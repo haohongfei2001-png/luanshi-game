@@ -17,12 +17,23 @@ touch artifacts/.gdignore
 "$GODOT" --headless --path . --script tests/test_hunger_properties.gd 2>&1 | tee artifacts/hunger-properties.log
 "$GODOT" --headless --path . --script tests/test_economy_properties.gd 2>&1 | tee artifacts/economy-properties.log
 "$GODOT" --headless --path . --script tests/test_battle_transactions.gd 2>&1 | tee artifacts/transaction-tests.log
-"$GODOT" --headless --path . --fixed-fps 60 --script tests/test_scene.gd 2>&1 | tee artifacts/scene-tests.log
-"$GODOT" --headless --path . --fixed-fps 60 --script tests/test_strategy.gd 2>&1 | tee artifacts/strategy-tests.log
-"$GODOT" --headless --path . --fixed-fps 60 --script tests/test_campaign_scene.gd 2>&1 | tee artifacts/campaign-tests.log
-"$GODOT" --headless --path . --fixed-fps 60 -- --smoke-scene 2>&1 | tee artifacts/scene-smoke.log
-"$GODOT" --headless --path . --fixed-fps 60 -- --campaign-smoke 2>&1 | tee artifacts/campaign-smoke.log
-if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/{import,simulation-tests,world-tests,economy-tests,hunger-tests,hunger-properties,economy-properties,transaction-tests,scene-tests,strategy-tests,campaign-tests,scene-smoke,campaign-smoke}.log; then
+"$GODOT" --headless --path . --script tests/test_campaign_saves.gd 2>&1 | tee artifacts/save-tests.log
+"$GODOT" --headless --path . --script tests/test_campaign_save_history.gd 2>&1 | tee artifacts/save-history.log
+for state in active committed dead; do
+  "$GODOT" --headless --path . --script tests/test_save_invalid_types.gd -- "$state" 2>&1 | tee "artifacts/save-invalid-$state.log"
+  grep -q 'SAVE_INVALID_TYPES .* cases / 0 failures' "artifacts/save-invalid-$state.log"
+done
+"$GODOT" --headless --path . --script tests/test_save_boundaries.gd 2>&1 | tee artifacts/save-boundaries.log
+SAVE_TEST_ID="test_restart_$(date +%s)_${RANDOM}_${RANDOM}"
+"$GODOT" --headless --path . --script tests/test_campaign_save_restart.gd -- prepare "$SAVE_TEST_ID" 2>&1 | tee artifacts/save-restart-prepare.log
+"$GODOT" --headless --path . --script tests/test_campaign_save_restart.gd -- resume "$SAVE_TEST_ID" 2>&1 | tee artifacts/save-restart-resume.log
+"$GODOT" --headless --path . --fixed-fps 60 --script tests/test_scene.gd -- --campaign-save-id="${SAVE_TEST_ID}_scene" 2>&1 | tee artifacts/scene-tests.log
+"$GODOT" --headless --path . --fixed-fps 60 --script tests/test_strategy.gd -- --campaign-save-id="${SAVE_TEST_ID}_strategy" 2>&1 | tee artifacts/strategy-tests.log
+"$GODOT" --headless --path . --fixed-fps 60 --script tests/test_campaign_scene.gd -- --campaign-save-id="${SAVE_TEST_ID}_campaign" 2>&1 | tee artifacts/campaign-tests.log
+"$GODOT" --headless --path . --fixed-fps 60 --script tests/test_campaign_save_scene.gd 2>&1 | tee artifacts/save-scene-tests.log
+"$GODOT" --headless --path . --fixed-fps 60 -- --smoke-scene --campaign-save-id="${SAVE_TEST_ID}_training" 2>&1 | tee artifacts/scene-smoke.log
+"$GODOT" --headless --path . --fixed-fps 60 -- --campaign-smoke --campaign-save-id="${SAVE_TEST_ID}_battle" 2>&1 | tee artifacts/campaign-smoke.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/{import,simulation-tests,world-tests,economy-tests,hunger-tests,hunger-properties,economy-properties,transaction-tests,save-tests,save-history,save-invalid-active,save-invalid-committed,save-invalid-dead,save-boundaries,save-scene-tests,save-restart-prepare,save-restart-resume,scene-tests,strategy-tests,campaign-tests,scene-smoke,campaign-smoke}.log; then
   echo 'Godot logged an error despite process exit code.' >&2
   exit 1
 fi
@@ -40,3 +51,11 @@ grep -q "INDEPENDENT_ECO_REVIEW .* assertions / 0 failures" artifacts/economy-pr
 grep -q 'Hunger tests: .* assertions, 0 failures' artifacts/hunger-tests.log
 
 grep -q "INDEPENDENT_HUNGER_AUDIT .* checks / 0 failures" artifacts/hunger-properties.log
+grep -q 'Campaign save tests: .* assertions, 0 failures' artifacts/save-tests.log
+grep -q 'Save restart prepare: .* assertions, 0 failures' artifacts/save-restart-prepare.log
+grep -q 'Save restart resume: .* assertions, 0 failures' artifacts/save-restart-resume.log
+
+grep -q "Save history tests: .* assertions, 0 failures" artifacts/save-history.log
+
+grep -q "BOUNDARY_AUDIT .* checks 0 failures" artifacts/save-boundaries.log
+grep -q '"failures":0' artifacts/save-scene-tests.log

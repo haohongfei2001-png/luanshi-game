@@ -120,3 +120,13 @@ Source `907fe31c938155f50589a9b9d3b62e312a81bc42`: [CI 42423403245](https://gith
 Native macOS26.7.2 arm64 ran both exported headless modes and passed strict ad-hoc signature verification. Campaign outcome remains15 enemy losses,19 regular allies plus living commander, hero202.5HP and world10806.6seconds. This does not demonstrate M5 rendered performance or human play feel. No Developer ID/notarization or formal release.
 
 Local v0.5 macOS ZIP SHA256: `14f99dfce0d6d640dfb4e15d586a542103c6633ea517762aed713271d8aeaf01`. Linux archive SHA256: `4324db0dd70c46734a71808379d4535d4d2d413556db9a07d57342715d3a93ac`. Source merged via PR #6 as `4174e98`. Actual logs: `evidence/hunger-native-macos.log`, `evidence/hunger-visual.log`. Following evidence-only commits do not claim new runtime coverage; they reference this tested code ancestor.
+
+## v0.6 campaign persistence: integrated source verification
+
+Cloud Linux/Godot4.6.3, full `./tools/test.sh`:6,691 functional assertions pass, including1,455 focused persistence,98 full90-day history,3,159 true two-process restart and70 save UI assertions. Existing economy/hunger/transaction coverage is retained; strategy now95 assertions. Additional independent regression:5,321 nested wrong-type mutations and107 file/codec boundaries,36 economy property scenarios and2,689 hunger oracle checks. Both actual-combat scene smokes still pass.
+
+Review exposed and fixed noncanonical JSON, causeless balanced ledgers/corpse resurrection, contradictory receipts/HP, failed-resume binding damage, wrong primitive-type exceptions, death-before-cause chronology, and a reachable90-day history exceeding the initial capacity. Tests preserve all14,007 events over90 days and exact day91 continuation; a bounded compressed format now supports that scenario without discarding history. See CAMPAIGN_SAVES.md for limits and distinction from anti-cheat or unlimited-lifetime guarantees.
+
+Four actual save-overlay/checkpoint/battle-resume/settled-result screenshots and native macOS exported two-process persistence are requested by CI but are NOT RUN for this source until a passing exact-head run is linked. No M5, power-loss fsync or cross-platform deterministic replay claim.
+
+Local exported v0.6 Linux program passed prepare/resume in two distinct processes (isolated test namespace), ending at world10829.075 with exactly42 events. Universal macOS archive structure is valid; native execution remains the CI stage. Local macOS SHA256 `98c56b303016df9b11f458c87dd79e82e0482d37a49d4c9de28a3c654d61c1bb`; Linux archive `ca4c11487d5f2668e1bdc72effb3f09df638e719c3c52a688d93f034594f44c1`. See `evidence/save-exported-linux.log`.

@@ -4,6 +4,7 @@ signal action_requested(action: String)
 signal restart_requested
 signal strategy_requested
 signal pause_requested
+signal saves_requested
 
 const INK := Color("111e22")
 const PAPER := Color("ede7d6")
@@ -16,6 +17,7 @@ var fps := 0.0
 var buttons: Dictionary = {}
 var result_panel: PanelContainer
 var result_label: Label
+var saves_button: Button
 var strategy_button: Button
 var pause_button: Button
 var restart_button: Button
@@ -47,6 +49,11 @@ func _ready() -> void:
 	strategy_button.focus_mode = Control.FOCUS_NONE
 	strategy_button.pressed.connect(func(): strategy_requested.emit())
 	add_child(strategy_button)
+	saves_button = Button.new()
+	saves_button.text = "F6  /  SAVE & LOAD"
+	saves_button.focus_mode = Control.FOCUS_NONE
+	saves_button.pressed.connect(func(): saves_requested.emit())
+	add_child(saves_button)
 	result_panel = PanelContainer.new()
 	result_panel.add_theme_stylebox_override("panel", _style(Color("14252af5"), GOLD))
 	result_panel.visible = false
@@ -98,6 +105,8 @@ func _layout() -> void:
 	pause_button.size = Vector2(108, 36)
 	strategy_button.position = Vector2(size.x - 162, 68)
 	strategy_button.size = Vector2(134, 26)
+	saves_button.position = Vector2(size.x - 345, 68)
+	saves_button.size = Vector2(176, 26)
 	result_panel.position = Vector2(size.x * 0.5 - 260, size.y * 0.5 - 160)
 	result_panel.size = Vector2(520, 320)
 
@@ -132,7 +141,7 @@ func update_state(state: BattleSimulation, is_paused: bool, measured_fps: float)
 		if campaign_mode:
 			result_label.text += "\n\n" + ("Losses, equipment and time recorded." if settlement_complete else "Settling campaign consequences...")
 			if not summary.player_alive:
-				result_label.text += "\nCampaign ended. No restart within this life."
+				result_label.text += "\nCampaign ended. Load an earlier save or life checkpoint."
 	queue_redraw()
 
 func is_world_pointer(pos: Vector2) -> bool:
@@ -155,7 +164,7 @@ func _draw() -> void:
 	draw_line(Vector2(0, 98), Vector2(size.x, 98), GOLD.darkened(0.4), 1)
 	_text(Vector2(28, 29), "L U A N S H I    /    " + ("CAMPAIGN ENCOUNTER" if campaign_mode else "TRAINING SKIRMISH"), 12, GOLD)
 	_text(Vector2(28, 63), "Hequ Depot Assault" if campaign_mode else "Border Skirmish", 28, PAPER)
-	_text(Vector2(28, 84), "REAL ROSTER / REAL LOSSES / NO BATTLE RESTART" if campaign_mode else "PRACTICE ONLY / M OPENS YOUR CAMPAIGN", 10, MUTED)
+	_text(Vector2(28, 84), "REAL ROSTER / REAL LOSSES / FREE SAVES" if campaign_mode else "PRACTICE ONLY / M OPENS YOUR CAMPAIGN", 10, MUTED)
 	_text(Vector2(420, 34), "OUR COMPANY", 11, MUTED)
 	_text(Vector2(420, 68), "%02d / %02d" % [sim.alive_count(0, campaign_mode), sim.report().friendly_survivors + sim.report().friendly_casualties + (1 if campaign_mode else 0)], 29, Color("78bcb6"))
 	_text(Vector2(610, 34), "OPPOSITION", 11, MUTED)

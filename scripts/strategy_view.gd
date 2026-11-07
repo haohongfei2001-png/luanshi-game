@@ -3,6 +3,7 @@ extends Control
 signal close_requested
 signal assault_requested
 signal campaign_reset
+signal saves_requested
 const World := preload("res://scripts/world_sim.gd")
 const NAMES := {"pingling": "Pingling", "anping": "Anping", "hequ": "Hequ"}
 const SOURCES := {"安平求援使者": "Anping relief messenger", "亲历斥候": "Local eyewitness scout", "逃出城的信使": "Escaped city messenger", "安平军情信使": "Anping military messenger"}
@@ -19,6 +20,7 @@ var scroll: ScrollContainer
 var status_label: Label
 var campaign_battle := false
 var battle_pending := false
+var interaction_blocked := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -41,8 +43,9 @@ func _ready() -> void:
 	stack.add_child(heading)
 	var title := _label(heading, "ANPING / CAMPAIGN PROTOTYPE", 24)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_button(heading, "saves", "Save / Load", func(): saves_requested.emit())
 	_button(heading, "close", "M  /  Return to training", func(): close_requested.emit())
-	status_label = _label(stack, "Real campaign roster and losses | Separate training skirmish | No saves yet", 16)
+	status_label = _label(stack, "Real campaign roster and losses | Separate training | Save / Load anytime", 16)
 	_label(stack, "Anping called for aid three days ago. Choose relief, assault Hequ's depot in person, or wait. Battle seconds also advance the world.", 15)
 	army_label = _label(stack, "", 16)
 	army_label.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -93,9 +96,11 @@ func _button(parent: Node, id: String, title: String, callback: Callable) -> voi
 	parent.add_child(button)
 
 func _command(command: String, argument: String = "", amount: int = 0) -> void:
+	if interaction_blocked:
+		return
 	var current: Dictionary = world.player_view()
 	if current.get("active_battle", "") != "" or (current.get("campaign_ended", false) and command != "reset"):
-		set_feedback("Finish the current battle before issuing world orders." if battle_pending else "The commander died. This campaign has ended.")
+		set_feedback("Finish the current battle before issuing world orders." if battle_pending else "The commander died. Load an earlier save or life checkpoint to return.")
 		return
 	var success := false
 	match command:
@@ -129,7 +134,22 @@ func show_battle_result(summary: Dictionary) -> void:
 	var current: Dictionary = world.player_view()
 	feedback.text = "Battle recorded once: %d soldiers returned / %d fallen. %.1fs passed in the world. %d soldiers remain in the army." % [summary.friendly_survivors + (1 if summary.player_alive else 0), summary.friendly_casualties + (0 if summary.player_alive else 1), summary.elapsed_seconds, current.army.soldiers]
 	if not summary.player_alive:
-		feedback.text += " The commander died. This campaign is over; its known reports remain below."
+		feedback.text += " The commander died. This campaign is over. Save / Load can restore an earlier life checkpoint."
+	refresh()
+
+func show_saved_battle_result(ticket: Dictionary) -> void:
+	# Only the player's own completed encounter is projected by last_battle_id.
+	if ticket.get("status", "") != "committed":
+		return
+	var outcome: Dictionary = ticket.outcome
+	var own: Dictionary = outcome.forces[0]
+	for force in outcome.forces:
+		if force.force_id == "relief":
+			own = force
+	var fallen: int = own.dead_ids.size()
+	feedback.text = "Saved battle already recorded: %s / %d fallen / %.1fs. Resources and casualties are not applied again." % [str(outcome.result).capitalize(), fallen, outcome.elapsed_world_time]
+	if not outcome.player_alive:
+		feedback.text += " Load an earlier save or life checkpoint to return."
 	refresh()
 
 func refresh() -> void:
@@ -138,7 +158,7 @@ func refresh() -> void:
 	var army: Dictionary = view.army
 	var ended: bool = view.get("campaign_ended", false)
 	var locked := battle_pending or ended
-	status_label.text = "CAMPAIGN ENDED / Commander died. Only known reports are shown." if ended else ("BATTLE PAUSED / Army and equipment reserved. Return to finish the encounter." if battle_pending else "Real campaign roster and losses | Separate training skirmish | No saves yet")
+	status_label.text = "CAMPAIGN ENDED / Load an earlier save or life checkpoint; known reports remain available." if ended else ("BATTLE PAUSED / Army and equipment reserved. Return to finish the encounter." if battle_pending else "Real campaign roster and losses | Separate training | Save / Load anytime")
 	buttons.close.text = "M  /  " + ("Resume campaign battle" if battle_pending else ("Review battle result" if campaign_battle else "Return to training"))
 	buttons.reset.disabled = battle_pending
 	buttons.wait1.disabled = locked

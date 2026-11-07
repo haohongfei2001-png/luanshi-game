@@ -8,11 +8,17 @@ touch builds/.gdignore artifacts/.gdignore
 "$GODOT" --headless --path . --export-release macOS builds/Luanshi-macOS.zip 2>&1 | tee artifacts/export-macos.log
 "$GODOT" --headless --path . --export-release Linux builds/Luanshi-linux.x86_64 2>&1 | tee artifacts/export-linux.log
 chmod +x builds/Luanshi-linux.x86_64
-builds/Luanshi-linux.x86_64 --headless --fixed-fps 60 -- --smoke-scene 2>&1 | tee artifacts/exported-linux-smoke.log
+SMOKE_ID="export_$(date +%s)_${RANDOM}_${RANDOM}"
+builds/Luanshi-linux.x86_64 --headless --fixed-fps 60 -- --smoke-scene --campaign-save-id="$SMOKE_ID" 2>&1 | tee artifacts/exported-linux-smoke.log
 grep -q SCENE_SMOKE_PASS artifacts/exported-linux-smoke.log
-builds/Luanshi-linux.x86_64 --headless --fixed-fps 60 -- --campaign-smoke 2>&1 | tee artifacts/exported-linux-campaign.log
+builds/Luanshi-linux.x86_64 --headless --fixed-fps 60 -- --campaign-smoke --campaign-save-id="$SMOKE_ID" 2>&1 | tee artifacts/exported-linux-campaign.log
 grep -q CAMPAIGN_SMOKE_PASS artifacts/exported-linux-campaign.log
-if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/export-{macos,linux}.log artifacts/exported-linux-{smoke,campaign}.log; then
+for phase in prepare resume; do
+  builds/Luanshi-linux.x86_64 --headless -- --persistence-smoke-$phase --persistence-smoke-id="$SMOKE_ID" 2>&1 | tee "artifacts/exported-linux-persistence-$phase.log"
+done
+grep -q PERSISTENCE_SMOKE_PREPARE_PASS artifacts/exported-linux-persistence-prepare.log
+grep -q PERSISTENCE_SMOKE_RESUME_PASS artifacts/exported-linux-persistence-resume.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/export-{macos,linux}.log artifacts/exported-linux-{smoke,campaign,persistence-prepare,persistence-resume}.log; then
   exit 1
 fi
 python3 tools/verify_macos.py builds/Luanshi-macOS.zip

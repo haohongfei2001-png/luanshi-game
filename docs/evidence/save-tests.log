@@ -1,0 +1,4 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Campaign save tests: 1455 assertions, 0 failures
+SAVE_TEST_SUMMARY {"assertions":1455,"failures":0,"isolated_directory":"test_saves_a50d33dad2f31d9f","messages":[]}

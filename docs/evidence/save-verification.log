@@ -1,0 +1,14 @@
+Campaign persistence core verification
+Environment: isolated cloud Linux checkout luanshi-saves, Godot 4.6.3.stable.official.7d41c59c4.
+Baseline: clean hunger implementation 0b3499d211763ae8258ab93e2b03b9bd0656f450.
+Canonical design documents read from primary through 244775d; doc sync excluded from feature commit.
+Command: XDG_DATA_HOME=/workspace/shared/godot-data XDG_CONFIG_HOME="$PWD/.local-config" XDG_CACHE_HOME="$PWD/.local-cache" bash tools/test.sh
+PASS: editor import, 1,871 preexisting functional assertions, 1,449 save assertions at aggregate run, 98 long-history assertions, 3,159 separate-process restart assertions, both training/campaign headless scene smokes.
+PASS: final affected save-test rerun adds six generation-high-water assertions, for 1,455 save assertions and 6,583 total functional assertions across final checks.
+PASS: 36 independent economy scenarios / 52,194 checks.
+PASS: latest independent hunger suite / 2,689 checks (copied for verification only, not duplicated in feature commit).
+PASS: two separate source-runtime-helper invocations, PERSISTENCE_SMOKE_PREPARE_PASS and PERSISTENCE_SMOKE_RESUME_PASS.
+PASS: git diff --check.
+90-day history: 14,007 events, all retained; 9,070,346 raw bytes, 111,827 stored bytes; cloud save 3,620ms/load 7,254ms; exact day-91 continuation.
+Malformed-load regressions include all envelope field types, nested types, finite ranges, unsupported versions, duplicate keys, trailing commas, truncation, recomputed-checksum causal contradictions, stale adapter/tickets, generation rollback, missing sessions, event chronology and death-before-cause.
+No GUI smoke, exported macOS runtime, M5 device performance, cross-platform bit-identical replay, hard power-loss, or unlimited lifetime save scale is claimed by these tests.

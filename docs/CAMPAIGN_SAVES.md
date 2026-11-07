@@ -1,0 +1,173 @@
+# Versioned campaign persistence (save schema 1)
+
+This is the first real campaign loader. World snapshot `version: 5` is a simulation
+schema, **not** a claim that old debug snapshots were loadable saves. Only envelope
+schema 1 + WorldSim version 5 are accepted. There are no legacy migrations yet.
+Future migrations must explicitly preserve causal state and add regression fixtures;
+unknown versions fail without modifying the live campaign or existing save.
+
+## API and ownership
+
+`CampaignStore.new("campaign_id")` selects one directory. Names contain 1–48 ASCII
+letters, digits, `_`, or `-`. Callers never provide arbitrary filesystem paths.
+
+- `save_slot(world, "slot_id")` / `load_slot(world, "slot_id")`: unrestricted named
+  free saves, including dead campaigns and local encounters.
+- `save_checkpoint(world, "node_id")` / `load_checkpoint(world, "node_id")`: complete
+  independent snapshots, not character-only rollbacks.
+- `list_saves(checkpoints = false)`: sorted IDs in the chosen namespace. Temporary
+  files and links are not offered as valid saves. Listing is not load validation.
+- `commit_and_save(world, outcome, "slot_id")`: settle a detached candidate,
+  atomically persist the candidate and receipt together, then adopt it in the live
+  WorldSim. On storage failure, the old live world and running session stay intact.
+- `WorldSimulation.export_campaign_state()` / `restore_campaign_state(value)`:
+  explicit non-IO state boundary. Restore validates on a separate authority before
+  swapping state and sessions. Never use private `_state` assignment to load.
+- All operations return `{ok: bool, ...}`; failures include a machine-readable
+  `reason` (and optional `errors`/`error_code`). The UI must surface failure and must
+  not replace the current scene based on an unsuccessful load.
+
+Loading mutates the existing WorldSim's complete state graph. Old scene dictionaries
+and BattleSimulation references must be discarded. `player_view().active_battle`
+identifies a reserved/running ticket. `BattleAdapter.resume(id)` starts a reservation
+or binds the already restored running simulation; it never creates a second roster.
+An ended-but-uncommitted running simulation remains ended and must be settled once.
+A committed ticket has no running simulation: inspect `battle_ticket(id).receipt`
+and `.outcome` instead. Repeating the exact outcome returns the old receipt with
+`already_committed: true`, without changing stocks, casualties, time, or events.
+Adapters retained across load cannot sync or settle a replacement live session.
+
+## What survives
+
+All currently implemented world facts survive: exact int64 stocks and ledgers,
+production/civilian consumption remainders, fractional seconds, army movement,
+convoy cargo and arrivals, delayed and already known intelligence, condition and
+activity intervals, siege, commander health/death, campaign generation, reservation
+locks, all ticket states, outcomes, receipts, counters, and event chronology.
+Running battles also preserve RNG state, seed, exact elapsed time (even ahead of the
+last world sync), unit IDs/roster identities, HP, equipment, positions, facing,
+targets, cooldowns, input, order, damage, and queued presentation events. Derived
+roster indices/counts are rebuilt from the validated canonical ticket. WorldSim
+currently has no stochastic RNG stream beyond its seed; none is invented on load.
+
+Loading an earlier snapshot intentionally restores its earlier history and resources,
+including undoing later death. It does not merge later loot into earlier inventories.
+Initial per-force headcounts are persisted and replay-audited against every loss
+and capture; moving dead soldiers back into a different inventory also fails.
+Generation high-water state is persisted; loading an old checkpoint in the same live
+authority does not cause `reset()` to reuse an already issued campaign generation.
+Objects from a discarded timeline are not capabilities to change restored sessions.
+
+This milestone does not implement captivity, narrative flags, politics, aging, or
+future RNG streams. New state requires an explicit schema evolution. Living capture
+must remain nonterminal when implemented; persistence adds no capture-as-death rule.
+
+## Format and untrusted input
+
+A complete generated, non-personal start-state example is
+`docs/examples/campaign-save-v1.json`. It is a test fixture for this first loader,
+not a promise to load earlier debug snapshots.
+
+Files are canonical JSON envelopes with `format`, `schema_version`, `encoding`,
+`uncompressed_bytes`, `payload`, and `sha256`. The payload is bounded Zstd-compressed
+UTF-8 wrapped in canonical base64. Decompressed size is checked before allocation;
+the decoded size must match the declared bound. Duplicate keys, trailing commas,
+and noncanonical JSON are rejected, including inside the compressed payload.
+The checksum detects accidental corruption. It is **not authentication or an anti-cheat
+boundary**. Even a valid checksum passes the separate closed schema and causal checks.
+The payload uses a small explicit primitive codec; no objects, scripts, resources,
+`bytes_to_var`, or arbitrary Variant deserialization are used. Integer strings avoid
+JSON double rounding above 2^53; finite floats are IEEE-754 hex bytes, and Vector2
+components use the same representation. Dictionary insertion order survives.
+
+World version 5 adds explicit aggregate `troops_lost` events and the real prisoner
+count on `city_captured`. The loader reconstructs every ledger from production,
+consumption, aggregate loss, capture and once-only battle events. It checks each
+ticket transition, capture receipt, latest commander HP and owner against its
+causal history, so balanced-but-causeless ledgers and settled-casualty resurrection
+do not pass merely because final totals add up.
+
+Validation covers exact required fields, bounded finite values, supported locations,
+force membership, condition, inventories, economic conservation, report timing and
+knowledge, convoy identity/timing, clock/event chronology, ticket generation/IDs,
+locks/rosters, sessions, actual battle endings, and receipt/outcome consistency.
+Unsupported types, duplicate encoded keys, bad IDs, missing sessions, malformed or
+truncated files, inconsistent ledgers, forged equipment, and stale/conflicting
+outcomes are rejected atomically. The loader is not a replay proof against someone
+who deliberately edits every consistent part of a single-player world.
+
+Bounds: 16 MiB per compressed file, 128 MiB of decompressed payload, 4,000,000
+primitive nodes, nesting depth 40, 250,000 entries per collection/history,
+8,192 characters per scalar string, 1,000
+world years. Economy and battle limits also apply. Exceeding a bound reports an
+error rather than truncating history or dropping data. Long-campaign lossless compaction/segmented history is
+future work, not silent save loss. Unrestricted lifetime OWNER-SAVE-01 acceptance
+is therefore still pending; the tested history horizon here is 90 days plus day 91.
+
+## Filesystem and interrupted writes
+
+Only `user://campaigns/<campaign_id>/slots/<slot_id>.save.json` and the parallel
+`checkpoints` namespace are used. Directory/file links are rejected. Saves write a
+new random temporary file in the same directory, flush/close, verify exact bytes,
+and use one rename to replace the selected slot. An error never deletes the old
+slot to force replacement. Only this call's newly created temporary file may be
+removed on failure; unrelated data and abandoned temporaries are left alone.
+
+The state and once-only receipt live in one replacement file, so process interruption
+before rename leaves the previous pending state, and interruption after rename leaves
+the complete committed state. Retrying either state cannot apply a settlement twice.
+The tests verify separate Godot process restart; OS/device power-loss durability and
+platform-specific rename behavior still require device verification. `flush()` and
+rename are not represented as a portable directory-fsync guarantee.
+
+## Reproduction and evidence
+
+Cloud Linux, Godot 4.6.3 stable. Exact continuation claims apply to the tested
+engine build and platform. Independent Linux and macOS prepare/resume runs do not
+prove cross-architecture combat replays are bit-identical; that portability check is
+separate. No GUI/native Mac claim is made by this core milestone.
+
+```sh
+XDG_DATA_HOME=/workspace/shared/godot-data \
+XDG_CONFIG_HOME="$PWD/.local-config" XDG_CACHE_HOME="$PWD/.local-cache" bash tools/test.sh
+```
+
+The suite includes `test_campaign_saves.gd` plus two distinct invocations of
+`test_campaign_save_restart.gd -- prepare <isolated_id>` and `-- resume <isolated_id>`.
+Prepare stores running, terminal-pending, committed, and uninterrupted oracle states;
+resume rebuilds them in a new process, completes real combat, compares the whole
+result exactly, and retries both precommit and postcommit recovery. Other tests
+cover frame-by-frame RNG equivalence, malformed nested inputs, exact integers,
+freely overwritten slots, death checkpoint reload, stale adapters, and IO failure.
+The unmodified 90-day economy scenario is also saved and loaded with all 14,007
+events intact, reconstructed resource ledgers and identical day-91 continuation.
+A cloud run measured 9,070,346 uncompressed bytes, 111,827 stored bytes, 3.62s save
+and 7.25s load. These are cloud measurements, not native-device performance claims.
+Compression is lossless; no old events are deleted or summarized. A full multi-decade
+life with future systems remains a separate scale/performance acceptance target.
+
+Tests create their own random `test_saves_*`/`test_restart_*`/`test_history_*` directories and never
+open the player's default slots. Logs are under `artifacts/save-*.log`; published
+text evidence is under `docs/evidence/`.
+
+## Exported app smoke hook
+
+`CampaignPersistenceSmoke.run("prepare", optional_id)` and `.run("resume", same_id)`
+in `scripts/campaign_persistence_smoke.gd` are runtime-safe, independent of `tests/`.
+The app can invoke them before scene setup for `--persistence-smoke-prepare` and
+`--persistence-smoke-resume`, print `PERSISTENCE_SMOKE_PREPARE_PASS` / `_RESUME_PASS`
+only on `result.ok`, and exit 0/1 accordingly. They use only the dedicated
+`runtime_smoke_<id>` campaign, real midbattle state, a fresh-process deterministic
+oracle and both pending/committed retry paths. Source wrapper coverage is not a
+claim that the exported macOS executable or native file replacement has passed;
+those same two launches must run against the actual exported executable.
+
+`player_view().last_battle_id` (or `last_committed_battle_id()`) identifies the
+latest committed encounter involving relief. It excludes cancelled tickets and
+remote encounters, letting UI inspect an owned receipt without reading save truth.
+
+## Integrated player interface and negative-input regression
+
+The game exposes named slots/checkpoints through F6 and map/HUD buttons; F5 saves the campaign to quick and F9 loads it. Training is explicitly excluded. Loading a running encounter recreates presentation from the restored authority and starts paused; completed encounters show the stored receipt on the map without settling again. Life checkpoints are unique and preserved across program launch, death and explicit new campaigns. Pre-battle/new-life checkpoint preparation and manual disk actions show a drawn busy message and block repeated inputs. Failed input/load preserves the existing world, adapter, views and pause state.
+
+The integrated source suite passes6,691 functional assertions, including70 actual save-scene assertions and95 strategy assertions. The independent wrong-type generator is now persisted as `tests/test_save_invalid_types.gd`:5,321 rejected mutations across active, committed and dead states, with zero exception or live mutation. `tests/test_save_boundaries.gd` adds107 file/codec checks. These run alongside the existing36 economy property scenarios and2,689 military-condition oracle checks. Full output: `evidence/save-integrated-tests.log`. Actual graphical save UI and native exported file replacement remain separately pending until exact-source CI evidence is recorded.

@@ -6,6 +6,12 @@ const InputActions := preload("res://scripts/input_actions.gd")
 const Strategy := preload("res://scripts/strategy_view.gd")
 const Hud := preload("res://scripts/battle_hud.gd")
 const Adapter := preload("res://scripts/battle_adapter.gd")
+const SavePanel := preload("res://scripts/campaign_save_panel.gd")
+const Store := preload("res://scripts/campaign_store.gd")
+const World := preload("res://scripts/world_sim.gd")
+var campaign_store := Store.new("campaign")
+var save_panel: Control
+var save_busy := false
 var strategy: Control
 var paused_before_strategy := false
 var sim := Simulation.new()
@@ -34,6 +40,24 @@ var last_frame_usec := 0
 var rendered_frames := 0
 
 func _ready() -> void:
+	var arguments := OS.get_cmdline_user_args()
+	if "--persistence-smoke-prepare" in arguments or "--persistence-smoke-resume" in arguments:
+		set_process(false)
+		set_physics_process(false)
+		set_process_input(false)
+		set_process_unhandled_input(false)
+		var phase := "prepare" if "--persistence-smoke-prepare" in arguments else "resume"
+		var smoke_id := "export_v1"
+		for argument in arguments:
+			if argument.begins_with("--persistence-smoke-id="):
+				smoke_id = argument.trim_prefix("--persistence-smoke-id=")
+		var proof: Dictionary = preload("res://scripts/campaign_persistence_smoke.gd").run(phase, smoke_id)
+		print("PERSISTENCE_SMOKE_%s_%s %s" % [phase.to_upper(), "PASS" if proof.ok else "FAIL", JSON.stringify(proof)])
+		get_tree().quit(0 if proof.ok else 1)
+		return
+	for argument in arguments:
+		if argument.begins_with("--campaign-save-id="):
+			campaign_store = Store.new(argument.trim_prefix("--campaign-save-id="))
 	InputActions.install()
 	scene_smoke = "--smoke-scene" in OS.get_cmdline_user_args()
 	campaign_smoke = "--campaign-smoke" in OS.get_cmdline_user_args()
@@ -47,6 +71,7 @@ func _ready() -> void:
 	hud.restart_requested.connect(_restart)
 	hud.pause_requested.connect(_toggle_pause)
 	hud.strategy_requested.connect(_toggle_strategy)
+	hud.saves_requested.connect(_open_save_panel)
 	strategy = Strategy.new()
 	strategy.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	canvas.add_child(strategy)
@@ -54,6 +79,16 @@ func _ready() -> void:
 	strategy.close_requested.connect(_toggle_strategy)
 	strategy.assault_requested.connect(_start_campaign_battle)
 	strategy.campaign_reset.connect(_on_campaign_reset)
+	strategy.saves_requested.connect(_open_save_panel)
+	save_panel = SavePanel.new()
+	save_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	canvas.add_child(save_panel)
+	save_panel.hide()
+	save_panel.close_requested.connect(_close_save_panel)
+	save_panel.save_requested.connect(func(slot: String): _request_save_operation("save", slot))
+	save_panel.load_requested.connect(func(id: String, checkpoint: bool): _request_save_operation("load", id, checkpoint))
+	save_panel.checkpoint_requested.connect(func(): _request_save_operation("checkpoint"))
+	save_panel.list_requested.connect(func(_checkpoints: bool): _refresh_save_list())
 	training_sim = sim
 	_restart()
 	if campaign_smoke:
@@ -122,6 +157,8 @@ func _build_battlefield() -> void:
 	cursor.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func _restart() -> void:
+	if save_panel != null and save_panel.visible:
+		return
 	if strategy != null and strategy.visible:
 		return
 	if campaign_adapter != null:
@@ -149,8 +186,15 @@ func _rebuild_unit_views() -> void:
 	_refresh_hud()
 
 func _start_campaign_battle() -> void:
-	if campaign_adapter != null and not sim.ended:
+	if save_busy or (campaign_adapter != null and not sim.ended):
 		return
+	var current: Dictionary = strategy.world.player_view()
+	if current.campaign_ended or not current.active_battle.is_empty() or current.local_city.get("id", "") != "hequ" or current.local_city.get("owner", "") == current.army.owner or current.local_city.get("soldiers", 0) <= 0 or current.army.soldiers <= 0:
+		strategy.set_feedback("Assault unavailable: no eligible local hostile force.")
+		return
+	_request_save_operation("prebattle")
+
+func _begin_campaign_battle(checkpoint: Dictionary) -> void:
 	var next_adapter := Adapter.new(strategy.world)
 	var started: Dictionary = next_adapter.begin_local_depot()
 	if not started.get("ok", false):
@@ -167,6 +211,9 @@ func _start_campaign_battle() -> void:
 	hud.show()
 	strategy.set_battle_context(true, true)
 	_rebuild_unit_views()
+	if not checkpoint.ok:
+		_open_save_panel()
+		save_panel.set_feedback("Battle ready, but the pre-battle checkpoint could not be saved. " + _save_error(checkpoint), true)
 
 func _settle_campaign_battle() -> void:
 	if campaign_adapter == null or not sim.ended or campaign_settlement.get("ok", false):
@@ -181,15 +228,156 @@ func _settle_campaign_battle() -> void:
 		strategy.set_feedback("Battle settlement blocked: " + str(campaign_settlement.get("reason", "Unknown error")))
 
 func _on_campaign_reset() -> void:
-	if campaign_adapter == null:
+	if campaign_adapter != null:
+		campaign_adapter = null
+		campaign_settlement = {}
+		sim = training_sim
+		paused_before_strategy = training_paused
+		paused = true
+		strategy.set_battle_context(false, false)
+		_rebuild_unit_views()
+	_request_save_operation("newlife")
+
+func _open_save_panel() -> void:
+	if save_panel.visible:
 		return
+	# A separate presentation gate freezes play without changing the prior pause.
+	strategy.interaction_blocked = true
+	save_panel.set_context(strategy.world.player_view())
+	save_panel.show()
+	cursor.hide()
+	save_panel.set_feedback("Select a save or enter a slot name. Loading replaces this campaign; training is unchanged.")
+	_refresh_save_list()
+	save_panel.buttons.close.grab_focus()
+
+func _close_save_panel() -> void:
+	if save_busy:
+		return
+	save_panel.hide()
+	strategy.interaction_blocked = false
+	get_viewport().gui_release_focus()
+
+func _request_save_operation(operation: String, id: String = "", checkpoint: bool = false) -> void:
+	if save_busy:
+		return
+	_open_save_panel()
+	save_busy = true
+	save_panel.set_busy(true)
+	var busy_messages := {"load": "Loading campaign... Please wait.", "prebattle": "Preparing encounter / saving pre-battle checkpoint...", "newlife": "Saving the new life's checkpoint..."}
+	save_panel.set_feedback(busy_messages.get(operation, "Saving campaign... Please wait."))
+	# Let the status draw before disk/validation work, including long histories.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var result: Dictionary = {}
+	match operation:
+		"save": _save_campaign(id)
+		"load": _load_campaign(id, checkpoint)
+		"checkpoint": _create_checkpoint()
+		"prebattle", "newlife": result = _save_life_checkpoint(operation)
+	save_busy = false
+	save_panel.set_busy(false)
+	if operation == "prebattle":
+		_close_save_panel()
+		_begin_campaign_battle(result)
+	elif operation == "newlife":
+		if result.ok:
+			_close_save_panel()
+		else:
+			save_panel.set_feedback("New campaign started, but its life checkpoint could not be saved. " + _save_error(result), true)
+
+func _refresh_save_list(selected_id: String = "") -> void:
+	var listed: Dictionary = campaign_store.list_saves(save_panel.is_checkpoint_mode())
+	save_panel.show_entries(listed.get("saves", []), selected_id)
+	if not listed.ok:
+		save_panel.set_feedback("Could not list saves. " + _save_error(listed), true)
+
+func _save_campaign(slot: String) -> Dictionary:
+	var result: Dictionary = campaign_store.save_slot(strategy.world, slot)
+	if result.ok:
+		save_panel.category.select(0)
+		save_panel._update_mode()
+		_refresh_save_list(slot)
+		save_panel.set_context(strategy.world.player_view())
+		save_panel.set_feedback("Saved campaign to '%s'. Full world and any active battle preserved; training is not included." % slot)
+	else:
+		save_panel.set_feedback("Save failed. Current play and previous saves are unchanged. " + _save_error(result), true)
+	return result
+
+func _save_life_checkpoint(kind: String) -> Dictionary:
+	# Unique across launches, even for the same game hour or restored life.
+	# App startup never writes a checkpoint, and old checkpoints are never pruned.
+	var id := "%s_%d_%s" % [kind, int(Time.get_unix_time_from_system()), Crypto.new().generate_random_bytes(6).hex_encode()]
+	return campaign_store.save_checkpoint(strategy.world, id)
+
+func _create_checkpoint() -> Dictionary:
+	var result: Dictionary = _save_life_checkpoint("life")
+	if result.ok:
+		save_panel.category.select(1)
+		save_panel._update_mode()
+		_refresh_save_list(result.id)
+		save_panel.set_feedback("Life checkpoint created. It remains available after death, new campaigns, and later launches.")
+	else:
+		save_panel.set_feedback("Checkpoint failed. " + _save_error(result), true)
+	return result
+
+func _load_campaign(id: String, checkpoint: bool = false) -> Dictionary:
+	# Disk, schema and presentation preflight touch only a detached candidate.
+	# Failed loads leave the live world, adapter, scene and pause state untouched.
+	var candidate := World.new()
+	var result: Dictionary = campaign_store.load_checkpoint(candidate, id) if checkpoint else campaign_store.load_slot(candidate, id)
+	var active := ""
+	if result.ok:
+		active = candidate.player_view().active_battle
+		if not active.is_empty():
+			result = Adapter.new(candidate).resume(active)
+	if not result.ok:
+		save_panel.set_feedback("Load failed. Your current campaign is unchanged. " + _save_error(result), true)
+		return result
+	result = strategy.world.restore_campaign_state(candidate.export_campaign_state())
+	if not result.ok:
+		save_panel.set_feedback("Load failed. Your current campaign is unchanged. " + _save_error(result), true)
+		return result
+	if campaign_adapter == null:
+		training_paused = paused_before_strategy if strategy.visible else paused
 	campaign_adapter = null
 	campaign_settlement = {}
-	sim = training_sim
-	paused_before_strategy = training_paused
-	paused = true
-	strategy.set_battle_context(false, false)
+	if not active.is_empty():
+		# The same graph and resume operation passed above; authority remains the
+		# existing strategy.world. Every old adapter/view is discarded explicitly.
+		campaign_adapter = Adapter.new(strategy.world)
+		campaign_adapter.resume(active)
+		sim = campaign_adapter.simulation
+		strategy.hide()
+		hud.show()
+		paused = true
+		paused_before_strategy = true
+		strategy.set_battle_context(true, true)
+	else:
+		sim = training_sim
+		paused = true
+		paused_before_strategy = training_paused
+		strategy.show()
+		hud.hide()
+		strategy.set_battle_context(false, false)
+		var known: Dictionary = strategy.world.player_view()
+		var last_id: String = known.get("last_battle_id", "")
+		if not last_id.is_empty():
+			strategy.show_saved_battle_result(strategy.world.battle_ticket(last_id))
+		else:
+			strategy.set_feedback("Campaign loaded. Earlier saves and life checkpoints remain available.")
 	_rebuild_unit_views()
+	save_panel.set_context(strategy.world.player_view())
+	save_panel.set_feedback("Loaded '%s'. %s" % [id, "Battle is paused. Close this panel, then Resume to continue." if not active.is_empty() else "Campaign restored. Close this panel to return to the map."])
+	return {"ok": true}
+
+func _save_error(result: Dictionary) -> String:
+	var reason: String = result.get("reason", "unknown_error")
+	match reason:
+		"invalid_save_identifier": return "Use 1-48 letters, numbers, hyphens or underscores for a slot name."
+		"save_read_failed": return "The save is missing or could not be read."
+		"save_open_failed", "save_directory_failed", "save_write_failed", "save_replace_failed": return "The save folder could not be written. Check available disk space and access."
+		"unsupported_save_schema": return "This save version is not supported by this build."
+		_: return "Save data could not be used (%s)." % reason.replace("_", " ")
 
 func _refresh_hud() -> void:
 	hud.campaign_mode = campaign_adapter != null
@@ -213,11 +401,31 @@ func _process(_delta: float) -> void:
 		print("VISUAL_CAPTURE " + str(error))
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("toggle_strategy") and not event.is_echo():
+	if save_busy:
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_echo():
+		return
+	if event.is_action_pressed("campaign_saves"):
+		_close_save_panel() if save_panel.visible else _open_save_panel()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("campaign_quicksave"):
+		_request_save_operation("save", "quick")
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("campaign_quickload"):
+		_request_save_operation("load", "quick")
+		get_viewport().set_input_as_handled()
+	elif save_panel.visible:
+		if event.is_action_pressed("pause_battle") or event.is_action_pressed("toggle_strategy"):
+			_close_save_panel()
+			get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("toggle_strategy"):
 		_toggle_strategy()
 		get_viewport().set_input_as_handled()
 
 func _toggle_strategy() -> void:
+	if save_panel.visible:
+		return
 	if strategy.visible:
 		strategy.hide()
 		hud.show()
@@ -231,7 +439,7 @@ func _toggle_strategy() -> void:
 		cursor.hide()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if strategy.visible:
+	if strategy.visible or save_panel.visible:
 		return
 	if event.is_action_pressed("pause_battle"):
 		_toggle_pause()
@@ -249,13 +457,13 @@ func _notification(what: int) -> void:
 		paused = true
 
 func _toggle_pause() -> void:
-	if strategy.visible:
+	if strategy.visible or save_panel.visible:
 		return
 	if not sim.ended:
 		paused = not paused
 
 func _request_action(action: String) -> void:
-	if paused or sim.ended:
+	if paused or sim.ended or save_panel.visible:
 		return
 	if action.begins_with("order_"):
 		sim.issue_order(action.trim_prefix("order_"))
@@ -263,7 +471,7 @@ func _request_action(action: String) -> void:
 		sim.use_action(action)
 
 func _physics_process(delta: float) -> void:
-	if strategy.visible:
+	if strategy.visible or save_panel.visible:
 		return
 	if sim.units.is_empty():
 		return
@@ -322,6 +530,8 @@ func _start_campaign_smoke() -> void:
 	strategy._command("march", "river")
 	strategy._command("advance", "", 3)
 	strategy._command("seize")
+	while save_busy:
+		await get_tree().process_frame
 	if campaign_adapter == null or sim.units.size() != 35 or sim.alive_count(0, true) != 20 or sim.alive_count(1) != 15:
 		push_error("Campaign smoke failed to launch a real 20 vs 15 roster")
 		get_tree().quit(1)

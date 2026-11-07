@@ -301,3 +301,82 @@ func outcome() -> Dictionary:
 		"elapsed_world_time": elapsed, "player_alive": player().hp > 0.0, "player_hp": player().hp,
 		"spoils": {"weapons": forces[1].recovered_equipment if status == "victory" else 0},
 		"retreat_positions": {"relief": _ticket.location} if status != "victory" else {}}
+
+
+func export_campaign_state() -> Dictionary:
+	## Explicit causal state only. Derived roster indices are rebuilt from the ticket.
+	return {"units": units.duplicate(true), "events": events.duplicate(true),
+		"seed": seed_value, "rng_state": rng.state, "elapsed": elapsed, "order": order,
+		"ended": ended, "result": result, "player_move": player_move, "player_aim": player_aim,
+		"cooldowns": cooldowns.duplicate(true), "damage_dealt": damage_dealt}
+
+func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
+	## Validate into a separate simulation; failed restoration never changes self.
+	var schema := preload("res://scripts/campaign_schema.gd")
+	if not schema.ticket(ticket) or not schema.keys(saved, ["units", "events", "seed", "rng_state", "elapsed", "order", "ended", "result", "player_move", "player_aim", "cooldowns", "damage_dealt"]):
+		return {"ok": false, "reason": "invalid_battle_shape"}
+	if not schema.types(saved, {"units": TYPE_ARRAY, "events": TYPE_ARRAY, "seed": TYPE_INT, "rng_state": TYPE_INT, "elapsed": TYPE_FLOAT, "order": TYPE_STRING, "ended": TYPE_BOOL, "result": TYPE_STRING, "player_move": TYPE_VECTOR2, "player_aim": TYPE_VECTOR2, "cooldowns": TYPE_DICTIONARY, "damage_dealt": TYPE_FLOAT}):
+		return {"ok": false, "reason": "invalid_battle_field_types"}
+	if not saved.seed is int or saved.seed != ticket.tactical_seed or not saved.rng_state is int or not schema.number(saved.elapsed, ticket.elapsed_world_time, 8760 * 3600.0) or saved.order not in ["follow", "attack", "retreat"] or not saved.ended is bool or not schema.text(saved.result) or not schema.number(saved.damage_dealt, 0, 2000):
+		return {"ok": false, "reason": "invalid_battle_fields"}
+	if not _save_direction(saved.player_move) or not _save_direction(saved.player_aim) or not is_equal_approx(saved.player_aim.length(), 1.0) or not schema.keys(saved.cooldowns, ["attack", "sweep", "lunge", "guard"]):
+		return {"ok": false, "reason": "invalid_battle_input"}
+	for action in saved.cooldowns:
+		var maximum: float = 0.55 if action == "attack" else SKILL_COOLDOWNS[action]
+		if not schema.number(saved.cooldowns[action], 0, maximum):
+			return {"ok": false, "reason": "invalid_battle_cooldown"}
+	var candidate := BattleSimulation.new()
+	candidate.reset_from_ticket(ticket)
+	if not schema.array(saved.units, 40) or saved.units.size() != candidate.units.size() or not schema.array(saved.events):
+		return {"ok": false, "reason": "invalid_battle_roster"}
+	for index in range(saved.units.size()):
+		var unit: Variant = saved.units[index]
+		var initial: Dictionary = candidate.units[index]
+		if not schema.keys(unit, initial.keys()):
+			return {"ok": false, "reason": "invalid_unit_shape"}
+		for field in ["id", "team", "hero", "max_hp", "speed", "damage", "condition_damage_scale", "condition_speed_scale", "range", "weapon", "roster_id", "force_id"]:
+			if typeof(unit[field]) != typeof(initial[field]) or unit[field] != initial[field]:
+				return {"ok": false, "reason": "changed_unit_identity_or_equipment"}
+		if not schema.number(unit.hp, 0, initial.hp) or not unit.pos is Vector2 or not unit.pos.is_finite() or unit.pos != unit.pos.clamp(-FIELD_HALF, FIELD_HALF) or not _save_direction(unit.facing) or not schema.integer(unit.target, -1, saved.units.size() - 1):
+			return {"ok": false, "reason": "invalid_unit_state"}
+		for pair in [["attack_cd", 1.1], ["guard", 2.6], ["flash", 0.12], ["swing", 0.24]]:
+			if not schema.number(unit[pair[0]], 0, pair[1]):
+				return {"ok": false, "reason": "invalid_unit_timer"}
+	for event in saved.events:
+		if not _save_event_valid(event, saved.units.size()):
+			return {"ok": false, "reason": "invalid_battle_event"}
+	candidate.units.assign(saved.units.duplicate(true))
+	candidate.order = saved.order
+	candidate._check_result()
+	if candidate.ended != saved.ended or candidate.result != saved.result:
+		return {"ok": false, "reason": "inconsistent_battle_end"}
+	# Everything that can fail is above. These assignments cannot execute game code.
+	reset_from_ticket(ticket)
+	units.assign(saved.units.duplicate(true))
+	events.assign(saved.events.duplicate(true))
+	rng.state = saved.rng_state
+	elapsed = saved.elapsed
+	order = saved.order
+	ended = saved.ended
+	result = saved.result
+	player_move = saved.player_move
+	player_aim = saved.player_aim
+	cooldowns = saved.cooldowns.duplicate(true)
+	damage_dealt = saved.damage_dealt
+	return {"ok": true}
+
+func _save_direction(value: Variant) -> bool:
+	return value is Vector2 and value.is_finite() and value.length_squared() <= 1.00001
+
+func _save_event_valid(event: Variant, count: int) -> bool:
+	var schema := preload("res://scripts/campaign_schema.gd")
+	if not event is Dictionary or not event.get("type") is String or (event.has("name") and not event.name is String) or not event.get("pos") is Vector2 or not event.pos.is_finite():
+		return false
+	match event.get("type"):
+		"order":
+			return schema.keys(event, ["type", "name", "pos"]) and event.name in ["follow", "attack", "retreat"]
+		"death":
+			return schema.keys(event, ["type", "id", "pos"]) and schema.integer(event.id, 0, count - 1)
+		"skill":
+			return schema.keys(event, ["type", "name", "pos", "facing"]) and cooldowns.has(event.name) and _save_direction(event.facing)
+	return false

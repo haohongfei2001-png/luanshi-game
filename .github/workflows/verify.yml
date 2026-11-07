@@ -62,6 +62,15 @@ jobs:
           test -s artifacts/campaign-battle-proof.png
           grep -q CAMPAIGN_SMOKE_PASS artifacts/campaign-visual.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/campaign-visual.log; then exit 1; fi
+      - name: Exercise actual save and checkpoint interface
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/campaign_save_visual.gd 2>&1 | tee artifacts/save-visual.log
+          for image in save-slots life-checkpoints battle-load saved-result; do test -s "artifacts/$image-proof.png"; done
+          grep -q CAMPAIGN_SAVE_VISUAL_PASS artifacts/save-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/save-visual.log; then exit 1; fi
       - name: Build macOS and verify exported Linux game
         run: ./tools/export.sh
       - name: Upload macOS playable
@@ -104,12 +113,18 @@ jobs:
           APP=$(find package/unpacked -maxdepth 1 -name '*.app' -print -quit)
           codesign --verify --deep --strict --verbose=2 "$APP" 2>&1 | tee mac-evidence/codesign.log
           BIN=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Contents/Info.plist")
-          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --smoke-scene 2>&1 | tee mac-evidence/runtime.log
+          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --smoke-scene --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/runtime.log
           grep -q SCENE_SMOKE_PASS mac-evidence/runtime.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/runtime.log; then exit 1; fi
-          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --campaign-smoke 2>&1 | tee mac-evidence/campaign.log
+          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --campaign-smoke --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/campaign.log
           grep -q CAMPAIGN_SMOKE_PASS mac-evidence/campaign.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/campaign.log; then exit 1; fi
+          for phase in prepare resume; do
+            "$APP/Contents/MacOS/$BIN" --headless -- --persistence-smoke-$phase --persistence-smoke-id="native_${GITHUB_RUN_ID}" 2>&1 | tee "mac-evidence/persistence-$phase.log"
+          done
+          grep -q PERSISTENCE_SMOKE_PREPARE_PASS mac-evidence/persistence-prepare.log
+          grep -q PERSISTENCE_SMOKE_RESUME_PASS mac-evidence/persistence-resume.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/persistence-*.log; then exit 1; fi
       - name: Upload native macOS evidence
         if: always()
         uses: actions/upload-artifact@v4
