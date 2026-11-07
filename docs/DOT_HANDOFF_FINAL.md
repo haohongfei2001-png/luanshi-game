@@ -10,7 +10,7 @@
 3. **docs/NARRATIVE_ART_DIRECTION.md**：叙事和克制写实的小人美术执行标准。
 4. **docs/ACCEPTANCE_MATRIX.md**：每项功能的可观察验收与真实测试证据。
 5. **docs/DOT_HANDOFF_FINAL.md**：本协议的自主执行与交接机制。
-按实际阶段查阅：docs/DELIVERY_PLAN.md、docs/FINAL_VISION_ACCEPTANCE.md、docs/PROJECT_STATUS.md（原型分支有最新状态）、AGENTS.md。早期的 GAME_VISION.md / PRO_DESIGN_BIBLE.md 作为背景，出现冲突以以上正式文本为准。
+**进入 G2 世界模型前**，先阅读 docs/SIMULATION_CONTRACTS.md，实施权威世界状态、战斗事务和延时情报。按实际阶段查阅：docs/DELIVERY_PLAN.md、docs/FINAL_VISION_ACCEPTANCE.md、docs/PROJECT_STATUS.md（原型分支有最新状态）、AGENTS.md。早期的 GAME_VISION.md / PRO_DESIGN_BIBLE.md 作为背景，出现冲突以以上正式文本为准。
 
 这些文档已经覆盖了用户需要作出的**普通产品选择**。不得再向用户反复询问操作方式、美术风格、战斗/统军/世界模拟优先级、失败难度、是否要继续下一阶段或怎么写代码。
 
@@ -56,7 +56,7 @@
 - 留下当前运行中的证据与续接状态，避免因无法开启云图形窗口就永久停滞。可以继续数据侧验证与导出，必要时提供简单 Web 可玩/视频证据（不能替代 Mac 真机性能）。
 
 ### D1 — 三城离屏世界模型
-- 统一时间、城池、人口、粮食/武器库存、军队位置、围城、行军、信使/延迟情报；分离玩家已知与真实状态。
+- 按 docs/SIMULATION_CONTRACTS.md 的模块职责和数据不变量实现统一时间、城池、人口、粮食/武器库存、军队位置、围城、行军、信使/延迟情报；分离玩家已知与真实状态。
 - 通过 ECO-01..04、WRL-01..04 的确定性测试；三种明确的安平救援不同结果，防止“剧情只看进入关卡触发”。
 - 当前战斗模块从权威世界取实际兵员并回写**一次**伤亡、装备与战利品；不要维持两套可矛盾的真相。
 
