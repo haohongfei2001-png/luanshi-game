@@ -2,7 +2,7 @@ class_name WorldSimulation
 extends RefCounted
 ## Authoritative seconds clock with integer economic accrual. Presentation uses player_view().
 
-const VERSION := 4
+const VERSION := 5
 const Condition := preload("res://data/condition_rules.gd")
 const CONDITION_RULES := Condition.RULES
 const Economy := preload("res://data/economy_rules.gd")
@@ -54,6 +54,9 @@ func reset(seed_value: int = 184) -> void:
 		"convoys": [], "next_convoy": 1,
 	}
 	_state["initial_totals"] = totals()
+	_state["initial_force_roster"] = {}
+	for id in _state.cities.keys() + _state.armies.keys():
+		_state.initial_force_roster[id] = _entity(id).soldiers
 	# This is an old observation, not a live view of the besieged city.
 	_queue_report("anping", "安平求援使者", -72, 0, {"owner": "sheng", "under_siege": true})
 	_deliver_reports()
@@ -92,7 +95,7 @@ func player_view() -> Dictionary:
 		local_city.erase("condition")
 	var own_army: Dictionary = _state.armies.relief.duplicate(true)
 	own_army.condition.merge(_condition_summary("relief"))
-	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "army": own_army, "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
+	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "last_battle_id": last_committed_battle_id(), "army": own_army, "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
 
 func march(route_id: String) -> bool:
 	if _state.campaign_ended or _state.battle_locks.has("relief") or not ROUTES.has(route_id):
@@ -447,6 +450,11 @@ func _lose_troops(entity: Dictionary, count: int, cause: String = "combat") -> v
 	entity.weapons -= weapons
 	_state.ledger.dead += lost
 	_state.ledger.weapons_destroyed += weapons
+	if lost > 0:
+		for entity_id in _state.cities.keys() + _state.armies.keys():
+			if is_same(entity, _entity(entity_id)):
+				_event("troops_lost", {"entity": entity_id, "dead": lost, "weapons_destroyed": weapons, "cause": cause})
+				break
 	# Aggregate losses take ordinary soldiers first. The last actual relief person
 	# is the commander; their removal cannot leave an immortal phantom character.
 	if is_same(entity, _state.armies.relief) and entity.soldiers == 0 and _state.commander.alive:
@@ -457,10 +465,11 @@ func _lose_troops(entity: Dictionary, count: int, cause: String = "combat") -> v
 
 func _capture(city_id: String, owner: String) -> void:
 	var city: Dictionary = _state.cities[city_id]
-	_state.ledger.prisoners += city.soldiers
+	var prisoners: int = city.soldiers
+	_state.ledger.prisoners += prisoners
 	city.soldiers = 0
 	city.owner = owner
-	_event("city_captured", {"city": city_id, "owner": owner})
+	_event("city_captured", {"city": city_id, "owner": owner, "prisoners": prisoners})
 	_queue_report(city_id, "逃出城的信使", _state.hour, _state.hour + 12, {"owner": owner, "under_siege": false})
 
 func _end_siege(outcome: String) -> void:
@@ -888,3 +897,186 @@ func _unlock_battle(battle_id: String) -> void:
 
 func _reject(reason: String) -> Dictionary:
 	return {"ok": false, "reason": reason}
+
+
+func export_campaign_state() -> Dictionary:
+	## Includes unsynchronized/finished-but-uncommitted sessions without advancing time.
+	var sessions := {}
+	for id in _battle_sessions:
+		sessions[id] = _battle_sessions[id].export_campaign_state()
+	return {"world": snapshot(), "battle_sessions": sessions,
+		"generation_highwater": _campaign_generation}
+
+func restore_campaign_state(saved: Variant) -> Dictionary:
+	## Closed shape validation precedes all domain arithmetic and session rebuilding.
+	## Swap the complete graph only after every check; invalid input leaves self intact.
+	var schema := preload("res://scripts/campaign_schema.gd")
+	if not schema.keys(saved, ["world", "battle_sessions", "generation_highwater"]) or not schema.world(saved.world, VERSION) or not schema.dictionary(saved.battle_sessions, 1) or not schema.integer(saved.generation_highwater, saved.world.campaign_generation, schema.MAX_ID):
+		return _reject("invalid_campaign_shape")
+	# Also reject non-finite/unsupported nested log values on the in-memory API.
+	var primitive_check := preload("res://scripts/campaign_value_codec.gd").new().encode(saved)
+	if not primitive_check.ok:
+		return _reject(primitive_check.reason)
+	var candidate := WorldSimulation.new()
+	candidate._state = saved.world.duplicate(true)
+	candidate._campaign_generation = saved.generation_highwater
+	var errors := candidate._save_causal_errors()
+	if not errors.is_empty():
+		return {"ok": false, "reason": "invalid_campaign_causality", "errors": errors}
+	for id in saved.battle_sessions:
+		if not candidate._state.battle_tickets.has(id) or candidate._state.battle_tickets[id].status != "running":
+			return _reject("orphan_battle_session")
+		var simulation := Battle.new()
+		var restored := simulation.restore_campaign_state(saved.battle_sessions[id], candidate._state.battle_tickets[id])
+		if not restored.ok:
+			return restored
+		candidate._battle_sessions[id] = simulation
+	for id in candidate._state.battle_tickets:
+		var ticket: Dictionary = candidate._state.battle_tickets[id]
+		if ticket.status == "running" and not candidate._battle_sessions.has(id):
+			return _reject("missing_battle_session")
+		if ticket.status == "running" and candidate._battle_sessions[id].ended:
+			var validation := candidate.validate_battle_outcome(candidate._battle_sessions[id].outcome())
+			if not validation.ok:
+				return validation
+	_state = candidate._state
+	_battle_sessions = candidate._battle_sessions
+	# A rollback does not reuse a generation already issued by this live authority.
+	_campaign_generation = maxi(_campaign_generation, candidate._campaign_generation)
+	return {"ok": true}
+
+func is_current_battle(battle_id: String, simulation: BattleSimulation) -> bool:
+	## Presentation adapters retained across a successful load are stale capabilities.
+	return simulation != null and _battle_sessions.get(battle_id) == simulation
+
+func _save_causal_errors() -> Array[String]:
+	var errors: Array[String] = []
+	var schema := preload("res://scripts/campaign_schema.gd")
+	if _state.hour != floori(_state.time_seconds / 3600.0):
+		errors.append("clock mismatch")
+	if _state.siege.active != (_state.siege.outcome == "ongoing"):
+		errors.append("siege status mismatch")
+	for army in _state.armies.values():
+		if not army.march.is_empty():
+			var route: Dictionary = ROUTES[army.march.route]
+			if army.march.destination not in [route.from, route.to] or army.march.arrives_at_seconds <= _state.time_seconds or army.march.arrives_at != ceili(army.march.arrives_at_seconds / 3600.0):
+				errors.append("invalid march timing or route")
+	var report_ids := {}
+	for report in _state.pending_reports + _state.reports:
+		if report_ids.has(report.id) or report.id >= _state.next_report:
+			errors.append("invalid report identity")
+		report_ids[report.id] = true
+		if report.observed_at_seconds > _state.time_seconds or report.observed_at_seconds > report.arrives_at_seconds or report.observed_at != floori(report.observed_at_seconds / 3600.0) or report.arrives_at != ceili(report.arrives_at_seconds / 3600.0):
+			errors.append("invalid report observation")
+	for report in _state.pending_reports:
+		if report.arrives_at_seconds <= _state.time_seconds or report.reported_at != -1 or report.reported_at_seconds != -1.0:
+			errors.append("pending report already due or known")
+	var last_report := 0
+	for report in _state.reports:
+		if report.id <= last_report or report.reported_at_seconds < report.arrives_at_seconds or report.reported_at_seconds > _state.time_seconds or report.reported_at != floori(report.reported_at_seconds / 3600.0):
+			errors.append("invalid delivered report")
+		last_report = report.id
+	var convoy_ids := {}
+	for convoy in _state.convoys:
+		if convoy_ids.has(convoy.id) or convoy.id >= _state.next_convoy or convoy.departed_at > _state.hour or convoy.arrives_at <= _state.hour or convoy.arrives_at <= convoy.departed_at or convoy.returning != (convoy.destination == "hequ"):
+			errors.append("invalid convoy identity or timing")
+		convoy_ids[convoy.id] = true
+	var last_time := -1.0
+	for event in _state.events:
+		if event.time_seconds < last_time or event.time_seconds > _state.time_seconds or event.hour != floori(event.time_seconds / 3600.0):
+			errors.append("event chronology mismatch")
+		last_time = event.time_seconds
+	var expected_locks := {}
+	for id in _state.battle_tickets:
+		var ticket: Dictionary = _state.battle_tickets[id]
+		var parts: PackedStringArray = id.split(":")
+		if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
+			errors.append("invalid battle identity")
+			continue
+		var serial := parts[1].to_int()
+		if id != "%d:%d" % [_state.campaign_generation, serial] or serial < 1 or serial >= _state.next_battle or ticket.battle_id != id or ticket.time > _state.time_seconds or ticket.tactical_seed != int(_state.seed) + serial * 7919:
+			errors.append("stale or inconsistent battle identity")
+		for team in range(2):
+			for slot in range(ticket.reserved_roster_snapshot[team].size()):
+				var entry: Dictionary = ticket.reserved_roster_snapshot[team][slot]
+				var expected := "commander" if entry.hero else "%s:%s:%d" % [id, entry.force_id, slot]
+				if entry.id != expected or not _valid_condition(entry.condition) or entry.condition_modifiers != _condition_modifiers(entry.condition):
+					errors.append("invalid reserved identity or condition")
+		if ticket.status in ["reserved", "running"]:
+			if not expected_locks.is_empty() or _state.campaign_ended:
+				errors.append("overlapping or ended battle")
+			for force in ticket.participating_force_ids:
+				expected_locks[force] = id
+				if _location(force) != ticket.location:
+					errors.append("reserved force moved")
+			if _state.time_seconds != ticket.time + ticket.elapsed_world_time or (ticket.status == "reserved" and ticket.elapsed_world_time != 0.0):
+				errors.append("battle clock mismatch")
+			if ticket.reserved_roster_snapshot[0][0].hp != _state.commander.hp:
+				errors.append("reserved commander mismatch")
+		elif ticket.status == "committed":
+			if not _save_committed_valid(ticket):
+				errors.append("invalid committed outcome or receipt")
+		elif ticket.elapsed_world_time != 0.0:
+			errors.append("cancelled battle elapsed")
+		if ticket.time + ticket.elapsed_world_time > _state.time_seconds:
+			errors.append("battle ahead of world")
+	if expected_locks != _state.battle_locks:
+		errors.append("battle locks mismatch")
+	# audit uses reservation references, so only call it after those links are safe.
+	if errors.is_empty():
+		errors.append_array(audit())
+	if errors.is_empty() and not _save_event_accounts_valid():
+		errors.append("event accounts contradict current world")
+	# Combined stock bounds make every conservation sum safe in signed int64.
+	for field in ["soldiers", "civilian_population"]:
+		if _state.initial_totals[field] > 5 * schema.MAX_PEOPLE:
+			errors.append("initial manpower exceeds supported range")
+	return errors
+
+func _save_committed_valid(ticket: Dictionary) -> bool:
+	var outcome: Dictionary = ticket.outcome
+	var receipt: Dictionary = ticket.receipt
+	if outcome.battle_id != ticket.battle_id or outcome.elapsed_world_time != ticket.elapsed_world_time or outcome.player_alive != (outcome.player_hp > 0.0) or (outcome.result == "commander_dead") == outcome.player_alive:
+		return false
+	for team in range(2):
+		var force: Dictionary = outcome.forces[team]
+		var roster: Array = ticket.reserved_roster_snapshot[team]
+		if force.force_id != ticket.participating_force_ids[team] or not force.wounded.is_empty() or not force.missing.is_empty() or not force.captured.is_empty() or force.surviving_ids.size() + force.dead_ids.size() != roster.size():
+			return false
+		var ids := {}
+		var dead_weapons := 0
+		for entry in roster:
+			var alive: bool = entry.id in force.surviving_ids
+			var dead: bool = entry.id in force.dead_ids
+			if alive == dead:
+				return false
+			ids[entry.id] = true
+			if dead and entry.weapon != "":
+				dead_weapons += 1
+		for id in force.surviving_ids + force.dead_ids:
+			if not ids.erase(id):
+				return false
+		if force.recovered_equipment != (dead_weapons if outcome.result == "victory" else 0) or force.destroyed_equipment != (0 if outcome.result == "victory" else dead_weapons):
+			return false
+	if ("commander" in outcome.forces[0].surviving_ids) != outcome.player_alive or outcome.player_hp > ticket.reserved_roster_snapshot[0][0].hp or (outcome.result == "victory" and not outcome.forces[1].surviving_ids.is_empty()):
+		return false
+	if outcome.spoils.weapons != outcome.forces[1].recovered_equipment or outcome.retreat_positions != ({} if outcome.result == "victory" else {"relief": ticket.location}):
+		return false
+	return receipt == {"ok": true, "already_committed": false, "battle_id": ticket.battle_id,
+		"result": outcome.result, "depot_captured": receipt.depot_captured,
+		"campaign_ended": not outcome.player_alive, "elapsed_world_time": outcome.elapsed_world_time,
+		"spoils": outcome.spoils} and (not receipt.depot_captured or outcome.result == "victory")
+
+func last_committed_battle_id() -> String:
+	## Only the player's owned encounter. Cancelled/remote tickets are not exposed.
+	var latest := ""
+	var serial := 0
+	for id in _state.battle_tickets:
+		var ticket: Dictionary = _state.battle_tickets[id]
+		if ticket.status == "committed" and "relief" in ticket.participating_force_ids and id.get_slice(":", 1).to_int() > serial:
+			latest = id
+			serial = id.get_slice(":", 1).to_int()
+	return latest
+
+func _save_event_accounts_valid() -> bool:
+	return preload("res://scripts/campaign_event_audit.gd").validate(_state)

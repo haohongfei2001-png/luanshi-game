@@ -1,0 +1,124 @@
+class_name CampaignValueCodec
+extends RefCounted
+## Closed primitive codec. No Variant/object deserialization or resource loading.
+## Decimal int64 strings and IEEE-754 bytes avoid JSON's lossy number conversion.
+
+const MAX_DEPTH := 40
+const MAX_NODES := 4000000
+const MAX_COLLECTION := 250000
+const MAX_STRING := 8192
+var _nodes := 0
+var error := ""
+
+func encode(value: Variant) -> Dictionary:
+	_nodes = 0
+	error = ""
+	var encoded: Variant = _encode(value, 0)
+	return {"ok": error.is_empty(), "value": encoded, "reason": error}
+
+func decode(value: Variant) -> Dictionary:
+	_nodes = 0
+	error = ""
+	var decoded: Variant = _decode(value, 0)
+	return {"ok": error.is_empty(), "value": decoded, "reason": error}
+
+func _budget(depth: int) -> bool:
+	_nodes += 1
+	if depth > MAX_DEPTH or _nodes > MAX_NODES:
+		error = "state_complexity_limit"
+	return error.is_empty()
+
+func _float_hex(value: float) -> String:
+	var bytes := PackedByteArray()
+	bytes.resize(8)
+	bytes.encode_double(0, value)
+	return bytes.hex_encode()
+
+func _encode(value: Variant, depth: int) -> Variant:
+	if not _budget(depth):
+		return null
+	match typeof(value):
+		TYPE_NIL, TYPE_BOOL:
+			return value
+		TYPE_STRING:
+			if value.length() <= MAX_STRING:
+				return value
+		TYPE_INT:
+			return ["i", str(value)]
+		TYPE_FLOAT:
+			if is_finite(value):
+				return ["f", _float_hex(value)]
+		TYPE_VECTOR2:
+			if value.is_finite():
+				return ["v", _float_hex(value.x), _float_hex(value.y)]
+		TYPE_ARRAY:
+			if value.size() <= MAX_COLLECTION:
+				var items: Array = []
+				for item in value:
+					items.append(_encode(item, depth + 1))
+				return ["a", items]
+		TYPE_DICTIONARY:
+			if value.size() <= MAX_COLLECTION:
+				var pairs: Array = []
+				for key in value:
+					if (not key is String and not key is StringName) or str(key).length() > MAX_STRING:
+						error = "invalid_dictionary_key"
+						return null
+					pairs.append([str(key), _encode(value[key], depth + 1)])
+				return ["d", pairs]
+	error = "unsupported_or_invalid_value"
+	return null
+
+func _decode(value: Variant, depth: int) -> Variant:
+	if not _budget(depth):
+		return null
+	if value == null or value is bool:
+		return value
+	if value is String and value.length() <= MAX_STRING:
+		return value
+	if not value is Array or value.size() < 2 or not value[0] is String:
+		error = "invalid_encoded_value"
+		return null
+	var tag: String = value[0]
+	if tag == "v" and value.size() == 3:
+		var x := _decode_float(value[1])
+		var y := _decode_float(value[2])
+		var vector := Vector2(x, y)
+		if not vector.is_finite():
+			error = "invalid_vector"
+		return vector
+	if value.size() != 2:
+		error = "invalid_encoded_arity"
+		return null
+	var body: Variant = value[1]
+	if tag == "i" and body is String and body.length() <= 20 and body.is_valid_int():
+		var integer: int = body.to_int()
+		if str(integer) == body:
+			return integer
+	elif tag == "f":
+		return _decode_float(body)
+	elif tag in ["a", "d"] and body is Array and body.size() <= MAX_COLLECTION:
+		if tag == "a":
+			var items: Array = []
+			for item in body:
+				items.append(_decode(item, depth + 1))
+			return items
+		var result: Dictionary = {}
+		for pair in body:
+			if not pair is Array or pair.size() != 2 or not pair[0] is String or pair[0].length() > MAX_STRING or result.has(pair[0]):
+				error = "invalid_or_duplicate_dictionary_key"
+				return null
+			result[pair[0]] = _decode(pair[1], depth + 1)
+		return result
+	error = "invalid_encoded_value"
+	return null
+
+func _decode_float(value: Variant) -> float:
+	if value is String and value.length() == 16 and value.to_lower() == value and value.is_valid_hex_number(false):
+		var bytes: PackedByteArray = value.hex_decode()
+		if bytes.size() == 8:
+			var number := bytes.decode_double(0)
+			if is_finite(number):
+				return number
+	error = "invalid_float"
+	return 0.0
