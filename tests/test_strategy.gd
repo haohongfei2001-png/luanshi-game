@@ -67,14 +67,14 @@ func _run() -> void:
 	check(ui.economy_label.visible and ui.economy_label.text.contains("20 civilians (garrison excluded) | 10 workers | stability 100/100"), "local civilian population and labor are distinct from military roster")
 	check(ui.economy_label.text.contains("8 farmers / 8 land slots | 2 crafters / 2 workshop slots"), "local economy shows actual allocated labor and capacity")
 	check(ui.economy_label.text.contains("2880 food + 30 weapons / 30-day month") and ui.economy_label.text.contains("Civilian food need: 2 / hour"), "local output and civilian upkeep use the projected rates and units")
-	check(ui.economy_label.text.contains("accrues hourly") and ui.economy_label.text.contains("not final historical scale"), "UI distinguishes rate accrual and provisional compressed population from a final economy")
+	check(ui.economy_label.text.split("\n").size() == 3, "normal economy panel contains only three essential lines")
 	test_economy_formatting()
 	check(ui.view.known.anping.observed_at == -72 and not ui.view.known.has("hequ"), "old Anping intel and unknown Hequ retained")
 	check(ui.reports_label.text.contains("observed h-72 / delivered h0") and ui.reports_label.text.contains("Anping relief messenger"), "report provenance and both timestamps visible in English")
 	await process_frame
 	await process_frame
 	check(ui.map.size.y >= 190.0 and ui.buttons.wait1.size.y >= 38.0, "economy panel preserves map and action-button sizes")
-	check(not ui.scroll.get_h_scroll_bar().visible, "1280-wide campaign panel does not require horizontal scrolling")
+	check(not ui.scroll.get_h_scroll_bar().visible and not ui.scroll.get_v_scroll_bar().visible and ui.scroll.get_global_rect().encloses(ui.buttons.reset.get_global_rect()), "initial 1280x800 campaign fully fits including reset without scrolling")
 	await click("food")
 	check(ui.view.army.food == 180 and ui.view.local_city.food == 440, "food button transfers real stocks")
 	await click("weapons")

@@ -201,9 +201,6 @@ func _economy_text(city: Dictionary) -> String:
 	]
 	if plan.besieged:
 		lines.append("Under siege: production halted; civilians still need food.")
-	else:
-		lines.append("Production accrues hourly at current labor and stability; this is not an instant harvest.")
-	lines.append("Compressed prototype population and rates; not final historical scale.")
 	return "\n".join(lines)
 
 func _rate_text(numerator: int, denominator: int) -> String:
