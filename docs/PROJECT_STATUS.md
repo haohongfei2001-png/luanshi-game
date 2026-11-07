@@ -7,8 +7,8 @@ Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using th
 ## Current branch and source
 
 - Working branch: `prototype/cloud-first-playable`, PR #1.
-- First playable: `98576db`; exports/scene tests: `5426efa`; camera/input/visual-CI repair: `8109761`; design merge: `7d8ea81`; supported native macOS runner: `bf2052f`.
-- Main design contracts through `65a46ce` are merged into this branch, retaining code and resolving only the README status paragraph in favor of the more recent factual implementation record.
+- First playable: `98576db`; exports/scene tests: `5426efa`; camera/input/visual-CI repair: `8109761`; design merge: `7d8ea81`; supported native macOS runner: `bf2052f`; WorldSim foundation: `50dc3be` (CI 42417682607 passed both jobs).
+- Main design contracts through `69f309b` are merged into this branch, retaining code and resolving only the README status paragraph in favor of the more recent factual implementation record.
 - Primary work directory: repository root. Commands: `./tools/test.sh`, `./tools/export.sh` with matching Godot 4.6.3 templates.
 
 ## Passed and pending
@@ -32,3 +32,16 @@ Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using th
 At each wake, first fetch current GitHub state and read this file plus latest `AGENTS.md` and design contracts. Check active work, uncommitted changes, PR head and exact-commit CI before starting another worker. Continue the smallest unfinished milestone. Run tests, commit verified changes and record concrete results. Do not blindly re-run an uncertain publication or overwrite concurrent design edits. If a tool/session limit stops work, commit safe progress and leave the exact next command and blocker here. Routine user review is optional and does not halt development.
 
 This repository preserves resumable state; it cannot guarantee uninterrupted compute or remove platform limits. The parent conversation owns any supported scheduled continuation.
+
+## Current final-spec acceptance alignment
+
+Canonical design authority is now PRODUCT_DECISIONS v2 → FINAL_GAME_DESIGN_SPEC → NARRATIVE_ART_DIRECTION / ACCEPTANCE_MATRIX → DOT_HANDOFF_FINAL. The new main documents were merged without replacing implementation. Three equal pillars, WASD/mouse controls, restrained realism and hard-but-fair outcomes are preserved.
+
+- COM-01..05 / TECH-01..02: automated and rendered evidence exists; manual gameplay quality remains pending, not owner-approved.
+- ECO-01: state-level weapon scarcity/transfer tests passed; world-sourced visible unarmed units still pending integration.
+- ECO-02 / WRL-01..04 / FAIR-01: tested inventory transport, off-screen state and causal scenarios; timings currently use a compressed hourly test scenario.
+- ECO-03: PARTIAL. Production is ledgered but fixed-rate; population/land-dependent production and multi-month coverage remain next work.
+- ECO-04: PARTIAL. Hunger clocks and eventual attrition exist; explicit fatigue/morale warning stages remain next work.
+- WRL-07 / TECH-03: NOT RUN. Exactly-once real army/battle settlement is not yet implemented.
+- G2 is therefore a tested foundation, not a claim that all final-matrix G2 acceptance is complete.
+- Strategic sandbox UI is currently being implemented in the same working branch; it must label its temporary independence from the battle state and must not reset or overwrite battle casualties.

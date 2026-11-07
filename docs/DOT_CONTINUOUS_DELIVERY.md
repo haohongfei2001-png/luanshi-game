@@ -1,4 +1,6 @@
-# Dot 持续自主开发协议 v1
+# Dot 持续自主开发协议（历史背景，已由 DOT_HANDOFF_FINAL.md 更新）
+
+**请以 PRODUCT_DECISIONS.md、FINAL_GAME_DESIGN_SPEC.md、NARRATIVE_ART_DIRECTION.md、ACCEPTANCE_MATRIX.md、DOT_HANDOFF_FINAL.md 为当前权威来源。本文件保留以供历史参考，若冲突以上述最新文件为准。**
 
 目的：让 Dot 从当前 GitHub 原型继续工作，不反复要求所有者讨论正常设计/技术细节，直到完成具有完整玩法与结局的 Mac 单机游戏。**这是一项长期目标，不代表保证无限自主运行，也不免除产品平台的权限/额度/暂停限制。**
 
