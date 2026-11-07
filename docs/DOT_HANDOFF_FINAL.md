@@ -8,12 +8,12 @@
 **用户已在 2026-11-08 正式回答 OWNER-01 至 OWNER-09；docs/OWNER_CREATIVE_DECISIONS_PENDING.md 已更新为“全部答复的历史索引”。完整 LOCKED 约束以 docs/PRODUCT_DECISIONS.md 1B 为准，不再逐项询问。**
 1. **docs/PRODUCT_DECISIONS.md**：用户锁定决策与保留审批事项，最高优先级。
 2. **docs/FINAL_GAME_DESIGN_SPEC.md**：正式玩法与系统架构，包含 WASD + 鼠标瞄准 + 快捷键、三个等权重支柱、困难公平。
-3. **docs/NARRATIVE_ART_DIRECTION.md**：叙事和克制写实的小人美术执行标准。
+3. **docs/NARRATIVE_ART_DIRECTION.md**：叙事和克制写实的小人美术执行标准。**另读 docs/NARRATIVE_WORLD_BIBLE_V0_2.md：这是最新唐末式政治、俘虏/归国与好友分歧叙事提案，必须区别用户已确定方向和仍需作者审定的重要人物剧情。**
 4. **docs/ACCEPTANCE_MATRIX.md**：每项功能的可观察验收与真实测试证据。
 5. **docs/DOT_HANDOFF_FINAL.md**：本协议的自主执行与交接机制。
 **进入 G2 世界模型前**，先阅读 docs/SIMULATION_CONTRACTS.md，实施权威世界状态、战斗事务和延时情报。按实际阶段查阅：docs/DELIVERY_PLAN.md、docs/FINAL_VISION_ACCEPTANCE.md、docs/PROJECT_STATUS.md（原型分支有最新状态）、AGENTS.md。早期的 GAME_VISION.md / PRO_DESIGN_BIBLE.md 作为背景，出现冲突以以上正式文本为准。
 
-这些文档已覆盖目前能够通过文字决定的主要产品与创作方向，包括身份/政治尝试、早期一敌二及后期高伤害但有限血量、可拦截的令旗/传令兵、时间主要随行军/休养/等待和剧情推进、东汉末至魏晋参照、自由存档、战争时代无法逃避、重大剧情节点可能改变等。**不要再向用户重复询问这九项，也不要擅自改为无双式无敌或固定必败史诗。** 真实画面手感、Mac 设备性能与最终审美接受度必须由可玩成果验证，而非凭文档声称已验收。
+这些文档已覆盖目前能够通过文字决定的主要产品与创作方向，包括身份/政治尝试、早期一敌二及后期高伤害但有限血量、可拦截的令旗/传令兵、时间主要随行军/休养/等待和剧情推进、**现改为中晚唐/唐末政治及唐蕃战争合成参照**、自由存档、战争时代无法逃避、重大剧情节点可能改变等。**不要再向用户重复询问这九项，也不要擅自改为无双式无敌或固定必败史诗。** 真实画面手感、Mac 设备性能与最终审美接受度必须由可玩成果验证，而非凭文档声称已验收。
 
 ## 2. 职责划分和独立程度
 
