@@ -13,10 +13,23 @@ func check(condition: bool, description: String) -> void:
 		push_error(description)
 
 func action(scene: Node, name: String) -> void:
-	var event := InputEventAction.new()
-	event.action = name
+	var keys := {"pause_battle": KEY_P, "guard": KEY_SPACE, "restart_battle": KEY_R}
+	var event := InputEventKey.new()
+	event.physical_keycode = keys[name]
+	event.keycode = keys[name]
 	event.pressed = true
-	scene._unhandled_input(event)
+	scene.get_viewport().push_input(event, true)
+	event.pressed = false
+	scene.get_viewport().push_input(event, true)
+
+func click_button(scene: Node, name: String) -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.position = scene.hud.buttons[name].get_global_rect().get_center()
+	event.pressed = true
+	scene.get_viewport().push_input(event, true)
+	event.pressed = false
+	scene.get_viewport().push_input(event, true)
 
 func _run() -> void:
 	var scene: Node = load("res://scenes/battle.tscn").instantiate()
@@ -27,6 +40,11 @@ func _run() -> void:
 	check(scene.hud.buttons.size() == 7, "all skill and order buttons connected")
 	for name in ["attack", "sweep", "lunge", "guard", "order_attack", "order_follow", "order_retreat"]:
 		check(InputMap.has_action(name), "input action exists: " + name)
+	for x in [-31.0, 31.0]:
+		for z in [-19.0, 19.0]:
+			for height in [0.0, 2.1]:
+				var pixel: Vector2 = scene.camera.unproject_position(Vector3(x, height, z))
+				check(scene.hud.is_world_pointer(pixel), "entire walkable field and unit heads remain outside HUD")
 	var pos: Vector2 = scene.sim.player().pos
 	Input.action_press("move_right")
 	for i in range(15):
@@ -38,16 +56,18 @@ func _run() -> void:
 	for i in range(10):
 		await physics_frame
 	check(scene.sim.elapsed == elapsed, "pause freezes authoritative state")
-	scene.hud.buttons.sweep.pressed.emit()
+	click_button(scene, "sweep")
 	check(scene.sim.cooldowns.sweep == 0.0, "paused UI cannot cast a skill")
 	action(scene, "pause_battle")
 	action(scene, "guard")
 	check(scene.sim.player().guard > 0.0, "mapped guard key activates skill")
-	scene.hud.buttons.order_attack.pressed.emit()
+	await physics_frame
+	await process_frame
+	click_button(scene, "order_attack")
 	check(scene.sim.order == "attack", "attack button reaches simulation")
-	scene.hud.buttons.order_follow.pressed.emit()
+	click_button(scene, "order_follow")
 	check(scene.sim.order == "follow", "follow button reaches simulation")
-	scene.hud.buttons.order_retreat.pressed.emit()
+	click_button(scene, "order_retreat")
 	check(scene.sim.order == "retreat", "retreat button reaches simulation")
 	await process_frame
 	var buttons: Array = scene.hud.buttons.values()

@@ -18,6 +18,9 @@ var cursor: MeshInstance3D
 var effects: Array[Dictionary] = []
 var capture_pending := false
 var capture_complete := false
+var frame_samples_ms: Array[float] = []
+var last_frame_usec := 0
+var rendered_frames := 0
 
 func _ready() -> void:
 	InputActions.install()
@@ -40,26 +43,26 @@ func _build_battlefield() -> void:
 	environment.environment.background_mode = Environment.BG_COLOR
 	environment.environment.background_color = Color("7e9089")
 	environment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.environment.ambient_light_color = Color("e3dfc9")
-	environment.environment.ambient_light_energy = 0.65
-	environment.environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	environment.environment.ambient_light_color = Color("ffffff")
+	environment.environment.ambient_light_energy = 0.30
+	environment.environment.tonemap_mode = Environment.TONE_MAPPER_LINEAR
 	add_child(environment)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-58, -28, 0)
-	sun.light_color = Color("ffebc5")
-	sun.light_energy = 1.6
+	sun.light_color = Color("fff2dc")
+	sun.light_energy = 0.75
 	sun.shadow_enabled = true
 	sun.directional_shadow_max_distance = 90
 	add_child(sun)
 	camera = Camera3D.new()
-	camera.position = Vector3(0, 46, 34)
+	camera.position = Vector3(0, 46, 36)
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 70.0
+	camera.size = 80.0
 	camera.near = 0.1
 	camera.far = 150
 	camera.keep_aspect = Camera3D.KEEP_WIDTH
 	add_child(camera)
-	camera.look_at(Vector3(0, 0, 0))
+	camera.look_at(Vector3(0, 0, 2))
 	camera.current = true
 	UnitView.add_box(self, Vector3(76, 0.5, 52), UnitView.material(Color("5d6850")), Vector3(0, -0.28, 0))
 	UnitView.add_box(self, Vector3(62, 0.04, 38), UnitView.material(Color("857959")), Vector3(0, -0.01, 0))
@@ -112,7 +115,12 @@ func _restart() -> void:
 	_sync_visuals(0.0)
 
 func _process(_delta: float) -> void:
-	if scene_smoke and "--capture-proof" in OS.get_cmdline_user_args() and smoke_steps >= 120 and not capture_pending:
+	var now := Time.get_ticks_usec()
+	if last_frame_usec > 0 and rendered_frames > 20:
+		frame_samples_ms.append(float(now - last_frame_usec) / 1000.0)
+	last_frame_usec = now
+	rendered_frames += 1
+	if scene_smoke and "--capture-proof" in OS.get_cmdline_user_args() and smoke_steps >= 280 and not capture_pending:
 		capture_pending = true
 		await RenderingServer.frame_post_draw
 		var snapshot := get_viewport().get_texture().get_image()
@@ -189,7 +197,7 @@ func _physics_process(delta: float) -> void:
 				push_error("Scene smoke did not produce its required visual evidence")
 				get_tree().quit(1)
 				return
-			print("SCENE_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report()}))
+			print("SCENE_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report(), "frame_timing": _frame_timing()}))
 			get_tree().quit(0)
 
 func _smoke_input() -> void:
@@ -230,3 +238,16 @@ func _sync_visuals(delta: float) -> void:
 		if effects[i].remaining <= 0.0:
 			effects[i].node.queue_free()
 			effects.remove_at(i)
+
+func _frame_timing() -> Dictionary:
+	if frame_samples_ms.is_empty():
+		return {}
+	var ordered := frame_samples_ms.duplicate()
+	ordered.sort()
+	var total := 0.0
+	for duration in ordered:
+		total += duration
+	return {"display": DisplayServer.get_name(), "device": RenderingServer.get_video_adapter_name(),
+		"sample_count": ordered.size(), "wall_mean_ms": total / ordered.size(),
+		"wall_p50_ms": ordered[int(ordered.size() * 0.5)],
+		"wall_p95_ms": ordered[mini(int(ordered.size() * 0.95), ordered.size() - 1)]}

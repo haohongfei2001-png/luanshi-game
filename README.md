@@ -28,7 +28,7 @@ Direct-cloud bootstrap: see [docs/DOT_BOOTSTRAP.md](docs/DOT_BOOTSTRAP.md). AI d
 
 ## Status
 
-Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 simulation and 27 scene/input assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 simulation and 35 scene/input assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
 
 ### Play from source
 

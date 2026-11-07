@@ -1,7 +1,7 @@
 name: Verify and package first playable
 on:
   push:
-    branches: [main, 'prototype/**']
+    branches: [main]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -36,7 +36,7 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
-          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --fixed-fps 60 -- --smoke-scene --capture-proof 2>&1 | tee artifacts/visual-smoke.log
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 -- --smoke-scene --capture-proof 2>&1 | tee artifacts/visual-smoke.log
           test -s artifacts/battle-proof.png
           grep -q SCENE_SMOKE_PASS artifacts/visual-smoke.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/visual-smoke.log; then exit 1; fi
