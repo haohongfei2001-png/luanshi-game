@@ -28,6 +28,13 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 - Keep commits small and purposeful; use branches and pull requests for major changes.
 - Do not represent an untested system as complete. Distinguish: written code, editor-loadable, successfully built, and gameplay-tested.
 
+## Reference test hardware
+
+- Primary local reference: **MacBook Air with Apple M5** (Apple Silicon, fanless). Do **not** assume a particular RAM configuration; the M5 Air exists in multiple memory and GPU configurations.
+- The first build must be playable on this Mac; verify arm64 macOS export and report whether it was tested on real hardware or only in an automated environment.
+- Benchmark 20-vs-20 first. Record frame rate and frame time during a sustained gameplay session; avoid high-cost effects and expensive per-unit AI/physics unless measured. Prefer conservative graphics and scalable settings due to the fanless chassis.
+- Keep input actions platform-independent for a later iPhone version. iOS export / signing requires a macOS machine with Xcode and suitable Apple credentials; don't commit credentials or claim iOS has been tested before device verification.
+
 ## Verification after each meaningful change
 
 - State the exact command and environment used to run any automated test or export.
