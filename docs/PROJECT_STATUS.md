@@ -1,80 +1,61 @@
 # Project status / resumable handoff
 
-## Current objective
+## Objective and current source
 
-Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using the existing Godot prototype. A first playable or first short campaign is not the full project. Preserve the last passing build; no paid services, extra accounts, user computer, Codex tasks or formal release without authorization.
+Continue the full single-player life, warfare and independent-world game. This is an ongoing project, not completion of the final vision. Preserve the existing Godot 4.6.3 game. Work only in the authorized cloud and existing public GitHub resources; no new costs, extra accounts, user computer, Codex tasks or formal release.
 
-## Current branch and source
+- Current accepted gameplay: **v0.6**, source `e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b`, merged in [PR7](https://github.com/haohongfei2001-png/luanshi-game/pull/7) as `465414d9c7adf2fb1fcf17a1a221d9da30e77dec`.
+- Latest design-only main `ebf89e1` is preserved in that merge. PRODUCT_DECISIONS v3.2 and NARRATIVE_LIFE_ARC_V0_3 take priority over the older Anping/captivity narrative proposals.
+- Current technical work: explicit early/late finite-HP profiles and preservation/migration of genuine v0.6 saves. A separate bounded native macOS graphical diagnostic is being prepared; its preparation is not a graphical pass.
+- Reproduction: matching official Godot 4.6.3 and export templates; `./tools/test.sh`, `./tools/export.sh`. Exact evidence is in VERIFICATION.md and docs/evidence. Read actual branch/PR/CI state before resuming.
 
-- Working branch: `feature/campaign-saves`, following merged PR #6 and proof commit (main `4d9c702`). The original playable/strategic foundation is preserved in `bfb028a`; real campaign transactions and their evidence in `0be9e51`.
-- First playable: `98576db`; exports/scene tests: `5426efa`; camera/input/visual-CI repair: `8109761`; design merge: `7d8ea81`; supported native macOS runner: `bf2052f`; WorldSim foundation: `50dc3be` (CI 42417682607 passed both jobs).
-- Main design contracts through `99d8ef0` are merged, including Tang-inspired political/material culture, live captivity, causal court/friend behavior and the explicit provisional status of major cast/story proposals. Existing code is preserved.
-- Primary work directory: repository root. Commands: `./tools/test.sh`, `./tools/export.sh` with matching Godot 4.6.3 templates.
+## Accepted current capabilities
 
-## Passed and pending
+- Original procedural3D isometric battle, WASD/mouse, basic attack, Q/E/Space skills and three local squad orders. Separate20 vs 20 training. Current v0.6 legacy360 HP hero remains a fixture, not approved early balance.
+- Three-city authoritative world with actual troops/equipment/food, travel, physical convoys, dated delayed reports and off-screen siege. Real battle locks20 of60 soldiers including the commander against15 actual depot defenders, leaving40 reserves. Casualties, equipment, clock, capture and physical retreat settle exactly once. Death ends the active life.
+- Population/labor-dependent agricultural and weapon production, integer accrual, distinct civilian/military meals. Ninety-day conservation is covered. Hunger warns before bounded attrition; full meals plus an entire safe stationary hour recover fatigue/morale. Battle/march/siege do not grant free rest.
+- Free named saves, F5/F9 quicksave/load, F6 panel, retained unique life checkpoints. Exact world numbers, RNG, full history, reports, movement, supplies, condition, reserved/running/pending/committed battles and receipts survive process restart. Training is separate. Loaded active fights reopen paused.
+- First real persistence format: envelope 1, World 5. Strict bounded primitive codec and causal validation; no arbitrary object/resource loading. Future schema changes require explicit preservation or migration and genuine old-save fixtures.
 
-- Passed current source: Godot4.6.3 import;6,691 functional assertions including current save UI and true two-process restoration, plus36 economy property scenarios,2,689 hunger oracle checks,5,321 wrong-type mutations and107 file/codec boundary checks. Both actual-combat source smokes pass. Current v0.6 graphical/export/native checks are separate pending stages; last verified playable is v0.5.
-- A real Ubuntu/Xvfb/llvmpipe render and screenshot were inspected. This exposed a HUD-covered field edge and excess brightness; corrected in `8109761`, repeated graphical CI passed in run 42418269168.
-- CI's first graphical run failed on absent audio hardware; the test-only Dummy audio fix passed.
-- Native macOS 26.7.2 arm64 CI and strict ad-hoc signature verification passed in run 42417350572. User M5 device performance, manual gameplay feel and owner approval remain unverified. No Developer ID signing/notarization or production release.
-- WorldSim foundation has causal scenarios, physical convoy conservation, delayed intelligence and 96h coverage. The M-key campaign now uses real reserved roster/equipment for depot combat, fractional time, persistent commander HP and in-process exactly-once settlement. Separate training is clearly labeled. Versioned save/load is implemented in the current feature branch, pending final graphical/native acceptance.
-- The 20v20 simulation remains O(n²); no large-army performance claim.
+## Latest verified artifact and tests
 
-## Next executable milestones
+[CI42425639702](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42425639702) passed both jobs for source `e86a1ad`. PR checkout/artifact suffix is `0b6dd7037ec40bc8fea5b2002fcd3a8c82a08fe4`, distinct from source head.
 
-1. v0.3 real roster/equipment, exact clock and once-only settlement: all 986 source/scene assertions and both actual-combat smoke runs pass. Source `0383e85` passed full CI run 42419804675: actual campaign launch/combat/retreat/map screenshots inspected, Linux exported runs, native macOS 26.7.2 arm64 training and campaign runs, strict ad-hoc signature. Local v0.3 macOS SHA256 `43661e6f89ae36f72dc73aaaac1bfac54fdf83b45779228846ceac80c0ecbc35`.
-2. v0.4 ECO-03 is merged in PR #4 / `ca3f21a`. Source `0c8e240` passed CI 42422010645: actual rendered local-economy controls inspected, Linux exports and native macOS arm64 headless training/campaign plus strict ad-hoc signature passed. See VERIFICATION.md. Last passing artifact remains available while ECO-04 is developed.
-3. v0.5 ECO-04 is merged in PR #6 / `4174e98`. Source `907fe31` passed CI 42423403245, including actual pre-loss shortage screenshot, Linux exports and native macOS headless dual-mode/signature checks. 337 condition assertions and 2,689 independent checks cover recovery/loss; UI has 94 assertions. The last passing v0.5 build is retained.
-4. v0.6 save core and actual UI now pass6,691 functional assertions,90-day full-history continuation,5,321 malformed-state cases and107 boundary cases. True two-process restore and cached receipt retry pass. Next: export/native process checks and four actual save UI screenshots, then retain build/merge. After that integrate explicit early/late100HP profiles and continue knowledge-driven NPC/courier and short narrative progression.
-5. Evaluate Mobile rendering on a supported graphical runner before claiming anything about iPhone/GPU performance. Do not optimize to unmeasured army sizes.
+- 6,691 functional assertions,5,321 malformed-type mutations,107 file/codec boundaries,36 economy property scenarios and2,689 independent condition checks pass. Separate prepare/resume processes preserve battle settlement;90 days/14,007 events plus day 91 continuation are intact.
+- Actual Ubuntu/Xvfb/llvmpipe images were inspected: named slots, life checkpoints, loaded paused fight, committed retreat result, and real campaign combat.1280×800 controls fit and remain readable. These are real rendered frames, not mockups.
+- Exact exported app ran on native macOS26.7.2 arm64 in headless training/campaign and two-process persistence modes. Strict ad-hoc signature passed. Native persistence ends at world 10829.075 with42 events, matching the expected result.
+- **Retained native-tested macOS ZIP SHA256:** `278daea3d44ccbbd6a98f36e2895f48df57121959b9bbf18352a28c3ea82956d`. This exact CI ZIP is the current playable in Space. CI Linux archive: `1c2ff114c60a194909e847e5c1de94ff3f02a918c7441eee43f13560d390661f`.
 
-## Continuation procedure
+## Next executable work
 
-At each wake, first fetch current GitHub state and read this file plus latest `AGENTS.md` and design contracts. Check active work, uncommitted changes, PR head and exact-commit CI before starting another worker. Continue the smallest unfinished milestone. Run tests, commit verified changes and record concrete results. Do not blindly re-run an uncertain publication or overwrite concurrent design edits. If a tool/session limit stops work, commit safe progress and leave the exact next command and blocker here. Routine user review is optional and does not halt development.
+1. Finish finite-HP early/late profile integration and full source/scene/render/export/native checks. Migrate real World 5 saves explicitly without clipping old360 HP characters, changing cooldowns/RNG or losing receipts. Keep v0.6 playable while validating.
+2. Complete the bounded, separately recorded native hosted-Mac window/renderer probe. It cannot prove M5 performance, human feel, Finder/Gatekeeper behavior or audio. If unavailable, record exact evidence and continue gameplay work.
+3. **First narrative slice:** age about 15 forced or voluntary enlistment, real first combat/earned merit, structurally unfair credit/reward, distinct endure/appeal/evidence/protect choices, actual first small-unit appointment, dangerous order, real casualties/retreat/replacements, persistent relationships and merit/army state. Use the existing world/battle/save authorities, not text-only branches or scripted squad wipes.
+4. Then genuine superior appreciation/exploitation, autonomous comrades, physically delayed messages/reinforcement/supply and an off-screen hometown chain. Rare captivity, long-term family/politics/succession follow later. Death never switches control to an heir.
 
-This repository preserves resumable state; it cannot guarantee uninterrupted compute or remove platform limits. The parent conversation owns any supported scheduled continuation.
+All major cast names and fixed imperial/romance/historical scripts remain provisional pending owner/Pro creative review. Ordinary characters, dialogue, side content and technical details can proceed autonomously. The Anping commander fixture is not the mandatory life opening.
 
-## Current final-spec acceptance alignment
+## Open acceptance and limits
 
-Canonical design authority is now PRODUCT_DECISIONS v3.1 → FINAL_GAME_DESIGN_SPEC → NARRATIVE_ART_DIRECTION / NARRATIVE_WORLD_BIBLE_V0_2 (proposals distinguished) / SIMULATION_CONTRACTS / ACCEPTANCE_MATRIX → DOT_HANDOFF_FINAL. The new main documents were merged without replacing implementation. Three equal pillars, WASD/mouse controls, restrained realism and hard-but-fair outcomes are preserved.
+- OWNER-COMBAT-01 is under implementation; current v0.6 does not meet early1-vs-2 balance. No earned progression system yet.
+- Current WRL-07/LIF-02/TECH-03 and OWNER-SAVE-01 evidence covers implemented systems and90 days, not unlimited lifetime or future NPC/story state.16 MiB file/128 MiB raw/4 million node bounds remain; long-history lossless compaction/segmentation is pending. Atomic rename is not a proven cross-platform power-loss fsync guarantee. Concurrent writes are last-writer-wins, not CAS.
+- Remote couriers/interception, autonomous named NPCs, age/life/career, narrative choices, long-term politics/family, multi-month activity flow and full-game acceptance remain incomplete. New NAR-YOUTH/SQUAD/COMMAND/ARC rows are NOT RUN.
+- Current live-battle condition penalties are entry snapshots. Populations/rates/timings are compressed provisional values.20 vs 20 simulation is O(n²); no large-army performance claim.
+- Linux software-render evidence and native Mac headless execution are distinct. User M5 sustained graphics/thermals/input feel remain NOT RUN. No Developer ID/notarization, iOS verification or formal release. Cloud display socket restrictions are not bypassed; graphical checks use existing standard CI.
+- Owner decision Issue3 and narrative Issue5 remain open until actual behavior is implemented, not merely because their documents were read.
 
-- COM-01..05 / TECH-01..02: automated and rendered evidence exists; manual gameplay quality remains pending, not owner-approved.
-- ECO-01: inventory scarcity/transfer and world-sourced visible unarmed units are implemented and regression-tested. Campaign 60 includes commander; 20 deploy with 10 weapons, 40 remain reserve.
-- ECO-02 / WRL-01..04 / FAIR-01: tested inventory transport, off-screen state and causal scenarios; timings currently use a compressed hourly test scenario.
-- ECO-03: deterministic implementation PASS. Shared labor, farmland/workshops, stability/siege and integer monthly-rate accrual drive physical stocks. 90-day conservation and UI local-only rates pass; graphical/export/native evidence passed for `0c8e240` in CI 42422010645. Fixed population, compressed provisional rates and absent industrial inputs remain explicit limits.
-- ECO-04: bounded implementation PASS; actual graphical/native evidence passed for `907fe31` / CI 42423403245. Proportional shortages, bounded fatigue/morale and delayed casualties, full safe-hour recovery, faction/garrison symmetry and detached visible condition are implemented. Long-battle modifiers are entry snapshots; individual physiology/desertion is future work. No live-force duplicate starvation deaths.
-- WRL-07 / LIF-02 / TECH-03: current implemented systems pass source two-process restore and once-only settlement. Actual graphical/export/native persistence proof is pending. No claims about not-yet-existing NPC/courier/story state or unlimited lifetime scale.
-- G2 is therefore a tested foundation, not a claim that all final-matrix G2 acceptance is complete.
-- Strategic UI is implemented with 36 synthetic input assertions plus 63 campaign lifecycle assertions: opening/closing preserves battle time, HP and casualties; only player_view data is rendered; world reset does not reset battle. Actual graphical screenshot reviewed from run 42418269168: readable 1280×800 layout, route and supply actions visible, historical intelligence distinct from local observation.
+## Durable continuation
 
-## Latest handoff received
+Fetch main, read this file, AGENTS and latest prioritized design; inspect active branches, uncommitted changes, exact source CI and artifacts. Continue the smallest unfinished stage without restarting previous work or overwriting concurrent design updates. Run tests, commit verified code/evidence, retain the last playable and advance to the next stage. Check uncertain publication outcomes before retrying.
 
-The final PR #1 comment (6713522579) and latest merged main `bfb028a` were read, including the concurrent `OWNER_CREATIVE_DECISIONS_PENDING.md` additions. Those previously pending high-level choices were subsequently resolved in main `82df117`; only implementation parameters remain provisional. The simulation transaction contracts now guide the next change. User asks for quiet autonomous work: routine progress belongs in this repository; contact only for reserved permissions or unavoidable blockers. No claim that the full game is finished.
+Routine progress belongs in GitHub; contact the owner only for reserved approvals or unavoidable blockers. A repository checkpoint supports recovery but cannot guarantee uninterrupted compute. If a platform limit stops work, leave exact last source, completed tests and next command here; never label the full project complete.
 
-## v0.3 review fixes
+## Preserved stage history
 
-Independent review found and repaired fractional route/report deadlines (a battle must not shorten later travel) and commander life consistency when coarse starvation removes the final person. Regression coverage includes exact deadlines, second-resolution intelligence freshness, autonomous world ticking after death with player commands blocked, and post-apply settlement rollback. No known high/medium transaction defect remains after review; CI/render/build proof for this new source is recorded separately when complete.
+- PR1 `bfb028a`: first playable and strategic/world foundation.
+- PR2 `0be9e51`: real campaign battle transactions; CI42419804675.
+- PR4 `ca3f21a`: population economy; CI42422010645.
+- PR6 `4174e98`: staged military condition; CI42423403245.
+- PR7 `465414d`: full implemented-campaign saves/checkpoints; CI42425639702.
 
-## v0.4 economy scope and review
-
-Production and civilian/military consumption now carry timestamped source events. Ninety days: 12,960 food produced, 13,828 eaten, 269 weapons produced, 500 food and 50 civilians remain. Existing relief/late/supply-interception scenarios still pass unchanged. Independent review fixed malformed economic schema, unsafe rate bounds and accepted numeric-cap advances that could otherwise leave invalid state. Headroom preflight rejects before mutation, including battle clocks and transfers. ECO-04 hunger/fatigue/morale is the current bounded code task.
-
-## Owner decisions synchronized from main 82df117 / Issue #3
-
-All nine high-level decisions are now recorded as resolved in PRODUCT_DECISIONS v3 section 1B and the historical PENDING filename. They do not require another user choice. Precision balance, demographics and rate values remain testable provisional parameters. Preserve the existing pipeline; finish G2 production and staged hunger first.
-
-New acceptance tracking: OWNER-TIME-01 has current no-extra-time menu/reading and resource-conservation coverage; OWNER-HISTORY-01/02 have tested offscreen siege and route-dependent outcomes. These are partial evidence, not completion of all associated narrative behavior. OWNER-COMBAT-01 is NOT RUN: current strong commander profile is a legacy combat fixture, not proof of the approved early 1-vs-2 balance; introduce explicit early/late profiles and 1/2/5 enemy tests after G2. OWNER-ORDER-01..03 are NOT RUN: local order shortcuts exist, but physical remote couriers/interception/uncertain acknowledgment are not implemented. OWNER-SAVE-01 now has source/scene free-slot and death-checkpoint recovery coverage for the bounded implemented campaign. Full lifetime horizon and not-yet-existing systems remain unaccepted. Continuous unpaused strategic clock, multi-month rest/story advancement, politics, aging, conditional major narrative nodes and later-scale acceptance remain pending. Keep Issue #3 open until its behavior has real code evidence.
-
-## Latest narrative handoff / continuation
-
-Read main `99d8ef0` before merging PR #4. Tang-inspired material culture replaces the earlier Han-Wei baseline. Court military/financial capacity may improve or decline through real events; living captivity must continue the run; friends have independent interests, knowledge and geographically valid reunions. These are implementation constraints, not permission to treat proposed emperors, cast or fixed story beats as finalized. The Anping fixture remains a mechanism test. New NAR-* acceptance rows are NOT RUN. No need to block G2 or ask routine questions while reusable systems are unfinished.
-
-Current next work: integrated save core/UI and independent fixes pass final source tests. Run final export/graphical/native CI before merging. The defect reproductions now reject cleanly. Preserve v0.5 while these final checks run. Early/late finite-HP profile calibration is underway separately; integrate without dropping or silently rewriting newly-supported saves, using explicit migration when schema changes. Preserve owner decision Issue #3 until its behavior is genuinely covered.
-
-## v0.5 retained artifact and actual proof
-
-Mac universal v0.5 local archive SHA256 `14f99dfce0d6d640dfb4e15d586a542103c6633ea517762aed713271d8aeaf01`. [CI 42423403245](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42423403245) and PR #6 preserve the verified source907fe31. Actual screenshot shows hour21, food0, all60people alive, fatigue12/morale90 and actionable shortage warning before loss. All1280×800 controls fit. Native macOS26.7.2 arm64 strict ad-hoc signature and training/campaign headless runs passed. M5 graphical performance and human feel remain NOT RUN.
-
-## v0.6 current source acceptance and continuation
-
-6,691 functional assertions plus independent properties/malformed-input checks pass. Save state includes exact int64/floats, RNG, fractional clock, full events/reports/convoys/condition, tickets, pending/running sessions and committed receipts. No stored arbitrary objects or resources execute. User slots/checkpoints are isolated from training and test namespaces.90-day history is tested, not unrestricted decades: append-only history eventually hits declared complexity/raw/disk bounds, so lossless compaction or segmented storage remains a full-game task. Future gameplay-schema changes must preserve or explicitly migrate this first real save format.
+Earlier exact results and discovered/fixed defects remain in VERIFICATION.md, system documents, tests and Git history; do not repeat already completed stages.

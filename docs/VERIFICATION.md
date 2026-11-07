@@ -130,3 +130,13 @@ Review exposed and fixed noncanonical JSON, causeless balanced ledgers/corpse re
 Four actual save-overlay/checkpoint/battle-resume/settled-result screenshots and native macOS exported two-process persistence are requested by CI but are NOT RUN for this source until a passing exact-head run is linked. No M5, power-loss fsync or cross-platform deterministic replay claim.
 
 Local exported v0.6 Linux program passed prepare/resume in two distinct processes (isolated test namespace), ending at world10829.075 with exactly42 events. Universal macOS archive structure is valid; native execution remains the CI stage. Local macOS SHA256 `98c56b303016df9b11f458c87dd79e82e0482d37a49d4c9de28a3c654d61c1bb`; Linux archive `ca4c11487d5f2668e1bdc72effb3f09df638e719c3c52a688d93f034594f44c1`. See `evidence/save-exported-linux.log`.
+
+## v0.6 actual GUI, export and native cross-process evidence
+
+Source `e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b` passed [CI42425639702](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42425639702), both jobs. Merged via PR7 as `465414d`, preserving concurrent design-only `ebf89e1`. PR artifact checkout suffix is `0b6dd7037ec40bc8fea5b2002fcd3a8c82a08fe4`; it is not the source head.
+
+Actual rendered named-slot, life-checkpoint, paused active-load and committed-result images were inspected. Real GUI actions and physical retreat produce the result;1280×800 controls are readable with no clipping. Complete history and once-only receipt remain intact after reload. Logs: `evidence/save-visual.log`.
+
+Native macOS26.7.2 arm64 passed strict ad-hoc signing, exported headless training/campaign and two distinct persistence prepare/resume processes. World10829.075 and42events match expected continuation. Logs: `evidence/save-native-macos.log`. This is not native graphical or M5 performance/human-feel proof. A separate bounded hosted-Mac graphical probe is being prepared; no result is preclaimed.
+
+The exact CI ZIP executed by native CI, now retained as the current playable, has SHA256 `278daea3d44ccbbd6a98f36e2895f48df57121959b9bbf18352a28c3ea82956d`; Linux CI archive `1c2ff114c60a194909e847e5c1de94ff3f02a918c7441eee43f13560d390661f`. These differ from the earlier local export bytes and are labeled separately. No Developer ID/notarization or formal release.
