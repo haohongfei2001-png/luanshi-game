@@ -8,7 +8,7 @@
 **用户已在 2026-11-08 正式回答 OWNER-01 至 OWNER-09；docs/OWNER_CREATIVE_DECISIONS_PENDING.md 已更新为“全部答复的历史索引”。完整 LOCKED 约束以 docs/PRODUCT_DECISIONS.md 1B 为准，不再逐项询问。**
 1. **docs/PRODUCT_DECISIONS.md**：用户锁定决策与保留审批事项，最高优先级。
 2. **docs/FINAL_GAME_DESIGN_SPEC.md**：正式玩法与系统架构，包含 WASD + 鼠标瞄准 + 快捷键、三个等权重支柱、困难公平。
-3. **docs/NARRATIVE_ART_DIRECTION.md**：叙事和克制写实的小人美术执行标准。**另读 docs/NARRATIVE_WORLD_BIBLE_V0_2.md：最新唐末式政治、朝廷强弱、俘虏后继续人生、归国受疑与好友异路/重逢的叙事提案。确认世界结构/行为规则已由用户表述，但皇帝、好友、重要战役/结局具体设定仍待其审定。**
+3. **docs/NARRATIVE_ART_DIRECTION.md**：叙事和克制写实的小人美术执行标准。**正式人生优先读取 docs/NARRATIVE_LIFE_ARC_V0_3.md：主线从约十五岁征发/主动从军、军功冒领与受罚、炮灰小队多次更替，逐步走向军权、内陆、婚恋、旧友、子嗣、继承与人生终局。docs/NARRATIVE_WORLD_BIBLE_V0_2.md 提供唐末朝廷与边境政治研究，其中被俘/归国已降为需要真实战败+被包围+主角生还等条件的罕见支线，不能再视作主线优先章节。**
 4. **docs/ACCEPTANCE_MATRIX.md**：每项功能的可观察验收与真实测试证据。
 5. **docs/DOT_HANDOFF_FINAL.md**：本协议的自主执行与交接机制。
 **进入 G2 世界模型前**，先阅读 docs/SIMULATION_CONTRACTS.md，实施权威世界状态、战斗事务和延时情报。按实际阶段查阅：docs/DELIVERY_PLAN.md、docs/FINAL_VISION_ACCEPTANCE.md、docs/PROJECT_STATUS.md（原型分支有最新状态）、AGENTS.md。早期的 GAME_VISION.md / PRO_DESIGN_BIBLE.md 作为背景，出现冲突以以上正式文本为准。
@@ -63,7 +63,7 @@
 
 ### D2 — 可完整游玩的短篇
 - 接军令→侦察/征发/备战→行军→实时交战/撤退→结算→动态人物/世界变化。
-- 4–6 名能自主判断的重要角色；玩家可知与未知清楚区分。令旗/号角/传令兵渠道必须能出现延迟、截击与失联，反馈不泄露未知的截杀事实。**推进玩家被俘继续游戏的可复用状态机，以及旧友独立人生/竞争/重逢逻辑**；但大型人物传记和国家核心剧情不得只因 Pro 的示例稿就标记为用户审定。
+- 4–6 名能自主判断的重要角色；玩家可知与未知清楚区分。令旗/号角/传令兵渠道必须能出现延迟、截击与失联，反馈不泄露未知的截杀事实。**剧情纵切版优先建立少年入伍（被征发/自愿）→ 初次军功被冒领/诬陷/受罚 → 因战争混乱得到小队及高危险任务 → 真正可能发生的伤亡与存活者关系变化**。在资源/世界状态上可靠后再加入上级真赏识/假利用及旧友关系；被俘归国、长期婚姻与继承属于后续可扩展机制而非短篇必须优先完成。
 - 伤病/战死结局、存档/人生节点回溯；基础剧情立绘、UI、声效与教程。
 - 多条结果不是只变片尾文字，必须改变真实城池、物资、角色或军队数据。
 
@@ -91,7 +91,7 @@
 
 ## 7. 可发给 Dot 的一次性启动句
 
-“请读取 main 最新 PRODUCT_DECISIONS.md 1B、FINAL_GAME_DESIGN_SPEC.md、SIMULATION_CONTRACTS.md、NARRATIVE_ART_DIRECTION.md、ACCEPTANCE_MATRIX.md、DOT_HANDOFF_FINAL.md，确认 OWNER-01..09 已由用户决定。检查当前 main/PR/CI 和 PROJECT_STATUS，继续现有原型与 WorldSim 的最新实施工作，不重写、不调用 Codex、不问我普通选择。按真实测试结果逐步实现高伤害低血量成长、可被截断的军令、活动驱动时间、不可逃避战争背景与关键节点可变结果。每轮提交代码/测试/状态并自主进入下一阶段；只有额外费用、账号设备授权、正式发行或重大违背已锁定产品方向时请求批准。”
+“请读取 main 最新 PRODUCT_DECISIONS.md（特别 §1B、§1C、§1D）、NARRATIVE_LIFE_ARC_V0_3.md、FINAL_GAME_DESIGN_SPEC.md、SIMULATION_CONTRACTS.md、NARRATIVE_ART_DIRECTION.md、ACCEPTANCE_MATRIX.md、DOT_HANDOFF_FINAL.md，确认 OWNER-01..09 已由用户决定，且后续新增的正式人生主线已经批准。检查当前 main/PR/CI 和 PROJECT_STATUS，继续现有原型与 WorldSim 的最新实施工作，不重写、不调用 Codex、不问我普通选择。按真实测试结果逐步实现高伤害低血量成长、可被截断的军令、活动驱动时间、不可逃避战争背景与关键节点可变结果。每轮提交代码/测试/状态并自主进入下一阶段；只有额外费用、账号设备授权、正式发行或重大违背已锁定产品方向时请求批准。”
 
 ## 8. 权限/能力边界与实际完成声明
 
