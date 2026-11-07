@@ -24,7 +24,7 @@ Out of scope for the initial milestone: a nationwide map, city economies, comple
 
 Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple Silicon preferred for initial validation); iPhone/iOS is a future target. Keep input handling and UI layout adaptable for touch controls. Engine choice should be revisited only after a focused technical benchmark, not based on speculation.
 
-**Read first:** [Owner decisions and rights](docs/PRODUCT_DECISIONS.md), [Pro-designed game bible](docs/PRO_DESIGN_BIBLE.md), [Dot continuous delivery contract](docs/DOT_CONTINUOUS_DELIVERY.md), [delivery gates](docs/DELIVERY_PLAN.md). Further references: [first independent technical review](docs/PRO_TECH_REVIEW_001.md), [Dot cloud bootstrap](docs/DOT_BOOTSTRAP.md), [AGENTS.md](AGENTS.md), [game vision](docs/GAME_VISION.md).
+**Read first:** [Owner decisions and rights](docs/PRODUCT_DECISIONS.md), [Pro-designed game bible](docs/PRO_DESIGN_BIBLE.md), [Dot continuous delivery contract](docs/DOT_CONTINUOUS_DELIVERY.md), [delivery gates](docs/DELIVERY_PLAN.md), and [full-game completion criteria](docs/FINAL_VISION_ACCEPTANCE.md). Further references: [first independent technical review](docs/PRO_TECH_REVIEW_001.md), [Dot cloud bootstrap](docs/DOT_BOOTSTRAP.md), [AGENTS.md](AGENTS.md), [game vision](docs/GAME_VISION.md).
 
 ## Status
 
