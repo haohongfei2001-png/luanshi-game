@@ -4,23 +4,31 @@
 === simulation-tests.log ===
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-BATTLE_REPORT {"ended":true,"mean_step_ms":0.599455600178492,"report":{"elapsed_seconds":37.35,"enemy_casualties":15,"enemy_survivors":5,"friendly_casualties":20,"friendly_survivors":0,"player_alive":false,"player_damage":0.0,"player_hp":0.0,"result":"The commander has fallen","seed":184},"steps":2241}
+BATTLE_REPORT {"ended":true,"mean_step_ms":0.539911200356983,"report":{"elapsed_seconds":37.35,"enemy_casualties":15,"enemy_survivors":5,"friendly_casualties":20,"friendly_survivors":0,"player_alive":false,"player_damage":0.0,"player_hp":0.0,"result":"The commander has fallen","seed":184},"steps":2241}
 TEST_SUMMARY {"assertions":33,"failures":0,"messages":[]}
+
+=== world-tests.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SCENARIO timely: hour=6 owner=sheng outcome=relieved relief=53 food=84
+SCENARIO late: fall=15 arrival=16 owner=bei prisoners=40
+SCENARIO interception: capture=3 retreat=10 owner=sheng relief=56 enemy_food=0
+World tests: 526 assertions, 0 failures
 
 === scene-tests.log ===
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
 LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility
-SCENE_TEST_SUMMARY {"assertions":27,"failures":0,"messages":[]}
+SCENE_TEST_SUMMARY {"assertions":35,"failures":0,"messages":[]}
 
 === scene-smoke.log ===
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
 LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility
-SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"mean_simulation_ms":1.54273058252427,"report":{"elapsed_seconds":6.87,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":20,"player_alive":true,"player_damage":1812.0,"player_hp":131.45,"result":"Victory at the border","seed":184},"steps":412}
+SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":390,"wall_mean_ms":2.37509487179487,"wall_p50_ms":2.325,"wall_p95_ms":3.206},"mean_simulation_ms":1.39295873786408,"report":{"elapsed_seconds":6.87,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":20,"player_alive":true,"player_damage":1812.0,"player_hp":131.45,"result":"Victory at the border","seed":184},"steps":412}
 
 === exported-linux-smoke.log ===
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
 LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility
-SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"mean_simulation_ms":1.44844902912621,"report":{"elapsed_seconds":6.87,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":20,"player_alive":true,"player_damage":1812.0,"player_hp":131.45,"result":"Victory at the border","seed":184},"steps":412}
+SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":390,"wall_mean_ms":2.24593076923077,"wall_p50_ms":2.137,"wall_p95_ms":2.818},"mean_simulation_ms":1.37268932038835,"report":{"elapsed_seconds":6.87,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":20,"player_alive":true,"player_damage":1812.0,"player_hp":131.45,"result":"Victory at the border","seed":184},"steps":412}

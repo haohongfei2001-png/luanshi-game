@@ -7,23 +7,25 @@ Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using th
 ## Current branch and source
 
 - Working branch: `prototype/cloud-first-playable`, PR #1.
-- First playable: `98576db`; exports/scene tests: `5426efa`; camera/input/visual-CI repair: `8109761`.
+- First playable: `98576db`; exports/scene tests: `5426efa`; camera/input/visual-CI repair: `8109761`; design merge: `7d8ea81`; supported native macOS runner: `bf2052f`.
 - Main design contracts through `65a46ce` are merged into this branch, retaining code and resolving only the README status paragraph in favor of the more recent factual implementation record.
 - Primary work directory: repository root. Commands: `./tools/test.sh`, `./tools/export.sh` with matching Godot 4.6.3 templates.
 
 ## Passed and pending
 
-- Passed: Godot 4.6.3 import; 33 simulation + 35 scene/input/camera assertions; deterministic army battle; real scene scripted battle; macOS universal ZIP export/static arm64+x86_64 inspection; exported Linux headless run.
+- Passed: Godot 4.6.3 import; 33 combat + 35 scene/input/camera + 526 WorldSim assertions (594 total); deterministic army battle; real scene scripted battle; macOS universal ZIP export/static arm64+x86_64 inspection; exported Linux headless run.
 - A real Ubuntu/Xvfb/llvmpipe render and screenshot were inspected. This exposed a HUD-covered field edge and excess brightness; corrected in `8109761`, awaiting repeated graphical CI verification.
-- CI's first graphical run completed combat but failed on absent audio hardware. Test-only Dummy audio is configured for the rerun.
-- Native macOS CI and corrected graphical artifact: pending. User M5 device performance, manual gameplay feel and owner approval: unverified. No Developer ID signing/notarization or production release.
+- CI's first graphical run failed on absent audio hardware; the test-only Dummy audio fix passed.
+- Native macOS 26.7.2 arm64 CI and strict ad-hoc signature verification passed in run 42417350572. User M5 device performance, manual gameplay feel and owner approval remain unverified. No Developer ID signing/notarization or production release.
+- WorldSim foundation implemented with three causal scenarios, resource/in-transit convoy conservation, delayed intelligence and 96h test coverage. It remains separate from the playable battle scene.
 - The 20v20 simulation remains O(n²); no large-army performance claim.
 
 ## Next executable milestones
 
-1. Complete corrected graphical CI and packaged macOS CI. Inspect the actual image and log, repair failures, update the downloadable prototype and this record.
-2. Implement pure `WorldSim`: three cities, two factions, hourly clock, inventories, siege food depletion, army marching, delayed intelligence and three deterministic relief/supply scenarios. Keep the existing battle scene intact.
-3. Add a playable strategic interface and an explicit battle-to-world transaction with exactly-once casualty/equipment accounting; then saves and short narrative progression.
+1. Finish the current WorldSim foundation commit and check CI for that exact head; preserve the standalone battle artifact.
+2. Add a playable three-city strategic interface reading only `WorldSim.player_view()`, with route, wait, resupply, scout and local depot actions. Keep the existing battle scene available.
+3. Add explicit army-to-battle roster creation and exactly-once casualty/equipment settlement, then versioned save/load and short narrative progression.
+4. Evaluate Mobile rendering on a supported graphical runner before claiming anything about iPhone/GPU performance. Do not optimize to unmeasured army sizes.
 
 ## Continuation procedure
 

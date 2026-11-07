@@ -9,12 +9,14 @@ mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" artifacts
 "$GODOT" --version | tee artifacts/engine-version.log
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 "$GODOT" --headless --path . --script tests/test_battle.gd 2>&1 | tee artifacts/simulation-tests.log
+"$GODOT" --headless --path . --script tests/test_world.gd 2>&1 | tee artifacts/world-tests.log
 "$GODOT" --headless --path . --fixed-fps 60 --script tests/test_scene.gd 2>&1 | tee artifacts/scene-tests.log
 "$GODOT" --headless --path . --fixed-fps 60 -- --smoke-scene 2>&1 | tee artifacts/scene-smoke.log
-if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/{import,simulation-tests,scene-tests,scene-smoke}.log; then
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/{import,simulation-tests,world-tests,scene-tests,scene-smoke}.log; then
   echo 'Godot logged an error despite process exit code.' >&2
   exit 1
 fi
 grep -q '"failures":0' artifacts/simulation-tests.log
 grep -q '"failures":0' artifacts/scene-tests.log
+grep -q 'World tests: .* assertions, 0 failures' artifacts/world-tests.log
 grep -q SCENE_SMOKE_PASS artifacts/scene-smoke.log

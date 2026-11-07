@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Luanshi-Linux-${{ github.sha }}
-          path: builds/Luanshi-linux.x86_64
+          path: builds/Luanshi-linux.tar.gz
           if-no-files-found: error
       - name: Upload evidence and hashes
         if: always()
