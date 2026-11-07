@@ -30,7 +30,7 @@
 - 故事先以架空北境三城“安平救援”做端到端验证，再根据性能和内容质量扩展；临时地名、角色名字、数值、台词可由 Dot 自主创作。
 - 默认画面不追求真实人物面部高清，优先远景装备轮廓、动作辨识、士兵阵型、地形信息和可靠 UI。剧情立绘承载特写细节。
 - 使用现有 Godot 4 + GDScript 工程继续研发；只有出现记录在案、无法合理解决的技术瓶颈且对照基准测试证实时才考虑换引擎。
-- 设计母本：`docs/FINAL_GAME_DESIGN_SPEC.md`；剧情与美术执行：`docs/NARRATIVE_ART_DIRECTION.md`；测试及难度：`docs/ACCEPTANCE_MATRIX.md`；Dot 接棒：`docs/DOT_HANDOFF_FINAL.md`。
+- 设计母本：`docs/FINAL_GAME_DESIGN_SPEC.md`；剧情与美术执行：`docs/NARRATIVE_ART_DIRECTION.md`；世界与战斗接口：`docs/SIMULATION_CONTRACTS.md`；测试及难度：`docs/ACCEPTANCE_MATRIX.md`；Dot 接棒：`docs/DOT_HANDOFF_FINAL.md`。
 
 ## 3. Dot 可直接决定、无须找用户复核
 
