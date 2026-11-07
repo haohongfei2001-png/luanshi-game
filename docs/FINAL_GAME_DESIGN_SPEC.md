@@ -1,6 +1,6 @@
 # 《乱世》（工作名）完整游戏设计规格 v1.0
 **所有者已锁定的产品方向 + Pro 实施基线**｜2026-11-08｜本文件作为 Dot 开发的首要设计规格。
-解释权限与冲突优先级见 PRODUCT_DECISIONS.md；剧情美术详见 NARRATIVE_ART_DIRECTION.md；可执行验收见 ACCEPTANCE_MATRIX.md。本文件不替代用户未来明确提出的新决定。
+解释权限与冲突优先级见 PRODUCT_DECISIONS.md；剧情美术详见 NARRATIVE_ART_DIRECTION.md；可执行验收见 ACCEPTANCE_MATRIX.md。本文件不替代用户未来明确提出的新决定。世界/战斗接口的建议数据结构与可测试不变量详见 SIMULATION_CONTRACTS.md。
 
 ## 0. 必须建立的游戏体验
 
