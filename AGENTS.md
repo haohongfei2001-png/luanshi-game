@@ -8,7 +8,7 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 
 ## Current scope and priorities
 
-1. Produce a **playable, reproducible Windows PC prototype**.
+1. Produce a **playable, reproducible macOS prototype**. iPhone/iOS is a planned adaptation path, not a first-milestone delivery requirement.
 2. First: one small 3D battlefield, a player-controlled isometric character, basic attack, three simple non-magical weapon skills, and 20 vs 20 tiny soldiers.
 3. Make soldiers move, fight, die, and obey basic squad commands.
 4. Record actual casualties and expose a simple results screen.
@@ -17,6 +17,9 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 ## Implementation
 
 - Preferred provisional stack: **Godot 4 + GDScript**. Use a text-oriented project structure and placeholder geometry initially.
+- Separate user actions from input devices. Implement keyboard/mouse on macOS now; do not hardcode controls in gameplay logic so that touch UI and gestures can be introduced later.
+- Evaluate Godot's **Mobile renderer** early for a shared macOS/iPhone path; benchmark on actual hardware before choosing final renderer settings.
+- A verified iOS build requires a macOS runner with Xcode and Apple signing configuration. Never commit certificates, provisioning profiles, credentials, or API keys. Do not claim an iOS build was verified unless it was actually built and tested.
 - Preserve a clear separation between simulation data/state and visual presentation so a later world simulation can use the same state.
 - Do not add dependencies, paid services, or external assets without checking their redistribution terms.
 - Avoid premature complexity: prefer small modules, explicit interfaces, and clear data contracts over giant frameworks.
