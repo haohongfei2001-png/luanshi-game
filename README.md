@@ -28,8 +28,38 @@ Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple S
 
 ## Status
 
-Dot is developing the initial 3D prototype on `prototype/cloud-first-playable` ([PR #1](https://github.com/haohongfei2001-png/luanshi-game/pull/1)), with cloud headless tests and export checks reported on that branch. **macOS M5 device gameplay and final subjective quality remain unverified.** Main contains the canonical frozen design contracts.
+Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 combat, 35 scene/input, 37 strategic-interface and 526 world-simulation assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+
+### Play from source
+
+1. Install Godot 4.6.3 (standard edition).
+2. Import `project.godot`, then press F6/F5 or run `godot --path .`.
+3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (75% damage reduction for 2.6 seconds).
+4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins a new encounter **after** the previous one ends.
+
+There are 20 friendly soldiers, 20 enemy soldiers, and one separately counted commander. The commander's death ends the encounter. Fallen soldiers remain in the casualty ledger; only a new encounter resets it.
+
+### Reproduce tests
+
+```sh
+./tools/test.sh
+```
+
+The test script runs editor import, pure simulation tests and the full scene's scripted smoke run. Runtime logs are written to ignored `artifacts/`. No game plugins, purchased services or third-party art are required.
+
+**macOS M5 device gameplay and final subjective quality remain unverified.**
 
 ## Licensing
 
 No open-source license has been selected. A public repository does not itself grant a license to reuse its code or assets.
+
+### Build and play the macOS package
+
+Install the official matching Godot 4.6.3 export templates, then run `./tools/export.sh`.
+`builds/Luanshi-macOS.zip` contains a universal `.app` with both Apple Silicon arm64 and Intel x86_64 code. The game uses Godot's built-in **ad-hoc** signature, not an Apple Developer ID certificate, and is **not notarized**.
+
+Unzip and open the app. If macOS blocks this downloaded prototype, only approve it if you trust this project: after attempting to open it, use System Settings → Privacy & Security → Open Anyway if macOS offers that option. Do not disable Gatekeeper globally. You can instead run the source project in an official Godot editor. Actual M5 performance remains untested.
+
+The repository's [Actions](../../actions) workflow tests and packages each prototype change. Its downloadable artifacts contain the macOS ZIP, a Linux executable, test logs, hashes and, when graphical CI succeeds, an actual rendered screenshot. GitHub may require sign-in to download Actions artifacts. This is a prototype artifact, not a public production release.
+
+[中文试玩说明](docs/PLAYING_ZH.md) · [Current resumable project status](docs/PROJECT_STATUS.md) · [World simulation foundation](docs/WORLD_SIM.md). Press **M** or click **Strategy** to use the three-city strategic sandbox: choose routes, advance hours, inspect local supplies, rearm, observe and seize the Hequ depot. It is explicitly independent of the battle for now; opening it pauses and preserves the current battle. Exactly-once battle/world settlement and saved campaigns remain next work.

@@ -1,0 +1,11 @@
+Source: https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42417350572/job/128538571690
+2026-11-07T21:46:54.7441040Z Image: macos-26-arm64
+2026-11-07T21:46:58.7571090Z grep -q SCENE_SMOKE_PASS mac-evidence/runtime.log
+2026-11-07T21:46:58.8552290Z Darwin iad20-gt1017-8f106f3b-adea-49ae-9a29-7d615a37bd3c-F2F423DC6B76.local 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
+2026-11-07T21:46:58.8911910Z ProductName:		macOS
+2026-11-07T21:46:58.8978730Z ProductVersion:		26.7.2
+2026-11-07T21:46:58.8980970Z BuildVersion:		25G332
+2026-11-07T21:46:59.7603470Z package/unpacked/Luanshi - Border Skirmish.app: valid on disk
+2026-11-07T21:46:59.7651140Z package/unpacked/Luanshi - Border Skirmish.app: satisfies its Designated Requirement
+2026-11-07T21:47:01.8069500Z LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility
+2026-11-07T21:47:01.8073330Z SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":390,"wall_mean_ms":1.93035128205128,"wall_p50_ms":1.415,"wall_p95_ms":4.369},"mean_simulation_ms":1.36154368932039,"report":{"elapsed_seconds":6.87,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":20,"player_alive":true,"player_damage":1812.0,"player_hp":131.45,"result":"Victory at the border","seed":184},"steps":412}

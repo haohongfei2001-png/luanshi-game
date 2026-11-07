@@ -1,0 +1,102 @@
+name: Verify and package first playable
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: playable-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-and-export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified official Godot and export templates
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_export_templates.tpz" -o /tmp/templates.tpz
+          echo 'da606b61c10157844f8300172df374472665f95015495cb1a7cd132c40ede404faa96cc1016a4b9662db9909ddea69632c4948b2cd11163438dad4808881fb68  /tmp/templates.tpz' | sha512sum -c -
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+          unzip -j -q /tmp/templates.tpz 'templates/macos.zip' 'templates/linux_release.x86_64' 'templates/linux_debug.x86_64' 'templates/version.txt' -d "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+      - name: Test simulation and real scene lifecycle
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/test.sh
+      - name: Exercise rendered scene with software OpenGL
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 -- --smoke-scene --capture-proof 2>&1 | tee artifacts/visual-smoke.log
+          test -s artifacts/battle-proof.png
+          grep -q SCENE_SMOKE_PASS artifacts/visual-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/visual-smoke.log; then exit 1; fi
+      - name: Exercise strategic map with real GUI events
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/strategy_visual.gd 2>&1 | tee artifacts/strategy-visual.log
+          test -s artifacts/strategy-proof.png
+          grep -q STRATEGY_VISUAL_PASS artifacts/strategy-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/strategy-visual.log; then exit 1; fi
+      - name: Build macOS and verify exported Linux game
+        run: ./tools/export.sh
+      - name: Upload macOS playable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luanshi-macOS-${{ github.sha }}
+          path: builds/Luanshi-macOS.zip
+          if-no-files-found: error
+      - name: Upload Linux playable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luanshi-Linux-${{ github.sha }}
+          path: builds/Luanshi-linux.tar.gz
+          if-no-files-found: error
+      - name: Upload evidence and hashes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-${{ github.sha }}
+          path: |
+            artifacts/
+            builds/SHA256SUMS
+          if-no-files-found: warn
+  macos-runtime:
+    needs: verify-and-export
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-${{ github.sha }}
+          path: package
+      - name: Verify bundle and run native macOS headless smoke
+        run: |
+          set -euo pipefail
+          mkdir -p mac-evidence
+          uname -a | tee mac-evidence/host.log
+          sw_vers | tee -a mac-evidence/host.log
+          ditto -x -k package/Luanshi-macOS.zip package/unpacked
+          APP=$(find package/unpacked -maxdepth 1 -name '*.app' -print -quit)
+          codesign --verify --deep --strict --verbose=2 "$APP" 2>&1 | tee mac-evidence/codesign.log
+          BIN=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Contents/Info.plist")
+          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --smoke-scene 2>&1 | tee mac-evidence/runtime.log
+          grep -q SCENE_SMOKE_PASS mac-evidence/runtime.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/runtime.log; then exit 1; fi
+      - name: Upload native macOS evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-verification-${{ github.sha }}
+          path: mac-evidence/
