@@ -44,7 +44,8 @@ func _ready() -> void:
 	_button(heading, "close", "M  /  Return to training", func(): close_requested.emit())
 	status_label = _label(stack, "Real campaign roster and losses | Separate training skirmish | No saves yet", 16)
 	_label(stack, "Anping called for aid three days ago. Choose relief, assault Hequ's depot in person, or wait. Battle seconds also advance the world.", 15)
-	army_label = _label(stack, "", 18)
+	army_label = _label(stack, "", 16)
+	army_label.mouse_filter = Control.MOUSE_FILTER_PASS
 	map = Control.new()
 	map.custom_minimum_size.y = 190
 	map.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -143,11 +144,10 @@ func refresh() -> void:
 	buttons.wait1.disabled = locked
 	buttons.wait6.disabled = locked
 	var now: float = view.time_seconds
-	var location: String = NAMES.get(army.location, "In transit")
-	if not army.march.is_empty():
-		var arrival: float = army.march.arrives_at_seconds
-		location = "To %s / arrival %s (%s remaining)" % [NAMES[army.march.destination], _time_text(arrival, true), _time_text(maxf(0.0, arrival - now))]
-	army_label.text = "World %s | %s\n%d soldiers | %d weapons / %d unarmed | %d food | %d short-ration hours" % [_time_text(now, true), location, army.soldiers, army.weapons, maxi(0, army.soldiers - army.weapons), army.food, army.starving_hours]
+	army_label.text = _army_text(army, now)
+	army_label.tooltip_text = _condition_details(army.condition)
+	var warning: bool = army.condition.low_food or army.condition.stage in ["shortage", "weakened", "attrition"]
+	army_label.add_theme_color_override("font_color", Color("e0c486") if warning else Color("ede7d6"))
 	for id in view.routes:
 		var route: Dictionary = view.routes[id]
 		buttons[id].text = "%s: %s - %s / %dh" % [id.capitalize(), NAMES[route.from], NAMES[route.to], route.hours]
@@ -184,6 +184,32 @@ func refresh() -> void:
 			lines.append("  Exact: observed %s / delivered %s / age %s" % [_time_text(observed, true), _time_text(delivered, true), _time_text(age)])
 	reports_label.text = "\n".join(lines)
 	map.queue_redraw()
+
+func _army_text(army: Dictionary, now: float) -> String:
+	# Consume only the detached own-army projection. Never inspect remote condition.
+	var condition: Dictionary = army.condition
+	var location: String = NAMES.get(army.location, "In transit")
+	if not army.march.is_empty():
+		var arrival: float = army.march.arrives_at_seconds
+		location = "To %s / arrival %s (%s remaining)" % [NAMES[army.march.destination], _time_text(arrival, true), _time_text(maxf(0.0, arrival - now))]
+	var supply := "~%.1fh at %d/h" % [condition.food_hours, condition.food_needed_per_hour] if condition.food_needed_per_hour > 0 else "no rations needed"
+	var rest := "Safe rest available" if condition.activity == "rest" else "No safe rest: " + str(condition.activity)
+	var warning: String = str(condition.stage).to_upper()
+	match condition.stage:
+		"shortage": warning += ": Resupply before losses"
+		"weakened": warning += ": Resupply now; attrition risk"
+		"attrition": warning += ": Starvation losses; resupply now"
+		"recovering": warning += ": Keep fed; rest to recover"
+		_: warning += ": LOW FOOD; resupply soon" if condition.low_food else ": Full rations + safe rest recover condition"
+	if condition.stage in ["shortage", "weakened", "attrition"] and army.food >= condition.food_needed_per_hour and condition.food_needed_per_hour > 0:
+		warning = str(condition.stage).to_upper() + ": Rations restored; recovery takes time"
+	if condition.hunger > 0:
+		warning += " | Hunger %.2f rations; attrition at %.2f" % [float(condition.hunger) / condition.ration_scale, float(condition.attrition_at) / condition.ration_scale]
+	return "World %s | %s\n%d soldiers | %d weapons / %d unarmed | Food %d (%s) | Fatigue %d/100 | Morale %d/100\n%s | %s" % [_time_text(now, true), location, army.soldiers, army.weapons, maxi(0, army.soldiers - army.weapons), army.food, supply, condition.fatigue, condition.morale, warning, rest]
+
+func _condition_details(condition: Dictionary) -> String:
+	# These are displayed rule values, not a second prediction/simulation of outcomes.
+	return "OWN ARMY / PROVISIONAL BALANCE\nLast hourly ration: %d eaten / %d needed; activity: %s.\nHunger: %d points; %d = one whole hourly ration missed.\nWeakening at %d; attrition threshold at %d with another food shortfall.\nCurrent next-battle entry: speed %d%% / damage %d%%.\nFull rations and an entire hour of safe rest recover fatigue and morale.\nSupply hours use the current roster and carried food only, not city stocks." % [condition.last_eaten, condition.last_needed, condition.last_activity, condition.hunger, condition.ration_scale, condition.weakened_at, condition.attrition_at, condition.modifiers.speed_percent, condition.modifiers.damage_percent]
 
 func _economy_text(city: Dictionary) -> String:
 	# Only the caller's local projection is accepted, never a remote city lookup.

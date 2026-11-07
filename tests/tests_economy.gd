@@ -54,7 +54,7 @@ func _run() -> void:
 func _test_capacity() -> void:
 	var baseline := Simulation.new()
 	check(baseline.totals().civilian_population == 50 and baseline.totals().soldiers == 215, "civilians exclude garrisons and field soldiers")
-	check(baseline.snapshot().version == 3, "new economic snapshot schema is explicit; no silent v2 migration")
+	check(baseline.snapshot().version == 4, "condition plus economy snapshot schema is explicit; no silent v2/v3 migration")
 	check(not baseline.snapshot().cities.pingling.has("food_per_hour"), "fixed city production is removed")
 	var cases := [
 		{"label": "normal", "inputs": {}, "food": 2880, "weapons": 30},

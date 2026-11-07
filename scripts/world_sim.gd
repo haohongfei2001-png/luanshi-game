@@ -2,7 +2,9 @@ class_name WorldSimulation
 extends RefCounted
 ## Authoritative seconds clock with integer economic accrual. Presentation uses player_view().
 
-const VERSION := 3
+const VERSION := 4
+const Condition := preload("res://data/condition_rules.gd")
+const CONDITION_RULES := Condition.RULES
 const Economy := preload("res://data/economy_rules.gd")
 const ECONOMY_RULES := Economy.RULES
 const MONTH_HOURS: int = ECONOMY_RULES.hours_per_day * ECONOMY_RULES.days_per_month
@@ -47,7 +49,7 @@ func reset(seed_value: int = 184) -> void:
 			"besiegers": _army("bei", "anping", 80, 70, 48),
 		},
 		"siege": {"city": "anping", "army": "besiegers", "active": true, "outcome": "ongoing"},
-		"ledger": {"food_produced": 0, "food_consumed": 0, "food_consumed_civilian": 0, "food_consumed_military": 0, "food_shortfall_civilian": 0, "food_shortfall_military": 0, "weapons_produced": 0, "weapons_destroyed": 0, "dead": 0, "prisoners": 0},
+		"ledger": {"food_produced": 0, "food_consumed": 0, "food_consumed_civilian": 0, "food_consumed_military": 0, "food_shortfall_civilian": 0, "food_shortfall_military": 0, "weapons_produced": 0, "weapons_destroyed": 0, "dead": 0, "starvation_dead": 0, "prisoners": 0},
 		"pending_reports": [], "reports": [], "events": [], "next_report": 1,
 		"convoys": [], "next_convoy": 1,
 	}
@@ -60,11 +62,15 @@ func _city(id: String, label: String, owner: String, troops: int, weapons: int, 
 	var city: Dictionary = Economy.CITIES[id].duplicate(true)
 	city.merge({"name": label, "owner": owner, "soldiers": troops, "weapons": weapons, "food": food, "fort": fort,
 		"production_rates": Economy.PRODUCTION_RATES.duplicate(true), "production_progress": {"food": 0, "weapons": 0},
-		"civilian_food_progress": 0})
+		"civilian_food_progress": 0, "condition": _new_condition()})
 	return city
 
 func _army(owner: String, location: String, troops: int, weapons: int, food: int) -> Dictionary:
-	return {"owner": owner, "location": location, "soldiers": troops, "weapons": weapons, "food": food, "march": {}, "starving_hours": 0}
+	return {"owner": owner, "location": location, "soldiers": troops, "weapons": weapons, "food": food, "march": {}, "starving_hours": 0, "condition": _new_condition()}
+
+func _new_condition() -> Dictionary:
+	return {"fatigue": 0, "morale": 100, "hunger": 0, "stage": "fed",
+		"last_needed": 0, "last_eaten": 0, "last_activity": "rest", "activity_flags": {}}
 
 func snapshot() -> Dictionary:
 	## Privileged save/debug truth, never a player-facing information API.
@@ -82,7 +88,11 @@ func player_view() -> Dictionary:
 		local_city = _state.cities[location].duplicate(true)
 		local_city["id"] = location
 		local_city["production_plan"] = _production_plan(location)
-	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "army": _state.armies.relief.duplicate(true), "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
+		# Physical presence does not reveal a hostile garrison's internal ration history.
+		local_city.erase("condition")
+	var own_army: Dictionary = _state.armies.relief.duplicate(true)
+	own_army.condition.merge(_condition_summary("relief"))
+	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "army": own_army, "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
 
 func march(route_id: String) -> bool:
 	if _state.campaign_ended or _state.battle_locks.has("relief") or not ROUTES.has(route_id):
@@ -176,6 +186,8 @@ func _advance_clock_to(target_seconds: float) -> void:
 				next_time = minf(next_time, float(army.march.arrives_at_seconds))
 		for report in _state.pending_reports:
 			next_time = minf(next_time, float(report.arrives_at_seconds))
+		if next_time > _state.time_seconds:
+			_record_condition_activity()
 		_state.time_seconds = next_time
 		if next_time == hour_boundary:
 			_state.hour += 1
@@ -269,14 +281,109 @@ func _feed() -> void:
 			var civilian_need: int = person_hours / ECONOMY_RULES.person_hours_per_food
 			city.civilian_food_progress = person_hours % ECONOMY_RULES.person_hours_per_food
 			_consume(city_id, "civilian", civilian_need, city.population, ECONOMY_RULES.hours_per_day)
-		_consume(city_id, "military", _military_food_need(city.soldiers), city.soldiers, 1)
+		var need := _military_food_need(city.soldiers)
+		var eaten := _consume(city_id, "military", need, city.soldiers, 1)
+		_update_condition(city_id, need, eaten)
 	for army_id in _state.armies:
 		var army: Dictionary = _state.armies[army_id]
 		var need := _military_food_need(army.soldiers)
 		var eaten := _consume(army_id, "military", need, army.soldiers, 1)
-		army.starving_hours = army.starving_hours + 1 if eaten < need else 0
-		if army.starving_hours >= 3:
-			_lose_troops(army, 1, "starvation")
+		army.starving_hours = mini(int(army.starving_hours) + 1, int(CONDITION_RULES.hunger_limit)) if eaten < need else 0
+		_update_condition(army_id, need, eaten)
+
+func _condition_activity(entity_id: String) -> String:
+	if _state.battle_locks.has(entity_id):
+		return "battle"
+	var entity := _entity(entity_id)
+	if _state.armies.has(entity_id) and not entity.march.is_empty():
+		return "march"
+	if _state.siege.active and entity_id in [_state.siege.city, _state.siege.army]:
+		return "siege"
+	var location := _location(entity_id)
+	if not _state.cities.has(location) or _state.cities[location].owner != entity.owner:
+		return "alert"
+	for army in _state.armies.values():
+		if army.soldiers > 0 and army.location == location and army.owner != entity.owner:
+			return "alert"
+	return "rest"
+
+func _record_condition_activity() -> void:
+	# Record every positive clock interval, not just the activity at the meal boundary.
+	# Any exertion during an hour rules out a full resting-hour recovery.
+	for entity_id in _state.cities.keys() + _state.armies.keys():
+		var entity := _entity(entity_id)
+		if entity.soldiers > 0:
+			entity.condition.activity_flags[_condition_activity(entity_id)] = true
+
+func _update_condition(entity_id: String, needed: int, eaten: int) -> void:
+	var entity := _entity(entity_id)
+	var condition: Dictionary = entity.condition
+	if needed == 0:
+		condition.activity_flags.clear()
+		return # An empty force neither recovers nor creates casualties.
+	var before: Dictionary = condition.duplicate(true)
+	var activity := "rest"
+	# Stable priority makes mixed-hour explanations deterministic.
+	for candidate in ["alert", "siege", "march", "battle"]:
+		if condition.activity_flags.has(candidate):
+			activity = candidate
+	var rested: bool = condition.activity_flags.size() == 1 and condition.activity_flags.has("rest")
+	var deficit := needed - eaten
+	var loss := 0
+	if deficit > 0:
+		condition.hunger = mini(int(CONDITION_RULES.hunger_limit), int(condition.hunger) + _scaled_shortfall(deficit, needed, CONDITION_RULES.ration_scale))
+		condition.fatigue = mini(100, int(condition.fatigue) + _scaled_shortfall(deficit, needed, CONDITION_RULES.fatigue_per_missed_ration))
+		condition.morale = maxi(0, int(condition.morale) - _scaled_shortfall(deficit, needed, CONDITION_RULES.morale_per_missed_ration))
+		condition.stage = "attrition" if condition.hunger >= CONDITION_RULES.attrition_at else ("weakened" if condition.hunger >= CONDITION_RULES.weakened_at else "shortage")
+	else:
+		condition.hunger = maxi(0, int(condition.hunger) - int(CONDITION_RULES.ration_scale))
+		if rested:
+			condition.fatigue = maxi(0, int(condition.fatigue) - int(CONDITION_RULES.fatigue_recovery))
+			condition.morale = mini(100, int(condition.morale) + int(CONDITION_RULES.morale_recovery))
+		condition.stage = "recovering" if condition.hunger > 0 or (rested and (condition.fatigue > 0 or condition.morale < 100)) else "fed"
+	condition.fatigue = mini(100, int(condition.fatigue) + int(Condition.ACTIVITIES[activity]))
+	condition.last_activity = activity
+	condition.last_needed = needed
+	condition.last_eaten = eaten
+	condition.activity_flags.clear()
+	# Emit the warning/weakening before any casualty at this boundary.
+	_event("military_condition", {"entity": entity_id, "needed": needed, "eaten": eaten,
+		"shortfall": deficit, "activity": activity, "rested": rested, "before": before, "after": condition})
+	if deficit > 0 and condition.hunger >= CONDITION_RULES.attrition_at:
+		var old_soldiers: int = entity.soldiers
+		var old_weapons: int = entity.weapons
+		_lose_troops(entity, CONDITION_RULES.attrition_per_hour, "starvation")
+		loss = old_soldiers - int(entity.soldiers)
+		_state.ledger.starvation_dead += loss
+		if loss > 0:
+			_event("starvation_attrition", {"entity": entity_id, "dead": loss,
+				"weapons_destroyed": old_weapons - int(entity.weapons), "hunger": condition.hunger,
+				"fatigue": condition.fatigue, "morale": condition.morale,
+				"reserved_people": _reserved_for(entity, "soldiers")})
+
+func _scaled_shortfall(deficit: int, needed: int, scale: int) -> int:
+	@warning_ignore("integer_division")
+	return (deficit * scale + needed - 1) / needed
+
+func _condition_summary(entity_id: String) -> Dictionary:
+	var entity := _entity(entity_id)
+	var needed := _military_food_need(entity.soldiers)
+	var modifiers := _condition_modifiers(entity.condition)
+	return {"activity": _condition_activity(entity_id), "food_needed_per_hour": needed,
+		"food_hours": float(entity.food) / needed if needed > 0 else 0.0,
+		"low_food": needed > 0 and entity.food <= needed * int(CONDITION_RULES.low_food_hours),
+		"ration_scale": CONDITION_RULES.ration_scale, "weakened_at": CONDITION_RULES.weakened_at,
+		"attrition_at": CONDITION_RULES.attrition_at, "modifiers": modifiers}
+
+func _condition_modifiers(condition: Dictionary) -> Dictionary:
+	# The legacy well-fed hero/soldier profiles remain unchanged. These bounded
+	# penalties are an entry snapshot, not a second live world-condition simulator.
+	var fatigue := maxi(0, int(condition.fatigue) - int(CONDITION_RULES.fatigue_penalty_above))
+	var morale := maxi(0, int(CONDITION_RULES.morale_penalty_below) - int(condition.morale))
+	@warning_ignore("integer_division")
+	var penalty: int = fatigue / 3 + morale / 7 + int(condition.hunger) / 500
+	return {"speed_percent": 100 - mini(int(CONDITION_RULES.max_speed_penalty), penalty),
+		"damage_percent": 100 - mini(int(CONDITION_RULES.max_damage_penalty), penalty)}
 
 func _military_food_need(soldiers: int) -> int:
 	# Existing hourly field-ration rounding is preserved, including locked participants.
@@ -468,6 +575,10 @@ func _economy_errors() -> Array[String]:
 		if not entity is Dictionary:
 			errors.append("invalid inventory entity")
 			continue
+		if not _valid_condition(entity.get("condition")):
+			errors.append("invalid military condition")
+		if entity.has("march") and not _bounded_integer(entity.get("starving_hours"), int(CONDITION_RULES.hunger_limit)):
+			errors.append("invalid consecutive shortage hours")
 		for resource in ["food", "weapons", "soldiers"]:
 			var limit: int = MAX_ECONOMY_PEOPLE if resource == "soldiers" else MAX_ECONOMY_STOCK
 			if not _bounded_integer(entity.get(resource), limit):
@@ -475,11 +586,13 @@ func _economy_errors() -> Array[String]:
 	for convoy in _state.convoys:
 		if not convoy is Dictionary or not _bounded_integer(convoy.get("food"), MAX_ECONOMY_PEOPLE):
 			errors.append("invalid convoy food")
-	for field in ["food_produced", "weapons_produced", "food_consumed", "food_consumed_civilian", "food_consumed_military", "food_shortfall_civilian", "food_shortfall_military"]:
+	for field in ["food_produced", "weapons_produced", "food_consumed", "food_consumed_civilian", "food_consumed_military", "food_shortfall_civilian", "food_shortfall_military", "dead", "starvation_dead", "prisoners", "weapons_destroyed"]:
 		if not _bounded_integer(_state.ledger.get(field), MAX_ECONOMY_STOCK):
 			errors.append("invalid economy ledger: " + field)
 	if not errors.is_empty():
 		return errors
+	if _state.ledger.starvation_dead > _state.ledger.dead:
+		errors.append("starvation casualty accounting")
 	# Only typed, bounded numbers reach calculations and cross-field invariants.
 	for city_id in _state.cities:
 		var city: Dictionary = _state.cities[city_id]
@@ -538,9 +651,31 @@ func _economy_has_headroom(target_seconds: float) -> bool:
 		"food_consumed": civilian_need + military_need,
 		"food_consumed_civilian": civilian_need, "food_consumed_military": military_need,
 		"food_shortfall_civilian": civilian_need, "food_shortfall_military": military_need,
+		"starvation_dead": mini(totals().soldiers, hours * int(CONDITION_RULES.attrition_per_hour) * (_state.cities.size() + _state.armies.size())),
+		"dead": totals().soldiers, "prisoners": totals().soldiers, "weapons_destroyed": totals().soldiers,
 	}
 	for field in ledger_deltas:
 		if int(_state.ledger[field]) > MAX_ECONOMY_STOCK - int(ledger_deltas[field]):
+			return false
+	return true
+
+func _valid_condition(value: Variant) -> bool:
+	if not value is Dictionary:
+		return false
+	for field in ["fatigue", "morale"]:
+		if not _bounded_integer(value.get(field), 100):
+			return false
+	if not _bounded_integer(value.get("hunger"), int(CONDITION_RULES.hunger_limit)):
+		return false
+	for field in ["last_needed", "last_eaten"]:
+		if not _bounded_integer(value.get(field), _military_food_need(MAX_ECONOMY_PEOPLE)):
+			return false
+	if value.last_eaten > value.last_needed or value.get("stage") not in ["fed", "shortage", "weakened", "attrition", "recovering"] or value.get("last_activity") not in Condition.ACTIVITIES:
+		return false
+	if not value.get("activity_flags") is Dictionary:
+		return false
+	for activity in value.activity_flags:
+		if activity not in Condition.ACTIVITIES or not value.activity_flags[activity] is bool or not value.activity_flags[activity]:
 			return false
 	return true
 
@@ -585,6 +720,8 @@ func create_battle_ticket(location: String = "hequ") -> Dictionary:
 		return _reject("participants_locked")
 	if army.soldiers <= 0 or depot.soldiers <= 0 or depot.owner == army.owner:
 		return _reject("no_hostile_force")
+	if not _economy_errors().is_empty():
+		return _reject("invalid_world_condition")
 	var battle_id := "%d:%d" % [_state.campaign_generation, _state.next_battle]
 	var rosters: Array = []
 	for force_id in ["relief", "hequ"]:
@@ -597,7 +734,8 @@ func create_battle_ticket(location: String = "hequ") -> Dictionary:
 			var hero: bool = force_id == "relief" and slot == 0
 			roster.append({"id": "commander" if hero else "%s:%s:%d" % [battle_id, force_id, slot],
 				"force_id": force_id, "hero": hero, "weapon": "spear" if slot < armed else "",
-				"hp": _state.commander.hp if hero else 100.0})
+				"hp": _state.commander.hp if hero else 100.0,
+				"condition": force.condition.duplicate(true), "condition_modifiers": _condition_modifiers(force.condition)})
 		rosters.append(roster)
 	var ticket := {"battle_id": battle_id, "time": _state.time_seconds, "location": location,
 		"participating_force_ids": ["relief", "hequ"], "reserved_roster_snapshot": rosters,

@@ -63,6 +63,9 @@ func _run() -> void:
 	key(KEY_SPACE)
 	check(battle_state() == original and scene.paused, "battle keys cannot pause/restart/cast through modal")
 	check(ui.view.army.soldiers == 60 and ui.view.army.weapons == 30 and ui.view.army.food == 120, "campaign force starts with actual inventory")
+	check(ui.army_label.text.contains("Food 120 (~20.0h at 6/h)") and ui.army_label.text.contains("Fatigue 0/100 | Morale 100/100"), "own army displays its usable carried supply and actual condition")
+	check(ui.army_label.text.contains("FED") and ui.army_label.text.contains("Safe rest available"), "rest availability is shown without claiming instant recovery")
+	test_condition_projection()
 	check(ui.view.local_city.id == "pingling", "only local city truth presented")
 	check(ui.economy_label.visible and ui.economy_label.text.contains("20 civilians (garrison excluded) | 10 workers | stability 100/100"), "local civilian population and labor are distinct from military roster")
 	check(ui.economy_label.text.contains("8 farmers / 8 land slots | 2 crafters / 2 workshop slots"), "local economy shows actual allocated labor and capacity")
@@ -75,6 +78,10 @@ func _run() -> void:
 	await process_frame
 	check(ui.map.size.y >= 190.0 and ui.buttons.wait1.size.y >= 38.0, "economy panel preserves map and action-button sizes")
 	check(not ui.scroll.get_h_scroll_bar().visible and not ui.scroll.get_v_scroll_bar().visible and ui.scroll.get_global_rect().encloses(ui.buttons.reset.get_global_rect()), "initial 1280x800 campaign fully fits including reset without scrolling")
+	check(ui.army_label.get_line_count() == 3, "own-army condition stays within three readable lines at 1280x800")
+	for button in ui.buttons.values():
+		check(ui.scroll.get_global_rect().encloses(button.get_global_rect()), "initial campaign control is fully visible: " + button.text)
+	await test_condition_progression()
 	await click("food")
 	check(ui.view.army.food == 180 and ui.view.local_city.food == 440, "food button transfers real stocks")
 	await click("weapons")
@@ -84,6 +91,7 @@ func _run() -> void:
 	await click("river")
 	check(ui.view.army.march.destination == "hequ" and ui.view.local_city.is_empty(), "route button dispatches real army and hides local truth")
 	check(not ui.economy_label.visible and ui.economy_label.text.is_empty(), "departing clears and hides local economy without retaining stale truth")
+	check(ui.army_label.text.contains("No safe rest: march"), "marching does not advertise safe rest")
 	check(ui.buttons.road.disabled and ui.buttons.observe.disabled and ui.buttons.food.disabled and ui.buttons.seize.disabled, "illegal transit actions disabled")
 	await click("wait1")
 	check(ui.view.hour == 1 and ui.view.army.food == 174, "advance button moves clock and consumes food")
@@ -91,6 +99,8 @@ func _run() -> void:
 	await click("wait1")
 	check(ui.view.local_city.id == "hequ" and ui.view.local_city.owner == "bei", "arrival reveals actual local ownership")
 	check(ui.economy_label.visible and ui.economy_label.text.contains("10 civilians") and ui.economy_label.text.contains("1440 food + 30 weapons"), "arrival shows only the new city's current economic projection")
+	check(ui.army_label.text.contains("Fatigue 6/100") and ui.army_label.text.contains("No safe rest: alert"), "hostile arrival retains marching fatigue and does not offer safe rest")
+	check(not ui.view.local_city.has("condition"), "even physically observed enemy city does not expose private military condition")
 	check(not ui.buttons.seize.disabled and ui.buttons.food.disabled, "enemy depot can be attacked but not freely looted")
 	check(ui.buttons.seize.text.contains("20 vs 15"), "assault previews the world-derived detachment size")
 	check(ui.local_label.text.contains("40 stay in reserve"), "nonparticipating soldiers are explicitly reserved outside the field")
@@ -160,6 +170,53 @@ func _run() -> void:
 	await process_frame
 	print("STRATEGY_TEST_SUMMARY " + JSON.stringify({"assertions": checks, "failures": failures.size(), "messages": failures}))
 	quit(0 if failures.is_empty() else 1)
+
+func test_condition_projection() -> void:
+	var before := var_to_str(ui.world.player_view())
+	var projected: Dictionary = ui.world.player_view()
+	var army: Dictionary = projected.army
+	army.food = 17
+	army.condition.merge({"fatigue": 37, "morale": 61, "stage": "shortage", "hunger": 500,
+		"food_hours": 12.5, "food_needed_per_hour": 7, "activity": "siege", "attrition_at": 2500,
+		"last_needed": 9, "last_eaten": 4}, true)
+	army.condition.modifiers.speed_percent = 87
+	army.condition.modifiers.damage_percent = 81
+	var fixture := var_to_str(army)
+	var text: String = ui._army_text(army, projected.time_seconds)
+	check(text.contains("Food 17 (~12.5h at 7/h)") and text.contains("Fatigue 37/100 | Morale 61/100"), "formatter consumes passed own-army projection rather than recalculating supply or reading live world")
+	check(text.contains("SHORTAGE: Rations restored; recovery takes time") and text.contains("Hunger 0.50 rations; attrition at 2.50") and text.contains("No safe rest: siege"), "warning uses projected hunger threshold, replenished supply and current activity")
+	var details: String = ui._condition_details(army.condition)
+	check(details.contains("4 eaten / 9 needed") and details.contains("speed 87% / damage 81%"), "details consume actual ration and battle-entry modifier projections")
+	check(var_to_str(army) == fixture, "condition formatting does not mutate its detached input")
+	check(var_to_str(ui.world.player_view()) == before, "nested condition projection mutation and formatting cannot alter WorldSim")
+	army.condition.food_needed_per_hour = 0
+	army.condition.food_hours = 0.0
+	check(ui._army_text(army, 0.0).contains("no rations needed"), "empty roster is not reported as out of supply")
+	ui.refresh()
+	check(ui.army_label.text.contains("Fatigue 0/100 | Morale 100/100"), "refresh replaces stale detached condition with the fresh own-army projection")
+
+func test_condition_progression() -> void:
+	# Move carried food back into a co-located allied store through the public API.
+	# No hidden world-state fixture is needed to exercise the warning before deaths.
+	check(ui.world.transfer("relief", "pingling", "food", 120), "condition test can return its carried supply to local storage")
+	ui.refresh()
+	check(ui.army_label.text.contains("LOW FOOD; resupply soon") and ui.view.army.soldiers == 60, "low-food warning precedes both missed rations and any soldier death")
+	await click("wait1")
+	check(ui.view.army.condition.stage == "shortage" and ui.view.army.soldiers == 60, "first missed ration produces shortage while every soldier is still alive")
+	check(ui.army_label.text.contains("SHORTAGE: Resupply before losses") and ui.army_label.text.contains("Fatigue 12/100 | Morale 90/100"), "first shortage visibly explains resupply and its fatigue/morale cost")
+	check(ui.army_label.text.contains("Hunger 1.00 rations; attrition at 3.00"), "shortage warning gives the projected attrition threshold before losses")
+	check(ui.scroll.get_global_rect().encloses(ui.army_label.get_global_rect()) and ui.scroll.get_global_rect().encloses(ui.buttons.food.get_global_rect()), "warning and resupply control are both visible at shortage")
+	await click("wait1")
+	check(ui.army_label.text.contains("WEAKENED: Resupply now") and ui.view.army.soldiers == 60, "second missed ration visibly weakens the army before attrition")
+	await click("wait1")
+	check(ui.army_label.text.contains("ATTRITION: Starvation losses") and ui.view.army.soldiers == 59, "later starvation loss has an explicit and truthful attrition label")
+	await click("food")
+	check(ui.army_label.text.contains("Fatigue 36/100 | Morale 70/100"), "transferring supplies does not falsely claim immediate fatigue or morale recovery")
+	check(ui.army_label.text.contains("Rations restored; recovery takes time"), "resupply replaces obsolete urgent orders without clearing lasting hunger")
+	await click("wait1")
+	check(ui.army_label.text.contains("RECOVERING") and ui.army_label.text.contains("Fatigue 30/100 | Morale 74/100"), "a full fed hour at safe rest visibly recovers condition")
+	await click("reset")
+	check(ui.army_label.text.contains("FED") and not ui.army_label.text.contains("SHORTAGE") and ui.view.army.soldiers == 60, "new campaign clears old condition warnings and losses")
 
 func test_economy_formatting() -> void:
 	# A local projection fixture covers fractional, labor-limited output independently

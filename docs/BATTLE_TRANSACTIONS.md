@@ -83,8 +83,11 @@ While reserved/running, both forces are locked against another ticket, marching,
 transfers and the legacy aggregate depot action. Free reserves remain available to
 coarse-world attrition; reserved people and weapons cannot also be killed/destroyed
 by that update. All reserved people remain included in world food/upkeep until
-settlement. Battle-detailed per-casualty food consumption and hunger effects on the
-local participants are not yet modeled.
+settlement. Battle-detailed per-casualty food consumption is not yet modeled. ECO-04 adds
+authoritative force condition and bounded movement/damage penalties on entry,
+including unarmed units and the commander’s skills; see [HUNGER.md](HUNGER.md).
+World hunger continues during battle, without double-killing reserved people.
+Live local modifier refresh and per-person hunger remain deferred.
 
 ## One clock and offscreen simulation
 

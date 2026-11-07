@@ -52,6 +52,7 @@ func _unit(id: int, team: int, pos: Vector2, hero: bool) -> Dictionary:
 		"facing": Vector2.RIGHT if team == 0 else Vector2.LEFT,
 		"hp": 360.0 if hero else 100.0, "max_hp": 360.0 if hero else 100.0,
 		"speed": 7.0 if hero else 3.0, "damage": 26.0 if hero else 13.0,
+		"condition_damage_scale": 1.0, "condition_speed_scale": 1.0,
 		"range": 3.1 if hero else 1.65, "weapon": "spear", "attack_cd": 0.0,
 		"guard": 0.0, "flash": 0.0, "swing": 0.0, "target": -1}
 
@@ -90,17 +91,17 @@ func use_action(action: String) -> bool:
 			_cone_attack(hero.range, hero.damage, 0.25)
 		"sweep":
 			cooldowns.sweep = SKILL_COOLDOWNS.sweep
-			_cone_attack(4.4, 44.0, -0.35)
+			_cone_attack(4.4, 44.0 * hero.condition_damage_scale, -0.35)
 		"lunge":
 			cooldowns.lunge = SKILL_COOLDOWNS.lunge
 			var start: Vector2 = hero.pos
-			var finish := _clamp_position(start + player_aim * 5.8)
+			var finish := _clamp_position(start + player_aim * 5.8 * hero.condition_speed_scale)
 			hero.pos = finish
 			for unit in units:
 				if unit.team == 1 and unit.hp > 0.0:
 					var nearest := Geometry2D.get_closest_point_to_segment(unit.pos, start, finish)
 					if nearest.distance_to(unit.pos) < 1.8:
-						_hurt(unit, 58.0, true)
+						_hurt(unit, 58.0 * hero.condition_damage_scale, true)
 		"guard":
 			cooldowns.guard = SKILL_COOLDOWNS.guard
 			hero.guard = 2.6
@@ -266,6 +267,10 @@ func reset_from_ticket(ticket: Dictionary) -> void:
 			if unit.weapon == "":
 				unit.damage = 7.0 if entry.hero else 4.0
 				unit.range = 0.85
+			unit.condition_damage_scale = float(entry.condition_modifiers.damage_percent) / 100.0
+			unit.condition_speed_scale = float(entry.condition_modifiers.speed_percent) / 100.0
+			unit.damage *= unit.condition_damage_scale
+			unit.speed *= unit.condition_speed_scale
 			units.append(unit)
 
 func outcome() -> Dictionary:
