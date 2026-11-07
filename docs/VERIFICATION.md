@@ -112,3 +112,11 @@ Local universal macOS ZIP SHA256: `dd0ffd72b4bc8c1fc78e0caa5bec314e001d3ad7ae1cc
 Cloud Linux/Godot4.6.3: **1,908 functional assertions** (33 battle, 526 world, 527 economy, 337 hunger, 293 transactions, 35 scene, 94 strategy, 63 campaign) plus the 36 economy property scenarios and 2,689 independent hunger oracle/boundary checks. Both actual-combat smokes retain the original healthy fixture outcomes. Independent audit found no confirmed defects. The new visible three-line panel exposes actual own-army ration coverage, fatigue/morale, activity/rest eligibility and shortage→weakening→attrition, without enemy truth. Core proof and exact formulas are in HUNGER.md.
 
 Graphical CI adds an actual pre-loss shortage screenshot after exhausting physical carried food through wait clicks. This new source's rendered warning, exports and native macOS results remain pending until a specific passing run is linked. Legacy 360HP hero balance, entry-only condition modifiers and no durable saves remain explicit limitations.
+
+## v0.5 actual graphical/native evidence
+
+Source `907fe31c938155f50589a9b9d3b62e312a81bc42`: [CI 42423403245](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42423403245) passed both jobs. The actual shortage screenshot was inspected: at hour21 all60 people remain, carried food0, fatigue12/morale90, pre-casualty warning and resupply action are readable, and the complete initial controls fit1280×800. The test reached this state by actual wait-button clicks, not injected image content. Battle/campaign graphical flows also passed.
+
+Native macOS26.7.2 arm64 ran both exported headless modes and passed strict ad-hoc signature verification. Campaign outcome remains15 enemy losses,19 regular allies plus living commander, hero202.5HP and world10806.6seconds. This does not demonstrate M5 rendered performance or human play feel. No Developer ID/notarization or formal release.
+
+Local v0.5 macOS ZIP SHA256: `14f99dfce0d6d640dfb4e15d586a542103c6633ea517762aed713271d8aeaf01`. Linux archive SHA256: `4324db0dd70c46734a71808379d4535d4d2d413556db9a07d57342715d3a93ac`. Source merged via PR #6 as `4174e98`. Actual logs: `evidence/hunger-native-macos.log`, `evidence/hunger-visual.log`. Following evidence-only commits do not claim new runtime coverage; they reference this tested code ancestor.
