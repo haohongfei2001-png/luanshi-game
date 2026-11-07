@@ -15,7 +15,8 @@ All commands exited 0 with no Godot script errors:
 
 1. `godot --headless --path . --editor --import`: passed.
 2. `godot --headless --path . --script tests/test_battle.gd`: **33 assertions, 0 failures**. Includes movement/bounds, attack facing, cooldowns, all three skills, order effects, retreat/extraction, casualty accounting, protagonist death, reset, deterministic replay and battle completion.
-3. `godot --headless --path . --fixed-fps 60 -- --smoke-scene`: real scene initialized, all 41 unit views and HUD instantiated, basic strike + three skills and attack/follow commands exercised. Scripted victory at 6.87 simulated seconds: friendly 20 survivors / 0 fallen, enemy 0 survivors / 20 fallen, commander 131.45 HP. This is scripted integration coverage, not a human playtest.
+3. `godot --headless --path . --fixed-fps 60 --script tests/test_scene.gd`: **27 assertions, 0 failures**. Tests live action binding, movement, pause/no casting while paused, UI command signals, button layout non-overlap, death/results and restart cleanup.
+4. `godot --headless --path . --fixed-fps 60 -- --smoke-scene`: real scene initialized, all 41 unit views and HUD instantiated, basic strike + three skills and attack/follow commands exercised. Scripted victory at 6.87 simulated seconds: friendly 20 survivors / 0 fallen, enemy 0 survivors / 20 fallen, commander 131.45 HP. This is scripted integration coverage, not a human playtest.
 
 Seed 184, armies fighting while the commander initially stays away: 37.35 simulated seconds; friendly 0 survivors / 20 fallen, enemy 5 survivors / 15 fallen. The survivors then killed the commander. The encounter correctly ended the run. Two repeats produced identical result dictionaries.
 
@@ -27,11 +28,17 @@ Measured CPU simulation cost: approximately 0.64 ms per fixed step in the army t
 - Headless editor import / simulation / scene lifecycle: passed.
 - Visual gameplay exercised: **no**. The environment has no display. Official Debian Xvfb was obtained, but X11 cannot create its Unix socket (`EPERM`), including with the supported elevated execution attempt. No security restriction was bypassed.
 - Native macOS runtime, Apple M5 performance, signing and notarization: **not tested**.
-- macOS export: preparation in progress; official 4.6.3 export templates downloaded and their SHA-512 verified.
+- macOS export: **passed**, universal ZIP with arm64 and x86_64 slices, valid Info.plist, packed game and executable permissions confirmed. Built-in ad-hoc code signing completed; no Developer ID signing or notarization. Official 4.6.3 export templates SHA-512 verified.
+- Linux export: **passed**; exported binary independently ran the same headless scene and reached the same victory result.
+- CI is configured to exercise a rendered scene on a standard Ubuntu runner and the packaged app headlessly on a standard macOS runner. Pending CI is not treated as a pass.
 - iPhone/Xcode/signing: deferred, not claimed.
 
 ## Technical tradeoffs / next executable step
 
 Compatibility rendering is the initial conservative desktop default. Mobile rendering must be evaluated separately; the lack of an authorized graphical display prevents an honest cloud visual/performance comparison. Inputs and authoritative simulation remain independent of presentation and device bindings.
 
-Next: export unsigned macOS universal ZIP and Linux binary; run the exported Linux binary headlessly; add reproducible export checks. Native Mac playtesting and graphical frame-time measurements remain separate acceptance levels.
+Export command: `XDG_DATA_HOME=/workspace/shared/godot-data XDG_CONFIG_HOME=/workspace/shared/godot-config XDG_CACHE_HOME=/workspace/shared/godot-cache ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0.
+
+The first export exposed a real configuration failure (arm64 requires ETC2/ASTC import); this was fixed by enabling that setting before the passing rerun. A new scene integration test initially exposed a GDScript inferred-type parse issue in the test itself; an explicit Node type fixed it and all 60 assertions then passed.
+
+Next: inspect CI evidence and fix any issues; then request a ten-minute hands-on review of movement, skills and orders. Native Mac playtesting and graphical frame-time measurements remain separate acceptance levels.

@@ -3,6 +3,7 @@ extends Node3D
 
 var body: Node3D
 var health_fill: MeshInstance3D
+var health_back: MeshInstance3D
 var helmet: MeshInstance3D
 var weapon: Node3D
 var ring: MeshInstance3D
@@ -51,7 +52,7 @@ func configure(unit: Dictionary) -> void:
 	body.add_child(weapon)
 	add_box(weapon, Vector3(0.065, 0.065, 2.15), leather, Vector3(0.48, 0.93, 0.57))
 	add_box(weapon, Vector3(0.13, 0.08, 0.44), iron, Vector3(0.48, 0.93, 1.78))
-	var health_back := add_box(self, Vector3(0.94, 0.08, 0.11), material(Color("252c29")), Vector3(0, 2.10, 0))
+	health_back = add_box(self, Vector3(0.94, 0.08, 0.11), material(Color("252c29")), Vector3(0, 2.10, 0))
 	health_back.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	health_fill = add_box(self, Vector3(0.9, 0.09, 0.12), material(base_color.lightened(0.22)), Vector3(0, 2.11, 0))
 	health_fill.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -73,7 +74,7 @@ func update_state(unit: Dictionary, time: float) -> void:
 			body.rotation.z = PI * 0.5
 			body.position.y = 0.15
 			cloth_material.albedo_color = base_color.darkened(0.55)
-			health_fill.get_parent().get_child(1).visible = false
+			health_back.visible = false
 			health_fill.visible = false
 			ring.visible = false
 		return

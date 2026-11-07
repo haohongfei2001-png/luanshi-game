@@ -28,7 +28,7 @@ Direct-cloud bootstrap: see [docs/DOT_BOOTSTRAP.md](docs/DOT_BOOTSTRAP.md). AI d
 
 ## Status
 
-Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 simulation assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 simulation and 27 scene/input assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
 
 ### Play from source
 
@@ -50,3 +50,12 @@ The test script runs editor import, pure simulation tests and the full scene's s
 ## Licensing
 
 No open-source license has been selected. A public repository does not itself grant a license to reuse its code or assets.
+
+### Build and play the macOS package
+
+Install the official matching Godot 4.6.3 export templates, then run `./tools/export.sh`.
+`builds/Luanshi-macOS.zip` contains a universal `.app` with both Apple Silicon arm64 and Intel x86_64 code. The game uses Godot's built-in **ad-hoc** signature, not an Apple Developer ID certificate, and is **not notarized**.
+
+Unzip and open the app. If macOS blocks this downloaded prototype, only approve it if you trust this project: after attempting to open it, use System Settings → Privacy & Security → Open Anyway if macOS offers that option. Do not disable Gatekeeper globally. You can instead run the source project in an official Godot editor. Actual M5 performance remains untested.
+
+The repository's [Actions](../../actions) workflow tests and packages each prototype change. Its downloadable artifacts contain the macOS ZIP, a Linux executable, test logs, hashes and, when graphical CI succeeds, an actual rendered screenshot. GitHub may require sign-in to download Actions artifacts. This is a prototype artifact, not a public production release.

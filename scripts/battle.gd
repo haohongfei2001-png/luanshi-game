@@ -16,6 +16,8 @@ var simulation_usec := 0
 var physics_steps := 0
 var cursor: MeshInstance3D
 var effects: Array[Dictionary] = []
+var capture_pending := false
+var capture_complete := false
 
 func _ready() -> void:
 	InputActions.install()
@@ -109,6 +111,15 @@ func _restart() -> void:
 		views.append(view)
 	_sync_visuals(0.0)
 
+func _process(_delta: float) -> void:
+	if scene_smoke and "--capture-proof" in OS.get_cmdline_user_args() and smoke_steps >= 120 and not capture_pending:
+		capture_pending = true
+		await RenderingServer.frame_post_draw
+		var snapshot := get_viewport().get_texture().get_image()
+		var error := snapshot.save_png("res://artifacts/battle-proof.png")
+		capture_complete = error == OK
+		print("VISUAL_CAPTURE " + str(error))
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause_battle"):
 		_toggle_pause()
@@ -164,6 +175,20 @@ func _physics_process(delta: float) -> void:
 	if scene_smoke:
 		smoke_steps += 1
 		if smoke_steps >= 3600 or sim.ended:
+			var required := ["attack", "sweep", "lunge", "guard", "order_attack", "order_follow"]
+			for action in required:
+				if not smoke_actions.has(action):
+					push_error("Scene smoke did not exercise " + action)
+					get_tree().quit(1)
+					return
+			if not sim.ended:
+				push_error("Scene smoke timed out without a result")
+				get_tree().quit(1)
+				return
+			if "--capture-proof" in OS.get_cmdline_user_args() and not capture_complete:
+				push_error("Scene smoke did not produce its required visual evidence")
+				get_tree().quit(1)
+				return
 			print("SCENE_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report()}))
 			get_tree().quit(0)
 
