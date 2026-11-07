@@ -13,6 +13,8 @@ This repository contains a **small game prototype**, not an instruction to imple
 
 ## Product constraints
 
+First read `docs/PRODUCT_DECISIONS.md`, `docs/PRO_DESIGN_BIBLE.md`, `docs/DOT_CONTINUOUS_DELIVERY.md` and `docs/DELIVERY_PLAN.md` (in addition to `docs/GAME_VISION.md`). Preserve the existing Dot first-prototype work on `prototype/cloud-first-playable` rather than restarting from scratch. Read `docs/PRO_TECH_REVIEW_001.md` for early review findings.
+
 Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silently replace the setting, camera, combat model, progression, world independence, or protagonist-death rule.
 
 ## Current scope and priorities
