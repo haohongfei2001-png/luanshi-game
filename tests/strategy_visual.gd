@@ -49,10 +49,31 @@ func _run() -> void:
 		push_error("Graphical local economy projection failed")
 		quit(1)
 		return
+	if not scene.strategy.scroll.get_global_rect().encloses(scene.strategy.buttons.reset.get_global_rect()) or scene.strategy.scroll.get_v_scroll_bar().visible or scene.strategy.army_label.get_line_count() != 3:
+		push_error("Graphical condition panel pushes initial campaign controls out of view")
+		quit(1)
+		return
 	if not await capture("res://artifacts/economy-local-proof.png"):
 		push_error("Could not save local economy visual evidence")
 		quit(1)
 		return
+	# Actual wait clicks exhaust carried food; the warning must appear before death.
+	for id in ["wait6", "wait6", "wait6", "wait1", "wait1", "wait1"]:
+		await click(id)
+	var shortage: Dictionary = scene.strategy.world.player_view()
+	if shortage.army.soldiers != 60 or shortage.army.condition.stage != "shortage" or not scene.strategy.army_label.text.contains("SHORTAGE: Resupply before losses"):
+		push_error("Graphical condition shortage must be visible before any casualty")
+		quit(1)
+		return
+	if not scene.strategy.scroll.get_global_rect().encloses(scene.strategy.army_label.get_global_rect()) or not scene.strategy.scroll.get_global_rect().encloses(scene.strategy.buttons.food.get_global_rect()):
+		push_error("Graphical shortage warning and resupply control must both remain visible")
+		quit(1)
+		return
+	if not await capture("res://artifacts/condition-shortage-proof.png"):
+		push_error("Could not save condition shortage visual evidence")
+		quit(1)
+		return
+	await click("reset")
 	for id in ["river", "wait1", "wait1", "wait1", "seize"]:
 		await click(id)
 	if scene.strategy.visible or scene.campaign_adapter == null or scene.views.size() != 35 or scene.hud._unarmed(0) != 10:

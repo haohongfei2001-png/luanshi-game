@@ -6,11 +6,15 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-$PWD/.local-data}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$PWD/.local-config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$PWD/.local-cache}"
 mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" artifacts
+# Evidence images are outputs, never imported game resources.
+touch artifacts/.gdignore
 "$GODOT" --version | tee artifacts/engine-version.log
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 "$GODOT" --headless --path . --script tests/test_battle.gd 2>&1 | tee artifacts/simulation-tests.log
 "$GODOT" --headless --path . --script tests/test_world.gd 2>&1 | tee artifacts/world-tests.log
 "$GODOT" --headless --path . --script tests/tests_economy.gd 2>&1 | tee artifacts/economy-tests.log
+"$GODOT" --headless --path . --script tests/tests_hunger.gd 2>&1 | tee artifacts/hunger-tests.log
+"$GODOT" --headless --path . --script tests/test_hunger_properties.gd 2>&1 | tee artifacts/hunger-properties.log
 "$GODOT" --headless --path . --script tests/test_economy_properties.gd 2>&1 | tee artifacts/economy-properties.log
 "$GODOT" --headless --path . --script tests/test_battle_transactions.gd 2>&1 | tee artifacts/transaction-tests.log
 "$GODOT" --headless --path . --fixed-fps 60 --script tests/test_scene.gd 2>&1 | tee artifacts/scene-tests.log
@@ -18,7 +22,7 @@ mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" artifacts
 "$GODOT" --headless --path . --fixed-fps 60 --script tests/test_campaign_scene.gd 2>&1 | tee artifacts/campaign-tests.log
 "$GODOT" --headless --path . --fixed-fps 60 -- --smoke-scene 2>&1 | tee artifacts/scene-smoke.log
 "$GODOT" --headless --path . --fixed-fps 60 -- --campaign-smoke 2>&1 | tee artifacts/campaign-smoke.log
-if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/{import,simulation-tests,world-tests,economy-tests,economy-properties,transaction-tests,scene-tests,strategy-tests,campaign-tests,scene-smoke,campaign-smoke}.log; then
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/{import,simulation-tests,world-tests,economy-tests,hunger-tests,hunger-properties,economy-properties,transaction-tests,scene-tests,strategy-tests,campaign-tests,scene-smoke,campaign-smoke}.log; then
   echo 'Godot logged an error despite process exit code.' >&2
   exit 1
 fi
@@ -32,3 +36,7 @@ grep -q '"failures":0' artifacts/campaign-tests.log
 grep -q SCENE_SMOKE_PASS artifacts/scene-smoke.log
 grep -q CAMPAIGN_SMOKE_PASS artifacts/campaign-smoke.log
 grep -q "INDEPENDENT_ECO_REVIEW .* assertions / 0 failures" artifacts/economy-properties.log
+
+grep -q 'Hunger tests: .* assertions, 0 failures' artifacts/hunger-tests.log
+
+grep -q "INDEPENDENT_HUNGER_AUDIT .* checks / 0 failures" artifacts/hunger-properties.log

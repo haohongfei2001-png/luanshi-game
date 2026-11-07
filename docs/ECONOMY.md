@@ -1,12 +1,12 @@
 # ECO-03: population-constrained economy
 
-Status: implementation and deterministic headless verification for the bounded ECO-03 milestone. This does not complete G2: staged military hunger/fatigue/morale (ECO-04), recruitment, civilian demography, governance commands, durable saves and narrative work are still separate milestones. All demographic values, rates, ration priority and work allocation below are **PROVISIONAL**, not owner-approved historical or final game balance.
+Status: implementation and deterministic headless verification for the bounded ECO-03 milestone. Staged military hunger/fatigue/morale is now documented in [HUNGER.md](HUNGER.md) (ECO-04). Recruitment, civilian demography, governance commands, durable saves and narrative work remain separate milestones. All demographic values, rates, ration priority and work allocation below are **PROVISIONAL**, not owner-approved historical or final game balance.
 
 This document supersedes the fixed-production/civilian-deferred economic description in the older `WORLD_SIM.md`. `BATTLE_TRANSACTIONS.md` remains the guide to the existing real-time encounter and exactly-once settlement. This change preserves those APIs, original regression tests, and rescue scenarios.
 
 ## Data and authoritative state
 
-`data/economy_rules.gd` contains the tunable scenario inputs, copied into each city by `WorldSimulation`. There is no resource creation in the UI or BattleSim. The world snapshot schema is now **3** because civilian population, capacity, fractional work and consumption ledgers are new persistent state. There is still no supported save loader or implicit old-schema migration.
+`data/economy_rules.gd` contains the tunable scenario inputs, copied into each city by `WorldSimulation`. There is no resource creation in the UI or BattleSim. ECO-03 introduced snapshot schema **3** for civilian population, capacity, fractional work and consumption ledgers. ECO-04 now uses schema **4**, adding military condition and classified starvation deaths; see HUNGER.md. There is still no supported save loader or implicit old-schema migration.
 
 Each city has:
 
@@ -46,11 +46,11 @@ One provisional ration unit represents ten person-hours of food. Civilians and s
 - Existing military rationing is unchanged: each city garrison and field army consumes `ceil(soldiers / 10)` each hour, including reserved battle participants. Integer rounding remains the existing compressed military rule.
 - At each full day boundary, civilians request `population × 24 / 10`, carrying the integer division remainder into the next day. One civilian therefore requests exactly 12 food over five days, not 15 independently rounded daily portions.
 - Actual eaten food is `min(requested, physical stock)`. The balance is recorded as unmet demand, never negative inventory, never consumption of nonexistent food, and never debt that creates later food.
-- On the daily boundary the existing hourly order is production → convoy deliveries/dispatches → city civilian meal → city garrison meal → field-army meals/old attrition → arrivals → siege resolution → reports. Civilian-first sharing of city stocks on that boundary is provisional. Convoy dispatch still precedes meals, as in the existing scenario.
+- On the daily boundary the existing hourly order is production → convoy deliveries/dispatches → city civilian meal → city garrison meal → field-army meals/condition and staged attrition → arrivals → siege resolution → reports. Civilian-first sharing of city stocks on that boundary is provisional. Convoy dispatch still precedes meals, as in the existing scenario.
 
 `ledger.food_consumed` equals `food_consumed_civilian + food_consumed_military`. `food_shortfall_civilian` and `food_shortfall_military` separately count cumulative unmet demand. Each consumption event records entity ID, civilian/military category, current people, period, requested/eaten/shortfall and signed food delta. Events with zero eaten but positive demand explain shortages without inventing meals.
 
-Civilian population remains fixed in this scope even when meals are missed. There are no new demographic deaths, hunger-driven productivity changes, recruitment, fatigue or morale rules. The existing coarse military starvation behavior remains; do not describe this as completed ECO-04.
+Civilian population remains fixed in this scope even when meals are missed. There are no civilian demographic deaths, hunger-driven civilian productivity changes or recruitment. Military meals now feed the staged fatigue/morale/attrition and recovery mechanism in HUNGER.md; its new effects do not change the actual-food conservation rules above.
 
 ## Conservation and validation
 

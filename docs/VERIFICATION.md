@@ -98,3 +98,17 @@ The economy run covers 90 days with ledger/event reconstruction: 12,960 food pro
 GUI checks prove only local population/production is displayed, clear it in transit, show genuine siege stoppage and resumed production, keep precise fractional output, preserve readable minimum controls and provide scrolling. Actual graphical/native evidence for this version is pending until recorded. Rates and initial demographic scale are PROVISIONAL, not final design approval.
 
 CI excludes documentation-only pull requests/pushes confined to docs, README and AGENTS; a mixed code PR can still rerun when evidence is appended. Source/config/workflow changes run the full test/graphics/export/native pipeline. A documentation-only evidence commit can reference its tested code ancestor only after its diff is verified to contain no game/build change.
+
+## v0.4 actual graphical and native evidence
+
+Final source `0c8e240e820833f74e400b098be8108a934efeda`: [CI 42422010645](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42422010645) completed both jobs successfully. All 1,534 functional assertions and 36 seeded property scenarios passed. The actual 1280×800 initial economic map image was inspected: three concise local-economic rows, original routes/actions, delayed-intelligence text and the complete new-campaign button fit inside the viewport. An earlier CI image exposed bottom-button clipping; the final source fixes it instead of treating a headless layout assertion as sufficient.
+
+The exported app ran headless on native macOS 26.7.2 arm64, with strict built-in ad-hoc signature verification and both training/campaign smokes passing. Campaign again completed at world 10806.6 seconds, 15 enemy casualties, no friendly casualties, hero202.5HP, relief60/45weapons/102food. This is not human play-feel, rendered M5 hardware performance, Developer ID or notarization acceptance.
+
+Local universal macOS ZIP SHA256: `dd0ffd72b4bc8c1fc78e0caa5bec314e001d3ad7ae1cc58a0ce1a4b446a8485b`. Linux archive SHA256: `150a20c3f583e49e7e7ff6d2ae6253f3e8d1f6402bb21b4b91bc3fe69a7d2ec6`. PR #4 merged as `ca3f21a`, preserving later main `99d8ef0` design-only changes. Native source logs are in `evidence/economy-native-macos.log`; actual GUI script output is in `evidence/economy-visual.log`. The final CI artifacts include the full actual PNG and all logs.
+
+## v0.5 staged military condition: source verification
+
+Cloud Linux/Godot4.6.3: **1,908 functional assertions** (33 battle, 526 world, 527 economy, 337 hunger, 293 transactions, 35 scene, 94 strategy, 63 campaign) plus the 36 economy property scenarios and 2,689 independent hunger oracle/boundary checks. Both actual-combat smokes retain the original healthy fixture outcomes. Independent audit found no confirmed defects. The new visible three-line panel exposes actual own-army ration coverage, fatigue/morale, activity/rest eligibility and shortage→weakening→attrition, without enemy truth. Core proof and exact formulas are in HUNGER.md.
+
+Graphical CI adds an actual pre-loss shortage screenshot after exhausting physical carried food through wait clicks. This new source's rendered warning, exports and native macOS results remain pending until a specific passing run is linked. Legacy 360HP hero balance, entry-only condition modifiers and no durable saves remain explicit limitations.

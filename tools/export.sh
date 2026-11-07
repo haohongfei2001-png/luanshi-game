@@ -3,6 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 GODOT="${GODOT:-godot}"
 mkdir -p builds artifacts
+touch builds/.gdignore artifacts/.gdignore
 "$GODOT" --headless --path . --script tools/write_notices.gd
 "$GODOT" --headless --path . --export-release macOS builds/Luanshi-macOS.zip 2>&1 | tee artifacts/export-macos.log
 "$GODOT" --headless --path . --export-release Linux builds/Luanshi-linux.x86_64 2>&1 | tee artifacts/export-linux.log
