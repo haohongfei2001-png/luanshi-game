@@ -17,7 +17,7 @@
 
 ## Provisional product decisions (reversible)
 
-- Windows desktop first; mobile compatibility can be investigated after gameplay validation.
+- **macOS desktop first** (Apple Silicon is the preferred initial test target); **iPhone/iOS is a future platform candidate**. Maintain device-independent game actions and layout flexibility from the first prototype. A native iOS build needs a macOS/Xcode environment and signing; do not assume cloud Codex provides it.
 - Godot 4 + GDScript first, unless a short empirical benchmark demonstrates an important limitation.
 - Real-time close combat and local orders; larger formations receive orders through commanders and simplified simulation.
 - One unified clock; different simulation granularity for battle, travel, logistics, and seasonal production.
@@ -26,7 +26,7 @@
 
 ## First playable milestone
 
-**Not** the full game. Produce a demonstrable top-down 3D combat prototype: a player character, basic attack, three simple skills, 20 friendly and 20 enemy soldiers, basic squad commands, health/death, and a casualty report. Use placeholders at first.
+**Not** the full game. Produce a demonstrable **macOS** top-down 3D combat prototype: a player character, basic attack, three simple skills, 20 friendly and 20 enemy soldiers, basic squad commands, health/death, and a casualty report. Use placeholders at first.
 
 Later experimental slice: three cities, two factions, 4–6 decision-making NPCs, actual inventories and supplies, delayed scouting, and a relief mission where the city can fall before the player arrives.
 
