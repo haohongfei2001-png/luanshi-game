@@ -24,11 +24,11 @@ Out of scope for the initial milestone: a nationwide map, city economies, comple
 
 Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple Silicon preferred for initial validation); iPhone/iOS is a future target. Keep input handling and UI layout adaptable for touch controls. Engine choice should be revisited only after a focused technical benchmark, not based on speculation.
 
-**Read first:** [Owner decisions and rights](docs/PRODUCT_DECISIONS.md), [Pro-designed game bible](docs/PRO_DESIGN_BIBLE.md), [Dot continuous delivery contract](docs/DOT_CONTINUOUS_DELIVERY.md), [delivery gates](docs/DELIVERY_PLAN.md), and [full-game completion criteria](docs/FINAL_VISION_ACCEPTANCE.md). Further references: [first independent technical review](docs/PRO_TECH_REVIEW_001.md), [Dot cloud bootstrap](docs/DOT_BOOTSTRAP.md), [AGENTS.md](AGENTS.md), [game vision](docs/GAME_VISION.md).
+**Canonical handoff, 2026-11-08:** [Owner's locked product decisions](docs/PRODUCT_DECISIONS.md) → [Pro final game design](docs/FINAL_GAME_DESIGN_SPEC.md) → [narrative and visual direction](docs/NARRATIVE_ART_DIRECTION.md) → [acceptance matrix](docs/ACCEPTANCE_MATRIX.md) → [Dot direct-cloud handoff](docs/DOT_HANDOFF_FINAL.md). Historical/stage references: [delivery gates](docs/DELIVERY_PLAN.md), [full vision completion](docs/FINAL_VISION_ACCEPTANCE.md), [first independent code review](docs/PRO_TECH_REVIEW_001.md), [Dot cloud bootstrap](docs/DOT_BOOTSTRAP.md), [AGENTS.md](AGENTS.md), [initial game bible](docs/PRO_DESIGN_BIBLE.md), [original game vision](docs/GAME_VISION.md).
 
 ## Status
 
-Dot has submitted an initial 3D combat prototype on branch `prototype/cloud-first-playable` (PR #1), with reported headless tests. It has not yet been visually played on the reference Mac. Main branch contains the canonical design/governance documents.
+Dot is developing the initial 3D prototype on `prototype/cloud-first-playable` ([PR #1](https://github.com/haohongfei2001-png/luanshi-game/pull/1)), with cloud headless tests and export checks reported on that branch. **macOS M5 device gameplay and final subjective quality remain unverified.** Main contains the canonical frozen design contracts.
 
 ## Licensing
 
