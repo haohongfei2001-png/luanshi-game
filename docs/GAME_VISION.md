@@ -17,7 +17,8 @@
 
 ## Provisional product decisions (reversible)
 
-- **macOS desktop first** (Apple Silicon is the preferred initial test target); **iPhone/iOS is a future platform candidate**. Maintain device-independent game actions and layout flexibility from the first prototype. A native iOS build needs a macOS/Xcode environment and signing; do not assume cloud Codex provides it.
+- **macOS desktop first** (MacBook Air M5 is the reference test device); **iPhone/iOS is a future platform candidate**. Maintain device-independent game actions and layout flexibility from the first prototype. A native iOS build needs macOS/Xcode/signing and must not be claimed as verified unless actually tested.
+- **Execution model:** Dot directly writes, builds, and tests via its own cloud computer and connected GitHub. Codex is not part of the default workflow and must not be delegated to without explicit user authorization. Do not require access to the user's MacBook for ordinary implementation.
 - Godot 4 + GDScript first, unless a short empirical benchmark demonstrates an important limitation.
 - Real-time close combat and local orders; larger formations receive orders through commanders and simplified simulation.
 - One unified clock; different simulation granularity for battle, travel, logistics, and seasonal production.
