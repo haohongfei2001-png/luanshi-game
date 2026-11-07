@@ -1,6 +1,6 @@
 # AI development instructions
 
-This repository contains a **small game prototype**, not an instruction to implement the entire proposed game in one pass.
+This repository currently contains an early battle prototype, but the **long-term assignment is a complete single-player game** under docs/FINAL_VISION_ACCEPTANCE.md. Implement incrementally; do not mistake the first prototype for project completion.
 
 ## Execution mode — Dot cloud only
 
@@ -13,7 +13,7 @@ This repository contains a **small game prototype**, not an instruction to imple
 
 ## Product constraints
 
-First read `docs/PRODUCT_DECISIONS.md`, `docs/PRO_DESIGN_BIBLE.md`, `docs/DOT_CONTINUOUS_DELIVERY.md` and `docs/DELIVERY_PLAN.md` (in addition to `docs/GAME_VISION.md`). Preserve the existing Dot first-prototype work on `prototype/cloud-first-playable` rather than restarting from scratch. Read `docs/PRO_TECH_REVIEW_001.md` for early review findings.
+**Canonical current design and workflow:** read `docs/PRODUCT_DECISIONS.md`, `docs/FINAL_GAME_DESIGN_SPEC.md`, `docs/NARRATIVE_ART_DIRECTION.md`, `docs/ACCEPTANCE_MATRIX.md` and `docs/DOT_HANDOFF_FINAL.md` first. Older docs (`PRO_DESIGN_BIBLE.md`, `GAME_VISION.md`, `DOT_CONTINUOUS_DELIVERY.md`, `DELIVERY_PLAN.md`) are background or stage details; user decisions and current final spec take precedence. Preserve the existing Dot first-prototype work on `prototype/cloud-first-playable` rather than restarting from scratch. Read `docs/PRO_TECH_REVIEW_001.md` for early review findings.
 
 Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silently replace the setting, camera, combat model, progression, world independence, or protagonist-death rule.
 
@@ -28,13 +28,15 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 ## Implementation
 
 - Preferred provisional stack: **Godot 4 + GDScript**. Use a text-oriented project structure and placeholder geometry initially.
-- Separate user actions from input devices. Implement keyboard/mouse on macOS now; do not hardcode controls in gameplay logic so that touch UI and gestures can be introduced later.
+- **User-confirmed controls:** WASD moves the character, the mouse aims attacks and skills, and keyboard skill shortcuts trigger abilities. Use device-independent action semantics so future iPhone touch UI can reuse gameplay logic. The recommended prototype mapping is left click/J basic attack, Q/E/Space for three skills, and 1/2/3 for local orders; allow rebinding without changing the locked movement paradigm.
 - Evaluate Godot's **Mobile renderer** early for a shared macOS/iPhone path; benchmark on actual hardware before choosing final renderer settings.
 - A verified iOS build requires a macOS runner with Xcode and Apple signing configuration. Never commit certificates, provisioning profiles, credentials, or API keys. Do not claim an iOS build was verified unless it was actually built and tested.
 - Preserve a clear separation between simulation data/state and visual presentation so a later world simulation can use the same state.
 - Do not add dependencies, paid services, or external assets without checking their redistribution terms.
 - Avoid premature complexity: prefer small modules, explicit interfaces, and clear data contracts over giant frameworks.
-- Use placeholder visuals until combat mechanics are verifiable; later visual design should use small, detailed, grounded ancient Chinese clothing and equipment, not exaggerated fantasy armor.
+- The **three equally important final player experiences** are (1) personal realtime combat, (2) army command, and (3) autonomous world simulation. Phase work sequentially but do not omit any from final gameplay.
+- **Locked art:** restrained realism in small detailed 3D figures, historically grounded material scarcity, readable equipment silhouettes, not flashy armor. Use placeholders until mechanics are verified.
+- **Locked difficulty:** hard but fair and explainable; no hidden scripted cheats, forced battlefield loss, magically arriving troops, or unjustified information leaks.
 - Never commit credentials, account data, API keys, or unlicensed assets. This repository is **public**.
 - Keep commits small and purposeful; use branches and pull requests for major changes.
 - Do not represent an untested system as complete. Distinguish: written code, editor-loadable, successfully built, and gameplay-tested.
