@@ -72,3 +72,11 @@ A separate graphical CI script (`tests/strategy_visual.gd`) exercises the route/
 ## v0.2 strategic interface verification
 
 Source `e476d0feef5d4c106bb0898bc0a034522421f414`, [CI run 42418269168](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42418269168): all 631 assertions, real Xvfb/llvmpipe battle and strategic scene renders, universal macOS packaging and native macOS 26.7.2 arm64 headless runtime passed. Strict built-in ad-hoc signature verified. Actual strategy screenshot inspected after routing to Hequ, seizing the depot and observing at hour3. This is not a Mac M5 graphical performance or human gameplay-feel test. Strategic scenario is still separate from battle in this version. Local v0.2 macOS ZIP SHA256: `de28a379e92680fdcb71abb769da6f7882a067cac7b1d8bdc2581823de117c80`.
+
+## v0.3 world-backed battle: local verification
+
+Cloud Linux, Godot 4.6.3, `./tools/test.sh` with matching shared XDG template/cache paths: 33 combat + 526 WorldSim + 293 transaction + 35 scene + 36 strategy + 63 campaign assertions = **986 passed, zero failures**. Both standalone and world-backed real scene smoke passed; neither smoke injects deaths. Campaign smoke result: 396 steps, 6.6 simulated seconds, 19 regular survivors plus commander, 15 actual enemy dead, commander 202.5 HP, relief 60 people/45  weapons/102 food, world time 10806.6 seconds; enemy 15 weapons transferred from the depot, no duplicate settlement mutation.
+
+Independent review reproduced and fixed two defects before publication: fractional battle time shortened later marches/reports; aggregate starvation could exhaust all 60 people without ending the counted commander's life. Added regressions for exact deadlines, precise GUI ETA, within-hour intelligence freshness, final-survivor death, world autonomy after death, and atomic rollback. Reviewer reran all 986 assertions successfully.
+
+Artifacts: `docs/evidence/transaction-tests.log`, `campaign-tests.log`, `campaign-smoke.log`. Graphical campaign render and this version's native macOS runtime remain pending until CI is linked below. In-process transaction success does not imply save/reload acceptance; persistence, ordinary soldier wounds, full economy and NPC/story systems are still pending.

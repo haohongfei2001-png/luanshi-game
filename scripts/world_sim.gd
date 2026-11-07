@@ -1,8 +1,10 @@
 class_name WorldSimulation
 extends RefCounted
-## Authoritative hourly simulation. Presentation must use player_view(), not snapshot().
+## Authoritative seconds clock with hourly economics. Presentation uses player_view().
 
-const VERSION := 1
+const VERSION := 2
+const Battle := preload("res://scripts/battle_sim.gd")
+const BATTLE_LIMIT := 20
 const MAX_ADVANCE := 8760
 const ROUTES := {
 	"road": {"from": "pingling", "to": "anping", "hours": 6},
@@ -11,13 +13,20 @@ const ROUTES := {
 	"grain_road": {"from": "hequ", "to": "anping", "hours": 5},
 }
 var _state: Dictionary = {}
+var _battle_sessions: Dictionary = {}
+var _campaign_generation := 0
 
 func _init(seed_value: int = 184) -> void:
 	reset(seed_value)
 
 func reset(seed_value: int = 184) -> void:
+	_campaign_generation += 1
+	_battle_sessions.clear()
 	_state = {
-		"version": VERSION, "seed": seed_value, "hour": 0,
+		"version": VERSION, "seed": seed_value, "hour": 0, "time_seconds": 0.0,
+		"campaign_generation": _campaign_generation, "campaign_ended": false,
+		"commander": {"alive": true, "hp": 360.0, "max_hp": 360.0, "army": "relief"},
+		"battle_tickets": {}, "battle_locks": {}, "next_battle": 1,
 		"factions": {"sheng": {"name": "晟军"}, "bei": {"name": "北军"}},
 		"cities": {
 			"anping": _city("安平", "sheng", 40, 40, 100, 60, 0),
@@ -52,17 +61,17 @@ func player_view() -> Dictionary:
 	var known: Dictionary = {}
 	for report in _state.reports:
 		var subject: String = report.subject
-		if not known.has(subject) or report.observed_at >= known[subject].observed_at:
+		if not known.has(subject) or report.observed_at_seconds >= known[subject].observed_at_seconds:
 			known[subject] = report.duplicate(true)
 	var location: String = _state.armies.relief.location
 	var local_city: Dictionary = {}
 	if _state.cities.has(location):
 		local_city = _state.cities[location].duplicate(true)
 		local_city["id"] = location
-	return {"hour": _state.hour, "army": _state.armies.relief.duplicate(true), "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
+	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "army": _state.armies.relief.duplicate(true), "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
 
 func march(route_id: String) -> bool:
-	if not ROUTES.has(route_id):
+	if _state.campaign_ended or _state.battle_locks.has("relief") or not ROUTES.has(route_id):
 		return false
 	var army: Dictionary = _state.armies.relief
 	var route: Dictionary = ROUTES[route_id]
@@ -75,13 +84,16 @@ func march(route_id: String) -> bool:
 		destination = route.from
 	else:
 		return false
-	army.march = {"route": route_id, "destination": destination, "arrives_at": _state.hour + route.hours}
+	var arrival_seconds: float = _state.time_seconds + route.hours * 3600.0
+	army.march = {"route": route_id, "destination": destination, "arrives_at": ceili(arrival_seconds / 3600.0), "arrives_at_seconds": arrival_seconds}
 	army.location = ""
-	_event("march_started", {"route": route_id, "arrives_at": army.march.arrives_at})
+	_event("march_started", {"route": route_id, "arrives_at": army.march.arrives_at, "arrives_at_seconds": arrival_seconds})
 	return true
 
 func transfer(from_id: String, to_id: String, resource: String, amount: int) -> bool:
 	## City/army inventory transfer only when co-located and allied. No remote teleporting.
+	if _state.campaign_ended or _state.battle_locks.has(from_id) or _state.battle_locks.has(to_id):
+		return false
 	if amount <= 0 or resource not in ["food", "weapons"] or from_id == to_id:
 		return false
 	var source := _entity(from_id)
@@ -97,7 +109,9 @@ func transfer(from_id: String, to_id: String, resource: String, amount: int) -> 
 	return true
 
 func seize_depot() -> bool:
-	## Actual local combat: insufficient forces cannot toggle the supply line.
+	## Legacy deterministic aggregate scenario; interactive UI uses BattleAdapter instead.
+	if _state.campaign_ended or not _state.battle_locks.is_empty():
+		return false
 	var army: Dictionary = _state.armies.relief
 	if army.location != "hequ" or not army.march.is_empty():
 		return false
@@ -112,7 +126,7 @@ func seize_depot() -> bool:
 
 func observe_city(city_id: String, delay_hours: int = 0) -> bool:
 	## Observation requires physical presence. Delayed content is frozen at observation time.
-	if not _state.cities.has(city_id) or delay_hours < 0 or delay_hours > MAX_ADVANCE:
+	if _state.campaign_ended or not _state.cities.has(city_id) or delay_hours < 0 or delay_hours > MAX_ADVANCE:
 		return false
 	if _state.armies.relief.location != city_id:
 		return false
@@ -125,15 +139,38 @@ func observe_city(city_id: String, delay_hours: int = 0) -> bool:
 func advance(hours: int) -> bool:
 	if hours < 0 or hours > MAX_ADVANCE:
 		return false
-	for _tick in range(hours):
-		_state.hour += 1
-		_produce()
-		_supply_enemy()
-		_feed()
-		_arrivals()
-		_resolve_siege()
-		_deliver_reports()
+	return advance_seconds(float(hours) * 3600.0)
+
+func advance_seconds(seconds: float) -> bool:
+	## Autonomous simulation API, not permission for a dead protagonist to wait.
+	## The world may continue after death; presentation blocks all campaign commands.
+	## Strategic time cannot also advance while a local battle owns the clock.
+	if not is_finite(seconds) or seconds < 0.0 or seconds > MAX_ADVANCE * 3600.0 or not _state.battle_locks.is_empty():
+		return false
+	_advance_clock_to(_state.time_seconds + seconds)
 	return true
+
+func _advance_clock_to(target_seconds: float) -> void:
+	while _state.time_seconds < target_seconds:
+		var hour_boundary: float = (_state.hour + 1) * 3600.0
+		var next_time := minf(target_seconds, hour_boundary)
+		for army in _state.armies.values():
+			if not army.march.is_empty():
+				next_time = minf(next_time, float(army.march.arrives_at_seconds))
+		for report in _state.pending_reports:
+			next_time = minf(next_time, float(report.arrives_at_seconds))
+		_state.time_seconds = next_time
+		if next_time == hour_boundary:
+			_state.hour += 1
+			_produce()
+			_supply_enemy()
+			_feed()
+			_arrivals()
+			_resolve_siege()
+			_deliver_reports()
+		else:
+			_arrivals()
+			_deliver_reports()
 
 func _produce() -> void:
 	for city in _state.cities.values():
@@ -186,7 +223,7 @@ func _feed() -> void:
 		var eaten := _consume(army, need)
 		army.starving_hours = army.starving_hours + 1 if eaten < need else 0
 		if army.starving_hours >= 3:
-			_lose_troops(army, 1)
+			_lose_troops(army, 1, "starvation")
 
 func _consume(entity: Dictionary, amount: int) -> int:
 	var eaten := mini(amount, int(entity.food))
@@ -196,7 +233,7 @@ func _consume(entity: Dictionary, amount: int) -> int:
 
 func _arrivals() -> void:
 	for army in _state.armies.values():
-		if not army.march.is_empty() and army.march.arrives_at <= _state.hour:
+		if not army.march.is_empty() and army.march.arrives_at_seconds <= _state.time_seconds:
 			army.location = army.march.destination
 			army.march = {}
 			_event("arrival", {"owner": army.owner, "location": army.location})
@@ -227,15 +264,24 @@ func _resolve_siege() -> void:
 		_end_siege("captured")
 
 func _strength(entity: Dictionary) -> int:
-	return mini(int(entity.soldiers), int(entity.weapons)) + maxi(0, int(entity.soldiers) - int(entity.weapons)) / 2
+	var soldiers := int(entity.soldiers) - _reserved_for(entity, "soldiers")
+	var weapons := int(entity.weapons) - _reserved_for(entity, "weapons")
+	return mini(soldiers, weapons) + maxi(0, soldiers - weapons) / 2
 
-func _lose_troops(entity: Dictionary, count: int) -> void:
-	var lost := mini(count, int(entity.soldiers))
-	var weapons := mini(lost, int(entity.weapons))
+func _lose_troops(entity: Dictionary, count: int, cause: String = "combat") -> void:
+	var lost := mini(count, int(entity.soldiers) - _reserved_for(entity, "soldiers"))
+	var weapons := mini(lost, int(entity.weapons) - _reserved_for(entity, "weapons"))
 	entity.soldiers -= lost
 	entity.weapons -= weapons
 	_state.ledger.dead += lost
 	_state.ledger.weapons_destroyed += weapons
+	# Aggregate losses take ordinary soldiers first. The last actual relief person
+	# is the commander; their removal cannot leave an immortal phantom character.
+	if is_same(entity, _state.armies.relief) and entity.soldiers == 0 and _state.commander.alive:
+		_state.commander.hp = 0.0
+		_state.commander.alive = false
+		_state.campaign_ended = true
+		_event("campaign_ended", {"cause": cause})
 
 func _capture(city_id: String, owner: String) -> void:
 	var city: Dictionary = _state.cities[city_id]
@@ -252,25 +298,31 @@ func _end_siege(outcome: String) -> void:
 		# Retreat is real movement, not disappearance or reinforcement spawning.
 		var army: Dictionary = _state.armies.besiegers
 		army.location = ""
-		army.march = {"route": "grain_road", "destination": "hequ", "arrives_at": _state.hour + 5}
+		army.march = {"route": "grain_road", "destination": "hequ", "arrives_at": _state.hour + 5, "arrives_at_seconds": _state.time_seconds + 5 * 3600.0}
 	_event("siege_ended", {"outcome": outcome})
 	_queue_report("anping", "安平军情信使", _state.hour, _state.hour + 12, {"owner": _state.cities.anping.owner, "under_siege": false, "outcome": outcome})
 
 func _queue_report(subject: String, source: String, observed_at: int, arrives_at: int, contents: Dictionary) -> void:
-	_state.pending_reports.append({"id": _state.next_report, "subject": subject, "source": source, "observed_at": observed_at, "arrives_at": arrives_at, "reported_at": -1, "confidence": 1.0, "contents": contents.duplicate(true)})
+	var observed_seconds: float = _state.time_seconds if observed_at == _state.hour else observed_at * 3600.0
+	var arrival_seconds: float = _state.time_seconds + (arrives_at - _state.hour) * 3600.0
+	_state.pending_reports.append({"id": _state.next_report, "subject": subject, "source": source,
+		"observed_at": observed_at, "arrives_at": ceili(arrival_seconds / 3600.0), "reported_at": -1,
+		"observed_at_seconds": observed_seconds, "arrives_at_seconds": arrival_seconds, "reported_at_seconds": -1.0,
+		"confidence": 1.0, "contents": contents.duplicate(true)})
 	_state.next_report += 1
 
 func _deliver_reports() -> void:
 	for index in range(_state.pending_reports.size() - 1, -1, -1):
 		var report: Dictionary = _state.pending_reports[index]
-		if report.arrives_at <= _state.hour:
+		if report.arrives_at_seconds <= _state.time_seconds:
 			report.reported_at = _state.hour
+			report.reported_at_seconds = _state.time_seconds
 			_state.reports.append(report)
 			_state.pending_reports.remove_at(index)
 	_state.reports.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.id < b.id)
 
 func _event(kind: String, details: Dictionary) -> void:
-	_state.events.append({"hour": _state.hour, "kind": kind, "details": details.duplicate(true)})
+	_state.events.append({"hour": _state.hour, "time_seconds": _state.time_seconds, "kind": kind, "details": details.duplicate(true)})
 
 func _entity(id: String) -> Dictionary:
 	if _state.cities.has(id):
@@ -309,4 +361,211 @@ func audit() -> Array[String]:
 	for convoy in _state.convoys:
 		if convoy.food <= 0 or convoy.arrives_at <= convoy.departed_at:
 			errors.append("invalid convoy")
+	if not is_finite(float(_state.time_seconds)) or _state.hour != floori(_state.time_seconds / 3600.0):
+		errors.append("clock mismatch")
+	for force_id in _state.battle_locks:
+		var ticket_id: String = _state.battle_locks[force_id]
+		if not _state.battle_tickets.has(ticket_id) or _state.battle_tickets[ticket_id].status not in ["reserved", "running"]:
+			errors.append("invalid battle lock")
+			continue
+		var entity := _entity(force_id)
+		if entity.soldiers < _reserved_for(entity, "soldiers") or entity.weapons < _reserved_for(entity, "weapons"):
+			errors.append("reservation exceeds inventory")
+	if _state.commander.alive and _state.armies.relief.soldiers < 1:
+		errors.append("living commander missing from army")
+	if _state.campaign_ended != (not _state.commander.alive) or _state.commander.alive != (_state.commander.hp > 0.0):
+		errors.append("commander life state")
 	return errors
+
+
+func _reserved_for(entity: Dictionary, resource: String) -> int:
+	for force_id in _state.battle_locks:
+		if not is_same(entity, _entity(force_id)):
+			continue
+		var ticket: Dictionary = _state.battle_tickets[_state.battle_locks[force_id]]
+		var team: int = ticket.participating_force_ids.find(force_id)
+		var roster: Array = ticket.reserved_roster_snapshot[team]
+		if resource == "soldiers":
+			return roster.size()
+		var equipped := 0
+		for soldier in roster:
+			equipped += 1 if soldier.weapon != "" else 0
+		return equipped
+	return 0
+
+func create_battle_ticket(location: String = "hequ") -> Dictionary:
+	## Only the local Hequ depot encounter is implemented. Reserves stay in their force.
+	if _state.campaign_ended:
+		return _reject("campaign_ended")
+	if location != "hequ":
+		return _reject("unsupported_location")
+	var army: Dictionary = _state.armies.relief
+	var depot: Dictionary = _state.cities.hequ
+	if army.location != location or not army.march.is_empty():
+		return _reject("not_local")
+	if not _state.battle_locks.is_empty():
+		return _reject("participants_locked")
+	if army.soldiers <= 0 or depot.soldiers <= 0 or depot.owner == army.owner:
+		return _reject("no_hostile_force")
+	var battle_id := "%d:%d" % [_state.campaign_generation, _state.next_battle]
+	var rosters: Array = []
+	for force_id in ["relief", "hequ"]:
+		var force := _entity(force_id)
+		var count := mini(BATTLE_LIMIT, int(force.soldiers))
+		# Representative allocation avoids silently selecting only an armed elite.
+		var armed := floori(float(mini(int(force.soldiers), int(force.weapons))) * count / force.soldiers)
+		var roster: Array[Dictionary] = []
+		for slot in range(count):
+			var hero: bool = force_id == "relief" and slot == 0
+			roster.append({"id": "commander" if hero else "%s:%s:%d" % [battle_id, force_id, slot],
+				"force_id": force_id, "hero": hero, "weapon": "spear" if slot < armed else "",
+				"hp": _state.commander.hp if hero else 100.0})
+		rosters.append(roster)
+	var ticket := {"battle_id": battle_id, "time": _state.time_seconds, "location": location,
+		"participating_force_ids": ["relief", "hequ"], "reserved_roster_snapshot": rosters,
+		"terrain": "depot", "tactical_seed": int(_state.seed) + int(_state.next_battle) * 7919,
+		"status": "reserved", "elapsed_world_time": 0.0}
+	_state.battle_tickets[battle_id] = ticket
+	_state.battle_locks = {"relief": battle_id, "hequ": battle_id}
+	_state.next_battle += 1
+	_event("battle_reserved", {"battle_id": battle_id, "location": location, "counts": [rosters[0].size(), rosters[1].size()]})
+	return {"ok": true, "ticket": ticket.duplicate(true)}
+
+func battle_ticket(battle_id: String) -> Dictionary:
+	return _state.battle_tickets.get(battle_id, {}).duplicate(true)
+
+func cancel_battle_ticket(battle_id: String) -> bool:
+	## No rollback of running fights: withdrawal must use the physical retreat exit.
+	if not _state.battle_tickets.has(battle_id) or _state.battle_tickets[battle_id].status != "reserved":
+		return false
+	_state.battle_tickets[battle_id].status = "cancelled"
+	_unlock_battle(battle_id)
+	_event("battle_cancelled", {"battle_id": battle_id})
+	return true
+
+func start_battle(battle_id: String) -> BattleSimulation:
+	if not _state.battle_tickets.has(battle_id):
+		return null
+	var ticket: Dictionary = _state.battle_tickets[battle_id]
+	if ticket.status == "running":
+		return _battle_sessions.get(battle_id)
+	if ticket.status != "reserved":
+		return null
+	var simulation := Battle.new()
+	simulation.reset_from_ticket(ticket)
+	_battle_sessions[battle_id] = simulation
+	ticket.status = "running"
+	_event("battle_started", {"battle_id": battle_id})
+	return simulation
+
+func sync_battle_time(battle_id: String) -> bool:
+	if not _battle_sessions.has(battle_id) or _state.battle_tickets[battle_id].status != "running":
+		return false
+	var simulation: BattleSimulation = _battle_sessions[battle_id]
+	var ticket: Dictionary = _state.battle_tickets[battle_id]
+	if not is_finite(simulation.elapsed) or simulation.elapsed < ticket.elapsed_world_time or simulation.elapsed > MAX_ADVANCE * 3600.0:
+		return false
+	_advance_clock_to(ticket.time + simulation.elapsed)
+	ticket.elapsed_world_time = simulation.elapsed
+	return true
+
+func validate_battle_outcome(outcome: Variant) -> Dictionary:
+	## Inspection is read-only. Caller-written dictionaries are never authoritative.
+	if not outcome is Dictionary or not outcome.get("battle_id") is String:
+		return _reject("malformed_outcome")
+	var battle_id: String = outcome.battle_id
+	if not _state.battle_tickets.has(battle_id):
+		return _reject("unknown_battle")
+	var ticket: Dictionary = _state.battle_tickets[battle_id]
+	if ticket.status == "committed":
+		if outcome == ticket.outcome:
+			return {"ok": true, "already_committed": true}
+		return _reject("conflicting_committed_outcome")
+	if ticket.status != "running" or not _battle_sessions.has(battle_id):
+		return _reject("battle_not_running")
+	var simulation: BattleSimulation = _battle_sessions[battle_id]
+	if not simulation.ended:
+		return _reject("battle_not_ended")
+	if not is_finite(simulation.elapsed) or simulation.elapsed < ticket.elapsed_world_time or simulation.elapsed > MAX_ADVANCE * 3600.0:
+		return _reject("invalid_elapsed_time")
+	if outcome != simulation.outcome():
+		return _reject("outcome_not_authoritative")
+	if simulation.units.size() != ticket.reserved_roster_snapshot[0].size() + ticket.reserved_roster_snapshot[1].size():
+		return _reject("roster_changed")
+	var seen: Array[String] = []
+	for team in range(2):
+		for reserved in ticket.reserved_roster_snapshot[team]:
+			var matched := false
+			for unit in simulation.units:
+				if unit.get("roster_id") == reserved.id:
+					if unit.roster_id in seen or unit.team != team or unit.weapon != reserved.weapon or unit.hero != reserved.hero or unit.force_id != reserved.force_id or not is_finite(float(unit.hp)) or unit.hp < 0.0 or unit.hp > reserved.hp:
+						return _reject("invalid_roster_state")
+					seen.append(unit.roster_id)
+					matched = true
+			if not matched:
+				return _reject("missing_roster_member")
+	if outcome.result == "retreat":
+		if simulation.order != "retreat" or simulation.player().pos.x >= -27.0:
+			return _reject("retreat_not_extracted")
+		for unit in simulation.units:
+			if unit.team == 0 and not unit.hero and unit.hp > 0.0 and unit.pos.x > -25.5:
+				return _reject("retreat_not_extracted")
+	for force_id in ticket.participating_force_ids:
+		if _state.battle_locks.get(force_id) != battle_id or _location(force_id) != ticket.location:
+			return _reject("reservation_changed")
+	if not audit().is_empty():
+		return _reject("world_audit_failed")
+	return {"ok": true, "already_committed": false}
+
+func commit_battle_outcome(outcome: Variant) -> Dictionary:
+	var validation := validate_battle_outcome(outcome)
+	if not validation.ok:
+		return validation
+	var battle_id: String = outcome.battle_id
+	if validation.already_committed:
+		var repeated: Dictionary = _state.battle_tickets[battle_id].receipt.duplicate(true)
+		repeated.already_committed = true
+		return repeated
+	var before := _state.duplicate(true)
+	if not sync_battle_time(battle_id):
+		return _reject("clock_sync_failed")
+	var ticket: Dictionary = _state.battle_tickets[battle_id]
+	for force in outcome.forces:
+		var entity := _entity(force.force_id)
+		entity.soldiers -= force.dead_ids.size()
+		entity.weapons -= force.destroyed_equipment
+		_state.ledger.dead += force.dead_ids.size()
+		_state.ledger.weapons_destroyed += force.destroyed_equipment
+	_state.cities.hequ.weapons -= outcome.spoils.weapons
+	_state.armies.relief.weapons += outcome.spoils.weapons
+	var captured: bool = outcome.result == "victory" and _state.cities.hequ.soldiers == 0
+	if captured:
+		_capture("hequ", _state.armies.relief.owner)
+	_unlock_battle(battle_id)
+	_state.commander.hp = outcome.player_hp
+	_state.commander.alive = outcome.player_alive
+	ticket.status = "committed"
+	ticket.outcome = outcome.duplicate(true)
+	ticket.receipt = {"ok": true, "already_committed": false, "battle_id": battle_id,
+		"result": outcome.result, "depot_captured": captured, "campaign_ended": not outcome.player_alive,
+		"elapsed_world_time": outcome.elapsed_world_time, "spoils": outcome.spoils.duplicate(true)}
+	_event("battle_committed", {"battle_id": battle_id, "result": outcome.result, "forces": outcome.forces, "spoils": outcome.spoils})
+	# A local observation is legitimate; remote siege truth remains delayed.
+	observe_city("hequ")
+	if not outcome.player_alive:
+		_state.campaign_ended = true
+		_event("campaign_ended", {"cause": "commander_dead", "battle_id": battle_id})
+	var errors := audit()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "settlement_audit_failed", "errors": errors}
+	_battle_sessions.erase(battle_id)
+	return ticket.receipt.duplicate(true)
+
+func _unlock_battle(battle_id: String) -> void:
+	for force_id in _state.battle_locks.keys():
+		if _state.battle_locks[force_id] == battle_id:
+			_state.battle_locks.erase(force_id)
+
+func _reject(reason: String) -> Dictionary:
+	return {"ok": false, "reason": reason}

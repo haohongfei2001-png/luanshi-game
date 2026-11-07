@@ -9,7 +9,9 @@ mkdir -p builds artifacts
 chmod +x builds/Luanshi-linux.x86_64
 builds/Luanshi-linux.x86_64 --headless --fixed-fps 60 -- --smoke-scene 2>&1 | tee artifacts/exported-linux-smoke.log
 grep -q SCENE_SMOKE_PASS artifacts/exported-linux-smoke.log
-if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/export-{macos,linux}.log artifacts/exported-linux-smoke.log; then
+builds/Luanshi-linux.x86_64 --headless --fixed-fps 60 -- --campaign-smoke 2>&1 | tee artifacts/exported-linux-campaign.log
+grep -q CAMPAIGN_SMOKE_PASS artifacts/exported-linux-campaign.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/export-{macos,linux}.log artifacts/exported-linux-{smoke,campaign}.log; then
   exit 1
 fi
 python3 tools/verify_macos.py builds/Luanshi-macOS.zip

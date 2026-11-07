@@ -5,14 +5,22 @@ const UnitView := preload("res://scripts/unit_view.gd")
 const InputActions := preload("res://scripts/input_actions.gd")
 const Strategy := preload("res://scripts/strategy_view.gd")
 const Hud := preload("res://scripts/battle_hud.gd")
+const Adapter := preload("res://scripts/battle_adapter.gd")
 var strategy: Control
 var paused_before_strategy := false
 var sim := Simulation.new()
+# Training is deliberately separate. Only adapter-backed encounters affect the campaign.
+var training_sim: BattleSimulation
+var training_paused := false
+var campaign_adapter: RefCounted
+var campaign_settlement: Dictionary = {}
 var camera: Camera3D
 var hud: Control
 var views: Array[Node3D] = []
 var paused := false
 var scene_smoke := false
+var campaign_smoke := false
+var campaign_smoke_complete := false
 var smoke_steps := 0
 var smoke_actions: Dictionary = {}
 var simulation_usec := 0
@@ -28,6 +36,7 @@ var rendered_frames := 0
 func _ready() -> void:
 	InputActions.install()
 	scene_smoke = "--smoke-scene" in OS.get_cmdline_user_args()
+	campaign_smoke = "--campaign-smoke" in OS.get_cmdline_user_args()
 	_build_battlefield()
 	var canvas := CanvasLayer.new()
 	add_child(canvas)
@@ -43,7 +52,12 @@ func _ready() -> void:
 	canvas.add_child(strategy)
 	strategy.hide()
 	strategy.close_requested.connect(_toggle_strategy)
+	strategy.assault_requested.connect(_start_campaign_battle)
+	strategy.campaign_reset.connect(_on_campaign_reset)
+	training_sim = sim
 	_restart()
+	if campaign_smoke:
+		_start_campaign_smoke()
 	print("LUANSHI_READY engine=%s soldiers=%d+%d renderer=%s" % [Engine.get_version_info().string, sim.alive_count(0), sim.alive_count(1), RenderingServer.get_current_rendering_method()])
 
 func _build_battlefield() -> void:
@@ -110,20 +124,77 @@ func _build_battlefield() -> void:
 func _restart() -> void:
 	if strategy != null and strategy.visible:
 		return
+	if campaign_adapter != null:
+		# R never rewinds a campaign transaction or revives its commander.
+		if sim.ended and campaign_settlement.get("ok", false):
+			_toggle_strategy()
+		return
+	sim.reset()
+	paused = false
+	_rebuild_unit_views()
+
+func _rebuild_unit_views() -> void:
 	for view in views:
 		view.queue_free()
 	views.clear()
 	for effect in effects:
 		effect.node.queue_free()
 	effects.clear()
-	sim.reset()
-	paused = false
 	for unit in sim.units:
 		var view := UnitView.new()
 		add_child(view)
 		view.configure(unit)
 		views.append(view)
 	_sync_visuals(0.0)
+	_refresh_hud()
+
+func _start_campaign_battle() -> void:
+	if campaign_adapter != null and not sim.ended:
+		return
+	var next_adapter := Adapter.new(strategy.world)
+	var started: Dictionary = next_adapter.begin_local_depot()
+	if not started.get("ok", false):
+		strategy.set_feedback("Assault unavailable: " + str(started.get("reason", "The force cannot engage.")))
+		return
+	if campaign_adapter == null:
+		training_paused = paused_before_strategy
+	campaign_adapter = next_adapter
+	campaign_settlement = {}
+	sim = campaign_adapter.simulation
+	paused = false
+	paused_before_strategy = false
+	strategy.hide()
+	hud.show()
+	strategy.set_battle_context(true, true)
+	_rebuild_unit_views()
+
+func _settle_campaign_battle() -> void:
+	if campaign_adapter == null or not sim.ended or campaign_settlement.get("ok", false):
+		return
+	campaign_settlement = campaign_adapter.settle()
+	if campaign_settlement.get("ok", false):
+		strategy.set_battle_context(true, false)
+		strategy.show_battle_result(sim.report())
+	else:
+		# A rejected settlement must not unlock actions, discard the roster or reset the world.
+		paused = true
+		strategy.set_feedback("Battle settlement blocked: " + str(campaign_settlement.get("reason", "Unknown error")))
+
+func _on_campaign_reset() -> void:
+	if campaign_adapter == null:
+		return
+	campaign_adapter = null
+	campaign_settlement = {}
+	sim = training_sim
+	paused_before_strategy = training_paused
+	paused = true
+	strategy.set_battle_context(false, false)
+	_rebuild_unit_views()
+
+func _refresh_hud() -> void:
+	hud.campaign_mode = campaign_adapter != null
+	hud.settlement_complete = campaign_settlement.get("ok", false)
+	hud.update_state(sim, paused, Engine.get_frames_per_second())
 
 func _process(_delta: float) -> void:
 	var now := Time.get_ticks_usec()
@@ -131,11 +202,13 @@ func _process(_delta: float) -> void:
 		frame_samples_ms.append(float(now - last_frame_usec) / 1000.0)
 	last_frame_usec = now
 	rendered_frames += 1
-	if scene_smoke and "--capture-proof" in OS.get_cmdline_user_args() and smoke_steps >= 280 and not capture_pending:
+	var capture_training := scene_smoke and "--capture-proof" in OS.get_cmdline_user_args() and smoke_steps >= 280
+	var capture_campaign := campaign_smoke and "--capture-campaign" in OS.get_cmdline_user_args() and smoke_steps >= 360
+	if (capture_training or capture_campaign) and not capture_pending:
 		capture_pending = true
 		await RenderingServer.frame_post_draw
 		var snapshot := get_viewport().get_texture().get_image()
-		var error := snapshot.save_png("res://artifacts/battle-proof.png")
+		var error := snapshot.save_png("res://artifacts/campaign-battle-proof.png" if capture_campaign else "res://artifacts/battle-proof.png")
 		capture_complete = error == OK
 		print("VISUAL_CAPTURE " + str(error))
 
@@ -172,7 +245,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				_request_action(action)
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and not scene_smoke:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and not scene_smoke and not campaign_smoke:
 		paused = true
 
 func _toggle_pause() -> void:
@@ -207,14 +280,22 @@ func _physics_process(delta: float) -> void:
 		sim.set_player_input(InputActions.movement(), aim)
 		if Input.is_action_pressed("attack") and (Input.is_physical_key_pressed(KEY_J) or hud.is_world_pointer(mouse)):
 			sim.use_action("attack")
-		if scene_smoke:
+		if scene_smoke or campaign_smoke:
 			_smoke_input()
 		var start := Time.get_ticks_usec()
 		sim.step(delta)
 		simulation_usec += Time.get_ticks_usec() - start
 		physics_steps += 1
+		if campaign_adapter != null and not campaign_adapter.sync_world():
+			paused = true
+			push_error("Campaign world clock synchronization failed")
+	_settle_campaign_battle()
 	_sync_visuals(delta)
-	hud.update_state(sim, paused, Engine.get_frames_per_second())
+	_refresh_hud()
+	if campaign_smoke and not campaign_smoke_complete:
+		smoke_steps += 1
+		if sim.ended or smoke_steps >= 7200:
+			_finish_campaign_smoke()
 	if scene_smoke:
 		smoke_steps += 1
 		if smoke_steps >= 3600 or sim.ended:
@@ -234,6 +315,42 @@ func _physics_process(delta: float) -> void:
 				return
 			print("SCENE_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report(), "frame_timing": _frame_timing()}))
 			get_tree().quit(0)
+
+func _start_campaign_smoke() -> void:
+	# Uses the real campaign command path and adapter; no injected casualties or outcome.
+	_toggle_strategy()
+	strategy._command("march", "river")
+	strategy._command("advance", "", 3)
+	strategy._command("seize")
+	if campaign_adapter == null or sim.units.size() != 35 or sim.alive_count(0, true) != 20 or sim.alive_count(1) != 15:
+		push_error("Campaign smoke failed to launch a real 20 vs 15 roster")
+		get_tree().quit(1)
+
+func _finish_campaign_smoke() -> void:
+	campaign_smoke_complete = true
+	var current: Dictionary = strategy.world.player_view()
+	var report: Dictionary = sim.report()
+	var loss_count: int = report.friendly_casualties + (0 if report.player_alive else 1)
+	var before_repeat := var_to_str(current)
+	var repeated: Dictionary = campaign_adapter.settle()
+	var valid: bool = sim.ended and campaign_settlement.get("ok", false) and repeated.get("already_committed", false)
+	valid = valid and current.active_battle == "" and strategy.world.audit().is_empty()
+	valid = valid and current.army.soldiers == 60 - loss_count and current.army.soldiers >= 40
+	valid = valid and absf(current.time_seconds - (10800.0 + sim.elapsed)) < 0.00001
+	valid = valid and before_repeat == var_to_str(strategy.world.player_view())
+	if "--capture-campaign" in OS.get_cmdline_user_args():
+		valid = valid and capture_complete
+	for action in ["attack", "sweep", "lunge", "guard", "order_attack", "order_follow"]:
+		valid = valid and smoke_actions.has(action)
+	if not valid:
+		push_error("Campaign smoke did not finish a conserved, exactly-once encounter: " + JSON.stringify(campaign_settlement))
+		get_tree().quit(1)
+		return
+	print("CAMPAIGN_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "report": report,
+		"settlement": campaign_settlement, "army": current.army, "world_time_seconds": current.time_seconds,
+		"actions": smoke_actions, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0,
+		"frame_timing": _frame_timing()}))
+	get_tree().quit(0)
 
 func _smoke_input() -> void:
 	# Runs the real scene and views using deterministic scripted controls.
