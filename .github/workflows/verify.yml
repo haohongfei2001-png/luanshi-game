@@ -2,7 +2,9 @@ name: Verify and package playable game
 on:
   push:
     branches: [main]
+    paths-ignore: ['docs/**', 'README.md', 'AGENTS.md']
   pull_request:
+    paths-ignore: ['docs/**', 'README.md', 'AGENTS.md']
   workflow_dispatch:
 permissions:
   contents: read
@@ -47,6 +49,7 @@ jobs:
           set -euo pipefail
           xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/strategy_visual.gd 2>&1 | tee artifacts/strategy-visual.log
           test -s artifacts/strategy-proof.png
+          test -s artifacts/economy-local-proof.png
           grep -q STRATEGY_VISUAL_PASS artifacts/strategy-visual.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/strategy-visual.log; then exit 1; fi
       - name: Exercise world-sourced combat with real graphics

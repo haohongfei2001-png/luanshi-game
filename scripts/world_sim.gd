@@ -1,10 +1,19 @@
 class_name WorldSimulation
 extends RefCounted
-## Authoritative seconds clock with hourly economics. Presentation uses player_view().
+## Authoritative seconds clock with integer economic accrual. Presentation uses player_view().
 
-const VERSION := 2
+const VERSION := 3
+const Economy := preload("res://data/economy_rules.gd")
+const ECONOMY_RULES := Economy.RULES
+const MONTH_HOURS: int = ECONOMY_RULES.hours_per_day * ECONOMY_RULES.days_per_month
+const PRODUCTION_DENOMINATOR: int = MONTH_HOURS * ECONOMY_RULES.condition_scale
+# Integer safety limits, not target game scale. Products remain within signed 64-bit.
+const MAX_ECONOMY_PEOPLE := 1_000_000_000
+const MAX_PRODUCTION_RATE := 1_000_000
+const MAX_ECONOMY_STOCK := 1_000_000_000_000_000_000
 const Battle := preload("res://scripts/battle_sim.gd")
 const BATTLE_LIMIT := 20
+const CONVOY_FOOD_PER_HOUR := 8
 const MAX_ADVANCE := 8760
 const ROUTES := {
 	"road": {"from": "pingling", "to": "anping", "hours": 6},
@@ -29,16 +38,16 @@ func reset(seed_value: int = 184) -> void:
 		"battle_tickets": {}, "battle_locks": {}, "next_battle": 1,
 		"factions": {"sheng": {"name": "晟军"}, "bei": {"name": "北军"}},
 		"cities": {
-			"anping": _city("安平", "sheng", 40, 40, 100, 60, 0),
-			"pingling": _city("平陵", "sheng", 20, 20, 500, 80, 4),
-			"hequ": _city("河曲", "bei", 15, 15, 600, 20, 2),
+			"anping": _city("anping", "安平", "sheng", 40, 40, 100, 60),
+			"pingling": _city("pingling", "平陵", "sheng", 20, 20, 500, 80),
+			"hequ": _city("hequ", "河曲", "bei", 15, 15, 600, 20),
 		},
 		"armies": {
 			"relief": _army("sheng", "pingling", 60, 30, 120),
 			"besiegers": _army("bei", "anping", 80, 70, 48),
 		},
 		"siege": {"city": "anping", "army": "besiegers", "active": true, "outcome": "ongoing"},
-		"ledger": {"food_produced": 0, "food_consumed": 0, "weapons_produced": 0, "weapons_destroyed": 0, "dead": 0, "prisoners": 0},
+		"ledger": {"food_produced": 0, "food_consumed": 0, "food_consumed_civilian": 0, "food_consumed_military": 0, "food_shortfall_civilian": 0, "food_shortfall_military": 0, "weapons_produced": 0, "weapons_destroyed": 0, "dead": 0, "prisoners": 0},
 		"pending_reports": [], "reports": [], "events": [], "next_report": 1,
 		"convoys": [], "next_convoy": 1,
 	}
@@ -47,8 +56,12 @@ func reset(seed_value: int = 184) -> void:
 	_queue_report("anping", "安平求援使者", -72, 0, {"owner": "sheng", "under_siege": true})
 	_deliver_reports()
 
-func _city(label: String, owner: String, troops: int, weapons: int, food: int, fort: int, production: int) -> Dictionary:
-	return {"name": label, "owner": owner, "soldiers": troops, "weapons": weapons, "food": food, "fort": fort, "food_per_hour": production}
+func _city(id: String, label: String, owner: String, troops: int, weapons: int, food: int, fort: int) -> Dictionary:
+	var city: Dictionary = Economy.CITIES[id].duplicate(true)
+	city.merge({"name": label, "owner": owner, "soldiers": troops, "weapons": weapons, "food": food, "fort": fort,
+		"production_rates": Economy.PRODUCTION_RATES.duplicate(true), "production_progress": {"food": 0, "weapons": 0},
+		"civilian_food_progress": 0})
+	return city
 
 func _army(owner: String, location: String, troops: int, weapons: int, food: int) -> Dictionary:
 	return {"owner": owner, "location": location, "soldiers": troops, "weapons": weapons, "food": food, "march": {}, "starving_hours": 0}
@@ -68,6 +81,7 @@ func player_view() -> Dictionary:
 	if _state.cities.has(location):
 		local_city = _state.cities[location].duplicate(true)
 		local_city["id"] = location
+		local_city["production_plan"] = _production_plan(location)
 	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "army": _state.armies.relief.duplicate(true), "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
 
 func march(route_id: String) -> bool:
@@ -101,7 +115,7 @@ func transfer(from_id: String, to_id: String, resource: String, amount: int) -> 
 	if source.is_empty() or target.is_empty() or source.owner != target.owner:
 		return false
 	var location := _location(from_id)
-	if location == "" or location != _location(to_id) or source[resource] < amount:
+	if location == "" or location != _location(to_id) or source[resource] < amount or target[resource] > MAX_ECONOMY_STOCK - amount:
 		return false
 	source[resource] -= amount
 	target[resource] += amount
@@ -145,9 +159,12 @@ func advance_seconds(seconds: float) -> bool:
 	## Autonomous simulation API, not permission for a dead protagonist to wait.
 	## The world may continue after death; presentation blocks all campaign commands.
 	## Strategic time cannot also advance while a local battle owns the clock.
-	if not is_finite(seconds) or seconds < 0.0 or seconds > MAX_ADVANCE * 3600.0 or not _state.battle_locks.is_empty():
+	if not is_finite(seconds) or seconds < 0.0 or seconds > MAX_ADVANCE * 3600.0 or not _state.battle_locks.is_empty() or not _economy_errors().is_empty():
 		return false
-	_advance_clock_to(_state.time_seconds + seconds)
+	var target_seconds: float = _state.time_seconds + seconds
+	if not _economy_has_headroom(target_seconds):
+		return false
+	_advance_clock_to(target_seconds)
 	return true
 
 func _advance_clock_to(target_seconds: float) -> void:
@@ -172,16 +189,44 @@ func _advance_clock_to(target_seconds: float) -> void:
 			_arrivals()
 			_deliver_reports()
 
+func _production_plan(city_id: String) -> Dictionary:
+	var city: Dictionary = _state.cities[city_id]
+	var farmers := mini(int(city.workable_population), int(city.arable_land))
+	var crafters := mini(int(city.workable_population) - farmers, int(city.workshop_capacity))
+	var besieged: bool = _state.siege.active and _state.siege.city == city_id
+	return {"farmers": farmers, "crafters": crafters, "stability": city.stability,
+		"besieged": besieged, "effective_condition": 0 if besieged else city.stability,
+		"food_per_month_numerator": farmers * int(city.production_rates.food_per_farmer_month) * (0 if besieged else int(city.stability)),
+		"weapons_per_month_numerator": crafters * int(city.production_rates.weapons_per_crafter_month) * (0 if besieged else int(city.stability)),
+		"rate_denominator": ECONOMY_RULES.condition_scale, "hours_per_month": MONTH_HOURS,
+		"civilian_food_per_hour_numerator": city.population,
+		"civilian_food_rate_denominator": ECONOMY_RULES.person_hours_per_food,
+		"hours_per_day": ECONOMY_RULES.hours_per_day}
+
 func _produce() -> void:
-	for city in _state.cities.values():
-		# Besieged production is interrupted. No unaccounted free supplies.
-		if city == _state.cities.anping and _state.siege.active:
-			continue
-		city.food += city.food_per_hour
-		_state.ledger.food_produced += city.food_per_hour
-		if _state.hour % 24 == 0:
-			city.weapons += 1
-			_state.ledger.weapons_produced += 1
+	for city_id in _state.cities:
+		var city: Dictionary = _state.cities[city_id]
+		var plan := _production_plan(city_id)
+		var before: Dictionary = city.production_progress.duplicate(true)
+		var increments := {
+			"food": plan.food_per_month_numerator,
+			"weapons": plan.weapons_per_month_numerator,
+		}
+		var produced := {"food": 0, "weapons": 0}
+		for resource in produced:
+			var work: int = city.production_progress[resource] + increments[resource]
+			@warning_ignore("integer_division")
+			var amount: int = work / PRODUCTION_DENOMINATOR
+			city.production_progress[resource] = work % PRODUCTION_DENOMINATOR
+			city[resource] += amount
+			_state.ledger[resource + "_produced"] += amount
+			produced[resource] = amount
+		if produced.food > 0 or produced.weapons > 0:
+			_event("production", {"city": city_id, "amounts": produced, "labor": plan,
+				"population": city.population, "workable_population": city.workable_population,
+				"arable_land": city.arable_land, "workshop_capacity": city.workshop_capacity,
+				"rates": city.production_rates, "progress_before": before, "progress_after": city.production_progress,
+				"period_hours": 1, "denominator": PRODUCTION_DENOMINATOR})
 
 func _supply_enemy() -> void:
 	var depot: Dictionary = _state.cities.hequ
@@ -208,7 +253,7 @@ func _supply_enemy() -> void:
 		_state.convoys.remove_at(index)
 	if not _state.siege.active or depot.owner != army.owner:
 		return
-	var amount := mini(8, int(depot.food))
+	var amount := mini(CONVOY_FOOD_PER_HOUR, int(depot.food))
 	if amount == 0:
 		return
 	depot.food -= amount
@@ -216,19 +261,39 @@ func _supply_enemy() -> void:
 	_state.next_convoy += 1
 
 func _feed() -> void:
-	for city in _state.cities.values():
-		_consume(city, ceili(float(city.soldiers) / 10.0))
-	for army in _state.armies.values():
-		var need := ceili(float(army.soldiers) / 10.0)
-		var eaten := _consume(army, need)
+	for city_id in _state.cities:
+		var city: Dictionary = _state.cities[city_id]
+		if _state.hour % ECONOMY_RULES.hours_per_day == 0:
+			var person_hours: int = city.civilian_food_progress + city.population * ECONOMY_RULES.hours_per_day
+			@warning_ignore("integer_division")
+			var civilian_need: int = person_hours / ECONOMY_RULES.person_hours_per_food
+			city.civilian_food_progress = person_hours % ECONOMY_RULES.person_hours_per_food
+			_consume(city_id, "civilian", civilian_need, city.population, ECONOMY_RULES.hours_per_day)
+		_consume(city_id, "military", _military_food_need(city.soldiers), city.soldiers, 1)
+	for army_id in _state.armies:
+		var army: Dictionary = _state.armies[army_id]
+		var need := _military_food_need(army.soldiers)
+		var eaten := _consume(army_id, "military", need, army.soldiers, 1)
 		army.starving_hours = army.starving_hours + 1 if eaten < need else 0
 		if army.starving_hours >= 3:
 			_lose_troops(army, 1, "starvation")
 
-func _consume(entity: Dictionary, amount: int) -> int:
+func _military_food_need(soldiers: int) -> int:
+	# Existing hourly field-ration rounding is preserved, including locked participants.
+	@warning_ignore("integer_division")
+	return (soldiers + int(ECONOMY_RULES.person_hours_per_food) - 1) / int(ECONOMY_RULES.person_hours_per_food)
+
+func _consume(entity_id: String, consumer: String, amount: int, people: int, period_hours: int) -> int:
+	var entity := _entity(entity_id)
 	var eaten := mini(amount, int(entity.food))
 	entity.food -= eaten
 	_state.ledger.food_consumed += eaten
+	_state.ledger["food_consumed_" + consumer] += eaten
+	_state.ledger["food_shortfall_" + consumer] += amount - eaten
+	if amount > 0:
+		_event("consumption", {"entity": entity_id, "consumer": consumer, "people": people,
+			"requested": amount, "eaten": eaten, "shortfall": amount - eaten,
+			"food_delta": -eaten, "period_hours": period_hours})
 	return eaten
 
 func _arrivals() -> void:
@@ -335,16 +400,20 @@ func _location(id: String) -> String:
 	return _state.armies.get(id, {}).get("location", "")
 
 func totals() -> Dictionary:
-	var result := {"food": 0, "weapons": 0, "soldiers": 0}
+	var result := {"food": 0, "weapons": 0, "soldiers": 0, "civilian_population": 0}
 	for entity in _state.cities.values() + _state.armies.values():
-		for resource in result:
+		for resource in ["food", "weapons", "soldiers"]:
 			result[resource] += entity[resource]
+	for city in _state.cities.values():
+		result.civilian_population += city.population
 	for convoy in _state.convoys:
 		result.food += convoy.food
 	return result
 
 func audit() -> Array[String]:
-	var errors: Array[String] = []
+	var errors := _economy_errors()
+	if not errors.is_empty():
+		return errors
 	var total := totals()
 	var initial: Dictionary = _state.initial_totals
 	var ledger: Dictionary = _state.ledger
@@ -354,10 +423,6 @@ func audit() -> Array[String]:
 		errors.append("weapon conservation")
 	if total.soldiers + ledger.dead + ledger.prisoners != initial.soldiers:
 		errors.append("soldier conservation")
-	for entity in _state.cities.values() + _state.armies.values():
-		for resource in ["food", "weapons", "soldiers"]:
-			if entity[resource] < 0:
-				errors.append("negative " + resource)
 	for convoy in _state.convoys:
 		if convoy.food <= 0 or convoy.arrives_at <= convoy.departed_at:
 			errors.append("invalid convoy")
@@ -376,6 +441,119 @@ func audit() -> Array[String]:
 	if _state.campaign_ended != (not _state.commander.alive) or _state.commander.alive != (_state.commander.hp > 0.0):
 		errors.append("commander life state")
 	return errors
+
+
+func _economy_errors() -> Array[String]:
+	# Validate schema before arithmetic. Clock-entry guards and transaction audits
+	# share this check; malformed economics must not partially advance the world.
+	var errors: Array[String] = []
+	for city_id in _state.cities:
+		var value: Variant = _state.cities[city_id]
+		if not value is Dictionary:
+			errors.append("invalid city economy: " + str(city_id))
+			continue
+		var city: Dictionary = value
+		for field in ["population", "workable_population", "arable_land", "workshop_capacity"]:
+			if not _bounded_integer(city.get(field), MAX_ECONOMY_PEOPLE):
+				errors.append("invalid city economy: " + city_id + ":" + field)
+		if not _bounded_integer(city.get("stability"), int(ECONOMY_RULES.condition_scale)):
+			errors.append("invalid city stability: " + city_id)
+		if not _bounded_integer(city.get("civilian_food_progress"), int(ECONOMY_RULES.person_hours_per_food) - 1):
+			errors.append("invalid civilian remainder: " + city_id)
+		if not _valid_economy_pair(city.get("production_rates"), ["food_per_farmer_month", "weapons_per_crafter_month"], MAX_PRODUCTION_RATE):
+			errors.append("invalid production rates: " + city_id)
+		if not _valid_economy_pair(city.get("production_progress"), ["food", "weapons"], PRODUCTION_DENOMINATOR - 1):
+			errors.append("invalid production remainder: " + city_id)
+	for entity in _state.cities.values() + _state.armies.values():
+		if not entity is Dictionary:
+			errors.append("invalid inventory entity")
+			continue
+		for resource in ["food", "weapons", "soldiers"]:
+			var limit: int = MAX_ECONOMY_PEOPLE if resource == "soldiers" else MAX_ECONOMY_STOCK
+			if not _bounded_integer(entity.get(resource), limit):
+				errors.append("invalid " + resource)
+	for convoy in _state.convoys:
+		if not convoy is Dictionary or not _bounded_integer(convoy.get("food"), MAX_ECONOMY_PEOPLE):
+			errors.append("invalid convoy food")
+	for field in ["food_produced", "weapons_produced", "food_consumed", "food_consumed_civilian", "food_consumed_military", "food_shortfall_civilian", "food_shortfall_military"]:
+		if not _bounded_integer(_state.ledger.get(field), MAX_ECONOMY_STOCK):
+			errors.append("invalid economy ledger: " + field)
+	if not errors.is_empty():
+		return errors
+	# Only typed, bounded numbers reach calculations and cross-field invariants.
+	for city_id in _state.cities:
+		var city: Dictionary = _state.cities[city_id]
+		if city.workable_population > city.population:
+			errors.append("invalid city capacity: " + city_id)
+	if totals().civilian_population != _state.initial_totals.civilian_population:
+		errors.append("civilian population conservation")
+	if _state.ledger.food_consumed != _state.ledger.food_consumed_civilian + _state.ledger.food_consumed_military:
+		errors.append("consumption accounting")
+	return errors
+
+func _economy_has_headroom(target_seconds: float) -> bool:
+	# Conservative bounds for this clock request. Do not rely on later consumption
+	# or casualties to create space: even intermediate stocks/ledgers stay valid.
+	# No full event-history copy is needed on every fractional battle frame.
+	var hours := floori(target_seconds / 3600.0) - int(_state.hour)
+	if hours <= 0:
+		return true
+	var produced := {"food": 0, "weapons": 0}
+	var civilian_need := 0
+	var military_need := 0
+	@warning_ignore("integer_division")
+	var days: int = (int(_state.hour) + hours) / int(ECONOMY_RULES.hours_per_day) - int(_state.hour) / int(ECONOMY_RULES.hours_per_day)
+	# All currently travelling and newly dispatched cargo is an upper bound for
+	# either receiving depot or the besieging army; ownership may change en route.
+	var incoming := CONVOY_FOOD_PER_HOUR * hours
+	for convoy in _state.convoys:
+		incoming += int(convoy.food)
+	for city_id in _state.cities:
+		var city: Dictionary = _state.cities[city_id]
+		var plan := _production_plan(city_id)
+		var increments := {
+			"food": int(plan.farmers) * int(city.production_rates.food_per_farmer_month) * int(city.stability),
+			"weapons": int(plan.crafters) * int(city.production_rates.weapons_per_crafter_month) * int(city.stability),
+		}
+		# Assume the siege can lift at any point, never underestimating future work.
+		for resource in produced:
+			var increment: int = increments[resource]
+			@warning_ignore("integer_division")
+			var amount: int = (increment / PRODUCTION_DENOMINATOR) * hours + (int(city.production_progress[resource]) + (increment % PRODUCTION_DENOMINATOR) * hours) / PRODUCTION_DENOMINATOR
+			produced[resource] += amount
+			var cargo: int = incoming if resource == "food" and city_id in ["anping", "hequ"] else 0
+			if int(city[resource]) > MAX_ECONOMY_STOCK - amount - cargo:
+				return false
+		@warning_ignore("integer_division")
+		var demand: int = (int(city.civilian_food_progress) + int(city.population) * int(ECONOMY_RULES.hours_per_day) * days) / int(ECONOMY_RULES.person_hours_per_food)
+		civilian_need += demand
+		military_need += _military_food_need(city.soldiers) * hours
+	for army_id in _state.armies:
+		var army: Dictionary = _state.armies[army_id]
+		military_need += _military_food_need(army.soldiers) * hours
+		if army_id == "besiegers" and int(army.food) > MAX_ECONOMY_STOCK - incoming:
+			return false
+	var ledger_deltas := {
+		"food_produced": produced.food, "weapons_produced": produced.weapons,
+		"food_consumed": civilian_need + military_need,
+		"food_consumed_civilian": civilian_need, "food_consumed_military": military_need,
+		"food_shortfall_civilian": civilian_need, "food_shortfall_military": military_need,
+	}
+	for field in ledger_deltas:
+		if int(_state.ledger[field]) > MAX_ECONOMY_STOCK - int(ledger_deltas[field]):
+			return false
+	return true
+
+func _bounded_integer(value: Variant, maximum: int) -> bool:
+	return value is int and value >= 0 and value <= maximum
+
+func _valid_economy_pair(value: Variant, keys: Array, maximum: int) -> bool:
+	if not value is Dictionary or value.size() != keys.size():
+		return false
+	for key in keys:
+		if not _bounded_integer(value.get(key), maximum):
+			return false
+	return true
 
 
 func _reserved_for(entity: Dictionary, resource: String) -> int:
@@ -459,13 +637,16 @@ func start_battle(battle_id: String) -> BattleSimulation:
 	return simulation
 
 func sync_battle_time(battle_id: String) -> bool:
-	if not _battle_sessions.has(battle_id) or _state.battle_tickets[battle_id].status != "running":
+	if not _battle_sessions.has(battle_id) or _state.battle_tickets[battle_id].status != "running" or not _economy_errors().is_empty():
 		return false
 	var simulation: BattleSimulation = _battle_sessions[battle_id]
 	var ticket: Dictionary = _state.battle_tickets[battle_id]
 	if not is_finite(simulation.elapsed) or simulation.elapsed < ticket.elapsed_world_time or simulation.elapsed > MAX_ADVANCE * 3600.0:
 		return false
-	_advance_clock_to(ticket.time + simulation.elapsed)
+	var target_seconds: float = ticket.time + simulation.elapsed
+	if not _economy_has_headroom(target_seconds):
+		return false
+	_advance_clock_to(target_seconds)
 	ticket.elapsed_world_time = simulation.elapsed
 	return true
 

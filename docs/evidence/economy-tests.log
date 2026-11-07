@@ -1,0 +1,5 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+ECONOMY_90_DAYS {"events":9212,"final_food":500,"food_consumed":13828,"food_produced":12960,"hour":2160,"population":50,"weapons_produced":269}
+Economy tests: 527 assertions, 0 failures
+ECONOMY_TEST_SUMMARY {"assertions":527,"failures":0,"messages":[]}

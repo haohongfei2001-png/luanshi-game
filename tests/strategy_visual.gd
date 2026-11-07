@@ -43,6 +43,16 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	key(KEY_M)
+	await process_frame
+	await process_frame
+	if not scene.strategy.economy_label.visible or not scene.strategy.economy_label.text.contains("2880 food + 30 weapons"):
+		push_error("Graphical local economy projection failed")
+		quit(1)
+		return
+	if not await capture("res://artifacts/economy-local-proof.png"):
+		push_error("Could not save local economy visual evidence")
+		quit(1)
+		return
 	for id in ["river", "wait1", "wait1", "wait1", "seize"]:
 		await click(id)
 	if scene.strategy.visible or scene.campaign_adapter == null or scene.views.size() != 35 or scene.hud._unarmed(0) != 10:
