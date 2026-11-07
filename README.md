@@ -28,7 +28,24 @@ Direct-cloud bootstrap: see [docs/DOT_BOOTSTRAP.md](docs/DOT_BOOTSTRAP.md). AI d
 
 ## Status
 
-Repository initialized; game prototype not yet implemented.
+Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 simulation assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+
+### Play from source
+
+1. Install Godot 4.6.3 (standard edition).
+2. Import `project.godot`, then press F6/F5 or run `godot --path .`.
+3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (75% damage reduction for 2.6 seconds).
+4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins a new encounter **after** the previous one ends.
+
+There are 20 friendly soldiers, 20 enemy soldiers, and one separately counted commander. The commander's death ends the encounter. Fallen soldiers remain in the casualty ledger; only a new encounter resets it.
+
+### Reproduce tests
+
+```sh
+./tools/test.sh
+```
+
+The test script runs editor import, pure simulation tests and the full scene's scripted smoke run. Runtime logs are written to ignored `artifacts/`. No game plugins, purchased services or third-party art are required.
 
 ## Licensing
 

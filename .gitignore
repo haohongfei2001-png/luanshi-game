@@ -22,3 +22,8 @@ exports/
 *.jks
 *.p12
 *.p8
+
+# Reproducible local runtime caches and generated outputs
+.local-*/
+builds/
+artifacts/
