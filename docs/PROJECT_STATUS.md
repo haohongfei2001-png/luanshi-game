@@ -6,7 +6,7 @@ Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using th
 
 ## Current branch and source
 
-- Working branch: `feature/world-battle-transactions`, following merged PR #1. The original playable and strategic foundation are preserved in main merge `bfb028a`.
+- Working branch: `feature/world-battle-transactions`, PR #2, following merged PR #1. The original playable and strategic foundation are preserved in main merge `bfb028a`.
 - First playable: `98576db`; exports/scene tests: `5426efa`; camera/input/visual-CI repair: `8109761`; design merge: `7d8ea81`; supported native macOS runner: `bf2052f`; WorldSim foundation: `50dc3be` (CI 42417682607 passed both jobs).
 - Main design contracts and pending creative-decision caveats through `bfb028a` are merged into this branch, retaining code and resolving only the README status paragraph in favor of the more recent factual implementation record.
 - Primary work directory: repository root. Commands: `./tools/test.sh`, `./tools/export.sh` with matching Godot 4.6.3 templates.
@@ -22,7 +22,7 @@ Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using th
 
 ## Next executable milestones
 
-1. v0.3 real roster/equipment, exact clock and once-only settlement: all 986 source/scene assertions and both actual-combat smoke runs pass. New graphical proof and native macOS export/runtime CI still pending until its evidence is linked.
+1. v0.3 real roster/equipment, exact clock and once-only settlement: all 986 source/scene assertions and both actual-combat smoke runs pass. Source `0383e85` passed full CI run 42419804675: actual campaign launch/combat/retreat/map screenshots inspected, Linux exported runs, native macOS 26.7.2 arm64 training and campaign runs, strict ad-hoc signature. Local v0.3 macOS SHA256 `43661e6f89ae36f72dc73aaaac1bfac54fdf83b45779228846ceac80c0ecbc35`.
 2. Next smallest G2 gap: replace fixed food production with population/workable-land/state-limited production and multi-month conservation tests (ECO-03).
 3. Add visible shortage → fatigue/morale → attrition progression for marching forces with deterministic tests (ECO-04). Do not call G2 fully passed before both gaps are demonstrated.
 4. Then add versioned campaign save/load, including pending events and battle receipts/session state, before claiming WRL-07/LIF-02/TECH-03 across process restart. Continue to knowledge-driven NPC and short narrative progression.
@@ -45,7 +45,7 @@ Canonical design authority is now PRODUCT_DECISIONS v2 → FINAL_GAME_DESIGN_SPE
 - ECO-04: PARTIAL. Hunger clocks and eventual attrition exist; explicit fatigue/morale warning stages remain next work.
 - WRL-07 / TECH-03: PARTIAL. Real army/battle transaction, locks, authoritative result validation, rollback, casualty/equipment audit and duplicate rejection pass in-process. Durable save/reload of transaction state is not implemented, so full acceptance remains pending.
 - G2 is therefore a tested foundation, not a claim that all final-matrix G2 acceptance is complete.
-- Strategic sandbox UI is implemented with 37 synthetic input assertions: opening/closing preserves battle time, HP and casualties; only player_view data is rendered; world reset does not reset battle. Actual graphical screenshot reviewed from run 42418269168: readable 1280×800 layout, route and supply actions visible, historical intelligence distinct from local observation.
+- Strategic UI is implemented with 36 synthetic input assertions plus 63 campaign lifecycle assertions: opening/closing preserves battle time, HP and casualties; only player_view data is rendered; world reset does not reset battle. Actual graphical screenshot reviewed from run 42418269168: readable 1280×800 layout, route and supply actions visible, historical intelligence distinct from local observation.
 
 ## Latest handoff received
 

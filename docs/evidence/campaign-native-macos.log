@@ -1,0 +1,10 @@
+Darwin iad20-gt1018-a59bb13e-9225-42f8-a5f5-a9cf8c5a7257-6A71FD89C8B8.local 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
+ProductName:		macOS
+ProductVersion:		26.7.2
+BuildVersion:		25G332
+package/unpacked/Luanshi - Border Skirmish.app: valid on disk
+package/unpacked/Luanshi - Border Skirmish.app: satisfies its Designated Requirement
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=19+15 renderer=gl_compatibility
+CAMPAIGN_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"army":{"food":102,"location":"hequ","march":{},"owner":"sheng","soldiers":60,"starving_hours":0,"weapons":45},"frame_timing":{"device":"","display":"headless","sample_count":374,"wall_mean_ms":0.910737967914438,"wall_p50_ms":0.945,"wall_p95_ms":1.084},"mean_simulation_ms":0.586449494949495,"report":{"elapsed_seconds":6.6,"enemy_casualties":15,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":19,"player_alive":true,"player_damage":1358.36,"player_hp":202.5,"result":"Victory at the border","seed":8103},"settlement":{"already_committed":false,"battle_id":"1:1","campaign_ended":false,"depot_captured":true,"elapsed_world_time":6.59999999999998,"ok":true,"result":"victory","spoils":{"weapons":15}},"steps":396,"world_time_seconds":10806.6}

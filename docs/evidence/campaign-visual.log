@@ -1,0 +1,8 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=19+15 renderer=gl_compatibility
+VISUAL_CAPTURE 0
+CAMPAIGN_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"army":{"food":102,"location":"hequ","march":{},"owner":"sheng","soldiers":60,"starving_hours":0,"weapons":45},"frame_timing":{"device":"llvmpipe (LLVM 20.1.2, 256 bits)","display":"X11","sample_count":374,"wall_mean_ms":61.9644010695188,"wall_p50_ms":60.68,"wall_p95_ms":67.398},"mean_simulation_ms":0.739707070707071,"report":{"elapsed_seconds":6.6,"enemy_casualties":15,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":19,"player_alive":true,"player_damage":1358.36,"player_hp":202.5,"result":"Victory at the border","seed":8103},"settlement":{"already_committed":false,"battle_id":"1:1","campaign_ended":false,"depot_captured":true,"elapsed_world_time":6.59999999999998,"ok":true,"result":"victory","spoils":{"weapons":15}},"steps":396,"world_time_seconds":10806.6}
