@@ -1,4 +1,6 @@
-# Dot autonomous cloud-development bootstrap
+# Dot autonomous cloud-development bootstrap (initial milestone archive)
+
+**Dot has already started developing PR #1. For ongoing work, use docs/DOT_HANDOFF_FINAL.md and docs/PRODUCT_DECISIONS.md first, not the old first-task checklist below.**
 
 > This file is an instruction for the user's **Dot**, not a request to create Codex tasks.
 
