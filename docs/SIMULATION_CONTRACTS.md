@@ -118,6 +118,54 @@ load_campaign(save) -> WorldState
 - 设计参数（粮耗、老龄风险、射程、士气阈值、军令延迟）保存在可配置数据中，不写死在散落的 UI 节点里。
 - 一次变更只修改一个可测试机制，保留上次可运行构建。文档和代码如果有差异，以用户锁定规范为目标修复代码，而不是直接删掉规范。
 
-## 9. 交接条件
+## 9. 用户新确认的战场命令、攻击与时间模型（2026-11-08）
+
+### 9.1 令旗/号角/传令兵是实体通信通道
+
+建议增量数据模型：
+- `CommandIntent`: id, issuer_id, target_detachment_id, type, desired_position, issued_at, origin, urgency。
+- `SignalChannel`: kind = local_voice / flag / horn / runner, effective_area_or_route, reliability, is_observable。
+- `Courier`: id, position, route, speed, health, faction_id, carrying_command_ids, status = traveling / intercepted / missing / delivered / captured / returned。
+- `OrderDelivery`: order_id, dispatched_at, last_confirmed_at, recipient_id, status = drafted / dispatched / pending / acknowledged / refused / timed_out / suspected_lost / confirmed_lost / superseded。
+
+单条军令的世界内进展为：`issue` → 选择可行通道 → 时延/路径仿真 → 收件人获知 → NPC 根据**自己**的情报决定是否执行 → 回信可能再次受运输、战争影响。令旗/号角在适当距离传播，不需要实例化几千个传令兵；远距命令才需要实体信使/路网。
+
+事件表区分 **world_true_delivery** 与 **player_known_delivery**：例如传令兵已被伏击，世界真实状态标记 intercepted，但玩家界面仍显示“派出中/超时失联”，直到目击者回报、己方发现遗物或通讯超时被合理推断。不要发送全知提示“敌军在某坐标击杀了传令兵”，除非当事人真的知道。
+
+可复现测试情境：相同世界种子中正常送达与改变敌军巡逻路线后信使被拦截的两种结果；未送达命令不得改变远方部队的执行任务。信使遇险不能影响已经在其之前送达的令旗或号角军令。
+
+### 9.2 角色进攻成长与脆弱性
+
+`CharacterCombat` 建议把 `damage_per_hit`, `attack_arc`, `attack_speed`, `skill_effectiveness`, `weapon`, `stamina`, `armor`, `hp` 和 `incoming_hit_exposure` 独立存储，不设 `hero_invincible_flag`、`enemy_count_buff` 或高等级强制伤害免疫。
+
+- 初期与普通士兵处于可一敌一/一敌二的能力区间；后期因攻击/招式/装备能在大量散兵中持续获胜，**血量增长仍有上限**。
+- 多敌攻击应按照真实命中、攻击面、武器射程和角度造成累计伤害；玩家被几十个敌方有效打中仍可死。
+- 大战可承载大量时间跨度内的累计杀敌统计，不能将“以一敌百”解释为 100 名敌军无条件同时攻击时必然存活。
+
+### 9.3 基于活动的世界时间
+
+`WorldClock` 按一个权威时钟，`ActionDurationPolicy` 区分：
+- `ui_zero`: 菜单、阅读、装备选择、点击给指令（除真实送令时间之外）不额外推进游戏时钟；
+- `minor`: 普通移动、即时交互、战斗按照实际经过的秒/分钟累计；
+- `scheduled`: 行军、休养、训练、等候、围城和剧情事件明确占据小时/天/月，触发统一世界推进；
+- `skip_until(condition)`: 可选择快速等到预计到达、夜晚或伤愈，同时推进所有离屏战斗、粮耗、消息和人物行为，不能跳过历史代价。
+
+无动作不代表永久冻结：若游戏当前未暂停，世界钟按合理比例推进；如果玩家主动使用暂停查看信息，世界可以暂停以保障公平，但恢复后所有在途事件继续。UI 时间接近零≠免费生产、免费训练、免费增兵。
+
+### 9.4 叙事锚点与条件性历史分支
+
+建议 `NarrativeAnchor`：id, kind = structural_pressure / external_campaign / historical_shock, initial_conditions, trigger_conditions, earliest_time, originating_faction_or_person, mutable_outcomes, active_status。
+
+- structural_pressure 指朝廷-地方矛盾、边境战争风险与资源争夺等**不能被主角忽然消除的时代状态**。
+- external_campaign 指已由外部大势力在现实政治条件下准备/发动的战争，起因不依赖玩家观看或出场，后续是否获胜/撤兵/兵变仍由世界推进。
+- historical_shock 指少量关键节点的外部行动，影响范围大，但不直接赋值最终胜者；玩家只有在具备位置、军权、资源/消息等真实条件时才可能改变结果。
+
+`NarrativeOutcome` 从真实世界条件和关键人物知识生成，不使用事件脚本把胜负、人口、军队库存置换成既定结局。普通互动影响局部，不自动改写全国；重大历史改写需通过明确影响力阈值和真实世界行动实现。
+
+### 9.5 不可重复刷任务的世界推进
+
+每个重复任务应具备：真实资源成本、世界条件/次数限制或设计上的自动汇总，避免为增加游戏小时数无意义强制刷怪。世界战争不随玩家退出军职停止；玩家隐居后可以通过季节/月度消息/城池状态/战争推进继续经历其历史后果，而不是切换成和平农场模式。
+
+## 10. 交接条件
 
 Dot 完成首个世界三城架构时，应提交：模块接口说明、示例保存文件的**脱敏版本**、三种安平救援不同结果的测试脚本与日志、资源守恒测试、战斗结算恰好一次测试。此后可进入剧情层；不需要再问用户选哪个架构。

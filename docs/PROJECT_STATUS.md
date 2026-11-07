@@ -8,7 +8,7 @@ Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using th
 
 - Working branch: `feature/population-economy`, following merged PR #2 (main `0be9e51`). The original playable/strategic foundation is preserved in `bfb028a`; real campaign transactions and their evidence in `0be9e51`.
 - First playable: `98576db`; exports/scene tests: `5426efa`; camera/input/visual-CI repair: `8109761`; design merge: `7d8ea81`; supported native macOS runner: `bf2052f`; WorldSim foundation: `50dc3be` (CI 42417682607 passed both jobs).
-- Main design contracts and pending creative-decision caveats through `bfb028a` are merged into this branch, retaining code and resolving only the README status paragraph in favor of the more recent factual implementation record.
+- Main design contracts and resolved owner decisions through `82df117` are merged into this branch, retaining code and resolving only the README status paragraph in favor of the more recent factual implementation record.
 - Primary work directory: repository root. Commands: `./tools/test.sh`, `./tools/export.sh` with matching Godot 4.6.3 templates.
 
 ## Passed and pending
@@ -49,7 +49,7 @@ Canonical design authority is now PRODUCT_DECISIONS v2 → FINAL_GAME_DESIGN_SPE
 
 ## Latest handoff received
 
-The final PR #1 comment (6713522579) and latest merged main `bfb028a` were read, including the concurrent `OWNER_CREATIVE_DECISIONS_PENDING.md` additions. Pro defaults for high-level creative questions remain PROVISIONAL; they are not owner sign-off. The simulation transaction contracts now guide the next change. User asks for quiet autonomous work: routine progress belongs in this repository; contact only for reserved permissions or unavoidable blockers. No claim that the full game is finished.
+The final PR #1 comment (6713522579) and latest merged main `bfb028a` were read, including the concurrent `OWNER_CREATIVE_DECISIONS_PENDING.md` additions. Those previously pending high-level choices were subsequently resolved in main `82df117`; only implementation parameters remain provisional. The simulation transaction contracts now guide the next change. User asks for quiet autonomous work: routine progress belongs in this repository; contact only for reserved permissions or unavoidable blockers. No claim that the full game is finished.
 
 ## v0.3 review fixes
 
@@ -58,3 +58,9 @@ Independent review found and repaired fractional route/report deadlines (a battl
 ## v0.4 economy scope and review
 
 Production and civilian/military consumption now carry timestamped source events. Ninety days: 12,960 food produced, 13,828 eaten, 269 weapons produced, 500 food and 50 civilians remain. Existing relief/late/supply-interception scenarios still pass unchanged. Independent review fixed malformed economic schema, unsafe rate bounds and accepted numeric-cap advances that could otherwise leave invalid state. Headroom preflight rejects before mutation, including battle clocks and transfers. Ordinary hunger fatigue/morale remains the next bounded code task.
+
+## Owner decisions synchronized from main 82df117 / Issue #3
+
+All nine high-level decisions are now recorded as resolved in PRODUCT_DECISIONS v3 section 1B and the historical PENDING filename. They do not require another user choice. Precision balance, demographics and rate values remain testable provisional parameters. Preserve the existing pipeline; finish G2 production and staged hunger first.
+
+New acceptance tracking: OWNER-TIME-01 has current no-extra-time menu/reading and resource-conservation coverage; OWNER-HISTORY-01/02 have tested offscreen siege and route-dependent outcomes. These are partial evidence, not completion of all associated narrative behavior. OWNER-COMBAT-01 is NOT RUN: current strong commander profile is a legacy combat fixture, not proof of the approved early 1-vs-2 balance; introduce explicit early/late profiles and 1/2/5 enemy tests after G2. OWNER-ORDER-01..03 are NOT RUN: local order shortcuts exist, but physical remote couriers/interception/uncertain acknowledgment are not implemented. OWNER-SAVE-01 is NOT RUN. Continuous unpaused strategic clock, multi-month rest/story advancement, politics, aging, conditional major narrative nodes and later-scale acceptance remain pending. Keep Issue #3 open until its behavior has real code evidence.

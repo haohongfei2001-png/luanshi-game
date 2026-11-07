@@ -5,8 +5,8 @@
 The Hequ depot action now uses real world inventory and people through
 `WorldSimulation → BattleTicket → BattleSimulation → BattleOutcome → WorldSimulation`.
 It is a small local encounter, not an implementation of every battle in the final
-specification. `docs/PRODUCT_DECISIONS.md`, the final design and the owner's pending
-creative decisions remain authoritative. The current numbers are reversible prototype
+specification. `docs/PRODUCT_DECISIONS.md`, the final design and the owner's resolved
+creative-decision index remain authoritative. The current numbers are reversible prototype
 balance, not final protagonist strength or approved final army scale.
 
 The standalone training encounter remains 20 friendly soldiers, 20 enemies and a
