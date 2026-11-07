@@ -3,7 +3,10 @@ extends Node3D
 const Simulation := preload("res://scripts/battle_sim.gd")
 const UnitView := preload("res://scripts/unit_view.gd")
 const InputActions := preload("res://scripts/input_actions.gd")
+const Strategy := preload("res://scripts/strategy_view.gd")
 const Hud := preload("res://scripts/battle_hud.gd")
+var strategy: Control
+var paused_before_strategy := false
 var sim := Simulation.new()
 var camera: Camera3D
 var hud: Control
@@ -34,6 +37,12 @@ func _ready() -> void:
 	hud.action_requested.connect(_request_action)
 	hud.restart_requested.connect(_restart)
 	hud.pause_requested.connect(_toggle_pause)
+	hud.strategy_requested.connect(_toggle_strategy)
+	strategy = Strategy.new()
+	strategy.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	canvas.add_child(strategy)
+	strategy.hide()
+	strategy.close_requested.connect(_toggle_strategy)
 	_restart()
 	print("LUANSHI_READY engine=%s soldiers=%d+%d renderer=%s" % [Engine.get_version_info().string, sim.alive_count(0), sim.alive_count(1), RenderingServer.get_current_rendering_method()])
 
@@ -99,6 +108,8 @@ func _build_battlefield() -> void:
 	cursor.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func _restart() -> void:
+	if strategy != null and strategy.visible:
+		return
 	for view in views:
 		view.queue_free()
 	views.clear()
@@ -128,7 +139,27 @@ func _process(_delta: float) -> void:
 		capture_complete = error == OK
 		print("VISUAL_CAPTURE " + str(error))
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("toggle_strategy") and not event.is_echo():
+		_toggle_strategy()
+		get_viewport().set_input_as_handled()
+
+func _toggle_strategy() -> void:
+	if strategy.visible:
+		strategy.hide()
+		hud.show()
+		paused = paused_before_strategy
+	else:
+		paused_before_strategy = paused
+		paused = true
+		hud.hide()
+		strategy.refresh()
+		strategy.show()
+		cursor.hide()
+
 func _unhandled_input(event: InputEvent) -> void:
+	if strategy.visible:
+		return
 	if event.is_action_pressed("pause_battle"):
 		_toggle_pause()
 	elif event.is_action_pressed("toggle_help"):
@@ -145,6 +176,8 @@ func _notification(what: int) -> void:
 		paused = true
 
 func _toggle_pause() -> void:
+	if strategy.visible:
+		return
 	if not sim.ended:
 		paused = not paused
 
@@ -157,6 +190,8 @@ func _request_action(action: String) -> void:
 		sim.use_action(action)
 
 func _physics_process(delta: float) -> void:
+	if strategy.visible:
+		return
 	if sim.units.is_empty():
 		return
 	var mouse := get_viewport().get_mouse_position()

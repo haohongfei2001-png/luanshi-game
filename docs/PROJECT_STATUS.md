@@ -13,18 +13,18 @@ Continue autonomous implementation toward `FINAL_VISION_ACCEPTANCE.md`, using th
 
 ## Passed and pending
 
-- Passed: Godot 4.6.3 import; 33 combat + 35 scene/input/camera + 526 WorldSim assertions (594 total); deterministic army battle; real scene scripted battle; macOS universal ZIP export/static arm64+x86_64 inspection; exported Linux headless run.
+- Passed: Godot 4.6.3 import; 33 combat + 35 scene/input/camera + 37 strategic UI + 526 WorldSim assertions (631 total); deterministic army battle; real scene scripted battle; macOS universal ZIP export/static arm64+x86_64 inspection; exported Linux headless run.
 - A real Ubuntu/Xvfb/llvmpipe render and screenshot were inspected. This exposed a HUD-covered field edge and excess brightness; corrected in `8109761`, awaiting repeated graphical CI verification.
 - CI's first graphical run failed on absent audio hardware; the test-only Dummy audio fix passed.
 - Native macOS 26.7.2 arm64 CI and strict ad-hoc signature verification passed in run 42417350572. User M5 device performance, manual gameplay feel and owner approval remain unverified. No Developer ID signing/notarization or production release.
-- WorldSim foundation implemented with three causal scenarios, resource/in-transit convoy conservation, delayed intelligence and 96h test coverage. It remains separate from the playable battle scene.
+- WorldSim foundation implemented with three causal scenarios, resource/in-transit convoy conservation, delayed intelligence and 96h test coverage. A playable M-key strategic sandbox now exposes routes, waiting, local observation, inventory transfers and depot capture. It explicitly remains a separate scenario from battle until settlement integration.
 - The 20v20 simulation remains O(n²); no large-army performance claim.
 
 ## Next executable milestones
 
-1. Finish the current WorldSim foundation commit and check CI for that exact head; preserve the standalone battle artifact.
-2. Add a playable three-city strategic interface reading only `WorldSim.player_view()`, with route, wait, resupply, scout and local depot actions. Keep the existing battle scene available.
-3. Add explicit army-to-battle roster creation and exactly-once casualty/equipment settlement, then versioned save/load and short narrative progression.
+1. Verify the current v0.2 strategic UI CI screenshot and native macOS package, repair issues and preserve the latest tested artifact.
+2. Add explicit army-to-battle roster creation and exactly-once casualty/equipment settlement, then versioned save/load and short narrative progression.
+3. Complete ECO-03 population/land production and ECO-04 visible fatigue/morale stages before calling the final-matrix G2 fully passed.
 4. Evaluate Mobile rendering on a supported graphical runner before claiming anything about iPhone/GPU performance. Do not optimize to unmeasured army sizes.
 
 ## Continuation procedure
@@ -44,4 +44,4 @@ Canonical design authority is now PRODUCT_DECISIONS v2 → FINAL_GAME_DESIGN_SPE
 - ECO-04: PARTIAL. Hunger clocks and eventual attrition exist; explicit fatigue/morale warning stages remain next work.
 - WRL-07 / TECH-03: NOT RUN. Exactly-once real army/battle settlement is not yet implemented.
 - G2 is therefore a tested foundation, not a claim that all final-matrix G2 acceptance is complete.
-- Strategic sandbox UI is currently being implemented in the same working branch; it must label its temporary independence from the battle state and must not reset or overwrite battle casualties.
+- Strategic sandbox UI is implemented with 37 synthetic input assertions: opening/closing preserves battle time, HP and casualties; only player_view data is rendered; world reset does not reset battle. Current graphical CI screenshot review remains pending until recorded.

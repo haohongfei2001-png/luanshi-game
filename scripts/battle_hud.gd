@@ -2,6 +2,7 @@ extends Control
 
 signal action_requested(action: String)
 signal restart_requested
+signal strategy_requested
 signal pause_requested
 
 const INK := Color("111e22")
@@ -15,6 +16,7 @@ var fps := 0.0
 var buttons: Dictionary = {}
 var result_panel: PanelContainer
 var result_label: Label
+var strategy_button: Button
 var pause_button: Button
 var font: Font
 
@@ -37,6 +39,11 @@ func _ready() -> void:
 	pause_button.focus_mode = Control.FOCUS_NONE
 	pause_button.pressed.connect(func(): pause_requested.emit())
 	add_child(pause_button)
+	strategy_button = Button.new()
+	strategy_button.text = "M  /  STRATEGY"
+	strategy_button.focus_mode = Control.FOCUS_NONE
+	strategy_button.pressed.connect(func(): strategy_requested.emit())
+	add_child(strategy_button)
 	result_panel = PanelContainer.new()
 	result_panel.add_theme_stylebox_override("panel", _style(Color("14252af5"), GOLD))
 	result_panel.visible = false
@@ -85,6 +92,8 @@ func _layout() -> void:
 		x += 142.0
 	pause_button.position = Vector2(size.x - 136, 25)
 	pause_button.size = Vector2(108, 36)
+	strategy_button.position = Vector2(size.x - 162, 68)
+	strategy_button.size = Vector2(134, 26)
 	result_panel.position = Vector2(size.x * 0.5 - 260, size.y * 0.5 - 160)
 	result_panel.size = Vector2(520, 320)
 

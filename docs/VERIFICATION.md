@@ -62,3 +62,9 @@ Successful complete run: https://github.com/haohongfei2001-png/luanshi-game/acti
 - Tests also prove slow-route and unarmed failures, no route-name automatic victory, in-transit resource conservation, source/timestamp-aware reports, deterministic replay and 96h progression.
 
 See `docs/WORLD_SIM.md` for interfaces and known model limits. No strategic UI, campaign save/load or exactly-once battle-to-world casualty settlement is claimed yet. These are the next implementation tasks, not a reason to stop the long-term project.
+
+## v0.2 playable strategic sandbox
+
+`godot --headless --path . --fixed-fps 60 --script tests/test_strategy.gd`: **37 assertions, 0 failures**, via synthetic keyboard and mouse events through the real Viewport. All local suites now total **631 assertions, 0 failures**. M/click entry opens the strategic UI without resetting the battle, preserves pause state and casualties, and blocks combat actions while open. Routes, hour advances, local observation, food/weapons transfers, depot seizure and independent reset call actual WorldSim commands. Only `player_view()` reaches the UI.
+
+A separate graphical CI script (`tests/strategy_visual.gd`) exercises the route/arrival/depot/observation flow and captures the actual interface. That current-head graphical check is pending, not inferred from headless success. The interface explicitly states that it is an independent scenario and that battle-world settlement/saves are not implemented yet.

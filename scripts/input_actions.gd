@@ -8,7 +8,7 @@ static func install() -> void:
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
 		"attack": [KEY_J], "sweep": [KEY_Q], "lunge": [KEY_E], "guard": [KEY_SPACE],
 		"order_attack": [KEY_1], "order_follow": [KEY_2], "order_retreat": [KEY_3],
-		"pause_battle": [KEY_ESCAPE, KEY_P], "restart_battle": [KEY_R], "toggle_help": [KEY_H]}
+		"pause_battle": [KEY_ESCAPE, KEY_P], "restart_battle": [KEY_R], "toggle_help": [KEY_H], "toggle_strategy": [KEY_M]}
 	for action in bindings:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)

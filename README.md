@@ -28,7 +28,7 @@ Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple S
 
 ## Status
 
-Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 combat, 35 scene/input and 526 world-simulation assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 combat, 35 scene/input, 37 strategic-interface and 526 world-simulation assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
 
 ### Play from source
 
@@ -62,4 +62,4 @@ Unzip and open the app. If macOS blocks this downloaded prototype, only approve 
 
 The repository's [Actions](../../actions) workflow tests and packages each prototype change. Its downloadable artifacts contain the macOS ZIP, a Linux executable, test logs, hashes and, when graphical CI succeeds, an actual rendered screenshot. GitHub may require sign-in to download Actions artifacts. This is a prototype artifact, not a public production release.
 
-[中文试玩说明](docs/PLAYING_ZH.md) · [Current resumable project status](docs/PROJECT_STATUS.md) · [World simulation foundation](docs/WORLD_SIM.md). The world foundation is tested code, not yet the connected campaign UI.
+[中文试玩说明](docs/PLAYING_ZH.md) · [Current resumable project status](docs/PROJECT_STATUS.md) · [World simulation foundation](docs/WORLD_SIM.md). Press **M** or click **Strategy** to use the three-city strategic sandbox: choose routes, advance hours, inspect local supplies, rearm, observe and seize the Hequ depot. It is explicitly independent of the battle for now; opening it pauses and preserves the current battle. Exactly-once battle/world settlement and saved campaigns remain next work.

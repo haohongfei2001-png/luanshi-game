@@ -40,6 +40,15 @@ jobs:
           test -s artifacts/battle-proof.png
           grep -q SCENE_SMOKE_PASS artifacts/visual-smoke.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/visual-smoke.log; then exit 1; fi
+      - name: Exercise strategic map with real GUI events
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/strategy_visual.gd 2>&1 | tee artifacts/strategy-visual.log
+          test -s artifacts/strategy-proof.png
+          grep -q STRATEGY_VISUAL_PASS artifacts/strategy-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/strategy-visual.log; then exit 1; fi
       - name: Build macOS and verify exported Linux game
         run: ./tools/export.sh
       - name: Upload macOS playable
