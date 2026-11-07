@@ -11,6 +11,7 @@ var view: Dictionary = {}
 var buttons: Dictionary = {}
 var army_label: Label
 var local_label: Label
+var economy_label: Label
 var reports_label: Label
 var feedback: Label
 var map: Control
@@ -64,6 +65,7 @@ func _ready() -> void:
 	_button(actions, "weapons", "Take 10 weapons", func(): _command("weapons"))
 	_button(actions, "seize", "Assault Hequ depot", func(): _command("seize"))
 	local_label = _label(stack, "", 15)
+	economy_label = _label(stack, "", 15)
 	feedback = _label(stack, "Choose a route, then advance time to travel. Taking weapons reduces the local garrison's equipment.", 15)
 	feedback.add_theme_color_override("font_color", Color("e0c486"))
 	_label(stack, "DELIVERED INTELLIGENCE / historical observations, not live remote ownership", 17)
@@ -162,6 +164,8 @@ func refresh() -> void:
 		local_label.text = "LOCAL TRUTH / %s at %s: %s | %d garrison | %d weapons | %d food | %d fortification" % [NAMES[city.id], _time_text(now, true), city.owner.capitalize(), city.soldiers, city.weapons, city.food, city.fort]
 		if city.id == "hequ" and not allied and not locked:
 			local_label.text += "\nAssault commits %d people including you; %d stay in reserve. Unarmed soldiers fight without spears." % [mini(20, army.soldiers), maxi(0, army.soldiers - 20)]
+	economy_label.text = _economy_text(city)
+	economy_label.visible = not economy_label.text.is_empty()
 	var lines: PackedStringArray = []
 	for report in view.reports:
 		var contents: Dictionary = report.contents
@@ -180,6 +184,38 @@ func refresh() -> void:
 			lines.append("  Exact: observed %s / delivered %s / age %s" % [_time_text(observed, true), _time_text(delivered, true), _time_text(age)])
 	reports_label.text = "\n".join(lines)
 	map.queue_redraw()
+
+func _economy_text(city: Dictionary) -> String:
+	# Only the caller's local projection is accepted, never a remote city lookup.
+	if city.is_empty():
+		return ""
+	var plan: Dictionary = city.production_plan
+	var food := _rate_text(plan.food_per_month_numerator, plan.rate_denominator)
+	var weapons := _rate_text(plan.weapons_per_month_numerator, plan.rate_denominator)
+	var upkeep := _rate_text(plan.civilian_food_per_hour_numerator, plan.civilian_food_rate_denominator)
+	var month_days := _rate_text(plan.hours_per_month, plan.hours_per_day)
+	var lines: PackedStringArray = [
+		"LOCAL ECONOMY / %d civilians (garrison excluded) | %d workers | stability %d/%d" % [city.population, city.workable_population, city.stability, plan.rate_denominator],
+		"Allocated labor: %d farmers / %d land slots | %d crafters / %d workshop slots" % [plan.farmers, city.arable_land, plan.crafters, city.workshop_capacity],
+		"Current output: %s food + %s weapons / %s-day month | Civilian food need: %s / hour" % [food, weapons, month_days, upkeep],
+	]
+	if plan.besieged:
+		lines.append("Under siege: production halted; civilians still need food.")
+	return "\n".join(lines)
+
+func _rate_text(numerator: int, denominator: int) -> String:
+	# Exact decimal for the current integer/percentage rules. Keep an exact fraction
+	# if future rule data cannot be expressed in hundredths, rather than rounding to 0.
+	@warning_ignore("integer_division")
+	var whole: int = numerator / denominator
+	var remainder := numerator % denominator
+	if remainder == 0:
+		return str(whole)
+	if 100 % denominator != 0:
+		return "%d/%d" % [numerator, denominator]
+	@warning_ignore("integer_division")
+	var hundredths: int = remainder * 100 / denominator
+	return ("%d.%02d" % [whole, hundredths]).trim_suffix("0")
 
 func _time_text(seconds: float, clock: bool = false) -> String:
 	# Round to display precision before splitting so 59.96s carries into the next minute.

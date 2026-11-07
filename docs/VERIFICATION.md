@@ -88,3 +88,13 @@ Source `0383e85f1fea6c9fb2db3bd0a4f77a00423d83b5`: [CI 42419804675](https://gith
 Actual X11/llvmpipe combat frame sample: 374 frames after warmup, mean 61.964 ms, p50 60.680 ms, p95 67.398 ms (about 16 FPS on CPU software rendering). This is neither a GPU nor Mac M5 performance measurement. macOS 26.7.2 arm64 CI verified strict ad-hoc signature and ran both exported training and real campaign headlessly; campaign outcome matches Linux. No Developer ID, notarization, user-device access or formal release.
 
 Local exported universal v0.3 ZIP SHA256: `43661e6f89ae36f72dc73aaaac1bfac54fdf83b45779228846ceac80c0ecbc35`. Native evidence: `docs/evidence/campaign-native-macos.log`; graphics: `docs/evidence/campaign-visual.log`. Still pending: durable saves, full G2 economy/hunger, NPC/narrative, M5 sustained graphics/thermals and human feel.
+
+## v0.4 population economy: source verification
+
+Cloud Linux, Godot 4.6.3, full `./tools/test.sh`: **1,534 functional assertions passed**, plus the persisted independent property script `tests/test_economy_properties.gd` (36 seeded parameter/horizon scenarios, one partial-hour city capture, 52,194 per-event/invariant checks). Both actual-combat smoke runs pass unchanged. Exact functional suites: 33 combat, 526 world, 527 economy, 293 transactions, 35 scene, 57 strategic UI, 63 campaign scene.
+
+The economy run covers 90 days with ledger/event reconstruction: 12,960 food produced, 13,828 consumed, 269 weapons produced, final 500 food/50 civilians. No original causal-rescue assertion was weakened. Invalid shapes, noninteger/negative fields, excessive rate inputs, maximum stock/ledger headroom and fractional clocks are covered. An independently reproduced cap defect was fixed before publication.
+
+GUI checks prove only local population/production is displayed, clear it in transit, show genuine siege stoppage and resumed production, keep precise fractional output, preserve readable minimum controls and provide scrolling. Actual graphical/native evidence for this version is pending until recorded. Rates and initial demographic scale are PROVISIONAL, not final design approval.
+
+CI excludes documentation-only pull requests/pushes confined to docs, README and AGENTS; a mixed code PR can still rerun when evidence is appended. Source/config/workflow changes run the full test/graphics/export/native pipeline. A documentation-only evidence commit can reference its tested code ancestor only after its diff is verified to contain no game/build change.

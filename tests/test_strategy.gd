@@ -64,8 +64,17 @@ func _run() -> void:
 	check(battle_state() == original and scene.paused, "battle keys cannot pause/restart/cast through modal")
 	check(ui.view.army.soldiers == 60 and ui.view.army.weapons == 30 and ui.view.army.food == 120, "campaign force starts with actual inventory")
 	check(ui.view.local_city.id == "pingling", "only local city truth presented")
+	check(ui.economy_label.visible and ui.economy_label.text.contains("20 civilians (garrison excluded) | 10 workers | stability 100/100"), "local civilian population and labor are distinct from military roster")
+	check(ui.economy_label.text.contains("8 farmers / 8 land slots | 2 crafters / 2 workshop slots"), "local economy shows actual allocated labor and capacity")
+	check(ui.economy_label.text.contains("2880 food + 30 weapons / 30-day month") and ui.economy_label.text.contains("Civilian food need: 2 / hour"), "local output and civilian upkeep use the projected rates and units")
+	check(ui.economy_label.text.split("\n").size() == 3, "normal economy panel contains only three essential lines")
+	test_economy_formatting()
 	check(ui.view.known.anping.observed_at == -72 and not ui.view.known.has("hequ"), "old Anping intel and unknown Hequ retained")
 	check(ui.reports_label.text.contains("observed h-72 / delivered h0") and ui.reports_label.text.contains("Anping relief messenger"), "report provenance and both timestamps visible in English")
+	await process_frame
+	await process_frame
+	check(ui.map.size.y >= 190.0 and ui.buttons.wait1.size.y >= 38.0, "economy panel preserves map and action-button sizes")
+	check(not ui.scroll.get_h_scroll_bar().visible and not ui.scroll.get_v_scroll_bar().visible and ui.scroll.get_global_rect().encloses(ui.buttons.reset.get_global_rect()), "initial 1280x800 campaign fully fits including reset without scrolling")
 	await click("food")
 	check(ui.view.army.food == 180 and ui.view.local_city.food == 440, "food button transfers real stocks")
 	await click("weapons")
@@ -74,18 +83,21 @@ func _run() -> void:
 	check(ui.view.known.pingling.observed_at == 0 and ui.reports_label.text.contains("Local eyewitness scout"), "observe creates delivered local report")
 	await click("river")
 	check(ui.view.army.march.destination == "hequ" and ui.view.local_city.is_empty(), "route button dispatches real army and hides local truth")
+	check(not ui.economy_label.visible and ui.economy_label.text.is_empty(), "departing clears and hides local economy without retaining stale truth")
 	check(ui.buttons.road.disabled and ui.buttons.observe.disabled and ui.buttons.food.disabled and ui.buttons.seize.disabled, "illegal transit actions disabled")
 	await click("wait1")
 	check(ui.view.hour == 1 and ui.view.army.food == 174, "advance button moves clock and consumes food")
 	await click("wait1")
 	await click("wait1")
 	check(ui.view.local_city.id == "hequ" and ui.view.local_city.owner == "bei", "arrival reveals actual local ownership")
+	check(ui.economy_label.visible and ui.economy_label.text.contains("10 civilians") and ui.economy_label.text.contains("1440 food + 30 weapons"), "arrival shows only the new city's current economic projection")
 	check(not ui.buttons.seize.disabled and ui.buttons.food.disabled, "enemy depot can be attacked but not freely looted")
 	check(ui.buttons.seize.text.contains("20 vs 15"), "assault previews the world-derived detachment size")
 	check(ui.local_label.text.contains("40 stay in reserve"), "nonparticipating soldiers are explicitly reserved outside the field")
 	check(battle_state() == original, "campaign preparation never alters the suspended training battle")
 	await click("reset")
 	check(ui.view.hour == 0 and ui.view.army.soldiers == 60 and ui.view.army.food == 120, "explicit new campaign resets WorldSim only")
+	check(ui.scroll.get_global_rect().encloses(ui.buttons.reset.get_global_rect()), "scroll reaches the reset control below economy and reports")
 	check(battle_state() == original, "world restart preserves battle casualties")
 	# Remain away from Anping while its unseen siege resolves; reports stay historical.
 	for i in range(4):
@@ -93,9 +105,23 @@ func _run() -> void:
 	check(ui.view.hour == 24 and ui.view.known.anping.observed_at == -72, "remote fall is not leaked before messenger arrives")
 	check(ui.view.known.anping.contents.owner == "sheng", "stale reported ownership is not silently refreshed")
 	check(not ui.local_label.text.contains("Anping"), "local inventory panel does not show remote truth")
+	check(not ui.economy_label.text.contains("Anping") and not ui.economy_label.text.contains("Under siege"), "unseen siege and remote economy cannot leak into the local panel")
 	await click("wait6")
 	check(ui.view.known.anping.contents.owner == "bei" and ui.view.known.anping.observed_at == 15, "delayed outcome becomes known only upon delivery")
 	check(ui.reports_label.text.contains("observed h15 / delivered h27"), "twelve-hour messenger delay remains explicit")
+	await click("reset")
+	# Reach Anping between hourly siege decisions. Observe the live siege through the
+	# public clock/march API, without rewriting or reading privileged world state.
+	check(ui.world.advance_seconds(0.5), "fractional world time can precede a march")
+	ui.refresh()
+	await click("road")
+	await click("wait6")
+	check(ui.view.local_city.id == "anping" and ui.view.local_city.production_plan.besieged, "fractional arrival can observe the still-active local siege")
+	check(ui.economy_label.text.contains("0 food + 0 weapons") and ui.economy_label.text.contains("Under siege: production halted"), "besieged economy shows zero effective output instead of base workshop capacity")
+	check(ui.economy_label.text.contains("Civilian food need: 2 / hour"), "siege halts work without hiding ongoing civilian food need")
+	await click("wait1")
+	check(not ui.view.local_city.production_plan.besieged and not ui.economy_label.text.contains("Under siege"), "local siege status refreshes after relief")
+	check(ui.economy_label.text.contains("0 food + 30 weapons"), "unblocked workshops resume while zero farmland still produces no food")
 	await click("reset")
 	# Late arrival exposes local truth without replacing stale delivered intelligence.
 	await click("wait6")
@@ -134,3 +160,22 @@ func _run() -> void:
 	await process_frame
 	print("STRATEGY_TEST_SUMMARY " + JSON.stringify({"assertions": checks, "failures": failures.size(), "messages": failures}))
 	quit(0 if failures.is_empty() else 1)
+
+func test_economy_formatting() -> void:
+	# A local projection fixture covers fractional, labor-limited output independently
+	# of current scenario balance. The presentation must use effective plan values.
+	var city: Dictionary = ui.view.local_city.duplicate(true)
+	city.population = 3
+	city.workable_population = 2
+	city.arable_land = 1
+	city.workshop_capacity = 100
+	city.stability = 1
+	city.production_plan.merge({"farmers": 1, "crafters": 1, "stability": 1, "effective_condition": 1,
+		"food_per_month_numerator": 360, "weapons_per_month_numerator": 15,
+		"civilian_food_per_hour_numerator": 3}, true)
+	var text: String = ui._economy_text(city)
+	check(text.contains("3.6 food + 0.15 weapons") and text.contains("Civilian food need: 0.3 / hour"), "effective fractional production and upkeep are not truncated to integers")
+	check(text.contains("1 crafters / 100 workshop slots"), "UI uses assigned workers instead of advertising all workshop capacity as production")
+	check(ui._rate_text(315, 100) == "3.15" and ui._rate_text(375, 100) == "3.75", "fractional output preserves both decimal digits")
+	check(ui._rate_text(1, 3) == "1/3" and ui._rate_text(1, 1000) == "1/1000", "future non-hundredth rates remain exact and never falsely show zero")
+	check(ui._economy_text({}).is_empty(), "no local projection means no economy details")
