@@ -18,11 +18,13 @@ The goal is **not** to build the full game immediately. Our first milestone is a
 
 Out of scope for the initial milestone: a nationwide map, city economies, complex NPC politics, and a million independently simulated soldiers.
 
-## Tooling
+## Autonomous development
+
+**Primary developer: the user's Dot, directly on its own cloud computer.** Dot should use its cloud shell/editor and the connected GitHub repository to write, run, test, and commit game code. **Do not delegate coding to Codex by default; Codex is opt-in only with explicit user approval.** No access to the user's MacBook is required for normal cloud coding. Native Mac performance validation is a separate step.
 
 Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple Silicon preferred for initial validation); iPhone/iOS is a future target. Keep input handling and UI layout adaptable for touch controls. Engine choice should be revisited only after a focused technical benchmark, not based on speculation.
 
-AI development rules: see [AGENTS.md](AGENTS.md). Product constraints: see [docs/GAME_VISION.md](docs/GAME_VISION.md).
+Direct-cloud bootstrap: see [docs/DOT_BOOTSTRAP.md](docs/DOT_BOOTSTRAP.md). AI development rules: see [AGENTS.md](AGENTS.md). Product constraints: see [docs/GAME_VISION.md](docs/GAME_VISION.md).
 
 ## Status
 
