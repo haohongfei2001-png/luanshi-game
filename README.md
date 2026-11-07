@@ -28,16 +28,16 @@ Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple S
 
 ## Status
 
-Godot 4.6.3 first playable implemented. The cloud imports the project, runs 33 combat, 35 scene/input, 37 strategic-interface and 526 world-simulation assertions, and executes the real battle scene headlessly. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+Godot 4.6.3 playable prototype implemented. A world-backed depot encounter now reserves actual soldiers and weapons, advances one clock and settles casualties/equipment exactly once in-process. Training remains a separate 20-vs-20 scene. Reproducible combat, world, transaction and routed scene tests are in `tools/test.sh`. See [verification](docs/VERIFICATION.md) for actual results and limitations.
 
 ### Play from source
 
 1. Install Godot 4.6.3 (standard edition).
 2. Import `project.godot`, then press F6/F5 or run `godot --path .`.
 3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (75% damage reduction for 2.6 seconds).
-4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins a new encounter **after** the previous one ends.
+4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins new training **after** it ends; in campaign combat R returns to the map without resetting casualties.
 
-There are 20 friendly soldiers, 20 enemy soldiers, and one separately counted commander. The commander's death ends the encounter. Fallen soldiers remain in the casualty ledger; only a new encounter resets it.
+The standalone training battle has 20 friendly soldiers, 20 enemy soldiers, and one separately counted commander. The commander's death ends the encounter. Fallen soldiers remain in the casualty ledger; only a new encounter resets it.
 
 ### Reproduce tests
 
@@ -62,4 +62,6 @@ Unzip and open the app. If macOS blocks this downloaded prototype, only approve 
 
 The repository's [Actions](../../actions) workflow tests and packages each prototype change. Its downloadable artifacts contain the macOS ZIP, a Linux executable, test logs, hashes and, when graphical CI succeeds, an actual rendered screenshot. GitHub may require sign-in to download Actions artifacts. This is a prototype artifact, not a public production release.
 
-[中文试玩说明](docs/PLAYING_ZH.md) · [Current resumable project status](docs/PROJECT_STATUS.md) · [World simulation foundation](docs/WORLD_SIM.md). Press **M** or click **Strategy** to use the three-city strategic sandbox: choose routes, advance hours, inspect local supplies, rearm, observe and seize the Hequ depot. It is explicitly independent of the battle for now; opening it pauses and preserves the current battle. Exactly-once battle/world settlement and saved campaigns remain next work.
+[中文试玩说明](docs/PLAYING_ZH.md) · [Current resumable project status](docs/PROJECT_STATUS.md) · [World simulation foundation](docs/WORLD_SIM.md) · [Battle transaction contract](docs/BATTLE_TRANSACTIONS.md).
+
+Press **M** to open the three-city campaign. Travel the river route for three hours and **Assault Hequ depot** to fight a real roster: 20 of the army's 60 people (including its commander) versus 15 actual defenders. With 30 weapons in the 60-person army, the deployment contains 10 armed and 10 genuinely unarmed people; 40 remain reserves. The outcome updates the same world once, including actual time, dead people, recovered/destroyed equipment and depot ownership. Physical retreat preserves survivors. Commander death ends the campaign after settlement. **R returns to the map, not a battle restart.** Explicit New Campaign is separate from training replay. Persistent save/load, population-based production, hunger fatigue stages and the complete narrative remain pending. This is a reversible prototype under the final design, not owner approval of all creative choices or completion of the full game.

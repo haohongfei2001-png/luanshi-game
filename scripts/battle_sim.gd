@@ -19,8 +19,14 @@ var player_aim := Vector2.RIGHT
 var cooldowns := {"attack": 0.0, "sweep": 0.0, "lunge": 0.0, "guard": 0.0}
 var damage_dealt := 0.0
 var seed_value := 184
+var _player_index := PLAYER_ID
+var _initial_counts := [20, 20]
+var _ticket: Dictionary = {}
 
 func reset(battle_seed: int = 184) -> void:
+	_ticket = {}
+	_player_index = PLAYER_ID
+	_initial_counts = [20, 20]
 	seed_value = battle_seed
 	rng.seed = battle_seed
 	units.clear()
@@ -46,11 +52,11 @@ func _unit(id: int, team: int, pos: Vector2, hero: bool) -> Dictionary:
 		"facing": Vector2.RIGHT if team == 0 else Vector2.LEFT,
 		"hp": 360.0 if hero else 100.0, "max_hp": 360.0 if hero else 100.0,
 		"speed": 7.0 if hero else 3.0, "damage": 26.0 if hero else 13.0,
-		"range": 3.1 if hero else 1.65, "attack_cd": 0.0,
+		"range": 3.1 if hero else 1.65, "weapon": "spear", "attack_cd": 0.0,
 		"guard": 0.0, "flash": 0.0, "swing": 0.0, "target": -1}
 
 func player() -> Dictionary:
-	return units[PLAYER_ID]
+	return units[_player_index]
 
 func alive_count(team: int, include_hero: bool = false) -> int:
 	var count := 0
@@ -75,11 +81,13 @@ func use_action(action: String) -> bool:
 	if ended or player().hp <= 0.0 or not cooldowns.has(action) or cooldowns[action] > 0.0:
 		return false
 	var hero := player()
+	if hero.weapon == "" and action in ["sweep", "lunge"]:
+		return false
 	hero.facing = player_aim
 	match action:
 		"attack":
 			cooldowns.attack = 0.55
-			_cone_attack(3.1, 26.0, 0.25)
+			_cone_attack(hero.range, hero.damage, 0.25)
 		"sweep":
 			cooldowns.sweep = SKILL_COOLDOWNS.sweep
 			_cone_attack(4.4, 44.0, -0.35)
@@ -112,7 +120,7 @@ func _cone_attack(reach: float, damage: float, min_dot: float) -> void:
 			_hurt(unit, damage, true)
 
 func step(delta: float) -> void:
-	if ended:
+	if ended or not is_finite(delta) or delta <= 0.0:
 		return
 	elapsed += delta
 	for key in cooldowns:
@@ -227,7 +235,64 @@ func _check_result() -> void:
 
 func report() -> Dictionary:
 	return {"seed": seed_value, "elapsed_seconds": snappedf(elapsed, 0.01), "result": result,
-		"friendly_survivors": alive_count(0), "friendly_casualties": SOLDIERS_PER_SIDE - alive_count(0),
-		"enemy_survivors": alive_count(1), "enemy_casualties": SOLDIERS_PER_SIDE - alive_count(1),
+		"friendly_survivors": alive_count(0), "friendly_casualties": _initial_counts[0] - alive_count(0),
+		"enemy_survivors": alive_count(1), "enemy_casualties": _initial_counts[1] - alive_count(1),
 		"player_alive": player().hp > 0.0, "player_hp": snappedf(player().hp, 0.01),
 		"player_damage": snappedf(damage_dealt, 0.01)}
+
+
+func reset_from_ticket(ticket: Dictionary) -> void:
+	## Only WorldSim supplies canonical tickets; no soldier or weapon is invented here.
+	reset(int(ticket.tactical_seed))
+	_ticket = ticket.duplicate(true)
+	units.clear()
+	_initial_counts = [0, 0]
+	for team in range(2):
+		var roster: Array = ticket.reserved_roster_snapshot[team]
+		for slot in range(roster.size()):
+			var entry: Dictionary = roster[slot]
+			var side := -1.0 if team == 0 else 1.0
+			var pos := Vector2(side * (13.0 + (slot / 5) * 1.65), (slot % 5 - 2) * 2.15)
+			var unit := _unit(units.size(), team, pos, entry.hero)
+			unit["roster_id"] = entry.id
+			unit["force_id"] = entry.force_id
+			unit.weapon = entry.weapon
+			if entry.hero:
+				_player_index = unit.id
+				unit.pos = Vector2(-21.0, 0.0)
+				unit.hp = entry.hp
+			else:
+				_initial_counts[team] += 1
+			if unit.weapon == "":
+				unit.damage = 7.0 if entry.hero else 4.0
+				unit.range = 0.85
+			units.append(unit)
+
+func outcome() -> Dictionary:
+	## Stable, unrounded battle facts. WorldSim compares these to the bound simulation.
+	if _ticket.is_empty() or not ended:
+		return {}
+	var status := "victory" if alive_count(1) == 0 else "retreat"
+	if player().hp <= 0.0:
+		status = "commander_dead"
+	var forces: Array[Dictionary] = []
+	for team in range(2):
+		var survivors: Array[String] = []
+		var dead_ids: Array[String] = []
+		var dead_weapons := 0
+		for unit in units:
+			if unit.team != team:
+				continue
+			if unit.hp > 0.0:
+				survivors.append(unit.roster_id)
+			else:
+				dead_ids.append(unit.roster_id)
+				dead_weapons += 1 if unit.weapon != "" else 0
+		forces.append({"force_id": _ticket.participating_force_ids[team], "surviving_ids": survivors,
+			"dead_ids": dead_ids, "wounded": [], "missing": [], "captured": [],
+			"recovered_equipment": dead_weapons if status == "victory" else 0,
+			"destroyed_equipment": dead_weapons if status != "victory" else 0})
+	return {"battle_id": _ticket.battle_id, "result": status, "forces": forces,
+		"elapsed_world_time": elapsed, "player_alive": player().hp > 0.0, "player_hp": player().hp,
+		"spoils": {"weapons": forces[1].recovered_equipment if status == "victory" else 0},
+		"retreat_positions": {"relief": _ticket.location} if status != "victory" else {}}
