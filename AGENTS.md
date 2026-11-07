@@ -2,6 +2,15 @@
 
 This repository contains a **small game prototype**, not an instruction to implement the entire proposed game in one pass.
 
+## Execution mode — Dot cloud only
+
+- The **primary implementer is the user's Dot itself**, working directly in its own cloud computer. Do not create or delegate coding tasks to Codex by default. Only use Codex after the user explicitly opts in.
+- Work through the cloud machine's available terminal, browser/editor and connected GitHub permissions: check out the repository, install or run Godot 4 if supported, modify project files, run headless tests, and commit/push the results.
+- Do not request access to the user's MacBook for routine development. The MacBook Air M5 is a **target test device**, not the development host.
+- If the cloud environment lacks an editor, shell, network access, GitHub write permission, or the required Godot runtime, report the exact blocker and which approval/capability is needed; do **not** silently switch to Codex or local execution.
+- Cloud code/test verification, visual gameplay verification, macOS export, and testing on a real Mac are distinct acceptance levels. A Linux cloud can run Godot headless tests and may export a macOS build with official templates, but **must not claim the Mac app has run on the user's machine**.
+- Prefer a small, inspectable GitHub PR or commit series, a reproducible test log, and a downloadable build artifact when possible. Consider an optional browser-playable build if practical, without changing the primary macOS target.
+
 ## Product constraints
 
 Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silently replace the setting, camera, combat model, progression, world independence, or protagonist-death rule.
