@@ -1,6 +1,6 @@
 # Delivery plan: from prototype to complete small game (v0.1)
 
-This document is the **delivery policy** for Dot developing directly on its own cloud computer. Follow AGENTS.md and GAME_VISION.md. This plan does not authorize Codex delegation, paid services, account access beyond existing permissions, or publishing.
+This document is the **stage delivery policy** for Dot developing directly on its own cloud computer. Owner authority and autonomy are specified by PRODUCT_DECISIONS.md and DOT_CONTINUOUS_DELIVERY.md, and detailed game intent by PRO_DESIGN_BIBLE.md. Follow AGENTS.md and GAME_VISION.md. This plan does not authorize Codex delegation, paid services, account access beyond existing permissions, or publishing.
 
 ## Definition of success
 
@@ -22,7 +22,7 @@ Primary target: macOS on Apple Silicon (reference: M5 MacBook Air). iPhone is a 
 - 20 allied vs 20 enemy soldiers can find, approach, attack, die; basic follow/attack/retreat squad orders.
 - Display battle results including survivors and casualties.
 - Test 20v20 for frame time, pathing, stability; placeholders are acceptable.
-- **Pass:** reproducible gameplay build (or clearly documented export limitation), actual gameplay evidence where cloud environment permits, tests, and a 10-minute hands-on review request.
+- **Pass:** reproducible gameplay build (or clearly documented export limitation), actual gameplay evidence where the cloud environment permits, tests, and an optional demo for the owner. If human visual feedback isn't yet available, mark it pending, continue autonomously with measurable work, and do not claim gameplay feel is user-approved.
 - **Do not expand** to cities, aging, or rich art until combat control and orders function.
 
 ### Gate 2 — Small consistent world
@@ -44,9 +44,9 @@ Primary target: macOS on Apple Silicon (reference: M5 MacBook Air). iPhone is a 
 - Gameplay must include at least one meaningful decision each involving battle tactics, logistics, uncertain intelligence, and a person's interests.
 - User interface, tutorial/onboarding, volume/options, saving/loading, accessibility basics, crash handling, error logs, clear credits/licenses.
 - macOS distributable, versioned release, legally licensed/owned art/audio, QA checklist and regression tests.
-- **Pass:** the game can be installed/run on reference Mac, played from start to finish, saved/loaded, and restarted; known critical defects are resolved and the user approves the experience.
+- **Pass:** the game can be installed/run on reference Mac, played from start to finish, saved/loaded, and restarted; known critical defects are resolved. Explicitly distinguish developer-tested from owner-approved. Public launch and any paid distribution require owner approval.
 
-### Gate 5 — Expansion decisions (only after Gate 4)
+### Gate 5 — Expansion toward the originally envisioned larger game (after Gate 4; continue autonomously unless authorization is required)
 - Benchmark larger formations and command hierarchy; decide whether visible numbers scale to 100v100, 500+, etc.
 - Expand political/aging/economic systems only where the small game proves they improve decisions and storytelling.
 - Evaluate iPhone touch UI, performance, Xcode/signing requirements **as a separate port milestone**.
@@ -64,13 +64,7 @@ Primary target: macOS on Apple Silicon (reference: M5 MacBook Air). iPhone is a 
 
 ## Minimum human involvement
 
-Ask the user for only:
-1. Missing necessary permissions (e.g., GitHub write permission).
-2. **One short gameplay review** after Gate 1: movement/skills/orders feeling.
-3. **One narrative/gameplay review** after Gate 3.
-4. Final release approval and any Apple signing/publishing step.
-
-For every review: provide a runnable artifact or browser-playable demo where feasible, a short recording, 3 concise observed problems/questions, and a recommended default. Do not request broad brainstorming again.
+Continue from one passed gate to the next without waiting for routine owner sign-off. Offer playable artifacts for voluntary user review, but do not block normal development merely because the user hasn't reviewed yet. Mark subjective gameplay/user approval as pending until actually obtained. Ask the owner only for new spending or accounts, extra device access/Codex delegation, fundamental product changes, publishing/signing, and a genuinely unavoidable blocker. Supply a default recommendation with the smallest required action. Refer to PRODUCT_DECISIONS.md for the exact escalation policy.
 
 ## Progress update schema
 
