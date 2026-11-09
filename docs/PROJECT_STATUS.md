@@ -18,8 +18,8 @@ ACCEPTANCE_MATRIX. Latest locked youth-life priorities override old captivity pr
 - Local verified implementation: `bb6654f0cad1e79b00789935f096134bdf476c3f`, v0.8.
   Only evidence/provenance/status documentation changed after its full validation.
 - Finite-profile public checkpoint: [`e337c3f`](https://github.com/haohongfei2001-png/luanshi-game/commit/e337c3f56accffa5ba7293f90bf85197397a0007),
-  tree-identical to c0c6d53. The final youth snapshot is being published on
-  `feature/youth-finite-integration` for draft PR, graphical and native CI.
+  tree-identical to c0c6d53. Youth source `049fecc` is public in
+  [draft PR10](https://github.com/haohongfei2001-png/luanshi-game/pull/10).
 - Terminal push had no credentials; the already connected GitHub interface publishes
   exact verified trees instead. No credential/account change is needed.
 
@@ -67,9 +67,16 @@ final sequence rerun. No failure was relabeled a pass or old check removed.
 
 ## Remaining stage gates and immediate next action
 
-1. Publish exact youth tree, create/update draft PR and inspect its actual full CI.
-   The workflow now requires Chinese graphical scenes and packaged youth restart
-   on native macOS in addition to all previous acceptance checks.
+1. [CI42546566552](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42546566552)
+   passed full simulation, calibration, strategic/battle/save graphics, but failed
+   the youth graphical personal-damage assertion: X11 input produced zero damage.
+   The PR remains draft; packaging and native macOS were correctly skipped.
+   The input driver now moves the real OS cursor, sends held-key events and flushes
+   buffered input. It also checks pointer error and actual movement frames.
+   `./tools/test-youth-ui.sh` passed again (59 scene checks, seven presentation checks,
+   99.47 personal damage, 419 moving frames, <0.001px headless pointer error).
+   The cloud Xvfb process cannot create its local display socket, so graphical
+   confirmation remains in GitHub CI. No runtime rule or pass assertion was weakened.
 2. Inspect real current screenshots and native logs. Only then mark readiness/merge
    and replace the retained v0.6 playable with a verified artifact. No current v0.8
    graphical, native Mac, M5 or subjective-quality pass is claimed yet.

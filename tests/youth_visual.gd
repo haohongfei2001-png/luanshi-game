@@ -48,7 +48,7 @@ func _run() -> void:
 	await controls.youth_click("battle")
 	check(scene.campaign_adapter != null and scene.sim.units.size() == 8, "Narrative enters actual small battle")
 	var first: Dictionary = await controls.fight("youth-first-battle-proof" if graphical else "")
-	check(first.report.player_alive and first.report.enemy_casualties > 0 and first.report.player_damage > 0 and scene.campaign_settlement.get("ok", false), "Actual movement, aim and attacks must create personal damage, merit and a settled surviving result")
+	check(first.report.player_alive and first.report.enemy_casualties > 0 and first.report.player_damage > 0 and first.moving_frames > 0 and first.pointer_error_max < 2.0 and scene.campaign_settlement.get("ok", false), "Actual movement, aim and attacks must create personal damage, merit and a settled surviving result")
 	if not first.report.player_alive or not scene.sim.ended:
 		_finish(first, {})
 		return
