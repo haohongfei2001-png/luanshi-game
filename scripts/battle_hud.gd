@@ -177,7 +177,7 @@ func _draw() -> void:
 	var bottom := size.y - 149
 	draw_rect(Rect2(0, bottom, size.x, 149), INK)
 	draw_line(Vector2(0, bottom), Vector2(size.x, bottom), GOLD.darkened(0.4), 1)
-	_text(Vector2(28, bottom + 27), "COMMANDER", 11, GOLD)
+	_text(Vector2(28, bottom + 27), profile_label(), 11, GOLD)
 	var health := float(sim.player().hp)
 	draw_rect(Rect2(140, bottom + 15, 210, 12), Color("293738"))
 	draw_rect(Rect2(140, bottom + 15, 210 * health / sim.player().max_hp, 12), GOLD)
@@ -193,3 +193,10 @@ func _draw() -> void:
 	if paused and not sim.ended:
 		draw_rect(Rect2(size.x * 0.5 - 150, size.y * 0.5 - 38, 300, 76), Color("14252aee"))
 		_text(Vector2(size.x * 0.5 - 62, size.y * 0.5 + 10), "PAUSED", 30, PAPER)
+
+func profile_label() -> String:
+	match sim.hero_profile.id:
+		"early_v1": return "EARLY / 100HP"
+		"late_v1": return "LATE TEST"
+		"legacy_test_v0": return "V0.6 LEGACY"
+	return "COMMANDER"

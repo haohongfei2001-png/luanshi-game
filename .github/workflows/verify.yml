@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Legacy profile parity materializes its preserved source commit.
       - name: Install verified official Godot and export templates
         run: |
           set -euo pipefail
@@ -33,6 +35,10 @@ jobs:
         env:
           XDG_DATA_HOME: /home/runner/.local/share
         run: ./tools/test.sh
+      - name: Verify finite hero calibration and legacy parity
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/calibrate-combat.sh
       - name: Exercise rendered scene with software OpenGL
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

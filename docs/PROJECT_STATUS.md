@@ -6,7 +6,7 @@ Continue the full single-player life, warfare and independent-world game. This i
 
 - Current accepted gameplay: **v0.6**, source `e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b`, merged in [PR7](https://github.com/haohongfei2001-png/luanshi-game/pull/7) as `465414d9c7adf2fb1fcf17a1a221d9da30e77dec`.
 - Latest design-only main `ebf89e1` is preserved in that merge. PRODUCT_DECISIONS v3.2 and NARRATIVE_LIFE_ARC_V0_3 take priority over the older Anping/captivity narrative proposals.
-- Current technical work: explicit early/late finite-HP profiles and preservation/migration of genuine v0.6 saves. A separate bounded native macOS graphical diagnostic is being prepared; its preparation is not a graphical pass.
+- Current technical work: v0.7 early/late finite-HP profiles and explicit genuine v0.6 save migration pass the full source suite; root integration/export/CI are underway. Youth core and presentation are being implemented separately. Native hosted-Mac graphical diagnostic is running in CI42427068166; no pass is claimed before results.
 - Reproduction: matching official Godot 4.6.3 and export templates; `./tools/test.sh`, `./tools/export.sh`. Exact evidence is in VERIFICATION.md and docs/evidence. Read actual branch/PR/CI state before resuming.
 
 ## Accepted current capabilities
@@ -59,3 +59,9 @@ Routine progress belongs in GitHub; contact the owner only for reserved approval
 - PR7 `465414d`: full implemented-campaign saves/checkpoints; CI42425639702.
 
 Earlier exact results and discovered/fixed defects remain in VERIFICATION.md, system documents, tests and Git history; do not repeat already completed stages.
+
+## v0.7 source integration checkpoint
+
+Normal new campaigns and training use early 100 HP; late 100 HP is a clearly labeled training tier, not earned progression. World 6 preserves immutable profile references on commander, tickets and battle saves. Real World 5 files migrate to legacy 360 HP without clipping HP, timers, RNG or history. All 20 original fixture artifacts were reproduced byte-for-byte from public e86a1ad.
+
+Isolated source integration passes 75,460 aggregate checks and 1,499 calibration/parity checks, including 1,773 exact original-engine continuation frames through settlement. Full root integration, exported builds and exact-head graphical/native acceptance are the next commands, before replacing the v0.6 playable. See HERO_PROFILE_INTEGRATION.md. No M5 or human quality claim.

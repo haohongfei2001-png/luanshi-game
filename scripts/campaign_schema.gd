@@ -1,7 +1,9 @@
 class_name CampaignSchema
 extends RefCounted
-## Explicit save-v1 shapes. Unknown fields require a new supported schema, not
+## Explicit World5 legacy / World6 profile-aware shapes. Unknown fields require a new supported schema, not
 ## silent discard. Domain cross-checks run only after these typed shapes pass.
+
+const HeroProfiles := preload("res://scripts/hero_combat_profiles.gd")
 
 const MAX_TIME := 31557600000.0 # 1,000 years: bounded clock arithmetic.
 const MAX_STOCK := 1000000000000000000
@@ -63,7 +65,14 @@ static func world(value: Variant, expected_version: int) -> bool:
 	for counter in ["next_battle", "next_report", "next_convoy"]:
 		if not integer(value[counter], 1, MAX_ID):
 			return false
-	if not keys(value.commander, ["alive", "hp", "max_hp", "army"]) or not value.commander.alive is bool or not number(value.commander.hp, 0, 360) or not number(value.commander.max_hp, 360, 360) or value.commander.army != "relief":
+	var commander_fields := ["alive", "hp", "max_hp", "army"]
+	var max_hp := 360.0
+	if expected_version == 6:
+		commander_fields.append("hero_profile")
+		if not HeroProfiles.valid_reference(value.commander.get("hero_profile")):
+			return false
+		max_hp = HeroProfiles.from_reference(value.commander.hero_profile).max_hp
+	if not keys(value.commander, commander_fields) or not value.commander.alive is bool or not number(value.commander.hp, 0, max_hp) or not number(value.commander.max_hp, max_hp, max_hp) or value.commander.army != "relief":
 		return false
 	if not keys(value.factions, ["sheng", "bei"]):
 		return false
@@ -112,7 +121,7 @@ static func world(value: Variant, expected_version: int) -> bool:
 	if not dictionary(value.battle_tickets) or not dictionary(value.battle_locks, 2):
 		return false
 	for id in value.battle_tickets:
-		if not text(id) or not ticket(value.battle_tickets[id]):
+		if not text(id) or not ticket(value.battle_tickets[id], expected_version):
 			return false
 	for force in value.battle_locks:
 		if force not in ["relief", "hequ"] or not text(value.battle_locks[force]):
@@ -180,10 +189,16 @@ static func _report(value: Variant) -> bool:
 static func _convoy(value: Variant) -> bool:
 	return keys(value, ["id", "owner", "origin", "destination", "departed_at", "arrives_at", "food", "returning"]) and types(value, {"owner": TYPE_STRING, "origin": TYPE_STRING, "destination": TYPE_STRING, "returning": TYPE_BOOL}) and integer(value.id, 1, MAX_ID) and value.owner in ["sheng", "bei"] and value.origin == "hequ" and value.destination in ["anping", "hequ"] and integer(value.departed_at, 0, int(MAX_TIME / 3600)) and integer(value.arrives_at, 0, int(MAX_TIME / 3600)) and integer(value.food, 1, MAX_PEOPLE) and value.returning is bool
 
-static func ticket(value: Variant) -> bool:
+static func ticket(value: Variant, world_version: int = 6) -> bool:
 	if not value is Dictionary or not types(value, {"status": TYPE_STRING, "location": TYPE_STRING, "terrain": TYPE_STRING, "participating_force_ids": TYPE_ARRAY}):
 		return false
 	var fields := ["battle_id", "time", "location", "participating_force_ids", "reserved_roster_snapshot", "terrain", "tactical_seed", "status", "elapsed_world_time"]
+	var hero_max_hp := 360.0
+	if world_version == 6:
+		fields.append("hero_profile")
+		if not HeroProfiles.valid_reference(value.get("hero_profile")):
+			return false
+		hero_max_hp = HeroProfiles.from_reference(value.hero_profile).max_hp
 	if value.get("status") == "committed":
 		fields.append_array(["outcome", "receipt"])
 	if not keys(value, fields) or not text(value.battle_id) or not number(value.time) or value.location != "hequ" or value.participating_force_ids != ["relief", "hequ"] or value.terrain != "depot" or not value.tactical_seed is int or value.status not in ["reserved", "running", "committed", "cancelled"] or not number(value.elapsed_world_time, 0, 8760 * 3600.0):
@@ -198,7 +213,7 @@ static func ticket(value: Variant) -> bool:
 			var entry: Variant = roster[slot]
 			if not keys(entry, ["id", "force_id", "hero", "weapon", "hp", "condition", "condition_modifiers"]):
 				return false
-			if not types(entry, {"id": TYPE_STRING, "force_id": TYPE_STRING, "hero": TYPE_BOOL, "weapon": TYPE_STRING}) or not text(entry.id) or entry.force_id != value.participating_force_ids[team] or entry.hero != (team == 0 and slot == 0) or not entry.hero is bool or entry.weapon not in ["", "spear"] or not number(entry.hp, 0.00001, 360.0 if entry.hero else 100.0) or not condition(entry.condition):
+			if not types(entry, {"id": TYPE_STRING, "force_id": TYPE_STRING, "hero": TYPE_BOOL, "weapon": TYPE_STRING}) or not text(entry.id) or entry.force_id != value.participating_force_ids[team] or entry.hero != (team == 0 and slot == 0) or not entry.hero is bool or entry.weapon not in ["", "spear"] or not number(entry.hp, 0.00001, hero_max_hp if entry.hero else 100.0) or not condition(entry.condition):
 				return false
 			if not keys(entry.condition_modifiers, ["damage_percent", "speed_percent"]):
 				return false

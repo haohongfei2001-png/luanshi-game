@@ -34,15 +34,18 @@ Godot 4.6.3 playable prototype implemented. A world-backed depot encounter now r
 
 1. Install Godot 4.6.3 (standard edition).
 2. Import `project.godot`, then press F6/F5 or run `godot --path .`.
-3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (75% damage reduction for 2.6 seconds).
+3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (50% damage reduction for 1 second on new early/late profiles).
 4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins new training **after** it ends; in campaign combat R returns to the map without resetting casualties.
 
 The standalone training battle has 20 friendly soldiers, 20 enemy soldiers, and one separately counted commander. The commander's death ends the encounter. Fallen soldiers remain in the casualty ledger; only a new encounter resets it.
+
+New campaigns and normal training use **early_v1: 100 HP**, modest reach and capped skill targets. Stay with soldiers, keep distance and brace deliberately. Late offense is available only as an explicit training test: `godot --path . -- --training-profile=late_v1`; it still has 100 HP and the same defense. This is not an earned campaign upgrade or an XP system. Existing v0.6 saves retain their original 360 HP legacy profile, timers and RNG without conversion or automatic rewriting. See [profile/save integration](docs/HERO_PROFILE_INTEGRATION.md) and [calibration limits](docs/HERO_COMBAT_CALIBRATION.md).
 
 ### Reproduce tests
 
 ```sh
 ./tools/test.sh
+./tools/calibrate-combat.sh
 ```
 
 The test script runs editor import, pure simulation tests and the full scene's scripted smoke run. Runtime logs are written to ignored `artifacts/`. No game plugins, purchased services or third-party art are required.

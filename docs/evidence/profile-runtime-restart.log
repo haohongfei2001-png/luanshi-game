@@ -1,0 +1,13 @@
+Integrated source/test head: 84cc5f8a881bcf07c5894c52ca31c7c31094adf4
+
+Commands: godot --headless --path . --script tests/test_campaign_persistence_runtime.gd -- prepare profile_84cc5f8
+then the same command with resume in a separate process.
+Shared XDG_DATA_HOME; isolated config/cache. Both exit 0.
+Source wrapper only, not exported executable verification.
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PERSISTENCE_SMOKE_PREPARE_PASS {"campaign":"runtime_smoke_profile_84cc5f8","errors":[],"events":42,"hero_profile":{"id":"early_v1","revision":1},"ok":true,"phase":"prepare","schema_version":1,"world_time":10825.825}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PERSISTENCE_SMOKE_RESUME_PASS {"campaign":"runtime_smoke_profile_84cc5f8","errors":[],"events":42,"hero_profile":{"id":"early_v1","revision":1},"ok":true,"phase":"resume","schema_version":1,"world_time":10825.825}

@@ -1,4 +1,5 @@
 extends SceneTree
+## Explicit legacy mechanics/parity fixture; normal early gameplay tested separately.
 
 const Simulation := preload("res://scripts/battle_sim.gd")
 var assertions := 0
@@ -15,7 +16,7 @@ func check(condition: bool, message: String) -> void:
 
 func fresh() -> BattleSimulation:
 	var battle := Simulation.new()
-	battle.reset(184)
+	battle.reset(184, "legacy_test_v0")
 	return battle
 
 func _run() -> void:
@@ -74,7 +75,7 @@ func _run() -> void:
 	sim.step(1.0)
 	check(sim.elapsed == elapsed, "finished encounter cannot advance")
 	check(not sim.issue_order("attack") and not sim.use_action("sweep"), "dead commander cannot act")
-	sim.reset(184)
+	sim.reset(184, "legacy_test_v0")
 	check(not sim.ended and sim.alive_count(0) == 20 and sim.player().hp == 360, "new encounter resets state")
 
 	var first := run_battle(184)
@@ -85,12 +86,12 @@ func _run() -> void:
 	check(first.report.enemy_survivors + first.report.enemy_casualties == 20, "enemy roster conserved")
 	check(first.report.friendly_survivors + first.report.friendly_casualties == 20, "friendly roster conserved")
 	print("BATTLE_REPORT " + JSON.stringify(first))
-	print("TEST_SUMMARY " + JSON.stringify({"assertions": assertions, "failures": failures.size(), "messages": failures}))
+	print("TEST_SUMMARY " + JSON.stringify({"profile": "legacy_test_v0", "assertions": assertions, "failures": failures.size(), "messages": failures}))
 	quit(0 if failures.is_empty() else 1)
 
 func run_battle(seed_number: int) -> Dictionary:
 	var battle := Simulation.new()
-	battle.reset(seed_number)
+	battle.reset(seed_number, "legacy_test_v0")
 	battle.issue_order("attack")
 	# Commander stays outside combat to measure the two soldier armies themselves.
 	battle.player().pos = Vector2(-30, -18)

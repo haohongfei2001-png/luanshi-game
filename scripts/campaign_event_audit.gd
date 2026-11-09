@@ -13,7 +13,7 @@ static func validate(state: Dictionary) -> bool:
 	var statuses := {}
 	var ownership := {}
 	var people: Dictionary = state.initial_force_roster.duplicate()
-	var commander_hp := 360.0
+	var commander_hp: float = S.HeroProfiles.from_reference(state.commander.hero_profile).max_hp
 	var death_recorded := false
 	var previous: Dictionary = {}
 	for event in state.events:

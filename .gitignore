@@ -27,3 +27,7 @@ exports/
 .local-*/
 builds/
 artifacts/
+
+# Portable CI harness caches
+__pycache__/
+*.pyc

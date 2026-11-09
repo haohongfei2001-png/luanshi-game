@@ -18,6 +18,7 @@ var sim := Simulation.new()
 # Training is deliberately separate. Only adapter-backed encounters affect the campaign.
 var training_sim: BattleSimulation
 var training_paused := false
+var training_profile_id := "early_v1"
 var campaign_adapter: RefCounted
 var campaign_settlement: Dictionary = {}
 var camera: Camera3D
@@ -58,6 +59,10 @@ func _ready() -> void:
 	for argument in arguments:
 		if argument.begins_with("--campaign-save-id="):
 			campaign_store = Store.new(argument.trim_prefix("--campaign-save-id="))
+		if argument.begins_with("--training-profile="):
+			var requested := argument.trim_prefix("--training-profile=")
+			if requested in Simulation.HeroProfiles.gameplay_ids():
+				training_profile_id = requested
 	InputActions.install()
 	scene_smoke = "--smoke-scene" in OS.get_cmdline_user_args()
 	campaign_smoke = "--campaign-smoke" in OS.get_cmdline_user_args()
@@ -93,7 +98,7 @@ func _ready() -> void:
 	_restart()
 	if campaign_smoke:
 		_start_campaign_smoke()
-	print("LUANSHI_READY engine=%s soldiers=%d+%d renderer=%s" % [Engine.get_version_info().string, sim.alive_count(0), sim.alive_count(1), RenderingServer.get_current_rendering_method()])
+	print("LUANSHI_READY engine=%s soldiers=%d+%d renderer=%s profile=%s" % [Engine.get_version_info().string, sim.alive_count(0), sim.alive_count(1), RenderingServer.get_current_rendering_method(), sim.hero_profile.id])
 
 func _build_battlefield() -> void:
 	var environment := WorldEnvironment.new()
@@ -166,7 +171,7 @@ func _restart() -> void:
 		if sim.ended and campaign_settlement.get("ok", false):
 			_toggle_strategy()
 		return
-	sim.reset()
+	sim.reset(184, training_profile_id)
 	paused = false
 	_rebuild_unit_views()
 
@@ -521,7 +526,7 @@ func _physics_process(delta: float) -> void:
 				push_error("Scene smoke did not produce its required visual evidence")
 				get_tree().quit(1)
 				return
-			print("SCENE_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report(), "frame_timing": _frame_timing()}))
+			print("SCENE_SMOKE_PASS " + JSON.stringify({"hero_profile": Simulation.HeroProfiles.profile_reference(sim.hero_profile.id), "steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report(), "frame_timing": _frame_timing()}))
 			get_tree().quit(0)
 
 func _start_campaign_smoke() -> void:
@@ -556,7 +561,7 @@ func _finish_campaign_smoke() -> void:
 		push_error("Campaign smoke did not finish a conserved, exactly-once encounter: " + JSON.stringify(campaign_settlement))
 		get_tree().quit(1)
 		return
-	print("CAMPAIGN_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "report": report,
+	print("CAMPAIGN_SMOKE_PASS " + JSON.stringify({"hero_profile": Simulation.HeroProfiles.profile_reference(sim.hero_profile.id), "steps": smoke_steps, "report": report,
 		"settlement": campaign_settlement, "army": current.army, "world_time_seconds": current.time_seconds,
 		"actions": smoke_actions, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0,
 		"frame_timing": _frame_timing()}))
@@ -575,11 +580,23 @@ func _smoke_input() -> void:
 	var target_id := sim._nearest_enemy(sim.player())
 	if target_id >= 0:
 		var offset: Vector2 = sim.units[target_id].pos - sim.player().pos
-		sim.set_player_input(offset.normalized() if offset.length() > 2.3 else Vector2.ZERO, offset)
-		if offset.length() < 7:
-			for action in ["attack", "sweep", "lunge", "guard"]:
+		# Profile-aware standoff and real input, not the old 360HP charge policy.
+		var distance := offset.length()
+		var movement := offset.normalized() if distance > sim.player().range * 0.95 else Vector2.ZERO
+		if distance < sim.player().range * 0.92:
+			movement = -offset.normalized()
+		sim.set_player_input(movement, offset)
+		if smoke_steps % 6 == 0:
+			var profile: Dictionary = sim.hero_profile
+			var eligible := []
+			if distance <= 1.9: eligible.append("guard")
+			if distance <= profile.sweep_range: eligible.append("sweep")
+			if distance > 0.65 and distance <= profile.lunge_distance: eligible.append("lunge")
+			if distance <= sim.player().range: eligible.append("attack")
+			for action in eligible:
 				if sim.use_action(action):
 					smoke_actions[action] = true
+					break
 
 func _sync_visuals(delta: float) -> void:
 	for i in range(views.size()):

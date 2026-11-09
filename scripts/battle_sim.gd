@@ -2,6 +2,7 @@ class_name BattleSimulation
 extends RefCounted
 ## Authoritative, seeded battle state. No scene nodes, physics or input devices.
 
+const HeroProfiles := preload("res://scripts/hero_combat_profiles.gd")
 const SOLDIERS_PER_SIDE := 20
 const FIELD_HALF := Vector2(31.0, 19.0)
 const PLAYER_ID := 40
@@ -22,8 +23,14 @@ var seed_value := 184
 var _player_index := PLAYER_ID
 var _initial_counts := [20, 20]
 var _ticket: Dictionary = {}
+# Versioned identity; profile data are reconstructed, never accepted from a save.
+var hero_profile: Dictionary = HeroProfiles.get_profile(HeroProfiles.EARLY)
 
-func reset(battle_seed: int = 184) -> void:
+func reset(battle_seed: int = 184, profile_id: String = HeroProfiles.EARLY) -> bool:
+	var selected := HeroProfiles.get_profile(profile_id)
+	if selected.is_empty():
+		return false
+	hero_profile = selected
 	_ticket = {}
 	_player_index = PLAYER_ID
 	_initial_counts = [20, 20]
@@ -46,14 +53,15 @@ func reset(battle_seed: int = 184) -> void:
 			var pos := Vector2(side * (13.0 + (i / 5) * 1.65), (i % 5 - 2) * 2.15)
 			units.append(_unit(units.size(), team, pos, false))
 	units.append(_unit(PLAYER_ID, 0, Vector2(-21.0, 0.0), true))
+	return true
 
 func _unit(id: int, team: int, pos: Vector2, hero: bool) -> Dictionary:
 	return {"id": id, "team": team, "hero": hero, "pos": pos,
 		"facing": Vector2.RIGHT if team == 0 else Vector2.LEFT,
-		"hp": 360.0 if hero else 100.0, "max_hp": 360.0 if hero else 100.0,
-		"speed": 7.0 if hero else 3.0, "damage": 26.0 if hero else 13.0,
+		"hp": hero_profile.max_hp if hero else 100.0, "max_hp": hero_profile.max_hp if hero else 100.0,
+		"speed": hero_profile.speed if hero else 3.0, "damage": hero_profile.damage if hero else 13.0,
 		"condition_damage_scale": 1.0, "condition_speed_scale": 1.0,
-		"range": 3.1 if hero else 1.65, "weapon": "spear", "attack_cd": 0.0,
+		"range": hero_profile.range if hero else 1.65, "weapon": "spear", "attack_cd": 0.0,
 		"guard": 0.0, "flash": 0.0, "swing": 0.0, "target": -1}
 
 func player() -> Dictionary:
@@ -87,24 +95,26 @@ func use_action(action: String) -> bool:
 	hero.facing = player_aim
 	match action:
 		"attack":
-			cooldowns.attack = 0.55
-			_cone_attack(hero.range, hero.damage, 0.25)
+			cooldowns.attack = hero_profile.attack_cooldown
+			_cone_attack(hero.range, hero.damage, hero_profile.attack_min_dot, hero_profile.attack_targets)
 		"sweep":
-			cooldowns.sweep = SKILL_COOLDOWNS.sweep
-			_cone_attack(4.4, 44.0 * hero.condition_damage_scale, -0.35)
+			cooldowns.sweep = hero_profile.sweep_cooldown
+			_cone_attack(hero_profile.sweep_range, hero_profile.sweep_damage * hero.condition_damage_scale, hero_profile.sweep_min_dot, hero_profile.sweep_targets)
 		"lunge":
-			cooldowns.lunge = SKILL_COOLDOWNS.lunge
+			cooldowns.lunge = hero_profile.lunge_cooldown
 			var start: Vector2 = hero.pos
-			var finish := _clamp_position(start + player_aim * 5.8 * hero.condition_speed_scale)
+			var finish := _clamp_position(start + player_aim * hero_profile.lunge_distance * hero.condition_speed_scale)
 			hero.pos = finish
+			var candidates: Array[Dictionary] = []
 			for unit in units:
 				if unit.team == 1 and unit.hp > 0.0:
 					var nearest := Geometry2D.get_closest_point_to_segment(unit.pos, start, finish)
-					if nearest.distance_to(unit.pos) < 1.8:
-						_hurt(unit, 58.0 * hero.condition_damage_scale, true)
+					if nearest.distance_to(unit.pos) < hero_profile.lunge_radius:
+						candidates.append(unit)
+			_apply_player_hits(candidates, hero_profile.lunge_damage * hero.condition_damage_scale, hero_profile.lunge_targets, start)
 		"guard":
-			cooldowns.guard = SKILL_COOLDOWNS.guard
-			hero.guard = 2.6
+			cooldowns.guard = hero_profile.guard_cooldown
+			hero.guard = hero_profile.guard_duration
 		_:
 			return false
 	hero.swing = 0.24
@@ -112,13 +122,25 @@ func use_action(action: String) -> bool:
 	_check_result()
 	return true
 
-func _cone_attack(reach: float, damage: float, min_dot: float) -> void:
+func _cone_attack(reach: float, damage: float, min_dot: float, target_limit: int = 0) -> void:
+	var candidates: Array[Dictionary] = []
 	for unit in units:
 		if unit.team != 1 or unit.hp <= 0.0:
 			continue
 		var offset: Vector2 = unit.pos - player().pos
 		if offset.length() <= reach and (offset.length() < 0.7 or player_aim.dot(offset.normalized()) >= min_dot):
-			_hurt(unit, damage, true)
+			candidates.append(unit)
+	_apply_player_hits(candidates, damage, target_limit, player().pos)
+
+func _apply_player_hits(candidates: Array[Dictionary], damage: float, target_limit: int, origin: Vector2) -> void:
+	if target_limit > 0:
+		candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			var ad: float = a.pos.distance_squared_to(origin)
+			var bd: float = b.pos.distance_squared_to(origin)
+			return a.id < b.id if ad == bd else ad < bd)
+	var hit_count := mini(target_limit, candidates.size()) if target_limit > 0 else candidates.size()
+	for i in range(hit_count):
+		_hurt(candidates[i], damage, true)
 
 func step(delta: float) -> void:
 	if ended or not is_finite(delta) or delta <= 0.0:
@@ -205,7 +227,8 @@ func _nearest_enemy(unit: Dictionary) -> int:
 func _hurt(unit: Dictionary, damage: float, from_player: bool) -> void:
 	if unit.hp <= 0.0:
 		return
-	var applied := damage * (0.25 if unit.guard > 0.0 else 1.0)
+	var guard_factor: float = hero_profile.guard_incoming_factor if unit.hero else 0.25
+	var applied := damage * (guard_factor if unit.guard > 0.0 else 1.0)
 	if from_player:
 		damage_dealt += minf(unit.hp, applied)
 	unit.hp = maxf(0.0, unit.hp - applied)
@@ -242,9 +265,11 @@ func report() -> Dictionary:
 		"player_damage": snappedf(damage_dealt, 0.01)}
 
 
-func reset_from_ticket(ticket: Dictionary) -> void:
+func reset_from_ticket(ticket: Dictionary) -> bool:
 	## Only WorldSim supplies canonical tickets; no soldier or weapon is invented here.
-	reset(int(ticket.tactical_seed))
+	if not HeroProfiles.valid_reference(ticket.get("hero_profile")):
+		return false
+	reset(int(ticket.tactical_seed), ticket.hero_profile.id)
 	_ticket = ticket.duplicate(true)
 	units.clear()
 	_initial_counts = [0, 0]
@@ -272,6 +297,7 @@ func reset_from_ticket(ticket: Dictionary) -> void:
 			unit.damage *= unit.condition_damage_scale
 			unit.speed *= unit.condition_speed_scale
 			units.append(unit)
+	return true
 
 func outcome() -> Dictionary:
 	## Stable, unrounded battle facts. WorldSim compares these to the bound simulation.
@@ -305,7 +331,7 @@ func outcome() -> Dictionary:
 
 func export_campaign_state() -> Dictionary:
 	## Explicit causal state only. Derived roster indices are rebuilt from the ticket.
-	return {"units": units.duplicate(true), "events": events.duplicate(true),
+	return {"hero_profile": HeroProfiles.profile_reference(hero_profile.id), "units": units.duplicate(true), "events": events.duplicate(true),
 		"seed": seed_value, "rng_state": rng.state, "elapsed": elapsed, "order": order,
 		"ended": ended, "result": result, "player_move": player_move, "player_aim": player_aim,
 		"cooldowns": cooldowns.duplicate(true), "damage_dealt": damage_dealt}
@@ -313,16 +339,19 @@ func export_campaign_state() -> Dictionary:
 func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
 	## Validate into a separate simulation; failed restoration never changes self.
 	var schema := preload("res://scripts/campaign_schema.gd")
-	if not schema.ticket(ticket) or not schema.keys(saved, ["units", "events", "seed", "rng_state", "elapsed", "order", "ended", "result", "player_move", "player_aim", "cooldowns", "damage_dealt"]):
+	if not schema.ticket(ticket) or not schema.keys(saved, ["hero_profile", "units", "events", "seed", "rng_state", "elapsed", "order", "ended", "result", "player_move", "player_aim", "cooldowns", "damage_dealt"]):
 		return {"ok": false, "reason": "invalid_battle_shape"}
 	if not schema.types(saved, {"units": TYPE_ARRAY, "events": TYPE_ARRAY, "seed": TYPE_INT, "rng_state": TYPE_INT, "elapsed": TYPE_FLOAT, "order": TYPE_STRING, "ended": TYPE_BOOL, "result": TYPE_STRING, "player_move": TYPE_VECTOR2, "player_aim": TYPE_VECTOR2, "cooldowns": TYPE_DICTIONARY, "damage_dealt": TYPE_FLOAT}):
 		return {"ok": false, "reason": "invalid_battle_field_types"}
+	if not HeroProfiles.valid_reference(saved.hero_profile) or saved.hero_profile != ticket.hero_profile:
+		return {"ok": false, "reason": "battle_profile_mismatch"}
+	var selected := HeroProfiles.from_reference(ticket.hero_profile)
 	if not saved.seed is int or saved.seed != ticket.tactical_seed or not saved.rng_state is int or not schema.number(saved.elapsed, ticket.elapsed_world_time, 8760 * 3600.0) or saved.order not in ["follow", "attack", "retreat"] or not saved.ended is bool or not schema.text(saved.result) or not schema.number(saved.damage_dealt, 0, 2000):
 		return {"ok": false, "reason": "invalid_battle_fields"}
 	if not _save_direction(saved.player_move) or not _save_direction(saved.player_aim) or not is_equal_approx(saved.player_aim.length(), 1.0) or not schema.keys(saved.cooldowns, ["attack", "sweep", "lunge", "guard"]):
 		return {"ok": false, "reason": "invalid_battle_input"}
 	for action in saved.cooldowns:
-		var maximum: float = 0.55 if action == "attack" else SKILL_COOLDOWNS[action]
+		var maximum: float = selected[action + "_cooldown"]
 		if not schema.number(saved.cooldowns[action], 0, maximum):
 			return {"ok": false, "reason": "invalid_battle_cooldown"}
 	var candidate := BattleSimulation.new()
@@ -339,7 +368,7 @@ func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
 				return {"ok": false, "reason": "changed_unit_identity_or_equipment"}
 		if not schema.number(unit.hp, 0, initial.hp) or not unit.pos is Vector2 or not unit.pos.is_finite() or unit.pos != unit.pos.clamp(-FIELD_HALF, FIELD_HALF) or not _save_direction(unit.facing) or not schema.integer(unit.target, -1, saved.units.size() - 1):
 			return {"ok": false, "reason": "invalid_unit_state"}
-		for pair in [["attack_cd", 1.1], ["guard", 2.6], ["flash", 0.12], ["swing", 0.24]]:
+		for pair in [["attack_cd", 1.1], ["guard", selected.guard_duration if initial.hero else 0.0], ["flash", 0.12], ["swing", 0.24]]:
 			if not schema.number(unit[pair[0]], 0, pair[1]):
 				return {"ok": false, "reason": "invalid_unit_timer"}
 	for event in saved.events:

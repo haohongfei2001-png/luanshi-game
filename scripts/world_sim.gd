@@ -2,7 +2,8 @@ class_name WorldSimulation
 extends RefCounted
 ## Authoritative seconds clock with integer economic accrual. Presentation uses player_view().
 
-const VERSION := 5
+const VERSION := 6
+const HeroProfiles := preload("res://scripts/hero_combat_profiles.gd")
 const Condition := preload("res://data/condition_rules.gd")
 const CONDITION_RULES := Condition.RULES
 const Economy := preload("res://data/economy_rules.gd")
@@ -27,16 +28,19 @@ var _state: Dictionary = {}
 var _battle_sessions: Dictionary = {}
 var _campaign_generation := 0
 
-func _init(seed_value: int = 184) -> void:
-	reset(seed_value)
+func _init(seed_value: int = 184, profile_id: String = HeroProfiles.EARLY) -> void:
+	reset(seed_value, profile_id)
 
-func reset(seed_value: int = 184) -> void:
+func reset(seed_value: int = 184, profile_id: String = HeroProfiles.EARLY) -> bool:
+	var profile := HeroProfiles.get_profile(profile_id)
+	if profile.is_empty():
+		return false
 	_campaign_generation += 1
 	_battle_sessions.clear()
 	_state = {
 		"version": VERSION, "seed": seed_value, "hour": 0, "time_seconds": 0.0,
 		"campaign_generation": _campaign_generation, "campaign_ended": false,
-		"commander": {"alive": true, "hp": 360.0, "max_hp": 360.0, "army": "relief"},
+		"commander": {"alive": true, "hp": profile.max_hp, "max_hp": profile.max_hp, "army": "relief", "hero_profile": HeroProfiles.profile_reference(profile_id)},
 		"battle_tickets": {}, "battle_locks": {}, "next_battle": 1,
 		"factions": {"sheng": {"name": "晟军"}, "bei": {"name": "北军"}},
 		"cities": {
@@ -60,6 +64,7 @@ func reset(seed_value: int = 184) -> void:
 	# This is an old observation, not a live view of the besieged city.
 	_queue_report("anping", "安平求援使者", -72, 0, {"owner": "sheng", "under_siege": true})
 	_deliver_reports()
+	return true
 
 func _city(id: String, label: String, owner: String, troops: int, weapons: int, food: int, fort: int) -> Dictionary:
 	var city: Dictionary = Economy.CITIES[id].duplicate(true)
@@ -746,7 +751,7 @@ func create_battle_ticket(location: String = "hequ") -> Dictionary:
 				"hp": _state.commander.hp if hero else 100.0,
 				"condition": force.condition.duplicate(true), "condition_modifiers": _condition_modifiers(force.condition)})
 		rosters.append(roster)
-	var ticket := {"battle_id": battle_id, "time": _state.time_seconds, "location": location,
+	var ticket := {"hero_profile": _state.commander.hero_profile.duplicate(), "battle_id": battle_id, "time": _state.time_seconds, "location": location,
 		"participating_force_ids": ["relief", "hequ"], "reserved_roster_snapshot": rosters,
 		"terrain": "depot", "tactical_seed": int(_state.seed) + int(_state.next_battle) * 7919,
 		"status": "reserved", "elapsed_world_time": 0.0}
@@ -777,7 +782,8 @@ func start_battle(battle_id: String) -> BattleSimulation:
 	if ticket.status != "reserved":
 		return null
 	var simulation := Battle.new()
-	simulation.reset_from_ticket(ticket)
+	if not simulation.reset_from_ticket(ticket):
+		return null
 	_battle_sessions[battle_id] = simulation
 	ticket.status = "running"
 	_event("battle_started", {"battle_id": battle_id})
@@ -911,6 +917,11 @@ func restore_campaign_state(saved: Variant) -> Dictionary:
 	## Closed shape validation precedes all domain arithmetic and session rebuilding.
 	## Swap the complete graph only after every check; invalid input leaves self intact.
 	var schema := preload("res://scripts/campaign_schema.gd")
+	if saved is Dictionary and saved.get("world") is Dictionary and saved.world.get("version") is int and saved.world.version == 5:
+		var migration := preload("res://scripts/campaign_migrations.gd").from_world5(saved)
+		if not migration.ok:
+			return migration
+		saved = migration.state
 	if not schema.keys(saved, ["world", "battle_sessions", "generation_highwater"]) or not schema.world(saved.world, VERSION) or not schema.dictionary(saved.battle_sessions, 1) or not schema.integer(saved.generation_highwater, saved.world.campaign_generation, schema.MAX_ID):
 		return _reject("invalid_campaign_shape")
 	# Also reject non-finite/unsupported nested log values on the in-memory API.
@@ -989,6 +1000,8 @@ func _save_causal_errors() -> Array[String]:
 	var expected_locks := {}
 	for id in _state.battle_tickets:
 		var ticket: Dictionary = _state.battle_tickets[id]
+		if ticket.hero_profile != _state.commander.hero_profile:
+			errors.append("ticket profile differs from commander life")
 		var parts: PackedStringArray = id.split(":")
 		if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
 			errors.append("invalid battle identity")
@@ -1011,7 +1024,7 @@ func _save_causal_errors() -> Array[String]:
 					errors.append("reserved force moved")
 			if _state.time_seconds != ticket.time + ticket.elapsed_world_time or (ticket.status == "reserved" and ticket.elapsed_world_time != 0.0):
 				errors.append("battle clock mismatch")
-			if ticket.reserved_roster_snapshot[0][0].hp != _state.commander.hp:
+			if ticket.reserved_roster_snapshot[0][0].hp != _state.commander.hp or ticket.hero_profile != _state.commander.hero_profile:
 				errors.append("reserved commander mismatch")
 		elif ticket.status == "committed":
 			if not _save_committed_valid(ticket):

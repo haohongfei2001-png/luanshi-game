@@ -1,10 +1,18 @@
 # Versioned campaign persistence (save schema 1)
 
-This is the first real campaign loader. World snapshot `version: 5` is a simulation
-schema, **not** a claim that old debug snapshots were loadable saves. Only envelope
-schema 1 + WorldSim version 5 are accepted. There are no legacy migrations yet.
-Future migrations must explicitly preserve causal state and add regression fixtures;
-unknown versions fail without modifying the live campaign or existing save.
+The first real loader shipped in v0.6 with envelope schema 1 + World version 5.
+The current authority is **World6**; envelope schema 1 remains the lossless transport.
+World6 requires explicit hero profile identity/revision on the commander, every
+canonical ticket and each active session. World5 is accepted only by a versioned
+migration to `legacy_test_v0` revision0. Older debug snapshots and unknown versions
+remain unsupported. Missing references on World6 never trigger a legacy fallback.
+
+Migration adds only identity metadata and changes World version5→6. It preserves
+HP/max HP, all units, cooldowns/guard, inputs, RNG, queued events, receipts and history
+bit-for-bit. Full current typed/domain/causal validation follows before adoption.
+Load is read-only on disk; only an explicitly requested successful save writes the
+new schema. See [finite profile integration](HERO_PROFILE_INTEGRATION.md) and the
+[genuine v0.6 fixture recipe](../tests/fixtures/v06/README.md).
 
 ## API and ownership
 
@@ -65,7 +73,7 @@ must remain nonterminal when implemented; persistence adds no capture-as-death r
 ## Format and untrusted input
 
 A complete generated, non-personal start-state example is
-`docs/examples/campaign-save-v1.json`. It is a test fixture for this first loader,
+`docs/examples/campaign-save-v1.json`. It is an original World5 fixture now checked through explicit legacy migration,
 not a promise to load earlier debug snapshots.
 
 Files are canonical JSON envelopes with `format`, `schema_version`, `encoding`,
