@@ -54,7 +54,7 @@ func _run() -> void:
 func _test_capacity() -> void:
 	var baseline := Simulation.new()
 	check(baseline.totals().civilian_population == 50 and baseline.totals().soldiers == 215, "civilians exclude garrisons and field soldiers")
-	check(baseline.snapshot().version == 7, "World7 explicitly distinguishes youth lives; World5/6 migrate to unchanged technical scenario")
+	check(baseline.snapshot().version == 8, "World8 adds physical orders; World5/6/7 migrate without changing existing lives")
 	check(not baseline.snapshot().cities.pingling.has("food_per_hour"), "fixed city production is removed")
 	var cases := [
 		{"label": "normal", "inputs": {}, "food": 2880, "weapons": 30},

@@ -96,3 +96,12 @@ short-slice endpoint is not the completed game. Important cast and fixed major
 literary plots remain provisional for owner/Pro review.
 
 [Youth systems](docs/YOUTH_LIFE_SLICE.md) · [Interface and controls](docs/YOUTH_INTERFACE.md)
+
+## World8 physical communication slice (v0.9)
+
+Youth patrols can arrange an existing camp soldier to carry a superior's return/report
+order and a physical reply. People, rations, time, interception and player knowledge
+are tracked separately. New battles use finite-range delayed flags and each soldier's
+last received instruction. Existing saves migrate without replacing their life or
+ongoing historical battle state. See [COURIER_ORDERS](docs/COURIER_ORDERS.md) for controls,
+actual scope, reproducible tests and remaining boundaries.

@@ -76,3 +76,6 @@ bash tools/test_youth_runtime.sh
 
 # World7 youth-life causal slice plus genuine World6 migrations and process restart.
 bash tools/test_youth.sh
+
+# World8 physical transport and finite-range received orders.
+bash tools/test_couriers.sh

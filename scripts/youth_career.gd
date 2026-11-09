@@ -1,5 +1,6 @@
 class_name YouthCareer
 extends RefCounted
+const Couriers := preload("res://scripts/courier_orders.gd")
 ## Pure narrative reducer. Only WorldSimulation mutates the resulting state.
 ## Ordinary names and dialogue are provisional, not an approved core cast.
 const YEAR_SECONDS := 365.25 * 24.0 * 3600.0
@@ -226,11 +227,27 @@ static func validate(state: Dictionary) -> bool:
 	var y := {}
 	var pending_moves: Array = []
 	var prior_at := 0.0
+	var courier_food := {}
 	var enemy_people := 15
 	if state.initial_force_roster != {"anping": 40, "pingling": 20, "hequ": 15, "relief": 60, "besiegers": 80}: return false
 	var stock := {"relief": {"soldiers": 60, "weapons": 30, "food": 120}, "pingling": {"soldiers": 20, "weapons": 20, "food": 500}}
 	for e in state.events:
-		if e.kind == "production" and e.details.get("city") == "pingling":
+		if e.kind == "courier":
+			var d: Dictionary = e.details
+			match d.action:
+				"dispatch":
+					stock.pingling.soldiers -= 1
+					stock.pingling.food -= Couriers.RATIONS
+					if stock.pingling.soldiers < 0 or stock.pingling.food < 0: return false
+					courier_food[d.id] = Couriers.RATIONS
+				"meal": courier_food[d.id] -= 1
+				"return":
+					stock.pingling.soldiers += 1
+					stock.pingling.food += courier_food[d.id]
+		elif e.kind == "courier_wait":
+			if not e.details.get("started_at") is float or e.details.started_at != prior_at: return false
+			prior_at = e.time_seconds
+		elif e.kind == "production" and e.details.get("city") == "pingling":
 			for r in ["food", "weapons"]: stock.pingling[r] += e.details.amounts[r]
 		elif e.kind == "consumption" and stock.has(e.details.get("entity")):
 			stock[e.details.entity].food -= e.details.eaten

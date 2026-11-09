@@ -1,0 +1,12 @@
+4.6.3.stable.official.7d41c59c4
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+HERO_PROFILE_TESTS {"checks":59,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+COMBAT_CALIBRATION_TESTS {"checks":320,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LEGACY_PROFILE_PARITY {"checks":1120,"failures":[]}
+f904970ff606bc88fbf2afed9c435fe85c271d939085faf36fa16c3486cdd11d  artifacts/combat-calibration.json
+COMBAT_CALIBRATION_REPEAT_PASS

@@ -1,6 +1,6 @@
 class_name CampaignSchema
 extends RefCounted
-## Explicit World5 legacy / World6 profile-aware shapes. Unknown fields require a new supported schema, not
+## Explicit World5 legacy through World8 physical-order shapes. Unknown fields require a supported schema, not
 ## silent discard. Domain cross-checks run only after these typed shapes pass.
 
 const Youth := preload("res://scripts/youth_career.gd")
@@ -57,7 +57,9 @@ static func condition(value: Variant) -> bool:
 static func world(value: Variant, expected_version: int) -> bool:
 	var fields := ["version", "seed", "hour", "time_seconds", "campaign_generation", "campaign_ended", "commander", "battle_tickets", "battle_locks", "next_battle", "factions", "cities", "armies", "siege", "ledger", "pending_reports", "reports", "events", "next_report", "convoys", "next_convoy", "initial_totals", "initial_force_roster"]
 	if expected_version >= 7: fields.append_array(["mode", "origin", "youth"])
+	if expected_version >= 8: fields.append("couriers")
 	if not keys(value, fields): return false
+	if expected_version >= 8 and not preload("res://scripts/courier_orders.gd").shape(value.couriers): return false
 	if expected_version >= 7 and (not value.mode is String or value.mode not in ["technical", "youth"] or not value.origin is String or value.origin not in ["new_world7", "legacy_campaign"] or not Youth.shape(value.youth)): return false
 	if not types(value, {"version": TYPE_INT, "seed": TYPE_INT, "hour": TYPE_INT, "time_seconds": TYPE_FLOAT, "campaign_generation": TYPE_INT, "campaign_ended": TYPE_BOOL, "commander": TYPE_DICTIONARY, "factions": TYPE_DICTIONARY, "cities": TYPE_DICTIONARY, "armies": TYPE_DICTIONARY, "siege": TYPE_DICTIONARY, "ledger": TYPE_DICTIONARY, "initial_totals": TYPE_DICTIONARY, "initial_force_roster": TYPE_DICTIONARY, "battle_tickets": TYPE_DICTIONARY, "battle_locks": TYPE_DICTIONARY, "pending_reports": TYPE_ARRAY, "reports": TYPE_ARRAY, "events": TYPE_ARRAY, "convoys": TYPE_ARRAY}):
 		return false
@@ -192,7 +194,7 @@ static func _report(value: Variant) -> bool:
 static func _convoy(value: Variant) -> bool:
 	return keys(value, ["id", "owner", "origin", "destination", "departed_at", "arrives_at", "food", "returning"]) and types(value, {"owner": TYPE_STRING, "origin": TYPE_STRING, "destination": TYPE_STRING, "returning": TYPE_BOOL}) and integer(value.id, 1, MAX_ID) and value.owner in ["sheng", "bei"] and value.origin == "hequ" and value.destination in ["anping", "hequ"] and integer(value.departed_at, 0, int(MAX_TIME / 3600)) and integer(value.arrives_at, 0, int(MAX_TIME / 3600)) and integer(value.food, 1, MAX_PEOPLE) and value.returning is bool
 
-static func ticket(value: Variant, world_version: int = 7) -> bool:
+static func ticket(value: Variant, world_version: int = 8) -> bool:
 	if not value is Dictionary or not types(value, {"status": TYPE_STRING, "location": TYPE_STRING, "terrain": TYPE_STRING, "participating_force_ids": TYPE_ARRAY}):
 		return false
 	var fields := ["battle_id", "time", "location", "participating_force_ids", "reserved_roster_snapshot", "terrain", "tactical_seed", "status", "elapsed_world_time"]
@@ -205,6 +207,9 @@ static func ticket(value: Variant, world_version: int = 7) -> bool:
 	if world_version >= 7:
 		fields.append_array(["purpose", "command_authority"])
 		if value.get("purpose") not in ["technical", "first_battle", "dangerous_battle"] or value.get("command_authority") not in ["squad", "withdrawal_only"]: return false
+	if world_version >= 8:
+		fields.append("signal_model")
+		if value.get("signal_model") not in ["local_v1", "legacy_global_v0"]: return false
 	if value.get("status") == "committed":
 		fields.append_array(["outcome", "receipt"])
 	if not keys(value, fields) or not text(value.battle_id) or not number(value.time) or value.location != "hequ" or value.participating_force_ids != ["relief", "hequ"] or value.terrain != "depot" or not value.tactical_seed is int or value.status not in ["reserved", "running", "committed", "cancelled"] or not number(value.elapsed_world_time, 0, 8760 * 3600.0):

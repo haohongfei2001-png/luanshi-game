@@ -1,5 +1,6 @@
 class_name CampaignEventAudit
 extends RefCounted
+const Couriers := preload("res://scripts/courier_orders.gd")
 ## Reconstruct authoritative ledgers and transaction transitions from causal events.
 ## A checksum or balanced final totals alone cannot prove these accounts agree.
 const S := preload("res://scripts/campaign_schema.gd")
@@ -10,6 +11,7 @@ static func validate(state: Dictionary) -> bool:
 	var accounts := {}
 	for key in state.ledger:
 		accounts[key] = 0
+	var courier_food := {}
 	var statuses := {}
 	var ownership := {}
 	var people: Dictionary = state.initial_force_roster.duplicate()
@@ -28,6 +30,23 @@ static func validate(state: Dictionary) -> bool:
 		if death_recorded and event.kind in ["march_started", "transfer", "depot_seized", "battle_reserved", "battle_started", "battle_committed"]:
 			return false
 		match event.kind:
+			"courier_wait":
+				if not S.keys(d, ["started_at"]) or not S.number(d.started_at, 0, event.time_seconds): return false
+			"courier":
+				if not S.keys(d, ["action", "id", "value"]) or not d.action is String or not d.id is int or not d.value is String: return false
+				match d.action:
+					"dispatch":
+						if death_recorded or people.pingling < 1 or courier_food.has(d.id): return false
+						people.pingling -= 1
+						courier_food[d.id] = Couriers.RATIONS
+					"meal":
+						if not courier_food.has(d.id) or courier_food[d.id] < 1: return false
+						courier_food[d.id] -= 1
+						if not _add(accounts, "food_consumed", 1) or not _add(accounts, "food_consumed_military", 1): return false
+					"lost":
+						if not _add(accounts, "dead", 1): return false
+						if d.value == "starvation" and not _add(accounts, "starvation_dead", 1): return false
+					"return": people.pingling += 1
 			"youth_inventory":
 				if not S.keys(d, ["from", "to", "resource", "amount"]) or d.from not in ["relief", "pingling"] or d.to not in ["relief", "pingling"] or d.from == d.to or d.resource not in ["food", "weapons", "soldiers"] or not S.integer(d.amount, 1, 120) or death_recorded: return false
 				if d.resource == "soldiers":

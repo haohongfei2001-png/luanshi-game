@@ -83,6 +83,15 @@ jobs:
           for image in save-slots life-checkpoints battle-load saved-result; do test -s "artifacts/$image-proof.png"; done
           grep -q CAMPAIGN_SAVE_VISUAL_PASS artifacts/save-visual.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/save-visual.log; then exit 1; fi
+      - name: Exercise physical courier knowledge interface with real graphics
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_courier_ui.gd -- --capture-couriers 2>&1 | tee artifacts/courier-visual.log
+          for image in courier-delivered courier-map-reply courier-overdue; do test -s "artifacts/$image-proof.png"; done
+          grep -q '"failures":\[\]' artifacts/courier-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/courier-visual.log; then exit 1; fi
       - name: Exercise youth life with real graphics and Chinese glyphs
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

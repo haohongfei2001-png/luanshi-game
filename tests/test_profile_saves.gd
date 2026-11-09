@@ -18,12 +18,18 @@ func legacy_fields(state: Dictionary) -> Dictionary:
 	original.world.erase("mode")
 	original.world.erase("origin")
 	original.world.erase("youth")
+	original.world.erase("couriers")
 	original.world.commander.erase("hero_profile")
 	for ticket in original.world.battle_tickets.values():
+		ticket.erase("signal_model")
 		ticket.erase("hero_profile")
 		ticket.erase("purpose")
 		ticket.erase("command_authority")
-	for session in original.battle_sessions.values(): session.erase("hero_profile")
+	for session in original.battle_sessions.values():
+		session.erase("hero_profile")
+		for f in ["signal_model", "signal_sequence", "pending_signals", "last_signal"]: session.erase(f)
+		for unit in session.units:
+			unit.erase("received_order"); unit.erase("received_order_sequence")
 	return original
 
 func expected(name: String, suffix: String = "state") -> Dictionary:

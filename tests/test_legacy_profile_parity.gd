@@ -12,7 +12,10 @@ func check(ok: bool, message: String) -> void:
 		push_error(message)
 
 func state(battle: RefCounted) -> Array:
-	return [battle.units, battle.events, battle.rng.state, battle.cooldowns,
+	var original_units: Array = battle.units.duplicate(true)
+	for unit in original_units:
+		unit.erase("received_order"); unit.erase("received_order_sequence")
+	return [original_units, battle.events, battle.rng.state, battle.cooldowns,
 		battle.elapsed, battle.order, battle.ended, battle.result, battle.damage_dealt,
 		battle.player_move, battle.player_aim, battle.report()]
 
@@ -30,6 +33,8 @@ func _run() -> void:
 		var after := Simulation.new()
 		before.reset(seed_number)
 		after.reset(seed_number, "legacy_test_v0")
+		# Historical active sessions preserve this model only via explicit migration.
+		after.signal_model = "legacy_global_v0"
 		check(state(before) == state(after), "legacy initial state parity")
 		for step_number in range(3600):
 			var movement := Vector2.RIGHT if step_number < 240 else Vector2.ZERO

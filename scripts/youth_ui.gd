@@ -35,6 +35,7 @@ var stage_label: Label
 var title_label: Label
 var status_label: Label
 var story_label: Label
+var courier_label: Label
 var facts_label: Label
 var records_label: Label
 var relations_label: Label
@@ -123,6 +124,7 @@ func _ready() -> void:
 			start_requested.emit(["forced", "volunteer"][enlistment.selected], ["survival", "merit", "homeland"][motivation.selected]))
 	_label(setup, "当前世界会先另存为人生节点，成功后才建立新人生。旧存档不删除；训练场独立保留。战斗未结算时不能换人生。", 14, MUTED)
 	facts_label = _label(content, "", 16)
+	courier_label = _label(content, "", 15, GOLD)
 	actions = VBoxContainer.new()
 	actions.add_theme_constant_override("separation", 9)
 	content.add_child(actions)
@@ -208,6 +210,8 @@ func refresh() -> void:
 			title_label.text = "此生至此"
 			story_label.text = _story_text("dead")
 	facts_label.text = _facts_text(known) if active else ""
+	courier_label.text = courier_text(known) if active else ""
+	courier_label.visible = not courier_label.text.is_empty()
 	_refresh_actions(active)
 	buttons.battle.visible = active and view.get("battle_ready", false)
 	buttons.battle.disabled = blocked or not known.active_battle.is_empty() or known.campaign_ended
@@ -306,4 +310,22 @@ func _relations_text() -> String:
 	for id in relationships:
 		var person: Dictionary = relationships[id]
 		lines.append("%s · %s · 信任 %d / 敬重 %d / 芥蒂 %d / 共同战历 %d" % [person.get("name", "军中相识"), "生还" if person.get("alive", true) else ("因断粮死亡" if id in starved else "已确认阵亡"), person.get("trust", 0), person.get("respect", 0), person.get("grievance", 0), person.get("known_battles", []).size() if person.get("known_battles", []) is Array else int(person.get("known_battles", 0))])
+	return "\n".join(lines)
+
+## Render only the explicit player projection. No courier position or hidden fate.
+static func courier_text(known: Dictionary) -> String:
+	var orders: Array = known.get("courier_orders", [])
+	if orders.is_empty(): return ""
+	var lines: PackedStringArray = ["传令往来 / 上官给巡队的军令"]
+	var now: float = known.get("time_seconds", 0.0)
+	for order in orders:
+		var phase: String = order.get("known", "")
+		var status: String = {"arranged": "已安排传令，尚未收到", "delivered": "军令已送达本人", "reply_sent": "回执已发出，营中是否收到仍未知", "camp_confirmed": "回营核实：营中已收到回报"}.get(phase, "进展未知")
+		lines.append("第 %d 号 · %s → %s：%s\n%s" % [order.id, order.issuer, order.recipient, order.payload, status])
+		lines.append("发令第 %.1f 时 · 已过 %.1f 小时 · 原预计送达第 %.1f 时 · 最近确认第 %.1f 时" % [float(order.issued_at) / 3600.0, maxf(0.0, now - float(order.issued_at)) / 3600.0, float(order.expected_at) / 3600.0, float(order.known_at) / 3600.0])
+		var response: String = {"comply": "愿遵令回营", "refuse": "拒绝此令", "not_found": "未找到巡队", "no_response": "未获答复"}.get(order.get("reply", ""), "")
+		if not response.is_empty(): lines.append("回报内容：" + response + "。回执不等于已经执行军令。")
+		if order.get("overdue", false): lines.append("逾期未获进一步确认：可能延误或失联，不能据此确认传令兵死亡。")
+		if phase == "delivered" and not order.get("can_reply", false): lines.append("当前不能交付回执；只保留已知的送达记录。")
+	lines.append("答应遵令不会移动部队；仍须亲自行军，按军旅进程实际回营。")
 	return "\n".join(lines)

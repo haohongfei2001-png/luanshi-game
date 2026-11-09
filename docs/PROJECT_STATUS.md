@@ -1,5 +1,38 @@
 # Project status / resumable handoff
 
+## Current v0.9 / World8 slice (2026-11-09)
+
+Implemented in a new isolated cloud checkout based on public `049fecc`, with the
+PR10 test-driver correction from public `52f545f` carried forward. Existing acceptance
+checkouts and user devices were not modified. See [COURIER_ORDERS](COURIER_ORDERS.md).
+
+- Optional superior→patrol courier and physical reply consume one existing camp soldier
+  and ten existing rations; unified travel/meal timing, endpoint interception and return
+  accounting are causal. No new force, reinforcement or city-command authority is created.
+- Players see only arranged/received/sent/locally confirmed information. Secret loss stays
+  unknown; receipt arrival does not magically inform a distant player.
+- New battles use finite-range delayed flags, per-soldier received orders and actual
+  extraction. Original active saves retain historical instruction timing until settlement.
+- Explicit World5→6→7→8 migrations and genuine World7 fixture bytes preserve old lives,
+  profiles, clocks, inventories and battle state. Adversarial receipt/authority/meal
+  forgeries found during independent review have regression tests and are rejected.
+- **Passed in Godot 4.6.3 Linux cloud:** full `tools/test.sh`, youth interface/input checks,
+  repeated combat calibration and original legacy parity, Linux/macOS export, packaged
+  scene/campaign/youth/courier separate-process save/restart. Exact logs are under
+  `docs/evidence/courier-v09-*`.
+- New focused checks: local flags 62, courier causality 194, genuine World7 migration 20,
+  courier UI 113, transport process restart 34+26, flag restart 1+3. Packaged transport
+  smoke passes 167+180 checks. Full regression remains separate from these counts.
+- **Not yet verified at source commit time:** this branch's GitHub CI and new rendered
+  courier screenshots; CI now includes delivered/reply/overdue screenshots. Local cloud
+  has no usable graphical display socket. macOS archive has arm64+x86_64, but no M5
+  device gameplay/performance test is claimed. No formal release or paid resource added.
+
+Acceptance remains partial: this is the physical communication foundation, not arbitrary
+remote subordinate command, terrain occlusion, route patrol simulation, mature political
+response or the complete game. PR10 merge/CI is coordinated separately; this branch does
+not modify PR10's branch or claim its pending hosted checks passed.
+
 ## Objective and execution boundaries
 
 Continue the complete single-player life, warfare and independent-world game.
@@ -10,7 +43,7 @@ literary plots remain reserved for owner/Pro review; ordinary implementation pro
 Read AGENTS, PRODUCT_DECISIONS v3.2, NARRATIVE_LIFE_ARC_V0_3, DOT_HANDOFF_FINAL and
 ACCEPTANCE_MATRIX. Latest locked youth-life priorities override old captivity proposals.
 
-## Current source and actual recovery (2026-11-09)
+## Previous v0.8 recovery record (historical, 2026-11-09)
 
 - Remote main was verified at `bfc7d5a`; no open PR and no active old Godot process.
   Finite profiles `c0c6d53`, youth core `e64070a` and UI `4222cf6` were present only

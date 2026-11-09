@@ -2,6 +2,7 @@ class_name BattleSimulation
 extends RefCounted
 ## Authoritative, seeded battle state. No scene nodes, physics or input devices.
 
+const OrderRules := preload("res://data/order_rules.gd")
 const HeroProfiles := preload("res://scripts/hero_combat_profiles.gd")
 const SOLDIERS_PER_SIDE := 20
 const FIELD_HALF := Vector2(31.0, 19.0)
@@ -13,6 +14,10 @@ var events: Array[Dictionary] = []
 var rng := RandomNumberGenerator.new()
 var elapsed := 0.0
 var order := "follow"
+var signal_model := "local_v1"
+var signal_sequence := 0
+var pending_signals: Array[Dictionary] = []
+var last_signal: Dictionary = {}
 var ended := false
 var result := ""
 var player_move := Vector2.ZERO
@@ -42,6 +47,10 @@ func reset(battle_seed: int = 184, profile_id: String = HeroProfiles.EARLY) -> b
 	ended = false
 	result = ""
 	order = "follow"
+	signal_model = "local_v1"
+	signal_sequence = 0
+	pending_signals.clear()
+	last_signal.clear()
 	player_move = Vector2.ZERO
 	player_aim = Vector2.RIGHT
 	damage_dealt = 0.0
@@ -62,6 +71,7 @@ func _unit(id: int, team: int, pos: Vector2, hero: bool) -> Dictionary:
 		"speed": hero_profile.speed if hero else 3.0, "damage": hero_profile.damage if hero else 13.0,
 		"condition_damage_scale": 1.0, "condition_speed_scale": 1.0,
 		"range": hero_profile.range if hero else 1.65, "weapon": "spear", "attack_cd": 0.0,
+		"received_order": order if team == 0 else "attack", "received_order_sequence": 0,
 		"guard": 0.0, "flash": 0.0, "swing": 0.0, "target": -1}
 
 func player() -> Dictionary:
@@ -77,11 +87,59 @@ func alive_count(team: int, include_hero: bool = false) -> int:
 func issue_order(next_order: String) -> bool:
 	if not _ticket.is_empty() and _ticket.get("command_authority", "squad") == "withdrawal_only" and next_order != "retreat":
 		return false
-	if ended or next_order not in ["follow", "attack", "retreat"]:
+	if ended or units.is_empty() or player().hp <= 0.0 or next_order not in OrderRules.ORDERS:
 		return false
-	order = next_order
-	events.append({"type": "order", "name": order, "pos": player().pos})
+	if signal_model == "legacy_global_v0":
+		order = next_order
+		for unit in units:
+			if unit.team == 0: unit.received_order = order
+		events.append({"type": "order", "name": order, "pos": player().pos})
+		return true
+	# Holding/repeating the same flag must not perpetually restart recognition.
+	if next_order == order and not pending_signals.is_empty():
+		return true
+	order = next_order # Issued intent, never the soldiers' shared AI instruction.
+	signal_sequence += 1
+	var origin: Vector2 = player().pos
+	last_signal = {"sequence": signal_sequence, "name": order, "origin": origin,
+		"issued_at": elapsed, "recipients": [], "due_times": [], "delivered": []}
+	for unit in units:
+		if unit.team != 0 or unit.hero or unit.hp <= 0.0 or not OrderRules.visible(origin, unit.pos):
+			continue
+		# One pending message per real soldier bounds spam and prevents stale override.
+		for i in range(pending_signals.size() - 1, -1, -1):
+			if pending_signals[i].recipient == unit.id:
+				pending_signals.remove_at(i)
+		pending_signals.append({"sequence": signal_sequence, "name": order, "origin": origin,
+			"issued_at": elapsed, "due": elapsed + OrderRules.delay(origin, unit.pos), "recipient": unit.id})
+		last_signal.recipients.append(unit.id)
+		last_signal.due_times.append(elapsed + OrderRules.delay(origin, unit.pos))
+	events.append({"type": "order", "name": order, "pos": origin})
 	return true
+
+func _deliver_signals() -> void:
+	for i in range(pending_signals.size() - 1, -1, -1):
+		var message := pending_signals[i]
+		if message.due > elapsed:
+			continue
+		pending_signals.remove_at(i)
+		var unit := units[message.recipient]
+		if unit.hp <= 0.0 or unit.hero or unit.team != 0 or not OrderRules.visible(message.origin, unit.pos):
+			continue
+		if message.sequence <= unit.received_order_sequence:
+			continue
+		unit.received_order = message.name
+		unit.received_order_sequence = message.sequence
+		if last_signal.get("sequence", 0) == message.sequence:
+			last_signal.delivered.append(unit.id)
+
+func signal_status() -> Dictionary:
+	var pending := 0
+	for message in pending_signals:
+		if message.sequence == last_signal.get("sequence", 0): pending += 1
+	return {"issued": order, "recipients": last_signal.get("recipients", []).size(),
+		"delivered": last_signal.get("delivered", []).size(), "pending": pending,
+		"range": OrderRules.FLAG_RANGE, "sequence": signal_sequence}
 
 func set_player_input(movement: Vector2, aim: Vector2) -> void:
 	player_move = movement.limit_length()
@@ -148,6 +206,7 @@ func step(delta: float) -> void:
 	if ended or not is_finite(delta) or delta <= 0.0:
 		return
 	elapsed += delta
+	_deliver_signals()
 	for key in cooldowns:
 		cooldowns[key] = maxf(0.0, cooldowns[key] - delta)
 	for unit in units:
@@ -172,13 +231,13 @@ func step(delta: float) -> void:
 		var engaging := target_id >= 0
 		if engaging:
 			destination = units[target_id].pos
-		if unit.team == 0 and order == "follow":
+		if unit.team == 0 and unit.received_order == "follow":
 			var slot := Vector2(-2.8 - (unit.id / 5) * 1.4, (unit.id % 5 - 2) * 1.7)
 			var station := _clamp_position(hero.pos + slot)
 			if not engaging or unit.pos.distance_to(destination) > 3.2 or unit.pos.distance_to(station) > 6.0:
 				destination = station
 				engaging = false
-		elif unit.team == 0 and order == "retreat":
+		elif unit.team == 0 and unit.received_order == "retreat":
 			destination = Vector2(-29.0, (unit.id % 5 - 2) * 2.0)
 			engaging = false
 		var distance: float = unit.pos.distance_to(destination)
@@ -273,6 +332,7 @@ func reset_from_ticket(ticket: Dictionary) -> bool:
 		return false
 	reset(int(ticket.tactical_seed), ticket.hero_profile.id)
 	_ticket = ticket.duplicate(true)
+	signal_model = ticket.get("signal_model", "local_v1")
 	if _ticket.get("command_authority", "squad") == "withdrawal_only": order = "attack"
 	units.clear()
 	_initial_counts = [0, 0]
@@ -337,12 +397,13 @@ func export_campaign_state() -> Dictionary:
 	return {"hero_profile": HeroProfiles.profile_reference(hero_profile.id), "units": units.duplicate(true), "events": events.duplicate(true),
 		"seed": seed_value, "rng_state": rng.state, "elapsed": elapsed, "order": order,
 		"ended": ended, "result": result, "player_move": player_move, "player_aim": player_aim,
-		"cooldowns": cooldowns.duplicate(true), "damage_dealt": damage_dealt}
+		"cooldowns": cooldowns.duplicate(true), "damage_dealt": damage_dealt,
+		"signal_model": signal_model, "signal_sequence": signal_sequence, "pending_signals": pending_signals.duplicate(true), "last_signal": last_signal.duplicate(true)}
 
 func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
 	## Validate into a separate simulation; failed restoration never changes self.
 	var schema := preload("res://scripts/campaign_schema.gd")
-	if not schema.ticket(ticket) or not schema.keys(saved, ["hero_profile", "units", "events", "seed", "rng_state", "elapsed", "order", "ended", "result", "player_move", "player_aim", "cooldowns", "damage_dealt"]):
+	if not schema.ticket(ticket) or not schema.keys(saved, ["hero_profile", "units", "events", "seed", "rng_state", "elapsed", "order", "ended", "result", "player_move", "player_aim", "cooldowns", "damage_dealt", "signal_model", "signal_sequence", "pending_signals", "last_signal"]):
 		return {"ok": false, "reason": "invalid_battle_shape"}
 	if not schema.types(saved, {"units": TYPE_ARRAY, "events": TYPE_ARRAY, "seed": TYPE_INT, "rng_state": TYPE_INT, "elapsed": TYPE_FLOAT, "order": TYPE_STRING, "ended": TYPE_BOOL, "result": TYPE_STRING, "player_move": TYPE_VECTOR2, "player_aim": TYPE_VECTOR2, "cooldowns": TYPE_DICTIONARY, "damage_dealt": TYPE_FLOAT}):
 		return {"ok": false, "reason": "invalid_battle_field_types"}
@@ -376,6 +437,8 @@ func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
 		for pair in [["attack_cd", 1.1], ["guard", selected.guard_duration if initial.hero else 0.0], ["flash", 0.12], ["swing", 0.24]]:
 			if not schema.number(unit[pair[0]], 0, pair[1]):
 				return {"ok": false, "reason": "invalid_unit_timer"}
+	if not _saved_signals_valid(saved, ticket):
+		return {"ok": false, "reason": "invalid_local_signals"}
 	for event in saved.events:
 		if not _save_event_valid(event, saved.units.size()):
 			return {"ok": false, "reason": "invalid_battle_event"}
@@ -399,6 +462,10 @@ func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
 	player_aim = saved.player_aim
 	cooldowns = saved.cooldowns.duplicate(true)
 	damage_dealt = saved.damage_dealt
+	signal_model = saved.signal_model
+	signal_sequence = saved.signal_sequence
+	pending_signals.assign(saved.pending_signals.duplicate(true))
+	last_signal = saved.last_signal.duplicate(true)
 	return {"ok": true}
 
 func _save_direction(value: Variant) -> bool:
@@ -416,3 +483,73 @@ func _save_event_valid(event: Variant, count: int) -> bool:
 		"skill":
 			return schema.keys(event, ["type", "name", "pos", "facing"]) and cooldowns.has(event.name) and _save_direction(event.facing)
 	return false
+
+func _saved_signals_valid(saved: Dictionary, ticket: Dictionary) -> bool:
+	var schema := preload("res://scripts/campaign_schema.gd")
+	if not saved.signal_model is String or saved.signal_model not in ["local_v1", "legacy_global_v0"] or saved.signal_model != ticket.get("signal_model", "local_v1"): return false
+	if not schema.integer(saved.signal_sequence, 0, schema.MAX_ID) or not schema.array(saved.pending_signals, saved.units.size()) or not saved.last_signal is Dictionary:
+		return false
+	if saved.signal_model == "legacy_global_v0" and saved.signal_sequence != 0: return false
+	for unit in saved.units:
+		if not unit.received_order is String or unit.received_order not in OrderRules.ORDERS or not schema.integer(unit.received_order_sequence, 0, saved.signal_sequence): return false
+		if (unit.team != 0 or unit.hero) and unit.received_order_sequence != 0: return false
+		if unit.received_order_sequence > 0 and saved.elapsed < OrderRules.RECOGNITION_SECONDS: return false
+		if unit.team != 0 and unit.received_order != "attack": return false
+		if saved.signal_model == "legacy_global_v0" and unit.team == 0 and unit.received_order != saved.order: return false
+		if saved.signal_model == "local_v1" and unit.team == 0 and unit.received_order_sequence == 0:
+			var initial_order := "attack" if ticket.command_authority == "withdrawal_only" else "follow"
+			if unit.received_order != initial_order: return false
+		if ticket.command_authority == "withdrawal_only" and unit.received_order_sequence > 0 and unit.received_order != "retreat": return false
+	if saved.signal_sequence == 0:
+		return saved.last_signal.is_empty() and saved.pending_signals.is_empty()
+	var latest: Dictionary = saved.last_signal
+	if not schema.keys(latest, ["sequence", "name", "origin", "issued_at", "recipients", "due_times", "delivered"]): return false
+	if not latest.sequence is int or not latest.name is String or latest.sequence != saved.signal_sequence or latest.name != saved.order or not _signal_origin(latest.origin) or not schema.number(latest.issued_at, 0, saved.elapsed): return false
+	if not schema.array(latest.recipients, saved.units.size()) or not schema.array(latest.delivered, saved.units.size()): return false
+	if not schema.array(latest.due_times, saved.units.size()) or latest.due_times.size() != latest.recipients.size(): return false
+	for due in latest.due_times:
+		if not schema.number(due, latest.issued_at + OrderRules.RECOGNITION_SECONDS, latest.issued_at + OrderRules.RECOGNITION_SECONDS + OrderRules.FLAG_RANGE / OrderRules.FLAG_SPEED): return false
+	var seen: Array = []
+	for id in latest.recipients:
+		if not schema.integer(id, 0, saved.units.size() - 1) or id in seen or saved.units[id].team != 0 or saved.units[id].hero: return false
+		seen.append(id)
+	seen.clear()
+	for id in latest.delivered:
+		if not schema.integer(id, 0, saved.units.size() - 1) or id in seen or id not in latest.recipients: return false
+		if saved.elapsed < latest.due_times[latest.recipients.find(id)]: return false
+		if saved.units[id].received_order_sequence != latest.sequence or saved.units[id].received_order != latest.name: return false
+		seen.append(id)
+	for unit in saved.units:
+		if unit.received_order_sequence == latest.sequence and unit.id not in latest.delivered: return false
+	seen.clear()
+	for message in saved.pending_signals:
+		if not schema.keys(message, ["sequence", "name", "origin", "issued_at", "due", "recipient"]): return false
+		if not schema.integer(message.sequence, 1, saved.signal_sequence) or not message.name is String or message.name not in OrderRules.ORDERS or not _signal_origin(message.origin): return false
+		if not schema.integer(message.recipient, 0, saved.units.size() - 1) or message.recipient in seen: return false
+		var unit: Dictionary = saved.units[message.recipient]
+		if unit.hero or unit.team != 0 or message.sequence <= unit.received_order_sequence: return false
+		if not schema.number(message.issued_at, 0, saved.elapsed) or not schema.number(message.due, message.issued_at + OrderRules.RECOGNITION_SECONDS, message.issued_at + OrderRules.RECOGNITION_SECONDS + OrderRules.FLAG_RANGE / OrderRules.FLAG_SPEED) or message.due <= saved.elapsed: return false
+		if message.sequence == latest.sequence and (message.recipient not in latest.recipients or message.name != latest.name or message.origin != latest.origin or message.issued_at != latest.issued_at or message.due != latest.due_times[latest.recipients.find(message.recipient)]): return false
+		seen.append(message.recipient)
+	if ticket.command_authority == "withdrawal_only":
+		if latest.name != "retreat": return false
+		for message in saved.pending_signals:
+			if message.name != "retreat": return false
+	return true
+
+func _signal_origin(value: Variant) -> bool:
+	return value is Vector2 and value.is_finite() and value == value.clamp(-FIELD_HALF, FIELD_HALF)
+
+static func migrate_legacy_session(saved: Dictionary) -> Dictionary:
+	# Called only by the explicit pre-World8 campaign migration.
+	var migrated := saved.duplicate(true)
+	migrated["signal_model"] = "legacy_global_v0"
+	migrated["signal_sequence"] = 0
+	migrated["pending_signals"] = []
+	migrated["last_signal"] = {}
+	if migrated.get("units") is Array:
+		for unit in migrated.units:
+			if unit is Dictionary:
+				unit["received_order"] = migrated.get("order", "follow") if unit.get("team") == 0 else "attack"
+				unit["received_order_sequence"] = 0
+	return migrated

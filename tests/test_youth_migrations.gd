@@ -10,8 +10,13 @@ func check(ok: bool, label: String) -> void:
 func world6(state: Dictionary) -> Dictionary:
 	var old := state.duplicate(true)
 	old.world.version = 6
+	old.world.erase("couriers")
 	old.world.erase("origin"); old.world.erase("mode"); old.world.erase("youth")
-	for t in old.world.battle_tickets.values(): t.erase("purpose"); t.erase("command_authority")
+	for t in old.world.battle_tickets.values(): t.erase("purpose"); t.erase("command_authority"); t.erase("signal_model")
+	for session in old.battle_sessions.values():
+		for f in ["signal_model", "signal_sequence", "pending_signals", "last_signal"]: session.erase(f)
+		for unit in session.units:
+			unit.erase("received_order"); unit.erase("received_order_sequence")
 	return old
 func expected(profile: String, phase: String) -> Dictionary:
 	return Codec.new().decode(JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/v07/%s_%s.codec.json" % [profile, phase]))).value

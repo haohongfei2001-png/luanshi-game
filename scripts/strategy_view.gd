@@ -15,6 +15,7 @@ var buttons: Dictionary = {}
 var army_label: Label
 var local_label: Label
 var economy_label: Label
+var courier_label: Label
 var reports_label: Label
 var feedback: Label
 var map: Control
@@ -32,6 +33,7 @@ func _ready() -> void:
 	add_child(backdrop)
 	scroll = ScrollContainer.new()
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.offset_left = 24
 	scroll.offset_top = 16
 	scroll.offset_right = -24
@@ -72,6 +74,9 @@ func _ready() -> void:
 	_button(actions, "food", "Take 60 food", func(): _command("food"))
 	_button(actions, "weapons", "Take 10 weapons", func(): _command("weapons"))
 	_button(actions, "seize", "Assault Hequ depot", func(): _command("seize"))
+	courier_label = _label(stack, "", 15)
+	courier_label.add_theme_font_override("font", narrative_font)
+	courier_label.add_theme_color_override("font_color", Color("e0c486"))
 	local_label = _label(stack, "", 15)
 	economy_label = _label(stack, "", 15)
 	feedback = _label(stack, "Choose a route, then advance time to travel. Taking weapons reduces the local garrison's equipment.", 15)
@@ -161,6 +166,8 @@ func show_saved_battle_result(ticket: Dictionary) -> void:
 
 func refresh() -> void:
 	view = world.player_view()
+	courier_label.text = preload("res://scripts/youth_ui.gd").courier_text(view)
+	courier_label.visible = not courier_label.text.is_empty()
 	battle_pending = view.get("active_battle", "") != ""
 	var army: Dictionary = view.army
 	var ended: bool = view.get("campaign_ended", false)

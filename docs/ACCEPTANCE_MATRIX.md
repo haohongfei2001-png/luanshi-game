@@ -176,3 +176,13 @@
 每个测试记录：测试编号、Git SHA、Godot 版本、设备/云环境、命令/步骤、数据种子、预期、实际、PASS/FAIL/BLOCKED/NOT RUN、日志/录屏/截图/产物 URL。自动化覆盖世界状态与因果；图形可读性、操作手感和 M5 设备性能必须与 headless 分开。
 
 对于玩家失败复盘，**展示角色当时有机会掌握的事实与因果推断**，例如“粮草只剩两日，斥候报告为四日前”，而不是全知调试界面泄露秘密谈判内容。开发者可另有全知调试日志验证因果，不进入普通玩家 UI。
+
+### World8 implementation evidence note (2026-11-09)
+
+The criteria above remain unchanged. `COURIER_ORDERS.md` and
+`docs/evidence/courier-v09-*` record the current partial implementation:
+OWNER-ORDER-01 has local range, finite delivery and per-soldier instructions on the
+open placeholder field; terrain occlusion remains unimplemented. OWNER-ORDER-02
+has an actual camp-superior→patrol exchange and physical replies, not a new remote
+subordinate army. OWNER-ORDER-03 has secret-loss versus player-known-state tests.
+Cloud headless/export passes do not substitute for hosted graphics or M5 acceptance.

@@ -47,6 +47,20 @@ var rendered_frames := 0
 
 func _ready() -> void:
 	var arguments := OS.get_cmdline_user_args()
+	if "--courier-smoke-prepare" in arguments or "--courier-smoke-resume" in arguments:
+		set_process(false)
+		set_physics_process(false)
+		set_process_input(false)
+		set_process_unhandled_input(false)
+		var phase := "prepare" if "--courier-smoke-prepare" in arguments else "resume"
+		var smoke_id := "export_v1"
+		for argument in arguments:
+			if argument.begins_with("--courier-smoke-id="):
+				smoke_id = argument.trim_prefix("--courier-smoke-id=")
+		var proof: Dictionary = preload("res://scripts/courier_persistence_smoke.gd").run(phase, smoke_id)
+		print("COURIER_RUNTIME_%s_%s %s" % [phase.to_upper(), "PASS" if proof.ok else "FAIL", JSON.stringify(proof)])
+		get_tree().quit(0 if proof.ok else 1)
+		return
 	if "--youth-smoke-prepare" in arguments or "--youth-smoke-resume" in arguments:
 		set_process(false)
 		set_physics_process(false)
@@ -752,9 +766,12 @@ func _smoke_input() -> void:
 			var profile: Dictionary = sim.hero_profile
 			var eligible := []
 			if distance <= 1.9: eligible.append("guard")
-			if distance <= profile.sweep_range: eligible.append("sweep")
-			if distance > 0.65 and distance <= profile.lunge_distance: eligible.append("lunge")
+			if smoke_actions.has("attack") and distance <= profile.sweep_range: eligible.append("sweep")
+			if smoke_actions.has("attack") and distance > 0.65 and distance <= profile.lunge_distance: eligible.append("lunge")
 			if distance <= sim.player().range: eligible.append("attack")
+			# Exercise each actual ability before repeating one. Changed squad timing
+			# must not starve the basic-attack proof behind every damaging skill.
+			eligible.sort_custom(func(a: String, b: String) -> bool: return not smoke_actions.has(a) and smoke_actions.has(b))
 			for action in eligible:
 				if sim.use_action(action):
 					smoke_actions[action] = true

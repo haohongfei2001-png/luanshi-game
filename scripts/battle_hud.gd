@@ -138,11 +138,11 @@ func update_state(state: BattleSimulation, is_paused: bool, measured_fps: float)
 		buttons[action].disabled = sim.ended or paused or cd > 0.0 or requires_weapon
 	for order_name in ["attack", "follow", "retreat"]:
 		var key: int = ["attack", "follow", "retreat"].find(order_name) + 1
-		buttons["order_" + order_name].text = "%d   %s\n%s" % [key, order_name.to_upper(), "ACTIVE" if sim.order == order_name else "ISSUE ORDER"]
+		buttons["order_" + order_name].text = "%d   %s\n%s" % [key, order_name.to_upper(), "FLAG ISSUED" if sim.order == order_name and sim.signal_sequence > 0 else "SIGNAL NEARBY"]
 		buttons["order_" + order_name].disabled = sim.ended or paused
 		if not youth_context.is_empty() and youth_context.get("command_authority", "withdrawal_only") != "squad":
 			buttons["order_" + order_name].disabled = sim.ended or paused or order_name != "retreat"
-			buttons["order_" + order_name].text = "3  WITHDRAW SELF" if order_name == "retreat" else "NO COMMAND AUTHORITY"
+			buttons["order_" + order_name].text = "3  RETREAT SIGNAL" if order_name == "retreat" else "NO COMMAND AUTHORITY"
 	pause_button.text = "RESUME" if paused else "II   PAUSE"
 	pause_button.disabled = sim.ended
 	restart_button.text = "R   /   RETURN TO CAMPAIGN" if campaign_mode else "R   /   BEGIN A NEW TRAINING SKIRMISH"
@@ -166,7 +166,7 @@ func update_state(state: BattleSimulation, is_paused: bool, measured_fps: float)
 		for order_name in ["attack", "follow", "retreat"]:
 			buttons["order_" + order_name].text = {"attack": "1  进攻", "follow": "2  跟随", "retreat": "3  撤退"}[order_name]
 			if youth_context.get("command_authority", "withdrawal_only") != "squad":
-				buttons["order_" + order_name].text = "3  自行撤离" if order_name == "retreat" else "尚无指挥权"
+				buttons["order_" + order_name].text = "3  预定撤离信号" if order_name == "retreat" else "尚无指挥权"
 		restart_button.text = "R / 返回人生记录"
 		if sim.ended:
 			var summary := sim.report()
@@ -211,7 +211,7 @@ func _draw() -> void:
 	draw_rect(Rect2(140, bottom + 15, 210, 12), Color("293738"))
 	draw_rect(Rect2(140, bottom + 15, 210 * health / sim.player().max_hp, 12), GOLD)
 	_text(Vector2(362, bottom + 27), "%d / %d" % [ceili(health), int(sim.player().max_hp)], 12, PAPER)
-	_text(Vector2(size.x - 456, bottom + 27), "COMPANY ORDERS  /  %d SOLDIERS + YOU" % (sim.report().friendly_survivors + sim.report().friendly_casualties), 11, GOLD)
+	_text(Vector2(size.x - 456, bottom + 27), local_signal_label(), 11, GOLD)
 	_text(Vector2(28, size.y - 12), "WASD / arrows  Move    Mouse  Aim    H  Help    P / Esc  Pause    R  " + ("Return after battle" if campaign_mode else "New training after battle"), 11, MUTED)
 	if show_help and not sim.ended:
 		draw_rect(Rect2(28, 114, 330, 95), Color("14252add"))
@@ -222,7 +222,7 @@ func _draw() -> void:
 			_text(Vector2(42, 200), "The commander's death ends this run.", 11, MUTED)
 		else:
 			_text(Vector2(42, 137), "WASD 移动 / 鼠标瞄准 / 左键攻击", 14, PAPER)
-			_text(Vector2(42, 160), "已获小队军权：1 进攻 / 2 跟随 / 3 撤退" if youth_context.get("command_authority", "") == "squad" else "你是新卒；1 / 2 不可用，3 自行撤离。", 13, GOLD)
+			_text(Vector2(42, 160), "已获小队军权：1 进攻 / 2 跟随 / 3 撤退" if youth_context.get("command_authority", "") == "squad" else "你是新卒；1 / 2 不可用，3 预定撤离信号。", 13, GOLD)
 			_text(Vector2(42, 183), "撤退：向左侧营门移动，不能瞬间脱战。", 12, MUTED)
 			_text(Vector2(42, 200), "生命只有 100；主角战死即局终，可读档。", 11, MUTED)
 	if paused and not sim.ended:
@@ -235,3 +235,11 @@ func profile_label() -> String:
 		"late_v1": return "LATE TEST"
 		"legacy_test_v0": return "V0.6 LEGACY"
 	return "COMMANDER"
+
+func local_signal_label() -> String:
+	if sim.signal_model == "legacy_global_v0": return "LEGACY SAVE / GLOBAL ORDERS"
+	var status := sim.signal_status()
+	if not youth_context.is_empty() and youth_context.get("command_authority", "withdrawal_only") != "squad":
+		return "撤离信号 %d/%d 已收 / %d 传达中" % [status.delivered, status.recipients, status.pending]
+	if status.sequence == 0: return "LOCAL FLAGS / 14m / NO SIGNAL ISSUED"
+	return "%s: %d/%d RECEIVED / %d PENDING" % [status.issued.to_upper(), status.delivered, status.recipients, status.pending]

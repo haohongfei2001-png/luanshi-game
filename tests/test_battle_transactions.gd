@@ -286,7 +286,7 @@ func _test_determinism_and_stale_ids() -> void:
 	var a := run_actual_battle()
 	var b := run_actual_battle()
 	check(a == b, "same world seed, battle seed and actions yield identical transaction and world")
-	check(a.campaign_ended, "real soldier AI reaches a terminal battle and settlement without fabricated outcome")
+	check(a.battle_tickets.size() == 1 and a.battle_tickets.values()[0].status == "committed", "real soldier AI reaches a terminal battle and settlement without requiring scripted hero death")
 	var world := local_world()
 	var adapter := begin(world)
 	finish_victory(adapter.simulation)
