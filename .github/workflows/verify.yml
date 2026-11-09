@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Legacy profile parity materializes its preserved source commit.
+      - name: Install system Chinese fonts for rendered narrative checks
+        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
       - name: Install verified official Godot and export templates
         run: |
           set -euo pipefail
@@ -35,6 +37,10 @@ jobs:
         env:
           XDG_DATA_HOME: /home/runner/.local/share
         run: ./tools/test.sh
+      - name: Verify youth narrative interface and real input path
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/test-youth-ui.sh
       - name: Verify finite hero calibration and legacy parity
         env:
           XDG_DATA_HOME: /home/runner/.local/share
@@ -77,6 +83,15 @@ jobs:
           for image in save-slots life-checkpoints battle-load saved-result; do test -s "artifacts/$image-proof.png"; done
           grep -q CAMPAIGN_SAVE_VISUAL_PASS artifacts/save-visual.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/save-visual.log; then exit 1; fi
+      - name: Exercise youth life with real graphics and Chinese glyphs
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/youth_visual.gd 2>&1 | tee artifacts/youth-visual.log
+          for image in enlistment first-battle injustice active-save withdrawal endpoint records; do test -s "artifacts/youth-$image-proof.png"; done
+          grep -q YOUTH_VISUAL_PASS artifacts/youth-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/youth-visual.log; then exit 1; fi
       - name: Build macOS and verify exported Linux game
         run: ./tools/export.sh
       - name: Upload macOS playable
@@ -131,6 +146,12 @@ jobs:
           grep -q PERSISTENCE_SMOKE_PREPARE_PASS mac-evidence/persistence-prepare.log
           grep -q PERSISTENCE_SMOKE_RESUME_PASS mac-evidence/persistence-resume.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/persistence-*.log; then exit 1; fi
+          for phase in prepare resume; do
+            "$APP/Contents/MacOS/$BIN" --headless -- --youth-smoke-$phase --youth-smoke-id="native_${GITHUB_RUN_ID}" 2>&1 | tee "mac-evidence/youth-$phase.log"
+          done
+          grep -q YOUTH_RUNTIME_PREPARE_PASS mac-evidence/youth-prepare.log
+          grep -q YOUTH_RUNTIME_RESUME_PASS mac-evidence/youth-resume.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/youth-*.log; then exit 1; fi
       - name: Upload native macOS evidence
         if: always()
         uses: actions/upload-artifact@v4

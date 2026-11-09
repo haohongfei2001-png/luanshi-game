@@ -28,6 +28,14 @@ static func validate(state: Dictionary) -> bool:
 		if death_recorded and event.kind in ["march_started", "transfer", "depot_seized", "battle_reserved", "battle_started", "battle_committed"]:
 			return false
 		match event.kind:
+			"youth_inventory":
+				if not S.keys(d, ["from", "to", "resource", "amount"]) or d.from not in ["relief", "pingling"] or d.to not in ["relief", "pingling"] or d.from == d.to or d.resource not in ["food", "weapons", "soldiers"] or not S.integer(d.amount, 1, 120) or death_recorded: return false
+				if d.resource == "soldiers":
+					if people[d.from] < d.amount: return false
+					people[d.from] -= d.amount
+					people[d.to] += d.amount
+			"youth_transition":
+				if not S.keys(d, ["action", "data", "moves"]): return false
 			"production":
 				if not _production(d) or event.hour < 1:
 					return false

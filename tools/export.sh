@@ -18,9 +18,15 @@ for phase in prepare resume; do
 done
 grep -q PERSISTENCE_SMOKE_PREPARE_PASS artifacts/exported-linux-persistence-prepare.log
 grep -q PERSISTENCE_SMOKE_RESUME_PASS artifacts/exported-linux-persistence-resume.log
+for phase in prepare resume; do
+  builds/Luanshi-linux.x86_64 --headless -- --youth-smoke-$phase --youth-smoke-id="$SMOKE_ID" 2>&1 | tee "artifacts/exported-linux-youth-$phase.log"
+  marker=$(printf '%s' "$phase" | tr '[:lower:]' '[:upper:]')
+  grep -q "YOUTH_RUNTIME_${marker}_PASS" "artifacts/exported-linux-youth-$phase.log"
+done
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/export-{macos,linux}.log artifacts/exported-linux-{smoke,campaign,persistence-prepare,persistence-resume}.log; then
   exit 1
 fi
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/exported-linux-youth-*.log; then exit 1; fi
 python3 tools/verify_macos.py builds/Luanshi-macOS.zip
 python3 - <<'PY'
 import zipfile

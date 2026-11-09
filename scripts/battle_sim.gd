@@ -75,6 +75,8 @@ func alive_count(team: int, include_hero: bool = false) -> int:
 	return count
 
 func issue_order(next_order: String) -> bool:
+	if not _ticket.is_empty() and _ticket.get("command_authority", "squad") == "withdrawal_only" and next_order != "retreat":
+		return false
 	if ended or next_order not in ["follow", "attack", "retreat"]:
 		return false
 	order = next_order
@@ -271,6 +273,7 @@ func reset_from_ticket(ticket: Dictionary) -> bool:
 		return false
 	reset(int(ticket.tactical_seed), ticket.hero_profile.id)
 	_ticket = ticket.duplicate(true)
+	if _ticket.get("command_authority", "squad") == "withdrawal_only": order = "attack"
 	units.clear()
 	_initial_counts = [0, 0]
 	for team in range(2):
@@ -348,6 +351,8 @@ func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
 	var selected := HeroProfiles.from_reference(ticket.hero_profile)
 	if not saved.seed is int or saved.seed != ticket.tactical_seed or not saved.rng_state is int or not schema.number(saved.elapsed, ticket.elapsed_world_time, 8760 * 3600.0) or saved.order not in ["follow", "attack", "retreat"] or not saved.ended is bool or not schema.text(saved.result) or not schema.number(saved.damage_dealt, 0, 2000):
 		return {"ok": false, "reason": "invalid_battle_fields"}
+	if ticket.command_authority == "withdrawal_only" and saved.order not in ["attack", "retreat"]:
+		return {"ok": false, "reason": "unauthorized_recruit_order"}
 	if not _save_direction(saved.player_move) or not _save_direction(saved.player_aim) or not is_equal_approx(saved.player_aim.length(), 1.0) or not schema.keys(saved.cooldowns, ["attack", "sweep", "lunge", "guard"]):
 		return {"ok": false, "reason": "invalid_battle_input"}
 	for action in saved.cooldowns:
@@ -374,6 +379,8 @@ func restore_campaign_state(saved: Variant, ticket: Dictionary) -> Dictionary:
 	for event in saved.events:
 		if not _save_event_valid(event, saved.units.size()):
 			return {"ok": false, "reason": "invalid_battle_event"}
+		if event.type == "order" and ticket.command_authority == "withdrawal_only" and event.name != "retreat":
+			return {"ok": false, "reason": "unauthorized_recruit_order_history"}
 	candidate.units.assign(saved.units.duplicate(true))
 	candidate.order = saved.order
 	candidate._check_result()

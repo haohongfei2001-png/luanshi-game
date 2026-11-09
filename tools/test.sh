@@ -71,3 +71,8 @@ grep -q "Save history tests: .* assertions, 0 failures" artifacts/save-history.l
 
 grep -q "BOUNDARY_AUDIT .* checks 0 failures" artifacts/save-boundaries.log
 grep -q '"failures":0' artifacts/save-scene-tests.log
+
+bash tools/test_youth_runtime.sh
+
+# World7 youth-life causal slice plus genuine World6 migrations and process restart.
+bash tools/test_youth.sh

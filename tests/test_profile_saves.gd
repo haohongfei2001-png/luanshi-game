@@ -15,8 +15,14 @@ func check(ok: bool, label: String) -> void:
 func legacy_fields(state: Dictionary) -> Dictionary:
 	var original := state.duplicate(true)
 	original.world.version = 5
+	original.world.erase("mode")
+	original.world.erase("origin")
+	original.world.erase("youth")
 	original.world.commander.erase("hero_profile")
-	for ticket in original.world.battle_tickets.values(): ticket.erase("hero_profile")
+	for ticket in original.world.battle_tickets.values():
+		ticket.erase("hero_profile")
+		ticket.erase("purpose")
+		ticket.erase("command_authority")
 	for session in original.battle_sessions.values(): session.erase("hero_profile")
 	return original
 

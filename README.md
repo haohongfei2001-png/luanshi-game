@@ -28,7 +28,7 @@ Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple S
 
 ## Status
 
-Godot 4.6.3 playable prototype implemented. A world-backed depot encounter now reserves actual soldiers and weapons, advances one clock and settles casualties/equipment exactly once in-process. Training remains a separate 20-vs-20 scene. Reproducible combat, world, transaction and routed scene tests are in `tools/test.sh`. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+Godot 4.6.3 v0.8 integration: finite-HP combat and a playable youth military-life slice. The new “少年军旅 / 人生” entry follows enlistment, real patrol combat, disputed merit, four consequential responses, a real squad commission, dangerous combat/retreat and replacement from existing resources. A world-backed depot encounter now reserves actual soldiers and weapons, advances one clock and settles casualties/equipment exactly once in-process. Training remains a separate 20-vs-20 scene. Reproducible combat, world, transaction and routed scene tests are in `tools/test.sh`. See [verification](docs/VERIFICATION.md) for actual results and limitations.
 
 ### Play from source
 
@@ -67,10 +67,32 @@ The repository's [Actions](../../actions) workflow tests and packages each proto
 
 [中文试玩说明](docs/PLAYING_ZH.md) · [Current resumable project status](docs/PROJECT_STATUS.md) · [World simulation foundation](docs/WORLD_SIM.md) · [Battle transaction contract](docs/BATTLE_TRANSACTIONS.md).
 
-Press **M** to open the three-city campaign. Travel the river route for three hours and **Assault Hequ depot** to fight a real roster: 20 of the army's 60 people (including its commander) versus 15 actual defenders. With 30 weapons in the 60-person army, the deployment contains 10 armed and 10 genuinely unarmed people; 40 remain reserves. The outcome updates the same world once, including actual time, dead people, recovered/destroyed equipment and depot ownership. Physical retreat preserves survivors. Commander death ends the campaign after settlement. **R returns to the map, not a battle restart.** Explicit New Campaign is separate from training replay. Local city production now uses actual civilian labor, farmland/workshops and stability, with continuous integer work accrual and separate civilian/military food consumption. The local map shows effective rates and siege stoppage; no remote economic truth is leaked. Real shortage now causes visible hunger, fatigue/morale penalties and bounded gradual attrition; full meals during an entire safe stationary hour restore condition. No rest is credited during marches, siege, hostile presence or reserved combat. Named campaign saves, active-battle resume and life checkpoints are now implemented; F6 opens the save panel, F5 quicksaves and F9 quickloads. The complete narrative remains pending. This is a reversible prototype under the final design, not owner approval of all creative choices or completion of the full game.
+Press **M** to open the three-city campaign. Travel the river route for three hours and **Assault Hequ depot** to fight a real roster: 20 of the army's 60 people (including its commander) versus 15 actual defenders. With 30 weapons in the 60-person army, the deployment contains 10 armed and 10 genuinely unarmed people; 40 remain reserves. The outcome updates the same world once, including actual time, dead people, recovered/destroyed equipment and depot ownership. Physical retreat preserves survivors. Commander death ends the campaign after settlement. **R returns to the map, not a battle restart.** Explicit New Campaign is separate from training replay. Local city production now uses actual civilian labor, farmland/workshops and stability, with continuous integer work accrual and separate civilian/military food consumption. The local map shows effective rates and siege stoppage; no remote economic truth is leaked. Real shortage now causes visible hunger, fatigue/morale penalties and bounded gradual attrition; full meals during an entire safe stationary hour restore condition. No rest is credited during marches, siege, hostile presence or reserved combat. Named campaign saves, active-battle resume and life checkpoints are now implemented; F6 opens the save panel, F5 quicksaves and F9 quickloads. The first youth narrative slice is playable through its own entry; the complete life narrative remains pending. This is a reversible prototype under the final design, not owner approval of all creative choices or completion of the full game.
 
 [Population economy and 90-day verification](docs/ECONOMY.md): fixed city output is replaced by constrained production. Original rescue timelines remain covered; demographic quantities and rates are compressed provisional test values, not final historical balance.
 
 [Military condition and recovery](docs/HUNGER.md): both factions and city garrisons use the same real-ration rules; the first warning precedes casualties. Combat penalties are bounded entry snapshots, not a separate hunger clock.
 
 [Campaign save format and verification](docs/CAMPAIGN_SAVES.md): free named slots and retained life checkpoints, atomic load, real battle/RNG resume and once-only receipts. Training is separate and is not stored. Saved active battles reopen paused; close the panel and press P to continue. Saves preserve complete90-day history; bounded size/complexity limits mean unrestricted multi-year lifetime scale is not yet accepted.
+
+
+### Youth military life (v0.8)
+
+Click **少年军旅 / 人生** at the top right. Choose conscription or volunteering,
+then survival, merit or homeland as a motive. Starting archives the previous
+campaign before creating a fifteen-year-old early-profile life. Story reading
+pauses; march, preparation, choices and actual combat advance the shared world.
+
+The first patrol has five real people, including the player. A recruit can signal
+withdrawal but cannot issue attack/follow orders. Return to camp after earning
+merit to choose endurance, appeal, private evidence or protection of a surviving
+comrade. A later actual commission enables squad command. The dangerous mission
+permits victory, physical retreat and death. Replacements draw from existing camp
+people and equipment; dead comrades are never revived by a story action.
+
+F5/F9 and named saves work throughout. Old World5/6 saves remain their original
+technical campaigns and profiles, never silently rewritten as youth lives. The
+short-slice endpoint is not the completed game. Important cast and fixed major
+literary plots remain provisional for owner/Pro review.
+
+[Youth systems](docs/YOUTH_LIFE_SLICE.md) · [Interface and controls](docs/YOUTH_INTERFACE.md)
