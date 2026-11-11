@@ -58,6 +58,10 @@ void vertex() {
 				float set=state==1 ? smoothstep(0.0,0.9,p) : 1.0-p;
 				swing-=set*(kit==7 && joint==4 ? 1.15 : 0.41);
 				v.z+=set*(joint==4 ? 0.16 : 0.09);
+			} else if (slot==3 && (kit==0 || kit==4)) {
+				float ready=state==1 ? smoothstep(0.0,0.85,p) : 1.0-p;
+				v=bend_y(v,shoulder,-0.68*ready);
+				swing-=ready*(kit==4 ? 0.92 : 0.68);
 			} else if (kit==7 && slot==1) {
 				v.z-=beat*(joint==4 ? 0.49 : 0.06);
 				swing-=joint==4 ? 0.58 : 0.23;
@@ -88,7 +92,10 @@ void vertex() {
 				swing+=beat*(kit==4 ? 0.91 : 0.48);
 			}
 		}
-		if (state==3) {swing-=kit==7 && joint==4 ? 1.08 : (kit==3 ? 0.28 : 0.68); v.z+=kit==3 ? 0.23 : 0.13;}
+		if (state==3) {float lift=kit==7 && joint==4 ? 1.08 : (kit==3 ? 0.28 : (kit==4 ? 0.92 : 0.68));
+			swing-=lift;
+			if (kit==0 || kit==4) v=bend_y(v,shoulder,-0.68);
+			v.z+=kit==3 ? 0.23 : 0.13;}
 		v=bend_x(v,shoulder,swing);
 	}
 	if (!animal && !seated && (state==1 || state==2)) {
