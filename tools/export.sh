@@ -30,7 +30,7 @@ if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/export-{macos,linux}.log 
   exit 1
 fi
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/exported-linux-youth-*.log; then exit 1; fi
-builds/Luanshi-linux.x86_64 --headless --fixed-fps 60 -- --field-check 2>&1 | tee artifacts/exported-field.log
+timeout 60s builds/Luanshi-linux.x86_64 --headless --quit-after 1100 --fixed-fps 60 -- --field-check 2>&1 | tee artifacts/exported-field.log
 grep -q '^FIELD_PACKAGE_PASS' artifacts/exported-field.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/exported-field.log; then exit 1; fi
 python3 tools/verify_macos.py builds/Luanshi-macOS.zip

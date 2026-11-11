@@ -42,10 +42,11 @@ func _ready() -> void:
 	add_child(audio)
 	hud.deploy.connect(deploy)
 	hud.pause.connect(toggle_pause)
+	hud.terrain_chosen.connect(pan_to)
 	hud.campaign.connect(func(): campaign_requested.emit())
 	hud.retry.connect(func(): new_muster(selections))
 	hud.weapon_changed.connect(func(i: int):
-		if not battle.started: battle.hero.kit=i)
+		battle.equip_hero(i))
 	hud.order_requested.connect(_order)
 	hud.save_requested.connect(_save)
 	hud.load_requested.connect(_load)
@@ -215,6 +216,7 @@ func _draw_field() -> void:
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	map.update_battle(battle)
+	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,half_extent-Vector2(4,6))
 	view_us+=Time.get_ticks_usec()-t
 
 func _process(delta: float) -> void:

@@ -5,12 +5,14 @@ const FontUI := preload("res://scripts/youth_ui.gd")
 signal deploy
 signal campaign
 signal pause
+signal terrain_chosen(at: Vector2)
 signal weapon_changed(index: int)
 signal order_requested(company: int, mission: int, channel: int)
 signal retry
 signal save_requested
 signal load_requested
 var root_control := Control.new()
+var inset := preload("res://scripts/field/map_inset.gd").new()
 var objective := Label.new()
 var own := Label.new()
 var condition := Label.new()
@@ -49,6 +51,13 @@ func _ready() -> void:
 	_button(row,command_toggle,"军令  Tab",func(): order_panel.visible = not order_panel.visible)
 	_button(row,change,"暂停  P",func(): pause.emit())
 	_button(row,legacy,"三城战役 / 旧存档",func(): campaign.emit())
+	root_control.add_child(inset)
+	inset.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	inset.offset_left=-211
+	inset.offset_right=-16
+	inset.offset_top=66
+	inset.offset_bottom=174
+	inset.chosen.connect(func(at: Vector2): terrain_chosen.emit(at))
 	var panel := _panel(root_control,Control.PRESET_BOTTOM_WIDE)
 	panel.offset_left=16; panel.offset_right=-16; panel.offset_bottom=-14
 	panel.grow_vertical=Control.GROW_DIRECTION_BEGIN
@@ -154,6 +163,8 @@ func update_model(b: Battle,paused: bool) -> void:
 	objective.text="河关城下" if b.gate_hp>0 else "占领内庭  %.1f / 6 秒" % b.capture
 	own.text="我军 %d / %d　军官 %d　敌军初始 %d" % [b.side_size-b.losses[0]-b.escaped[0],b.side_size,b.companies_per_side,b.side_size]
 	condition.text="%s · 体力 %d/%d　" % [Arms.NAMES[b.hero.kit],ceili(b.hero.hp),int(b.hero.max_hp)]
+	if b.hero.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] and not b.legacy_missiles:
+		condition.text+="%s %d　" % ["箭" if b.hero.kit==Arms.Kit.BOW else "弩矢",b.hero.ammo]
 	health.value=b.hero.hp/b.hero.max_hp*100
 	feedback.text="　"+b.notice
 	help.visible=not b.started or toggle_help
@@ -161,7 +172,8 @@ func update_model(b: Battle,paused: bool) -> void:
 	go.visible=not b.started
 	change.disabled=not b.started or b.result!=""
 	change.text="继续  P" if paused else "暂停  P"
-	var names: Array=Arms.LABELS[b.hero.kit]
+	var names: Array=Arms.LABELS[b.hero.kit].duplicate()
+	if b.hero.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] and b.hero.ammo==0 and not b.legacy_missiles: names[0]="近身推击"
 	var line := PackedStringArray()
 	for i in 4:
 		var delay := " %.1fs" % b.hero_cds[i] if b.hero_cds[i]>0 else ""

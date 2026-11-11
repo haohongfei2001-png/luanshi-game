@@ -12,7 +12,7 @@ func _ready() -> void:
 	else:
 		open_field()
 		if "--field-check" in OS.get_cmdline_user_args():
-			load("res://scripts/field/package_probe.gd").run(get_tree(),field)
+			preload("res://scripts/field/package_probe.gd").run(get_tree(),field)
 
 func open_field() -> void:
 	if not field:

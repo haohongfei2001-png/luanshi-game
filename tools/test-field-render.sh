@@ -15,6 +15,10 @@ for mode in benchmark film; do
   timeout 150s xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . "${args[@]}" --script tests/field_render.gd -- "${user_args[@]}" 2>&1 | tee "artifacts/field-$mode.log"
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "artifacts/field-$mode.log"; then exit 1; fi
 done
+timeout 120s xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/field_controls.gd -- --field-size=20 2>&1 | tee artifacts/field-controls.log
+grep -q '^FIELD_CONTROLS_PASS' artifacts/field-controls.log
+if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-controls.log; then exit 1; fi
+ffmpeg -nostdin -loglevel error -y -framerate 10 -i artifacts/kit-film/frame-%03d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/player-nine-weapons.mp4
 grep -q '^FIELD_RENDER_PASS' artifacts/field-benchmark.log
 grep -q '^FIELD_FILM_PASS' artifacts/field-film.log
 ffmpeg -nostdin -loglevel error -y -framerate 15 -i artifacts/field-film/frame-%03d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/river-gate-512.mp4

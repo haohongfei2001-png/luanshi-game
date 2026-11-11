@@ -117,6 +117,7 @@ jobs:
             artifacts/
             builds/SHA256SUMS
             !artifacts/field-film/**
+            !artifacts/kit-film/**
           if-no-files-found: warn
   macos-runtime:
     needs: verify-and-export
@@ -143,7 +144,7 @@ jobs:
           "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --campaign-smoke --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/campaign.log
           grep -q CAMPAIGN_SMOKE_PASS mac-evidence/campaign.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/campaign.log; then exit 1; fi
-          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --field-check 2>&1 | tee mac-evidence/field.log
+          "$APP/Contents/MacOS/$BIN" --headless --quit-after 1100 --fixed-fps 60 -- --field-check 2>&1 | tee mac-evidence/field.log
           grep -q '^FIELD_PACKAGE_PASS' mac-evidence/field.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/field.log; then exit 1; fi
           for phase in prepare resume; do
@@ -165,7 +166,7 @@ jobs:
           app = next(pathlib.Path("package/unpacked").glob("*.app"))
           exe = plistlib.loads((app / "Contents/Info.plist").read_bytes())["CFBundleExecutable"]
           evidence = pathlib.Path("mac-evidence").resolve()
-          args = [str(app / "Contents/MacOS" / exe), "--audio-driver", "Dummy", "--resolution", "960x600", "--fixed-fps", "60", "--", "--field-check", f"--field-proof={evidence}/field.png"]
+          args = [str(app / "Contents/MacOS" / exe), "--audio-driver", "Dummy", "--resolution", "1280x800", "--disable-vsync", "--", "--field-check", "--field-profile", f"--field-proof={evidence}/field.png"]
           with (evidence / "field-window.log").open("w") as out:
               result = subprocess.run(args, stdout=out, stderr=subprocess.STDOUT, timeout=75)
           log = (evidence / "field-window.log").read_text()
