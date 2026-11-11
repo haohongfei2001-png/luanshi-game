@@ -29,6 +29,7 @@ func strength(b) -> Dictionary:
 	var approach := [0,0]
 	var court := [0,0]
 	var quivers := [0,0]
+	var moving := 0
 	for c in b.companies:
 		if c.standing>0 and b.corps.can_command(b,c):
 			command[c.team]+=1
@@ -39,6 +40,7 @@ func strength(b) -> Dictionary:
 			shaken[side]+=1
 			continue
 		ready[side]+=1
+		if u.pos.distance_squared_to(u.before)>0.0016: moving+=1
 		var gear := 1.0
 		if u.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]:
 			quivers[side]+=u.ammo
@@ -49,7 +51,7 @@ func strength(b) -> Dictionary:
 		if u.pos.distance_squared_to(Ground.COURT)<15.0*15.0: court[side]+=1
 	for side in 2:
 		power[side]*=0.68+0.32*command[side]/float(b.companies_per_side)
-	return {"effective":power,"ready":ready,"routing":shaken,"command":command,"approach":approach,"court":court,"ammunition":quivers}
+	return {"effective":power,"ready":ready,"routing":shaken,"command":command,"approach":approach,"court":court,"ammunition":quivers,"moving":moving}
 
 func resolve(b) -> String:
 	if b.hero.hp<=0:
@@ -90,7 +92,7 @@ func resolve(b) -> String:
 			decision=("守军失去关前阵地" if side==1 else "我军无法维持攻势")+"，存留战力 %d 对 %d，可指挥部队 %d 支。" % [roundi(friendly),roundi(enemy),s.command[side]]
 			return "守军溃退" if side==1 else "攻势瓦解"
 	var strikes: int=b.hits[0]+b.hits[1]
-	var stationary: bool=strikes==last_hits and is_equal_approx(last_gate,b.gate_hp) and b.ram.distance_squared_to(last_ram)<0.1 and b.capture<=0
+	var stationary: bool=s.moving<=maxi(2,ceili((s.ready[0]+s.ready[1])*0.035)) and strikes==last_hits and is_equal_approx(last_gate,b.gate_hp) and b.ram.distance_squared_to(last_ram)<0.1 and b.capture<=0
 	quiet=quiet+1 if stationary else 0
 	last_hits=strikes
 	last_gate=b.gate_hp
