@@ -46,6 +46,12 @@ Full playable combat scope covers: flat frontal battle; river/bridge/hills/front
 
 These are full-product requirements. **First deepen the existing battle-first prototype** using reuse of its current map, troop, objective and supplies systems, then expand theaters with shared modules and honest status. Artillery and advanced naval technology must be **era/production/industry gated**; do not insert late-era guns into the Tang-like opening. River/boat fighting can start earlier. No new literary story, fabricated character arcs or unlicensed assets. Keep 512v512 real soldiers, good camera/figures/weapon actions, M5 60fps goal and existing proven save/CI behavior.
 
+## 2026-11-12 Owner addendum: historical battles from late Tang to Qing are a mandatory design research corpus
+
+Read `docs/PRODUCT_DECISIONS.md §1J`, `docs/HISTORICAL_BATTLES_TANG_TO_QING_RESEARCH_20261112.md` and `docs/ACCEPTANCE_MATRIX.md §7F-D`. Research actual battles from late Tang/Five Dynasties through Song/Liao/Xia/Jin/Yuan, Ming and Qing (including the late Qing) to select **battlefield geography, tactics, distinct troop types, arms/armor, siege machinery, river/naval and logistics systems** worth converting into reusable, player-observable warfare mechanics. Do not hardcode historical winners or write fixed story plots; the owner will author literature. Distinguish documented history, gameplay transformations and alternate-history mechanics.
+
+**Historical technology correction:** Song already used gunpowder weapons; early fire lances, bombs and primitive guns developed before Ming; Ming–Qing warfare included muskets and cannon. Late Qing industrial naval guns, steam/ironclad fleets are different high-prerequisite technologies, not the first time artillery existed. Stone-throwing siege engines are not gunpowder cannon. Equipment adoption depends on regional invention/diffusion, workshops, stock, skilled troops and logistics, not a binary 'era reached' button. Pick highly reusable scenario templates and deliver actual code/test evidence as phases allow, **without delaying the currently active real 512v512 battle, existing PRs, nine weapons, Mac M5 benchmark and save compatibility**. No unlicensed museum image reproduction, no new unauthorized spending.
+
 ## Implementation
 
 - Preferred provisional stack: **Godot 4 + GDScript**. Use a text-oriented project structure and placeholder geometry initially.
