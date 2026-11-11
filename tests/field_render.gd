@@ -6,7 +6,6 @@ const Ground := preload("res://scripts/field/ground.gd")
 var failures: Array[String]=[]
 var field: Field
 var film := false
-var deadline := 0
 var totals := []
 
 func _initialize() -> void:

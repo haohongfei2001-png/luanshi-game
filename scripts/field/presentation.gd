@@ -4,7 +4,7 @@ const Arms := preload("res://scripts/field/arms.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Figures := preload("res://scripts/field/figures.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
-const Shader := preload("res://scripts/field/figure.gdshader")
+const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
 const FRIEND := Color("3e7271")
 const FOE := Color("a35340")
 const GOLD := Color("c3a45e")
@@ -30,7 +30,7 @@ var shown_fallen := 0
 
 func _material(col: Color, kit: int, animal: bool=false) -> ShaderMaterial:
 	var mat := ShaderMaterial.new()
-	mat.shader = Shader
+	mat.shader = FIGURE_SHADER
 	mat.set_shader_parameter("livery",col)
 	mat.set_shader_parameter("kit",kit)
 	mat.set_shader_parameter("animal",animal)

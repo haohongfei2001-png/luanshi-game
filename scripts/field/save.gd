@@ -67,7 +67,11 @@ static func restore(data: Variant) -> Battle:
 		else: remaining[u.squad]+=1
 	for i in b.companies.size():
 		var c := b.companies[i]
-		if not _apply(c,COMPANY,data.companies[i]) or c.mission<0 or c.mission>=Battle.MISSIONS.size() or c.standing!=remaining[i] or c.delivered>c.serial: return null
+		var row: Variant = data.companies[i]
+		if row is Array and row.size()==COMPANY.size()-1:
+			row=row.duplicate()
+			row.append(false)
+		if not _apply(c,COMPANY,row) or c.mission<0 or c.mission>=Battle.MISSIONS.size() or c.standing!=remaining[i] or c.delivered>c.serial: return null
 	if not data.get("orders") is Array or data.orders.size()>8192 or not data.get("shots") is Array or data.shots.size()>b.roster.size()*8: return null
 	for row in data.orders:
 		var o := Battle.Dispatch.new()
