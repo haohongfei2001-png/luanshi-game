@@ -42,6 +42,14 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 - Keep commits small and purposeful; use branches and pull requests for major changes.
 - Do not represent an untested system as complete. Distinguish: written code, editor-loadable, successfully built, and gameplay-tested.
 
+## Long-term owner vision: compressed millennial wars in one lifetime
+
+The owner added `docs/PRODUCT_DECISIONS.md` §1E and `docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md` (2026-11-12). A strong/surviving **single** protagonist may experience Tang-style provincial wars and collapse, unification, northern rivals, half-country defense or counteroffensive, capital/tax/peasant-revolt/frontier double crises, and even an Opium-War-style industrial naval challenge in one naturally limited life. These are **conditional historical pressure archetypes, not forced outcomes or guaranteed defeat**.
+- No instant dynasty/technology upgrades, forced Li-Zicheng events from tax toggles, magical revival of defeated northern enemies or political continuity between unrelated states without actual faction history.
+- Beijing/Nanjing-style capital risk and tax/army-pay crisis must arise from geographically meaningful logistics/finance/politics.
+- External technology evolves autonomously. An openness/technology-oriented player can gain some historically Qing-era comparative advantages, but cannot cheaply skip industrial and military prerequisites.
+- All comprehensive `ERA-*` tests are **future expansion targets**. **Do not stop current G2/G3 youth-combat-world economy/save work** to implement sea warfare, steam engines or 1000-year scripts now. Preserve source/CI. The user writes the main literary plot.
+
 ## Reference test hardware
 
 - Primary local reference: **MacBook Air with Apple M5** (Apple Silicon, fanless). Do **not** assume a particular RAM configuration; the M5 Air exists in multiple memory and GPU configurations.
