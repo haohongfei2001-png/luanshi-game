@@ -1,5 +1,9 @@
 # Project status / resumable handoff
 
+## 最新验收 · 河关城下
+
+游戏提交 `eae4f9d3f23f` 已通过独立的 Linux 与 macOS 任务。默认每方 512 名普通士兵。常规军令在 33.85 模拟秒攻破城门，46.70 秒守军失去战斗能力。托管 Apple M1 虚拟机已实际用默认 Metal 后端开窗。真实 M5 持续性能待测。[下载、三段录像、逐帧与军需结果](evidence/river-gate-20261112/README.md)。
+
 ## 河关千人战场 · 2026-11-12 云端开发
 
 直接启动默认进入河关战前部署。新军籍包含双方各 512 名普通士兵，另有 32 名军官与 1 名玩家。旧三城战役、训练、v0.6 存档与此前的工程分支仍可单独进入。当前候选、可下载包、录像、逐帧 JSON 与最后一次执行结果集中在 [战场 PR #18](https://github.com/haohongfei2001-png/luanshi-game/pull/18)。
