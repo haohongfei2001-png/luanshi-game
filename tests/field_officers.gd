@@ -5,6 +5,7 @@ const Battle := preload("res://scripts/field/battle.gd")
 const Corps := preload("res://scripts/field/officer_corps.gd")
 const Arms := preload("res://scripts/field/arms.gd")
 const Save := preload("res://scripts/field/save.gd")
+const Campaign := preload("res://scripts/field/campaign.gd")
 
 var failures: Array[String] = []
 
@@ -122,8 +123,8 @@ func _challenge() -> void:
 		var b := _field(Arms.Kit.SWORD, 100)
 		var record = b.corps.companies[b.companies_per_side + 2]
 		var challenger := b.roster[record.primary]
-		_place(b.hero, Vector2(45.5, 11) if behind_wall else Vector2.ZERO)
-		_place(challenger, Vector2(51, 11) if behind_wall else Vector2(8, 0))
+		_place(b.hero, Vector2(45.5, 11) if behind_wall else Vector2(0, -16))
+		_place(challenger, Vector2(51, 11) if behind_wall else Vector2(8, -16))
 		b.start()
 		for i in 15:
 			b.step()
@@ -241,6 +242,7 @@ func _capture_and_death() -> void:
 		check(Save.snapshot(resumed) == Save.snapshot(b), "A restored contested casualty has the same holder and outcome")
 	check(b.corps.is_captive(u.id) and u.hp > 0 and not b.active(u) and b.corps.companies[0].captor == hostile.id, "The unopposed opponent takes a living prisoner after actual contact")
 	check(b.losses == [0, 0] and b.escaped == [0, 0], "Officer capture reconciles outside ordinary losses")
+	_settle_prisoner(b, u.id)
 
 	var fatal := _field()
 	var wounded := fatal.roster[fatal.companies[0].officer_id]
@@ -254,6 +256,29 @@ func _capture_and_death() -> void:
 	fatal.step()
 	check(wounded.state == Battle.State.DEAD and opponent.impacts == hits and not fatal.corps.is_captive(wounded.id), "A second fatal strike kills a wounded officer once")
 	print("FIELD_OFFICER_CUSTODY ", JSON.stringify({"prisoner": u.id, "holder": b.corps.companies[0].captor, "fatal": fatal.corps.summary(fatal).fallen}))
+
+func _settle_prisoner(b: Battle, prisoner: int) -> void:
+	var world := Campaign.new()
+	check(world.bind(b), "Bind the running battle with a living prisoner to the campaign")
+	var previous: int = world._state.ledger.prisoners
+	var foe := b.roster[b.companies[1].officer_id]
+	_place(b.hero, Vector2(13, -19))
+	_place(foe, Vector2(15, -19))
+	b.input_state(Vector2.ZERO, Vector2.RIGHT)
+	for i in 420:
+		if b.result != "":
+			break
+		b.step()
+	check(b.result == "主将阵亡" and b.losses[0] < b.side_size, "The opposing officer defeats an exposed hero while allied troops still survive")
+	var receipt := world.settle()
+	check(not receipt.is_empty(), "Settle the encounter into the existing world")
+	if receipt.is_empty():
+		return
+	check(prisoner in receipt.living_ids[0] and prisoner in receipt.captured_officers[0] and prisoner not in receipt.dead_ids[0] and prisoner not in receipt.escaped_ids[0], "The physically seized character is a living captive in the world receipt")
+	var taken: int = receipt.captured_officers[0].size() + receipt.captured_officers[1].size()
+	check(world._state.ledger.prisoners == previous + taken and world.audit().is_empty() and world.audit_quivers(), "World soldiers, captives, weapons and missiles reconcile")
+	check(world.settle() == receipt and world._state.ledger.prisoners == previous + taken, "Repeating settlement does not duplicate any captured person or gear")
+	print("FIELD_OFFICER_WORLD ", JSON.stringify({"outcome": b.result, "prisoners": receipt.captured_officers, "ordinary_dead": b.losses, "ticks": b.tick}))
 
 func _old_field() -> void:
 	var historical := Battle.new()
