@@ -32,6 +32,8 @@
 
 开发时由先锋/小将和已有双方高级将领使用较好动作/决策，小兵仍可低成本 FSM，保证 512v512 真实战斗、真实损失/补给、镜头连续性、Codex 提交/CI与 Mac M5 60fps目标，不虚报进度。
 
+**新增独立开发任务：[#20 多战场战术、先锋/小将与海陆战争](https://github.com/haohongfei2001-png/luanshi-game/issues/20)。** 与 [#19 双方强将及胜负因果](https://github.com/haohongfei2001-png/luanshi-game/issues/19) 配合，在既有千人战场/九兵器/主将体系基础上阶段实现，避免与当前 PR #18 同时写同一文件；阶段状态和专项证据在 Issue #20 追踪。
+
 ## 今夜四项任务
 
 | 顺序 | GitHub Issue | 真正要交付的东西 | 并行规则 |
