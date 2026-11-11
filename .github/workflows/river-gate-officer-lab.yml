@@ -1,0 +1,37 @@
+name: River gate officer encounter
+on:
+  push:
+    branches: [codex/river-gate-officer-lab]
+permissions:
+  contents: read
+jobs:
+  encounter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the verified Godot runtime
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+      - name: Replay bilateral officer encounters in Godot
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --version
+          godot --headless --path . --editor --import > artifacts/officer-import.log 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/officer-import.log; then exit 1; fi
+          timeout 90s godot --headless --path . --script res://tests/field_officers.gd 2>&1 | tee artifacts/officer-encounters.log
+          grep -q '^FIELD_OFFICERS_PASS' artifacts/officer-encounters.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/officer-encounters.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: officer-encounter-log
+          path: artifacts/officer-*.log
