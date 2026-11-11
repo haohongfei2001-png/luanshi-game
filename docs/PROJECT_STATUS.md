@@ -1,5 +1,9 @@
 # Project status / resumable handoff
 
+## 河关实际交付 · 2026-11-12
+
+[河关第二轮可玩候选、带声录像、安装包和完整数据](evidence/river-gate-round-two/PLAYTEST.md)。 开发 PR #24，源 77ad69619972。真实图形回归包括正常部署与结算、撤离、阵亡、继续原部队、两种车马。托管 Mac 已启动已导出的同一包。真实 M5 Air 20 分钟 / 60 FPS：NOT_RUN。以下较早阶段记录保留。
+
 ## 河关千人战场 · 2026-11-12 云端开发
 
 直接启动默认进入河关战前部署。新军籍包含双方各 512 名普通士兵，另有 32 名军官与 1 名玩家。旧三城战役、训练、v0.6 存档与此前的工程分支仍可单独进入。当前候选、可下载包、录像、逐帧 JSON 与最后一次执行结果集中在 [战场 PR #18](https://github.com/haohongfei2001-png/luanshi-game/pull/18)。
