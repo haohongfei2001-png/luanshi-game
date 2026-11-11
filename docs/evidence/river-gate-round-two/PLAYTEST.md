@@ -40,7 +40,22 @@ Ubuntu 24.04，Godot 4.6.3，llvmpipe (LLVM 20.1.2, 256 bits)，1280×800，缩�
 | default-metal-2 | mobile | 24.00 秒 | 57.11 | 36.09 / 56.47 ms | 335 MiB | 1246 |
 | compat-2 | gl_compatibility | 6.26 秒 | 19.18 | 86.03 / 111.73 ms | 309 MiB | 806 |
 
-设备标识：Apple M1 (Virtual) / Apple Paravirtual device (Apple5)，1000×600；默认 Metal 巡场各 4 秒窗口的命中与帧数在 measured.json。**真实 MacBook Air M5、持续至少 20 分钟：NOT_RUN。** 云端没有使用用户电脑。
+以上视口列为程序报告的窗口尺寸。设备标识：Apple M1 (Virtual) / Apple Paravirtual device (Apple5)，1000×600；默认 Metal 巡场各 4 秒窗口的命中与帧数在 measured.json。**真实 MacBook Air M5、持续至少 20 分钟：NOT_RUN。** 云端没有使用用户电脑。
+
+## 同一安装包的三档画质对照
+
+[单机四次巡场](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43112250498)，使用同一个已校验的候选包。每次在真实伤害开始后采样约 24 秒，每四秒记录命中、帧数和可见人数。顺序为清晰 A → 均衡 → 性能 → 清晰 B；这是另一台托管 M1 虚拟机，不能将其结果与前一台主机混为一组。
+
+| 画质 | 窗口 / 内部尺寸估计 | FPS | P95 / P99 | 峰值 RSS | 命中 |
+|---|---|---:|---:|---:|---:|
+| 清晰 A | 1000×600 / 720×450 | 136.7 | 18.2 / 27.2 ms | 384 MiB | 1252 |
+| 均衡 | 1000×600 / 612×383 | 96.8 | 25.6 / 39.1 ms | 335 MiB | 1247 |
+| 性能 | 1000×600 / 504×315 | 143.2 | 15.6 / 25.1 ms | 336 MiB | 1248 |
+| 清晰 B | 1000×600 / 720×450 | 133.8 | 17.3 / 25.5 ms | 336 MiB | 1252 |
+
+实际缩放和阴影由导出游戏的分段日志核对。内部尺寸是渲染纹理尺寸乘缩放所得，非桌面分辨率，也不是系统 GPU 计数器。性能档的 P95 较好，但仍有超过 16.7 ms 的帧；均衡档在本样本更慢，不能断言降低一个档位总会变快。两台虚拟 M1 的清晰档结果明显不同。原生 Mac 未提供 GPU 独立计时，不能把缺失值当作零。
+
+[比较程序](https://github.com/haohongfei2001-png/luanshi-game/blob/192eb0ba523c52a73c2ce9efbefae888bb732c39/tools/measure-field-presets.py)、[完整帧记录与截图](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43112250498/artifacts/13896702569)、[汇总 JSON](quality-presets.json)。首次补充尝试超过原设进程时间，不记成绩；上述四组是经过启动预热、重新验证的同包结果。
 
 ## 复现与剩余范围
 
