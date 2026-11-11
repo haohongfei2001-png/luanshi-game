@@ -51,6 +51,7 @@ var deployment := VBoxContainer.new()
 var orders := VBoxContainer.new()
 var select_title := Label.new()
 var context := Label.new()
+var composition:=Label.new()
 var details := Button.new()
 var apply_position := Button.new()
 var issue := Button.new()
@@ -131,6 +132,7 @@ func _ready() -> void:
 	_label(stack,select_title,21,Color("efdaa3"))
 	_label(stack,context,14,Color("c1d0c2"))
 	_select(stack,unit,"部队",[])
+	_label(stack,composition,14,Color("e0c891"))
 	stack.add_child(orders)
 	_select(orders,plan,"全军",["自由部署","协同攻门","交替撤离"])
 	plan.item_selected.connect(func(index: int): plan_requested.emit(index))
@@ -236,7 +238,20 @@ func select_company(b: Battle,index: int) -> void:
 	slot.select(c.slot)
 	shape.select(c.shape)
 	front.select(c.front)
-	if not b.started: mission.select(c.mission)
+	if not b.started:
+		mission.select(c.mission)
+		var counts: Array[int]=[0,0,0,0,0,0]
+		var engineers:=0
+		for u in b.roster:
+			if u.team!=0 or u.squad!=index or u.officer or u.hero: continue
+			if u.engineer: engineers+=1
+			if u.mounted: counts[5]+=1
+			elif u.kit==Arms.Kit.SHIELD: counts[1]+=1
+			elif u.kit in [Arms.Kit.SPEAR,Arms.Kit.GLAIVE]: counts[2]+=1
+			elif u.kit==Arms.Kit.BOW: counts[3]+=1
+			elif u.kit==Arms.Kit.CROSSBOW: counts[4]+=1
+			else: counts[0]+=1
+		composition.text="步 %d　盾 %d　长兵 %d　骑 %d\n弓 %d　弩 %d　冲车役 %d（含在编内）" % [counts[0],counts[1],counts[2],counts[5],counts[3],counts[4],engineers]
 	inset.set_muster(b,index)
 
 
@@ -247,6 +262,7 @@ func update_model(b: Battle,paused: bool) -> void:
 		deployment.hide()
 		orders.show()
 		details.text="调整阵位与兵种"
+		composition.visible=phase==0
 		details.visible=phase==0
 		plan.get_parent().visible=phase==0
 		weapon.get_parent().visible=phase==0
@@ -261,7 +277,7 @@ func update_model(b: Battle,paused: bool) -> void:
 		context.text="护送冲车破门，占住内庭六秒。\n点小地图勘察，选部队查看阵位。" if phase==0 else "挑选部队、任务和传达方式。\n命令送达后，军官才会行动。"
 		inset.set_muster(b,maxi(0,unit.selected))
 	objective.text=("河关 · 护送冲车" if not b.started else "城门 %d%%" % ceili(b.gate_hp/260.0*100.0)) if b.gate_hp>0 else "内庭 %.1f / 6" % b.capture
-	own.text="我军 %d / %d　军官 %d　敌军初始 %d" % [b.side_size-b.losses[0]-b.escaped[0],b.side_size,b.companies_per_side,b.side_size]
+	own.text="我军 %d / %d　初编军官 %d　守军初编 %d" % [b.side_size-b.losses[0]-b.escaped[0],b.side_size,b.companies_per_side,b.side_size]
 	condition.text="%s · 生命 %d/%d　" % [Arms.NAMES[b.hero.kit],ceili(b.hero.hp),int(b.hero.max_hp)]
 	if b.hero.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] and not b.legacy_missiles:
 		condition.text+="%s %d　" % ["箭" if b.hero.kit==Arms.Kit.BOW else "弩矢",b.hero.ammo]
@@ -315,7 +331,7 @@ func show_receipt(b: Battle,receipt: Dictionary,world: Dictionary) -> void:
 		if not world.reports.is_empty():
 			var latest: Dictionary=world.reports.back()
 			var subject: String={"hequ":"河关","pingling":"平陵","anping":"安平","relief":"本军"}.get(latest.subject,"沿线")
-			result_text.text+="\n最近送达：%s，观测于第 %d 时。" % [subject,int(latest.observed_at_seconds/3600.0)]
+			result_text.text+="\n最近送达：%s，约 %d 小时前观测。" % [subject,maxi(0,floori((world.time_seconds-latest.observed_at_seconds)/3600.0))]
 	else:
 		var parts:=PackedStringArray()
 		for kit in Arms.NAMES:

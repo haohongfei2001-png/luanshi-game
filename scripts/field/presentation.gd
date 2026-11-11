@@ -114,8 +114,16 @@ func configure(model: Battle) -> void:
 	flag.quad(Vector3(0,3.49,0.012),Vector3(0.9,3.42,0.101),Vector3(0.9,3.36,0.105),Vector3(0,3.43,0.012),CLOTH_COLOR)
 	flag.tri(Vector3(0.91,2.96,0.15),Vector3(1.36,2.77,0.19),Vector3(0.91,2.72,0.18),GOLD)
 	var fm := flag.finish()
-	for team in 2:
-		standards.append(_batch(fm,_material(FRIEND if team==0 else FOE,0),battle.companies_per_side))
+	var garrison:=Builder.new()
+	garrison.rod(Vector3.ZERO,Vector3(0,3.62,0),0.046,0.034,Color("745636"),4)
+	garrison.dye=1
+	garrison.quad(Vector3(0,3.48,0),Vector3(0.89,3.39,0.09),Vector3(0.91,2.89,0.16),Vector3(0,2.82,0),Color.WHITE)
+	garrison.tri(Vector3(0.07,2.84,0),Vector3(0.42,2.49,0.10),Vector3(0.52,2.87,0.09),Color.WHITE)
+	garrison.tri(Vector3(0.49,2.88,0.09),Vector3(0.83,2.56,0.18),Vector3(0.90,2.91,0.16),Color.WHITE)
+	garrison.dye=0
+	garrison.quad(Vector3(0.12,3.14,0.045),Vector3(0.43,3.32,0.075),Vector3(0.72,3.10,0.13),Vector3(0.42,2.96,0.082),CLOTH_COLOR)
+	standards.append(_batch(fm,_material(FRIEND,0),battle.companies_per_side))
+	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.companies_per_side))
 	runners = _batch(near_mesh[Arms.Kit.SWORD],_material(Color("c49b5c"),0),8)
 
 func _key(u: Battle.Unit) -> int:

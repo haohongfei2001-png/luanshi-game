@@ -53,7 +53,14 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	var start:=Time.get_ticks_usec()
 	var previous:=start
 	var panned:=false
-	while b.result=="" and Time.get_ticks_usec()-start<12000000 and (frames.size()<120 or Time.get_ticks_usec()-start<3500000):
+	var tour: bool="--field-window-tour" in OS.get_cmdline_user_args()
+	var minimum_us:=24000000 if tour else 3500000
+	var bins: Array=[]
+	var bin_start:=start
+	var bin_hits:=before_hits
+	var bin_frame:=0
+	var stops:=0
+	while b.result=="" and Time.get_ticks_usec()-start<minimum_us+8500000 and (frames.size()<120 or Time.get_ticks_usec()-start<minimum_us):
 		await RenderingServer.frame_post_draw
 		var now:=Time.get_ticks_usec()
 		frames.append((now-previous)/1000.0)
@@ -61,6 +68,15 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 		if not panned and now-start>=1250000:
 			panned=true
 			scene.pan_to(Vector2(2,-18))
+		if tour and now-bin_start>=4000000:
+			var current_hits: int=b.hits[0]+b.hits[1]
+			bins.append({"wall_seconds":(now-bin_start)/1000000.0,"frames":frames.size()-bin_frame,"hits":current_hits-bin_hits,"tick":b.tick,"visible":scene.view.visible_soldiers})
+			bin_hits=current_hits
+			bin_start=now
+			bin_frame=frames.size()
+			var stops_at: Array[Vector2]=[Vector2(1,18),Vector2(11,2),Vector2(23,-8),Vector2(42,0),Vector2(48,6)]
+			scene.pan_to(stops_at[stops%stops_at.size()])
+			stops+=1
 		var cpu:=RenderingServer.viewport_get_measured_render_time_cpu(rid)
 		var gpu:=RenderingServer.viewport_get_measured_render_time_gpu(rid)
 		if cpu>0: rcpu.append(cpu)
@@ -73,7 +89,7 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	var record:={"platform":OS.get_name(),"processor":OS.get_processor_name(),"adapter":RenderingServer.get_video_adapter_name(),
 		"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"viewport":[tree.root.size.x,tree.root.size.y],
 		"scale":tree.root.scaling_3d_scale,"shadows":true,"per_side":b.side_size,"frames":frames.size(),"seconds":duration,"fps":frames.size()/duration,
-		"p95_ms":sorted[ceili(sorted.size()*0.95)-1],"p99_ms":sorted[ceili(sorted.size()*0.99)-1],
+		"tour":tour,"four_second_windows":bins,"mean_ms":duration*1000.0/frames.size(),"p95_ms":sorted[ceili(sorted.size()*0.95)-1],"p99_ms":sorted[ceili(sorted.size()*0.99)-1],
 		"render_cpu_p95_ms":rcpu[ceili(rcpu.size()*0.95)-1] if not rcpu.is_empty() else null,
 		"render_gpu_p95_ms":rgpu[ceili(rgpu.size()*0.95)-1] if not rgpu.is_empty() else null,
 		"hits_in_window":b.hits[0]+b.hits[1]-before_hits,"static_bytes":bytes if bytes>0 else null,"panned":panned}
@@ -82,4 +98,4 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	var file:=FileAccess.open(path.get_basename()+"-frames.json",FileAccess.WRITE)
 	if not file: return false
 	file.store_string(JSON.stringify(record))
-	return frames.size()>=10 and record.hits_in_window>0 and panned
+	return frames.size()>=10 and record.hits_in_window>0 and panned and (not tour or (duration>=16.0 and bins.size()>=4))

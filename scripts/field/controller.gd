@@ -18,7 +18,7 @@ var audio := Sound.new()
 var camera := Camera3D.new()
 var camera_center := Vector2.ZERO
 var camera_pitch:=deg_to_rad(51.0)
-var camera_yaw:=0.0
+var camera_yaw:=deg_to_rad(-33.0)
 var orbiting:=false
 var follow := true
 var paused := false
@@ -162,7 +162,10 @@ func toggle_pause() -> void:
 
 func _order(company: int,mission: int,channel: int) -> void:
 	if battle.command(company,mission,channel):
-		if battle.started and channel==Battle.Channel.HORN: audio.cue("horn",-10)
+		if battle.started:
+			hud.order_panel.hide()
+			get_viewport().gui_release_focus()
+			if channel==Battle.Channel.HORN: audio.cue("horn",-10)
 	hud.update_model(battle,paused)
 
 func _save() -> void:
@@ -242,6 +245,15 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 				best=u.pos
 	return best
 
+func _input(e: InputEvent) -> void:
+	if not battle or not is_visible_in_tree() or e.is_echo() or battle.result!="": return
+	if e.is_action_pressed("field_orders"):
+		for menu in [hud.weapon,hud.plan,hud.unit,hud.mission,hud.channel,hud.quality,hud.shape,hud.front,hud.slot]:
+			if menu.get_popup().visible: return
+		hud.order_panel.visible=not hud.order_panel.visible
+		get_viewport().gui_release_focus()
+		get_viewport().set_input_as_handled()
+
 func _unhandled_input(e: InputEvent) -> void:
 	if not battle or e.is_echo(): return
 	if e is InputEventMouseButton:
@@ -266,7 +278,6 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("field_deploy"): deploy()
 	elif e.is_action_pressed("pause_battle"): toggle_pause()
 	elif e.is_action_pressed("field_center"): follow=true
-	elif e.is_action_pressed("field_orders") and battle.result=="": hud.order_panel.visible=not hud.order_panel.visible
 	elif e.is_action_pressed("toggle_help"): hud.toggle_help=not hud.toggle_help
 	elif e.is_action_pressed("campaign_quicksave"): _save()
 	elif e.is_action_pressed("campaign_quickload"): _load()
@@ -361,6 +372,7 @@ func _draw_field() -> void:
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	map.update_battle(battle)
+	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="")
 	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,half_extent-Vector2(4,6))
 	view_us+=Time.get_ticks_usec()-t
 

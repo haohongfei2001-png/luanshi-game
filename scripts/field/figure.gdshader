@@ -49,7 +49,22 @@ void vertex() {
 				beat=(-0.9+1.75*back-1.80*cut)*(1.0-smoothstep(0.46,1.0,p));
 				if (kit==8 && joint==4) beat=-beat;
 			}
-			if (((code/32)%2)==1) {
+			bool evading=slot==3 && (kit==1 || kit==5 || kit==8);
+			bool bracing=slot==3 && (kit==2 || kit==3 || kit==6 || kit==7);
+			if (evading) {
+				v.z-=0.16*(1.0-p);
+				swing-=0.55*(1.0-p);
+			} else if (bracing) {
+				float set=state==1 ? smoothstep(0.0,0.9,p) : 1.0-p;
+				swing-=set*(kit==7 && joint==4 ? 1.15 : 0.41);
+				v.z+=set*(joint==4 ? 0.16 : 0.09);
+			} else if (kit==7 && slot==1) {
+				v.z-=beat*(joint==4 ? 0.49 : 0.06);
+				swing-=joint==4 ? 0.58 : 0.23;
+			} else if (kit==2 && (slot==1 || slot==2)) {
+				v.z-=beat*(slot==1 ? 0.40 : 0.52);
+				swing+=0.19*beat;
+			} else if (((code/32)%2)==1) {
 				v.z-=beat*0.42;
 				swing+=beat*0.36;
 			} else if (kit==3 || (kit==0 && slot==2) || kit==7) {
@@ -73,7 +88,7 @@ void vertex() {
 				swing+=beat*(kit==4 ? 0.91 : 0.48);
 			}
 		}
-		if (state==3) {swing-=0.8; v.z+=0.13;}
+		if (state==3) {swing-=kit==7 && joint==4 ? 1.08 : (kit==3 ? 0.28 : 0.68); v.z+=kit==3 ? 0.23 : 0.13;}
 		v=bend_x(v,shoulder,swing);
 	}
 	if (!animal && !seated && (state==1 || state==2)) {
@@ -81,6 +96,11 @@ void vertex() {
 		float weight=smoothstep(0.25,1.18,v.y);
 		v.z-=load*weight*(kit==4 ? 0.14 : 0.075);
 		v.y-=weight*abs(load)*0.032;
+	}
+	if (!animal && slot==3 && (kit==1 || kit==5 || kit==8) && (state==1 || state==2) && !seated) {
+		float dip=state==1 ? smoothstep(0.0,1.0,p) : 1.0-smoothstep(0.25,1.0,p);
+		v.y-=smoothstep(0.1,1.15,v.y)*0.19*dip;
+		v.z-=0.18*dip*smoothstep(0.4,1.3,v.y);
 	}
 	if (state==4) {v=bend_x(v,vec3(0,0.45,0),-0.22*(1.0-p));}
 	if (state==7) {v=bend_x(v,vec3(0,0.11,0),-1.45*smoothstep(0.0,0.90,p));}

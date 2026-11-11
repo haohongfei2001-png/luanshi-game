@@ -132,6 +132,8 @@ func _weapon(kit: int) -> void:
 	print("FIELD_WEAPON_INPUT "+JSON.stringify(row))
 
 func _portrait() -> void:
+	var entering_yaw:=field.camera_yaw
+	field.camera_yaw=0.0 # Fixed light and angle across portrait revisions.
 	var u:=field.battle.roster[0]
 	field.camera.size=5.8
 	field.pan_to(u.pos)
@@ -159,7 +161,7 @@ func _portrait() -> void:
 	print("FIELD_PORTRAIT_JPEG "+Marshalls.raw_to_base64(FileAccess.get_file_as_bytes("res://artifacts/soldier-portrait.jpg")))
 	_check(face_pixels>=7 and hand_pixels>=3,"Modeled skin remains visible on the face and at least one hand")
 	print("FIELD_PORTRAIT "+JSON.stringify({"face_skin_pixels":face_pixels,"hand_skin_pixels":hand_pixels,"crop_px":[rect.size.x,rect.size.y],"zoom":field.camera.size}))
-	field.camera_yaw=0.0
+	field.camera_yaw=entering_yaw
 
 func _warm_pixels(pic: Image,center: Vector2i,radius: int) -> int:
 	var found:=0

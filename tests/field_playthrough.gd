@@ -128,7 +128,7 @@ func _run() -> void:
 	await _frames(3)
 	await _choose(h.channel,Battle.Channel.HORN)
 	await _click(h.issue)
-	_tap(KEY_TAB)
+	_check(not h.order_panel.visible,"Successful order clears the field of view")
 	await _frames(3)
 	var order_tick:=b.tick
 	var aimed:=false

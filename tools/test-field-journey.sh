@@ -24,16 +24,19 @@ info=dict(streams=[v,a],peak_db=peak,mean_db=mean)
 print('JOURNEY_MIX '+json.dumps(info))
 (p/'journey-media.json').write_text(json.dumps(info,indent=2))
 PY
-# Preserve a directly downloadable review copy without relying on an expiring
-# artifact URL. Both streams come from the movie above, at the original frame rate.
-ffmpeg -nostdin -loglevel error -y -i artifacts/river-gate-journey.mp4 -vf scale=640:400 -c:v libx264 -preset fast -crf 27 -maxrate 245k -bufsize 400k -c:a aac -b:a 48k -movflags +faststart "$movie_dir/field-review.mp4"
-python3 - "$movie_dir/field-review.mp4" <<'PY'
-import base64, hashlib, json, pathlib, subprocess, sys
-file=pathlib.Path(sys.argv[1]); data=file.read_bytes()
-probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=codec_name,channels,duration,nb_frames','-of','json',str(file)]))['streams']
-orig=json.loads(pathlib.Path('artifacts/journey-media.json').read_text())['streams']
-assert probe[0]['nb_frames']==orig[0]['nb_frames'] and probe[1]['channels']==2 and abs(float(probe[1]['duration'])-float(orig[1]['duration']))<0.10
-print('JOURNEY_ARCHIVE '+json.dumps(dict(bytes=len(data),sha256=hashlib.sha256(data).hexdigest(),original_sha256=hashlib.sha256(pathlib.Path('artifacts/river-gate-journey.mp4').read_bytes()).hexdigest(),streams=probe)),flush=True)
-wire=base64.b64encode(data).decode()
-for i in range(0,len(wire),32000): print('JOURNEY_PART',i//32000,wire[i:i+32000],flush=True)
+# The small instant-play copy retains every frame and the real master mix.
+python3 - <<'PY'
+import hashlib, json, pathlib, subprocess
+p=pathlib.Path('artifacts')
+orig=json.loads((p/'journey-media.json').read_text())['streams']
+length=float(orig[0]['duration'])
+rate=max(45,min(215,int(8*1180000/length/1000)-48))
+target=p/'river-gate-review.mp4'
+subprocess.run(['ffmpeg','-nostdin','-loglevel','error','-y','-i',str(p/'river-gate-journey.mp4'),'-vf','scale=640:400','-c:v','libx264','-preset','fast','-crf','27','-maxrate',str(rate)+'k','-bufsize',str(rate)+'k','-c:a','aac','-b:a','40k','-movflags','+faststart',str(target)],check=True)
+data=target.read_bytes()
+probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=codec_name,channels,duration,nb_frames','-of','json',str(target)]))['streams']
+assert len(data)<1450000 and probe[0]['nb_frames']==orig[0]['nb_frames'] and probe[1]['channels']==2 and abs(float(probe[1]['duration'])-float(orig[1]['duration']))<0.10
+meta=dict(bytes=len(data),sha256=hashlib.sha256(data).hexdigest(),original_sha256=hashlib.sha256((p/'river-gate-journey.mp4').read_bytes()).hexdigest(),streams=probe)
+print('JOURNEY_ARCHIVE '+json.dumps(meta))
+(p/'journey-archive.json').write_text(json.dumps(meta,indent=2))
 PY

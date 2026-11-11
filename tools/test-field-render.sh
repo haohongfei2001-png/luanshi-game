@@ -5,6 +5,9 @@ mkdir -p artifacts
 touch artifacts/.gdignore
 export LIBGL_ALWAYS_SOFTWARE=1
 GODOT="${GODOT:-godot}"
+timeout 100s xvfb-run -a -s '-screen 0 800x500x24' "$GODOT" --path . --resolution 800x500 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_alternate_outcomes.gd -- --field-size=20 2>&1 | tee artifacts/field-outcomes.log
+grep -q '^FIELD_ENDINGS_PASS' artifacts/field-outcomes.log
+if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-outcomes.log; then exit 1; fi
 for mode in benchmark film; do
   args=(--disable-vsync --resolution 1280x800 --audio-driver Dummy)
   user_args=(--field-size=20)
