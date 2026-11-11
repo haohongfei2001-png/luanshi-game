@@ -24,6 +24,7 @@ class Unit:
 	var officer := false
 	var hero := false
 	var engineer := false
+	var wall_post := false
 	var mounted := false
 	var mount_hp := 0.0
 	var pos := Vector2.ZERO
@@ -74,6 +75,8 @@ class Shot:
 	var pierce := 1
 	var last_hit := -1
 	var arrow := false
+	var over_front := false
+	var launch_height := 0.0
 
 class Dispatch:
 	var squad := 0
@@ -159,6 +162,12 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 					u.kit = Arms.Kit.SHIELD if file % 3 == 0 else Arms.Kit.SPEAR
 				else:
 					u.kit = [Arms.Kit.SWORD, Arms.Kit.DAO, Arms.Kit.STAFF, Arms.Kit.GLAIVE][file % 4]
+				if garrison and c-ceili(companies_per_side*0.58)<2 and j>=24:
+					var sign_z := -1 if c==ceili(companies_per_side*0.58) else 1
+					u.pos=Vector2(Ground.WALL_X+2.05+(j%2)*1.1,sign_z*(14.0+floorf((j-24)/2.0)*1.7))
+					u.before=u.pos
+					u.station=u.pos
+					u.wall_post=true
 				# A small detachment travels with the ram. Its crew are counted soldiers.
 				u.engineer = team == 0 and c == bands / 2 and j >= 12 and j < 16
 				if n == 20 and j >= 16:
@@ -225,6 +234,7 @@ func _assessment(u: Unit) -> void:
 	var correction := Vector2.ZERO
 	var cell := _cell(u.pos)
 	var open := gate_hp <= 0
+	var elevated := u.wall_post and Ground.parapet(u.pos)>2.75
 	for ring in range(ceili(reach/CELL)+1):
 		for y in range(maxi(0,cell.y-ring),mini(ROWS-1,cell.y+ring)+1):
 			for x in range(maxi(0,cell.x-ring),mini(COLS-1,cell.x+ring)+1):
@@ -236,7 +246,7 @@ func _assessment(u: Unit) -> void:
 					var sq := d.length_squared()
 					if i!=u.id and sq<0.96 and sq>0.00001:
 						correction-=d*(0.98/sqrt(sq)-1.0)
-					if other.team!=u.team and (sq<best_sq or (sq==best_sq and i<best)) and Ground.clear_shot(u.pos,other.pos,open):
+					if other.team!=u.team and (sq<best_sq or (sq==best_sq and i<best)) and Ground.clear_shot(u.pos,other.pos,open,elevated or (reach>10 and other.wall_post and Ground.parapet(other.pos)>2.75)):
 						best=i
 						best_sq=sq
 					i=links[i]
@@ -395,6 +405,8 @@ func _release(u: Unit, move: Arms.Move) -> void:
 			shot.pos = u.pos + u.locked * 0.45
 			shot.previous = shot.pos
 			shot.direction = u.locked.rotated((j-1)*0.12 if count == 3 else 0.0)
+			shot.launch_height=Ground.deck_height(u.pos)
+			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
 			shot.speed = 24.0 if shot.arrow else 37.0
 			shot.remaining = move.reach
@@ -489,7 +501,7 @@ func _projectiles() -> void:
 				continue
 			var v := roster[id]
 			var closest := Geometry2D.get_closest_point_to_segment(v.pos, s.pos, next)
-			if closest.distance_squared_to(v.pos) <= 0.36 and Ground.clear_shot(s.pos, closest, gate_hp <= 0):
+			if closest.distance_squared_to(v.pos) <= 0.36 and Ground.clear_shot(s.pos, closest, gate_hp <= 0, s.over_front):
 				_hurt(roster[s.source], v, s.power, s.pos)
 				s.pierce -= 1
 				s.last_hit = id
@@ -499,7 +511,7 @@ func _projectiles() -> void:
 		s.distance += step
 		s.previous = s.pos
 		s.pos = next
-		if s.pierce == 0 or s.remaining <= 0.0001 or not Ground.clear_shot(s.previous, next, gate_hp <= 0):
+		if s.pierce == 0 or s.remaining <= 0.0001 or not Ground.clear_shot(s.previous, next, gate_hp <= 0, s.over_front):
 			shots.remove_at(at)
 
 func _move(u: Unit, offset: Vector2) -> void:
@@ -539,6 +551,8 @@ func _soldier(u: Unit) -> void:
 	var c := companies[u.squad]
 	var fleeing := u.state == State.ROUT
 	var goal := c.aim + (u.station - c.home) * 0.70
+	var at_post := u.wall_post and c.mission==Mission.HOLD and not c.regrouping
+	if at_post: goal=u.station
 	if u.engineer and ram_hp > 0 and gate_hp > 0:
 		goal = ram + Vector2(-0.75, (u.id % 4 - 1.5)*0.75)
 	if fleeing or c.mission == Mission.WITHDRAW:
@@ -556,10 +570,10 @@ func _soldier(u: Unit) -> void:
 			chase = 9.0 if c.mission == Mission.HOLD else 5.0
 		var protecting_ram := u.engineer and ram_hp>0 and gate_hp>0 and c.mission!=Mission.WITHDRAW
 		var may_engage := v!=null and active(v) and (not protecting_ram or v.pos.distance_to(ram)<4.8)
-		if may_engage and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or (c.mission == Mission.PRESS and not c.regrouping)):
+		if may_engage and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or (c.mission == Mission.PRESS and not c.regrouping) or at_post):
 			var distance := u.pos.distance_to(v.pos)
 			var move: Arms.Move = moves[u.kit][0]
-			goal = v.pos
+			goal = u.station if at_post else v.pos
 			if distance <= move.reach and u.fatigue <= 0:
 				u.facing = u.pos.direction_to(v.pos)
 				if distance < 3.4 and u.kit in [Arms.Kit.SHIELD, Arms.Kit.SPEAR] and v.state == State.WINDUP and (tick + u.id) % 4 <= 1:
@@ -667,13 +681,21 @@ func step() -> void:
 		result = "守军已失去战斗能力"
 	elif losses[0]+escaped[0] >= ceili(side_size*0.72):
 		result = "攻势瓦解"
-	elif tick*DT >= 360:
+	elif tick%20==0 and losses[1]+escaped[1]+routed(1)>=ceili(side_size*0.72) and routed(1)+escaped[1]>=ceili(side_size*0.20):
+		result = "守军溃退"
+	elif tick*DT >= 1500:
 		result = "守城成功"
+
+func routed(team: int) -> int:
+	var count := 0
+	for u in roster:
+		if u.team==team and not u.officer and not u.hero and u.state==State.ROUT: count+=1
+	return count
 
 func report() -> Dictionary:
 	return {"seed":rng.seed,"soldiers_per_side":side_size,"officers":companies.size(),
 		"tick":tick,"result":result,"hits":hits.duplicate(),"attacks":attacks,
 		"blocked_hits":blocked_hits,"projectiles":arrow_count,"dead":losses.duplicate(),
-		"escaped":escaped.duplicate(),"dropped_weapons":equipment.duplicate(),
+		"escaped":escaped.duplicate(),"routing":[routed(0),routed(1)],"dropped_weapons":equipment.duplicate(),
 		"gate_hp":gate_hp,"ram_hp":ram_hp,"capture_sec":capture,
 		"orders_delivered":messages_arrived,"orders_lost":messages_lost,"hero_hp":hero.hp}

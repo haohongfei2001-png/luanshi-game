@@ -51,6 +51,7 @@ func _initialize() -> void:
 	_test_grid()
 	_test_resume()
 	_test_player_kits()
+	_test_world_settlement()
 	print("FIELD_SIM_" + ("PASS" if failures.is_empty() else "FAIL") + " " + JSON.stringify(failures))
 	quit(0 if failures.is_empty() else 1)
 
@@ -84,7 +85,8 @@ func _test_grid() -> void:
 		for v in b.roster:
 			if v.team == u.team: continue
 			var d := u.pos.distance_squared_to(v.pos)
-			if d < dsq and Ground.clear_shot(u.pos,v.pos,false):
+			var high := (u.wall_post and Ground.parapet(u.pos)>2.75) or (reach>10 and v.wall_post and Ground.parapet(v.pos)>2.75)
+			if d < dsq and Ground.clear_shot(u.pos,v.pos,false,high):
 				best = v.id
 				dsq = d
 		expected.append(best)
@@ -137,3 +139,45 @@ func _test_player_kits() -> void:
 	mounted.setup(20)
 	check(mounted.mount(1) and mounted.vehicle==1,"Mount real horse near muster")
 	check(mounted.mount(1) and mounted.vehicle==0 and mounted.mount(2) and mounted.vehicle==2,"Dismount and board the separate cart")
+
+func _test_world_settlement() -> void:
+	const FieldWorld := preload("res://scripts/field/campaign.gd")
+	var b:=Battle.new()
+	b.setup(20)
+	var w:=FieldWorld.new()
+	check(w.bind(b) and w.reserve(),"World reserves the actual field roster and issued weapons")
+	b.start()
+	while b.result=="" and b.tick<1200: b.step()
+	check(b.result!="" and w.sync(),"Encounter produces a natural result")
+	var first:=w.settle()
+	check(not first.is_empty() and w.audit().is_empty(),"World settlement conserves soldiers, gear, civilians and food")
+	var snapshot:=w.snapshot()
+	check(snapshot.hour>=1 and snapshot.convoys.size()>0 and snapshot.ledger.food_consumed>0,"Offscreen supply departed and both sides ate on the same clock")
+	check(first==w.settle() and snapshot==w.snapshot(),"Repeated settlement has no second effect")
+	var resumed:=FieldWorld.new()
+	check(resumed.bind(b) and resumed.snapshot()==snapshot and resumed.receipt==first,"Terminal save rebuilds identical clock, inventory, receipt and delayed reports")
+	var siege:=Battle.new()
+	siege.setup(100)
+	var siege_world:=FieldWorld.new()
+	check(siege_world.bind(siege) and siege_world.reserve(),"Second opening has its own military supply")
+	# Isolated siege fixture: leave real crews at the door and real defenders
+	# outside the court. Only ordinary siege ticks can damage the gate or capture.
+	siege.start()
+	siege.ram=Vector2(Ground.WALL_X-2.7,0)
+	var occupants:=0
+	for u in siege.roster:
+		if u.engineer: u.pos=siege.ram+Vector2(0,0.30*(u.id%4))
+		elif u.team==0 and occupants<6:
+			u.pos=Ground.COURT+Vector2(0.4*occupants,0)
+			occupants+=1
+		elif u.team==1: u.pos=Vector2(27,34)+Vector2(u.id%8,floorf((u.id%32)/8.0))
+	siege._rebuild_grid()
+	for i in 1200:
+		siege.tick+=1
+		siege._siege()
+		if siege.capture>=6: break
+	check(siege.gate_hp==0 and siege.capture>=6 and siege.losses==[0,0],"Physical crew opened gate and held the court with defenders still alive")
+	siege.step()
+	check(siege.result=="夺取城内阵地" and siege_world.sync() and not siege_world.settle().is_empty(),"Court control produces a non-annihilation settlement")
+	var world:=siege_world.snapshot()
+	check(world.cities.hequ.owner=="sheng" and world.armies.hequ_remnant.soldiers==siege.side_size+siege.companies_per_side and siege_world.audit().is_empty(),"Living garrison leaves on an actual road with its equipment")

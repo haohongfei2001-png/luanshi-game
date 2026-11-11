@@ -6,7 +6,7 @@ const FILE := "user://river_gate_quick_v1.bin"
 const HEAD := [&"tick",&"started",&"result",&"attacks",&"blocked_hits",&"arrow_count",&"messages_arrived",&"messages_lost",&"notice",&"gate_hp",&"ram_hp",&"ram",&"ram_timer",&"capture",&"hero_move",&"aim",&"vehicle",&"riding_speed",&"riding_heading"]
 const UNIT := [&"pos",&"before",&"facing",&"locked",&"separation",&"target",&"state",&"timer",&"duration",&"move_slot",&"hp",&"morale",&"fatigue",&"flash",&"stride",&"used_second",&"impacts",&"received",&"lost_tick",&"mounted",&"mount_hp"]
 const COMPANY := [&"aim",&"mission",&"standing",&"serial",&"delivered",&"regrouping"]
-const SHOT := [&"team",&"source",&"pos",&"previous",&"direction",&"speed",&"remaining",&"distance",&"power",&"pierce",&"last_hit",&"arrow"]
+const SHOT := [&"team",&"source",&"pos",&"previous",&"direction",&"speed",&"remaining",&"distance",&"power",&"pierce",&"last_hit",&"arrow",&"over_front",&"launch_height"]
 const ORDER := [&"squad",&"serial",&"mission",&"channel",&"pos",&"age",&"delay"]
 
 static func _row(item: Object, fields: Array) -> Array:
@@ -77,7 +77,12 @@ static func restore(data: Variant) -> Battle:
 		var o := Battle.Dispatch.new()
 		if not _apply(o,ORDER,row) or o.squad<0 or o.squad>=b.companies_per_side or o.channel<0 or o.channel>2 or o.mission<0 or o.mission>=Battle.MISSIONS.size(): return null
 		b.orders.append(o)
-	for row in data.shots:
+	for source_row in data.shots:
+		var row: Variant=source_row
+		if row is Array and row.size()==SHOT.size()-2:
+			row=row.duplicate()
+			row.append(false)
+			row.append(0.0)
 		var s := Battle.Shot.new()
 		if not _apply(s,SHOT,row) or s.source<0 or s.source>=b.roster.size() or s.team!=b.roster[s.source].team or s.pierce<1 or s.pierce>2: return null
 		b.shots.append(s)

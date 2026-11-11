@@ -27,7 +27,14 @@ static func crossing(z: float) -> float:
 			best = v
 	return best
 
+static func parapet(p: Vector2) -> float:
+	var z := absf(p.y)
+	if p.x < WALL_X+1.4 or p.x > WALL_X+4.6 or z < 5.5 or z > WALL_Z-1.2: return 0.0
+	return clampf((z-5.5)*0.43,0.0,3.25)
+
 static func deck_height(p: Vector2) -> float:
+	var ledge := parapet(p)
+	if ledge>0: return ledge
 	if absf(p.x - RIVER_X) < 6.6 and absf(p.y - crossing(p.y)) < 3.95:
 		return 0.13
 	return height(p)
@@ -51,15 +58,20 @@ static func blocked(p: Vector2, open: bool) -> bool:
 		return true
 	return p.x >= WALL_X and p.x <= BACK_X and absf(absf(p.y) - WALL_Z) < 1.2
 
+static func can_step(p: Vector2, q: Vector2, open: bool) -> bool:
+	if blocked(q,open): return false
+	if maxf(p.x,q.x)<WALL_X or minf(p.x,q.x)>WALL_X+5.0: return true
+	return absf(parapet(q)-parapet(p))<0.56
+
 static func travel(p: Vector2, offset: Vector2, open: bool) -> Vector2:
 	var dest := (p + offset).clamp(-LIMIT, LIMIT)
-	if not blocked(dest, open):
+	if can_step(p,dest,open):
 		return dest
 	var slide := Vector2(dest.x, p.y)
-	if not blocked(slide, open):
+	if can_step(p,slide,open):
 		return slide
 	slide = Vector2(p.x, dest.y)
-	return p if blocked(slide, open) else slide
+	return slide if can_step(p,slide,open) else p
 
 static func waypoint(p: Vector2, goal: Vector2) -> Vector2:
 	if (p.x < RIVER_X - 5.0 and goal.x > RIVER_X - 5.0) or (p.x > RIVER_X + 5.0 and goal.x < RIVER_X + 5.0):
@@ -71,14 +83,14 @@ static func waypoint(p: Vector2, goal: Vector2) -> Vector2:
 		return Vector2(WALL_X - 4.0, 0)
 	return goal
 
-static func clear_shot(a: Vector2, b: Vector2, open: bool) -> bool:
+static func clear_shot(a: Vector2, b: Vector2, open: bool, over_front: bool=false) -> bool:
 	# Segment vs the actual wall strips; includes diagonal approaches and parapets.
 	if maxf(a.x,b.x) < WALL_X - 1.4:
 		return true
 	for x: float in [WALL_X, BACK_X]:
 		if (a.x < x) != (b.x < x):
 			var z := lerpf(a.y, b.y, (x - a.x) / (b.x - a.x))
-			if absf(z) < WALL_Z + 0.8 and (x == BACK_X or not open or absf(z) >= GATE_HALF):
+			if absf(z) < WALL_Z + 0.8 and (x == BACK_X or (not over_front and (not open or absf(z) >= GATE_HALF))):
 				return false
 	for z: float in [-WALL_Z, WALL_Z]:
 		if (a.y < z) != (b.y < z):
