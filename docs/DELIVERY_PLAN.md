@@ -1,12 +1,23 @@
 # Delivery plan: from prototype to complete small game (v0.1)
 
-This document is the **stage delivery policy** for Dot developing directly on its own cloud computer. Owner authority and autonomy are specified by PRODUCT_DECISIONS.md and DOT_CONTINUOUS_DELIVERY.md, and detailed game intent by PRO_DESIGN_BIBLE.md. Follow AGENTS.md and GAME_VISION.md. This plan does not authorize Codex delegation, paid services, account access beyond existing permissions, or publishing.
+This document contains historical milestone definitions. **Latest Owner override (2026-11-12): Codex is authorized and is now the primary developer.** The present first-release target is `docs/BATTLE_FIRST_V1_OWNER_SPEC_20261112.md`, with B0–B4 in `docs/CODEX_BATTLE_FIRST_EXECUTION_HANDOFF.md`; old 20v20 / story-first gates remain regression/history only. Codex authorization does not grant new spending, personal Mac control, extra accounts, formal release or publishing license changes.
 
 ## Definition of success
 
-Success is **a playable, comprehensible, tested, downloadable single-player game**. A massive world is a future expansion, not a prerequisite to shipping the first complete version.
+Success at the **new Owner-defined combat V1** is an actually playable, clear and compelling macOS war game with a MOBA-scale map, 512v512 true fighting units, weapon/horse/chariot/siege/command/mission systems and real M5 60fps performance evidence. A fully written story and nationwide/modern history are **not** prerequisites to this battle-first V1. Prior low-scope prototypes remain useful regression stages, not the new release acceptance.
 
 Primary target: macOS on Apple Silicon (reference: M5 MacBook Air). iPhone is a possible future port. Do not require the user's Mac as a routine development machine.
+
+## Current active B0–B4 plan — battle first, NO authored story
+
+**The following now overrides the milestone order below, which remains a historical reference.**
+- **B0**: inherit old code/PR #10, repair actual macOS font/CI and keep v0.6 saves; start 512v512 stress test and CPU/GPU profiling immediately.
+- **B1**: mature 3D character with visible face/hands/clothes/weapons; nine distinct weapon movesets and hit timing; horse/chariot foundations; real playable combat feel.
+- **B2**: 512v512 persistent combat soldiers, formations, specialized troop types, interpolation/navigation/animation LOD/instance optimizations without freezing offscreen casualties; 100/250/512 per side are increasing benchmarks.
+- **B3**: one highly polished map with terrain/fortifications, prebattle commander tasks, flag/horn/courier orders, autonomous commanders, siege and non-annihilation objective conditions.
+- **B4**: complete original/legally licensed art and sound, tested native macOS export, ≥20-minute M5 512v512 battle performance aiming 60 FPS, actual gameplay recording and truthful QA. **No fiction plot production until Owner authors it.**
+- All B* criteria are bound to `docs/BATTLE_FIRST_V1_OWNER_SPEC_20261112.md §8` and `docs/ACCEPTANCE_MATRIX.md §7F`; smaller prototypes and CI alone cannot be labeled the final current V1.
+- This game remains ambitious and may require extensive optimization; **do not quietly lower the target**. Record true partial progress and any device blocker and continue the maximum feasible engineering work.
 
 ## Project stages and strict gates
 
@@ -32,13 +43,13 @@ Primary target: macOS on Apple Silicon (reference: M5 MacBook Air). iPhone is a 
 - Deterministic test seeds demonstrate different outcomes caused by altered action/arrival timing.
 - **Pass:** at least three reproducible scenarios with logs: timely relief, late relief, and a different supply/route decision. Inventory and casualty accounting remain consistent.
 
-### Gate 3 — Connected 30–60-minute vertical slice
+### Historical Gate 3 — Connected 30–60-minute vertical slice (deferred authored story; NOT current combat-first acceptance)
 - Recruitment, equipment allocation, supplies, marching, combat, casualties/spoils, post-battle status, return to strategic view.
 - 4–6 meaningful named NPCs, condition-triggered dialogue/portraits, one crisis with at least two meaningfully different outcomes.
 - Protagonist mortality, run-ending epilogue, load a previous save/checkpoint. Aging may initially be simplified if 30–60-minute slice cannot demonstrate a full lifespan.
 - **Pass:** a complete 30–60-minute replayable path from introduction to conclusion; a new user can play without reading developer documentation.
 
-### Gate 4 — First complete small game (shipping candidate)
+### Historical Gate 4 — First complete small game (shipping candidate; superseded by current battle V1)
 - Target a compact **1–3-hour** narrative campaign rather than an enormous open world.
 - Suggested scope ceilings (not mandatory targets): 3–6 strategic settlements; roughly 6–12 named characters; two usable weapon archetypes; a few infantry types; a handful of major battles.
 - Gameplay must include at least one meaningful decision each involving battle tactics, logistics, uncertain intelligence, and a person's interests.
