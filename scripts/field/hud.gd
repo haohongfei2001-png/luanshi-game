@@ -135,7 +135,7 @@ func _ready() -> void:
 	_select(stack,unit,"部队",[])
 	_label(stack,composition,14,Color("e0c891"))
 	stack.add_child(orders)
-	_select(orders,plan,"全军",["自由部署 · 夺关","协同攻门","交替撤离","护送冲车"])
+	_select(orders,plan,"全军",["河关会战 · 全军","协同攻门","交替撤离","护送冲车","平陵巡防 · 按军籍"])
 	plan.item_selected.connect(func(index: int): plan_requested.emit(index))
 	_select(orders,weapon,"兵器",Arms.NAMES)
 	weapon.select(Arms.Kit.SPEAR)
@@ -224,7 +224,7 @@ func bind(b: Battle) -> void:
 	slot.clear()
 	phase=-1
 	career_alive=b.hero.hp>0
-	plan.select(3 if b.objectives.task==Battle.Objectives.Task.ESCORT else 0)
+	plan.select(4 if b.world_patrol else (3 if b.objectives.task==Battle.Objectives.Task.ESCORT else 0))
 	for i in b.companies_per_side:
 		var point:=b.muster_slots[i]
 		var wing: String="北翼" if point.y< -5 else ("南翼" if point.y>5 else "中军")
@@ -280,11 +280,12 @@ func update_model(b: Battle,paused: bool) -> void:
 		select_title.text="河关 · 战前部署" if phase==0 else "临阵 · 传达军令"
 		context.text="挑选部队、任务和传达方式。\n命令送达后，军官才会行动。"
 		inset.set_muster(b,maxi(0,unit.selected))
-	if phase==0: context.text=b.objectives.brief()+"\n点小地图勘察，选部队查看阵位。"
+	if phase==0:
+		context.text=b.objectives.brief()+"\n"+("平陵部队已沿河道到场，按实有军械出阵。" if b.world_patrol else "点小地图勘察，选部队查看阵位。")
 	objective.text=("河关 · 护送冲车" if not b.started else "城门 %d%%" % ceili(b.gate_hp/260.0*100.0)) if b.gate_hp>0 else "内庭 %.1f / 6" % b.capture
 	if b.objectives.task==Battle.Objectives.Task.ESCORT:
 		objective.text="护送冲车 · 撞门 %d/%d" % [b.objectives.strokes,Battle.Objectives.ESCORT_STROKES]
-	own.text="我军 %d / %d　初编军官 %d　守军初编 %d" % [b.side_size-b.losses[0]-b.escaped[0],b.side_size,b.companies_per_side,b.side_size]
+	own.text="我军 %d / %d　初编军官 %d　守军初编 %d" % [b.side_size-b.losses[0]-b.escaped[0],b.side_size,b.companies_per_side,b.ordinary_counts[1]]
 	condition.text="%s · 生命 %d/%d　" % [Arms.NAMES[b.hero.kit],ceili(b.hero.hp),int(b.hero.max_hp)]
 	if b.hero.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] and not b.legacy_missiles:
 		condition.text+="%s %d　" % ["箭" if b.hero.kit==Arms.Kit.BOW else "弩矢",b.hero.ammo]
@@ -351,7 +352,7 @@ func show_receipt(b: Battle,receipt: Dictionary,world: Dictionary) -> void:
 		var parts:=PackedStringArray()
 		for kit in Arms.NAMES:
 			if receipt.spoils.has(kit): parts.append("%s ×%d" % [kit,receipt.spoils[kit]])
-		result_text.text="%s · 河关战报\n普通士兵　　　阵亡　 撤出　 存活（含撤出）\n我军　　　　　 %d　　 %d　　 %d\n守军　　　　　 %d　　 %d　　 %d\n我军军官阵亡 %d　守军军官阵亡 %d\n缴获归库：%s\n战场遗留兵器 %d 件　本军存粮 %d" % [b.result,b.losses[0],b.escaped[0],b.side_size-b.losses[0],b.losses[1],b.escaped[1],b.side_size-b.losses[1],receipt.dead_ids[0].size()-b.losses[0]-(1 if b.hero.hp<=0 else 0),receipt.dead_ids[1].size()-b.losses[1],"、".join(parts) if not parts.is_empty() else "无",receipt.loose_weapons,army.food]
+		result_text.text="%s · 河关战报\n普通士兵　　　阵亡　 撤出　 存活（含撤出）\n我军　　　　　 %d　　 %d　　 %d\n守军　　　　　 %d　　 %d　　 %d\n我军军官阵亡 %d　守军军官阵亡 %d\n缴获归库：%s\n战场遗留兵器 %d 件　本军存粮 %d" % [b.result,b.losses[0],b.escaped[0],b.side_size-b.losses[0],b.losses[1],b.escaped[1],b.ordinary_counts[1]-b.losses[1],receipt.dead_ids[0].size()-b.losses[0]-(1 if b.hero.hp<=0 else 0),receipt.dead_ids[1].size()-b.losses[1],"、".join(parts) if not parts.is_empty() else "无",receipt.loose_weapons,army.food]
 		if receipt.has("officers"):
 			var ranks: Dictionary=receipt.officers
 			result_text.text+="\n接任队正　我军 %d　守军 %d　　救出军官 %d / %d" % [ranks.successions[0],ranks.successions[1],ranks.rescued[0].size(),ranks.rescued[1].size()]

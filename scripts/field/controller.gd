@@ -7,6 +7,8 @@ const Hud := preload("res://scripts/field/hud.gd")
 const Sound := preload("res://scripts/field/sound.gd")
 const Store := preload("res://scripts/field/save.gd")
 const FieldWorld := preload("res://scripts/field/campaign.gd")
+const ArmsForMuster := preload("res://scripts/field/arms.gd")
+const Patrol := preload("res://scripts/field/patrol_muster.gd")
 const Actions := preload("res://scripts/input_actions.gd")
 signal campaign_requested
 var battle: Battle
@@ -29,6 +31,7 @@ var sim_us := 0
 var view_us := 0
 var max_step_us := 0
 var selections := 512
+var opposing_selection := -1
 var last_sound_tick := -20
 var last_shot_tick := -20
 var frame_log: RefCounted
@@ -54,6 +57,12 @@ func _ready() -> void:
 	hud.campaign.connect(func(): campaign_requested.emit())
 	hud.plan_requested.connect(func(style: int):
 		if battle.started: return
+		if style==4:
+			patrol_muster()
+			return
+		if battle.world_patrol and style==0:
+			new_muster(512)
+			return
 		battle.objectives.task=Battle.Objectives.Task.ESCORT if style==3 else Battle.Objectives.Task.COURT
 		if style==0:
 			hud.update_model(battle,paused)
@@ -86,7 +95,9 @@ func _ready() -> void:
 	hud.back_report.connect(func():
 		battle.at_camp=false
 		_refresh_hud())
-	hud.retry.connect(func(): new_muster(selections))
+	hud.retry.connect(func():
+		if battle.world_patrol: patrol_muster()
+		else: new_muster(selections,opposing_selection))
 	hud.weapon_changed.connect(func(i: int):
 		battle.equip_hero(i))
 	hud.order_requested.connect(_order)
@@ -103,9 +114,25 @@ func _ready() -> void:
 		frame_log = preload("res://scripts/field/frame_log.gd").new()
 		frame_log.open(get_viewport())
 
-func new_muster(count: int) -> void:
+func new_muster(count: int,defenders: int=-1) -> void:
 	var fresh := Battle.new()
-	fresh.setup(count)
+	fresh.setup(count,Battle.SEED,ArmsForMuster.Kit.SPEAR,true,true,defenders)
+	_adopt(fresh)
+	paused=false
+	hud.order_panel.show()
+
+func patrol_muster() -> void:
+	var world:=FieldWorld.new()
+	if not Patrol.arrive(world,Battle.SEED): return
+	var manifest:=world.snapshot()
+	var relief: Dictionary=manifest.armies.relief
+	var garrison: Dictionary=manifest.cities.hequ
+	var own:=Patrol.ordinary_for(relief.soldiers,relief.weapons,true)
+	var opposing:=Patrol.ordinary_for(garrison.soldiers,garrison.weapons)
+	if mini(own,opposing)<=0: return
+	var fresh:=Battle.new()
+	fresh.setup(own,Battle.SEED,ArmsForMuster.Kit.SPEAR,true,true,opposing)
+	fresh.world_patrol=true
 	_adopt(fresh)
 	paused=false
 	hud.order_panel.show()
@@ -120,6 +147,7 @@ func _adopt(fresh: Battle) -> void:
 		push_error("Field roster does not match opening inventory")
 		return
 	selections=battle.side_size
+	opposing_selection=battle.ordinary_counts[1]
 	view=Figures.new()
 	add_child(view)
 	view.configure(battle)

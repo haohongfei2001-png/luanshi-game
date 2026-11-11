@@ -15,6 +15,7 @@ var last_hits := 0
 var last_gate := 260.0
 var last_ram := Vector2(-9,1)
 var decision := ""
+var garrison_retiring := false
 
 func brief() -> String:
 	if task==Task.ESCORT:
@@ -50,7 +51,7 @@ func strength(b) -> Dictionary:
 		if u.pos.distance_squared_to(Ground.GATE)<19.0*19.0: approach[side]+=1
 		if u.pos.distance_squared_to(Ground.COURT)<15.0*15.0: court[side]+=1
 	for side in 2:
-		power[side]*=0.68+0.32*command[side]/float(b.companies_per_side)
+		power[side]*=0.68+0.32*command[side]/float(b.command_counts[side])
 	return {"effective":power,"ready":ready,"routing":shaken,"command":command,"approach":approach,"court":court,"ammunition":quivers,"moving":moving}
 
 func resolve(b) -> String:
@@ -80,15 +81,24 @@ func resolve(b) -> String:
 		var friendly: float=s.effective[side]
 		var enemy: float=s.effective[other]
 		# A held gate and a formed garrison can absorb a defeat on the outer field.
-		var fortified: bool=side==1 and b.gate_hp>0 and s.court[1]>=maxi(2,ceili(b.side_size*0.035))
-		var contested: bool=s.approach[other]+s.court[other]>=maxi(2,ceili(b.side_size*0.025))
-		var collapse: bool=enemy>maxf(1,friendly*1.72) and (friendly<b.side_size*0.23 or s.routing[side]>s.ready[side]*0.55)
-		var pressure: bool=contested or s.ready[side]<=maxi(1,ceili(b.side_size*0.08)) or s.routing[side]>s.ready[side]
+		var fortified: bool=side==1 and b.gate_hp>0 and s.court[1]>=maxi(2,ceili(b.ordinary_counts[1]*0.035))
+		var contested: bool=s.approach[other]+s.court[other]>=maxi(2,ceili(b.ordinary_counts[other]*0.025))
+		var collapse: bool=enemy>maxf(1,friendly*1.72) and (friendly<b.ordinary_counts[side]*0.23 or s.routing[side]>s.ready[side]*0.55)
+		var pressure: bool=contested or s.ready[side]<=maxi(1,ceili(b.ordinary_counts[side]*0.08)) or s.routing[side]>s.ready[side]
 		if collapse and pressure and not fortified:
-			broken[side]+=1
+			broken[side]=mini(8,broken[side]+1)
 		else:
 			broken[side]=maxi(0,broken[side]-2)
 		if broken[side]>=8:
+			if side==1 and b.gate_hp<=0 and task==Task.COURT:
+				if not garrison_retiring:
+					garrison_retiring=true
+					# Outer-line collapse triggers a physical withdrawal. The attackers
+					# must still take the court before the city changes hands.
+					for company in b.companies:
+						if company.team==1 and (company.standing*2<company.initial or company.home.x<Ground.WALL_X or not b.corps.can_command(b,company)):
+							company.mission=b.Mission.WITHDRAW
+				continue
 			decision=("守军失去关前阵地" if side==1 else "我军无法维持攻势")+"，存留战力 %d 对 %d，可指挥部队 %d 支。" % [roundi(friendly),roundi(enemy),s.command[side]]
 			return "守军溃退" if side==1 else "攻势瓦解"
 	var strikes: int=b.hits[0]+b.hits[1]
@@ -106,7 +116,7 @@ func resolve(b) -> String:
 	return ""
 
 func snapshot() -> Dictionary:
-	return {"enabled":enabled,"task":task,"strokes":strokes,"broken":broken.duplicate(),"quiet":quiet,"last_hits":last_hits,"last_gate":last_gate,"last_ram":last_ram,"decision":decision}
+	return {"enabled":enabled,"task":task,"strokes":strokes,"broken":broken.duplicate(),"quiet":quiet,"last_hits":last_hits,"last_gate":last_gate,"last_ram":last_ram,"decision":decision,"garrison_retiring":garrison_retiring}
 
 func restore(v: Variant,tick: int) -> bool:
 	if not v is Dictionary or not v.get("enabled") is bool or v.get("task",-1) not in [Task.COURT,Task.ESCORT]: return false
@@ -119,5 +129,7 @@ func restore(v: Variant,tick: int) -> bool:
 	if not v.get("last_ram") is Vector2 or not v.last_ram.is_finite() or not v.get("decision") is String or v.decision.length()>160: return false
 	if v.strokes>tick or v.quiet>tick: return false
 	for key in ["enabled","task","strokes","quiet","last_hits","last_gate","last_ram","decision"]: set(key,v[key])
+	if not v.get("garrison_retiring",false) is bool: return false
+	garrison_retiring=v.get("garrison_retiring",false)
 	broken=v.broken.duplicate()
 	return true

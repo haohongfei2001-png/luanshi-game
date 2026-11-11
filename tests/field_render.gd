@@ -202,15 +202,16 @@ func _paired_detail() -> void:
 	field.follow=false
 	field.camera.size=28
 	field.pan_to(Vector2(1,-18))
-	var samples: Array=[[],[],[]]
-	var triangles := [0,0,0]
+	var samples: Array=[[],[],[],[]]
+	var triangles := [0,0,0,0]
 	var visible := -1
 	for frame in 12:
 		field.battle.step()
-		for half in 3:
-			var ref: int=(frame+half)%3
+		for half in 4:
+			var ref: int=(frame+half)%4
 			field.view.reference_detail=ref==1
 			field.view.reference_two_lods=ref==2
+			field.view.reference_officer_detail=ref in [1,2,3]
 			await RenderingServer.frame_post_draw
 			var before:=Time.get_ticks_usec()
 			await RenderingServer.frame_post_draw
@@ -222,10 +223,11 @@ func _paired_detail() -> void:
 	for series in samples: series.sort()
 	var pair: Dictionary={"poses":10,"visible_soldiers_last":visible,"per_side":field.battle.side_size,
 		"optimized_median_render_ms":samples[0][5],"full_detail_median_render_ms":samples[1][5],
-		"optimized_primitives":triangles[0],"full_detail_primitives":triangles[1],"previous_two_lods_median_ms":samples[2][5],"previous_two_lods_primitives":triangles[2]}
+		"optimized_primitives":triangles[0],"full_detail_primitives":triangles[1],"previous_two_lods_median_ms":samples[2][5],"previous_two_lods_primitives":triangles[2],"previous_officer_detail_ms":samples[3][5],"previous_officer_detail_primitives":triangles[3]}
 	print("FIELD_PAIRED_LOD "+JSON.stringify(pair))
 	var file:=FileAccess.open("res://artifacts/field-lod-paired.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(pair,"  "))
 	field.view.reference_detail=false
 	field.view.reference_two_lods=false
+	field.view.reference_officer_detail=false
 	field.set_physics_process(true)

@@ -87,7 +87,15 @@ func _weapon(kit: int) -> void:
 	var b:=field.battle
 	_key(KEY_ENTER,true); _key(KEY_ENTER,false)
 	_check(b.started and b.hero.kit==kit,"Deploy selected kit "+Arms.NAMES[kit])
-	var enemy:=b.roster[b.side_size]
+	# Stage a shield infantryman from the same roster who can engage locally.
+	# A bodyguard deliberately returns to his commander instead of holding a duel.
+	var enemy: Battle.Unit
+	for unit in b.roster:
+		if unit.team==1 and unit.kit==Arms.Kit.SHIELD and not unit.officer and b.corps.title_of(b,unit)=="":
+			enemy=unit
+			break
+	_check(enemy!=null,"A shield infantryman is available from the defended formation")
+	if enemy==null: return
 	b.hero.pos=Vector2(14,-46); b.hero.before=b.hero.pos
 	enemy.pos=b.hero.pos+Vector2(3.8 if kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] else 1.36,0)
 	enemy.before=enemy.pos

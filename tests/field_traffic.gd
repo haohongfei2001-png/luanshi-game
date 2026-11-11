@@ -24,7 +24,7 @@ func _initialize() -> void:
 			"every_ticks": PERIOD, "overlap_m": OVERLAP, "before": old, "after": current}))
 	check(old.samples == current.samples and current.samples == 53, "Identical congestion observation window")
 	check(current.hull_occupant_samples < old.hull_occupant_samples, "Fewer living bodies overlapping the wooden chassis")
-	check(current.overlapping_person_samples < old.overlapping_person_samples, "Fewer close overlaps in the ram, gate and bridge areas")
+	check(current.peak_3m_square < old.peak_3m_square, "Smaller bulk concentration in a three-metre patch; nearby fighting pairs remain allowed")
 	for row: Dictionary in [old, current]:
 		check(row.ordinary == [512, 512], "Both samples retain ordinary soldier identities")
 		check(row.hits[0] > 0 and row.hits[1] > 0 and row.dead[0] > 0 and row.dead[1] > 0, "Attacker and defender exchange real damage")
@@ -132,7 +132,7 @@ func _siege(enabled: bool) -> Dictionary:
 		elif i in [0, 4]: mission = Battle.Mission.FLANK
 		check(b.command(i, mission, Battle.Channel.FLAG), "Identical muster task in each replay")
 	var row := {"samples": 0, "hull_occupant_samples": 0, "overlapping_person_samples": 0, "crowded_pairs": 0,
-			"peak_3m_square": 0, "bridge_file_metres": [], "bridge_crossers": 0, "gate_crossers": 0,
+			"peak_3m_square": 0, "peak_half_metre_cell": 0, "peak_same_coordinate": 0, "bridge_file_metres": [], "bridge_crossers": 0, "gate_crossers": 0,
 			"low_motion_passage_samples": 0, "breach": -1, "gate_contact": -1, "ram_strikes": 0,
 			"ram_farthest_x": b.ram.x, "wall_defenders": 0, "ordinary": [0, 0]}
 	for u in b.roster:
@@ -140,15 +140,21 @@ func _siege(enabled: bool) -> Dictionary:
 			row.ordinary[u.team] += 1
 			if u.team == 1 and u.station.x > Ground.WALL_X:
 				row.wall_defenders += 1
-	var post_breach := {"samples": 0, "overlapping_person_samples": 0, "hull_occupant_samples": 0, "crowded_pairs": 0, "peak_3m_square": 0, "low_motion_passage_samples": 0, "gate_crossers": 0}
+	var post_breach := {"samples": 0, "overlapping_person_samples": 0, "hull_occupant_samples": 0, "crowded_pairs": 0, "peak_3m_square": 0, "peak_half_metre_cell": 0, "peak_same_coordinate": 0, "low_motion_passage_samples": 0, "gate_crossers": 0}
 	var service_log := []
+	var escort_spread := []
+	var sim_us := PackedInt64Array()
 	var bridge_users := {}
 	var gate_users := {}
 	var bridge_files := {}
 	b.start()
 	for t in 3600:
 		var timer_before := b.ram_timer
+		var start := Time.get_ticks_usec()
 		b.step()
+		var step_cost := Time.get_ticks_usec() - start
+		if b.tick >= FIRST_SAMPLE and b.tick <= LAST_SAMPLE: sim_us.append(step_cost)
+		if b.tick in [200, 400, 600]: escort_spread.append(_escort_spread(b))
 		if b.tick % 200 == 0:
 			var crew := []
 			var close_attackers := 0
@@ -177,6 +183,15 @@ func _siege(enabled: bool) -> Dictionary:
 				_sample(b, post_breach, true)
 				if elapsed == 120: post_breach.gate_crossers = gate_users.size()
 		if not b.result.is_empty(): break
+	sim_us.sort()
+	if not sim_us.is_empty():
+		var timings := {}
+		for p: int in [50, 95, 99]:
+			var index := ceili(sim_us.size() * p / 100.0) - 1
+			timings["p%d" % p] = sim_us[index] / 1000.0
+		timings.samples = sim_us.size()
+		row.sim_tick_ms = timings
+	row.escort_formation = escort_spread
 	row.service = service_log
 	row.after_breach_6s = post_breach
 	row.bridge_crossers = bridge_users.size()
@@ -187,9 +202,30 @@ func _siege(enabled: bool) -> Dictionary:
 			"ram_hp": b.ram_hp, "gate_hp": b.gate_hp, "dropped_weapons": b.equipment})
 	return row
 
+func _escort_spread(b: Battle) -> Dictionary:
+	# Interdecile frontage/depth of all available ordinary escort soldiers.
+	# An isolated skirmisher or a single horse cannot dominate the measurement.
+	var x := PackedFloat32Array()
+	var z := PackedFloat32Array()
+	for u in b.roster:
+		if u.team != 0 or u.officer or u.hero or not b.active(u) or u.state == Battle.State.ROUT: continue
+		if b.companies[u.squad].mission != Battle.Mission.ESCORT: continue
+		x.append(u.pos.x)
+		z.append(u.pos.y)
+	var row := {"tick": b.tick, "ordinary": x.size(), "depth_m": 0.0, "frontage_m": 0.0}
+	if x.size() >= 2:
+		x.sort()
+		z.sort()
+		var low := floori((x.size() - 1) * 0.10)
+		var high := ceili((x.size() - 1) * 0.90)
+		row.depth_m = snappedf(x[high] - x[low], 0.01)
+		row.frontage_m = snappedf(z[high] - z[low], 0.01)
+	return row
+
 func _sample(b: Battle, row: Dictionary, only_gate: bool = false) -> void:
 	row.samples += 1
 	var close := {}
+	var coordinates := {}
 	var cells := {}
 	var density := {}
 	for u in b.roster:
@@ -204,6 +240,8 @@ func _sample(b: Battle, row: Dictionary, only_gate: bool = false) -> void:
 			row.hull_occupant_samples += 1
 		if (near_bridge or (near_gate and b.gate_hp <= 0)) and u.state == Battle.State.MARCH and u.target < 0 and u.before.distance_squared_to(u.pos) < 0.0001:
 			row.low_motion_passage_samples += 1
+		coordinates[u.pos] = int(coordinates.get(u.pos, 0)) + 1
+		row.peak_same_coordinate = maxi(row.peak_same_coordinate, coordinates[u.pos])
 		var tile := Vector2i((u.pos / 3.0).floor())
 		density[tile] = int(density.get(tile, 0)) + 1
 		row.peak_3m_square = maxi(row.peak_3m_square, density[tile])
@@ -219,4 +257,5 @@ func _sample(b: Battle, row: Dictionary, only_gate: bool = false) -> void:
 						row.crowded_pairs += 1
 		if not cells.has(cell): cells[cell] = []
 		cells[cell].append(u.id)
+		row.peak_half_metre_cell = maxi(row.peak_half_metre_cell, cells[cell].size())
 	row.overlapping_person_samples += close.size()

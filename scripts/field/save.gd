@@ -21,7 +21,7 @@ static func _rows(items: Array, fields: Array) -> Array:
 	return rows
 
 static func snapshot(b: Battle) -> Dictionary:
-	return {"version":4,"ram_crew":b.ram_crew.duplicate(),"reliefs":b.reliefs,"officer_corps":b.corps.snapshot(),"traffic_enabled":b.traffic_enabled,"objectives":b.objectives.snapshot(),"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
+	return {"version":4,"defenders":b.ordinary_counts[1],"world_patrol":b.world_patrol,"ram_crew":b.ram_crew.duplicate(),"reliefs":b.reliefs,"officer_corps":b.corps.snapshot(),"traffic_enabled":b.traffic_enabled,"soft_crowd":b.soft_crowd,"objectives":b.objectives.snapshot(),"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
 		"battle":_row(b,HEAD),"units":_rows(b.roster,UNIT),"companies":_rows(b.companies,COMPANY),
 		"orders":_rows(b.orders,ORDER),"shots":_rows(b.shots,SHOT),
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
@@ -45,14 +45,21 @@ static func _list(data: Dictionary,key: String,count: int) -> bool:
 	return data.get(key) is Array and data[key].size()==count
 
 static func restore(data: Variant) -> Battle:
-	if not data is Dictionary or data.get("version") not in [1,2,3,4] or data.get("side") not in Battle.SCALES: return null
+	if not data is Dictionary or data.get("version") not in [1,2,3,4] or not data.get("side") is int or data.side<=0: return null
+	var opposing: Variant=data.get("defenders",data.side) if data.version==4 else data.side
+	if not opposing is int or opposing<=0 or not data.get("units") is Array: return null
+	if data.side>data.units.size() or opposing>data.units.size() or not _list(data,"units",data.side+opposing+ceili(data.side/32.0)+ceili(opposing/32.0)+1): return null
 	if not data.get("seed") is int or not data.get("rng") is int or not data.get("weapon") is int or data.weapon<0 or data.weapon>8: return null
 	var b := Battle.new()
 	if not data.get("dry_muster",false) is bool: return null
 	var modern: bool=data.version==4
 	if modern and (not data.get("officer_corps") is Dictionary or not data.officer_corps.get("enabled") is bool or not data.get("traffic_enabled") is bool): return null
-	b.setup(data.side,data.seed,data.weapon,data.version>=3 and data.get("dry_muster",true),modern and data.officer_corps.enabled)
+	b.setup(data.side,data.seed,data.weapon,data.version>=3 and data.get("dry_muster",true),modern and data.officer_corps.enabled,opposing)
+	if not data.get("world_patrol",false) is bool: return null
+	b.world_patrol=modern and data.get("world_patrol",false)
 	b.traffic_enabled=modern and data.traffic_enabled
+	if not data.get("soft_crowd",false) is bool: return null
+	b.soft_crowd=modern and data.get("soft_crowd",false)
 	b.objectives.enabled=modern
 	if not data.get("seat_origin",false) is bool: return null
 	b.seat_origin=data.version>=3 and data.get("seat_origin",false)
@@ -158,12 +165,15 @@ static func restore(data: Variant) -> Battle:
 		if not data.ram_crew is PackedInt32Array or data.ram_crew.size()!=4 or not data.get("reliefs") is int or data.reliefs<0 or data.reliefs>b.tick*4: return null
 		var used: Dictionary={}
 		for id in data.ram_crew:
+			if id== -1: continue
 			if id<0 or id>=b.side_size or used.has(id): return null
 			used[id]=true
-		for id in b.ram_crew: b.roster[id].ram_station=-1
+		for id in b.ram_crew:
+			if id>=0: b.roster[id].ram_station=-1
 		b.ram_crew=data.ram_crew.duplicate()
 		b.reliefs=data.reliefs
-		for i in 4: b.roster[b.ram_crew[i]].ram_station=i
+		for i in 4:
+			if b.ram_crew[i]>=0: b.roster[b.ram_crew[i]].ram_station=i
 	if modern and (not b.corps.restore(b,data.officer_corps) or not b.objectives.restore(data.get("objectives"),b.tick)): return null
 	b.hero_cds=data.skill_clocks.duplicate()
 	b.rng.state=data.rng
