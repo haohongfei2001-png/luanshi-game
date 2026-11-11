@@ -25,7 +25,6 @@ var battle_pending := false
 var interaction_blocked := false
 
 func _ready() -> void:
-	preload("res://scripts/youth_ui.gd").apply_font(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var backdrop := ColorRect.new()
 	backdrop.color = Color("111e22")
@@ -130,6 +129,10 @@ func _command(command: String, argument: String = "", amount: int = 0) -> void:
 	refresh()
 
 func set_feedback(message: String) -> void:
+	if world.has_method("youth_view") and world.youth_view().get("enabled", false):
+		feedback.add_theme_font_override("font", narrative_font)
+	else:
+		feedback.remove_theme_font_override("font")
 	feedback.text = message
 	refresh()
 

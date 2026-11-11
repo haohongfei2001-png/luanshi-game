@@ -5,7 +5,7 @@ const Ground := preload("res://scripts/field/ground.gd")
 const FILE := "user://river_gate_quick_v1.bin"
 const HEAD := [&"tick",&"started",&"result",&"attacks",&"blocked_hits",&"arrow_count",&"messages_arrived",&"messages_lost",&"notice",&"gate_hp",&"ram_hp",&"ram",&"ram_timer",&"capture",&"hero_move",&"aim",&"vehicle",&"riding_speed",&"riding_heading"]
 const UNIT := [&"pos",&"before",&"facing",&"locked",&"separation",&"target",&"state",&"timer",&"duration",&"move_slot",&"hp",&"morale",&"fatigue",&"flash",&"stride",&"used_second",&"impacts",&"received",&"lost_tick",&"mounted",&"mount_hp"]
-const COMPANY := [&"aim",&"mission",&"standing",&"serial",&"delivered"]
+const COMPANY := [&"aim",&"mission",&"standing",&"serial",&"delivered",&"regrouping"]
 const SHOT := [&"team",&"source",&"pos",&"previous",&"direction",&"speed",&"remaining",&"distance",&"power",&"pierce",&"last_hit",&"arrow"]
 const ORDER := [&"squad",&"serial",&"mission",&"channel",&"pos",&"age",&"delay"]
 

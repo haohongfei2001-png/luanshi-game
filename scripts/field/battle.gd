@@ -59,6 +59,7 @@ class Company:
 	var standing := 0
 	var serial := 0
 	var delivered := 0
+	var regrouping := false
 
 class Shot:
 	var team := 0
@@ -135,6 +136,12 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 			company.team = team
 			var lane := (float(c % bands) - (bands - 1) * 0.5) * 13.6
 			company.home = Vector2(-sign_x * (5.0 + floorf(float(c) / bands) * 7.2), lane)
+			# Sortie companies meet the attacker on the outer field. The garrison still
+			# physically occupies the walled court when the outer line collapses.
+			var garrison := team == 1 and companies_per_side >= 4 and c >= ceili(companies_per_side*0.58)
+			if garrison:
+				var post := c-ceili(companies_per_side*0.58)
+				company.home = Vector2(55.5 + floorf(post/3.0)*8.4, (post%3-1)*12.0)
 			company.mission = Mission.PRESS if team == 0 else Mission.HOLD
 			company.aim = company.home
 			companies.append(company)
@@ -214,26 +221,32 @@ func _rebuild_grid() -> void:
 func _assessment(u: Unit) -> void:
 	var best := -1
 	var reach := 29.0 if u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 6.8
-	var best_sq := reach * reach
+	var best_sq := reach*reach
 	var correction := Vector2.ZERO
-	var lo := _cell(u.pos - Vector2.ONE * reach)
-	var hi := _cell(u.pos + Vector2.ONE * reach)
-	for y in range(lo.y, hi.y+1):
-		for x in range(lo.x, hi.x+1):
-			var i := grid[y*COLS+x]
-			while i != -1:
-				var other := roster[i]
-				var d := other.pos - u.pos
-				var sq := d.length_squared()
-				if i != u.id and sq < 0.96 and sq > 0.00001:
-					correction -= d * (0.98 / sqrt(sq) - 1.0)
-				if other.team != u.team and active(other) and (sq < best_sq or (sq == best_sq and i < best)):
-					if Ground.clear_shot(u.pos, other.pos, gate_hp <= 0):
-						best = i
-						best_sq = sq
-				i = links[i]
-	u.target = best
-	u.separation = correction.limit_length(1.0) * 3.6
+	var cell := _cell(u.pos)
+	var open := gate_hp <= 0
+	for ring in range(ceili(reach/CELL)+1):
+		for y in range(maxi(0,cell.y-ring),mini(ROWS-1,cell.y+ring)+1):
+			for x in range(maxi(0,cell.x-ring),mini(COLS-1,cell.x+ring)+1):
+				if ring>0 and absi(x-cell.x)!=ring and absi(y-cell.y)!=ring: continue
+				var i := grid[y*COLS+x]
+				while i!=-1:
+					var other := roster[i]
+					var d := other.pos-u.pos
+					var sq := d.length_squared()
+					if i!=u.id and sq<0.96 and sq>0.00001:
+						correction-=d*(0.98/sqrt(sq)-1.0)
+					if other.team!=u.team and (sq<best_sq or (sq==best_sq and i<best)) and Ground.clear_shot(u.pos,other.pos,open):
+						best=i
+						best_sq=sq
+					i=links[i]
+		# Lower bound from the unit to any cell not visited yet.
+		var dx := minf(u.pos.x+124-(cell.x-ring)*CELL,(cell.x+ring+1)*CELL-124-u.pos.x)
+		var dz := minf(u.pos.y+70-(cell.y-ring)*CELL,(cell.y+ring+1)*CELL-70-u.pos.y)
+		var edge := minf(dx,dz)
+		if edge>0.99 and best_sq<edge*edge: break
+	u.target=best
+	u.separation=correction.limit_length(1.0)*3.6
 
 func start() -> void:
 	if not started:
@@ -299,6 +312,8 @@ func _dispatches() -> void:
 func _objective(c: Company) -> Vector2:
 	if not active(roster[c.officer_id]):
 		return c.home
+	if c.regrouping:
+		return Vector2(43.5,clampf(c.home.y,-16,16)) if c.team==1 else Vector2(-36,Ground.crossing(c.home.y))
 	match c.mission:
 		Mission.WITHDRAW: return Vector2(-92 if c.team == 0 else 96, c.home.y)
 		Mission.ESCORT: return ram
@@ -457,7 +472,7 @@ func _hurt(source: Unit, target: Unit, power: float, from: Vector2) -> void:
 	elif not target.hero and not target.officer and target.state != State.ROUT:
 		var c := companies[target.squad]
 		var cohesion := float(c.standing) / c.initial
-		if target.morale + cohesion * 0.30 < 0.58 or (not active(roster[c.officer_id]) and target.hp < target.max_hp * 0.50):
+		if target.morale + cohesion * 0.30 < 0.71 or (not active(roster[c.officer_id]) and target.hp < target.max_hp * 0.50):
 			_set_state(target, State.ROUT, 0)
 		elif damage > target.max_hp * 0.28 and target.state != State.GUARD:
 			_set_state(target, State.STAGGER, 0.17)
@@ -539,7 +554,9 @@ func _soldier(u: Unit) -> void:
 		var chase := 34.0
 		if c.mission in [Mission.HOLD,Mission.RESERVE]:
 			chase = 9.0 if c.mission == Mission.HOLD else 5.0
-		if v != null and active(v) and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or c.mission == Mission.PRESS):
+		var protecting_ram := u.engineer and ram_hp>0 and gate_hp>0 and c.mission!=Mission.WITHDRAW
+		var may_engage := v!=null and active(v) and (not protecting_ram or v.pos.distance_to(ram)<4.8)
+		if may_engage and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or (c.mission == Mission.PRESS and not c.regrouping)):
 			var distance := u.pos.distance_to(v.pos)
 			var move: Arms.Move = moves[u.kit][0]
 			goal = v.pos
@@ -618,11 +635,14 @@ func step() -> void:
 	_dispatches()
 	if tick == 1 or tick % 8 == 0:
 		for c in companies:
+			c.regrouping = active(roster[c.officer_id]) and c.standing*2 < c.initial and c.standing>0 and c.mission in [Mission.PRESS,Mission.HOLD]
 			c.aim = _objective(c)
 	for u in roster:
 		u.before = u.pos
-		if active(u) and not u.hero and u.state != State.ROUT and (tick + u.id) % 5 == 0:
-			_assessment(u)
+		if active(u) and not u.hero and u.state == State.MARCH:
+			var interval := 8 if u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 5
+			if (tick+u.id)%interval==0 or (u.target>=0 and not active(roster[u.target])):
+				_assessment(u)
 	# Alternate initiative for contacts that share a tick.
 	for i in roster.size():
 		var u := roster[i if tick % 2 == 0 else roster.size()-1-i]
@@ -644,7 +664,7 @@ func step() -> void:
 	elif hero.pos.x < -85 and companies[hero.squad].mission == Mission.WITHDRAW and escaped[0] > 0:
 		result = "成功撤离"
 	elif losses[1]+escaped[1] >= ceili(side_size*0.72):
-		result = "守军溃退"
+		result = "守军已失去战斗能力"
 	elif losses[0]+escaped[0] >= ceili(side_size*0.72):
 		result = "攻势瓦解"
 	elif tick*DT >= 360:
