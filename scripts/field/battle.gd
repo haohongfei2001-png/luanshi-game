@@ -516,7 +516,10 @@ func _objective(c: Company) -> Vector2:
 		return Vector2(43.5,clampf(c.home.y,-16,16)) if c.team==1 else Vector2(-36,Ground.crossing(c.home.y))
 	match c.mission:
 		Mission.WITHDRAW: return Vector2(-92 if c.team == 0 else 96, c.home.y)
-		Mission.ESCORT: return ram
+		Mission.ESCORT:
+			if objectives.enabled and objectives.task==Objectives.Task.COURT and gate_hp<=0:
+				return Ground.COURT+Vector2(-0.8,2.2 if c.slot%2==0 else -2.2)
+			return ram
 		Mission.FLANK: return Vector2(38, signf(c.home.y + 0.5) * 29) if gate_hp > 0 else Ground.COURT
 		Mission.HOLD: return c.home
 		Mission.RESERVE: return c.home + Vector2(-9 if c.team == 0 else 9, 0)
@@ -851,6 +854,8 @@ func _soldier(u: Unit) -> void:
 			chase = 9.0 if c.mission == Mission.HOLD else 5.0
 		var protecting_ram := on_ram and ram_hp>0 and (gate_hp>0 or escort_after_breach) and c.mission!=Mission.WITHDRAW
 		var may_engage := v!=null and active(v) and (not protecting_ram or v.pos.distance_to(ram)<4.8)
+		if may_engage and u.team==0 and objectives.garrison_retiring and (v.state==State.ROUT or companies[v.squad].mission==Mission.WITHDRAW):
+			may_engage=u.pos.distance_squared_to(v.pos)<6.25
 		if may_engage and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or (c.mission == Mission.PRESS and not c.regrouping) or at_post):
 			var distance := u.pos.distance_to(v.pos)
 			var move := _basic(u)
@@ -996,6 +1001,7 @@ func step() -> void:
 	if tick == 1 or tick % 8 == 0:
 		for c in companies:
 			c.regrouping = corps.can_command(self,c) and c.standing*2 < c.initial and c.standing>0 and c.mission in [Mission.PRESS,Mission.HOLD]
+			if objectives.garrison_retiring and c.team==0 and c.mission in [Mission.PRESS,Mission.FLANK]: c.regrouping=false
 			c.aim = corps.guide_company(self,c,_objective(c))
 	for u in roster:
 		u.before = u.pos

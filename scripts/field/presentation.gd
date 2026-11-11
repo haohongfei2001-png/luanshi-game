@@ -21,6 +21,7 @@ var contact: Batch
 var contact_for_all:=false
 var reference_detail := false
 var reference_two_lods:=false
+var reference_officer_detail:=false
 var rank_soldiers:=0
 var high_detail_soldiers := 0
 var horse: Batch
@@ -160,7 +161,8 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if u.state == Battle.State.ESCAPED: continue
 		var p := u.before.lerp(u.pos,alpha)
 		if absf(p.x-center.x)>half_extent.x or absf(p.y-center.y)>half_extent.y: continue
-		var base := Ground.unit_point(p)
+		var ground := Ground.unit_point(p)
+		var base := ground
 		var angle := atan2(u.facing.x,u.facing.y)
 		var progress := clampf(1.0-u.timer/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
@@ -177,9 +179,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			if battle.vehicle == 2 and not battle.seat_origin:
 				base -= Vector3(heading.x,0,heading.y)*1.83
 			base.y += 0.83 if battle.vehicle==1 else 0.91
-		var full := reference_detail or u.hero or u.officer or (zoom<17 and p.distance_squared_to(center)<110) or (zoom<36 and p.distance_squared_to(center)<19)
+		var distance_sq:=p.distance_squared_to(center)
+		var full := reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<190))) or (zoom<17 and distance_sq<110) or (zoom<36 and distance_sq<19)
 		var key:=_key(u)
-		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and p.distance_squared_to(center)>170.0)):
+		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and distance_sq>170.0)):
 			key+=60
 			rank_soldiers+=1
 		elif not full:
@@ -187,7 +190,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		elif not u.hero and not u.officer:
 			high_detail_soldiers+=1
 		if not full or contact_for_all:
-			_put(contact,Ground.unit_point(p)+Vector3.UP*0.035,angle,Color(0,0,0,0))
+			_put(contact,ground+Vector3.UP*0.035,angle,Color(0,0,0,0))
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0)
 		if not u.hero and not u.officer:
 			visible_soldiers += 1

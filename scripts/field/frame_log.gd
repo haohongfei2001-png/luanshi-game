@@ -6,6 +6,9 @@ var wall := PackedFloat32Array()
 var gpu := PackedFloat32Array()
 var cpu := PackedFloat32Array()
 var previous := 0
+var input_slot := -1
+var input_stamp := 0
+var input_ms := PackedFloat32Array()
 var first_tick := -1
 var first_hits := 0
 var observed_hits:=0
@@ -28,6 +31,23 @@ func open(viewport: Viewport) -> void:
 		"adapter":RenderingServer.get_video_adapter_name(),"godot":Engine.get_version_info().string,"build":ProjectSettings.get_setting("application/config/version"),
 		"driver":DisplayServer.get_name(),"vsync":DisplayServer.window_get_vsync_mode(),"file":file.get_path().get_file()})
 	print("FIELD_PROFILE_FILE "+name)
+
+func accepted(slot: int,at: int) -> void:
+	if file:
+		input_slot=slot
+		input_stamp=at
+
+func pose_submitted(b) -> void:
+	if input_slot<0: return
+	if b.hero.move_slot==input_slot and b.hero.state in [b.State.WINDUP,b.State.RECOVER,b.State.GUARD]:
+		RenderingServer.frame_post_draw.connect(_drawn.bind(input_slot,input_stamp,b.tick),CONNECT_ONE_SHOT)
+	input_slot=-1
+
+func _drawn(slot: int,stamp: int,tick: int) -> void:
+	var ms: float=(Time.get_ticks_usec()-stamp)/1000.0
+	if input_ms.size()>=256: input_ms.remove_at(0)
+	input_ms.append(ms)
+	_write({"kind":"accepted_action_to_frame_post_draw","slot":slot,"tick":tick,"ms":ms})
 
 func _write(row: Dictionary) -> void:
 	file.store_line(JSON.stringify(row))
@@ -83,7 +103,7 @@ func _stats(values: PackedFloat32Array) -> Variant:
 	sorted.sort()
 	var sum:=0.0
 	for v in sorted: sum+=v
-	return {"samples":sorted.size(),"mean_ms":sum/sorted.size(),"p95_ms":sorted[ceili(sorted.size()*0.95)-1],"p99_ms":sorted[ceili(sorted.size()*0.99)-1]}
+	return {"samples":sorted.size(),"mean_ms":sum/sorted.size(),"p50_ms":sorted[ceili(sorted.size()*0.50)-1],"p95_ms":sorted[ceili(sorted.size()*0.95)-1],"p99_ms":sorted[ceili(sorted.size()*0.99)-1]}
 
 func _flush(scene) -> void:
 	if wall.is_empty(): return
@@ -92,7 +112,7 @@ func _flush(scene) -> void:
 	var target:=vp.get_texture().get_size()
 	var window:=DisplayServer.window_get_size()
 	var memory:=OS.get_static_memory_usage()
-	_write({"kind":"frames","seed":b.rng.seed,"per_side":b.side_size,"start_tick":first_tick,"end_tick":b.tick,
+	_write({"kind":"frames","seed":b.rng.seed,"ordinary_rosters":[b.ordinary_counts[0],b.ordinary_counts[1]],"per_side":b.side_size if b.ordinary_counts[0]==b.ordinary_counts[1] else null,"start_tick":first_tick,"end_tick":b.tick,
 		"engaged_wall_seconds":active_seconds,"viewport":[vp.get_visible_rect().size.x,vp.get_visible_rect().size.y],
 		"window_px":[window.x,window.y],"render_target_px":[target.x,target.y],
 		"estimated_internal_px":[roundi(target.x*vp.scaling_3d_scale),roundi(target.y*vp.scaling_3d_scale)],"internal_scale":vp.scaling_3d_scale,"preset":scene.detail_preset,"shadows":scene.map.sun.shadow_enabled,"shadow_max_m":scene.map.sun.directional_shadow_max_distance,"camera_size":scene.camera.size,"camera_travel":first_camera.distance_to(scene.camera_center),

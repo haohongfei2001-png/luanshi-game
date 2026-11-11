@@ -13,6 +13,8 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install pinned Godot
         run: |
           curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
@@ -23,14 +25,16 @@ jobs:
           mkdir -p artifacts
           touch artifacts/.gdignore
           godot --headless --editor --path . --import
-      - name: Integrated field tests
+      - name: Original pre-v4 save and committed battlefield
         run: |
-          failed=0
-          for name in field_officers field_simulation field_traffic field_mission_cases; do
-            if [[ -e tests/$name.gd ]]; then
-              godot --headless --path . --script tests/$name.gd > "artifacts/$name.log" 2>&1 || failed=1
-              awk 'length($0)<9000' "artifacts/$name.log" | tail -32
-              if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' "artifacts/$name.log"; then failed=1; fi
-            fi
-          done
-          exit "$failed"
+          ./tools/test-field-history.sh
+          godot --headless --path . --script tests/field_simulation.gd | tee artifacts/field-sim.log
+          grep '^FIELD_SIM_PASS' artifacts/field-sim.log
+      - name: Actual graphical weapon input
+        run: |
+          LIBGL_ALWAYS_SOFTWARE=1 timeout 200s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/field_controls.gd -- --field-size=20 > artifacts/inputs.log 2>&1
+          grep -E '^FIELD_WEAPON_INPUT|^FIELD_CONTROLS' artifacts/inputs.log
+      - name: Show failed steps
+        if: failure()
+        run: |
+          awk 'length($0)<1600' artifacts/*.log | tail -65

@@ -126,6 +126,7 @@ func _siege(enabled: bool) -> Dictionary:
 	var b := Battle.new()
 	b.setup(512)
 	b.traffic_enabled = enabled
+	if "soft_crowd" in b: b.set(&"soft_crowd", enabled)
 	for i in b.companies_per_side:
 		var mission := Battle.Mission.PRESS
 		if i in [2, 7]: mission = Battle.Mission.ESCORT
@@ -191,6 +192,8 @@ func _siege(enabled: bool) -> Dictionary:
 			timings["p%d" % p] = sim_us[index] / 1000.0
 		timings.samples = sim_us.size()
 		row.sim_tick_ms = timings
+	row.traffic_lanes = enabled
+	row.soft_crowd = b.get(&"soft_crowd") if "soft_crowd" in b else false
 	row.escort_formation = escort_spread
 	row.service = service_log
 	row.after_breach_6s = post_breach
@@ -207,12 +210,14 @@ func _escort_spread(b: Battle) -> Dictionary:
 	# An isolated skirmisher or a single horse cannot dominate the measurement.
 	var x := PackedFloat32Array()
 	var z := PackedFloat32Array()
+	var occupied := {}
 	for u in b.roster:
 		if u.team != 0 or u.officer or u.hero or not b.active(u) or u.state == Battle.State.ROUT: continue
 		if b.companies[u.squad].mission != Battle.Mission.ESCORT: continue
 		x.append(u.pos.x)
 		z.append(u.pos.y)
-	var row := {"tick": b.tick, "ordinary": x.size(), "depth_m": 0.0, "frontage_m": 0.0}
+		occupied[Vector2i(u.pos.floor())] = true
+	var row := {"tick": b.tick, "ordinary": x.size(), "occupied_1m_cells": occupied.size(), "depth_m": 0.0, "frontage_m": 0.0}
 	if x.size() >= 2:
 		x.sort()
 		z.sort()
