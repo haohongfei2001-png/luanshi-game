@@ -51,7 +51,10 @@ func _initialize() -> void:
 	_test_grid()
 	_test_resume()
 	_test_player_kits()
+	_test_move_windows_and_parapet()
+	_test_cavalry()
 	_test_world_settlement()
+	_test_full_siege()
 	_test_quivers_and_acknowledgments()
 	print("FIELD_SIM_" + ("PASS" if failures.is_empty() else "FAIL") + " " + JSON.stringify(failures))
 	quit(0 if failures.is_empty() else 1)
@@ -211,9 +214,7 @@ func _test_quivers_and_acknowledgments() -> void:
 	old.version=1
 	old.erase("legacy_missiles")
 	old.battle.pop_back()
-	for row in old.units:
-		row.pop_back()
-		row.pop_back()
+	for row in old.units: row.resize(Save.UNIT.find(&"ammo"))
 	var preserved:=Save.restore(old)
 	check(preserved!=null and preserved.legacy_missiles and preserved.arrow_count==initial,"Unmetered historical field retains its original rules")
 	if preserved: check(Save.restore(Save.snapshot(preserved)).legacy_missiles,"Saving again preserves historical behavior")
@@ -254,3 +255,107 @@ func _test_quivers_and_acknowledgments() -> void:
 	check(signal_battle.messages_lost==1 and signal_battle.notice.contains("已发"),"Unseen interception is not reported at once")
 	for i in 280: signal_battle._dispatches()
 	check(signal_battle.notice.contains("超时") and company.mission==Battle.Mission.FLANK,"Late notice exposes the missing reply without hidden enemy positions")
+
+func _test_full_siege() -> void:
+	const FieldWorld:=preload("res://scripts/field/campaign.gd")
+	var b:=Battle.new()
+	b.setup(512)
+	var w:=FieldWorld.new()
+	check(w.bind(b),"Bind full siege to historical world")
+	for i in b.companies_per_side:
+		var mission:=Battle.Mission.PRESS
+		if i in [2,7]: mission=Battle.Mission.ESCORT
+		elif i in [0,4]: mission=Battle.Mission.FLANK
+		check(b.command(i,mission,Battle.Channel.FLAG),"Issue muster task to standing officer")
+	check(w.reserve(),"Reserve the full deployment")
+	b.start()
+	var gate_contact := -1
+	var breach := -1
+	var farthest_ram := b.ram.x
+	for i in 3600:
+		b.step()
+		if b.gate_hp<260 and gate_contact<0: gate_contact=b.tick
+		if b.gate_hp<=0 and breach<0: breach=b.tick
+		farthest_ram=maxf(farthest_ram,b.ram.x)
+		if b.result!="": break
+	check(w.sync() and w.audit_quivers(),"Three-minute siege retains issued combat supplies")
+	if b.result!="": check(not w.settle().is_empty(),"Natural force outcome settles once")
+	var row:=b.report()
+	row.merge({"first_gate_damage_tick":gate_contact,"gate_breach_tick":breach,"farthest_ram_x":farthest_ram,
+		"ordinary_surviving":[b.side_size-b.losses[0],b.side_size-b.losses[1]],"world_receipt":not w.receipt.is_empty()})
+	print("FIELD_NATURAL_SIEGE "+JSON.stringify(row))
+
+func _test_move_windows_and_parapet() -> void:
+	var moves_checked:=0
+	for kit in Arms.NAMES.size():
+		for slot in 4:
+			var b:=Battle.new()
+			b.setup(20,Battle.SEED,kit)
+			b.start()
+			b.hero.pos=Vector2(20,45)
+			var start:=b.hero.pos
+			var move: Arms.Move=b.moves[kit][slot]
+			var target:=b.roster[20]
+			target.pos=start+Vector2(maxf(1.05,move.step+1.05),0)
+			b._rebuild_grid()
+			b.input_state(Vector2.ZERO,target.pos-start)
+			check(b.action(slot) and target.hp==target.max_hp,"Windup precedes contact for %d-%d"%[kit,slot])
+			var held:=false
+			for i in 58:
+				b._state_step(b.hero)
+				held=held or b.hero.state==Battle.State.GUARD
+				b._projectiles()
+			if move.shape in [Arms.Shape.PARRY,Arms.Shape.BRACE]:
+				check(held and target.hp==target.max_hp,"Actual defensive interval")
+			elif move.shape==Arms.Shape.EVADE:
+				check(b.hero.pos.x<start.x-0.9 and target.hp==target.max_hp,"Evasion changes the real position")
+			else:
+				check(target.hp<target.max_hp and b.hero.impacts>0,"Damaging window connects for %d-%d"%[kit,slot])
+			if slot>0: check(b.hero_cds[slot]>0 and not b.action(slot),"Skill cooldown is independent from animation recovery")
+			moves_checked+=1
+	print("FIELD_MOVE_WINDOWS "+str(moves_checked))
+
+	var b:=Battle.new()
+	b.setup(20,Battle.SEED,Arms.Kit.CROSSBOW)
+	b.start()
+	b.hero.pos=Vector2(Ground.WALL_X-5,15)
+	var low:=b.roster[20]
+	var high:=b.roster[21]
+	low.pos=Vector2(Ground.WALL_X+6.0,15)
+	high.pos=Vector2(Ground.WALL_X+3.1,15)
+	b._rebuild_grid()
+	b.input_state(Vector2.ZERO,high.pos-b.hero.pos)
+	check(b.action(1),"Manually aim at a real parapet position")
+	for i in 35:
+		b._state_step(b.hero)
+		b._projectiles()
+	check(high.hp<high.max_hp and low.hp==low.max_hp,"Elevated shot connects with wall defender without hitting a screened ground unit")
+
+func _test_cavalry() -> void:
+	for braced in [false,true]:
+		var b:=Battle.new()
+		b.setup(100)
+		b.start()
+		var horseman: Battle.Unit
+		var defender: Battle.Unit
+		for u in b.roster:
+			if horseman==null and u.team==0 and u.mounted: horseman=u
+			if defender==null and u.team==1 and u.kit==Arms.Kit.SPEAR: defender=u
+		horseman.pos=Vector2(4,48)
+		horseman.fatigue=0.0
+		defender.pos=Vector2(15,48)
+		defender.facing=Vector2.LEFT
+		if braced: b._set_state(defender,Battle.State.GUARD,4.0)
+		b.companies[horseman.squad].aim=defender.pos
+		horseman.target=defender.id
+		var fastest:=0.0
+		for i in 80:
+			b._rebuild_grid()
+			b._state_step(horseman)
+			fastest=maxf(fastest,horseman.charge_speed)
+			if horseman.received>0 or defender.received>0: break
+		check(fastest>=4.5,"A running horse gathers actual momentum")
+		if braced:
+			check(horseman.received>0 and horseman.mount_hp<48 and defender.hp==defender.max_hp,"A facing spear stops the charge and injures its mount")
+		else:
+			check(defender.received>0 and defender.max_hp-defender.hp>25 and horseman.received==0,"Unopposed cavalry lands a stronger moving strike")

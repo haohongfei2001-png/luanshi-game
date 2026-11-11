@@ -5,7 +5,7 @@ const Arms := preload("res://scripts/field/arms.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const FILE := "user://river_gate_quick_v1.bin"
 const HEAD := [&"tick",&"started",&"result",&"attacks",&"blocked_hits",&"arrow_count",&"messages_arrived",&"messages_lost",&"notice",&"gate_hp",&"ram_hp",&"ram",&"ram_timer",&"capture",&"hero_move",&"aim",&"vehicle",&"riding_speed",&"riding_heading",&"messages_refused"]
-const UNIT := [&"pos",&"before",&"facing",&"locked",&"separation",&"target",&"state",&"timer",&"duration",&"move_slot",&"hp",&"morale",&"fatigue",&"flash",&"stride",&"used_second",&"impacts",&"received",&"lost_tick",&"mounted",&"mount_hp",&"ammo",&"stock_strike"]
+const UNIT := [&"pos",&"before",&"facing",&"locked",&"separation",&"target",&"state",&"timer",&"duration",&"move_slot",&"hp",&"morale",&"fatigue",&"flash",&"stride",&"used_second",&"impacts",&"received",&"lost_tick",&"mounted",&"mount_hp",&"ammo",&"stock_strike",&"charge_speed",&"charging_strike"]
 const COMPANY := [&"aim",&"mission",&"standing",&"serial",&"delivered",&"regrouping"]
 const SHOT := [&"team",&"source",&"pos",&"previous",&"direction",&"speed",&"remaining",&"distance",&"power",&"pierce",&"last_hit",&"arrow",&"over_front",&"launch_height"]
 const ORDER := [&"squad",&"serial",&"mission",&"channel",&"pos",&"age",&"delay",&"leg",&"due",&"refused"]
@@ -21,7 +21,7 @@ static func _rows(items: Array, fields: Array) -> Array:
 	return rows
 
 static func snapshot(b: Battle) -> Dictionary:
-	return {"version":2,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,
+	return {"version":2,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
 		"battle":_row(b,HEAD),"units":_rows(b.roster,UNIT),"companies":_rows(b.companies,COMPANY),
 		"orders":_rows(b.orders,ORDER),"shots":_rows(b.shots,SHOT),
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
@@ -49,6 +49,9 @@ static func restore(data: Variant) -> Battle:
 	if not data.get("seed") is int or not data.get("rng") is int or not data.get("weapon") is int or data.weapon<0 or data.weapon>8: return null
 	var b := Battle.new()
 	b.setup(data.side,data.seed,data.weapon)
+	if not data.get("aim_at_wall_post",false) is bool or not data.get("locked_at_wall_post",false) is bool: return null
+	b.locked_at_wall_post=data.get("locked_at_wall_post",false)
+	b.aim_at_wall_post=data.get("aim_at_wall_post",false)
 	var header: Variant=data.get("battle")
 	if data.version==1 and header is Array and header.size()==HEAD.size()-1:
 		header=header.duplicate()
@@ -69,11 +72,14 @@ static func restore(data: Variant) -> Battle:
 	for i in b.roster.size():
 		var u := b.roster[i]
 		var values: Variant=data.units[i]
-		if data.version==1 and values is Array and values.size()==UNIT.size()-2:
+		if data.version==1 and values is Array and values.size()==UNIT.size()-4:
 			values=values.duplicate()
 			values.append(Arms.issue(u.kit))
 			values.append(false)
-		if not _apply(u,UNIT,values) or u.ammo<0 or u.ammo>Arms.issue(u.kit): return null
+		if values is Array and values.size()==UNIT.size()-2:
+			values=values.duplicate()
+			values.append_array([0.0,false])
+		if not _apply(u,UNIT,values) or u.charge_speed<0 or u.charge_speed>12 or u.ammo<0 or u.ammo>Arms.issue(u.kit): return null
 		if u.stock_strike and (u.ammo!=0 or u.kit not in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]): return null
 		spent+=Arms.issue(u.kit)-u.ammo
 		if u.state < 0 or u.state > Battle.State.DEAD or u.move_slot < 0 or u.move_slot > 3 or u.target < -1 or u.target>=b.roster.size(): return null

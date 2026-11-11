@@ -40,6 +40,8 @@ class Unit:
 	var move_slot := 0
 	var ammo := 0
 	var stock_strike := false
+	var charge_speed:=0.0
+	var charging_strike:=false
 	var hp := 62.0
 	var max_hp := 62.0
 	var armor := 0.0
@@ -125,6 +127,8 @@ var ram_timer := 0.0
 var capture := 0.0
 var hero_move := Vector2.ZERO
 var aim := Vector2.RIGHT
+var aim_at_wall_post:=false
+var locked_at_wall_post:=false
 var hero_cds := PackedFloat32Array([0.0,0.0,0.0,0.0])
 # Foot, horse and chariot are separate physical assets. The rider can lose either vehicle.
 var vehicle := 0
@@ -411,6 +415,7 @@ func input_state(walk: Vector2, facing: Vector2) -> void:
 	hero_move = walk.limit_length()
 	if facing.length_squared() > 0.0001:
 		aim = facing.normalized()
+		aim_at_wall_post=Ground.parapet(hero.pos+facing)>2.75
 
 func action(slot: int) -> bool:
 	if slot < 0 or slot > 3 or not started or result != "" or hero_cds[slot] > 0 or hero.state != State.MARCH:
@@ -425,6 +430,9 @@ func action(slot: int) -> bool:
 func _begin(u: Unit, slot: int, direction: Vector2) -> void:
 	var move: Arms.Move = _basic(u) if slot==0 else moves[u.kit][slot]
 	u.stock_strike=move==stock_blow
+	u.charging_strike=u.mounted and u.charge_speed>=4.5 and u.facing.dot(direction)>0.78
+	if u.charging_strike: u.charge_speed=0.0
+	if u.hero: locked_at_wall_post=aim_at_wall_post
 	u.move_slot = slot
 	u.locked = direction if direction.length_squared() > 0.1 else u.facing
 	u.facing = u.locked
@@ -469,7 +477,7 @@ func _release(u: Unit, move: Arms.Move) -> void:
 			shot.previous = shot.pos
 			shot.direction = u.locked.rotated((float(j)-(count-1)*0.5)*0.12)
 			shot.launch_height=Ground.deck_height(u.pos)
-			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
+			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.hero and locked_at_wall_post) or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
 			shot.speed = 24.0 if shot.arrow else 37.0
 			shot.remaining = move.reach
@@ -500,7 +508,13 @@ func _melee(u: Unit, move: Arms.Move) -> void:
 		elif along < offset.length() * cos(move.width):
 			continue
 		if Ground.clear_shot(u.pos, v.pos, gate_hp <= 0):
-			_hurt(u, v, move.power, u.pos)
+			var charging:=u.mounted and u.charging_strike
+			u.charging_strike=false
+			if charging and v.kit==Arms.Kit.SPEAR and v.state in [State.GUARD,State.WINDUP] and v.facing.dot(v.pos.direction_to(u.pos))>0.4:
+				_hurt(v,u,23.0,v.pos)
+				if active(u): _set_state(u,State.STAGGER,0.46)
+				break
+			_hurt(u,v,move.power*(1.48 if charging else 1.0),u.pos)
 			if active(v) and move.shape == Arms.Shape.BASH:
 				_move(v, u.locked * 0.88)
 				_set_state(v, State.STAGGER, 0.30)
@@ -564,7 +578,12 @@ func _projectiles() -> void:
 				continue
 			var v := roster[id]
 			var closest := Geometry2D.get_closest_point_to_segment(v.pos, s.pos, next)
-			if closest.distance_squared_to(v.pos) <= 0.36 and Ground.clear_shot(s.pos, closest, gate_hp <= 0, s.over_front):
+			if closest.distance_squared_to(v.pos)>0.36: continue
+			var raised_target:=Ground.parapet(v.pos)>2.75
+			var launch:=s.pos-s.direction*s.distance
+			if s.over_front and s.launch_height<2.75 and not raised_target and not Ground.clear_shot(launch,v.pos,gate_hp<=0):
+				continue
+			if Ground.clear_shot(s.pos,closest,gate_hp<=0,s.over_front):
 				_hurt(roster[s.source], v, s.power, s.pos)
 				s.pierce -= 1
 				s.last_hit = id
@@ -656,9 +675,15 @@ func _soldier(u: Unit) -> void:
 	var dist := u.pos.distance_to(next)
 	var speed := 5.8 if u.mounted else (4.1 if fleeing else 2.85)
 	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted),dist / DT)
+	var old_heading:=u.facing
 	if vel.length_squared() > 0.08:
 		u.facing = vel.normalized()
+	var old_pos:=u.pos
 	_move(u,(vel+u.separation)*DT)
+	if u.mounted:
+		var actual: float=u.pos.distance_to(old_pos)/DT
+		var aligned:=old_heading.dot(u.facing)>0.87 and not fleeing
+		u.charge_speed=move_toward(u.charge_speed,actual if aligned else 0.0,DT*(5.0 if aligned else 12.0))
 
 func _state_step(u: Unit) -> void:
 	u.timer = maxf(0, u.timer-DT)
@@ -723,6 +748,7 @@ func step() -> void:
 	# Alternate initiative for contacts that share a tick.
 	for i in roster.size():
 		var u := roster[i if tick % 2 == 0 else roster.size()-1-i]
+		if u.mounted and u.state!=State.MARCH: u.charge_speed=move_toward(u.charge_speed,0.0,DT*7.0)
 		u.flash = maxf(0,u.flash-DT)
 		u.fatigue = maxf(0,u.fatigue-DT)
 		if not active(u):
