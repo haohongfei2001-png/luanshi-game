@@ -34,6 +34,8 @@ jobs:
             mode=(--patrol-accounts-only)
             expected=FIELD_PATROL_ACCOUNTS_PASS
           fi
+          export XDG_DATA_HOME="$(mktemp -d)"
+          export LUANSHI_PATROL_ISOLATED_SLOT=1
           timeout 100s godot --headless --path . --script res://tests/field_patrol.gd -- --field-size=20 "${mode[@]}" 2>&1 | tee artifacts/patrol-encounter.log
           grep -q "^$expected" artifacts/patrol-encounter.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/patrol-encounter.log; then exit 1; fi

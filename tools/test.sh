@@ -17,6 +17,9 @@ if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; 
 "$GODOT" --headless --path . --script tests/field_officers.gd 2>&1 | tee artifacts/field-officers.log
 grep -q '^FIELD_OFFICERS_PASS' artifacts/field-officers.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-officers.log; then exit 1; fi
+"$GODOT" --headless --path . --script tests/field_patrol.gd -- --field-size=20 2>&1 | tee artifacts/field-patrol.log
+grep -q '^FIELD_PATROL_PASS' artifacts/field-patrol.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-patrol.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/field_mission_cases.gd 2>&1 | tee artifacts/field-missions.log
 grep -q '^FIELD_MISSIONS_PASS' artifacts/field-missions.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-missions.log; then exit 1; fi
