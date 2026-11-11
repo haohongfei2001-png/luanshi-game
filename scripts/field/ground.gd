@@ -7,6 +7,7 @@ const WALL_X := 48.0
 const BACK_X := 89.0
 const WALL_Z := 23.0
 const GATE_HALF := 4.0
+const POSTERN_HALF := 1.65
 const GATE := Vector2(WALL_X, 0)
 const COURT := Vector2(66, 0)
 const CAMP := Vector2(-83, 0)
@@ -55,7 +56,7 @@ static func blocked(p: Vector2, open: bool) -> bool:
 	if absf(p.x - WALL_X) < 1.4 and absf(p.y) <= WALL_Z + 1.0:
 		return not (open and absf(p.y) < GATE_HALF - 0.3)
 	if absf(p.x - BACK_X) < 1.2 and absf(p.y) <= WALL_Z + 1.0:
-		return true
+		return absf(p.y) >= POSTERN_HALF
 	return p.x >= WALL_X and p.x <= BACK_X and absf(absf(p.y) - WALL_Z) < 1.2
 
 static func can_step(p: Vector2, q: Vector2, open: bool) -> bool:
@@ -83,6 +84,33 @@ static func waypoint(p: Vector2, goal: Vector2) -> Vector2:
 		return Vector2(WALL_X - 4.0, 0)
 	return goal
 
+## Withdrawal uses actual gate openings and the toe of the sloped wall walk.
+## The two side lanes run outside the corner towers.
+static func retreat_waypoint(p: Vector2, goal: Vector2, front_open: bool) -> Vector2:
+	if parapet(p) > 0.0:
+		return Vector2(WALL_X + 3.0, signf(p.y) * 4.7)
+	var eastbound := goal.x > BACK_X
+	var side := -1.0 if goal.y < 0.0 else 1.0
+	var outside_z := side * (WALL_Z + 5.0)
+	var in_fort := p.x > WALL_X - 1.4 and p.x < BACK_X + 1.2 and absf(p.y) < WALL_Z - 1.15
+	if in_fort:
+		if eastbound or not front_open:
+			if absf(p.y) > POSTERN_HALF * 0.65:
+				return Vector2(BACK_X - 3.0, 0)
+			return Vector2(BACK_X + 3.0, 0)
+		if absf(p.y) > GATE_HALF - 1.0:
+			return Vector2(WALL_X + 3.0, 0)
+		return Vector2(WALL_X - 3.0, 0)
+	if eastbound and p.x >= RIVER_X - 5.0 and p.x <= BACK_X + 1.2:
+		if p.x < WALL_X - 1.4 and absf(p.y) < WALL_Z + 3.1:
+			return Vector2(WALL_X - 4.3, outside_z)
+		return Vector2(BACK_X + 3.0, outside_z)
+	if not eastbound and p.x > WALL_X - 2.0:
+		if p.x >= BACK_X + 1.2 and absf(p.y) < WALL_Z + 3.1:
+			return Vector2(BACK_X + 4.3, outside_z)
+		return Vector2(WALL_X - 4.3, outside_z)
+	return waypoint(p, goal)
+
 static func clear_shot(a: Vector2, b: Vector2, open: bool, over_front: bool=false) -> bool:
 	# Segment vs the actual wall strips; includes diagonal approaches and parapets.
 	if maxf(a.x,b.x) < WALL_X - 1.4:
@@ -90,8 +118,9 @@ static func clear_shot(a: Vector2, b: Vector2, open: bool, over_front: bool=fals
 	for x: float in [WALL_X, BACK_X]:
 		if (a.x < x) != (b.x < x):
 			var z := lerpf(a.y, b.y, (x - a.x) / (b.x - a.x))
-			if absf(z) < WALL_Z + 0.8 and (x == BACK_X or (not over_front and (not open or absf(z) >= GATE_HALF))):
-				return false
+			if absf(z) < WALL_Z + 0.8:
+				if x == BACK_X and absf(z) >= POSTERN_HALF: return false
+				if x == WALL_X and not over_front and (not open or absf(z) >= GATE_HALF): return false
 	for z: float in [-WALL_Z, WALL_Z]:
 		if (a.y < z) != (b.y < z):
 			var x := lerpf(a.x, b.x, (z - a.y) / (b.y - a.y))

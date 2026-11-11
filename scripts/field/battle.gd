@@ -632,12 +632,16 @@ func _player_walk() -> void:
 func _soldier(u: Unit) -> void:
 	var c := companies[u.squad]
 	var fleeing := u.state == State.ROUT
+	var withdrawing := fleeing or c.mission == Mission.WITHDRAW
+	if fleeing:
+		# Routed soldiers no longer run target assessment. Release the old contact offset.
+		u.separation = u.separation.move_toward(Vector2.ZERO, DT * 8.0)
 	var goal := c.aim + (u.station - c.home) * 0.70
 	var at_post := u.wall_post and c.mission==Mission.HOLD and not c.regrouping
 	if at_post: goal=u.station
 	if u.engineer and ram_hp > 0 and gate_hp > 0:
 		goal = ram + Vector2(-0.75, (u.id % 4 - 1.5)*0.75)
-	if fleeing or c.mission == Mission.WITHDRAW:
+	if withdrawing:
 		goal = Vector2(-98.0 if u.team == 0 else 100.0, signf(u.pos.y)*32)
 		if u.pos.distance_to(goal) < 3:
 			_set_state(u, State.ESCAPED, 0.0)
@@ -671,7 +675,7 @@ func _soldier(u: Unit) -> void:
 			_begin(u, 0, u.pos.direction_to(Ground.GATE))
 			u.fatigue = 0.6
 			return
-	var next := Ground.waypoint(u.pos, goal)
+	var next := Ground.retreat_waypoint(u.pos, goal, gate_hp <= 0) if withdrawing else Ground.waypoint(u.pos, goal)
 	var dist := u.pos.distance_to(next)
 	var speed := 5.8 if u.mounted else (4.1 if fleeing else 2.85)
 	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted),dist / DT)
