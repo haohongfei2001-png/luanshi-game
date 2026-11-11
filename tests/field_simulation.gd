@@ -57,6 +57,7 @@ func _initialize() -> void:
 	_test_world_settlement()
 	_test_full_siege()
 	_test_deployment_and_camp()
+	_test_chariot_origin()
 	_test_quivers_and_acknowledgments()
 	print("FIELD_SIM_" + ("PASS" if failures.is_empty() else "FAIL") + " " + JSON.stringify(failures))
 	quit(0 if failures.is_empty() else 1)
@@ -479,3 +480,28 @@ func _test_deployment_and_camp() -> void:
 	legacy.erase("dry_muster")
 	var old:=Store.restore(legacy)
 	check(old!=null and not old.dry_muster and old.camp_actions.is_empty(),"Previous field save remains readable without a new campaign")
+
+func _test_chariot_origin() -> void:
+	const Store:=preload("res://scripts/field/save.gd")
+	var b:=Battle.new()
+	b.setup(20,Battle.SEED,Arms.Kit.BOW)
+	var nose: Vector2=b.vehicle_pos[2]
+	check(b.mount(2) and b.hero.pos.is_equal_approx(nose-Vector2.RIGHT*1.83),"Charioteer physically boards the visible platform")
+	check(not b.mount(1) and b.vehicle==2,"Mount key cannot silently dismount a charioteer")
+	b.start()
+	b.input_state(Vector2.ZERO,Vector2.UP)
+	check(b.action(0),"Loose one real arrow from the cart")
+	var fired:=false
+	for i in 30:
+		b.step()
+		for s in b.shots:
+			if s.source==b.hero.id and not fired:
+				fired=s.previous.distance_to(b.hero.pos+Vector2.UP*0.45)<0.02 and s.launch_height>Ground.deck_height(b.hero.pos)+0.85
+	check(fired,"Arrow originates above the seat, not the draft horse")
+	b.input_state(Vector2.DOWN,Vector2.LEFT)
+	for i in 32: b.step()
+	var parked: Vector2=b.vehicle_pos[2]
+	var heading:=b.riding_heading
+	check(b.mount(2) and b.vehicle==0 and b.hero.pos.distance_to(parked)>0.8 and b.parked_heading[2].is_equal_approx(heading),"Dismount onto a bank-side foot position without rotating the empty cart")
+	var restored:=Store.restore(Store.snapshot(b))
+	check(restored!=null and restored.vehicle_pos==b.vehicle_pos and restored.parked_heading==b.parked_heading,"Parking direction survives a save")

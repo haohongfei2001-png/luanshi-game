@@ -163,7 +163,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			base.y += 0.81
 		if u.hero and battle.vehicle != 0:
 			var heading := battle.riding_heading
-			if battle.vehicle == 2:
+			if battle.vehicle == 2 and not battle.seat_origin:
 				base -= Vector3(heading.x,0,heading.y)*1.83
 			base.y += 0.83 if battle.vehicle==1 else 0.91
 		var full := reference_detail or u.hero or u.officer or (zoom<17 and p.distance_squared_to(center)<110) or (zoom<36 and p.distance_squared_to(center)<19)
@@ -188,7 +188,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	for id in [1,2]:
 		var pos: Vector2 = battle.vehicle_pos[id]
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
-		var heading := battle.riding_heading if battle.vehicle == id else Vector2.RIGHT
+		var heading := battle.riding_heading if battle.vehicle == id else battle.parked_heading[id]
 		var stride := battle.hero.stride if battle.vehicle == id else 0.0
 		_put(horse if id==1 else cart,Ground.unit_point(pos),atan2(heading.x,heading.y),Color((state+0.5)/128.0,1,stride,0))
 	for s in battle.shots:

@@ -63,15 +63,22 @@ func _choose(c: OptionButton,index: int) -> void:
 	await _click(c)
 	var popup:=c.get_popup()
 	if not _check(popup.visible,"Opened menu "+str(c.name)): return
-	var offset:=index-c.selected
-	for i in absi(offset): _tap(KEY_DOWN if offset>0 else KEY_UP)
-	_tap(KEY_ENTER)
-	await _frames(2)
+	# X11 delivers these keys to the focused Godot popup window. Sending an
+	# action only to the main viewport does not exercise a child window.
+	for round_index in 3:
+		var focus:=popup.get_focused_item()
+		if focus==index: break
+		var distance: int=(index-focus+c.item_count)%c.item_count
+		var keys:=PackedStringArray(["key","--delay","18"])
+		for n in distance: keys.append("Down")
+		_check(OS.execute("xdotool",keys)==0,"Native menu navigation is available")
+		await _frames(3)
+	_check(OS.execute("xdotool",PackedStringArray(["key","Return"]))==0,"Native menu confirmation")
+	await _frames(3)
 	if c.selected!=index:
-		# Some embedded window managers route keyboard focus to the parent.
-		# In that case activate the real menu item and disclose it in the report.
-		if not popup.visible: c.show_popup()
-		popup.activate_item(index)
+		# Disclose a semantic fallback. It uses the same public PopupMenu signal
+		# to the OptionButton; it does not change the authoritative battle.
+		popup.index_pressed.emit(index)
 		menu_activations+=1
 	popup.hide()
 	await _frames(2)
@@ -81,6 +88,8 @@ func _snap(label: String) -> void:
 	await RenderingServer.frame_post_draw
 	var pic:=root.get_texture().get_image()
 	_check(pic.save_jpg("res://artifacts/journey-"+label+".jpg",0.90)==OK,"Save viewport "+label)
+	pic.resize(640,400,Image.INTERPOLATE_BILINEAR)
+	print("JOURNEY_IMAGE journey-"+label+" "+Marshalls.raw_to_base64(pic.save_jpg_to_buffer(0.80)))
 	screens.append(label)
 	print("JOURNEY_STAGE "+label+" tick="+str(field.battle.tick))
 

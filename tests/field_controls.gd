@@ -68,6 +68,8 @@ func _run() -> void:
 	_check(field.camera.size<zoom,"Wheel changes viewing distance")
 	_key(KEY_C,true); _key(KEY_C,false)
 	_check(field.follow,"C restores player camera")
+	await _vehicle_inputs()
+	field.new_muster(20)
 	await _portrait()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://artifacts/kit-film"))
 	for kit in Arms.NAMES.size(): await _weapon(kit)
@@ -167,3 +169,33 @@ func _warm_pixels(pic: Image,center: Vector2i,radius: int) -> int:
 			var c:=pic.get_pixel(x,y)
 			if c.r>0.24 and c.r>c.g*1.05 and c.g>c.b*1.05: found+=1
 	return found
+
+func _vehicle_inputs() -> void:
+	var vehicle_records: Array=[]
+	for id in [1,2]:
+		field.new_muster(20)
+		var b:=field.battle
+		field.hud.weapon.select(Arms.Kit.SPEAR)
+		field.hud.weapon.item_selected.emit(Arms.Kit.SPEAR)
+		var button: Key=KEY_F if id==1 else KEY_V
+		_key(button,true); _key(button,false)
+		_key(KEY_ENTER,true); _key(KEY_ENTER,false)
+		field.camera.size=9.2
+		var start:=b.hero.pos
+		_key(KEY_S,true)
+		_key(KEY_SHIFT,true)
+		for i in 38: await process_frame
+		var speed:=b.riding_speed
+		var turned:=b.riding_heading.y
+		_key(KEY_SHIFT,false); _key(KEY_S,false)
+		_key(KEY_Q,true); _key(KEY_Q,false)
+		var used:=b.hero_cds[1]>0
+		for i in 22: await process_frame
+		await RenderingServer.frame_post_draw
+		var name_of_vehicle: String="horse" if id==1 else "cart"
+		_check(root.get_texture().get_image().save_jpg("res://artifacts/journey-vehicle-"+name_of_vehicle+".jpg",0.91)==OK,"Capture actual ridden vehicle")
+		var distance:=b.hero.pos.distance_to(start)
+		_key(button,true); _key(button,false)
+		_check(speed>2 and turned>0.6 and distance>1.0 and used and b.vehicle==0,"Ride, steer, fight and dismount "+name_of_vehicle)
+		vehicle_records.append({"vehicle":name_of_vehicle,"speed":speed,"turn_z":turned,"distance":distance,"skill":used,"dismounted":b.vehicle==0})
+	print("FIELD_VEHICLE_INPUTS "+JSON.stringify(vehicle_records))

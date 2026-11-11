@@ -150,6 +150,8 @@ var locked_at_wall_post:=false
 var hero_cds := PackedFloat32Array([0.0,0.0,0.0,0.0])
 # Foot, horse and chariot are separate physical assets. The rider can lose either vehicle.
 var vehicle := 0
+var seat_origin:=true
+var parked_heading: Array[Vector2]=[Vector2.RIGHT,Vector2.RIGHT,Vector2.RIGHT]
 var vehicle_pos := [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
 var vehicle_hp := [0.0, 75.0, 115.0]
 var riding_speed := 0.0
@@ -494,7 +496,18 @@ func mount(id: int) -> bool:
 	if result != "" or id < 0 or id > 2 or hero.state in [State.WINDUP, State.STAGGER]:
 		return false
 	if vehicle != 0:
-		vehicle_pos[vehicle] = hero.pos
+		if seat_origin:
+			if id!=0 and id!=vehicle:
+				notice="请先下乘，再登上另一辆车马"
+				return false
+			parked_heading[vehicle]=riding_heading
+			vehicle_pos[vehicle]=hero.pos+(riding_heading*1.83 if vehicle==2 else Vector2.ZERO)
+			var side:=riding_heading.orthogonal()*1.05
+			var landing:=Ground.travel(hero.pos,side,gate_hp<=0)
+			if landing.distance_to(hero.pos)<0.5: landing=Ground.travel(hero.pos,-side,gate_hp<=0)
+			hero.pos=landing
+			hero.before=landing
+		else: vehicle_pos[vehicle] = hero.pos
 		vehicle = 0
 		riding_speed = 0
 		notice = "已下乘"
@@ -502,8 +515,15 @@ func mount(id: int) -> bool:
 	if id == 0 or vehicle_hp[id] <= 0 or hero.pos.distance_to(vehicle_pos[id]) > 4.5:
 		notice = "需靠近可用的坐骑或战车"
 		return false
+	var seat: Vector2=vehicle_pos[id]-(parked_heading[id]*1.83 if seat_origin and id==2 else Vector2.ZERO)
+	if seat_origin:
+		if Ground.blocked(seat,gate_hp<=0) or not Ground.clear_shot(hero.pos,seat,gate_hp<=0):
+			notice="车马在阻隔另一侧"
+			return false
+		hero.pos=seat
+		hero.before=seat
 	vehicle = id
-	riding_heading = hero.facing
+	riding_heading = parked_heading[id] if seat_origin else hero.facing
 	notice = "已上马" if id == 1 else "已登车"
 	return true
 
@@ -570,7 +590,7 @@ func _near(at: Vector2, radius: float, team: int) -> Array[int]:
 	return found
 
 func _release(u: Unit, move: Arms.Move) -> void:
-	if move.step != 0:
+	if move.step != 0 and not (u.hero and seat_origin and vehicle!=0):
 		_move(u, u.locked * move.step)
 	if move.shape in [Arms.Shape.PARRY, Arms.Shape.BRACE]:
 		_set_state(u, State.GUARD, move.recovery)
@@ -587,6 +607,7 @@ func _release(u: Unit, move: Arms.Move) -> void:
 			shot.previous = shot.pos
 			shot.direction = u.locked.rotated((float(j)-(count-1)*0.5)*0.12)
 			shot.launch_height=Ground.deck_height(u.pos)
+			if seat_origin and (u.mounted or (u.hero and vehicle!=0)): shot.launch_height+=0.91 if u.hero and vehicle==2 else 0.81
 			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.hero and locked_at_wall_post) or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
 			shot.speed = 24.0 if shot.arrow else 37.0
@@ -711,6 +732,8 @@ func _move(u: Unit, offset: Vector2) -> void:
 
 func _player_walk() -> void:
 	var walk := hero_move
+	var start_pos:=hero.pos
+	var start_heading:=riding_heading
 	var speed := 4.2
 	var run:=sprinting and not winded and vehicle==0 and walk.length_squared()>0.01 and hero.state==State.MARCH
 	if run:
@@ -721,10 +744,12 @@ func _player_walk() -> void:
 		breath=minf(1,breath+DT*0.14)
 		if breath>=0.30: winded=false
 	if vehicle != 0:
-		var target_speed := (8.7 if vehicle == 1 else 7.0) * walk.length()
+		var top: float=(10.5 if vehicle==1 else 8.2) if sprinting and seat_origin else (8.7 if vehicle==1 else 7.0)
+		var target_speed := top*walk.length()
 		riding_speed = move_toward(riding_speed, target_speed, DT * (5.5 if vehicle == 1 else 3.5))
 		if walk.length_squared() > 0.01:
-			riding_heading = Vector2.from_angle(rotate_toward(riding_heading.angle(),walk.angle(),DT * (2.8 if vehicle == 1 else 1.4)))
+			var turn: float=(2.8 if vehicle==1 else 1.4)*lerpf(1.0,0.74,riding_speed/top) if seat_origin else (2.8 if vehicle==1 else 1.4)
+			riding_heading = Vector2.from_angle(rotate_toward(riding_heading.angle(),walk.angle(),DT*turn))
 		walk = riding_heading
 		speed = riding_speed
 	if hero.state in [State.WINDUP, State.GUARD]:
@@ -732,9 +757,13 @@ func _player_walk() -> void:
 	if hero.state != State.STAGGER:
 		_move(hero, walk * speed * DT * Ground.pace(hero.pos,vehicle != 0))
 	if vehicle != 0:
-		vehicle_pos[vehicle] = hero.pos
+		if vehicle==2 and seat_origin and (Ground.blocked(hero.pos+riding_heading*1.83,gate_hp<=0) or not Ground.clear_shot(hero.pos,hero.pos+riding_heading*1.83,gate_hp<=0)):
+			hero.pos=start_pos
+			riding_heading=start_heading
+		vehicle_pos[vehicle] = hero.pos+(riding_heading*1.83 if vehicle==2 and seat_origin else Vector2.ZERO)
+		if seat_origin and speed>2 and hero.pos.distance_squared_to(start_pos)<0.0004: riding_speed=minf(riding_speed,0.5)
 		if riding_speed > 5.5 and tick % 9 == 0:
-			var front := hero.pos + riding_heading * 1.1
+			var front: Vector2 = vehicle_pos[vehicle] + riding_heading * 1.1
 			for id in _near(front, 1.2, 1):
 				var v := roster[id]
 				if v.kit == Arms.Kit.SPEAR and v.state in [State.GUARD,State.WINDUP] and v.facing.dot(-riding_heading) > 0.3:
