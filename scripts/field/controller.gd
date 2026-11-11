@@ -18,6 +18,8 @@ var audio := Sound.new()
 var camera := Camera3D.new()
 var camera_center := Vector2.ZERO
 var camera_pitch:=deg_to_rad(51.0)
+var camera_yaw:=0.0
+var orbiting:=false
 var follow := true
 var paused := false
 var pan := false
@@ -147,7 +149,7 @@ func _load() -> void:
 func _camera() -> void:
 	var p := Ground.unit_point(camera_center)
 	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
-	camera.position=p+Vector3(0,sin(camera_pitch),cos(camera_pitch))*77.5
+	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*77.5
 	camera.look_at(p)
 	camera.current=true
 
@@ -210,13 +212,20 @@ func _unhandled_input(e: InputEvent) -> void:
 	if not battle or e.is_echo(): return
 	if e is InputEventMouseButton:
 		match e.button_index:
-			MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE:
+			MOUSE_BUTTON_RIGHT:
 				pan=e.pressed
+			MOUSE_BUTTON_MIDDLE:
+				orbiting=e.pressed
 			MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN:
 				if e.pressed:
 					camera.size=clampf(camera.size*(0.83 if e.button_index==MOUSE_BUTTON_WHEEL_UP else 1.20),5.8,115)
+	elif e is InputEventMouseMotion and orbiting:
+		if e.button_mask & MOUSE_BUTTON_MASK_MIDDLE:
+			camera_yaw=wrapf(camera_yaw-e.relative.x*0.009,-PI,PI)
+			_camera()
+		else: orbiting=false
 	elif e is InputEventMouseMotion and pan:
-		if e.button_mask & (MOUSE_BUTTON_MASK_RIGHT | MOUSE_BUTTON_MASK_MIDDLE):
+		if e.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 			pan_to(camera_center+_screen_ground(e.position-e.relative)-_screen_ground(e.position))
 		else:
 			pan=false
@@ -235,7 +244,7 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif not paused and battle.started:
 		for i in 3:
 			if e.is_action_pressed(["sweep","lunge","guard"][i]):
-				battle.input_state(Actions.movement(),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
+				battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
 				battle.action(i+1)
 
 func _physics_process(delta: float) -> void:
@@ -245,7 +254,7 @@ func _physics_process(delta: float) -> void:
 		carry=maxf(0,carry-Battle.DT)
 		var pointer := get_viewport().get_mouse_position()
 		var attacking:=Input.is_action_pressed("attack") and (Input.is_physical_key_pressed(KEY_J) or get_viewport().gui_get_hovered_control()==null)
-		battle.input_state(Actions.movement(),_aim_point(pointer,attacking)-battle.hero.pos)
+		battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(pointer,attacking)-battle.hero.pos)
 		if attacking:
 			battle.action(0)
 		var arrows_before := battle.arrow_count
@@ -277,7 +286,11 @@ func _physics_process(delta: float) -> void:
 
 func _draw_field() -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
-	var half_extent := Vector2(camera.size*viewport_size.x/maxf(viewport_size.y,1)*0.5+4,0.5*camera.size/sin(camera_pitch)+6)
+	var hw:=camera.size*viewport_size.x/maxf(viewport_size.y,1)*0.5
+	var hd:=0.5*camera.size/sin(camera_pitch)
+	var co:=absf(cos(camera_yaw))
+	var si:=absf(sin(camera_yaw))
+	var half_extent:=Vector2(co*hw+si*hd+4,si*hw+co*hd+6)
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	map.update_battle(battle)

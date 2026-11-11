@@ -1,5 +1,5 @@
 extends RefCounted
-## A small original mesh authoring palette. UV2 stores the joint and dyed-cloth mask.
+## A small original mesh authoring palette. The UV channels carry the authored figure paint, joint and cloth mask through instancing.
 var surface := SurfaceTool.new()
 var joint := 0
 var dye := 0.0
@@ -13,7 +13,8 @@ func tri(a: Vector3, b: Vector3, c: Vector3, color: Color) -> void:
 	for p: Vector3 in [a,c,b]:
 		surface.set_normal(n)
 		surface.set_color(color)
-		surface.set_uv2(Vector2(joint,dye))
+		surface.set_uv(Vector2(color.r,color.g))
+		surface.set_uv2(Vector2(joint,2.0*dye+color.b))
 		surface.add_vertex(p)
 
 func quad(a: Vector3,b: Vector3,c: Vector3,d: Vector3,col: Color) -> void:

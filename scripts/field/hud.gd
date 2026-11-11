@@ -77,7 +77,7 @@ func _ready() -> void:
 	_button(vital,save_button,"保存 F5",func(): save_requested.emit())
 	_button(vital,load_button,"读档 F9",func(): load_requested.emit())
 	_label(bottom,action_text,15,Color("e6e4d2"))
-	help.text="WASD 移动　鼠标瞄准　滚轮缩放　右键拖动镜头　C 跟随\nF 骑马 / 下马　V 登车 / 下车　1 推进　2 守阵　3 撤离"
+	help.text="WASD 移动　鼠标瞄准　滚轮缩放　右键平移　中键环视　C 跟随\nF 骑马 / 下马　V 登车 / 下车　1 推进　2 守阵　3 撤离"
 	_label(bottom,help,14,Color("aebdb0"))
 	root_control.add_child(order_panel)
 	order_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_LEFT)

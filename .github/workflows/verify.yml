@@ -179,16 +179,16 @@ jobs:
           exe = app / "Contents/MacOS" / plistlib.loads((app / "Contents/Info.plist").read_bytes())["CFBundleExecutable"]
           digest = hashlib.sha256(pathlib.Path("package/Luanshi-macOS.zip").read_bytes()).hexdigest()
           print("SOURCE_ARCHIVE_SHA256", digest)
-          plans = [("compat-1", "gl_compatibility"), ("metal-1", "mobile"), ("metal-2", "mobile"), ("compat-2", "gl_compatibility")]
+          plans = [("compat-1", "gl_compatibility"), ("default-metal-1", "mobile"), ("default-metal-2", "mobile"), ("compat-2", "gl_compatibility")]
           records = []
           unavailable = set()
           for name, method in plans:
               if method in unavailable:
                   continue
               image = base / (name + ".png")
-              args = ["/usr/bin/time", "-l", str(exe), "--rendering-method", method]
-              if method == "mobile":
-                  args += ["--rendering-driver", "metal"]
+              args = ["/usr/bin/time", "-l", str(exe)]
+              if method == "gl_compatibility":
+                  args += ["--rendering-method", "gl_compatibility"]
               args += ["--resolution", "1000x600", "--audio-driver", "Dummy", "--disable-vsync", "--", "--field-check", "--field-profile", "--field-proof=" + str(image)]
               try:
                   test = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=70)
@@ -215,11 +215,8 @@ jobs:
                   unavailable.add(method)
                   print("DIAGNOSTIC", log[-2000:], flush=True)
           (base / "renderer-comparison.json").write_text(json.dumps({"archive_sha256":digest,"source_run":os.environ["GITHUB_RUN_ID"],"samples":records},indent=2))
-          required = [r for r in records if r["requested_method"] == "gl_compatibility"]
-          if len(required) != 2 or not all(r["validated"] for r in required):
-              raise SystemExit("The shipped renderer did not pass the native window trials.")
-          if "mobile" in unavailable:
-              print("::warning::Mobile/Metal did not verify on this host. Its diagnostic was retained.")
+          if len(records) != 4 or not all(r["validated"] for r in records):
+              raise SystemExit("The native Mac default or its compatibility path did not pass the window trials.")
           PY
       - name: Upload native macOS evidence
         if: always()

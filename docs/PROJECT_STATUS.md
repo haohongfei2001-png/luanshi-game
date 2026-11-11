@@ -1,5 +1,9 @@
 # Project status / resumable handoff
 
+## 最新验收 · 河关城下
+
+游戏提交 `eae4f9d3f23f` 已通过独立的 Linux 与 macOS 任务。默认每方 512 名普通士兵。常规军令在 33.85 模拟秒攻破城门，46.70 秒守军失去战斗能力。托管 Apple M1 虚拟机已实际用默认 Metal 后端开窗。真实 M5 持续性能待测。[下载、三段录像、逐帧与军需结果](evidence/river-gate-20261112/README.md)。
+
 ## 河关千人战场 · 2026-11-12 云端开发
 
 直接启动默认进入河关战前部署。新军籍包含双方各 512 名普通士兵，另有 32 名军官与 1 名玩家。旧三城战役、训练、v0.6 存档与此前的工程分支仍可单独进入。当前候选、可下载包、录像、逐帧 JSON 与最后一次执行结果集中在 [战场 PR #18](https://github.com/haohongfei2001-png/luanshi-game/pull/18)。
@@ -8,6 +12,7 @@
 | --- | --- |
 | [原工程兼容修复 PR #17](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43077402767) | 原 PR #10 的提交与 main 的设计文档合并到接管分支。中文字体随包加载，1280×800 战略界面、旧档和跨进程恢复、Linux 导出、托管 macOS 原生运行通过。 |
 | [河关可运行候选 de12785](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43083976264) | Ubuntu X11 实际执行九种兵器的鼠标普攻与 Q、骑乘切换、地图点选、右键拖动。原生 macOS 26.7.2 的 Apple M1 虚拟机用导出包开窗，在实际 1024×645、100% 渲染、动态阴影下采集 120 帧，平均 30.33 FPS，P95 57.65 ms，P99 87.42 ms，采样间有 515 次命中。 |
+| [原生窗口与不同军令 e20cb98](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43087676463) | 九把兵器的坡地瞄准均通过。同一台 M1 虚拟机、同一个 1000×600 原生窗口、同一份包，两次原生 Metal 短测分别为 121.56、179.66 FPS，兼容路径为 40.70、31.06 FPS。这组结果用于选择 Mac 默认后端。完整攻城录像从部署到结算共 468 帧。另一次[不改游戏逻辑的部署对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43089432898)中，护送队的冲车实际撞门三次，撤出计划则让双方合计仅五名普通士兵阵亡。 |
 | [千人攻城与视角对照 4cdeaef](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43086157942) | 种子 61112 从正常军籍部署，工兵与攻门部队接战。第 551 个 20 Hz 模拟步城门首次受损，第 677 步破门，第 934 步守军失去战斗能力。普通守军仍有 143 人生还，世界完成一次结算。36 种武器动作窗口、冲锋与定枪、军需守恒通过。该提交的云端图形检查发现低角度坡面瞄准偏差，枪和两种远程武器未通过真实鼠标检查。后续修复与复验见战场 PR。 |
 
 源代码使用 Godot 4.6.3。开发环境先执行 `./tools/prepare-font.sh`，再以 `godot --path .` 启动。Ubuntu 24.04 执行 `./tools/test.sh`、`./tools/test-field-render.sh`、`./tools/export.sh`；后两项需要 Xvfb、Mesa、ffmpeg 和对应版本导出模板。录像使用固定采集步长，性能采样使用未锁帧的另一进程。可从原生 macOS 包传入 `-- --field-profile` 记录实际游玩的原始帧时间。详情见[中文操作说明](PLAYING_ZH.md)。
