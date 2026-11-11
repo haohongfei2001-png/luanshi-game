@@ -2,12 +2,12 @@
 
 This repository currently contains an early battle prototype, but the **long-term assignment is a complete single-player game** under docs/FINAL_VISION_ACCEPTANCE.md. Implement incrementally; do not mistake the first prototype for project completion.
 
-## Execution mode — Dot cloud only
+## Execution mode — Codex primary, Dot optional coordination (Owner override 2026-11-12)
 
-- The **primary implementer is the user's Dot itself**, working directly in its own cloud computer. Do not create or delegate coding tasks to Codex by default. Only use Codex after the user explicitly opts in.
+- The **primary implementer is now Codex**, explicitly authorized by the owner on 2026-11-12. Dot may help coordinate and track work but is **no longer the sole programmer**. Codex may independently edit, test, optimize and submit changes in already authorized repo/cloud development environments. Neither may access the user's Mac, spend money, publish a product, or modify licenses without separate approval. Avoid overlapping writes to the same working branch.
 - Work through the cloud machine's available terminal, browser/editor and connected GitHub permissions: check out the repository, install or run Godot 4 if supported, modify project files, run headless tests, and commit/push the results.
 - Do not request access to the user's MacBook for routine development. The MacBook Air M5 is a **target test device**, not the development host.
-- If the cloud environment lacks an editor, shell, network access, GitHub write permission, or the required Godot runtime, report the exact blocker and which approval/capability is needed; do **not** silently switch to Codex or local execution.
+- If a development environment lacks editor, shell, network, GitHub write permission or a Godot runtime, record the exact blocker and choose an authorized Codex cloud environment; do **not** claim a task has been executed and do not silently switch to the user's local machine.
 - Cloud code/test verification, visual gameplay verification, macOS export, and testing on a real Mac are distinct acceptance levels. A Linux cloud can run Godot headless tests and may export a macOS build with official templates, but **must not claim the Mac app has run on the user's machine**.
 - Prefer a small, inspectable GitHub PR or commit series, a reproducible test log, and a downloadable build artifact when possible. Consider an optional browser-playable build if practical, without changing the primary macOS target.
 
@@ -17,13 +17,16 @@ This repository currently contains an early battle prototype, but the **long-ter
 
 Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silently replace the setting, camera, combat model, progression, world independence, or protagonist-death rule.
 
-## Current scope and priorities
+## Current scope and priorities — OWNER LOCKED 2026-11-12
 
-1. Produce a **playable, reproducible macOS prototype**. iPhone/iOS is a planned adaptation path, not a first-milestone delivery requirement.
-2. First: one small 3D battlefield, a player-controlled isometric character, basic attack, three simple non-magical weapon skills, and 20 vs 20 tiny soldiers.
-3. Make soldiers move, fight, die, and obey basic squad commands.
-4. Record actual casualties and expose a simple results screen.
-5. Keep a deterministic simulation harness where practical; do not add city-management or million-unit visualization until core combat is proven fun and technically feasible.
+**READ FIRST** `docs/BATTLE_FIRST_V1_OWNER_SPEC_20261112.md` and `docs/CODEX_BATTLE_FIRST_EXECUTION_HANDOFF.md`, then `docs/PRODUCT_DECISIONS.md §1F`. Existing 20v20 and three-city work is a **preserved engineering regression baseline**, not the accepted full first-release size.
+1. Preserve v0.6 and current open PR #10, fix actual font/CI, save migration and macOS runtime issues before merging. Never restart Godot from scratch.
+2. Produce **one** carefully crafted MOBA-scale isometric 3D battlefield, including a real siege/city/gate and terrain roles. Every visible nearby unit actually fights; offscreen units maintain causal state, even during camera pans.
+3. **Initial release target: 512 vs 512 = 1024 independent combat soldiers** (excluding player/commanders/mounts), distinct troop types/gear, command hierarchy, prebattle missions, flags/horns/couriers, and non-annihilation outcomes.
+4. Nine distinct player weapon kits: sword, dao, staff, spear, long blade, bow, crossbow, sword+shield, dual swords; plus horse combat, chariots and siege gear. Real weapon strikes, skill animations and appropriate counters, not reskins.
+5. Visible face/hand/weapon/clothing detail at near camera; legible formations and equipment at wide camera. Target real **MacBook Air M5 sustained 60 FPS** at 512v512 with recorded graphic settings and frame times. Never claim device PASS without running on the target.
+6. **No authored plot writing now.** One military opening/root and systemic objective templates only; owner will write all formal story later. Preserve future life/history architecture without implementing narrative branches prematurely.
+7. Grow from 20v20 → 100v100 → 250v250 → 512v512 as benchmark gates, but smaller scales are not a substitute for the target. Record genuine gameplay, performance and Mac build evidence.
 
 ## Implementation
 
@@ -36,7 +39,7 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 - Avoid premature complexity: prefer small modules, explicit interfaces, and clear data contracts over giant frameworks.
 - The **three equally important final player experiences** are (1) personal realtime combat, (2) army command, and (3) autonomous world simulation. Phase work sequentially but do not omit any from final gameplay.
 - **Locked art:** restrained realism in small detailed 3D figures, **now informed by mid/late Tang material culture and late-Tang provincial armies** (the earlier Han-Wei default has been superseded), historically grounded scarcity, readable equipment silhouettes, not flashy armor. Use placeholders until mechanics are verified.
-- **New locked narrative constraints:** primary story begins around age fifteen (forced conscription or voluntary service), early military merit unrewarded/stolen, expendable company suffers actual casualties, then earning power, moving inward, complex alliances/family/children and unpredictable succession. See `docs/NARRATIVE_LIFE_ARC_V0_3.md`. Court can be militarily strong or weakened by actual wars; factions and frontier powers are morally complex; **rare capture while alive does not end the run**; reception by court after return depends on evidence and politics; important friends can become subordinates, rivals, enemies or reconcile based on their own interests and experiences. Canonical details in `docs/PRODUCT_DECISIONS.md` §1C. Main character names and particular fixed story beats in `docs/NARRATIVE_WORLD_BIBLE_V0_2.md` are creative proposals, not owner-approved final script.
+- **Future owner-authored narrative constraints (NOT current Codex content task):** the future story may begin around age fifteen, with military injustice, a company, command, alliances and family. All authoritative literary plotting/dialogue is reserved to the owner and **must remain blank in the current battle-first implementation**; see `docs/NARRATIVE_LIFE_ARC_V0_3.md` for future system compatibility only. Court can be militarily strong or weakened by actual wars; factions and frontier powers are morally complex; **rare capture while alive does not end the run**; reception by court after return depends on evidence and politics; important friends can become subordinates, rivals, enemies or reconcile based on their own interests and experiences. Canonical details in `docs/PRODUCT_DECISIONS.md` §1C. Main character names and particular fixed story beats in `docs/NARRATIVE_WORLD_BIBLE_V0_2.md` are creative proposals, not owner-approved final script.
 - **Locked difficulty:** hard but fair and explainable; no hidden scripted cheats, forced battlefield loss, magically arriving troops, or unjustified information leaks.
 - Never commit credentials, account data, API keys, or unlicensed assets. This repository is **public**.
 - Keep commits small and purposeful; use branches and pull requests for major changes.
