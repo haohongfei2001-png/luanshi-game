@@ -1,0 +1,321 @@
+{
+  "format": 1,
+  "checkout_label": "luanshi-comrades",
+  "branch": "feature/comrade-choices",
+  "source_head": "c1c40c216505b51eaeaf2bd71859234ba79d4da8",
+  "source_tree": "db6e89441eaac7bbfbea6a17a8558c5a9315738d",
+  "base_manifest": "BASELINE.json",
+  "replace_or_add": {
+    ".github/workflows/verify.yml": {
+      "mode": "100644",
+      "original_blob_sha1": "617f7ec17d10c49ebf8e136ef7cd30c2f5b4dc40",
+      "original_sha256": "31697ac6542f1bc3e57234e098a1edef52436a71e5b1ae23f1ebdf3981614008",
+      "published_sha256": "31697ac6542f1bc3e57234e098a1edef52436a71e5b1ae23f1ebdf3981614008",
+      "published_bytes": 11612,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/31697ac6542f1bc3e57234e098a1edef52436a71e5b1ae23f1ebdf3981614008.txt"
+      }
+    },
+    "README.md": {
+      "mode": "100644",
+      "original_blob_sha1": "d72e2ce66e590514b15e48759e7a4b89574c4d48",
+      "original_sha256": "c14b169b786aaff564ddfcc6fa17619dfaebeef2f3924ab19ae4886145c06b33",
+      "published_sha256": "c14b169b786aaff564ddfcc6fa17619dfaebeef2f3924ab19ae4886145c06b33",
+      "published_bytes": 11783,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/c14b169b786aaff564ddfcc6fa17619dfaebeef2f3924ab19ae4886145c06b33.txt"
+      }
+    },
+    "docs/ACCEPTANCE_MATRIX.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7f2f0480df6027351055aed2fc7402e31767c839",
+      "original_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_bytes": 23007,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0.txt"
+      }
+    },
+    "docs/DELIVERY_PLAN.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5d4e33a84a9e7362b2aa9e772fe5114ab6566fc6",
+      "original_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_bytes": 7031,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040.txt"
+      }
+    },
+    "docs/DOT_HANDOFF_FINAL.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7221f52c5cb9bb8eaa969e1f0d0a98faf8d7de0e",
+      "original_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_bytes": 12666,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722.txt"
+      }
+    },
+    "docs/FINAL_GAME_DESIGN_SPEC.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7b883813120f18287a4ff964d280c64ddf72cfef",
+      "original_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_bytes": 29255,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe.txt"
+      }
+    },
+    "docs/FINAL_VISION_ACCEPTANCE.md": {
+      "mode": "100644",
+      "original_blob_sha1": "2c8276b427996aee37253fe49052f03604095d25",
+      "original_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_bytes": 5804,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a.txt"
+      }
+    },
+    "docs/NARRATIVE_ART_DIRECTION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "0939c3547558a041141f2fed2b5dbd992b081786",
+      "original_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_bytes": 13970,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5.txt"
+      }
+    },
+    "docs/PLAYING_ZH.md": {
+      "mode": "100644",
+      "original_blob_sha1": "f469efd29f469aabd1c135409cd8a60a12773aca",
+      "original_sha256": "c9efcba3c08452cf6171a6427c483bb0d60b731217c6a01606ebed8379efa9e8",
+      "published_sha256": "c9efcba3c08452cf6171a6427c483bb0d60b731217c6a01606ebed8379efa9e8",
+      "published_bytes": 9627,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/c9efcba3c08452cf6171a6427c483bb0d60b731217c6a01606ebed8379efa9e8.txt"
+      }
+    },
+    "docs/PRODUCT_DECISIONS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "05fe4bb65bde39ed67690e25222640842838e513",
+      "original_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_bytes": 20851,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666.txt"
+      }
+    },
+    "docs/PROJECT_STATUS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "cdf270569a98ac54c53a12e5b64fe9029e4cd1e2",
+      "original_sha256": "711ee7e493612ae27239d4431d66737f7f1e9967270a39f9912ddb46f388240b",
+      "published_sha256": "711ee7e493612ae27239d4431d66737f7f1e9967270a39f9912ddb46f388240b",
+      "published_bytes": 16308,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/711ee7e493612ae27239d4431d66737f7f1e9967270a39f9912ddb46f388240b.txt"
+      }
+    },
+    "docs/SIMULATION_CONTRACTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "017b96857ded3a4fa22296a638810fd3b1089a7f",
+      "original_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_bytes": 20921,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6.txt"
+      }
+    },
+    "export_presets.cfg": {
+      "mode": "100644",
+      "original_blob_sha1": "9e929710f3610a158753560ed72166b6bc69363e",
+      "original_sha256": "6f9f1e4f58752d099e0323e26b13ac39f5ee54f34123d0ab2f43f1929d4076cc",
+      "published_sha256": "6f9f1e4f58752d099e0323e26b13ac39f5ee54f34123d0ab2f43f1929d4076cc",
+      "published_bytes": 1574,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/6f9f1e4f58752d099e0323e26b13ac39f5ee54f34123d0ab2f43f1929d4076cc.txt"
+      }
+    },
+    "project.godot": {
+      "mode": "100644",
+      "original_blob_sha1": "74de7c7c0492a346e96d2162a3e2c2ea35b90091",
+      "original_sha256": "b12cbeab406c32350b69b4cdaf686bafe7987b836349a41bdab02d8b52f1cc37",
+      "published_sha256": "b12cbeab406c32350b69b4cdaf686bafe7987b836349a41bdab02d8b52f1cc37",
+      "published_bytes": 793,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/b12cbeab406c32350b69b4cdaf686bafe7987b836349a41bdab02d8b52f1cc37.txt"
+      }
+    },
+    "scripts/battle.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "c41d4c970a90c942688e1ba079e864b98c74e923",
+      "original_sha256": "3995117e340f35423a43ed923c60fc9d0926767125b3f3186bea3686b5b2d188",
+      "published_sha256": "3995117e340f35423a43ed923c60fc9d0926767125b3f3186bea3686b5b2d188",
+      "published_bytes": 35549,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/3995117e340f35423a43ed923c60fc9d0926767125b3f3186bea3686b5b2d188.txt"
+      }
+    },
+    "scripts/campaign_event_audit.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "09303fca2c4a17348e7569973c440dd984fe3233",
+      "original_sha256": "e22249f364afc3826b9d1960d3eeb6af009300d116e70e70b0246b6e7d284218",
+      "published_sha256": "e22249f364afc3826b9d1960d3eeb6af009300d116e70e70b0246b6e7d284218",
+      "published_bytes": 13566,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e22249f364afc3826b9d1960d3eeb6af009300d116e70e70b0246b6e7d284218.txt"
+      }
+    },
+    "scripts/strategy_view.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "fa34fd3337a37294dfe0b4ea8fe9da2b0a9df6aa",
+      "original_sha256": "4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0",
+      "published_sha256": "4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0",
+      "published_bytes": 18396,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0.txt"
+      }
+    },
+    "scripts/world_sim.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "85add452b50dc1f7ef419dae43d248283b40d3e9",
+      "original_sha256": "080e196ffebab7f03969633910987eb583918168f342fd7476ece743983b2b77",
+      "published_sha256": "080e196ffebab7f03969633910987eb583918168f342fd7476ece743983b2b77",
+      "published_bytes": 74949,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/080e196ffebab7f03969633910987eb583918168f342fd7476ece743983b2b77.txt"
+      }
+    },
+    "scripts/youth_career.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "8d1942793d1855b9db9b6ad372465f866338cb74",
+      "original_sha256": "5174881bdac8061d87cc44c577933c74599aa8e5a18eddf5798dcc43a588473b",
+      "published_sha256": "5174881bdac8061d87cc44c577933c74599aa8e5a18eddf5798dcc43a588473b",
+      "published_bytes": 22898,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5174881bdac8061d87cc44c577933c74599aa8e5a18eddf5798dcc43a588473b.txt"
+      }
+    },
+    "scripts/youth_ui.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "b30ef47f691f684c831f3837cc9c182a6f966f01",
+      "original_sha256": "9ae2cac2405503f439b037846b07eae33f22df74ae72a54141b81f3ce804f624",
+      "published_sha256": "9ae2cac2405503f439b037846b07eae33f22df74ae72a54141b81f3ce804f624",
+      "published_bytes": 21238,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/9ae2cac2405503f439b037846b07eae33f22df74ae72a54141b81f3ce804f624.txt"
+      }
+    },
+    "tools/export.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "a431b65d4992d0f3172f8fe796892a1bd83d6794",
+      "original_sha256": "ca13a58bd79ff1127828e4f4c3f741e899b4fe1326933ba5a1db03e87489473c",
+      "published_sha256": "ca13a58bd79ff1127828e4f4c3f741e899b4fe1326933ba5a1db03e87489473c",
+      "published_bytes": 3796,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/ca13a58bd79ff1127828e4f4c3f741e899b4fe1326933ba5a1db03e87489473c.txt"
+      }
+    },
+    "tools/test.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "87a7d131af890825c99f2771f4308c3784fdf738",
+      "original_sha256": "66ba9355daa638fd29e98003c926b307dd4b15b7c40bb7059a8c08125b90fe36",
+      "published_sha256": "66ba9355daa638fd29e98003c926b307dd4b15b7c40bb7059a8c08125b90fe36",
+      "published_bytes": 6338,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/66ba9355daa638fd29e98003c926b307dd4b15b7c40bb7059a8c08125b90fe36.txt"
+      }
+    }
+  },
+  "delete_from_baseline": [
+    "docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md",
+    "docs/DESIGN_SYNC_V014.md",
+    "docs/HOMETOWN_MESSAGES.md",
+    "docs/WOUND_CARE.md",
+    "docs/evidence/hometown-v012-validation.log",
+    "docs/evidence/wounds-v013-validation.log",
+    "scripts/campaign_clock_replay.gd",
+    "scripts/campaign_clock_replay.gd.uid",
+    "scripts/hometown_messages.gd",
+    "scripts/hometown_messages.gd.uid",
+    "scripts/hometown_persistence_smoke.gd",
+    "scripts/hometown_persistence_smoke.gd.uid",
+    "scripts/wound_care.gd",
+    "scripts/wound_care.gd.uid",
+    "scripts/wound_persistence_smoke.gd",
+    "scripts/wound_persistence_smoke.gd.uid",
+    "tests/test_hometown_messages.gd",
+    "tests/test_hometown_messages.gd.uid",
+    "tests/test_hometown_restart.gd",
+    "tests/test_hometown_restart.gd.uid",
+    "tests/test_hometown_ui.gd",
+    "tests/test_hometown_ui.gd.uid",
+    "tests/test_wounds.gd",
+    "tests/test_wounds.gd.uid",
+    "tests/test_wounds_restart.gd",
+    "tests/test_wounds_restart.gd.uid",
+    "tests/test_wounds_ui.gd",
+    "tests/test_wounds_ui.gd.uid",
+    "tools/test_hometown.sh",
+    "tools/test_wounds.sh"
+  ],
+  "excluded_assets": [
+    {
+      "path": "assets/fonts/LuanshiUISCR-Regular.otf",
+      "reason": "Font bytes deliberately absent; not represented by object pool."
+    }
+  ],
+  "deletion_semantics": "Omit these baseline tracked paths when reconstructing this HEAD into a NEW empty directory. Never delete from the live development tree.",
+  "original_source_text_files": 232,
+  "published_text_files": 328,
+  "document_files_transformed": 22,
+  "source_is_ancestor_of_latest": true,
+  "inventory_hash_algorithm": "SHA256 of sorted UTF-8 rows: relative_path + NUL + git_mode + NUL + file_sha256 + LF. Source inventory excludes document/evidence paths; all-text inventories exclude omitted font.",
+  "original_source_inventory_sha256": "43f072333c0273f6b25664f828ae9ff6075ca490c6453b54955a7565a1058afa",
+  "original_all_text_inventory_sha256": "62544f2bb0c19006a70da4436224d29de5da23f65948e43c5191e56cafe13e41",
+  "published_all_text_inventory_sha256": "888d032606d4caf4ff6084ec2898f7f0e2713fb38c3e885bb0d9a130b12c67de"
+}

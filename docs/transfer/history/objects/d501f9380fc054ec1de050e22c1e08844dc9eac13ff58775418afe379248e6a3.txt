@@ -1,0 +1,30 @@
+extends SceneTree
+const W := preload("res://scripts/world_sim.gd")
+const Setup := preload("res://scripts/hometown_persistence_smoke.gd")
+var count := 0
+var failures: Array[String] = []
+func _initialize() -> void:
+	var setup := Setup.new()
+	var w := setup.build()
+	w.youth_action("first_march")
+	w.youth_action("wait_courier")
+	w.youth_action("courier_comply")
+	setup.fight_return(w)
+	w.youth_action("keep_evidence")
+	w.youth_action("visit_hometown")
+	var snapshot := w.export_campaign_state()
+	for i in range(snapshot.world.events.size()):
+		var e: Dictionary = snapshot.world.events[i]
+		if e.kind != "youth_transition": continue
+		for key in ["action","data","moves"]:
+			for value in [null,true,1,1.25,"bad",[],{}]:
+				if typeof(e.details[key]) == typeof(value): continue
+				var forged := snapshot.duplicate(true)
+				forged.world.events[i].details[key] = value
+				var target := W.new(432)
+				var before := target.export_campaign_state()
+				var result := target.restore_campaign_state(forged)
+				count += 1
+				if result.ok or target.export_campaign_state() != before: failures.append(str([i,key,value]))
+	print("INDEPENDENT_MALFORMED_SOURCE ",{"checks":count,"failures":failures})
+	quit(0 if failures.is_empty() else 1)

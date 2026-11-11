@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+GODOT="${GODOT:-godot}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$PWD/.local-data}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$PWD/.local-config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$PWD/.local-cache}"
+mkdir -p artifacts; touch artifacts/.gdignore
+for name in career migrations validation; do
+  "$GODOT" --headless --path . --script "tests/test_youth_${name}.gd" 2>&1 | tee "artifacts/youth-${name}.log"
+  grep -q '"failures":\[\]' "artifacts/youth-${name}.log"
+  if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' "artifacts/youth-${name}.log"; then exit 1; fi
+done
+ID="youth_restart_$(date +%s)_${RANDOM}"
+for phase in prepare resume; do
+  "$GODOT" --headless --path . --script tests/test_youth_restart.gd -- "$phase" "$ID" 2>&1 | tee "artifacts/youth-restart-${phase}.log"
+  grep -q '"failures":\[\]' "artifacts/youth-restart-${phase}.log"
+  if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' "artifacts/youth-restart-${phase}.log"; then exit 1; fi
+done

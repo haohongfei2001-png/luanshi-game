@@ -1,12 +1,13 @@
 class_name HeroCombatProfiles
 extends RefCounted
-## Immutable versioned combat snapshots, not a progression/unlock system.
+## Immutable versioned combat snapshots. CombatGrowth owns earned transitions.
 ## Released IDs must never change meaning; tuning creates a new ID/revision.
 ## OWNER-03 approves the direction; these exact values are provisional calibration.
 ## Enemy count is deliberately not an input. Ordinary soldiers remain unchanged.
 
 const REVISION := 1
 const EARLY := "early_v1"
+const PRACTICED := "practiced_v1"
 const LATE := "late_v1"
 const LEGACY := "legacy_test_v0"
 const GAMEPLAY_HP_CAP := 100.0
@@ -18,6 +19,16 @@ const PROFILES := {
 		"sweep_cooldown": 5.0, "sweep_damage": 26.0, "sweep_range": 2.4,
 		"sweep_min_dot": -0.15, "sweep_targets": 2,
 		"lunge_cooldown": 7.0, "lunge_damage": 34.0, "lunge_distance": 2.6,
+		"lunge_radius": 0.9, "lunge_targets": 2,
+		"guard_cooldown": 9.0, "guard_duration": 1.0, "guard_incoming_factor": 0.5,
+	},
+	PRACTICED: {
+		"id": PRACTICED, "revision": REVISION, "test_only": false,
+		"max_hp": 100.0, "speed": 3.0, "damage": 21.0, "range": 1.9,
+		"attack_cooldown": 0.66, "attack_min_dot": 0.25, "attack_targets": 1,
+		"sweep_cooldown": 5.0, "sweep_damage": 30.0, "sweep_range": 2.4,
+		"sweep_min_dot": -0.15, "sweep_targets": 2,
+		"lunge_cooldown": 7.0, "lunge_damage": 38.0, "lunge_distance": 2.6,
 		"lunge_radius": 0.9, "lunge_targets": 2,
 		"guard_cooldown": 9.0, "guard_duration": 1.0, "guard_incoming_factor": 0.5,
 	},
@@ -47,6 +58,10 @@ static func get_profile(profile_id: String) -> Dictionary:
 	## Unknown IDs must fail closed at the integration boundary; never become legacy.
 	return PROFILES.get(profile_id, {}).duplicate(true)
 
+static func starting_ids() -> Array[String]:
+	return [EARLY, LATE, LEGACY]
+
+# Existing calibration/preview set is stable; earned profiles are tested separately.
 static func gameplay_ids() -> Array[String]:
 	return [EARLY, LATE]
 

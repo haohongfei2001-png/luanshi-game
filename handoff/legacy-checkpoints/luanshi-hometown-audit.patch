@@ -1,0 +1,297 @@
+diff --git a/tests/audit_hometown_exact_shortfall.gd b/tests/audit_hometown_exact_shortfall.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..c4c3ec88400e90c80cffe3aba0671eed8bb547f8
+--- /dev/null
++++ b/tests/audit_hometown_exact_shortfall.gd
+@@ -0,0 +1,38 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const H := preload("res://scripts/hometown_messages.gd")
++const Store := preload("res://scripts/campaign_store.gd")
++func _initialize() -> void:
++	var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
++	var w := W.new()
++	w.restore_campaign_state(decoded.state)
++	print("APPRAISAL ",w.youth_action("camp_appraisal"), w.youth_action("appraisal_accept"))
++	while w.snapshot().hour < 23 and not w.snapshot().campaign_ended:
++		var result := w.youth_action("wait_courier")
++		if not result.ok: print("BLOCK ",result); break
++	print("PRE ",w.snapshot().time_seconds," food ",w.snapshot().armies.relief.food," ended ",w.snapshot().campaign_ended)
++	print("VISIT ",w.youth_action("visit_hometown"))
++	var forged := w.export_campaign_state()
++	var found := -1
++	for i in range(forged.world.events.size()):
++		if forged.world.events[i].kind == "hometown_visit": found = i
++	if found < 0: quit(1); return
++	print("REAL_FACT ",H.record(forged.world).visit.observation)
++	for e in forged.world.events:
++		if e.kind == "consumption" and e.time_seconds == 86400.0 and e.details.entity == "pingling" and e.details.consumer == "civilian":
++			var eaten: int = e.details.eaten
++			e.details.eaten = 0
++			e.details.shortfall = e.details.requested
++			e.details.food_delta = 0
++			forged.world.cities.pingling.food += eaten
++			forged.world.ledger.food_consumed -= eaten
++			forged.world.ledger.food_consumed_civilian -= eaten
++			forged.world.ledger.food_shortfall_civilian += eaten
++			print("EXACT_EVENT ",e)
++	forged.world.events[found].details.observation = H.truth(forged.world)
++	forged.world.events[found].details.outcome = "left_notice"
++	var target := W.new()
++	var result := target.restore_campaign_state(forged)
++	print("FORGED_SHORTFALL ",result)
++	if result.ok: print("FAKE_FACT ",target.player_view().hometown.visit.observation," city_food ",target.snapshot().cities.pingling.food," SAVE ",Store.new().encode_campaign(target).get("ok"))
++	quit()
+diff --git a/tests/audit_hometown_exact_shortfall.gd.uid b/tests/audit_hometown_exact_shortfall.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..2c3723d201292b79987d09f860189b3cd5213916
+--- /dev/null
++++ b/tests/audit_hometown_exact_shortfall.gd.uid
+@@ -0,0 +1 @@
++uid://cs1qitgwtjhp2
+diff --git a/tests/audit_hometown_extra.gd b/tests/audit_hometown_extra.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..b8c6469742d6a342d0e88c6cc0b7f330aaeaa594
+--- /dev/null
++++ b/tests/audit_hometown_extra.gd
+@@ -0,0 +1,23 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const H := preload("res://scripts/hometown_messages.gd")
++const Driver := preload("res://tests/youth_combat_driver.gd")
++const Setup := preload("res://scripts/hometown_persistence_smoke.gd")
++func _initialize() -> void:
++	var setup := Setup.new()
++	var w := setup.build()
++	print("MARCH ",w.youth_action("first_march"))
++	var t := w.create_battle_ticket()
++	var b := w.start_battle(t.ticket.battle_id)
++	var outcome := Driver.play(b, "retreat")
++	print("BATTLE ",outcome.result," dead=",outcome.forces[1].dead_ids.size()," elapsed=",outcome.elapsed_world_time)
++	print("SETTLE ",w.commit_battle_outcome(outcome))
++	print("ENDPOINT ",w.snapshot().youth.endpoint, " TIME ",w.snapshot().time_seconds)
++	print("CHOICES ",w.youth_view().choices)
++	var before := w.export_campaign_state()
++	print("WAIT ",w.youth_action("wait_courier")," rolled_back=",before == w.export_campaign_state())
++	var snapshot := w.snapshot()
++	print("PRIOR TRUTH ",H.truth(snapshot))
++	w._advance_clock_to(w.snapshot().time_seconds + 7200.0)
++	print("LATER TRUTH ",H.truth(w.snapshot()))
++	quit()
+diff --git a/tests/audit_hometown_extra.gd.uid b/tests/audit_hometown_extra.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..b314721314114d872059d1df89bf254e56f49e8b
+--- /dev/null
++++ b/tests/audit_hometown_extra.gd.uid
+@@ -0,0 +1 @@
++uid://c3bmoqa21383k
+diff --git a/tests/audit_hometown_false_shortfall.gd b/tests/audit_hometown_false_shortfall.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..424a70737699ead9130e32c24db73d7749724eb4
+--- /dev/null
++++ b/tests/audit_hometown_false_shortfall.gd
+@@ -0,0 +1,30 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const H := preload("res://scripts/hometown_messages.gd")
++const Store := preload("res://scripts/campaign_store.gd")
++func _initialize() -> void:
++	var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
++	var w := W.new()
++	w.restore_campaign_state(decoded.state)
++	print("APPRAISAL ",w.youth_action("camp_appraisal"), w.youth_action("appraisal_accept"))
++	while w.snapshot().hour < 23 and not w.snapshot().campaign_ended:
++		var result := w.youth_action("wait_courier")
++		if not result.ok: print("BLOCK ",result); break
++	print("PRE ",w.snapshot().time_seconds," food ",w.snapshot().armies.relief.food," ended ",w.snapshot().campaign_ended)
++	print("VISIT ",w.youth_action("visit_hometown"))
++	var forged := w.export_campaign_state()
++	var found := -1
++	for i in range(forged.world.events.size()):
++		if forged.world.events[i].kind == "hometown_visit": found = i
++	if found < 0: quit(1); return
++	print("REAL_FACT ",H.record(forged.world).visit.observation)
++	var fake := {"hour": forged.world.hour,"time_seconds":forged.world.time_seconds,"kind":"consumption","details":{"entity":"pingling","consumer":"civilian","people":1,"requested":1,"eaten":0,"shortfall":1,"food_delta":0,"period_hours":24}}
++	forged.world.events.insert(found, fake)
++	forged.world.ledger.food_shortfall_civilian += 1
++	forged.world.events[found+1].details.observation = H.truth(forged.world)
++	forged.world.events[found+1].details.outcome = "left_notice"
++	var target := W.new()
++	var result := target.restore_campaign_state(forged)
++	print("FORGED_SHORTFALL ",result)
++	if result.ok: print("FAKE_FACT ",target.player_view().hometown.visit.observation," city_food ",target.snapshot().cities.pingling.food," SAVE ",Store.new().encode_campaign(target).get("ok"))
++	quit()
+diff --git a/tests/audit_hometown_false_shortfall.gd.uid b/tests/audit_hometown_false_shortfall.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..d0fa750d189c964ea54565be96e4ce1b9933e3a1
+--- /dev/null
++++ b/tests/audit_hometown_false_shortfall.gd.uid
+@@ -0,0 +1 @@
++uid://bxiqjhb3hvpyi
+diff --git a/tests/audit_hometown_forgery.gd b/tests/audit_hometown_forgery.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..ee456d13339b4bd2943709cd46ee5268c6b4f43c
+--- /dev/null
++++ b/tests/audit_hometown_forgery.gd
+@@ -0,0 +1,24 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const H := preload("res://scripts/hometown_messages.gd")
++const Store := preload("res://scripts/campaign_store.gd")
++func _initialize() -> void:
++	var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
++	var w := W.new()
++	print("BASE ",w.restore_campaign_state(decoded.state), " time ",w.snapshot().time_seconds,"couriers ",w.snapshot().couriers)
++	for i in range(9):
++		print("WAIT_FOR_FORGERY ",w.youth_action("wait_courier")," at ",w.snapshot().time_seconds," convoys ",w.snapshot().convoys.size())
++	var forged := w.export_campaign_state()
++	var started: float = forged.world.time_seconds
++	forged.world.time_seconds += 3600.0
++	forged.world.hour = floori(forged.world.time_seconds / 3600.0)
++	H.finish_visit(forged.world, started)
++	var target := W.new(99)
++	var result := target.restore_campaign_state(forged)
++	print("FORGE_FREE_HOUR ",result)
++	if result.ok:
++		print("VISIT ",target.player_view().hometown," ECONOMY_UNCHANGED ",target.snapshot().cities==w.snapshot().cities and target.snapshot().armies==w.snapshot().armies," LEDGER_UNCHANGED ",target.snapshot().ledger==w.snapshot().ledger)
++		print("SAVE ",Store.new().encode_campaign(target).get("ok"))
++	var real := w.youth_action("visit_hometown")
++	print("REAL ",real, " FOOD_BEFORE ",forged.world.armies.relief.food," FOOD_AFTER ",w.snapshot().armies.relief.food)
++	quit()
+diff --git a/tests/audit_hometown_forgery.gd.uid b/tests/audit_hometown_forgery.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..ce17fcbec254f3ea928dc4aa0f1e2f0f6496ee47
+--- /dev/null
++++ b/tests/audit_hometown_forgery.gd.uid
+@@ -0,0 +1 @@
++uid://ths4w5n80lc2
+diff --git a/tests/audit_hometown_live_restore.gd b/tests/audit_hometown_live_restore.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b8dd0155923cb170c8b09d91c8d3d8a1de909fb
+--- /dev/null
++++ b/tests/audit_hometown_live_restore.gd
+@@ -0,0 +1,38 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const Setup := preload("res://scripts/hometown_persistence_smoke.gd")
++const Driver := preload("res://tests/youth_combat_driver.gd")
++var checks := 0
++var failures: Array[String] = []
++func ck(ok: bool, label: String) -> void:
++	checks += 1
++	if not ok: failures.append(label)
++func _initialize() -> void:
++	var w := Setup.new().build()
++	ck(w.youth_action("first_march").ok,"march")
++	var t := w.create_battle_ticket()
++	var b := w.start_battle(t.ticket.battle_id)
++	b.set_player_input(Vector2(0.3,-0.2),Vector2.RIGHT)
++	for i in range(7): b.step(1.0/60.0)
++	ck(w.sync_battle_time(t.ticket.battle_id),"fraction sync")
++	for i in range(5): b.step(1.0/60.0)
++	var snapshot := w.export_campaign_state()
++	var restored := W.new(999)
++	ck(restored.restore_campaign_state(snapshot).ok,"restore unsynced live session")
++	ck(snapshot == w.export_campaign_state(),"validation does not mutate source")
++	ck(snapshot == restored.export_campaign_state(),"complete live graph exact")
++	var rb := restored.start_battle(t.ticket.battle_id)
++	var bad := snapshot.duplicate(true)
++	bad.world.events[3].kind = "hometown_invented"
++	ck(not restored.restore_campaign_state(bad).ok,"malformed rejects")
++	ck(restored.export_campaign_state() == snapshot and restored.is_current_battle(t.ticket.battle_id,rb),"rejection preserves live session identity")
++	var one := Driver.play(b,"retreat")
++	var two := Driver.play(rb,"retreat")
++	ck(one == two,"continued live outcome deterministic")
++	ck(w.commit_battle_outcome(one).ok and restored.commit_battle_outcome(two).ok,"both settle")
++	ck(w.export_campaign_state() == restored.export_campaign_state(),"whole world deterministic after restore")
++	for i in range(3):
++		ck(w.youth_action("wait_courier").ok and restored.youth_action("wait_courier").ok,"endpoint wait")
++	ck(w.export_campaign_state() == restored.export_campaign_state(),"endpoint receipts exact")
++	print("INDEPENDENT_LIVE_RESTORE ",{"checks":checks,"failures":failures})
++	quit(0 if failures.is_empty() else 1)
+diff --git a/tests/audit_hometown_live_restore.gd.uid b/tests/audit_hometown_live_restore.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..7ed202cc52c6e7864252cf696df6df8509278111
+--- /dev/null
++++ b/tests/audit_hometown_live_restore.gd.uid
+@@ -0,0 +1 @@
++uid://cn70iocmf1ieu
+diff --git a/tests/audit_hometown_malformed_source.gd b/tests/audit_hometown_malformed_source.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..77eb6659286b84eaef50e4b3904325d129191fc8
+--- /dev/null
++++ b/tests/audit_hometown_malformed_source.gd
+@@ -0,0 +1,30 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const Setup := preload("res://scripts/hometown_persistence_smoke.gd")
++var count := 0
++var failures: Array[String] = []
++func _initialize() -> void:
++	var setup := Setup.new()
++	var w := setup.build()
++	w.youth_action("first_march")
++	w.youth_action("wait_courier")
++	w.youth_action("courier_comply")
++	setup.fight_return(w)
++	w.youth_action("keep_evidence")
++	w.youth_action("visit_hometown")
++	var snapshot := w.export_campaign_state()
++	for i in range(snapshot.world.events.size()):
++		var e: Dictionary = snapshot.world.events[i]
++		if e.kind != "youth_transition": continue
++		for key in ["action","data","moves"]:
++			for value in [null,true,1,1.25,"bad",[],{}]:
++				if typeof(e.details[key]) == typeof(value): continue
++				var forged := snapshot.duplicate(true)
++				forged.world.events[i].details[key] = value
++				var target := W.new(432)
++				var before := target.export_campaign_state()
++				var result := target.restore_campaign_state(forged)
++				count += 1
++				if result.ok or target.export_campaign_state() != before: failures.append(str([i,key,value]))
++	print("INDEPENDENT_MALFORMED_SOURCE ",{"checks":count,"failures":failures})
++	quit(0 if failures.is_empty() else 1)
+diff --git a/tests/audit_hometown_replay_time.gd b/tests/audit_hometown_replay_time.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..f70391c07c8be517b0d617eeb4510fbf547d0f02
+--- /dev/null
++++ b/tests/audit_hometown_replay_time.gd
+@@ -0,0 +1,30 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const Store := preload("res://scripts/campaign_store.gd")
++func _initialize() -> void:
++	var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
++	var w := W.new()
++	w.restore_campaign_state(decoded.state)
++	print("APPRAISAL ",w.youth_action("camp_appraisal"), w.youth_action("appraisal_accept"))
++	while w.snapshot().hour < 20:
++		if not w.youth_action("wait_courier").ok: quit(2); return
++	print("ATTACH ",w.youth_action("arrange_courier"),w.youth_action("attach_hometown_letter"),w.youth_action("dangerous_march"),w.youth_action("wait_courier"),w.youth_action("courier_comply"))
++	for i in range(3): print("WAIT ",w.youth_action("wait_courier"))
++	print("TIME ",w.snapshot().time_seconds," CONVOYS ",w.snapshot().convoys.size()," REPORTS ",w.snapshot().pending_reports.size()," ALIVE ",w.snapshot().commander.alive)
++	var ticket := w.create_battle_ticket()
++	if not ticket.ok: print("BAD TICKET ",ticket); quit(3); return
++	w.start_battle(ticket.ticket.battle_id)
++	var forged := w.export_campaign_state()
++	var hours := float(OS.get_cmdline_user_args()[0]) if not OS.get_cmdline_user_args().is_empty() else 24.0
++	forged.world.time_seconds += 3600.0*hours
++	forged.world.hour = floori(forged.world.time_seconds/3600.0)
++	forged.world.battle_tickets[ticket.ticket.battle_id].elapsed_world_time = 3600.0*hours
++	var target := W.new()
++	var t := Time.get_ticks_msec()
++	var result := target.restore_campaign_state(forged)
++	print("HOURS ",hours," MS ",Time.get_ticks_msec()-t," RESULT ",result)
++	var replay := W.new(forged.world.seed)
++	var clock := preload("res://scripts/campaign_clock_replay.gd")
++	var directly := clock.validate(forged.world, replay)
++	print("REPLAY_EVENTS ",replay.snapshot().events.size()," INPUT_EVENTS ",forged.world.events.size()," REPLAY_TIME ",replay.snapshot().time_seconds," DIRECT ",directly)
++	quit()
+diff --git a/tests/audit_hometown_replay_time.gd.uid b/tests/audit_hometown_replay_time.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..c19e9a75f9ad4b42c7d9d9077c553763fa9367e1
+--- /dev/null
++++ b/tests/audit_hometown_replay_time.gd.uid
+@@ -0,0 +1 @@
++uid://bny2ty8nh36o6

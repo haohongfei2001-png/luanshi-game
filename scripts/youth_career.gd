@@ -251,7 +251,7 @@ static func validate(state: Dictionary) -> bool:
 		for t in state.battle_tickets.values():
 			if t.purpose != "technical" or t.command_authority != "squad": return false
 		return true
-	if state.mode != "youth" or state.origin != "new_world7" or state.commander.hero_profile.id != "early_v1": return false
+	if state.mode != "youth" or state.origin != "new_world7" or preload("res://scripts/combat_growth.gd").initial_profile(state).id != "early_v1": return false
 	var y := {}
 	var pending_moves: Array = []
 	var prior_at := 0.0
@@ -282,10 +282,10 @@ static func validate(state: Dictionary) -> bool:
 					returned_receipts.append({"id": d.id, "reply": courier_replies.get(d.id, "")})
 					stock.pingling.soldiers += 1
 					stock.pingling.food += courier_food[d.id]
-		elif e.kind == "wound_rest_started":
+		elif e.kind in ["wound_rest_started", "combat_training_started"]:
 			had_care = true
 			if e.time_seconds != prior_at: return false
-		elif e.kind == "wound_rest_completed":
+		elif e.kind in ["wound_rest_completed", "combat_training_completed"]:
 			if e.details.started_at != prior_at: return false
 			prior_at = e.time_seconds
 		elif e.kind == "hometown_visit":

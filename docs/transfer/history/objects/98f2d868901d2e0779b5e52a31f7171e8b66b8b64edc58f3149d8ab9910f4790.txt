@@ -1,0 +1,113 @@
+extends SceneTree
+const W := preload("res://scripts/world_sim.gd")
+const Store := preload("res://scripts/campaign_store.gd")
+const Driver := preload("res://tests/youth_combat_driver.gd")
+const HSetup := preload("res://scripts/hometown_persistence_smoke.gd")
+const Setup := preload("res://scripts/wound_persistence_smoke.gd")
+var checks := 0
+var failures: Array[String] = []
+func _initialize() -> void: call_deferred("run")
+func check(ok: bool, label: String) -> void:
+	checks += 1
+	if not ok: failures.append(label); push_error(label)
+func exact(w: WorldSimulation, label: String) -> void:
+	var s := w.export_campaign_state()
+	var clone := W.new()
+	var r := clone.restore_campaign_state(s)
+	check(r.ok and clone.export_campaign_state() == s, label + " restore exact " + str(r))
+	var encoded := Store.new().encode_campaign(w)
+	check(encoded.ok, label + " encode")
+	if encoded.ok:
+		var decoded := Store.new().decode_campaign(encoded.bytes)
+		check(decoded.ok and decoded.state == s, label + " decode exact")
+func act(w: WorldSimulation, action: String) -> void:
+	var r := w.youth_action(action)
+	check(r.ok, "real youth " + action + str(r))
+func injury(b: BattleSimulation, retreat: bool) -> void:
+	var initial: float = b.player().hp
+	b.issue_order("attack")
+	for frame in range(18000):
+		if b.ended: break
+		if not retreat and b.player().hp < initial:
+			Driver.play(b, "fight")
+			return
+		if retreat and b.player().hp < initial:
+			b.issue_order("retreat"); b.set_player_input(Vector2.LEFT, Vector2.RIGHT)
+		else:
+			var aim := Vector2.RIGHT
+			var dist := INF
+			for u in b.units:
+				if u.team == 1 and u.hp > 0.0 and b.player().pos.distance_to(u.pos) < dist:
+					dist = b.player().pos.distance_to(u.pos); aim = u.pos - b.player().pos
+			b.set_player_input(aim, aim)
+		b.step(BattleSimulation.FIXED_DELTA)
+func run() -> void:
+	# Existing v0.6 committed legacy battle opts in where it really stood.
+	var d := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/v06/committed.save.json"))
+	var legacy := W.new(); check(d.ok and legacy.restore_campaign_state(d.state).ok, "genuine old committed load")
+	var before := legacy.export_campaign_state()
+	var r := legacy.rest_wounds(1)
+	check(r.ok and r.healed == 5.0 and legacy.snapshot().commander.max_hp == 360.0, "old committed real care " + str(r))
+	check(before.world.battle_tickets == legacy.snapshot().battle_tickets, "old committed immutable ticket")
+	exact(legacy, "old committed recovered")
+	# Actual old running fixture inputs, not a modern synthetic migration clone.
+	for file in ["v07/early_v1_running.save.json", "v07/late_v1_running.save.json", "v08/world7_youth_running.save.json"]:
+		d = Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/" + file))
+		var w := W.new(); check(d.ok and w.restore_campaign_state(d.state).ok, "old active load " + file)
+		before = w.export_campaign_state()
+		exact(w, "old active initial " + file)
+		var id: String = w.player_view().active_battle
+		var b := w.start_battle(id)
+		injury(b, w.snapshot().mode != "youth")
+		check(b.ended and b.player().hp > 0.0 and b.player().hp < b.player().max_hp, "old active actual injury " + file)
+		check(w.commit_battle_outcome(b.outcome()).ok, "old active commit " + file)
+		if w.snapshot().mode == "youth": act(w, "return_to_camp")
+		else: check(w.march("river") and w.advance(3), "old active real return " + file)
+		r = w.rest_wounds(1)
+		check(r.ok and r.healed == 5.0, "old active enable recovery " + file + str(r))
+		check(before.world.battle_tickets[id].reserved_roster_snapshot == w.snapshot().battle_tickets[id].reserved_roster_snapshot and before.world.battle_tickets[id].signal_model == w.snapshot().battle_tickets[id].signal_model, "old reservation immutable " + file)
+		exact(w, "old active care " + file)
+	# Preserve source replay across the existing real aggregate depot takeover.
+	var tech := Setup.new().build("technical")
+	check(tech.march("river") and tech.advance(3) and tech.seize_depot(), "real existing aggregate depot takeover")
+	r = tech.rest_wounds(1)
+	check(r.ok, "aggregate technical care " + str(r))
+	exact(tech, "aggregate technical care")
+	# Existing World8 fixture starts fully healthy, then actual second encounter.
+	d = Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
+	var world8 := W.new(); check(d.ok and world8.restore_campaign_state(d.state).ok, "old world8 load")
+	act(world8, "dangerous_march")
+	r = world8.create_battle_ticket(); check(r.ok, "old world8 real battle")
+	var b := world8.start_battle(r.ticket.battle_id)
+	injury(b, false)
+	check(b.ended and b.player().hp < 100.0 and world8.commit_battle_outcome(b.outcome()).ok, "old world8 actual combat injury or death")
+	# The slice ends after this mission: legitimate injury must not unlock forbidden care.
+	before = world8.export_campaign_state()
+	check(not world8.rest_wounds(1).ok and world8.export_campaign_state() == before, "old world8 endpoint cannot rest")
+	exact(world8, "old world8 endpoint")
+	# Hometown + courier + combat injury + care + reunions/appraisal coexist.
+	var hs := HSetup.new()
+	var youth := hs.build()
+	act(youth, "first_march"); act(youth, "wait_courier"); act(youth, "courier_comply")
+	r = youth.create_battle_ticket(); check(r.ok, "letter injury battle reserve")
+	b = youth.start_battle(r.ticket.battle_id); injury(b, false)
+	check(b.ended and b.player().hp > 0.0 and b.player().hp < 100.0 and youth.commit_battle_outcome(b.outcome()).ok, "letter real injured victory")
+	act(youth, "return_to_camp")
+	var message: Dictionary = youth.player_view().hometown.message.duplicate(true)
+	r = youth.rest_wounds(1); check(r.ok, "care before first injustice decision " + str(r))
+	var choice_ids: Array = youth.youth_view().choices.map(func(option): return option.id)
+	for original in ["endure", "appeal", "keep_evidence", "protect_comrade"]: check(original in choice_ids, "original injustice choice remains " + original)
+	act(youth, "keep_evidence")
+	r = youth.rest_wounds(1); check(r.ok, "care before hometown visit " + str(r))
+	act(youth, "visit_hometown"); act(youth, "accept_appointment"); act(youth, "comrade_petition"); act(youth, "camp_appraisal")
+	exact(youth, "combined pending quote")
+	act(youth, "appraisal_accept")
+	check(youth.player_view().hometown.message == message, "rest never rewrites old message")
+	r = youth.rest_wounds(1); check(r.ok, "care after appraisal " + str(r))
+	exact(youth, "combined cared appraisal")
+	act(youth, "refuse_order")
+	before = youth.export_campaign_state()
+	check(not youth.rest_wounds(6).ok and youth.export_campaign_state() == before, "refusal endpoint rest denied exact")
+	exact(youth, "combined original endpoint")
+	print("INDEPENDENT_WOUNDS_ROUTES " + JSON.stringify({"checks": checks, "failures": failures}))
+	quit(0 if failures.is_empty() else 1)

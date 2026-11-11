@@ -1,0 +1,29 @@
+# Godot 4
+.godot/
+.import/
+.mono/
+data_*/
+*.tmp
+
+# Local/editor/build artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+build/
+dist/
+exports/
+
+# Credentials and private configuration
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.p12
+*.p8
+
+# Reproducible local runtime caches and generated outputs
+.local-*/
+builds/
+artifacts/

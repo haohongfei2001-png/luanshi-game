@@ -1,0 +1,346 @@
+{
+  "format": 1,
+  "checkout_label": "luanshi-appraisal",
+  "branch": "work/camp-appraisal",
+  "source_head": "5d90c217158f380d6248bd65e3da8ea69ebf7324",
+  "source_tree": "908af1b93d91fba6dc5ec53ce4f218d4a61d2b7f",
+  "base_manifest": "BASELINE.json",
+  "replace_or_add": {
+    ".github/workflows/verify.yml": {
+      "mode": "100644",
+      "original_blob_sha1": "2fce093d68fde335a930a801bc0d2982e7316768",
+      "original_sha256": "16769ae52cfae0b0f7dc52a5f57d8c0dbb9601c6d1468522bc45206fa128e1db",
+      "published_sha256": "16769ae52cfae0b0f7dc52a5f57d8c0dbb9601c6d1468522bc45206fa128e1db",
+      "published_bytes": 10874,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/16769ae52cfae0b0f7dc52a5f57d8c0dbb9601c6d1468522bc45206fa128e1db.txt"
+      }
+    },
+    "README.md": {
+      "mode": "100644",
+      "original_blob_sha1": "31171b63c4f3423a47762363177eb5f2d98ca239",
+      "original_sha256": "51cec658af0f91d549d06fa33172cfb7cc2d609db77e46e0a45be4821c996541",
+      "published_sha256": "51cec658af0f91d549d06fa33172cfb7cc2d609db77e46e0a45be4821c996541",
+      "published_bytes": 11615,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/51cec658af0f91d549d06fa33172cfb7cc2d609db77e46e0a45be4821c996541.txt"
+      }
+    },
+    "docs/ACCEPTANCE_MATRIX.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7f2f0480df6027351055aed2fc7402e31767c839",
+      "original_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_bytes": 23007,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0.txt"
+      }
+    },
+    "docs/DELIVERY_PLAN.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5d4e33a84a9e7362b2aa9e772fe5114ab6566fc6",
+      "original_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_bytes": 7031,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040.txt"
+      }
+    },
+    "docs/DOT_HANDOFF_FINAL.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7221f52c5cb9bb8eaa969e1f0d0a98faf8d7de0e",
+      "original_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_bytes": 12666,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722.txt"
+      }
+    },
+    "docs/FINAL_GAME_DESIGN_SPEC.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7b883813120f18287a4ff964d280c64ddf72cfef",
+      "original_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_bytes": 29255,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe.txt"
+      }
+    },
+    "docs/FINAL_VISION_ACCEPTANCE.md": {
+      "mode": "100644",
+      "original_blob_sha1": "2c8276b427996aee37253fe49052f03604095d25",
+      "original_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_bytes": 5804,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a.txt"
+      }
+    },
+    "docs/NARRATIVE_ART_DIRECTION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "0939c3547558a041141f2fed2b5dbd992b081786",
+      "original_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_bytes": 13970,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5.txt"
+      }
+    },
+    "docs/PLAYING_ZH.md": {
+      "mode": "100644",
+      "original_blob_sha1": "f45c681e6e4e9f55fea31f2bf12598b8726486f1",
+      "original_sha256": "d3f846c6af59beae3c3c1ac13f3640217cfe8872e83e37f518790a555dcfd407",
+      "published_sha256": "d3f846c6af59beae3c3c1ac13f3640217cfe8872e83e37f518790a555dcfd407",
+      "published_bytes": 9243,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/d3f846c6af59beae3c3c1ac13f3640217cfe8872e83e37f518790a555dcfd407.txt"
+      }
+    },
+    "docs/PRODUCT_DECISIONS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "05fe4bb65bde39ed67690e25222640842838e513",
+      "original_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_bytes": 20851,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666.txt"
+      }
+    },
+    "docs/PROJECT_STATUS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "a287a0235449de47d8c4aafa1f3a40ece06cb83c",
+      "original_sha256": "4bcec9370ff7722f5fb7d53434af9a67fbdf8dfac76cc4ee99a9330e5ffe12a3",
+      "published_sha256": "4bcec9370ff7722f5fb7d53434af9a67fbdf8dfac76cc4ee99a9330e5ffe12a3",
+      "published_bytes": 13955,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/4bcec9370ff7722f5fb7d53434af9a67fbdf8dfac76cc4ee99a9330e5ffe12a3.txt"
+      }
+    },
+    "docs/SIMULATION_CONTRACTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "017b96857ded3a4fa22296a638810fd3b1089a7f",
+      "original_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_bytes": 20921,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6.txt"
+      }
+    },
+    "export_presets.cfg": {
+      "mode": "100644",
+      "original_blob_sha1": "a48f04b6fdcb9c92568bda01701edba369e9c200",
+      "original_sha256": "75607c06becb6af8b35ed444aad5e03370079a076d139bf7f51e72ade189a42c",
+      "published_sha256": "75607c06becb6af8b35ed444aad5e03370079a076d139bf7f51e72ade189a42c",
+      "published_bytes": 1574,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/75607c06becb6af8b35ed444aad5e03370079a076d139bf7f51e72ade189a42c.txt"
+      }
+    },
+    "project.godot": {
+      "mode": "100644",
+      "original_blob_sha1": "83e7c011770366b9e05d17b2458737fb846ac40e",
+      "original_sha256": "2e2feac3c2fc05f770bf79d1ea915cfd92e8779052239e72e2f60f2c739decad",
+      "published_sha256": "2e2feac3c2fc05f770bf79d1ea915cfd92e8779052239e72e2f60f2c739decad",
+      "published_bytes": 793,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/2e2feac3c2fc05f770bf79d1ea915cfd92e8779052239e72e2f60f2c739decad.txt"
+      }
+    },
+    "scripts/appraisal_persistence_smoke.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "381d9a1ac3faf2e6f845fae85d1381ce23be948e",
+      "original_sha256": "73a519d2be26d9d079552dceddec85fac817f604c7c727c2d17d35cd3861323c",
+      "published_sha256": "73a519d2be26d9d079552dceddec85fac817f604c7c727c2d17d35cd3861323c",
+      "published_bytes": 3482,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/73a519d2be26d9d079552dceddec85fac817f604c7c727c2d17d35cd3861323c.txt"
+      }
+    },
+    "scripts/battle.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "cecff0cb9e5db69240eb935dac50708c028ff83d",
+      "original_sha256": "a4319a38824037ce9e483e48c4740f077a25af7cad2b32d3a13385962f0823ae",
+      "published_sha256": "a4319a38824037ce9e483e48c4740f077a25af7cad2b32d3a13385962f0823ae",
+      "published_bytes": 34835,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/a4319a38824037ce9e483e48c4740f077a25af7cad2b32d3a13385962f0823ae.txt"
+      }
+    },
+    "scripts/campaign_event_audit.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "09303fca2c4a17348e7569973c440dd984fe3233",
+      "original_sha256": "e22249f364afc3826b9d1960d3eeb6af009300d116e70e70b0246b6e7d284218",
+      "published_sha256": "e22249f364afc3826b9d1960d3eeb6af009300d116e70e70b0246b6e7d284218",
+      "published_bytes": 13566,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e22249f364afc3826b9d1960d3eeb6af009300d116e70e70b0246b6e7d284218.txt"
+      }
+    },
+    "scripts/strategy_view.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "fa34fd3337a37294dfe0b4ea8fe9da2b0a9df6aa",
+      "original_sha256": "4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0",
+      "published_sha256": "4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0",
+      "published_bytes": 18396,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0.txt"
+      }
+    },
+    "scripts/world_sim.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "f0c825bf999009e7e911fee6ac2ad4ebe364ccf4",
+      "original_sha256": "b60b8ada234b8175fe385b6ae1f89c5abe5ba9b29a93874c2a3cd750ba970ff9",
+      "published_sha256": "b60b8ada234b8175fe385b6ae1f89c5abe5ba9b29a93874c2a3cd750ba970ff9",
+      "published_bytes": 74224,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/b60b8ada234b8175fe385b6ae1f89c5abe5ba9b29a93874c2a3cd750ba970ff9.txt"
+      }
+    },
+    "scripts/youth_career.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "20f184b1fad9de079146df42aa677ebf20028357",
+      "original_sha256": "f8e0e2530efbe8ad3e9b292925f50fb2eac595a74e51391b72eddd91e50dfa25",
+      "published_sha256": "f8e0e2530efbe8ad3e9b292925f50fb2eac595a74e51391b72eddd91e50dfa25",
+      "published_bytes": 22269,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f8e0e2530efbe8ad3e9b292925f50fb2eac595a74e51391b72eddd91e50dfa25.txt"
+      }
+    },
+    "scripts/youth_ui.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "4877491d2450e663276dd8d8c2ccd5515b19d8e0",
+      "original_sha256": "a5f691f1d8ae4a0088ab0210e271488d7d8474f432a3117be06317ae8c9f2ffc",
+      "published_sha256": "a5f691f1d8ae4a0088ab0210e271488d7d8474f432a3117be06317ae8c9f2ffc",
+      "published_bytes": 20718,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/a5f691f1d8ae4a0088ab0210e271488d7d8474f432a3117be06317ae8c9f2ffc.txt"
+      }
+    },
+    "tools/export.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "4ce0e718904f519f95b05f92fb8fca616b7b29c7",
+      "original_sha256": "318307416837e20af3f8a77f6010d465f78131a9801ba4afa28afe23c8a39b52",
+      "published_sha256": "318307416837e20af3f8a77f6010d465f78131a9801ba4afa28afe23c8a39b52",
+      "published_bytes": 3346,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/318307416837e20af3f8a77f6010d465f78131a9801ba4afa28afe23c8a39b52.txt"
+      }
+    },
+    "tools/test.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "3222f5e19325cb6106e2880529e9f3f8bda081a6",
+      "original_sha256": "d0db0d17c9d2fcc13dc98cb70c812d974d3b69cc4f5b0cd6fdab1edc293f3dda",
+      "published_sha256": "d0db0d17c9d2fcc13dc98cb70c812d974d3b69cc4f5b0cd6fdab1edc293f3dda",
+      "published_bytes": 6227,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/d0db0d17c9d2fcc13dc98cb70c812d974d3b69cc4f5b0cd6fdab1edc293f3dda.txt"
+      }
+    }
+  },
+  "delete_from_baseline": [
+    "docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md",
+    "docs/COMRADE_PETITION.md",
+    "docs/DESIGN_SYNC_V014.md",
+    "docs/HOMETOWN_MESSAGES.md",
+    "docs/WOUND_CARE.md",
+    "docs/evidence/comrades-v011-validation.log",
+    "docs/evidence/hometown-v012-validation.log",
+    "docs/evidence/wounds-v013-validation.log",
+    "scripts/campaign_clock_replay.gd",
+    "scripts/campaign_clock_replay.gd.uid",
+    "scripts/comrade_petition.gd",
+    "scripts/comrade_petition.gd.uid",
+    "scripts/hometown_messages.gd",
+    "scripts/hometown_messages.gd.uid",
+    "scripts/hometown_persistence_smoke.gd",
+    "scripts/hometown_persistence_smoke.gd.uid",
+    "scripts/petition_persistence_smoke.gd",
+    "scripts/petition_persistence_smoke.gd.uid",
+    "scripts/wound_care.gd",
+    "scripts/wound_care.gd.uid",
+    "scripts/wound_persistence_smoke.gd",
+    "scripts/wound_persistence_smoke.gd.uid",
+    "tests/test_comrade_petition.gd",
+    "tests/test_comrade_petition.gd.uid",
+    "tests/test_hometown_messages.gd",
+    "tests/test_hometown_messages.gd.uid",
+    "tests/test_hometown_restart.gd",
+    "tests/test_hometown_restart.gd.uid",
+    "tests/test_hometown_ui.gd",
+    "tests/test_hometown_ui.gd.uid",
+    "tests/test_petition_restart.gd",
+    "tests/test_petition_restart.gd.uid",
+    "tests/test_petition_ui.gd",
+    "tests/test_petition_ui.gd.uid",
+    "tests/test_wounds.gd",
+    "tests/test_wounds.gd.uid",
+    "tests/test_wounds_restart.gd",
+    "tests/test_wounds_restart.gd.uid",
+    "tests/test_wounds_ui.gd",
+    "tests/test_wounds_ui.gd.uid",
+    "tools/test_hometown.sh",
+    "tools/test_petition.sh",
+    "tools/test_wounds.sh"
+  ],
+  "excluded_assets": [
+    {
+      "path": "assets/fonts/LuanshiUISCR-Regular.otf",
+      "reason": "Font bytes deliberately absent; not represented by object pool."
+    }
+  ],
+  "deletion_semantics": "Omit these baseline tracked paths when reconstructing this HEAD into a NEW empty directory. Never delete from the live development tree.",
+  "original_source_text_files": 221,
+  "published_text_files": 315,
+  "document_files_transformed": 22,
+  "source_is_ancestor_of_latest": true,
+  "inventory_hash_algorithm": "SHA256 of sorted UTF-8 rows: relative_path + NUL + git_mode + NUL + file_sha256 + LF. Source inventory excludes document/evidence paths; all-text inventories exclude omitted font.",
+  "original_source_inventory_sha256": "89445280f229074379995d072cf8e04681cc5fdb623e620eb2115e40ae10da0e",
+  "original_all_text_inventory_sha256": "1728d41b898a8eb1599001fa20b1fee90c7b9413f794c8b4f6a4a2ca744293f7",
+  "published_all_text_inventory_sha256": "1fc86d69275ab060a8b58a16ae473d3def38bc11764f813e7a010647b7966656"
+}

@@ -1,0 +1,24 @@
+extends SceneTree
+const W := preload("res://scripts/world_sim.gd")
+const H := preload("res://scripts/hometown_messages.gd")
+const Store := preload("res://scripts/campaign_store.gd")
+func _initialize() -> void:
+	var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
+	var w := W.new()
+	print("BASE ",w.restore_campaign_state(decoded.state), " time ",w.snapshot().time_seconds,"couriers ",w.snapshot().couriers)
+	for i in range(9):
+		print("WAIT_FOR_FORGERY ",w.youth_action("wait_courier")," at ",w.snapshot().time_seconds," convoys ",w.snapshot().convoys.size())
+	var forged := w.export_campaign_state()
+	var started: float = forged.world.time_seconds
+	forged.world.time_seconds += 3600.0
+	forged.world.hour = floori(forged.world.time_seconds / 3600.0)
+	H.finish_visit(forged.world, started)
+	var target := W.new(99)
+	var result := target.restore_campaign_state(forged)
+	print("FORGE_FREE_HOUR ",result)
+	if result.ok:
+		print("VISIT ",target.player_view().hometown," ECONOMY_UNCHANGED ",target.snapshot().cities==w.snapshot().cities and target.snapshot().armies==w.snapshot().armies," LEDGER_UNCHANGED ",target.snapshot().ledger==w.snapshot().ledger)
+		print("SAVE ",Store.new().encode_campaign(target).get("ok"))
+	var real := w.youth_action("visit_hometown")
+	print("REAL ",real, " FOOD_BEFORE ",forged.world.armies.relief.food," FOOD_AFTER ",w.snapshot().armies.relief.food)
+	quit()

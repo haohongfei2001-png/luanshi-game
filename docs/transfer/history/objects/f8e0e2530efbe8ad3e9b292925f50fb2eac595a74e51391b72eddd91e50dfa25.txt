@@ -1,0 +1,379 @@
+class_name YouthCareer
+extends RefCounted
+const Appraisal := preload("res://scripts/camp_appraisal.gd")
+const Couriers := preload("res://scripts/courier_orders.gd")
+## Pure narrative reducer. Only WorldSimulation mutates the resulting state.
+## Ordinary names and dialogue are provisional, not an approved core cast.
+const YEAR_SECONDS := 365.25 * 24.0 * 3600.0
+const CHOICES := ["endure", "appeal", "keep_evidence", "protect_comrade"]
+const PEOPLE := ["recruit_lin", "recruit_zhou", "recruit_wu", "recruit_tian"]
+const NAMES := ["林七", "周禾", "吴石", "田安"]
+const CHOICE_HOURS := {"endure": 1, "appeal": 6, "keep_evidence": 2, "protect_comrade": 3}
+const REWARDS := {"endure": 2, "appeal": 6, "keep_evidence": 1, "protect_comrade": 0}
+
+static func initial(enlistment: String, motivation: String) -> Dictionary:
+	if enlistment not in ["forced", "volunteer"] or motivation not in ["survival", "merit", "homeland"]:
+		return {}
+	var characters := {}
+	for i in range(PEOPLE.size()):
+		characters[PEOPLE[i]] = person(NAMES[i], "comrade", "relief")
+		characters[PEOPLE[i]].trust = 2 if motivation == "homeland" else 0
+	characters["officer_qiao"] = person("乔队正", "superior", "pingling")
+	characters["clerk_yu"] = person("余书吏", "clerk", "pingling")
+	return {"revision": 1, "enlistment": enlistment, "motivation": motivation,
+		"born_at_seconds": -15.0 * YEAR_SECONDS, "stage": "first_orders", "rank": "recruit",
+		"standing": (-1 if enlistment == "forced" else 1) + (1 if motivation == "merit" else 0),
+		"earned_merit": 0, "recorded_merit": 0, "appropriated_merit": 0,
+		"reward_food": 0, "evidence": [], "choice": "", "incident": "",
+		"appointment": {}, "roster": ["commander"] + PEOPLE, "characters": characters,
+		"battle_ids": [], "protected_id": "", "endpoint": {}, "timeline": []}
+
+static func person(label: String, role: String, location: String) -> Dictionary:
+	return {"name": label, "role": role, "alive": true, "location": location,
+		"trust": 0, "respect": 0, "grievance": 0, "reported_merit": 0, "known_battles": []}
+
+static func initial_food(enlistment: String, motivation: String) -> int:
+	return (10 if enlistment == "forced" else 14) + (2 if motivation == "survival" else 0)
+
+static func witness(y: Dictionary) -> String:
+	for id in y.roster:
+		if id != "commander" and y.characters[id].alive:
+			return id
+	return ""
+
+static func transition(previous: Dictionary, action: String, at: float, d: Dictionary, tickets: Dictionary, seed: int) -> Dictionary:
+	var y := previous.duplicate(true)
+	match action:
+		"start":
+			if not y.is_empty() or not _keys(d, ["enlistment", "motivation"]): return {}
+			y = initial(d.enlistment, d.motivation)
+			if y.is_empty() or at != 0.0: return {}
+		"first_march", "dangerous_march":
+			if not d.is_empty() or y.is_empty() or y.stage != ("first_orders" if action == "first_march" else "dangerous_orders"): return {}
+			y.stage = "first_battle" if action == "first_march" else "dangerous_battle"
+		"battle":
+			if not _keys(d, ["battle_id"]) or y.is_empty() or y.stage not in ["first_battle", "dangerous_battle"] or not tickets.has(d.battle_id) or d.battle_id in y.battle_ids: return {}
+			var ticket: Dictionary = tickets[d.battle_id]
+			if ticket.status != "committed" or ticket.time + ticket.elapsed_world_time != at or ticket.purpose != y.stage: return {}
+			var out: Dictionary = ticket.outcome
+			var expected_roster: Array = []
+			for entry in ticket.reserved_roster_snapshot[0]: expected_roster.append(entry.id)
+			if expected_roster != y.roster: return {}
+			y.battle_ids.append(d.battle_id)
+			var merit: int = out.forces[1].dead_ids.size() + (1 if out.result == "victory" else 0)
+			y.earned_merit += merit
+			if y.stage == "dangerous_battle": y.recorded_merit += merit
+			for id in y.roster.duplicate():
+				if id == "commander": continue
+				var c: Dictionary = y.characters[id]
+				c.known_battles.append(d.battle_id)
+				if id in out.forces[0].dead_ids:
+					c.alive = false
+					c.location = "hequ"
+					y.roster.erase(id)
+				else:
+					c.trust += 1 if out.result == "victory" else 2
+					c.respect += 1 if out.result == "victory" else 0
+					c.grievance += out.forces[0].dead_ids.size()
+			if not out.player_alive:
+				y.roster.erase("commander")
+				_finish(y, "commander_dead", at)
+			elif y.stage == "first_battle" and merit == 0:
+				_finish(y, "first_patrol_withdrawn", at)
+			else:
+				y.stage = "first_return" if y.stage == "first_battle" else "dangerous_return"
+		"return_to_camp":
+			if not d.is_empty() or y.is_empty() or y.stage not in ["first_return", "dangerous_return"]: return {}
+			for id in ["officer_qiao", "clerk_yu"]:
+				y.characters[id].known_battles = y.battle_ids.duplicate()
+			if y.stage == "first_return":
+				y.incident = "appropriated_report" if posmod(seed, 2) == 0 else "disputed_order"
+				y.recorded_merit = 1 if y.earned_merit > 1 else 0
+				y.appropriated_merit = y.earned_merit - y.recorded_merit
+				y.characters.officer_qiao.reported_merit += y.appropriated_merit
+				y.stage = "injustice"
+			else: y.stage = "replenishment"
+		"choice":
+			if not _keys(d, ["choice"]) or y.is_empty() or y.stage != "injustice" or d.choice not in CHOICES: return {}
+			var who := witness(y)
+			if d.choice == "protect_comrade" and who.is_empty(): return {}
+			y.choice = d.choice
+			y.reward_food = REWARDS[d.choice]
+			match d.choice:
+				"endure":
+					y.standing += 2
+					y.characters.clerk_yu.respect -= 1
+					if who != "": y.characters[who].trust -= 1
+				"appeal":
+					y.standing -= 2
+					var restored: int = mini(y.appropriated_merit, 2 if who != "" else 1)
+					y.recorded_merit += restored
+					y.appropriated_merit -= restored
+					y.characters.officer_qiao.reported_merit -= restored
+					y.evidence.append({"kind": "witness_deposition" if who != "" else "contested_roster", "battle_id": y.battle_ids[0], "witness": who, "disclosed_to": ["officer_qiao", "clerk_yu"]})
+					if who != "": y.characters[who].respect += 2
+				"keep_evidence":
+					y.evidence.append({"kind": "private_roster_copy", "battle_id": y.battle_ids[0], "witness": who, "disclosed_to": []})
+					if who != "": y.characters[who].trust += 1
+				"protect_comrade":
+					y.standing -= 3
+					y.protected_id = who
+					y.characters[who].trust += 3
+					y.characters[who].grievance = maxi(0, y.characters[who].grievance - 1)
+					y.characters[who].location = "pingling"
+					y.roster.erase(who)
+					y.evidence.append({"kind": "accepted_responsibility", "battle_id": y.battle_ids[0], "witness": who, "disclosed_to": ["officer_qiao", "clerk_yu"]})
+			y.stage = "appointment"
+		"accept_appointment", "replenish":
+			if not _keys(d, ["added", "weapons", "food"]) or not d.added is Array or not d.weapons is int or not d.food is int or y.is_empty() or y.stage != ("appointment" if action == "accept_appointment" else "replenishment"): return {}
+			var cap := 4 if y.choice == "protect_comrade" else 6
+			if d.added.size() > cap - y.roster.size() or d.weapons < 0 or d.weapons > cap or d.food < 0 or d.food > 12: return {}
+			if action == "accept_appointment" and d.added.size() != cap - y.roster.size(): return {}
+			for index in range(d.added.size()):
+				var id := "replacement_%s_%d" % [action, index]
+				if not d.added[index] is String or d.added[index] != id or y.characters.has(id): return {}
+				y.characters[id] = person("补入军士%d" % (index + 1), "comrade", "relief")
+				y.roster.append(id)
+			if action == "accept_appointment":
+				y.appointment = {"issuer": "officer_qiao", "capacity": cap, "issued_at": at, "basis": "patrol_record_and_vacancy"}
+				y.rank = "temporary_squad_leader"
+				y.stage = "dangerous_orders"
+			else: _finish(y, "mission_" + str(tickets[y.battle_ids[-1]].outcome.result), at)
+		"finish_without_replacements":
+			if not d.is_empty() or y.is_empty() or y.stage != "replenishment": return {}
+			_finish(y, "mission_" + str(tickets[y.battle_ids[-1]].outcome.result), at)
+		"camp_appraisal":
+			if y.is_empty() or y.stage != "dangerous_orders" or not Appraisal.offer(y).is_empty(): return {}
+			# Complete evidence/stock equality is verified against the event stream in validate().
+			if not Appraisal.shape(d) or d.revision != Appraisal.REVISION or d.outcome not in ["support", "bargain", "denied"]: return {}
+		"appraisal_accept", "appraisal_decline":
+			if not d.is_empty() or not Appraisal.pending(y): return {}
+			if action == "appraisal_accept":
+				var quote := Appraisal.offer(y)
+				y.reward_food += quote.food
+				y.standing += 1
+				if quote.outcome == "support": y.characters.officer_qiao.respect += 1
+				else:
+					if y.recorded_merit < 1: return {}
+					y.recorded_merit -= 1
+					y.appropriated_merit += 1
+					y.characters.officer_qiao.reported_merit += 1
+		"refuse_order":
+			if not d.is_empty() or y.is_empty() or y.stage != "dangerous_orders": return {}
+			y.standing -= 4
+			y.rank = "relieved_of_command"
+			for id in y.roster:
+				if id != "commander": y.characters[id].location = "pingling"
+			y.roster = ["commander"]
+			_finish(y, "order_refused", at)
+		"interrupted":
+			if not _keys(d, ["action"]) or d.action != "protect_comrade" or y.is_empty() or y.stage != "injustice" or witness(y) != "": return {}
+			# Time and actual losses remain; the player may choose another response.
+		"unavailable":
+			if not _keys(d, ["reason"]) or y.is_empty() or d.reason not in ["no_appointment_pool", "mission_target_absent"]: return {}
+			if (d.reason == "no_appointment_pool" and y.stage != "appointment") or (d.reason == "mission_target_absent" and y.stage not in ["first_battle", "dangerous_battle"]): return {}
+			_finish(y, d.reason, at)
+		_:
+			return {}
+	y.timeline.append({"at": at, "action": action, "details": d.duplicate(true)})
+	return y
+
+static func apply_losses(previous: Dictionary, count: int, cause: String, at: float) -> Dictionary:
+	# Only starvation can kill this roster outside its two recorded encounters.
+	# Match WorldSim's aggregate policy: ordinary soldiers first, commander last.
+	# Called only from an actual troops_lost event, identically during live play and replay.
+	var y := previous.duplicate(true)
+	if y.is_empty() or count <= 0 or count > y.roster.size() or cause != "starvation": return {}
+	var dead_ids: Array = []
+	for id in y.roster:
+		if id != "commander" and dead_ids.size() < count:
+			dead_ids.append(id)
+	if dead_ids.size() < count: dead_ids.append("commander")
+	for id in dead_ids:
+		y.roster.erase(id)
+		if id != "commander": y.characters[id].alive = false
+	if "commander" in dead_ids:
+		_finish(y, "commander_dead", at)
+		y.endpoint["cause"] = cause
+	y.timeline.append({"at": at, "action": "attrition", "details": {"cause": cause, "dead_ids": dead_ids}})
+	return y
+
+static func _finish(y: Dictionary, reason: String, at: float) -> void:
+	y.stage = "endpoint"
+	y.endpoint = {"reason": reason, "at": at, "army_ids": y.roster.duplicate(), "earned_merit": y.earned_merit, "recorded_merit": y.recorded_merit}
+
+static func _keys(value: Variant, fields: Array) -> bool:
+	if not value is Dictionary or value.size() != fields.size(): return false
+	for key in fields:
+		if not value.has(key): return false
+	return true
+
+static func shape(value: Variant) -> bool:
+	# Full recursive bounds are checked before the replay reducer dereferences fields.
+	if not value is Dictionary: return false
+	if value.is_empty(): return true
+	if not _keys(value, initial("forced", "survival").keys()): return false
+	for field in ["revision", "standing", "earned_merit", "recorded_merit", "appropriated_merit", "reward_food"]:
+		if not value[field] is int or abs(value[field]) > 1000: return false
+	for field in ["enlistment", "motivation", "stage", "rank", "choice", "incident", "protected_id"]:
+		if not value[field] is String or value[field].length() > 64: return false
+	if not value.born_at_seconds is float or value.born_at_seconds != -15.0 * YEAR_SECONDS: return false
+	for field in ["evidence", "roster", "battle_ids", "timeline"]:
+		if not value[field] is Array or value[field].size() > 32: return false
+	for field in ["appointment", "characters", "endpoint"]:
+		if not value[field] is Dictionary or value[field].size() > 24: return false
+	for id in value.characters:
+		var c: Variant = value.characters[id]
+		if not id is String or id.length() > 64 or not _keys(c, person("", "", "").keys()): return false
+		for field in ["name", "role", "location"]:
+			if not c[field] is String or c[field].length() > 64: return false
+		if not c.alive is bool or not c.known_battles is Array or c.known_battles.size() > 2: return false
+		for field in ["trust", "respect", "grievance", "reported_merit"]:
+			if not c[field] is int or abs(c[field]) > 100: return false
+	return true
+
+static func validate(state: Dictionary) -> bool:
+	if state.mode == "technical":
+		if not state.youth.is_empty(): return false
+		for e in state.events:
+			if e.kind.begins_with("youth_"): return false
+		for t in state.battle_tickets.values():
+			if t.purpose != "technical" or t.command_authority != "squad": return false
+		return true
+	if state.mode != "youth" or state.origin != "new_world7" or state.commander.hero_profile.id != "early_v1": return false
+	var y := {}
+	var pending_moves: Array = []
+	var prior_at := 0.0
+	var courier_food := {}
+	var courier_replies := {}
+	var returned_receipts: Array = []
+	var location := "pingling"
+	var camp_owner := "sheng"
+	var enemy_people := 15
+	if state.initial_force_roster != {"anping": 40, "pingling": 20, "hequ": 15, "relief": 60, "besiegers": 80}: return false
+	var stock := {"relief": {"soldiers": 60, "weapons": 30, "food": 120}, "pingling": {"soldiers": 20, "weapons": 20, "food": 500}}
+	for e in state.events:
+		if e.kind == "march_started": location = ""
+		elif e.kind == "arrival" and e.details.owner == "sheng": location = e.details.location
+		elif e.kind == "city_captured" and e.details.city == "pingling": camp_owner = e.details.owner
+		if e.kind == "courier":
+			var d: Dictionary = e.details
+			match d.action:
+				"dispatch":
+					stock.pingling.soldiers -= 1
+					stock.pingling.food -= Couriers.RATIONS
+					if stock.pingling.soldiers < 0 or stock.pingling.food < 0: return false
+					courier_food[d.id] = Couriers.RATIONS
+				"reply": courier_replies[d.id] = d.value
+				"meal": courier_food[d.id] -= 1
+				"return":
+					returned_receipts.append({"id": d.id, "reply": courier_replies.get(d.id, "")})
+					stock.pingling.soldiers += 1
+					stock.pingling.food += courier_food[d.id]
+		elif e.kind == "courier_wait":
+			if not e.details.get("started_at") is float or e.details.started_at != prior_at: return false
+			prior_at = e.time_seconds
+		elif e.kind == "production" and e.details.get("city") == "pingling":
+			for r in ["food", "weapons"]: stock.pingling[r] += e.details.amounts[r]
+		elif e.kind == "consumption" and stock.has(e.details.get("entity")):
+			stock[e.details.entity].food -= e.details.eaten
+		elif e.kind == "battle_reserved":
+			var ticket: Dictionary = state.battle_tickets[e.details.battle_id]
+			if y.is_empty() or ticket.purpose != y.stage or e.time_seconds != prior_at: return false
+			var ids: Array = []
+			for entry in ticket.reserved_roster_snapshot[0]: ids.append(entry.id)
+			if ids != y.roster: return false
+			var limit: int = 3 + posmod(state.seed, 2) if y.stage == "first_battle" else 6 + posmod(state.seed, 2)
+			if ticket.reserved_roster_snapshot[1].size() != mini(enemy_people, limit): return false
+		elif e.kind == "battle_committed":
+			var ticket: Dictionary = state.battle_tickets[e.details.battle_id]
+			stock.relief.soldiers -= ticket.outcome.forces[0].dead_ids.size()
+			stock.relief.weapons -= ticket.outcome.forces[0].destroyed_equipment
+			stock.relief.weapons += ticket.outcome.spoils.weapons
+			enemy_people -= ticket.outcome.forces[1].dead_ids.size()
+		elif e.kind == "troops_lost" and e.details.get("entity") == "hequ":
+			enemy_people -= e.details.dead
+		elif e.kind == "city_captured" and e.details.get("city") == "hequ":
+			enemy_people -= e.details.prisoners
+		elif e.kind == "troops_lost" and stock.has(e.details.get("entity")):
+			stock[e.details.entity].soldiers -= e.details.dead
+			stock[e.details.entity].weapons -= e.details.weapons_destroyed
+			if e.details.entity == "relief":
+				y = apply_losses(y, e.details.dead, e.details.cause, e.time_seconds)
+				if y.is_empty(): return false
+		elif e.kind == "youth_inventory":
+			var m: Dictionary = e.details
+			if not _keys(m, ["from", "to", "resource", "amount"]) or not m.from is String or not m.to is String or not m.resource is String or not m.amount is int or m.amount < 1 or not stock.has(m.from) or not stock.has(m.to) or not stock[m.from].has(m.resource) or stock[m.from][m.resource] < m.amount: return false
+			stock[m.from][m.resource] -= m.amount
+			stock[m.to][m.resource] += m.amount
+			pending_moves.append(m)
+		elif e.kind == "youth_transition":
+			var d: Dictionary = e.details
+			if not _keys(d, ["action", "data", "moves"]) or not d.action is String or not d.data is Dictionary or not d.moves is Array or pending_moves != d.moves: return false
+			if not _moves_valid(y, d.action, d.data, d.moves): return false
+			var elapsed: float = e.time_seconds - prior_at
+			var durations := {"first_march": 3, "dangerous_march": 3, "return_to_camp": 3, "accept_appointment": 2, "replenish": 4, "refuse_order": 0, "finish_without_replacements": 0, "start": 0, "camp_appraisal": 1, "appraisal_accept": 0, "appraisal_decline": 0}
+			if durations.has(d.action) and not is_equal_approx(elapsed, durations[d.action] * 3600.0): return false
+			if d.action in ["camp_appraisal", "appraisal_accept", "appraisal_decline"] and (location != "pingling" or camp_owner != "sheng" or y.is_empty() or y.stage != "dangerous_orders"): return false
+			if d.action == "camp_appraisal" and (not Appraisal.shape(d.data) or d.data != Appraisal.evaluate(y, returned_receipts, stock.pingling.food)): return false
+			if d.action == "interrupted" and not is_equal_approx(elapsed, 10800.0): return false
+			if d.action == "choice" and not is_equal_approx(elapsed, CHOICE_HOURS.get(d.data.get("choice"), -1) * 3600.0): return false
+			if d.action == "battle" and (not state.battle_tickets.has(d.data.get("battle_id")) or state.battle_tickets[d.data.battle_id].time != prior_at): return false
+			if d.action in ["accept_appointment", "replenish"]:
+				var before: Dictionary = stock.duplicate(true)
+				for m in d.moves:
+					before[m.from][m.resource] += m.amount
+					before[m.to][m.resource] -= m.amount
+				var cap := 4 if y.choice == "protect_comrade" else 6
+				if d.data.added.size() != mini(cap - before.relief.soldiers, before.pingling.soldiers) or d.data.weapons != mini(maxi(0, cap - before.relief.weapons), before.pingling.weapons) or d.data.food != mini(12 if d.action == "accept_appointment" else 8, before.pingling.food): return false
+			if d.action == "unavailable":
+				if d.data.get("reason") == "no_appointment_pool":
+					var cap := 4 if y.choice == "protect_comrade" else 6
+					if not is_equal_approx(elapsed, 7200.0) or stock.pingling.soldiers >= cap - stock.relief.soldiers: return false
+				elif d.data.get("reason") == "mission_target_absent":
+					if elapsed != 0.0 or (enemy_people > 0 and state.cities.hequ.owner != "sheng"): return false
+				else: return false
+			prior_at = e.time_seconds
+			y = transition(y, d.action, e.time_seconds, d.data, state.battle_tickets, state.seed)
+			if y.is_empty(): return false
+			pending_moves.clear()
+	if not pending_moves.is_empty() or y != state.youth or y.is_empty() or enemy_people != state.cities.hequ.soldiers: return false
+	for id in stock:
+		var entity: Dictionary = state.armies.relief if id == "relief" else state.cities.pingling
+		for r in stock[id]:
+			if entity[r] != stock[id][r]: return false
+	if y.roster.size() != state.armies.relief.soldiers or ("commander" in y.roster) != state.commander.alive: return false
+	if state.campaign_ended != (y.endpoint.get("reason", "") == "commander_dead"): return false
+	for t in state.battle_tickets.values():
+		if t.purpose not in ["first_battle", "dangerous_battle"] or t.command_authority != ("withdrawal_only" if t.purpose == "first_battle" else "squad"): return false
+		if t.status == "committed" and t.battle_id not in y.battle_ids: return false
+		if t.reserved_roster_snapshot[1].size() > (3 + posmod(state.seed, 2) if t.purpose == "first_battle" else 6 + posmod(state.seed, 2)): return false
+	return true
+
+static func _moves_valid(y: Dictionary, action: String, d: Dictionary, moves: Array) -> bool:
+	for m in moves:
+		if not _keys(m, ["from", "to", "resource", "amount"]) or not m.amount is int or m.amount <= 0 or m.amount > 120 or m.resource not in ["food", "weapons", "soldiers"] or m.from not in ["relief", "pingling"] or m.to not in ["relief", "pingling"] or m.from == m.to: return false
+	var expected: Array = []
+	match action:
+		"start":
+			if not _keys(d, ["enlistment", "motivation"]) or not d.enlistment is String or not d.motivation is String: return false
+			expected = [move("relief", "pingling", "soldiers", 55), move("relief", "pingling", "weapons", 25), move("relief", "pingling", "food", 120 - initial_food(d.enlistment, d.motivation))]
+		"choice":
+			if not _keys(d, ["choice"]) or d.choice not in CHOICES: return false
+			if d.choice == "protect_comrade": expected.append(move("relief", "pingling", "soldiers", 1))
+			if REWARDS[d.choice] > 0: expected.append(move("pingling", "relief", "food", REWARDS[d.choice]))
+		"accept_appointment", "replenish":
+			if not _keys(d, ["added", "weapons", "food"]) or not d.added is Array or not d.weapons is int or not d.food is int: return false
+			if d.added.size() > 0: expected.append(move("pingling", "relief", "soldiers", d.added.size()))
+			if d.weapons > 0: expected.append(move("pingling", "relief", "weapons", d.weapons))
+			if d.food > 0: expected.append(move("pingling", "relief", "food", d.food))
+		"appraisal_accept":
+			if not Appraisal.pending(y): return false
+			expected.append(move("pingling", "relief", "food", Appraisal.offer(y).food))
+		"refuse_order":
+			if y.is_empty(): return false
+			if y.roster.size() > 1: expected.append(move("relief", "pingling", "soldiers", y.roster.size() - 1))
+	return moves == expected
+
+static func move(source: String, target: String, resource: String, amount: int) -> Dictionary:
+	return {"from": source, "to": target, "resource": resource, "amount": amount}

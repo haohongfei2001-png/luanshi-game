@@ -1,0 +1,22 @@
+# Genuine World6 / v0.7 compatibility fixtures
+
+These six saves were emitted by the unmodified gameplay and save code at commit
+`84cc5f8`, Godot 4.6.3 stable (`7d41c59c4`), not made by removing fields from
+World7. Three profiles each have a running battle (live guard and fractional time)
+and its real physical withdrawal/committed continuation. No hits, positions,
+casualties or results were injected. `.codec.json` files preserve every original
+state field; `.save.json` are the original v1 transport bytes.
+
+Reproduce from a detached checkout of the named source commit with:
+
+```
+godot --headless --path /path/to/world6-checkout --editor --import
+godot --headless --path /path/to/world6-checkout \
+  --script /path/to/current/tools/capture_world6_fixtures.gd \
+  -- /path/to/current/tests/fixtures/v07
+```
+
+The helper explicitly requires `World.VERSION == 6`. The World7 migration tests
+remove only mode/youth and ticket purpose/authority metadata when comparing to
+these originals. Original HP, seeds, RNG, timers, outcomes, event history,
+inventories, locks and all receipt fields must remain identical.

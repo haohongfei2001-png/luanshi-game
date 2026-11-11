@@ -1,0 +1,92 @@
+# Battle wounds and paid convalescence / v0.13
+
+This is a general mechanical loop, not new core story, permanent disability,
+diseases, medical careers, drugs, or a complete lifelong health simulation.
+Battle HP already persisted before this change. New work exposes its actual
+sources, adds bounded recovery, and audits recovery against the real world clock.
+
+## Player contract
+
+- Each injury source is an already committed owned battle: entry HP from its
+  reserved roster minus the authoritative outcome HP. The second battle does not
+  count `100 - current HP` again. Zero-loss battles produce no injury entry.
+- Current HP enters the next encounter. No extra movement, damage or attack-rate
+  penalty is layered onto the existing fatigue/hunger system. Early/late released
+  profiles still cap at 100 HP. Historical `legacy_test_v0` saves keep their exact
+  360 HP test profile; they are not new normal youth lives.
+- At a safe friendly location, request one to six hours of active convalescence.
+  Each continuous 3,600 seconds can restore at most five HP, never beyond the
+  existing profile cap. A request stops once fully healed. Its preflight food
+  requirement covers only the hours needed, including clearing existing hunger.
+- Each elapsed hour crosses a real hourly ration boundary. The existing army
+  rations, production, civilian consumption, siege, couriers, reports and local
+  civilian activity all progress normally. There is no extra invented drug fee,
+  ration duplication, instant refill or paused remote war.
+- Existing hunger must first clear through actual full meals. If still hungry at
+  the end of a paid hour, no HP is recovered and the reason is recorded.
+- A fractional start, for example 10h + 8 seconds, ends at 11h + 8 seconds. It is
+  not rounded to an earlier hourly boundary. Existing mixed-hour activity flags
+  are retained: this new 3,600-second recovery cannot erase earlier marching or
+  fighting to get free fatigue/morale recovery.
+- Insufficient carried food, enemy occupation/presence, siege, marching, any
+  reserved/running battle, dead protagonist, or youth slice endpoint disallow the
+  request without mutation. Dead people are never revived and historic battles,
+  merit, spoils, casualties, roster identities and reservations are never changed.
+- If a future moving threat interrupts a resting hour, only actual time is
+  recorded, with no healing. The current funded/safe normal route cannot cause
+  starvation during rest. The interruption branch has an explicit isolated
+  threat-arrival test, not a claim of a new playable enemy-march scenario.
+
+Technical campaigns have independent map controls. Youth has an independent
+health section below its battle controls, without adding a fifth injustice choice
+or inventing new characters, military decisions, romance, or a fixed fate.
+The training skirmish has no persistent campaign injuries or care.
+
+## Data and validation
+
+World8 fields, ticket/session shapes, hero profile identities, save envelope and
+old fixture bytes are unchanged. Existing settlement is the atomic, once-only
+source of injury facts. Views derive sources from its immutable tickets/outcomes;
+repeat commit returns the old receipt and adds no damage or recovery.
+
+Two closed `revision: 1` event payloads opt a history into this feature:
+`wound_rest_started` and `wound_rest_completed`. An older client will reject these
+unknown events rather than reinterpret them. Old saves without these events still
+use their original compatibility path; no healing happens during migration/load.
+
+The public API rejects non-integer durations, takes a rollback snapshot, performs
+bounded primitive hourly actions, then checks full campaign causality. Failure
+restores the complete previous state. Save validation checks closed shapes before
+arithmetic or replay. The replay calls only the primitive to avoid recursive
+public API validation.
+
+Histories with care independently replay WorldSim from the original seed and
+profile, including technical transfers and aggregate depot actions and the
+existing youth/courier/hometown actions. Each actual hourly boundary and event
+must match before replay can continue. A forged long empty span is rejected at
+the first missing hour, rather than simulated to the forged endpoint. Battle
+outcomes retain the established validated outcome contract; this is not a claim
+of re-simulating historical tactical input.
+
+Youth action endpoints with care must have exact time or an active battle owning
+the clock. Technical campaigns retain their explicit autonomous `advance_seconds`
+API, including valid fractional waiting; that does not grant healing. Recovery
+itself always requires exact paid action duration in either mode.
+
+## Reproduction and limits
+
+- `bash tools/test_wounds.sh`: real surviving injury, second-battle consequences,
+  no uninjured penalty, actual death, food/location/lock guards, continuous and
+  split time, full-cap batching, hunger, repeat settlement, old fixtures, legacy
+  active continuation, corrupt events/time/stock and exact separate-process saves.
+- Youth and technical UI tests send actual Viewport keyboard events. These are
+  input/control tests, not rendered visual playtesting.
+- `bash tools/test.sh`, `bash tools/test-youth-ui.sh`,
+  `bash tools/calibrate-combat.sh`, `bash tools/export.sh` retain all earlier gates.
+- Packaged Linux runs new wounded/recovered/active-battle restarts. Existing CI
+  has bounded actual-display screenshots and native macOS restart checks wired in.
+  They have not run for this local branch. Cross-export is not native execution;
+  no M5 performance, input feel, Finder/Gatekeeper or final quality claim is made.
+
+No new cost, service, user-computer access, GitHub font upload or code publication
+is part of this implementation. The existing font confirmation remains unresolved.

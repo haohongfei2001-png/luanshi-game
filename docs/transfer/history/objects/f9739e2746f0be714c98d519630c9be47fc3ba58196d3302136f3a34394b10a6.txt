@@ -1,0 +1,38 @@
+extends SceneTree
+const W := preload("res://scripts/world_sim.gd")
+const Setup := preload("res://scripts/hometown_persistence_smoke.gd")
+const Driver := preload("res://tests/youth_combat_driver.gd")
+var checks := 0
+var failures: Array[String] = []
+func ck(ok: bool, label: String) -> void:
+	checks += 1
+	if not ok: failures.append(label)
+func _initialize() -> void:
+	var w := Setup.new().build()
+	ck(w.youth_action("first_march").ok,"march")
+	var t := w.create_battle_ticket()
+	var b := w.start_battle(t.ticket.battle_id)
+	b.set_player_input(Vector2(0.3,-0.2),Vector2.RIGHT)
+	for i in range(7): b.step(1.0/60.0)
+	ck(w.sync_battle_time(t.ticket.battle_id),"fraction sync")
+	for i in range(5): b.step(1.0/60.0)
+	var snapshot := w.export_campaign_state()
+	var restored := W.new(999)
+	ck(restored.restore_campaign_state(snapshot).ok,"restore unsynced live session")
+	ck(snapshot == w.export_campaign_state(),"validation does not mutate source")
+	ck(snapshot == restored.export_campaign_state(),"complete live graph exact")
+	var rb := restored.start_battle(t.ticket.battle_id)
+	var bad := snapshot.duplicate(true)
+	bad.world.events[3].kind = "hometown_invented"
+	ck(not restored.restore_campaign_state(bad).ok,"malformed rejects")
+	ck(restored.export_campaign_state() == snapshot and restored.is_current_battle(t.ticket.battle_id,rb),"rejection preserves live session identity")
+	var one := Driver.play(b,"retreat")
+	var two := Driver.play(rb,"retreat")
+	ck(one == two,"continued live outcome deterministic")
+	ck(w.commit_battle_outcome(one).ok and restored.commit_battle_outcome(two).ok,"both settle")
+	ck(w.export_campaign_state() == restored.export_campaign_state(),"whole world deterministic after restore")
+	for i in range(3):
+		ck(w.youth_action("wait_courier").ok and restored.youth_action("wait_courier").ok,"endpoint wait")
+	ck(w.export_campaign_state() == restored.export_campaign_state(),"endpoint receipts exact")
+	print("INDEPENDENT_LIVE_RESTORE ",{"checks":checks,"failures":failures})
+	quit(0 if failures.is_empty() else 1)

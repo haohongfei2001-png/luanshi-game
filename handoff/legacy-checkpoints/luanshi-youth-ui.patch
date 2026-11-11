@@ -1,0 +1,7 @@
+diff --git a/tests/test_youth_smoke.gd.uid b/tests/test_youth_smoke.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..fb3b3f069a7af66356c6f35f6eb7ea9d7956bfbf
+--- /dev/null
++++ b/tests/test_youth_smoke.gd.uid
+@@ -0,0 +1 @@
++uid://mknmke38dt10

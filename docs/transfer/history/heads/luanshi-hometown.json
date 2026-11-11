@@ -1,0 +1,330 @@
+{
+  "format": 1,
+  "checkout_label": "luanshi-hometown",
+  "branch": "work/hometown-messages",
+  "source_head": "dfc4ae88e0278e07a3bee32fa4f2fad71eff044e",
+  "source_tree": "e6b75744bd26b4edd661354a7032376b92fadfed",
+  "base_manifest": "BASELINE.json",
+  "replace_or_add": {
+    ".github/workflows/verify.yml": {
+      "mode": "100644",
+      "original_blob_sha1": "a6aaa8d2541a2efdba59e116984db78276874ae2",
+      "original_sha256": "6d898e854782a4b5b2ef73fe25104885a12a3902cf8a45967ad06e1f43ad0110",
+      "published_sha256": "6d898e854782a4b5b2ef73fe25104885a12a3902cf8a45967ad06e1f43ad0110",
+      "published_bytes": 12353,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/6d898e854782a4b5b2ef73fe25104885a12a3902cf8a45967ad06e1f43ad0110.txt"
+      }
+    },
+    "README.md": {
+      "mode": "100644",
+      "original_blob_sha1": "2d72370f7d570176eafc0bd52d15ac16427e2cf9",
+      "original_sha256": "410a15db77f79bae9c79ab182f31bc5310ffa08cd50407faddcb7b4e9f58992f",
+      "published_sha256": "410a15db77f79bae9c79ab182f31bc5310ffa08cd50407faddcb7b4e9f58992f",
+      "published_bytes": 12155,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/410a15db77f79bae9c79ab182f31bc5310ffa08cd50407faddcb7b4e9f58992f.txt"
+      }
+    },
+    "docs/ACCEPTANCE_MATRIX.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7f2f0480df6027351055aed2fc7402e31767c839",
+      "original_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_bytes": 23007,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0.txt"
+      }
+    },
+    "docs/DELIVERY_PLAN.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5d4e33a84a9e7362b2aa9e772fe5114ab6566fc6",
+      "original_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_bytes": 7031,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040.txt"
+      }
+    },
+    "docs/DOT_HANDOFF_FINAL.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7221f52c5cb9bb8eaa969e1f0d0a98faf8d7de0e",
+      "original_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_bytes": 12666,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722.txt"
+      }
+    },
+    "docs/FINAL_GAME_DESIGN_SPEC.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7b883813120f18287a4ff964d280c64ddf72cfef",
+      "original_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_bytes": 29255,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe.txt"
+      }
+    },
+    "docs/FINAL_VISION_ACCEPTANCE.md": {
+      "mode": "100644",
+      "original_blob_sha1": "2c8276b427996aee37253fe49052f03604095d25",
+      "original_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_bytes": 5804,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a.txt"
+      }
+    },
+    "docs/NARRATIVE_ART_DIRECTION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "0939c3547558a041141f2fed2b5dbd992b081786",
+      "original_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_bytes": 13970,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5.txt"
+      }
+    },
+    "docs/PLAYING_ZH.md": {
+      "mode": "100644",
+      "original_blob_sha1": "f80fb62d051f2644501d8dc471fcc3eb91c27e31",
+      "original_sha256": "c5a0ff051986987da301aa3cabad56f51c32547c5f6003dfc14a0cde1ade61d3",
+      "published_sha256": "c5a0ff051986987da301aa3cabad56f51c32547c5f6003dfc14a0cde1ade61d3",
+      "published_bytes": 10232,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/c5a0ff051986987da301aa3cabad56f51c32547c5f6003dfc14a0cde1ade61d3.txt"
+      }
+    },
+    "docs/PRODUCT_DECISIONS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "05fe4bb65bde39ed67690e25222640842838e513",
+      "original_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_bytes": 20851,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666.txt"
+      }
+    },
+    "docs/PROJECT_STATUS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "8c96c04130fc8e90a03efc6e8447564ef38854d6",
+      "original_sha256": "6965fe4778b040909dd0a481c8fa155bcb0fd68e06756ca1f656c85a80c0f685",
+      "published_sha256": "6965fe4778b040909dd0a481c8fa155bcb0fd68e06756ca1f656c85a80c0f685",
+      "published_bytes": 19232,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/6965fe4778b040909dd0a481c8fa155bcb0fd68e06756ca1f656c85a80c0f685.txt"
+      }
+    },
+    "docs/SIMULATION_CONTRACTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "017b96857ded3a4fa22296a638810fd3b1089a7f",
+      "original_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_bytes": 20921,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6.txt"
+      }
+    },
+    "export_presets.cfg": {
+      "mode": "100644",
+      "original_blob_sha1": "81ca4bcbbccbea34d8e6c2fd538e929b6c3f445f",
+      "original_sha256": "065366069d90bda41d6d19a91de1317364ef64d9efb1d268a7efb90f35a58efa",
+      "published_sha256": "065366069d90bda41d6d19a91de1317364ef64d9efb1d268a7efb90f35a58efa",
+      "published_bytes": 1574,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/065366069d90bda41d6d19a91de1317364ef64d9efb1d268a7efb90f35a58efa.txt"
+      }
+    },
+    "project.godot": {
+      "mode": "100644",
+      "original_blob_sha1": "f3cc03367f39dc3ecf7694a520c61ee86afaa724",
+      "original_sha256": "55fe85b6f4a5b01f24f2dfa5ed2cafc105b34c0e22c13d079d0edaeaf70acd00",
+      "published_sha256": "55fe85b6f4a5b01f24f2dfa5ed2cafc105b34c0e22c13d079d0edaeaf70acd00",
+      "published_bytes": 793,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/55fe85b6f4a5b01f24f2dfa5ed2cafc105b34c0e22c13d079d0edaeaf70acd00.txt"
+      }
+    },
+    "scripts/battle.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "398bf55be17d3d02a806c0ff42b03a26679bcd20",
+      "original_sha256": "ae5a0f02a8eb13281b707b69aded68b6aea81f0758d632d6cf429994f2671da3",
+      "published_sha256": "ae5a0f02a8eb13281b707b69aded68b6aea81f0758d632d6cf429994f2671da3",
+      "published_bytes": 36263,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/ae5a0f02a8eb13281b707b69aded68b6aea81f0758d632d6cf429994f2671da3.txt"
+      }
+    },
+    "scripts/campaign_clock_replay.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "30191713941cfddc035c9a5f3eb7bf2f5585c138",
+      "original_sha256": "c5d0daa882261c861967f6210a2b252ef94ee534d3615d051a6d238eda3fd4ab",
+      "published_sha256": "c5d0daa882261c861967f6210a2b252ef94ee534d3615d051a6d238eda3fd4ab",
+      "published_bytes": 4814,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/c5d0daa882261c861967f6210a2b252ef94ee534d3615d051a6d238eda3fd4ab.txt"
+      }
+    },
+    "scripts/campaign_event_audit.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "3a32c098b152c7b261d9864ac6d175c71ad86707",
+      "original_sha256": "90b462c68b93c10c8f1d9f287affb5036fdc9766cd079e72364377ec863be3ae",
+      "published_sha256": "90b462c68b93c10c8f1d9f287affb5036fdc9766cd079e72364377ec863be3ae",
+      "published_bytes": 13744,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/90b462c68b93c10c8f1d9f287affb5036fdc9766cd079e72364377ec863be3ae.txt"
+      }
+    },
+    "scripts/hometown_messages.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "de4ce56f1c3f56cb1c6274a7833376614f80ae1d",
+      "original_sha256": "d71bc8b2231c3aac8dfb65f0036726d4ee9a9d905e851cb746345550d603c2f0",
+      "published_sha256": "d71bc8b2231c3aac8dfb65f0036726d4ee9a9d905e851cb746345550d603c2f0",
+      "published_bytes": 12390,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/d71bc8b2231c3aac8dfb65f0036726d4ee9a9d905e851cb746345550d603c2f0.txt"
+      }
+    },
+    "scripts/strategy_view.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "fa34fd3337a37294dfe0b4ea8fe9da2b0a9df6aa",
+      "original_sha256": "4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0",
+      "published_sha256": "4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0",
+      "published_bytes": 18396,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/4c4e1f9474dddc06e2e04d43ceeabc9e7cf262a1232289fb4fc9abed35342ee0.txt"
+      }
+    },
+    "scripts/world_sim.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "90af122f87e74fd1d941fc900144bd490156b669",
+      "original_sha256": "5f2ffa39b2ba475ff6700b2d2f3771cf7d63171b114fe4305656f3943d21cb5e",
+      "published_sha256": "5f2ffa39b2ba475ff6700b2d2f3771cf7d63171b114fe4305656f3943d21cb5e",
+      "published_bytes": 77464,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5f2ffa39b2ba475ff6700b2d2f3771cf7d63171b114fe4305656f3943d21cb5e.txt"
+      }
+    },
+    "scripts/youth_career.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "d5f8eb2a423c5579f7292db558d1f029921561fa",
+      "original_sha256": "44682670443a1151ecfaa2020ab4b8c15e04a636dc4a8150db33796ac7972f1b",
+      "published_sha256": "44682670443a1151ecfaa2020ab4b8c15e04a636dc4a8150db33796ac7972f1b",
+      "published_bytes": 23015,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/44682670443a1151ecfaa2020ab4b8c15e04a636dc4a8150db33796ac7972f1b.txt"
+      }
+    },
+    "scripts/youth_ui.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "b9d356224b10c32d63f7e9f13cd9c531c3a92b63",
+      "original_sha256": "cdd7c2405e6aa0b1a032e361a467bc4ccf59483965b0b2a8209da8d680528ea1",
+      "published_sha256": "cdd7c2405e6aa0b1a032e361a467bc4ccf59483965b0b2a8209da8d680528ea1",
+      "published_bytes": 21451,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/cdd7c2405e6aa0b1a032e361a467bc4ccf59483965b0b2a8209da8d680528ea1.txt"
+      }
+    },
+    "tools/export.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "68da71790be7149362274873889c9814575b76c5",
+      "original_sha256": "b1b5a0dbd8d64292932f69afc098e933c873b660936823a6dd12a1bbb4035f0b",
+      "published_sha256": "b1b5a0dbd8d64292932f69afc098e933c873b660936823a6dd12a1bbb4035f0b",
+      "published_bytes": 4246,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/b1b5a0dbd8d64292932f69afc098e933c873b660936823a6dd12a1bbb4035f0b.txt"
+      }
+    },
+    "tools/test.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "ef101213f9d4d5be6f81af2aa0c9e16e2596e6b6",
+      "original_sha256": "645d9d46dbba6a70b589ddc234f8492e7f1a832986b4f357c83600620ee57605",
+      "published_sha256": "645d9d46dbba6a70b589ddc234f8492e7f1a832986b4f357c83600620ee57605",
+      "published_bytes": 6450,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/645d9d46dbba6a70b589ddc234f8492e7f1a832986b4f357c83600620ee57605.txt"
+      }
+    }
+  },
+  "delete_from_baseline": [
+    "docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md",
+    "docs/DESIGN_SYNC_V014.md",
+    "docs/WOUND_CARE.md",
+    "docs/evidence/wounds-v013-validation.log",
+    "scripts/wound_care.gd",
+    "scripts/wound_care.gd.uid",
+    "scripts/wound_persistence_smoke.gd",
+    "scripts/wound_persistence_smoke.gd.uid",
+    "tests/test_wounds.gd",
+    "tests/test_wounds.gd.uid",
+    "tests/test_wounds_restart.gd",
+    "tests/test_wounds_restart.gd.uid",
+    "tests/test_wounds_ui.gd",
+    "tests/test_wounds_ui.gd.uid",
+    "tools/test_wounds.sh"
+  ],
+  "excluded_assets": [
+    {
+      "path": "assets/fonts/LuanshiUISCR-Regular.otf",
+      "reason": "Font bytes deliberately absent; not represented by object pool."
+    }
+  ],
+  "deletion_semantics": "Omit these baseline tracked paths when reconstructing this HEAD into a NEW empty directory. Never delete from the live development tree.",
+  "original_source_text_files": 245,
+  "published_text_files": 343,
+  "document_files_transformed": 22,
+  "source_is_ancestor_of_latest": true,
+  "inventory_hash_algorithm": "SHA256 of sorted UTF-8 rows: relative_path + NUL + git_mode + NUL + file_sha256 + LF. Source inventory excludes document/evidence paths; all-text inventories exclude omitted font.",
+  "original_source_inventory_sha256": "858deb0b092d924f7d2ba9f4f3d4bfd469b45497040abe0cae90169420ec76e3",
+  "original_all_text_inventory_sha256": "fc3eaea650b36a152c251d19ce80b60e8b2dd890dc715ab0139ed8ee46b356f3",
+  "published_all_text_inventory_sha256": "bdecc5c59f4a2b2d256ab982941abc667e80a7fb4a0e261f2375fd2f8b03ead2"
+}

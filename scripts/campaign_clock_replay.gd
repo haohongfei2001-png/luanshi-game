@@ -8,7 +8,7 @@ const C := preload("res://scripts/courier_orders.gd")
 
 static func required(state: Dictionary) -> bool:
 	for e in state.events:
-		if e.kind.begins_with("hometown_") or e.kind.begins_with("wound_rest_"): return true
+		if e.kind.begins_with("hometown_") or e.kind.begins_with("wound_rest_") or e.kind.begins_with("combat_training_"): return true
 	return false
 
 static func validate(state: Dictionary, replay: RefCounted) -> bool:
@@ -36,6 +36,9 @@ static func validate(state: Dictionary, replay: RefCounted) -> bool:
 		if e.time_seconds != replay._state.time_seconds: return false
 		var before: int = replay._state.events.size()
 		match e.kind:
+			"combat_training_started":
+				if not preload("res://scripts/combat_growth.gd").reason(replay).is_empty() or not replay._economy_errors().is_empty() or not replay._economy_has_headroom(replay._state.time_seconds + 3600.0): return false
+				replay._train_combat_hour()
 			"wound_rest_started":
 				if not preload("res://scripts/wound_care.gd").reason(replay).is_empty() or not replay._economy_errors().is_empty() or not replay._economy_has_headroom(replay._state.time_seconds + 3600.0): return false
 				replay._rest_wound_hour() # Primitive only; public API owns final validation/rollback.

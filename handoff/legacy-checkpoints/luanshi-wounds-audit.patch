@@ -1,0 +1,297 @@
+diff --git a/tests/audit_old_wounds.gd b/tests/audit_old_wounds.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..b4c630ad97ad6db1745554b56621540c0c16c6ba
+--- /dev/null
++++ b/tests/audit_old_wounds.gd
+@@ -0,0 +1,11 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const Store := preload("res://scripts/campaign_store.gd")
++func _initialize() -> void: call_deferred("run")
++func run() -> void:
++	for fixture in ["v06/running.save.json", "v06/committed.save.json", "v07/early_v1_running.save.json", "v07/early_v1_committed.save.json", "v07/late_v1_running.save.json", "v08/world7_youth_running.save.json", "v08/world7_youth_at_camp.save.json", "world8-camp-before-appraisal.save.json"]:
++		var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/" + fixture))
++		var w := W.new()
++		var restored := w.restore_campaign_state(decoded.state)
++		print(fixture, " ", restored, " version=", decoded.state.world.version, " commander=", w.snapshot().commander, " army=", w.snapshot().armies.relief.location, " mode=", w.snapshot().mode, " stage=", w.snapshot().youth.get("stage"), " active=", w.player_view().active_battle, " rest=", w.player_view().wounds.reason)
++	quit()
+diff --git a/tests/audit_wounds_independent.gd b/tests/audit_wounds_independent.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..01b897eb0dec5b9345dcd1bf13d02e75f687b98d
+--- /dev/null
++++ b/tests/audit_wounds_independent.gd
+@@ -0,0 +1,155 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const Setup := preload("res://scripts/wound_persistence_smoke.gd")
++const Store := preload("res://scripts/campaign_store.gd")
++const Care := preload("res://scripts/wound_care.gd")
++var checks := 0
++var failures: Array[String] = []
++func _initialize() -> void: call_deferred("run")
++func check(ok: bool, label: String) -> void:
++	checks += 1
++	if not ok: failures.append(label); push_error(label)
++func clone(s: Dictionary) -> WorldSimulation:
++	var w := W.new(99)
++	var r := w.restore_campaign_state(s)
++	check(r.ok, "clone valid " + str(r))
++	check(not r.ok or w.export_campaign_state() == s, "clone exact")
++	return w
++func reject(s: Dictionary, target: WorldSimulation, label: String) -> void:
++	var before := target.export_campaign_state()
++	var id: String = target.player_view().active_battle
++	var live: BattleSimulation = target.start_battle(id) if not id.is_empty() else null
++	var at := Time.get_ticks_msec()
++	var r := target.restore_campaign_state(s)
++	check(not r.ok, label + " rejected " + str(r))
++	check(target.export_campaign_state() == before, label + " exact atomic")
++	if live != null: check(target.is_current_battle(id, live) and target.start_battle(id) == live, label + " retained live object")
++	check(Time.get_ticks_msec() - at < 3000, label + " bounded reject")
++func retreat_with_new_hit(w: WorldSimulation) -> bool:
++	var t := w.create_battle_ticket()
++	if not t.ok: return false
++	var b := w.start_battle(t.ticket.battle_id)
++	var entry: float = b.player().hp
++	b.issue_order("attack")
++	for i in range(18000):
++		if b.ended: break
++		if b.player().hp < entry:
++			b.issue_order("retreat"); b.set_player_input(Vector2.LEFT, Vector2.RIGHT)
++		else: b.set_player_input(Vector2.RIGHT, Vector2.RIGHT)
++		b.step(BattleSimulation.FIXED_DELTA)
++	return b.ended and b.player().hp > 0.0 and b.player().hp < entry and w.commit_battle_outcome(b.outcome()).ok
++func run() -> void:
++	var helper := Setup.new()
++	var tech := helper.build("technical")
++	check(helper.failures.is_empty(), "real first injury input " + str(helper.failures))
++	var base := tech.export_campaign_state()
++	print("BASE hp=", base.world.commander.hp, " seconds=", base.world.time_seconds, " soldiers=", base.world.armies.relief.soldiers)
++	# Legal technical waiting at arbitrary offsets including a civilian daily boundary.
++	for offset in [0.0, 0.0001, 0.125, 3599.75, 86400.0 - base.world.time_seconds - 0.125]:
++		var w := clone(base)
++		check(w.advance_seconds(offset), "real fractional wait " + str(offset))
++		var old := w.export_campaign_state()
++		var control := clone(old)
++		check(control.advance_seconds(3600.0), "control whole second hour")
++		var result := w.rest_wounds(1)
++		check(result.ok and result.elapsed == 3600.0 and result.healed == 5.0, "continuous full3600 " + str(offset) + " " + str(result))
++		for field in ["cities", "armies", "ledger", "reports", "pending_reports", "convoys", "siege", "couriers", "battle_tickets"]:
++			check(w.snapshot()[field] == control.snapshot()[field], "same world " + field + str(offset))
++		check(w.snapshot().time_seconds == old.world.time_seconds + 3600.0, "exact fractional end")
++		clone(w.export_campaign_state())
++	# Whole batch and repeated one-hour actions with genuine prior food shortages.
++	for shortage in [0, 1, 2, 4]:
++		var w := clone(base)
++		check(w.transfer("relief", "pingling", "food", w.snapshot().armies.relief.food), "drain via authorized local transfer")
++		check(w.advance(shortage), "genuine shortage " + str(shortage))
++		check(w.transfer("pingling", "relief", "food", 100), "genuine resupply")
++		var split := clone(w.export_campaign_state())
++		var r := w.rest_wounds(6)
++		var elapsed := 0.0
++		for i in range(6):
++			if split.snapshot().commander.hp == split.snapshot().commander.max_hp: break
++			var one := split.rest_wounds(1)
++			check(one.ok, "split hungry rest " + str(shortage))
++			if not one.ok: break
++			elapsed += one.elapsed
++		check(r.ok and r.elapsed == elapsed, "bulk elapsed including hunger " + str(shortage))
++		check(w.export_campaign_state() == split.export_campaign_state(), "bulk exact hungry " + str(shortage))
++		clone(w.export_campaign_state())
++	# Actual surviving second fight begins from recovered HP; no unchanged health debt.
++	var second := clone(base)
++	check(second.rest_wounds(1).ok, "heal before second battle")
++	var first_ticket: Dictionary = second.snapshot().battle_tickets.duplicate(true)
++	var old_sources: Array = second.player_view().wounds.sources.duplicate(true)
++	var entry: float = second.snapshot().commander.hp
++	check(second.march("river") and second.advance(3), "second real march")
++	check(retreat_with_new_hit(second), "second actual survived new hit")
++	var sources: Array = second.player_view().wounds.sources
++	check(sources.size() == 2 and sources[0] == old_sources[0], "source1 unchanged")
++	check(sources[-1].hp_before == entry and sources[-1].loss == entry - second.snapshot().commander.hp, "second only incremental damage")
++	var outcome: Dictionary = second.snapshot().battle_tickets["1:2"].outcome
++	var before := second.export_campaign_state()
++	check(second.commit_battle_outcome(outcome).already_committed and second.export_campaign_state() == before, "second repeat is identity")
++	check(second.march("river") and second.advance(3) and second.rest_wounds(1).ok, "second real care")
++	check(second.snapshot().battle_tickets["1:1"] == first_ticket["1:1"], "care never changes first ticket")
++	check(second.player_view().wounds.sources == sources, "care never changes loss sources")
++	clone(second.export_campaign_state())
++	# Target has a genuine current session. Every invalid load keeps the object live.
++	var target := clone(base)
++	check(target.march("river") and target.advance(3), "atomic target real march")
++	var ticket := target.create_battle_ticket()
++	check(ticket.ok and target.start_battle(ticket.ticket.battle_id) != null, "atomic target live session")
++	var rested := clone(base)
++	check(rested.rest_wounds(2).ok, "forgery source real recovery")
++	var saved := rested.export_campaign_state()
++	for future_hours in [24, 240, 8760]:
++		var forged := saved.duplicate(true)
++		forged.world.time_seconds += future_hours * 3600.0; forged.world.hour += future_hours
++		reject(forged, target, "sparse long world " + str(future_hours))
++	for field in ["hp_before", "hp_after", "healed", "started_at"]:
++		for value in [true, 1, NAN, INF, -INF, "1.0", null, [], {}]:
++			var forged := saved.duplicate(true)
++			for e in forged.world.events:
++				if e.kind == "wound_rest_completed": e.details[field] = value; break
++			reject(forged, target, "malformed rest " + field + str(value))
++	# Delete a paid hour entirely while preserving whole current and recovery times.
++	var forged := saved.duplicate(true)
++	var hour: int = ceili(base.world.time_seconds / 3600.0)
++	for index in range(forged.world.events.size() - 1, -1, -1):
++		var e: Dictionary = forged.world.events[index]
++		if e.hour != hour or e.time_seconds != hour * 3600.0: continue
++		if e.kind == "consumption":
++			forged.world.ledger.food_consumed -= e.details.eaten
++			forged.world.ledger["food_consumed_" + e.details.consumer] -= e.details.eaten
++			forged.world.ledger["food_shortfall_" + e.details.consumer] -= e.details.shortfall
++			var entity: Dictionary = forged.world.cities.get(e.details.entity, forged.world.armies.get(e.details.entity, {}))
++			entity.food += e.details.eaten
++		if e.kind == "production":
++			for resource in ["food", "weapons"]:
++				forged.world.ledger[resource + "_produced"] -= e.details.amounts[resource]
++				forged.world.cities[e.details.city][resource] -= e.details.amounts[resource]
++		forged.world.events.remove_at(index)
++	reject(forged, target, "coordinated removed hour ration stock ledger")
++	# Day-boundary actual civilian meal, then balanced coordinated deletion.
++	var daily := clone(base)
++	check(daily.advance_seconds(86400.0 - daily.snapshot().time_seconds - 0.125) and daily.rest_wounds(1).ok, "actual day-crossing care")
++	forged = daily.export_campaign_state()
++	for e in forged.world.events:
++		if e.kind == "consumption" and e.details.entity == "pingling" and e.details.consumer == "civilian" and e.time_seconds == 86400.0:
++			var eaten: int = e.details.eaten
++			e.details.eaten = 0; e.details.food_delta = 0; e.details.shortfall += eaten
++			forged.world.cities.pingling.food += eaten
++			forged.world.ledger.food_consumed -= eaten; forged.world.ledger.food_consumed_civilian -= eaten
++			forged.world.ledger.food_shortfall_civilian += eaten
++	reject(forged, target, "coordinated real daily ration stock ledger")
++	# Technical legal fractional waiting remains legal but cannot itself heal.
++	var ending: float = rested.snapshot().commander.hp
++	check(rested.advance_seconds(0.125) and rested.snapshot().commander.hp == ending, "technical fractional wait no heal")
++	clone(rested.export_campaign_state())
++	# Context tampering should roll back the public rest operation, not just load.
++	var tampered := clone(base)
++	tampered._state.seed += 1
++	before = tampered.export_campaign_state()
++	var attempted := tampered.rest_wounds(1)
++	check(not attempted.ok and tampered.export_campaign_state() == before, "public final audit rollback tampered source")
++	print("INDEPENDENT_WOUNDS_AUDIT " + JSON.stringify({"checks": checks, "failures": failures}))
++	quit(0 if failures.is_empty() else 1)
+diff --git a/tests/audit_wounds_routes.gd b/tests/audit_wounds_routes.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..926324ad32dc7ab7eaeccf906716da81ea9e8b62
+--- /dev/null
++++ b/tests/audit_wounds_routes.gd
+@@ -0,0 +1,113 @@
++extends SceneTree
++const W := preload("res://scripts/world_sim.gd")
++const Store := preload("res://scripts/campaign_store.gd")
++const Driver := preload("res://tests/youth_combat_driver.gd")
++const HSetup := preload("res://scripts/hometown_persistence_smoke.gd")
++const Setup := preload("res://scripts/wound_persistence_smoke.gd")
++var checks := 0
++var failures: Array[String] = []
++func _initialize() -> void: call_deferred("run")
++func check(ok: bool, label: String) -> void:
++	checks += 1
++	if not ok: failures.append(label); push_error(label)
++func exact(w: WorldSimulation, label: String) -> void:
++	var s := w.export_campaign_state()
++	var clone := W.new()
++	var r := clone.restore_campaign_state(s)
++	check(r.ok and clone.export_campaign_state() == s, label + " restore exact " + str(r))
++	var encoded := Store.new().encode_campaign(w)
++	check(encoded.ok, label + " encode")
++	if encoded.ok:
++		var decoded := Store.new().decode_campaign(encoded.bytes)
++		check(decoded.ok and decoded.state == s, label + " decode exact")
++func act(w: WorldSimulation, action: String) -> void:
++	var r := w.youth_action(action)
++	check(r.ok, "real youth " + action + str(r))
++func injury(b: BattleSimulation, retreat: bool) -> void:
++	var initial: float = b.player().hp
++	b.issue_order("attack")
++	for frame in range(18000):
++		if b.ended: break
++		if not retreat and b.player().hp < initial:
++			Driver.play(b, "fight")
++			return
++		if retreat and b.player().hp < initial:
++			b.issue_order("retreat"); b.set_player_input(Vector2.LEFT, Vector2.RIGHT)
++		else:
++			var aim := Vector2.RIGHT
++			var dist := INF
++			for u in b.units:
++				if u.team == 1 and u.hp > 0.0 and b.player().pos.distance_to(u.pos) < dist:
++					dist = b.player().pos.distance_to(u.pos); aim = u.pos - b.player().pos
++			b.set_player_input(aim, aim)
++		b.step(BattleSimulation.FIXED_DELTA)
++func run() -> void:
++	# Existing v0.6 committed legacy battle opts in where it really stood.
++	var d := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/v06/committed.save.json"))
++	var legacy := W.new(); check(d.ok and legacy.restore_campaign_state(d.state).ok, "genuine old committed load")
++	var before := legacy.export_campaign_state()
++	var r := legacy.rest_wounds(1)
++	check(r.ok and r.healed == 5.0 and legacy.snapshot().commander.max_hp == 360.0, "old committed real care " + str(r))
++	check(before.world.battle_tickets == legacy.snapshot().battle_tickets, "old committed immutable ticket")
++	exact(legacy, "old committed recovered")
++	# Actual old running fixture inputs, not a modern synthetic migration clone.
++	for file in ["v07/early_v1_running.save.json", "v07/late_v1_running.save.json", "v08/world7_youth_running.save.json"]:
++		d = Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/" + file))
++		var w := W.new(); check(d.ok and w.restore_campaign_state(d.state).ok, "old active load " + file)
++		before = w.export_campaign_state()
++		exact(w, "old active initial " + file)
++		var id: String = w.player_view().active_battle
++		var b := w.start_battle(id)
++		injury(b, w.snapshot().mode != "youth")
++		check(b.ended and b.player().hp > 0.0 and b.player().hp < b.player().max_hp, "old active actual injury " + file)
++		check(w.commit_battle_outcome(b.outcome()).ok, "old active commit " + file)
++		if w.snapshot().mode == "youth": act(w, "return_to_camp")
++		else: check(w.march("river") and w.advance(3), "old active real return " + file)
++		r = w.rest_wounds(1)
++		check(r.ok and r.healed == 5.0, "old active enable recovery " + file + str(r))
++		check(before.world.battle_tickets[id].reserved_roster_snapshot == w.snapshot().battle_tickets[id].reserved_roster_snapshot and before.world.battle_tickets[id].signal_model == w.snapshot().battle_tickets[id].signal_model, "old reservation immutable " + file)
++		exact(w, "old active care " + file)
++	# Preserve source replay across the existing real aggregate depot takeover.
++	var tech := Setup.new().build("technical")
++	check(tech.march("river") and tech.advance(3) and tech.seize_depot(), "real existing aggregate depot takeover")
++	r = tech.rest_wounds(1)
++	check(r.ok, "aggregate technical care " + str(r))
++	exact(tech, "aggregate technical care")
++	# Existing World8 fixture starts fully healthy, then actual second encounter.
++	d = Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
++	var world8 := W.new(); check(d.ok and world8.restore_campaign_state(d.state).ok, "old world8 load")
++	act(world8, "dangerous_march")
++	r = world8.create_battle_ticket(); check(r.ok, "old world8 real battle")
++	var b := world8.start_battle(r.ticket.battle_id)
++	injury(b, false)
++	check(b.ended and b.player().hp < 100.0 and world8.commit_battle_outcome(b.outcome()).ok, "old world8 actual combat injury or death")
++	# The slice ends after this mission: legitimate injury must not unlock forbidden care.
++	before = world8.export_campaign_state()
++	check(not world8.rest_wounds(1).ok and world8.export_campaign_state() == before, "old world8 endpoint cannot rest")
++	exact(world8, "old world8 endpoint")
++	# Hometown + courier + combat injury + care + reunions/appraisal coexist.
++	var hs := HSetup.new()
++	var youth := hs.build()
++	act(youth, "first_march"); act(youth, "wait_courier"); act(youth, "courier_comply")
++	r = youth.create_battle_ticket(); check(r.ok, "letter injury battle reserve")
++	b = youth.start_battle(r.ticket.battle_id); injury(b, false)
++	check(b.ended and b.player().hp > 0.0 and b.player().hp < 100.0 and youth.commit_battle_outcome(b.outcome()).ok, "letter real injured victory")
++	act(youth, "return_to_camp")
++	var message: Dictionary = youth.player_view().hometown.message.duplicate(true)
++	r = youth.rest_wounds(1); check(r.ok, "care before first injustice decision " + str(r))
++	var choice_ids: Array = youth.youth_view().choices.map(func(option): return option.id)
++	for original in ["endure", "appeal", "keep_evidence", "protect_comrade"]: check(original in choice_ids, "original injustice choice remains " + original)
++	act(youth, "keep_evidence")
++	r = youth.rest_wounds(1); check(r.ok, "care before hometown visit " + str(r))
++	act(youth, "visit_hometown"); act(youth, "accept_appointment"); act(youth, "comrade_petition"); act(youth, "camp_appraisal")
++	exact(youth, "combined pending quote")
++	act(youth, "appraisal_accept")
++	check(youth.player_view().hometown.message == message, "rest never rewrites old message")
++	r = youth.rest_wounds(1); check(r.ok, "care after appraisal " + str(r))
++	exact(youth, "combined cared appraisal")
++	act(youth, "refuse_order")
++	before = youth.export_campaign_state()
++	check(not youth.rest_wounds(6).ok and youth.export_campaign_state() == before, "refusal endpoint rest denied exact")
++	exact(youth, "combined original endpoint")
++	print("INDEPENDENT_WOUNDS_ROUTES " + JSON.stringify({"checks": checks, "failures": failures}))
++	quit(0 if failures.is_empty() else 1)

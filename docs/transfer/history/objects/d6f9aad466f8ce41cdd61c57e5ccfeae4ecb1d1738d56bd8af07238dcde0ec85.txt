@@ -1,0 +1,19 @@
+{
+  "source_commit": "84cc5f8a881bcf07c5894c52ca31c7c31094adf4",
+  "engine": "4.6.3.stable.official.7d41c59c4",
+  "generated_by": "tools/capture_world6_fixtures.gd",
+  "files": {
+    "early_v1_committed.codec.json": "86b636cd5c25a19eb4ecc250ea2dcbc66dc9a00d42887d93f171c29e9de4dfa2",
+    "early_v1_committed.save.json": "3faf1fdd97b119a023a55e768ec913dcb2d2b2c0cd689516d1c988521c0b61eb",
+    "early_v1_running.codec.json": "207e4302d254ebd86090914fe477bcae9a811983a4c90d90d050cd3eb1467cf4",
+    "early_v1_running.save.json": "8ae0cce7445fc4df7b87e714f706825dfc1099994c7d7b9353ddb23509b97915",
+    "late_v1_committed.codec.json": "2e83b66f3868d0db83b5015f6872eb2009ff0107a723ac44cefb945507152e27",
+    "late_v1_committed.save.json": "9be985cc405b18744963e7b968498d5ec2c4ebfb32cac2390fa533e2145b6366",
+    "late_v1_running.codec.json": "2b8379bebef812a95857ee717abe47df642e9f10c70e5df4304890b86b04777d",
+    "late_v1_running.save.json": "7a935a097766b38afe09bd802d8c39558c38e1408501686f8da816751f40d45a",
+    "legacy_test_v0_committed.codec.json": "2f0111d718ce18cc1adc777c0cd4333e09d8525f51d716f2dc2932be784128e0",
+    "legacy_test_v0_committed.save.json": "f5809a37c414381bcf3b38d950e124730beb73b35bd0b118e808023ba9bf3505",
+    "legacy_test_v0_running.codec.json": "bb16ecd9b09fd1427555d3aa00a75b3772ac8c1b19fc51ba2bdfaa38510242a8",
+    "legacy_test_v0_running.save.json": "a396457e1eb0c3342ad78d0e02f613a6f0b0d3d783f7498076ed9e539ed54564"
+  }
+}

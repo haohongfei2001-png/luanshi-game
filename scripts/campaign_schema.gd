@@ -76,6 +76,7 @@ static func world(value: Variant, expected_version: int) -> bool:
 		commander_fields.append("hero_profile")
 		if not HeroProfiles.valid_reference(value.commander.get("hero_profile")):
 			return false
+		if expected_version < 8 and value.commander.hero_profile.id not in HeroProfiles.starting_ids(): return false
 		max_hp = HeroProfiles.from_reference(value.commander.hero_profile).max_hp
 	if not keys(value.commander, commander_fields) or not value.commander.alive is bool or not number(value.commander.hp, 0, max_hp) or not number(value.commander.max_hp, max_hp, max_hp) or value.commander.army != "relief":
 		return false
@@ -123,6 +124,7 @@ static func world(value: Variant, expected_version: int) -> bool:
 	for event in value.events:
 		if not keys(event, ["hour", "time_seconds", "kind", "details"]) or not integer(event.hour, 0, int(MAX_TIME / 3600)) or not number(event.time_seconds) or not text(event.kind) or not dictionary(event.details, 64):
 			return false
+		if expected_version < 8 and event.kind.begins_with("combat_training_"): return false
 	if not dictionary(value.battle_tickets) or not dictionary(value.battle_locks, 2):
 		return false
 	for id in value.battle_tickets:
@@ -203,6 +205,7 @@ static func ticket(value: Variant, world_version: int = 8) -> bool:
 		fields.append("hero_profile")
 		if not HeroProfiles.valid_reference(value.get("hero_profile")):
 			return false
+		if world_version < 8 and value.hero_profile.id not in HeroProfiles.starting_ids(): return false
 		hero_max_hp = HeroProfiles.from_reference(value.hero_profile).max_hp
 	if world_version >= 7:
 		fields.append_array(["purpose", "command_authority"])

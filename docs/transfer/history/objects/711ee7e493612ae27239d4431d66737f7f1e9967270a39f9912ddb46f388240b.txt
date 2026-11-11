@@ -1,0 +1,232 @@
+# Project status / resumable handoff
+
+## Current v0.11 / voluntary comrade testimony (2026-11-10)
+
+Runtime and tests: `f81264f285bd62c3d2e6cffe5de7f7cdfc884c5f`.
+New isolated branch based on local v0.10 `5d90c217158f380d6248bd65e3da8ea69ebf7324`.
+Not published. See [COMRADE_PETITION](COMRADE_PETITION.md) for the bounded contract.
+
+- One optional post-appointment petition asks original living, present first-battle
+  comrades for supplemental testimony. Their named choices depend on actual shared
+  experience, losses, trust/respect, previous protection and practical concerns.
+  Positive support and continued friendship are possible; refusal has no added penalty.
+- New signatures restore only remaining initial appropriated merit, with exact officer
+  credit/evidence/relationship consequences. Existing appeal witnesses cannot testify
+  twice. Requesting a ration quote visibly closes this petition, so voluntary credit
+  trades cannot be reclaimed. No troops, supplies or authority are invented.
+- Real hourly world progression precedes decisions; death interrupts. Strict replay
+  recalculates choices, location, order, timing and resulting history. World8 fields,
+  old-save identities and legacy actions stay exact; only event payload revision 1
+  is added. Genuine pre-feature fixture and existing migrations remain covered.
+- **Local PASS, Godot 4.6.3:** full source suite; petition 464, keyboard UI 32,
+  source/process restart 27+27; youth Chinese font/input; calibration/legacy parity
+  1,499; Linux/macOS exports and packaged petition restart 27+27. See
+  [sanitized validation](evidence/comrades-v011-validation.log), including failed
+  development assumptions and their repairs. Independent final review also passed.
+- Prior private-copy leakage and global-choice leakage were fixed: each actor now
+  uses their own known evidence and local facts; survival motivation can produce
+  refusal while endurance need not make every friend withdraw support.
+- Graphical screenshot and native macOS petition restart checks are wired into bounded
+  existing CI but are **NOT RUN**. No M5 or subjective gameplay acceptance is claimed.
+
+Publication still waits on the already-presented platform-required bundled-font
+confirmation. No GitHub writes, bypass, alternate upload, user-device access or new
+costs were attempted. This optional relationship loop is not the complete game.
+
+## Previous v0.10 / optional camp appraisal (2026-11-09)
+
+Local runtime source `d92f18c5b95a281c94a3cf03b0ad160efdca70a5`, with test/CI-gate
+follow-up `66bf95980c0b4e34bd9045d445940b56b83149ea`, in a new isolated checkout
+based on v0.9. These commits are not yet published. See [CAMP_APPRAISAL](CAMP_APPRAISAL.md).
+
+- After real appointment, one optional camp request spends an hour. Already reported
+  battle credit and physically returned courier replies determine support (eight
+  existing rations), refusal, or a four-ration bargain for one actual credited merit.
+  Private evidence and unknown courier loss cannot influence the decision.
+- Accept/decline has visible real effects, conserves stock and earned merit, and is
+  applied once. Death interrupts the request; stale location/stage/stock is rechecked.
+  Existing march/refusal routes and legitimate outcomes remain available.
+- World8/youth fields and identities stay unchanged; the new timeline contract has
+  revision 1 and requires v0.10+ to read. A genuine pre-feature World8 fixture loads
+  with exact values and can then opt into appraisal. Older fixtures/migrations remain.
+- **Local PASS, Godot 4.6.3:** full `tools/test.sh`; focused appraisal 349; real
+  Viewport keyboard UI 39; source restart 55+25; youth font/UI/input; calibration and
+  legacy parity 1,499; Linux/macOS export and packaged restart, including appraisal
+  55+25. Reproducible commands/results: [validation](evidence/appraisal-v010-validation.log).
+- New actual-display screenshot and native macOS courier/appraisal restart gates are
+  wired into existing CI, with strict failures. They have **not run** for these commits.
+  No local graphical, native macOS, M5 or subjective-quality acceptance is claimed.
+
+**Publication blocker:** the bundled-font upload is awaiting an already-presented
+platform-required confirmation. No retry, bypass, alternate upload, GitHub write or
+new expense was attempted here. On confirmation, publish the verified dependency
+and this slice, then run and inspect the exact commit's hosted graphics/native checks
+before merge or replacing the retained playable. Until then, preserve these local
+commits and continue independent world-backed comrades/relationship work within
+existing scope. This is one complete optional loop, not the complete game.
+
+## Previous v0.9 / World8 slice (2026-11-09)
+
+Implemented in a new isolated cloud checkout based on public `049fecc`, with the
+PR10 test-driver correction from public `52f545f` and licensed bundled Chinese
+font correction carried forward. Evidence was refreshed after the final font-integrated
+verification. Existing acceptance
+checkouts and user devices were not modified. See [COURIER_ORDERS](COURIER_ORDERS.md).
+
+- Optional superior→patrol courier and physical reply consume one existing camp soldier
+  and ten existing rations; unified travel/meal timing, endpoint interception and return
+  accounting are causal. No new force, reinforcement or city-command authority is created.
+- Players see only arranged/received/sent/locally confirmed information. Secret loss stays
+  unknown; receipt arrival does not magically inform a distant player.
+- New battles use finite-range delayed flags, per-soldier received orders and actual
+  extraction. Original active saves retain historical instruction timing until settlement.
+- Explicit World5→6→7→8 migrations and genuine World7 fixture bytes preserve old lives,
+  profiles, clocks, inventories and battle state. Adversarial receipt/authority/meal
+  forgeries found during independent review have regression tests and are rejected.
+- **Passed in Godot 4.6.3 Linux cloud:** full `tools/test.sh`, youth interface/input checks,
+  repeated combat calibration and original legacy parity, Linux/macOS export, packaged
+  scene/campaign/youth/courier separate-process save/restart. Exact logs are under
+  `docs/evidence/courier-v09-*`.
+- After the upstream bundled-font fix, the complete full suite, font/source glyph
+  coverage, UI/input checks and both exports were rerun successfully. The new courier
+  Chinese text uses the same cached licensed FontFile without system fallback.
+- New focused checks: local flags 62, courier causality 194, genuine World7 migration 20,
+  courier UI 113, transport process restart 34+26, flag restart 1+3. Packaged transport
+  smoke passes 167+180 checks. Full regression remains separate from these counts.
+- **Not yet verified at source commit time:** this branch's GitHub CI and new rendered
+  courier screenshots; CI now includes delivered/reply/overdue screenshots. Local cloud
+  has no usable graphical display socket. macOS archive has arm64+x86_64, but no M5
+  device gameplay/performance test is claimed. No formal release or paid resource added.
+
+Acceptance remains partial: this is the physical communication foundation, not arbitrary
+remote subordinate command, terrain occlusion, route patrol simulation, mature political
+response or the complete game. PR10 merge/CI is coordinated separately; this branch does
+not modify PR10's branch or claim its pending hosted checks passed.
+
+## Objective and execution boundaries
+
+Continue the complete single-player life, warfare and independent-world game.
+A prototype or the first two encounters are not completion. Work in the authorized
+cloud and existing public GitHub resources, with no new costs, accounts, user
+computer, Codex tasks, formal release or license changes. Major cast and fixed
+literary plots remain reserved for owner/Pro review; ordinary implementation proceeds.
+Read AGENTS, PRODUCT_DECISIONS v3.2, NARRATIVE_LIFE_ARC_V0_3, DOT_HANDOFF_FINAL and
+ACCEPTANCE_MATRIX. Latest locked youth-life priorities override old captivity proposals.
+
+## Previous v0.8 recovery record (historical, 2026-11-09)
+
+- Remote main was verified at `bfc7d5a`; no open PR and no active old Godot process.
+  Finite profiles `c0c6d53`, youth core `e64070a` and UI `4222cf6` were present only
+  in cloud checkouts. They are now integrated without overwriting dirty old folders.
+- Local verified implementation: `bb6654f0cad1e79b00789935f096134bdf476c3f`, v0.8.
+  Only evidence/provenance/status documentation changed after its full validation.
+- Finite-profile public checkpoint: [`e337c3f`](https://github.com/haohongfei2001-png/luanshi-game/commit/e337c3f56accffa5ba7293f90bf85197397a0007),
+  tree-identical to c0c6d53. Youth source `049fecc` is public in
+  [draft PR10](https://github.com/haohongfei2001-png/luanshi-game/pull/10).
+- Terminal push had no credentials; the already connected GitHub interface publishes
+  exact verified trees instead. No credential/account change is needed.
+
+## Newly implemented player behavior
+
+- New campaigns/training use early 100 HP. Late offense remains a labeled 100 HP
+  training tier, not earned progression. Genuine World5/6 saves preserve their
+  original profiles, HP, RNG, timers, inventories, receipts and technical identity.
+- 「少年军旅 / 人生」 starts age fifteen with forced/voluntary service and motive.
+  Actual five-person patrol combat earns merit; reported merit and superior credit
+  differ. Endure, appeal, evidence and protecting a survivor have distinct effects.
+- Actual commission enables local squad command. Dangerous missions have real
+  victory, withdrawal and death; replacements consume existing camp resources.
+  Names, evidence, relationships and casualties survive ordinary saves/checkpoints.
+- Long-combat starvation no longer makes the return journey roll back: named losses
+  follow world losses, death stops pending actions, and failed protection records
+  real elapsed time without inventing a survivor. Tactical extraction no longer
+  falsely claims that the army has already marched back to camp.
+
+## Completed local checks on the integrated implementation
+
+Official Godot 4.6.3 / Linux cloud, using isolated XDG data, configuration and cache
+directories. Reproduce from the repository root with the scripts below:
+
+- `./tools/test.sh`: PASS, including all prior battle/world/economy/hunger/transaction/
+  save cases, 90 days and 14,007 events, 5,472 malformed-save mutations, 3,066 legacy
+  profile/save checks; youth career 536, genuine World6 migration 40, youth corruption
+  2,201, restart 13+14 and starvation restart 65+24 checks. No Godot error markers.
+- `./tools/test-youth-ui.sh`: PASS, 59 actual-control scene assertions, seven text
+  fixtures and the real input route with damage, actual casualties and physical retreat.
+- `./tools/calibrate-combat.sh`: PASS, 1,499 profile/calibration/parity checks; repeated
+  calibration hash 4db8d665b7d5de8aa01d7ba07cc98fde13658619ffbf9624608cffb99aef6b93.
+- `./tools/export.sh`: PASS. Exported Linux training, campaign, old persistence and
+  youth prepare/resume pass. Youth has 30+29 checks, exact World7 endpoint, 284 events,
+  world time 72023.8479166667. Universal macOS 0.8 archive structure passes.
+- Local macOS ZIP SHA256: 8f8d7f1bb01d55197a9b3a6ee419ce15c6d09aef74c72a9cd3eb90e0fa704303.
+  Linux archive: 64f2e113b6a01db211b84ddae9e563ec3a5fb75d695b666c82947368b1352435.
+  These are cloud build hashes, not native-test results. CI creates its own packages.
+
+Evidence: [integrated source](evidence/youth-integrated-tests.log),
+[UI/input](evidence/youth-integrated-ui.log), [calibration](evidence/youth-integrated-calibration.log),
+[exports](evidence/youth-integrated-export.log), [youth behavior](YOUTH_LIFE_SLICE.md).
+Initial environment-path and merge-order test failures were fixed and the full
+final sequence rerun. No failure was relabeled a pass or old check removed.
+
+## Remaining stage gates and immediate next action
+
+1. [CI42546566552](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42546566552)
+   passed full simulation, calibration, strategic/battle/save graphics, but failed
+   the youth graphical personal-damage assertion: X11 input produced zero damage.
+   The PR remains draft; packaging and native macOS were correctly skipped.
+   The input driver now moves the real OS cursor, sends held-key events and flushes
+   buffered input. It also checks pointer error and actual movement frames.
+   `./tools/test-youth-ui.sh` passed again (59 scene checks, seven presentation checks,
+   99.47 personal damage, 419 moving frames, <0.001px headless pointer error).
+   The cloud Xvfb process cannot create its local display socket, so graphical
+   confirmation remains in GitHub CI. No runtime rule or pass assertion was weakened.
+2. [CI42547603376](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42547603376)
+   confirmed the input repair: all Linux tests, real Chinese youth graphics and exports
+   passed. X11 recorded 99.47 personal damage, 420 moving frames and 1.37px maximum
+   pointer error. Actual images were downloaded and inspected; see
+   [X11 evidence](evidence/youth-x11-ci49.log). Native arm64 macOS 26.7.2 then failed
+   SystemFont loading with FreeType empty-font-path errors. This is a real stage
+   failure, not a passed native build. The Mac package is not accepted or delivered.
+   The shared FontFile now bundles a renamed Noto CJK SC 2.004 subset under SIL OFL 1.1,
+   disables OS fallback and ships the license. It covers 7,617 codepoints (GB2312, Latin
+   and runtime source text). Repeated builds produced identical font SHA256
+   830b4d3122ba9db8c24c1f39919e414566896ab00f9e9b079df5a797144d94a2.
+   Local font/source scan, 59 scene checks, full input route and seven presentation
+   checks pass; unsupported-glyph negative test fails as intended. Both exports and
+   Linux packaged smoke pass, including full font manifest/license checks. Native
+   macOS confirmation remains pending on the next CI; errors are not suppressed.
+3. Inspect the next current screenshots and native logs. Only then mark readiness/merge
+   and replace the retained v0.6 playable with a verified artifact. No current v0.8
+   graphical, native Mac, M5 or subjective-quality pass is claimed yet.
+4. Continue world-backed, interceptable command transmission and limited knowledge,
+   then superior appreciation/exploitation and autonomous comrades/hometown messages.
+   Long-term politics, family, rare captivity and succession follow the locked priorities.
+
+## Retained playable and acceptance limits
+
+The last accepted playable remains v0.6 source e86a1ad (PR7 merge 465414d),
+[CI42425639702](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42425639702).
+Its native-tested macOS ZIP SHA256 is
+278daea3d44ccbbd6a98f36e2895f48df57121959b9bbf18352a28c3ea82956d.
+The existing Space artifact remains retained. Old bounded native graphics probe
+CI42427068166 finished successfully; job success alone is not its graphics verdict.
+
+The source/UI headless checks and Linux archive execution are not actual rendered
+playtesting. macOS cross-export is not native execution. M5 sustained frame time,
+thermals, input feel, Finder/Gatekeeper and human quality remain unverified. No
+Developer ID/notarization, iOS or formal release. 20v20 is still O(n²). Condition
+penalties are battle-entry snapshots. Saves retain 16 MiB file/128 MiB raw/4 million
+node limits; unlimited history, power-loss fsync and concurrent CAS are not promised.
+Earned combat progression, persistent wounds, 4–6 fully autonomous important NPCs,
+long-term life/politics/family and full G3/G4/F acceptance remain unfinished.
+
+## Preserved stage history
+
+PR1 bfb028a: first playable/world. PR2 0be9e51: real battle transactions.
+PR4 ca3f21a: population economy. PR6 4174e98: hunger and recovery.
+PR7 465414d: full campaign saves. See VERIFICATION and system evidence for details.
+
+On resume fetch live main/PR/CI, inspect this file and dirty checkouts, then continue
+the smallest unfinished gate. Record exact source, results and next command at every
+checkpoint. A durable record enables recovery; it is not a claim of uninterrupted
+compute or complete-game delivery. Routine progress stays in GitHub.

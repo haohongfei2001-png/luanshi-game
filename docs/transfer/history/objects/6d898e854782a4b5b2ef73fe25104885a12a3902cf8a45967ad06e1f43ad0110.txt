@@ -1,0 +1,210 @@
+name: Verify and package playable game
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', 'README.md', 'AGENTS.md']
+  pull_request:
+    paths-ignore: ['docs/**', 'README.md', 'AGENTS.md']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: playable-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-and-export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Legacy profile parity materializes its preserved source commit.
+      - name: Install system Chinese fonts for rendered narrative checks
+        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
+      - name: Install verified official Godot and export templates
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_export_templates.tpz" -o /tmp/templates.tpz
+          echo 'da606b61c10157844f8300172df374472665f95015495cb1a7cd132c40ede404faa96cc1016a4b9662db9909ddea69632c4948b2cd11163438dad4808881fb68  /tmp/templates.tpz' | sha512sum -c -
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+          unzip -j -q /tmp/templates.tpz 'templates/macos.zip' 'templates/linux_release.x86_64' 'templates/linux_debug.x86_64' 'templates/version.txt' -d "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+      - name: Test simulation and real scene lifecycle
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/test.sh
+      - name: Verify youth narrative interface and real input path
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/test-youth-ui.sh
+      - name: Verify finite hero calibration and legacy parity
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/calibrate-combat.sh
+      - name: Exercise rendered scene with software OpenGL
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 -- --smoke-scene --capture-proof 2>&1 | tee artifacts/visual-smoke.log
+          test -s artifacts/battle-proof.png
+          grep -q SCENE_SMOKE_PASS artifacts/visual-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/visual-smoke.log; then exit 1; fi
+      - name: Exercise strategic map with real GUI events
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/strategy_visual.gd 2>&1 | tee artifacts/strategy-visual.log
+          test -s artifacts/strategy-proof.png
+          test -s artifacts/economy-local-proof.png
+          test -s artifacts/condition-shortage-proof.png
+          grep -q STRATEGY_VISUAL_PASS artifacts/strategy-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/strategy-visual.log; then exit 1; fi
+      - name: Exercise world-sourced combat with real graphics
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 -- --campaign-smoke --capture-campaign 2>&1 | tee artifacts/campaign-visual.log
+          test -s artifacts/campaign-battle-proof.png
+          grep -q CAMPAIGN_SMOKE_PASS artifacts/campaign-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/campaign-visual.log; then exit 1; fi
+      - name: Exercise actual save and checkpoint interface
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/campaign_save_visual.gd 2>&1 | tee artifacts/save-visual.log
+          for image in save-slots life-checkpoints battle-load saved-result; do test -s "artifacts/$image-proof.png"; done
+          grep -q CAMPAIGN_SAVE_VISUAL_PASS artifacts/save-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/save-visual.log; then exit 1; fi
+      - name: Exercise comrade choices with real graphics and input
+        timeout-minutes: 3
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          GODOT_SILENCE_ROOT_WARNING: 1
+        run: |
+          set -euo pipefail
+          timeout 150s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_petition_ui.gd -- --capture-petition 2>&1 | tee artifacts/petition-visual.log
+          for image in petition-signed petition-refused petition-protected; do test -s "artifacts/$image-proof.png"; done
+          grep -q '"failures":\[\]' artifacts/petition-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/petition-visual.log; then exit 1; fi
+      - name: Exercise hometown knowledge with real graphics and input
+        timeout-minutes: 3
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          GODOT_SILENCE_ROOT_WARNING: 1
+        run: |
+          set -euo pipefail
+          timeout 150s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_hometown_ui.gd -- --capture-hometown 2>&1 | tee artifacts/hometown-visual.log
+          for image in hometown-received hometown-reunion hometown-unknown; do test -s "artifacts/$image-proof.png"; done
+          grep -q '"failures":\[\]' artifacts/hometown-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/hometown-visual.log; then exit 1; fi
+      - name: Exercise camp appraisal with real graphics and input
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          GODOT_SILENCE_ROOT_WARNING: 1
+        run: |
+          set -o pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_appraisal_ui.gd -- --capture-appraisal 2>&1 | tee artifacts/appraisal-visual.log
+          for image in appraisal-offer appraisal-accepted appraisal-declined appraisal-support appraisal-denied; do test -s "artifacts/$image-proof.png"; done
+          grep -q '"failures":\[\]' artifacts/appraisal-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/appraisal-visual.log; then exit 1; fi
+      - name: Exercise physical courier knowledge interface with real graphics
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_courier_ui.gd -- --capture-couriers 2>&1 | tee artifacts/courier-visual.log
+          for image in courier-delivered courier-map-reply courier-overdue; do test -s "artifacts/$image-proof.png"; done
+          grep -q '"failures":\[\]' artifacts/courier-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/courier-visual.log; then exit 1; fi
+      - name: Exercise youth life with real graphics and Chinese glyphs
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/youth_visual.gd 2>&1 | tee artifacts/youth-visual.log
+          for image in enlistment first-battle injustice active-save withdrawal endpoint records; do test -s "artifacts/youth-$image-proof.png"; done
+          grep -q YOUTH_VISUAL_PASS artifacts/youth-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/youth-visual.log; then exit 1; fi
+      - name: Build macOS and verify exported Linux game
+        run: ./tools/export.sh
+      - name: Upload macOS playable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luanshi-macOS-${{ github.sha }}
+          path: builds/Luanshi-macOS.zip
+          if-no-files-found: error
+      - name: Upload Linux playable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luanshi-Linux-${{ github.sha }}
+          path: builds/Luanshi-linux.tar.gz
+          if-no-files-found: error
+      - name: Upload evidence and hashes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-${{ github.sha }}
+          path: |
+            artifacts/
+            builds/SHA256SUMS
+          if-no-files-found: warn
+  macos-runtime:
+    needs: verify-and-export
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-${{ github.sha }}
+          path: package
+      - name: Verify bundle and run native macOS headless smoke
+        run: |
+          set -euo pipefail
+          mkdir -p mac-evidence
+          uname -a | tee mac-evidence/host.log
+          sw_vers | tee -a mac-evidence/host.log
+          ditto -x -k package/Luanshi-macOS.zip package/unpacked
+          APP=$(find package/unpacked -maxdepth 1 -name '*.app' -print -quit)
+          codesign --verify --deep --strict --verbose=2 "$APP" 2>&1 | tee mac-evidence/codesign.log
+          BIN=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Contents/Info.plist")
+          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --smoke-scene --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/runtime.log
+          grep -q SCENE_SMOKE_PASS mac-evidence/runtime.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/runtime.log; then exit 1; fi
+          "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --campaign-smoke --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/campaign.log
+          grep -q CAMPAIGN_SMOKE_PASS mac-evidence/campaign.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/campaign.log; then exit 1; fi
+          for phase in prepare resume; do
+            "$APP/Contents/MacOS/$BIN" --headless -- --persistence-smoke-$phase --persistence-smoke-id="native_${GITHUB_RUN_ID}" 2>&1 | tee "mac-evidence/persistence-$phase.log"
+          done
+          grep -q PERSISTENCE_SMOKE_PREPARE_PASS mac-evidence/persistence-prepare.log
+          grep -q PERSISTENCE_SMOKE_RESUME_PASS mac-evidence/persistence-resume.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/persistence-*.log; then exit 1; fi
+          for phase in prepare resume; do
+            "$APP/Contents/MacOS/$BIN" --headless -- --youth-smoke-$phase --youth-smoke-id="native_${GITHUB_RUN_ID}" 2>&1 | tee "mac-evidence/youth-$phase.log"
+          done
+          grep -q YOUTH_RUNTIME_PREPARE_PASS mac-evidence/youth-prepare.log
+          grep -q YOUTH_RUNTIME_RESUME_PASS mac-evidence/youth-resume.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/youth-*.log; then exit 1; fi
+          for suite in courier appraisal petition hometown; do
+            marker=$(printf '%s' "$suite" | tr '[:lower:]' '[:upper:]')
+            for phase in prepare resume; do
+              "$APP/Contents/MacOS/$BIN" --headless -- "--${suite}-smoke-${phase}" "--${suite}-smoke-id=native_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}_${suite}" 2>&1 | tee "mac-evidence/${suite}-${phase}.log"
+              phase_marker=$(printf '%s' "$phase" | tr '[:lower:]' '[:upper:]')
+              grep -q "${marker}_RUNTIME_${phase_marker}_PASS" "mac-evidence/${suite}-${phase}.log"
+              if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' "mac-evidence/${suite}-${phase}.log"; then exit 1; fi
+            done
+          done
+      - name: Upload native macOS evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-verification-${{ github.sha }}
+          path: mac-evidence/

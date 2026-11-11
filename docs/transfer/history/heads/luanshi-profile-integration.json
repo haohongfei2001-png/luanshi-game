@@ -1,0 +1,603 @@
+{
+  "format": 1,
+  "checkout_label": "luanshi-profile-integration",
+  "branch": "feature/finite-hero-profiles",
+  "source_head": "e9f390482a49df920638a59793ecaa0e1e881a92",
+  "source_tree": "2a43c92a449e98119450a8bdaff39fedcb9aef18",
+  "base_manifest": "BASELINE.json",
+  "replace_or_add": {
+    ".github/workflows/verify.yml": {
+      "mode": "100644",
+      "original_blob_sha1": "a4531f48561f90a757553c535f74e9b61fe0532c",
+      "original_sha256": "41cded2a223b7721d3b5965451a5da79eb8c7ed786cf96396ccdd3280ae602a0",
+      "published_sha256": "41cded2a223b7721d3b5965451a5da79eb8c7ed786cf96396ccdd3280ae602a0",
+      "published_bytes": 7369,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/41cded2a223b7721d3b5965451a5da79eb8c7ed786cf96396ccdd3280ae602a0.txt"
+      }
+    },
+    ".gitignore": {
+      "mode": "100644",
+      "original_blob_sha1": "7e553b325c6fabf84806d18edb744abb55696fbd",
+      "original_sha256": "88bb81590b1d4a7165b99d723455b74ce5323fd74d6b6f4318c20bd9a8a32b4f",
+      "published_sha256": "88bb81590b1d4a7165b99d723455b74ce5323fd74d6b6f4318c20bd9a8a32b4f",
+      "published_bytes": 321,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/88bb81590b1d4a7165b99d723455b74ce5323fd74d6b6f4318c20bd9a8a32b4f.txt"
+      }
+    },
+    "AGENTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "141968fcde3686c978270b3caf8176ee2c46f942",
+      "original_sha256": "792eb27d9db2819994419e33db7198b9a914a04d3f27d67cba047e5e9ad16d58",
+      "published_sha256": "792eb27d9db2819994419e33db7198b9a914a04d3f27d67cba047e5e9ad16d58",
+      "published_bytes": 8593,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/792eb27d9db2819994419e33db7198b9a914a04d3f27d67cba047e5e9ad16d58.txt"
+      }
+    },
+    "README.md": {
+      "mode": "100644",
+      "original_blob_sha1": "ea0c4c71a0cce964c05248edddb7530c3e9995fc",
+      "original_sha256": "ddf0877e1a07d9808b2a49d05f93bb7fb91980c4c84216d3eebbc0a301f9c1af",
+      "published_sha256": "ddf0877e1a07d9808b2a49d05f93bb7fb91980c4c84216d3eebbc0a301f9c1af",
+      "published_bytes": 8874,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/ddf0877e1a07d9808b2a49d05f93bb7fb91980c4c84216d3eebbc0a301f9c1af.txt"
+      }
+    },
+    "docs/ACCEPTANCE_MATRIX.md": {
+      "mode": "100644",
+      "original_blob_sha1": "c0817462c2cd9fc1fe30d8e022fe35850e82ec9d",
+      "original_sha256": "6baf457a306a4fd75eb7b4dbf7cdaf1296f26696df4fbc86a2a468bb3f454456",
+      "published_sha256": "6baf457a306a4fd75eb7b4dbf7cdaf1296f26696df4fbc86a2a468bb3f454456",
+      "published_bytes": 18172,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/6baf457a306a4fd75eb7b4dbf7cdaf1296f26696df4fbc86a2a468bb3f454456.txt"
+      }
+    },
+    "docs/DELIVERY_PLAN.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5d4e33a84a9e7362b2aa9e772fe5114ab6566fc6",
+      "original_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_bytes": 7031,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040.txt"
+      }
+    },
+    "docs/DOT_HANDOFF_FINAL.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7f6e99404c6032ddca1dad16f89a61dcef67564d",
+      "original_sha256": "2482b88cc634e785bb36041e084ff9017ab2c23d4f270ae4ef268ee82ede5aeb",
+      "published_sha256": "2482b88cc634e785bb36041e084ff9017ab2c23d4f270ae4ef268ee82ede5aeb",
+      "published_bytes": 12204,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/2482b88cc634e785bb36041e084ff9017ab2c23d4f270ae4ef268ee82ede5aeb.txt"
+      }
+    },
+    "docs/FINAL_GAME_DESIGN_SPEC.md": {
+      "mode": "100644",
+      "original_blob_sha1": "ec957e0a03110af764cc51483edd3717be56a8be",
+      "original_sha256": "052cfd529ea334dd105454c0b09445a901c3f35953b53ce3ce1543bdb0b3dd58",
+      "published_sha256": "052cfd529ea334dd105454c0b09445a901c3f35953b53ce3ce1543bdb0b3dd58",
+      "published_bytes": 28886,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/052cfd529ea334dd105454c0b09445a901c3f35953b53ce3ce1543bdb0b3dd58.txt"
+      }
+    },
+    "docs/FINAL_VISION_ACCEPTANCE.md": {
+      "mode": "100644",
+      "original_blob_sha1": "c833d575dbd7d82f2fa9214bd5801625d0fe138f",
+      "original_sha256": "92084e59f6e72c0fb1674500f7765095a14b7e532ef0295e47945d016221b6e1",
+      "published_sha256": "92084e59f6e72c0fb1674500f7765095a14b7e532ef0295e47945d016221b6e1",
+      "published_bytes": 5249,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/92084e59f6e72c0fb1674500f7765095a14b7e532ef0295e47945d016221b6e1.txt"
+      }
+    },
+    "docs/NARRATIVE_ART_DIRECTION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "3b01d5db2b506f16fa87af90efc2be0401ff828a",
+      "original_sha256": "f818dbf41debb168f9e0847a3f4b4f5c584e652062efa510d24ad659fb551c7a",
+      "published_sha256": "f818dbf41debb168f9e0847a3f4b4f5c584e652062efa510d24ad659fb551c7a",
+      "published_bytes": 13622,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f818dbf41debb168f9e0847a3f4b4f5c584e652062efa510d24ad659fb551c7a.txt"
+      }
+    },
+    "docs/NARRATIVE_WORLD_BIBLE_V0_2.md": {
+      "mode": "100644",
+      "original_blob_sha1": "1360a16d35dcf28b7e7cceb3b619a58ad154da07",
+      "original_sha256": "6a2ad1ea5f31c5af01c5a04aedc650e75e911416000d0d3132e9dbd1f6e79e63",
+      "published_sha256": "6a2ad1ea5f31c5af01c5a04aedc650e75e911416000d0d3132e9dbd1f6e79e63",
+      "published_bytes": 13822,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/6a2ad1ea5f31c5af01c5a04aedc650e75e911416000d0d3132e9dbd1f6e79e63.txt"
+      }
+    },
+    "docs/PLAYING_ZH.md": {
+      "mode": "100644",
+      "original_blob_sha1": "fdf9d9ada73a139b22a3e50e23279584383178cf",
+      "original_sha256": "5df99e8025c2613d9ae0742bc8b2a52ce4f4a9677a75b0fbe26a147bc4147f78",
+      "published_sha256": "5df99e8025c2613d9ae0742bc8b2a52ce4f4a9677a75b0fbe26a147bc4147f78",
+      "published_bytes": 6403,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5df99e8025c2613d9ae0742bc8b2a52ce4f4a9677a75b0fbe26a147bc4147f78.txt"
+      }
+    },
+    "docs/PRODUCT_DECISIONS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "49cbec7c276c5a118591a119cc2224c00a465483",
+      "original_sha256": "ecac7888c187e1b5a594d56ac22735598dabae8b1486aac24a144b2c30da41fd",
+      "published_sha256": "ecac7888c187e1b5a594d56ac22735598dabae8b1486aac24a144b2c30da41fd",
+      "published_bytes": 16521,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/ecac7888c187e1b5a594d56ac22735598dabae8b1486aac24a144b2c30da41fd.txt"
+      }
+    },
+    "docs/PROJECT_STATUS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "fc0d4249a3699558956821f6e55202e2a7576461",
+      "original_sha256": "6be6cdc8aaa633ded52ded7f506683160e6612d7de1f3ef75d62d9ed9e90a74f",
+      "published_sha256": "6be6cdc8aaa633ded52ded7f506683160e6612d7de1f3ef75d62d9ed9e90a74f",
+      "published_bytes": 13316,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/6be6cdc8aaa633ded52ded7f506683160e6612d7de1f3ef75d62d9ed9e90a74f.txt"
+      }
+    },
+    "docs/SIMULATION_CONTRACTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5554d21453d056044cc8241c82d76ec725fa5814",
+      "original_sha256": "bb5f8f882552015617c4c629f22da19567316c009160ae247dd7c03615318a40",
+      "published_sha256": "bb5f8f882552015617c4c629f22da19567316c009160ae247dd7c03615318a40",
+      "published_bytes": 16811,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/bb5f8f882552015617c4c629f22da19567316c009160ae247dd7c03615318a40.txt"
+      }
+    },
+    "docs/VERIFICATION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5b10be49af93dd030da3d23dc1133e1d16d4ce8a",
+      "original_sha256": "2ce510fa67ef659e16c17e48f9ae73c9cc32d7ec7e837acc0ae15c1249aeaabf",
+      "published_sha256": "0c845a07834dac6a26d0b0e5c09c7abe9de9595ba258dd76cdc532382cf55bfe",
+      "published_bytes": 19221,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": false,
+      "storage": {
+        "object": "objects/0c845a07834dac6a26d0b0e5c09c7abe9de9595ba258dd76cdc532382cf55bfe.txt"
+      },
+      "redaction_key": "docs/VERIFICATION.md@5b10be49af93dd030da3d23dc1133e1d16d4ce8a"
+    },
+    "export_presets.cfg": {
+      "mode": "100644",
+      "original_blob_sha1": "291461ddca5bf607b2f25d5767b8654929a36839",
+      "original_sha256": "df0a9582faccb39d2123e787c417a6fed6be8e95b2dc701c1d241ce3b6f5c6bd",
+      "published_sha256": "df0a9582faccb39d2123e787c417a6fed6be8e95b2dc701c1d241ce3b6f5c6bd",
+      "published_bytes": 1536,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/df0a9582faccb39d2123e787c417a6fed6be8e95b2dc701c1d241ce3b6f5c6bd.txt"
+      }
+    },
+    "project.godot": {
+      "mode": "100644",
+      "original_blob_sha1": "b0c20ad500ee3bc43cb568bd3e6e0e3a6e532d06",
+      "original_sha256": "3d4c2978955bca2f030f9d9cdafae1e12ea89ee3568d2d69a817e243a89be14f",
+      "published_sha256": "3d4c2978955bca2f030f9d9cdafae1e12ea89ee3568d2d69a817e243a89be14f",
+      "published_bytes": 792,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/3d4c2978955bca2f030f9d9cdafae1e12ea89ee3568d2d69a817e243a89be14f.txt"
+      }
+    },
+    "scripts/battle.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "9007f99121fd61329f548dbdba27f8e7def5dcea",
+      "original_sha256": "ba8953a1ce9498d929be32ade5febdf49fff103577d8e25fa9498bd3f0ad2ede",
+      "published_sha256": "ba8953a1ce9498d929be32ade5febdf49fff103577d8e25fa9498bd3f0ad2ede",
+      "published_bytes": 26814,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/ba8953a1ce9498d929be32ade5febdf49fff103577d8e25fa9498bd3f0ad2ede.txt"
+      }
+    },
+    "scripts/battle_hud.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "45ac725930210a77d6ade9998149f2533450183c",
+      "original_sha256": "eba5e98b6c3baa19e5aeb323c1cd4187dc033d69305d8a41ab9af65ecd909269",
+      "published_sha256": "eba5e98b6c3baa19e5aeb323c1cd4187dc033d69305d8a41ab9af65ecd909269",
+      "published_bytes": 9681,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/eba5e98b6c3baa19e5aeb323c1cd4187dc033d69305d8a41ab9af65ecd909269.txt"
+      }
+    },
+    "scripts/battle_sim.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "2a6942fa9ca27b085bc58f69e43f9c6b42ae2292",
+      "original_sha256": "0f269bb9388dafa4ae1e931ab0256ea7807ac9f41697e59957d7373655207792",
+      "published_sha256": "0f269bb9388dafa4ae1e931ab0256ea7807ac9f41697e59957d7373655207792",
+      "published_bytes": 18457,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/0f269bb9388dafa4ae1e931ab0256ea7807ac9f41697e59957d7373655207792.txt"
+      }
+    },
+    "scripts/campaign_event_audit.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "f7ee7ceddeae751030fc77b0b83200aaff1ecca9",
+      "original_sha256": "dc7a6f02a4e1b95f4fc716c23d0e449d9b15e2c1430b14b3b68ce33f0cedcb90",
+      "published_sha256": "dc7a6f02a4e1b95f4fc716c23d0e449d9b15e2c1430b14b3b68ce33f0cedcb90",
+      "published_bytes": 12064,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/dc7a6f02a4e1b95f4fc716c23d0e449d9b15e2c1430b14b3b68ce33f0cedcb90.txt"
+      }
+    },
+    "scripts/campaign_migrations.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "6eb1e1e31a063d9528480bc170a2b5ffd3840589",
+      "original_sha256": "e5d4a86a6333dd0abc48d22812db19ba928fb63b17d24bbcba20596870c3cf3d",
+      "published_sha256": "e5d4a86a6333dd0abc48d22812db19ba928fb63b17d24bbcba20596870c3cf3d",
+      "published_bytes": 1829,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e5d4a86a6333dd0abc48d22812db19ba928fb63b17d24bbcba20596870c3cf3d.txt"
+      }
+    },
+    "scripts/campaign_schema.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "5c1fc40ecb0e76002f615aba34cbdc52315d3cb5",
+      "original_sha256": "28e9271054f43d27f9469e3ea6e8501f926f0b5649c9a71013634d8cebe5bc15",
+      "published_sha256": "28e9271054f43d27f9469e3ea6e8501f926f0b5649c9a71013634d8cebe5bc15",
+      "published_bytes": 15311,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/28e9271054f43d27f9469e3ea6e8501f926f0b5649c9a71013634d8cebe5bc15.txt"
+      }
+    },
+    "scripts/strategy_view.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "cb27b9eba7ea285bce0055ef9ba336642b860e20",
+      "original_sha256": "7ea8c32aa58a0f057477cf286dbb28dd47a5023ead9871819af3751296fb62e0",
+      "published_sha256": "7ea8c32aa58a0f057477cf286dbb28dd47a5023ead9871819af3751296fb62e0",
+      "published_bytes": 17145,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/7ea8c32aa58a0f057477cf286dbb28dd47a5023ead9871819af3751296fb62e0.txt"
+      }
+    },
+    "scripts/world_sim.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "5710dcb9343721b97e4998c821825663f9beec5e",
+      "original_sha256": "b43e4d92ac0b22868e20c411d1245f9b736b51d581cf99f217a63b706c713ab9",
+      "published_sha256": "b43e4d92ac0b22868e20c411d1245f9b736b51d581cf99f217a63b706c713ab9",
+      "published_bytes": 56312,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/b43e4d92ac0b22868e20c411d1245f9b736b51d581cf99f217a63b706c713ab9.txt"
+      }
+    },
+    "tests/test_battle_transactions.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "a24d99f2ee469475548c7b58c0a84d5d6c61b953",
+      "original_sha256": "5af3c28212e7de2c81f323477a50af7e340f461a58f5c38715d0188b94c51365",
+      "published_sha256": "5af3c28212e7de2c81f323477a50af7e340f461a58f5c38715d0188b94c51365",
+      "published_bytes": 21792,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5af3c28212e7de2c81f323477a50af7e340f461a58f5c38715d0188b94c51365.txt"
+      }
+    },
+    "tests/test_campaign_saves.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "4d4e485b06ff686ae2f4f79f96eeec0fa082e31b",
+      "original_sha256": "8ac3aeba7816bdce0012352b7aa9822ee60930b06e3030eea768b77ba6f52944",
+      "published_sha256": "8ac3aeba7816bdce0012352b7aa9822ee60930b06e3030eea768b77ba6f52944",
+      "published_bytes": 20274,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/8ac3aeba7816bdce0012352b7aa9822ee60930b06e3030eea768b77ba6f52944.txt"
+      }
+    },
+    "tests/test_legacy_profile_parity.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "bd8a371a6af00e5246fe8c8aaf1c7497ba3cb1ed",
+      "original_sha256": "45b60bb54da54ae835594321d7bf25b10aa1d2b2ca5bb5cab1fd10fadf4d96b3",
+      "published_sha256": "45b60bb54da54ae835594321d7bf25b10aa1d2b2ca5bb5cab1fd10fadf4d96b3",
+      "published_bytes": 2252,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/45b60bb54da54ae835594321d7bf25b10aa1d2b2ca5bb5cab1fd10fadf4d96b3.txt"
+      }
+    },
+    "tests/test_profile_saves.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "45c150d41e712daa6136e7289b3757040c21f403",
+      "original_sha256": "574408c2a0b48c96b6d12a3c664fb5fc365c2c60d4c71e2ecf3e8eb1bd0f3676",
+      "published_sha256": "574408c2a0b48c96b6d12a3c664fb5fc365c2c60d4c71e2ecf3e8eb1bd0f3676",
+      "published_bytes": 11057,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/574408c2a0b48c96b6d12a3c664fb5fc365c2c60d4c71e2ecf3e8eb1bd0f3676.txt"
+      }
+    },
+    "tests/tests_economy.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "0926649d13a450a26b38f75d999cf7869313aa61",
+      "original_sha256": "0d394028b07bf2e6f4e1e69f6cc94e846f5fb455d86be086dbc4c07f7487d785",
+      "published_sha256": "0d394028b07bf2e6f4e1e69f6cc94e846f5fb455d86be086dbc4c07f7487d785",
+      "published_bytes": 27032,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/0d394028b07bf2e6f4e1e69f6cc94e846f5fb455d86be086dbc4c07f7487d785.txt"
+      }
+    },
+    "tools/export.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "51a2f9d443411cf7c073a4e86a04c0ac6d80df01",
+      "original_sha256": "ced0dd73590417a011cfb5376a785317175a992293dd9e8f24903be74e7322fa",
+      "published_sha256": "ced0dd73590417a011cfb5376a785317175a992293dd9e8f24903be74e7322fa",
+      "published_bytes": 2014,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/ced0dd73590417a011cfb5376a785317175a992293dd9e8f24903be74e7322fa.txt"
+      }
+    },
+    "tools/test.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "358270957f3403cdf60b444a9b2636a65dcf4bec",
+      "original_sha256": "1b84161d991833cbac1252ea56d8c618980e451c8817ffff46311be3edf05909",
+      "published_sha256": "1b84161d991833cbac1252ea56d8c618980e451c8817ffff46311be3edf05909",
+      "published_bytes": 5901,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/1b84161d991833cbac1252ea56d8c618980e451c8817ffff46311be3edf05909.txt"
+      }
+    },
+    "tools/write_notices.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "c122274c42c3141979b19e24bfb1b5b9dee4d861",
+      "original_sha256": "3a3edb39d3f3629d0d06cd20362f9f777121873ee63fbdf6f0729478541c4234",
+      "published_sha256": "3a3edb39d3f3629d0d06cd20362f9f777121873ee63fbdf6f0729478541c4234",
+      "published_bytes": 1024,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/3a3edb39d3f3629d0d06cd20362f9f777121873ee63fbdf6f0729478541c4234.txt"
+      }
+    }
+  },
+  "delete_from_baseline": [
+    ".github/probes/native-macos-v06.json",
+    ".github/workflows/macos-graphical-probe.yml",
+    "assets/fonts/LuanshiUISCR-Regular.otf.import",
+    "assets/fonts/README.md",
+    "assets/fonts/coverage.txt",
+    "assets/fonts/license.txt",
+    "data/order_rules.gd",
+    "data/order_rules.gd.uid",
+    "docs/CAMP_APPRAISAL.md",
+    "docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md",
+    "docs/COMRADE_PETITION.md",
+    "docs/COURIER_ORDERS.md",
+    "docs/DESIGN_SYNC_V014.md",
+    "docs/HOMETOWN_MESSAGES.md",
+    "docs/NARRATIVE_LIFE_ARC_V0_3.md",
+    "docs/NATIVE_MACOS_GRAPHICS_PROBE.md",
+    "docs/WOUND_CARE.md",
+    "docs/YOUTH_INTERFACE.md",
+    "docs/YOUTH_LIFE_SLICE.md",
+    "docs/evidence/appraisal-v010-validation.log",
+    "docs/evidence/comrades-v011-validation.log",
+    "docs/evidence/courier-v09-calibration.log",
+    "docs/evidence/courier-v09-export.log",
+    "docs/evidence/courier-v09-font-recheck.log",
+    "docs/evidence/courier-v09-full-tests.log",
+    "docs/evidence/courier-v09-youth-ui.log",
+    "docs/evidence/hometown-v012-validation.log",
+    "docs/evidence/save-native-macos.log",
+    "docs/evidence/save-visual.log",
+    "docs/evidence/v07-public-source-reproduction.log",
+    "docs/evidence/wounds-v013-validation.log",
+    "docs/evidence/youth-bundled-font-local.log",
+    "docs/evidence/youth-combat-results.json",
+    "docs/evidence/youth-core-full-tests.log",
+    "docs/evidence/youth-input-driver-fix.log",
+    "docs/evidence/youth-input-tests.log",
+    "docs/evidence/youth-integrated-calibration.log",
+    "docs/evidence/youth-integrated-export.log",
+    "docs/evidence/youth-integrated-tests.log",
+    "docs/evidence/youth-integrated-ui.log",
+    "docs/evidence/youth-ui-tests.log",
+    "docs/evidence/youth-x11-ci49.log",
+    "scripts/appraisal_persistence_smoke.gd",
+    "scripts/appraisal_persistence_smoke.gd.uid",
+    "scripts/camp_appraisal.gd",
+    "scripts/camp_appraisal.gd.uid",
+    "scripts/campaign_clock_replay.gd",
+    "scripts/campaign_clock_replay.gd.uid",
+    "scripts/comrade_petition.gd",
+    "scripts/comrade_petition.gd.uid",
+    "scripts/courier_orders.gd",
+    "scripts/courier_orders.gd.uid",
+    "scripts/courier_persistence_smoke.gd",
+    "scripts/courier_persistence_smoke.gd.uid",
+    "scripts/font_verification.gd",
+    "scripts/font_verification.gd.uid",
+    "scripts/hometown_messages.gd",
+    "scripts/hometown_messages.gd.uid",
+    "scripts/hometown_persistence_smoke.gd",
+    "scripts/hometown_persistence_smoke.gd.uid",
+    "scripts/petition_persistence_smoke.gd",
+    "scripts/petition_persistence_smoke.gd.uid",
+    "scripts/wound_care.gd",
+    "scripts/wound_care.gd.uid",
+    "scripts/wound_persistence_smoke.gd",
+    "scripts/wound_persistence_smoke.gd.uid",
+    "scripts/youth_career.gd",
+    "scripts/youth_career.gd.uid",
+    "scripts/youth_persistence_smoke.gd",
+    "scripts/youth_persistence_smoke.gd.uid",
+    "scripts/youth_ui.gd",
+    "scripts/youth_ui.gd.uid",
+    "tests/fixtures/generate_world8_camp.gd",
+    "tests/fixtures/generate_world8_camp.gd.uid",
+    "tests/fixtures/v07/README.md",
+    "tests/fixtures/v07/early_v1_committed.codec.json",
+    "tests/fixtures/v07/early_v1_committed.save.json",
+    "tests/fixtures/v07/early_v1_running.codec.json",
+    "tests/fixtures/v07/early_v1_running.save.json",
+    "tests/fixtures/v07/late_v1_committed.codec.json",
+    "tests/fixtures/v07/late_v1_committed.save.json",
+    "tests/fixtures/v07/late_v1_running.codec.json",
+    "tests/fixtures/v07/late_v1_running.save.json",
+    "tests/fixtures/v07/legacy_test_v0_committed.codec.json",
+    "tests/fixtures/v07/legacy_test_v0_committed.save.json",
+    "tests/fixtures/v07/legacy_test_v0_running.codec.json",
+    "tests/fixtures/v07/legacy_test_v0_running.save.json",
+    "tests/fixtures/v07/provenance.json",
+    "tests/fixtures/v08/README.md",
+    "tests/fixtures/v08/provenance.json",
+    "tests/fixtures/v08/world7_youth_at_camp.codec.json",
+    "tests/fixtures/v08/world7_youth_at_camp.save.json",
+    "tests/fixtures/v08/world7_youth_running.codec.json",
+    "tests/fixtures/v08/world7_youth_running.save.json",
+    "tests/fixtures/world8-camp-before-appraisal.md",
+    "tests/fixtures/world8-camp-before-appraisal.save.json",
+    "tests/test_appraisal_restart.gd",
+    "tests/test_appraisal_restart.gd.uid",
+    "tests/test_appraisal_ui.gd",
+    "tests/test_appraisal_ui.gd.uid",
+    "tests/test_camp_appraisal.gd",
+    "tests/test_camp_appraisal.gd.uid",
+    "tests/test_chinese_font.gd",
+    "tests/test_chinese_font.gd.uid",
+    "tests/test_comrade_petition.gd",
+    "tests/test_comrade_petition.gd.uid",
+    "tests/test_courier_migrations.gd",
+    "tests/test_courier_migrations.gd.uid",
+    "tests/test_courier_orders.gd",
+    "tests/test_courier_orders.gd.uid",
+    "tests/test_courier_restart.gd",
+    "tests/test_courier_restart.gd.uid",
+    "tests/test_courier_ui.gd",
+    "tests/test_courier_ui.gd.uid",
+    "tests/test_hometown_messages.gd",
+    "tests/test_hometown_messages.gd.uid",
+    "tests/test_hometown_restart.gd",
+    "tests/test_hometown_restart.gd.uid",
+    "tests/test_hometown_ui.gd",
+    "tests/test_hometown_ui.gd.uid",
+    "tests/test_local_signals.gd",
+    "tests/test_local_signals.gd.uid",
+    "tests/test_macos_graphics_probe.py",
+    "tests/test_macos_probe_source.cjs",
+    "tests/test_petition_restart.gd",
+    "tests/test_petition_restart.gd.uid",
+    "tests/test_petition_ui.gd",
+    "tests/test_petition_ui.gd.uid",
+    "tests/test_wounds.gd",
+    "tests/test_wounds.gd.uid",
+    "tests/test_wounds_restart.gd",
+    "tests/test_wounds_restart.gd.uid",
+    "tests/test_wounds_ui.gd",
+    "tests/test_wounds_ui.gd.uid",
+    "tests/test_youth_attrition.gd",
+    "tests/test_youth_attrition.gd.uid",
+    "tests/test_youth_career.gd",
+    "tests/test_youth_career.gd.uid",
+    "tests/test_youth_migrations.gd",
+    "tests/test_youth_migrations.gd.uid",
+    "tests/test_youth_presentation.gd",
+    "tests/test_youth_presentation.gd.uid",
+    "tests/test_youth_restart.gd",
+    "tests/test_youth_restart.gd.uid",
+    "tests/test_youth_scene.gd",
+    "tests/test_youth_scene.gd.uid",
+    "tests/test_youth_smoke.gd",
+    "tests/test_youth_smoke.gd.uid",
+    "tests/test_youth_validation.gd",
+    "tests/test_youth_validation.gd.uid",
+    "tests/youth_combat_driver.gd",
+    "tests/youth_combat_driver.gd.uid",
+    "tests/youth_input_driver.gd",
+    "tests/youth_input_driver.gd.uid",
+    "tests/youth_visual.gd",
+    "tests/youth_visual.gd.uid",
+    "tools/build_chinese_font.py",
+    "tools/capture_world6_fixtures.gd",
+    "tools/capture_world6_fixtures.gd.uid",
+    "tools/capture_world7_fixtures.gd",
+    "tools/capture_world7_fixtures.gd.uid",
+    "tools/macos_probe_source.cjs",
+    "tools/macos_window_probe.c",
+    "tools/probe_macos_graphics.py",
+    "tools/test-youth-ui.sh",
+    "tools/test_appraisal.sh",
+    "tools/test_couriers.sh",
+    "tools/test_hometown.sh",
+    "tools/test_petition.sh",
+    "tools/test_wounds.sh",
+    "tools/test_youth.sh",
+    "tools/test_youth_runtime.sh"
+  ],
+  "excluded_assets": [],
+  "deletion_semantics": "Omit these baseline tracked paths when reconstructing this HEAD into a NEW empty directory. Never delete from the live development tree.",
+  "original_source_text_files": 122,
+  "published_text_files": 186,
+  "document_files_transformed": 15,
+  "source_is_ancestor_of_latest": false,
+  "inventory_hash_algorithm": "SHA256 of sorted UTF-8 rows: relative_path + NUL + git_mode + NUL + file_sha256 + LF. Source inventory excludes document/evidence paths; all-text inventories exclude omitted font.",
+  "original_source_inventory_sha256": "1f822be1cdcf5d5976201c0577896ed0334b29d5d8f09a574a38b8c692dbb72f",
+  "original_all_text_inventory_sha256": "d1dc58df9caa47cad86a137b213b5677f15b97862a3812fdca93f442b5728d61",
+  "published_all_text_inventory_sha256": "6dacbf3a458672907136b4df65ce69049c63c0ce05a8e7da44de41bfbd461951"
+}

@@ -1,8 +1,8 @@
 {
   "format": 1,
-  "kind": "baseline",
-  "local_source_commit": "0e525a4ddf56c774dab3f87278447a3b29444cfc",
-  "local_source_tree": "c9eb913e6389e4682dd12d2ffa8ffcfdcd98b2a1",
+  "kind": "wip",
+  "local_source_commit": "e8000836256587e9c721d34ce56b3ee8a2b4325d",
+  "local_source_tree": "9e9976c005af7ced2f1e58f128b84bca293db07f",
   "remote_tree_equivalent_to_local": false,
   "scope": "All tracked UTF-8 project text except the excluded font asset. Evidence is sanitized; publication banners and handoff documents are additions. No raw ignored artifacts are included.",
   "excluded_assets": [
@@ -63,10 +63,10 @@
     {
       "path": "README.md",
       "mode": "100644",
-      "source_blob_sha1": "21d77ce4a366d8088229916e487d19c0877c46bf",
-      "published_blob_sha1": "8f6755a1f098283d9c1c5286760aa919dfb866d9",
-      "sha256": "c0aaa24ff22ab640c25a0dbf4579ff3aa4f4d7072c9b0a4fdf0e940fa5f71c88",
-      "bytes": 13223,
+      "source_blob_sha1": "73c6fb7063491ad8f547ebd395f726880afcd7aa",
+      "published_blob_sha1": "5537fee71c00782492d0a7292ebcbf11dec048db",
+      "sha256": "4696784836ab9d2c78217cb8c009eb3f8b9c9a74134145171d91e24869e6d3ad",
+      "bytes": 13506,
       "changes": [
         "Added transfer-publication banner without rewriting historical verification claims."
       ]
@@ -247,6 +247,17 @@
       "changes": []
     },
     {
+      "path": "docs/DEVELOPMENT_TRANSFER_V014_WIP.md",
+      "mode": "100644",
+      "source_blob_sha1": "c9511ee9671a216c09e05f937a76b382d76de38f",
+      "published_blob_sha1": "febfd499e548fcb284dea09f1bdaf51f08f3fa1b",
+      "sha256": "afec58e3d804b423a7e9ed90fc1f1054edc80219f497eddff9816b1e872d922d",
+      "bytes": 6127,
+      "changes": [
+        "Added transfer-publication banner without rewriting historical verification claims."
+      ]
+    },
+    {
       "path": "docs/DOT_BOOTSTRAP.md",
       "mode": "100644",
       "source_blob_sha1": "be60a8a8864b220ace84278eca449123ffa94e0a",
@@ -419,10 +430,10 @@
     {
       "path": "docs/PROJECT_STATUS.md",
       "mode": "100644",
-      "source_blob_sha1": "cc5af5d443b550bd9e736678cf073431d2ba2855",
-      "published_blob_sha1": "e412b8d285e2219dc6542bece2ba9f16bea3cba9",
-      "sha256": "00b96b2579c54d0c506477b93ae628341c677e0b659e02885d94c6c96fc7454d",
-      "bytes": 23850,
+      "source_blob_sha1": "9d8ec3a6c819dc31063009b2cda88a2350a32a33",
+      "published_blob_sha1": "5de21b8e15187fe4cc57e238d45025e939cec9ee",
+      "sha256": "4222c641ec7254817b9113e91052ef3d4897462b39657bbdb8521805598799dc",
+      "bytes": 24784,
       "changes": [
         "Added transfer-publication banner without rewriting historical verification claims."
       ]
@@ -1200,10 +1211,10 @@
     {
       "path": "scripts/campaign_clock_replay.gd",
       "mode": "100644",
-      "source_blob_sha1": "92bf924d419dfec8b371f223192dadfcaaaa3c7d",
-      "published_blob_sha1": "92bf924d419dfec8b371f223192dadfcaaaa3c7d",
-      "sha256": "3e3ebfc08d406ea00d539430ae1cbd1258f98a1a89bf71464df81a61d646e24f",
-      "bytes": 5519,
+      "source_blob_sha1": "8f4c6a4ac9b995a7902a2f0f333125a043d49f46",
+      "published_blob_sha1": "8f4c6a4ac9b995a7902a2f0f333125a043d49f46",
+      "sha256": "785689f910a8976afde61bf16fafb50799fc1ff841d459332ebef143c60c3bcb",
+      "bytes": 5832,
       "changes": []
     },
     {
@@ -1218,10 +1229,10 @@
     {
       "path": "scripts/campaign_event_audit.gd",
       "mode": "100644",
-      "source_blob_sha1": "33179e9f73ec5cb0faedfc9d5d61e8241b90f12a",
-      "published_blob_sha1": "33179e9f73ec5cb0faedfc9d5d61e8241b90f12a",
-      "sha256": "74a37f3f11103c85b236086ebbc92e14efb900d2938f1bb83ddfa28fa1830025",
-      "bytes": 14685,
+      "source_blob_sha1": "8c9974a5c3960d2908f8a29eb14686c8ed211998",
+      "published_blob_sha1": "8c9974a5c3960d2908f8a29eb14686c8ed211998",
+      "sha256": "b2f103753460f37eac76e55c7e9f90b48e17a86f0395981a988abf3e8d25b425",
+      "bytes": 14944,
       "changes": []
     },
     {
@@ -1290,10 +1301,10 @@
     {
       "path": "scripts/campaign_schema.gd",
       "mode": "100644",
-      "source_blob_sha1": "1fa8a3603bb6ef710ebed6d82db16c439db67488",
-      "published_blob_sha1": "1fa8a3603bb6ef710ebed6d82db16c439db67488",
-      "sha256": "560d9a6e4ab8aaa5799be0772a9923644e81f31261cdd5d55df113802ade80ae",
-      "bytes": 16254,
+      "source_blob_sha1": "4a4ec963e8124743c10114cbc1965e04593e4c22",
+      "published_blob_sha1": "4a4ec963e8124743c10114cbc1965e04593e4c22",
+      "sha256": "bf12ae06735c1698da04ac68080d31bd4c157681b2389304fee7d90fd6b0332c",
+      "bytes": 16550,
       "changes": []
     },
     {
@@ -1338,6 +1349,24 @@
       "source_blob_sha1": "57f9b47bbb8fd8afa93935734b8200490cd35368",
       "published_blob_sha1": "57f9b47bbb8fd8afa93935734b8200490cd35368",
       "sha256": "956653ddb4255c1fee441694ee21cd255eea2cd60205171ae6a719cd877d4b66",
+      "bytes": 20,
+      "changes": []
+    },
+    {
+      "path": "scripts/combat_growth.gd",
+      "mode": "100644",
+      "source_blob_sha1": "e21b62f821c12db10a291087227c4c708c025d88",
+      "published_blob_sha1": "e21b62f821c12db10a291087227c4c708c025d88",
+      "sha256": "d8f416cb5a8195f78ceeab473e38730552f0b5b6c0cd644a684e9540d88c1451",
+      "bytes": 6917,
+      "changes": []
+    },
+    {
+      "path": "scripts/combat_growth.gd.uid",
+      "mode": "100644",
+      "source_blob_sha1": "b62461683f2e517f68aa8c343bb6007ebbed897e",
+      "published_blob_sha1": "b62461683f2e517f68aa8c343bb6007ebbed897e",
+      "sha256": "c300193426c0262155f08ef2fa1c38904c7aee697cd91ce6cfbc66634517e036",
       "bytes": 20,
       "changes": []
     },
@@ -1416,10 +1445,10 @@
     {
       "path": "scripts/hero_combat_profiles.gd",
       "mode": "100644",
-      "source_blob_sha1": "2e797872bf6ca488170534a72aa823cddedadbb6",
-      "published_blob_sha1": "2e797872bf6ca488170534a72aa823cddedadbb6",
-      "sha256": "2804bf443165ec93f5c0d0e6715a6680e1399dd18bc8c0962435081ad5364e5c",
-      "bytes": 2869,
+      "source_blob_sha1": "a0a725333c908c90cf2048bf9872f02debd561f9",
+      "published_blob_sha1": "a0a725333c908c90cf2048bf9872f02debd561f9",
+      "sha256": "79479e7cd635de48c8a0c63873c9f6fcdb5e98ad4c2b81f6a13ec779e0233991",
+      "bytes": 3587,
       "changes": []
     },
     {
@@ -1506,10 +1535,10 @@
     {
       "path": "scripts/strategy_view.gd",
       "mode": "100644",
-      "source_blob_sha1": "199b6002a63335c58d15827b43e11a056405b852",
-      "published_blob_sha1": "199b6002a63335c58d15827b43e11a056405b852",
-      "sha256": "cfb377543ee027587567dde4d5ca252960c44ea8d1ba74e4db18be6363436fc9",
-      "bytes": 19093,
+      "source_blob_sha1": "f4100a593992936703c3b4eb43723bcd515bd62c",
+      "published_blob_sha1": "f4100a593992936703c3b4eb43723bcd515bd62c",
+      "sha256": "633aacb49f686d72c616b87899f0f0020ca14817faab9d9bfaa341b9902cb782",
+      "bytes": 20531,
       "changes": []
     },
     {
@@ -1542,10 +1571,10 @@
     {
       "path": "scripts/world_sim.gd",
       "mode": "100644",
-      "source_blob_sha1": "657453ecc42a1a5e41308fdb8c065558d0b7b29c",
-      "published_blob_sha1": "657453ecc42a1a5e41308fdb8c065558d0b7b29c",
-      "sha256": "cc63b7f47ed3359553a6a56be626c24dfdda7bede438d0e8da4fc3bcd6d7d062",
-      "bytes": 79966,
+      "source_blob_sha1": "16225a4ab1852624c825661d4d3efaf4873c6fc8",
+      "published_blob_sha1": "16225a4ab1852624c825661d4d3efaf4873c6fc8",
+      "sha256": "687fff93b369576beea453432ec91d23d93b111ad534af8c2a804d189b385611",
+      "bytes": 82596,
       "changes": []
     },
     {
@@ -1596,10 +1625,10 @@
     {
       "path": "scripts/youth_career.gd",
       "mode": "100644",
-      "source_blob_sha1": "0d0d244a970c319e389aee128323ac56f4b42909",
-      "published_blob_sha1": "0d0d244a970c319e389aee128323ac56f4b42909",
-      "sha256": "f33cab53a57f0f148db0fbf4063a8481994d324c73b915a6eaf077ae32d56466",
-      "bytes": 23407,
+      "source_blob_sha1": "c97d001fd7214180b20b70f20f637e978acacc56",
+      "published_blob_sha1": "c97d001fd7214180b20b70f20f637e978acacc56",
+      "sha256": "38946eef1e0c6ab9c71017d78caa3aea79b4c5e3218334bd2197a7b4cf910361",
+      "bytes": 23503,
       "changes": []
     },
     {
@@ -1632,10 +1661,10 @@
     {
       "path": "scripts/youth_ui.gd",
       "mode": "100644",
-      "source_blob_sha1": "68967f862c33b5e1e4192ddc6aae49b18e3707f6",
-      "published_blob_sha1": "68967f862c33b5e1e4192ddc6aae49b18e3707f6",
-      "sha256": "f71c97bcb47bad1c08ba76e34695a59e56ebe98d8f59b82febde4217e1611070",
-      "bytes": 22399,
+      "source_blob_sha1": "5a1d12bfda7801fecc56eae265bb223576575abb",
+      "published_blob_sha1": "5a1d12bfda7801fecc56eae265bb223576575abb",
+      "sha256": "ed2ae44af39aad94c2f4068d792f70cb0e0a9330be106fab5530ec54828fb749",
+      "bytes": 23882,
       "changes": []
     },
     {
@@ -2490,6 +2519,24 @@
       "source_blob_sha1": "3e92874b23dd1ae43ca397a75a954b5253dc1059",
       "published_blob_sha1": "3e92874b23dd1ae43ca397a75a954b5253dc1059",
       "sha256": "e29e4170a52a2c16d41a7c320ec2169cd24ab5045285ca6caaab3337e8b8d18b",
+      "bytes": 19,
+      "changes": []
+    },
+    {
+      "path": "tests/test_growth_ui.gd",
+      "mode": "100644",
+      "source_blob_sha1": "1bf072345c08e2f5f6f99b916803dd59debc983f",
+      "published_blob_sha1": "1bf072345c08e2f5f6f99b916803dd59debc983f",
+      "sha256": "e39d82b822571e15132a69c60b385eb01f87ef618390f49c1855dde9e1c99312",
+      "bytes": 7269,
+      "changes": []
+    },
+    {
+      "path": "tests/test_growth_ui.gd.uid",
+      "mode": "100644",
+      "source_blob_sha1": "2fa15180d4083aec052dadf5437bad0a0f9c74ec",
+      "published_blob_sha1": "2fa15180d4083aec052dadf5437bad0a0f9c74ec",
+      "sha256": "105ad5ab30c3217585732cdfa677272f0102d2185e3863070e5d80aa19cc24bd",
       "bytes": 19,
       "changes": []
     },

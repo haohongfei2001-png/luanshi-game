@@ -1,0 +1,1521 @@
+{
+  "format": 1,
+  "notice": "This is an explicit redaction audit, not an applyable patch. Original private metadata is not reproduced; original hashes and line ranges identify the exact changes. Non-document source text is never modified.",
+  "files": [
+    {
+      "path": "README.md",
+      "original_blob_sha1": "21d77ce4a366d8088229916e487d19c0877c46bf",
+      "original_sha256": "cc01f1e931f248eb33f4da6bad3f3b5404b1195e1a369e52f3b3c6fb92cb9f5f",
+      "published_sha256": "c0aaa24ff22ab640c25a0dbf4579ff3aa4f4d7072c9b0a4fdf0e940fa5f71c88",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Transfer publication, 2026-11-11 UTC: Development is **stopped**. Only this **text-only handoff projection** is being published, not a complete runnable release. The font and build packages are not uploaded; v0.14 remains incomplete and unvalidated. The required bundled font is absent. See [transfer status](handoff/TRANSFER_STATUS.md) for provenance, missing assets, actual verification and WIP limits. Earlier local-only/publication statements below are preserved historical records.",
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/BATTLE_TRANSACTIONS.md",
+      "original_blob_sha1": "2a61d1f5552d32c831cc2e8f8d6ed44c09439ed1",
+      "original_sha256": "ca9d27d13991c9cc0ee089b5e80a830eebf3b84ed038d88690d9d0fcb5f1f9cd",
+      "published_sha256": "8cdfd7ce4975efce1179accc597058327989d8627c46273741dcdeda73d71ce9",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            172,
+            174
+          ],
+          "published_lines": [
+            174,
+            176
+          ],
+          "original_lines_sha256": "7162fd7ec6ed1a20f6d7566c8c300a4f0670b7904620246e1f48b543dfe2ddb6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "export XDG_DATA_HOME=${WRITABLE_XDG_DATA}",
+            "export XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG}",
+            "export XDG_CACHE_HOME=${WRITABLE_XDG_CACHE}"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/CAMPAIGN_SAVES.md",
+      "original_blob_sha1": "310212b130ddd07fb6dbe5597a7ea988a6539877",
+      "original_sha256": "29f4e05411c388c8dd387b6d224f2d1e303bf8fc1600e9f0ad669417f155a594",
+      "published_sha256": "2b98344c6040bb543f9d60bc5f955016e1d9c47c64cb71d0c484599adeab763e",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            139,
+            139
+          ],
+          "published_lines": [
+            141,
+            141
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${WRITABLE_XDG_DATA} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/ECONOMY.md",
+      "original_blob_sha1": "aeeffa053c81ff1d84f049598d4095560bd7ed54",
+      "original_sha256": "2aea5fab6352e823c2150029a81e333dbd788d4a6aa1e4e61019c1d63a9432fc",
+      "published_sha256": "40f7c487295f77578a56e68fc77aef6c9a887f8fe3feeb19c01f9bce9ff30349",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            76,
+            76
+          ],
+          "published_lines": [
+            78,
+            78
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${WRITABLE_XDG_DATA} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/HERO_COMBAT_CALIBRATION.md",
+      "original_blob_sha1": "63ecdae7365ef198268935b82e3114cc9c1c8d67",
+      "original_sha256": "456d89c9b74ea7d7916a8a59a980e77524a218610a75f911299efc89f11392af",
+      "published_sha256": "cb4cefbf19cd4fcd90d44f0cdc848c93d37b2bf8b2b3a7de4d977fbf087c321b",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            128,
+            128
+          ],
+          "published_lines": [
+            130,
+            130
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${WRITABLE_XDG_DATA} \\"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            131,
+            131
+          ],
+          "published_lines": [
+            133,
+            133
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${WRITABLE_XDG_DATA} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/HERO_PROFILE_INTEGRATION.md",
+      "original_blob_sha1": "41d43f9c343ae939fc1c0a5e7dfcf744f1f1c2fd",
+      "original_sha256": "68157b3f27da323ebd5a6cd4c97cff0bce65b9fc5fcc1d950a2964d7b941dbac",
+      "published_sha256": "19cabd7d65b8f5bed887f29eae6622fe18b5a8dccff6b903537daf4684c494ad",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            87,
+            87
+          ],
+          "published_lines": [
+            89,
+            89
+          ],
+          "original_lines_sha256": "b9c46e162a11c2bbcb3cdf427755ab5de1c795b49322887a1ff5f1d3d83e6619",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "export XDG_DATA_HOME=${WRITABLE_XDG_DATA}"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/HUNGER.md",
+      "original_blob_sha1": "4e180fb12d209b2df4d81447c112cc66a1d6fbc6",
+      "original_sha256": "28ff9d6c8b1c7351b92e66dd1941ed05ca494629f57cf3b930c6601e8aa40a94",
+      "published_sha256": "5f45f2569aa7b0ecc9bcb36a27f808c625e5da7e76fc815b98156f7bf2de7598",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            92,
+            92
+          ],
+          "published_lines": [
+            94,
+            94
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${WRITABLE_XDG_DATA} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/PROJECT_STATUS.md",
+      "original_blob_sha1": "cc5af5d443b550bd9e736678cf073431d2ba2855",
+      "original_sha256": "07b8ba4251462c52092ed57b7dad7ea5c006f67faff52304264d71643ee3e714",
+      "published_sha256": "00b96b2579c54d0c506477b93ae628341c677e0b659e02885d94c6c96fc7454d",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Transfer publication, 2026-11-11 UTC: Development is **stopped**. Only this **text-only handoff projection** is being published, not a complete runnable release. The font and build packages are not uploaded; v0.14 remains incomplete and unvalidated. The required bundled font is absent. See [transfer status](../handoff/TRANSFER_STATUS.md) for provenance, missing assets, actual verification and WIP limits. Earlier local-only/publication statements below are preserved historical records.",
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "original_blob_sha1": "a23c9ac0ead9f037c3bc2ac645556beb98456851",
+      "original_sha256": "ae544db237b9d6e0c923d71cfb7f58307a2aa8ba0116ddaa36742d935dc87d34",
+      "published_sha256": "36ddec0920df46bf99cc9fdcd8e64930f279d45dfcf044e72874a0c7f7105d5b",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            12,
+            12
+          ],
+          "published_lines": [
+            14,
+            14
+          ],
+          "original_lines_sha256": "afd64cca0807705025f8396b76799043d4708a0ed4ad961a60550a060c5c63b1",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "`XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} ./tools/test.sh`"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            40,
+            40
+          ],
+          "published_lines": [
+            42,
+            42
+          ],
+          "original_lines_sha256": "53c83a33d409c7126bc5b56b2ad1f27f5845c350f88a3118044c9cb6e5eca782",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Export command: `XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0."
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/WORLD_SIM.md",
+      "original_blob_sha1": "6048caa2877003b3398182d678928906205d90c0",
+      "original_sha256": "b8e161465e0bfdc4179ee2a03b99a7aba343dab118bd002f2c206bd83ebf5c87",
+      "published_sha256": "0649b5607b2d881cfc6195a628c3cf7d21dc76afee8c072646d83bb076fe4230",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            10,
+            12
+          ],
+          "published_lines": [
+            12,
+            14
+          ],
+          "original_lines_sha256": "1bb60d7f50fe55a121c9fd080249a75a49df5aa9821d12e0c381558c45fcef2b",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${WRITABLE_XDG_DATA} \\",
+            "XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} \\",
+            "XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/YOUTH_INTERFACE.md",
+      "original_blob_sha1": "f61dc58f0de56e8c1e07bfc0dd25aca737cd4e9a",
+      "original_sha256": "376ea3a7b2e51123d45bb193cd42cfcb24039aa94f94688bedd9936142838805",
+      "published_sha256": "3202f8f980f4310158309a2896483e3521dfd9117a0444a4c64512074f93801d",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            29,
+            29
+          ],
+          "published_lines": [
+            31,
+            31
+          ],
+          "original_lines_sha256": "12306626b4381519f4c6812976af0f0ac8d0ce730929dbf2cca28ea84a2af9b0",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "- `XDG_DATA_HOME=${WRITABLE_XDG_DATA} ./tools/test-youth-ui.sh`"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/campaign-native-macos.log",
+      "original_blob_sha1": "1671bd8e25f77f3ec4a6bb4f7b5d80b65df481ab",
+      "original_sha256": "e045475dba09d96a162c28ff5c344540b766772a7fd3a48f62f5726bf0b5d5cc",
+      "published_sha256": "e3aa753b789fc5b3b35de283d3ebdd69fae914701fbae65729d5f89e4da7fcf6",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            1,
+            1
+          ],
+          "published_lines": [
+            1,
+            3
+          ],
+          "original_lines_sha256": "c4b51db2c37a00bb9aedc1642cf7ec356374cf269b24a4cf879826c8d29c90e5",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            "",
+            "Darwin <HISTORICAL_RUNNER_HOST> 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/economy-native-macos.log",
+      "original_blob_sha1": "fb0dd94593490eb56ff5462eae3d41dfd12ede2f",
+      "original_sha256": "bc40f476e04c184107eae609a7ec7d670a1ce4fae1253eda60d87fef9452e954",
+      "published_sha256": "e086449f8ddb5c41e7d90a58e8d146282ffa4e698e8fc5503b95f21a8876e558",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            2,
+            2
+          ],
+          "published_lines": [
+            4,
+            4
+          ],
+          "original_lines_sha256": "256d4d49304516ff8805da1cc75dc0da26fc94b0e7b42288e10041a31140f604",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Darwin <HISTORICAL_RUNNER_HOST> 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/hunger-native-macos.log",
+      "original_blob_sha1": "36079916723beab756e90c1974b955af19a4f281",
+      "original_sha256": "0773bedeed0b76d307b483099a827c9d60ec52df6e0b4d3121a55f974490c3ac",
+      "published_sha256": "344336eab293815198c9f766ac4c3d812c7ca29cf5f7315a1125c15d9ad212b7",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            2,
+            2
+          ],
+          "published_lines": [
+            4,
+            4
+          ],
+          "original_lines_sha256": "95ca4c25b4e3fc545f0fdc7d32fff7461b388946061d6e92ab24030a170bf09f",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Darwin <HISTORICAL_RUNNER_HOST> 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/native-macos.log",
+      "original_blob_sha1": "be0fec98cd848a9e0ed07369d8174b6c501fb257",
+      "original_sha256": "829270884f4beec1667739f164b83825f5551fbb8a133feecd27a2f801373773",
+      "published_sha256": "6e0e51efeb3ae1b280cb8b9f5eb41b5bc89cb3afa472808833d68500cfaf61b2",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            4,
+            4
+          ],
+          "published_lines": [
+            6,
+            6
+          ],
+          "original_lines_sha256": "0ecf1b36e87918009a98b0886582a3902408bbe2a0b181b5e149bdee80f81c55",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "2026-11-07T21:46:58.8552290Z Darwin <HISTORICAL_RUNNER_HOST> 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/profile-integration-tests.log",
+      "original_blob_sha1": "f305208e9498e4c1bacd49da903f2c09951ae9a9",
+      "original_sha256": "41d6835a9f65c1292c6261f9dc1c269acf8764d8fa62ebaf31cc08bef1969b86",
+      "published_sha256": "c3f39676191569ac1cfad14e95bf138a09dde650abe1dbc289bab8614be7a4c6",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            3,
+            3
+          ],
+          "published_lines": [
+            5,
+            5
+          ],
+          "original_lines_sha256": "471ffe214c02569e6030cef3d24875e912c284d2d5d3da3ebebf9d0ae64f7b1b",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Command: XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=$PWD/.local-config XDG_CACHE_HOME=$PWD/.local-cache ./tools/test.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/save-native-macos.log",
+      "original_blob_sha1": "6509472411f2f3fea27ea9e38fd691db6a3575c0",
+      "original_sha256": "e9ef531c306ef6e7f29dc6d01ec15ec1115276a20bfedebbbe532abb79c980b6",
+      "published_sha256": "da851a0c1a11edb5e34542537fd1099e2c0ba5cf7405da06c821147ee7c4470e",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            2,
+            2
+          ],
+          "published_lines": [
+            4,
+            4
+          ],
+          "original_lines_sha256": "7ce8462dd2b8817df1278742b0ae0703cca965ed34a13339d645e42ac80082e0",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Darwin <HISTORICAL_RUNNER_HOST> 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/save-verification.log",
+      "original_blob_sha1": "33108daa2aea1de9596b7d754bec9a847590ea9b",
+      "original_sha256": "ce2533b280dafbef3046a1fa547cdbd1c511ec8b8fcd5342d44d0c9a91c3e303",
+      "published_sha256": "8a9c3c5412c89af97413d143bf755ab9fcd4aeccc972321ec715f6057c597411",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            5,
+            5
+          ],
+          "published_lines": [
+            7,
+            7
+          ],
+          "original_lines_sha256": "1173b6a81e96262e8ee651390a56cc8fec6d0fd4f4e65e278378d826b5399027",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Command: XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=\"$PWD/.local-config\" XDG_CACHE_HOME=\"$PWD/.local-cache\" bash tools/test.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/v06-public-source-reproduction.log",
+      "original_blob_sha1": "eff2d23a1ae491fb88eab78e64cfd453d941b13c",
+      "original_sha256": "f4d4e33777156346ebc798702105b9166306a8411bf35e40e9114326c59eaa6a",
+      "published_sha256": "9868b3360724b18675fe80e5abdfd069c3669b03876abdc1d3208758ad65e210",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            9,
+            9
+          ],
+          "published_lines": [
+            11,
+            11
+          ],
+          "original_lines_sha256": "5a1078bcff4a6b366df42274afa0966e0b88c88d5317ca3f711f3480f616ef47",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Shared XDG_DATA_HOME=${WRITABLE_XDG_DATA}; temporary isolated config/cache."
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/youth-bundled-font-local.log",
+      "original_blob_sha1": "2d22ac47ddbaceed2a5760d5bfadb9f48b68930f",
+      "original_sha256": "29b012ebd5a17045a3853096b5186df843009a134a4466cd727e3d3ec3542664",
+      "published_sha256": "cca10f3610405cf750eaeb2f8d03fe99c1ae809a644550264c6e19ee23625bad",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            5,
+            5
+          ],
+          "published_lines": [
+            7,
+            7
+          ],
+          "original_lines_sha256": "80dee5329e1befcfe90235499d27bc23c014b0b52b5dc62ce9271c03e3099c0e",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "gio: file://<PROJECT_WORKSPACE>/builds/Luanshi-macOS.zip: Trashing on system internal mounts is not supported"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/youth-core-full-tests.log",
+      "original_blob_sha1": "51a1a18ca2d742470c3651fc303193005fb785c4",
+      "original_sha256": "ad507115a80034fdfa81e2dd8adb2f50f6e007e62eb71b3535548b0f625f8e59",
+      "published_sha256": "d2a3794b90b7c11ce7f2ebf74a23f9e85a07268696ab029b1e069ad3651992f1",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            3,
+            3
+          ],
+          "published_lines": [
+            5,
+            5
+          ],
+          "original_lines_sha256": "fb5610e9d61cc5932fe46f223bdd4bdaa71eca2988de3888e0efef37f39f6ef8",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "COMMAND GODOT=/usr/local/bin/godot XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} bash tools/test.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/youth-integrated-calibration.log",
+      "original_blob_sha1": "cfdc7ffb8653814568c64900631c9bd33c25534f",
+      "original_sha256": "22af6256efe19fe21dcc8a0e05f525a6089f1855dec084dafc68409d5b28962f",
+      "published_sha256": "cfdf4afe541459e15653ebe6d39a28e092a23d83a28f87521d76b0814c80fd61",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            3,
+            3
+          ],
+          "published_lines": [
+            5,
+            5
+          ],
+          "original_lines_sha256": "2b190dacdccc8af57aa03ea0fcdbfbc00ce485855601dab1406d931228a863c3",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Command: XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} ./tools/calibrate-combat.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/youth-integrated-tests.log",
+      "original_blob_sha1": "bf332c61ed60740f8247945867d022856d7ef7f8",
+      "original_sha256": "13f60016e0557e30a065b688a8dc117ddcdab1ac3e9ffab05c7f0d57143e8984",
+      "published_sha256": "bf098cc419b8b71e1df1ffd95a239802f8edd0516845b4c88dc2aa3c7757fe2f",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            3,
+            3
+          ],
+          "published_lines": [
+            5,
+            5
+          ],
+          "original_lines_sha256": "513681a5a68b9d8c505fdc064f57ef859c2d16ee451e5f8b2428b037b31c3dd2",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Command: XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} ./tools/test.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/youth-integrated-ui.log",
+      "original_blob_sha1": "e56bca243cebb52c5ce8edd496f622f7c0e182e2",
+      "original_sha256": "debf32ca410431c1f010b45a47a1f715e251c336f49718068d8c6db6748118b3",
+      "published_sha256": "fa2eb5089e82d0587f52f357ecfea24a1844a79f6a04de669cdd66ebc8ab75cc",
+      "transformation_source": "baseline SOURCE_MANIFEST.json",
+      "changes": [
+        {
+          "operation": "insert",
+          "original_lines": [
+            1,
+            0
+          ],
+          "published_lines": [
+            1,
+            2
+          ],
+          "original_lines_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.",
+            ""
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            3,
+            3
+          ],
+          "published_lines": [
+            5,
+            5
+          ],
+          "original_lines_sha256": "26c8ae73171c38526d6ebb5b4dbc9b2bc6e19be04a32e68bf2453819923bdf06",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Command: XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} ./tools/test-youth-ui.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/BATTLE_TRANSACTIONS.md",
+      "original_blob_sha1": "771b941c7a802481e5fbb969280c73ba7e2aadf5",
+      "original_sha256": "5032664cfcf14dc0b865c38ad80b446ff8c7ee8674470ea0e4b270af66ae91ad",
+      "published_sha256": "607a2740cea8e78374fcad3e68650d0f3b652dfd0dd469bc268ad9a797266caf",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            172,
+            174
+          ],
+          "published_lines": [
+            172,
+            174
+          ],
+          "original_lines_sha256": "7162fd7ec6ed1a20f6d7566c8c300a4f0670b7904620246e1f48b543dfe2ddb6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "export XDG_DATA_HOME=${REDACTED_ENV_PATH}",
+            "export XDG_CONFIG_HOME=${REDACTED_ENV_PATH}",
+            "export XDG_CACHE_HOME=${REDACTED_ENV_PATH}"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/HERO_COMBAT_CALIBRATION.md",
+      "original_blob_sha1": "be88df6bff28d39162c1451285cd079415c2eb6a",
+      "original_sha256": "bc8f1aa88de54843c63d7caac927020ffabab6b3a751a516e8a25d9498a55d6c",
+      "published_sha256": "0bcd6d23ae7e66a0b3b0b017ffcb1da4f411ec4ecd2ece07efe326337fa913e0",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            122,
+            122
+          ],
+          "published_lines": [
+            122,
+            122
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${REDACTED_ENV_PATH} \\"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            125,
+            125
+          ],
+          "published_lines": [
+            125,
+            125
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${REDACTED_ENV_PATH} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "original_blob_sha1": "f79ef57ccb7f929cccf992e5f3c2f02c05a8c66e",
+      "original_sha256": "48d4a5fb2ab9d1d37303e3ef75634ab90e3ad8dffae2bfd1f2349381daf94c70",
+      "published_sha256": "7d6d2cc1c7069eaf15f391264b2d1b9fc999efe2db313c14f45de683f276bc13",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            12,
+            12
+          ],
+          "published_lines": [
+            12,
+            12
+          ],
+          "original_lines_sha256": "afd64cca0807705025f8396b76799043d4708a0ed4ad961a60550a060c5c63b1",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "`XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/test.sh`"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            40,
+            40
+          ],
+          "published_lines": [
+            40,
+            40
+          ],
+          "original_lines_sha256": "53c83a33d409c7126bc5b56b2ad1f27f5845c350f88a3118044c9cb6e5eca782",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Export command: `XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0."
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/BATTLE_TRANSACTIONS.md",
+      "original_blob_sha1": "9ba8dfe7a7ff27876a6016bae50a91c6d7eaa749",
+      "original_sha256": "cf818fcf17bdd21262e57aaf620c9b3fcdb48c3c9b3453b8e5a89e3a7a735c0f",
+      "published_sha256": "81346744a7827e375f564e2cd4b4b109e58e79f62c4a211983f933d450f629f0",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            169,
+            171
+          ],
+          "published_lines": [
+            169,
+            171
+          ],
+          "original_lines_sha256": "7162fd7ec6ed1a20f6d7566c8c300a4f0670b7904620246e1f48b543dfe2ddb6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "export XDG_DATA_HOME=${REDACTED_ENV_PATH}",
+            "export XDG_CONFIG_HOME=${REDACTED_ENV_PATH}",
+            "export XDG_CACHE_HOME=${REDACTED_ENV_PATH}"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/ECONOMY.md",
+      "original_blob_sha1": "d69c1fad7a69a3b113e444d3acb4d5071899238c",
+      "original_sha256": "2f841ecd07d5892cc6762b42adb5c1e01a46b0221278fc87542702a43930436e",
+      "published_sha256": "9b748b48867bd0402c427580f1769663512e5e7fee87119acf59cb11165d4494",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            76,
+            76
+          ],
+          "published_lines": [
+            76,
+            76
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${REDACTED_ENV_PATH} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "original_blob_sha1": "fbe22ff65701995d7696aab246ab71bd0f2601d1",
+      "original_sha256": "78889a536a08ae1b31c2d01b76f44ddbc0d413065b4e98d64dbe9eae2ef3a7f9",
+      "published_sha256": "0e2d5a4b25f041fc76b132c7e0454e0fad847a78a58d9a5ac728608c0ad45433",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            12,
+            12
+          ],
+          "published_lines": [
+            12,
+            12
+          ],
+          "original_lines_sha256": "afd64cca0807705025f8396b76799043d4708a0ed4ad961a60550a060c5c63b1",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "`XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/test.sh`"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            40,
+            40
+          ],
+          "published_lines": [
+            40,
+            40
+          ],
+          "original_lines_sha256": "53c83a33d409c7126bc5b56b2ad1f27f5845c350f88a3118044c9cb6e5eca782",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Export command: `XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0."
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/HUNGER.md",
+      "original_blob_sha1": "c29513d5bada8394444afea99bd24b20cd03202f",
+      "original_sha256": "fe19463ce000781c87173c965f18eaffca80601689d3e4bc25da5ced770e8ad6",
+      "published_sha256": "28eda660a9286fd684f9446fba3ab37c971b4442d6c12e970fc84a5be2c8f933",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            92,
+            92
+          ],
+          "published_lines": [
+            92,
+            92
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${REDACTED_ENV_PATH} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "original_blob_sha1": "ba8872537976d22666dbd63507c4a1674be7d969",
+      "original_sha256": "9b442c5c3616f0400562115319fd3e5c0c1243ab9d471ffe06cdc379544dc438",
+      "published_sha256": "23342abf11e2450ced423e2d78751d502885465403a4bc66007cac11a3b9f77d",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            12,
+            12
+          ],
+          "published_lines": [
+            12,
+            12
+          ],
+          "original_lines_sha256": "afd64cca0807705025f8396b76799043d4708a0ed4ad961a60550a060c5c63b1",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "`XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/test.sh`"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            40,
+            40
+          ],
+          "published_lines": [
+            40,
+            40
+          ],
+          "original_lines_sha256": "53c83a33d409c7126bc5b56b2ad1f27f5845c350f88a3118044c9cb6e5eca782",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Export command: `XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0."
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/hunger-verification.log",
+      "original_blob_sha1": "4b76cbd4f93133e1bf0abe9f1eead43eb2346739",
+      "original_sha256": "1939eb5185e679d2f38624cc3dc11387d66a7a5c53454d73cdcf588936968814",
+      "published_sha256": "4e2d345dce802db562995dde2676e38f54cf0f3abe15357c74c6aa6bd177f7de",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            3,
+            3
+          ],
+          "published_lines": [
+            3,
+            3
+          ],
+          "original_lines_sha256": "01d363aea853c9df8015fd6c80817f3480fa667c2ff34775140efda383fae918",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Command: XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=\"$PWD/.local-config\" XDG_CACHE_HOME=\"$PWD/.local-cache\" ./tools/test.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/CAMPAIGN_SAVES.md",
+      "original_blob_sha1": "54f57d29599b2bca422847ee5f272af050b205c0",
+      "original_sha256": "2706112db33f4d571e4d3510cb9dc70402cd8cd8340ab154dbafe2fa869137b8",
+      "published_sha256": "e1f0f539c498a0b7798035ad7ad5dff53459231fe88f82bcfa531aea29a423c7",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            131,
+            131
+          ],
+          "published_lines": [
+            131,
+            131
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${REDACTED_ENV_PATH} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "original_blob_sha1": "5b10be49af93dd030da3d23dc1133e1d16d4ce8a",
+      "original_sha256": "2ce510fa67ef659e16c17e48f9ae73c9cc32d7ec7e837acc0ae15c1249aeaabf",
+      "published_sha256": "0c845a07834dac6a26d0b0e5c09c7abe9de9595ba258dd76cdc532382cf55bfe",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            12,
+            12
+          ],
+          "published_lines": [
+            12,
+            12
+          ],
+          "original_lines_sha256": "afd64cca0807705025f8396b76799043d4708a0ed4ad961a60550a060c5c63b1",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "`XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/test.sh`"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            40,
+            40
+          ],
+          "published_lines": [
+            40,
+            40
+          ],
+          "original_lines_sha256": "53c83a33d409c7126bc5b56b2ad1f27f5845c350f88a3118044c9cb6e5eca782",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Export command: `XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0."
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/PROJECT_STATUS.md",
+      "original_blob_sha1": "172ca8b2ec75b14d1d9304232b091f448c9b4c35",
+      "original_sha256": "329f2c5a2d8541cb0f117afb7970909da0f06e57d8efc877e701ad505475af69",
+      "published_sha256": "c347152cab041d6409f27adce4a6dee6e8ecec663795553e5e043ac964f693cf",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            44,
+            45
+          ],
+          "published_lines": [
+            44,
+            45
+          ],
+          "original_lines_sha256": "9796c2121bc6a6c41eb8625907fc50f6ef7cac290d6cdf74438e79cd401c61d0",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Official Godot 4.6.3 / Linux cloud, with XDG_DATA_HOME=${REDACTED_ENV_PATH},",
+            "XDG_CONFIG_HOME=${REDACTED_ENV_PATH} and XDG_CACHE_HOME=${REDACTED_ENV_PATH}"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/HUNGER.md",
+      "original_blob_sha1": "f0720edd6bff028d2c28e1f7de27a6cfaa1f0cf6",
+      "original_sha256": "570c96d04875127778ecf52d6056cc1bb41301092f9a36309dae0fdf8885bece",
+      "published_sha256": "93ec3d15129fc87c01f1ba045599064ba6971bf8261d4666f34474d3d4b1de68",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            92,
+            92
+          ],
+          "published_lines": [
+            92,
+            92
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${REDACTED_ENV_PATH} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "original_blob_sha1": "c7eecbe4015a8856ee705c5101a7ad021b8dbbd5",
+      "original_sha256": "e25f1215d1ab7245b7dccdb84108227a688555e1d179a9118d802dc898317793",
+      "published_sha256": "13b9c8a63c2a8d0905a16f7a1649ef830ee7e12fea860dc4b002dcb53efab16c",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            12,
+            12
+          ],
+          "published_lines": [
+            12,
+            12
+          ],
+          "original_lines_sha256": "afd64cca0807705025f8396b76799043d4708a0ed4ad961a60550a060c5c63b1",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "`XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/test.sh`"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            40,
+            40
+          ],
+          "published_lines": [
+            40,
+            40
+          ],
+          "original_lines_sha256": "53c83a33d409c7126bc5b56b2ad1f27f5845c350f88a3118044c9cb6e5eca782",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "Export command: `XDG_DATA_HOME=${REDACTED_ENV_PATH} XDG_CONFIG_HOME=${REDACTED_ENV_PATH} XDG_CACHE_HOME=${REDACTED_ENV_PATH} ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0."
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/CAMPAIGN_SAVES.md",
+      "original_blob_sha1": "783bd955bc601ba4480ae6fe4181a16c4024a414",
+      "original_sha256": "a0b9612d0782df45843e8fb1cd0b41589192efe43bbeef8f04344cd31088d712",
+      "published_sha256": "91893df9fbcb2a158afc6b639d35b542e9fc42b6107e012857526b9573fc5cba",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            131,
+            131
+          ],
+          "published_lines": [
+            131,
+            131
+          ],
+          "original_lines_sha256": "4f170aac089cb29ac6b6cac9b48cd4c71737ccf6fd6638ca31de7c826a9d10d6",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "XDG_DATA_HOME=${REDACTED_ENV_PATH} \\"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/v06/README.md",
+      "original_blob_sha1": "5868639bc92e01b34eb8f8a094eebe72a6b39890",
+      "original_sha256": "f01005d7d35cfbbfb17a1c669a6edc40e133c8f788f1d68596bfdae3c1462595",
+      "published_sha256": "9cb4f6da88666d3b2a778bed776b6f833a42b32e15171b0cf39ab112913c1881",
+      "transformation_source": "history metadata-only redaction",
+      "changes": [
+        {
+          "operation": "replace",
+          "original_lines": [
+            65,
+            66
+          ],
+          "published_lines": [
+            65,
+            66
+          ],
+          "original_lines_sha256": "37bcab6b9dd4ae3018587a993b273f5fb3ef30649f7f3cabbeceb8ae444d0602",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "SOURCE=$(mktemp -d ${REDACTED_ENV_PATH})",
+            "OUTPUT=$(mktemp -d ${REDACTED_ENV_PATH})"
+          ]
+        },
+        {
+          "operation": "replace",
+          "original_lines": [
+            69,
+            69
+          ],
+          "published_lines": [
+            69,
+            69
+          ],
+          "original_lines_sha256": "b9c46e162a11c2bbcb3cdf427755ab5de1c795b49322887a1ff5f1d3d83e6619",
+          "removed_lines": "[Original text withheld because it contains environment metadata, or publisher notice changed.]",
+          "replacement_lines": [
+            "export XDG_DATA_HOME=${REDACTED_ENV_PATH}"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+extends SceneTree
+const W := preload("res://scripts/world_sim.gd")
+const Store := preload("res://scripts/campaign_store.gd")
+func _initialize() -> void:
+	var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
+	var w := W.new()
+	w.restore_campaign_state(decoded.state)
+	print("APPRAISAL ",w.youth_action("camp_appraisal"), w.youth_action("appraisal_accept"))
+	while w.snapshot().hour < 20:
+		if not w.youth_action("wait_courier").ok: quit(2); return
+	print("ATTACH ",w.youth_action("arrange_courier"),w.youth_action("attach_hometown_letter"),w.youth_action("dangerous_march"),w.youth_action("wait_courier"),w.youth_action("courier_comply"))
+	for i in range(3): print("WAIT ",w.youth_action("wait_courier"))
+	print("TIME ",w.snapshot().time_seconds," CONVOYS ",w.snapshot().convoys.size()," REPORTS ",w.snapshot().pending_reports.size()," ALIVE ",w.snapshot().commander.alive)
+	var ticket := w.create_battle_ticket()
+	if not ticket.ok: print("BAD TICKET ",ticket); quit(3); return
+	w.start_battle(ticket.ticket.battle_id)
+	var forged := w.export_campaign_state()
+	var hours := float(OS.get_cmdline_user_args()[0]) if not OS.get_cmdline_user_args().is_empty() else 24.0
+	forged.world.time_seconds += 3600.0*hours
+	forged.world.hour = floori(forged.world.time_seconds/3600.0)
+	forged.world.battle_tickets[ticket.ticket.battle_id].elapsed_world_time = 3600.0*hours
+	var target := W.new()
+	var t := Time.get_ticks_msec()
+	var result := target.restore_campaign_state(forged)
+	print("HOURS ",hours," MS ",Time.get_ticks_msec()-t," RESULT ",result)
+	var replay := W.new(forged.world.seed)
+	var clock := preload("res://scripts/campaign_clock_replay.gd")
+	var directly := clock.validate(forged.world, replay)
+	print("REPLAY_EVENTS ",replay.snapshot().events.size()," INPUT_EVENTS ",forged.world.events.size()," REPLAY_TIME ",replay.snapshot().time_seconds," DIRECT ",directly)
+	quit()

@@ -12,6 +12,7 @@ var world := World.new()
 var narrative_font: Font = preload("res://scripts/youth_ui.gd").chinese_font()
 var view: Dictionary = {}
 var buttons: Dictionary = {}
+var growth_label: Label
 var wounds_label: Label
 var army_label: Label
 var local_label: Label
@@ -81,6 +82,14 @@ func _ready() -> void:
 	_button(actions, "seize", "Assault Hequ depot", func(): _command("seize"))
 	wounds_label = _label(stack, "", 15)
 	wounds_label.add_theme_font_override("font", narrative_font)
+	growth_label = _label(stack, "", 15)
+	growth_label.add_theme_font_override("font", narrative_font)
+	var growth_controls := HFlowContainer.new()
+	stack.add_child(growth_controls)
+	_button(growth_controls, "train1", "Combat practice 1h / time + rations, no healing", func(): _command("train", "", 1))
+	_button(growth_controls, "train2", "Combat practice up to 2h / time + rations, no healing", func(): _command("train", "", 2))
+	buttons.train1.focus_mode = Control.FOCUS_ALL
+	buttons.train2.focus_mode = Control.FOCUS_ALL
 	courier_label = _label(stack, "", 15)
 	courier_label.add_theme_font_override("font", narrative_font)
 	courier_label.add_theme_color_override("font_color", Color("e0c486"))
@@ -126,6 +135,10 @@ func _command(command: String, argument: String = "", amount: int = 0) -> void:
 		"march": success = world.march(argument)
 		"advance": success = world.advance(amount)
 		"rest": success = world.rest_wounds(amount).ok
+		"train":
+			var result: Dictionary = world.train_combat(amount)
+			set_feedback(("Practiced %.1fh. " % (result.elapsed / 3600.0) + ("One small attack tier earned. HP unchanged; not a late-game profile." if result.upgraded else "Shared combat experience practiced; growth not yet complete.")) if result.ok else preload("res://scripts/combat_growth.gd").reason_text(result.reason))
+			return
 		"observe": success = world.observe_city(current.army.location)
 		"food": success = world.transfer(current.army.location, "relief", "food", 60)
 		"weapons": success = world.transfer(current.army.location, "relief", "weapons", 10)
@@ -189,6 +202,11 @@ func refresh() -> void:
 	buttons.rest6.disabled = not view.wounds.six_hour_reason.is_empty()
 	wounds_label.text = preload("res://scripts/wound_care.gd").describe(view.wounds)
 	wounds_label.visible = not view.wounds.sources.is_empty()
+	growth_label.text = preload("res://scripts/combat_growth.gd").describe(view.growth)
+	buttons.train1.disabled = interaction_blocked or locked or not view.growth.reason.is_empty()
+	buttons.train2.disabled = interaction_blocked or locked or not view.growth.two_hour_reason.is_empty()
+	buttons.train1.tooltip_text = preload("res://scripts/combat_growth.gd").reason_text(view.growth.reason)
+	buttons.train2.tooltip_text = preload("res://scripts/combat_growth.gd").reason_text(view.growth.two_hour_reason)
 	var now: float = view.time_seconds
 	army_label.text = _army_text(army, now)
 	army_label.tooltip_text = _condition_details(army.condition)

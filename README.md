@@ -2,6 +2,8 @@
 
 # Luanshi (working title)
 
+> Development transfer checkpoint: current v0.14 source is **unfinished WIP**, not a validated release. Use the retained v0.13 commit `e64a398a4b7c0f01abfac50decd516ea57c0ba3a` for the last fully tested version. See [handoff and unrun gates](docs/DEVELOPMENT_TRANSFER_V014_WIP.md).
+
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Vision

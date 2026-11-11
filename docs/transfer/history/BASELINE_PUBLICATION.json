@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/haohongfei2001-png/luanshi-game",
+  "commit": "71215500d18fda0c6aeb0de885a76b6430406c11",
+  "tree": "1d4d76f64adf8b5eefefc88c1eba9ab71c52c30a",
+  "commit_url": "https://github.com/haohongfei2001-png/luanshi-game/commit/71215500d18fda0c6aeb0de885a76b6430406c11",
+  "verification": "Publisher confirmed complete remote tree read-back: 360 paths, modes and blob identities match first-layer staging; font absent. This helper did not write GitHub.",
+  "source_snapshot": "0e525a4ddf56c774dab3f87278447a3b29444cfc",
+  "source_tree": "c9eb913e6389e4682dd12d2ffa8ffcfdcd98b2a1",
+  "published_tree_equals_original_source_tree": false
+}

@@ -2,6 +2,21 @@
 
 # Project status / resumable handoff
 
+## Development transfer: v0.14 WIP, STOPPED (2026-11-11 UTC)
+
+The owner requested development closeout and transfer. New feature work stopped.
+All current source/UI/test edits are retained as a local WIP checkpoint, not a
+completed or validated v0.14 release. See [transfer handoff](DEVELOPMENT_TRANSFER_V014_WIP.md).
+The last fully tested playable remains v0.13 at `e64a398a4b7c0f01abfac50decd516ea57c0ba3a`
+(runtime-tested `b71a6c96c410808fba43beb96514962b7f75d05d`).
+
+Only Godot 4.6.3 editor import and whitespace checking passed for this WIP.
+The UI test attempt failed at engine startup because its default data directory
+was not writable; no UI assertion ran. No mechanism suite, full regressions,
+calibration, export, package restart, independent audit or actual render ran.
+No remote source publication, font retry, hosted CI, user-device access or new
+cost occurred. Do not merge/publish this as a validated game milestone.
+
 ## Design synchronization for v0.14 (2026-11-11 UTC)
 
 Read-only main snapshot: `b32de2c1d6c08297d4550b36c02ea4ba6b5bb625`.

@@ -1,0 +1,476 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index 09e2ca36cfe120f59ac9f55c4efe8ffe4ac794a3..141968fcde3686c978270b3caf8176ee2c46f942 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -13,7 +13,7 @@ This repository currently contains an early battle prototype, but the **long-ter
+ 
+ ## Product constraints
+ 
+-**Canonical current design and workflow:** recognize that OWNER-01..09 have now been directly answered by the user in `docs/PRODUCT_DECISIONS.md` section 1B and the historical tracker `docs/OWNER_CREATIVE_DECISIONS_PENDING.md` is resolved. Continue autonomously; do not ask the owner to choose those again. Implement high-attack but limited-HP hero progression, interceptable courier orders, time primarily via rest/travel/wait/story, non-optional war-era background with mutable battles, non-grindy changing world and free saves. Read `docs/PRODUCT_DECISIONS.md`, `docs/FINAL_GAME_DESIGN_SPEC.md`, `docs/NARRATIVE_ART_DIRECTION.md`, `docs/ACCEPTANCE_MATRIX.md` and `docs/DOT_HANDOFF_FINAL.md` first. For world-time, inventories, delayed reports and battle-to-world integration, also read `docs/SIMULATION_CONTRACTS.md`. Older docs (`PRO_DESIGN_BIBLE.md`, `GAME_VISION.md`, `DOT_CONTINUOUS_DELIVERY.md`, `DELIVERY_PLAN.md`) are background or stage details; user decisions and current final spec take precedence. Preserve the existing Dot first-prototype work on `prototype/cloud-first-playable` rather than restarting from scratch. Read `docs/PRO_TECH_REVIEW_001.md` for early review findings.
++**Canonical current design and workflow:** recognize that OWNER-01..09 have now been directly answered by the user in `docs/PRODUCT_DECISIONS.md` section 1B and the historical tracker `docs/OWNER_CREATIVE_DECISIONS_PENDING.md` is resolved. Continue autonomously; do not ask the owner to choose those again. Implement high-attack but limited-HP hero progression, interceptable courier orders, time primarily via rest/travel/wait/story, non-optional war-era background with mutable battles, non-grindy changing world and free saves. Read `docs/PRODUCT_DECISIONS.md`, `docs/FINAL_GAME_DESIGN_SPEC.md`, `docs/NARRATIVE_ART_DIRECTION.md`, `docs/NARRATIVE_WORLD_BIBLE_V0_2.md`, `docs/ACCEPTANCE_MATRIX.md` and `docs/DOT_HANDOFF_FINAL.md` first. For world-time, inventories, delayed reports and battle-to-world integration, also read `docs/SIMULATION_CONTRACTS.md`. Older docs (`PRO_DESIGN_BIBLE.md`, `GAME_VISION.md`, `DOT_CONTINUOUS_DELIVERY.md`, `DELIVERY_PLAN.md`) are background or stage details; user decisions and current final spec take precedence. Preserve the existing Dot first-prototype work on `prototype/cloud-first-playable` rather than restarting from scratch. Read `docs/PRO_TECH_REVIEW_001.md` for early review findings.
+ 
+ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silently replace the setting, camera, combat model, progression, world independence, or protagonist-death rule.
+ 
+@@ -35,7 +35,8 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
+ - Do not add dependencies, paid services, or external assets without checking their redistribution terms.
+ - Avoid premature complexity: prefer small modules, explicit interfaces, and clear data contracts over giant frameworks.
+ - The **three equally important final player experiences** are (1) personal realtime combat, (2) army command, and (3) autonomous world simulation. Phase work sequentially but do not omit any from final gameplay.
+-- **Locked art:** restrained realism in small detailed 3D figures, historically grounded material scarcity, readable equipment silhouettes, not flashy armor. Use placeholders until mechanics are verified.
++- **Locked art:** restrained realism in small detailed 3D figures, **now informed by mid/late Tang material culture and late-Tang provincial armies** (the earlier Han-Wei default has been superseded), historically grounded scarcity, readable equipment silhouettes, not flashy armor. Use placeholders until mechanics are verified.
++- **New locked narrative constraints:** court can be militarily strong or weakened by actual wars; factions and frontier powers are morally complex; **capture while alive does not end the run**; reception by court after return depends on evidence and politics; important friends can become subordinates, rivals, enemies or reconcile based on their own interests and experiences. Canonical details in `docs/PRODUCT_DECISIONS.md` §1C. Main character names and particular fixed story beats in `docs/NARRATIVE_WORLD_BIBLE_V0_2.md` are creative proposals, not owner-approved final script.
+ - **Locked difficulty:** hard but fair and explainable; no hidden scripted cheats, forced battlefield loss, magically arriving troops, or unjustified information leaks.
+ - Never commit credentials, account data, API keys, or unlicensed assets. This repository is **public**.
+ - Keep commits small and purposeful; use branches and pull requests for major changes.
+diff --git a/docs/ACCEPTANCE_MATRIX.md b/docs/ACCEPTANCE_MATRIX.md
+index 4d283b7d126cf603266bc6ddca6afb9915da4af3..c0817462c2cd9fc1fe30d8e022fe35850e82ec9d 100644
+--- a/docs/ACCEPTANCE_MATRIX.md
++++ b/docs/ACCEPTANCE_MATRIX.md
+@@ -117,10 +117,26 @@
+ | OWNER-HISTORY-03 | F | 无关键地位/资源的普通选择 vs 玩家具有军权、兵力与时机的关键节点行动 | 前者主要局部影响；后者才可能改变大区域战争与政治，且变化在世界日志中可追溯 |
+ | OWNER-PACING-01 | G4/F | 重复同一备战/野战/城池请求；玩家选择长期发展或不思进取 | 避免强制重复刷关、无意义长等待；世界能靠正常推进/事件推动故事而非固定游玩小时数 |
+ | OWNER-SAVE-01 | G3 | 任意合法场景存读档与人生节点回溯 | 同一真实世界与种子恢复，死亡结束该局但玩家可以回到过去；没有强制铁人机制 |
+-| OWNER-CULTURE-01 | G4 | 检查平民/富户/新募兵/老兵的装备/建筑/社会细节 | 东汉末至魏晋为主要参照、世界内部科技一致、不凭升级生成浮夸铠甲或超现实装备 |
++| OWNER-CULTURE-01 | G4 | 检查平民/富户/新募兵/老兵的装备/建筑/社会细节 | **中晚唐式服饰、装备和军镇**为主要物质参照，唐末政治与早期唐蕃战争合成时序注明架空；内部科技一致，不凭升级生成浮夸铠甲或超现实装备 |
+ 
+ 专项通过要求包括 **(1) 世界状态记录，(2) 自动/手工可复现操作，(3) 真实画面/设备体验状态** 三个层面的证据；没有 GUI 的 CI 只能验证前两者。具体数值由 Dot 自主调参并在测试中记录，用户不必事先签署每个阈值。
+ 
++## 7C. 唐式朝廷与人物命运专题用例（用户新剧情设定）
++
++| ID | 阶段 | 测试输入 | 验收标准 |
++| --- | --- | --- | --- |
++| NAR-COURT-01 | G3/F | 同一开局：中央军与强敌交战失败/补给充足取得胜利 | 朝廷的可动员军队、财政与诏令执行能力真实变化；不固定“朝廷必弱/必亡” |
++| NAR-COURT-02 | G3/F | 皇帝希望宽恕，某监军/派系提出不利证据 | 政策可能受到不同政治行为者影响，玩家只能逐步获得情报；不能把皇帝/朝廷视为单一恶善值 |
++| NAR-CAPTIVE-01 | G3 | 主角战败被俘但未受致命伤 | **本局不结束**；羁押、谈判、有限活动、羁留时间和离屏局势继续推进 |
++| NAR-CAPTIVE-02 | G3/F | 同样被俘后分别拒降、暂时受聘、换俘归国、逃离 | 朝廷/外方的后果因真实证据、派系和人际关系不同，允许归国受重用、受疑、受罚甚至反目；不得必然报复 |
++| NAR-CAPTIVE-03 | G3/F | 国君收到关于主角投敌的错误报告，主角尚不知情 | 诏令/牵连依实际派系决策和传令推进；玩家无从知晓时不能立刻显示全知“朝廷迫害”弹窗 |
++| NAR-FRIEND-01 | G3/F | 旧友成为主角部将、战功更大但封赏被忽略 | 可出现不满、求调、拒命/竞争或和解，关系变化由历史与目标解释，不按单值强制叛变 |
++| NAR-FRIEND-02 | G3/F | 两个重要角色因不同军令离开，多年后在相同战场/谈判地点遇见 | 双方保有真实中间经历；可合作/反目/中立，死亡/失踪者不能为了剧情重逢而复活 |
++| NAR-FRIEND-03 | F | 旧友被称叛将，但本人实际为保护被俘将士暂归外方 | 主角与朝廷可产生不同判断与错误情报；故事可以澄清也可继续误会，不强行洗白或抹黑 |
++| NAR-HISTORY-01 | F | 观察相同架空背景、但改变中央强军损失和藩镇政治 | 同一类结构矛盾可产生“朝廷重振”与“中央势力衰微”的不同历史进程，不能被剧情覆盖 |
++
++此表是**长期验收用例**。Dot 现在先做可重复的政治资源/角色状态机与俘虏继续游戏，主要人物和关键长剧情保留用户创作审定权。东汉魏晋默认已被用户更新的中晚唐参照替代。
++
+ ## 8. 阶段判定与“完成”层级
+ 
+ - **G1 原型通过**：COM-01..05、TECH-01..02 有实测证据。云端无 GUI 时允许运动/输入逻辑判通过但 COM-07 待人类视觉复核；不许把它写成画面已验收。
+diff --git a/docs/DOT_HANDOFF_FINAL.md b/docs/DOT_HANDOFF_FINAL.md
+index d863a05caa111f8a5862f8f6a20d09dfb218ef71..7f6e99404c6032ddca1dad16f89a61dcef67564d 100644
+--- a/docs/DOT_HANDOFF_FINAL.md
++++ b/docs/DOT_HANDOFF_FINAL.md
+@@ -1,5 +1,5 @@
+ # Dot 自主开发交接指令 v2.0
+-**用户已锁定四项产品基线及九项高杠杆创作决定 → Pro 已同步系统/叙事/验收规范 → Dot 持续直接云端实施。**
++**用户已锁定四项产品基线、九项创作方向，以及 2026-11-08 中晚唐式朝廷/俘虏/友谊叙事原则 → Pro 已同步系统/叙事/验收规范 → Dot 持续直接云端实施。注意：正式皇帝、好友人物和关键主线仍是创作提案，并非用户批准的不可变剧本。**
+ 目标：不再让用户管理日常开发；在已授权的云环境内直接把《乱世》从当前原型做成可玩的 Mac 游戏，并按实际能力逐渐实现长期完整愿景。
+ 
+ ## 1. 指令与权限：先读这些，然后开始代码
+@@ -8,12 +8,12 @@
+ **用户已在 2026-11-08 正式回答 OWNER-01 至 OWNER-09；docs/OWNER_CREATIVE_DECISIONS_PENDING.md 已更新为“全部答复的历史索引”。完整 LOCKED 约束以 docs/PRODUCT_DECISIONS.md 1B 为准，不再逐项询问。**
+ 1. **docs/PRODUCT_DECISIONS.md**：用户锁定决策与保留审批事项，最高优先级。
+ 2. **docs/FINAL_GAME_DESIGN_SPEC.md**：正式玩法与系统架构，包含 WASD + 鼠标瞄准 + 快捷键、三个等权重支柱、困难公平。
+-3. **docs/NARRATIVE_ART_DIRECTION.md**：叙事和克制写实的小人美术执行标准。
++3. **docs/NARRATIVE_ART_DIRECTION.md**：叙事和克制写实的小人美术执行标准。**另读 docs/NARRATIVE_WORLD_BIBLE_V0_2.md：最新唐末式政治、朝廷强弱、俘虏后继续人生、归国受疑与好友异路/重逢的叙事提案。确认世界结构/行为规则已由用户表述，但皇帝、好友、重要战役/结局具体设定仍待其审定。**
+ 4. **docs/ACCEPTANCE_MATRIX.md**：每项功能的可观察验收与真实测试证据。
+ 5. **docs/DOT_HANDOFF_FINAL.md**：本协议的自主执行与交接机制。
+ **进入 G2 世界模型前**，先阅读 docs/SIMULATION_CONTRACTS.md，实施权威世界状态、战斗事务和延时情报。按实际阶段查阅：docs/DELIVERY_PLAN.md、docs/FINAL_VISION_ACCEPTANCE.md、docs/PROJECT_STATUS.md（原型分支有最新状态）、AGENTS.md。早期的 GAME_VISION.md / PRO_DESIGN_BIBLE.md 作为背景，出现冲突以以上正式文本为准。
+ 
+-这些文档已覆盖目前能够通过文字决定的主要产品与创作方向，包括身份/政治尝试、早期一敌二及后期高伤害但有限血量、可拦截的令旗/传令兵、时间主要随行军/休养/等待和剧情推进、东汉末至魏晋参照、自由存档、战争时代无法逃避、重大剧情节点可能改变等。**不要再向用户重复询问这九项，也不要擅自改为无双式无敌或固定必败史诗。** 真实画面手感、Mac 设备性能与最终审美接受度必须由可玩成果验证，而非凭文档声称已验收。
++这些文档已覆盖目前能够通过文字决定的主要产品与创作方向，包括身份/政治尝试、早期一敌二及后期高伤害但有限血量、可拦截的令旗/传令兵、时间主要随行军/休养/等待和剧情推进、**现改为中晚唐/唐末政治及唐蕃战争合成参照**、自由存档、战争时代无法逃避、重大剧情节点可能改变等。**不要再向用户重复询问这九项，也不要擅自改为无双式无敌或固定必败史诗。** 真实画面手感、Mac 设备性能与最终审美接受度必须由可玩成果验证，而非凭文档声称已验收。
+ 
+ ## 2. 职责划分和独立程度
+ 
+@@ -63,7 +63,7 @@
+ 
+ ### D2 — 可完整游玩的短篇
+ - 接军令→侦察/征发/备战→行军→实时交战/撤退→结算→动态人物/世界变化。
+-- 4–6 名能自主判断的重要角色；玩家可知与未知清楚区分。令旗/号角/传令兵渠道必须能出现延迟、截击与失联，反馈不泄露未知的截杀事实。
++- 4–6 名能自主判断的重要角色；玩家可知与未知清楚区分。令旗/号角/传令兵渠道必须能出现延迟、截击与失联，反馈不泄露未知的截杀事实。**推进玩家被俘继续游戏的可复用状态机，以及旧友独立人生/竞争/重逢逻辑**；但大型人物传记和国家核心剧情不得只因 Pro 的示例稿就标记为用户审定。
+ - 伤病/战死结局、存档/人生节点回溯；基础剧情立绘、UI、声效与教程。
+ - 多条结果不是只变片尾文字，必须改变真实城池、物资、角色或军队数据。
+ 
+diff --git a/docs/FINAL_GAME_DESIGN_SPEC.md b/docs/FINAL_GAME_DESIGN_SPEC.md
+index 314055f2efb892d0992e7bc1cd3c13a1a10f9b10..ec957e0a03110af764cc51483edd3717be56a8be 100644
+--- a/docs/FINAL_GAME_DESIGN_SPEC.md
++++ b/docs/FINAL_GAME_DESIGN_SPEC.md
+@@ -1,6 +1,6 @@
+ # 《乱世》（工作名）完整游戏设计规格 v1.1
+ **所有者已锁定的产品方向 + Pro 实施基线**｜2026-11-08｜本文件作为 Dot 开发的首要设计规格。
+-解释权限与冲突优先级见 PRODUCT_DECISIONS.md；剧情美术详见 NARRATIVE_ART_DIRECTION.md；可执行验收见 ACCEPTANCE_MATRIX.md。本文件不替代用户未来明确提出的新决定。世界/战斗接口的建议数据结构与可测试不变量详见 SIMULATION_CONTRACTS.md。
++解释权限与冲突优先级见 PRODUCT_DECISIONS.md；剧情美术详见 NARRATIVE_ART_DIRECTION.md；可执行验收见 ACCEPTANCE_MATRIX.md。本文件不替代用户未来明确提出的新决定。世界/战斗接口的建议数据结构与可测试不变量详见 SIMULATION_CONTRACTS.md。**最新叙事方向与人物状态的正式提案见 NARRATIVE_WORLD_BIBLE_V0_2.md；皇帝、朝廷派系、核心好友的具体身份及关键剧情场面暂不视为所有者最终审定。**
+ 
+ ## 2026-11-08 所有者九项创作决策：强制执行补充
+ 
+@@ -40,7 +40,7 @@
+ - **避免重复**：跳过没有新局势/决策的重复刷怪战、重复征兵按钮与长时间空等。可用短篇文字/战报汇总日常；关键抉择与大规模战争才分配更高叙事成本。
+ 
+ ### 6. 统一的文化与存档基准
+-- 虚构朝代以**东汉末至魏晋**的军事/技术/社会环境为主，不照搬任何一段真实历史时间线，保证装备不跨时代荒谬混搭。
++- 用户已将此前东汉末—魏晋默认改为以**中晚唐政治、唐末藩镇格局与唐蕃战争经验**为主要架空参照；如合并不同年代强势吐蕃与晚唐中央/藩镇局势，明确它是虚构合成历史而非单一年份复原。保持装备、生产力与政治制度内部一致。
+ - 自由正常存档 + 关键人生节点回溯。读档恢复世界、角色知识、在途消息、随机种子；死亡结束当前局，不禁止重新加载。
+ - 叙事主旨经用户同意：个人有限生命与无法完全掌控的历史；命运有代价，不必强制苦难。
+ 
+@@ -161,6 +161,16 @@
+ ### 战史灵感
+ 可从官渡战中粮道破坏、将领离心与投降的因果链，以及淝水传统叙述中的恐慌传播、误判与秩序崩溃获取**机制灵感**；战争史料的兵力数字不能直接当成准确模拟参数。使用虚构国家、地点和人物，避免照抄特定史实作为玩家不可改变的结局。
+ 
++## 6B. 中晚唐式政治、俘获续玩与旧友分歧（2026-11-08 新剧情方向）
++
++用户已选择参考中晚唐/唐末的**朝廷—地方藩镇—外部边境势力**关系，详见 PRODUCT_DECISIONS.md 1C 与 NARRATIVE_WORLD_BIBLE_V0_2.md。朝廷拥有可能强大的中央军、都城防务、国库和诏令体系，但会因边战、内部猜疑与地方争权出现实质性伤亡、粮费消耗或重整，**朝廷不是固定弱者也不是固定反派**。皇帝的愿望、监军的判断、臣僚的政策及各路将领的行动允许不同。
++
++**俘虏不等于死亡**：主角活着被敌方俘获时，可在受限行动中继续经历转押、留用、拒降、交换、逃亡、获释与归国；时间、身体、兵权与旧友仍在世界变化。重新入境时是否受欢迎、被疑、被捕、报复或重用，取决于证据、派系、权势、过往行迹和朝廷实际处境。李陵/苏武只是对照性历史灵感，不能写成“苏武也受汉廷必然诛罚”或“投降自动触发家族灭亡”。**只有死亡才结束人生局**。
++
++**关系变化不是一个忠诚度**：旧友与主角可能同袍、上下级、对手、异阵营官员、不同任务而别后重逢；共同伤亡、功劳归属、军权分配、野心/自尊、价值观、家族、谣言与自己掌握的信息影响关系。拒命不一定是叛乱，野心不一定等于背信；能反目也能和解。角色分离后在离屏独立行军、晋升、受伤、死亡，重逢须满足地点、谈判或消息相通的真实条件。
++
++**重大人物定稿界限**：安平救援仍是机制验证场景；新的正式国君、外方领袖、核心旧友与最终主线未由用户逐项审定。Dot 可以发展人物 AI、监军/军权系统、俘虏状态机与条件性占位文本，**不能把 Pro 草案的人名与人物必死/必叛情节标注为用户已定稿**。
++
+ ## 7. 年龄、疾病、人生与存档
+ 
+ 角色年龄随世界时间单向增加；健康、疲劳、旧伤、疾病可恶化或康复。年老应逐渐影响体能/恢复/战斗风险，但可通过经验、组织能力和信任的部将保持战略作用。70 多岁可能自然死亡，但**不硬性设置 75 岁自动死亡**；使用随年龄变化的风险与具体病伤状态，保证有可解释的时间跨度和预警。
+diff --git a/docs/NARRATIVE_ART_DIRECTION.md b/docs/NARRATIVE_ART_DIRECTION.md
+index 594dab47495e26962451df7d291458d5f0ed2b55..3b01d5db2b506f16fa87af90efc2be0401ff828a 100644
+--- a/docs/NARRATIVE_ART_DIRECTION.md
++++ b/docs/NARRATIVE_ART_DIRECTION.md
+@@ -13,7 +13,7 @@
+ **本节对后续所有剧情创作有约束力。**
+ 
+ ### 不可被普通选择抹去的结构历史
+-这是东汉末—魏晋风格物质文化的虚构乱世，社会已经存在朝廷/地方军权矛盾、边境战争、人口与物资紧张；外部势力有自己的战争目标。**玩家不参战、躲到某座城、辞官或隐居，也不能让这些背景冲突消失**。战争消息、征粮、流民、城池归属和将领生死仍在世界持续演化。
++这是**中晚唐式物质文化与唐末藩镇政治**的虚构乱世（唐蕃边境战争作为跨期取材，不照搬同一年真实历史），社会已经存在朝廷/地方军权矛盾、边境战争、人口与物资紧张；外部势力有自己的战争目标。**玩家不参战、躲到某座城、辞官或隐居，也不能让这些背景冲突消失**。战争消息、征粮、流民、城池归属和将领生死仍在世界持续演化。
+ 
+ ### 可以改变的具体历史
+ 一场围城能否坚持、援军是否赶到、守将是否降、城池何时陷落、哪支军队幸存、谁因误判而死、玩家能否获得军权，全部可在规则内改变。故事不是“主角救援成功也强迫安平失陷”；背景不可避免的战争 ≠ 每一场战役都必须有固定胜者。
+@@ -36,7 +36,7 @@
+ 
+ ## B. 架空历史的写作规则
+ 
+-推荐工作时代为“虚构王朝末期，生产力与军事技术大体借鉴东汉后期至魏晋，但不混同真实朝代”。国家工作名“晟”，敌国/割据势力、地理名称由 Dot 保持统一、建立世界地图词典。史实只提供战争补给、官制/军职、装备和人性方面的参照；具体历史人物、年份、事件不作为玩家必须照演的真结局。
++**用户最新选择**为“虚构中晚唐/唐末式王朝；朝廷仍可能掌握强大军队，藩镇与边境势力各有利益，借鉴唐蕃冲突”。国家工作名“晟”仍仅为占位，正式国号/核心人物与重要战争需按 NARRATIVE_WORLD_BIBLE_V0_2.md 区分提案和用户审定；敌国/割据势力、地理名称由 Dot 暂时保持统一、建立世界地图词典。史实只提供战争补给、官制/军职、装备和人性方面的参照；具体历史人物、年份、事件不作为玩家必须照演的真结局。
+ 
+ 世界背景的持久冲突：
+ 1. 朝廷与边军互相依赖但互不完全信任；
+diff --git a/docs/NARRATIVE_WORLD_BIBLE_V0_2.md b/docs/NARRATIVE_WORLD_BIBLE_V0_2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..1360a16d35dcf28b7e7cceb3b619a58ad154da07
+--- /dev/null
++++ b/docs/NARRATIVE_WORLD_BIBLE_V0_2.md
+@@ -0,0 +1,120 @@
++# 《乱世》剧情世界母本 v0.2：中晚唐式架空战争与灰色忠诚
++日期：2026-11-08｜性质：**Pro 根据所有者最新叙事方向形成的提案与系统设计，不等于所有人物姓名、每场战役和结局已由所有者审定。**
++权限高于此前“东汉末—魏晋文化默认设定”，但以 PRODUCT_DECISIONS.md 的用户明确决定为最高准则。
++完成度：背景和机制可以直接由 Dot 研发；正式主要人物和关键剧情仍须尊重 Owner 创作判断，未指定细节由 Pro 提案、Dot 临时实现且标记 PROVISIONAL。
++
++## 0. 已被用户明确提出并应锁定的剧情公理
++
++1. **参考唐代后期政治环境**：朝廷仍可能掌握国内部分最强的军事力量，但其兵力会因与藩镇争权、边境强敌作战、内部失误而消耗；也可能经改革、援军和政治联盟恢复能力。不能预设“朝廷开局必亡”或“永远无力”。
++2. **存在多种阵营生涯**：玩家可追随朝廷、地方势力、边境外敌，或者转换忠诚/自立；人物有现实的利益与风险，行动不自动成功。
++3. **被俘不等于死亡或强制 Game Over**：可以被押解、关押、招降、有限自由、交换、逃回或长期服务外方。是否被原朝廷猜忌、报复或再接纳取决于信息、政治、功绩、派系等，允许经历《汉书》中的李陵/苏武式对照，但不固定谁的结局。
++4. **背叛的灰度**：主角可能认为仍有可敬的国君与朝廷，也可能从具体遭遇中失望；旧主、藩镇、外方都不必被写成单一善恶标签。
++5. **友谊与反目有因果**：好友可能成为部下、同僚、竞争者、不同势力的将领或敌人；好胜、不甘居下、价值观、利益与任务差异、失散与重逢可能积累矛盾，也可和解、互救或和平分道扬镳。不可用单一“忠诚值低于 X 自动背叛”。
++6. **历史两层**：边境战争、军权争夺、财政与兵源压力构成不可凭玩家逃避而消失的历史背景；具体战役、人物生死、朝廷是否重新崛起、某次忠诚或叛离结果可在真实世界因果中改变。
++7. **剧情重点**：重要战争和人际关键节点安排精心写作的条件分支；大量普通行动通过系统与战报表现，避免重复刷任务。玩家初期对天下影响有限，得到军权/情报/地位后影响可扩大。
++
++## 1. 年代表述：架空但不能伪称严格史实
++
++- **政治主参照：安史之乱后的中晚唐藩镇政治、中央禁军（含神策军经验）、朝廷与边镇相互猜忌。**
++- **边境主参照：八世纪后期至九世纪初唐蕃战争、和议与边疆权力变动。** 历史上吐蕃帝国在约842年发生严重继承危机，并于九世纪中叶走向分裂；若游戏希望同时拥有接近九世纪末的“唐末”分裂局势与统一强大的西部外敌，必须明确这是**架空合成时序**，不能暗示真实历史在同一年发生了这些事件。
++- 虚构王朝、皇帝、藩镇、西方高原政权的正式名称暂定，**只保留制度结构与冲突机制**。原三城安平救援是第一阶段验证场景，不应被自动认定为最终唯一主线。
++- 视觉参照随用户新决定同步为**中晚唐服饰、铁/革/札甲、马匹、军镇和边塞建筑的朴素日常面貌**。不等于“所有唐军必无甲”：财富、职位、军种、供给与战利品决定军备差异。
++
++史实线索（仅供研究/取材，不作为必须复制的剧情）：
++- https://www.cambridge.org/core/journals/journal-of-chinese-history/article/reach-of-the-military-tang/ECFE9C64AE6E73EC4319B165A606F88C
++- https://texts.mandala.library.virginia.edu/node/48226
++- https://ctext.org/han-shu/li-guang-su-jian-zhuan/ens
++
++## 2. 天下不是一条中央“健康条”：政治军事实力模型
++
++**朝廷/地方/边敌均为拥有军队、财政、控制链与内部人物矛盾的势力。** 朝廷的实际能力建议拆为：
++- `imperial_field_army`：忠于中央的机动精锐（可强大，但会在实际战争中伤亡）；
++- `capital_defense`：都城与直属军镇守备，不能全随意抽空；
++- `treasury_and_supply`：财政、粮饷、马匹、道路运力；
++- `command_cohesion`：谁真正能使各军遵命、军令传递是否被阻断；
++- `legitimacy`：皇帝、朝廷官僚、地方官及居民是否承认诏命；
++- `court_factions`：皇帝、监军、禁军统帅、宰辅、边将之间的不同利益。
++- `border_pressure`：外敌军队位置、谈判、补给和对内政的牵制。
++
++上述不应压成一个“朝廷强度 = 57%”的万能公式；玩家见到的只是延迟、片面、可能被粉饰的军报与人际观察。朝廷可能这次有效救援，下次猜忌功臣；也可能先失利、后来重整。
++
++主要势力初版建议设为：中枢朝廷、至少两个具有利益差异的地方军镇、西方高原政权（外加边境内部派系）。其他军镇/民间武装可由 Dot 随世界规模增加，不急于制作全国地图。
++
++## 3. 俘虏—异国—归国—政治后果的完整可玩链路
++
++**明确“失去自由”而不等于角色死亡**。建议状态：
++`free` → `captured` → (`detained` / `negotiating` / `conditionally_employed` / `exchanged` / `escaped` / `returned` / `defected`)。
++若被杀、疾病致死或自然死亡则本局结束；活着仍能经历囚禁、转押、讯问、传递口信、选择是否帮助外方、等待交换、与看守建立关系、尝试逃跑等有限行动。不能因为场景被俘就自动恢复全自由控制或全部装备。
++
++### “李陵 / 苏武”不是二选一脚本
++历史原型《汉书》：李陵因战败降匈奴与后来汉廷的处置、误传、家人遭诛相关；苏武被扣押多年后得以归汉。两人事迹属于**西汉**，在本游戏只借鉴“羁留、忠诚证据、政治误判、归国评价”结构，不是唐代历史人物穿越。
++
++可演化结果示例：
++- **羁留而不降、交换归国**：仍有功绩与支持者，可能得任用，也可能因多年失联受猜疑；
++- **为保全士兵暂接受外方官职**：可以获得生存/行动能力，但归国后面临调查、羞辱、流放或报复，亦可能靠证据、势力保护而重获信任；
++- **原朝廷误信“主角教敌军用兵”**：家属、部下受牵连 → 归国无路 → 主角转而加入地方军镇甚至反抗朝廷；也可能通过找到证人或政治变化洗清；
++- **主动归附外方**：外方不会因为“投降”就自动信任；可能需要交人质、证明能力，原部众也可能拒从；
++- **既被朝廷猜忌又不受外方信任**：在两边成为边缘人，也可与旧友重逢、流亡、尝试自立。
++
++**公平性**：重大“被诬陷/全家受牵连”需要真实信息来源、政治动机、决策链、可获知的警讯和因果日志。不要把被俘固定成“最坏结局”或无可改变的报复惩罚。玩家有权尝试举证、和解或逃离，但不保证有效。
++
++**情报隔离**：玩家在异国不能立即知道朝廷对他的判决；通过信使、俘虏、商旅、间谍和后续会面获知。返回之后也可能发现命令早已签发，不能因玩家读到一封信才启动历史。
++
++## 4. 友情、竞争与反目的多维模型
++
++重要角色至少有：
++- `shared_history`：曾救命、结义、共同战斗、分别时间及共同伤亡；
++- `status_ambition`：对军职、名望、军权、财富与自主性的追求；
++- `recognition`：是否觉得自己的功劳被承认、对封赏与指挥关系是否满意；
++- `moral_position`：对百姓、朝廷、战俘、敌方与谋反的底线；
++- `trust`：是否相信玩家行为/诺言；
++- `current_interests`：其自己/家人/部队所受风险、拥有的资源；
++- `beliefs_about_player`：他掌握的玩家行动、谣言和证据，**不是玩家的真实善恶评分**。
++
++示例 A：昔日战友功劳不逊于玩家，战后玩家成为他的上司。若玩家独占功绩、不尊重其部下，他可能请求转任、消极执行、挑战权威或投向地方；若玩家委以实权或共同建立更公平的奖惩关系，他也可能成为长期可信的副将。
++
++示例 B：玩家与好友因不同军令离别，数年后分别在朝廷与地方军镇担任将领。即使两人仍有感情，也会因彼此任务/家眷与军队利益面临对抗；可以谈判、私下放走对方、上报/隐瞒、战场交锋或拒战，不保证所有选项成功。
++
++示例 C：旧友从朝廷转投外方，玩家以为他背叛，后来得知他当时保护被俘士兵或被假军报误导。真实动机依世界生成并记录，**不能为了洗白主角让所有旧友都变无辜**。好友也可能真的野心勃勃并主动牺牲友谊。
++
++### Reunion（重逢）触发必须有真实物理/情报条件
++两个角色都存活，且在相同城市/军营/战场，或者合法的信使/谈判渠道实际连通，才能发生重逢；遇见时根据当时关系与利益生成条件台词。不能让已经战死的好友为了完成“剧情节点”重新出现。若主角一生未再相遇，只能留下传言或未知。
++
++## 5. 重要情节骨架：**建议而非已锁定的正式剧本**
++
++**作者锁定的是冲突，不是固定战果。** 下列建议为 Pro 提供给 Dot 的结构模板；具体角色、对话与某次战役的开端和结尾，仍需由 Owner 通过后续审定或明示委托 Pro 自行提案后决定。
++
++1. **年轻边军与朝廷威望**：朝廷曾在边境救援、派遣精兵；玩家或家人可能相信国君愿意保护臣民；也可以开局就对朝廷持怀疑态度。朋友最初同袍或因军令分别。
++2. **第一次重大迟疑**：一次真正的边境失利、军粮短缺或监军截令造成未能救援；朝廷可能重整获胜，亦可能猜忌功臣。玩家可尝试援救、举证或改投地方。
++3. **俘获与回归（条件支线，不强制所有玩家被俘）**：战败、护送、遭出卖后被俘；留在异国、拒降、暂任职、逃出或归国，触发不同时长的人生、友谊与政治后果。
++4. **旧友异路与重逢（条件性）**：晋升/分兵/立场分化之后，两人可能久别重逢；利益冲突可升级为拒命、公开决裂或战场交锋，也可维系友谊。
++5. **关键权力转折**：朝廷精锐是否在边疆/藩镇战争中折损，决定国君是否还有实力兑现承诺；玩家军权是否足以改变都城与边境的战争，取决于真实兵力与支持者。
++6. **一生的结果**：能成为边关守将、受害忠臣、异国重臣、藩镇将军、割据者、遗恨战死者，或晚年旁观战争。结局依据其实际能够得知的历史信息叙述，长远结果可悬而未决。
++
++## 6. 非线性故事的必要因果/测试
++
++- 朝廷强弱随“确有的军队损耗、军粮与派系”变化；同一世界可出现**朝廷重振**与**朝廷衰弱**两组路径，不应一律崩溃。
++- 被俘是一个可以继续进行的**人物状态**，不是故事终局或纯过场；证明“不降仍可能受疑”“暂降不必永远为敌”“外方也未必信任降将”。
++- 旧友晋升为玩家部将，可以从信任 → 矛盾 → 拒命/出走/反目，也能通过权力分配与真诚承诺避免；行为从多变量决定。
++- 旧友分离数年后，只有实际地理/信使连接才可能重逢；关系既不能强制恶化，也不应自动保持不变。
++- 主角不知道朝廷内部某项谕令时，世界也会按因果办理；后续消息到达后，玩家可以作出新选择。
++- 不凭玩家选择是否“忠诚”直接决定皇帝善恶或天下大战；平时多为局部影响，只有在军权/证据/资源条件具备时才可能影响政权。
++- 玩家遭审判、背叛或战败后应能解释**其当时可以掌握的风险与后续获得的证据**，不能把未预告的随机惩罚当深刻剧情。
++- 社会、政治和边疆势力的人物都应有其政治目标与内部利益，不把外敌写成只会侵犯、也不把朝廷写成必定善良或必定腐朽。
++
++## 7. 应由用户最终审定而不是 Dot 自行锁死的创作点
++
++**不要再让用户选择工程细节，但这些是作者意义上的剧情取舍：**
++- 王朝最初是否拥有一个具体的、玩家可能信任的国君，还是多任君主/宫廷派系使“朝廷”本就不是同一个人？
++- 正式主线是否特别强调“被俘归来遭猜忌”作为多个开局可选的**主要中段支线**，或者其只是少数会触发的人生路径？
++- 核心旧友采用“一位贯穿人生、可忠可敌”的中心人物，还是两三位性格不同的旧友共同构成复杂群像？
++- 主线主要地理空间是西部边境—朝廷—藩镇三角，还是多条边境并行？
++- 最终风格偏“可逆的政治悲剧”还是“混合成功、遗憾与偶然”的史传体叙事？
++
++这些未决创作点不阻塞基础机制：Dot 可实现捕俘状态机、重要 NPC 利益/认知模型、朝廷有限军队和消息传递，但最终大型关键人物/过场叙事不应在未经明确创作委托的情况下视为不可变定稿。
++
++## 8. 设计职责分离
++
++Owner：决定重心与重要人物/主线冲突，选择 Pro 剧情提案；Pro：历史一致性、政治人性与叙事结构、关键节点分支文案、验收规则；Dot：运行中的游戏实现、条件触发、有限视觉演出、文案细化与技术测试。日常 NPC 台词、普通军报、军营支线 Dot 可自主写，但不能将“所有角色忠于玩家”“被俘=永远背叛”写成必然结局。
++
++文件中已经标识明确确认/Pro建议/待审定，避免误把所有创作想法写成用户既有承诺。
+diff --git a/docs/PRODUCT_DECISIONS.md b/docs/PRODUCT_DECISIONS.md
+index 8172f958763cfa63cb9bc3a0ef07fac4846bfed9..49cbec7c276c5a118591a119cc2224c00a465483 100644
+--- a/docs/PRODUCT_DECISIONS.md
++++ b/docs/PRODUCT_DECISIONS.md
+@@ -1,4 +1,4 @@
+-# 《乱世》产品所有者最终决策 / Product Authority v3.0
++# 《乱世》产品所有者最终决策 / Product Authority v3.1
+ 状态：**产品所有者已正式确认最初四项产品方向与后续九项高杠杆创作决定。** 产品创作基线现可正式执行；实际操作手感、画面品质、性能及商业发行仍须依据真实成果验证或授权。详见 [OWNER_CREATIVE_DECISIONS_PENDING.md](OWNER_CREATIVE_DECISIONS_PENDING.md)，其中九项已转为已决，不再作为开发阻塞。
+ 更新时间：2026-11-08。责任：Owner（用户）／Pro（设计基线与按需独立评审）／Dot（实施和持续交付）。
+ 
+@@ -24,7 +24,7 @@
+ 
+ **OWNER-01 身份与人生道路：** 允许不同初始军职/身份，并在世界条件允许时尝试从军、升迁、叛逃、起义、割据、称帝或退出原职位。玩家可以尝试，并不代表 NPC 必须响应、势力一定支持或最终必然成功。
+ 
+-**OWNER-02 文化基准：** 架空王朝的装备、社会生产力、服饰和战争组织以**东汉末—魏晋**为主要审美/军事参照，可以合理架空，但同一世界内部的科技与社会规则必须一致。
++**OWNER-02 文化基准（2026-11-08 新决定覆盖旧版）：** 架空王朝的装备、社会生产力、服饰和战争组织改以**中晚唐，尤其唐末藩镇与朝廷政治**为主要参照，同时借鉴唐蕃战争的边境形势。因真实统一吐蕃帝国在九世纪中叶瓦解，本游戏若合并较晚唐末政治与较早唐蕃军事形势，必须明确属于架空时序，不宣称是单一年份的史实。世界内科技、社会规则与装备一致。
+ 
+ **OWNER-03 主角战斗成长：** 初期主角约能在对等近战中应付一到两名普通敌兵，**不能初期以一敌百**。随着年龄中的实战经验、技能、武器和装备成长，并在更大规模的战役环境中，后期可以通过高攻击效率、范围技能、战术和敌军溃散累计击杀几十甚至上百敌人。**生命值不得无限膨胀**，几十名士兵的有效集火、军阵包围或远程齐射仍然有致命风险；玩家成长主要提高造成伤害与处理敌人的能力，不等于防御无敌。“大军出现”本身不自动为主角加攻击力。
+ 
+@@ -49,6 +49,16 @@
+ 
+ 这十余项可用于指导 Pro/Dot 的正式设计。精确年龄阈值、武器数值、年份比例、单局小时数与场上可视单位上限属于**可配置且需测试的参数**，没有被所有者指定具体数字。
+ 
++## 1C. 2026-11-08 用户亲自提出的剧情世界方向（LOCKED，覆盖过去时代/阵营设定）
++
++1. **唐末式灰色政权**：采用中晚唐/唐末的中央—地方藩镇—边境外敌的三角关系。朝廷不必从一开始就软弱：它可能拥有最强的一部分军队；与地方争权和边境强敌交战会实际消耗军队、军费与信用，也可能在战争或改革后重整。**不把朝廷强弱和善恶写死**。真实历史上强大的统一吐蕃主要属于较早阶段，架空世界可合成时序，但不可假称是严格史实。
++2. **立场可以转移**：玩家能支持朝廷、地方势力或外部政权，能被俘、投降、归国、再投敌、自立。**被俘而尚存活不是游戏结束**，此后仍应有自由受限的决策与人生推进。
++3. **李陵/苏武式政治命运**：有人被扣押仍坚持旧忠，有人因军事失败、被迫羁留、真假情报、朝廷猜疑与牵连而失去归路。朝廷可能接纳归来者、审查、流放或报复；主角可能反过来与朝廷为敌，但**不得因为被俘就必然遭报复**。借鉴两人的历史结构而不是把西汉人物强行写入唐式历史。
++4. **皇帝与朝廷有可信的灰度**：主角可能相信国君仍有抱负与仁义，也可能对政策、权宦/监军、错误军令、失信和迫害感到失望。皇帝的个人意愿、中央军、官僚派系与地方军权不必完全一致；玩家不能从统一的“朝廷善恶条”得知一切。
++5. **旧友和部将不是财产**：朋友可能成为玩家的部下、被派往别的地区、成为竞争对手，或与玩家分属不同势力。功劳与官职分配、个性、野心、亲友利益、军事任务与认知冲突可能造成不服、拒命、叛离、反目、死战；也允许和解、互救与继续友谊。**不能用单个忠诚值阈值决定剧情或无条件强迫朋友背叛**。
++6. **相遇需有真实条件**：两名角色分离后继续过自己的生活，若再次在同一地点、战场、谈判或信使渠道遇见，关系随这段时间的事件改变。玩家不在场时旧友仍有军职、战争、生死和情感经历；死者不可剧情复活。
++7. **主线未获最终人物层审定**：以上世界结构与人物行为原则由用户确定，**正式皇帝、朝廷/藩镇将领的具体姓名、核心旧友的个人经历、被俘主线是否必经、某一关键战役及主要结局的逐项剧情仍由用户保留主创判断权**。Pro 可提出内容与结构，Dot 可以实现占位剧情/通用机制，但不能把未审定的关键人物稿件冒充用户定稿。最新研究和情节提案见 `NARRATIVE_WORLD_BIBLE_V0_2.md`。
++
+ ## 2. Pro 现已提供的默认设计裁量（DELEGATED）
+ 
+ 这些是**设计实现基线，不是假称用户逐项拍板**。Dot 有权在不背离以上 LOCKED 原则的前提下采用、测试和微调，并在提交记录中说明：
+@@ -59,7 +69,7 @@
+ - 故事先以架空北境三城“安平救援”做端到端验证，再根据性能和内容质量扩展；临时地名、角色名字、数值、台词可由 Dot 自主创作。
+ - 默认画面不追求真实人物面部高清，优先远景装备轮廓、动作辨识、士兵阵型、地形信息和可靠 UI。剧情立绘承载特写细节。
+ - 使用现有 Godot 4 + GDScript 工程继续研发；只有出现记录在案、无法合理解决的技术瓶颈且对照基准测试证实时才考虑换引擎。
+-- 设计母本：`docs/FINAL_GAME_DESIGN_SPEC.md`；剧情与美术执行：`docs/NARRATIVE_ART_DIRECTION.md`；世界与战斗接口：`docs/SIMULATION_CONTRACTS.md`；测试及难度：`docs/ACCEPTANCE_MATRIX.md`；Dot 接棒：`docs/DOT_HANDOFF_FINAL.md`。
++- 设计母本：`docs/FINAL_GAME_DESIGN_SPEC.md`；剧情与美术执行：`docs/NARRATIVE_ART_DIRECTION.md` 和新建的 **`docs/NARRATIVE_WORLD_BIBLE_V0_2.md`（最新唐末式叙事提案，含已确认与未审定的明确区分）**；世界与战斗接口：`docs/SIMULATION_CONTRACTS.md`；测试及难度：`docs/ACCEPTANCE_MATRIX.md`；Dot 接棒：`docs/DOT_HANDOFF_FINAL.md`。
+ 
+ ## 3. Dot 可直接决定、无须找用户复核
+ 
+diff --git a/docs/SIMULATION_CONTRACTS.md b/docs/SIMULATION_CONTRACTS.md
+index 129e63d8af31d77531f64dc5c7264f358ca7e8de..5554d21453d056044cc8241c82d76ec725fa5814 100644
+--- a/docs/SIMULATION_CONTRACTS.md
++++ b/docs/SIMULATION_CONTRACTS.md
+@@ -166,6 +166,24 @@ load_campaign(save) -> WorldState
+ 
+ 每个重复任务应具备：真实资源成本、世界条件/次数限制或设计上的自动汇总，避免为增加游戏小时数无意义强制刷怪。世界战争不随玩家退出军职停止；玩家隐居后可以通过季节/月度消息/城池状态/战争推进继续经历其历史后果，而不是切换成和平农场模式。
+ 
++## 9B. 中晚唐式政治、俘获、归国与关系链的数据契约
++
++本节建立在 PRODUCT_DECISIONS.md 1C 最新用户方向上。用户并未批准固定 NPC 名册或固定朝廷崩溃剧情。
++
++- `CourtState`（建议）：中央机动军、都城守备、军粮国库、诏令可执行程度、政治正统性、皇帝当前政策目标、派系压力、中央对地方的真实控制关系。不能只有一个 `court_good_or_bad` 数值。
++- `FactionAffiliation`：角色正式编制归属、实际庇护者、当前掌控军队、被朝廷如何记载（忠臣/失踪/已故/嫌疑/叛将）、角色本人承认的义务，这些字段可能互相矛盾。
++- `CaptivityState`：`free / captured / detained / conditional_service / exchanged / escaped / returned / defected`，以及俘虏的羁押势力、地点、约束、可用物资、允许的动作、在途谈判、保释或换俘条件、主角仍在世的持续时间。
++- `CourtInvestigation`：指控来源、证据/假证、知情派系、是否曾获赦、未送达诏令、受牵连人员、司法/政治决定、生效时间与角色所知的区别；不能把“被俘”直接映射“朝廷必然抄家”。
++- `RelationshipHistory`：两名角色共同事件、承诺履行、授职与功劳分配、野心、自尊、道德立场、家族风险、各自掌握的情报、分离时间、当前利益冲突。人物自主决策可从这些维度评估合作、争权、拒命、归附、背叛、和解。
++- `ReunionEvent`：双方真实存活、实际位置/通讯渠道连通、角色彼此已知的历史、事件前后关系更新；离屏死亡会取消面对面重逢而改为消息/遗物路径。
++
++**一致性约束**：
++1. `captured` 不是主角死亡/本局结束；若俘虏被执行死刑、病死或自然死亡，才触发主角终章。被俘时主角的部队、城池、好友继续演化。
++2. 玩家被囚禁时不能仍直接指挥原军队，除非拥有实际可行的秘密传信或代理指挥路径。
++3. 外方接纳不代表全方立即信任；归国不等于立即清白也不等于必遭惩罚，所有路径必须有角色视角的证据和时间线。
++4. 同一旧友可能服从主角、公开竞争、另赴军镇、做敌将、和平离别或死亡；角色是否响应要有可审计理由，不由单一忠诚掷骰。
++5. 朝廷可能在战役中损失某支强军，也可能因税赋/补给/胜仗恢复；实际主导权必须由可动员军力、传令、兵权和财政而不是“好皇帝”标签决定。
++
+ ## 10. 交接条件
+ 
+ Dot 完成首个世界三城架构时，应提交：模块接口说明、示例保存文件的**脱敏版本**、三种安平救援不同结果的测试脚本与日志、资源守恒测试、战斗结算恰好一次测试。此后可进入剧情层；不需要再问用户选哪个架构。
+diff --git a/tests/test_hunger_properties.gd b/tests/test_hunger_properties.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..feddd7b25db00eee7d9d0c9964de05137a71ca67
+--- /dev/null
++++ b/tests/test_hunger_properties.gd
+@@ -0,0 +1,113 @@
++extends SceneTree
++const W = preload("res://scripts/world_sim.gd")
++const A = preload("res://scripts/battle_adapter.gd")
++var checks := 0
++var failures: Array[String] = []
++func check(ok: bool, label: String) -> void:
++	checks += 1
++	if not ok:
++		failures.append(label)
++		push_error(label)
++func setup(count: int = 60) -> WorldSimulation:
++	var w := W.new()
++	w._state.siege.active = false
++	w._state.armies.besiegers.location = "hequ"
++	w._state.armies.besiegers.food = 1000000
++	w._state.cities.pingling.food = 1000000000000
++	w._state.armies.relief.soldiers = count
++	w._state.armies.relief.weapons = mini(count,30)
++	w._state.armies.relief.food = 0
++	w._state.initial_totals = w.totals()
++	return w
++func ceil_ratio(a: int,b: int) -> int:
++	@warning_ignore("integer_division")
++	return (a+b-1)/b
++func _initialize() -> void:
++	call_deferred("run")
++func run() -> void:
++	var rng := RandomNumberGenerator.new()
++	rng.seed = 790004
++	# A separate condition oracle, driven by physical transfers only after setup.
++	for population in [1,9,10,11,59,60,61,1001,1000000000]:
++		var w := setup(population)
++		var parts := setup(population)
++		var hunger := 0
++		var fatigue := 0
++		var morale := 100
++		var people: int = population
++		var dead := 0
++		for hour in range(25):
++			if people == 0: break
++			var needed := ceil_ratio(people,10)
++			var eaten := rng.randi_range(0,needed)
++			for sim in [w,parts]:
++				if eaten > 0:
++					check(sim.transfer("pingling","relief","food",eaten),"transfer %s/%s" % [population,hour])
++			var missing := needed-eaten
++			if missing > 0:
++				hunger = mini(6000,hunger + ceil_ratio(missing*1000,needed))
++				fatigue = mini(100,fatigue + ceil_ratio(missing*12,needed))
++				morale = maxi(0,morale - ceil_ratio(missing*10,needed))
++				if hunger >= 3000:
++					people -= 1
++					dead += 1
++			else:
++				hunger = maxi(0,hunger-1000)
++				fatigue = maxi(0,fatigue-6)
++				morale = mini(100,morale+4)
++			check(w.advance(1),"oracle hour accepted")
++			for chunk in [1,5,57,901,999,1637]:
++				check(parts.advance_seconds(chunk),"chunk accepted")
++			var c: Dictionary = w._state.armies.relief.condition
++			check(c.hunger == hunger and c.fatigue == fatigue and c.morale == morale,"independent ration oracle population=%d hour=%d actual=%s expected=%s" % [population,hour,[c.hunger,c.fatigue,c.morale],[hunger,fatigue,morale]])
++			check(w._state.armies.relief.soldiers == people and w._state.ledger.starvation_dead == dead,"independent delayed casualty oracle")
++			check(w.snapshot() == parts.snapshot(),"arbitrary subhour segmentation reproducible")
++			check(w.audit().is_empty(),"oracle conservation")
++	# Mixed battle/alert/rest hours and cancellation without elapsed time.
++	var w := W.new()
++	w.march("river")
++	w.advance_seconds(12600.0)
++	w._state.armies.relief.condition.fatigue = 60
++	w._state.armies.relief.condition.morale = 50
++	var adapter := A.new(w)
++	check(adapter.begin_local_depot().ok,"mixed battle begins")
++	adapter.simulation.elapsed = 3600.0
++	for unit in adapter.simulation.units:
++		if unit.team == 1: adapter.simulation._hurt(unit,1000.0,false)
++	adapter.simulation._check_result()
++	check(adapter.settle().ok,"mixed battle ends")
++	check(w._state.armies.relief.condition.fatigue == 63,"battle boundary exertion applied once")
++	check(w.advance_seconds(1800.0),"post-battle half rest advances")
++	check(w._state.armies.relief.condition.fatigue == 66 and w._state.armies.relief.condition.morale == 50,"half-hour rest cannot erase prior half-hour battle")
++	check(w.advance(1),"full rest following mixed hour")
++	check(w._state.armies.relief.condition.fatigue == 60 and w._state.armies.relief.condition.morale == 54,"next full hour recovers")
++	check(w.audit().is_empty(),"mixed battle conservation")
++	# Condition validation should reject every required key omission and wrong compound types.
++	for id in ["relief","hequ"]:
++		var fields: Array = W.new()._entity(id).condition.keys()
++		for field in fields:
++			w = W.new()
++			w._entity(id).condition.erase(field)
++			var before := w.snapshot()
++			check(not w.advance_seconds(1) and var_to_bytes(before) == var_to_bytes(w.snapshot()),"missing condition %s/%s rejects atomically" % [id,field])
++		for field in ["fatigue","morale","hunger","last_needed","last_eaten","stage","last_activity","activity_flags"]:
++			for bad in [[],{},Vector2.ZERO,NAN,INF,-INF]:
++				if field == "activity_flags" and bad is Dictionary: continue
++				w = W.new()
++				w._entity(id).condition[field] = bad
++				var before := w.snapshot()
++				check(not w.advance_seconds(1) and var_to_bytes(before) == var_to_bytes(w.snapshot()),"invalid condition compound %s/%s/%s rejects atomically" % [id,field,str(bad)])
++	# Detached audit evidence and event immutability.
++	w = setup()
++	w.advance(1)
++	var evidence: Dictionary = w.snapshot()
++	var condition_events: Array = evidence.events.filter(func(e: Dictionary) -> bool: return e.kind == "military_condition" and e.details.entity == "relief")
++	check(condition_events.size() == 1,"one condition record per entity per hour")
++	w.advance(3)
++	var actual: Array = w.snapshot().events.filter(func(e: Dictionary) -> bool: return e.kind == "military_condition" and e.details.entity == "relief")
++	check(actual[0] == condition_events[0],"original warning remains immutable over later starvation")
++	condition_events[0].details.after.hunger = -9
++	check(w._state.armies.relief.condition.hunger == 4000,"public snapshot mutation does not change authority")
++	print("INDEPENDENT_HUNGER_AUDIT %d checks / %d failures" % [checks,failures.size()])
++	print(JSON.stringify(failures))
++	quit(0 if failures.is_empty() else 1)
+diff --git a/tests/test_hunger_properties.gd.uid b/tests/test_hunger_properties.gd.uid
+new file mode 100644
+index 0000000000000000000000000000000000000000..3d5ccda551c53b2dcb5af2b65c5e71426dd32bb2
+--- /dev/null
++++ b/tests/test_hunger_properties.gd.uid
+@@ -0,0 +1 @@
++uid://dibuodwgogqq4

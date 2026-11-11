@@ -35,6 +35,8 @@ var stage_label: Label
 var title_label: Label
 var status_label: Label
 var story_label: Label
+var growth_label: Label
+var growth_controls: HFlowContainer
 var wounds_label: Label
 var rest_controls: HFlowContainer
 var hometown_label: Label
@@ -145,6 +147,12 @@ func _ready() -> void:
 			var result: Dictionary = world.rest_wounds(hours)
 			set_feedback("已休养 %.1f 小时，恢复 %.1f 生命。" % [result.elapsed / 3600.0, result.healed] if result.ok else preload("res://scripts/wound_care.gd").reason_text(result.reason))
 			refresh())
+	growth_label = _label(content, "", 16)
+	growth_controls = HFlowContainer.new()
+	content.add_child(growth_controls)
+	for duration in [1, 2]:
+		var hours: int = duration
+		_button(growth_controls, "train_combat_%d" % hours, "实战操练 %s（耗时耗粮，不疗伤）" % ("1 小时" if hours == 1 else "最多 2 小时"), func(): _train_combat(hours))
 	records_label = _label(content, "", 16)
 	relations_label = _label(content, "", 16)
 	_button(content, "new_life", "另存本局，查看新人生入口", func():
@@ -155,6 +163,12 @@ func _ready() -> void:
 	_label(stack, "阅读与选择菜单暂停当前行动；行军、候命、休整和战斗推进同一个世界时钟。F5 快存 / F9 快读。", 13, MUTED)
 	if world != null:
 		refresh()
+
+func _train_combat(hours: int) -> void:
+	if blocked or not world.youth_view().get("enabled", false): return
+	var result: Dictionary = world.train_combat(hours)
+	set_feedback(("已操练 %.1f 小时。" % (result.elapsed / 3600.0) + ("完成一阶小幅攻击成长；生命不变。" if result.upgraded else "共同实战经历已练习；尚未完成成长。")) if result.ok else preload("res://scripts/combat_growth.gd").reason_text(result.reason))
+	refresh()
 
 func _label(parent: Node, text: String, font_size: int, color: Color = PAPER) -> Label:
 	var label := Label.new()
@@ -238,6 +252,13 @@ func refresh() -> void:
 	rest_controls.visible = active
 	buttons.rest_wounds_1.disabled = blocked or not known.wounds.reason.is_empty()
 	buttons.rest_wounds_6.disabled = blocked or not known.wounds.six_hour_reason.is_empty()
+	growth_label.text = preload("res://scripts/combat_growth.gd").describe(known.growth) if active else ""
+	growth_label.visible = active
+	growth_controls.visible = active
+	buttons.train_combat_1.disabled = blocked or not active or not known.growth.reason.is_empty()
+	buttons.train_combat_2.disabled = blocked or not active or not known.growth.two_hour_reason.is_empty()
+	buttons.train_combat_1.tooltip_text = preload("res://scripts/combat_growth.gd").reason_text(known.growth.reason)
+	buttons.train_combat_2.tooltip_text = preload("res://scripts/combat_growth.gd").reason_text(known.growth.two_hour_reason)
 	_refresh_actions(active)
 	buttons.battle.visible = active and view.get("battle_ready", false)
 	buttons.battle.disabled = blocked or not known.active_battle.is_empty() or known.campaign_ended

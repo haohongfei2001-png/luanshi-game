@@ -1,0 +1,149 @@
+{
+  "format": 1,
+  "checkout_label": "luanshi-wounds",
+  "branch": "work/persistent-wounds",
+  "source_head": "e64a398a4b7c0f01abfac50decd516ea57c0ba3a",
+  "source_tree": "4f20125643bac3d29fd4c2e11118e840c4d2d607",
+  "base_manifest": "BASELINE.json",
+  "replace_or_add": {
+    "README.md": {
+      "mode": "100644",
+      "original_blob_sha1": "6ff7dd4b1358b541cdbe5fd056613f0ac9d9d4cb",
+      "original_sha256": "e96fa952bb92b77cf22bf4ff2b2f15ad2dd88ea5a94216a78f530bd33295ed9a",
+      "published_sha256": "e96fa952bb92b77cf22bf4ff2b2f15ad2dd88ea5a94216a78f530bd33295ed9a",
+      "published_bytes": 12477,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e96fa952bb92b77cf22bf4ff2b2f15ad2dd88ea5a94216a78f530bd33295ed9a.txt"
+      }
+    },
+    "docs/ACCEPTANCE_MATRIX.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7f2f0480df6027351055aed2fc7402e31767c839",
+      "original_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_sha256": "15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0",
+      "published_bytes": 23007,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/15701d5bd83dcf6a62b29791e1e3f4c50f10e752bfcd37f28924e48b837a11b0.txt"
+      }
+    },
+    "docs/DELIVERY_PLAN.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5d4e33a84a9e7362b2aa9e772fe5114ab6566fc6",
+      "original_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_bytes": 7031,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040.txt"
+      }
+    },
+    "docs/DOT_HANDOFF_FINAL.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7221f52c5cb9bb8eaa969e1f0d0a98faf8d7de0e",
+      "original_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_sha256": "f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722",
+      "published_bytes": 12666,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f572564229505c79426eec3a6fc9a7fd03ed1d3c8d46115b77213a9403a4b722.txt"
+      }
+    },
+    "docs/FINAL_GAME_DESIGN_SPEC.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7b883813120f18287a4ff964d280c64ddf72cfef",
+      "original_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_sha256": "382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe",
+      "published_bytes": 29255,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/382453a79a974f9dd5372b7e72c7633d12be98d31bb0089b068a12acfb5daffe.txt"
+      }
+    },
+    "docs/FINAL_VISION_ACCEPTANCE.md": {
+      "mode": "100644",
+      "original_blob_sha1": "2c8276b427996aee37253fe49052f03604095d25",
+      "original_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_sha256": "59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a",
+      "published_bytes": 5804,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/59102e582cd8c4408011a339c4e6e5709aa143e3bcfda62eed10bcd9384ed67a.txt"
+      }
+    },
+    "docs/NARRATIVE_ART_DIRECTION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "0939c3547558a041141f2fed2b5dbd992b081786",
+      "original_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_sha256": "e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5",
+      "published_bytes": 13970,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e079b3c9f0d2b6e46a2184d84e286218d0caeafae1a5d7f914088cc5e5487ce5.txt"
+      }
+    },
+    "docs/PRODUCT_DECISIONS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "05fe4bb65bde39ed67690e25222640842838e513",
+      "original_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_sha256": "1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666",
+      "published_bytes": 20851,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/1e34124ae04880abd629629272bbb68d2d858c4549a7a51b3bf86fb004c99666.txt"
+      }
+    },
+    "docs/PROJECT_STATUS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "d89a978f316322da74d87d01363ab87bbedb36cf",
+      "original_sha256": "c6f4ec069978844b28e0e7763053ce003ee03d486696ebca259977ee0d137670",
+      "published_sha256": "c6f4ec069978844b28e0e7763053ce003ee03d486696ebca259977ee0d137670",
+      "published_bytes": 22529,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/c6f4ec069978844b28e0e7763053ce003ee03d486696ebca259977ee0d137670.txt"
+      }
+    },
+    "docs/SIMULATION_CONTRACTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "017b96857ded3a4fa22296a638810fd3b1089a7f",
+      "original_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_sha256": "cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6",
+      "published_bytes": 20921,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/cd38a2d13b56df06eedf5bcf43ea987c9394517ab91aebeba9d7ef5415aa62c6.txt"
+      }
+    }
+  },
+  "delete_from_baseline": [
+    "docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md",
+    "docs/DESIGN_SYNC_V014.md"
+  ],
+  "excluded_assets": [
+    {
+      "path": "assets/fonts/LuanshiUISCR-Regular.otf",
+      "reason": "Font bytes deliberately absent; not represented by object pool."
+    }
+  ],
+  "deletion_semantics": "Omit these baseline tracked paths when reconstructing this HEAD into a NEW empty directory. Never delete from the live development tree.",
+  "original_source_text_files": 256,
+  "published_text_files": 356,
+  "document_files_transformed": 22,
+  "source_is_ancestor_of_latest": true,
+  "inventory_hash_algorithm": "SHA256 of sorted UTF-8 rows: relative_path + NUL + git_mode + NUL + file_sha256 + LF. Source inventory excludes document/evidence paths; all-text inventories exclude omitted font.",
+  "original_source_inventory_sha256": "435f4080d98bec595c9ae85604687930993665e4dfbbbfbef6afd796a8d40f18",
+  "original_all_text_inventory_sha256": "f3a2195d40748c3b261b2577be9d8d600552050dfba51da13d0fd1cb0688f047",
+  "published_all_text_inventory_sha256": "4a8fc82e472a79360b9cfcef9bf09edfbdaed711e2e051c83b1cc37db17a87c3"
+}

@@ -3,6 +3,7 @@ extends RefCounted
 ## Authoritative seconds clock with integer economic accrual. Presentation uses player_view().
 
 const VERSION := 8
+const Growth := preload("res://scripts/combat_growth.gd")
 const Wounds := preload("res://scripts/wound_care.gd")
 const Couriers := preload("res://scripts/courier_orders.gd")
 const Hometown := preload("res://scripts/hometown_messages.gd")
@@ -40,7 +41,7 @@ func _init(seed_value: int = 184, profile_id: String = HeroProfiles.EARLY) -> vo
 
 func reset(seed_value: int = 184, profile_id: String = HeroProfiles.EARLY) -> bool:
 	var profile := HeroProfiles.get_profile(profile_id)
-	if profile.is_empty():
+	if profile.is_empty() or profile_id not in HeroProfiles.starting_ids():
 		return false
 	_campaign_generation += 1
 	_battle_sessions.clear()
@@ -107,7 +108,49 @@ func player_view() -> Dictionary:
 		local_city.erase("condition")
 	var own_army: Dictionary = _state.armies.relief.duplicate(true)
 	own_army.condition.merge(_condition_summary("relief"))
-	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "last_battle_id": last_committed_battle_id(), "army": own_army, "courier_orders": Couriers.view(_state), "hometown": Hometown.view(_state), "wounds": Wounds.view(self), "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
+	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "last_battle_id": last_committed_battle_id(), "army": own_army, "courier_orders": Couriers.view(_state), "hometown": Hometown.view(_state), "wounds": Wounds.view(self), "growth": Growth.view(self), "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
+
+func train_combat(hours: Variant = 1) -> Dictionary:
+	if not hours is int: return _reject("invalid_duration")
+	var reason: String = Growth.reason(self, hours)
+	if not reason.is_empty(): return _reject(reason)
+	hours = mini(hours, Growth.REQUIRED_HOURS - Growth.completed_hours(_state))
+	if not _economy_errors().is_empty() or not _economy_has_headroom(_state.time_seconds + hours * 3600.0): return _reject("invalid_world_condition")
+	var before := _state.duplicate(true)
+	var started: float = _state.time_seconds
+	var previous_hours := Growth.completed_hours(_state)
+	for i in range(hours):
+		if not Growth.reason(self).is_empty(): break
+		_train_combat_hour()
+	var errors := _save_causal_errors()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "training_audit_failed", "errors": errors}
+	return {"ok": true, "elapsed": _state.time_seconds - started,
+		"completed_hours": Growth.completed_hours(_state) - previous_hours,
+		"upgraded": _state.commander.hero_profile.id == HeroProfiles.PRACTICED}
+
+func _train_combat_hour() -> void:
+	# Replay primitive: caller owns full validation and atomic rollback. The army
+	# stays in camp; old mixed-hour exertion is retained. Personal practice never heals.
+	var started: float = _state.time_seconds
+	var source := Growth.source_battle(_state)
+	_event("combat_training_started", {"revision": Growth.REVISION, "source_battle": source,
+		"location": _state.armies.relief.location, "hp": _state.commander.hp,
+		"rations": _military_food_need(_state.armies.relief.soldiers)})
+	var previous_command := _youth_command
+	_youth_command = true
+	_advance_clock_to(started + 3600.0, true)
+	_youth_command = previous_command
+	var condition: Dictionary = _state.armies.relief.condition
+	var reason := "trained"
+	if _state.campaign_ended or _state.time_seconds != started + 3600.0 or _condition_activity("relief") != "rest" or (_state.siege.active and _state.armies.relief.location == _state.siege.city): reason = "interrupted"
+	elif condition.last_eaten < condition.last_needed or condition.hunger > 0: reason = "hungry"
+	var hours := Growth.completed_hours(_state) + (1 if reason == "trained" else 0)
+	if hours == Growth.REQUIRED_HOURS: _state.commander.hero_profile = HeroProfiles.profile_reference(HeroProfiles.PRACTICED)
+	_event("combat_training_completed", {"revision": Growth.REVISION, "source_battle": source,
+		"started_at": started, "reason": reason, "hours_completed": hours,
+		"hero_profile": _state.commander.hero_profile.duplicate()})
 
 func rest_wounds(hours: Variant = 1) -> Dictionary:
 	if not hours is int: return _reject("invalid_duration")
@@ -1095,8 +1138,6 @@ func _save_causal_errors() -> Array[String]:
 	var expected_locks := {}
 	for id in _state.battle_tickets:
 		var ticket: Dictionary = _state.battle_tickets[id]
-		if ticket.hero_profile != _state.commander.hero_profile:
-			errors.append("ticket profile differs from commander life")
 		var parts: PackedStringArray = id.split(":")
 		if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
 			errors.append("invalid battle identity")
@@ -1137,6 +1178,8 @@ func _save_causal_errors() -> Array[String]:
 		errors.append_array(audit())
 	if errors.is_empty() and not _save_event_accounts_valid():
 		errors.append("event accounts contradict current world")
+	if errors.is_empty() and not Growth.validate(_state):
+		errors.append("combat progression history mismatch")
 	if errors.is_empty() and not Couriers.validate(_state):
 		errors.append("courier causal state mismatch")
 	if errors.is_empty() and not Youth.validate(_state):
@@ -1144,7 +1187,7 @@ func _save_causal_errors() -> Array[String]:
 	if errors.is_empty() and not Hometown.validate(_state):
 		errors.append("hometown causal state mismatch")
 	if errors.is_empty() and preload("res://scripts/campaign_clock_replay.gd").required(_state):
-		if not preload("res://scripts/campaign_clock_replay.gd").validate(_state, WorldSimulation.new(_state.seed, _state.commander.hero_profile.id)):
+		if not preload("res://scripts/campaign_clock_replay.gd").validate(_state, WorldSimulation.new(_state.seed, Growth.initial_profile(_state).id)):
 			errors.append("unified clock history mismatch")
 	# Combined stock bounds make every conservation sum safe in signed int64.
 	for field in ["soldiers", "civilian_population"]:

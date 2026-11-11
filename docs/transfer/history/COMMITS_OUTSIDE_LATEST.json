@@ -1,0 +1,464 @@
+{
+  "notice": "Read-only provenance labels for commits reachable from the 20 recorded HEADs but not from the latest source HEAD. These are metadata only; original Git commit/tree/blob objects or graph restoration are not supplied.",
+  "count": 65,
+  "commits": [
+    {
+      "sha": "efbaaab2ced331de2066111d7145c1dbc29758fb",
+      "parents": [
+        "cf61ca60e34a82fad42abfc5d026274a35de037a"
+      ],
+      "subject": "WIP: preserve hometown-audit for transfer"
+    },
+    {
+      "sha": "b9536b1f8f4d507ebe6cbbfc6df65c9090d0bd10",
+      "parents": [
+        "4da2a638f18c05a90d05dc419f785a6e698c580b"
+      ],
+      "subject": "WIP: preserve saves for transfer"
+    },
+    {
+      "sha": "141f61e7a699e94d30cf6014bb060b4214b1139a",
+      "parents": [
+        "b71a6c96c410808fba43beb96514962b7f75d05d"
+      ],
+      "subject": "WIP: preserve wounds-audit for transfer"
+    },
+    {
+      "sha": "e084fc6e961081c946313122643a951bd043f9ff",
+      "parents": [
+        "4222cf63d35699eda0e7ab1b43fb0c2ccf8a95bd"
+      ],
+      "subject": "WIP: preserve youth-ui for transfer"
+    },
+    {
+      "sha": "3c79fee263f44e64c72a42d93f8fe15ed6b369bf",
+      "parents": [
+        "64f6341f48b35af54ed79b1a5ec8df9f2c10e1ea"
+      ],
+      "subject": "WIP: preserve save-ui for transfer"
+    },
+    {
+      "sha": "485dac648c9c4837cf8434758bd9c5faa1c8659c",
+      "parents": [
+        "3972facb0c9379fd265718b9c9e8df99c6004ffb"
+      ],
+      "subject": "Keep font verification evidence free of transient workspace identifiers"
+    },
+    {
+      "sha": "3972facb0c9379fd265718b9c9e8df99c6004ffb",
+      "parents": [
+        "6925a1bccf11094195a8142f6d8d4dfd830c3337"
+      ],
+      "subject": "Bundle licensed Chinese font and verify glyphs in exported games"
+    },
+    {
+      "sha": "6925a1bccf11094195a8142f6d8d4dfd830c3337",
+      "parents": [
+        "a7c4d4e438688799cdf35f28429fb9a2bca947ad"
+      ],
+      "subject": "Exercise real window pointer and held keys in youth graphics proof"
+    },
+    {
+      "sha": "a7c4d4e438688799cdf35f28429fb9a2bca947ad",
+      "parents": [
+        "bb6654f0cad1e79b00789935f096134bdf476c3f"
+      ],
+      "subject": "Record integrated v0.8 proofs and publicly reproducible World6 fixtures"
+    },
+    {
+      "sha": "bb6654f0cad1e79b00789935f096134bdf476c3f",
+      "parents": [
+        "3583471b37b4ac7e08a4204cf1f3fd2e831528ad"
+      ],
+      "subject": "Track presentation regression resource identity"
+    },
+    {
+      "sha": "3583471b37b4ac7e08a4204cf1f3fd2e831528ad",
+      "parents": [
+        "0a79b93320eb71f8ea9945b0b00ec47578320be1"
+      ],
+      "subject": "Explain starvation and interrupted protection with focused regressions"
+    },
+    {
+      "sha": "0a79b93320eb71f8ea9945b0b00ec47578320be1",
+      "parents": [
+        "004c725aad74ce2890cab153eec2cef8af18b71f"
+      ],
+      "subject": "Preserve named youth starvation losses and interrupt actions on death"
+    },
+    {
+      "sha": "4304a173ca6049d643b9f45283b214c288e93ca2",
+      "parents": [
+        "a95d02ca5406606d85c130c05ede314f2bc8f721"
+      ],
+      "subject": "Preserve named youth starvation losses and interrupt actions on death"
+    },
+    {
+      "sha": "004c725aad74ce2890cab153eec2cef8af18b71f",
+      "parents": [
+        "e55e90bd46731df21a14481c98df2851fcbb3029"
+      ],
+      "subject": "Record real resumed integration state and remaining validation gates"
+    },
+    {
+      "sha": "e55e90bd46731df21a14481c98df2851fcbb3029",
+      "parents": [
+        "a95d02ca5406606d85c130c05ede314f2bc8f721"
+      ],
+      "subject": "Verify youth lives in packaged runtimes and report tactical withdrawal honestly"
+    },
+    {
+      "sha": "a95d02ca5406606d85c130c05ede314f2bc8f721",
+      "parents": [
+        "11c22797246d7dbd13bd6a50b79d4886910f269e",
+        "4222cf63d35699eda0e7ab1b43fb0c2ccf8a95bd"
+      ],
+      "subject": "Integrate youth-life presentation and real input regression coverage"
+    },
+    {
+      "sha": "11c22797246d7dbd13bd6a50b79d4886910f269e",
+      "parents": [
+        "c0c6d5351dea2e9f318f3ea46f4f0b5e9a3ee5a2",
+        "e64070ae19f4455e77ecdce7a1570a464b2f55cf"
+      ],
+      "subject": "Integrate recovered youth World7 with finite hero profiles"
+    },
+    {
+      "sha": "e64070ae19f4455e77ecdce7a1570a464b2f55cf",
+      "parents": [
+        "97726eed8ae3cf3f32cbe254961a5148c8cf3a5e"
+      ],
+      "subject": "Record frozen-head youth core verification and real-control outcomes"
+    },
+    {
+      "sha": "97726eed8ae3cf3f32cbe254961a5148c8cf3a5e",
+      "parents": [
+        "ce6498cd7bd4e5e8f4af4f4fcfa26c9939c07c3b"
+      ],
+      "subject": "Expect explicit migrated origin in original save example assertion"
+    },
+    {
+      "sha": "ce6498cd7bd4e5e8f4af4f4fcfa26c9939c07c3b",
+      "parents": [
+        "f4f8fc4a992c0baa893223ec750043e50e040ede"
+      ],
+      "subject": "Verify youth casualties, distinct choices, exact migrations and restart with real combat"
+    },
+    {
+      "sha": "4222cf63d35699eda0e7ab1b43fb0c2ccf8a95bd",
+      "parents": [
+        "d67d621f27eb9909de92d7eef04ccb5428f387c5"
+      ],
+      "subject": "Keep narrative fonts stable and label results by their actual encounter"
+    },
+    {
+      "sha": "d67d621f27eb9909de92d7eef04ccb5428f387c5",
+      "parents": [
+        "063465054e2b554ac3a885c7da41454a42ca9ed7"
+      ],
+      "subject": "Cover every narrative save stage and actual protagonist death in scene tests"
+    },
+    {
+      "sha": "063465054e2b554ac3a885c7da41454a42ca9ed7",
+      "parents": [
+        "36db42fb504aed70c93fcc25bdc95ea98396c479"
+      ],
+      "subject": "Verify youth interface through real combat, retreat, saves and Chinese rendering checks"
+    },
+    {
+      "sha": "36db42fb504aed70c93fcc25bdc95ea98396c479",
+      "parents": [
+        "ab8e27505cf2f89cd74eccba8e3552299bd93719"
+      ],
+      "subject": "Implement real youth enlistment, military injustice and squad authority in World7"
+    },
+    {
+      "sha": "f4f8fc4a992c0baa893223ec750043e50e040ede",
+      "parents": [
+        "beb8970c1768320ed90b8e4b2030196491714a5e"
+      ],
+      "subject": "Implement real youth enlistment, military injustice and squad authority in World7"
+    },
+    {
+      "sha": "ab8e27505cf2f89cd74eccba8e3552299bd93719",
+      "parents": [
+        "beb8970c1768320ed90b8e4b2030196491714a5e"
+      ],
+      "subject": "Add youth-life interface with protected entry and authoritative action flow"
+    },
+    {
+      "sha": "c0c6d5351dea2e9f318f3ea46f4f0b5e9a3ee5a2",
+      "parents": [
+        "8fc47b4f4f7127a38dbc1a079b5190e504689583"
+      ],
+      "subject": "build: stage v0.7 finite hero gameplay and preserve the last verified playable"
+    },
+    {
+      "sha": "8fc47b4f4f7127a38dbc1a079b5190e504689583",
+      "parents": [
+        "01625b46665036dadb506808579e59518076588a"
+      ],
+      "subject": "Make genuine v0.6 fixtures reproducible from published equivalent source"
+    },
+    {
+      "sha": "e9f390482a49df920638a59793ecaa0e1e881a92",
+      "parents": [
+        "211aa0c1c5b4eac7c316590854c7e5736c62e815"
+      ],
+      "subject": "Make genuine v0.6 fixtures reproducible from published equivalent source"
+    },
+    {
+      "sha": "01625b46665036dadb506808579e59518076588a",
+      "parents": [
+        "fbd9c33d09db8cd946a20707495434db6f2f9d65"
+      ],
+      "subject": "Document finite-profile gameplay compatibility and complete integrated evidence"
+    },
+    {
+      "sha": "fbd9c33d09db8cd946a20707495434db6f2f9d65",
+      "parents": [
+        "e5d9b9d6a678f24d994536ae9509dea35247e348"
+      ],
+      "subject": "Assert finite early commander wounds in actual campaign withdrawal test"
+    },
+    {
+      "sha": "e5d9b9d6a678f24d994536ae9509dea35247e348",
+      "parents": [
+        "f64667d3bbf7c0c398b4234af6ef95c29566bce3"
+      ],
+      "subject": "Require deterministic profile calibration and preserved-source parity in CI"
+    },
+    {
+      "sha": "f64667d3bbf7c0c398b4234af6ef95c29566bce3",
+      "parents": [
+        "21d980bbee3a710136c3888258a3618445d32fd9"
+      ],
+      "subject": "Keep multi-profile restart campaign identifiers within save limits"
+    },
+    {
+      "sha": "21d980bbee3a710136c3888258a3618445d32fd9",
+      "parents": [
+        "53c6da8c7e8967140e31af7e4c7f1936e8828885"
+      ],
+      "subject": "Wire early gameplay and isolated late training with save-aware scene proofs"
+    },
+    {
+      "sha": "53c6da8c7e8967140e31af7e4c7f1936e8828885",
+      "parents": [
+        "21e44f7abbd9675f3e217fd8ac5252f53039766b"
+      ],
+      "subject": "Keep legacy fixtures explicit and port deterministic finite-hero calibration"
+    },
+    {
+      "sha": "21e44f7abbd9675f3e217fd8ac5252f53039766b",
+      "parents": [
+        "9676af925d955bfe880691184f55a6963a5e34d4"
+      ],
+      "subject": "Migrate genuine v0.6 saves without changing legacy combat state"
+    },
+    {
+      "sha": "9676af925d955bfe880691184f55a6963a5e34d4",
+      "parents": [
+        "5c2954d293dad897494b12ae485005ed20e3ab2c"
+      ],
+      "subject": "test: trace genuine v0.6 combat through terminal settlement"
+    },
+    {
+      "sha": "5c2954d293dad897494b12ae485005ed20e3ab2c",
+      "parents": [
+        "5d69154b0ed9e53611298e5a4791fee21872c8e9"
+      ],
+      "subject": "test: capture genuine v0.6 save and continuation fixtures"
+    },
+    {
+      "sha": "5d69154b0ed9e53611298e5a4791fee21872c8e9",
+      "parents": [
+        "02b6462f8bcab160930c99eb8ec5f0358559b091"
+      ],
+      "subject": "Bind finite hero profiles to campaign authority tickets and combat state"
+    },
+    {
+      "sha": "02b6462f8bcab160930c99eb8ec5f0358559b091",
+      "parents": [
+        "bfc7d5a393a9d513a88a0bdc567d19c9ad89412f"
+      ],
+      "subject": "Add immutable early late and legacy hero profile data"
+    },
+    {
+      "sha": "54127f676e13719291131ad4d01012578013ee0c",
+      "parents": [
+        "459a4d57a6c88e5291d715a4d1d5e0ec4dcd884c"
+      ],
+      "subject": "ci: allow explicit v0.6 manifest trigger with archive hash guard"
+    },
+    {
+      "sha": "beb8970c1768320ed90b8e4b2030196491714a5e",
+      "parents": [
+        "84cc5f8a881bcf07c5894c52ca31c7c31094adf4",
+        "465414d9c7adf2fb1fcf17a1a221d9da30e77dec"
+      ],
+      "subject": "Merge current narrative design guidance without reverting v0.7 profile code"
+    },
+    {
+      "sha": "211aa0c1c5b4eac7c316590854c7e5736c62e815",
+      "parents": [
+        "84cc5f8a881bcf07c5894c52ca31c7c31094adf4"
+      ],
+      "subject": "Document finite-profile gameplay compatibility and complete integrated evidence"
+    },
+    {
+      "sha": "84cc5f8a881bcf07c5894c52ca31c7c31094adf4",
+      "parents": [
+        "b521f8d0ca0e2a88a6bc80187a10926db12fa115"
+      ],
+      "subject": "Assert finite early commander wounds in actual campaign withdrawal test"
+    },
+    {
+      "sha": "b521f8d0ca0e2a88a6bc80187a10926db12fa115",
+      "parents": [
+        "5bccf16301593e3b6f43409bd85a30fc29f74255"
+      ],
+      "subject": "Require deterministic profile calibration and preserved-source parity in CI"
+    },
+    {
+      "sha": "459a4d57a6c88e5291d715a4d1d5e0ec4dcd884c",
+      "parents": [
+        "e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b"
+      ],
+      "subject": "ci: prepare bounded native macOS window and renderer probe"
+    },
+    {
+      "sha": "5bccf16301593e3b6f43409bd85a30fc29f74255",
+      "parents": [
+        "91c127589ceae76f5653d14f23390a50f4839ece"
+      ],
+      "subject": "Keep multi-profile restart campaign identifiers within save limits"
+    },
+    {
+      "sha": "91c127589ceae76f5653d14f23390a50f4839ece",
+      "parents": [
+        "74c375a795969afdc7c94c39833eb5d8daac85c9"
+      ],
+      "subject": "Wire early gameplay and isolated late training with save-aware scene proofs"
+    },
+    {
+      "sha": "74c375a795969afdc7c94c39833eb5d8daac85c9",
+      "parents": [
+        "2d92b5760659e831bf34015992d3fe04788b8726"
+      ],
+      "subject": "Keep legacy fixtures explicit and port deterministic finite-hero calibration"
+    },
+    {
+      "sha": "2d92b5760659e831bf34015992d3fe04788b8726",
+      "parents": [
+        "967cd95315acce891f787fafa682f8ab9b8fbc3b"
+      ],
+      "subject": "Migrate genuine v0.6 saves without changing legacy combat state"
+    },
+    {
+      "sha": "967cd95315acce891f787fafa682f8ab9b8fbc3b",
+      "parents": [
+        "1769a903426d49a59100d7bd36e694c68614c49b"
+      ],
+      "subject": "test: trace genuine v0.6 combat through terminal settlement"
+    },
+    {
+      "sha": "1769a903426d49a59100d7bd36e694c68614c49b",
+      "parents": [
+        "337c5a0e93bec17d0c075a185c224a515af24b87"
+      ],
+      "subject": "test: capture genuine v0.6 save and continuation fixtures"
+    },
+    {
+      "sha": "337c5a0e93bec17d0c075a185c224a515af24b87",
+      "parents": [
+        "3d85eaf061696f27c7fa9fed56a9bbc4a965cc71"
+      ],
+      "subject": "Bind finite hero profiles to campaign authority tickets and combat state"
+    },
+    {
+      "sha": "3d85eaf061696f27c7fa9fed56a9bbc4a965cc71",
+      "parents": [
+        "37beae24b60f841a5d9e1137a747271acb00695c"
+      ],
+      "subject": "Add immutable early late and legacy hero profile data"
+    },
+    {
+      "sha": "37beae24b60f841a5d9e1137a747271acb00695c",
+      "parents": [
+        "8c65743b714f38d1cbfe273ec6dddbd456b08ea5"
+      ],
+      "subject": "Verify integrated save UI, malformed-input guards and exported restart pipeline"
+    },
+    {
+      "sha": "4654c686fa63747f3d3da9c35689e2c1ccc375c5",
+      "parents": [
+        "8c3baaade0c3bf892d2076fd4ac44d861cb2fe52"
+      ],
+      "subject": "Measure finite hero profiles with deterministic action policies"
+    },
+    {
+      "sha": "8c3baaade0c3bf892d2076fd4ac44d861cb2fe52",
+      "parents": [
+        "1b370b1904d1a8b74b60217c37d339133222a320"
+      ],
+      "subject": "Experimentally apply named hero profiles in battle simulation"
+    },
+    {
+      "sha": "1b370b1904d1a8b74b60217c37d339133222a320",
+      "parents": [
+        "4d9c702263e016d78e92aed0d817c801e3d31078"
+      ],
+      "subject": "Add finite early and late hero combat profile data"
+    },
+    {
+      "sha": "8c65743b714f38d1cbfe273ec6dddbd456b08ea5",
+      "parents": [
+        "27decf27eeb17f3ae7918c750a73b1f84216cb5b"
+      ],
+      "subject": "feat: persist versioned campaign state and battle receipts"
+    },
+    {
+      "sha": "4da2a638f18c05a90d05dc419f785a6e698c580b",
+      "parents": [
+        "0b3499d211763ae8258ab93e2b03b9bd0656f450"
+      ],
+      "subject": "feat: persist versioned campaign state and battle receipts"
+    },
+    {
+      "sha": "27decf27eeb17f3ae7918c750a73b1f84216cb5b",
+      "parents": [
+        "4d9c702263e016d78e92aed0d817c801e3d31078"
+      ],
+      "subject": "feat: add campaign save slots and recoverable life checkpoint UI"
+    },
+    {
+      "sha": "64f6341f48b35af54ed79b1a5ec8df9f2c10e1ea",
+      "parents": [
+        "907fe31c938155f50589a9b9d3b62e312a81bc42"
+      ],
+      "subject": "feat: add campaign save slots and recoverable life checkpoint UI"
+    },
+    {
+      "sha": "0b3499d211763ae8258ab93e2b03b9bd0656f450",
+      "parents": [
+        "0c8e240e820833f74e400b098be8108a934efeda"
+      ],
+      "subject": "Implement staged military hunger, condition and safe recovery"
+    },
+    {
+      "sha": "c1b25bb3d58349ea05e53732b40015552a53fed5",
+      "parents": [
+        "e995dc4e860bb8ca792efc2ab7e716609f86d95a"
+      ],
+      "subject": "Reject economy advances without safe numeric headroom"
+    },
+    {
+      "sha": "e995dc4e860bb8ca792efc2ab7e716609f86d95a",
+      "parents": [
+        "0383e85f1fea6c9fb2db3bd0a4f77a00423d83b5"
+      ],
+      "subject": "Add population-constrained production and civilian consumption"
+    }
+  ]
+}

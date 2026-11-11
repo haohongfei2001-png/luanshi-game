@@ -1,0 +1,33 @@
+{
+  "format": 1,
+  "date_utc": "2026-11-11",
+  "development_status": "stopped_for_transfer",
+  "complete_runnable_delivery": false,
+  "font_included": false,
+  "build_packages_included": false,
+  "full_local_git_history_published": false,
+  "published_baseline": {
+    "commit": "71215500d18fda0c6aeb0de885a76b6430406c11",
+    "tree": "1d4d76f64adf8b5eefefc88c1eba9ab71c52c30a",
+    "local_source_commit": "0e525a4ddf56c774dab3f87278447a3b29444cfc",
+    "local_source_tree": "c9eb913e6389e4682dd12d2ffa8ffcfdcd98b2a1",
+    "manifest": "BASELINE_SOURCE_MANIFEST.json"
+  },
+  "local_last_fully_tested_v013": {
+    "commit": "e64a398a4b7c0f01abfac50decd516ea57c0ba3a",
+    "tree": "4f20125643bac3d29fd4c2e11118e840c4d2d607",
+    "runtime_tested_commit": "b71a6c96c410808fba43beb96514962b7f75d05d",
+    "native_macos_current_acceptance": false,
+    "m5_acceptance": false
+  },
+  "current_wip_projection": {
+    "local_source_commit": "e8000836256587e9c721d34ce56b3ee8a2b4325d",
+    "local_source_tree": "9e9976c005af7ced2f1e58f128b84bca293db07f",
+    "manifest": "SOURCE_MANIFEST.json",
+    "validation": "editor import and whitespace only; attempted UI startup failed before assertions",
+    "full_suite_run": false
+  },
+  "historical_wip_patches": "legacy-checkpoints/manifest.json",
+  "twenty_head_text_recovery": "../docs/transfer/history/README.md",
+  "publication_scope": "Only independent UTF-8 project text, sanitized public evidence, and recovery manifests; no binary/font bytes or ignored raw artifacts."
+}

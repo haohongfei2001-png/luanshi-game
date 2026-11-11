@@ -1,0 +1,11 @@
+extends SceneTree
+const W := preload("res://scripts/world_sim.gd")
+const Store := preload("res://scripts/campaign_store.gd")
+func _initialize() -> void: call_deferred("run")
+func run() -> void:
+	for fixture in ["v06/running.save.json", "v06/committed.save.json", "v07/early_v1_running.save.json", "v07/early_v1_committed.save.json", "v07/late_v1_running.save.json", "v08/world7_youth_running.save.json", "v08/world7_youth_at_camp.save.json", "world8-camp-before-appraisal.save.json"]:
+		var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/" + fixture))
+		var w := W.new()
+		var restored := w.restore_campaign_state(decoded.state)
+		print(fixture, " ", restored, " version=", decoded.state.world.version, " commander=", w.snapshot().commander, " army=", w.snapshot().armies.relief.location, " mode=", w.snapshot().mode, " stage=", w.snapshot().youth.get("stage"), " active=", w.player_view().active_battle, " rest=", w.player_view().wounds.reason)
+	quit()

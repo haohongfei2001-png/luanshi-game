@@ -31,6 +31,9 @@ static func validate(state: Dictionary) -> bool:
 		if death_recorded and event.kind in ["march_started", "transfer", "depot_seized", "battle_reserved", "battle_started", "battle_committed"]:
 			return false
 		match event.kind:
+			"combat_training_started", "combat_training_completed":
+				if not preload("res://scripts/combat_growth.gd").event_shape(event.kind, d): return false
+				if event.kind == "combat_training_started" and (death_recorded or d.hp != commander_hp): return false
 			"wound_rest_started":
 				if not preload("res://scripts/wound_care.gd").event_shape(event.kind, d) or death_recorded or not resting.is_empty() or d.hp != commander_hp: return false
 				resting = {"at": event.time_seconds, "hp": commander_hp}

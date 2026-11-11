@@ -1,0 +1,218 @@
+{
+  "format": 1,
+  "scope": "Five historical independent WIP diffs, not applied to the current game. These do not by themselves preserve every historical HEAD baseline or the complete Git graph.",
+  "checkpoints": [
+    {
+      "checkout_label": "luanshi-save-ui",
+      "original_head": "64f6341f48b35af54ed79b1a5ec8df9f2c10e1ea",
+      "preserved_wip_head": "3c79fee263f44e64c72a42d93f8fe15ed6b369bf",
+      "patch": "luanshi-save-ui.patch",
+      "patch_sha256": "055e2f7f1caccd44c9f331c2554b908ef50580b4ed0023931cbea592bd6d40b1",
+      "bytes": 49764,
+      "changed_files": 11,
+      "verification": "Applied to exact original changed text files; all results match preserved WIP bytes. No binary/font content.",
+      "files": [
+        {
+          "path": "scripts/battle_adapter.gd",
+          "sha256": "76e9606fce4b46275ce1d4f3f556402a4bf41ba92e6b3adf696bb06673af3ae4"
+        },
+        {
+          "path": "scripts/battle_sim.gd",
+          "sha256": "7d8df6fab52f61350be65f8fa3946205e26fbcc394846a81ace92776d0b38b77"
+        },
+        {
+          "path": "scripts/campaign_persistence_smoke.gd",
+          "sha256": "93217bc0a8144d708ae859c4b46e7e6ee2213c71d118a6b9e5541cf00bf94554"
+        },
+        {
+          "path": "scripts/campaign_persistence_smoke.gd.uid",
+          "sha256": "c9f1925d0e0909dab0ba129567cd237c9485287ddb560bf1f3b0d36e0f425e1f"
+        },
+        {
+          "path": "scripts/campaign_schema.gd",
+          "sha256": "f0437b53a5a195eaf502d38189159a78db3e0ff18a0225e511b65873971853fc"
+        },
+        {
+          "path": "scripts/campaign_schema.gd.uid",
+          "sha256": "985f8ed23c5f6ac66b0c07fa717f0cfa75bff4fe0c6624d3e97c4202a8cebfc3"
+        },
+        {
+          "path": "scripts/campaign_store.gd",
+          "sha256": "88be389915a5e2927713b52e72db11cc1e47fcea80e4d467ce4cddd7b9b2e3c4"
+        },
+        {
+          "path": "scripts/campaign_store.gd.uid",
+          "sha256": "a3588d84c26e5bb8912313484632770f8f9695a5cd014f56490bc1ee37de08e2"
+        },
+        {
+          "path": "scripts/campaign_value_codec.gd",
+          "sha256": "fa2097b8e3ec6ca30fd6c12a5ca34621414f2eb9d46566938a61e5aaa25cd3db"
+        },
+        {
+          "path": "scripts/campaign_value_codec.gd.uid",
+          "sha256": "30d6cfa77aee508c8eab740fe14daa1d31983f174d68a57fb95d43d1772e53d8"
+        },
+        {
+          "path": "scripts/world_sim.gd",
+          "sha256": "f6844cf848b03ac0271383cebcf369f9d7231e61d36c903e607afdf02d4e426d"
+        }
+      ]
+    },
+    {
+      "checkout_label": "luanshi-saves",
+      "original_head": "4da2a638f18c05a90d05dc419f785a6e698c580b",
+      "preserved_wip_head": "b9536b1f8f4d507ebe6cbbfc6df65c9090d0bd10",
+      "patch": "luanshi-saves.patch",
+      "patch_sha256": "31a5b6e85d3bdb4b949a4303a7b7c89a37c77aaaf1aced58b8f754b7dcd37a60",
+      "bytes": 52559,
+      "changed_files": 10,
+      "verification": "Applied to exact original changed text files; all results match preserved WIP bytes. No binary/font content.",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "792eb27d9db2819994419e33db7198b9a914a04d3f27d67cba047e5e9ad16d58"
+        },
+        {
+          "path": "docs/ACCEPTANCE_MATRIX.md",
+          "sha256": "6baf457a306a4fd75eb7b4dbf7cdaf1296f26696df4fbc86a2a468bb3f454456"
+        },
+        {
+          "path": "docs/DOT_HANDOFF_FINAL.md",
+          "sha256": "2482b88cc634e785bb36041e084ff9017ab2c23d4f270ae4ef268ee82ede5aeb"
+        },
+        {
+          "path": "docs/FINAL_GAME_DESIGN_SPEC.md",
+          "sha256": "052cfd529ea334dd105454c0b09445a901c3f35953b53ce3ce1543bdb0b3dd58"
+        },
+        {
+          "path": "docs/NARRATIVE_ART_DIRECTION.md",
+          "sha256": "f818dbf41debb168f9e0847a3f4b4f5c584e652062efa510d24ad659fb551c7a"
+        },
+        {
+          "path": "docs/NARRATIVE_WORLD_BIBLE_V0_2.md",
+          "sha256": "6a2ad1ea5f31c5af01c5a04aedc650e75e911416000d0d3132e9dbd1f6e79e63"
+        },
+        {
+          "path": "docs/PRODUCT_DECISIONS.md",
+          "sha256": "ecac7888c187e1b5a594d56ac22735598dabae8b1486aac24a144b2c30da41fd"
+        },
+        {
+          "path": "docs/SIMULATION_CONTRACTS.md",
+          "sha256": "bb5f8f882552015617c4c629f22da19567316c009160ae247dd7c03615318a40"
+        },
+        {
+          "path": "tests/test_hunger_properties.gd",
+          "sha256": "dbf5a3104b7f02a49774879fc59ce6f14c9c4e7432ef4ead7ef36d3e57c287ed"
+        },
+        {
+          "path": "tests/test_hunger_properties.gd.uid",
+          "sha256": "54070047f4707918b0ccb9ccf23e4074f0918ebb292788bf755f97908e3b37f7"
+        }
+      ]
+    },
+    {
+      "checkout_label": "luanshi-hometown-audit",
+      "original_head": "cf61ca60e34a82fad42abfc5d026274a35de037a",
+      "preserved_wip_head": "efbaaab2ced331de2066111d7145c1dbc29758fb",
+      "patch": "luanshi-hometown-audit.patch",
+      "patch_sha256": "e47d29e94f909adc1e3dde83cb8c02caf4ef8d6004a99913be5b5d24eabb5542",
+      "bytes": 15636,
+      "changed_files": 13,
+      "verification": "Applied to exact original changed text files; all results match preserved WIP bytes. No binary/font content.",
+      "files": [
+        {
+          "path": "tests/audit_hometown_exact_shortfall.gd",
+          "sha256": "03c70e169457a77cd2024e7e055a12a9ba4a736208e83d70c42e8e4c8a954741"
+        },
+        {
+          "path": "tests/audit_hometown_exact_shortfall.gd.uid",
+          "sha256": "f51848d4b7174efbe59cd63b8aafed978c16b314c57201f66a71e9ff2d377b82"
+        },
+        {
+          "path": "tests/audit_hometown_extra.gd",
+          "sha256": "a6d7416b875c877eef8dcc5bbe88e68ceb1419ae76118a68fb5f547d5ecfd915"
+        },
+        {
+          "path": "tests/audit_hometown_extra.gd.uid",
+          "sha256": "8347588ae4611fdb6ba66830e34446557b5d0c52049190361ec530fb5b54f937"
+        },
+        {
+          "path": "tests/audit_hometown_false_shortfall.gd",
+          "sha256": "1d2c2e2b5357eae3c5cac2896e628773d66b6ec532085adcb8057c0fe2d08c6f"
+        },
+        {
+          "path": "tests/audit_hometown_false_shortfall.gd.uid",
+          "sha256": "789602d3aa96c3775aad1b13c1acf97ff7171eb820c03a13f0b34f03d3101085"
+        },
+        {
+          "path": "tests/audit_hometown_forgery.gd",
+          "sha256": "c66bcd18efad3e713dfa64ea11e6a6f970d40d31d0cc5265b8ea051379189ae0"
+        },
+        {
+          "path": "tests/audit_hometown_forgery.gd.uid",
+          "sha256": "5ab20fe592b4182d18fec76c159924ccb06d447c02223e6c65114667993e0ec4"
+        },
+        {
+          "path": "tests/audit_hometown_live_restore.gd",
+          "sha256": "f9739e2746f0be714c98d519630c9be47fc3ba58196d3302136f3a34394b10a6"
+        },
+        {
+          "path": "tests/audit_hometown_live_restore.gd.uid",
+          "sha256": "5703e147a2a2653eb2c65428f5da967f935b262ce54f8cbd9290794b366dc7a8"
+        },
+        {
+          "path": "tests/audit_hometown_malformed_source.gd",
+          "sha256": "d501f9380fc054ec1de050e22c1e08844dc9eac13ff58775418afe379248e6a3"
+        },
+        {
+          "path": "tests/audit_hometown_replay_time.gd",
+          "sha256": "c65700b48b4c3edada454d2fcb8df56cf02330ebec15b222925ebe6d04b7cef8"
+        },
+        {
+          "path": "tests/audit_hometown_replay_time.gd.uid",
+          "sha256": "2a5b85d4f5e718b19becedce9406dfd9f85dca3364a8b90c68cb88cdbc1ac835"
+        }
+      ]
+    },
+    {
+      "checkout_label": "luanshi-wounds-audit",
+      "original_head": "b71a6c96c410808fba43beb96514962b7f75d05d",
+      "preserved_wip_head": "141f61e7a699e94d30cf6014bb060b4214b1139a",
+      "patch": "luanshi-wounds-audit.patch",
+      "patch_sha256": "c6c3ea786901cb5480e4d03a0241532596919e57d72f15cd413726dcd56f7472",
+      "bytes": 18165,
+      "changed_files": 3,
+      "verification": "Applied to exact original changed text files; all results match preserved WIP bytes. No binary/font content.",
+      "files": [
+        {
+          "path": "tests/audit_old_wounds.gd",
+          "sha256": "565d8b294f723ea6c8c8df43cb947eed1a382a7a64ce5d34a39b8b9422f6eae2"
+        },
+        {
+          "path": "tests/audit_wounds_independent.gd",
+          "sha256": "9a06a344301d5836805350b287b5b7d742c7f3002f8264c0bc03377cc26c1c0e"
+        },
+        {
+          "path": "tests/audit_wounds_routes.gd",
+          "sha256": "98f2d868901d2e0779b5e52a31f7171e8b66b8b64edc58f3149d8ab9910f4790"
+        }
+      ]
+    },
+    {
+      "checkout_label": "luanshi-youth-ui",
+      "original_head": "4222cf63d35699eda0e7ab1b43fb0c2ccf8a95bd",
+      "preserved_wip_head": "e084fc6e961081c946313122643a951bd043f9ff",
+      "patch": "luanshi-youth-ui.patch",
+      "patch_sha256": "62aef191b69b3ae3bf50541574193fbd5ec7a0345af54651f786beb3086f47a9",
+      "bytes": 269,
+      "changed_files": 1,
+      "verification": "Applied to exact original changed text files; all results match preserved WIP bytes. No binary/font content.",
+      "files": [
+        {
+          "path": "tests/test_youth_smoke.gd.uid",
+          "sha256": "f6205e52e4237d960bca481cc539ad8fe2e6798ac3da6491d7b0d85deb2a6e64"
+        }
+      ]
+    }
+  ]
+}

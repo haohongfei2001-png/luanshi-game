@@ -1,0 +1,30 @@
+extends SceneTree
+const W := preload("res://scripts/world_sim.gd")
+const H := preload("res://scripts/hometown_messages.gd")
+const Store := preload("res://scripts/campaign_store.gd")
+func _initialize() -> void:
+	var decoded := Store.new().decode_campaign(FileAccess.get_file_as_bytes("res://tests/fixtures/world8-camp-before-appraisal.save.json"))
+	var w := W.new()
+	w.restore_campaign_state(decoded.state)
+	print("APPRAISAL ",w.youth_action("camp_appraisal"), w.youth_action("appraisal_accept"))
+	while w.snapshot().hour < 23 and not w.snapshot().campaign_ended:
+		var result := w.youth_action("wait_courier")
+		if not result.ok: print("BLOCK ",result); break
+	print("PRE ",w.snapshot().time_seconds," food ",w.snapshot().armies.relief.food," ended ",w.snapshot().campaign_ended)
+	print("VISIT ",w.youth_action("visit_hometown"))
+	var forged := w.export_campaign_state()
+	var found := -1
+	for i in range(forged.world.events.size()):
+		if forged.world.events[i].kind == "hometown_visit": found = i
+	if found < 0: quit(1); return
+	print("REAL_FACT ",H.record(forged.world).visit.observation)
+	var fake := {"hour": forged.world.hour,"time_seconds":forged.world.time_seconds,"kind":"consumption","details":{"entity":"pingling","consumer":"civilian","people":1,"requested":1,"eaten":0,"shortfall":1,"food_delta":0,"period_hours":24}}
+	forged.world.events.insert(found, fake)
+	forged.world.ledger.food_shortfall_civilian += 1
+	forged.world.events[found+1].details.observation = H.truth(forged.world)
+	forged.world.events[found+1].details.outcome = "left_notice"
+	var target := W.new()
+	var result := target.restore_campaign_state(forged)
+	print("FORGED_SHORTFALL ",result)
+	if result.ok: print("FAKE_FACT ",target.player_view().hometown.visit.observation," city_food ",target.snapshot().cities.pingling.food," SAVE ",Store.new().encode_campaign(target).get("ok"))
+	quit()

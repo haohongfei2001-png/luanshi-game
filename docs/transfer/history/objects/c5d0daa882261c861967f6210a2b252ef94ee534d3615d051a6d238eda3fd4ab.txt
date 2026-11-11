@@ -1,0 +1,90 @@
+class_name CampaignClockReplay
+extends RefCounted
+## New hometown actions must not trust self-reported economic events. Replay the
+## actual WorldSim clock from the original seed, accepting only previously validated
+## external actions and settled battle outcomes. Do not invent a second economy.
+const H := preload("res://scripts/hometown_messages.gd")
+const C := preload("res://scripts/courier_orders.gd")
+
+static func required(state: Dictionary) -> bool:
+	for e in state.events:
+		if e.kind.begins_with("hometown_"): return true
+	return false
+
+static func validate(state: Dictionary, replay: RefCounted) -> bool:
+	replay._campaign_generation = state.campaign_generation
+	replay._state.campaign_generation = state.campaign_generation
+	replay._state.mode = "youth"
+	replay._youth_command = true
+	var index := 0
+	while index < state.events.size():
+		if index < replay._state.events.size():
+			if replay._state.events[index] != state.events[index]: return false
+			index += 1
+			continue
+		var e: Dictionary = state.events[index]
+		var d: Dictionary = e.details
+		if e.time_seconds > replay._state.time_seconds:
+			# Scheduled actions stop on death; an already running local battle owns
+			# its actual elapsed seconds, exactly as in sync_battle_time().
+			replay._youth_command = replay._state.battle_locks.is_empty()
+			replay._advance_clock_to(minf(e.time_seconds, (replay._state.hour + 1) * 3600.0))
+			replay._youth_command = true
+			if index < replay._state.events.size(): continue
+			if replay._state.time_seconds < e.time_seconds: continue
+		if e.time_seconds != replay._state.time_seconds: return false
+		var before: int = replay._state.events.size()
+		match e.kind:
+			"youth_inventory":
+				if not replay._youth_moves([d]): return false
+			"youth_transition":
+				if not replay._youth_transition(d.action, d.data, d.moves): return false
+			"march_started":
+				if not replay.march(d.route): return false
+			"courier":
+				if d.action == "dispatch":
+					if not C.dispatch(replay._state): return false
+				elif d.action == "reply" and d.value in ["comply", "refuse"]:
+					if not C.reply(replay._state, d.value): return false
+				else: return false # Other courier events must come from real clock ticks.
+			"courier_wait": replay._event(e.kind, d.duplicate(true))
+			"hometown_attach":
+				if not H.attach(replay._state): return false
+			"hometown_visit": H.finish_visit(replay._state, d.started_at)
+			"battle_reserved":
+				var result: Dictionary = replay.create_battle_ticket(e.details.location)
+				if not result.ok or result.ticket.battle_id != d.battle_id: return false
+				# Migrated, already-started old battles retain their historical signal model.
+				replay._state.battle_tickets[d.battle_id].signal_model = state.battle_tickets[d.battle_id].signal_model
+			"battle_started":
+				if replay.start_battle(d.battle_id) == null: return false
+			"battle_cancelled":
+				if not replay.cancel_battle_ticket(d.battle_id): return false
+			"battle_committed", "city_captured":
+				# A capture caused by a battle is emitted immediately before settlement.
+				# Clock-driven captures have already been generated and compared above.
+				var id := ""
+				if e.kind == "battle_committed": id = d.battle_id
+				elif index + 1 < state.events.size() and state.events[index + 1].kind == "battle_committed": id = state.events[index + 1].details.battle_id
+				if id.is_empty() or not replay._state.battle_tickets.has(id): return false
+				var ticket: Dictionary = state.battle_tickets[id]
+				if ticket.status != "committed" or ticket.time + ticket.elapsed_world_time != e.time_seconds: return false
+				replay._state.battle_tickets[id].elapsed_world_time = ticket.elapsed_world_time
+				if not replay._apply_battle_settlement(ticket.outcome): return false
+				replay._battle_sessions.erase(id)
+			_: return false # No auto-production/meal/condition/fate may be supplied by a save.
+		if before == replay._state.events.size(): return false
+	while replay._state.time_seconds < state.time_seconds:
+		replay._youth_command = replay._state.battle_locks.is_empty()
+		replay._advance_clock_to(minf(state.time_seconds, (replay._state.hour + 1) * 3600.0))
+		if replay._state.events.size() != state.events.size(): return false
+	for id in replay._state.battle_tickets:
+		var ticket: Dictionary = replay._state.battle_tickets[id]
+		if ticket.status == "running": ticket.elapsed_world_time = state.battle_tickets[id].elapsed_world_time
+	var expected: Dictionary = replay._state.duplicate(true)
+	var actual := state.duplicate(true)
+	# Existing explicit local observations have no event entry. They do not affect
+	# clock economics or hometown knowledge; their original report validator remains.
+	for field in ["reports", "pending_reports", "next_report"]:
+		expected.erase(field); actual.erase(field)
+	return expected == actual

@@ -1,0 +1,765 @@
+{
+  "format": 1,
+  "checkout_label": "luanshi-fatigue",
+  "branch": "feat/eco04-hunger",
+  "source_head": "0b3499d211763ae8258ab93e2b03b9bd0656f450",
+  "source_tree": "ca898c54527ce7694b5d6386c2419242419c03b7",
+  "base_manifest": "BASELINE.json",
+  "replace_or_add": {
+    ".github/workflows/verify.yml": {
+      "mode": "100644",
+      "original_blob_sha1": "f1afb382dbb4751cdc1283fc23c30dfa6904c012",
+      "original_sha256": "205da52a58caf7b5b6c9e9d02d1b3b70edeff581ac8c400c385e1bc0c24e5666",
+      "published_sha256": "205da52a58caf7b5b6c9e9d02d1b3b70edeff581ac8c400c385e1bc0c24e5666",
+      "published_bytes": 5821,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/205da52a58caf7b5b6c9e9d02d1b3b70edeff581ac8c400c385e1bc0c24e5666.txt"
+      }
+    },
+    ".gitignore": {
+      "mode": "100644",
+      "original_blob_sha1": "7e553b325c6fabf84806d18edb744abb55696fbd",
+      "original_sha256": "88bb81590b1d4a7165b99d723455b74ce5323fd74d6b6f4318c20bd9a8a32b4f",
+      "published_sha256": "88bb81590b1d4a7165b99d723455b74ce5323fd74d6b6f4318c20bd9a8a32b4f",
+      "published_bytes": 321,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/88bb81590b1d4a7165b99d723455b74ce5323fd74d6b6f4318c20bd9a8a32b4f.txt"
+      }
+    },
+    "AGENTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "09e2ca36cfe120f59ac9f55c4efe8ffe4ac794a3",
+      "original_sha256": "8274263a7e9782d238de0d698cc2ad2f2f752ad00ca2f8480d9f982f861efb8d",
+      "published_sha256": "8274263a7e9782d238de0d698cc2ad2f2f752ad00ca2f8480d9f982f861efb8d",
+      "published_bytes": 7845,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/8274263a7e9782d238de0d698cc2ad2f2f752ad00ca2f8480d9f982f861efb8d.txt"
+      }
+    },
+    "README.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5a23943b91bfdcbb356ef36e97d727d677cb4de5",
+      "original_sha256": "0a2ef3ccf8a31fa5a0a49d4ca29ead3445829904336113fcb4dd9a24f789b3d7",
+      "published_sha256": "0a2ef3ccf8a31fa5a0a49d4ca29ead3445829904336113fcb4dd9a24f789b3d7",
+      "published_bytes": 7114,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/0a2ef3ccf8a31fa5a0a49d4ca29ead3445829904336113fcb4dd9a24f789b3d7.txt"
+      }
+    },
+    "docs/ACCEPTANCE_MATRIX.md": {
+      "mode": "100644",
+      "original_blob_sha1": "4d283b7d126cf603266bc6ddca6afb9915da4af3",
+      "original_sha256": "e3c4af1265ed7107fab4679a8555ede0dbce396762656cec0e8e52d727447ff5",
+      "published_sha256": "e3c4af1265ed7107fab4679a8555ede0dbce396762656cec0e8e52d727447ff5",
+      "published_bytes": 15813,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/e3c4af1265ed7107fab4679a8555ede0dbce396762656cec0e8e52d727447ff5.txt"
+      }
+    },
+    "docs/BATTLE_TRANSACTIONS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "771b941c7a802481e5fbb969280c73ba7e2aadf5",
+      "original_sha256": "5032664cfcf14dc0b865c38ad80b446ff8c7ee8674470ea0e4b270af66ae91ad",
+      "published_sha256": "607a2740cea8e78374fcad3e68650d0f3b652dfd0dd469bc268ad9a797266caf",
+      "published_bytes": 11470,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": false,
+      "storage": {
+        "object": "objects/607a2740cea8e78374fcad3e68650d0f3b652dfd0dd469bc268ad9a797266caf.txt"
+      },
+      "redaction_key": "docs/BATTLE_TRANSACTIONS.md@771b941c7a802481e5fbb969280c73ba7e2aadf5"
+    },
+    "docs/DELIVERY_PLAN.md": {
+      "mode": "100644",
+      "original_blob_sha1": "5d4e33a84a9e7362b2aa9e772fe5114ab6566fc6",
+      "original_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_sha256": "f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040",
+      "published_bytes": 7031,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f116d271187461a48d898a733b0e507346195ed331ac2eb0835d08f19e4c8040.txt"
+      }
+    },
+    "docs/DOT_HANDOFF_FINAL.md": {
+      "mode": "100644",
+      "original_blob_sha1": "d863a05caa111f8a5862f8f6a20d09dfb218ef71",
+      "original_sha256": "352c76e51fce574d7506695f1b73cd5d478329a8803c0178da4c26bb476b3c1b",
+      "published_sha256": "352c76e51fce574d7506695f1b73cd5d478329a8803c0178da4c26bb476b3c1b",
+      "published_bytes": 11511,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/352c76e51fce574d7506695f1b73cd5d478329a8803c0178da4c26bb476b3c1b.txt"
+      }
+    },
+    "docs/FINAL_GAME_DESIGN_SPEC.md": {
+      "mode": "100644",
+      "original_blob_sha1": "314055f2efb892d0992e7bc1cd3c13a1a10f9b10",
+      "original_sha256": "ade5e5896211b04ebd002a71c33e572e851b40b9facd3102681d51fbc976adb3",
+      "published_sha256": "ade5e5896211b04ebd002a71c33e572e851b40b9facd3102681d51fbc976adb3",
+      "published_bytes": 26628,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/ade5e5896211b04ebd002a71c33e572e851b40b9facd3102681d51fbc976adb3.txt"
+      }
+    },
+    "docs/FINAL_VISION_ACCEPTANCE.md": {
+      "mode": "100644",
+      "original_blob_sha1": "c833d575dbd7d82f2fa9214bd5801625d0fe138f",
+      "original_sha256": "92084e59f6e72c0fb1674500f7765095a14b7e532ef0295e47945d016221b6e1",
+      "published_sha256": "92084e59f6e72c0fb1674500f7765095a14b7e532ef0295e47945d016221b6e1",
+      "published_bytes": 5249,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/92084e59f6e72c0fb1674500f7765095a14b7e532ef0295e47945d016221b6e1.txt"
+      }
+    },
+    "docs/HUNGER.md": {
+      "mode": "100644",
+      "original_blob_sha1": "c29513d5bada8394444afea99bd24b20cd03202f",
+      "original_sha256": "fe19463ce000781c87173c965f18eaffca80601689d3e4bc25da5ced770e8ad6",
+      "published_sha256": "28eda660a9286fd684f9446fba3ab37c971b4442d6c12e970fc84a5be2c8f933",
+      "published_bytes": 11883,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": false,
+      "storage": {
+        "object": "objects/28eda660a9286fd684f9446fba3ab37c971b4442d6c12e970fc84a5be2c8f933.txt"
+      },
+      "redaction_key": "docs/HUNGER.md@c29513d5bada8394444afea99bd24b20cd03202f"
+    },
+    "docs/NARRATIVE_ART_DIRECTION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "594dab47495e26962451df7d291458d5f0ed2b55",
+      "original_sha256": "d4e7baa9590e0d3f9e26e93aa4cfec3a1db5272d4b613bc6c4e21b794d9f3525",
+      "published_sha256": "d4e7baa9590e0d3f9e26e93aa4cfec3a1db5272d4b613bc6c4e21b794d9f3525",
+      "published_bytes": 13383,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/d4e7baa9590e0d3f9e26e93aa4cfec3a1db5272d4b613bc6c4e21b794d9f3525.txt"
+      }
+    },
+    "docs/OWNER_CREATIVE_DECISIONS_PENDING.md": {
+      "mode": "100644",
+      "original_blob_sha1": "bde62ea43825e41f02eda1e4141b221520fa3038",
+      "original_sha256": "1d73135a1a6c10b0216342b429b059139d43903480ee43c6745db5d76633872c",
+      "published_sha256": "1d73135a1a6c10b0216342b429b059139d43903480ee43c6745db5d76633872c",
+      "published_bytes": 3421,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/1d73135a1a6c10b0216342b429b059139d43903480ee43c6745db5d76633872c.txt"
+      }
+    },
+    "docs/PLAYING_ZH.md": {
+      "mode": "100644",
+      "original_blob_sha1": "1041bb53a16cb3d175abc5e39033841ef41e98bf",
+      "original_sha256": "5a1a1b43b3fe6964682eda8f32abe420b5592a3aa010f6d52f8551fc0f281512",
+      "published_sha256": "5a1a1b43b3fe6964682eda8f32abe420b5592a3aa010f6d52f8551fc0f281512",
+      "published_bytes": 4456,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5a1a1b43b3fe6964682eda8f32abe420b5592a3aa010f6d52f8551fc0f281512.txt"
+      }
+    },
+    "docs/PRODUCT_DECISIONS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "8172f958763cfa63cb9bc3a0ef07fac4846bfed9",
+      "original_sha256": "2d53e76defea1e8b7c69553d398c123cd6d2cb1f1c250a315917ce985b9b1a3f",
+      "published_sha256": "2d53e76defea1e8b7c69553d398c123cd6d2cb1f1c250a315917ce985b9b1a3f",
+      "published_bytes": 13425,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/2d53e76defea1e8b7c69553d398c123cd6d2cb1f1c250a315917ce985b9b1a3f.txt"
+      }
+    },
+    "docs/PROJECT_STATUS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "7c8e948693ff958b036f39c3c6aaed4263130119",
+      "original_sha256": "d80ae6b7120c33a5d9f20a978ce235f09cc97546e64c92deb13733ce819ad726",
+      "published_sha256": "d80ae6b7120c33a5d9f20a978ce235f09cc97546e64c92deb13733ce819ad726",
+      "published_bytes": 9768,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/d80ae6b7120c33a5d9f20a978ce235f09cc97546e64c92deb13733ce819ad726.txt"
+      }
+    },
+    "docs/SIMULATION_CONTRACTS.md": {
+      "mode": "100644",
+      "original_blob_sha1": "129e63d8af31d77531f64dc5c7264f358ca7e8de",
+      "original_sha256": "48ea981f204af1dd86c8343b2df7a40b2ca49682d50e40359bfe01dc627c0ae4",
+      "published_sha256": "48ea981f204af1dd86c8343b2df7a40b2ca49682d50e40359bfe01dc627c0ae4",
+      "published_bytes": 14277,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/48ea981f204af1dd86c8343b2df7a40b2ca49682d50e40359bfe01dc627c0ae4.txt"
+      }
+    },
+    "docs/VERIFICATION.md": {
+      "mode": "100644",
+      "original_blob_sha1": "ba8872537976d22666dbd63507c4a1674be7d969",
+      "original_sha256": "9b442c5c3616f0400562115319fd3e5c0c1243ab9d471ffe06cdc379544dc438",
+      "published_sha256": "23342abf11e2450ced423e2d78751d502885465403a4bc66007cac11a3b9f77d",
+      "published_bytes": 13578,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": false,
+      "storage": {
+        "object": "objects/23342abf11e2450ced423e2d78751d502885465403a4bc66007cac11a3b9f77d.txt"
+      },
+      "redaction_key": "docs/VERIFICATION.md@ba8872537976d22666dbd63507c4a1674be7d969"
+    },
+    "docs/evidence/hunger-verification.log": {
+      "mode": "100644",
+      "original_blob_sha1": "4b76cbd4f93133e1bf0abe9f1eead43eb2346739",
+      "original_sha256": "1939eb5185e679d2f38624cc3dc11387d66a7a5c53454d73cdcf588936968814",
+      "published_sha256": "4e2d345dce802db562995dde2676e38f54cf0f3abe15357c74c6aa6bd177f7de",
+      "published_bytes": 5500,
+      "kind": "document_or_evidence",
+      "byte_exact_to_original": false,
+      "storage": {
+        "object": "objects/4e2d345dce802db562995dde2676e38f54cf0f3abe15357c74c6aa6bd177f7de.txt"
+      },
+      "redaction_key": "docs/evidence/hunger-verification.log@4b76cbd4f93133e1bf0abe9f1eead43eb2346739"
+    },
+    "export_presets.cfg": {
+      "mode": "100644",
+      "original_blob_sha1": "921258508900ea7809d741989f99e4e55c97142c",
+      "original_sha256": "d469aa83759e1763ce8290760c51669dfea11c129063d94c4a9848419a2ce038",
+      "published_sha256": "d469aa83759e1763ce8290760c51669dfea11c129063d94c4a9848419a2ce038",
+      "published_bytes": 1536,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/d469aa83759e1763ce8290760c51669dfea11c129063d94c4a9848419a2ce038.txt"
+      }
+    },
+    "project.godot": {
+      "mode": "100644",
+      "original_blob_sha1": "736b3fd1dccdd1517a715cf62306907408bcd82b",
+      "original_sha256": "f78c1b95e3ababf1c299939c4285c8b3c73a0bad71e5ca2388f54acf64ab2008",
+      "published_sha256": "f78c1b95e3ababf1c299939c4285c8b3c73a0bad71e5ca2388f54acf64ab2008",
+      "published_bytes": 792,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f78c1b95e3ababf1c299939c4285c8b3c73a0bad71e5ca2388f54acf64ab2008.txt"
+      }
+    },
+    "scripts/battle.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "acedbe4b785dc8e987f495c1502fc1b9d7d4a3c0",
+      "original_sha256": "2025a506cd2f83c51af7386bc70ad494c16b95fbed07a2ddcf14d25ff2f52bea",
+      "published_sha256": "2025a506cd2f83c51af7386bc70ad494c16b95fbed07a2ddcf14d25ff2f52bea",
+      "published_bytes": 15928,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/2025a506cd2f83c51af7386bc70ad494c16b95fbed07a2ddcf14d25ff2f52bea.txt"
+      }
+    },
+    "scripts/battle_adapter.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "5473482935d872963dca25c16c9e0f7ffeb1ef83",
+      "original_sha256": "6cb1a6619b13c659f6f34cbe7cc8c52ad6044a1887b42831fcd39754c2d1b247",
+      "published_sha256": "6cb1a6619b13c659f6f34cbe7cc8c52ad6044a1887b42831fcd39754c2d1b247",
+      "published_bytes": 997,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/6cb1a6619b13c659f6f34cbe7cc8c52ad6044a1887b42831fcd39754c2d1b247.txt"
+      }
+    },
+    "scripts/battle_hud.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "4bb4425e7dfa252ff5480cb174b88e2e0334f5f4",
+      "original_sha256": "5da6b347cf83b5fb1078c7950f9a170dc68b097cb8642ae652e3ac1afc38259f",
+      "published_sha256": "5da6b347cf83b5fb1078c7950f9a170dc68b097cb8642ae652e3ac1afc38259f",
+      "published_bytes": 9140,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5da6b347cf83b5fb1078c7950f9a170dc68b097cb8642ae652e3ac1afc38259f.txt"
+      }
+    },
+    "scripts/battle_sim.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "d02e7cd0ac4ead5ee6696260c8f75660595b7f5f",
+      "original_sha256": "14dd36b34dde8632299a03e6ff1865b4af5b8f1995907e150635fb1a8a517df8",
+      "published_sha256": "14dd36b34dde8632299a03e6ff1865b4af5b8f1995907e150635fb1a8a517df8",
+      "published_bytes": 11160,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/14dd36b34dde8632299a03e6ff1865b4af5b8f1995907e150635fb1a8a517df8.txt"
+      }
+    },
+    "scripts/input_actions.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "d20a291d54255c56a0ce2d52ead0b92c012ea295",
+      "original_sha256": "5d0984a009da2c0ec04feaad1f13cdba7d58eb74fa5989494caacdf14c309fe2",
+      "published_sha256": "5d0984a009da2c0ec04feaad1f13cdba7d58eb74fa5989494caacdf14c309fe2",
+      "published_bytes": 1053,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5d0984a009da2c0ec04feaad1f13cdba7d58eb74fa5989494caacdf14c309fe2.txt"
+      }
+    },
+    "scripts/strategy_view.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "b6d70337fa5987ff19c3ad341e31710ceffd9a08",
+      "original_sha256": "194425469ddb189ed4a2240ae7406cd1b9b00314d0042a168c9ee75f361fd1db",
+      "published_sha256": "194425469ddb189ed4a2240ae7406cd1b9b00314d0042a168c9ee75f361fd1db",
+      "published_bytes": 13680,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/194425469ddb189ed4a2240ae7406cd1b9b00314d0042a168c9ee75f361fd1db.txt"
+      }
+    },
+    "scripts/world_sim.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "c150df6877fe2fc75103a5f08d6b072e8e652490",
+      "original_sha256": "5210739c1ad80e9d90ca9111912279d2638460f5dcfe09bd7b4649b750e40960",
+      "published_sha256": "5210739c1ad80e9d90ca9111912279d2638460f5dcfe09bd7b4649b750e40960",
+      "published_bytes": 44376,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/5210739c1ad80e9d90ca9111912279d2638460f5dcfe09bd7b4649b750e40960.txt"
+      }
+    },
+    "tests/strategy_visual.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "6a392f30b9a252b1d513ed5bbca1ec4b9f370330",
+      "original_sha256": "4eb61bd9ae3a49ff48fe13acc55d5eac2e43f315ae07de17ccee142a7448f765",
+      "published_sha256": "4eb61bd9ae3a49ff48fe13acc55d5eac2e43f315ae07de17ccee142a7448f765",
+      "published_bytes": 3186,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/4eb61bd9ae3a49ff48fe13acc55d5eac2e43f315ae07de17ccee142a7448f765.txt"
+      }
+    },
+    "tests/test_battle.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "137be18fca41dfd69400662edadfb66d9caf3c7c",
+      "original_sha256": "c773221337de2150c1da93b08a51c7b83215496ccaf9480930a8709ed034224c",
+      "published_sha256": "c773221337de2150c1da93b08a51c7b83215496ccaf9480930a8709ed034224c",
+      "published_bytes": 4850,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/c773221337de2150c1da93b08a51c7b83215496ccaf9480930a8709ed034224c.txt"
+      }
+    },
+    "tests/test_battle_transactions.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "17b294590bbf106080308a76b24a4f0248022fed",
+      "original_sha256": "3d4b1d87974db2148038b4f544af201a944a221428d151c29e03918aa39fb9cf",
+      "published_sha256": "3d4b1d87974db2148038b4f544af201a944a221428d151c29e03918aa39fb9cf",
+      "published_bytes": 21768,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/3d4b1d87974db2148038b4f544af201a944a221428d151c29e03918aa39fb9cf.txt"
+      }
+    },
+    "tests/test_campaign_scene.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "5f30f58c0b0fcb615dd98a1d054176b2c4fcd697",
+      "original_sha256": "bb130d8d7ca3047cc91b097e4951a878163aab83affd9457dc4fd6eebcd24f8c",
+      "published_sha256": "bb130d8d7ca3047cc91b097e4951a878163aab83affd9457dc4fd6eebcd24f8c",
+      "published_bytes": 11185,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/bb130d8d7ca3047cc91b097e4951a878163aab83affd9457dc4fd6eebcd24f8c.txt"
+      }
+    },
+    "tests/test_scene.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "6a3dd12642e9f2918af9c01d9766a953c20c26e8",
+      "original_sha256": "bec43a33b34aefd9b51f4e3434be652839ed53dfe62944208d767391f44cbe5a",
+      "published_sha256": "bec43a33b34aefd9b51f4e3434be652839ed53dfe62944208d767391f44cbe5a",
+      "published_bytes": 3947,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/bec43a33b34aefd9b51f4e3434be652839ed53dfe62944208d767391f44cbe5a.txt"
+      }
+    },
+    "tests/test_strategy.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "a942e7d2b96805b9e11233b2366e724e4a96ffdb",
+      "original_sha256": "bbb2745e885f3c9c08695bd7aa82ba66e90c9a53660d3f0986a48e2e3e9e2a95",
+      "published_sha256": "bbb2745e885f3c9c08695bd7aa82ba66e90c9a53660d3f0986a48e2e3e9e2a95",
+      "published_bytes": 11251,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/bbb2745e885f3c9c08695bd7aa82ba66e90c9a53660d3f0986a48e2e3e9e2a95.txt"
+      }
+    },
+    "tests/tests_economy.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "4293c5c78d004770c122ae61984655ab7e13bda6",
+      "original_sha256": "3769b61e19477d0cbf21b517e4d5db5651611c621af75576410825aeec745b41",
+      "published_sha256": "3769b61e19477d0cbf21b517e4d5db5651611c621af75576410825aeec745b41",
+      "published_bytes": 27036,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/3769b61e19477d0cbf21b517e4d5db5651611c621af75576410825aeec745b41.txt"
+      }
+    },
+    "tests/tests_hunger.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "dbca62bff9e0f7f12efa28c9b83faebf5e16c56c",
+      "original_sha256": "a78dadf44b72b9475347c5d6725e15967a827257444b9058f7199190d417c4d1",
+      "published_sha256": "a78dadf44b72b9475347c5d6725e15967a827257444b9058f7199190d417c4d1",
+      "published_bytes": 21663,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/a78dadf44b72b9475347c5d6725e15967a827257444b9058f7199190d417c4d1.txt"
+      }
+    },
+    "tools/export.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "438b195c34e0788842552fa57b779044686bdb37",
+      "original_sha256": "b4068ff66398d0dee1eef3817b1b0dd635f40f6edb5b6f4e23f2384ec289c186",
+      "published_sha256": "b4068ff66398d0dee1eef3817b1b0dd635f40f6edb5b6f4e23f2384ec289c186",
+      "published_bytes": 1442,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/b4068ff66398d0dee1eef3817b1b0dd635f40f6edb5b6f4e23f2384ec289c186.txt"
+      }
+    },
+    "tools/test.sh": {
+      "mode": "100755",
+      "original_blob_sha1": "c73efe56da4174605fec28c79bac588a0640abcc",
+      "original_sha256": "f4acf848957ce3acf581ae594906e5611680d73853ddd8829a0b4b224a998ce5",
+      "published_sha256": "f4acf848957ce3acf581ae594906e5611680d73853ddd8829a0b4b224a998ce5",
+      "published_bytes": 2654,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/f4acf848957ce3acf581ae594906e5611680d73853ddd8829a0b4b224a998ce5.txt"
+      }
+    },
+    "tools/write_notices.gd": {
+      "mode": "100644",
+      "original_blob_sha1": "c122274c42c3141979b19e24bfb1b5b9dee4d861",
+      "original_sha256": "3a3edb39d3f3629d0d06cd20362f9f777121873ee63fbdf6f0729478541c4234",
+      "published_sha256": "3a3edb39d3f3629d0d06cd20362f9f777121873ee63fbdf6f0729478541c4234",
+      "published_bytes": 1024,
+      "kind": "source_text",
+      "byte_exact_to_original": true,
+      "storage": {
+        "object": "objects/3a3edb39d3f3629d0d06cd20362f9f777121873ee63fbdf6f0729478541c4234.txt"
+      }
+    }
+  },
+  "delete_from_baseline": [
+    ".github/probes/native-macos-v06.json",
+    ".github/workflows/macos-graphical-probe.yml",
+    "assets/fonts/LuanshiUISCR-Regular.otf.import",
+    "assets/fonts/README.md",
+    "assets/fonts/coverage.txt",
+    "assets/fonts/license.txt",
+    "data/order_rules.gd",
+    "data/order_rules.gd.uid",
+    "docs/CAMPAIGN_SAVES.md",
+    "docs/CAMP_APPRAISAL.md",
+    "docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md",
+    "docs/COMRADE_PETITION.md",
+    "docs/COURIER_ORDERS.md",
+    "docs/DESIGN_SYNC_V014.md",
+    "docs/HERO_COMBAT_CALIBRATION.md",
+    "docs/HERO_PROFILE_INTEGRATION.md",
+    "docs/HOMETOWN_MESSAGES.md",
+    "docs/NARRATIVE_LIFE_ARC_V0_3.md",
+    "docs/NARRATIVE_WORLD_BIBLE_V0_2.md",
+    "docs/NATIVE_MACOS_GRAPHICS_PROBE.md",
+    "docs/WOUND_CARE.md",
+    "docs/YOUTH_INTERFACE.md",
+    "docs/YOUTH_LIFE_SLICE.md",
+    "docs/evidence/appraisal-v010-validation.log",
+    "docs/evidence/combat-calibration-tests.log",
+    "docs/evidence/combat-calibration-v1.json",
+    "docs/evidence/combat-profile-regression.log",
+    "docs/evidence/comrades-v011-validation.log",
+    "docs/evidence/courier-v09-calibration.log",
+    "docs/evidence/courier-v09-export.log",
+    "docs/evidence/courier-v09-font-recheck.log",
+    "docs/evidence/courier-v09-full-tests.log",
+    "docs/evidence/courier-v09-youth-ui.log",
+    "docs/evidence/economy-native-macos.log",
+    "docs/evidence/economy-visual.log",
+    "docs/evidence/hometown-v012-validation.log",
+    "docs/evidence/hunger-independent.log",
+    "docs/evidence/hunger-native-macos.log",
+    "docs/evidence/hunger-visual.log",
+    "docs/evidence/profile-calibration-integrated.log",
+    "docs/evidence/profile-integration-tests.log",
+    "docs/evidence/profile-runtime-restart.log",
+    "docs/evidence/save-exported-linux.log",
+    "docs/evidence/save-history.log",
+    "docs/evidence/save-integrated-tests.log",
+    "docs/evidence/save-native-macos.log",
+    "docs/evidence/save-restart-prepare.log",
+    "docs/evidence/save-restart-resume.log",
+    "docs/evidence/save-runtime-prepare.log",
+    "docs/evidence/save-runtime-resume.log",
+    "docs/evidence/save-tests.log",
+    "docs/evidence/save-verification.log",
+    "docs/evidence/save-visual.log",
+    "docs/evidence/v06-public-source-reproduction.log",
+    "docs/evidence/v07-public-source-reproduction.log",
+    "docs/evidence/wounds-v013-validation.log",
+    "docs/evidence/youth-bundled-font-local.log",
+    "docs/evidence/youth-combat-results.json",
+    "docs/evidence/youth-core-full-tests.log",
+    "docs/evidence/youth-input-driver-fix.log",
+    "docs/evidence/youth-input-tests.log",
+    "docs/evidence/youth-integrated-calibration.log",
+    "docs/evidence/youth-integrated-export.log",
+    "docs/evidence/youth-integrated-tests.log",
+    "docs/evidence/youth-integrated-ui.log",
+    "docs/evidence/youth-ui-tests.log",
+    "docs/evidence/youth-x11-ci49.log",
+    "docs/examples/campaign-save-v1.json",
+    "scripts/appraisal_persistence_smoke.gd",
+    "scripts/appraisal_persistence_smoke.gd.uid",
+    "scripts/camp_appraisal.gd",
+    "scripts/camp_appraisal.gd.uid",
+    "scripts/campaign_clock_replay.gd",
+    "scripts/campaign_clock_replay.gd.uid",
+    "scripts/campaign_event_audit.gd",
+    "scripts/campaign_event_audit.gd.uid",
+    "scripts/campaign_migrations.gd",
+    "scripts/campaign_migrations.gd.uid",
+    "scripts/campaign_persistence_smoke.gd",
+    "scripts/campaign_persistence_smoke.gd.uid",
+    "scripts/campaign_save_panel.gd",
+    "scripts/campaign_save_panel.gd.uid",
+    "scripts/campaign_schema.gd",
+    "scripts/campaign_schema.gd.uid",
+    "scripts/campaign_store.gd",
+    "scripts/campaign_store.gd.uid",
+    "scripts/campaign_value_codec.gd",
+    "scripts/campaign_value_codec.gd.uid",
+    "scripts/comrade_petition.gd",
+    "scripts/comrade_petition.gd.uid",
+    "scripts/courier_orders.gd",
+    "scripts/courier_orders.gd.uid",
+    "scripts/courier_persistence_smoke.gd",
+    "scripts/courier_persistence_smoke.gd.uid",
+    "scripts/font_verification.gd",
+    "scripts/font_verification.gd.uid",
+    "scripts/hero_combat_profiles.gd",
+    "scripts/hero_combat_profiles.gd.uid",
+    "scripts/hometown_messages.gd",
+    "scripts/hometown_messages.gd.uid",
+    "scripts/hometown_persistence_smoke.gd",
+    "scripts/hometown_persistence_smoke.gd.uid",
+    "scripts/petition_persistence_smoke.gd",
+    "scripts/petition_persistence_smoke.gd.uid",
+    "scripts/wound_care.gd",
+    "scripts/wound_care.gd.uid",
+    "scripts/wound_persistence_smoke.gd",
+    "scripts/wound_persistence_smoke.gd.uid",
+    "scripts/youth_career.gd",
+    "scripts/youth_career.gd.uid",
+    "scripts/youth_persistence_smoke.gd",
+    "scripts/youth_persistence_smoke.gd.uid",
+    "scripts/youth_ui.gd",
+    "scripts/youth_ui.gd.uid",
+    "tests/campaign_save_visual.gd",
+    "tests/campaign_save_visual.gd.uid",
+    "tests/combat_calibration.gd",
+    "tests/combat_calibration.gd.uid",
+    "tests/fixtures/generate_v06.gd",
+    "tests/fixtures/generate_v06.gd.uid",
+    "tests/fixtures/generate_world8_camp.gd",
+    "tests/fixtures/generate_world8_camp.gd.uid",
+    "tests/fixtures/v06/README.md",
+    "tests/fixtures/v06/cancelled.continuation.codec.json",
+    "tests/fixtures/v06/cancelled.save.json",
+    "tests/fixtures/v06/cancelled.state.codec.json",
+    "tests/fixtures/v06/committed.continuation.codec.json",
+    "tests/fixtures/v06/committed.save.json",
+    "tests/fixtures/v06/committed.state.codec.json",
+    "tests/fixtures/v06/dead.continuation.codec.json",
+    "tests/fixtures/v06/dead.save.json",
+    "tests/fixtures/v06/dead.state.codec.json",
+    "tests/fixtures/v06/life_node.continuation.codec.json",
+    "tests/fixtures/v06/life_node.save.json",
+    "tests/fixtures/v06/life_node.state.codec.json",
+    "tests/fixtures/v06/manifest.json",
+    "tests/fixtures/v06/pending.continuation.codec.json",
+    "tests/fixtures/v06/pending.save.json",
+    "tests/fixtures/v06/pending.state.codec.json",
+    "tests/fixtures/v06/running.continuation.codec.json",
+    "tests/fixtures/v06/running.save.json",
+    "tests/fixtures/v06/running.state.codec.json",
+    "tests/fixtures/v06/running.trace.json",
+    "tests/fixtures/v06/running.whole_fight.codec.json",
+    "tests/fixtures/v07/README.md",
+    "tests/fixtures/v07/early_v1_committed.codec.json",
+    "tests/fixtures/v07/early_v1_committed.save.json",
+    "tests/fixtures/v07/early_v1_running.codec.json",
+    "tests/fixtures/v07/early_v1_running.save.json",
+    "tests/fixtures/v07/late_v1_committed.codec.json",
+    "tests/fixtures/v07/late_v1_committed.save.json",
+    "tests/fixtures/v07/late_v1_running.codec.json",
+    "tests/fixtures/v07/late_v1_running.save.json",
+    "tests/fixtures/v07/legacy_test_v0_committed.codec.json",
+    "tests/fixtures/v07/legacy_test_v0_committed.save.json",
+    "tests/fixtures/v07/legacy_test_v0_running.codec.json",
+    "tests/fixtures/v07/legacy_test_v0_running.save.json",
+    "tests/fixtures/v07/provenance.json",
+    "tests/fixtures/v08/README.md",
+    "tests/fixtures/v08/provenance.json",
+    "tests/fixtures/v08/world7_youth_at_camp.codec.json",
+    "tests/fixtures/v08/world7_youth_at_camp.save.json",
+    "tests/fixtures/v08/world7_youth_running.codec.json",
+    "tests/fixtures/v08/world7_youth_running.save.json",
+    "tests/fixtures/world8-camp-before-appraisal.md",
+    "tests/fixtures/world8-camp-before-appraisal.save.json",
+    "tests/run_combat_calibration.gd",
+    "tests/run_combat_calibration.gd.uid",
+    "tests/test_appraisal_restart.gd",
+    "tests/test_appraisal_restart.gd.uid",
+    "tests/test_appraisal_ui.gd",
+    "tests/test_appraisal_ui.gd.uid",
+    "tests/test_camp_appraisal.gd",
+    "tests/test_camp_appraisal.gd.uid",
+    "tests/test_campaign_persistence_runtime.gd",
+    "tests/test_campaign_persistence_runtime.gd.uid",
+    "tests/test_campaign_save_history.gd",
+    "tests/test_campaign_save_history.gd.uid",
+    "tests/test_campaign_save_restart.gd",
+    "tests/test_campaign_save_restart.gd.uid",
+    "tests/test_campaign_save_scene.gd",
+    "tests/test_campaign_save_scene.gd.uid",
+    "tests/test_campaign_saves.gd",
+    "tests/test_campaign_saves.gd.uid",
+    "tests/test_chinese_font.gd",
+    "tests/test_chinese_font.gd.uid",
+    "tests/test_combat_calibration.gd",
+    "tests/test_combat_calibration.gd.uid",
+    "tests/test_comrade_petition.gd",
+    "tests/test_comrade_petition.gd.uid",
+    "tests/test_courier_migrations.gd",
+    "tests/test_courier_migrations.gd.uid",
+    "tests/test_courier_orders.gd",
+    "tests/test_courier_orders.gd.uid",
+    "tests/test_courier_restart.gd",
+    "tests/test_courier_restart.gd.uid",
+    "tests/test_courier_ui.gd",
+    "tests/test_courier_ui.gd.uid",
+    "tests/test_hero_profiles.gd",
+    "tests/test_hero_profiles.gd.uid",
+    "tests/test_hometown_messages.gd",
+    "tests/test_hometown_messages.gd.uid",
+    "tests/test_hometown_restart.gd",
+    "tests/test_hometown_restart.gd.uid",
+    "tests/test_hometown_ui.gd",
+    "tests/test_hometown_ui.gd.uid",
+    "tests/test_hunger_properties.gd",
+    "tests/test_hunger_properties.gd.uid",
+    "tests/test_legacy_profile_parity.gd",
+    "tests/test_legacy_profile_parity.gd.uid",
+    "tests/test_local_signals.gd",
+    "tests/test_local_signals.gd.uid",
+    "tests/test_macos_graphics_probe.py",
+    "tests/test_macos_probe_source.cjs",
+    "tests/test_petition_restart.gd",
+    "tests/test_petition_restart.gd.uid",
+    "tests/test_petition_ui.gd",
+    "tests/test_petition_ui.gd.uid",
+    "tests/test_profile_saves.gd",
+    "tests/test_profile_saves.gd.uid",
+    "tests/test_profile_scene.gd",
+    "tests/test_profile_scene.gd.uid",
+    "tests/test_save_boundaries.gd",
+    "tests/test_save_boundaries.gd.uid",
+    "tests/test_save_invalid_types.gd",
+    "tests/test_save_invalid_types.gd.uid",
+    "tests/test_wounds.gd",
+    "tests/test_wounds.gd.uid",
+    "tests/test_wounds_restart.gd",
+    "tests/test_wounds_restart.gd.uid",
+    "tests/test_wounds_ui.gd",
+    "tests/test_wounds_ui.gd.uid",
+    "tests/test_youth_attrition.gd",
+    "tests/test_youth_attrition.gd.uid",
+    "tests/test_youth_career.gd",
+    "tests/test_youth_career.gd.uid",
+    "tests/test_youth_migrations.gd",
+    "tests/test_youth_migrations.gd.uid",
+    "tests/test_youth_presentation.gd",
+    "tests/test_youth_presentation.gd.uid",
+    "tests/test_youth_restart.gd",
+    "tests/test_youth_restart.gd.uid",
+    "tests/test_youth_scene.gd",
+    "tests/test_youth_scene.gd.uid",
+    "tests/test_youth_smoke.gd",
+    "tests/test_youth_smoke.gd.uid",
+    "tests/test_youth_validation.gd",
+    "tests/test_youth_validation.gd.uid",
+    "tests/youth_combat_driver.gd",
+    "tests/youth_combat_driver.gd.uid",
+    "tests/youth_input_driver.gd",
+    "tests/youth_input_driver.gd.uid",
+    "tests/youth_visual.gd",
+    "tests/youth_visual.gd.uid",
+    "tools/build_chinese_font.py",
+    "tools/calibrate-combat.sh",
+    "tools/capture_world6_fixtures.gd",
+    "tools/capture_world6_fixtures.gd.uid",
+    "tools/capture_world7_fixtures.gd",
+    "tools/capture_world7_fixtures.gd.uid",
+    "tools/macos_probe_source.cjs",
+    "tools/macos_window_probe.c",
+    "tools/probe_macos_graphics.py",
+    "tools/test-youth-ui.sh",
+    "tools/test_appraisal.sh",
+    "tools/test_couriers.sh",
+    "tools/test_hometown.sh",
+    "tools/test_petition.sh",
+    "tools/test_wounds.sh",
+    "tools/test_youth.sh",
+    "tools/test_youth_runtime.sh"
+  ],
+  "excluded_assets": [],
+  "deletion_semantics": "Omit these baseline tracked paths when reconstructing this HEAD into a NEW empty directory. Never delete from the live development tree.",
+  "original_source_text_files": 50,
+  "published_text_files": 87,
+  "document_files_transformed": 8,
+  "source_is_ancestor_of_latest": false,
+  "inventory_hash_algorithm": "SHA256 of sorted UTF-8 rows: relative_path + NUL + git_mode + NUL + file_sha256 + LF. Source inventory excludes document/evidence paths; all-text inventories exclude omitted font.",
+  "original_source_inventory_sha256": "ece7c2f09bbddb24ebcd39453a9de0c70e06454d72c29981c0f4f6a854715f6a",
+  "original_all_text_inventory_sha256": "3c0d3bf01ea524e95d837478898b63fea98d58688566ddfdacd4f3d04ac92877",
+  "published_all_text_inventory_sha256": "260bbadbece244d15d255538c6d1c95793807ecfae906447872b990cd801d89d"
+}
