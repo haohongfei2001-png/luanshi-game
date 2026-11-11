@@ -1,5 +1,37 @@
-# 河关城下 · 云端试玩验收
+# 河关城下 · 试玩与云端验收
 
+## 当前试玩版
+
+默认进入这张千人战场。解开下载的外层压缩包，在 macOS 上再解压 Luanshi-macOS.zip 并打开其中的 app。选择兵器与军令，按 Enter 开战。GitHub Actions 上的 macOS 和 Linux 两个作业均已成功。游戏提交为 [b6fa81886278](https://github.com/haohongfei2001-png/luanshi-game/commit/b6fa8188627807f65e2238c066dce49e7e3bf5a0)，CI 合并检出为 `c258365fc3523b1510f68b4ba7f83ccd342b14bf`。
+
+[下载 macOS](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43099735539/artifacts/13890089339) · [下载 Linux](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43099735539/artifacts/13890638998) · [本版三段 MP4 录像](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43099735539/artifacts/13892361178) · [运行记录](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43099735539) · [试玩操作](https://github.com/haohongfei2001-png/luanshi-game/blob/b6fa8188627807f65e2238c066dce49e7e3bf5a0/docs/PLAYING_ZH.md)。
+
+同一随机种子 61112 的正常出阵由双方各 512 名普通士兵、32 名军官与主角组成。城门在 32.40 模拟秒攻破，39.05 秒时守军失去战斗能力。攻守双方剩余 300 / 167 名普通士兵生还，分别有 9 / 25 人离开战场。射出 2,193 支箭矢，双方共 2,158 次命中，军籍与弹药完成结算。全程录像为 392 帧、39.2 秒。
+
+原先困在城墙边沿的弓手现在沿坡退下，经画面中双方都能通行的小后门撤离。Godot 回归覆盖南北城头以及正门完好、已破的组合，四种条件分别在 386 次士兵更新后走过真实的后门，均计入生还撤离。另测了城外守军以及城内攻方向己方出口绕行。[问题与修复](https://github.com/haohongfei2001-png/luanshi-game/pull/23) · [本版机器可读结果](retreat-fix/measurements.json)。
+
+![本版近景交战](retreat-fix/near.jpg)
+
+![本版城门与墙上守军](retreat-fix/gate.jpg)
+
+| 环境 | 实际结果 |
+| --- | --- |
+| Ubuntu 24.04、llvmpipe、1280×800、100% 渲染、动态阴影 | 每方 20 / 100 / 250 / 512 名普通士兵时分别为 29.92 / 22.17 / 18.06 / 11.88 FPS。千人样本 P95 为 93.64 毫秒。相同视角可见 495 名普通士兵，保留近景细节后的绘制中位数为 68.74 毫秒，全员高细节为 191.21 毫秒。 |
+| 托管 Apple M1 (Virtual)、默认 Metal、1000×600、100% 渲染、动态阴影 | 两个约 3.5 秒的短样本平均 148.09 / 178.67 FPS，P95 为 16.32 / 14.55 毫秒，P99 为 20.21 / 16.93 毫秒。两次各观察到 416 次命中。 |
+| 真实无风扇 MacBook Air M5 | 内屏与外接 4K 的持续 20 分钟 512v512 实测均为 NOT_RUN。 |
+
+可下载[本版 Linux 截图与逐帧数据](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43099735539/artifacts/13892236163)以及[托管 Mac 原生日志与截图](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43099735539/artifacts/13892426410)。当前近景采用原创低多边形角色，最终造型、长时手感和河关后期武艺成长仍待完善。双方高阶将领救援和继任由 [#19](https://github.com/haohongfei2001-png/luanshi-game/issues/19) 跟踪。
+
+内部试玩包 SHA-256 如下。
+
+| 文件 | SHA-256 |
+| --- | --- |
+| `Luanshi-macOS.zip` | `6d11bba21f12f32c8e967a19c5e2d4e4a7219eddbf57761f94685d78ba20374e` |
+| `Luanshi-linux.tar.gz` | `7261fcd8a75d9fdebd193c3901f70a9d74887f221af58cca092c8edd94ee5012` |
+
+## 前一版 eae4f9d 的录像与长测
+
+以下三段可直接播放的仓库录像和 196 秒连续接战记录来自 eae4f9d。这份记录保留了预备队长测的逐帧数据，并可与本版比较守军的实际撤离效果。
 游戏源码 [eae4f9d3f23f](https://github.com/haohongfei2001-png/luanshi-game/commit/eae4f9d3f23f119fdd210390a9c7f7c7533eae6d)，GitHub 测试与打包检出 ce568994faef7c00742b3e1d7714739b9edbf24c。Godot 4.6.3，固定战场种子 61112。验收包通过托管 Linux 和 macOS 运行。真实 MacBook Air M5 20 分钟持续 60 FPS 的状态为 **NOT_RUN**。
 
 [下载 macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43090225102/artifacts/13889540567) · [下载 Linux 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43090225102/artifacts/13888159714) · [三段实机渲染录像](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43090225102/artifacts/13889390882) · [Linux 截图、日志与逐帧数据](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43090225102/artifacts/13889560582) · [托管 Mac 的窗口截图、日志与逐帧数据](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43090225102/artifacts/13889710826)。
@@ -125,4 +157,4 @@ GitHub 给这次 Actions 产物标注的到期日为 2027-02-09（UTC）。外�
 
 全军推进的样本约 47 秒决出胜负，分批投入预备队的实测约 196 秒。20 分钟同场持续交战节奏、M5 内屏与外接 4K 表现、最终角色美术与玩家主观手感仍待验收。早期与成熟主角对不同人数的既有校准继续随三城回归运行，河关长期武艺成长仍需专门的玩法及平衡验证。
 
-原试玩候选有一个已知撤离缺陷，城头弓手可能走向墙沿并卡住。独立后续修复增加沿坡退下、经过后门和两翼撤离的回归。[修复及其独立验收状态](https://github.com/haohongfei2001-png/luanshi-game/pull/23)。
+eae4f9d 中城头弓手可能卡在墙沿。本文顶部的 b6fa818 已通过沿坡退下、经过后门和两翼撤离的回归。[修复及其独立验收状态](https://github.com/haohongfei2001-png/luanshi-game/pull/23)。
