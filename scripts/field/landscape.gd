@@ -180,7 +180,11 @@ func _fort(b: Builder) -> void:
 		for x: float in [Ground.WALL_X,Ground.BACK_X]:
 			_tower(b,Vector3(x,0,side*Ground.WALL_Z))
 		_tower(b,Vector3(Ground.WALL_X,0,side*(Ground.GATE_HALF+2.6)))
-	b.block(Vector3(Ground.BACK_X,1.65,0),Vector3(2.3,3.3,Ground.WALL_Z*2),LIME)
+		var rear_length := Ground.WALL_Z - Ground.POSTERN_HALF
+		var rear_center := side * (Ground.WALL_Z + Ground.POSTERN_HALF) * 0.5
+		b.block(Vector3(Ground.BACK_X,1.65,rear_center),Vector3(2.3,3.3,rear_length),LIME)
+	b.block(Vector3(Ground.BACK_X,3.05,0),Vector3(2.3,0.50,Ground.POSTERN_HALF*2.0),LIME)
+	b.block(Vector3(Ground.BACK_X+1.20,2.73,0),Vector3(0.25,0.23,Ground.POSTERN_HALF*2.0+0.45),WOOD)
 	b.block(Vector3(Ground.WALL_X,4.16,0),Vector3(4.1,0.5,9.5),WOOD)
 	_roof(b,Vector3(Ground.WALL_X,6.1,0),3.4,5.0,1.45,SLATE)
 	for x: float in [65,78]:

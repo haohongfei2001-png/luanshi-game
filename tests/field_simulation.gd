@@ -52,6 +52,7 @@ func _initialize() -> void:
 	_test_resume()
 	_test_player_kits()
 	_test_move_windows_and_parapet()
+	_test_wall_retreat()
 	_test_cavalry()
 	_test_world_settlement()
 	_test_full_siege()
@@ -76,6 +77,52 @@ func _test_orders_and_ground() -> void:
 	check(Ground.blocked(Ground.GATE,false) and not Ground.blocked(Ground.GATE,true),"Gate opens only after a breach")
 	check(not Ground.clear_shot(Vector2(44,10),Vector2(55,10),true),"Wall stops shots beside breached gate")
 	check(Ground.blocked(Vector2(Ground.RIVER_X,13),true) and not Ground.blocked(Vector2(Ground.RIVER_X,0),true),"Bridge is a physical crossing")
+
+func _test_wall_retreat() -> void:
+	# The first archer on each wall walk used to walk straight into its high edge.
+	for breached: bool in [false, true]:
+		var b := Battle.new()
+		b.setup(250)
+		if breached: b.gate_hp = 0
+		var sides := {}
+		for archer in b.roster:
+			if not archer.wall_post or sides.has(signf(archer.pos.y)): continue
+			var side := signf(archer.pos.y)
+			sides[side] = true
+			b._set_state(archer, Battle.State.ROUT, 0)
+			archer.separation = Vector2(2.2, side * 1.1)
+			var steps := 0
+			var descended := false
+			var crossed_postern := false
+			var continuous := true
+			for i in 850:
+				steps += 1
+				var previous := archer.pos
+				b._state_step(archer)
+				continuous = continuous and absf(Ground.parapet(previous)-Ground.parapet(archer.pos)) < 0.56
+				if Ground.parapet(archer.pos) == 0 and archer.pos.x < Ground.WALL_X + 5:
+					descended = true
+				if previous.x < Ground.BACK_X and archer.pos.x >= Ground.BACK_X:
+					crossed_postern = absf(archer.pos.y) < Ground.POSTERN_HALF
+				if archer.state == Battle.State.ESCAPED: break
+			print("FIELD_PARAPET_RETREAT ",JSON.stringify({"side":side,"front_breached":breached,"steps":steps,"ramp":descended,"continuous":continuous,"postern":crossed_postern,"escaped":archer.state==Battle.State.ESCAPED}))
+			check(descended and continuous and crossed_postern and archer.state == Battle.State.ESCAPED,
+				"Defending archer descends its ramp and exits the rear postern, side %d, front breach %s" % [int(side),str(breached)])
+		check(sides.size() == 2 and b.escaped[1] == 2 and b.losses[1] == 0,"Both routed soldiers were accounted alive exactly once")
+	check(not Ground.blocked(Vector2(Ground.BACK_X,0),false) and Ground.blocked(Vector2(Ground.BACK_X,3),false),"Rear postern is narrow and independent of the front gate")
+	check(Ground.clear_shot(Vector2(84,0),Vector2(95,0),false) and not Ground.clear_shot(Vector2(84,3),Vector2(95,3),true),
+		"Missiles and walking use the same rear opening")
+	for side: float in [-1.0, 1.0]:
+		for pair: Array in [[Vector2(4.0,side*9),Vector2(100.0,side*32),false],
+				[Vector2(69.0,side*11),Vector2(-98.0,side*32),true],
+				[Vector2(69.0,side*11),Vector2(-98.0,side*32),false]]:
+			var at: Vector2 = pair[0]
+			var goal: Vector2 = pair[1]
+			for step in 1600:
+				if at.distance_to(goal) < 1.0: break
+				var via := Ground.retreat_waypoint(at, goal, pair[2])
+				at = Ground.travel(at,at.direction_to(via)*minf(0.2,at.distance_to(via)),pair[2])
+			check(at.distance_to(goal)<1.0,"Courtyard and sortie retreat follow open passages to the army exit")
 
 func _test_grid() -> void:
 	var b := Battle.new()
