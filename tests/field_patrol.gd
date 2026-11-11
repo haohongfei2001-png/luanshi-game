@@ -173,4 +173,39 @@ func _menu_to_camp(marched: Dictionary) -> void:
 	if not replay.receipt.is_empty():
 		check(replay.snapshot().armies == state.armies and replay.snapshot().ledger == state.ledger, "Saved and live postbattle armies and resources match")
 	print("FIELD_PATROL_ENCOUNTER ", JSON.stringify({"ordinary": people, "officers": officers, "uncommitted": uncommitted, "unused_weapons": spare, "end": b.result, "seconds": state.time_seconds, "army": returned.soldiers, "rearguard": rear.get("soldiers", 0), "weapons": carried}))
+	_wrong_origin(field)
 	shell.free()
+
+func _wrong_origin(field) -> void:
+	var ordinary := Battle.new()
+	ordinary.setup(20)
+	var data := Store.snapshot(ordinary)
+	data["world_patrol"] = true
+	var candidate = Store.restore(data)
+	if candidate != null:
+		var verifier := FieldWorld.new()
+		check(not verifier.bind(candidate), "A normal exercise cannot claim soldiers from the world patrol")
+	var current = field.battle
+	var world = field.theater
+	var figures_id: int = field.view.get_instance_id()
+	var ledger: Dictionary = world.snapshot().ledger
+	var click_load := OS.get_environment("LUANSHI_PATROL_ISOLATED_SLOT") == "1"
+	if click_load:
+		# The cloud replay gives this process a fresh, private XDG_DATA_HOME.
+		# Refuse any pre-existing slot, including when the harness is run manually.
+		if not check(not FileAccess.file_exists(Store.FILE), "Use an empty disposable quickslot for the normal Load button"):
+			return
+		var fixture := FileAccess.open(Store.FILE, FileAccess.WRITE)
+		if not check(fixture != null, "Write the mismatched checkpoint in the isolated slot"):
+			return
+		fixture.store_buffer(var_to_bytes(data))
+		fixture.close()
+		field.hud.load_button.pressed.emit()
+		check(DirAccess.remove_absolute(ProjectSettings.globalize_path(Store.FILE)) == OK, "Remove isolated test checkpoint")
+		check(current.notice != "已恢复战场", "Failed loading cannot announce that the battle was restored")
+	elif candidate != null:
+		field.call("_adopt", candidate)
+	check(is_same(field.battle, current) and is_same(field.theater, world), "Rejected provenance leaves the existing battle and world active")
+	check(is_instance_id_valid(figures_id) and field.view.get_instance_id() == figures_id, "The previous rendered battle survives rejection")
+	check(world.snapshot().ledger == ledger and not world.receipt.is_empty(), "Rejection preserves the settled campaign receipt")
+	print("FIELD_PATROL_REJECT ", JSON.stringify({"quickload_button": click_load, "retained_world": is_same(field.theater, world)}))
