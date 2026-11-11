@@ -118,6 +118,9 @@ func _run() -> void:
 		var best: Dictionary={}
 		for plan: Dictionary in PLANS:
 			var result:=_trial(plan)
+			if result.is_empty():
+				quit(1)
+				return
 			trials.append(result)
 			print("ENDURANCE_PLAN "+JSON.stringify(result))
 			if best.is_empty() or result.five_second_bins_with_hits>best.five_second_bins_with_hits or (result.five_second_bins_with_hits==best.five_second_bins_with_hits and result.longest_contact_5s_sim_seconds>best.longest_contact_5s_sim_seconds):
@@ -213,7 +216,7 @@ func _window(plan: Dictionary) -> void:
 		"open_or_settled_world_valid":field.theater.audit().is_empty() and field.theater.audit_quivers(),"error":early_exit})
 	_write_json("window.json",result)
 	print("ENDURANCE_WINDOW "+JSON.stringify(result))
-	var good:=early_exit=="" and bool(result.open_or_settled_world_valid) and frames.size()>100 and book.last_hits>0 and segment>0
+	var good: bool=early_exit=="" and bool(result.open_or_settled_world_valid) and frames.size()>100 and book.last_hits>0 and segment>0
 	shell.queue_free()
 	await process_frame
 	quit(0 if good else 1)
