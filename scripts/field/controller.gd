@@ -7,7 +7,6 @@ const Hud := preload("res://scripts/field/hud.gd")
 const Sound := preload("res://scripts/field/sound.gd")
 const Store := preload("res://scripts/field/save.gd")
 const FieldWorld := preload("res://scripts/field/campaign.gd")
-const ArmsForMuster := preload("res://scripts/field/arms.gd")
 const Patrol := preload("res://scripts/field/patrol_muster.gd")
 const Actions := preload("res://scripts/input_actions.gd")
 signal campaign_requested
@@ -116,8 +115,8 @@ func _ready() -> void:
 
 func new_muster(count: int,defenders: int=-1) -> void:
 	var fresh := Battle.new()
-	fresh.setup(count,Battle.SEED,ArmsForMuster.Kit.SPEAR,true,true,defenders)
-	_adopt(fresh)
+	fresh.setup(count,Battle.SEED,Battle.Arms.Kit.SPEAR,true,true,defenders)
+	if not _adopt(fresh): return
 	paused=false
 	hud.order_panel.show()
 
@@ -131,9 +130,9 @@ func patrol_muster() -> void:
 	var opposing:=Patrol.ordinary_for(garrison.soldiers,garrison.weapons)
 	if mini(own,opposing)<=0: return
 	var fresh:=Battle.new()
-	fresh.setup(own,Battle.SEED,ArmsForMuster.Kit.SPEAR,true,true,opposing)
+	fresh.setup(own,Battle.SEED,Battle.Arms.Kit.SPEAR,true,true,opposing)
 	fresh.world_patrol=true
-	_adopt(fresh)
+	if not _adopt(fresh): return
 	paused=false
 	hud.order_panel.show()
 

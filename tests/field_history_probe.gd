@@ -29,8 +29,10 @@ func _initialize() -> void:
 	var different: Array=[]
 	for k in expected:
 		if k!="version" and now.get(k)!=expected[k]: different.append(k)
-	var ok:=int(original.version)==3 and different.is_empty() and resumed.tick==278
-	print("FIELD_HISTORY_"+("PASS " if ok else "FAIL ")+JSON.stringify({"source_version":original.version,"resumed_tick":resumed.tick,"hits":resumed.hits,"different_keys":different}))
+	var expected_tick: int=expected.battle[Save.HEAD.find(&"tick")]
+	var start_tick: int=original.battle[Save.HEAD.find(&"tick")]
+	var ok:=int(original.version)==3 and different.is_empty() and resumed.tick==expected_tick and resumed.tick>start_tick
+	print("FIELD_HISTORY_"+("PASS " if ok else "FAIL ")+JSON.stringify({"source_version":original.version,"start_tick":start_tick,"expected_tick":expected_tick,"resumed_tick":resumed.tick,"hits":resumed.hits,"different_keys":different}))
 	quit(0 if ok else 1)
 
 func _write(path: String,value: Dictionary) -> void:

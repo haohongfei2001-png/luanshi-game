@@ -68,7 +68,7 @@ func _choose(c: OptionButton,index: int) -> void:
 	for round_index in 3:
 		var focus:=popup.get_focused_item()
 		if focus==index: break
-		var distance: int=(index-focus+c.item_count)%c.item_count
+		var distance: int=1 if focus<0 else (index-focus+c.item_count)%c.item_count
 		var keys:=PackedStringArray(["key","--delay","18"])
 		for n in distance: keys.append("Down")
 		_check(OS.execute("xdotool",keys)==0,"Native menu navigation is available")

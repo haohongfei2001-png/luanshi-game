@@ -169,11 +169,16 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if u.officer and battle.corps.is_wounded(u.id):
 			code=Battle.State.ESCAPED # Wounded pose; departed units are culled above.
 			progress=0.75 if battle.corps.support_partner(battle,u)>=0 else 0.0
-		if u.mounted or (u.hero and battle.vehicle==1): code+=64
+		if (u.mounted and u.hp>0) or (u.hero and battle.vehicle==1): code+=64
 		var data := Color((code+0.5)/128.0,progress,u.stride,clampf(u.flash/0.22,0,1))
 		if u.mounted:
-			_put(horse,base,angle,Color((u.state+0.5)/128,progress,u.stride,data.a))
-			base.y += 0.81
+			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
+			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
+			_put(horse,base,angle,Color((horse_pose+0.5)/128,0.0 if unhorsed else progress,0.0 if unhorsed else u.stride,data.a))
+			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
+			base.y+=0.81*(1.0-fall)
+			var side:=u.facing.orthogonal()*fall*(0.91 if u.id%2==0 else -0.91)
+			base+=Vector3(side.x,0,side.y)
 		if u.hero and battle.vehicle != 0:
 			var heading := battle.riding_heading
 			if battle.vehicle == 2 and not battle.seat_origin:

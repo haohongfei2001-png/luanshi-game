@@ -116,7 +116,13 @@ void vertex() {
 		if (joint==4) v=bend_x(v,vec3(-0.25,1.24,0),-0.42-p*0.52);
 	}
 	if (state==4) {v=bend_x(v,vec3(0,0.45,0),-0.22*(1.0-p));}
-	if (state==7) {v=bend_x(v,vec3(0,0.11,0),-1.45*smoothstep(0.0,0.90,p));}
+	if (state==7) {
+		float fall=smoothstep(0.0,0.90,p);
+		float side=INSTANCE_CUSTOM.b<0.5 ? -1.0 : 1.0;
+		v=bend_x(v,vec3(0,0.11,0),-1.47*fall);
+		v=bend_y(v,vec3(0,0.11,0),side*(0.23+0.42*INSTANCE_CUSTOM.b)*fall);
+		v.y=max(v.y,0.035);
+	}
 	else if (state==5) {v=bend_x(v,vec3(0,0.5,0),0.15);}
 	VERTEX=v;
 	// Some instancing paths multiply vertex COLOR by the optional instance tint.

@@ -31,6 +31,7 @@ jobs:
           godot --headless --path . --script tests/field_simulation.gd | tee artifacts/field-sim.log
           grep '^FIELD_SIM_PASS' artifacts/field-sim.log
       - name: Actual graphical weapon input
+        if: ${{ !cancelled() }}
         run: |
           LIBGL_ALWAYS_SOFTWARE=1 timeout 200s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/field_controls.gd -- --field-size=20 > artifacts/inputs.log 2>&1
           grep -E '^FIELD_WEAPON_INPUT|^FIELD_CONTROLS' artifacts/inputs.log
