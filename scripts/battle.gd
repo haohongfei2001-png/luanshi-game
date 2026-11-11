@@ -1,5 +1,7 @@
 extends Node3D
 
+signal field_requested
+
 const Simulation := preload("res://scripts/battle_sim.gd")
 const UnitView := preload("res://scripts/unit_view.gd")
 const InputActions := preload("res://scripts/input_actions.gd")
@@ -97,6 +99,7 @@ func _ready() -> void:
 	hud.strategy_requested.connect(_toggle_strategy)
 	hud.saves_requested.connect(_open_save_panel)
 	hud.youth_requested.connect(_open_youth)
+	hud.field_requested.connect(func(): field_requested.emit())
 	strategy = Strategy.new()
 	strategy.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	canvas.add_child(strategy)

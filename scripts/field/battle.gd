@@ -389,7 +389,8 @@ func _release(u: Unit, move: Arms.Move) -> void:
 			arrow_count += 1
 	elif move.shape != Arms.Shape.EVADE:
 		_melee(u, move)
-	_set_state(u, State.RECOVER, move.recovery)
+	if u.state == State.WINDUP:
+		_set_state(u, State.RECOVER, move.recovery)
 
 func _melee(u: Unit, move: Arms.Move) -> void:
 	var candidates := _near(u.pos, move.reach + 0.35, 1-u.team)
@@ -429,7 +430,7 @@ func _hurt(source: Unit, target: Unit, power: float, from: Vector2) -> void:
 	if target.state == State.GUARD and frontal:
 		damage *= 0.22 if target.kit == Arms.Kit.SHIELD else 0.46
 		blocked_hits += 1
-		if target.move_slot == 3 and moves[target.kit][3].shape == Arms.Shape.PARRY and source.pos.distance_to(target.pos) < 3.4 and target.timer > target.duration * 0.5:
+		if target.move_slot == 3 and moves[target.kit][3].shape == Arms.Shape.PARRY and active(source) and source.pos.distance_to(target.pos) < 3.4 and target.timer > target.duration * 0.5:
 			_set_state(source, State.STAGGER, 0.27)
 	if target.hero and vehicle != 0:
 		vehicle_hp[vehicle] = maxf(0.0, vehicle_hp[vehicle] - damage * 0.45)
@@ -622,7 +623,9 @@ func step() -> void:
 		u.before = u.pos
 		if active(u) and not u.hero and u.state != State.ROUT and (tick + u.id) % 5 == 0:
 			_assessment(u)
-	for u in roster:
+	# Alternate initiative for contacts that share a tick.
+	for i in roster.size():
+		var u := roster[i if tick % 2 == 0 else roster.size()-1-i]
 		u.flash = maxf(0,u.flash-DT)
 		u.fatigue = maxf(0,u.fatigue-DT)
 		if not active(u):

@@ -49,6 +49,8 @@ func _initialize() -> void:
 		print("FIELD_SCALE " + JSON.stringify(r))
 	_test_orders_and_ground()
 	_test_grid()
+	_test_resume()
+	_test_player_kits()
 	print("FIELD_SIM_" + ("PASS" if failures.is_empty() else "FAIL") + " " + JSON.stringify(failures))
 	quit(0 if failures.is_empty() else 1)
 
@@ -92,3 +94,46 @@ func _test_grid() -> void:
 		b._assessment(u)
 		check(u.target == expected[u.id],"Local and exhaustive target disagree at %d" % u.id)
 	print("FIELD_TARGET_LOOKUP " + JSON.stringify({"units":b.roster.size(),"all_pairs_us":exhaustive,"grid_with_separation_us":Time.get_ticks_usec()-start}))
+
+func _test_resume() -> void:
+	const Save := preload("res://scripts/field/save.gd")
+	var b := Battle.new()
+	b.setup(100)
+	b.start()
+	b.command(1,Battle.Mission.FLANK,Battle.Channel.COURIER)
+	for i in 32: b.step()
+	var saved := Save.snapshot(b)
+	var restored := Save.restore(saved)
+	check(restored!=null,"Restore an engaged field with flights and officer orders")
+	if restored==null: return
+	for i in 52:
+		b.step()
+		restored.step()
+	check(Save.snapshot(b)==Save.snapshot(restored),"Resumed contacts, losses, mounts, pending orders and RNG agree")
+	saved.losses[0]+=1
+	check(Save.restore(saved)==null,"Reject mismatched casualty ledger")
+
+func _test_player_kits() -> void:
+	for kit in Arms.NAMES.size():
+		var b := Battle.new()
+		b.setup(20,Battle.SEED,kit)
+		b.start()
+		var hero:=b.hero
+		hero.pos=Vector2(18,50)
+		var target:=b.roster[20]
+		target.pos=hero.pos+Vector2(1.25,0)
+		b._rebuild_grid()
+		b.input_state(Vector2.ZERO,Vector2.RIGHT)
+		var hp:=target.hp
+		check(b.action(0) and not b.action(0),"Windup locks repeated basic input")
+		check(target.hp==hp and hero.state==Battle.State.WINDUP,"Contact waits for each weapon windup")
+		for i in 30:
+			b._state_step(hero)
+			b._projectiles()
+		check(target.hp<hp,"Actual weapon contact "+Arms.NAMES[kit])
+		var projectile_kit:=kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]
+		check((b.arrow_count>0)==projectile_kit,"Ranged kit produces a traveling projectile")
+	var mounted:=Battle.new()
+	mounted.setup(20)
+	check(mounted.mount(1) and mounted.vehicle==1,"Mount real horse near muster")
+	check(mounted.mount(1) and mounted.vehicle==0 and mounted.mount(2) and mounted.vehicle==2,"Dismount and board the separate cart")

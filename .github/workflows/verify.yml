@@ -14,7 +14,7 @@ concurrency:
 jobs:
   verify-and-export:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,7 +34,7 @@ jobs:
       - name: Test simulation and real scene lifecycle
         env:
           XDG_DATA_HOME: /home/runner/.local/share
-        run: ./tools/test.sh
+        run: timeout 5m ./tools/test.sh
       - name: Verify youth narrative interface and real input path
         env:
           XDG_DATA_HOME: /home/runner/.local/share
@@ -90,6 +90,10 @@ jobs:
           for image in enlistment first-battle injustice active-save withdrawal endpoint records; do test -s "artifacts/youth-$image-proof.png"; done
           grep -q YOUTH_VISUAL_PASS artifacts/youth-visual.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/youth-visual.log; then exit 1; fi
+      - name: Measure contact at four army sizes and record a separate 512v512 run
+        run: |
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          ./tools/test-field-render.sh
       - name: Build macOS and verify exported Linux game
         run: ./tools/export.sh
       - name: Upload macOS playable

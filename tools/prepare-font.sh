@@ -10,7 +10,7 @@ if [[ -f "$target" ]] && [[ "$(git hash-object --no-filters "$target")" == "$blo
 fi
 partial=$(mktemp "${target}.XXXXXX")
 trap 'rm -f "$partial"' EXIT
-curl --fail --location --silent --show-error --retry 2 "$upstream" --output "$partial"
+curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 --retry 1 "$upstream" --output "$partial"
 if [[ "$(git hash-object --no-filters "$partial")" != "$blob" ]]; then
   echo "Unexpected upstream font content for $target" >&2
   exit 1
