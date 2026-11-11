@@ -1,0 +1,9 @@
+from pathlib import Path
+import json
+path = Path("scripts/field/battle.gd")
+source = path.read_text()
+hooks = json.loads("[[\"const Ground := preload(\\\"res://scripts/field/ground.gd\\\")\",\"const Ground := preload(\\\"res://scripts/field/ground.gd\\\")\\nconst Traffic := preload(\\\"res://scripts/field/formation_traffic.gd\\\")\\nvar traffic_enabled := true\"],[\"\\tif withdrawing:\\n\\t\\tgoal = Vector2(-98.0\",\"\\tif traffic_enabled and u.team == 0 and not withdrawing and not at_post and not c.regrouping and ram_hp > 0 and gate_hp > 0:\\n\\t\\tif u.engineer:\\n\\t\\t\\tgoal = Traffic.crew_station(ram, u.id)\\n\\t\\telif c.mission == Mission.ESCORT:\\n\\t\\t\\tgoal = Traffic.escort_station(ram, c.slot, u.station - c.home)\\n\\t\\telif c.mission == Mission.PRESS and c.aim.x >= Ground.WALL_X - 2.1:\\n\\t\\t\\tgoal = Traffic.gate_station(c.slot, companies_per_side, c.home, u.station - c.home)\\n\\tif withdrawing:\\n\\t\\tgoal = Vector2(-98.0\"],[\"\\tvar next := Ground.retreat_waypoint(u.pos, goal, gate_hp <= 0) if withdrawing else Ground.waypoint(u.pos, goal)\",\"\\tvar next: Vector2\\n\\tif withdrawing:\\n\\t\\tnext = Ground.retreat_waypoint(u.pos, goal, gate_hp <= 0)\\n\\telif traffic_enabled and not at_post:\\n\\t\\tnext = Traffic.waypoint(u.pos, goal, u.station.y - c.home.y, u.id, gate_hp <= 0)\\n\\telse:\\n\\t\\tnext = Ground.waypoint(u.pos, goal)\\n\\tif traffic_enabled and ram_hp > 0 and not at_post:\\n\\t\\tnext = Traffic.around_ram(u.pos, next, ram, u.id)\"],[\"func _move(u: Unit, offset: Vector2) -> void:\\n\\tu.pos = Ground.travel\",\"func _move(u: Unit, offset: Vector2) -> void:\\n\\tif traffic_enabled and ram_hp > 0:\\n\\t\\toffset = Traffic.ram_motion(u.pos, offset, ram, u.id)\\n\\tu.pos = Ground.travel\"]]")
+for old, new in hooks:
+    assert source.count(old) == 1, old
+    source = source.replace(old, new)
+path.write_text(source)
