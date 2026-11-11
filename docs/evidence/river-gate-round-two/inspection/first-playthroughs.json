@@ -1,0 +1,145 @@
+{
+  "first_attempt": {
+    "code": "21ce50911acc3ab7a7859beea4b3ec59bdc0f75a",
+    "run": 43105742072,
+    "journey": {
+      "attacks": 4122,
+      "blocked_hits": 60,
+      "camp_hours": 1,
+      "camp_resumed": true,
+      "capture_sec": 0,
+      "dead": [
+        247,
+        329
+      ],
+      "dropped_weapons": [
+        247,
+        329
+      ],
+      "errors": [
+        "Opened menu @OptionButton@191",
+        "Existing bow carriers reached the front",
+        "Deploy returns to the equipped hero",
+        "Short pointer input wounded an opponent and Q was used",
+        "A real order reached its officer"
+      ],
+      "escaped": [
+        11,
+        40
+      ],
+      "gate_hp": 0,
+      "hero_ammo": 0,
+      "hero_hp": 100,
+      "hero_impacts": 0,
+      "hits": [
+        1249,
+        974
+      ],
+      "officers": 32,
+      "orders_delivered": 0,
+      "orders_lost": 0,
+      "orders_refused": 0,
+      "popup_semantic_fallbacks": 0,
+      "projectiles": 2145,
+      "ram_hp": 150,
+      "result": "守军已失去战斗能力",
+      "routing": [
+        10,
+        4
+      ],
+      "screens": [
+        "01-muster",
+        "02-deploy",
+        "03-gate",
+        "05-breach",
+        "04-contact",
+        "06-report",
+        "07-camp"
+      ],
+      "seed": 61112,
+      "soldiers_per_side": 512,
+      "tick": 780
+    },
+    "reason": "The test driver sent menu navigation to the parent window and called an engine method unavailable to GDScript. The wrong kit and channel remained selected; this is not a passing battle walkthrough."
+  },
+  "native_menu_retry": {
+    "code": "b249cfde0f288953f8614f2a8403635094af6264",
+    "run": 43106842480,
+    "journey": {
+      "attacks": 4144,
+      "blocked_hits": 86,
+      "camp_hours": 1,
+      "camp_resumed": true,
+      "capture_sec": 0,
+      "dead": [
+        212,
+        334
+      ],
+      "dropped_weapons": [
+        212,
+        334
+      ],
+      "errors": [],
+      "escaped": [
+        18,
+        36
+      ],
+      "gate_hp": 0,
+      "hero_ammo": 13,
+      "hero_hp": 100,
+      "hero_impacts": 4,
+      "hits": [
+        1312,
+        896
+      ],
+      "officers": 32,
+      "orders_delivered": 1,
+      "orders_lost": 0,
+      "orders_refused": 0,
+      "popup_semantic_fallbacks": 0,
+      "projectiles": 2224,
+      "ram_hp": 150,
+      "result": "守军已失去战斗能力",
+      "routing": [
+        10,
+        7
+      ],
+      "screens": [
+        "01-muster",
+        "02-deploy",
+        "03-gate",
+        "04-contact",
+        "05-breach",
+        "06-report",
+        "07-camp"
+      ],
+      "seed": 61112,
+      "soldiers_per_side": 512,
+      "tick": 808
+    },
+    "mix": {
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 800,
+          "duration": "47.133333",
+          "nb_frames": "707"
+        },
+        {
+          "codec_name": "aac",
+          "channels": 2,
+          "duration": "47.133000",
+          "nb_frames": "2211"
+        }
+      ],
+      "peak_db": -8.4,
+      "mean_db": -32.1
+    }
+  },
+  "visual_findings": [
+    "Front towers overlap the gate at the default zero yaw.",
+    "The order panel was still open during the next personal attack.",
+    "A legacy report revealed its pre-opening negative epoch instead of its age."
+  ]
+}
