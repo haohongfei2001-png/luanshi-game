@@ -95,7 +95,7 @@ func configure(model: Battle) -> void:
 	contact=_batch(sm,shade,battle.roster.size())
 	contact.node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var mount_mesh := Figures.horse()
-	horse = _batch(mount_mesh,_material(FRIEND,0,true),battle.side_size*2+1)
+	horse = _batch(mount_mesh,_material(FRIEND,0,true),battle.ordinary_counts[0]+battle.ordinary_counts[1]+1)
 	var wagon := Figures.horse(true)
 	cart = _batch(wagon,_material(FRIEND,0,true),1)
 	var b := Builder.new()
@@ -123,7 +123,7 @@ func configure(model: Battle) -> void:
 	garrison.dye=0
 	garrison.quad(Vector3(0.12,3.14,0.045),Vector3(0.43,3.32,0.075),Vector3(0.72,3.10,0.13),Vector3(0.42,2.96,0.082),CLOTH_COLOR)
 	standards.append(_batch(fm,_material(FRIEND,0),battle.companies_per_side))
-	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.companies_per_side))
+	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.command_counts[1]))
 	runners = _batch(near_mesh[Arms.Kit.SWORD],_material(Color("c49b5c"),0),8)
 
 func _key(u: Battle.Unit) -> int:
