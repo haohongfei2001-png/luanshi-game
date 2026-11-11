@@ -28,6 +28,7 @@ func _run() -> void:
 		field.set_physics_process(false)
 		field.set_process(false)
 		field.battle.traffic_enabled = enabled
+		if "soft_crowd" in field.battle: field.battle.set(&"soft_crowd", enabled)
 		field.hud.plan_requested.emit(1)
 		field.hud.go.pressed.emit()
 		var b := field.battle

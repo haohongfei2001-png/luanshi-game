@@ -126,6 +126,7 @@ func _siege(enabled: bool) -> Dictionary:
 	var b := Battle.new()
 	b.setup(512)
 	b.traffic_enabled = enabled
+	if "soft_crowd" in b: b.set(&"soft_crowd", enabled)
 	for i in b.companies_per_side:
 		var mission := Battle.Mission.PRESS
 		if i in [2, 7]: mission = Battle.Mission.ESCORT
@@ -191,6 +192,8 @@ func _siege(enabled: bool) -> Dictionary:
 			timings["p%d" % p] = sim_us[index] / 1000.0
 		timings.samples = sim_us.size()
 		row.sim_tick_ms = timings
+	row.traffic_lanes = enabled
+	row.soft_crowd = b.get(&"soft_crowd") if "soft_crowd" in b else false
 	row.escort_formation = escort_spread
 	row.service = service_log
 	row.after_breach_6s = post_breach
