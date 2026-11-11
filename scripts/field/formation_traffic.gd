@@ -23,22 +23,44 @@ static func escort_station(ram: Vector2, slot: int, formation: Vector2) -> Vecto
 	return Vector2(anchor_x + formation.y, ram.y + side * distance)
 
 static func gate_station(slot: int, count: int, home: Vector2, formation: Vector2) -> Vector2:
-	# Keep the assault formations in their deployment order as they dress the
-	# wall. Two forward files per company can still strike the gate on foot.
+	# Forward files serve both leaves. Relief ranks stop just behind the first,
+	# within striking distance even if another company lost its vanguard.
 	var bands := mini(5, count)
 	var depth := floorf(float(slot) / bands)
-	if absf(formation.x) < 0.4 and absf(formation.y) < 1.6:
+	var forward := absf(formation.x) < 0.45 and absf(formation.y) <= 4.0
+	var relief := absf(formation.x) <= 2.05 and absf(formation.y) <= 1.65
+	if forward or relief:
 		var shoulder := -1.0 if formation.y < 0.0 else 1.0
-		return Ground.GATE + Vector2(-2.20 - 0.90 * depth, shoulder * (2.35 + float(slot % 3) * 0.32))
+		var file := clampf(absf(formation.y) * 0.35 + float(slot % 3) * 0.23, 0.0, 1.76)
+		var stand_off := 1.70 + 0.35 * (0.0 if forward else 1.0) + float(slot % 2) * 0.18
+		return Ground.GATE + Vector2(-stand_off, shoulder * (1.48 + file))
 	var x := Ground.WALL_X - 2.75 - depth * 6.3 + formation.x
 	return Vector2(x, home.y * 0.82 + formation.y * 0.87)
+
+static func gate_face(p: Vector2) -> Vector2:
+	# The two leaves and their bindings occupy the entire rendered aperture.
+	return Vector2(Ground.WALL_X - 0.71, clampf(p.y, -Ground.GATE_HALF + 0.12, Ground.GATE_HALF - 0.12))
+
+static func hits_gate(p: Vector2, direction: Vector2, reach: float, width: float, thrust: bool) -> bool:
+	if direction.x <= 0.0 or p.x >= Ground.WALL_X - 0.71:
+		return false
+	var face := gate_face(p)
+	var distance_x := face.x - p.x
+	if distance_x > reach + 0.20: return false
+	# Clamp the attack ray to the near leaf or closest jamb. Lateral sweep
+	# tolerance follows the actual equipped attack, as it does against units.
+	face.y = clampf(p.y + distance_x * direction.y / direction.x, -Ground.GATE_HALF + 0.12, Ground.GATE_HALF - 0.12)
+	var delta := face - p
+	var along := direction.dot(delta)
+	if along <= 0.0 or delta.length_squared() > (reach + 0.20) * (reach + 0.20): return false
+	return absf(direction.cross(delta)) <= width + 0.22 if thrust else along >= delta.length() * cos(width)
 
 static func _passage(p: Vector2, x: float, z: float, half_depth: float, direction: float) -> Vector2:
 	if (p.x - x) * direction < -half_depth and absf(p.y - z) > 0.76:
 		return Vector2(x - direction * (half_depth + 1.48), z)
 	return Vector2(x + direction * (half_depth + 0.85), z)
 
-static func waypoint(p: Vector2, goal: Vector2, file_z: float, _id: int, gate_open: bool) -> Vector2:
+static func waypoint(p: Vector2, goal: Vector2, file_z: float, id: int, gate_open: bool, ram_at_gate: bool = false) -> Vector2:
 	var direction := signf(goal.x - p.x)
 	if direction == 0.0:
 		return Ground.waypoint(p, goal)
@@ -53,6 +75,10 @@ static func waypoint(p: Vector2, goal: Vector2, file_z: float, _id: int, gate_op
 	var to_gate := (goal.x - Ground.WALL_X) * direction
 	if gate_open and from_gate < 1.55 and to_gate > 1.55:
 		if absf(p.y) < Ground.WALL_Z or absf(goal.y) < Ground.WALL_Z:
+			if ram_at_gate:
+				# The parked chassis occupies the centre file up to the opening.
+				# Keep both shoulders open from approach through the far doorpost.
+				lane = _side(lane, id) * (1.64 + minf(1.30, absf(lane) * 0.47))
 			return _passage(p, Ground.WALL_X, lane, 1.45, direction)
 	return Ground.waypoint(p, goal)
 
@@ -89,7 +115,7 @@ static func _blocks_segment(a: Vector2, b: Vector2) -> bool:
 		leave = minf(leave, maxf(t0, t1))
 	return enter < leave
 
-static func around_ram(p: Vector2, goal: Vector2, ram: Vector2, id: int) -> Vector2:
+static func around_ram(p: Vector2, goal: Vector2, ram: Vector2, id: int, gate_open: bool = false) -> Vector2:
 	var a := p - ram
 	if absf(a.x) > 8.5 or absf(a.y) > 7.0:
 		return goal
@@ -108,14 +134,14 @@ static func around_ram(p: Vector2, goal: Vector2, ram: Vector2, id: int) -> Vect
 	for k in 4:
 		var i := (k + (id % 2) * 2) % 4
 		var corner: Vector2 = CORNERS[i]
-		if a.distance_squared_to(corner) < 0.12 or ram.x + corner.x >= Ground.WALL_X - 1.45 or _blocks_segment(a, corner):
+		if a.distance_squared_to(corner) < 0.12 or (not gate_open and ram.x + corner.x >= Ground.WALL_X - 1.45) or _blocks_segment(a, corner):
 			continue
 		var remaining := corner.distance_to(b)
 		if _blocks_segment(corner, b):
 			remaining = INF
 			for j in [(i + 1) % 4, (i + 3) % 4]:
 				var other: Vector2 = CORNERS[j]
-				if ram.x + other.x < Ground.WALL_X - 1.45 and not _blocks_segment(other, b):
+				if (gate_open or ram.x + other.x < Ground.WALL_X - 1.45) and not _blocks_segment(other, b):
 					remaining = minf(remaining, corner.distance_to(other) + other.distance_to(b))
 		var total := a.distance_to(corner) + remaining
 		if total < best:

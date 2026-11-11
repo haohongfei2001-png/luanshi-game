@@ -17,6 +17,7 @@ func check(ok: bool, message: String) -> void:
 func _initialize() -> void:
 	_check_passages()
 	_check_serving_crew()
+	_check_gate_leaves()
 	var old := _siege(false)
 	var current := _siege(true)
 	print("FIELD_TRAFFIC_AB " + JSON.stringify({"seed": Battle.SEED, "window_ticks": [FIRST_SAMPLE, LAST_SAMPLE],
@@ -50,6 +51,18 @@ func _check_passages() -> void:
 					if p.distance_to(goal) < 0.3: break
 				check(crossed and p.distance_to(goal) < 0.3, "Movement crosses the physical passage and reaches its destination")
 	check(lanes.size() >= 12, "Traversing troops use distinct lateral files in both directions")
+	for file: float in [-5.5, -1.8, 0.8, 5.5]:
+		for dir: float in [-1.0, 1.0]:
+			var parked := Ground.GATE - Vector2(3.05, 0)
+			var p := Ground.GATE + Vector2(-dir * 15.0, dir * 7.0)
+			var goal := Ground.GATE + Vector2(dir * 12.0, -dir * 6.0)
+			for frame in 410:
+				var next := Traffic.waypoint(p, goal, file, 3, true, true)
+				next = Traffic.around_ram(p, next, parked, 3, true)
+				var offset := p.direction_to(next) * minf(0.17, p.distance_to(next))
+				p = Ground.travel(p, Traffic.ram_motion(p, offset, parked, 3), true)
+				if p.distance_to(goal) < 0.3: break
+			check(p.distance_to(goal) < 0.3, "Open gate retains a usable route around a parked ram in each direction")
 	for i in 4:
 		var p: Vector2 = [Vector2(-6, 0), Vector2(6, 0), Vector2(0, -4), Vector2(0, 4)][i]
 		var goal := -p
@@ -87,6 +100,28 @@ func _check_serving_crew() -> void:
 		b._siege()
 	check(b.gate_hp == damaged, "No gate damage from an abandoned engine")
 
+func _check_gate_leaves() -> void:
+	var b := Battle.new()
+	b.setup(20)
+	b.traffic_enabled = true
+	var u := b.roster[0]
+	var move := b.moves[Battle.Arms.Kit.SHIELD][0] as Battle.Arms.Move
+	for z: float in [-3.15, 3.15]:
+		u.pos = Vector2(Ground.WALL_X - 2.10, z)
+		u.locked = Vector2.RIGHT
+		var hp := b.gate_hp
+		b._melee(u, move)
+		check(b.gate_hp < hp, "A shield fighter at either wooden leaf reaches it")
+		hp = b.gate_hp
+		u.locked = Vector2.LEFT
+		b._melee(u, move)
+		check(b.gate_hp == hp, "Swing aimed away from the gate misses")
+	u.pos = Vector2(Ground.WALL_X - 2.0, Ground.GATE_HALF + 3.0)
+	u.locked = Vector2.RIGHT
+	var hp := b.gate_hp
+	b._melee(u, move)
+	check(b.gate_hp == hp, "Hitting stone outside the jamb does not damage the door")
+
 func _siege(enabled: bool) -> Dictionary:
 	var b := Battle.new()
 	b.setup(512)
@@ -105,6 +140,8 @@ func _siege(enabled: bool) -> Dictionary:
 			row.ordinary[u.team] += 1
 			if u.team == 1 and u.station.x > Ground.WALL_X:
 				row.wall_defenders += 1
+	var post_breach := {"samples": 0, "overlapping_person_samples": 0, "hull_occupant_samples": 0, "crowded_pairs": 0, "peak_3m_square": 0, "low_motion_passage_samples": 0, "gate_crossers": 0}
+	var service_log := []
 	var bridge_users := {}
 	var gate_users := {}
 	var bridge_files := {}
@@ -112,6 +149,13 @@ func _siege(enabled: bool) -> Dictionary:
 	for t in 3600:
 		var timer_before := b.ram_timer
 		b.step()
+		if b.tick % 200 == 0:
+			var crew := []
+			var close_attackers := 0
+			for u in b.roster:
+				if u.engineer and b.active(u): crew.append([u.id, u.state, snappedf(u.pos.distance_to(b.ram), 0.1)])
+				if u.team == 0 and b.active(u) and u.pos.distance_to(Traffic.gate_face(u.pos)) < 2.8: close_attackers += 1
+			service_log.append([b.tick, snappedf(b.ram.x, 0.1), snappedf(b.gate_hp, 0.1), close_attackers, crew])
 		if b.ram_timer > timer_before: row.ram_strikes += 1
 		row.ram_farthest_x = maxf(row.ram_farthest_x, b.ram.x)
 		if b.gate_hp < 260 and row.gate_contact < 0: row.gate_contact = b.tick
@@ -127,7 +171,14 @@ func _siege(enabled: bool) -> Dictionary:
 					bridge_files[roundi(u.pos.y - Ground.crossing(u.pos.y))] = true
 				if u.pos.x > Ground.WALL_X + 1.4 and absf(u.pos.y) < Ground.WALL_Z - 1.2:
 					gate_users[u.id] = true
+		if row.breach > 0:
+			var elapsed: int = b.tick - row.breach
+			if elapsed > 0 and elapsed <= 120 and elapsed % PERIOD == 0:
+				_sample(b, post_breach, true)
+				if elapsed == 120: post_breach.gate_crossers = gate_users.size()
 		if not b.result.is_empty(): break
+	row.service = service_log
+	row.after_breach_6s = post_breach
 	row.bridge_crossers = bridge_users.size()
 	row.gate_crossers = gate_users.size()
 	row.bridge_file_metres = bridge_files.keys()
@@ -136,7 +187,7 @@ func _siege(enabled: bool) -> Dictionary:
 			"ram_hp": b.ram_hp, "gate_hp": b.gate_hp, "dropped_weapons": b.equipment})
 	return row
 
-func _sample(b: Battle, row: Dictionary) -> void:
+func _sample(b: Battle, row: Dictionary, only_gate: bool = false) -> void:
 	row.samples += 1
 	var close := {}
 	var cells := {}
@@ -147,6 +198,7 @@ func _sample(b: Battle, row: Dictionary) -> void:
 		var near_ram := absf(offset.x) <= 8.0 and absf(offset.y) <= 8.0
 		var near_gate := absf(u.pos.x - Ground.WALL_X) <= 8.0 and absf(u.pos.y) <= 10.0
 		var near_bridge := absf(u.pos.x - Ground.RIVER_X) <= 7.0 and absf(u.pos.y - Ground.crossing(u.pos.y)) <= 4.0
+		if only_gate and not near_gate: continue
 		if not (near_ram or near_gate or near_bridge): continue
 		if absf(offset.x) < 1.95 and absf(offset.y) < 0.88:
 			row.hull_occupant_samples += 1
