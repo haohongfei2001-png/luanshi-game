@@ -68,6 +68,7 @@ func _run() -> void:
 	_check(field.camera.size<zoom,"Wheel changes viewing distance")
 	_key(KEY_C,true); _key(KEY_C,false)
 	_check(field.follow,"C restores player camera")
+	await _portrait()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://artifacts/kit-film"))
 	for kit in Arms.NAMES.size(): await _weapon(kit)
 	var out:=FileAccess.open("res://artifacts/field-controls.json",FileAccess.WRITE)
@@ -127,3 +128,42 @@ func _weapon(kit: int) -> void:
 	var row:={"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed,"max_ground_error":max_ground_error,"max_body_pick_error":cursor_error}
 	evidence.append(row)
 	print("FIELD_WEAPON_INPUT "+JSON.stringify(row))
+
+func _portrait() -> void:
+	var u:=field.battle.roster[0]
+	field.camera.size=5.8
+	field.pan_to(u.pos)
+	var mouse:=Vector2(620,380)
+	root.warp_mouse(mouse)
+	_mouse(MOUSE_BUTTON_MIDDLE,mouse,true)
+	var turn:=InputEventMouseMotion.new()
+	turn.position=mouse+Vector2(-132,0); turn.relative=Vector2(-132,0); turn.button_mask=MOUSE_BUTTON_MASK_MIDDLE
+	Input.parse_input_event(turn); Input.flush_buffered_events()
+	_mouse(MOUSE_BUTTON_MIDDLE,turn.position,false)
+	_check(field.camera_yaw>1.0,"Middle drag orbits the same living soldier")
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	var full:=root.get_texture().get_image()
+	var feet:=Ground.unit_point(u.pos)
+	var face:=field.camera.unproject_position(feet+Vector3(0.143,1.485,0))
+	var face_pixels:=_warm_pixels(full,Vector2i(face),5)
+	var hand_pixels:=0
+	for sign_z: float in [-1,1]:
+		var hand:=field.camera.unproject_position(feet+Vector3(0.36,1.018,sign_z*0.34))
+		hand_pixels=maxi(hand_pixels,_warm_pixels(full,Vector2i(hand),6))
+	var rect:=Rect2i(Vector2i(face)-Vector2i(78,52),Vector2i(156,206)).intersection(Rect2i(Vector2i.ZERO,full.get_size()))
+	var portrait:=full.get_region(rect)
+	_check(portrait.save_jpg("res://artifacts/soldier-portrait.jpg",0.97)==OK,"Store the actual face and hands at maximum play zoom")
+	print("FIELD_PORTRAIT_JPEG "+Marshalls.raw_to_base64(FileAccess.get_file_as_bytes("res://artifacts/soldier-portrait.jpg")))
+	_check(face_pixels>=7 and hand_pixels>=3,"Modeled skin remains visible on the face and at least one hand")
+	print("FIELD_PORTRAIT "+JSON.stringify({"face_skin_pixels":face_pixels,"hand_skin_pixels":hand_pixels,"crop_px":[rect.size.x,rect.size.y],"zoom":field.camera.size}))
+	field.camera_yaw=0.0
+
+func _warm_pixels(pic: Image,center: Vector2i,radius: int) -> int:
+	var found:=0
+	var area:=Rect2i(center-Vector2i.ONE*radius,Vector2i.ONE*(radius*2+1)).intersection(Rect2i(Vector2i.ZERO,pic.get_size()))
+	for x in range(area.position.x,area.end.x):
+		for y in range(area.position.y,area.end.y):
+			var c:=pic.get_pixel(x,y)
+			if c.r>0.24 and c.r>c.g*1.05 and c.g>c.b*1.05: found+=1
+	return found

@@ -72,7 +72,12 @@ void vertex() {
 	if (state==7) {v=bend_x(v,vec3(0,0.11,0),-1.45*smoothstep(0.0,0.90,p));}
 	else if (state==5) {v=bend_x(v,vec3(0,0.5,0),0.15);}
 	VERTEX=v;
-	tint=mix(COLOR.rgb,livery.rgb*(0.67+0.34*COLOR.r),clamp(UV2.y,0.0,1.0));
+	// Some instancing paths multiply vertex COLOR by the optional instance tint.
+	// Keep the authored skin, iron and leather palette independent of instance data.
+	float dyed=step(1.5,UV2.y);
+	vec3 paint=clamp(vec3(UV,UV2.y-2.0*dyed),vec3(0.0),vec3(1.0));
+	vec3 surface_paint=OUTPUT_IS_SRGB ? paint : mix(paint/12.92,pow((paint+0.055)/1.055,vec3(2.4)),step(vec3(0.04045),paint));
+	tint=mix(surface_paint,livery.rgb*(0.67+0.34*paint.r),dyed);
 	tint=mix(tint,vec3(0.95,0.59,0.34),INSTANCE_CUSTOM.a*0.57);
 	if (state==7) {tint*=0.64;}
 }
