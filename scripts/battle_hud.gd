@@ -5,6 +5,7 @@ signal restart_requested
 signal strategy_requested
 signal pause_requested
 signal saves_requested
+signal field_requested
 signal youth_requested
 
 const INK := Color("111e22")
@@ -24,6 +25,7 @@ var pause_button: Button
 var restart_button: Button
 var campaign_mode := false
 var settlement_complete := false
+var field_button: Button
 var youth_button: Button
 var youth_context: Dictionary = {}
 var font: Font
@@ -65,6 +67,11 @@ func _ready() -> void:
 	youth_button.focus_mode = Control.FOCUS_NONE
 	youth_button.pressed.connect(func(): youth_requested.emit())
 	add_child(youth_button)
+	field_button = Button.new()
+	field_button.text = "河关 · 千人战场"
+	field_button.focus_mode = Control.FOCUS_NONE
+	field_button.pressed.connect(func(): field_requested.emit())
+	add_child(field_button)
 	result_panel = PanelContainer.new()
 	result_panel.add_theme_stylebox_override("panel", _style(Color("14252af5"), GOLD))
 	result_panel.visible = false
@@ -118,6 +125,8 @@ func _layout() -> void:
 	strategy_button.size = Vector2(134, 26)
 	saves_button.position = Vector2(size.x - 345, 68)
 	saves_button.size = Vector2(176, 26)
+	field_button.position = Vector2(size.x - 522, 25)
+	field_button.size = Vector2(168, 36)
 	youth_button.position = Vector2(size.x - 345, 25)
 	youth_button.size = Vector2(202, 36)
 	result_panel.position = Vector2(size.x * 0.5 - 260, size.y * 0.5 - 160)

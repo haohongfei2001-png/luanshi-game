@@ -13,6 +13,18 @@ touch artifacts/.gdignore
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; fi
 "$GODOT" --headless --path . --check-only --script scripts/youth_ui.gd
+"$GODOT" --headless --path . --check-only --script scripts/field/package_probe.gd
+"$GODOT" --headless --path . --check-only --script tests/field_render.gd
+"$GODOT" --headless --path . --check-only --script tests/field_controls.gd
+"$GODOT" --headless --path . --check-only --script tests/field_siege_film.gd
+"$GODOT" --headless --path . --fixed-fps 60 --quit-after 1100 -- --field-check 2>&1 | tee artifacts/field-package-source.log
+grep -q '^FIELD_PACKAGE_PASS' artifacts/field-package-source.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-package-source.log; then exit 1; fi
+"$GODOT" --headless --path . --quit-after 3 res://scenes/river_gate.tscn 2>&1 | tee artifacts/field-entry.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-entry.log; then exit 1; fi
+"$GODOT" --headless --path . --script tests/field_simulation.gd 2>&1 | tee artifacts/field-simulation.log
+grep -q '^FIELD_SIM_PASS' artifacts/field-simulation.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-simulation.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/test_battle.gd 2>&1 | tee artifacts/simulation-tests.log
 "$GODOT" --headless --path . --script tests/test_world.gd 2>&1 | tee artifacts/world-tests.log
 "$GODOT" --headless --path . --script tests/tests_economy.gd 2>&1 | tee artifacts/economy-tests.log

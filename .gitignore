@@ -34,3 +34,4 @@ __pycache__/
 
 # Restored from a pinned upstream blob before editor import.
 /assets/fonts/NotoSansSC-Regular.otf
+/assets/build-revision.txt

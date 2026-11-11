@@ -2,6 +2,10 @@
 
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
+## Play the river gate candidate
+
+Download the macOS or Linux build and gameplay footage from [the battlefield pull request](https://github.com/haohongfei2001-png/luanshi-game/pull/18). The default opening deploys 512 ordinary soldiers on each side. Select a weapon and company tasks, then press Enter. From source, run `./tools/prepare-font.sh` and `godot --path .` with Godot 4.6.3. The upper-right campaign button opens the earlier three-city game and its saves. [Controls in Chinese](docs/PLAYING_ZH.md) · [Verification history](docs/PROJECT_STATUS.md).
+
 ## Vision
 
 A character-driven war RPG with MOBA-style isometric 3D combat, soldiers who require real supplies, strategic army command, and a world that continues to evolve outside the player's view. The protagonist grows older and can die. Death concludes that playthrough; saves and major-life checkpoints allow replay.
@@ -32,11 +36,17 @@ Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple S
 
 Godot 4.6.3 v0.8 integration: finite-HP combat and a playable youth military-life slice. The new “少年军旅 / 人生” entry follows enlistment, real patrol combat, disputed merit, four consequential responses, a real squad commission, dangerous combat/retreat and replacement from existing resources. A world-backed depot encounter now reserves actual soldiers and weapons, advances one clock and settles casualties/equipment exactly once in-process. Training remains a separate 20-vs-20 scene. Reproducible combat, world, transaction and routed scene tests are in `tools/test.sh`. See [verification](docs/VERIFICATION.md) for actual results and limitations.
 
+### 河关战场
+
+默认开场为河关战前部署。选择兵器，给各队分配任务，按 Enter 开战。WASD 移动，鼠标瞄准，左键或 J 普攻，Q、E、空格使用本兵器的三个动作。右键拖动镜头，滚轮缩放，C 回到主角。靠近马匹按 F，靠近战车按 V。Tab 打开军令，F5/F9 保存或恢复这场战斗。
+
+默认双方各 512 名普通士兵，另有军官、玩家和载具。三城战役和旧存档可从右上角进入。河关以新军籍接入原有 WorldSim。其本局时钟、留在地面的兵器、真实兵员损失及守军沿道路的撤离均在战后结算。两种开场各自保存，切换会保留内存中的现场。源代码验证命令是 `./tools/test.sh`。Linux X11 图形测量使用 `./tools/test-field-render.sh`，需要 Xvfb、FFmpeg 和 GNU timeout。
+
 ### Play from source
 
 1. Install Godot 4.6.3 (standard edition).
 2. In a fresh checkout run `./tools/prepare-font.sh`, then import `project.godot` in Godot and press F5. Packaged games include the font and run offline.
-3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (50% damage reduction for 1 second on new early/late profiles).
+3. In the legacy training mode, WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (50% damage reduction for 1 second on new early/late profiles).
 4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins new training **after** it ends; in campaign combat R returns to the map without resetting casualties.
 
 The standalone training battle has 20 friendly soldiers, 20 enemy soldiers, and one separately counted commander. The commander's death ends the encounter. Fallen soldiers remain in the casualty ledger; only a new encounter resets it.
