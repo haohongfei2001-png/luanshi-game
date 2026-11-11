@@ -28,6 +28,10 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 6. **No authored plot writing now.** One military opening/root and systemic objective templates only; owner will write all formal story later. Preserve future life/history architecture without implementing narrative branches prematurely.
 7. Grow from 20v20 → 100v100 → 250v250 → 512v512 as benchmark gates, but smaller scales are not a substitute for the target. Record genuine gameplay, performance and Mac build evidence.
 
+## 2026-11-12 Owner addendum: simpler individual soldiers are APPROVED
+
+See `PRODUCT_DECISIONS.md §1G` and `BATTLE_FIRST_V1_OWNER_SPEC_20261112.md §1.1B`. The owner permits reducing **individual soldier intelligence** to minimal attack, defense, health, morale, weapon, position and basic state machines. Group tactics, orders, routes and adjustments should mainly be managed by officers/squads. Keep real hit/animation/casualty continuity, near-camera recognizable people and weapons, and the 512v512 target. Prioritize simplifying individual AI/physics/update rates over secretly shrinking army sizes or showing fake combat animation. Maintain real Mac M5 performance target; untested remains NOT_RUN.
+
 ## Implementation
 
 - Preferred provisional stack: **Godot 4 + GDScript**. Use a text-oriented project structure and placeholder geometry initially.
