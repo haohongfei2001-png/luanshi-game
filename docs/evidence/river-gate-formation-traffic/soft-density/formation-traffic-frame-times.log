@@ -1,0 +1,12 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+FIELD_TRAFFIC_FRAME {"camera_size":26.0,"first_tick":460,"godot_tracked_bytes":68801511,"internal_scale":1.0,"last_tick":490,"mean_ms":57.7070333333333,"mode":"original","p50_ms":55.337,"p95_ms":63.983,"p99_ms":65.848,"real_hits":3,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":90,"seed":61112,"window":[960,600]}
+FIELD_TRAFFIC_FRAME {"camera_size":52.0,"first_tick":490,"godot_tracked_bytes":68821399,"internal_scale":1.0,"last_tick":520,"mean_ms":66.5071888888889,"mode":"original","p50_ms":64.708,"p95_ms":72.999,"p99_ms":108.372,"real_hits":6,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":90,"seed":61112,"window":[960,600]}
+FIELD_TRAFFIC_FRAME {"camera_size":26.0,"first_tick":460,"godot_tracked_bytes":68878919,"internal_scale":1.0,"last_tick":490,"mean_ms":55.3444,"mode":"with-lanes","p50_ms":52.139,"p95_ms":64.195,"p99_ms":64.778,"real_hits":22,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":90,"seed":61112,"window":[960,600]}
+FIELD_TRAFFIC_FRAME {"camera_size":52.0,"first_tick":490,"godot_tracked_bytes":68911707,"internal_scale":1.0,"last_tick":520,"mean_ms":65.5253111111111,"mode":"with-lanes","p50_ms":62.842,"p95_ms":73.271,"p99_ms":76.277,"real_hits":16,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":90,"seed":61112,"window":[960,600]}
+FIELD_TRAFFIC_PROFILE_PASS
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)

@@ -4,7 +4,7 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
-Download the macOS or Linux build and gameplay footage from [the battlefield pull request](https://github.com/haohongfei2001-png/luanshi-game/pull/18). The default opening deploys 512 ordinary soldiers on each side. Select a weapon and company tasks, then press Enter. From source, run `./tools/prepare-font.sh` and `godot --path .` with Godot 4.6.3. The upper-right campaign button opens the earlier three-city game and its saves. [Controls in Chinese](docs/PLAYING_ZH.md) · [Verification history](docs/PROJECT_STATUS.md).
+河关战役从军议进入。默认会战部署双方各 512 名普通兵，另有军官与玩家。也可选择「平陵巡防」按三城的现有兵力、军械出阵。请在 [Linux 与原生 macOS 构建记录](https://github.com/haohongfei2001-png/luanshi-game/actions/workflows/verify.yml?query=branch%3Amain) 下载对应的构建与实录。源码使用 Godot 4.6.3，先执行 `./tools/prepare-font.sh`，再执行 `godot --path .`。右上角「三城旧档」可进入已有战役。 [中文操作](docs/PLAYING_ZH.md) · [当前交付记录](docs/CODEX_CONTINUATION.md)
 
 ## Vision
 
