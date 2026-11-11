@@ -13,15 +13,24 @@ app = next(pathlib.Path("package/unpacked").glob("*.app"))
 exe = app / "Contents/MacOS" / plistlib.loads((app/"Contents/Info.plist").read_bytes())["CFBundleExecutable"]
 subprocess.run(["codesign","--verify","--deep","--strict",str(app)],check=True)
 digest = hashlib.sha256(pathlib.Path("package/Luanshi-macOS.zip").read_bytes()).hexdigest()
+# The first native startup on a fresh VM is not part of a frame-time sample.
+warm=subprocess.run([str(exe),"--headless","--fixed-fps","60","--quit-after","1100","--","--field-check"],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=65)
+assert warm.returncode==0 and b'FIELD_PACKAGE_PASS ' in warm.stdout,warm.stdout[-900:]
 settings = None
 trials = []
 for label,preset in [("clear-A",0),("balanced",1),("performance",2),("clear-B",0)]:
     if settings is not None:
         settings.write_text("[display]\npreset="+str(preset)+"\n")
     args=["/usr/bin/time","-l",str(exe),"--resolution","1000x600","--disable-vsync","--audio-driver","Dummy","--","--field-check","--field-profile","--field-window-tour","--field-proof="+str(out/(label+".png"))]
-    trial=subprocess.run(args,capture_output=True,text=True,timeout=60)
-    log=trial.stdout+"\n"+trial.stderr
-    (out/(label+".log")).write_text(log)
+    log_path=out/(label+".log")
+    print("Starting",label,"with verified archive",digest,flush=True)
+    with log_path.open("w") as handle:
+        try:
+            trial=subprocess.run(args,stdout=handle,stderr=subprocess.STDOUT,timeout=95)
+        except subprocess.TimeoutExpired:
+            print("Incomplete process, last log:",log_path.read_text(errors="replace")[-1700:],flush=True)
+            raise
+    log=log_path.read_text(errors="replace")
     assert trial.returncode==0 and 'FIELD_PACKAGE_PASS ' in log and not any(err in log for err in ['SCRIPT ERROR','SHADER ERROR','ERROR:']),log[-1700:]
     line=next(l for l in log.splitlines() if l.startswith("FIELD_HOST_WINDOW "))
     metrics=json.loads(line.partition(" ")[2])

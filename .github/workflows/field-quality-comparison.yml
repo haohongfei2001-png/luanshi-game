@@ -9,7 +9,7 @@ permissions:
 jobs:
   hosted-metal:
     runs-on: macos-latest
-    timeout-minutes: 7
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
