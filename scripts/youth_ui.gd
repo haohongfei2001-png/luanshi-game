@@ -49,7 +49,6 @@ var preview_new_life := false
 const CHINESE_FONT: FontFile = preload("res://assets/fonts/NotoSansSC-Regular.otf")
 
 static func chinese_font() -> FontFile:
-	CHINESE_FONT.allow_system_fallback = false
 	return CHINESE_FONT
 
 static func apply_font(control: Control) -> void:
