@@ -186,10 +186,10 @@ func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live
 	# In an orthographic camera the rays through every subject are parallel.
 	var direction:=eye-Ground.unit_point(focus)
 	for roof in roofs:
-		var hide: bool=zoom<43 and (_between(p,p+direction,roof) or (live and _between(h,h+direction,roof)) or (focus.distance_squared_to(Ground.GATE)<150 and _between(door,door+direction,roof)))
+		var occluding: bool=zoom<43 and (_between(p,p+direction,roof) or (live and _between(h,h+direction,roof)) or (focus.distance_squared_to(Ground.GATE)<150 and _between(door,door+direction,roof)))
 		var node: MeshInstance3D=roof.node
-		if hide: has_open_roof=true
-		if node.visible==hide: node.visible=not hide
+		if occluding: has_open_roof=true
+		if node.visible==occluding: node.visible=not occluding
 
 func _tower(b: Builder,p: Vector3) -> void:
 	b.block(p+Vector3(0,2.15,0),Vector3(5.1,4.3,5.1),STONE)
@@ -223,8 +223,8 @@ func _fort(b: Builder) -> void:
 		for layer in 4:
 			var h:=0.94+layer*0.51
 			var start:=Vector3(Ground.WALL_X-1.306,h,side*(Ground.GATE_HALF+0.3))
-			var end:=Vector3(start.x,h+0.035,side*(Ground.WALL_Z-0.4))
-			b.quad(start,end,end+Vector3.UP*0.035,start+Vector3.UP*0.035,LIME.darkened(0.15))
+			var lift_end:=Vector3(start.x,h+0.035,side*(Ground.WALL_Z-0.4))
+			b.quad(start,lift_end,lift_end+Vector3.UP*0.035,start+Vector3.UP*0.035,LIME.darkened(0.15))
 		for i in range(6,23,2):
 			b.block(Vector3(Ground.WALL_X-1.07,3.59,side*i),Vector3(0.47,0.66,1.33),LIME)
 		b.block(Vector3((Ground.WALL_X+Ground.BACK_X)*0.5,1.68,side*Ground.WALL_Z),Vector3(Ground.BACK_X-Ground.WALL_X,3.35,2.1),LIME)
