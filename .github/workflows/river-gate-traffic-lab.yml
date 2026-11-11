@@ -1,54 +1,25 @@
-name: Archive measured soft density and rendered comparisons
+name: Inspect the archived playable frame sheet
 on:
   push:
     branches: [codex/river-gate-lane-lab]
 permissions:
-  contents: write
-  actions: read
+  contents: read
 jobs:
-  record:
+  review:
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: codex/river-gate-lane-evidence
-      - uses: actions/download-artifact@v4
-        with:
-          name: river-gate-density-and-frames
-          run-id: 43121731374
-          github-token: ${{ github.token }}
-          path: /tmp/field-audit
-      - name: Save the verified game output on the evidence branch
+          ref: 35dfb086ddf3048b973aaf58b9cc66ed134c7b69
+      - name: Read the existing JPEG for visual inspection
         run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = 'b35c8ce19413be71398ec4157ca2c25813a6a023'
-          folder=docs/evidence/river-gate-formation-traffic/soft-density
-          mkdir -p "$folder"
-          cp /tmp/field-audit/formation-traffic-comparison.mp4 /tmp/field-audit/formation-traffic.log /tmp/field-audit/formation-traffic-camera.log /tmp/field-audit/formation-traffic-frame-times.log /tmp/field-audit/traffic-review-sheet.jpg /tmp/field-audit/SHA256SUMS "$folder/"
-          (cd "$folder" && sha256sum -c SHA256SUMS)
-          cat > "$folder/provenance.json" <<'PROVENANCE'
-          {
-            "stage": "河关兵流、役兵接替与软密度对照",
-            "simulation_source": "2ad18fd0f3feea89eefa757f49d9941b11d60dd7",
-            "evidence_tests_source": "1f6ab836e752de3e55b6b829503769774c96cd0b",
-            "workflow": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43121731374",
-            "seed": 61112,
-            "ordinary_soldiers": [
-              512,
-              512
-            ],
-            "controlled_variables": "相同军官、部署、命令、输入、真实命中和伤亡计算；原轨关闭 formation traffic 和 soft crowd，新轨同时开启。",
-            "simulation_window": "tick 100 至 620，按 tick 计时，半秒采样近距重合与密度；守门吞吐另取每轨破门后的相同 6 秒。",
-            "frame_profile": "Ubuntu 24.04，Godot 4.6.3，Xvfb 960×600 + llvmpipe。关闭垂直同步，无屏幕读回和编码，每三张渲染帧走一个真实20Hz战斗步，每个镜头每轨90张。这里记录相同负载的实时时钟帧开销。",
-            "recording": "单独的固定时钟实录。左右是相同世界坐标和游戏时刻，tick 260–736，每4个20Hz步记录每轨1帧，视频按10FPS播放，相当于2倍游戏时间。",
-            "M5": "DEVICE_NOT_TESTED",
-            "earlier_evidence": "上层目录对照的是 aa517095 上第一个门板/冲车方案。那段视频首帧的 HUD 仍在等待第一次刷新；本目录已将 HUD 与各采样时刻同步。",
-            "runner": "ubuntu-24.04, Godot 4.6.3, Mesa llvmpipe LLVM 20.1.2 256-bit"
-          }
-          PROVENANCE
-          git add -f -- "$folder/formation-traffic-comparison.mp4" "$folder/formation-traffic.log" "$folder/formation-traffic-camera.log" "$folder/formation-traffic-frame-times.log" "$folder/traffic-review-sheet.jpg" "$folder/SHA256SUMS" "$folder/provenance.json"
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Archive moving near and far frame samples plus the defended gate footage'
-          git push origin HEAD:refs/heads/codex/river-gate-lane-evidence
+          python3 - <<'PY'
+          import base64, hashlib, pathlib
+          path = pathlib.Path("docs/evidence/river-gate-formation-traffic/soft-density/traffic-review-sheet.jpg")
+          data = path.read_bytes()
+          assert hashlib.sha256(data).hexdigest() == "89924e852e178bfa03b42edfa5ae3360316b07766f6bff691b6bde07bab1c262"
+          encoded = base64.b64encode(data).decode("ascii")
+          for index in range(0, len(encoded), 1800):
+              print("SHEET_BYTES", encoded[index:index+1800])
+          PY
