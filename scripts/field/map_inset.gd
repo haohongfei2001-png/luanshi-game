@@ -8,6 +8,16 @@ var player:=Vector2.ZERO
 var heading:=Vector2.RIGHT
 var half_view:=Vector2(19,15)
 var first:=true
+var mustering:=PackedVector2Array()
+var selected:=Vector2.INF
+
+func set_muster(b: RefCounted,index: int) -> void:
+	mustering.clear()
+	selected=Vector2.INF
+	if not b.started:
+		for i in b.companies_per_side: mustering.append(b.companies[i].home)
+		if index>=0 and index<mustering.size(): selected=mustering[index]
+	queue_redraw()
 
 func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_STOP
@@ -45,6 +55,8 @@ func _draw() -> void:
 	draw_circle(_point(Ground.GATE),2.5,Color("ebbe7b"))
 	var bounds:=_rect(observer-half_view,observer+half_view).intersection(Rect2(Vector2(2,2),size-Vector2(4,4)))
 	if bounds.has_area(): draw_rect(bounds,Color("a8c5b3"),false,1)
+	for at in mustering: draw_circle(_point(at),1.6,Color("9fc6bd"))
+	if selected.is_finite(): draw_arc(_point(selected),4,0,TAU,12,Color("ffe297"),1.6,true)
 	var p:=_point(player)
 	draw_circle(p,2.8,Color("ffe6a0"))
 	draw_line(p,p+heading*6,Color("ffedc2"),1.4,true)

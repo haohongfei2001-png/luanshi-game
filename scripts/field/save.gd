@@ -21,7 +21,7 @@ static func _rows(items: Array, fields: Array) -> Array:
 	return rows
 
 static func snapshot(b: Battle) -> Dictionary:
-	return {"version":2,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
+	return {"version":3,"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
 		"battle":_row(b,HEAD),"units":_rows(b.roster,UNIT),"companies":_rows(b.companies,COMPANY),
 		"orders":_rows(b.orders,ORDER),"shots":_rows(b.shots,SHOT),
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
@@ -45,18 +45,25 @@ static func _list(data: Dictionary,key: String,count: int) -> bool:
 	return data.get(key) is Array and data[key].size()==count
 
 static func restore(data: Variant) -> Battle:
-	if not data is Dictionary or data.get("version") not in [1,2] or data.get("side") not in Battle.SCALES: return null
+	if not data is Dictionary or data.get("version") not in [1,2,3] or data.get("side") not in Battle.SCALES: return null
 	if not data.get("seed") is int or not data.get("rng") is int or not data.get("weapon") is int or data.weapon<0 or data.weapon>8: return null
 	var b := Battle.new()
 	b.setup(data.side,data.seed,data.weapon)
 	if not data.get("aim_at_wall_post",false) is bool or not data.get("locked_at_wall_post",false) is bool: return null
 	b.locked_at_wall_post=data.get("locked_at_wall_post",false)
 	b.aim_at_wall_post=data.get("aim_at_wall_post",false)
+	if data.version==3:
+		if not b.restore_muster(data.get("muster")): return null
+		for k in ["aftermath_hours","at_camp","breath","winded","buffer_ticks","buffered_slot","buffer_aim","buffer_wall"]:
+			if not _valid(data.get(k),b.get(k)): return null
+			b.set(k,data[k])
+		if b.aftermath_hours<0 or b.aftermath_hours>168 or b.breath<0 or b.breath>1 or b.buffer_ticks<0 or b.buffer_ticks>4 or b.buffered_slot< -1 or b.buffered_slot>3 or (b.buffer_ticks==0)!=(b.buffered_slot==-1): return null
 	var header: Variant=data.get("battle")
 	if data.version==1 and header is Array and header.size()==HEAD.size()-1:
 		header=header.duplicate()
 		header.append(0)
 	if not _apply(b,HEAD,header) or b.tick<0 or b.vehicle<0 or b.vehicle>2: return null
+	if (b.aftermath_hours>0 or b.at_camp) and b.result=="": return null
 	if data.version==1:
 		b.legacy_missiles=b.started
 	else:
