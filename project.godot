@@ -3,8 +3,8 @@ config_version=5
 
 [application]
 config/name="Luanshi - Border Skirmish"
-config/version="0.6.0"
-run/main_scene="res://scenes/battle.tscn"
+config/version="0.15.0-field.1"
+run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
 [display]
@@ -17,6 +17,8 @@ window/stretch/mode="canvas_items"
 [rendering]
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="mobile"
+renderer/rendering_method.macos="mobile"
+rendering_device/driver.macos="metal"
 textures/default_filters/use_nearest_mipmap_filter=false
 textures/vram_compression/import_etc2_astc=true
 textures/vram_compression/import_s3tc_bptc=true

@@ -4,10 +4,12 @@ signal close_requested
 signal assault_requested
 signal campaign_reset
 signal saves_requested
+signal youth_requested
 const World := preload("res://scripts/world_sim.gd")
 const NAMES := {"pingling": "Pingling", "anping": "Anping", "hequ": "Hequ"}
 const SOURCES := {"安平求援使者": "Anping relief messenger", "亲历斥候": "Local eyewitness scout", "逃出城的信使": "Escaped city messenger", "安平军情信使": "Anping military messenger"}
 var world := World.new()
+var narrative_font: Font = preload("res://scripts/youth_ui.gd").chinese_font()
 var view: Dictionary = {}
 var buttons: Dictionary = {}
 var army_label: Label
@@ -41,8 +43,10 @@ func _ready() -> void:
 	scroll.add_child(stack)
 	var heading := HBoxContainer.new()
 	stack.add_child(heading)
-	var title := _label(heading, "ANPING / CAMPAIGN PROTOTYPE", 24)
+	var title := _label(heading, "ANPING / TECHNICAL CAMPAIGN", 24)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_button(heading, "youth", "少年军旅 / 人生", func(): youth_requested.emit())
+	buttons.youth.add_theme_font_override("font", narrative_font)
 	_button(heading, "saves", "Save / Load", func(): saves_requested.emit())
 	_button(heading, "close", "M  /  Return to training", func(): close_requested.emit())
 	status_label = _label(stack, "Real campaign roster and losses | Separate training | Save / Load anytime", 16)
@@ -99,6 +103,9 @@ func _command(command: String, argument: String = "", amount: int = 0) -> void:
 	if interaction_blocked:
 		return
 	var current: Dictionary = world.player_view()
+	if world.has_method("youth_view") and world.youth_view().get("enabled", false):
+		set_feedback("少年军旅通过人生面板接取军令；此处只查看已知军情。")
+		return
 	if current.get("active_battle", "") != "" or (current.get("campaign_ended", false) and command != "reset"):
 		set_feedback("Finish the current battle before issuing world orders." if battle_pending else "The commander died. Load an earlier save or life checkpoint to return.")
 		return
@@ -122,6 +129,10 @@ func _command(command: String, argument: String = "", amount: int = 0) -> void:
 	refresh()
 
 func set_feedback(message: String) -> void:
+	if world.has_method("youth_view") and world.youth_view().get("enabled", false):
+		feedback.add_theme_font_override("font", narrative_font)
+	else:
+		feedback.remove_theme_font_override("font")
 	feedback.text = message
 	refresh()
 
@@ -203,6 +214,13 @@ func refresh() -> void:
 		if not is_zero_approx(fposmod(observed, 3600.0)) or not is_zero_approx(fposmod(delivered, 3600.0)):
 			lines.append("  Exact: observed %s / delivered %s / age %s" % [_time_text(observed, true), _time_text(delivered, true), _time_text(age)])
 	reports_label.text = "\n".join(lines)
+	if world.has_method("youth_view") and world.youth_view().get("enabled", false):
+		status_label.text = "少年军旅 / 世界军报。已知情报来自同一世界；请回人生面板继续军旅。"
+		status_label.add_theme_font_override("font", narrative_font)
+		buttons.close.text = "M / Return to youth life"
+		for id in buttons:
+			if id not in ["close", "saves", "youth"]:
+				buttons[id].disabled = true
 	map.queue_redraw()
 
 func _army_text(army: Dictionary, now: float) -> String:

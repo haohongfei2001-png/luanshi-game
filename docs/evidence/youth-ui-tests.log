@@ -1,0 +1,5 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+YOUTH_SCENE_FIRST_COMBAT {"actions":{"attack":true,"guard":true,"lunge":true,"sweep":true},"captured":false,"frames":427,"report":{"elapsed_seconds":7.2,"enemy_casualties":3,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":4,"player_alive":true,"player_damage":112.0,"player_hp":100.0,"result":"Victory at the border","seed":8103}}
+YOUTH_SCENE_SUMMARY {"assertions":55,"failures":0,"messages":[]}

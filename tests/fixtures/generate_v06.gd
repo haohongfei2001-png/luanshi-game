@@ -1,0 +1,147 @@
+extends SceneTree
+# Run ONLY against public v0.6 source e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b.
+# Its tree matches the original local fixture source 37beae24b60f841a5d9e1137a747271acb00695c.
+const W = preload("res://scripts/world_sim.gd")
+const S = preload("res://scripts/campaign_store.gd")
+const C = preload("res://scripts/campaign_value_codec.gd")
+const B = preload("res://scripts/battle_sim.gd")
+var failures: Array[String] = []
+var output: String
+var store = S.new("v06_fixture_generation")
+var manifest = {
+	"source_commit": "e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b",
+	"original_generation_source_commit": "37beae24b60f841a5d9e1137a747271acb00695c",
+	"source_tree": "8b5bcf4f3298bf68bd9c4198e1828e5c66cda7df",
+	"godot": "4.6.3.stable.official.7d41c59c4",
+	"fixtures": {},
+}
+func must(ok: bool, label: String):
+	if not ok:
+		push_error(label)
+		failures.append(label)
+func local_world():
+	var w = W.new(184)
+	w.advance_seconds(0.125)
+	w.observe_city("pingling",8)
+	w.march("river")
+	w.advance(3)
+	return w
+func write_text(name: String, data: String):
+	var f = FileAccess.open(output.path_join(name), FileAccess.WRITE)
+	must(f != null, "open " + name)
+	f.store_string(data)
+	f.close()
+func state_file(name: String, state: Dictionary) -> String:
+	var encoded = C.new().encode(state)
+	must(encoded.ok,"codec " + name)
+	var raw = JSON.stringify(encoded.value)
+	write_text(name,raw + "\n")
+	return raw.sha256_text()
+func save_fixture(name: String, w, checkpoint: bool = false):
+	must(w.audit().is_empty(),name + " audit")
+	var disk = store.save_checkpoint(w,name) if checkpoint else store.save_slot(w,name)
+	must(disk.ok,name + " writes")
+	var path = "user://campaigns/v06_fixture_generation/" + ("checkpoints/" if checkpoint else "slots/") + name + ".save.json"
+	var bytes = FileAccess.get_file_as_bytes(path)
+	var decoded = store.decode_campaign(bytes)
+	must(decoded.ok and decoded.state == w.export_campaign_state(),name + " exact decode")
+	write_text(name + ".save.json",bytes.get_string_from_utf8())
+	manifest.fixtures[name] = {"state_sha256":state_file(name + ".state.codec.json",decoded.state),"checkpoint":checkpoint}
+func continue_running(w, id: String, first_frame: int, end_frame: int, hashes: Array):
+	var sim = w.start_battle(id)
+	for frame in range(first_frame,end_frame):
+		if frame % 19 == 0: sim.use_action("guard")
+		if frame % 23 == 0: sim.use_action("attack")
+		sim.set_player_input(Vector2(0.25,-0.125),Vector2(1.0,0.35))
+		sim.step(B.FIXED_DELTA)
+		w.sync_battle_time(id)
+		var encoded = C.new().encode(w.export_campaign_state())
+		must(encoded.ok,"running frame codec " + str(frame))
+		hashes.append(JSON.stringify(encoded.value).sha256_text())
+		if sim.ended: break
+func continuation(name: String, w):
+	manifest.fixtures[name].continuation_sha256 = state_file(name + ".continuation.codec.json",w.export_campaign_state())
+	must(w.audit().is_empty(),name + " continuation audit")
+func _initialize():
+	output = OS.get_cmdline_user_args()[0]
+	DirAccess.make_dir_recursive_absolute(output)
+	var w = local_world()
+	save_fixture("life_node",w,true)
+	w.advance_seconds(7 * 3600.0 + 0.3456789012)
+	continuation("life_node",w)
+	w = local_world()
+	var id: String = w.create_battle_ticket().ticket.battle_id
+	must(w.cancel_battle_ticket(id),"cancel")
+	save_fixture("cancelled",w)
+	w.advance_seconds(7 * 3600.0 + 0.3456789012)
+	continuation("cancelled",w)
+	w = local_world()
+	id = w.create_battle_ticket().ticket.battle_id
+	var sim = w.start_battle(id)
+	var initial_rng = sim.rng.state
+	sim.issue_order("attack")
+	for frame in range(330):
+		sim.step(B.FIXED_DELTA)
+		w.sync_battle_time(id)
+	sim.set_player_input(Vector2(0.3,-0.2),Vector2(1.0,0.2))
+	for action in ["attack","sweep","lunge","guard"]: must(sim.use_action(action),action)
+	sim.step(0.03125) # Intentionally unsynced, preserving lagging strategic time.
+	must(not sim.ended and sim.player().guard > 0.0 and sim.rng.state != initial_rng,"running state rich")
+	for cd in sim.cooldowns.values(): must(cd > 0.0,"all cooldowns active")
+	save_fixture("running",w)
+	var hashes: Array = []
+	continue_running(w,id,0,120,hashes)
+	continuation("running",w)
+	must(not sim.ended,"running first 120 frames nonterminal")
+	continue_running(w,id,120,18000,hashes)
+	must(sim.ended,"running whole fight terminal")
+	var trace = {"first_frame":0,"frame_count":hashes.size(),"state_sha256":hashes}
+	var trace_json = JSON.stringify(trace)
+	write_text("running.trace.json",trace_json + "\n")
+	manifest.fixtures.running.trace_sha256 = trace_json.sha256_text()
+	manifest.fixtures.running.trace_frame_count = hashes.size()
+	must(w.commit_battle_outcome(sim.outcome()).ok,"running terminal settles")
+	must(w.audit().is_empty(),"running whole fight audit")
+	manifest.fixtures.running.whole_fight_sha256 = state_file("running.whole_fight.codec.json",w.export_campaign_state())
+	# Victory is reached via actual simulation only, never direct HP/stat mutations.
+	w = local_world()
+	id = w.create_battle_ticket().ticket.battle_id
+	sim = w.start_battle(id)
+	sim.issue_order("attack")
+	for frame in range(18000):
+		var nearest = sim._nearest_enemy(sim.player())
+		if nearest >= 0:
+			var offset: Vector2 = sim.units[nearest].pos - sim.player().pos
+			sim.set_player_input(offset.normalized() if offset.length() > 2.0 else Vector2.ZERO,offset)
+			for action in ["guard","sweep","lunge","attack"]: sim.use_action(action)
+		sim.step(B.FIXED_DELTA)
+		w.sync_battle_time(id)
+		if sim.ended: break
+	must(sim.ended and sim.player().hp > 0.0,"natural victory")
+	save_fixture("pending",w)
+	var outcome = sim.outcome()
+	must(w.commit_battle_outcome(outcome).ok,"pending commits")
+	continuation("pending",w)
+	save_fixture("committed",w)
+	var retry = w.commit_battle_outcome(outcome)
+	must(retry.ok and retry.already_committed,"receipt idempotent")
+	continuation("committed",w)
+	# Isolated commander faces the enemies while the company retreats.
+	w = local_world()
+	id = w.create_battle_ticket().ticket.battle_id
+	sim = w.start_battle(id)
+	sim.issue_order("retreat")
+	for frame in range(18000):
+		var movement = Vector2.RIGHT if sim.player().pos.x < 12.0 else Vector2.ZERO
+		sim.set_player_input(movement,Vector2.RIGHT)
+		sim.step(B.FIXED_DELTA)
+		w.sync_battle_time(id)
+		if sim.ended: break
+	must(sim.ended and sim.player().hp == 0.0,"natural death")
+	must(w.commit_battle_outcome(sim.outcome()).ok,"death commits")
+	save_fixture("dead",w)
+	must(store.load_checkpoint(w,"life_node").ok,"life node restores")
+	continuation("dead",w)
+	write_text("manifest.json",JSON.stringify(manifest,"\t") + "\n")
+	print("V06_FIXTURES_RESULT failures=" + str(failures) + " " + JSON.stringify(manifest))
+	quit(0 if failures.is_empty() else 1)
