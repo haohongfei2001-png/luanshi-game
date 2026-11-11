@@ -1,0 +1,167 @@
+{
+  "source_commit": "97726eed8ae3cf3f32cbe254961a5148c8cf3a5e",
+  "engine": "4.6.3.stable.official.7d41c59c4",
+  "environment": "Linux cloud, headless",
+  "control_driver": "tests/youth_combat_driver.gd",
+  "injected_gameplay_outcomes": false,
+  "proofs": [
+    {
+      "ally_dead": [],
+      "elapsed": 8.80000000000002,
+      "enemy_dead": 3,
+      "phase": "first",
+      "player_hp": 100.0,
+      "policy": "fight",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [
+        "recruit_lin",
+        "recruit_wu",
+        "recruit_tian"
+      ],
+      "elapsed": 11.6666666666668,
+      "enemy_dead": 6,
+      "phase": "dangerous",
+      "player_hp": 93.321736395359,
+      "policy": "tactical",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [],
+      "elapsed": 8.80000000000002,
+      "enemy_dead": 3,
+      "phase": "first",
+      "player_hp": 100.0,
+      "policy": "fight",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [
+        "recruit_lin",
+        "recruit_wu",
+        "recruit_tian"
+      ],
+      "elapsed": 11.6666666666668,
+      "enemy_dead": 6,
+      "phase": "dangerous",
+      "player_hp": 93.321736395359,
+      "policy": "tactical",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [],
+      "elapsed": 8.80000000000002,
+      "enemy_dead": 3,
+      "phase": "first",
+      "player_hp": 100.0,
+      "policy": "fight",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [
+        "recruit_lin",
+        "recruit_wu",
+        "recruit_tian"
+      ],
+      "elapsed": 11.6666666666668,
+      "enemy_dead": 6,
+      "phase": "dangerous",
+      "player_hp": 93.321736395359,
+      "policy": "tactical",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [],
+      "elapsed": 8.80000000000002,
+      "enemy_dead": 3,
+      "phase": "first",
+      "player_hp": 100.0,
+      "policy": "fight",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [
+        "recruit_zhou",
+        "recruit_wu",
+        "recruit_tian"
+      ],
+      "elapsed": 15.016666666667,
+      "enemy_dead": 0,
+      "phase": "dangerous",
+      "player_hp": 100.0,
+      "policy": "delayed_retreat",
+      "result": "retreat",
+      "seed": 184
+    },
+    {
+      "ally_dead": [],
+      "elapsed": 4.18333333333332,
+      "enemy_dead": 0,
+      "phase": "first",
+      "player_hp": 100.0,
+      "policy": "retreat",
+      "result": "retreat",
+      "seed": 185
+    },
+    {
+      "ally_dead": [
+        "recruit_lin"
+      ],
+      "elapsed": 15.3833333333337,
+      "enemy_dead": 4,
+      "phase": "first",
+      "player_hp": 7.79254126548767,
+      "policy": "reckless",
+      "result": "victory",
+      "seed": 185
+    },
+    {
+      "ally_dead": [],
+      "elapsed": 8.80000000000002,
+      "enemy_dead": 3,
+      "phase": "first",
+      "player_hp": 100.0,
+      "policy": "fight",
+      "result": "victory",
+      "seed": 184
+    },
+    {
+      "ally_dead": [
+        "commander",
+        "recruit_lin",
+        "recruit_zhou",
+        "recruit_wu",
+        "recruit_tian",
+        "replacement_accept_appointment_0"
+      ],
+      "elapsed": 12.9333333333336,
+      "enemy_dead": 1,
+      "phase": "dangerous",
+      "player_hp": 0.0,
+      "policy": "reckless",
+      "result": "commander_dead",
+      "seed": 184
+    }
+  ],
+  "validation_fixture_note": "The separate no-witness validation fixture injects terminal unit damage and is excluded from proofs.",
+  "checks": {
+    "career": 536,
+    "genuine_world6": 40,
+    "youth_validation": 2201,
+    "restart_prepare": 13,
+    "restart_resume": 14
+  },
+  "full_suite": "PASS, exit 0, no Godot error markers",
+  "unverified": [
+    "Graphical player experience",
+    "Real MacBook Air M5 gameplay/performance"
+  ]
+}

@@ -36,6 +36,7 @@ func _run() -> void:
 	root.add_child(scene)
 	await process_frame
 	await process_frame
+	check(scene.sim.hero_profile.id == "early_v1" and scene.sim.player().max_hp == 100.0, "normal scene uses finite early profile")
 	check(scene.views.size() == 41, "all unit views instantiated")
 	check(scene.hud.buttons.size() == 7, "all skill and order buttons connected")
 	for name in ["attack", "sweep", "lunge", "guard", "order_attack", "order_follow", "order_retreat"]:

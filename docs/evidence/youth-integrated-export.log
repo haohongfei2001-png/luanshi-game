@@ -1,0 +1,39 @@
+Verified implementation: bb6654f0cad1e79b00789935f096134bdf476c3f
+Linux cloud; official Godot 4.6.3 matching templates.
+Command: ./tools/export.sh with the same explicit XDG directories as source verification.
+Exit: 0. macOS archive structure checked only; native execution pending CI.
+
+=== exported-linux-smoke
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":872,"wall_mean_ms":2.42115252293578,"wall_p50_ms":2.471,"wall_p95_ms":3.309},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":1.11393736017897,"report":{"elapsed_seconds":14.9,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":10,"friendly_survivors":10,"player_alive":true,"player_damage":395.91,"player_hp":54.15,"result":"Victory at the border","seed":184},"steps":894}
+
+=== exported-linux-campaign
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"army":{"condition":{"activity":"rest","activity_flags":{"battle":true},"attrition_at":3000,"fatigue":6,"food_hours":17.0,"food_needed_per_hour":6,"hunger":0,"last_activity":"march","last_eaten":6,"last_needed":6,"low_food":false,"modifiers":{"damage_percent":100,"speed_percent":100},"morale":100,"ration_scale":1000,"stage":"fed","weakened_at":2000},"food":102,"location":"hequ","march":{},"owner":"sheng","soldiers":57,"starving_hours":0,"weapons":45},"frame_timing":{"device":"","display":"headless","sample_count":839,"wall_mean_ms":2.28492848629321,"wall_p50_ms":2.222,"wall_p95_ms":3.014},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":0.929870779976717,"report":{"elapsed_seconds":14.32,"enemy_casualties":15,"enemy_survivors":0,"friendly_casualties":3,"friendly_survivors":16,"player_alive":true,"player_damage":413.59,"player_hp":24.67,"result":"Victory at the border","seed":8103},"settlement":{"already_committed":false,"battle_id":"1:1","campaign_ended":false,"depot_captured":true,"elapsed_world_time":14.316666666667,"ok":true,"result":"victory","spoils":{"weapons":15}},"steps":859,"world_time_seconds":10814.3166666667}
+
+=== exported-linux-persistence-prepare
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PERSISTENCE_SMOKE_PREPARE_PASS {"campaign":"runtime_smoke_export_1794187877_6350_3973","errors":[],"events":42,"hero_profile":{"id":"early_v1","revision":1},"ok":true,"phase":"prepare","schema_version":1,"world_time":10825.825}
+
+=== exported-linux-persistence-resume
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PERSISTENCE_SMOKE_RESUME_PASS {"campaign":"runtime_smoke_export_1794187877_6350_3973","errors":[],"events":42,"hero_profile":{"id":"early_v1","revision":1},"ok":true,"phase":"resume","schema_version":1,"world_time":10825.825}
+
+=== exported-linux-youth-prepare
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RUNTIME_PREPARE_PASS {"checks":30,"envelope_version":1,"errors":[],"events":284,"hero_hp":100.0,"ok":true,"phase":"prepare","stage":"endpoint","world_time":72023.8479166667,"world_version":7}
+
+=== exported-linux-youth-resume
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RUNTIME_RESUME_PASS {"checks":29,"envelope_version":1,"errors":[],"events":284,"hero_hp":100.0,"ok":true,"phase":"resume","stage":"endpoint","world_time":72023.8479166667,"world_version":7}
+
+8f8d7f1bb01d55197a9b3a6ee419ce15c6d09aef74c72a9cd3eb90e0fa704303  builds/Luanshi-macOS.zip
+64f2e113b6a01db211b84ddae9e563ec3a5fb75d695b666c82947368b1352435  builds/Luanshi-linux.tar.gz

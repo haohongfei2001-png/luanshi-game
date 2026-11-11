@@ -171,7 +171,8 @@ func _test_faction_and_garrison_symmetry() -> void:
 	check(world.totals().civilian_population == 50, "military hunger does not add deferred civilian demography")
 
 func local_world() -> WorldSimulation:
-	var world := World.new()
+	# Existing condition arithmetic is an explicit legacy fixture.
+	var world := World.new(184, "legacy_test_v0")
 	world.march("river")
 	world.advance(3)
 	return world
@@ -191,7 +192,7 @@ func victory(simulation: BattleSimulation) -> void:
 func _test_battle_entry() -> void:
 	var healthy := local_world()
 	var normal := begin(healthy)
-	check(normal.simulation.player().speed == 7.0 and normal.simulation.player().damage == 26.0 and normal.simulation.player().hp == 360.0, "healthy legacy hero profile unchanged; OWNER-COMBAT-01 remains separate")
+	check(normal.simulation.player().speed == 7.0 and normal.simulation.player().damage == 26.0 and normal.simulation.player().hp == 360.0, "explicit legacy condition fixture unchanged; finite profiles have separate coverage")
 	var world := local_world()
 	for id in ["relief", "hequ"]:
 		strain(world, id)

@@ -1,0 +1,4 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+YOUTH_INPUT_VALIDATION_PASS {"captures":[],"dangerous_withdrawal":{"elapsed_seconds":14.17,"enemy_casualties":0,"enemy_survivors":8,"friendly_casualties":2,"friendly_survivors":3,"player_alive":true,"player_damage":0.0,"player_hp":100.0,"result":"The company withdrew","seed":16022},"device":"","display":"headless","failures":0,"personal_first_combat":{"actions":{"attack":true,"guard":true,"lunge":true,"sweep":true},"captured":false,"frames":427,"report":{"elapsed_seconds":7.2,"enemy_casualties":3,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":4,"player_alive":true,"player_damage":112.0,"player_hp":100.0,"result":"Victory at the border","seed":8103}}}
