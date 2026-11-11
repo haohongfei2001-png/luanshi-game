@@ -32,6 +32,12 @@ Read `docs/GAME_VISION.md` before changing gameplay architecture. Do not silentl
 
 See `PRODUCT_DECISIONS.md §1G` and `BATTLE_FIRST_V1_OWNER_SPEC_20261112.md §1.1B`. The owner permits reducing **individual soldier intelligence** to minimal attack, defense, health, morale, weapon, position and basic state machines. Group tactics, orders, routes and adjustments should mainly be managed by officers/squads. Keep real hit/animation/casualty continuity, near-camera recognizable people and weapons, and the 512v512 target. Prioritize simplifying individual AI/physics/update rates over secretly shrinking army sizes or showing fake combat animation. Maintain real Mac M5 performance target; untested remains NOT_RUN.
 
+## 2026-11-12 Owner addendum: powerful generals on BOTH sides and causal battle outcomes
+
+Read `docs/PRODUCT_DECISIONS.md §1H` and `docs/BATTLE_FIRST_V1_OWNER_SPEC_20261112.md §4.3/5.1` BEFORE modifying the current field battlefield or commander systems. There are combat-capable senior officers, battlefield commanders and potentially off-field supreme commanders on **both teams**. Ordinary soldiers may have inexpensive FSMs, but elite enemy/friendly officers must independently fight, threaten the player's formations, order troops, protect/evacuate commanders and engage the player in fair timing/position/weapon-based action combat. The player can plausibly kill dozens of ordinary troops, while opposing generals can do comparable harm to friendly troops; no free invincibility or automatic boss teleporting to player.
+
+**Decapitation is NOT a win button**: commanders can be wounded, rescued, evacuated, captured or killed; orders can survive through delegates, or brittle armies may genuinely break. Evaluate actual bilateral force, morale, reserves, logistics, terrain, missions, command continuity and retreat/relief before settling battles. Killing all enemy generals without loss of resistance or objectives does NOT immediately end the war; a battle can end without killing any leader. Player death ends the player's life, not automatically every friendly army's campaign. Acceptance: `ACCEPTANCE_MATRIX.md §7F-B`. Preserve separate 512+512 ordinary troops, true M5 60fps validation status, story blank, existing v0.6/PRs and saves.
+
 ## Implementation
 
 - Preferred provisional stack: **Godot 4 + GDScript**. Use a text-oriented project structure and placeholder geometry initially.
