@@ -5,7 +5,7 @@ const Field := preload("res://scripts/field/controller.gd")
 const Battle := preload("res://scripts/field/battle.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const START_TICK := 260
-const FRAME_COUNT := 90
+const FRAME_COUNT := 120
 const TICKS_PER_FRAME := 4
 var ok := true
 
@@ -43,9 +43,9 @@ func _run() -> void:
 				quit(1)
 				return
 			var center_x := -9.0 + float(target_tick) * 0.073
-			field.pan_to(Vector2(minf(center_x, Ground.WALL_X - 4.0), 0.0))
+			field.pan_to(Vector2(minf(center_x, Ground.WALL_X + 2.0), 0.0))
 			field.camera.size = 26.0
-			field._process(Battle.DT)
+			field._process(Battle.DT * TICKS_PER_FRAME)
 			await RenderingServer.frame_post_draw
 			var shot := root.get_texture().get_image()
 			ok = ok and shot != null and shot.save_jpg("%s/frame-%03d.jpg" % [directory, frame], 0.92) == OK
