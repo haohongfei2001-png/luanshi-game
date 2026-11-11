@@ -2,6 +2,12 @@
 
 This repository currently contains an early battle prototype, but the **long-term assignment is a complete single-player game** under docs/FINAL_VISION_ACCEPTANCE.md. Implement incrementally; do not mistake the first prototype for project completion.
 
+## 2026-11-12 MASTER EXECUTION MANDATE — read before development
+
+**Primary task: [docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md](docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md).** The owner does **not** want to relay messages between ChatGPT and Codex after each PR. Continue autonomously within the actual execution runtime: integrate current river-gate playable candidate and validated PR chain, repair remaining quality/performance, finish nine weapons, bilateral strong generals, realistic military outcomes and one polished easy-to-play 512v512 battle, validate Linux/macOS, archive evidence, deliver an installable candidate. Do not stop at each phase to ask for another user message. Historical wars are optional inspiration, not a checklist. Formal literary plot stays blank. Actual M5 hardware access is a separate gated permission; mark unverified and do everything else.
+
+The mandate does **not** authorize unlimited background execution. Before session cutoff commit/push tested progress and write exact next action to `docs/CODEX_CONTINUATION.md` or the principal GitHub issue. Older overlapping execution queues/issue fragments are subordinated to this mandate and newer owner decisions.
+
 ## Execution mode — Codex primary, Dot optional coordination (Owner override 2026-11-12)
 
 - The **primary implementer is now Codex**, explicitly authorized by the owner on 2026-11-12. Dot may help coordinate and track work but is **no longer the sole programmer**. Codex may independently edit, test, optimize and submit changes in already authorized repo/cloud development environments. Neither may access the user's Mac, spend money, publish a product, or modify licenses without separate approval. Avoid overlapping writes to the same working branch.
