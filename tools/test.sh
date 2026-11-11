@@ -11,6 +11,9 @@ touch artifacts/.gdignore
 ./tools/prepare-font.sh
 "$GODOT" --version | tee artifacts/engine-version.log
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
+"$GODOT" --headless --path . --script tests/field_simulation.gd 2>&1 | tee artifacts/field-simulation.log
+grep -q '^FIELD_SIM_PASS' artifacts/field-simulation.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-simulation.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/test_battle.gd 2>&1 | tee artifacts/simulation-tests.log
 "$GODOT" --headless --path . --script tests/test_world.gd 2>&1 | tee artifacts/world-tests.log
 "$GODOT" --headless --path . --script tests/tests_economy.gd 2>&1 | tee artifacts/economy-tests.log

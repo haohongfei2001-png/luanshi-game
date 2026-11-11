@@ -1,0 +1,656 @@
+extends RefCounted
+## Fixed-step field combat. IDs index a permanent roster including fallen soldiers.
+## The camera and rendering layer never participate in a decision or damage roll.
+const Arms := preload("res://scripts/field/arms.gd")
+const Ground := preload("res://scripts/field/ground.gd")
+const Profiles := preload("res://scripts/hero_combat_profiles.gd")
+const DT := 0.05
+const CELL := 6.0
+const COLS := 42
+const ROWS := 24
+const SCALES := [20, 100, 250, 512]
+const SEED := 61112
+enum State { MARCH, WINDUP, RECOVER, GUARD, STAGGER, ROUT, ESCAPED, DEAD }
+enum Mission { PRESS, HOLD, FLANK, ESCORT, INTERCEPT, RESERVE, WITHDRAW }
+enum Channel { FLAG, HORN, COURIER }
+const MISSIONS := ["推进城门", "守住阵地", "侧翼推进", "护送冲车", "截击", "预备队", "撤离"]
+const CHANNELS := ["令旗", "号角", "传令兵"]
+
+class Unit:
+	var id := 0
+	var team := 0
+	var squad := 0
+	var kit := 0
+	var officer := false
+	var hero := false
+	var engineer := false
+	var mounted := false
+	var mount_hp := 0.0
+	var pos := Vector2.ZERO
+	var before := Vector2.ZERO
+	var facing := Vector2.RIGHT
+	var locked := Vector2.RIGHT
+	var separation := Vector2.ZERO
+	var station := Vector2.ZERO
+	var target := -1
+	var state := State.MARCH
+	var timer := 0.0
+	var duration := 0.0
+	var move_slot := 0
+	var hp := 62.0
+	var max_hp := 62.0
+	var armor := 0.0
+	var morale := 1.0
+	var fatigue := 0.0
+	var flash := 0.0
+	var stride := 0.0
+	var used_second := false
+	var impacts := 0
+	var received := 0
+	var lost_tick := -1
+
+class Company:
+	var team := 0
+	var officer_id := -1
+	var home := Vector2.ZERO
+	var aim := Vector2.ZERO
+	var mission := Mission.PRESS
+	var initial := 0
+	var standing := 0
+	var serial := 0
+	var delivered := 0
+
+class Shot:
+	var team := 0
+	var source := 0
+	var pos := Vector2.ZERO
+	var previous := Vector2.ZERO
+	var direction := Vector2.RIGHT
+	var speed := 0.0
+	var remaining := 0.0
+	var distance := 0.0
+	var power := 0.0
+	var pierce := 1
+	var last_hit := -1
+	var arrow := false
+
+class Dispatch:
+	var squad := 0
+	var serial := 0
+	var mission := 0
+	var channel := 0
+	var pos := Vector2.ZERO
+	var age := 0.0
+	var delay := 0.0
+
+var moves := Arms.library()
+var roster: Array[Unit] = []
+var companies: Array[Company] = []
+var shots: Array[Shot] = []
+var orders: Array[Dispatch] = []
+var hero: Unit
+var rng := RandomNumberGenerator.new()
+var side_size := 0
+var companies_per_side := 0
+var tick := 0
+var started := false
+var result := ""
+var equipment := [0, 0]
+var losses := [0, 0]
+var escaped := [0, 0]
+var hits := [0, 0]
+var attacks := 0
+var blocked_hits := 0
+var arrow_count := 0
+var messages_arrived := 0
+var messages_lost := 0
+var notice := ""
+var gate_hp := 260.0
+var ram_hp := 150.0
+var ram := Vector2(-9, 1)
+var ram_timer := 0.0
+var capture := 0.0
+var hero_move := Vector2.ZERO
+var aim := Vector2.RIGHT
+var hero_cds := PackedFloat32Array([0.0,0.0,0.0,0.0])
+# Foot, horse and chariot are separate physical assets. The rider can lose either vehicle.
+var vehicle := 0
+var vehicle_pos := [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
+var vehicle_hp := [0.0, 75.0, 115.0]
+var riding_speed := 0.0
+var riding_heading := Vector2.RIGHT
+var grid := PackedInt32Array()
+var links := PackedInt32Array()
+
+func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void:
+	assert(n in SCALES and roster.is_empty())
+	side_size = n
+	rng.seed = seed_value
+	companies_per_side = ceili(float(n) / 32.0)
+	var bands := mini(5, companies_per_side)
+	for team in 2:
+		var sign_x := 1.0 if team == 0 else -1.0
+		for c in companies_per_side:
+			var company := Company.new()
+			company.team = team
+			var lane := (float(c % bands) - (bands - 1) * 0.5) * 13.6
+			company.home = Vector2(-sign_x * (5.0 + floorf(float(c) / bands) * 7.2), lane)
+			company.mission = Mission.PRESS if team == 0 else Mission.HOLD
+			company.aim = company.home
+			companies.append(company)
+			for j in mini(32, n - c * 32):
+				var pos := company.home + Vector2(-sign_x * floorf(j / 8.0) * 1.78, (j % 8 - 3.5) * 1.58)
+				var u := _add(team, companies.size()-1, pos)
+				var file := j % 8
+				if j >= 24:
+					u.kit = Arms.Kit.BOW if file % 2 == 0 else Arms.Kit.CROSSBOW
+				elif j >= 16 and file >= 6:
+					u.kit = Arms.Kit.DAO
+					u.mounted = true
+					u.mount_hp = 48.0
+				elif j < 8:
+					u.kit = Arms.Kit.SHIELD if file % 3 == 0 else Arms.Kit.SPEAR
+				else:
+					u.kit = [Arms.Kit.SWORD, Arms.Kit.DAO, Arms.Kit.STAFF, Arms.Kit.GLAIVE][file % 4]
+				# A small detachment travels with the ram. Its crew are counted soldiers.
+				u.engineer = team == 0 and c == bands / 2 and j >= 12 and j < 16
+				if n == 20 and j >= 16:
+					u.kit = Arms.Kit.BOW if file % 2 == 0 else Arms.Kit.CROSSBOW
+				u.armor = 0.22 if u.kit == Arms.Kit.SHIELD else (0.12 if u.kit == Arms.Kit.GLAIVE else 0.05)
+				company.initial += 1
+				company.standing += 1
+	for i in companies.size():
+		var c := companies[i]
+		var u := _add(c.team, i, c.home + Vector2(-7.6 if c.team == 0 else 7.6, 1.2))
+		u.officer = true
+		u.kit = Arms.Kit.GLAIVE
+		u.max_hp = 88
+		u.hp = u.max_hp
+		u.armor = 0.15
+		c.officer_id = u.id
+	hero = _add(0, 0, Vector2(-10, -3))
+	hero.hero = true
+	hero.kit = weapon
+	hero.max_hp = Profiles.get_profile(Profiles.EARLY).max_hp
+	hero.hp = hero.max_hp
+	vehicle_pos[1] = hero.pos + Vector2(-1.8, 0)
+	vehicle_pos[2] = hero.pos + Vector2(-2.8, 2.2)
+	grid.resize(COLS * ROWS)
+	links.resize(roster.size())
+	_rebuild_grid()
+
+func _add(team: int, squad: int, pos: Vector2) -> Unit:
+	var u := Unit.new()
+	u.id = roster.size()
+	u.team = team
+	u.squad = squad
+	u.pos = pos
+	u.before = pos
+	u.station = pos
+	u.facing = Vector2.RIGHT if team == 0 else Vector2.LEFT
+	u.locked = u.facing
+	u.morale = rng.randf_range(0.73, 1.0)
+	u.stride = rng.randf()
+	u.fatigue = rng.randf_range(0.0, 0.35)
+	roster.append(u)
+	return u
+
+func active(u: Unit) -> bool:
+	return u.hp > 0 and u.state != State.ESCAPED
+
+func _cell(p: Vector2) -> Vector2i:
+	return Vector2i(clampi(floori((p.x + 124) / CELL), 0, COLS-1), clampi(floori((p.y + 70) / CELL), 0, ROWS-1))
+
+func _rebuild_grid() -> void:
+	grid.fill(-1)
+	for i in range(roster.size()-1, -1, -1):
+		var u := roster[i]
+		if active(u):
+			var cell := _cell(u.pos)
+			var ix := cell.y * COLS + cell.x
+			links[i] = grid[ix]
+			grid[ix] = i
+
+func _assessment(u: Unit) -> void:
+	var best := -1
+	var reach := 29.0 if u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 6.8
+	var best_sq := reach * reach
+	var correction := Vector2.ZERO
+	var lo := _cell(u.pos - Vector2.ONE * reach)
+	var hi := _cell(u.pos + Vector2.ONE * reach)
+	for y in range(lo.y, hi.y+1):
+		for x in range(lo.x, hi.x+1):
+			var i := grid[y*COLS+x]
+			while i != -1:
+				var other := roster[i]
+				var d := other.pos - u.pos
+				var sq := d.length_squared()
+				if i != u.id and sq < 0.96 and sq > 0.00001:
+					correction -= d * (0.98 / sqrt(sq) - 1.0)
+				if other.team != u.team and active(other) and (sq < best_sq or (sq == best_sq and i < best)):
+					if Ground.clear_shot(u.pos, other.pos, gate_hp <= 0):
+						best = i
+						best_sq = sq
+				i = links[i]
+	u.target = best
+	u.separation = correction.limit_length(1.0) * 3.6
+
+func start() -> void:
+	if not started:
+		started = true
+		notice = "军令已发"
+
+func command(squad: int, mission: int, channel: int) -> bool:
+	if squad < 0 or squad >= companies_per_side or mission < 0 or mission >= MISSIONS.size() or channel < 0 or channel >= CHANNELS.size() or result != "":
+		return false
+	var c := companies[squad]
+	var officer := roster[c.officer_id]
+	if not active(officer):
+		notice = "本队军官已失去指挥能力"
+		return false
+	if not started:
+		c.mission = mission
+		notice = "已部署 · %02d队 %s" % [squad+1, MISSIONS[mission]]
+		return true
+	var distance := hero.pos.distance_to(officer.pos)
+	if channel == Channel.FLAG and (distance > 34 or not Ground.clear_shot(hero.pos, officer.pos, gate_hp <= 0)):
+		notice = "军官看不到令旗"
+		return false
+	if channel == Channel.HORN and distance > 54:
+		notice = "军官在号角范围外"
+		return false
+	var order := Dispatch.new()
+	c.serial += 1
+	order.serial = c.serial
+	order.squad = squad
+	order.mission = mission
+	order.channel = channel
+	order.pos = hero.pos
+	order.delay = 0.24 + distance / (50.0 if channel == Channel.HORN else 30.0)
+	orders.append(order)
+	notice = "%s已发 · %02d队" % [CHANNELS[channel], squad+1]
+	return true
+
+func _dispatches() -> void:
+	for at in range(orders.size()-1, -1, -1):
+		var order := orders[at]
+		var c := companies[order.squad]
+		var officer := roster[c.officer_id]
+		order.age += DT
+		var lost := not active(officer)
+		if order.channel == Channel.COURIER and not lost:
+			var heading := order.pos.direction_to(Ground.waypoint(order.pos, officer.pos))
+			order.pos = Ground.travel(order.pos, heading * 7.0 * DT, gate_hp <= 0)
+			lost = not _near(order.pos, 1.55, 1).is_empty() or order.age > 90.0
+			if not lost and order.pos.distance_squared_to(officer.pos) > 4:
+				continue
+		elif not lost and order.age < order.delay:
+			continue
+		if lost:
+			messages_lost += 1
+			notice = "军令中断 · %02d队" % (order.squad+1)
+		elif order.serial > c.delivered:
+			c.delivered = order.serial
+			c.mission = order.mission
+			messages_arrived += 1
+			notice = "%02d队领命 · %s" % [order.squad+1, MISSIONS[c.mission]]
+		orders.remove_at(at)
+
+func _objective(c: Company) -> Vector2:
+	if not active(roster[c.officer_id]):
+		return c.home
+	match c.mission:
+		Mission.WITHDRAW: return Vector2(-92 if c.team == 0 else 96, c.home.y)
+		Mission.ESCORT: return ram
+		Mission.FLANK: return Vector2(38, signf(c.home.y + 0.5) * 29) if gate_hp > 0 else Ground.COURT
+		Mission.HOLD: return c.home
+		Mission.RESERVE: return c.home + Vector2(-9 if c.team == 0 else 9, 0)
+		Mission.INTERCEPT: return Vector2(5, c.home.y)
+	return Ground.COURT if gate_hp <= 0 else Vector2(Ground.WALL_X - 2, 0)
+
+func mount(id: int) -> bool:
+	if result != "" or id < 0 or id > 2 or hero.state in [State.WINDUP, State.STAGGER]:
+		return false
+	if vehicle != 0:
+		vehicle_pos[vehicle] = hero.pos
+		vehicle = 0
+		riding_speed = 0
+		notice = "已下乘"
+		return true
+	if id == 0 or vehicle_hp[id] <= 0 or hero.pos.distance_to(vehicle_pos[id]) > 4.5:
+		notice = "需靠近可用的坐骑或战车"
+		return false
+	vehicle = id
+	riding_heading = hero.facing
+	notice = "已上马" if id == 1 else "已登车"
+	return true
+
+func input_state(walk: Vector2, facing: Vector2) -> void:
+	hero_move = walk.limit_length()
+	if facing.length_squared() > 0.0001:
+		aim = facing.normalized()
+
+func action(slot: int) -> bool:
+	if slot < 0 or slot > 3 or not started or result != "" or hero_cds[slot] > 0 or hero.state != State.MARCH:
+		return false
+	_begin(hero, slot, aim)
+	hero_cds[slot] = 0.12 if slot == 0 else [0.0,3.6,4.5,4.2][slot]
+	return true
+
+func _begin(u: Unit, slot: int, direction: Vector2) -> void:
+	var move: Arms.Move = moves[u.kit][slot]
+	u.move_slot = slot
+	u.locked = direction if direction.length_squared() > 0.1 else u.facing
+	u.facing = u.locked
+	u.used_second = false
+	_set_state(u, State.WINDUP, move.wind)
+	attacks += 1
+
+func _set_state(u: Unit, state: int, length: float) -> void:
+	u.state = state
+	u.timer = length
+	u.duration = length
+
+func _near(at: Vector2, radius: float, team: int) -> Array[int]:
+	var found: Array[int] = []
+	var lo := _cell(at - Vector2.ONE * radius)
+	var hi := _cell(at + Vector2.ONE * radius)
+	for y in range(lo.y, hi.y+1):
+		for x in range(lo.x, hi.x+1):
+			var i := grid[y*COLS+x]
+			while i != -1:
+				var u := roster[i]
+				if u.team == team and active(u) and at.distance_squared_to(u.pos) <= radius * radius:
+					found.append(i)
+				i = links[i]
+	return found
+
+func _release(u: Unit, move: Arms.Move) -> void:
+	if move.step != 0:
+		_move(u, u.locked * move.step)
+	if move.shape in [Arms.Shape.PARRY, Arms.Shape.BRACE]:
+		_set_state(u, State.GUARD, move.recovery)
+		return
+	if move.shape in [Arms.Shape.ARROW, Arms.Shape.BOLT, Arms.Shape.FAN, Arms.Shape.PIERCE]:
+		var count := 3 if move.shape == Arms.Shape.FAN else 1
+		for j in count:
+			var shot := Shot.new()
+			shot.team = u.team
+			shot.source = u.id
+			shot.pos = u.pos + u.locked * 0.45
+			shot.previous = shot.pos
+			shot.direction = u.locked.rotated((j-1)*0.12 if count == 3 else 0.0)
+			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
+			shot.speed = 24.0 if shot.arrow else 37.0
+			shot.remaining = move.reach
+			shot.power = move.power
+			shot.pierce = 2 if move.shape == Arms.Shape.PIERCE else 1
+			shots.append(shot)
+			arrow_count += 1
+	elif move.shape != Arms.Shape.EVADE:
+		_melee(u, move)
+	_set_state(u, State.RECOVER, move.recovery)
+
+func _melee(u: Unit, move: Arms.Move) -> void:
+	var candidates := _near(u.pos, move.reach + 0.35, 1-u.team)
+	# Nearest-first, with stable ID ties for equal distances across cell boundaries.
+	candidates.sort_custom(func(a: int, b: int) -> bool:
+		var da := u.pos.distance_squared_to(roster[a].pos)
+		var db := u.pos.distance_squared_to(roster[b].pos)
+		return a < b if da == db else da < db)
+	var count := 0
+	for id in candidates:
+		var v := roster[id]
+		var offset := v.pos - u.pos
+		var along := u.locked.dot(offset)
+		if move.shape == Arms.Shape.LINE or (move.shape == Arms.Shape.DOUBLE and u.kit == Arms.Kit.SPEAR):
+			if along < 0 or along > move.reach or absf(u.locked.cross(offset)) > move.width + 0.22:
+				continue
+		elif along < offset.length() * cos(move.width):
+			continue
+		if Ground.clear_shot(u.pos, v.pos, gate_hp <= 0):
+			_hurt(u, v, move.power, u.pos)
+			if active(v) and move.shape == Arms.Shape.BASH:
+				_move(v, u.locked * 0.88)
+				_set_state(v, State.STAGGER, 0.30)
+			count += 1
+			if count >= move.limit:
+				break
+	if u.team == 0 and gate_hp > 0 and u.pos.distance_to(Ground.GATE) <= move.reach + 1.0 and u.locked.x > 0.4:
+		gate_hp = maxf(0, gate_hp - move.power * (0.20 if u.engineer else 0.075))
+	if u.team == 1 and ram_hp > 0 and u.pos.distance_to(ram) < move.reach + 0.5 and u.locked.dot(u.pos.direction_to(ram)) > 0.45:
+		ram_hp = maxf(0, ram_hp - move.power * 0.16)
+
+func _hurt(source: Unit, target: Unit, power: float, from: Vector2) -> void:
+	if not active(target):
+		return
+	var damage := power * rng.randf_range(0.89,1.09) * (1.0-target.armor)
+	var frontal := target.facing.dot(target.pos.direction_to(from)) > 0.18
+	if target.state == State.GUARD and frontal:
+		damage *= 0.22 if target.kit == Arms.Kit.SHIELD else 0.46
+		blocked_hits += 1
+		if target.move_slot == 3 and moves[target.kit][3].shape == Arms.Shape.PARRY and source.pos.distance_to(target.pos) < 3.4 and target.timer > target.duration * 0.5:
+			_set_state(source, State.STAGGER, 0.27)
+	if target.hero and vehicle != 0:
+		vehicle_hp[vehicle] = maxf(0.0, vehicle_hp[vehicle] - damage * 0.45)
+		if vehicle_hp[vehicle] <= 0:
+			vehicle_pos[vehicle] = target.pos
+			vehicle = 0
+			riding_speed = 0
+	elif target.mounted:
+		target.mount_hp = maxf(0, target.mount_hp - damage * 0.55)
+		target.mounted = target.mount_hp > 0
+	target.hp = maxf(0, target.hp - damage)
+	target.flash = 0.22
+	target.morale = maxf(0, target.morale - damage * 0.005)
+	target.received += 1
+	source.impacts += 1
+	hits[source.team] += 1
+	if target.hp <= 0:
+		_set_state(target, State.DEAD, 0.70)
+		target.lost_tick = tick
+		if not target.officer and not target.hero:
+			losses[target.team] += 1
+			equipment[target.team] += 1
+			companies[target.squad].standing -= 1
+	elif not target.hero and not target.officer and target.state != State.ROUT:
+		var c := companies[target.squad]
+		var cohesion := float(c.standing) / c.initial
+		if target.morale + cohesion * 0.30 < 0.58 or (not active(roster[c.officer_id]) and target.hp < target.max_hp * 0.50):
+			_set_state(target, State.ROUT, 0)
+		elif damage > target.max_hp * 0.28 and target.state != State.GUARD:
+			_set_state(target, State.STAGGER, 0.17)
+
+func _projectiles() -> void:
+	for at in range(shots.size()-1,-1,-1):
+		var s := shots[at]
+		var step := minf(s.remaining, s.speed * DT)
+		var next := s.pos + s.direction * step
+		var struck := _near((s.pos+next)*0.5, step*0.5+0.60, 1-s.team)
+		struck.sort_custom(func(a: int,b: int) -> bool: return s.direction.dot(roster[a].pos) < s.direction.dot(roster[b].pos))
+		for id in struck:
+			if id == s.last_hit:
+				continue
+			var v := roster[id]
+			var closest := Geometry2D.get_closest_point_to_segment(v.pos, s.pos, next)
+			if closest.distance_squared_to(v.pos) <= 0.36 and Ground.clear_shot(s.pos, closest, gate_hp <= 0):
+				_hurt(roster[s.source], v, s.power, s.pos)
+				s.pierce -= 1
+				s.last_hit = id
+				if s.pierce == 0:
+					break
+		s.remaining -= step
+		s.distance += step
+		s.previous = s.pos
+		s.pos = next
+		if s.pierce == 0 or s.remaining <= 0.0001 or not Ground.clear_shot(s.previous, next, gate_hp <= 0):
+			shots.remove_at(at)
+
+func _move(u: Unit, offset: Vector2) -> void:
+	u.pos = Ground.travel(u.pos, offset, gate_hp <= 0)
+
+func _player_walk() -> void:
+	var walk := hero_move
+	var speed := 4.2
+	if vehicle != 0:
+		var target_speed := (8.7 if vehicle == 1 else 7.0) * walk.length()
+		riding_speed = move_toward(riding_speed, target_speed, DT * (5.5 if vehicle == 1 else 3.5))
+		if walk.length_squared() > 0.01:
+			riding_heading = Vector2.from_angle(rotate_toward(riding_heading.angle(),walk.angle(),DT * (2.8 if vehicle == 1 else 1.4)))
+		walk = riding_heading
+		speed = riding_speed
+	if hero.state in [State.WINDUP, State.GUARD]:
+		speed *= 0.45
+	if hero.state != State.STAGGER:
+		_move(hero, walk * speed * DT * Ground.pace(hero.pos,vehicle != 0))
+	if vehicle != 0:
+		vehicle_pos[vehicle] = hero.pos
+		if riding_speed > 5.5 and tick % 9 == 0:
+			var front := hero.pos + riding_heading * 1.1
+			for id in _near(front, 1.2, 1):
+				var v := roster[id]
+				if v.kit == Arms.Kit.SPEAR and v.state in [State.GUARD,State.WINDUP] and v.facing.dot(-riding_heading) > 0.3:
+					_hurt(v, hero, 21, v.pos)
+					riding_speed = 0.5
+					break
+				_hurt(hero, v, 19 if vehicle == 1 else 28, hero.pos)
+				riding_speed *= 0.76
+				break
+	if hero.state == State.MARCH:
+		hero.facing = aim
+
+func _soldier(u: Unit) -> void:
+	var c := companies[u.squad]
+	var fleeing := u.state == State.ROUT
+	var goal := c.aim + (u.station - c.home) * 0.70
+	if u.engineer and ram_hp > 0 and gate_hp > 0:
+		goal = ram + Vector2(-0.75, (u.id % 4 - 1.5)*0.75)
+	if fleeing or c.mission == Mission.WITHDRAW:
+		goal = Vector2(-98.0 if u.team == 0 else 100.0, signf(u.pos.y)*32)
+		if u.pos.distance_to(goal) < 3:
+			_set_state(u, State.ESCAPED, 0.0)
+			if not u.officer:
+				escaped[u.team] += 1
+				c.standing -= 1
+			return
+	else:
+		var v: Unit = roster[u.target] if u.target >= 0 else null
+		var chase := 34.0
+		if c.mission in [Mission.HOLD,Mission.RESERVE]:
+			chase = 9.0 if c.mission == Mission.HOLD else 5.0
+		if v != null and active(v) and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or c.mission == Mission.PRESS):
+			var distance := u.pos.distance_to(v.pos)
+			var move: Arms.Move = moves[u.kit][0]
+			goal = v.pos
+			if distance <= move.reach and u.fatigue <= 0:
+				u.facing = u.pos.direction_to(v.pos)
+				if distance < 3.4 and u.kit in [Arms.Kit.SHIELD, Arms.Kit.SPEAR] and v.state == State.WINDUP and (tick + u.id) % 4 <= 1:
+					_set_state(u, State.GUARD, 0.32)
+					u.fatigue = 0.49
+				else:
+					_begin(u, 0, u.facing)
+					u.fatigue = rng.randf_range(0.15,0.39)
+				return
+			if distance <= move.reach * 0.90:
+				goal = u.pos
+		elif u.team == 0 and gate_hp > 0 and u.pos.distance_to(Ground.GATE) < 3.9 and u.fatigue <= 0:
+			_begin(u, 0, u.pos.direction_to(Ground.GATE))
+			u.fatigue = 0.6
+			return
+	var next := Ground.waypoint(u.pos, goal)
+	var dist := u.pos.distance_to(next)
+	var speed := 5.8 if u.mounted else (4.1 if fleeing else 2.85)
+	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted),dist / DT)
+	if vel.length_squared() > 0.08:
+		u.facing = vel.normalized()
+	_move(u,(vel+u.separation)*DT)
+
+func _state_step(u: Unit) -> void:
+	u.timer = maxf(0, u.timer-DT)
+	match u.state:
+		State.WINDUP:
+			if u.timer <= 0:
+				_release(u,moves[u.kit][u.move_slot])
+		State.RECOVER:
+			var move: Arms.Move = moves[u.kit][u.move_slot]
+			if move.shape == Arms.Shape.DOUBLE and not u.used_second and u.timer <= move.recovery * 0.55:
+				u.used_second = true
+				_melee(u, move)
+			if u.timer <= 0 and u.state == State.RECOVER:
+				u.state = State.MARCH
+		State.GUARD, State.STAGGER:
+			if u.timer <= 0:
+				u.state = State.MARCH
+		State.MARCH, State.ROUT:
+			if not u.hero:
+				_soldier(u)
+
+func _siege() -> void:
+	if ram_hp > 0 and gate_hp > 0 and tick % 4 == 0:
+		var crew := 0
+		for id in _near(ram,4.8,0):
+			if roster[id].engineer and roster[id].state != State.ROUT:
+				crew += 1
+		if crew >= 2:
+			if ram.distance_to(Ground.GATE) < 3.3:
+				ram_timer -= DT*4
+				if ram_timer <= 0:
+					gate_hp = maxf(0,gate_hp - 14.0 - crew*1.5)
+					ram_timer = 1.7
+			else:
+				ram = Ground.travel(ram,ram.direction_to(Ground.GATE)*DT*4*1.5,false)
+	if tick % 5 == 0:
+		var friendly := _near(Ground.COURT,7.0,0).size()
+		var enemy := _near(Ground.COURT,7.0,1).size()
+		if gate_hp <= 0 and friendly > enemy:
+			capture += DT*5
+		else:
+			capture = maxf(0,capture-DT*3)
+
+func step() -> void:
+	if not started or result != "":
+		return
+	tick += 1
+	for i in hero_cds.size():
+		hero_cds[i] = maxf(0, hero_cds[i]-DT)
+	_rebuild_grid()
+	_dispatches()
+	if tick == 1 or tick % 8 == 0:
+		for c in companies:
+			c.aim = _objective(c)
+	for u in roster:
+		u.before = u.pos
+		if active(u) and not u.hero and u.state != State.ROUT and (tick + u.id) % 5 == 0:
+			_assessment(u)
+	for u in roster:
+		u.flash = maxf(0,u.flash-DT)
+		u.fatigue = maxf(0,u.fatigue-DT)
+		if not active(u):
+			u.timer = maxf(0,u.timer-DT)
+			continue
+		if u.hero:
+			_player_walk()
+		_state_step(u)
+		u.stride = fposmod(u.stride + u.pos.distance_to(u.before) * 0.68, 1.0)
+	_projectiles()
+	_siege()
+	if hero.hp <= 0:
+		result = "主将阵亡"
+	elif capture >= 6.0:
+		result = "夺取城内阵地"
+	elif hero.pos.x < -85 and companies[hero.squad].mission == Mission.WITHDRAW and escaped[0] > 0:
+		result = "成功撤离"
+	elif losses[1]+escaped[1] >= ceili(side_size*0.72):
+		result = "守军溃退"
+	elif losses[0]+escaped[0] >= ceili(side_size*0.72):
+		result = "攻势瓦解"
+	elif tick*DT >= 360:
+		result = "守城成功"
+
+func report() -> Dictionary:
+	return {"seed":rng.seed,"soldiers_per_side":side_size,"officers":companies.size(),
+		"tick":tick,"result":result,"hits":hits.duplicate(),"attacks":attacks,
+		"blocked_hits":blocked_hits,"projectiles":arrow_count,"dead":losses.duplicate(),
+		"escaped":escaped.duplicate(),"dropped_weapons":equipment.duplicate(),
+		"gate_hp":gate_hp,"ram_hp":ram_hp,"capture_sec":capture,
+		"orders_delivered":messages_arrived,"orders_lost":messages_lost,"hero_hp":hero.hp}
