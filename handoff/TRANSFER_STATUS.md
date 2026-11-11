@@ -41,6 +41,10 @@ History recovery uses the fixed first-publication commit `71215500d18fda0c6aeb0d
 
 `tools/calibrate-combat.sh` retains its original generic `/workspace/shared/godot-data` fallback to preserve source identity. Override `XDG_DATA_HOME` with a writable receiving-environment directory. Sanitized commands use explicit `${WRITABLE_XDG_DATA}`, `${WRITABLE_XDG_CONFIG}`, `${WRITABLE_XDG_CACHE}` and `<PROJECT_WORKSPACE>` placeholders.
 
+## Concurrent main specification added after source freeze
+
+After the source snapshots were frozen, main advanced independently to [`3021a3a282e59b6841909d202f1e8a480b74886a`](https://github.com/haohongfei2001-png/luanshi-game/commit/3021a3a282e59b6841909d202f1e8a480b74886a), adding [BATTLE_FIRST_V1_OWNER_SPEC_20261112.md](https://github.com/haohongfei2001-png/luanshi-game/blob/3021a3a282e59b6841909d202f1e8a480b74886a/docs/BATTLE_FIRST_V1_OWNER_SPEC_20261112.md). That document was not present in local snapshots `0e525a4` or `e800083`; neither those snapshots nor this handoff source implements its newly added specification. The receiving developer must review it alongside this frozen-source handoff. Its existence is not automatic authorization for this stopped transfer workflow to resume development. This notice records the concurrent upstream addition without changing runtime source, historical evidence or source manifests.
+
 ## Current product direction and stop instruction
 
 Current canonical design was synchronized from main `b32de2c1d6c08297d4550b36c02ea4ba6b5bb625`. Core story is authored by the owner and deferred until last. Historical evolution supports dynamic paths and unfixed outcomes; E0–E7 is a synchronized future design goal, **not an implemented system or a fixed war/dynasty script**. Older narrative proposals and historical “continue next stage” sections do not override those constraints or authorize new work during transfer.
