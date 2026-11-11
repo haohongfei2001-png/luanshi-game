@@ -2,6 +2,10 @@
 
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
+## Play the river gate candidate
+
+Download the macOS or Linux build and gameplay footage from [the battlefield pull request](https://github.com/haohongfei2001-png/luanshi-game/pull/18). The default opening deploys 512 ordinary soldiers on each side. Select a weapon and company tasks, then press Enter. From source, run `./tools/prepare-font.sh` and `godot --path .` with Godot 4.6.3. The upper-right campaign button opens the earlier three-city game and its saves. [Controls in Chinese](docs/PLAYING_ZH.md) · [Verification history](docs/PROJECT_STATUS.md).
+
 ## Vision
 
 A character-driven war RPG with MOBA-style isometric 3D combat, soldiers who require real supplies, strategic army command, and a world that continues to evolve outside the player's view. The protagonist grows older and can die. Death concludes that playthrough; saves and major-life checkpoints allow replay.

@@ -91,6 +91,7 @@ func _flush(scene) -> void:
 	var vp: Viewport=scene.get_viewport()
 	var target:=vp.get_texture().get_size()
 	var window:=DisplayServer.window_get_size()
+	var memory:=OS.get_static_memory_usage()
 	_write({"kind":"frames","seed":b.rng.seed,"per_side":b.side_size,"start_tick":first_tick,"end_tick":b.tick,
 		"engaged_wall_seconds":active_seconds,"viewport":[vp.get_visible_rect().size.x,vp.get_visible_rect().size.y],
 		"window_px":[window.x,window.y],"render_target_px":[target.x,target.y],
@@ -98,7 +99,7 @@ func _flush(scene) -> void:
 		"visible_soldiers":scene.view.visible_soldiers,"visible_combat_poses":scene.view.visible_fighting,
 		"hits_in_window":b.hits[0]+b.hits[1]-first_hits,"losses":b.losses,"gate_hp":b.gate_hp,"outcome":b.result,
 		"sim_cpu_ms":float(scene.sim_us-first_sim)/1000.0,"view_script_ms":float(scene.view_us-first_view)/1000.0,
-		"wall":_stats(wall),"render_cpu":_stats(cpu),"render_gpu":_stats(gpu),"memory_bytes":OS.get_static_memory_usage(),"raw_wall_ms":Array(wall)})
+		"wall":_stats(wall),"render_cpu":_stats(cpu),"render_gpu":_stats(gpu),"memory_bytes":memory if memory>0 else null,"raw_wall_ms":Array(wall)})
 	wall.clear()
 	gpu.clear()
 	cpu.clear()

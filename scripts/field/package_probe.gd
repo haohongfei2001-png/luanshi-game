@@ -69,13 +69,14 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	sorted.sort(); rcpu.sort(); rgpu.sort()
 	if sorted.is_empty(): return false
 	var duration: float=(previous-start)/1000000.0
+	var bytes:=OS.get_static_memory_usage()
 	var record:={"platform":OS.get_name(),"processor":OS.get_processor_name(),"adapter":RenderingServer.get_video_adapter_name(),
 		"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"viewport":[tree.root.size.x,tree.root.size.y],
 		"scale":tree.root.scaling_3d_scale,"shadows":true,"per_side":b.side_size,"frames":frames.size(),"seconds":duration,"fps":frames.size()/duration,
 		"p95_ms":sorted[ceili(sorted.size()*0.95)-1],"p99_ms":sorted[ceili(sorted.size()*0.99)-1],
 		"render_cpu_p95_ms":rcpu[ceili(rcpu.size()*0.95)-1] if not rcpu.is_empty() else null,
 		"render_gpu_p95_ms":rgpu[ceili(rgpu.size()*0.95)-1] if not rgpu.is_empty() else null,
-		"hits_in_window":b.hits[0]+b.hits[1]-before_hits,"static_bytes":OS.get_static_memory_usage(),"panned":panned}
+		"hits_in_window":b.hits[0]+b.hits[1]-before_hits,"static_bytes":bytes if bytes>0 else null,"panned":panned}
 	print("FIELD_HOST_WINDOW "+JSON.stringify(record))
 	record.raw_wall_ms=frames
 	var file:=FileAccess.open(path.get_basename()+"-frames.json",FileAccess.WRITE)

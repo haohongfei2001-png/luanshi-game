@@ -19,6 +19,10 @@ timeout 120s xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . --disable-
 grep -q '^FIELD_CONTROLS_PASS' artifacts/field-controls.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-controls.log; then exit 1; fi
 ffmpeg -nostdin -loglevel error -y -framerate 10 -i artifacts/kit-film/frame-%03d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/player-nine-weapons.mp4
+timeout 150s xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --disable-vsync --audio-driver Dummy --resolution 960x600 --fixed-fps 10 --script tests/field_siege_film.gd -- --field-size=512 2>&1 | tee artifacts/natural-siege.log
+grep -q '^FIELD_SIEGE_FILM_PASS' artifacts/natural-siege.log
+if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/natural-siege.log; then exit 1; fi
+ffmpeg -nostdin -loglevel error -y -framerate 10 -i artifacts/siege-film/frame-%04d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/river-gate-full-siege.mp4
 grep -q '^FIELD_RENDER_PASS' artifacts/field-benchmark.log
 grep -q '^FIELD_FILM_PASS' artifacts/field-film.log
 ffmpeg -nostdin -loglevel error -y -framerate 15 -i artifacts/field-film/frame-%03d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/river-gate-512.mp4

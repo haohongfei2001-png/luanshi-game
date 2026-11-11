@@ -115,6 +115,7 @@ jobs:
           path: |
             artifacts/river-gate-512.mp4
             artifacts/player-nine-weapons.mp4
+            artifacts/river-gate-full-siege.mp4
           if-no-files-found: error
       - name: Upload evidence and hashes
         if: always()
@@ -126,6 +127,7 @@ jobs:
             builds/SHA256SUMS
             !artifacts/field-film/**
             !artifacts/kit-film/**
+            !artifacts/siege-film/**
             !artifacts/*.mp4
           if-no-files-found: warn
   macos-runtime:
@@ -168,20 +170,56 @@ jobs:
           grep -q YOUTH_RUNTIME_PREPARE_PASS mac-evidence/youth-prepare.log
           grep -q YOUTH_RUNTIME_RESUME_PASS mac-evidence/youth-resume.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/youth-*.log; then exit 1; fi
-      - name: Render the exported siege in a hosted arm64 macOS window
+      - name: Render the exported siege and compare two macOS backends on identical hardware
         run: |
           python3 - <<'PY'
-          import pathlib, plistlib, subprocess
+          import hashlib, json, os, pathlib, plistlib, re, shutil, subprocess
+          base = pathlib.Path("mac-evidence").resolve()
           app = next(pathlib.Path("package/unpacked").glob("*.app"))
-          exe = plistlib.loads((app / "Contents/Info.plist").read_bytes())["CFBundleExecutable"]
-          evidence = pathlib.Path("mac-evidence").resolve()
-          args = [str(app / "Contents/MacOS" / exe), "--audio-driver", "Dummy", "--resolution", "1280x800", "--disable-vsync", "--", "--field-check", "--field-profile", f"--field-proof={evidence}/field.png"]
-          with (evidence / "field-window.log").open("w") as out:
-              result = subprocess.run(args, stdout=out, stderr=subprocess.STDOUT, timeout=75)
-          log = (evidence / "field-window.log").read_text()
-          print(log[-3500:])
-          assert result.returncode == 0 and "FIELD_PACKAGE_PASS" in log and (evidence / "field.png").stat().st_size > 4096
-          assert not any(marker in log for marker in ("ERROR:", "SCRIPT ERROR", "Parse Error", "SHADER ERROR"))
+          exe = app / "Contents/MacOS" / plistlib.loads((app / "Contents/Info.plist").read_bytes())["CFBundleExecutable"]
+          digest = hashlib.sha256(pathlib.Path("package/Luanshi-macOS.zip").read_bytes()).hexdigest()
+          print("SOURCE_ARCHIVE_SHA256", digest)
+          plans = [("compat-1", "gl_compatibility"), ("metal-1", "mobile"), ("metal-2", "mobile"), ("compat-2", "gl_compatibility")]
+          records = []
+          unavailable = set()
+          for name, method in plans:
+              if method in unavailable:
+                  continue
+              image = base / (name + ".png")
+              args = ["/usr/bin/time", "-l", str(exe), "--rendering-method", method]
+              if method == "mobile":
+                  args += ["--rendering-driver", "metal"]
+              args += ["--resolution", "1000x600", "--audio-driver", "Dummy", "--disable-vsync", "--", "--field-check", "--field-profile", "--field-proof=" + str(image)]
+              try:
+                  test = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=70)
+                  log = test.stdout.decode(errors="replace")
+                  code = test.returncode
+              except subprocess.TimeoutExpired as exc:
+                  log = (exc.stdout or b"").decode(errors="replace")
+                  code = 124
+              (base / (name + ".log")).write_text(log)
+              for line in log.splitlines():
+                  if line.startswith("FIELD_PROFILE_FILE "):
+                      session_file = pathlib.Path(line.partition(" ")[2])
+                      if session_file.is_file():
+                          shutil.copy2(session_file, base / (name + "-session.jsonl"))
+              rows = [json.loads(s.partition(" ")[2]) for s in log.splitlines() if s.startswith("FIELD_HOST_WINDOW ")]
+              row = rows[0] if rows else {}
+              resident = re.search(r"^\s*(\d+)\s+maximum resident set size", log, re.M)
+              row.update(label=name, returncode=code, requested_method=method, max_rss_bytes=int(resident.group(1)) if resident else None)
+              valid = code == 0 and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method and image.exists() and image.stat().st_size > 4096 and row.get("hits_in_window",0)>0 and not any(m in log for m in ("SCRIPT ERROR","SHADER ERROR","ERROR:"))
+              row["validated"] = valid
+              records.append(row)
+              print("RENDERER_TRIAL", json.dumps(row), flush=True)
+              if not valid:
+                  unavailable.add(method)
+                  print("DIAGNOSTIC", log[-2000:], flush=True)
+          (base / "renderer-comparison.json").write_text(json.dumps({"archive_sha256":digest,"source_run":os.environ["GITHUB_RUN_ID"],"samples":records},indent=2))
+          required = [r for r in records if r["requested_method"] == "gl_compatibility"]
+          if len(required) != 2 or not all(r["validated"] for r in required):
+              raise SystemExit("The shipped renderer did not pass the native window trials.")
+          if "mobile" in unavailable:
+              print("::warning::Mobile/Metal did not verify on this host. Its diagnostic was retained.")
           PY
       - name: Upload native macOS evidence
         if: always()

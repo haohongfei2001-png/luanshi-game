@@ -1,5 +1,20 @@
 # Project status / resumable handoff
 
+## 河关千人战场 · 2026-11-12 云端开发
+
+直接启动默认进入河关战前部署。新军籍包含双方各 512 名普通士兵，另有 32 名军官与 1 名玩家。旧三城战役、训练、v0.6 存档与此前的工程分支仍可单独进入。当前候选、可下载包、录像、逐帧 JSON 与最后一次执行结果集中在 [战场 PR #18](https://github.com/haohongfei2001-png/luanshi-game/pull/18)。
+
+| 已留下的证据 | 实际结果 |
+| --- | --- |
+| [原工程兼容修复 PR #17](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43077402767) | 原 PR #10 的提交与 main 的设计文档合并到接管分支。中文字体随包加载，1280×800 战略界面、旧档和跨进程恢复、Linux 导出、托管 macOS 原生运行通过。 |
+| [河关可运行候选 de12785](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43083976264) | Ubuntu X11 实际执行九种兵器的鼠标普攻与 Q、骑乘切换、地图点选、右键拖动。原生 macOS 26.7.2 的 Apple M1 虚拟机用导出包开窗，在实际 1024×645、100% 渲染、动态阴影下采集 120 帧，平均 30.33 FPS，P95 57.65 ms，P99 87.42 ms，采样间有 515 次命中。 |
+| [千人攻城与视角对照 4cdeaef](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43086157942) | 种子 61112 从正常军籍部署，工兵与攻门部队接战。第 551 个 20 Hz 模拟步城门首次受损，第 677 步破门，第 934 步守军失去战斗能力。普通守军仍有 143 人生还，世界完成一次结算。36 种武器动作窗口、冲锋与定枪、军需守恒通过。该提交的云端图形检查发现低角度坡面瞄准偏差，枪和两种远程武器未通过真实鼠标检查。后续修复与复验见战场 PR。 |
+
+源代码使用 Godot 4.6.3。开发环境先执行 `./tools/prepare-font.sh`，再以 `godot --path .` 启动。Ubuntu 24.04 执行 `./tools/test.sh`、`./tools/test-field-render.sh`、`./tools/export.sh`；后两项需要 Xvfb、Mesa、ffmpeg 和对应版本导出模板。录像使用固定采集步长，性能采样使用未锁帧的另一进程。可从原生 macOS 包传入 `-- --field-profile` 记录实际游玩的原始帧时间。详情见[中文操作说明](PLAYING_ZH.md)。
+
+真实 MacBook Air M5 内屏与 4K 持续交战均为 **NOT_RUN**。美术和手感仍待玩家试玩。正式剧情由作者保留。
+
+
 ## Owner priority override — 2026-11-12 (design update only; NO claimed code implementation)
 
 - **Codex is now explicitly authorized as the PRIMARY developer**; Dot may optionally help coordinate, not overwrite active Codex work. Current battle-first top-level owner spec: `docs/BATTLE_FIRST_V1_OWNER_SPEC_20261112.md`; direct development handoff: `docs/CODEX_BATTLE_FIRST_EXECUTION_HANDOFF.md`.
