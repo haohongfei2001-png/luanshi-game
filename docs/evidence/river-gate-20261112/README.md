@@ -53,9 +53,37 @@ Ubuntu 24.04，X11/Xvfb，Mesa llvmpipe 软件渲染，GL Compatibility。输出
 
 ![交战阵线](formations.jpg)
 
-## 单场预备队长测的记录状态
+## 同一场战斗的预备队长测
 
-额外的云端测量比较中央梯次推进、两翼交替和逐队接替三种可由玩家下达的军令。三套无界面部署检查和一次未锁帧的真实窗口测量均已通过；图形步骤从 20:15:39 到 20:19:02 UTC，用时 203 秒（含启动、输出）。该作业的附件上传失败。这 203 秒只是步骤用时，逐帧命中分布和长测帧率待从完整数据复核。可独立查看[原作业步骤](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43094439832/job/130779531619)、[数据恢复进度](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43096964759)和[独立证据目录](https://github.com/haohongfei2001-png/luanshi-game/tree/codex/river-gate-evidence-20261112/docs/evidence/river-gate-20261112)。GitHub 后来在[官方事件记录](https://www.githubstatus.com/incidents/dvy0t3mvh1lg)中列出了 Actions 可用性异常。
+另开一次合法部署，从同一张地图、同一个种子和双方初始军籍各 512 人开始。测试没有重开、读档、暂停、复活或修改生命值。先在无界面比较三种可以在部署面板排出的军令，按发生真实命中的五秒区间数选择图形复验方案，区间数相同则取命中间隔不超过五秒的最长交战时长。三个候选都保留在下表。
+
+| 初始军令与轮换 | 模拟秒 | 有命中的五秒区间 | 最长连续交战（允许五秒间隔） | 结局 |
+| --- | ---: | ---: | ---: | --- |
+| 中央梯次推进 | 190.3 | 39 / 39 | 189.6 秒 | 守军已失去战斗能力 |
+| 两翼交替 | 196.0 | 40 / 40 | 195.3 秒 | 守军已失去战斗能力 |
+| 逐队接替 | 200.0 | 40 / 40 | 145.4 秒 | 到了观察截止时仍在战斗 |
+
+实际窗口采用「两翼交替」，将 2 队先投入，其他待命，然后每 14 秒按固定队序用号角传达新任务，超出范围则派传令兵。主角向后走 2.5 秒，随后留在原地指挥。窗口保持游戏正常时间推进，观察点轮流查看两翼、外野和城门。
+
+单局记录 196.0 模拟秒，实际用时 198.73 秒，2210 个呈现帧，累计 2305 次命中。40 / 40 个五秒区间有新增命中，最长无命中间隔 3.70 模拟秒。末次采样普通士兵生还 253 / 143（攻 / 守），此时结局为「守军已失去战斗能力」，世界军籍及弹药审计通过。
+
+| 实际窗口 1000×600，100% 渲染，动态阴影 | 帧数 | 墙钟秒 | 平均 FPS | P50 / P95 / P99 毫秒 |
+| --- | ---: | ---: | ---: | --- |
+| 整段图形记录（含机动和战斗间隙） | 2210 | 198.73 | 11.12 | 84.34 / 133.92 / 147.22 |
+| 距离最近一次新增命中不超过两个模拟秒的帧 | 2176 | 194.20 | 11.20 | 84.54 / 132.68 / 147.01 |
+
+窗口运行在 AMD EPYC 9V74 80-Core Processor，llvmpipe (LLVM 20.1.2, 256 bits)，gl_compatibility。图形命中时间取帧呈现时最近的模拟步。表内最近接战帧来自同一局的若干区间，精确覆盖和间隙可从逐帧数据辨认。普通士兵随伤亡减少。环境、分辨率、伤亡和视角会影响帧率。
+
+复现命令以及直接调用的全部玩家军令已按提交归档。[GitHub Actions](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43094439832) · [军令与驱动程序](https://github.com/haohongfei2001-png/luanshi-game/blob/eca0f508e0d2a2bba340dc9c480bcb952553bb94/tests/field_endurance.gd) · [完整逐帧 CSV（gzip）](endurance-frames.csv.gz) · [部署和开窗原始结果](endurance-measurements.json)。
+
+在同一台 Ubuntu 24.04 主机依次执行以下命令。第一条保留三种军令的全部结果，第二条读取选择并运行同一场景的真实窗口。
+
+```sh
+godot --headless --path . --script tests/field_endurance.gd
+LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1024x768x24' godot --path . --resolution 1000x600 --disable-vsync --audio-driver Dummy --script tests/field_endurance.gd -- --field-size=512
+```
+
+原始作业的部署对照和窗口步骤通过，附件上传失败，工作流最终状态为 cancelled。已直接从该作业日志恢复 2,210 行原始帧数据，交叉检查 gzip 的 SHA-256、CRC、行数、模拟步顺序和最终命中。压缩文件 SHA-256 为 `6b5ff7404b8412d0a77d61bcff29eb1ead76dc1bfef59c3b0a852dbd7e4619b1`。首版长测脚本的类型错误也保存在[首次检查记录](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43093940143)。
 
 ## 托管 macOS 原生窗口
 
@@ -95,4 +123,6 @@ GitHub 给这次 Actions 产物标注的到期日为 2027-02-09（UTC）。外�
 
 坡地瞄准的上一个候选在枪、弓、弩的真实鼠标路径上失败。当前候选九种武器的鼠标命中与 Q 键均通过，下列数据保留了每次武器比对结果、坡面点击误差和实际渲染样本。[原失败记录](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43086157942) · [机器可读记录](measurements.json)。
 
-这一局数十秒内决出胜负。20 分钟同场持续交战节奏、M5 内屏与外接 4K 表现、最终角色美术与玩家主观手感仍待验收。早期与成熟主角对不同人数的既有校准继续随三城回归运行，河关长期武艺成长仍需专门的玩法及平衡验证。
+全军推进的样本约 47 秒决出胜负，分批投入预备队的实测约 196 秒。20 分钟同场持续交战节奏、M5 内屏与外接 4K 表现、最终角色美术与玩家主观手感仍待验收。早期与成熟主角对不同人数的既有校准继续随三城回归运行，河关长期武艺成长仍需专门的玩法及平衡验证。
+
+原试玩候选有一个已知撤离缺陷，城头弓手可能走向墙沿并卡住。独立后续修复增加沿坡退下、经过后门和两翼撤离的回归。[修复及其独立验收状态](https://github.com/haohongfei2001-png/luanshi-game/pull/23)。
