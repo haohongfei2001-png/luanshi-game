@@ -7,6 +7,10 @@ const Field := preload("res://scripts/field/controller.gd")
 
 static func run(tree: SceneTree,scene: Field) -> void:
 	await tree.process_frame
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--field-quality="):
+			var opt:=arg.trim_prefix("--field-quality=")
+			if opt in ["0","1","2"]: scene.set_quality(opt.to_int())
 	scene.hud.weapon.select(Arms.Kit.BOW)
 	scene.hud.weapon.item_selected.emit(Arms.Kit.BOW)
 	scene.hud.go.pressed.emit()
@@ -97,9 +101,11 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	if sorted.is_empty(): return false
 	var duration: float=(previous-start)/1000000.0
 	var bytes:=OS.get_static_memory_usage()
+	var target:=tree.root.get_texture().get_size()
+	var scale:=tree.root.scaling_3d_scale
 	var record:={"platform":OS.get_name(),"processor":OS.get_processor_name(),"adapter":RenderingServer.get_video_adapter_name(),
 		"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"viewport":[tree.root.size.x,tree.root.size.y],
-		"scale":tree.root.scaling_3d_scale,"shadows":true,"per_side":b.side_size,"frames":frames.size(),"seconds":duration,"fps":frames.size()/duration,
+		"scale":scale,"preset":scene.detail_preset,"render_target_px":[target.x,target.y],"estimated_internal_px":[roundi(target.x*scale),roundi(target.y*scale)],"shadows":scene.map.sun.shadow_enabled,"per_side":b.side_size,"frames":frames.size(),"seconds":duration,"fps":frames.size()/duration,
 		"tour":tour,"four_second_windows":bins,"mean_ms":duration*1000.0/frames.size(),"input_to_postdraw_ms":Array(scene.frame_log.input_ms) if scene.frame_log else [],"p50_ms":sorted[ceili(sorted.size()*0.5)-1],"p95_ms":sorted[ceili(sorted.size()*0.95)-1],"p99_ms":sorted[ceili(sorted.size()*0.99)-1],
 		"render_cpu_p95_ms":rcpu[ceili(rcpu.size()*0.95)-1] if not rcpu.is_empty() else null,
 		"render_gpu_p95_ms":rgpu[ceili(rgpu.size()*0.95)-1] if not rgpu.is_empty() else null,

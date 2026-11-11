@@ -182,7 +182,7 @@ jobs:
           exe = app / "Contents/MacOS" / plistlib.loads((app / "Contents/Info.plist").read_bytes())["CFBundleExecutable"]
           digest = hashlib.sha256(pathlib.Path("package/Luanshi-macOS.zip").read_bytes()).hexdigest()
           print("SOURCE_ARCHIVE_SHA256", digest)
-          plans = [("compat-1", "gl_compatibility"), ("default-metal-1", "mobile"), ("default-metal-2", "mobile"), ("compat-2", "gl_compatibility")]
+          plans = [("compat-1", "gl_compatibility"), ("default-metal-1", "mobile"), ("default-metal-2", "mobile"), ("balanced-metal", "mobile"), ("performance-metal", "mobile"), ("compat-2", "gl_compatibility")]
           records = []
           unavailable = set()
           for name, method in plans:
@@ -193,6 +193,8 @@ jobs:
               if method == "gl_compatibility":
                   args += ["--rendering-method", "gl_compatibility"]
               args += ["--resolution", "1000x600", "--audio-driver", "Dummy", "--disable-vsync", "--", "--field-check", "--field-profile", "--field-proof=" + str(image)]
+              quality = {"balanced-metal": 1, "performance-metal": 2}.get(name, 0)
+              args.append("--field-quality=" + str(quality))
               if name == "default-metal-2":
                   args.append("--field-window-tour")
               try:
@@ -213,6 +215,7 @@ jobs:
               resident = re.search(r"^\s*(\d+)\s+maximum resident set size", log, re.M)
               row.update(label=name, returncode=code, requested_method=method, max_rss_bytes=int(resident.group(1)) if resident else None)
               valid = code == 0 and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method and image.exists() and image.stat().st_size > 4096 and row.get("hits_in_window",0)>0 and not any(m in log for m in ("SCRIPT ERROR","SHADER ERROR","ERROR:"))
+              valid = valid and row.get("preset") == quality and row.get("shadows") == (quality != 2) and abs(row.get("scale", 0) - [1.0, 0.85, 0.70][quality]) < 0.001
               row["validated"] = valid
               records.append(row)
               print("RENDERER_TRIAL", json.dumps(row), flush=True)
@@ -220,7 +223,7 @@ jobs:
                   unavailable.add(method)
                   print("DIAGNOSTIC", log[-2000:], flush=True)
           (base / "renderer-comparison.json").write_text(json.dumps({"archive_sha256":digest,"source_run":os.environ["GITHUB_RUN_ID"],"samples":records},indent=2))
-          if len(records) != 4 or not all(r["validated"] for r in records):
+          if len(records) != 6 or not all(r["validated"] for r in records):
               raise SystemExit("The native Mac default or its compatibility path did not pass the window trials.")
           PY
       - name: Upload native macOS evidence
