@@ -177,7 +177,7 @@ func _between(target: Vector3,eye: Vector3,roof: Dictionary) -> bool:
 	var cross_at:=target+t*ray
 	return absf(cross_at.x-center.x)<float(roof.w)+0.9 and absf(cross_at.z-center.z)<float(roof.d)+0.9
 
-func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live: bool) -> void:
+func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live: bool,assault_near: bool=false) -> void:
 	if not has_open_roof and focus.x<24 and hero.x<24: return
 	has_open_roof=false
 	var p:=Ground.unit_point(focus)+Vector3.UP*0.85
@@ -185,8 +185,19 @@ func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live
 	var door:=Ground.unit_point(Ground.GATE)+Vector3.UP*1.2
 	# In an orthographic camera the rays through every subject are parallel.
 	var direction:=eye-Ground.unit_point(focus)
+	var gate_inspection:=live and assault_near and focus.distance_squared_to(Ground.GATE)<245 and zoom< 42.0
 	for roof in roofs:
 		var occluding: bool=zoom<43 and (_between(p,p+direction,roof) or (live and _between(h,h+direction,roof)) or (focus.distance_squared_to(Ground.GATE)<150 and _between(door,door+direction,roof)))
+		var middle: Vector3=roof.center
+		if gate_inspection and absf(middle.x-Ground.WALL_X)<3 and absf(middle.z)<11:
+			if absf(middle.z)<1.0:
+				occluding=true
+			else:
+				for exit_x: float in [-2.6,1.5,5.0]:
+					var lane:=door+Vector3(exit_x,0,signf(middle.z)*2.7)
+					if _between(lane,lane+direction,roof):
+						occluding=true
+						break
 		var node: MeshInstance3D=roof.node
 		if occluding: has_open_roof=true
 		if node.visible==occluding: node.visible=not occluding
