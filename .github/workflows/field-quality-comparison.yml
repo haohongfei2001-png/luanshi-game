@@ -1,0 +1,30 @@
+name: Compare existing river-gate graphics presets on one hosted Mac
+on:
+  push:
+    branches: [codex/river-gate-quality-profile]
+    paths: ['.github/workflows/field-quality-comparison.yml','tools/measure-field-presets.py']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  hosted-metal:
+    runs-on: macos-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43108736632
+          name: Luanshi-macOS-8236e9af4d63f52b8692bf42ede678ead2e9d111
+          github-token: ${{ github.token }}
+          path: package
+      - name: Verify and compare the existing binary
+        run: |
+          echo '3e0c85b00965aa92f76c143564f2205f63b0a9c96d3e7a4a16d0d9d09a2837a9  package/Luanshi-macOS.zip' | shasum -a 256 -c -
+          ditto -x -k package/Luanshi-macOS.zip package/unpacked
+          python3 tools/measure-field-presets.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-gate-three-presets-${{ github.sha }}
+          path: quality-evidence
