@@ -1,0 +1,39 @@
+name: Preserve the already recorded field movies
+on:
+  push:
+    branches: [codex/river-gate-evidence-20261112]
+    paths: ['.github/workflows/field-footage-archive.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  footage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43090225102
+          name: gameplay-ce568994faef7c00742b3e1d7714739b9edbf24c
+          github-token: ${{ github.token }}
+          path: footage
+      - name: Encode smaller archival copies from the captured frames
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          python3 - <<'PY'
+          import base64, hashlib, json, pathlib, subprocess
+          names = {"siege":"river-gate-full-siege.mp4","weapons":"player-nine-weapons.mp4","formations":"river-gate-512.mp4"}
+          for stem, original in names.items():
+              source = next(pathlib.Path("footage").rglob(original))
+              target = pathlib.Path(stem + ".mp4")
+              subprocess.run(["ffmpeg","-nostdin","-loglevel","error","-y","-i",str(source),"-an","-vf","scale=512:320","-c:v","libx264","-preset","fast","-pix_fmt","yuv420p","-crf","29","-maxrate","165k","-bufsize","330k","-movflags","+faststart",str(target)],check=True)
+              encoded = target.read_bytes()
+              probe = lambda p: json.loads(subprocess.check_output(["ffprobe","-v","error","-select_streams","v:0","-show_entries","stream=nb_frames,width,height,duration","-of","json",str(p)]))["streams"][0]
+              before, after = probe(source), probe(target)
+              assert before["nb_frames"] == after["nb_frames"] and abs(float(before["duration"])-float(after["duration"])) < 0.01
+              print("ARCHIVE_VIDEO",stem,json.dumps({"source_run":43090225102,"original":original,"source_sha256":hashlib.sha256(source.read_bytes()).hexdigest(),"sha256":hashlib.sha256(encoded).hexdigest(),"bytes":len(encoded),"source_stream":before,"archive_stream":after}),flush=True)
+              payload = base64.b64encode(encoded).decode()
+              for i in range(0,len(payload),32768):
+                  print("ARCHIVE_PART",stem,i//32768,payload[i:i+32768],flush=True)
+          PY
