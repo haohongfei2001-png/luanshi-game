@@ -17,6 +17,7 @@ func _initialize() -> void:
 	_manifest()
 	_two_fronts()
 	_duel()
+	_challenge()
 	_succession()
 	_rescue()
 	_capture_and_death()
@@ -57,9 +58,9 @@ func _place(u, point: Vector2) -> void:
 	u.pos = point
 	u.before = point
 
-func _field(weapon: int = Arms.Kit.SPEAR) -> Battle:
+func _field(weapon: int = Arms.Kit.SPEAR, count: int = 20) -> Battle:
 	var b := Battle.new()
-	b.setup(20, Battle.SEED, weapon)
+	b.setup(count, Battle.SEED, weapon)
 	# Leave other actors in their own garrison, preserving their troops and equipment.
 	for i in b.companies.size():
 		var c := b.companies[i]
@@ -115,6 +116,28 @@ func _duel() -> void:
 	var withdrew := _exchange(2)
 	check(exposed > guarded and guarded > 0.0 and withdrew == 0.0, "The same visible officer strike can hit, be blocked, or miss a retreating player")
 	print("FIELD_OFFICER_DUEL ", JSON.stringify({"exposed": exposed, "blocked": guarded, "out_of_reach": withdrew}))
+
+func _challenge() -> void:
+	for behind_wall: bool in [false, true]:
+		var b := _field(Arms.Kit.SWORD, 100)
+		var record = b.corps.companies[b.companies_per_side + 2]
+		var challenger := b.roster[record.primary]
+		_place(b.hero, Vector2(45.5, 11) if behind_wall else Vector2.ZERO)
+		_place(challenger, Vector2(51, 11) if behind_wall else Vector2(8, 0))
+		b.start()
+		for i in 15:
+			b.step()
+		if behind_wall:
+			check(record.challenged == -1 and b.hero.hp == b.hero.max_hp, "A closed curtain wall prevents a nearby challenge or attack")
+		else:
+			check(record.challenged == b.hero.id and record.challenge_tick >= 0, "The field challenger recognizes a visible opposing commander")
+			var initial := b.hero.pos
+			b.sprinting = true
+			b.input_state(Vector2.LEFT, Vector2.RIGHT)
+			for i in 48:
+				b.step()
+			check(initial.distance_to(b.hero.pos) > 10.0 and challenger.pos.distance_to(b.hero.pos) > 10.0 and b.hero.hp == b.hero.max_hp and b.result == "", "A player may leave the challenge on foot while the battle continues")
+			print("FIELD_OFFICER_CHALLENGE ", JSON.stringify({"challenger": challenger.id, "seen_tick": record.challenge_tick, "player_distance": initial.distance_to(b.hero.pos)}))
 
 func _wound(b: Battle, u, source) -> void:
 	b._rebuild_grid()
@@ -235,6 +258,8 @@ func _capture_and_death() -> void:
 func _old_field() -> void:
 	var historical := Battle.new()
 	historical.setup(20, Battle.SEED, Arms.Kit.SPEAR, true, false)
+	historical.traffic_enabled = false
+	historical.objectives.enabled = false
 	historical.start()
 	for i in 6:
 		historical.step()
