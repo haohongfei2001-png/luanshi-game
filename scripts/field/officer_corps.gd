@@ -21,10 +21,10 @@ const SERIAL := [&"duty", &"leader", &"vacant_since", &"handover_pos", &"contact
 
 class Command:
 	var primary := -1
-	var rank := Rank.CAPTAIN
+	var rank: int = Rank.CAPTAIN
 	var guards: Array[int] = []
 	var deputies: Array[int] = []
-	var duty := Duty.FIT
+	var duty: int = Duty.FIT
 	var leader := -1
 	var vacant_since := -1
 	var handover_pos := Vector2.ZERO
