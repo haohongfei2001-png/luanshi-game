@@ -30,3 +30,6 @@ printf '\n'
 printf 'FIELD_CLOSE_JPEG '
 base64 -w0 artifacts/field-close.jpg
 printf '\n'
+printf 'FIELD_GATE_JPEG '
+base64 -w0 artifacts/field-gate.jpg
+printf '\n'

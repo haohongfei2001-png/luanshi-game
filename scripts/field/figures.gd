@@ -1,8 +1,8 @@
 extends RefCounted
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const Arms := preload("res://scripts/field/arms.gd")
-const SKIN := Color("bd8966")
-const IRON := Color("59605c")
+const SKIN := Color("d1a07e")
+const IRON := Color("70776f")
 const EDGE := Color("c1c5b9")
 const HIDE := Color("4c352b")
 const WOOD := Color("805a3a")
@@ -13,6 +13,8 @@ const BRASS := Color("b28c52")
 static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 	var b := Builder.new()
 	var n := 8 if detailed else 5
+	var lamellar:=kit in [Arms.Kit.SHIELD,Arms.Kit.GLAIVE,Arms.Kit.CROSSBOW]
+	var vest:=IRON if lamellar else Color("93775b")
 	for side: float in [-1.0,1.0]:
 		b.joint = 1 if side < 0 else 2
 		var x := side * 0.14
@@ -23,12 +25,15 @@ static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 	b.loft([Vector3(0,0.53,0),Vector3(0,0.94,0),Vector3(0,1.28,0),Vector3(0,1.38,0)],
 		[Vector2(0.34,0.23),Vector2(0.225,0.16),Vector2(0.31,0.20),Vector2(0.18,0.14)],n,CLOTH)
 	b.dye = 0
-	b.loft([Vector3(0,0.96,0),Vector3(0,1.25,0)], [Vector2(0.257,0.184),Vector2(0.296,0.209)],n,IRON)
+	b.loft([Vector3(0,0.96,0),Vector3(0,1.25,0)], [Vector2(0.257,0.184),Vector2(0.296,0.209)],n,vest)
 	b.loft([Vector3(0,0.88,0),Vector3(0,0.955,0)], [Vector2(0.254,0.181),Vector2(0.25,0.184)],n,HIDE)
 	if detailed:
 		for row in 3:
 			for i in 5:
-				b.block(Vector3((i-2)*0.079,1.019+row*0.078,0.181-absf(i-2)*0.020),Vector3(0.070,0.066,0.035),IRON.lightened(0.05*(row%2)))
+				b.block(Vector3((i-2)*0.079,1.019+row*0.078,0.181-absf(i-2)*0.020),Vector3(0.070,0.066,0.035),vest.lightened(0.09*(row%2)))
+		if lamellar:
+			for side: float in [-1,1]:
+				b.loft([Vector3(side*0.215,0.63,0),Vector3(side*0.193,0.88,0)],[Vector2(0.14,0.177),Vector2(0.145,0.168)],6,vest)
 		b.block(Vector3(0,0.918,0.185),Vector3(0.09,0.055,0.038),BRASS)
 		b.rod(Vector3(-0.17,1.36,0.10),Vector3(0.08,1.13,0.20),0.036,0.029,HIDE)
 	# Shaped jaw, cheek, brow and helmet. The positive Z axis is the direction of contact.
@@ -41,6 +46,11 @@ static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 			b.rod(Vector3(sign_x*0.148,1.51,0.006),Vector3(sign_x*0.148,1.456,0.012),0.031,0.024,SKIN)
 	b.loft([Vector3(0,1.55,-0.023),Vector3(0,1.64,-0.023),Vector3(0,1.72,-0.035)],
 		[Vector2(0.184,0.185),Vector2(0.16,0.16),Vector2(0.053,0.053)],n,IRON if kit not in [Arms.Kit.BOW,Arms.Kit.STAFF] else HAIR)
+	if detailed:
+		b.rod(Vector3(0,1.57,-0.016),Vector3(0,1.593,-0.018),0.177,0.169,HIDE,8)
+		for side: float in [-1,1]:
+			b.block(Vector3(side*0.13,1.466,-0.055),Vector3(0.046,0.14,0.151),vest)
+		b.block(Vector3(0,1.431,0.161),Vector3(0.056,0.010,0.012),Color("8e5d49"))
 	b.dye = 1
 	b.rod(Vector3(0,1.70,-0.035),Vector3(0,1.79,-0.078),0.048,0.025,CLOTH)
 	b.dye = 0

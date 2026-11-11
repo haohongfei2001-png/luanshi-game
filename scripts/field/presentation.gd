@@ -17,6 +17,7 @@ class Batch:
 var battle: Battle
 var groups: Dictionary = {}
 var contact: Batch
+var contact_for_all:=false
 var reference_detail := false
 var high_detail_soldiers := 0
 var horse: Batch
@@ -144,9 +145,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var angle := atan2(u.facing.x,u.facing.y)
 		var progress := clampf(1.0-u.timer/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
-		var data := Color((code+0.5)/64.0,progress,u.stride,clampf(u.flash/0.22,0,1))
+		if u.mounted or (u.hero and battle.vehicle==1): code+=64
+		var data := Color((code+0.5)/128.0,progress,u.stride,clampf(u.flash/0.22,0,1))
 		if u.mounted:
-			_put(horse,base,angle,Color((u.state+0.5)/64,progress,u.stride,data.a))
+			_put(horse,base,angle,Color((u.state+0.5)/128,progress,u.stride,data.a))
 			base.y += 0.81
 		if u.hero and battle.vehicle != 0:
 			var heading := battle.riding_heading
@@ -157,9 +159,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var key:=_key(u)
 		if not full:
 			key+=30
-			_put(contact,Ground.unit_point(p)+Vector3.UP*0.035,angle,Color(0,0,0,0))
 		elif not u.hero and not u.officer:
 			high_detail_soldiers+=1
+		if not full or contact_for_all:
+			_put(contact,Ground.unit_point(p)+Vector3.UP*0.035,angle,Color(0,0,0,0))
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0)
 		if u.officer and u.hp>0:
 			_put(standards[u.team],base+Vector3(-0.32,0,0),angle,Color(0,0,0,0))
@@ -173,7 +176,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
 		var heading := battle.riding_heading if battle.vehicle == id else Vector2.RIGHT
 		var stride := battle.hero.stride if battle.vehicle == id else 0.0
-		_put(horse if id==1 else cart,Ground.unit_point(pos),atan2(heading.x,heading.y),Color((state+0.5)/64.0,1,stride,0))
+		_put(horse if id==1 else cart,Ground.unit_point(pos),atan2(heading.x,heading.y),Color((state+0.5)/128.0,1,stride,0))
 	for s in battle.shots:
 		var p := s.previous.lerp(s.pos,alpha)
 		var fraction := s.distance / maxf(1,s.distance+s.remaining)

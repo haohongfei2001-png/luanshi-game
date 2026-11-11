@@ -108,6 +108,14 @@ jobs:
           name: Luanshi-Linux-${{ github.sha }}
           path: builds/Luanshi-linux.tar.gz
           if-no-files-found: error
+      - name: Upload gameplay footage
+        uses: actions/upload-artifact@v4
+        with:
+          name: gameplay-${{ github.sha }}
+          path: |
+            artifacts/river-gate-512.mp4
+            artifacts/player-nine-weapons.mp4
+          if-no-files-found: error
       - name: Upload evidence and hashes
         if: always()
         uses: actions/upload-artifact@v4
@@ -118,6 +126,7 @@ jobs:
             builds/SHA256SUMS
             !artifacts/field-film/**
             !artifacts/kit-film/**
+            !artifacts/*.mp4
           if-no-files-found: warn
   macos-runtime:
     needs: verify-and-export

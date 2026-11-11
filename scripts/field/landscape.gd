@@ -6,6 +6,8 @@ const LIME := Color("ad9d79")
 const SLATE := Color("465657")
 const STONE := Color("838274")
 const DIRT := Color("a28c67")
+var surface_material:=ShaderMaterial.new()
+var sun:=DirectionalLight3D.new()
 var gate: MeshInstance3D
 var ram: MeshInstance3D
 var ram_beam: MeshInstance3D
@@ -19,7 +21,6 @@ func _ready() -> void:
 	world.environment.ambient_light_color = Color("e2e3ce")
 	world.environment.ambient_light_energy = 0.52
 	add_child(world)
-	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-53,-31,0)
 	sun.light_color = Color("ffedce")
 	sun.light_energy = 0.76
@@ -28,10 +29,26 @@ func _ready() -> void:
 	sun.directional_shadow_max_distance = 75.0
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	add_child(sun)
-	var b := Builder.new()
-	_earth(b)
-	_fort(b)
-	_camp(b)
+	surface_material.shader=preload("res://scripts/field/ground.gdshader")
+	var grain:=PackedByteArray()
+	grain.resize(128*128)
+	var grain_rng:=RandomNumberGenerator.new()
+	grain_rng.seed=71261
+	for i in grain.size(): grain[i]=grain_rng.randi() & 255
+	var image:=Image.create_from_data(128,128,false,Image.FORMAT_R8,grain)
+	image.generate_mipmaps()
+	surface_material.set_shader_parameter("grain_map",ImageTexture.create_from_image(image))
+	_ground_tiles()
+	var river:=Builder.new()
+	_crossings(river)
+	_mesh(river,self)
+	var city:=Builder.new()
+	_fort(city)
+	_mesh(city,self)
+	var tents:=Builder.new()
+	_camp(tents)
+	_mesh(tents,self)
+	var vegetation:={}
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 8725
 	for i in 164:
@@ -42,14 +59,14 @@ func _ready() -> void:
 		else:
 			p = Vector2(rng.randf_range(-112,110),rng.randf_range(-62,62))
 			if absf(p.y) < 40 or absf(p.x-Ground.RIVER_X)<7: continue
-		_tree(b,Ground.unit_point(p),rng.randf_range(1.9,3.9),i%4)
+		_tree(_vegetation_cell(vegetation,p),Ground.unit_point(p),rng.randf_range(1.9,3.9),i%4)
 	for i in 110:
 		var z := rng.randf_range(-63,63)
 		if absf(z-Ground.crossing(z)) < 5: continue
 		var p := Vector2(Ground.RIVER_X+(-1 if i%2 else 1)*rng.randf_range(4.6,5.6),z)
 		var foot := Ground.unit_point(p)
-		b.rod(foot,foot+Vector3(0.12,0.70,0.10),0.045,0.01,Color("a6a16d"),3)
-	_mesh(b,self)
+		_vegetation_cell(vegetation,p).rod(foot,foot+Vector3(0.12,0.70,0.10),0.045,0.01,Color("a6a16d"),3)
+	for patch: Builder in vegetation.values(): _mesh(patch,self)
 	var door := Builder.new()
 	for x: float in [-0.50,0.50]:
 		door.block(Vector3(x,1.75,0),Vector3(0.23,3.50,Ground.GATE_HALF*2),WOOD.darkened(0.27))
@@ -75,20 +92,29 @@ func _ready() -> void:
 func _mesh(builder: Builder,parent: Node3D) -> MeshInstance3D:
 	var mesh := MeshInstance3D.new()
 	mesh.mesh = builder.finish()
-	var mat := ShaderMaterial.new()
-	mat.shader = preload("res://scripts/field/ground.gdshader")
-	mesh.material_override = mat
+	mesh.material_override=surface_material
 	parent.add_child(mesh)
 	return mesh
 
 func _point(x: float,z: float) -> Vector3:
 	return Vector3(x,Ground.height(Vector2(x,z)),z)
 
-func _earth(b: Builder) -> void:
-	b.joint=1
-	for x in range(-126,126,3):
-		for z in range(-72,72,3):
-			b.quad(_point(x,z),_point(x,z+3),_point(x+3,z+3),_point(x+3,z),Color.WHITE)
+func _vegetation_cell(patches: Dictionary,p: Vector2) -> Builder:
+	var key:=Vector2i(floori(p.x/36),floori(p.y/36))
+	if not patches.has(key): patches[key]=Builder.new()
+	return patches[key]
+
+func _ground_tiles() -> void:
+	for x0 in range(-126,126,42):
+		for z0 in range(-72,72,36):
+			var land:=Builder.new()
+			land.joint=1
+			for x in range(x0,x0+42,3):
+				for z in range(z0,z0+36,3):
+					land.quad(_point(x,z),_point(x,z+3),_point(x+3,z+3),_point(x+3,z),Color.WHITE)
+			_mesh(land,self)
+
+func _crossings(b: Builder) -> void:
 	b.joint=2
 	var water := Color("577d78")
 	b.quad(Vector3(Ground.RIVER_X-4.8,-0.33,-72),Vector3(Ground.RIVER_X-4.8,-0.33,72),

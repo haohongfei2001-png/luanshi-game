@@ -17,23 +17,31 @@ vec3 bend_y(vec3 p, vec3 pivot, float a) {
 }
 
 void vertex() {
-	int code=int(floor(INSTANCE_CUSTOM.r*64.0));
+	int code=int(floor(INSTANCE_CUSTOM.r*128.0));
 	int state=code%8;
 	int slot=(code/8)%4;
+	bool seated=code>=64 && !animal;
 	float p=INSTANCE_CUSTOM.g;
 	float walk=sin(INSTANCE_CUSTOM.b*6.28318);
 	int joint=int(round(UV2.x));
 	vec3 v=VERTEX;
 	if (joint==1 || joint==2) {
 		float stride=walk*(joint==1 ? 1.0 : -1.0);
-		v=bend_x(v,vec3(0,animal ? 0.94 : 0.65,0),stride*(state==5 ? 0.61 : 0.38));
+		if (seated) {
+			float drop=clamp((0.76-v.y)/0.70,0.0,1.0);
+			v.x+=(joint==1 ? -1.0 : 1.0)*drop*0.22;
+			v.z+=sin(drop*2.58)*0.30;
+			v.y+=drop*0.10;
+		} else {
+			v=bend_x(v,vec3(0,animal ? 0.94 : 0.65,0),stride*(state==5 ? 0.61 : 0.38));
+		}
 	}
 	if (!animal && (joint==3 || joint==4)) {
 		vec3 shoulder=vec3(joint==3 ? 0.25 : -0.25,1.25,0);
 		float swing=joint==3 ? -0.14*walk : 0.14*walk;
 		if (state==1 || state==2) {
 			float beat=state==1 ? smoothstep(0.0,0.74,p)-1.9*smoothstep(0.74,1.0,p) : -0.9*(1.0-p);
-			if (code>=32) {
+			if (((code/32)%2)==1) {
 				v.z-=beat*0.42;
 				swing+=beat*0.36;
 			} else if (kit==3 || (kit==0 && slot==2) || kit==7) {
@@ -68,4 +76,4 @@ void vertex() {
 	tint=mix(tint,vec3(0.95,0.59,0.34),INSTANCE_CUSTOM.a*0.57);
 	if (state==7) {tint*=0.64;}
 }
-void fragment(){ALBEDO=tint; ROUGHNESS=0.89;}
+void fragment(){ALBEDO=tint; EMISSION=tint*0.23; ROUGHNESS=0.84; SPECULAR=0.21;}

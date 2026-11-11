@@ -8,6 +8,8 @@ var cpu := PackedFloat32Array()
 var previous := 0
 var first_tick := -1
 var first_hits := 0
+var observed_hits:=0
+var last_contact_tick:=-1
 var first_sim := 0
 var first_view := 0
 var active_seconds := 0.0
@@ -38,8 +40,17 @@ func sample(scene) -> void:
 		interrupt("new_battle")
 		observed=b
 		active_seconds=0
-	if not b.started or scene.paused or b.result!="" or b.hits[0]+b.hits[1]==0:
+		observed_hits=0
+		last_contact_tick=-1
+	var hits: int=b.hits[0]+b.hits[1]
+	if hits>observed_hits:
+		last_contact_tick=b.tick
+		observed_hits=hits
+	if not b.started or scene.paused or b.result!="" or last_contact_tick<0:
 		interrupt("paused_or_finished",scene)
+		return
+	if b.tick-last_contact_tick>40:
+		interrupt("no_recent_contact",scene)
 		return
 	var now:=Time.get_ticks_usec()
 	if previous==0:
@@ -78,9 +89,12 @@ func _flush(scene) -> void:
 	if wall.is_empty(): return
 	var b=scene.battle
 	var vp: Viewport=scene.get_viewport()
+	var target:=vp.get_texture().get_size()
+	var window:=DisplayServer.window_get_size()
 	_write({"kind":"frames","seed":b.rng.seed,"per_side":b.side_size,"start_tick":first_tick,"end_tick":b.tick,
 		"engaged_wall_seconds":active_seconds,"viewport":[vp.get_visible_rect().size.x,vp.get_visible_rect().size.y],
-		"internal_scale":vp.scaling_3d_scale,"shadow_max_m":75,"camera_size":scene.camera.size,"camera_travel":first_camera.distance_to(scene.camera_center),
+		"window_px":[window.x,window.y],"render_target_px":[target.x,target.y],
+		"estimated_internal_px":[roundi(target.x*vp.scaling_3d_scale),roundi(target.y*vp.scaling_3d_scale)],"internal_scale":vp.scaling_3d_scale,"preset":scene.detail_preset,"shadows":scene.map.sun.shadow_enabled,"shadow_max_m":scene.map.sun.directional_shadow_max_distance,"camera_size":scene.camera.size,"camera_travel":first_camera.distance_to(scene.camera_center),
 		"visible_soldiers":scene.view.visible_soldiers,"visible_combat_poses":scene.view.visible_fighting,
 		"hits_in_window":b.hits[0]+b.hits[1]-first_hits,"losses":b.losses,"gate_hp":b.gate_hp,"outcome":b.result,
 		"sim_cpu_ms":float(scene.sim_us-first_sim)/1000.0,"view_script_ms":float(scene.view_us-first_view)/1000.0,

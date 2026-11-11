@@ -40,6 +40,10 @@ func _run() -> void:
 	root.add_child(shell)
 	field=shell.field
 	await process_frame
+	var roster:=field.battle.roster
+	field.hud.quality.item_selected.emit(2)
+	_check(is_equal_approx(root.scaling_3d_scale,0.70) and not field.map.sun.shadow_enabled and is_same(roster,field.battle.roster),"Graphics preset changes render scale and shadows on the same fighters")
+	field.hud.quality.item_selected.emit(0)
 	_key(KEY_F,true); _key(KEY_F,false)
 	_check(field.battle.vehicle==1,"Mount key boards the horse")
 	_key(KEY_F,true); _key(KEY_F,false)

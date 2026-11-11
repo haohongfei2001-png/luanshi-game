@@ -17,6 +17,7 @@ var hud := Hud.new()
 var audio := Sound.new()
 var camera := Camera3D.new()
 var camera_center := Vector2.ZERO
+var camera_pitch:=deg_to_rad(51.0)
 var follow := true
 var paused := false
 var pan := false
@@ -29,6 +30,8 @@ var selections := 512
 var last_sound_tick := -20
 var last_shot_tick := -20
 var frame_log: RefCounted
+var detail_preset:=0
+const QUALITY_FILE:="user://river-gate-graphics.cfg"
 
 func _ready() -> void:
 	Actions.install()
@@ -43,6 +46,7 @@ func _ready() -> void:
 	hud.deploy.connect(deploy)
 	hud.pause.connect(toggle_pause)
 	hud.terrain_chosen.connect(pan_to)
+	hud.quality_changed.connect(func(index: int): set_quality(index,true))
 	hud.campaign.connect(func(): campaign_requested.emit())
 	hud.retry.connect(func(): new_muster(selections))
 	hud.weapon_changed.connect(func(i: int):
@@ -54,6 +58,8 @@ func _ready() -> void:
 		if arg.begins_with("--field-size="):
 			var count := arg.trim_prefix("--field-size=").to_int()
 			if count in Battle.SCALES: selections=count
+	var cfg:=ConfigFile.new()
+	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,2)
 	new_muster(selections)
 	if "--field-profile" in OS.get_cmdline_user_args():
 		frame_log = preload("res://scripts/field/frame_log.gd").new()
@@ -79,12 +85,29 @@ func _adopt(fresh: Battle) -> void:
 	view=Figures.new()
 	add_child(view)
 	view.configure(battle)
+	set_quality(detail_preset)
 	camera_center=battle.hero.pos
 	follow=true
 	carry=0
 	hud.bind(battle)
 	_camera()
 	_draw_field()
+
+func set_quality(which: int,remember: bool=false) -> void:
+	if which<0 or which>2: return
+	if frame_log and which!=detail_preset: frame_log.interrupt("changed_graphics",self)
+	detail_preset=which
+	var vp:=get_viewport()
+	vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
+	vp.scaling_3d_scale=[1.0,0.85,0.70][which]
+	map.sun.shadow_enabled=which!=2
+	map.sun.directional_shadow_max_distance=75.0 if which==0 else 48.0
+	view.contact_for_all=not map.sun.shadow_enabled
+	hud.quality.select(which)
+	if remember:
+		var cfg:=ConfigFile.new()
+		cfg.set_value("display","preset",which)
+		cfg.save(QUALITY_FILE)
 
 func deploy() -> void:
 	if battle.result!="" or battle.started: return
@@ -123,7 +146,8 @@ func _load() -> void:
 
 func _camera() -> void:
 	var p := Ground.unit_point(camera_center)
-	camera.position=p+Vector3(0,60,49)
+	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
+	camera.position=p+Vector3(0,sin(camera_pitch),cos(camera_pitch))*77.5
 	camera.look_at(p)
 	camera.current=true
 
@@ -150,7 +174,7 @@ func _unhandled_input(e: InputEvent) -> void:
 				pan=e.pressed
 			MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN:
 				if e.pressed:
-					camera.size=clampf(camera.size*(0.83 if e.button_index==MOUSE_BUTTON_WHEEL_UP else 1.20),7.5,115)
+					camera.size=clampf(camera.size*(0.83 if e.button_index==MOUSE_BUTTON_WHEEL_UP else 1.20),5.8,115)
 	elif e is InputEventMouseMotion and pan:
 		if e.button_mask & (MOUSE_BUTTON_MASK_RIGHT | MOUSE_BUTTON_MASK_MIDDLE):
 			pan_to(camera_center+_screen_ground(e.position-e.relative)-_screen_ground(e.position))
@@ -212,7 +236,7 @@ func _physics_process(delta: float) -> void:
 
 func _draw_field() -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
-	var half_extent := Vector2(camera.size*viewport_size.x/maxf(viewport_size.y,1)*0.5+4,camera.size*0.68+6)
+	var half_extent := Vector2(camera.size*viewport_size.x/maxf(viewport_size.y,1)*0.5+4,0.5*camera.size/sin(camera_pitch)+6)
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	map.update_battle(battle)
