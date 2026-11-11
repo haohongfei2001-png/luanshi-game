@@ -1,0 +1,170 @@
+extends SceneTree
+## Same deployment, seed, input, clock and close-contact sample window on both runs.
+const Battle := preload("res://scripts/field/battle.gd")
+const Ground := preload("res://scripts/field/ground.gd")
+const Traffic := preload("res://scripts/field/formation_traffic.gd")
+const FIRST_SAMPLE := 100
+const LAST_SAMPLE := 620
+const PERIOD := 10
+const OVERLAP := 0.52
+var failures: Array[String] = []
+
+func check(ok: bool, message: String) -> void:
+	if not ok:
+		failures.append(message)
+		push_error(message)
+
+func _initialize() -> void:
+	_check_passages()
+	_check_serving_crew()
+	var old := _siege(false)
+	var current := _siege(true)
+	print("FIELD_TRAFFIC_AB " + JSON.stringify({"seed": Battle.SEED, "window_ticks": [FIRST_SAMPLE, LAST_SAMPLE],
+			"every_ticks": PERIOD, "overlap_m": OVERLAP, "before": old, "after": current}))
+	check(old.samples == current.samples and current.samples == 53, "Identical congestion observation window")
+	check(current.hull_occupant_samples < old.hull_occupant_samples, "Fewer living bodies overlapping the wooden chassis")
+	check(current.overlapping_person_samples < old.overlapping_person_samples, "Fewer close overlaps in the ram, gate and bridge areas")
+	for row: Dictionary in [old, current]:
+		check(row.ordinary == [512, 512], "Both samples retain ordinary soldier identities")
+		check(row.hits[0] > 0 and row.hits[1] > 0 and row.dead[0] > 0 and row.dead[1] > 0, "Attacker and defender exchange real damage")
+		check(row.wall_defenders > 0 and row.breach > row.gate_contact and row.gate_contact > 0, "Defended gate damaged and breached in natural simulation")
+		check(row.ram_farthest_x > 27.0, "Living engineers advanced the real ram")
+	print("FIELD_TRAFFIC_" + ("PASS" if failures.is_empty() else "FAIL") + " " + JSON.stringify(failures))
+	quit(0 if failures.is_empty() else 1)
+
+func _check_passages() -> void:
+	var lanes := {}
+	for landmark: Vector2 in [Vector2(Ground.RIVER_X, 35), Ground.GATE]:
+		for dir: float in [-1.0, 1.0]:
+			for file: float in [-5.5, -2.4, 0.8, 5.5]:
+				var p := landmark + Vector2(-dir * 15.0, dir * 9.0)
+				var goal := landmark + Vector2(dir * 14.0, dir * -8.0)
+				var crossed := false
+				for t in 380:
+					var next := Traffic.waypoint(p, goal, file, 4, true)
+					var q := Ground.travel(p, p.direction_to(next) * minf(p.distance_to(next), 0.19), true)
+					if (p.x - landmark.x) * dir < 0.0 and (q.x - landmark.x) * dir >= 0.0:
+						crossed = true
+						lanes[Vector3i(int(landmark.x), int(dir), roundi(q.y - landmark.y))] = true
+					p = q
+					if p.distance_to(goal) < 0.3: break
+				check(crossed and p.distance_to(goal) < 0.3, "Movement crosses the physical passage and reaches its destination")
+	check(lanes.size() >= 12, "Traversing troops use distinct lateral files in both directions")
+	for i in 4:
+		var p: Vector2 = [Vector2(-6, 0), Vector2(6, 0), Vector2(0, -4), Vector2(0, 4)][i]
+		var goal := -p
+		for t in 220:
+			var next := Traffic.around_ram(p, goal, Vector2.ZERO, i)
+			var offset := p.direction_to(next) * minf(0.15, p.distance_to(next))
+			p += Traffic.ram_motion(p, offset, Vector2.ZERO, i)
+			check(not Traffic._inside(p), "Route stays outside the hull")
+			if p.distance_to(goal) < 0.2: break
+		check(p.distance_to(goal) < 0.2, "A unit can pass the vehicle from either end or side")
+
+func _check_serving_crew() -> void:
+	# Isolated damage attribution. Then remove the crew and repeat with no defenders
+	# killed and no timer/gate edits: a parked, unserved ram cannot land a second hit.
+	var b := Battle.new()
+	b.setup(20)
+	b.ram = Ground.GATE - Vector2(3.1, 0)
+	var engineers: Array[Battle.Unit] = []
+	for u in b.roster:
+		if u.engineer:
+			u.pos = Traffic.crew_station(b.ram, u.id)
+			check(not Traffic._inside(u.pos - b.ram) and u.pos.distance_to(b.ram) < 4.8, "Engineers occupy reachable service handles")
+			engineers.append(u)
+	b._rebuild_grid()
+	var original := b.gate_hp
+	b.tick = 4
+	b._siege()
+	check(engineers.size() == 4 and b.gate_hp == original - 20.0, "All four counted engineers drove an actual siege strike")
+	for u in engineers:
+		u.pos.x -= 12.0
+	b._rebuild_grid()
+	var damaged := b.gate_hp
+	for j in 20:
+		b.tick += 4
+		b._siege()
+	check(b.gate_hp == damaged, "No gate damage from an abandoned engine")
+
+func _siege(enabled: bool) -> Dictionary:
+	var b := Battle.new()
+	b.setup(512)
+	b.traffic_enabled = enabled
+	for i in b.companies_per_side:
+		var mission := Battle.Mission.PRESS
+		if i in [2, 7]: mission = Battle.Mission.ESCORT
+		elif i in [0, 4]: mission = Battle.Mission.FLANK
+		check(b.command(i, mission, Battle.Channel.FLAG), "Identical muster task in each replay")
+	var row := {"samples": 0, "hull_occupant_samples": 0, "overlapping_person_samples": 0, "crowded_pairs": 0,
+			"peak_3m_square": 0, "bridge_file_metres": [], "bridge_crossers": 0, "gate_crossers": 0,
+			"low_motion_passage_samples": 0, "breach": -1, "gate_contact": -1, "ram_strikes": 0,
+			"ram_farthest_x": b.ram.x, "wall_defenders": 0, "ordinary": [0, 0]}
+	for u in b.roster:
+		if not u.hero and not u.officer:
+			row.ordinary[u.team] += 1
+			if u.team == 1 and u.station.x > Ground.WALL_X:
+				row.wall_defenders += 1
+	var bridge_users := {}
+	var gate_users := {}
+	var bridge_files := {}
+	b.start()
+	for t in 3600:
+		var timer_before := b.ram_timer
+		b.step()
+		if b.ram_timer > timer_before: row.ram_strikes += 1
+		row.ram_farthest_x = maxf(row.ram_farthest_x, b.ram.x)
+		if b.gate_hp < 260 and row.gate_contact < 0: row.gate_contact = b.tick
+		if b.gate_hp <= 0 and row.breach < 0: row.breach = b.tick
+		if b.tick % PERIOD == 0:
+			if b.tick >= FIRST_SAMPLE and b.tick <= LAST_SAMPLE:
+				_sample(b, row)
+			for u in b.roster:
+				if u.team != 0 or u.hero or u.officer or not b.active(u): continue
+				if u.station.x < Ground.RIVER_X - 4.8 and u.pos.x > Ground.RIVER_X + 4.8:
+					bridge_users[u.id] = true
+				if absf(u.pos.x - Ground.RIVER_X) < 2.3:
+					bridge_files[roundi(u.pos.y - Ground.crossing(u.pos.y))] = true
+				if u.pos.x > Ground.WALL_X + 1.4 and absf(u.pos.y) < Ground.WALL_Z - 1.2:
+					gate_users[u.id] = true
+		if not b.result.is_empty(): break
+	row.bridge_crossers = bridge_users.size()
+	row.gate_crossers = gate_users.size()
+	row.bridge_file_metres = bridge_files.keys()
+	row.bridge_file_metres.sort()
+	row.merge({"tick": b.tick, "end": b.result, "hits": b.hits, "dead": b.losses, "escaped": b.escaped,
+			"ram_hp": b.ram_hp, "gate_hp": b.gate_hp, "dropped_weapons": b.equipment})
+	return row
+
+func _sample(b: Battle, row: Dictionary) -> void:
+	row.samples += 1
+	var close := {}
+	var cells := {}
+	var density := {}
+	for u in b.roster:
+		if u.hero or u.officer or not b.active(u): continue
+		var offset := u.pos - b.ram
+		var near_ram := absf(offset.x) <= 8.0 and absf(offset.y) <= 8.0
+		var near_gate := absf(u.pos.x - Ground.WALL_X) <= 8.0 and absf(u.pos.y) <= 10.0
+		var near_bridge := absf(u.pos.x - Ground.RIVER_X) <= 7.0 and absf(u.pos.y - Ground.crossing(u.pos.y)) <= 4.0
+		if not (near_ram or near_gate or near_bridge): continue
+		if absf(offset.x) < 1.95 and absf(offset.y) < 0.88:
+			row.hull_occupant_samples += 1
+		if (near_bridge or (near_gate and b.gate_hp <= 0)) and u.state == Battle.State.MARCH and u.target < 0 and u.before.distance_squared_to(u.pos) < 0.0001:
+			row.low_motion_passage_samples += 1
+		var tile := Vector2i((u.pos / 3.0).floor())
+		density[tile] = int(density.get(tile, 0)) + 1
+		row.peak_3m_square = maxi(row.peak_3m_square, density[tile])
+		var cell := Vector2i((u.pos / OVERLAP).floor())
+		for dz in range(-1, 2):
+			for dx in range(-1, 2):
+				var key := cell + Vector2i(dx, dz)
+				if not cells.has(key): continue
+				for id: int in cells[key]:
+					if u.pos.distance_squared_to(b.roster[id].pos) < OVERLAP * OVERLAP:
+						close[u.id] = true
+						close[id] = true
+						row.crowded_pairs += 1
+		if not cells.has(cell): cells[cell] = []
+		cells[cell].append(u.id)
+	row.overlapping_person_samples += close.size()
