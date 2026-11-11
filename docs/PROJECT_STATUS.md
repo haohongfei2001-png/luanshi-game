@@ -1,5 +1,14 @@
 # Project status / resumable handoff
 
+## Owner priority override — 2026-11-12 (design update only; NO claimed code implementation)
+
+- **Codex is now explicitly authorized as the PRIMARY developer**; Dot may optionally help coordinate, not overwrite active Codex work. Current battle-first top-level owner spec: `docs/BATTLE_FIRST_V1_OWNER_SPEC_20261112.md`; direct development handoff: `docs/CODEX_BATTLE_FIRST_EXECUTION_HANDOFF.md`.
+- **New V1 owner target**: one polished MOBA-scale 3D map with **512 vs 512 = 1024 real fighting soldiers** excluding player/officers/mounts, near-camera visible faces/hands/weapons/clothes, nine unique weapon kits, cavalry/chariots/siege, prebattle officer tasks, flag/horn/courier orders, non-annihilation outcomes, and actual **MacBook Air M5 sustained 60 FPS** performance evidence. See BF-01..BF-15 in `docs/ACCEPTANCE_MATRIX.md §7F`.
+- **Formal story writing remains blank and exclusively reserved to Owner**. One neutral military opening/root and system branching interfaces only. The old youth/long-history narratives remain deferred visions and regression-compatible code, not Codex's present script-writing instructions.
+- **Preserve existing code/data**: accepted v0.6 and existing open PR #10; last known PR #10 (historical `52f545fe58`) needs macOS font/CI verification and old-save migration. Check GitHub current state/CI before writing; a separate incomplete `handoff/cloud-transfer-20261111` branch is not by itself a release.
+- **Important evidence boundary**: This commit only updated the design, acceptance and handoff documents. It did **NOT** implement 1024-person combat, art, nine weapon movesets, mounted/siege mechanics or M5 FPS. All BF tests remain NOT_RUN unless actual linked code/tests prove otherwise. [GitHub battle-first issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12).
+- The rest of this file is a historical developer status snapshot. It should be updated by the *actual* development agent after running the next verified work.
+
 ## Objective and current source
 
 Continue the full single-player life, warfare and independent-world game. This is an ongoing project, not completion of the final vision. Preserve the existing Godot 4.6.3 game. Work only in the authorized cloud and existing public GitHub resources; no new costs, extra accounts, user computer, Codex tasks or formal release.
