@@ -1,3 +1,5 @@
+> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
 # First playable verification
 
 ## Environment and tested stage
@@ -9,7 +11,7 @@
 
 ## Actual commands and results
 
-`XDG_DATA_HOME=/workspace/shared/godot-data XDG_CONFIG_HOME=/workspace/shared/godot-config XDG_CACHE_HOME=/workspace/shared/godot-cache ./tools/test.sh`
+`XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} ./tools/test.sh`
 
 All commands exited 0 with no Godot script errors:
 
@@ -37,7 +39,7 @@ Measured CPU simulation cost: approximately 0.64 ms per fixed step in the army t
 
 Compatibility rendering is the initial conservative desktop default. Mobile rendering must be evaluated separately; the lack of an authorized graphical display prevents an honest cloud visual/performance comparison. Inputs and authoritative simulation remain independent of presentation and device bindings.
 
-Export command: `XDG_DATA_HOME=/workspace/shared/godot-data XDG_CONFIG_HOME=/workspace/shared/godot-config XDG_CACHE_HOME=/workspace/shared/godot-cache ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0.
+Export command: `XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} ./tools/export.sh`. Both platform exports, exported Linux smoke and static macOS archive verification exited 0.
 
 The first export exposed a real configuration failure (arm64 requires ETC2/ASTC import); this was fixed by enabling that setting before the passing rerun. A new scene integration test initially exposed a GDScript inferred-type parse issue in the test itself; an explicit Node type fixed it and all 68 assertions then passed.
 

@@ -1,0 +1,100 @@
+Luanshi voluntary comrade testimony v0.11 / local cloud validation
+Date: 2026-11-10 UTC
+Verified runtime/test/CI source: f81264f285bd62c3d2e6cffe5de7f7cdfc884c5f
+Verified source tree: 23983f3fac414b007c76bfb07ac2235195d6c40f
+Local commits only; not published or hosted-tested.
+Engine: 4.6.3.stable.official.7d41c59c4
+Environment: Linux cloud headless. XDG_DATA_HOME, XDG_CONFIG_HOME and XDG_CACHE_HOME
+were set to persistent test directories. Commands run from repository root.
+No user-device access, new costs, GitHub write or alternate font upload attempted.
+
+Final commands, each completed successfully (exit 0):
+  bash tools/test.sh
+  bash tools/test_petition.sh (also included in full suite)
+  bash tools/test-youth-ui.sh
+  bash tools/calibrate-combat.sh
+  bash tools/export.sh
+  bash -n tools/test.sh tools/test_petition.sh tools/export.sh
+Workflow YAML parsed successfully; verify-and-export and macos-runtime jobs present.
+
+Final observed focused stdout:
+COMRADE_PETITION_SUMMARY {"checks":464,"failures":[]}
+PETITION_UI_SUMMARY {"checks":32,"failures":[],"input":"Viewport keyboard events, not emitted button signals","rendered":false}
+PETITION_RESTART_SUMMARY {"checks":27,"failures":[],"ok":true,"phase":"prepare"}
+PETITION_RESTART_SUMMARY {"checks":27,"failures":[],"ok":true,"phase":"resume"}
+
+Selected regression stdout (the full suite above was run, not only these checks):
+World tests: 526 assertions, 0 failures
+Economy tests: 527 assertions, 0 failures
+Hunger tests: 337 assertions, 0 failures
+INDEPENDENT_HUNGER_AUDIT 2689 checks / 0 failures
+INDEPENDENT_ECO_REVIEW 52194 assertions / 0 failures
+Campaign save tests: 1243 assertions, 0 failures
+PROFILE_SAVE_TESTS {"checks":3066,"failures":[]}
+SAVE_INVALID_TYPES 1877 cases / 0 failures
+SAVE_INVALID_TYPES 1884 cases / 0 failures
+SAVE_INVALID_TYPES 1831 cases / 0 failures
+BOUNDARY_AUDIT 107 checks 0 failures []
+YOUTH_CAREER_TESTS {"checks":536,"failures":[]}
+YOUTH_WORLD6_MIGRATION_TESTS {"checks":40,"failures":[]}
+YOUTH_VALIDATION_TESTS {"checks":2201,"failures":[]}
+LOCAL_SIGNALS_TESTS {"checks":62,"failures":[]}
+COURIER_ORDERS_TESTS {"checks":194,"failures":[]}
+COURIER_MIGRATIONS {"checks":20,"failures":[]}
+COURIER_UI_SUMMARY {"checks":113,"failures":[]}
+CAMP_APPRAISAL_SUMMARY {"checks":349,"failures":[]}
+APPRAISAL_UI_SUMMARY {"checks":39,"failures":[],"input":"Viewport keyboard events, not emitted button signals","rendered":false}
+APPRAISAL_RESTART_SUMMARY {"checks":55,"failures":[],"ok":true,"phase":"prepare"}
+APPRAISAL_RESTART_SUMMARY {"checks":25,"failures":[],"ok":true,"phase":"resume"}
+
+Font/input and calibration observed stdout:
+CHINESE_FONT_SUMMARY {"failures":0,"font":"Luanshi UI SC"}
+YOUTH_SCENE_SUMMARY {"assertions":59,"failures":0,"messages":[]}
+YOUTH_PRESENTATION_SUMMARY {"checks":7,"failures":0}
+HERO_PROFILE_TESTS {"checks":59,"failures":[]}
+COMBAT_CALIBRATION_TESTS {"checks":320,"failures":[]}
+LEGACY_PROFILE_PARITY {"checks":1120,"failures":[]}
+COMBAT_CALIBRATION_REPEAT_PASS
+Actual input route: personal first-battle damage 99.47, 419 moving frames,
+maximum headless pointer error 0.0001220703125 pixels; this is not visual acceptance.
+Calibration JSON SHA256: f904970ff606bc88fbf2afed9c435fe85c271d939085faf36fa16c3486cdd11d
+
+Both final v0.11 exports completed. Linux packaged original scene/campaign/save,
+youth 30+29, courier 167+180 and appraisal 55+25 restart routes all passed.
+PETITION_RUNTIME_PREPARE_PASS {"checks":27,"failures":[],"ok":true,"phase":"prepare"}
+PETITION_RUNTIME_RESUME_PASS {"checks":27,"failures":[],"ok":true,"phase":"resume"}
+MACOS_ARCHIVE_PASS arm64+x86_64 bundle=com.luanshi.prototype version=0.11.0 signing=not-verified runtime=not-tested
+macOS ZIP SHA256: 347172e015c65d3a0b23b7b8d846065e11126fde8881642624027942ce5bb960
+Linux TAR.GZ SHA256: 9be4a9dc48726ef908b6b8cdaa826a721535e5714fe00ba19e963be06c1926eb
+
+Development failures and repairs retained:
+- First casualty test incorrectly assumed seed184 delayed_retreat killed a comrade.
+  It did not; that assertion failed. Replaced with actually executed seed185 reckless
+  battle: Lin died, commander survived at 7.79254126548767 HP, four enemies died.
+  Dead Lin is excluded; actual new private-copy witness Zhou can testify. Real hourly
+  starvation and the terminal-hour interruption are separately covered, not injected.
+- Review found Lin's private copy influenced Zhou without disclosure. Record-based
+  support now requires that exact copy's named witness and battle. A hidden unrelated
+  copy change cannot influence Zhou; both real battle routes have regressions.
+- Review found Wu/Tian read the player's private choice flag. Both global-choice
+  gates were removed. Their decisions now depend only on personal relationships,
+  shared battle and locally present peers. Identical local facts give identical
+  decisions across endurance/private-record choices; a real low-trust survival
+  upbringing supplies the complete-refusal test, rather than forced all-person refusal.
+- Protected gratitude originally preceded loss concerns. Losses now take precedence
+  and protection needs existing trust. High-grievance refusal has a boundary test.
+
+Independent final review also passed focused464 / keyboard32 / restart27+27.
+No blocking issue remained in that bounded review. Earlier failed/uncorrected
+snapshots are not the source for the successful final exported artifacts above.
+
+Prepared but NOT RUN: three real-display petition screenshots (signed/refused/
+protected), strict error scanning, 150-second graphical command limit and three-minute
+step timeout; native macOS petition prepare/resume in the bounded existing native job.
+No graphical screenshot, hosted CI, native macOS, M5 performance or subjective quality
+acceptance is claimed. macOS archive inspection is not macOS execution.
+The existing font publication confirmation remains pending; no retry or bypass.
+
+Sanitization: this evidence contains selected observed summaries and explicit results,
+not raw execution logs. Absolute cloud directories, transient save IDs and any local
+integration warning paths are omitted. Local warnings are not rendered-game evidence.

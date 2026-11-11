@@ -1,8 +1,10 @@
+Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
 Campaign persistence core verification
 Environment: isolated cloud Linux checkout luanshi-saves, Godot 4.6.3.stable.official.7d41c59c4.
 Baseline: clean hunger implementation 0b3499d211763ae8258ab93e2b03b9bd0656f450.
 Canonical design documents read from primary through 244775d; doc sync excluded from feature commit.
-Command: XDG_DATA_HOME=/workspace/shared/godot-data XDG_CONFIG_HOME="$PWD/.local-config" XDG_CACHE_HOME="$PWD/.local-cache" bash tools/test.sh
+Command: XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME="$PWD/.local-config" XDG_CACHE_HOME="$PWD/.local-cache" bash tools/test.sh
 PASS: editor import, 1,871 preexisting functional assertions, 1,449 save assertions at aggregate run, 98 long-history assertions, 3,159 separate-process restart assertions, both training/campaign headless scene smokes.
 PASS: final affected save-test rerun adds six generation-high-water assertions, for 1,455 save assertions and 6,583 total functional assertions across final checks.
 PASS: 36 independent economy scenarios / 52,194 checks.

@@ -25,6 +25,8 @@ func _run(phase: String, isolated_id: String) -> Dictionary:
 		var battle := world.start_battle(id)
 		battle.issue_order("attack")
 		_play(world, id, 330)
+		for action in ["attack", "sweep", "lunge", "guard"]:
+			_expect(battle.use_action(action), "activate saved " + action)
 		_expect(store.save_slot(world, "running").ok, "midbattle save failed")
 		_play(world, id, 10800)
 		_expect(battle.ended, "uninterrupted battle did not end")
@@ -55,7 +57,7 @@ func _run(phase: String, isolated_id: String) -> Dictionary:
 		_expect(world.export_campaign_state() == before and before == expected.export_campaign_state(), "duplicate resource settlement")
 	return {"ok": _errors.is_empty(), "phase": phase, "errors": _errors,
 		"campaign": "runtime_smoke_" + isolated_id, "world_time": world.snapshot().time_seconds,
-		"events": world.snapshot().events.size(), "schema_version": Store.SAVE_VERSION}
+		"hero_profile": world.snapshot().commander.hero_profile, "events": world.snapshot().events.size(), "schema_version": Store.SAVE_VERSION}
 
 func _play(world: WorldSimulation, id: String, frames: int) -> void:
 	var battle := world.start_battle(id)

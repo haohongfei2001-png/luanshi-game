@@ -1,0 +1,116 @@
+Luanshi v0.13 / battle wounds and paid convalescence
+Verified 2026-11-11 UTC; official Godot 4.6.3 (7d41c59c4), Linux cloud.
+Runtime/tests: b71a6c96c410808fba43beb96514962b7f75d05d
+Tree: a520b1e9ab90d3bb814d376ca5d54fbce783b09d
+Base: dfc4ae88e0278e07a3bee32fa4f2fad71eff044e (v0.12 retained unchanged).
+All Godot commands used isolated XDG data, configuration and cache directories.
+Private machine paths and per-run save identifiers are deliberately omitted.
+
+FINAL COMMANDS, ALL EXIT 0
+  bash tools/test.sh
+  bash tools/test-youth-ui.sh
+  bash tools/calibrate-combat.sh
+  bash tools/export.sh
+  bash tools/test_wounds.sh (also included by test.sh)
+
+NEW FOCUSED RESULTS
+  wounds mechanism: 314 checks, 0 failures
+  wounds UI: 22 checks, 0 failures, actual Viewport keyboard events, rendered=false
+  source separate-process restart: prepare 30 / resume 22, 0 failures
+  actual main-scene --wounds-smoke-prepare / --wounds-smoke-resume: 30 / 22 PASS
+  package separate-process restart: prepare 30 / resume 22 PASS
+  initial strategy viewport: original 98 assertions, 0 failures
+
+BEHAVIOR OBSERVED
+  Actual reckless youth input survived first battle at 9.65042245388031 / 100 HP.
+  Fractional-start care advanced exactly 3600 seconds and recovered 5 HP.
+  The old partial hour retained its march activity flag; no free fatigue reset.
+  Two rest hours and two one-hour actions produced identical complete states.
+  Next battle entered with existing injury plus only paid recovery.
+  Actual second battle death ended the life and disabled recovery.
+  Near-full technical commander with only two ration-hours could request up to six
+  hours: actually paid two hours, reached 100 HP and stopped, with no excess cost.
+  Actual shortage/resupply cleared hunger through meals before healing resumed.
+  Real legacy World5 running fixture survived ordinary inputs, withdrew, returned
+  and recovered; exact old 360 HP test profile and reservation stayed unchanged.
+  Death, full health, insufficient rations, hostile/occupied/besieged camp,
+  marching, reserved/running battles and malformed durations reject atomically.
+  Enemy-arrival interruption is an isolated primitive test: 720 seconds, no heal,
+  truthful 0.2-hour accounting. It is not claimed as a new playable enemy route.
+
+REGRESSION EXCERPTS FROM THE COMPLETE SUCCESSFUL RUN
+  Economy property review: 52,194 assertions / 0 failures
+  Hunger property review: 2,689 checks / 0 failures
+  Battle transactions: 293 assertions / 0 failures
+  Campaign saves: 1,243 assertions / 0 failures
+  Hero profile saves: 3,066 checks / 0 failures
+  90-day save history: 14,007 events / 98 assertions / 0 failures
+  Malformed saves: active 1,877 + committed 1,884 + dead 1,831 / 0 failures
+  Save boundary audit: 107 checks / 0 failures
+  Youth career 536; migration 40; corruption 2,201 / all PASS
+  Local signals 62; courier causality 194; courier migration 20 / all PASS
+  Appraisal 349 / UI 39 / restart 55+25 PASS
+  Comrade petition 464 / UI 32 / restart 27+27 PASS
+  Hometown 291 / UI 53 / restart 35+27 PASS
+  Original tests and all genuine fixtures were not weakened or rewritten.
+
+FONT, INPUT, CALIBRATION
+  Bundled Chinese font/source glyph verification: PASS, font unchanged.
+  Font SHA256: 830b4d3122ba9db8c24c1f39919e414566896ab00f9e9b079df5a797144d94a2
+  Youth scene 59 + presentation 7: PASS
+  Actual youth input route: 99.47 damage, 419 moving frames,
+    maximum headless pointer error 0.0001220703125 pixels.
+  Hero profile 59 + calibration 320 + legacy parity 1,120 = 1,499 PASS.
+  Repeated calibration output identical:
+    f904970ff606bc88fbf2afed9c435fe85c271d939085faf36fa16c3486cdd11d
+
+SEPARATE-CHECKOUT REVIEW, FINAL RUNTIME SHA
+  Independently reran focused 314, UI 22, restart 30+22, original strategy 98,
+    and actual main-scene CLI prepare/resume 30+22: all PASS.
+  Additional independent checks: 349 adversarial + 86 routes/compatibility PASS.
+  Included two real surviving injured fights; daily civilian meal boundary;
+    fractional 0 / 0.0001 / 0.125 / 3599.75 offsets; actual hunger/resupply;
+    World5 committed and World6/7 active fixtures; aggregate depot action;
+    courier/letter/care/evidence/reunion/petition/appraisal/refusal combination.
+  Coordinated free hour and false civilian ration with balanced ledgers rejected.
+  Sparse +24/+240/+8760-hour forgeries rejected within the bounded 3-second test.
+  Invalid restores preserved an already-running target battle object/state.
+  Tampered initial seed caused public recovery to fail and roll back completely.
+  No new final implementation defect found. These extra ad hoc review harnesses
+    are separate from the distributed regression suite, not added to its count.
+
+EXPORTS AND PACKAGE RESTART
+  macOS: universal arm64+x86_64, com.luanshi.prototype, version 0.13.0.
+  Archive structure, bundled font manifest and license: PASS.
+  Linux: scene, campaign, original saves, youth, courier, appraisal, petition,
+    hometown and new wound-care package restarts: all PASS.
+  macOS ZIP SHA256:
+    785120170b7ca4c20c8838d8bbfaf917ad6feeaf4bdc1a529989642e8f36f7b5
+  Linux TAR.GZ SHA256:
+    e92e4397376ed6472e69a74160afb11b0e7a7758149392b1bca3905db708e228
+
+DEVELOPMENT FAILURES AND REPAIRS (NOT COUNTED AS PASSES)
+  The first helper selected a policy unsupported by an older playback helper,
+    causing an uninjured fight. Replaced it with actual targeted reckless input.
+  The first technical driver ran ahead without commanding its squad and died.
+    It now issues the real attack command and physically retreats after a hit;
+    no HP, roster, position or outcome mutations are used in these played routes.
+  An added +0.125-second youth-tail corruption initially loaded. New care histories
+    now require exact youth action endpoints unless a battle owns the clock.
+  Early batching preflight demanded six hours of food even when two could finish;
+    now it budgets actual needed hours. Interrupted time uses actual seconds.
+  First whole-scene import failed on a pluralized smoke preload filename;
+    fixed in 418df78, then actual main-scene and package paths passed.
+  First whole regression failed two original 1280x800 strategy layout assertions;
+    fixed in b71a6c9 by hiding long injury details until injuries exist. Original
+    assertions stayed intact. The final full suite and affected gates were rerun.
+  No Godot SCRIPT ERROR, Parse Error or ERROR markers in the final gate logs.
+
+NOT RUN / NOT CLAIMED
+  Actual rendered UI/gameplay, hosted graphics CI, native macOS execution,
+  Finder/Gatekeeper, M5 performance/thermals/input feel, subjective quality,
+  Apple signing/notarization, iOS, formal release and complete-game acceptance.
+  Bounded graphics and native restart gates are wired into existing CI, not run.
+  No user-device access, new cost or service. Source/build publication still waits
+  on the previously presented platform-required font confirmation; no font retry,
+  alternative upload or code-ref change occurred in this implementation phase.

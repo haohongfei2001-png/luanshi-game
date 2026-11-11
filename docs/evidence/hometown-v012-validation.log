@@ -1,0 +1,102 @@
+Luanshi v0.12 hometown messages: sanitized reproducible verification
+Date: 2026-11-11
+Engine: Godot 4.6.3.stable.official.7d41c59c4
+Environment: Linux cloud, headless; existing official export templates.
+Runtime/test source: cf61ca60e34a82fad42abfc5d026274a35de037a
+Source tree: fb201ba3827edca72738d84dae1c54b775cd066a
+Base: c1c40c216505b51eaeaf2bd71859234ba79d4da8 (retained v0.11)
+
+Reproduction
+Set GODOT to the Godot 4.6.3 executable. Set XDG_DATA_HOME, XDG_CONFIG_HOME,
+and XDG_CACHE_HOME to existing writable test directories, then run from checkout:
+  bash tools/test.sh
+  bash tools/test_hometown.sh
+  bash tools/test-youth-ui.sh
+  bash tools/calibrate-combat.sh
+  bash tools/export.sh
+The aggregate, font/input/calibration and export commands above all exited 0
+on the final runtime source. No SCRIPT ERROR, Parse Error or ERROR lines occurred.
+
+PASS: complete tools/test.sh, including unchanged prior contracts
+- World, economy, hunger, independent resource properties and battle transactions.
+- Campaign persistence/history/boundaries, malformed saves and separate-process restart.
+- Hero profiles, training/strategy/campaign scenes and packaged-style scene smoke.
+- Youth career, genuine old migrations, attrition, save/restart and validation (2,201).
+- Physical couriers, finite-range flags, original camp appraisal and comrade petition.
+- New hometown model: 291 checks, failures [].
+- Hometown UI: 53 checks, failures []; actual Viewport keyboard events, rendered=false.
+- Hometown source restart: prepare 35 / resume 27 checks, failures [].
+Counts identify separate suites and are not an aggregate unique-assertion count.
+
+PASS: focused contracts
+- Actual departure at hour 1 freezes facts; physical delivery at hour 4 carries
+  that old letter although the offscreen neighbor has changed to family duties.
+- A real hostile endpoint intercepts the carrier; only unknown/overdue is exposed.
+- Real battle/return, meeting or family-duty notice, one-hour food use and real
+  starvation interrupting a visit. No new troops, population, food or merit.
+- Repeat actions, reopen/load, fractional clock splits, late knowledge and terminal
+  truth/overdue freezing, including zero-merit first-patrol retreat.
+- World8 fixture exact preservation and opt-in, multiple generations, reserved and
+  running battles, fractional battle synchronization and ordinary local reports.
+- Missing/duplicated/forged snapshots or receipt events are rejected atomically.
+- Coordinated free-hour history and false civilian shortages, including changed
+  inventories/ledgers at the exact daily boundary, are rejected by WorldSim replay.
+- Sparse 24/240-hour future histories reject at the first missing hourly evidence;
+  no saved field disables replay. Normal complete hourly histories remain accepted.
+- Camp-return pickup, local ration shortage and local takeover include isolated
+  model checks. Camp-return is NOT claimed as a reachable played youth route.
+
+PASS: separate font and input checks
+CHINESE_FONT_SUMMARY failures=0, bundled Luanshi UI SC, system fallback disabled.
+YOUTH_SCENE_SUMMARY assertions=59, failures=0.
+YOUTH_INPUT_VALIDATION_PASS failures=0, display=headless, captures=[].
+YOUTH_PRESENTATION_SUMMARY checks=7, failures=0.
+
+PASS: combat calibration and original legacy parity
+Hero profiles 59; combat calibration 320; original legacy parity 1,120.
+Two complete calibration runs matched byte-for-byte.
+Calibration SHA256: f904970ff606bc88fbf2afed9c435fe85c271d939085faf36fa16c3486cdd11d
+
+PASS: final Linux/macOS exports and Linux package execution
+Scene/campaign smoke; persistence, youth, courier, appraisal, petition and hometown
+prepare/resume each ran as separate exported Linux processes.
+HOMETOWN_RUNTIME_PREPARE_PASS checks=35 failures=[]
+HOMETOWN_RUNTIME_RESUME_PASS checks=27 failures=[]
+MACOS_ARCHIVE_PASS arm64+x86_64 version=0.12.0 signing=not-verified runtime=not-tested
+Final archives:
+be7c03884b65891f3f6191a082e81083d7b1e7299d4570ea06eb29b9fc544130  builds/Luanshi-macOS.zip
+84280cdb8bc7989252a02430069d4bc3a4ea0b4402eab0d30bb79744b63af823  builds/Luanshi-linux.tar.gz
+
+Development failures retained rather than hidden
+- Initial new test assumed the wrong starting ration count; replaced that assumption
+  with comparison against the real existing enlistment configuration.
+- Waiting until late afternoon caused real hunger death, not a family-duty meeting.
+  Preserved it as an interruption case; a properly supplied branch proves refusal.
+- Inserting visit into the injustice page broke its original four-choice UI contract.
+  Kept the old assertions; moved visiting after the military-injustice decision.
+- Early retreat was terminal in runtime but not hometown replay; now both freeze at
+  the actual first_patrol_withdrawn boundary while legacy courier waits still work.
+- Trusting time/consumption claims allowed a free hour and a fabricated local shortage.
+  Replaced that trust with complete authoritative clock/event/state reconstruction.
+- Fractional-time subtraction needed a bounded float tolerance for one-hour visits.
+- Malformed old narrative payloads reached hometown code too early; original Youth
+  validation now runs first. All 2,201 malformed-save checks pass without script errors.
+- Unbounded replay advanced a sparse future before rejecting; now it compares after
+  each hourly boundary. The final sparse-future regressions pass.
+- First export still carried old macOS bundle metadata; corrected to 0.12.0 and reran.
+
+PASS: independent final review of cf61ca6 / fb201ba3
+Repeated new suites (291 / 53 / 35+27); original terminal/free-hour/false-shortage
+reproductions; coordinated exact-day fake rations; live-battle load/continue 14;
+malformed source payloads 90. No script errors or remaining slice blocker found.
+Sparse future variants each stopped at 418 total reconstructed events (406 input
+history entries), rather than simulating 698/2,718 events before rejecting.
+Those figures are total replay lengths, not counts of additional events.
+
+NOT RUN / retained acceptance gates
+Actual rendered screenshots, hosted CI for this source, macOS native execution and
+M5 gameplay/performance/subjective acceptance. Existing bounded CI contains the new
+rendered hometown input/capture and native package restart checks, but was not run.
+No display workaround, user-device access, new paid resource, signing/notarization,
+GitHub write, font-upload retry or alternate publication route was attempted.
+This is a bounded optional relationship/information slice, not the complete game.

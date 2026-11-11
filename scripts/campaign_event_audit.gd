@@ -1,5 +1,6 @@
 class_name CampaignEventAudit
 extends RefCounted
+const Couriers := preload("res://scripts/courier_orders.gd")
 ## Reconstruct authoritative ledgers and transaction transitions from causal events.
 ## A checksum or balanced final totals alone cannot prove these accounts agree.
 const S := preload("res://scripts/campaign_schema.gd")
@@ -10,12 +11,14 @@ static func validate(state: Dictionary) -> bool:
 	var accounts := {}
 	for key in state.ledger:
 		accounts[key] = 0
+	var courier_food := {}
 	var statuses := {}
 	var ownership := {}
 	var people: Dictionary = state.initial_force_roster.duplicate()
-	var commander_hp := 360.0
+	var commander_hp: float = S.HeroProfiles.from_reference(state.commander.hero_profile).max_hp
 	var death_recorded := false
 	var previous: Dictionary = {}
+	var resting: Dictionary = {}
 	for event in state.events:
 		var d: Dictionary = event.details
 		for name in ["entity", "consumer", "cause", "city", "owner", "battle_id", "location", "activity", "route", "from", "to", "resource", "destination", "outcome", "result"]:
@@ -28,6 +31,44 @@ static func validate(state: Dictionary) -> bool:
 		if death_recorded and event.kind in ["march_started", "transfer", "depot_seized", "battle_reserved", "battle_started", "battle_committed"]:
 			return false
 		match event.kind:
+			"wound_rest_started":
+				if not preload("res://scripts/wound_care.gd").event_shape(event.kind, d) or death_recorded or not resting.is_empty() or d.hp != commander_hp: return false
+				resting = {"at": event.time_seconds, "hp": commander_hp}
+			"wound_rest_completed":
+				if not preload("res://scripts/wound_care.gd").event_shape(event.kind, d) or resting.is_empty() or d.started_at != resting.at or d.hp_before != resting.hp: return false
+				if event.time_seconds > d.started_at + 3600.0 or event.time_seconds <= d.started_at: return false
+				if d.reason == "interrupted":
+					if d.healed != 0.0 or d.hp_after != commander_hp: return false
+				elif death_recorded or event.time_seconds != d.started_at + 3600.0 or d.hp_after != commander_hp + d.healed or (d.reason != "rested" and d.healed != 0.0): return false
+				commander_hp = d.hp_after
+				resting.clear()
+			"hometown_attach", "hometown_letter", "hometown_received", "hometown_visit":
+				if not preload("res://scripts/hometown_messages.gd").event_shape(event.kind, d): return false
+			"courier_wait":
+				if not S.keys(d, ["started_at"]) or not S.number(d.started_at, 0, event.time_seconds): return false
+			"courier":
+				if not S.keys(d, ["action", "id", "value"]) or not d.action is String or not d.id is int or not d.value is String: return false
+				match d.action:
+					"dispatch":
+						if death_recorded or people.pingling < 1 or courier_food.has(d.id): return false
+						people.pingling -= 1
+						courier_food[d.id] = Couriers.RATIONS
+					"meal":
+						if not courier_food.has(d.id) or courier_food[d.id] < 1: return false
+						courier_food[d.id] -= 1
+						if not _add(accounts, "food_consumed", 1) or not _add(accounts, "food_consumed_military", 1): return false
+					"lost":
+						if not _add(accounts, "dead", 1): return false
+						if d.value == "starvation" and not _add(accounts, "starvation_dead", 1): return false
+					"return": people.pingling += 1
+			"youth_inventory":
+				if not S.keys(d, ["from", "to", "resource", "amount"]) or d.from not in ["relief", "pingling"] or d.to not in ["relief", "pingling"] or d.from == d.to or d.resource not in ["food", "weapons", "soldiers"] or not S.integer(d.amount, 1, 120) or death_recorded: return false
+				if d.resource == "soldiers":
+					if people[d.from] < d.amount: return false
+					people[d.from] -= d.amount
+					people[d.to] += d.amount
+			"youth_transition":
+				if not S.keys(d, ["action", "data", "moves"]): return false
 			"production":
 				if not _production(d) or event.hour < 1:
 					return false
@@ -101,6 +142,7 @@ static func validate(state: Dictionary) -> bool:
 			_:
 				return false
 		previous = event
+	if not resting.is_empty(): return false
 	if accounts != state.ledger or statuses.size() != state.battle_tickets.size() or state.campaign_ended != death_recorded:
 		return false
 	for id in people:

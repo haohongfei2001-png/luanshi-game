@@ -1,3 +1,5 @@
+> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
 # WorldSim: Gate 2 simulation foundation
 
 Status: implemented and headless-tested in Godot 4.6.3. This is a pure simulation module, **not yet a playable strategic interface or a completed narrative game**. The existing battle scene and its scripts are unchanged. No macOS device/playability claim follows from these tests.
@@ -7,9 +9,9 @@ Status: implemented and headless-tested in Godot 4.6.3. This is a pure simulatio
 From the repository root:
 
 ```sh
-XDG_DATA_HOME=/workspace/shared/godot-data \
-XDG_CONFIG_HOME=/workspace/shared/godot-config \
-XDG_CACHE_HOME=/workspace/shared/godot-cache \
+XDG_DATA_HOME=${WRITABLE_XDG_DATA} \
+XDG_CONFIG_HOME=${WRITABLE_XDG_CONFIG} \
+XDG_CACHE_HOME=${WRITABLE_XDG_CACHE} \
 godot --headless --path . --script tests/test_world.gd
 ```
 

@@ -1,3 +1,5 @@
+> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
 # ECO-03: population-constrained economy
 
 Status: implementation and deterministic headless verification for the bounded ECO-03 milestone. Staged military hunger/fatigue/morale is now documented in [HUNGER.md](HUNGER.md) (ECO-04). Recruitment, civilian demography, governance commands, durable saves and narrative work remain separate milestones. All demographic values, rates, ration priority and work allocation below are **PROVISIONAL**, not owner-approved historical or final game balance.
@@ -73,7 +75,7 @@ Baseline: `0383e85f1fea6c9fb2db3bd0a4f77a00423d83b5`, isolated cloud checkout. G
 From this checkout:
 
 ```sh
-XDG_DATA_HOME=/workspace/shared/godot-data \
+XDG_DATA_HOME=${WRITABLE_XDG_DATA} \
 XDG_CONFIG_HOME="$PWD/.local-config" \
 XDG_CACHE_HOME="$PWD/.local-cache" \
 ./tools/test.sh

@@ -69,7 +69,9 @@ func _test_codec() -> void:
 		check(not codec.decode(invalid).ok, "invalid codec value rejected " + str(invalid))
 	check(not codec.encode(INF).ok and not codec.encode(RefCounted.new()).ok, "no infinity or objects encoded")
 	var example := store.decode_campaign(FileAccess.get_file_as_bytes("res://docs/examples/campaign-save-v1.json"))
-	check(example.ok and example.state == World.new(184).export_campaign_state(), "documented schema-v1 sample loads exact initial world")
+	var expected_legacy := World.new(184, "legacy_test_v0").export_campaign_state()
+	expected_legacy.world.origin = "legacy_campaign"
+	check(example.ok and example.state == expected_legacy, "documented v0.6 sample preserves exact initial state with explicit legacy profile and origin")
 
 func _test_strategy() -> void:
 	var world := local_world()

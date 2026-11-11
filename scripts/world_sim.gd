@@ -2,7 +2,14 @@ class_name WorldSimulation
 extends RefCounted
 ## Authoritative seconds clock with integer economic accrual. Presentation uses player_view().
 
-const VERSION := 5
+const VERSION := 8
+const Wounds := preload("res://scripts/wound_care.gd")
+const Couriers := preload("res://scripts/courier_orders.gd")
+const Hometown := preload("res://scripts/hometown_messages.gd")
+const Petition := preload("res://scripts/comrade_petition.gd")
+const Appraisal := preload("res://scripts/camp_appraisal.gd")
+const Youth := preload("res://scripts/youth_career.gd")
+const HeroProfiles := preload("res://scripts/hero_combat_profiles.gd")
 const Condition := preload("res://data/condition_rules.gd")
 const CONDITION_RULES := Condition.RULES
 const Economy := preload("res://data/economy_rules.gd")
@@ -26,17 +33,21 @@ const ROUTES := {
 var _state: Dictionary = {}
 var _battle_sessions: Dictionary = {}
 var _campaign_generation := 0
+var _youth_command := false
 
-func _init(seed_value: int = 184) -> void:
-	reset(seed_value)
+func _init(seed_value: int = 184, profile_id: String = HeroProfiles.EARLY) -> void:
+	reset(seed_value, profile_id)
 
-func reset(seed_value: int = 184) -> void:
+func reset(seed_value: int = 184, profile_id: String = HeroProfiles.EARLY) -> bool:
+	var profile := HeroProfiles.get_profile(profile_id)
+	if profile.is_empty():
+		return false
 	_campaign_generation += 1
 	_battle_sessions.clear()
 	_state = {
-		"version": VERSION, "seed": seed_value, "hour": 0, "time_seconds": 0.0,
+		"mode": "technical", "origin": "new_world7", "youth": {}, "version": VERSION, "seed": seed_value, "hour": 0, "time_seconds": 0.0,
 		"campaign_generation": _campaign_generation, "campaign_ended": false,
-		"commander": {"alive": true, "hp": 360.0, "max_hp": 360.0, "army": "relief"},
+		"commander": {"alive": true, "hp": profile.max_hp, "max_hp": profile.max_hp, "army": "relief", "hero_profile": HeroProfiles.profile_reference(profile_id)},
 		"battle_tickets": {}, "battle_locks": {}, "next_battle": 1,
 		"factions": {"sheng": {"name": "晟军"}, "bei": {"name": "北军"}},
 		"cities": {
@@ -51,7 +62,7 @@ func reset(seed_value: int = 184) -> void:
 		"siege": {"city": "anping", "army": "besiegers", "active": true, "outcome": "ongoing"},
 		"ledger": {"food_produced": 0, "food_consumed": 0, "food_consumed_civilian": 0, "food_consumed_military": 0, "food_shortfall_civilian": 0, "food_shortfall_military": 0, "weapons_produced": 0, "weapons_destroyed": 0, "dead": 0, "starvation_dead": 0, "prisoners": 0},
 		"pending_reports": [], "reports": [], "events": [], "next_report": 1,
-		"convoys": [], "next_convoy": 1,
+		"convoys": [], "next_convoy": 1, "couriers": [],
 	}
 	_state["initial_totals"] = totals()
 	_state["initial_force_roster"] = {}
@@ -60,6 +71,7 @@ func reset(seed_value: int = 184) -> void:
 	# This is an old observation, not a live view of the besieged city.
 	_queue_report("anping", "安平求援使者", -72, 0, {"owner": "sheng", "under_siege": true})
 	_deliver_reports()
+	return true
 
 func _city(id: String, label: String, owner: String, troops: int, weapons: int, food: int, fort: int) -> Dictionary:
 	var city: Dictionary = Economy.CITIES[id].duplicate(true)
@@ -95,9 +107,50 @@ func player_view() -> Dictionary:
 		local_city.erase("condition")
 	var own_army: Dictionary = _state.armies.relief.duplicate(true)
 	own_army.condition.merge(_condition_summary("relief"))
-	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "last_battle_id": last_committed_battle_id(), "army": own_army, "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
+	return {"hour": _state.hour, "time_seconds": _state.time_seconds, "campaign_ended": _state.campaign_ended, "commander": _state.commander.duplicate(true), "active_battle": _state.battle_locks.get("relief", ""), "last_battle_id": last_committed_battle_id(), "army": own_army, "courier_orders": Couriers.view(_state), "hometown": Hometown.view(_state), "wounds": Wounds.view(self), "local_city": local_city, "routes": ROUTES.duplicate(true), "reports": _state.reports.duplicate(true), "known": known}
+
+func rest_wounds(hours: Variant = 1) -> Dictionary:
+	if not hours is int: return _reject("invalid_duration")
+	var reason: String = Wounds.reason(self, hours)
+	if not reason.is_empty(): return _reject(reason)
+	hours = Wounds.planned_hours(self, hours)
+	if not _economy_errors().is_empty() or not _economy_has_headroom(_state.time_seconds + hours * 3600.0): return _reject("invalid_world_condition")
+	var before := _state.duplicate(true)
+	var started: float = _state.time_seconds
+	var original_hp: float = _state.commander.hp
+	# Each hour is the same atomic action: rest(2) and two rest(1) have identical
+	# events and economics. No UI click, idle time or partial hour grants healing.
+	for i in range(hours):
+		if not Wounds.reason(self).is_empty(): break
+		_rest_wound_hour()
+	var errors := _save_causal_errors()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "convalescence_audit_failed", "errors": errors}
+	return {"ok": true, "elapsed": _state.time_seconds - started, "healed": maxf(0.0, _state.commander.hp - original_hp)}
+
+func _rest_wound_hour() -> void:
+	var started: float = _state.time_seconds
+	var hp: float = _state.commander.hp
+	_event("wound_rest_started", {"revision": Wounds.REVISION, "location": _state.armies.relief.location,
+		"hp": hp, "rations": _military_food_need(_state.armies.relief.soldiers)})
+	var previous_command := _youth_command
+	_youth_command = true # Scheduled convalescence stops at the actual death boundary in either mode.
+	_advance_clock_to(started + 3600.0, true)
+	_youth_command = previous_command
+	var condition: Dictionary = _state.armies.relief.condition
+	var reason := "rested"
+	if _state.campaign_ended or _state.time_seconds != started + 3600.0 or _condition_activity("relief") != "rest": reason = "interrupted"
+	elif condition.last_eaten < condition.last_needed or condition.hunger > 0: reason = "hungry"
+	var healed := 0.0
+	if reason == "rested":
+		healed = minf(Wounds.HP_PER_HOUR, _state.commander.max_hp - _state.commander.hp)
+		_state.commander.hp += healed
+	_event("wound_rest_completed", {"revision": Wounds.REVISION, "started_at": started,
+		"hp_before": hp, "hp_after": _state.commander.hp, "healed": healed, "reason": reason})
 
 func march(route_id: String) -> bool:
+	if _state.mode == "youth" and not _youth_command: return false
 	if _state.campaign_ended or _state.battle_locks.has("relief") or not ROUTES.has(route_id):
 		return false
 	var army: Dictionary = _state.armies.relief
@@ -118,6 +171,7 @@ func march(route_id: String) -> bool:
 	return true
 
 func transfer(from_id: String, to_id: String, resource: String, amount: int) -> bool:
+	if _state.mode == "youth" and not _youth_command: return false
 	## City/army inventory transfer only when co-located and allied. No remote teleporting.
 	if _state.campaign_ended or _state.battle_locks.has(from_id) or _state.battle_locks.has(to_id):
 		return false
@@ -136,6 +190,7 @@ func transfer(from_id: String, to_id: String, resource: String, amount: int) -> 
 	return true
 
 func seize_depot() -> bool:
+	if _state.mode == "youth": return false
 	## Legacy deterministic aggregate scenario; interactive UI uses BattleAdapter instead.
 	if _state.campaign_ended or not _state.battle_locks.is_empty():
 		return false
@@ -169,6 +224,7 @@ func advance(hours: int) -> bool:
 	return advance_seconds(float(hours) * 3600.0)
 
 func advance_seconds(seconds: float) -> bool:
+	if _state.mode == "youth" and not _youth_command: return false
 	## Autonomous simulation API, not permission for a dead protagonist to wait.
 	## The world may continue after death; presentation blocks all campaign commands.
 	## Strategic time cannot also advance while a local battle owns the clock.
@@ -180,10 +236,11 @@ func advance_seconds(seconds: float) -> bool:
 	_advance_clock_to(target_seconds)
 	return true
 
-func _advance_clock_to(target_seconds: float) -> void:
+func _advance_clock_to(target_seconds: float, convalescing: bool = false) -> void:
 	while _state.time_seconds < target_seconds:
+		if convalescing and (_condition_activity("relief") != "rest" or (_state.siege.active and _state.armies.relief.location == _state.siege.city)): break
 		var hour_boundary: float = (_state.hour + 1) * 3600.0
-		var next_time := minf(target_seconds, hour_boundary)
+		var next_time := Couriers.next_boundary(_state, minf(target_seconds, hour_boundary))
 		for army in _state.armies.values():
 			if not army.march.is_empty():
 				next_time = minf(next_time, float(army.march.arrives_at_seconds))
@@ -203,6 +260,10 @@ func _advance_clock_to(target_seconds: float) -> void:
 		else:
 			_arrivals()
 			_deliver_reports()
+		Couriers.tick(_state)
+		Hometown.tick(_state)
+		# A narrative action ends at the actual death boundary, not its planned end.
+		if _youth_command and _state.campaign_ended: break
 
 func _production_plan(city_id: String) -> Dictionary:
 	var city: Dictionary = _state.cities[city_id]
@@ -462,6 +523,8 @@ func _lose_troops(entity: Dictionary, count: int, cause: String = "combat") -> v
 		_state.commander.alive = false
 		_state.campaign_ended = true
 		_event("campaign_ended", {"cause": cause})
+	if lost > 0 and _state.mode == "youth" and is_same(entity, _state.armies.relief):
+		_state.youth = Youth.apply_losses(_state.youth, lost, cause, _state.time_seconds)
 
 func _capture(city_id: String, owner: String) -> void:
 	var city: Dictionary = _state.cities[city_id]
@@ -524,6 +587,9 @@ func totals() -> Dictionary:
 		result.civilian_population += city.population
 	for convoy in _state.convoys:
 		result.food += convoy.food
+	for courier in _state.get("couriers", []):
+		result.food += courier.food
+		if courier.status in Couriers.ACTIVE: result.soldiers += 1
 	return result
 
 func audit() -> Array[String]:
@@ -563,6 +629,9 @@ func _economy_errors() -> Array[String]:
 	# Validate schema before arithmetic. Clock-entry guards and transaction audits
 	# share this check; malformed economics must not partially advance the world.
 	var errors: Array[String] = []
+	if not Couriers.shape(_state.get("couriers")):
+		errors.append("invalid courier state")
+		return errors
 	for city_id in _state.cities:
 		var value: Variant = _state.cities[city_id]
 		if not value is Dictionary:
@@ -618,7 +687,7 @@ func _economy_has_headroom(target_seconds: float) -> bool:
 	# or casualties to create space: even intermediate stocks/ledgers stay valid.
 	# No full event-history copy is needed on every fractional battle frame.
 	var hours := floori(target_seconds / 3600.0) - int(_state.hour)
-	if hours <= 0:
+	if hours <= 0 and Couriers.next_boundary(_state, INF) > target_seconds:
 		return true
 	var produced := {"food": 0, "weapons": 0}
 	var civilian_need := 0
@@ -627,6 +696,11 @@ func _economy_has_headroom(target_seconds: float) -> bool:
 	var days: int = (int(_state.hour) + hours) / int(ECONOMY_RULES.hours_per_day) - int(_state.hour) / int(ECONOMY_RULES.hours_per_day)
 	# All currently travelling and newly dispatched cargo is an upper bound for
 	# either receiving depot or the besieging army; ownership may change en route.
+	var courier_incoming := 0
+	for c in _state.couriers:
+		if c.status in Couriers.ACTIVE:
+			courier_incoming += c.food
+			military_need += mini(c.food, maxi(0, floori((target_seconds - c.meal_at) / 3600.0) + 1))
 	var incoming := CONVOY_FOOD_PER_HOUR * hours
 	for convoy in _state.convoys:
 		incoming += int(convoy.food)
@@ -643,7 +717,7 @@ func _economy_has_headroom(target_seconds: float) -> bool:
 			@warning_ignore("integer_division")
 			var amount: int = (increment / PRODUCTION_DENOMINATOR) * hours + (int(city.production_progress[resource]) + (increment % PRODUCTION_DENOMINATOR) * hours) / PRODUCTION_DENOMINATOR
 			produced[resource] += amount
-			var cargo: int = incoming if resource == "food" and city_id in ["anping", "hequ"] else 0
+			var cargo: int = (courier_incoming if city_id == "pingling" else incoming) if resource == "food" else 0
 			if int(city[resource]) > MAX_ECONOMY_STOCK - amount - cargo:
 				return false
 		@warning_ignore("integer_division")
@@ -719,6 +793,8 @@ func create_battle_ticket(location: String = "hequ") -> Dictionary:
 	## Only the local Hequ depot encounter is implemented. Reserves stay in their force.
 	if _state.campaign_ended:
 		return _reject("campaign_ended")
+	if _state.mode == "youth" and _state.youth.stage not in ["first_battle", "dangerous_battle"]:
+		return _reject("no_authorized_youth_encounter")
 	if location != "hequ":
 		return _reject("unsupported_location")
 	var army: Dictionary = _state.armies.relief
@@ -736,17 +812,22 @@ func create_battle_ticket(location: String = "hequ") -> Dictionary:
 	for force_id in ["relief", "hequ"]:
 		var force := _entity(force_id)
 		var count := mini(BATTLE_LIMIT, int(force.soldiers))
+		if _state.mode == "youth" and force_id == "hequ":
+			count = mini(count, 3 + posmod(_state.seed, 2) if _state.youth.stage == "first_battle" else 6 + posmod(_state.seed, 2))
 		# Representative allocation avoids silently selecting only an armed elite.
 		var armed := floori(float(mini(int(force.soldiers), int(force.weapons))) * count / force.soldiers)
 		var roster: Array[Dictionary] = []
 		for slot in range(count):
 			var hero: bool = force_id == "relief" and slot == 0
-			roster.append({"id": "commander" if hero else "%s:%s:%d" % [battle_id, force_id, slot],
+			var roster_id: String = "commander" if hero else "%s:%s:%d" % [battle_id, force_id, slot]
+			if _state.mode == "youth" and force_id == "relief": roster_id = _state.youth.roster[slot]
+			roster.append({"id": roster_id,
 				"force_id": force_id, "hero": hero, "weapon": "spear" if slot < armed else "",
 				"hp": _state.commander.hp if hero else 100.0,
 				"condition": force.condition.duplicate(true), "condition_modifiers": _condition_modifiers(force.condition)})
 		rosters.append(roster)
-	var ticket := {"battle_id": battle_id, "time": _state.time_seconds, "location": location,
+	var purpose: String = _state.youth.stage if _state.mode == "youth" else "technical"
+	var ticket := {"signal_model": "local_v1", "purpose": purpose, "command_authority": "withdrawal_only" if purpose == "first_battle" else "squad", "hero_profile": _state.commander.hero_profile.duplicate(), "battle_id": battle_id, "time": _state.time_seconds, "location": location,
 		"participating_force_ids": ["relief", "hequ"], "reserved_roster_snapshot": rosters,
 		"terrain": "depot", "tactical_seed": int(_state.seed) + int(_state.next_battle) * 7919,
 		"status": "reserved", "elapsed_world_time": 0.0}
@@ -777,7 +858,8 @@ func start_battle(battle_id: String) -> BattleSimulation:
 	if ticket.status != "reserved":
 		return null
 	var simulation := Battle.new()
-	simulation.reset_from_ticket(ticket)
+	if not simulation.reset_from_ticket(ticket):
+		return null
 	_battle_sessions[battle_id] = simulation
 	ticket.status = "running"
 	_event("battle_started", {"battle_id": battle_id})
@@ -857,6 +939,19 @@ func commit_battle_outcome(outcome: Variant) -> Dictionary:
 	var before := _state.duplicate(true)
 	if not sync_battle_time(battle_id):
 		return _reject("clock_sync_failed")
+	if not _apply_battle_settlement(outcome):
+		_state = before
+		return _reject("youth_battle_transition_failed")
+	var errors := audit()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "settlement_audit_failed", "errors": errors}
+	_battle_sessions.erase(battle_id)
+	return _state.battle_tickets[battle_id].receipt.duplicate(true)
+
+func _apply_battle_settlement(outcome: Dictionary) -> bool:
+	# Shared by live settlement and independent world-clock audit after outcome validation.
+	var battle_id: String = outcome.battle_id
 	var ticket: Dictionary = _state.battle_tickets[battle_id]
 	for force in outcome.forces:
 		var entity := _entity(force.force_id)
@@ -883,12 +978,10 @@ func commit_battle_outcome(outcome: Variant) -> Dictionary:
 	if not outcome.player_alive:
 		_state.campaign_ended = true
 		_event("campaign_ended", {"cause": "commander_dead", "battle_id": battle_id})
-	var errors := audit()
-	if not errors.is_empty():
-		_state = before
-		return {"ok": false, "reason": "settlement_audit_failed", "errors": errors}
-	_battle_sessions.erase(battle_id)
-	return ticket.receipt.duplicate(true)
+	if _state.mode == "youth":
+		if not _youth_transition("battle", {"battle_id": battle_id}, []):
+			return false
+	return true
 
 func _unlock_battle(battle_id: String) -> void:
 	for force_id in _state.battle_locks.keys():
@@ -911,6 +1004,19 @@ func restore_campaign_state(saved: Variant) -> Dictionary:
 	## Closed shape validation precedes all domain arithmetic and session rebuilding.
 	## Swap the complete graph only after every check; invalid input leaves self intact.
 	var schema := preload("res://scripts/campaign_schema.gd")
+	if saved is Dictionary and saved.get("world") is Dictionary and saved.world.get("version") is int and saved.world.version == 5:
+		var migration := preload("res://scripts/campaign_migrations.gd").from_world5(saved)
+		if not migration.ok:
+			return migration
+		saved = migration.state
+	if saved is Dictionary and saved.get("world") is Dictionary and saved.world.get("version") is int and saved.world.version == 6:
+		var migration := preload("res://scripts/campaign_migrations.gd").from_world6(saved)
+		if not migration.ok: return migration
+		saved = migration.state
+	if saved is Dictionary and saved.get("world") is Dictionary and saved.world.get("version") is int and saved.world.version == 7:
+		var migration := preload("res://scripts/campaign_migrations.gd").from_world7(saved)
+		if not migration.ok: return migration
+		saved = migration.state
 	if not schema.keys(saved, ["world", "battle_sessions", "generation_highwater"]) or not schema.world(saved.world, VERSION) or not schema.dictionary(saved.battle_sessions, 1) or not schema.integer(saved.generation_highwater, saved.world.campaign_generation, schema.MAX_ID):
 		return _reject("invalid_campaign_shape")
 	# Also reject non-finite/unsupported nested log values on the in-memory API.
@@ -989,6 +1095,8 @@ func _save_causal_errors() -> Array[String]:
 	var expected_locks := {}
 	for id in _state.battle_tickets:
 		var ticket: Dictionary = _state.battle_tickets[id]
+		if ticket.hero_profile != _state.commander.hero_profile:
+			errors.append("ticket profile differs from commander life")
 		var parts: PackedStringArray = id.split(":")
 		if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
 			errors.append("invalid battle identity")
@@ -1000,7 +1108,9 @@ func _save_causal_errors() -> Array[String]:
 			for slot in range(ticket.reserved_roster_snapshot[team].size()):
 				var entry: Dictionary = ticket.reserved_roster_snapshot[team][slot]
 				var expected := "commander" if entry.hero else "%s:%s:%d" % [id, entry.force_id, slot]
-				if entry.id != expected or not _valid_condition(entry.condition) or entry.condition_modifiers != _condition_modifiers(entry.condition):
+				if (_state.mode == "technical" or team == 1) and entry.id != expected:
+					errors.append("invalid reserved identity")
+				if not _valid_condition(entry.condition) or entry.condition_modifiers != _condition_modifiers(entry.condition):
 					errors.append("invalid reserved identity or condition")
 		if ticket.status in ["reserved", "running"]:
 			if not expected_locks.is_empty() or _state.campaign_ended:
@@ -1011,7 +1121,7 @@ func _save_causal_errors() -> Array[String]:
 					errors.append("reserved force moved")
 			if _state.time_seconds != ticket.time + ticket.elapsed_world_time or (ticket.status == "reserved" and ticket.elapsed_world_time != 0.0):
 				errors.append("battle clock mismatch")
-			if ticket.reserved_roster_snapshot[0][0].hp != _state.commander.hp:
+			if ticket.reserved_roster_snapshot[0][0].hp != _state.commander.hp or ticket.hero_profile != _state.commander.hero_profile:
 				errors.append("reserved commander mismatch")
 		elif ticket.status == "committed":
 			if not _save_committed_valid(ticket):
@@ -1027,6 +1137,15 @@ func _save_causal_errors() -> Array[String]:
 		errors.append_array(audit())
 	if errors.is_empty() and not _save_event_accounts_valid():
 		errors.append("event accounts contradict current world")
+	if errors.is_empty() and not Couriers.validate(_state):
+		errors.append("courier causal state mismatch")
+	if errors.is_empty() and not Youth.validate(_state):
+		errors.append("youth causal state mismatch")
+	if errors.is_empty() and not Hometown.validate(_state):
+		errors.append("hometown causal state mismatch")
+	if errors.is_empty() and preload("res://scripts/campaign_clock_replay.gd").required(_state):
+		if not preload("res://scripts/campaign_clock_replay.gd").validate(_state, WorldSimulation.new(_state.seed, _state.commander.hero_profile.id)):
+			errors.append("unified clock history mismatch")
 	# Combined stock bounds make every conservation sum safe in signed int64.
 	for field in ["soldiers", "civilian_population"]:
 		if _state.initial_totals[field] > 5 * schema.MAX_PEOPLE:
@@ -1080,3 +1199,231 @@ func last_committed_battle_id() -> String:
 
 func _save_event_accounts_valid() -> bool:
 	return preload("res://scripts/campaign_event_audit.gd").validate(_state)
+
+func start_youth(enlistment: String, motivation: String) -> Dictionary:
+	## A new life, never a retrofit of an existing commander or loaded campaign.
+	if not _youth_startable(): return _reject("requires_pristine_early_campaign")
+	if Youth.initial(enlistment, motivation).is_empty(): return _reject("invalid_enlistment")
+	var before := _state.duplicate(true)
+	_state.mode = "youth"
+	var moves: Array = [Youth.move("relief", "pingling", "soldiers", 55), Youth.move("relief", "pingling", "weapons", 25), Youth.move("relief", "pingling", "food", 120 - Youth.initial_food(enlistment, motivation))]
+	if not _youth_moves(moves) or not _youth_transition("start", {"enlistment": enlistment, "motivation": motivation}, moves):
+		_state = before
+		return _reject("enlistment_failed")
+	var errors := _save_causal_errors()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "enlistment_audit_failed", "errors": errors}
+	return {"ok": true}
+
+func _youth_startable() -> bool:
+	return _state.mode == "technical" and _state.origin == "new_world7" and _state.time_seconds == 0.0 and _state.events.is_empty() and _state.battle_tickets.is_empty() and _state.commander.hero_profile.id == HeroProfiles.EARLY and _state.armies.relief.soldiers == 60 and _state.armies.relief.food == 120 and _state.armies.relief.weapons == 30
+
+func youth_view() -> Dictionary:
+	var active: bool = _state.mode == "youth"
+	var y: Dictionary = _state.youth
+	var view := {"enabled": active, "startable": _youth_startable(), "stage": y.get("stage", "technical"), "choices": [],
+		"battle_ready": false, "command_authority": "squad", "age_years": 0.0,
+		"rank": "", "standing": 0, "earned_merit": 0, "recorded_merit": 0, "appropriated_merit": 0, "reward_food": 0,
+		"enlistment": "", "motivation": "", "incident": "", "incident_details": {}, "choice": "", "evidence": [], "relationships": {},
+		"appointment": {}, "endpoint": {}, "timeline": [], "army": player_view().army}
+	if not active: return view
+	for key in ["rank", "standing", "earned_merit", "recorded_merit", "appropriated_merit", "reward_food", "enlistment", "motivation", "incident", "choice", "evidence", "appointment", "endpoint", "timeline"]:
+		view[key] = y[key].duplicate(true) if y[key] is Dictionary or y[key] is Array else y[key]
+	view["petition"] = Petition.record(y)
+	view["appraisal"] = Appraisal.offer(y)
+	view["appraisal_resolution"] = Appraisal.decision(y)
+	view.relationships = y.characters.duplicate(true)
+	if y.incident != "":
+		view.incident_details = {"actor_id": "officer_qiao", "recorded_by": "clerk_yu", "battle_id": y.battle_ids[0], "credited_superior": y.characters.officer_qiao.reported_merit,
+			"account": "乔队正以领军之名，将巡队的未登记军功记入自己名下。" if y.incident == "appropriated_report" else "乔队正称新兵行动未经单独授权，将主要军功记为自己的调度之功。"}
+	view.age_years = (_state.time_seconds - y.born_at_seconds) / Youth.YEAR_SECONDS
+	view.command_authority = "withdrawal_only" if y.appointment.is_empty() else "squad"
+	if y.rank == "relieved_of_command" or not _state.commander.alive: view.command_authority = "none"
+	view.battle_ready = y.stage in ["first_battle", "dangerous_battle"] and _state.battle_locks.is_empty() and not _state.campaign_ended
+	if not _state.battle_locks.is_empty() or _state.campaign_ended: return view
+	match y.stage:
+		"first_orders": view.choices = [_youth_option("first_march", "随巡队赴河曲（遵上官军令）", 3)]
+		"first_return", "dangerous_return": view.choices = [_youth_option("return_to_camp", "循河道返回平陵，呈报亲历战果", 3)]
+		"injustice":
+			view.choices = [_youth_option("endure", "隐忍：领两份口粮，维持上官认可", 1), _youth_option("appeal", "申诉：由书吏收证，争回部分军功", 6), _youth_option("keep_evidence", "留证：私留名册，暂不公开", 2), _youth_option("protect_comrade", "保护同袍：承担责难，让一人留营", 3)]
+			if Youth.witness(y) == "":
+				view.choices[3].enabled = false
+				view.choices[3].reason = "已无在队生还同袍，不能让死者复生"
+		"appointment": view.choices = [_youth_option("accept_appointment", "接受队正临时委任，从营中实员补编", 2)]
+		"dangerous_orders": view.choices = [_youth_option("dangerous_march", "领队袭扰河曲，敌众且无保证援军", 3), _youth_option("refuse_order", "拒令：交还部众，承担撤职处分", 0)]
+		"replenishment": view.choices = [_youth_option("replenish", "从平陵现有兵员与军械补员整备", 4), _youth_option("finish_without_replacements", "保留现有幸存队伍，结束本段军旅", 0)]
+	if y.stage == "dangerous_orders" and _state.armies.relief.location == "pingling" and _state.armies.relief.march.is_empty() and _state.cities.pingling.owner == _state.armies.relief.owner:
+		if Petition.available(y):
+			view.choices.append(_youth_option("comrade_petition", "请亲历同袍自主联署，补证未归还的战功", 1))
+		if view.appraisal.is_empty():
+			view.choices.append(_youth_option("camp_appraisal", "向队正请求额外行粮，核对已知军报", 1))
+		elif Appraisal.pending(y):
+			var accept := _youth_option("appraisal_accept", "接受营粮与明示条件", 0)
+			if _state.cities.pingling.food < view.appraisal.food:
+				accept.enabled = false
+				accept.reason = "现有营粮已不足，可拒绝交易或照旧行动"
+			view.choices.append(accept)
+			view.choices.append(_youth_option("appraisal_decline", "不接受这次配给，保留原有记录", 0))
+	if Hometown.can_attach(_state):
+		view.choices.append({"id": "attach_hometown_letter", "label": "托已安排的信使顺路捎来旧识近况", "description": "不另派人、不加粮；信使离营时才向平陵旧识取信，沿原河道三小时送到巡队。只说明写信时的情况，也可能失联。每局一次。", "hours": 0, "enabled": true, "reason": ""})
+	if Hometown.can_visit(_state):
+		view.choices.append({"id": "visit_hometown", "label": "返乡探望平陵旧识（一小时）", "description": "全世界与粮耗照常推进，往返营外城坊一小时。旧识按实际作坊、家中与配粮情况决定能否相见，不保证长谈，无额外奖励。每局一次。", "hours": 1, "enabled": true, "reason": ""})
+	if Couriers.available(_state):
+		view.choices.append({"id": "arrange_courier", "label": "向队正申请本次巡队的回营传令", "description": "上级在一小时后遣使，沿河道行走三小时。平陵现有驻军抽走一人和十份口粮；信使可失联，不保证到达。", "hours": 0, "enabled": true, "reason": ""})
+	if not _state.couriers.is_empty() and _state.armies.relief.location in ["hequ", "pingling"]:
+		view.choices.append({"id": "wait_courier", "label": "候信一小时（全世界照常推进）", "description": "候信消耗时间和实际军粮，也可自行返营。未知失联不等于确认遇害。", "hours": 1, "enabled": true, "reason": ""})
+	for c in Couriers.view(_state):
+		if c.can_reply:
+			view.choices.append({"id": "courier_comply", "label": "交回执：准备回营呈报", "description": "信使携回执沿原路返回三小时；你仍须自己率队回营，不会被瞬移。", "hours": 0, "enabled": true, "reason": ""})
+			view.choices.append({"id": "courier_refuse", "label": "交回执：暂不遵令", "description": "拒令消息只有信使抵达营地后才为上级所知；这份回报可影响回营后的额外行粮申请，不自动撤职。", "hours": 0, "enabled": true, "reason": ""})
+	return view
+
+func _youth_option(id: String, label: String, hours: int) -> Dictionary:
+	var descriptions := {
+		"comrade_petition": "一次补证，耗时一小时；同袍按共同经历、信任、伤亡和自身风险决定是否联署。每份亲历证词至多追回一点尚被冒领的军功，不保证有人愿意；不联署也不惩罚。请求行粮报价后关闭补证，不能追回自愿让出的功劳。",
+		"camp_appraisal": "一生限一次；开始核对即定下本次营中记功，关闭同袍补证机会，请先决定是否补证。核对耗时一小时，世界和粮耗照常推进。仅使用亲自呈报的战果与实体带回的回执，不公开私留证据。申请可能获准、有条件获准或被拒。",
+		"appraisal_accept": "按上方明示条件从现存营粮调拨一次；无兵员凭空增补，不强迫出战。条件交易会转出一点真实名册军功。",
+		"appraisal_decline": "不领本次额外营粮，不转让军功，不追加处罚；原有出发和拒令路径保留。",
+		"first_march": "消耗三小时和随行口粮；你是新兵，只可发出预先约定的撤离信号，无权调度巡队。",
+		"return_to_camp": "全队沿原路行军三小时，正常消耗口粮；上官和书吏此时才收到你的亲历战报。",
+		"endure": "一小时；军中评价+2，同袍信任-1，书吏尊重-1；领两份真实营粮，不留证。",
+		"appeal": "六小时；军中评价-2，领六份营粮。有生还证人可追回两点军功并获其尊重+2；无证人仅追回一点，异议存档。",
+		"keep_evidence": "两小时；领一份营粮，私留战斗名册，不向上官公开；一位生还同袍信任+1。",
+		"protect_comrade": "三小时；军中评价-3，放弃营粮奖励，一位生还同袍留营免于下次出战，其信任+3；临时编制上限降为四人。",
+		"accept_appointment": "两小时整备；队正依法临时委任，补足四至六人含你本人。兵员、军械和最多十二份粮均从本营现有库存调拨。",
+		"dangerous_march": "三小时行军且耗粮；面对现有敌军巡防队，允许实战取胜、撤退或阵亡，没有脚本保证援军。",
+		"refuse_order": "军中评价-4，失去指挥职并交还所有同袍；保留已发生的战果、关系与军功记录，结束本段。",
+		"replenish": "四小时整备；只从本营现有兵源和军械补缺，最多调拨八份粮。死者不会复生，补员具有新身份。",
+		"finish_without_replacements": "不额外耗时、不补兵；把现有幸存部队、军功和人物关系写入本段结局。"
+	}
+	return {"id": id, "label": label, "description": descriptions.get(id, ""), "hours": hours, "enabled": true, "reason": ""}
+
+func courier_action(action: String) -> Dictionary:
+	if _state.mode != "youth" or _state.campaign_ended or not _state.battle_locks.is_empty(): return _reject("courier_action_unavailable")
+	var before := _state.duplicate(true)
+	var ok := false
+	match action:
+		"arrange_courier": ok = Couriers.dispatch(_state)
+		"courier_comply", "courier_refuse": ok = Couriers.reply(_state, "comply" if action == "courier_comply" else "refuse")
+		"wait_courier":
+			if not _state.couriers.is_empty() and _state.armies.relief.location in ["hequ", "pingling"]:
+				var started: float = _state.time_seconds
+				_youth_command = true
+				ok = advance(1)
+				_youth_command = false
+				if ok: _event("courier_wait", {"started_at": started})
+	if not ok: return _reject("courier_action_unavailable")
+	var errors := _save_causal_errors()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "courier_audit_failed", "errors": errors}
+	return {"ok": true}
+
+func hometown_action(action: String) -> Dictionary:
+	if action == "attach_hometown_letter" and not Hometown.can_attach(_state): return _reject("hometown_unavailable")
+	if action == "visit_hometown" and not Hometown.can_visit(_state): return _reject("hometown_unavailable")
+	var before := _state.duplicate(true)
+	if action == "attach_hometown_letter":
+		if not Hometown.attach(_state): return _reject("hometown_unavailable")
+	elif action == "visit_hometown":
+		var started: float = _state.time_seconds
+		_youth_command = true
+		var ok := advance(1)
+		_youth_command = false
+		if not ok: return _reject("world_time_failed")
+		Hometown.finish_visit(_state, started)
+	else: return _reject("hometown_unavailable")
+	var errors := _save_causal_errors()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "hometown_audit_failed", "errors": errors}
+	return {"ok": true}
+
+func youth_action(action: String) -> Dictionary:
+	if action in ["attach_hometown_letter", "visit_hometown"]: return hometown_action(action)
+	if action in ["arrange_courier", "wait_courier", "courier_comply", "courier_refuse"]: return courier_action(action)
+	if _state.mode != "youth" or _state.campaign_ended or not _state.battle_locks.is_empty(): return _reject("youth_action_unavailable")
+	var selected := {}
+	for option in youth_view().choices:
+		if option.id == action: selected = option
+	if selected.is_empty() or not selected.enabled: return _reject("choice_not_available")
+	var before := _state.duplicate(true)
+	_youth_command = true
+	var result := _apply_youth_action(action, selected.hours)
+	_youth_command = false
+	if not result.ok:
+		_state = before
+		return result
+	var errors := _save_causal_errors()
+	if not errors.is_empty():
+		_state = before
+		return {"ok": false, "reason": "youth_action_audit_failed", "errors": errors}
+	return {"ok": true}
+
+func _apply_youth_action(action: String, hours: int) -> Dictionary:
+	var y: Dictionary = _state.youth
+	var moves: Array = []
+	var data := {}
+	var transition := action
+	if action in ["first_march", "dangerous_march", "return_to_camp"]:
+		if not march("river") or not advance(hours): return _reject("travel_failed")
+	elif hours > 0:
+		if _state.armies.relief.location != "pingling" or not _state.armies.relief.march.is_empty(): return _reject("not_at_camp")
+		if not advance(hours): return _reject("world_time_failed")
+	# Attrition during the elapsed time is authoritative, including a terminal death.
+	# Do not award supplies, recruit replacements or finish a now-impossible action.
+	if _state.campaign_ended: return {"ok": true}
+	y = _state.youth
+	if action == "protect_comrade" and Youth.witness(y) == "":
+		return {"ok": _youth_transition("interrupted", {"action": action}, [])}
+	if action == "comrade_petition":
+		data = Petition.evaluate(y)
+	elif action == "camp_appraisal":
+		data = Appraisal.evaluate(y, Appraisal.returned(_state.couriers), _state.cities.pingling.food)
+	elif action == "appraisal_accept":
+		moves.append(Youth.move("pingling", "relief", "food", Appraisal.offer(y).food))
+	elif action in Youth.CHOICES:
+		transition = "choice"
+		data = {"choice": action}
+		if action == "protect_comrade": moves.append(Youth.move("relief", "pingling", "soldiers", 1))
+		if Youth.REWARDS[action] > 0: moves.append(Youth.move("pingling", "relief", "food", Youth.REWARDS[action]))
+	elif action in ["accept_appointment", "replenish"]:
+		var cap := 4 if y.choice == "protect_comrade" else 6
+		var needed: int = cap - _state.armies.relief.soldiers
+		var count: int = mini(needed, _state.cities.pingling.soldiers)
+		if action == "accept_appointment" and count < needed:
+			return {"ok": _youth_transition("unavailable", {"reason": "no_appointment_pool"}, [])}
+		var weapons: int = mini(maxi(0, cap - _state.armies.relief.weapons), _state.cities.pingling.weapons)
+		var food: int = mini(12 if action == "accept_appointment" else 8, _state.cities.pingling.food)
+		var added: Array = []
+		for index in range(count): added.append("replacement_%s_%d" % [action, index])
+		data = {"added": added, "weapons": weapons, "food": food}
+		if count > 0: moves.append(Youth.move("pingling", "relief", "soldiers", count))
+		if weapons > 0: moves.append(Youth.move("pingling", "relief", "weapons", weapons))
+		if food > 0: moves.append(Youth.move("pingling", "relief", "food", food))
+	elif action == "refuse_order":
+		if y.roster.size() > 1: moves.append(Youth.move("relief", "pingling", "soldiers", y.roster.size() - 1))
+	if not _youth_moves(moves) or not _youth_transition(transition, data, moves): return _reject("narrative_transition_failed")
+	if action in ["first_march", "dangerous_march"] and (_state.cities.hequ.soldiers == 0 or _state.cities.hequ.owner == _state.armies.relief.owner):
+		if not _youth_transition("unavailable", {"reason": "mission_target_absent"}, []): return _reject("absence_transition_failed")
+	return {"ok": true}
+
+func _youth_moves(moves: Array) -> bool:
+	## Allocation is a real co-located transfer, never a resource grant.
+	for m in moves:
+		var source := _entity(m.from)
+		var target := _entity(m.to)
+		if source.is_empty() or target.is_empty() or source.owner != target.owner or _location(m.from) != _location(m.to) or _location(m.from) == "" or source[m.resource] < m.amount or target[m.resource] > MAX_ECONOMY_STOCK - m.amount: return false
+		if m.resource == "soldiers" and target.soldiers > MAX_ECONOMY_PEOPLE - m.amount: return false
+		source[m.resource] -= m.amount
+		target[m.resource] += m.amount
+		_event("youth_inventory", m.duplicate(true))
+	return true
+
+func _youth_transition(action: String, data: Dictionary, moves: Array) -> bool:
+	var next := Youth.transition(_state.youth, action, _state.time_seconds, data, _state.battle_tickets, _state.seed)
+	if next.is_empty(): return false
+	_state.youth = next
+	_event("youth_transition", {"action": action, "data": data.duplicate(true), "moves": moves.duplicate(true)})
+	return true

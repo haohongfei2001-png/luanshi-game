@@ -1,0 +1,139 @@
+Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
+Integrated source/test head: 84cc5f8a881bcf07c5894c52ca31c7c31094adf4
+
+Command: XDG_DATA_HOME=${WRITABLE_XDG_DATA} XDG_CONFIG_HOME=$PWD/.local-config XDG_CACHE_HOME=$PWD/.local-cache ./tools/test.sh
+Outcome: exit 0; final full run, not a concatenation of partial runs.
+
+4.6.3.stable.official.7d41c59c4
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+BATTLE_REPORT {"ended":true,"mean_step_ms":0.638770638107987,"report":{"elapsed_seconds":37.35,"enemy_casualties":15,"enemy_survivors":5,"friendly_casualties":20,"friendly_survivors":0,"player_alive":false,"player_damage":0.0,"player_hp":0.0,"result":"The commander has fallen","seed":184},"steps":2241}
+TEST_SUMMARY {"assertions":33,"failures":0,"messages":[],"profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SCENARIO timely: hour=6 owner=sheng outcome=relieved relief=53 food=84
+SCENARIO late: fall=15 arrival=16 owner=bei prisoners=40
+SCENARIO interception: capture=3 retreat=10 owner=sheng relief=56 enemy_food=0
+World tests: 526 assertions, 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+ECONOMY_90_DAYS {"events":14007,"final_food":500,"food_consumed":13828,"food_produced":12960,"hour":2160,"population":50,"weapons_produced":269}
+Economy tests: 527 assertions, 0 failures
+ECONOMY_TEST_SUMMARY {"assertions":527,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+HUNGER_STAGES {"first_death_hour":3,"first_warning_hour":1,"survivors":59,"weakened_hour":2}
+Hunger tests: 337 assertions, 0 failures
+HUNGER_TEST_SUMMARY {"assertions":337,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+INDEPENDENT_HUNGER_AUDIT 2689 checks / 0 failures
+[]
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+INDEPENDENT_ECO_REVIEW 52194 assertions / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Battle transaction tests: 293 assertions, 0 failures
+TRANSACTION_TEST_SUMMARY {"assertions":293,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Campaign save tests: 1455 assertions, 0 failures
+SAVE_TEST_SUMMARY {"assertions":1455,"failures":0,"isolated_directory":"test_saves_9e54502a35d1c723","messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PROFILE_SAVE_TESTS {"checks":3066,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_HISTORY_METRICS {"days":90,"disk_bytes":113531,"events":14007,"load_ms":6816,"save_ms":3534,"uncompressed_bytes":9070412.0}
+Save history tests: 98 assertions, 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1753 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1856 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1803 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (ff)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (fe)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (ff)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (fe)
+BOUNDARY_AUDIT 107 checks 0 failures []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1551 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1551,"failures":0,"messages":[],"phase":"prepare","profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 1223 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1223,"failures":0,"messages":[],"phase":"resume","profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1519 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1519,"failures":0,"messages":[],"phase":"prepare","profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 1191 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1191,"failures":0,"messages":[],"phase":"resume","profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1630 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1630,"failures":0,"messages":[],"phase":"prepare","profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 1302 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1302,"failures":0,"messages":[],"phase":"resume","profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+SCENE_TEST_SUMMARY {"assertions":36,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+STRATEGY_TEST_SUMMARY {"assertions":95,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SCENE_TEST_SUMMARY {"assertions":64,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SAVE_SCENE_SUMMARY {"assertions":70,"failures":0,"isolated_campaign":"scene_saves_df7f79bd92927984","messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+PROFILE_SCENE_TESTS {"checks":21,"failures":[],"training_profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=late_v1
+PROFILE_SCENE_TESTS {"checks":21,"failures":[],"training_profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":872,"wall_mean_ms":2.26684747706422,"wall_p50_ms":2.34,"wall_p95_ms":3.082},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":1.08860178970917,"report":{"elapsed_seconds":14.9,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":10,"friendly_survivors":10,"player_alive":true,"player_damage":395.91,"player_hp":54.15,"result":"Victory at the border","seed":184},"steps":894}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"army":{"condition":{"activity":"rest","activity_flags":{"battle":true},"attrition_at":3000,"fatigue":6,"food_hours":17.0,"food_needed_per_hour":6,"hunger":0,"last_activity":"march","last_eaten":6,"last_needed":6,"low_food":false,"modifiers":{"damage_percent":100,"speed_percent":100},"morale":100,"ration_scale":1000,"stage":"fed","weakened_at":2000},"food":102,"location":"hequ","march":{},"owner":"sheng","soldiers":57,"starving_hours":0,"weapons":45},"frame_timing":{"device":"","display":"headless","sample_count":839,"wall_mean_ms":2.38337425506555,"wall_p50_ms":2.3,"wall_p95_ms":3.352},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":0.970194412107101,"report":{"elapsed_seconds":14.32,"enemy_casualties":15,"enemy_survivors":0,"friendly_casualties":3,"friendly_survivors":16,"player_alive":true,"player_damage":413.59,"player_hp":24.67,"result":"Victory at the border","seed":8103},"settlement":{"already_committed":false,"battle_id":"1:1","campaign_ended":false,"depot_captured":true,"elapsed_world_time":14.316666666667,"ok":true,"result":"victory","spoils":{"weapons":15}},"steps":859,"world_time_seconds":10814.3166666667}

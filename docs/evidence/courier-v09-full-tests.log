@@ -1,0 +1,184 @@
+4.6.3.stable.official.7d41c59c4
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started Project initialization (5 steps)
+[   0% ] first_scan_filesystem | Scanning file structure...
+[  16% ] first_scan_filesystem | Loading global class names...
+[  33% ] first_scan_filesystem | Verifying GDExtensions...
+[  50% ] first_scan_filesystem | Creating autoload scripts...
+[  66% ] first_scan_filesystem | Initializing plugins...
+[  83% ] first_scan_filesystem | Starting file scan...
+[ DONE ] first_scan_filesystem
+
+[   0% ] loading_editor_layout | Started Loading editor (5 steps)
+[   0% ] loading_editor_layout | Loading editor layout...
+[  16% ] loading_editor_layout | Loading docks...
+[ DONE ] loading_editor_layout
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+BATTLE_REPORT {"ended":true,"mean_step_ms":0.607196179659267,"report":{"elapsed_seconds":32.28,"enemy_casualties":13,"enemy_survivors":7,"friendly_casualties":20,"friendly_survivors":0,"player_alive":false,"player_damage":0.0,"player_hp":0.0,"result":"The commander has fallen","seed":184},"steps":1937}
+TEST_SUMMARY {"assertions":33,"failures":0,"messages":[],"profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SCENARIO timely: hour=6 owner=sheng outcome=relieved relief=53 food=84
+SCENARIO late: fall=15 arrival=16 owner=bei prisoners=40
+SCENARIO interception: capture=3 retreat=10 owner=sheng relief=56 enemy_food=0
+World tests: 526 assertions, 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+ECONOMY_90_DAYS {"events":14007,"final_food":500,"food_consumed":13828,"food_produced":12960,"hour":2160,"population":50,"weapons_produced":269}
+Economy tests: 527 assertions, 0 failures
+ECONOMY_TEST_SUMMARY {"assertions":527,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+HUNGER_STAGES {"first_death_hour":3,"first_warning_hour":1,"survivors":59,"weakened_hour":2}
+Hunger tests: 337 assertions, 0 failures
+HUNGER_TEST_SUMMARY {"assertions":337,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+INDEPENDENT_HUNGER_AUDIT 2689 checks / 0 failures
+[]
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+INDEPENDENT_ECO_REVIEW 52194 assertions / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Battle transaction tests: 293 assertions, 0 failures
+TRANSACTION_TEST_SUMMARY {"assertions":293,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Campaign save tests: 1243 assertions, 0 failures
+SAVE_TEST_SUMMARY {"assertions":1243,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PROFILE_SAVE_TESTS {"checks":3066,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_HISTORY_METRICS {"days":90,"disk_bytes":112403,"events":14007,"load_ms":7285,"save_ms":3481,"uncompressed_bytes":9070498.0}
+Save history tests: 98 assertions, 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1877 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1884 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1831 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (ff)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (fe)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (ff)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (fe)
+BOUNDARY_AUDIT 107 checks 0 failures []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1020 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1020,"failures":0,"messages":[],"phase":"prepare","profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 692 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":692,"failures":0,"messages":[],"phase":"resume","profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1020 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1020,"failures":0,"messages":[],"phase":"prepare","profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 692 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":692,"failures":0,"messages":[],"phase":"resume","profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1020 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1020,"failures":0,"messages":[],"phase":"prepare","profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 692 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":692,"failures":0,"messages":[],"phase":"resume","profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+SCENE_TEST_SUMMARY {"assertions":36,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+STRATEGY_TEST_SUMMARY {"assertions":96,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SCENE_TEST_SUMMARY {"assertions":64,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SAVE_SCENE_SUMMARY {"assertions":70,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+PROFILE_SCENE_TESTS {"checks":21,"failures":[],"training_profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=late_v1
+PROFILE_SCENE_TESTS {"checks":21,"failures":[],"training_profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":389,"wall_mean_ms":2.68928791773779,"wall_p50_ms":2.632,"wall_p95_ms":3.099},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":1.48795133819951,"report":{"elapsed_seconds":6.85,"enemy_casualties":2,"enemy_survivors":18,"friendly_casualties":1,"friendly_survivors":19,"player_alive":false,"player_damage":156.0,"player_hp":0.0,"result":"The commander has fallen","seed":184},"steps":411}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"army":{"condition":{"activity":"alert","activity_flags":{"battle":true},"attrition_at":3000,"fatigue":6,"food_hours":17.0,"food_needed_per_hour":6,"hunger":0,"last_activity":"march","last_eaten":6,"last_needed":6,"low_food":false,"modifiers":{"damage_percent":100,"speed_percent":100},"morale":100,"ration_scale":1000,"stage":"fed","weakened_at":2000},"food":102,"location":"hequ","march":{},"owner":"sheng","soldiers":59,"starving_hours":0,"weapons":29},"frame_timing":{"device":"","display":"headless","sample_count":402,"wall_mean_ms":2.41822139303483,"wall_p50_ms":2.362,"wall_p95_ms":2.859},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":1.10023696682464,"report":{"elapsed_seconds":7.03,"enemy_casualties":2,"enemy_survivors":13,"friendly_casualties":0,"friendly_survivors":19,"player_alive":false,"player_damage":156.0,"player_hp":0.0,"result":"The commander has fallen","seed":8103},"settlement":{"already_committed":false,"battle_id":"1:1","campaign_ended":true,"depot_captured":false,"elapsed_world_time":7.03333333333331,"ok":true,"result":"commander_dead","spoils":{"weapons":0}},"steps":422,"world_time_seconds":10807.0333333333}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RUNTIME_PREPARE_PASS {"checks":30,"envelope_version":1,"errors":[],"events":284,"hero_hp":100.0,"ok":true,"phase":"prepare","stage":"endpoint","world_time":72023.8479166667,"world_version":8}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RUNTIME_RESUME_PASS {"checks":29,"envelope_version":1,"errors":[],"events":284,"hero_hp":100.0,"ok":true,"phase":"resume","stage":"endpoint","world_time":72023.8479166667,"world_version":8}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_COMBAT_PROOFS [{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_lin","recruit_zhou","recruit_wu"],"elapsed":12.6166666666669,"enemy_dead":6,"phase":"dangerous","player_hp":100.0,"policy":"tactical","result":"victory","seed":184},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_lin","recruit_zhou","recruit_wu"],"elapsed":12.6166666666669,"enemy_dead":6,"phase":"dangerous","player_hp":100.0,"policy":"tactical","result":"victory","seed":184},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_lin","recruit_zhou","recruit_wu"],"elapsed":12.6166666666669,"enemy_dead":6,"phase":"dangerous","player_hp":100.0,"policy":"tactical","result":"victory","seed":184},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_zhou","recruit_wu","recruit_tian"],"elapsed":15.016666666667,"enemy_dead":0,"phase":"dangerous","player_hp":100.0,"policy":"delayed_retreat","result":"retreat","seed":184},{"ally_dead":[],"elapsed":5.06666666666665,"enemy_dead":0,"phase":"first","player_hp":100.0,"policy":"retreat","result":"retreat","seed":185},{"ally_dead":["recruit_lin"],"elapsed":15.3833333333337,"enemy_dead":4,"phase":"first","player_hp":7.79254126548767,"policy":"reckless","result":"victory","seed":185},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["commander","recruit_lin","recruit_zhou","recruit_wu","recruit_tian","replacement_accept_appointment_0"],"elapsed":13.1333333333336,"enemy_dead":2,"phase":"dangerous","player_hp":0.0,"policy":"reckless","result":"commander_dead","seed":184}]
+YOUTH_CAREER_TESTS {"checks":536,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_WORLD6_MIGRATION_TESTS {"checks":40,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_VALIDATION_TESTS {"checks":2201,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RESTART_PREPARE {"checks":13,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RESTART_RESUME {"checks":14,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_ATTRITION_PREPARE {"checks":65,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_ATTRITION_RESUME {"checks":24,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LOCAL_SIGNALS_TESTS {"checks":62,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+COURIER_ORDERS_TESTS {"checks":194,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+COURIER_MIGRATIONS {"checks":20,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+COURIER_UI_SUMMARY {"checks":113,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+COURIER_RESTART_PREPARE {"checks":34,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+COURIER_RESTART_RESUME {"checks":26,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LOCAL_SIGNAL_RESTART {"checks":1,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LOCAL_SIGNAL_RESTART {"checks":3,"failures":[]}

@@ -1,0 +1,31 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started Project initialization (5 steps)
+[   0% ] first_scan_filesystem | Scanning file structure...
+[  16% ] first_scan_filesystem | Loading global class names...
+[  33% ] first_scan_filesystem | Verifying GDExtensions...
+[  50% ] first_scan_filesystem | Creating autoload scripts...
+[  66% ] first_scan_filesystem | Initializing plugins...
+[  83% ] first_scan_filesystem | Starting file scan...
+[ DONE ] first_scan_filesystem
+
+[   0% ] loading_editor_layout | Started Loading editor (5 steps)
+[   0% ] loading_editor_layout | Loading editor layout...
+[  16% ] loading_editor_layout | Loading docks...
+[ DONE ] loading_editor_layout
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+CHINESE_FONT_SUMMARY {"failures":0,"font":"Luanshi UI SC"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+YOUTH_SCENE_FIRST_COMBAT {"actions":{"attack":true,"guard":true,"lunge":true,"sweep":true},"captured":false,"frames":457,"moving_frames":419,"pointer_error_max":0.0001220703125,"report":{"elapsed_seconds":7.7,"enemy_casualties":3,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":4,"player_alive":true,"player_damage":99.47,"player_hp":100.0,"result":"Victory at the border","seed":8103}}
+YOUTH_SCENE_SUMMARY {"assertions":59,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+YOUTH_INPUT_VALIDATION_PASS {"captures":[],"dangerous_withdrawal":{"elapsed_seconds":11.23,"enemy_casualties":1,"enemy_survivors":5,"friendly_casualties":5,"friendly_survivors":0,"player_alive":true,"player_damage":0.0,"player_hp":100.0,"result":"The company withdrew","seed":16022},"device":"","display":"headless","failures":0,"personal_first_combat":{"actions":{"attack":true,"guard":true,"lunge":true,"sweep":true},"captured":false,"frames":457,"moving_frames":419,"pointer_error_max":0.0001220703125,"report":{"elapsed_seconds":7.7,"enemy_casualties":3,"enemy_survivors":0,"friendly_casualties":0,"friendly_survivors":4,"player_alive":true,"player_damage":99.47,"player_hp":100.0,"result":"Victory at the border","seed":8103}}}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_PRESENTATION_SUMMARY {"checks":7,"failures":0}

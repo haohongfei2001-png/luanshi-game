@@ -1,0 +1,38 @@
+> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
+# 少年军旅界面与可复现验证
+
+此界面读取 World7 的 `youth_view()`，只通过 `start_youth()`、`youth_action()` 和既有 BattleAdapter 发起行动。普通边营姓名与对白是可调整的占位短篇，不是正式皇帝、核心旧友或历史转折定稿。
+
+## 入口与保存
+
+- 默认保留原有 20 对 20 训练。右上「少年军旅 / 人生」进入独立叙事人生；安平地图标题明确标为技术战役。
+- 入伍方式（征发 / 自愿）与动机（求生 / 求功 / 守乡）分别选择。
+- 开始新人生前先保存整个旧世界节点。保存失败不重置世界；成功后才采用新的十五岁人生。不会删除旧槽位、节点或改变独立训练状态。
+- 各叙事行动先保存可回溯的行动前节点，忙碌期间阻止重复点击、回退和读档。节点保存失败则不执行行动。
+- F6 自由存读档，F5 快存，F9 快读。无活动战斗的少年存档直接恢复对应叙事阶段；活动战斗加载后保持暂停，关闭存档页再按继续。
+- 菜单阅读维持既有暂停语义。行军、休整、候命与实际战斗使用同一世界时钟。
+
+## 真正联动的可见反馈
+
+- 所有选项与可执行原因、耗时、可知代价来自 WorldSim；界面不自行复制数值或决定合法阶段。
+- 新卒不能使用进攻、跟随军令，键盘也不能绕过；可自行撤离。受实际委任后才显示小队指挥。
+- 战斗来源于实际军籍与敌军分队，通过既有事务结算一次。R 返回人生记录，不重置实际战役。
+- 军功、被记功/冒领、赏粮、留存证据、同袍生还/阵亡、关系与部队资源显示权威结果。
+- 世界地图在少年模式下作为已知情报视图，不能借技术模式按钮绕开军令或重置人生。
+- 主角阵亡即本局终止；旧存档和节点可读，没有后代切换。终点可查看新人生入口，仍须先保存当前世界。
+
+## 字体与布局
+
+1280×800，固定标题操作区与纵向滚动正文。使用系统字体 PingFang SC / Noto Sans CJK SC / Microsoft YaHei，不打包外部字体资产。Ubuntu 图形 CI 安装官方发行版的 `fonts-noto-cjk`。图形测试逐字确认字体含中文字符并捕获真实渲染画面；不能把 headless 的字符串或字体检查当作视觉验收。
+
+## 验证命令
+
+- `XDG_DATA_HOME=${WRITABLE_XDG_DATA} ./tools/test-youth-ui.sh`
+- 真实渲染：`xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/youth_visual.gd`
+
+`test_youth_scene.gd` 使用实际 GUI 事件，覆盖不同入伍选择、旧世界归档、保存失败不改状态、忙碌重入、四种选择可见、战斗指挥权、逐阶段/战斗存读档、真实战死后的有限生平、补员与终点。仅保存错误测试使用明确标注的无效存档命名 fixture；不注入战斗 HP、位置、结局或伤亡。
+
+`youth_visual.gd` 使用实际控件、鼠标瞄准、移动/技能输入与军令。首战控制主角造成真实伤害；第二战命令小队交战，在出现真实伤亡后通过实际移动撤退，回营从现有人力物资补员。它允许显式 `--validate-youth-inputs` 在 headless 下检查同一输入路线，但只输出 `YOUTH_INPUT_VALIDATION_PASS`，不生成或宣称渲染证明。
+
+预期图像：入伍、首战、不公四选项、活动战斗读档、实际伤亡后撤退、终点、记录。自动化不能替代用户的主观审美、手感与 M5 真机性能验收。

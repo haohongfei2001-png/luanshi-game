@@ -24,12 +24,13 @@ func _play(world: WorldSimulation, id: String, frames: int) -> void:
 
 func _run() -> void:
 	var arguments := OS.get_cmdline_user_args()
-	if arguments.size() != 2 or arguments[0] not in ["prepare", "resume"]:
+	if arguments.size() not in [2, 3] or arguments[0] not in ["prepare", "resume"]:
 		push_error("Expected prepare|resume plus isolated campaign identifier")
 		quit(1)
 		return
 	var store := Store.new(arguments[1])
-	var world := World.new(998877)
+	var profile_id: String = arguments[2] if arguments.size() == 3 else "early_v1"
+	var world := World.new(998877, profile_id)
 	var id := ""
 	if arguments[0] == "prepare":
 		world.observe_city("pingling", 20)
@@ -39,6 +40,7 @@ func _run() -> void:
 		var battle := world.start_battle(id)
 		battle.issue_order("attack")
 		_play(world, id, 330)
+		for action in ["attack", "sweep", "lunge", "guard"]: check(battle.use_action(action), "activate saved " + action)
 		check(store.save_slot(world, "running").ok, "write running session")
 		_play(world, id, 10800)
 		check(battle.ended, "uninterrupted battle ends")
@@ -50,6 +52,7 @@ func _run() -> void:
 		var expected := World.new()
 		check(store.load_checkpoint(expected, "expected").ok, "read oracle from previous process")
 		check(store.load_slot(world, "running").ok, "read running session from previous process")
+		check(world.snapshot().commander.hero_profile.id == profile_id, "fresh process retains selected profile")
 		id = world.player_view().active_battle
 		if id.is_empty():
 			check(false, "running ticket missing")
@@ -69,5 +72,5 @@ func _run() -> void:
 		check(duplicate.ok and duplicate.receipt.already_committed, "retry after simulated post-rename crash returns receipt")
 		check(world.export_campaign_state() == before and before == expected.export_campaign_state(), "postcommit retry cannot duplicate resources")
 	print("Save restart %s: %d assertions, %d failures" % [arguments[0], assertions, failures.size()])
-	print("SAVE_RESTART_SUMMARY " + JSON.stringify({"phase": arguments[0], "assertions": assertions, "failures": failures.size(), "messages": failures}))
+	print("SAVE_RESTART_SUMMARY " + JSON.stringify({"profile": profile_id, "phase": arguments[0], "assertions": assertions, "failures": failures.size(), "messages": failures}))
 	quit(0 if failures.is_empty() else 1)

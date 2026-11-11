@@ -1,3 +1,5 @@
+> Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
 # ECO-04: military shortage, condition and recovery
 
 Status: bounded authoritative simulation milestone, with deterministic headless evidence. The three-line strategic army panel consumes this contract, with headless shortage/recovery/layout coverage. This document does not claim rendered hunger UI or M5 gameplay acceptance until separate exact-source CI evidence is recorded. All rates and thresholds are **provisional compressed Anping-scenario balance**, not historical claims or owner-approved final values. Military condition is shared by both factions and city garrisons. Civilian population remains fixed; civilian starvation, recruitment, disease, desertion and detailed demography are not implemented here.
@@ -89,7 +91,7 @@ Audits and world/battle clock guards reject missing/wrong-type condition, out-of
 Baseline: `0c8e240e820833f74e400b098be8108a934efeda`, isolated Linux cloud checkout. Engine: **Godot 4.6.3.stable.official.7d41c59c4**.
 
 ```sh
-XDG_DATA_HOME=/workspace/shared/godot-data \
+XDG_DATA_HOME=${WRITABLE_XDG_DATA} \
 XDG_CONFIG_HOME="$PWD/.local-config" \
 XDG_CACHE_HOME="$PWD/.local-cache" \
 ./tools/test.sh

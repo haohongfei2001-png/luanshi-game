@@ -1,0 +1,17 @@
+Public verification summary: World8 / v0.9, after bundled-font integration
+Environment: Godot 4.6.3, Linux cloud, isolated data/config/cache directories.
+Reproduce from the repository root: bash tools/export.sh
+Result: exit 0; no script, parse or engine error markers.
+
+Linux release export: PASS
+macOS universal archive export and structure check: PASS (arm64 + x86_64)
+Packaged scene movement/combat/skills/order smoke: PASS
+Packaged campaign world-clock and exact-once settlement smoke: PASS
+Packaged persistence prepare/resume in separate processes: PASS
+Packaged youth prepare/resume: PASS (30 + 29 checks)
+Packaged courier prepare/resume: PASS (167 + 180 checks)
+Bundled Chinese glyph coverage and redistribution license: PASS
+
+macOS native execution and M5 gameplay/performance are not established by these
+Linux export checks. This branch's hosted CI remains a separate acceptance stage.
+This public summary omits private workspace paths and process/session identifiers.

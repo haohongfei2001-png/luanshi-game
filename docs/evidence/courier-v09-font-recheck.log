@@ -1,0 +1,13 @@
+Public verification summary after licensed bundled Chinese font integration
+Environment: Godot 4.6.3, Linux cloud, isolated data/config/cache directories.
+Commands executed from repository root:
+  bash tools/test.sh
+  bash tools/test-youth-ui.sh
+  godot --headless --path . --script tests/test_courier_ui.gd
+  bash tools/export.sh
+All commands exited 0; no SCRIPT ERROR, Parse Error or ERROR markers.
+CHINESE_FONT_SUMMARY failures=0; font=Luanshi UI SC
+COURIER_UI_SUMMARY checks=113; failures=0
+Complete regression results are recorded in courier-v09-full-tests.log.
+No graphical display or M5 device test is claimed.
+Private paths, process/session identifiers and unrelated build metadata are omitted.

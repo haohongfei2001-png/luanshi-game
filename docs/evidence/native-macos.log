@@ -1,7 +1,9 @@
+Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
 Source: https://github.com/haohongfei2001-png/luanshi-game/actions/runs/42417350572/job/128538571690
 2026-11-07T21:46:54.7441040Z Image: macos-26-arm64
 2026-11-07T21:46:58.7571090Z grep -q SCENE_SMOKE_PASS mac-evidence/runtime.log
-2026-11-07T21:46:58.8552290Z Darwin iad20-gt1017-8f106f3b-adea-49ae-9a29-7d615a37bd3c-F2F423DC6B76.local 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
+2026-11-07T21:46:58.8552290Z Darwin <HISTORICAL_RUNNER_HOST> 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
 2026-11-07T21:46:58.8911910Z ProductName:		macOS
 2026-11-07T21:46:58.8978730Z ProductVersion:		26.7.2
 2026-11-07T21:46:58.8980970Z BuildVersion:		25G332

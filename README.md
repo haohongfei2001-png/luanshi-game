@@ -1,3 +1,5 @@
+> Transfer publication, 2026-11-11 UTC: Development is **stopped**. Only this **text-only handoff projection** is being published, not a complete runnable release. The font and build packages are not uploaded; v0.14 remains incomplete and unvalidated. The required bundled font is absent. See [transfer status](handoff/TRANSFER_STATUS.md) for provenance, missing assets, actual verification and WIP limits. Earlier local-only/publication statements below are preserved historical records.
+
 # Luanshi (working title)
 
 An experimental single-player game set in a fictional ancient Chinese dynasty.
@@ -5,8 +7,6 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 ## Vision
 
 A character-driven war RPG with MOBA-style isometric 3D combat, soldiers who require real supplies, strategic army command, and a world that continues to evolve outside the player's view. The protagonist grows older and can die. Death concludes that playthrough; saves and major-life checkpoints allow replay.
-
-**Long-term campaign expansion (2026-11-12):** A capable long-lived protagonist can potentially experience a compressed historical arc from Tang-style warlord fragmentation and reunification through competing northern powers, divided-state defense, capital and fiscal crises, and eventual foreign advanced naval warfare, within one mortal life. Branching outcomes are determined by world simulation; winning a war does not automatically make historical events unfold on fixed rails. This is a future design target, **not yet implemented**. See [the era-campaign specification](docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md).
 
 The goal is **not** to build the full game immediately. Our first milestone is a small, testable, playable **macOS** prototype, with iPhone/iOS support considered from the start but not yet a release requirement.
 
@@ -26,25 +26,28 @@ Out of scope for the initial milestone: a nationwide map, city economies, comple
 
 Godot 4 and GDScript are the provisional choices. Platform: macOS first (Apple Silicon preferred for initial validation); iPhone/iOS is a future target. Keep input handling and UI layout adaptable for touch controls. Engine choice should be revisited only after a focused technical benchmark, not based on speculation.
 
-**Canonical handoff, 2026-11-08:** [Owner's locked product decisions](docs/PRODUCT_DECISIONS.md) → [one-life century-war epoch campaign](docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md) → [owner's nine resolved creative decisions](docs/OWNER_CREATIVE_DECISIONS_PENDING.md) → [Pro final game design](docs/FINAL_GAME_DESIGN_SPEC.md) → [narrative and visual direction](docs/NARRATIVE_ART_DIRECTION.md) → [life-spanning narrative arc (owner-approved concepts)](docs/NARRATIVE_LIFE_ARC_V0_3.md) → [Tang-inspired court politics and rare captive branch](docs/NARRATIVE_WORLD_BIBLE_V0_2.md) → [simulation architecture contracts](docs/SIMULATION_CONTRACTS.md) → [acceptance matrix](docs/ACCEPTANCE_MATRIX.md) → [Dot direct-cloud handoff](docs/DOT_HANDOFF_FINAL.md). Historical/stage references: [delivery gates](docs/DELIVERY_PLAN.md), [full vision completion](docs/FINAL_VISION_ACCEPTANCE.md), [first independent code review](docs/PRO_TECH_REVIEW_001.md), [Dot cloud bootstrap](docs/DOT_BOOTSTRAP.md), [AGENTS.md](AGENTS.md), [initial game bible](docs/PRO_DESIGN_BIBLE.md), [original game vision](docs/GAME_VISION.md).
+**Canonical handoff, 2026-11-08:** [Owner's locked product decisions](docs/PRODUCT_DECISIONS.md) → [owner's nine resolved creative decisions](docs/OWNER_CREATIVE_DECISIONS_PENDING.md) → [Pro final game design](docs/FINAL_GAME_DESIGN_SPEC.md) → [narrative and visual direction](docs/NARRATIVE_ART_DIRECTION.md) → [life-spanning narrative arc (owner-approved concepts)](docs/NARRATIVE_LIFE_ARC_V0_3.md) → [Tang-inspired court politics and rare captive branch](docs/NARRATIVE_WORLD_BIBLE_V0_2.md) → [simulation architecture contracts](docs/SIMULATION_CONTRACTS.md) → [acceptance matrix](docs/ACCEPTANCE_MATRIX.md) → [Dot direct-cloud handoff](docs/DOT_HANDOFF_FINAL.md). Historical/stage references: [delivery gates](docs/DELIVERY_PLAN.md), [full vision completion](docs/FINAL_VISION_ACCEPTANCE.md), [first independent code review](docs/PRO_TECH_REVIEW_001.md), [Dot cloud bootstrap](docs/DOT_BOOTSTRAP.md), [AGENTS.md](AGENTS.md), [initial game bible](docs/PRO_DESIGN_BIBLE.md), [original game vision](docs/GAME_VISION.md).
 
 ## Status
 
-Godot 4.6.3 playable prototype implemented. A world-backed depot encounter now reserves actual soldiers and weapons, advances one clock and settles casualties/equipment exactly once in-process. Training remains a separate 20-vs-20 scene. Reproducible combat, world, transaction and routed scene tests are in `tools/test.sh`. See [verification](docs/VERIFICATION.md) for actual results and limitations.
+Godot 4.6.3 v0.8 integration: finite-HP combat and a playable youth military-life slice. The new “少年军旅 / 人生” entry follows enlistment, real patrol combat, disputed merit, four consequential responses, a real squad commission, dangerous combat/retreat and replacement from existing resources. A world-backed depot encounter now reserves actual soldiers and weapons, advances one clock and settles casualties/equipment exactly once in-process. Training remains a separate 20-vs-20 scene. Reproducible combat, world, transaction and routed scene tests are in `tools/test.sh`. See [verification](docs/VERIFICATION.md) for actual results and limitations.
 
 ### Play from source
 
 1. Install Godot 4.6.3 (standard edition).
 2. Import `project.godot`, then press F6/F5 or run `godot --path .`.
-3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (75% damage reduction for 2.6 seconds).
+3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (50% damage reduction for 1 second on new early/late profiles).
 4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins new training **after** it ends; in campaign combat R returns to the map without resetting casualties.
 
 The standalone training battle has 20 friendly soldiers, 20 enemy soldiers, and one separately counted commander. The commander's death ends the encounter. Fallen soldiers remain in the casualty ledger; only a new encounter resets it.
+
+New campaigns and normal training use **early_v1: 100 HP**, modest reach and capped skill targets. Stay with soldiers, keep distance and brace deliberately. Late offense is available only as an explicit training test: `godot --path . -- --training-profile=late_v1`; it still has 100 HP and the same defense. This is not an earned campaign upgrade or an XP system. Existing v0.6 saves retain their original 360 HP legacy profile, timers and RNG without conversion or automatic rewriting. See [profile/save integration](docs/HERO_PROFILE_INTEGRATION.md) and [calibration limits](docs/HERO_COMBAT_CALIBRATION.md).
 
 ### Reproduce tests
 
 ```sh
 ./tools/test.sh
+./tools/calibrate-combat.sh
 ```
 
 The test script runs editor import, pure simulation tests and the full scene's scripted smoke run. Runtime logs are written to ignored `artifacts/`. No game plugins, purchased services or third-party art are required.
@@ -66,10 +69,71 @@ The repository's [Actions](../../actions) workflow tests and packages each proto
 
 [中文试玩说明](docs/PLAYING_ZH.md) · [Current resumable project status](docs/PROJECT_STATUS.md) · [World simulation foundation](docs/WORLD_SIM.md) · [Battle transaction contract](docs/BATTLE_TRANSACTIONS.md).
 
-Press **M** to open the three-city campaign. Travel the river route for three hours and **Assault Hequ depot** to fight a real roster: 20 of the army's 60 people (including its commander) versus 15 actual defenders. With 30 weapons in the 60-person army, the deployment contains 10 armed and 10 genuinely unarmed people; 40 remain reserves. The outcome updates the same world once, including actual time, dead people, recovered/destroyed equipment and depot ownership. Physical retreat preserves survivors. Commander death ends the campaign after settlement. **R returns to the map, not a battle restart.** Explicit New Campaign is separate from training replay. Local city production now uses actual civilian labor, farmland/workshops and stability, with continuous integer work accrual and separate civilian/military food consumption. The local map shows effective rates and siege stoppage; no remote economic truth is leaked. Real shortage now causes visible hunger, fatigue/morale penalties and bounded gradual attrition; full meals during an entire safe stationary hour restore condition. No rest is credited during marches, siege, hostile presence or reserved combat. Named campaign saves, active-battle resume and life checkpoints are now implemented; F6 opens the save panel, F5 quicksaves and F9 quickloads. The complete narrative remains pending. This is a reversible prototype under the final design, not owner approval of all creative choices or completion of the full game.
+Press **M** to open the three-city campaign. Travel the river route for three hours and **Assault Hequ depot** to fight a real roster: 20 of the army's 60 people (including its commander) versus 15 actual defenders. With 30 weapons in the 60-person army, the deployment contains 10 armed and 10 genuinely unarmed people; 40 remain reserves. The outcome updates the same world once, including actual time, dead people, recovered/destroyed equipment and depot ownership. Physical retreat preserves survivors. Commander death ends the campaign after settlement. **R returns to the map, not a battle restart.** Explicit New Campaign is separate from training replay. Local city production now uses actual civilian labor, farmland/workshops and stability, with continuous integer work accrual and separate civilian/military food consumption. The local map shows effective rates and siege stoppage; no remote economic truth is leaked. Real shortage now causes visible hunger, fatigue/morale penalties and bounded gradual attrition; full meals during an entire safe stationary hour restore condition. No rest is credited during marches, siege, hostile presence or reserved combat. Named campaign saves, active-battle resume and life checkpoints are now implemented; F6 opens the save panel, F5 quicksaves and F9 quickloads. The first youth narrative slice is playable through its own entry; the complete life narrative remains pending. This is a reversible prototype under the final design, not owner approval of all creative choices or completion of the full game.
 
 [Population economy and 90-day verification](docs/ECONOMY.md): fixed city output is replaced by constrained production. Original rescue timelines remain covered; demographic quantities and rates are compressed provisional test values, not final historical balance.
 
 [Military condition and recovery](docs/HUNGER.md): both factions and city garrisons use the same real-ration rules; the first warning precedes casualties. Combat penalties are bounded entry snapshots, not a separate hunger clock.
 
 [Campaign save format and verification](docs/CAMPAIGN_SAVES.md): free named slots and retained life checkpoints, atomic load, real battle/RNG resume and once-only receipts. Training is separate and is not stored. Saved active battles reopen paused; close the panel and press P to continue. Saves preserve complete90-day history; bounded size/complexity limits mean unrestricted multi-year lifetime scale is not yet accepted.
+
+
+### Youth military life (v0.8)
+
+Click **少年军旅 / 人生** at the top right. Choose conscription or volunteering,
+then survival, merit or homeland as a motive. Starting archives the previous
+campaign before creating a fifteen-year-old early-profile life. Story reading
+pauses; march, preparation, choices and actual combat advance the shared world.
+
+The first patrol has five real people, including the player. A recruit can signal
+withdrawal but cannot issue attack/follow orders. Return to camp after earning
+merit to choose endurance, appeal, private evidence or protection of a surviving
+comrade. A later actual commission enables squad command. The dangerous mission
+permits victory, physical retreat and death. Replacements draw from existing camp
+people and equipment; dead comrades are never revived by a story action.
+
+F5/F9 and named saves work throughout. Old World5/6 saves remain their original
+technical campaigns and profiles, never silently rewritten as youth lives. The
+short-slice endpoint is not the completed game. Important cast and fixed major
+literary plots remain provisional for owner/Pro review.
+
+[Youth systems](docs/YOUTH_LIFE_SLICE.md) · [Interface and controls](docs/YOUTH_INTERFACE.md)
+
+## World8 physical communication slice (v0.9)
+
+Youth patrols can arrange an existing camp soldier to carry a superior's return/report
+order and a physical reply. People, rations, time, interception and player knowledge
+are tracked separately. New battles use finite-range delayed flags and each soldier's
+last received instruction. Existing saves migrate without replacing their life or
+ongoing historical battle state. See [COURIER_ORDERS](docs/COURIER_ORDERS.md) for controls,
+actual scope, reproducible tests and remaining boundaries.
+
+## Optional camp appraisal (v0.10)
+
+After earning a real small-squad appointment, request extra marching rations at camp.
+The officer uses only personally reported battle records and physically returned courier
+replies: support, refusal, or a stated credit-for-rations bargain have different real
+stock/merit consequences. Declining keeps the original paths. Existing World8 saves retain
+their exact identities and values; new appraisal events require v0.10 or later.
+See [camp appraisal](docs/CAMP_APPRAISAL.md); run `bash tools/test_appraisal.sh`.
+
+Optional v0.11 camp testimony: see [comrade petition](docs/COMRADE_PETITION.md).
+Run `bash tools/test_petition.sh` for focused source, keyboard UI and restart checks.
+
+Optional v0.12 hometown information chain: see [hometown messages](docs/HOMETOWN_MESSAGES.md).
+Request an existing courier, attach one local acquaintance's letter before departure,
+and visit the Pingling neighborhood after returning. Messages stay dated and may remain unknown.
+Run `bash tools/test_hometown.sh` for the focused model, keyboard UI and two-process checks.
+
+### Battle wound care (v0.13)
+
+At a safe friendly camp, use the separate wound-care controls to rest for up to
+one or six real world-hours. Existing battle HP persists; each paid, fully fed
+hour restores at most five HP. No instant healing or resurrection.
+See [the contract and verification limits](docs/WOUND_CARE.md).
+
+### Current long-term design
+
+[Single-life era pressures](docs/CENTURY_WAR_ERA_CAMPAIGN_V0_1.md) describes the
+owner’s E0–E7 same-protagonist target, not an implemented campaign. Current
+v0.13 launch instructions and evidence above remain applicable.

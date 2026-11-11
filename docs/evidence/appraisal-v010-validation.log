@@ -1,0 +1,73 @@
+Luanshi camp appraisal v0.10 / local cloud validation
+Date: 2026-11-09 UTC
+Runtime source: d92f18c5b95a281c94a3cf03b0ad160efdca70a5
+Test and hosted-gate source: 66bf95980c0b4e34bd9045d445940b56b83149ea
+These are local commits, not claims of published or hosted-tested source.
+Engine: 4.6.3.stable.official.7d41c59c4
+Environment: Linux cloud, headless; XDG_DATA_HOME/XDG_CONFIG_HOME/XDG_CACHE_HOME
+set to separate persistent test directories. All commands run at repository root.
+No user device, new paid resource, publication, or alternate upload route used.
+
+Commands:
+  bash tools/test.sh
+  bash tools/test_appraisal.sh
+  bash tools/test-youth-ui.sh
+  bash tools/calibrate-combat.sh
+  bash tools/export.sh
+
+Final focused observed stdout:
+CAMP_APPRAISAL_SUMMARY {"checks":349,"failures":[]}
+APPRAISAL_UI_SUMMARY {"checks":39,"failures":[],"input":"Viewport keyboard events, not emitted button signals","rendered":false}
+APPRAISAL_RESTART_SUMMARY {"checks":55,"failures":[],"ok":true,"phase":"prepare"}
+APPRAISAL_RESTART_SUMMARY {"checks":25,"failures":[],"ok":true,"phase":"resume"}
+
+Regression observed stdout (selected summaries, not a replacement for the full suite):
+World tests: 526 assertions, 0 failures
+Economy tests: 527 assertions, 0 failures
+Hunger tests: 337 assertions, 0 failures
+INDEPENDENT_HUNGER_AUDIT 2689 checks / 0 failures
+INDEPENDENT_ECO_REVIEW 52194 assertions / 0 failures
+Campaign save tests: 1243 assertions, 0 failures
+PROFILE_SAVE_TESTS {"checks":3066,"failures":[]}
+SAVE_INVALID_TYPES 1877 cases / 0 failures
+SAVE_INVALID_TYPES 1884 cases / 0 failures
+SAVE_INVALID_TYPES 1831 cases / 0 failures
+BOUNDARY_AUDIT 107 checks 0 failures []
+YOUTH_CAREER_TESTS {"checks":536,"failures":[]}
+YOUTH_WORLD6_MIGRATION_TESTS {"checks":40,"failures":[]}
+YOUTH_VALIDATION_TESTS {"checks":2201,"failures":[]}
+LOCAL_SIGNALS_TESTS {"checks":62,"failures":[]}
+COURIER_ORDERS_TESTS {"checks":194,"failures":[]}
+COURIER_MIGRATIONS {"checks":20,"failures":[]}
+COURIER_UI_SUMMARY {"checks":113,"failures":[]}
+
+CHINESE_FONT_SUMMARY {"failures":0,"font":"Luanshi UI SC"}
+YOUTH_SCENE_SUMMARY {"assertions":59,"failures":0,"messages":[]}
+YOUTH_PRESENTATION_SUMMARY {"checks":7,"failures":0}
+Existing actual-input combat route also passed: 99.47 personal first-battle damage,
+419 moving frames and maximum headless pointer error 0.0001220703125 pixels.
+This is input/simulation evidence, not rendered visual acceptance.
+
+HERO_PROFILE_TESTS {"checks":59,"failures":[]}
+COMBAT_CALIBRATION_TESTS {"checks":320,"failures":[]}
+LEGACY_PROFILE_PARITY {"checks":1120,"failures":[]}
+COMBAT_CALIBRATION_REPEAT_PASS
+Calibration JSON SHA256: f904970ff606bc88fbf2afed9c435fe85c271d939085faf36fa16c3486cdd11d
+
+Both exports succeeded. The Linux packaged executable passed original training,
+campaign, persistence, youth 30+29 and courier 167+180 separate-process smoke checks.
+APPRAISAL_RUNTIME_PREPARE_PASS {"checks":55,"failures":[],"ok":true,"phase":"prepare"}
+APPRAISAL_RUNTIME_RESUME_PASS {"checks":25,"failures":[],"ok":true,"phase":"resume"}
+MACOS_ARCHIVE_PASS arm64+x86_64 bundle=com.luanshi.prototype version=0.10.0 signing=not-verified runtime=not-tested
+macOS ZIP SHA256: 8363dafbc97207e3698d84a4a6efe9709e655bda59f68f6c6b0618f73bf397f2
+Linux TAR.GZ SHA256: 896b641f4ed392c3bde72c145a175e4f0bd43889a168ffae72cf29752f51dcc5
+
+WORKFLOW_YAML_AND_BASH_SYNTAX_PASS
+CI is prepared, not executed: actual display captures bargain/accepted/declined/
+support/denied; native macOS runs courier and appraisal prepare/resume with unique
+run/attempt IDs, required PASS markers, pipeline failures and Godot error scans.
+
+Limits: no new graphical screenshots, native macOS execution, M5 performance/input
+feel, signing/notarization verification, hosted CI, merge or formal release claimed.
+Publication is pending the existing platform-required bundled-font confirmation.
+Private cloud paths and ephemeral test identifiers are omitted from this public record.

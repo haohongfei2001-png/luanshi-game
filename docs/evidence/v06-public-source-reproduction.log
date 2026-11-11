@@ -1,0 +1,37 @@
+Publication note: ${WRITABLE_XDG_DATA}, ${WRITABLE_XDG_CONFIG}, ${WRITABLE_XDG_CACHE}, <PROJECT_WORKSPACE> and <HISTORICAL_RUNNER_HOST> are explicit placeholders for the historical environment. Substitute writable local directories as applicable. Only environment identifiers were sanitized; no test result was changed or rerun.
+
+Public v0.6 fixture reproduction
+
+Original generation source: 37beae24b60f841a5d9e1137a747271acb00695c
+Public regeneration source: e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b
+Both Git trees: 8b5bcf4f3298bf68bd9c4198e1828e5c66cda7df
+Engine: 4.6.3.stable.official.7d41c59c4 (Linux headless)
+Generation: git archive of the public source plus the fixture generator.
+Only generator provenance metadata changed; gameplay generation logic is unchanged.
+Shared XDG_DATA_HOME=${WRITABLE_XDG_DATA}; temporary isolated config/cache.
+Editor import exit 0; generator exit 0; failures=[].
+All 20 gameplay artifacts are byte-identical to the original committed fixtures.
+All fixture hashes and 1,773-frame trace expectations are unchanged.
+Only manifest provenance fields changed. No test or gameplay-state acceptance changed.
+
+Matched SHA-256 values:
+defb554fd8e0597623cee80b24601d3079e106a0f9a87c98c46e379d4204cc20  cancelled.continuation.codec.json
+a0fbe1314e1b6cc05905c98bf9371a482de66c43e1bf8bd5104ebf9f14a764d7  cancelled.save.json
+13a78e559999bf04f66ba464d363ed610a9bd3d9f0a09df598a34aecc30e8875  cancelled.state.codec.json
+e48706a492a0efd99674c5d12b0564bdf395f201318b71ca36d83ac8ea538406  committed.continuation.codec.json
+6a2694bac82825d28f84a6e94e93165cffe45439927bb7ba057320f61d265ee5  committed.save.json
+e48706a492a0efd99674c5d12b0564bdf395f201318b71ca36d83ac8ea538406  committed.state.codec.json
+52a32cf0078e73adaf039ecc8e5cdad987952ce21ba4b06344d4bfd875c093c0  dead.continuation.codec.json
+ee7bffa8b81ec0ba312227663f829fc19bca97a3d59db907b79af4e983d7958a  dead.save.json
+550648eb8dd8070c21319c449e65a9d37d300d391934317de888aead911906d9  dead.state.codec.json
+539e5fb76da4f35bead0030fd1bc173d4d0dd9f4e0175e2644837193e5d76f0e  life_node.continuation.codec.json
+f23ef53249a6b6481f99ddf286a042380352466f66d3b903ff496671f7341464  life_node.save.json
+52a32cf0078e73adaf039ecc8e5cdad987952ce21ba4b06344d4bfd875c093c0  life_node.state.codec.json
+e48706a492a0efd99674c5d12b0564bdf395f201318b71ca36d83ac8ea538406  pending.continuation.codec.json
+549020cb6bf2c415d145041d971ba353113c8d96045a6e077fd3f5e068d7eef4  pending.save.json
+0d656a35bccc57ef9e0b6722744fe58c778ebf705eeee07d68360a896e72e89a  pending.state.codec.json
+1468df72f3af7123e74828205c771a359bf5cc039674a56b39c8b06c917a71fd  running.continuation.codec.json
+32f3d6dece751c6fa91dc12e31d7652b15de52e9db9d8783a7f89052f57c3119  running.save.json
+a2b07eca1b67689fcd3ea1cf8acdeb5c062382a65d08b9544e165fabf43a42f7  running.state.codec.json
+2d20fe873798fe8c7b75dd053fd434298572c5abb33bcbcbb849164bbbfc6e79  running.trace.json
+d177d2a33d8e1918144d4657ef6dd80d555c667b22c51ac5e9a3e7a1136520cc  running.whole_fight.codec.json

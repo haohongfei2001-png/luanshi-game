@@ -1,0 +1,12 @@
+{
+  "source_commit": "049fecc66bd4da84ca533cb4dbd403d4bae88733",
+  "engine": "4.6.3.stable.official.7d41c59c4",
+  "source_world_version": 7,
+  "captured_on": "2026-11-09",
+  "files": {
+    "world7_youth_at_camp.codec.json": "bdcac8ce56a932ce9c1396edb110c8e5a426b233c4c319e6a0dcf8529393aecb",
+    "world7_youth_at_camp.save.json": "ac52c9594c866917a0649f913bb72d9bf83233b9b4962deb9c7dc696b3e00b17",
+    "world7_youth_running.codec.json": "35a3d6c38a89826acab39d3a18e796278e8190feeec58580ed227b1638c0bc77",
+    "world7_youth_running.save.json": "7fe8f6818de34872dcc25bdd70132e8077e90538864a3f1545e6fa1e7d1ca262"
+  }
+}

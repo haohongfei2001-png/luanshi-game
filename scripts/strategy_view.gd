@@ -4,15 +4,19 @@ signal close_requested
 signal assault_requested
 signal campaign_reset
 signal saves_requested
+signal youth_requested
 const World := preload("res://scripts/world_sim.gd")
 const NAMES := {"pingling": "Pingling", "anping": "Anping", "hequ": "Hequ"}
 const SOURCES := {"安平求援使者": "Anping relief messenger", "亲历斥候": "Local eyewitness scout", "逃出城的信使": "Escaped city messenger", "安平军情信使": "Anping military messenger"}
 var world := World.new()
+var narrative_font: Font = preload("res://scripts/youth_ui.gd").chinese_font()
 var view: Dictionary = {}
 var buttons: Dictionary = {}
+var wounds_label: Label
 var army_label: Label
 var local_label: Label
 var economy_label: Label
+var courier_label: Label
 var reports_label: Label
 var feedback: Label
 var map: Control
@@ -30,6 +34,7 @@ func _ready() -> void:
 	add_child(backdrop)
 	scroll = ScrollContainer.new()
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.offset_left = 24
 	scroll.offset_top = 16
 	scroll.offset_right = -24
@@ -41,8 +46,10 @@ func _ready() -> void:
 	scroll.add_child(stack)
 	var heading := HBoxContainer.new()
 	stack.add_child(heading)
-	var title := _label(heading, "ANPING / CAMPAIGN PROTOTYPE", 24)
+	var title := _label(heading, "ANPING / TECHNICAL CAMPAIGN", 24)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_button(heading, "youth", "少年军旅 / 人生", func(): youth_requested.emit())
+	buttons.youth.add_theme_font_override("font", narrative_font)
 	_button(heading, "saves", "Save / Load", func(): saves_requested.emit())
 	_button(heading, "close", "M  /  Return to training", func(): close_requested.emit())
 	status_label = _label(stack, "Real campaign roster and losses | Separate training | Save / Load anytime", 16)
@@ -64,10 +71,19 @@ func _ready() -> void:
 	stack.add_child(actions)
 	_button(actions, "wait1", "Advance 1h", func(): _command("advance", "", 1))
 	_button(actions, "wait6", "Advance 6h", func(): _command("advance", "", 6))
+	_button(actions, "rest1", "Rest wounds 1h", func(): _command("rest", "", 1))
+	_button(actions, "rest6", "Rest wounds up to 6h", func(): _command("rest", "", 6))
+	buttons.rest1.focus_mode = Control.FOCUS_ALL
+	buttons.rest6.focus_mode = Control.FOCUS_ALL
 	_button(actions, "observe", "Observe here", func(): _command("observe"))
 	_button(actions, "food", "Take 60 food", func(): _command("food"))
 	_button(actions, "weapons", "Take 10 weapons", func(): _command("weapons"))
 	_button(actions, "seize", "Assault Hequ depot", func(): _command("seize"))
+	wounds_label = _label(stack, "", 15)
+	wounds_label.add_theme_font_override("font", narrative_font)
+	courier_label = _label(stack, "", 15)
+	courier_label.add_theme_font_override("font", narrative_font)
+	courier_label.add_theme_color_override("font_color", Color("e0c486"))
 	local_label = _label(stack, "", 15)
 	economy_label = _label(stack, "", 15)
 	feedback = _label(stack, "Choose a route, then advance time to travel. Taking weapons reduces the local garrison's equipment.", 15)
@@ -99,6 +115,9 @@ func _command(command: String, argument: String = "", amount: int = 0) -> void:
 	if interaction_blocked:
 		return
 	var current: Dictionary = world.player_view()
+	if world.has_method("youth_view") and world.youth_view().get("enabled", false):
+		set_feedback("少年军旅通过人生面板接取军令；此处只查看已知军情。")
+		return
 	if current.get("active_battle", "") != "" or (current.get("campaign_ended", false) and command != "reset"):
 		set_feedback("Finish the current battle before issuing world orders." if battle_pending else "The commander died. Load an earlier save or life checkpoint to return.")
 		return
@@ -106,6 +125,7 @@ func _command(command: String, argument: String = "", amount: int = 0) -> void:
 	match command:
 		"march": success = world.march(argument)
 		"advance": success = world.advance(amount)
+		"rest": success = world.rest_wounds(amount).ok
 		"observe": success = world.observe_city(current.army.location)
 		"food": success = world.transfer(current.army.location, "relief", "food", 60)
 		"weapons": success = world.transfer(current.army.location, "relief", "weapons", 10)
@@ -154,6 +174,8 @@ func show_saved_battle_result(ticket: Dictionary) -> void:
 
 func refresh() -> void:
 	view = world.player_view()
+	courier_label.text = preload("res://scripts/youth_ui.gd").courier_text(view)
+	courier_label.visible = not courier_label.text.is_empty()
 	battle_pending = view.get("active_battle", "") != ""
 	var army: Dictionary = view.army
 	var ended: bool = view.get("campaign_ended", false)
@@ -163,6 +185,10 @@ func refresh() -> void:
 	buttons.reset.disabled = battle_pending
 	buttons.wait1.disabled = locked
 	buttons.wait6.disabled = locked
+	buttons.rest1.disabled = not view.wounds.reason.is_empty()
+	buttons.rest6.disabled = not view.wounds.six_hour_reason.is_empty()
+	wounds_label.text = preload("res://scripts/wound_care.gd").describe(view.wounds)
+	wounds_label.visible = not view.wounds.sources.is_empty()
 	var now: float = view.time_seconds
 	army_label.text = _army_text(army, now)
 	army_label.tooltip_text = _condition_details(army.condition)
@@ -203,6 +229,13 @@ func refresh() -> void:
 		if not is_zero_approx(fposmod(observed, 3600.0)) or not is_zero_approx(fposmod(delivered, 3600.0)):
 			lines.append("  Exact: observed %s / delivered %s / age %s" % [_time_text(observed, true), _time_text(delivered, true), _time_text(age)])
 	reports_label.text = "\n".join(lines)
+	if world.has_method("youth_view") and world.youth_view().get("enabled", false):
+		status_label.text = "少年军旅 / 世界军报。已知情报来自同一世界；请回人生面板继续军旅。"
+		status_label.add_theme_font_override("font", narrative_font)
+		buttons.close.text = "M / Return to youth life"
+		for id in buttons:
+			if id not in ["close", "saves", "youth"]:
+				buttons[id].disabled = true
 	map.queue_redraw()
 
 func _army_text(army: Dictionary, now: float) -> String:
