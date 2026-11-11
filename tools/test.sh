@@ -14,6 +14,9 @@ touch artifacts/.gdignore
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; fi
 "$GODOT" --headless --path . --check-only --script scripts/youth_ui.gd
+"$GODOT" --headless --path . --script tests/field_officers.gd 2>&1 | tee artifacts/field-officers.log
+grep -q '^FIELD_OFFICERS_PASS' artifacts/field-officers.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-officers.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/field_traffic.gd 2>&1 | tee artifacts/field-traffic.log
 grep -q '^FIELD_TRAFFIC_PASS' artifacts/field-traffic.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-traffic.log; then exit 1; fi

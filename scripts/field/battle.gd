@@ -27,6 +27,7 @@ class Unit:
 	var officer := false
 	var hero := false
 	var engineer := false
+	var ram_station := -1
 	var wall_post := false
 	var mounted := false
 	var mount_hp := 0.0
@@ -148,6 +149,8 @@ var gate_hp := 260.0
 var ram_hp := 150.0
 var ram := Vector2(-9, 1)
 var ram_timer := 0.0
+var ram_crew := PackedInt32Array([-1,-1,-1,-1])
+var reliefs := 0
 var capture := 0.0
 var hero_move := Vector2.ZERO
 var aim := Vector2.RIGHT
@@ -168,6 +171,8 @@ var links := PackedInt32Array()
 func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true,ranked_officers: bool=true) -> void:
 	assert(n in SCALES and roster.is_empty())
 	side_size = n
+	traffic_enabled=ranked_officers
+	objectives.enabled=ranked_officers
 	dry_muster=on_banks
 	rng.seed = seed_value
 	companies_per_side = ceili(float(n) / 32.0)
@@ -214,6 +219,9 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 					u.wall_post=true
 				# A small detachment travels with the ram. Its crew are counted soldiers.
 				u.engineer = team == 0 and c == bands / 2 and j >= 12 and j < 16
+				if u.engineer:
+					u.ram_station=u.id%4
+					ram_crew[u.ram_station]=u.id
 				if n == 20 and j >= 16:
 					u.kit = Arms.Kit.BOW if file % 2 == 0 else Arms.Kit.CROSSBOW
 				u.ammo=Arms.issue(u.kit)
@@ -659,7 +667,13 @@ func _melee(u: Unit, move: Arms.Move) -> void:
 			count += 1
 			if count >= move.limit:
 				break
-	if u.team == 0 and gate_hp > 0 and u.pos.distance_to(Ground.GATE) <= move.reach + 1.0 and u.locked.x > 0.4:
+	var struck_gate := false
+	if u.team == 0 and gate_hp > 0:
+		if traffic_enabled:
+			struck_gate = Traffic.hits_gate(u.pos, u.locked, move.reach, move.width, move.shape == Arms.Shape.LINE or (move.shape == Arms.Shape.DOUBLE and u.kit == Arms.Kit.SPEAR))
+		else:
+			struck_gate = u.pos.distance_to(Ground.GATE) <= move.reach + 1.0 and u.locked.x > 0.4
+	if struck_gate:
 		gate_hp = maxf(0, gate_hp - move.power * (0.20 if u.engineer else 0.075))
 	if u.team == 1 and ram_hp > 0 and u.pos.distance_to(ram) < move.reach + 0.5 and u.locked.dot(u.pos.direction_to(ram)) > 0.45:
 		ram_hp = maxf(0, ram_hp - move.power * 0.16)
@@ -795,12 +809,15 @@ func _soldier(u: Unit) -> void:
 		# Routed soldiers no longer run target assessment. Release the old contact offset.
 		u.separation = u.separation.move_toward(Vector2.ZERO, DT * 8.0)
 	var goal := c.aim + (u.station - c.home) * 0.70
+	var gate_face := Traffic.gate_face(u.pos) if traffic_enabled else Ground.GATE
 	var at_post := u.wall_post and c.mission==Mission.HOLD and not c.regrouping
 	if at_post: goal=u.station
-	if u.engineer and ram_hp > 0 and gate_hp > 0:
+	var on_ram:=u.ram_station>=0 if traffic_enabled else u.engineer
+	var escort_after_breach:=objectives.enabled and objectives.task==Objectives.Task.ESCORT and gate_hp<=0 and ram.distance_squared_to(Ground.GATE)>9.0
+	if on_ram and ram_hp > 0 and (gate_hp > 0 or escort_after_breach):
 		goal = ram + Vector2(-0.75, (u.id % 4 - 1.5)*0.75)
-	if traffic_enabled and u.team==0 and not withdrawing and not at_post and not c.regrouping and ram_hp>0 and gate_hp>0:
-		if u.engineer: goal=Traffic.crew_station(ram,u.id)
+	if traffic_enabled and u.team==0 and not withdrawing and not at_post and not c.regrouping and ram_hp>0 and (gate_hp>0 or escort_after_breach):
+		if on_ram: goal=Traffic.crew_station(ram,u.ram_station)
 		elif c.mission==Mission.ESCORT: goal=Traffic.escort_station(ram,c.slot,u.station-c.home)
 		elif c.mission==Mission.PRESS and c.aim.x>=Ground.WALL_X-2.1: goal=Traffic.gate_station(c.slot,companies_per_side,c.home,u.station-c.home)
 	if withdrawing:
@@ -816,7 +833,7 @@ func _soldier(u: Unit) -> void:
 		var chase := 34.0
 		if c.mission in [Mission.HOLD,Mission.RESERVE]:
 			chase = 9.0 if c.mission == Mission.HOLD else 5.0
-		var protecting_ram := u.engineer and ram_hp>0 and gate_hp>0 and c.mission!=Mission.WITHDRAW
+		var protecting_ram := on_ram and ram_hp>0 and (gate_hp>0 or escort_after_breach) and c.mission!=Mission.WITHDRAW
 		var may_engage := v!=null and active(v) and (not protecting_ram or v.pos.distance_to(ram)<4.8)
 		if may_engage and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or (c.mission == Mission.PRESS and not c.regrouping) or at_post):
 			var distance := u.pos.distance_to(v.pos)
@@ -833,15 +850,15 @@ func _soldier(u: Unit) -> void:
 				return
 			if distance <= move.reach * 0.90:
 				goal = u.pos
-		elif u.team == 0 and gate_hp > 0 and u.pos.distance_to(Ground.GATE) < 3.9 and u.fatigue <= 0:
-			_begin(u, 0, u.pos.direction_to(Ground.GATE))
+		elif u.team == 0 and gate_hp > 0 and u.fatigue <= 0 and u.pos.distance_to(gate_face) < (minf(3.9, _basic(u).reach + 0.20) if traffic_enabled else 3.9):
+			_begin(u, 0, u.pos.direction_to(gate_face))
 			u.fatigue = 0.6
 			return
 	var next := Ground.retreat_waypoint(u.pos, goal, gate_hp <= 0) if withdrawing else Ground.waypoint(u.pos, goal)
 	if traffic_enabled and not withdrawing and not at_post:
-		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0)
+		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0,ram_hp>0 and ram.x>Ground.WALL_X-6.0)
 	if traffic_enabled and ram_hp>0 and not at_post:
-		next=Traffic.around_ram(u.pos,next,ram,u.id)
+		next=Traffic.around_ram(u.pos,next,ram,u.id,gate_hp<=0)
 	var dist := u.pos.distance_to(next)
 	var speed := 5.8 if u.mounted else (4.1 if fleeing else 2.85)
 	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted),dist / DT)
@@ -882,16 +899,41 @@ func _state_step(u: Unit) -> void:
 			if not u.hero:
 				_soldier(u)
 
+func _rotate_ram_crew() -> void:
+	# A signal can only reach nearby escorts. A replacement walks from his
+	# current position and keeps his original identity, weapon, HP and company.
+	if not traffic_enabled or ram_hp<=0 or (gate_hp<=0 and objectives.task!=Objectives.Task.ESCORT): return
+	var nearby: Array[int]=[]
+	for slot in ram_crew.size():
+		var old:=roster[ram_crew[slot]]
+		if active(old) and old.state!=State.ROUT and companies[old.squad].mission!=Mission.WITHDRAW and old.pos.distance_squared_to(ram)<81.0: continue
+		if nearby.is_empty(): nearby=_near(ram,9.0,0)
+		var best: Unit=null
+		var distance:=INF
+		for id in nearby:
+			var u:=roster[id]
+			if u.ram_station>=0 or u.hero or u.officer or u.mounted or u.state==State.ROUT or u.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]: continue
+			if companies[u.squad].mission!=Mission.ESCORT or not corps.title_of(self,u).is_empty(): continue
+			var d:=u.pos.distance_squared_to(Traffic.crew_station(ram,slot))
+			if d<distance or (is_equal_approx(d,distance) and best!=null and id<best.id):
+				distance=d
+				best=u
+		if best:
+			old.ram_station=-1
+			best.ram_station=slot
+			ram_crew[slot]=best.id
+			reliefs+=1
+
 func _siege() -> void:
-	if ram_hp > 0 and gate_hp > 0 and tick % 4 == 0:
+	if ram_hp > 0 and tick % 4 == 0 and (gate_hp>0 or (objectives.enabled and objectives.task==Objectives.Task.ESCORT)):
 		var crew := 0
 		for id in _near(ram,4.8,0):
-			if roster[id].engineer and roster[id].state != State.ROUT:
+			if (roster[id].ram_station>=0 if traffic_enabled else roster[id].engineer) and roster[id].state != State.ROUT:
 				crew += 1
 		if crew >= 2:
 			if ram.distance_to(Ground.GATE) < 3.3:
 				ram_timer -= DT*4
-				if ram_timer <= 0:
+				if ram_timer <= 0 and gate_hp>0:
 					objectives.strokes+=1
 					gate_hp = maxf(0,gate_hp - 14.0 - crew*1.5)
 					ram_timer = 1.7
@@ -933,6 +975,7 @@ func step() -> void:
 		if buffer_ticks==0: buffered_slot=-1
 	_rebuild_grid()
 	corps.advance(self)
+	if tick%20==0: _rotate_ram_crew()
 	_dispatches()
 	if tick == 1 or tick % 8 == 0:
 		for c in companies:
@@ -992,5 +1035,5 @@ func report() -> Dictionary:
 		"tick":tick,"result":result,"hits":hits.duplicate(),"attacks":attacks,
 		"blocked_hits":blocked_hits,"projectiles":arrow_count,"dead":losses.duplicate(),
 		"escaped":escaped.duplicate(),"routing":[routed(0),routed(1)],"dropped_weapons":equipment.duplicate(),
-		"gate_hp":gate_hp,"ram_hp":ram_hp,"capture_sec":capture,"mission":Objectives.TITLES[objectives.task],"ram_strokes":objectives.strokes,"decision":objectives.decision,"officer_corps":corps.summary(self),
+		"gate_hp":gate_hp,"ram_hp":ram_hp,"capture_sec":capture,"mission":Objectives.TITLES[objectives.task],"ram_strokes":objectives.strokes,"crew_replacements":reliefs,"decision":objectives.decision,"officer_corps":corps.summary(self),
 		"orders_delivered":messages_arrived,"orders_lost":messages_lost,"orders_refused":messages_refused,"hero_hp":hero.hp}

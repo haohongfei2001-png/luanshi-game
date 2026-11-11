@@ -352,6 +352,9 @@ func show_receipt(b: Battle,receipt: Dictionary,world: Dictionary) -> void:
 		for kit in Arms.NAMES:
 			if receipt.spoils.has(kit): parts.append("%s ×%d" % [kit,receipt.spoils[kit]])
 		result_text.text="%s · 河关战报\n普通士兵　　　阵亡　 撤出　 存活（含撤出）\n我军　　　　　 %d　　 %d　　 %d\n守军　　　　　 %d　　 %d　　 %d\n我军军官阵亡 %d　守军军官阵亡 %d\n缴获归库：%s\n战场遗留兵器 %d 件　本军存粮 %d" % [b.result,b.losses[0],b.escaped[0],b.side_size-b.losses[0],b.losses[1],b.escaped[1],b.side_size-b.losses[1],receipt.dead_ids[0].size()-b.losses[0]-(1 if b.hero.hp<=0 else 0),receipt.dead_ids[1].size()-b.losses[1],"、".join(parts) if not parts.is_empty() else "无",receipt.loose_weapons,army.food]
+		if receipt.has("officers"):
+			var ranks: Dictionary=receipt.officers
+			result_text.text+="\n接任队正　我军 %d　守军 %d　　救出军官 %d / %d" % [ranks.successions[0],ranks.successions[1],ranks.rescued[0].size(),ranks.rescued[1].size()]
 		if receipt.has("strategy") and not b.objectives.decision.is_empty():
 			result_text.text+="\n"+b.objectives.decision
 		if receipt.has("captured_officers") and (not receipt.captured_officers[0].is_empty() or not receipt.captured_officers[1].is_empty()):
