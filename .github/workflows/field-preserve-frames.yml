@@ -1,0 +1,65 @@
+name: Preserve reserve-battle frame evidence in Git
+on:
+  push:
+    branches: [codex/river-gate-evidence-20261112]
+    paths: ['.github/workflows/field-preserve-frames.yml', 'tests/archive_endurance.py']
+permissions:
+  contents: read
+jobs:
+  preserve:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read the original hosted accounts before spending renderer time
+        id: recover
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git diff --exit-code eae4f9d3f23f119fdd210390a9c7f7c7533eae6d HEAD -- scripts scenes assets project.godot
+          git diff --exit-code eca0f508e0d2a2bba340dc9c480bcb952553bb94 HEAD -- tests/field_endurance.gd
+          for path in actions/jobs/130779531619/logs actions/runs/43094439832/logs; do
+            if curl --max-time 30 -fsSL -H "Authorization: Bearer $GH_TOKEN" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/$path" -o /tmp/prior-field-log && python3 tests/archive_endurance.py existing /tmp/prior-field-log; then
+              echo 'recovered=true' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+          echo 'recovered=false' >> "$GITHUB_OUTPUT"
+      - name: Reconstruct missing frame evidence only when both prior log endpoints failed
+        if: steps.recover.outputs.recovered == 'false'
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/field-engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/field-engine.zip' | sha512sum -c -
+          unzip -q /tmp/field-engine.zip -d /tmp/field-engine
+          ENGINE=/tmp/field-engine/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/endurance
+          touch artifacts/.gdignore
+          "$ENGINE" --headless --path . --editor --import > artifacts/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/import.log; then exit 1; fi
+          timeout 280s "$ENGINE" --headless --path . --script tests/field_endurance.gd 2>&1 | tee artifacts/plan-recovery.log
+          timeout 460s xvfb-run -a -s '-screen 0 1024x768x24' "$ENGINE" --path . --resolution 1000x600 --disable-vsync --audio-driver Dummy --script tests/field_endurance.gd -- --field-size=512 2>&1 | tee artifacts/window-recovery.log
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/plan-recovery.log artifacts/window-recovery.log; then exit 1; fi
+          python3 tests/archive_endurance.py reconstructed
+      - name: Publish only the two validated measurements to the evidence branch
+        env:
+          EXPECTED_BRANCH: codex/river-gate-evidence-20261112
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$EXPECTED_BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- docs/evidence/river-gate-20261112/endurance-frames.csv.gz docs/evidence/river-gate-20261112/endurance-measurements.json
+          test "$(git diff --cached --numstat | wc -l)" -eq 2
+          git commit -m 'Preserve validated per-frame data from one continuous reserve deployment'
+          git push origin "HEAD:refs/heads/$EXPECTED_BRANCH"
