@@ -14,10 +14,13 @@ touch artifacts/.gdignore
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; fi
 "$GODOT" --headless --path . --check-only --script scripts/youth_ui.gd
+bash tools/test-field-history.sh 2>&1 | tee artifacts/field-history.log
+grep -q '^FIELD_HISTORY_PASS ' artifacts/field-history.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-history.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/field_officers.gd 2>&1 | tee artifacts/field-officers.log
 grep -q '^FIELD_OFFICERS_PASS' artifacts/field-officers.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-officers.log; then exit 1; fi
-"$GODOT" --headless --path . --script tests/field_patrol.gd -- --field-size=20 2>&1 | tee artifacts/field-patrol.log
+LUANSHI_PATROL_ISOLATED_SLOT=1 XDG_DATA_HOME="$(mktemp -d)" "$GODOT" --headless --path . --script tests/field_patrol.gd -- --field-size=20 2>&1 | tee artifacts/field-patrol.log
 grep -q '^FIELD_PATROL_PASS' artifacts/field-patrol.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-patrol.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/field_mission_cases.gd 2>&1 | tee artifacts/field-missions.log

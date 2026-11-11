@@ -137,15 +137,14 @@ func patrol_muster() -> void:
 	paused=false
 	hud.order_panel.show()
 
-func _adopt(fresh: Battle) -> void:
+func _adopt(fresh: Battle) -> bool:
+	var candidate:=FieldWorld.new()
+	if not candidate.bind(fresh): return false
 	if view:
 		remove_child(view)
 		view.free()
 	battle=fresh
-	theater=FieldWorld.new()
-	if not theater.bind(fresh):
-		push_error("Field roster does not match opening inventory")
-		return
+	theater=candidate
 	selections=battle.side_size
 	opposing_selection=battle.ordinary_counts[1]
 	view=Figures.new()
@@ -161,6 +160,7 @@ func _adopt(fresh: Battle) -> void:
 	_refresh_hud()
 	_camera()
 	_draw_field()
+	return true
 
 func set_quality(which: int,remember: bool=false) -> void:
 	if which<0 or which>2: return
@@ -208,13 +208,12 @@ func _save() -> void:
 
 func _load() -> void:
 	var saved := Store.load_quick()
-	if saved:
-		_adopt(saved)
+	if saved and _adopt(saved):
 		paused=saved.started and saved.result==""
 		hud.order_panel.visible=not saved.started
 		battle.notice="已恢复战场"
 	else:
-		battle.notice="未找到可用的战场存档"
+		battle.notice="存档与军籍不符，当前战场已保留" if saved else "未找到可用的战场存档"
 	hud.update_model(battle,paused)
 
 func _camera() -> void:
@@ -323,11 +322,16 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif not paused and battle.started and battle.result=="":
 		if e.is_action_pressed("attack"):
 			battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
-			battle.press_action(0)
+			_submit_attack(0)
 		for i in 3:
 			if e.is_action_pressed(["sweep","lunge","guard"][i]):
 				battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
-				battle.press_action(i+1)
+				_submit_attack(i+1)
+
+func _submit_attack(slot: int) -> void:
+	var at:=Time.get_ticks_usec()
+	if battle.press_action(slot) and frame_log:
+		frame_log.accepted(slot,at)
 
 func _physics_process(delta: float) -> void:
 	if not battle or paused or not battle.started or battle.result!="": return
@@ -408,8 +412,9 @@ func _draw_field() -> void:
 		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1))
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
+	if frame_log: frame_log.pose_submitted(battle)
 	map.update_battle(battle)
-	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="")
+	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="",battle.gate_hp<260.0 or battle.ram.x>Ground.WALL_X-12.0)
 	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,half_extent-Vector2(4,6))
 	view_us+=Time.get_ticks_usec()-t
 

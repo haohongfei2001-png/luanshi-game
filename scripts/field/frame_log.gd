@@ -6,6 +6,9 @@ var wall := PackedFloat32Array()
 var gpu := PackedFloat32Array()
 var cpu := PackedFloat32Array()
 var previous := 0
+var input_slot := -1
+var input_stamp := 0
+var input_ms := PackedFloat32Array()
 var first_tick := -1
 var first_hits := 0
 var observed_hits:=0
@@ -28,6 +31,23 @@ func open(viewport: Viewport) -> void:
 		"adapter":RenderingServer.get_video_adapter_name(),"godot":Engine.get_version_info().string,"build":ProjectSettings.get_setting("application/config/version"),
 		"driver":DisplayServer.get_name(),"vsync":DisplayServer.window_get_vsync_mode(),"file":file.get_path().get_file()})
 	print("FIELD_PROFILE_FILE "+name)
+
+func accepted(slot: int,at: int) -> void:
+	if file:
+		input_slot=slot
+		input_stamp=at
+
+func pose_submitted(b) -> void:
+	if input_slot<0: return
+	if b.hero.move_slot==input_slot and b.hero.state in [b.State.WINDUP,b.State.RECOVER,b.State.GUARD]:
+		RenderingServer.frame_post_draw.connect(_drawn.bind(input_slot,input_stamp,b.tick),CONNECT_ONE_SHOT)
+	input_slot=-1
+
+func _drawn(slot: int,stamp: int,tick: int) -> void:
+	var ms: float=(Time.get_ticks_usec()-stamp)/1000.0
+	if input_ms.size()>=256: input_ms.remove_at(0)
+	input_ms.append(ms)
+	_write({"kind":"accepted_action_to_frame_post_draw","slot":slot,"tick":tick,"ms":ms})
 
 func _write(row: Dictionary) -> void:
 	file.store_line(JSON.stringify(row))
