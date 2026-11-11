@@ -131,6 +131,8 @@ func settle() -> Dictionary:
 	if field.result=="" or not sync() or not audit().is_empty() or not audit_quivers(): return {}
 	var dead := [[],[]]
 	var living := [[],[]]
+	var captives := [[],[]]
+	var taken_weapons := [0,0]
 	var fled := [[],[]]
 	var dropped := [0,0]
 	var loose_by_kit := [{},{}]
@@ -149,6 +151,10 @@ func settle() -> Dictionary:
 				loose_by_kit[team][entry.weapon]=int(loose_by_kit[team].get(entry.weapon,0))+pieces
 			else:
 				living[team].append(u.id)
+				if u.officer and field.corps.is_captive(u.id):
+					captives[team].append(u.id)
+					taken_weapons[team]+=pieces
+					continue
 				surviving_gear[team]+=pieces
 				if u.state==Field.State.ESCAPED: fled[team].append(u.id)
 				if team==0 and (u.hero or u.state==Field.State.ESCAPED):
@@ -158,8 +164,9 @@ func settle() -> Dictionary:
 	var old_loose:=loose_weapons
 	for team in 2:
 		var force:=_entity(FORCES[team])
-		force.soldiers-=dead[team].size()
-		force.weapons-=dropped[team]
+		force.soldiers-=dead[team].size()+captives[team].size()
+		force.weapons+=taken_weapons[1-team]-taken_weapons[team]-dropped[team]
+		_state.ledger.prisoners+=captives[team].size()
 		_state.ledger.dead+=dead[team].size()
 		loose_weapons+=dropped[team]
 	_unlock_battle(ENCOUNTER)
@@ -182,7 +189,7 @@ func settle() -> Dictionary:
 		# Holding the court dislodges the garrison. Living opponents stay on the
 		# map as a field force on an actual route, keeping their assigned weapons.
 		var city: Dictionary=_state.cities.hequ
-		var count: int=living[1].size()
+		var count: int=living[1].size()-captives[1].size()
 		if count>0:
 			var remnant:=_army("bei","hequ",count,surviving_gear[1],0)
 			_state.armies["hequ_remnant"]=remnant
@@ -209,6 +216,10 @@ func settle() -> Dictionary:
 	var issued := {"battle_id":ENCOUNTER,"outcome":field.result,"ending_seconds":_state.time_seconds,
 		"dead_ids":dead,"living_ids":living,"escaped_ids":fled,"dropped_by_kit":loose_by_kit,
 		"loose_weapons":loose_weapons,"spoils":spoils,"reclaimed":reclaimed,"captured_gate":captured,"commander_alive":_state.commander.alive}
+	if field.objectives.enabled:
+		issued.strategy={"task":field.objectives.task,"reason":field.objectives.decision,"strength":field.objectives.strength(field)}
+		issued.officers=field.corps.summary(field)
+		issued.captured_officers=captives
 	if not field.legacy_missiles: issued.ammunition=arrow_ledger
 	ticket.receipt=issued.duplicate(true)
 	_event("field_settled",{"battle_id":ENCOUNTER,"outcome":field.result,"dead":[dead[0].size(),dead[1].size()]})
@@ -236,7 +247,8 @@ func _settle_quivers(captured: bool) -> Dictionary:
 			dropped[u.team][k]+=u.ammo
 			continue
 		var dest:String=FORCES[u.team]
-		if captured and u.team==1: dest="hequ_remnant"
+		if u.officer and field.corps.is_captive(u.id): dest=FORCES[1-u.team]
+		elif captured and u.team==1: dest="hequ_remnant"
 		elif field.result=="成功撤离" and u.team==0 and not u.hero and u.state!=Field.State.ESCAPED:
 			dest="hequ_rearguard"
 		var force:=_entity(dest)

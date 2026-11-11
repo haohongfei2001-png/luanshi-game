@@ -239,7 +239,7 @@ func _test_world_settlement() -> void:
 func _test_quivers_and_acknowledgments() -> void:
 	const Save := preload("res://scripts/field/save.gd")
 	var b:=Battle.new()
-	b.setup(20,Battle.SEED,Arms.Kit.BOW)
+	b.setup(20,Battle.SEED,Arms.Kit.BOW,true,false)
 	b.start()
 	var archer:=b.hero
 	b.input_state(Vector2.ZERO,Vector2.RIGHT)
@@ -475,7 +475,11 @@ func _test_deployment_and_camp() -> void:
 	var saved_camp:=Store.restore(Store.snapshot(v))
 	var rebound:=World.new()
 	check(saved_camp!=null and rebound.bind(saved_camp) and rebound.snapshot()==w.snapshot() and rebound.receipt==receipt and rebound.audit().is_empty(),"Saving camp restores exactly one settlement and every timed march/transfer")
-	var legacy:=Store.snapshot(v)
+	var former:=Battle.new()
+	former.setup(20,Battle.SEED,Arms.Kit.SPEAR,false,false)
+	former.start()
+	for i in 20: former.step()
+	var legacy:=Store.snapshot(former)
 	legacy.version=2
 	legacy.erase("dry_muster")
 	var old:=Store.restore(legacy)

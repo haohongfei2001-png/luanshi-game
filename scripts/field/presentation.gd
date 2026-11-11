@@ -164,6 +164,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var angle := atan2(u.facing.x,u.facing.y)
 		var progress := clampf(1.0-u.timer/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
+		if u.officer and battle.corps.is_wounded(u.id):
+			code=Battle.State.ESCAPED # Wounded pose; departed units are culled above.
+			progress=0.75 if battle.corps.support_partner(battle,u)>=0 else 0.0
 		if u.mounted or (u.hero and battle.vehicle==1): code+=64
 		var data := Color((code+0.5)/128.0,progress,u.stride,clampf(u.flash/0.22,0,1))
 		if u.mounted:
@@ -186,13 +189,21 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if not full or contact_for_all:
 			_put(contact,Ground.unit_point(p)+Vector3.UP*0.035,angle,Color(0,0,0,0))
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0)
-		if u.officer and u.hp>0:
-			_put(standards[u.team],base+Vector3(-0.32,0,0),angle,Color(0,0,0,0))
-		elif not u.hero and not u.officer:
+		if not u.hero and not u.officer:
 			visible_soldiers += 1
 			if u.state in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD,Battle.State.STAGGER]:
 				visible_fighting += 1
 			if u.hp<=0: shown_fallen += 1
+	# A standard follows the current officer, including a successor drawn from the ranks.
+	for company in battle.companies:
+		if not battle.corps.can_command(battle,company): continue
+		var bearer: Battle.Unit=battle.corps.recipient(battle,company)
+		var at:=bearer.before.lerp(bearer.pos,alpha)
+		if absf(at.x-center.x)>half_extent.x or absf(at.y-center.y)>half_extent.y: continue
+		var role: String=battle.corps.title_of(battle,bearer)
+		var height:=1.25 if role=="战场主将" else (1.10 if role=="先锋" else 1.0)
+		var base:=Ground.unit_point(at)+Vector3(-0.32,0.81 if bearer.mounted else 0.0,0)
+		_put(standards[bearer.team],base,atan2(bearer.facing.x,bearer.facing.y),Color(0,0,0,0),height)
 	for id in [1,2]:
 		var pos: Vector2 = battle.vehicle_pos[id]
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
@@ -207,7 +218,8 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		_put(arrows,Vector3(p.x,altitude,p.y),atan2(s.direction.x,s.direction.y),Color(0,0,0,0))
 	for order in battle.orders:
 		if order.channel==Battle.Channel.COURIER and order.leg!=2:
-			var destination:=battle.hero.pos if order.leg==1 else battle.roster[battle.companies[order.squad].officer_id].pos
+			var recipient: Battle.Unit=battle.corps.recipient(battle,battle.companies[order.squad])
+			var destination:=battle.hero.pos if order.leg==1 else recipient.pos
 			var dir := order.pos.direction_to(destination)
 			_put(runners,Ground.unit_point(order.pos),atan2(dir.x,dir.y),Color(0,0,fposmod(order.age*3,1.0),0))
 	for g: Batch in groups.values():

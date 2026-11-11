@@ -53,16 +53,22 @@ func _ready() -> void:
 	hud.quality_changed.connect(func(index: int): set_quality(index,true))
 	hud.campaign.connect(func(): campaign_requested.emit())
 	hud.plan_requested.connect(func(style: int):
-		if battle.started or style==0: return
+		if battle.started: return
+		battle.objectives.task=Battle.Objectives.Task.ESCORT if style==3 else Battle.Objectives.Task.COURT
+		if style==0:
+			hud.update_model(battle,paused)
+			return
 		for i in battle.companies_per_side:
 			var mission:=Battle.Mission.PRESS
-			if style==1:
-				if i in [2,7]: mission=Battle.Mission.ESCORT
+			if style in [1,3]:
+				if style==3 and i%4 in [1,2]: mission=Battle.Mission.ESCORT
+				elif i in [2,7]: mission=Battle.Mission.ESCORT
 				elif i in [0,4]: mission=Battle.Mission.FLANK
 			else: mission=Battle.Mission.HOLD if i%4==3 else Battle.Mission.WITHDRAW
 			battle.command(i,mission,Battle.Channel.FLAG)
 		hud.select_company(battle,hud.unit.selected)
-		battle.notice="全军任务已分配，可逐队调整")
+		battle.notice="全军任务已分配，可逐队调整"
+		hud.update_model(battle,paused))
 	hud.muster_apply.connect(func(index: int,slot: int,shape: int,front: int):
 		if battle.deploy_company(index,slot,shape,front):
 			battle.notice="部署已定 · %02d 队 %s" % [index+1,Battle.FORMATIONS[shape]]
@@ -309,6 +315,7 @@ func _physics_process(delta: float) -> void:
 		var arrows_before := battle.arrow_count
 		var gate_before := battle.gate_hp
 		var personal:=battle.hero.impacts
+		var bruises:=battle.hero.received
 		var blocked:=battle.blocked_hits
 		var motion_before:=battle.hero.pos
 		var pose_before:=battle.hero.state
@@ -326,6 +333,8 @@ func _physics_process(delta: float) -> void:
 		if battle.hero.impacts>personal:
 			last_hero_hit=battle.tick
 			if near_hero: _cue_at("impact",-8,battle.hero.pos)
+		if near_hero and battle.hero.received>bruises:
+			_cue_at("shield" if battle.hero.state==Battle.State.GUARD and battle.blocked_hits>blocked else "wood",-9,battle.hero.pos)
 		if near_hero and pose_before==Battle.State.WINDUP and battle.hero.state==Battle.State.RECOVER and battle.hero.kit not in [5,6]:
 			_cue_at("swing",-19,battle.hero.pos)
 		step_distance+=motion_before.distance_to(battle.hero.pos)

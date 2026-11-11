@@ -21,7 +21,7 @@ static func _rows(items: Array, fields: Array) -> Array:
 	return rows
 
 static func snapshot(b: Battle) -> Dictionary:
-	return {"version":3,"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
+	return {"version":4,"officer_corps":b.corps.snapshot(),"traffic_enabled":b.traffic_enabled,"objectives":b.objectives.snapshot(),"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
 		"battle":_row(b,HEAD),"units":_rows(b.roster,UNIT),"companies":_rows(b.companies,COMPANY),
 		"orders":_rows(b.orders,ORDER),"shots":_rows(b.shots,SHOT),
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
@@ -45,13 +45,17 @@ static func _list(data: Dictionary,key: String,count: int) -> bool:
 	return data.get(key) is Array and data[key].size()==count
 
 static func restore(data: Variant) -> Battle:
-	if not data is Dictionary or data.get("version") not in [1,2,3] or data.get("side") not in Battle.SCALES: return null
+	if not data is Dictionary or data.get("version") not in [1,2,3,4] or data.get("side") not in Battle.SCALES: return null
 	if not data.get("seed") is int or not data.get("rng") is int or not data.get("weapon") is int or data.weapon<0 or data.weapon>8: return null
 	var b := Battle.new()
 	if not data.get("dry_muster",false) is bool: return null
-	b.setup(data.side,data.seed,data.weapon,data.version==3 and data.get("dry_muster",true))
+	var modern: bool=data.version==4
+	if modern and (not data.get("officer_corps") is Dictionary or not data.officer_corps.get("enabled") is bool or not data.get("traffic_enabled") is bool): return null
+	b.setup(data.side,data.seed,data.weapon,data.version>=3 and data.get("dry_muster",true),modern and data.officer_corps.enabled)
+	b.traffic_enabled=modern and data.traffic_enabled
+	b.objectives.enabled=modern
 	if not data.get("seat_origin",false) is bool: return null
-	b.seat_origin=data.version==3 and data.get("seat_origin",false)
+	b.seat_origin=data.version>=3 and data.get("seat_origin",false)
 	if b.seat_origin:
 		if not _list(data,"parked_heading",3): return null
 		for i in 3:
@@ -61,7 +65,7 @@ static func restore(data: Variant) -> Battle:
 	if not data.get("aim_at_wall_post",false) is bool or not data.get("locked_at_wall_post",false) is bool: return null
 	b.locked_at_wall_post=data.get("locked_at_wall_post",false)
 	b.aim_at_wall_post=data.get("aim_at_wall_post",false)
-	if data.version==3:
+	if data.version>=3:
 		var actions: Variant=data.get("camp_actions",[])
 		if not actions is Array or actions.size()>300: return null
 		var last:=-1
@@ -150,6 +154,7 @@ static func restore(data: Variant) -> Battle:
 	if not data.get("skill_clocks") is PackedFloat32Array or data.skill_clocks.size()!=4: return null
 	for cd in data.skill_clocks:
 		if not is_finite(cd) or cd<0: return null
+	if modern and (not b.corps.restore(b,data.officer_corps) or not b.objectives.restore(data.get("objectives"),b.tick)): return null
 	b.hero_cds=data.skill_clocks.duplicate()
 	b.rng.state=data.rng
 	b._rebuild_grid()

@@ -109,6 +109,12 @@ void vertex() {
 		v.y-=smoothstep(0.1,1.15,v.y)*0.19*dip;
 		v.z-=0.18*dip*smoothstep(0.4,1.3,v.y);
 	}
+	if (state==6 && !animal) {
+		float lowered=mix(0.61,0.34,p);
+		v=bend_x(v,vec3(0,0.34,0),-lowered);
+		v.y-=smoothstep(0.05,0.84,v.y)*lowered*0.39;
+		if (joint==4) v=bend_x(v,vec3(-0.25,1.24,0),-0.42-p*0.52);
+	}
 	if (state==4) {v=bend_x(v,vec3(0,0.45,0),-0.22*(1.0-p));}
 	if (state==7) {v=bend_x(v,vec3(0,0.11,0),-1.45*smoothstep(0.0,0.90,p));}
 	else if (state==5) {v=bend_x(v,vec3(0,0.5,0),0.15);}

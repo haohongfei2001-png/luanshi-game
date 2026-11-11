@@ -3,6 +3,9 @@ extends RefCounted
 ## The camera and rendering layer never participate in a decision or damage roll.
 const Arms := preload("res://scripts/field/arms.gd")
 const Ground := preload("res://scripts/field/ground.gd")
+const OfficerCorps := preload("res://scripts/field/officer_corps.gd")
+const Objectives := preload("res://scripts/field/field_objectives.gd")
+const Traffic := preload("res://scripts/field/formation_traffic.gd")
 const Profiles := preload("res://scripts/hero_combat_profiles.gd")
 const DT := 0.05
 const CELL := 6.0
@@ -101,6 +104,9 @@ const FORMATIONS := ["横阵","疏列","纵队"]
 const VANGUARDS := ["原有次序","盾枪在前","弓弩在前","骑兵在前"]
 var muster_slots: Array[Vector2] = []
 var dry_muster:=true
+var corps := OfficerCorps.new()
+var objectives := Objectives.new()
+var traffic_enabled := true
 var camp_actions: Array=[]
 var aftermath_hours := 0
 var at_camp := false
@@ -159,7 +165,7 @@ var riding_heading := Vector2.RIGHT
 var grid := PackedInt32Array()
 var links := PackedInt32Array()
 
-func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true) -> void:
+func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true,ranked_officers: bool=true) -> void:
 	assert(n in SCALES and roster.is_empty())
 	side_size = n
 	dry_muster=on_banks
@@ -232,6 +238,7 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 	vehicle_pos[2] = hero.pos + Vector2(-2.8, 2.2)
 	grid.resize(COLS * ROWS)
 	links.resize(roster.size())
+	corps.setup(self,ranked_officers)
 	_rebuild_grid()
 
 func _rank(u: Unit,front: int) -> int:
@@ -391,8 +398,8 @@ func command(squad: int, mission: int, channel: int) -> bool:
 	if squad < 0 or squad >= companies_per_side or mission < 0 or mission >= MISSIONS.size() or channel < 0 or channel >= CHANNELS.size() or result != "":
 		return false
 	var c := companies[squad]
-	var officer := roster[c.officer_id]
-	if not active(officer) and (not started or _observed(officer.pos)):
+	var officer: Unit = corps.recipient(self,c)
+	if not corps.can_command(self,c) and (not started or _observed(officer.pos)):
 		notice = "本队军官已失去指挥能力"
 		return false
 	if not started:
@@ -443,11 +450,11 @@ func _dispatches() -> void:
 	for at in range(orders.size()-1,-1,-1):
 		var order:=orders[at]
 		var c:=companies[order.squad]
-		var officer:=roster[c.officer_id]
+		var officer: Unit=corps.recipient(self,c)
 		order.age+=DT
 		if order.channel!=Channel.COURIER:
 			if order.age<order.delay: continue
-			if active(officer):
+			if corps.can_command(self,c):
 				_deliver(order,c)
 				if _observed(officer.pos): _report_order(order)
 			else:
@@ -463,7 +470,7 @@ func _dispatches() -> void:
 		var destination:=hero.pos if order.leg==1 else officer.pos
 		var direction:=order.pos.direction_to(Ground.waypoint(order.pos,destination))
 		order.pos=Ground.travel(order.pos,direction*7.0*DT,gate_hp<=0)
-		if (order.leg==0 and not active(officer)) or not _near(order.pos,1.55,1).is_empty() or order.age>90.0:
+		if (order.leg==0 and not corps.can_command(self,c)) or not _near(order.pos,1.55,1).is_empty() or order.age>90.0:
 			if order.leg==0: messages_lost+=1
 			if _observed(order.pos):
 				notice="%02d队传令中断" % (order.squad+1)
@@ -479,7 +486,7 @@ func _dispatches() -> void:
 			order.leg=1
 
 func _objective(c: Company) -> Vector2:
-	if not active(roster[c.officer_id]):
+	if not corps.can_command(self,c):
 		return c.home
 	if c.regrouping:
 		return Vector2(43.5,clampf(c.home.y,-16,16)) if c.team==1 else Vector2(-36,Ground.crossing(c.home.y))
@@ -589,8 +596,8 @@ func _near(at: Vector2, radius: float, team: int) -> Array[int]:
 				i = links[i]
 	return found
 
-func _release(u: Unit, move: Arms.Move) -> void:
-	if move.step != 0 and not (u.hero and seat_origin and vehicle!=0):
+func _release(u: Unit, move: Arms.Move,apply_stride: bool=true) -> void:
+	if apply_stride and move.step != 0 and not (u.hero and seat_origin and vehicle!=0):
 		_move(u, u.locked * move.step)
 	if move.shape in [Arms.Shape.PARRY, Arms.Shape.BRACE]:
 		_set_state(u, State.GUARD, move.recovery)
@@ -692,10 +699,12 @@ func _hurt(source: Unit, target: Unit, power: float, from: Vector2) -> void:
 	elif not target.hero and not target.officer and target.state != State.ROUT:
 		var c := companies[target.squad]
 		var cohesion := float(c.standing) / c.initial
-		if target.morale + cohesion * 0.30 < 0.71 or (not active(roster[c.officer_id]) and target.hp < target.max_hp * 0.50):
+		if target.morale + cohesion * 0.30 < 0.71 or (not corps.can_command(self,c) and target.hp < target.max_hp * 0.50):
 			_set_state(target, State.ROUT, 0)
 		elif damage > target.max_hp * 0.28 and target.state != State.GUARD:
 			_set_state(target, State.STAGGER, 0.17)
+	if source.officer or target.officer:
+		corps.after_hit(self,source,target)
 
 func _projectiles() -> void:
 	for at in range(shots.size()-1,-1,-1):
@@ -728,6 +737,7 @@ func _projectiles() -> void:
 			shots.remove_at(at)
 
 func _move(u: Unit, offset: Vector2) -> void:
+	if traffic_enabled and ram_hp>0: offset=Traffic.ram_motion(u.pos,offset,ram,u.id)
 	u.pos = Ground.travel(u.pos, offset, gate_hp <= 0)
 
 func _player_walk() -> void:
@@ -777,6 +787,7 @@ func _player_walk() -> void:
 		hero.facing = aim
 
 func _soldier(u: Unit) -> void:
+	if corps.act(self,u): return
 	var c := companies[u.squad]
 	var fleeing := u.state == State.ROUT
 	var withdrawing := fleeing or c.mission == Mission.WITHDRAW
@@ -788,6 +799,10 @@ func _soldier(u: Unit) -> void:
 	if at_post: goal=u.station
 	if u.engineer and ram_hp > 0 and gate_hp > 0:
 		goal = ram + Vector2(-0.75, (u.id % 4 - 1.5)*0.75)
+	if traffic_enabled and u.team==0 and not withdrawing and not at_post and not c.regrouping and ram_hp>0 and gate_hp>0:
+		if u.engineer: goal=Traffic.crew_station(ram,u.id)
+		elif c.mission==Mission.ESCORT: goal=Traffic.escort_station(ram,c.slot,u.station-c.home)
+		elif c.mission==Mission.PRESS and c.aim.x>=Ground.WALL_X-2.1: goal=Traffic.gate_station(c.slot,companies_per_side,c.home,u.station-c.home)
 	if withdrawing:
 		goal = Vector2(-98.0 if u.team == 0 else 100.0, signf(u.pos.y)*32)
 		if u.pos.distance_to(goal) < 3:
@@ -823,6 +838,10 @@ func _soldier(u: Unit) -> void:
 			u.fatigue = 0.6
 			return
 	var next := Ground.retreat_waypoint(u.pos, goal, gate_hp <= 0) if withdrawing else Ground.waypoint(u.pos, goal)
+	if traffic_enabled and not withdrawing and not at_post:
+		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0)
+	if traffic_enabled and ram_hp>0 and not at_post:
+		next=Traffic.around_ram(u.pos,next,ram,u.id)
 	var dist := u.pos.distance_to(next)
 	var speed := 5.8 if u.mounted else (4.1 if fleeing else 2.85)
 	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted),dist / DT)
@@ -837,11 +856,18 @@ func _soldier(u: Unit) -> void:
 		u.charge_speed=move_toward(u.charge_speed,actual if aligned else 0.0,DT*(5.0 if aligned else 12.0))
 
 func _state_step(u: Unit) -> void:
+	var prior:=u.timer
 	u.timer = maxf(0, u.timer-DT)
 	match u.state:
 		State.WINDUP:
+			var move:=_committed_move(u)
+			var footwork:=objectives.enabled and u.hero and vehicle==0 and move.step!=0.0
+			if footwork:
+				var before:=smoothstep(0.12,1.0,1.0-prior/u.duration)
+				var now:=smoothstep(0.12,1.0,1.0-u.timer/u.duration)
+				_move(u,u.locked*(now-before)*move.step)
 			if u.timer <= 0:
-				_release(u,_committed_move(u))
+				_release(u,move,not footwork)
 		State.RECOVER:
 			var move := _committed_move(u)
 			if move.shape == Arms.Shape.DOUBLE and not u.used_second and u.timer <= move.recovery * 0.55:
@@ -866,17 +892,27 @@ func _siege() -> void:
 			if ram.distance_to(Ground.GATE) < 3.3:
 				ram_timer -= DT*4
 				if ram_timer <= 0:
+					objectives.strokes+=1
 					gate_hp = maxf(0,gate_hp - 14.0 - crew*1.5)
 					ram_timer = 1.7
 			else:
 				ram = Ground.travel(ram,ram.direction_to(Ground.GATE)*DT*4*1.5,false)
 	if tick % 5 == 0:
-		var friendly := _near(Ground.COURT,7.0,0).size()
-		var enemy := _near(Ground.COURT,7.0,1).size()
+		var friendly := _court_holders(0)
+		var enemy := _court_holders(1)
 		if gate_hp <= 0 and friendly > enemy:
 			capture += DT*5
 		else:
 			capture = maxf(0,capture-DT*3)
+
+func _court_holders(team: int) -> int:
+	var contacts:=_near(Ground.COURT,7.0,team)
+	if not objectives.enabled: return contacts.size()
+	var standing:=0
+	for id in contacts:
+		var u:=roster[id]
+		if u.state!=State.ROUT and not corps.is_wounded(id): standing+=1
+	return standing
 
 func step() -> void:
 	if not started or result != "":
@@ -896,11 +932,12 @@ func step() -> void:
 		buffer_ticks-=1
 		if buffer_ticks==0: buffered_slot=-1
 	_rebuild_grid()
+	corps.advance(self)
 	_dispatches()
 	if tick == 1 or tick % 8 == 0:
 		for c in companies:
-			c.regrouping = active(roster[c.officer_id]) and c.standing*2 < c.initial and c.standing>0 and c.mission in [Mission.PRESS,Mission.HOLD]
-			c.aim = _objective(c)
+			c.regrouping = corps.can_command(self,c) and c.standing*2 < c.initial and c.standing>0 and c.mission in [Mission.PRESS,Mission.HOLD]
+			c.aim = corps.guide_company(self,c,_objective(c))
 	for u in roster:
 		u.before = u.pos
 		if active(u) and not u.hero and u.state == State.MARCH:
@@ -922,6 +959,13 @@ func step() -> void:
 		u.stride = fposmod(u.stride + u.pos.distance_to(u.before) * 0.68, 1.0)
 	_projectiles()
 	_siege()
+	if objectives.enabled:
+		result=objectives.resolve(self)
+		return
+	_resolve_historical()
+
+# Version 1–3 checkpoints replay their original adjudication from their saved tick.
+func _resolve_historical() -> void:
 	if hero.hp <= 0:
 		result = "主将阵亡"
 	elif capture >= 6.0:
@@ -948,5 +992,5 @@ func report() -> Dictionary:
 		"tick":tick,"result":result,"hits":hits.duplicate(),"attacks":attacks,
 		"blocked_hits":blocked_hits,"projectiles":arrow_count,"dead":losses.duplicate(),
 		"escaped":escaped.duplicate(),"routing":[routed(0),routed(1)],"dropped_weapons":equipment.duplicate(),
-		"gate_hp":gate_hp,"ram_hp":ram_hp,"capture_sec":capture,
+		"gate_hp":gate_hp,"ram_hp":ram_hp,"capture_sec":capture,"mission":Objectives.TITLES[objectives.task],"ram_strokes":objectives.strokes,"decision":objectives.decision,"officer_corps":corps.summary(self),
 		"orders_delivered":messages_arrived,"orders_lost":messages_lost,"orders_refused":messages_refused,"hero_hp":hero.hp}
