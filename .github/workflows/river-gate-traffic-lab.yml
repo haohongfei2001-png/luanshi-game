@@ -1,75 +1,54 @@
-name: River gate traffic replay
+name: Archive measured soft density and rendered comparisons
 on:
   push:
     branches: [codex/river-gate-lane-lab]
 permissions:
-  contents: read
+  contents: write
+  actions: read
 jobs:
-  replay:
+  record:
     runs-on: ubuntu-24.04
-    timeout-minutes: 11
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Install the verified Godot binary
-        run: |
-          set -euo pipefail
-          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
-          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
-          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
-          unzip -q /tmp/godot.zip -d /tmp/godot
-          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
-      - name: Read the exact integrated game and the latest measuring scripts
-        run: |
-          set -euo pipefail
-          git fetch --no-tags --depth=1 origin 2ad18fd0f3feea89eefa757f49d9941b11d60dd7
-          git archive FETCH_HEAD | tar -x
-          git fetch --no-tags --depth=1 origin 1f6ab836e752de3e55b6b829503769774c96cd0b
-          git show FETCH_HEAD:tests/field_traffic.gd > tests/field_traffic.gd
-          git show FETCH_HEAD:tests/field_traffic_capture.gd > tests/field_traffic_capture.gd
-          test "$(git show FETCH_HEAD:scripts/field/formation_traffic.gd | sha256sum)" = "$(sha256sum < scripts/field/formation_traffic.gd)"
-          printf '%s\n' '2ad18fd0f3feea89eefa757f49d9941b11d60dd7' '1f6ab836e752de3e55b6b829503769774c96cd0b'
-      - name: Compare a full siege with and without formation traffic
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts
-          touch artifacts/.gdignore
-          godot --headless --version
-          ./tools/prepare-font.sh
-          godot --headless --path . --editor --import > /tmp/traffic-import.log 2>&1
-          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/traffic-import.log; then exit 1; fi
-          timeout 4m godot --headless --path . --script tests/field_traffic.gd 2>&1 | tee artifacts/formation-traffic.log
-          grep -q '^FIELD_TRAFFIC_PASS' artifacts/formation-traffic.log
-          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/formation-traffic.log; then exit 1; fi
-      - name: Measure actual near and far frame intervals without readback
-        env:
-          LIBGL_ALWAYS_SOFTWARE: '1'
-        run: |
-          set -euo pipefail
-          timeout 180s xvfb-run -a -s '-screen 0 960x600x24' godot --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --script tests/field_traffic_capture.gd -- --field-size=512 --traffic-frame-probe 2>&1 | tee artifacts/formation-traffic-frame-times.log
-          grep -q '^FIELD_TRAFFIC_PROFILE_PASS' artifacts/formation-traffic-frame-times.log
-          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/formation-traffic-frame-times.log; then exit 1; fi
-      - name: Record the entire approaching and opening gate section separately
-        if: always() && !cancelled()
-        env:
-          LIBGL_ALWAYS_SOFTWARE: '1'
-        run: |
-          set -euo pipefail
-          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
-          timeout 190s xvfb-run -a -s '-screen 0 960x600x24' godot --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 20 --script tests/field_traffic_capture.gd -- --field-size=512 2>&1 | tee artifacts/formation-traffic-camera.log
-          grep -q '^FIELD_TRAFFIC_CAMERA_PASS' artifacts/formation-traffic-camera.log
-          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/formation-traffic-camera.log; then exit 1; fi
-          ffmpeg -nostdin -v error -y -framerate 10 -i artifacts/formation-traffic/original/frame-%03d.jpg -framerate 10 -i artifacts/formation-traffic/with-lanes/frame-%03d.jpg -filter_complex "[0:v][1:v]hstack=inputs=2,pad=iw:ih+30:0:30:color=0x18211f,drawtext=text='Original':x=12:y=4:fontsize=20:fontcolor=white,drawtext=text='Formation lanes and crowd pressure':x=w/2+12:y=4:fontsize=20:fontcolor=white" -c:v libx264 -crf 21 -preset veryfast -pix_fmt yuv420p -movflags +faststart artifacts/formation-traffic-comparison.mp4
-          ffmpeg -nostdin -v error -i artifacts/formation-traffic-comparison.mp4 -frames:v 1 -vf "select='eq(n,0)+eq(n,60)+eq(n,118)',scale=1440:-2,tile=1x3" -q:v 3 artifacts/traffic-review-sheet.jpg
-          cd artifacts
-          sha256sum formation-traffic-comparison.mp4 formation-traffic.log formation-traffic-camera.log formation-traffic-frame-times.log traffic-review-sheet.jpg > SHA256SUMS
-      - uses: actions/upload-artifact@v4
-        if: always()
+        with:
+          ref: codex/river-gate-lane-evidence
+      - uses: actions/download-artifact@v4
         with:
           name: river-gate-density-and-frames
-          path: |
-            artifacts/formation-traffic.log
-            artifacts/formation-traffic-camera.log
-            artifacts/formation-traffic-frame-times.log
-            artifacts/formation-traffic-comparison.mp4
-            artifacts/traffic-review-sheet.jpg
-            artifacts/SHA256SUMS
+          run-id: 43121731374
+          github-token: ${{ github.token }}
+          path: /tmp/field-audit
+      - name: Save the verified game output on the evidence branch
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'b35c8ce19413be71398ec4157ca2c25813a6a023'
+          folder=docs/evidence/river-gate-formation-traffic/soft-density
+          mkdir -p "$folder"
+          cp /tmp/field-audit/formation-traffic-comparison.mp4 /tmp/field-audit/formation-traffic.log /tmp/field-audit/formation-traffic-camera.log /tmp/field-audit/formation-traffic-frame-times.log /tmp/field-audit/traffic-review-sheet.jpg /tmp/field-audit/SHA256SUMS "$folder/"
+          (cd "$folder" && sha256sum -c SHA256SUMS)
+          cat > "$folder/provenance.json" <<'PROVENANCE'
+          {
+            "stage": "河关兵流、役兵接替与软密度对照",
+            "simulation_source": "2ad18fd0f3feea89eefa757f49d9941b11d60dd7",
+            "evidence_tests_source": "1f6ab836e752de3e55b6b829503769774c96cd0b",
+            "workflow": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43121731374",
+            "seed": 61112,
+            "ordinary_soldiers": [
+              512,
+              512
+            ],
+            "controlled_variables": "相同军官、部署、命令、输入、真实命中和伤亡计算；原轨关闭 formation traffic 和 soft crowd，新轨同时开启。",
+            "simulation_window": "tick 100 至 620，按 tick 计时，半秒采样近距重合与密度；守门吞吐另取每轨破门后的相同 6 秒。",
+            "frame_profile": "Ubuntu 24.04，Godot 4.6.3，Xvfb 960×600 + llvmpipe。关闭垂直同步，无屏幕读回和编码，每三张渲染帧走一个真实20Hz战斗步，每个镜头每轨90张。这里记录相同负载的实时时钟帧开销。",
+            "recording": "单独的固定时钟实录。左右是相同世界坐标和游戏时刻，tick 260–736，每4个20Hz步记录每轨1帧，视频按10FPS播放，相当于2倍游戏时间。",
+            "M5": "DEVICE_NOT_TESTED",
+            "earlier_evidence": "上层目录对照的是 aa517095 上第一个门板/冲车方案。那段视频首帧的 HUD 仍在等待第一次刷新；本目录已将 HUD 与各采样时刻同步。",
+            "runner": "ubuntu-24.04, Godot 4.6.3, Mesa llvmpipe LLVM 20.1.2 256-bit"
+          }
+          PROVENANCE
+          git add -f -- "$folder/formation-traffic-comparison.mp4" "$folder/formation-traffic.log" "$folder/formation-traffic-camera.log" "$folder/formation-traffic-frame-times.log" "$folder/traffic-review-sheet.jpg" "$folder/SHA256SUMS" "$folder/provenance.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive moving near and far frame samples plus the defended gate footage'
+          git push origin HEAD:refs/heads/codex/river-gate-lane-evidence
