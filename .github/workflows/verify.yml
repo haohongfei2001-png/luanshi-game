@@ -38,6 +38,7 @@ jobs:
       - name: Measure contact at four army sizes and record a separate 512v512 run
         run: |
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          ./tools/test-field-journey.sh
           ./tools/test-field-render.sh
       - name: Verify youth narrative interface and real input path
         env:
@@ -116,6 +117,7 @@ jobs:
             artifacts/river-gate-512.mp4
             artifacts/player-nine-weapons.mp4
             artifacts/river-gate-full-siege.mp4
+            artifacts/river-gate-journey.mp4
           if-no-files-found: error
       - name: Upload evidence and hashes
         if: always()

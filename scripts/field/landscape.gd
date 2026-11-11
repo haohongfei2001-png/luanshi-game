@@ -142,6 +142,13 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) ->
 		var top_b := base+Vector3(ridge,rise,0)
 		b.quad(outer_a,outer_b,low_b,low_a,col.lightened(0.05))
 		b.quad(low_a,low_b,top_b,top_a,col)
+		# Broad bands follow the pitched tiles; their width survives mip filtering.
+		for course in 4:
+			var t:=0.14+course*0.205
+			var a:=low_a.lerp(top_a,t)+Vector3.UP*0.015
+			var d0:=low_b.lerp(top_b,t)+Vector3.UP*0.015
+			b.quad(a,d0,low_b.lerp(top_b,t+0.035)+Vector3.UP*0.015,low_a.lerp(top_a,t+0.035)+Vector3.UP*0.015,col.lightened(0.13))
+		b.rod(outer_a,outer_b,0.080,0.080,WOOD,4)
 		b.tri(outer_a,low_a,top_a,col)
 		b.tri(outer_b,top_b,low_b,col)
 	for side: float in [-1,1]:
@@ -154,6 +161,11 @@ func _tower(b: Builder,p: Vector3) -> void:
 	for x: float in [-1.95,1.95]:
 		for z: float in [-1.95,1.95]:
 			b.block(p+Vector3(x,5.55,z),Vector3(0.28,2.5,0.28),WOOD)
+	for side: float in [-1,1]:
+		b.block(p+Vector3(0,5.02,side*2.20),Vector3(4.6,0.10,0.12),WOOD)
+		b.block(p+Vector3(0,4.72,side*2.20),Vector3(4.6,0.075,0.10),WOOD)
+		for x: float in [-1.1,0,1.1]:
+			b.block(p+Vector3(x,4.72,side*2.2),Vector3(0.085,0.65,0.095),WOOD)
 	_roof(b,p+Vector3(0,6.55,0),3.62,3.37,1.45,SLATE)
 
 func _fort(b: Builder) -> void:

@@ -2,9 +2,11 @@ extends CanvasLayer
 const Arms := preload("res://scripts/field/arms.gd")
 const Battle := preload("res://scripts/field/battle.gd")
 const FontUI := preload("res://scripts/youth_ui.gd")
+signal plan_requested(style: int)
 signal muster_apply(company: int,slot: int,shape: int,front: int)
 signal camp_requested
 signal camp_wait
+signal camp_order(command: String)
 signal back_report
 signal deploy
 signal campaign
@@ -16,6 +18,7 @@ signal order_requested(company: int, mission: int, channel: int)
 signal retry
 signal save_requested
 signal load_requested
+var marker:=preload("res://scripts/field/hero_marker.gd").new()
 var root_control := Control.new()
 var inset := preload("res://scripts/field/map_inset.gd").new()
 var objective := Label.new()
@@ -43,6 +46,7 @@ var toggle_help := false
 var slot := OptionButton.new()
 var shape := OptionButton.new()
 var front := OptionButton.new()
+var plan:=OptionButton.new()
 var deployment := VBoxContainer.new()
 var orders := VBoxContainer.new()
 var select_title := Label.new()
@@ -50,6 +54,11 @@ var context := Label.new()
 var details := Button.new()
 var apply_position := Button.new()
 var issue := Button.new()
+var journey := OptionButton.new()
+var march_button := Button.new()
+var ration_button := Button.new()
+var travel_row:=HBoxContainer.new()
+var route_location:="?"
 var resume_camp := Button.new()
 var wait_hour := Button.new()
 var report_button := Button.new()
@@ -60,6 +69,7 @@ var phase := -1
 
 
 func _ready() -> void:
+	add_child(marker)
 	add_child(root_control)
 	root_control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root_control.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -122,6 +132,8 @@ func _ready() -> void:
 	_label(stack,context,14,Color("c1d0c2"))
 	_select(stack,unit,"部队",[])
 	stack.add_child(orders)
+	_select(orders,plan,"全军",["自由部署","协同攻门","交替撤离"])
+	plan.item_selected.connect(func(index: int): plan_requested.emit(index))
 	_select(orders,weapon,"兵器",Arms.NAMES)
 	weapon.select(Arms.Kit.SPEAR)
 	weapon.item_selected.connect(func(i: int): weapon_changed.emit(i))
@@ -147,6 +159,12 @@ func _ready() -> void:
 	var summary := VBoxContainer.new()
 	result_box.add_child(summary)
 	_label(summary,result_text,19,Color("f0dfb2"))
+	summary.add_child(travel_row)
+	journey.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	travel_row.add_child(journey)
+	_button(travel_row,march_button,"行军",func():
+		if journey.selected>=0: camp_order.emit(str(journey.get_item_metadata(journey.selected))))
+	_button(travel_row,ration_button,"就地补粮",func(): camp_order.emit("ration"))
 	var choices:=HBoxContainer.new()
 	summary.add_child(choices)
 	_button(choices,resume_camp,"继续随军",func(): camp_requested.emit())
@@ -202,6 +220,7 @@ func bind(b: Battle) -> void:
 	unit.clear()
 	slot.clear()
 	phase=-1
+	plan.select(0)
 	for i in b.companies_per_side:
 		var point:=b.muster_slots[i]
 		var wing: String="北翼" if point.y< -5 else ("南翼" if point.y>5 else "中军")
@@ -229,6 +248,7 @@ func update_model(b: Battle,paused: bool) -> void:
 		orders.show()
 		details.text="调整阵位与兵种"
 		details.visible=phase==0
+		plan.get_parent().visible=phase==0
 		weapon.get_parent().visible=phase==0
 		channel.get_parent().visible=phase==1
 		legacy.visible=phase!=1
@@ -263,6 +283,7 @@ func update_model(b: Battle,paused: bool) -> void:
 	action_text.text="　　 ".join(line)+"　　　 H 操作"
 	result_box.visible=b.result!=""
 	if result_box.visible:
+		travel_row.visible=b.at_camp
 		resume_camp.visible=b.hero.hp>0 and not b.at_camp
 		wait_hour.visible=b.at_camp
 		report_button.visible=b.at_camp
@@ -271,8 +292,26 @@ func update_model(b: Battle,paused: bool) -> void:
 func show_receipt(b: Battle,receipt: Dictionary,world: Dictionary) -> void:
 	var army: Dictionary=world.army
 	if b.at_camp:
+		var local: Dictionary=world.local_city
+		ration_button.disabled=local.is_empty() or local.owner!=army.owner or local.food<=0
+		if route_location!=army.location:
+			route_location=army.location
+			journey.clear()
+			for id: String in world.routes:
+				var road: Dictionary=world.routes[id]
+				if army.location!=road.from and army.location!=road.to: continue
+				var destination: String=road.to if road.from==army.location else road.from
+				var road_name: String={"road":"驿道","mountain":"山路","river":"河道","grain_road":"粮道"}[id]
+				var city_name: String={"hequ":"河关","pingling":"平陵","anping":"安平"}[destination]
+				journey.add_item("%s → %s · %d时" % [road_name,city_name,road.hours])
+				journey.set_item_metadata(journey.item_count-1,id)
+		march_button.disabled=journey.item_count==0 or army.soldiers<=0
+		journey.visible=journey.item_count>0
 		var place: String={"hequ":"河关","pingling":"平陵","anping":"安平"}.get(army.location,"行军途中")
 		result_text.text="军中整备 · %s\n战后 %d 小时　军历第 %d 时\n在册 %d 人　兵器 %d 件　存粮 %d\n已送达军报 %d 份" % [place,b.aftermath_hours,world.hour,army.soldiers,army.weapons,army.food,world.reports.size()]
+		if not army.march.is_empty():
+			var arrival: String={"hequ":"河关","pingling":"平陵","anping":"安平"}[army.march.destination]
+			result_text.text+="\n前往%s · 预计第 %d 时到达" % [arrival,army.march.arrives_at]
 		if not world.reports.is_empty():
 			var latest: Dictionary=world.reports.back()
 			var subject: String={"hequ":"河关","pingling":"平陵","anping":"安平","relief":"本军"}.get(latest.subject,"沿线")

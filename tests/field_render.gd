@@ -120,12 +120,13 @@ func _measure(count: int) -> void:
 	var span: float=(previous-begin)/1000.0
 	clips.sort(); cpu.sort(); gpu.sort(); draws.sort()
 	var record:=b.report()
+	var rss:=_resident_kib()
 	record.merge({"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"device":RenderingServer.get_video_adapter_name(),
 		"viewport_px":[root.size.x,root.size.y],"render_scale":root.scaling_3d_scale,"shadows":true,"seed":Battle.SEED,"frame_samples":clips.size(),
 		"wall_seconds":span/1000.0,"fps":clips.size()*1000.0/maxf(span,0.01),"mean_ms":span/maxi(1,clips.size()),"p95_ms":_pct(clips,0.95),"p99_ms":_pct(clips,0.99),
 		"sim_ms_per_tick":float(field.sim_us-sim_begin)/maxi(1,b.tick-first_tick)/1000.0,"view_script_ms_per_frame":float(field.view_us-view_begin)/maxi(1,clips.size())/1000.0,
 		"render_cpu_p95_ms":_pct(cpu,0.95),"render_gpu_p95_ms":_pct(gpu,0.95),"draw_calls_p95":_pct(draws,0.95),
-		"static_memory_bytes":OS.get_static_memory_usage(),"input_observed_ms":latency,"peak_visible_combat_poses":peak_poses,"last_visible_soldiers":field.view.visible_soldiers,"last_high_detail_soldiers":field.view.high_detail_soldiers,"hits_during_sample":b.hits[0]+b.hits[1]-before_hits})
+		"resident_kib":rss,"median_ms":_pct(clips,0.50),"last_rank_soldiers":field.view.rank_soldiers,"static_memory_bytes":OS.get_static_memory_usage(),"input_observed_ms":latency,"peak_visible_combat_poses":peak_poses,"last_visible_soldiers":field.view.visible_soldiers,"last_high_detail_soldiers":field.view.high_detail_soldiers,"hits_during_sample":b.hits[0]+b.hits[1]-before_hits})
 	totals.append(record)
 	print("FIELD_FRAME_SAMPLE "+JSON.stringify(record))
 	var pic:=root.get_texture().get_image()
@@ -135,6 +136,16 @@ func _measure(count: int) -> void:
 	var raw_file:=FileAccess.open("res://artifacts/field-frame-times-%d.json"%count,FileAccess.WRITE)
 	raw_file.store_string(JSON.stringify(raw))
 	file.store_string(JSON.stringify(totals,"  "))
+
+func _resident_kib() -> int:
+	var proc:=FileAccess.open("/proc/self/status",FileAccess.READ)
+	if not proc: return -1
+	while not proc.eof_reached():
+		var line:=proc.get_line()
+		if line.begins_with("VmRSS:"):
+			for part in line.replace("\t"," ").split(" ",false):
+				if part.is_valid_int(): return part.to_int()
+	return -1
 
 func _pct(a: Array[float],p: float) -> Variant:
 	if a.is_empty(): return null
@@ -191,14 +202,15 @@ func _paired_detail() -> void:
 	field.follow=false
 	field.camera.size=28
 	field.pan_to(Vector2(1,-18))
-	var samples: Array=[[],[]]
-	var triangles := [0,0]
+	var samples: Array=[[],[],[]]
+	var triangles := [0,0,0]
 	var visible := -1
 	for frame in 12:
 		field.battle.step()
-		for half in 2:
-			var ref: int=(frame+half)%2
-			field.view.reference_detail=bool(ref)
+		for half in 3:
+			var ref: int=(frame+half)%3
+			field.view.reference_detail=ref==1
+			field.view.reference_two_lods=ref==2
 			await RenderingServer.frame_post_draw
 			var before:=Time.get_ticks_usec()
 			await RenderingServer.frame_post_draw
@@ -210,9 +222,10 @@ func _paired_detail() -> void:
 	for series in samples: series.sort()
 	var pair: Dictionary={"poses":10,"visible_soldiers_last":visible,"per_side":field.battle.side_size,
 		"optimized_median_render_ms":samples[0][5],"full_detail_median_render_ms":samples[1][5],
-		"optimized_primitives":triangles[0],"full_detail_primitives":triangles[1]}
+		"optimized_primitives":triangles[0],"full_detail_primitives":triangles[1],"previous_two_lods_median_ms":samples[2][5],"previous_two_lods_primitives":triangles[2]}
 	print("FIELD_PAIRED_LOD "+JSON.stringify(pair))
 	var file:=FileAccess.open("res://artifacts/field-lod-paired.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(pair,"  "))
 	field.view.reference_detail=false
+	field.view.reference_two_lods=false
 	field.set_physics_process(true)

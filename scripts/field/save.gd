@@ -21,7 +21,7 @@ static func _rows(items: Array, fields: Array) -> Array:
 	return rows
 
 static func snapshot(b: Battle) -> Dictionary:
-	return {"version":3,"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
+	return {"version":3,"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
 		"battle":_row(b,HEAD),"units":_rows(b.roster,UNIT),"companies":_rows(b.companies,COMPANY),
 		"orders":_rows(b.orders,ORDER),"shots":_rows(b.shots,SHOT),
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
@@ -48,11 +48,20 @@ static func restore(data: Variant) -> Battle:
 	if not data is Dictionary or data.get("version") not in [1,2,3] or data.get("side") not in Battle.SCALES: return null
 	if not data.get("seed") is int or not data.get("rng") is int or not data.get("weapon") is int or data.weapon<0 or data.weapon>8: return null
 	var b := Battle.new()
-	b.setup(data.side,data.seed,data.weapon)
+	if not data.get("dry_muster",false) is bool: return null
+	b.setup(data.side,data.seed,data.weapon,data.version==3 and data.get("dry_muster",true))
 	if not data.get("aim_at_wall_post",false) is bool or not data.get("locked_at_wall_post",false) is bool: return null
 	b.locked_at_wall_post=data.get("locked_at_wall_post",false)
 	b.aim_at_wall_post=data.get("aim_at_wall_post",false)
 	if data.version==3:
+		var actions: Variant=data.get("camp_actions",[])
+		if not actions is Array or actions.size()>300: return null
+		var last:=-1
+		for op in actions:
+			if not op is Array or op.size()!=2 or not op[0] is int or not op[1] is String: return null
+			if op[0]<last or op[0]<0 or op[0]>168 or op[1] not in ["road","river","mountain","grain_road","ration"]: return null
+			last=op[0]
+		b.camp_actions=actions.duplicate(true)
 		if not b.restore_muster(data.get("muster")): return null
 		for k in ["aftermath_hours","at_camp","breath","winded","buffer_ticks","buffered_slot","buffer_aim","buffer_wall"]:
 			if not _valid(data.get(k),b.get(k)): return null
@@ -63,7 +72,8 @@ static func restore(data: Variant) -> Battle:
 		header=header.duplicate()
 		header.append(0)
 	if not _apply(b,HEAD,header) or b.tick<0 or b.vehicle<0 or b.vehicle>2: return null
-	if (b.aftermath_hours>0 or b.at_camp) and b.result=="": return null
+	if (b.aftermath_hours>0 or b.at_camp or not b.camp_actions.is_empty()) and b.result=="": return null
+	if not b.camp_actions.is_empty() and b.camp_actions.back()[0]>b.aftermath_hours: return null
 	if data.version==1:
 		b.legacy_missiles=b.started
 	else:

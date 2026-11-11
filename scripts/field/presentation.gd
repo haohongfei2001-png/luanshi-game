@@ -7,6 +7,7 @@ const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
 const FRIEND := Color("3e7271")
 const FOE := Color("a35340")
+const CLOTH_COLOR:=Color("dbcba4")
 const GOLD := Color("c3a45e")
 
 class Batch:
@@ -19,6 +20,8 @@ var groups: Dictionary = {}
 var contact: Batch
 var contact_for_all:=false
 var reference_detail := false
+var reference_two_lods:=false
+var rank_soldiers:=0
 var high_detail_soldiers := 0
 var horse: Batch
 var cart: Batch
@@ -56,9 +59,11 @@ func configure(model: Battle) -> void:
 	battle = model
 	var near_mesh: Array[Mesh] = []
 	var far_mesh: Array[Mesh] = []
+	var ranks_mesh: Array[Mesh]=[]
 	for kit in Arms.NAMES.size():
 		near_mesh.append(Figures.fighter(kit,true))
 		far_mesh.append(Figures.silhouette(kit))
+		ranks_mesh.append(Figures.ranks(kit))
 	var counts := {}
 	for u in battle.roster:
 		var key := _key(u)
@@ -71,6 +76,8 @@ func configure(model: Battle) -> void:
 		if key<20:
 			groups[30+key]=_batch(far_mesh[kit],mat,counts[key])
 			groups[30+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			groups[60+key]=_batch(ranks_mesh[kit],mat,counts[key])
+			groups[60+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
@@ -103,6 +110,9 @@ func configure(model: Battle) -> void:
 	flag.tri(Vector3(0.89,3.41,0.09),Vector3(1.32,3.34,0.16),Vector3(0.90,3.06,0.15),Color.WHITE)
 	flag.dye = 0
 	flag.block(Vector3(0.38,3.11,0.02),Vector3(0.13,0.42,0.09),GOLD)
+	# A notched tail and two light hems remain legible beyond clothing detail.
+	flag.quad(Vector3(0,3.49,0.012),Vector3(0.9,3.42,0.101),Vector3(0.9,3.36,0.105),Vector3(0,3.43,0.012),CLOTH_COLOR)
+	flag.tri(Vector3(0.91,2.96,0.15),Vector3(1.36,2.77,0.19),Vector3(0.91,2.72,0.18),GOLD)
 	var fm := flag.finish()
 	for team in 2:
 		standards.append(_batch(fm,_material(FRIEND if team==0 else FOE,0),battle.companies_per_side))
@@ -124,6 +134,7 @@ func _reserve(g: Batch,count: int) -> void:
 func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) -> void:
 	visible_soldiers = 0
 	high_detail_soldiers=0
+	rank_soldiers=0
 	contact.used=0
 	visible_fighting = 0
 	shown_fallen = 0
@@ -157,7 +168,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			base.y += 0.83 if battle.vehicle==1 else 0.91
 		var full := reference_detail or u.hero or u.officer or (zoom<17 and p.distance_squared_to(center)<110) or (zoom<36 and p.distance_squared_to(center)<19)
 		var key:=_key(u)
-		if not full:
+		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and p.distance_squared_to(center)>170.0)):
+			key+=60
+			rank_soldiers+=1
+		elif not full:
 			key+=30
 		elif not u.hero and not u.officer:
 			high_detail_soldiers+=1

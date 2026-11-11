@@ -45,8 +45,13 @@ func bind(model: Field) -> bool:
 		if not sync(): return false
 		if field.result!="" and settle().is_empty(): return false
 		if (field.at_camp or field.aftermath_hours>0) and (_state.campaign_ended or receipt.is_empty()): return false
-		for hour in field.aftermath_hours:
-			if not advance(1): return false
+		var cursor:=0
+		for hour in field.aftermath_hours+1:
+			while cursor<field.camp_actions.size() and field.camp_actions[cursor][0]==hour:
+				if not _camp_action(field.camp_actions[cursor][1]): return false
+				cursor+=1
+			if hour<field.aftermath_hours and not advance(1): return false
+		if cursor!=field.camp_actions.size(): return false
 	return audit().is_empty() and audit_quivers()
 
 static func _ammo_kind(kit: int) -> int:
@@ -266,4 +271,18 @@ func enter_camp() -> bool:
 func wait_at_camp() -> bool:
 	if not field.at_camp or field.aftermath_hours>=168 or _state.campaign_ended or not advance(1): return false
 	field.aftermath_hours+=1
+	return true
+
+func _camp_action(command: String) -> bool:
+	if command=="ration":
+		var army: Dictionary=_state.armies.relief
+		var local: Dictionary=_state.cities.get(army.location,{})
+		if local.is_empty(): return false
+		var batch:=mini(army.soldiers,local.food)
+		return batch>0 and transfer(army.location,"relief","food",batch)
+	return march(command)
+
+func camp_order(command: String) -> bool:
+	if not field.at_camp or field.camp_actions.size()>=300 or _state.campaign_ended or not _camp_action(command): return false
+	field.camp_actions.append([field.aftermath_hours,command])
 	return true

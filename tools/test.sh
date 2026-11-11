@@ -17,6 +17,7 @@ if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; 
 "$GODOT" --headless --path . --check-only --script tests/field_render.gd
 "$GODOT" --headless --path . --check-only --script tests/field_controls.gd
 "$GODOT" --headless --path . --check-only --script tests/field_siege_film.gd
+"$GODOT" --headless --path . --check-only --script tests/field_playthrough.gd
 "$GODOT" --headless --path . --fixed-fps 60 --quit-after 1100 -- --field-check 2>&1 | tee artifacts/field-package-source.log
 grep -q '^FIELD_PACKAGE_PASS' artifacts/field-package-source.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-package-source.log; then exit 1; fi

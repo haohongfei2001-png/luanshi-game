@@ -100,6 +100,8 @@ class Dispatch:
 const FORMATIONS := ["横阵","疏列","纵队"]
 const VANGUARDS := ["原有次序","盾枪在前","弓弩在前","骑兵在前"]
 var muster_slots: Array[Vector2] = []
+var dry_muster:=true
+var camp_actions: Array=[]
 var aftermath_hours := 0
 var at_camp := false
 var sprinting := false
@@ -155,9 +157,10 @@ var riding_heading := Vector2.RIGHT
 var grid := PackedInt32Array()
 var links := PackedInt32Array()
 
-func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void:
+func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true) -> void:
 	assert(n in SCALES and roster.is_empty())
 	side_size = n
+	dry_muster=on_banks
 	rng.seed = seed_value
 	companies_per_side = ceili(float(n) / 32.0)
 	var bands := mini(5, companies_per_side)
@@ -175,6 +178,8 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 				var post := c-ceili(companies_per_side*0.58)
 				company.home = Vector2(55.5 + floorf(post/3.0)*8.4, (post%3-1)*12.0)
 			company.mission = Mission.PRESS if team == 0 else Mission.HOLD
+			if team==0 and dry_muster and company.home.x< -23:
+				company.home.x=Ground.RIVER_X-7.3
 			company.slot=c
 			if team==0: muster_slots.append(company.home)
 			company.aim = company.home
