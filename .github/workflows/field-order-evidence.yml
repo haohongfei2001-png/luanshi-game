@@ -1,0 +1,37 @@
+name: Compare orders on the verified river-gate game
+on:
+  push:
+    branches: [codex/river-gate-evidence-20261112]
+    paths: ['.github/workflows/field-order-evidence.yml', 'tests/field_orders_comparison.gd']
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check the game tree and run three legitimate deployments
+        run: |
+          set -euo pipefail
+          git diff --exit-code e20cb984aabe84b80c5472c8db124229de200e61 HEAD -- scripts scenes assets project.godot
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/field-godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/field-godot.zip' | sha512sum -c -
+          unzip -q /tmp/field-godot.zip -d /tmp/field-engine
+          ENGINE=/tmp/field-engine/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          "$ENGINE" --headless --path . --editor --import > artifacts/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/import.log; then exit 1; fi
+          "$ENGINE" --headless --path . --check-only --script tests/field_orders_comparison.gd
+          timeout 120s "$ENGINE" --headless --path . --script tests/field_orders_comparison.gd | tee artifacts/deployments.log
+          test "$(grep -c '^FIELD_ORDER_TRIAL' artifacts/deployments.log)" = 3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: natural-deployment-comparison
+          path: artifacts/
