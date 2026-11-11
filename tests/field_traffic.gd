@@ -207,12 +207,14 @@ func _escort_spread(b: Battle) -> Dictionary:
 	# An isolated skirmisher or a single horse cannot dominate the measurement.
 	var x := PackedFloat32Array()
 	var z := PackedFloat32Array()
+	var occupied := {}
 	for u in b.roster:
 		if u.team != 0 or u.officer or u.hero or not b.active(u) or u.state == Battle.State.ROUT: continue
 		if b.companies[u.squad].mission != Battle.Mission.ESCORT: continue
 		x.append(u.pos.x)
 		z.append(u.pos.y)
-	var row := {"tick": b.tick, "ordinary": x.size(), "depth_m": 0.0, "frontage_m": 0.0}
+		occupied[Vector2i(u.pos.floor())] = true
+	var row := {"tick": b.tick, "ordinary": x.size(), "occupied_1m_cells": occupied.size(), "depth_m": 0.0, "frontage_m": 0.0}
 	if x.size() >= 2:
 		x.sort()
 		z.sort()
