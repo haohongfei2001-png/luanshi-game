@@ -1,0 +1,57 @@
+name: Measure a continuous reserve battle on the shipped field
+on:
+  push:
+    branches: [codex/river-gate-evidence-20261112]
+    paths: ['tests/field_endurance.gd', '.github/workflows/field-endurance.yml']
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify the shipping source and prepare the existing engine
+        run: |
+          set -euo pipefail
+          git diff --exit-code eae4f9d3f23f119fdd210390a9c7f7c7533eae6d HEAD -- scripts scenes assets project.godot
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/field-engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/field-engine.zip' | sha512sum -c -
+          unzip -q /tmp/field-engine.zip -d /tmp/field-engine
+          echo "ENGINE=/tmp/field-engine/Godot_v4.6.3-stable_linux.x86_64" >> "$GITHUB_ENV"
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/endurance
+          touch artifacts/.gdignore
+          /tmp/field-engine/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --editor --import > artifacts/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/import.log; then exit 1; fi
+      - name: Compare three legal schedules and retain every outcome
+        run: |
+          set -euo pipefail
+          "$ENGINE" --headless --path . --check-only --script tests/field_endurance.gd
+          timeout 280s "$ENGINE" --headless --path . --script tests/field_endurance.gd 2>&1 | tee artifacts/endurance-simulation.log
+          test "$(grep -c '^ENDURANCE_PLAN ' artifacts/endurance-simulation.log)" = 3
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/endurance-simulation.log; then exit 1; fi
+      - name: Render one uninterrupted game in real wall time
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          timeout 460s xvfb-run -a -s '-screen 0 1024x768x24' "$ENGINE" --path . --resolution 1000x600 --disable-vsync --audio-driver Dummy --script tests/field_endurance.gd -- --field-size=512 2>&1 | tee artifacts/endurance-window.log
+          grep -q '^ENDURANCE_WINDOW ' artifacts/endurance-window.log
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/endurance-window.log; then exit 1; fi
+          gzip -nc artifacts/endurance/frames.csv > artifacts/endurance/frames.csv.gz
+          sha256sum artifacts/endurance/frames.csv.gz
+          printf 'ENDURANCE_GZIP '
+          base64 -w0 artifacts/endurance/frames.csv.gz
+          printf '\n'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-gate-reserve-endurance
+          path: |
+            artifacts/endurance/
+            artifacts/*log
+          if-no-files-found: error
