@@ -95,8 +95,14 @@ func _weapon(kit: int) -> void:
 	var skill_attempted:=false
 	var skill_committed:=false
 	var mouse_down:=false
+	var max_ground_error:=0.0
+	var cursor_error:=0.0
 	for n in 84:
-		var aim:=field.camera.unproject_position(Ground.unit_point(enemy.pos))
+		var foot:=Ground.unit_point(enemy.pos)
+		var floor_screen:=field.camera.unproject_position(foot)
+		max_ground_error=maxf(max_ground_error,field._screen_ground(floor_screen).distance_to(enemy.pos))
+		var aim:=field.camera.unproject_position(foot+Vector3.UP*0.95)
+		cursor_error=maxf(cursor_error,field._aim_point(aim,true).distance_to(enemy.pos))
 		root.warp_mouse(aim)
 		if n==2:
 			_mouse(MOUSE_BUTTON_LEFT,aim,true)
@@ -116,7 +122,8 @@ func _weapon(kit: int) -> void:
 			_check(pic.save_jpg("res://artifacts/kit-film/frame-%03d.jpg"%frame_number,0.86)==OK,"Write action frame")
 			frame_number+=1
 	if mouse_down: _mouse(MOUSE_BUTTON_LEFT,root.get_mouse_position(),false)
+	_check(max_ground_error<0.04,"Ray intersects the actual sloping ground")
 	_check(basic_connected and skill_committed,"Mouse hit and Q windup for "+Arms.NAMES[kit])
-	var row:={"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed}
+	var row:={"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed,"max_ground_error":max_ground_error,"max_body_pick_error":cursor_error}
 	evidence.append(row)
 	print("FIELD_WEAPON_INPUT "+JSON.stringify(row))

@@ -157,14 +157,54 @@ func pan_to(p: Vector2) -> void:
 	_camera()
 
 func _screen_ground(point: Vector2) -> Vector2:
-	var origin := camera.project_ray_origin(point)
-	var dir := camera.project_ray_normal(point)
-	var t := -origin.y/dir.y
-	var p := Vector2(origin.x+dir.x*t,origin.z+dir.z*t)
-	for i in 2:
-		t=(Ground.deck_height(p)-origin.y)/dir.y
-		p=Vector2(origin.x+dir.x*t,origin.z+dir.z*t)
-	return p
+	var origin:=camera.project_ray_origin(point)
+	var dir:=camera.project_ray_normal(point)
+	# Traverse from above the tallest deck to below the river bed, then refine
+	# the first surface. Iterating from a flat plane misses uphill narrow attacks.
+	var top: float=(5.8-origin.y)/dir.y
+	var bottom: float=(-1.3-origin.y)/dir.y
+	var previous:=top
+	for sample in range(1,13):
+		var at:=lerpf(top,bottom,sample/12.0)
+		var p:=origin+dir*at
+		if p.y<=Ground.deck_height(Vector2(p.x,p.z)):
+			var lo:=previous
+			var hi:=at
+			for i in 10:
+				var mid: float=(lo+hi)*0.5
+				var q:=origin+dir*mid
+				if q.y>Ground.deck_height(Vector2(q.x,q.z)): lo=mid
+				else: hi=mid
+			p=origin+dir*((lo+hi)*0.5)
+			return Vector2(p.x,p.z)
+		previous=at
+	var end:=origin+dir*bottom
+	return Vector2(end.x,end.z)
+
+func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
+	var floor_point:=_screen_ground(screen)
+	if not target_figures: return floor_point
+	var best:=floor_point
+	var best_score:=INF
+	# A cursor resting on a visible torso selects that ground direction at the
+	# start of the strike. Melee reach, flight and obstruction remain in Battle.
+	for id in battle._near(floor_point,4.8,1):
+		var u:=battle.roster[id]
+		if battle.hero.pos.distance_squared_to(u.pos)>34.0*34.0: continue
+		var elevated:=Ground.parapet(u.pos)>2.75 or Ground.parapet(battle.hero.pos)>2.75
+		if not Ground.clear_shot(battle.hero.pos,u.pos,battle.gate_hp<=0,elevated): continue
+		var foot:=Ground.unit_point(u.pos)
+		var head:=foot+Vector3.UP*(2.45 if u.mounted else 1.70)
+		var low:=camera.unproject_position(foot)
+		var high:=camera.unproject_position(head)
+		var radius:=maxf(2.0,high.distance_to(camera.unproject_position(head+Vector3.RIGHT*0.32)))
+		var d:=screen.distance_to(Geometry2D.get_closest_point_to_segment(screen,low,high))
+		if d<=radius:
+			var score:=d/radius+0.001*screen.distance_to(low)
+			if score<best_score:
+				best_score=score
+				best=u.pos
+	return best
 
 func _unhandled_input(e: InputEvent) -> void:
 	if not battle or e.is_echo(): return
@@ -195,7 +235,7 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif not paused and battle.started:
 		for i in 3:
 			if e.is_action_pressed(["sweep","lunge","guard"][i]):
-				battle.input_state(Actions.movement(),_screen_ground(get_viewport().get_mouse_position())-battle.hero.pos)
+				battle.input_state(Actions.movement(),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
 				battle.action(i+1)
 
 func _physics_process(delta: float) -> void:
@@ -204,8 +244,9 @@ func _physics_process(delta: float) -> void:
 	while carry+0.000001>=Battle.DT:
 		carry=maxf(0,carry-Battle.DT)
 		var pointer := get_viewport().get_mouse_position()
-		battle.input_state(Actions.movement(),_screen_ground(pointer)-battle.hero.pos)
-		if Input.is_action_pressed("attack") and (Input.is_physical_key_pressed(KEY_J) or get_viewport().gui_get_hovered_control()==null):
+		var attacking:=Input.is_action_pressed("attack") and (Input.is_physical_key_pressed(KEY_J) or get_viewport().gui_get_hovered_control()==null)
+		battle.input_state(Actions.movement(),_aim_point(pointer,attacking)-battle.hero.pos)
+		if attacking:
 			battle.action(0)
 		var arrows_before := battle.arrow_count
 		var gate_before := battle.gate_hp
