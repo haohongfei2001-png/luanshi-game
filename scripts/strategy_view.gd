@@ -25,6 +25,7 @@ var battle_pending := false
 var interaction_blocked := false
 
 func _ready() -> void:
+	preload("res://scripts/youth_ui.gd").apply_font(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var backdrop := ColorRect.new()
 	backdrop.color = Color("111e22")

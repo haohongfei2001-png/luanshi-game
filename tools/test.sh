@@ -8,6 +8,7 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$PWD/.local-cache}"
 mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" artifacts
 # Evidence images are outputs, never imported game resources.
 touch artifacts/.gdignore
+./tools/prepare-font.sh
 "$GODOT" --version | tee artifacts/engine-version.log
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 "$GODOT" --headless --path . --script tests/test_battle.gd 2>&1 | tee artifacts/simulation-tests.log

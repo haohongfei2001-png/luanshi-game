@@ -29,6 +29,7 @@ var youth_context: Dictionary = {}
 var font: Font
 
 func _ready() -> void:
+	preload("res://scripts/youth_ui.gd").apply_font(self)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	font = preload("res://scripts/youth_ui.gd").chinese_font()
 	add_theme_font_override("font", font)

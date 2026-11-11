@@ -46,14 +46,20 @@ var motivation: OptionButton
 var blocked := false
 var preview_new_life := false
 
-static func chinese_font() -> SystemFont:
-	var value := SystemFont.new()
-	value.font_names = PackedStringArray(["PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", "sans-serif"])
-	return value
+const CHINESE_FONT: FontFile = preload("res://assets/fonts/NotoSansSC-Regular.otf")
+
+static func chinese_font() -> FontFile:
+	CHINESE_FONT.allow_system_fallback = false
+	return CHINESE_FONT
+
+static func apply_font(control: Control) -> void:
+	var shared_theme := Theme.new()
+	shared_theme.default_font = chinese_font()
+	control.theme = shared_theme
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	add_theme_font_override("font", chinese_font())
+	apply_font(self)
 	var background := ColorRect.new()
 	background.color = INK
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

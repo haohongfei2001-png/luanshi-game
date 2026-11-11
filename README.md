@@ -35,7 +35,7 @@ Godot 4.6.3 v0.8 integration: finite-HP combat and a playable youth military-lif
 ### Play from source
 
 1. Install Godot 4.6.3 (standard edition).
-2. Import `project.godot`, then press F6/F5 or run `godot --path .`.
+2. In a fresh checkout run `./tools/prepare-font.sh`, then import `project.godot` in Godot and press F5. Packaged games include the font and run offline.
 3. WASD/arrows move, mouse aims, left click or J strikes. Q performs a sweeping cut, E lunges, Space braces (50% damage reduction for 1 second on new early/late profiles).
 4. 1 orders attack, 2 follow, 3 retreat. To withdraw, lead surviving troops to the green gate at the left edge. P/Esc pauses, H toggles help. R begins new training **after** it ends; in campaign combat R returns to the map without resetting casualties.
 

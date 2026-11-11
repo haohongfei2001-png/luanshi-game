@@ -15,6 +15,7 @@ var context_label: Label
 var buttons: Dictionary = {}
 
 func _ready() -> void:
+	preload("res://scripts/youth_ui.gd").apply_font(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var shade := ColorRect.new()
 	shade.color = Color("081216df")

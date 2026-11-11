@@ -13,6 +13,11 @@ static func run(phase: String, isolated_id: String) -> Dictionary:
 func _run(phase: String, isolated_id: String) -> Dictionary:
 	if phase not in ["prepare", "resume"]:
 		return {"ok": false, "errors": ["unsupported phase"]}
+	var font := preload("res://scripts/youth_ui.gd").chinese_font()
+	for character in "乱世战场军令长枪弓弩守城骑乘":
+		_expect(font.has_char(character.unicode_at(0)), "Missing packaged font glyph " + character)
+	_expect(not font.allow_system_fallback, "Font depends on the host OS")
+	_expect(FileAccess.get_file_as_string("res://assets/fonts/OFL.txt").contains("SIL OPEN FONT LICENSE Version 1.1"), "Missing font redistribution notice")
 	var store := Store.new("youth_runtime_" + isolated_id)
 	var world := World.new(184)
 	if phase == "prepare":
