@@ -1,36 +1,41 @@
-name: Inspect paired river gate footage
+name: Preserve tested river gate comparison
 on:
   push:
     branches: [codex/river-gate-lane-lab]
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
-  review:
+  record:
     runs-on: ubuntu-24.04
     timeout-minutes: 3
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/river-gate-lane-evidence
       - uses: actions/download-artifact@v4
         with:
           name: river-gate-traffic-evidence
           run-id: 43119328109
           github-token: ${{ github.token }}
-          path: evidence
-      - name: Extract three matched frames from the existing capture
-        run: |
-          set -euo pipefail
-          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
-          ffmpeg -nostdin -v error -i evidence/formation-traffic-comparison.mp4 -frames:v 1 -vf "select='eq(n,0)+eq(n,48)+eq(n,88)',scale=1440:-2,tile=1x3" -q:v 3 evidence/traffic-review-sheet.jpg
-          python3 - <<'PY'
-          import base64, hashlib, pathlib
-          p = pathlib.Path("evidence/traffic-review-sheet.jpg")
-          data = p.read_bytes()
-          print("SHEET_SHA256", hashlib.sha256(data).hexdigest(), len(data))
-          encoded = base64.b64encode(data).decode("ascii")
-          for i in range(0, len(encoded), 1800):
-              print("SHEET_BYTES", encoded[i:i+1800])
-          PY
-      - uses: actions/upload-artifact@v4
+          path: /tmp/capture
+      - uses: actions/download-artifact@v4
         with:
           name: river-gate-reviewed-frames
-          path: evidence/traffic-review-sheet.jpg
+          run-id: 43119878758
+          github-token: ${{ github.token }}
+          path: /tmp/review
+      - name: Preserve exact runner output on the separate evidence branch
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '3a37caebf2cb6eea895014f49fc49aaba4d971c0'
+          folder=docs/evidence/river-gate-formation-traffic
+          mkdir -p "$folder"
+          cp /tmp/capture/formation-traffic-comparison.mp4 /tmp/capture/formation-traffic.log /tmp/capture/formation-traffic-camera.log /tmp/review/traffic-review-sheet.jpg "$folder/"
+          (cd "$folder" && sha256sum formation-traffic-comparison.mp4 formation-traffic.log formation-traffic-camera.log traffic-review-sheet.jpg > SHA256SUMS)
+          echo 'd4ab63c4d24eae2577871baaabc43059bb7a6ce8210ca8487d9f70b7e479f270  /tmp/review/traffic-review-sheet.jpg' | sha256sum -c -
+          git add -f -- "$folder/formation-traffic-comparison.mp4" "$folder/formation-traffic.log" "$folder/formation-traffic-camera.log" "$folder/traffic-review-sheet.jpg" "$folder/SHA256SUMS"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Preserve two real 512v512 gate replays, paired frames and their measured contacts'
+          git push origin HEAD:refs/heads/codex/river-gate-lane-evidence
