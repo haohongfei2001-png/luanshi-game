@@ -52,6 +52,16 @@ Primary target: macOS on Apple Silicon (reference: M5 MacBook Air). iPhone is a 
 - Evaluate iPhone touch UI, performance, Xcode/signing requirements **as a separate port milestone**.
 - Million-scale armies may exist as aggregate strategic records; do not promise a million independent onscreen 3D soldiers.
 
+### Gate 6 — One-life compressed historical wars (new long-term owner target)
+
+After the core action/army/world game and initial rich-life narrative are actually playable, add conditional epoch pressures as specified in `CENTURY_WAR_ERA_CAMPAIGN_V0_1.md`: Tang-like provincial collapse → unification → northern rivals → territorial halving/naval last stand or reconquest → capital choice/central-local power → taxation, peasant rebellion and northern invasion → foreign steam/naval shock.
+
+- Do **not** require all players to reach every stage. A reproducible **high-success same-protagonist** route must eventually be achievable within ordinary old age, without invulnerability or inheritance control.
+- Do **not** force every historical defeat or rebuild an old enemy without political/army continuity. A conquered polity may fall while the surviving player continues a human life.
+- Introduce separate capital/fiscal/logistics and multi-dimensional research/manufacture/equipment systems with real costs; an open/technology-focused polity can outperform a Qing-like baseline somewhat, not instantly become a fully industrial 20th-century empire.
+- Sea battles and large armies require their own real benchmarks, assets, controls and tests; early world-only abstract simulations are permitted pending graphics implementation.
+- **Pass**: objective evidence for the `ERA-01..12` acceptance cases, including at least one valid from-age-15-to-modern-threat career replay. Not a requirement for Gate 1–4 and not a reason to interrupt Dot's current coding.
+
 ## Non-negotiable discipline
 
 - One authoritative simulation state; scene visuals cannot invent soldiers, food, weapons, or battle outcomes.
