@@ -3,6 +3,7 @@ extends RefCounted
 var surface := SurfaceTool.new()
 var joint := 0
 var dye := 0.0
+var open_ends := false
 func _init() -> void:
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 
@@ -60,8 +61,9 @@ func rod(a: Vector3,b: Vector3,ra: float,rb: float,col: Color,n: int=5) -> void:
 		var edge := cos(t)*basis_x+sin(t)*basis_z
 		var next := cos(nt)*basis_x+sin(nt)*basis_z
 		quad(a+ra*edge,a+ra*next,b+rb*next,b+rb*edge,col)
-		tri(b,b+rb*edge,b+rb*next,col)
-		tri(a,a+ra*next,a+ra*edge,col)
+		if not open_ends:
+			tri(b,b+rb*edge,b+rb*next,col)
+			tri(a,a+ra*next,a+ra*edge,col)
 
 func finish() -> ArrayMesh:
 	surface.index()

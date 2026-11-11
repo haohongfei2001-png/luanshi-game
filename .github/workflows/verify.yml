@@ -37,7 +37,8 @@ jobs:
         run: timeout 5m ./tools/test.sh
       - name: Measure contact at four army sizes and record a separate 512v512 run
         run: |
-          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          if ! command -v ffmpeg >/dev/null || ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
+          ./tools/test-field-journey.sh
           ./tools/test-field-render.sh
       - name: Verify youth narrative interface and real input path
         env:
@@ -116,6 +117,8 @@ jobs:
             artifacts/river-gate-512.mp4
             artifacts/player-nine-weapons.mp4
             artifacts/river-gate-full-siege.mp4
+            artifacts/river-gate-journey.mp4
+            artifacts/river-gate-review.mp4
           if-no-files-found: error
       - name: Upload evidence and hashes
         if: always()
@@ -190,6 +193,8 @@ jobs:
               if method == "gl_compatibility":
                   args += ["--rendering-method", "gl_compatibility"]
               args += ["--resolution", "1000x600", "--audio-driver", "Dummy", "--disable-vsync", "--", "--field-check", "--field-profile", "--field-proof=" + str(image)]
+              if name == "default-metal-2":
+                  args.append("--field-window-tour")
               try:
                   test = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=70)
                   log = test.stdout.decode(errors="replace")
@@ -224,3 +229,23 @@ jobs:
         with:
           name: macos-verification-${{ github.sha }}
           path: mac-evidence/
+
+  review-footage:
+    name: Preserve review video bytes
+    needs: verify-and-export
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: gameplay-${{ github.sha }}
+          path: review
+      - name: Deliver the already encoded copy for the Git evidence record
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, pathlib
+          data=next(pathlib.Path('review').rglob('river-gate-review.mp4')).read_bytes()
+          print('JOURNEY_DIGEST',len(data),hashlib.sha256(data).hexdigest(),flush=True)
+          wire=base64.b64encode(data).decode()
+          for i in range(0,len(wire),32000): print('JOURNEY_PART',i//32000,wire[i:i+32000],flush=True)
+          PY

@@ -11,6 +11,8 @@ var sun:=DirectionalLight3D.new()
 var gate: MeshInstance3D
 var ram: MeshInstance3D
 var ram_beam: MeshInstance3D
+var roofs: Array[Dictionary]=[]
+var has_open_roof:=false
 
 func _ready() -> void:
 	var world := WorldEnvironment.new()
@@ -142,11 +144,52 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) ->
 		var top_b := base+Vector3(ridge,rise,0)
 		b.quad(outer_a,outer_b,low_b,low_a,col.lightened(0.05))
 		b.quad(low_a,low_b,top_b,top_a,col)
+		# Broad bands follow the pitched tiles; their width survives mip filtering.
+		for course in 4:
+			var t:=0.14+course*0.205
+			var a:=low_a.lerp(top_a,t)+Vector3.UP*0.015
+			var d0:=low_b.lerp(top_b,t)+Vector3.UP*0.015
+			b.quad(a,d0,low_b.lerp(top_b,t+0.035)+Vector3.UP*0.015,low_a.lerp(top_a,t+0.035)+Vector3.UP*0.015,col.lightened(0.13))
+		b.rod(outer_a,outer_b,0.080,0.080,WOOD,4)
 		b.tri(outer_a,low_a,top_a,col)
 		b.tri(outer_b,top_b,low_b,col)
 	for side: float in [-1,1]:
 		b.tri(base+Vector3(side*w,0.24,-d),base+Vector3(side*w,0.24,d),base+Vector3(side*ridge,rise,0),col.darkened(0.10))
 	b.rod(base+Vector3(-ridge-0.35,rise,0),base+Vector3(ridge+0.35,rise,0),0.12,0.12,col.darkened(0.15))
+
+# These roofs can lift away independently while the posts, eaves, and the
+# people inside remain. No soldier or combat state changes with the camera.
+func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
+	var cover:=Builder.new()
+	_roof(cover,base,w,d,rise,SLATE)
+	var node:=_mesh(cover,self)
+	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d})
+	for side: float in [-1,1]:
+		frame.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
+		frame.block(base+Vector3(side*w*0.84,-0.09,0),Vector3(0.19,0.18,d*1.70),WOOD)
+
+func _between(target: Vector3,eye: Vector3,roof: Dictionary) -> bool:
+	var center: Vector3=roof.center
+	var ray:=eye-target
+	if ray.y<0.05 or center.y<=target.y: return false
+	var t: float=(center.y-target.y)/ray.y
+	if t<0 or t>1: return false
+	var cross_at:=target+t*ray
+	return absf(cross_at.x-center.x)<float(roof.w)+0.9 and absf(cross_at.z-center.z)<float(roof.d)+0.9
+
+func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live: bool) -> void:
+	if not has_open_roof and focus.x<24 and hero.x<24: return
+	has_open_roof=false
+	var p:=Ground.unit_point(focus)+Vector3.UP*0.85
+	var h:=Ground.unit_point(hero)+Vector3.UP*0.85
+	var door:=Ground.unit_point(Ground.GATE)+Vector3.UP*1.2
+	# In an orthographic camera the rays through every subject are parallel.
+	var direction:=eye-Ground.unit_point(focus)
+	for roof in roofs:
+		var occluding: bool=zoom<43 and (_between(p,p+direction,roof) or (live and _between(h,h+direction,roof)) or (focus.distance_squared_to(Ground.GATE)<150 and _between(door,door+direction,roof)))
+		var node: MeshInstance3D=roof.node
+		if occluding: has_open_roof=true
+		if node.visible==occluding: node.visible=not occluding
 
 func _tower(b: Builder,p: Vector3) -> void:
 	b.block(p+Vector3(0,2.15,0),Vector3(5.1,4.3,5.1),STONE)
@@ -154,7 +197,12 @@ func _tower(b: Builder,p: Vector3) -> void:
 	for x: float in [-1.95,1.95]:
 		for z: float in [-1.95,1.95]:
 			b.block(p+Vector3(x,5.55,z),Vector3(0.28,2.5,0.28),WOOD)
-	_roof(b,p+Vector3(0,6.55,0),3.62,3.37,1.45,SLATE)
+	for side: float in [-1,1]:
+		b.block(p+Vector3(0,5.02,side*2.20),Vector3(4.6,0.10,0.12),WOOD)
+		b.block(p+Vector3(0,4.72,side*2.20),Vector3(4.6,0.075,0.10),WOOD)
+		for x: float in [-1.1,0,1.1]:
+			b.block(p+Vector3(x,4.72,side*2.2),Vector3(0.085,0.65,0.095),WOOD)
+	_cover(b,p+Vector3(0,6.55,0),3.62,3.37,1.45)
 
 func _fort(b: Builder) -> void:
 	for side: float in [-1,1]:
@@ -172,6 +220,11 @@ func _fort(b: Builder) -> void:
 		var length := Ground.WALL_Z-Ground.GATE_HALF
 		b.block(Vector3(Ground.WALL_X,1.65,z),Vector3(2.6,3.3,length),LIME)
 		b.block(Vector3(Ground.WALL_X,0.37,z),Vector3(2.9,0.75,length),STONE)
+		for layer in 4:
+			var h:=0.94+layer*0.51
+			var start:=Vector3(Ground.WALL_X-1.306,h,side*(Ground.GATE_HALF+0.3))
+			var lift_end:=Vector3(start.x,h+0.035,side*(Ground.WALL_Z-0.4))
+			b.quad(start,lift_end,lift_end+Vector3.UP*0.035,start+Vector3.UP*0.035,LIME.darkened(0.15))
 		for i in range(6,23,2):
 			b.block(Vector3(Ground.WALL_X-1.07,3.59,side*i),Vector3(0.47,0.66,1.33),LIME)
 		b.block(Vector3((Ground.WALL_X+Ground.BACK_X)*0.5,1.68,side*Ground.WALL_Z),Vector3(Ground.BACK_X-Ground.WALL_X,3.35,2.1),LIME)
@@ -186,11 +239,19 @@ func _fort(b: Builder) -> void:
 	b.block(Vector3(Ground.BACK_X,3.05,0),Vector3(2.3,0.50,Ground.POSTERN_HALF*2.0),LIME)
 	b.block(Vector3(Ground.BACK_X+1.20,2.73,0),Vector3(0.25,0.23,Ground.POSTERN_HALF*2.0+0.45),WOOD)
 	b.block(Vector3(Ground.WALL_X,4.16,0),Vector3(4.1,0.5,9.5),WOOD)
-	_roof(b,Vector3(Ground.WALL_X,6.1,0),3.4,5.0,1.45,SLATE)
+	_cover(b,Vector3(Ground.WALL_X,6.1,0),3.4,5.0,1.45)
+	# The entrance has its own lintel, lacquered plaque and watch pennants.
+	b.block(Vector3(Ground.WALL_X-2.10,4.25,0),Vector3(0.16,0.85,3.5),Color("61483a"))
+	b.block(Vector3(Ground.WALL_X-2.20,4.25,0),Vector3(0.06,0.62,2.95),Color("405450"))
+	for side: float in [-1,1]:
+		var post:=Vector3(Ground.WALL_X-1.65,3.45,side*5.1)
+		b.rod(post,post+Vector3.UP*2.1,0.055,0.04,WOOD)
+		b.quad(post+Vector3(0,2,0),post+Vector3(-0.08,1.96,side*0.92),post+Vector3(-0.21,1.30,side*0.97),post+Vector3(0,1.32,0),Color("a3543c"))
+		b.tri(post+Vector3(-0.21,1.30,side*0.97),post+Vector3(-0.22,1.04,side*0.74),post+Vector3(-0.08,1.38,side*0.55),Color("b59659"))
 	for x: float in [65,78]:
 		for z: float in [-14,14]:
 			b.block(Vector3(x,1.4,z),Vector3(7,2.8,4.4),LIME)
-			_roof(b,Vector3(x,2.74,z),4.45,3.02,1.12,SLATE)
+			_cover(b,Vector3(x,2.74,z),4.45,3.02,1.12)
 
 func _camp(b: Builder) -> void:
 	for side: float in [-1,1]:

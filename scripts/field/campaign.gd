@@ -3,6 +3,7 @@ extends "res://scripts/world_sim.gd"
 ## Old careers retain their actual forces. Only a new opening receives this manifest.
 const Field := preload("res://scripts/field/battle.gd")
 const Arms := preload("res://scripts/field/arms.gd")
+const GroundMap := preload("res://scripts/field/ground.gd")
 const ENCOUNTER := "river_gate:1"
 const FORCES := ["relief","hequ"]
 const START_SECONDS := 3595.0
@@ -43,6 +44,14 @@ func bind(model: Field) -> bool:
 		if not reserve(): return false
 		if not sync(): return false
 		if field.result!="" and settle().is_empty(): return false
+		if (field.at_camp or field.aftermath_hours>0) and (_state.campaign_ended or receipt.is_empty()): return false
+		var cursor:=0
+		for hour in field.aftermath_hours+1:
+			while cursor<field.camp_actions.size() and field.camp_actions[cursor][0]==hour:
+				if not _camp_action(field.camp_actions[cursor][1]): return false
+				cursor+=1
+			if hour<field.aftermath_hours and not advance(1): return false
+		if cursor!=field.camp_actions.size(): return false
 	return audit().is_empty() and audit_quivers()
 
 static func _ammo_kind(kit: int) -> int:
@@ -155,6 +164,20 @@ func settle() -> Dictionary:
 		loose_weapons+=dropped[team]
 	_unlock_battle(ENCOUNTER)
 	var captured:=field.result=="夺取城内阵地"
+	var spoils: Dictionary={}
+	var reclaimed:=0
+	if field.result in ["夺取城内阵地","守军溃退","守军已失去战斗能力"]:
+		# Collect only the weapon of a fallen enemy in secured, accessible ground.
+		field._rebuild_grid()
+		for id in dead[1]:
+			var body:=field.roster[int(id)]
+			if not _secured(body.pos): continue
+			var name_of_kit: String=Arms.NAMES[body.kit]
+			var pieces:=_pieces(body.kit)
+			spoils[name_of_kit]=int(spoils.get(name_of_kit,0))+pieces
+			reclaimed+=pieces
+		loose_weapons-=reclaimed
+		_entity("relief").weapons+=reclaimed
 	if captured:
 		# Holding the court dislodges the garrison. Living opponents stay on the
 		# map as a field force on an actual route, keeping their assigned weapons.
@@ -185,7 +208,7 @@ func settle() -> Dictionary:
 	ticket.status="committed"
 	var issued := {"battle_id":ENCOUNTER,"outcome":field.result,"ending_seconds":_state.time_seconds,
 		"dead_ids":dead,"living_ids":living,"escaped_ids":fled,"dropped_by_kit":loose_by_kit,
-		"loose_weapons":loose_weapons,"captured_gate":captured,"commander_alive":_state.commander.alive}
+		"loose_weapons":loose_weapons,"spoils":spoils,"reclaimed":reclaimed,"captured_gate":captured,"commander_alive":_state.commander.alive}
 	if not field.legacy_missiles: issued.ammunition=arrow_ledger
 	ticket.receipt=issued.duplicate(true)
 	_event("field_settled",{"battle_id":ENCOUNTER,"outcome":field.result,"dead":[dead[0].size(),dead[1].size()]})
@@ -229,3 +252,37 @@ func _march_home(force: Dictionary,route: String,destination: String) -> void:
 
 func own_supply() -> int:
 	return _state.armies.relief.food
+
+func _secured(at: Vector2) -> bool:
+	var open:=field.gate_hp<=0
+	for i in field._near(at,5.5,1):
+		var guard:=field.roster[i]
+		if guard.state!=Field.State.ROUT and GroundMap.clear_shot(at,guard.pos,open): return false
+	for i in field._near(at,7.5,0):
+		var carrier:=field.roster[i]
+		if carrier.state!=Field.State.ROUT and GroundMap.clear_shot(at,carrier.pos,open): return true
+	return false
+
+func enter_camp() -> bool:
+	if receipt.is_empty() or _state.campaign_ended: return false
+	field.at_camp=true
+	return true
+
+func wait_at_camp() -> bool:
+	if not field.at_camp or field.aftermath_hours>=168 or _state.campaign_ended or not advance(1): return false
+	field.aftermath_hours+=1
+	return true
+
+func _camp_action(command: String) -> bool:
+	if command=="ration":
+		var army: Dictionary=_state.armies.relief
+		var local: Dictionary=_state.cities.get(army.location,{})
+		if local.is_empty(): return false
+		var batch:=mini(army.soldiers,local.food)
+		return batch>0 and transfer(army.location,"relief","food",batch)
+	return march(command)
+
+func camp_order(command: String) -> bool:
+	if not field.at_camp or field.camp_actions.size()>=300 or _state.campaign_ended or not _camp_action(command): return false
+	field.camp_actions.append([field.aftermath_hours,command])
+	return true

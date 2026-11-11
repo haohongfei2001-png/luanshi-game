@@ -18,7 +18,7 @@ var audio := Sound.new()
 var camera := Camera3D.new()
 var camera_center := Vector2.ZERO
 var camera_pitch:=deg_to_rad(51.0)
-var camera_yaw:=0.0
+var camera_yaw:=deg_to_rad(-33.0)
 var orbiting:=false
 var follow := true
 var paused := false
@@ -33,6 +33,8 @@ var last_sound_tick := -20
 var last_shot_tick := -20
 var frame_log: RefCounted
 var detail_preset:=0
+var last_hero_hit:=-100
+var step_distance:=0.0
 const QUALITY_FILE:="user://river-gate-graphics.cfg"
 
 func _ready() -> void:
@@ -50,6 +52,34 @@ func _ready() -> void:
 	hud.terrain_chosen.connect(pan_to)
 	hud.quality_changed.connect(func(index: int): set_quality(index,true))
 	hud.campaign.connect(func(): campaign_requested.emit())
+	hud.plan_requested.connect(func(style: int):
+		if battle.started or style==0: return
+		for i in battle.companies_per_side:
+			var mission:=Battle.Mission.PRESS
+			if style==1:
+				if i in [2,7]: mission=Battle.Mission.ESCORT
+				elif i in [0,4]: mission=Battle.Mission.FLANK
+			else: mission=Battle.Mission.HOLD if i%4==3 else Battle.Mission.WITHDRAW
+			battle.command(i,mission,Battle.Channel.FLAG)
+		hud.select_company(battle,hud.unit.selected)
+		battle.notice="全军任务已分配，可逐队调整")
+	hud.muster_apply.connect(func(index: int,slot: int,shape: int,front: int):
+		if battle.deploy_company(index,slot,shape,front):
+			battle.notice="部署已定 · %02d 队 %s" % [index+1,Battle.FORMATIONS[shape]]
+			hud.select_company(battle,index)
+			pan_to(battle.companies[index].home))
+	hud.unit.item_selected.connect(func(i: int):
+		hud.select_company(battle,i)
+		if not battle.started: pan_to(battle.companies[i].home))
+	hud.camp_requested.connect(func():
+		if theater.enter_camp(): _refresh_hud())
+	hud.camp_order.connect(func(command: String):
+		if theater.camp_order(command): _refresh_hud())
+	hud.camp_wait.connect(func():
+		if theater.wait_at_camp(): _refresh_hud())
+	hud.back_report.connect(func():
+		battle.at_camp=false
+		_refresh_hud())
 	hud.retry.connect(func(): new_muster(selections))
 	hud.weapon_changed.connect(func(i: int):
 		battle.equip_hero(i))
@@ -90,8 +120,11 @@ func _adopt(fresh: Battle) -> void:
 	set_quality(detail_preset)
 	camera_center=battle.hero.pos
 	follow=true
+	last_hero_hit=-100
+	step_distance=0
 	carry=0
 	hud.bind(battle)
+	_refresh_hud()
 	_camera()
 	_draw_field()
 
@@ -117,6 +150,7 @@ func deploy() -> void:
 		battle.notice="军籍与库存不符，无法出阵"
 		return
 	battle.start()
+	follow=true
 	hud.order_panel.hide()
 	audio.cue("horn",-10)
 	hud.update_model(battle,paused)
@@ -128,7 +162,10 @@ func toggle_pause() -> void:
 
 func _order(company: int,mission: int,channel: int) -> void:
 	if battle.command(company,mission,channel):
-		if battle.started and channel==Battle.Channel.HORN: audio.cue("horn",-10)
+		if battle.started:
+			hud.order_panel.hide()
+			get_viewport().gui_release_focus()
+			if channel==Battle.Channel.HORN: audio.cue("horn",-10)
 	hud.update_model(battle,paused)
 
 func _save() -> void:
@@ -208,6 +245,15 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 				best=u.pos
 	return best
 
+func _input(e: InputEvent) -> void:
+	if not battle or not is_visible_in_tree() or e.is_echo() or battle.result!="": return
+	if e.is_action_pressed("field_orders"):
+		for menu in [hud.weapon,hud.plan,hud.unit,hud.mission,hud.channel,hud.quality,hud.shape,hud.front,hud.slot]:
+			if menu.get_popup().visible: return
+		hud.order_panel.visible=not hud.order_panel.visible
+		get_viewport().gui_release_focus()
+		get_viewport().set_input_as_handled()
+
 func _unhandled_input(e: InputEvent) -> void:
 	if not battle or e.is_echo(): return
 	if e is InputEventMouseButton:
@@ -232,7 +278,6 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("field_deploy"): deploy()
 	elif e.is_action_pressed("pause_battle"): toggle_pause()
 	elif e.is_action_pressed("field_center"): follow=true
-	elif e.is_action_pressed("field_orders"): hud.order_panel.visible=not hud.order_panel.visible
 	elif e.is_action_pressed("toggle_help"): hud.toggle_help=not hud.toggle_help
 	elif e.is_action_pressed("campaign_quicksave"): _save()
 	elif e.is_action_pressed("campaign_quickload"): _load()
@@ -241,11 +286,14 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif e.is_action_pressed("order_attack"): _order(hud.unit.selected,Battle.Mission.PRESS,hud.channel.selected)
 	elif e.is_action_pressed("order_follow"): _order(hud.unit.selected,Battle.Mission.HOLD,hud.channel.selected)
 	elif e.is_action_pressed("order_retreat"): _order(hud.unit.selected,Battle.Mission.WITHDRAW,hud.channel.selected)
-	elif not paused and battle.started:
+	elif not paused and battle.started and battle.result=="":
+		if e.is_action_pressed("attack"):
+			battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
+			battle.press_action(0)
 		for i in 3:
 			if e.is_action_pressed(["sweep","lunge","guard"][i]):
 				battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
-				battle.action(i+1)
+				battle.press_action(i+1)
 
 func _physics_process(delta: float) -> void:
 	if not battle or paused or not battle.started or battle.result!="": return
@@ -255,10 +303,15 @@ func _physics_process(delta: float) -> void:
 		var pointer := get_viewport().get_mouse_position()
 		var attacking:=Input.is_action_pressed("attack") and (Input.is_physical_key_pressed(KEY_J) or get_viewport().gui_get_hovered_control()==null)
 		battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(pointer,attacking)-battle.hero.pos)
-		if attacking:
+		battle.sprinting=Input.is_action_pressed("field_sprint")
+		if attacking and battle.buffered_slot<0:
 			battle.action(0)
 		var arrows_before := battle.arrow_count
 		var gate_before := battle.gate_hp
+		var personal:=battle.hero.impacts
+		var blocked:=battle.blocked_hits
+		var motion_before:=battle.hero.pos
+		var pose_before:=battle.hero.state
 		var start := Time.get_ticks_usec()
 		battle.step()
 		if battle.tick%20==0 or battle.result!="":
@@ -269,20 +322,38 @@ func _physics_process(delta: float) -> void:
 		var cost := Time.get_ticks_usec()-start
 		sim_us+=cost
 		max_step_us=maxi(max_step_us,cost)
+		var near_hero:=camera_center.distance_squared_to(battle.hero.pos)<400
+		if battle.hero.impacts>personal:
+			last_hero_hit=battle.tick
+			if near_hero: _cue_at("impact",-8,battle.hero.pos)
+		if near_hero and pose_before==Battle.State.WINDUP and battle.hero.state==Battle.State.RECOVER and battle.hero.kit not in [5,6]:
+			_cue_at("swing",-19,battle.hero.pos)
+		step_distance+=motion_before.distance_to(battle.hero.pos)
+		var step_length:=2.40 if battle.vehicle!=0 else 1.28
+		if step_distance>=step_length:
+			step_distance=fmod(step_distance,step_length)
+			if near_hero: _cue_at("step" if battle.vehicle==0 else "hoof",-21 if battle.vehicle==0 else -15,battle.hero.pos)
+		if battle.tick%161==1: audio.cue("wind",-28,0.45)
+		if battle.tick in [4,13,24] or (battle.gate_hp==0 and gate_before>0): _cue_at("drum",-14,battle.ram)
 		if battle.gate_hp<gate_before and camera_center.distance_to(Ground.GATE)<32:
-			audio.cue("wood",-12)
+			_cue_at("wood",-12,Ground.GATE)
 		if battle.arrow_count>arrows_before and battle.tick-last_shot_tick>=8:
 			for shot in battle.shots:
 				if shot.distance<2.0 and camera_center.distance_squared_to(shot.pos)<100:
-					audio.cue("shot",-21)
+					_cue_at("shot",-18,shot.pos)
 					last_shot_tick=battle.tick
 					break
 		if battle.tick-last_sound_tick>=5:
 			for id in battle._near(camera_center,minf(camera.size*0.40,12),1):
 				if battle.roster[id].flash>=0.20:
-					audio.cue("clash",-20.0)
+					_cue_at("shield" if battle.blocked_hits>blocked and battle.roster[id].state==Battle.State.GUARD else "clash",-17,battle.roster[id].pos)
 					last_sound_tick=battle.tick
 					break
+
+func _cue_at(kind: String,level: float,at: Vector2) -> void:
+	var offset:=at-camera_center
+	var right:=Vector2(camera.basis.x.x,camera.basis.x.z)
+	audio.cue(kind,level-minf(12.0,offset.length()*0.22),clampf(offset.dot(right)/maxf(5,camera.size*0.45),-1,1))
 
 func _draw_field() -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
@@ -291,9 +362,17 @@ func _draw_field() -> void:
 	var co:=absf(cos(camera_yaw))
 	var si:=absf(sin(camera_yaw))
 	var half_extent:=Vector2(co*hw+si*hd+4,si*hw+co*hd+6)
+	var hero:=battle.hero
+	hud.marker.visible=battle.result=="" and camera.is_position_in_frustum(Ground.unit_point(hero.pos))
+	if hud.marker.visible:
+		var hp:=Ground.unit_point(hero.before.lerp(hero.pos,clampf(carry/Battle.DT,0,1)))
+		var at:=camera.unproject_position(hp)
+		var ahead:=camera.unproject_position(hp+Vector3(hero.facing.x,0,hero.facing.y))
+		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1))
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	map.update_battle(battle)
+	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="")
 	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,half_extent-Vector2(4,6))
 	view_us+=Time.get_ticks_usec()-t
 
@@ -306,8 +385,11 @@ func _process(delta: float) -> void:
 	ui_clock+=delta
 	if ui_clock>=0.13:
 		ui_clock=0
-		hud.update_model(battle,paused)
-		hud.show_world(theater.own_supply(),theater.loose_weapons,not theater.receipt.is_empty())
+		_refresh_hud()
+
+func _refresh_hud() -> void:
+	hud.update_model(battle,paused)
+	if not theater.receipt.is_empty(): hud.show_receipt(battle,theater.receipt,theater.player_view())
 
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT and battle and battle.started: paused=true

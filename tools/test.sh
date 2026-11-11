@@ -10,6 +10,7 @@ mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" artifacts
 touch artifacts/.gdignore
 ./tools/prepare-font.sh
 "$GODOT" --version | tee artifacts/engine-version.log
+"$GODOT" --headless --path . --check-only --script scripts/field/landscape.gd
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; fi
 "$GODOT" --headless --path . --check-only --script scripts/youth_ui.gd
@@ -17,6 +18,8 @@ if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; 
 "$GODOT" --headless --path . --check-only --script tests/field_render.gd
 "$GODOT" --headless --path . --check-only --script tests/field_controls.gd
 "$GODOT" --headless --path . --check-only --script tests/field_siege_film.gd
+"$GODOT" --headless --path . --check-only --script tests/field_playthrough.gd
+"$GODOT" --headless --path . --check-only --script tests/field_alternate_outcomes.gd
 "$GODOT" --headless --path . --fixed-fps 60 --quit-after 1100 -- --field-check 2>&1 | tee artifacts/field-package-source.log
 grep -q '^FIELD_PACKAGE_PASS' artifacts/field-package-source.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-package-source.log; then exit 1; fi

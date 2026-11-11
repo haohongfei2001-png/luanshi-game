@@ -56,6 +56,9 @@ class Unit:
 
 class Company:
 	var team := 0
+	var slot := 0
+	var shape := 0
+	var front := 0
 	var officer_id := -1
 	var home := Vector2.ZERO
 	var aim := Vector2.ZERO
@@ -93,6 +96,21 @@ class Dispatch:
 	var leg := 0 # 0 outward, 1 returning with the officer’s reply, 2 missing
 	var due := 0.0
 	var refused := false
+
+const FORMATIONS := ["横阵","疏列","纵队"]
+const VANGUARDS := ["原有次序","盾枪在前","弓弩在前","骑兵在前"]
+var muster_slots: Array[Vector2] = []
+var dry_muster:=true
+var camp_actions: Array=[]
+var aftermath_hours := 0
+var at_camp := false
+var sprinting := false
+var breath := 1.0
+var winded := false
+var buffered_slot := -1
+var buffer_ticks := 0
+var buffer_aim := Vector2.RIGHT
+var buffer_wall := false
 
 var moves := Arms.library()
 var stock_blow := Arms.Move.new(Arms.Shape.BASH,1.25,0.72,0.27,0.56,8.0,1)
@@ -132,6 +150,8 @@ var locked_at_wall_post:=false
 var hero_cds := PackedFloat32Array([0.0,0.0,0.0,0.0])
 # Foot, horse and chariot are separate physical assets. The rider can lose either vehicle.
 var vehicle := 0
+var seat_origin:=true
+var parked_heading: Array[Vector2]=[Vector2.RIGHT,Vector2.RIGHT,Vector2.RIGHT]
 var vehicle_pos := [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
 var vehicle_hp := [0.0, 75.0, 115.0]
 var riding_speed := 0.0
@@ -139,9 +159,10 @@ var riding_heading := Vector2.RIGHT
 var grid := PackedInt32Array()
 var links := PackedInt32Array()
 
-func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void:
+func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true) -> void:
 	assert(n in SCALES and roster.is_empty())
 	side_size = n
+	dry_muster=on_banks
 	rng.seed = seed_value
 	companies_per_side = ceili(float(n) / 32.0)
 	var bands := mini(5, companies_per_side)
@@ -159,6 +180,10 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 				var post := c-ceili(companies_per_side*0.58)
 				company.home = Vector2(55.5 + floorf(post/3.0)*8.4, (post%3-1)*12.0)
 			company.mission = Mission.PRESS if team == 0 else Mission.HOLD
+			if team==0 and dry_muster and company.home.x< -23:
+				company.home.x=Ground.RIVER_X-7.3
+			company.slot=c
+			if team==0: muster_slots.append(company.home)
 			company.aim = company.home
 			companies.append(company)
 			for j in mini(32, n - c * 32):
@@ -208,6 +233,79 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 	grid.resize(COLS * ROWS)
 	links.resize(roster.size())
 	_rebuild_grid()
+
+func _rank(u: Unit,front: int) -> int:
+	match front:
+		1: return 0 if u.kit in [Arms.Kit.SHIELD,Arms.Kit.SPEAR] else 1
+		2: return 0 if u.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] else 1
+		3: return 0 if u.mounted else 1
+	return 0
+
+func _place_company(index: int) -> void:
+	var c:=companies[index]
+	c.home=muster_slots[c.slot]
+	c.aim=c.home
+	var line: Array[Unit]=[]
+	for u in roster:
+		if u.team==0 and u.squad==index and not u.officer and not u.hero: line.append(u)
+	if c.front!=0:
+		line.sort_custom(func(a: Unit,b: Unit):
+			var ra:=_rank(a,c.front)
+			var rb:=_rank(b,c.front)
+			return a.id<b.id if ra==rb else ra<rb)
+	var width:=4 if c.shape==2 else 8
+	# Fit every shape inside its own deployment cell, including the rear file.
+	var spacing:=1.76 if c.shape==1 else (1.14 if c.shape==2 else 1.58)
+	var depth:=0.91 if c.shape==2 else 1.78
+	for j in line.size():
+		var u:=line[j]
+		u.station=c.home+Vector2(-floorf(float(j)/width)*depth,(float(j%width)-(width-1)*0.5)*spacing)
+		u.pos=u.station
+		u.before=u.pos
+	var officer:=roster[c.officer_id]
+	officer.station=c.home+Vector2(-7.6,1.2)
+	officer.pos=officer.station
+	officer.before=officer.pos
+
+func deploy_company(index: int,slot: int,shape: int,front: int) -> bool:
+	if started or index<0 or index>=companies_per_side or slot<0 or slot>=companies_per_side or shape<0 or shape>=FORMATIONS.size() or front<0 or front>=VANGUARDS.size(): return false
+	var chosen:=companies[index]
+	for i in companies_per_side:
+		if i!=index and companies[i].slot==slot:
+			companies[i].slot=chosen.slot
+			_place_company(i)
+			break
+	chosen.slot=slot
+	chosen.shape=shape
+	chosen.front=front
+	_place_company(index)
+	_rebuild_grid()
+	return true
+
+func muster_manifest() -> Array:
+	var out: Array=[]
+	for i in companies_per_side:
+		var c:=companies[i]
+		out.append([c.slot,c.shape,c.front])
+	return out
+
+func restore_muster(rows: Variant) -> bool:
+	if not rows is Array or rows.size()!=companies_per_side: return false
+	var seen: Dictionary={}
+	for row in rows:
+		if not row is Array or row.size()!=3: return false
+		for v in row:
+			if not v is int: return false
+		if row[0]<0 or row[0]>=companies_per_side or seen.has(row[0]) or row[1]<0 or row[1]>=FORMATIONS.size() or row[2]<0 or row[2]>=VANGUARDS.size(): return false
+		seen[row[0]]=true
+	for i in companies_per_side:
+		var c:=companies[i]
+		c.slot=rows[i][0]
+		c.shape=rows[i][1]
+		c.front=rows[i][2]
+		_place_company(i)
+	_rebuild_grid()
+	return true
 
 func equip_hero(kit: int) -> void:
 	if started or kit<0 or kit>=Arms.NAMES.size(): return
@@ -398,7 +496,18 @@ func mount(id: int) -> bool:
 	if result != "" or id < 0 or id > 2 or hero.state in [State.WINDUP, State.STAGGER]:
 		return false
 	if vehicle != 0:
-		vehicle_pos[vehicle] = hero.pos
+		if seat_origin:
+			if id!=0 and id!=vehicle:
+				notice="请先下乘，再登上另一辆车马"
+				return false
+			parked_heading[vehicle]=riding_heading
+			vehicle_pos[vehicle]=hero.pos+(riding_heading*1.83 if vehicle==2 else Vector2.ZERO)
+			var side:=riding_heading.orthogonal()*1.05
+			var landing:=Ground.travel(hero.pos,side,gate_hp<=0)
+			if landing.distance_to(hero.pos)<0.5: landing=Ground.travel(hero.pos,-side,gate_hp<=0)
+			hero.pos=landing
+			hero.before=landing
+		else: vehicle_pos[vehicle] = hero.pos
 		vehicle = 0
 		riding_speed = 0
 		notice = "已下乘"
@@ -406,8 +515,15 @@ func mount(id: int) -> bool:
 	if id == 0 or vehicle_hp[id] <= 0 or hero.pos.distance_to(vehicle_pos[id]) > 4.5:
 		notice = "需靠近可用的坐骑或战车"
 		return false
+	var seat: Vector2=vehicle_pos[id]-(parked_heading[id]*1.83 if seat_origin and id==2 else Vector2.ZERO)
+	if seat_origin:
+		if Ground.blocked(seat,gate_hp<=0) or not Ground.clear_shot(hero.pos,seat,gate_hp<=0):
+			notice="车马在阻隔另一侧"
+			return false
+		hero.pos=seat
+		hero.before=seat
 	vehicle = id
-	riding_heading = hero.facing
+	riding_heading = parked_heading[id] if seat_origin else hero.facing
 	notice = "已上马" if id == 1 else "已登车"
 	return true
 
@@ -416,6 +532,20 @@ func input_state(walk: Vector2, facing: Vector2) -> void:
 	if facing.length_squared() > 0.0001:
 		aim = facing.normalized()
 		aim_at_wall_post=Ground.parapet(hero.pos+facing)>2.75
+
+# Keep the last deliberate press near release. Holding attack never overwrites a skill.
+func press_action(slot: int) -> bool:
+	if not started or result!="" or slot<0 or slot>3: return false
+	if action(slot):
+		buffered_slot=-1
+		buffer_ticks=0
+		return true
+	if hero.state in [State.WINDUP,State.RECOVER,State.GUARD,State.STAGGER] and hero_cds[slot]<=0.20 and (slot!=0 or buffered_slot<=0):
+		buffered_slot=slot
+		buffer_aim=aim
+		buffer_wall=aim_at_wall_post
+		buffer_ticks=4
+	return false
 
 func action(slot: int) -> bool:
 	if slot < 0 or slot > 3 or not started or result != "" or hero_cds[slot] > 0 or hero.state != State.MARCH:
@@ -460,7 +590,7 @@ func _near(at: Vector2, radius: float, team: int) -> Array[int]:
 	return found
 
 func _release(u: Unit, move: Arms.Move) -> void:
-	if move.step != 0:
+	if move.step != 0 and not (u.hero and seat_origin and vehicle!=0):
 		_move(u, u.locked * move.step)
 	if move.shape in [Arms.Shape.PARRY, Arms.Shape.BRACE]:
 		_set_state(u, State.GUARD, move.recovery)
@@ -477,6 +607,7 @@ func _release(u: Unit, move: Arms.Move) -> void:
 			shot.previous = shot.pos
 			shot.direction = u.locked.rotated((float(j)-(count-1)*0.5)*0.12)
 			shot.launch_height=Ground.deck_height(u.pos)
+			if seat_origin and (u.mounted or (u.hero and vehicle!=0)): shot.launch_height+=0.91 if u.hero and vehicle==2 else 0.81
 			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.hero and locked_at_wall_post) or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
 			shot.speed = 24.0 if shot.arrow else 37.0
@@ -601,12 +732,24 @@ func _move(u: Unit, offset: Vector2) -> void:
 
 func _player_walk() -> void:
 	var walk := hero_move
+	var start_pos:=hero.pos
+	var start_heading:=riding_heading
 	var speed := 4.2
+	var run:=sprinting and not winded and vehicle==0 and walk.length_squared()>0.01 and hero.state==State.MARCH
+	if run:
+		speed=6.65
+		breath=maxf(0,breath-DT*0.21)
+		winded=breath<=0.01
+	else:
+		breath=minf(1,breath+DT*0.14)
+		if breath>=0.30: winded=false
 	if vehicle != 0:
-		var target_speed := (8.7 if vehicle == 1 else 7.0) * walk.length()
+		var top: float=(10.5 if vehicle==1 else 8.2) if sprinting and seat_origin else (8.7 if vehicle==1 else 7.0)
+		var target_speed := top*walk.length()
 		riding_speed = move_toward(riding_speed, target_speed, DT * (5.5 if vehicle == 1 else 3.5))
 		if walk.length_squared() > 0.01:
-			riding_heading = Vector2.from_angle(rotate_toward(riding_heading.angle(),walk.angle(),DT * (2.8 if vehicle == 1 else 1.4)))
+			var turn: float=(2.8 if vehicle==1 else 1.4)*lerpf(1.0,0.74,riding_speed/top) if seat_origin else (2.8 if vehicle==1 else 1.4)
+			riding_heading = Vector2.from_angle(rotate_toward(riding_heading.angle(),walk.angle(),DT*turn))
 		walk = riding_heading
 		speed = riding_speed
 	if hero.state in [State.WINDUP, State.GUARD]:
@@ -614,9 +757,13 @@ func _player_walk() -> void:
 	if hero.state != State.STAGGER:
 		_move(hero, walk * speed * DT * Ground.pace(hero.pos,vehicle != 0))
 	if vehicle != 0:
-		vehicle_pos[vehicle] = hero.pos
+		if vehicle==2 and seat_origin and (Ground.blocked(hero.pos+riding_heading*1.83,gate_hp<=0) or not Ground.clear_shot(hero.pos,hero.pos+riding_heading*1.83,gate_hp<=0)):
+			hero.pos=start_pos
+			riding_heading=start_heading
+		vehicle_pos[vehicle] = hero.pos+(riding_heading*1.83 if vehicle==2 and seat_origin else Vector2.ZERO)
+		if seat_origin and speed>2 and hero.pos.distance_squared_to(start_pos)<0.0004: riding_speed=minf(riding_speed,0.5)
 		if riding_speed > 5.5 and tick % 9 == 0:
-			var front := hero.pos + riding_heading * 1.1
+			var front: Vector2 = vehicle_pos[vehicle] + riding_heading * 1.1
 			for id in _near(front, 1.2, 1):
 				var v := roster[id]
 				if v.kit == Arms.Kit.SPEAR and v.state in [State.GUARD,State.WINDUP] and v.facing.dot(-riding_heading) > 0.3:
@@ -737,6 +884,17 @@ func step() -> void:
 	tick += 1
 	for i in hero_cds.size():
 		hero_cds[i] = maxf(0, hero_cds[i]-DT)
+	if buffer_ticks>0:
+		if hero.state==State.MARCH:
+			var current:=aim
+			var wall:=aim_at_wall_post
+			aim=buffer_aim
+			aim_at_wall_post=buffer_wall
+			if action(buffered_slot): buffer_ticks=1
+			aim=current
+			aim_at_wall_post=wall
+		buffer_ticks-=1
+		if buffer_ticks==0: buffered_slot=-1
 	_rebuild_grid()
 	_dispatches()
 	if tick == 1 or tick % 8 == 0:

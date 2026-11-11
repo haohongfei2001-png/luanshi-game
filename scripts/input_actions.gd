@@ -10,7 +10,7 @@ static func install() -> void:
 		"order_attack": [KEY_1], "order_follow": [KEY_2], "order_retreat": [KEY_3],
 		"pause_battle": [KEY_ESCAPE, KEY_P], "restart_battle": [KEY_R], "toggle_help": [KEY_H], "toggle_strategy": [KEY_M],
 		"field_deploy": [KEY_ENTER], "field_orders": [KEY_TAB], "field_center": [KEY_C],
-		"field_mount": [KEY_F], "field_chariot": [KEY_V],
+		"field_sprint": [KEY_SHIFT], "field_mount": [KEY_F], "field_chariot": [KEY_V],
 		"campaign_saves": [KEY_F6], "campaign_quicksave": [KEY_F5], "campaign_quickload": [KEY_F9]}
 	for action in bindings:
 		if not InputMap.has_action(action):

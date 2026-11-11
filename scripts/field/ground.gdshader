@@ -23,7 +23,9 @@ void fragment() {
 		float spur=abs(abs(p.y)-35.0);
 		track=max(track,(1.0-smoothstep(1.35,2.65,spur+patch-0.5))*(1.0-smoothstep(2.0,22.0,p.x)));
 		if (p.x>48.0 && p.x<89.0 && abs(p.y)<22.0) track=max(track,0.74);
-		tone=mix(grass,road.rgb*(0.93+0.085*grit),track);
+		float rut=1.0-smoothstep(0.13,0.48+fwidth(edge),abs(edge-1.27+0.14*(patch-0.5)));
+		float trodden=1.0-0.14*rut*(1.0-smoothstep(40.0,48.0,p.x));
+		tone=mix(grass,road.rgb*(0.93+0.085*grit)*trodden,track);
 		if (p.x < -49.0 && p.y>17.0 && p.y<43.0) tone*=0.86+0.12*smoothstep(-0.6,0.6,sin(p.x*7.0+p.y*0.32));
 	} else if (part>1.5 && part<2.5) {
 		tone=stream.rgb*(0.90+0.14*noise2(p*vec2(2.4,0.65)));

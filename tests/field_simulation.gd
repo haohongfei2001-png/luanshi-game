@@ -56,6 +56,8 @@ func _initialize() -> void:
 	_test_cavalry()
 	_test_world_settlement()
 	_test_full_siege()
+	_test_deployment_and_camp()
+	_test_chariot_origin()
 	_test_quivers_and_acknowledgments()
 	print("FIELD_SIM_" + ("PASS" if failures.is_empty() else "FAIL") + " " + JSON.stringify(failures))
 	quit(0 if failures.is_empty() else 1)
@@ -406,3 +408,100 @@ func _test_cavalry() -> void:
 			check(horseman.received>0 and horseman.mount_hp<48 and defender.hp==defender.max_hp,"A facing spear stops the charge and injures its mount")
 		else:
 			check(defender.received>0 and defender.max_hp-defender.hp>25 and horseman.received==0,"Unopposed cavalry lands a stronger moving strike")
+
+func _test_deployment_and_camp() -> void:
+	const Store:=preload("res://scripts/field/save.gd")
+	const World:=preload("res://scripts/field/campaign.gd")
+	var b:=Battle.new()
+	b.setup(512)
+	var enemy_before:=b.roster[b.side_size].pos
+	var gear:=PackedInt32Array()
+	for u in b.roster:
+		gear.append(u.kit)
+		if u.team==0: check(not Ground.blocked(u.pos,false),"Own muster is on dry traversable ground")
+	var original:=b.companies[0].home
+	var north:=b.companies[4].home
+	check(b.deploy_company(0,4,2,2) and b.companies[0].home==north and b.companies[4].home==original,"Swap two actual company sites")
+	check(b.roster[24].station.x==north.x and b.roster[0].station.x<north.x and b.roster[b.side_size].pos==enemy_before,"Existing archers take the front of the narrow column")
+	for u in b.roster: check(u.kit==gear[u.id],"Muster cannot mint or reissue gear")
+	var saved:=Store.snapshot(b)
+	var read:=Store.restore(saved)
+	check(read!=null and read.roster[24].station==b.roster[24].station and read.muster_manifest()==b.muster_manifest(),"Muster slot swap and assignments persist")
+	var invalid:=saved.duplicate(true)
+	invalid.muster[0][0]=invalid.muster[1][0]
+	check(Store.restore(invalid)==null,"Reject overlapping deployment slots")
+	b.start()
+	check(not b.deploy_company(0,0,0,0),"Cannot reposition forces through the muster after deployment")
+	# A deliberate short press during the last recovery frames uses the direction
+	# at press time and cannot interrupt the existing strike.
+	b.hero.state=Battle.State.RECOVER
+	b.hero.timer=0.09
+	b.hero.duration=0.34
+	b.aim=Vector2.UP
+	check(not b.press_action(1) and b.buffer_ticks==4,"Recovery queues a short skill press")
+	b.aim=Vector2.DOWN
+	var saved_input:=Store.restore(Store.snapshot(b))
+	for i in 3:
+		b.step()
+		if saved_input: saved_input.step()
+	check(b.hero.state==Battle.State.WINDUP and b.hero.locked==Vector2.UP and b.buffered_slot==-1 and saved_input!=null and saved_input.hero.locked==b.hero.locked,"Buffered strike preserves aim through a save")
+	b.hero.state=Battle.State.MARCH
+	b.sprinting=true
+	b.input_state(Vector2.LEFT,Vector2.LEFT)
+	var before:=b.hero.pos
+	b.step()
+	check(b.hero.pos.distance_to(before)>0.25 and b.breath<1.0,"Actual foot sprint spends breath")
+	# Controlled settlement fixture: one secured dropped blade, one under guard.
+	var v:=Battle.new()
+	v.setup(20)
+	var w:=World.new()
+	check(w.bind(v) and w.reserve(),"Open a real world ticket for the salvage fixture")
+	v.start()
+	for u in v.roster:
+		u.pos=Vector2(-10,0) if u.team==0 else Vector2(20,0)
+		u.before=u.pos
+	var safe:=v.roster[v.side_size]
+	var guarded:=v.roster[v.side_size+1]
+	safe.pos=Vector2(-9,0)
+	v._hurt(v.hero,safe,10000,v.hero.pos)
+	v._hurt(v.hero,guarded,10000,v.hero.pos)
+	v.result="守军溃退"
+	var receipt:=w.settle()
+	check(receipt.get("reclaimed",-1)==1 and w.loose_weapons==1 and w.audit().is_empty(),"Only one accessible weapon enters friendly inventory")
+	check(not w.camp_order("river") and w.enter_camp() and not w.camp_order("ration"),"No strategic act before continuing; hostile city cannot supply player")
+	check(w.camp_order("river") and not w.camp_order("river"),"Army physically marches and cannot dispatch itself twice")
+	for i in 3: check(w.wait_at_camp(),"World advances from the settled clock")
+	check(w.player_view().army.location=="pingling" and w.camp_order("ration"),"The surviving army arrives before drawing local supplies")
+	var saved_camp:=Store.restore(Store.snapshot(v))
+	var rebound:=World.new()
+	check(saved_camp!=null and rebound.bind(saved_camp) and rebound.snapshot()==w.snapshot() and rebound.receipt==receipt and rebound.audit().is_empty(),"Saving camp restores exactly one settlement and every timed march/transfer")
+	var legacy:=Store.snapshot(v)
+	legacy.version=2
+	legacy.erase("dry_muster")
+	var old:=Store.restore(legacy)
+	check(old!=null and not old.dry_muster and old.camp_actions.is_empty(),"Previous field save remains readable without a new campaign")
+
+func _test_chariot_origin() -> void:
+	const Store:=preload("res://scripts/field/save.gd")
+	var b:=Battle.new()
+	b.setup(20,Battle.SEED,Arms.Kit.BOW)
+	var nose: Vector2=b.vehicle_pos[2]
+	check(b.mount(2) and b.hero.pos.is_equal_approx(nose-Vector2.RIGHT*1.83),"Charioteer physically boards the visible platform")
+	check(not b.mount(1) and b.vehicle==2,"Mount key cannot silently dismount a charioteer")
+	b.start()
+	b.input_state(Vector2.ZERO,Vector2.UP)
+	check(b.action(0),"Loose one real arrow from the cart")
+	var fired:=false
+	for i in 30:
+		b.step()
+		for s in b.shots:
+			if s.source==b.hero.id and not fired:
+				fired=s.previous.distance_to(b.hero.pos+Vector2.UP*0.45)<0.02 and s.launch_height>Ground.deck_height(b.hero.pos)+0.85
+	check(fired,"Arrow originates above the seat, not the draft horse")
+	b.input_state(Vector2.DOWN,Vector2.LEFT)
+	for i in 32: b.step()
+	var parked: Vector2=b.vehicle_pos[2]
+	var heading:=b.riding_heading
+	check(b.mount(2) and b.vehicle==0 and b.hero.pos.distance_to(parked)>0.8 and b.parked_heading[2].is_equal_approx(heading),"Dismount onto a bank-side foot position without rotating the empty cart")
+	var restored:=Store.restore(Store.snapshot(b))
+	check(restored!=null and restored.vehicle_pos==b.vehicle_pos and restored.parked_heading==b.parked_heading,"Parking direction survives a save")

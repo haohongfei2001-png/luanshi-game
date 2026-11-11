@@ -7,6 +7,7 @@ const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
 const FRIEND := Color("3e7271")
 const FOE := Color("a35340")
+const CLOTH_COLOR:=Color("dbcba4")
 const GOLD := Color("c3a45e")
 
 class Batch:
@@ -19,6 +20,8 @@ var groups: Dictionary = {}
 var contact: Batch
 var contact_for_all:=false
 var reference_detail := false
+var reference_two_lods:=false
+var rank_soldiers:=0
 var high_detail_soldiers := 0
 var horse: Batch
 var cart: Batch
@@ -56,9 +59,11 @@ func configure(model: Battle) -> void:
 	battle = model
 	var near_mesh: Array[Mesh] = []
 	var far_mesh: Array[Mesh] = []
+	var ranks_mesh: Array[Mesh]=[]
 	for kit in Arms.NAMES.size():
 		near_mesh.append(Figures.fighter(kit,true))
 		far_mesh.append(Figures.silhouette(kit))
+		ranks_mesh.append(Figures.ranks(kit))
 	var counts := {}
 	for u in battle.roster:
 		var key := _key(u)
@@ -71,6 +76,8 @@ func configure(model: Battle) -> void:
 		if key<20:
 			groups[30+key]=_batch(far_mesh[kit],mat,counts[key])
 			groups[30+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			groups[60+key]=_batch(ranks_mesh[kit],mat,counts[key])
+			groups[60+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
@@ -103,9 +110,20 @@ func configure(model: Battle) -> void:
 	flag.tri(Vector3(0.89,3.41,0.09),Vector3(1.32,3.34,0.16),Vector3(0.90,3.06,0.15),Color.WHITE)
 	flag.dye = 0
 	flag.block(Vector3(0.38,3.11,0.02),Vector3(0.13,0.42,0.09),GOLD)
+	# A notched tail and two light hems remain legible beyond clothing detail.
+	flag.quad(Vector3(0,3.49,0.012),Vector3(0.9,3.42,0.101),Vector3(0.9,3.36,0.105),Vector3(0,3.43,0.012),CLOTH_COLOR)
+	flag.tri(Vector3(0.91,2.96,0.15),Vector3(1.36,2.77,0.19),Vector3(0.91,2.72,0.18),GOLD)
 	var fm := flag.finish()
-	for team in 2:
-		standards.append(_batch(fm,_material(FRIEND if team==0 else FOE,0),battle.companies_per_side))
+	var garrison:=Builder.new()
+	garrison.rod(Vector3.ZERO,Vector3(0,3.62,0),0.046,0.034,Color("745636"),4)
+	garrison.dye=1
+	garrison.quad(Vector3(0,3.48,0),Vector3(0.89,3.39,0.09),Vector3(0.91,2.89,0.16),Vector3(0,2.82,0),Color.WHITE)
+	garrison.tri(Vector3(0.07,2.84,0),Vector3(0.42,2.49,0.10),Vector3(0.52,2.87,0.09),Color.WHITE)
+	garrison.tri(Vector3(0.49,2.88,0.09),Vector3(0.83,2.56,0.18),Vector3(0.90,2.91,0.16),Color.WHITE)
+	garrison.dye=0
+	garrison.quad(Vector3(0.12,3.14,0.045),Vector3(0.43,3.32,0.075),Vector3(0.72,3.10,0.13),Vector3(0.42,2.96,0.082),CLOTH_COLOR)
+	standards.append(_batch(fm,_material(FRIEND,0),battle.companies_per_side))
+	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.companies_per_side))
 	runners = _batch(near_mesh[Arms.Kit.SWORD],_material(Color("c49b5c"),0),8)
 
 func _key(u: Battle.Unit) -> int:
@@ -124,6 +142,7 @@ func _reserve(g: Batch,count: int) -> void:
 func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) -> void:
 	visible_soldiers = 0
 	high_detail_soldiers=0
+	rank_soldiers=0
 	contact.used=0
 	visible_fighting = 0
 	shown_fallen = 0
@@ -152,12 +171,15 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			base.y += 0.81
 		if u.hero and battle.vehicle != 0:
 			var heading := battle.riding_heading
-			if battle.vehicle == 2:
+			if battle.vehicle == 2 and not battle.seat_origin:
 				base -= Vector3(heading.x,0,heading.y)*1.83
 			base.y += 0.83 if battle.vehicle==1 else 0.91
 		var full := reference_detail or u.hero or u.officer or (zoom<17 and p.distance_squared_to(center)<110) or (zoom<36 and p.distance_squared_to(center)<19)
 		var key:=_key(u)
-		if not full:
+		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and p.distance_squared_to(center)>170.0)):
+			key+=60
+			rank_soldiers+=1
+		elif not full:
 			key+=30
 		elif not u.hero and not u.officer:
 			high_detail_soldiers+=1
@@ -174,7 +196,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	for id in [1,2]:
 		var pos: Vector2 = battle.vehicle_pos[id]
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
-		var heading := battle.riding_heading if battle.vehicle == id else Vector2.RIGHT
+		var heading := battle.riding_heading if battle.vehicle == id else battle.parked_heading[id]
 		var stride := battle.hero.stride if battle.vehicle == id else 0.0
 		_put(horse if id==1 else cart,Ground.unit_point(pos),atan2(heading.x,heading.y),Color((state+0.5)/128.0,1,stride,0))
 	for s in battle.shots:

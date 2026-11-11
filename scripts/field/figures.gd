@@ -28,7 +28,17 @@ static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 	b.loft([Vector3(0,0.96,0),Vector3(0,1.25,0)], [Vector2(0.257,0.184),Vector2(0.296,0.209)],n,vest)
 	b.loft([Vector3(0,0.88,0),Vector3(0,0.955,0)], [Vector2(0.254,0.181),Vector2(0.25,0.184)],n,HIDE)
 	if detailed:
-		for row in 3:
+		# Overlapping collar, sleeve edging and a hanging belt end read at face distance.
+		b.quad(Vector3(-0.18,1.35,0.12),Vector3(-0.12,1.37,0.14),Vector3(0.19,1.12,0.16),Vector3(0.15,1.08,0.18),Color("d9c5a0"))
+		b.quad(Vector3(0.14,1.37,0.13),Vector3(0.19,1.35,0.12),Vector3(0.015,1.23,0.20),Vector3(-0.022,1.26,0.19),HIDE)
+		b.quad(Vector3(-0.14,0.92,0.17),Vector3(-0.09,0.92,0.19),Vector3(-0.10,0.65,0.23),Vector3(-0.16,0.62,0.22),HIDE)
+		if kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]:
+			var quiver:=Vector3(-0.16,0.77,-0.23)
+			b.rod(quiver,quiver+Vector3(0.27,0.59,-0.03),0.083,0.093,HIDE,6)
+			for i in 4:
+				var tail:=quiver+Vector3(0.23+i*0.020,0.67+(i%2)*0.046,-0.02-(i%2)*0.03)
+				b.rod(tail-Vector3(0.04,0.11,0),tail,0.019,0.024,CLOTH,3)
+		for row in (3 if lamellar else 0):
 			for i in 5:
 				b.block(Vector3((i-2)*0.079,1.019+row*0.078,0.181-absf(i-2)*0.020),Vector3(0.070,0.066,0.035),vest.lightened(0.09*(row%2)))
 		if lamellar:
@@ -59,12 +69,23 @@ static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 		var shoulder := Vector3(side*0.255,1.28,0)
 		var elbow := Vector3(side*0.35,1.00,0.05)
 		var hand := Vector3(side*0.34,1.01,0.30)
+		if side<0 and kit in [Arms.Kit.STAFF,Arms.Kit.SPEAR,Arms.Kit.GLAIVE,Arms.Kit.CROSSBOW]:
+			b.joint=3
+			elbow=Vector3(-0.24,1.01,0.24)
+			hand=Vector3(0.32,1.03,0.61)
+		elif side<0 and kit==Arms.Kit.BOW:
+			hand=Vector3(0.30,1.02,0.05)
+			elbow=Vector3(-0.27,1.09,-0.03)
 		b.dye = 1
 		b.rod(shoulder,elbow,0.115,0.080,CLOTH,n)
 		b.dye = 0
 		b.rod(elbow,hand,0.078,0.053,HIDE,n)
 		b.rod(hand - Vector3(0,0,0.025),hand+Vector3(0,0.006,0.093),0.067,0.052,SKIN,n)
 		if detailed:
+			b.rod(elbow.lerp(hand,0.67),elbow.lerp(hand,0.82),0.070,0.062,vest,6)
+			for finger in 3:
+				var knuckle:=hand+Vector3(side*0.018,0.018,0.013+finger*0.025)
+				b.rod(knuckle,knuckle+Vector3(-side*0.048,-0.039,0.011),0.017,0.014,SKIN,4)
 			b.rod(hand+Vector3(-side*0.044,0.034,0.015),hand+Vector3(-side*0.061,0.032,0.075),0.028,0.014,SKIN)
 	b.joint = 3
 	match kit:
@@ -121,6 +142,10 @@ static func horse(cart: bool = false) -> ArrayMesh:
 	b.rod(Vector3(0,1.70,0.74),Vector3(0,1.87,0.70),0.088,0.036,HAIR)
 	b.rod(Vector3(0,1.23,-0.65),Vector3(0,0.57,-0.87),0.10,0.045,HAIR)
 	b.block(Vector3(0,1.32,-0.04),Vector3(0.52,0.12,0.49),HIDE)
+	for side: float in [-1,1]:
+		b.quad(Vector3(side*0.19,1.31,0.29),Vector3(side*0.19,1.31,-0.42),Vector3(side*0.30,1.03,-0.39),Vector3(side*0.30,1.04,0.20),Color("926953"))
+		b.rod(Vector3(side*0.13,1.51,1.04),Vector3(side*0.26,1.27,0.11),0.018,0.021,HIDE,3)
+		b.rod(Vector3(side*0.12,1.55,0.95),Vector3(side*0.12,1.65,0.75),0.025,0.023,HIDE,3)
 	for x: float in [-0.18,0.18]:
 		for z: float in [-0.47,0.47]:
 			b.joint = 1 if x*z<0 else 2
@@ -179,4 +204,43 @@ static func silhouette(kit: int) -> ArrayMesh:
 		elif kit==Arms.Kit.DUAL:
 			b.joint=4
 			_blade(b,Vector3(-0.34,1.01,0.33),0.63,0.052,false)
+	return b.finish()
+
+# Wide-view bodies still have independently articulated arms, legs, head, weapons
+# and faction cloth. The hidden end caps and armor plates cost more than their pixels.
+static func ranks(kit: int) -> ArrayMesh:
+	var b:=Builder.new()
+	b.open_ends=true
+	b.dye=1
+	b.loft([Vector3(0,0.48,0),Vector3(0,1.30,0)],[Vector2(0.32,0.22),Vector2(0.31,0.18)],4,CLOTH)
+	b.dye=0
+	b.rod(Vector3(0,1.30,0),Vector3(0,1.60,0.024),0.104,0.151,SKIN,4)
+	b.rod(Vector3(0,1.55,0),Vector3(0,1.76,-0.03),0.183,0.04,IRON,4)
+	for side: float in [-1.0,1.0]:
+		b.joint=1 if side<0 else 2
+		b.rod(Vector3(side*0.14,0.61,0),Vector3(side*0.16,0.045,0.045),0.104,0.081,HIDE,3)
+		b.joint=4 if side<0 else 3
+		b.rod(Vector3(side*0.235,1.26,0),Vector3(side*0.34,0.99,0.30),0.107,0.058,HIDE,3)
+	b.joint=3
+	var p:=Vector3(0.34,1.01,0.28)
+	if kit in [Arms.Kit.STAFF,Arms.Kit.SPEAR,Arms.Kit.GLAIVE]:
+		var reach:=1.19 if kit==Arms.Kit.STAFF else 1.65
+		b.rod(p+Vector3(0,-0.10,-0.87),p+Vector3(0,0.13,reach),0.044,0.034,WOOD,3)
+		if kit!=Arms.Kit.STAFF:
+			b.tri(p+Vector3(0,0.07,reach-0.10),p+Vector3(0,0.22 if kit==Arms.Kit.GLAIVE else 0.18,reach-0.07),p+Vector3(0,0.20,reach+0.37),EDGE)
+	elif kit==Arms.Kit.BOW:
+		for side: float in [-1,1]:
+			var tip:=p+Vector3(0,side*0.65,-0.08)
+			b.rod(p,tip,0.048,0.020,WOOD,3)
+			b.tri(tip,p+Vector3(0,0,-0.28),p+Vector3(0.016,0,-0.28),CLOTH)
+	elif kit==Arms.Kit.CROSSBOW:
+		b.rod(p+Vector3(0,0,-0.22),p+Vector3(0,0.09,0.61),0.057,0.046,WOOD,3)
+		b.rod(p+Vector3(-0.43,0.09,0.39),p+Vector3(0.43,0.09,0.39),0.039,0.038,IRON,3)
+	else:
+		b.tri(p+Vector3(0,-0.045,0),p+Vector3(0,0.07,0),p+Vector3(0,0.15 if kit==Arms.Kit.DAO else 0,0.97),EDGE)
+		b.joint=4
+		if kit==Arms.Kit.SHIELD:
+			b.quad(Vector3(-0.56,0.66,0.40),Vector3(-0.12,0.66,0.40),Vector3(-0.12,1.39,0.40),Vector3(-0.56,1.39,0.40),HIDE)
+		if kit==Arms.Kit.DUAL:
+			b.tri(Vector3(-0.34,0.97,0.30),Vector3(-0.34,1.09,0.30),Vector3(-0.34,1.05,1.08),EDGE)
 	return b.finish()
