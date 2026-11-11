@@ -23,3 +23,6 @@ ffmpeg -nostdin -loglevel error -y -i artifacts/field-512.png -vf scale=640:-2 -
 printf 'FIELD_PREVIEW_JPEG '
 base64 -w0 artifacts/river-gate-preview.jpg
 printf '\n'
+printf 'FIELD_CLOSE_JPEG '
+base64 -w0 artifacts/field-close.jpg
+printf '\n'

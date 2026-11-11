@@ -36,7 +36,7 @@ Godot 4.6.3 v0.8 integration: finite-HP combat and a playable youth military-lif
 
 默认开场为河关战前部署。选择兵器，给各队分配任务，按 Enter 开战。WASD 移动，鼠标瞄准，左键或 J 普攻，Q、E、空格使用本兵器的三个动作。右键拖动镜头，滚轮缩放，C 回到主角。靠近马匹按 F，靠近战车按 V。Tab 打开军令，F5/F9 保存或恢复这场战斗。
 
-默认双方各 512 名普通士兵，另有军官、玩家和载具。三城战役和旧存档可从右上角进入。河关战场拥有独立进度，两种模式间切换会保留内存中的现场。源代码验证命令是 `./tools/test.sh`。Linux X11 图形测量使用 `./tools/test-field-render.sh`，需要 Xvfb、FFmpeg 和 GNU timeout。
+默认双方各 512 名普通士兵，另有军官、玩家和载具。三城战役和旧存档可从右上角进入。河关以新军籍接入原有 WorldSim。其本局时钟、留在地面的兵器、真实兵员损失及守军沿道路的撤离均在战后结算。两种开场各自保存，切换会保留内存中的现场。源代码验证命令是 `./tools/test.sh`。Linux X11 图形测量使用 `./tools/test-field-render.sh`，需要 Xvfb、FFmpeg 和 GNU timeout。
 
 ### Play from source
 

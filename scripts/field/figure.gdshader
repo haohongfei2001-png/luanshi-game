@@ -36,9 +36,18 @@ void vertex() {
 			if (kit==3 || (kit==0 && slot==2) || kit==7) {
 				v.z-=beat*(joint==3 ? 0.48 : 0.18);
 				swing+=beat*0.28;
-			} else if (kit==5 || kit==6) {
+			} else if (kit==6) {
+				// Hold the stock level at release, then return the string during recovery.
+				float load=state==2 ? sin(3.14159*p) : 0.0;
+				v.z+=(joint==4 ? -0.32*load : -0.08*beat);
+				swing+=(joint==4 ? 0.72*load : 0.12*load);
+			} else if (kit==5) {
 				v.z+=beat*(joint==4 ? -0.31 : 0.12);
 				swing-=0.18;
+			 } else if (kit==1 || kit==4) {
+				float chop=kit==4 ? 1.04 : 0.68;
+				v=bend_y(v,shoulder,beat*(slot==1 ? 1.28 : 0.47));
+				swing+=beat*chop;
 			} else {
 				float side=(joint==4 && kit==8) ? -1.0 : 1.0;
 				v=bend_y(v,shoulder,beat*(kit==2 ? 1.26 : 0.98)*side);

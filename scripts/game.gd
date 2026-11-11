@@ -9,7 +9,10 @@ func _ready() -> void:
 		if argument in ["--smoke-scene","--campaign-smoke","--training"] or argument.begins_with("--persistence-smoke-") or argument.begins_with("--youth-smoke-") or argument.begins_with("--training-profile=") or argument.begins_with("--campaign-save-id="):
 			legacy=true
 	if legacy: open_campaign()
-	else: open_field()
+	else:
+		open_field()
+		if "--field-check" in OS.get_cmdline_user_args():
+			load("res://scripts/field/package_probe.gd").run(get_tree(),field)
 
 func open_field() -> void:
 	if not field:

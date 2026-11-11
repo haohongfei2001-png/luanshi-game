@@ -170,3 +170,7 @@ func update_model(b: Battle,paused: bool) -> void:
 	result_box.visible=b.result!=""
 	if result_box.visible:
 		result_text.text="%s\n我军阵亡 %d · 撤出 %d · 存活 %d\n敌军阵亡 %d · 撤出 %d · 存活 %d\n遗落兵器 %d / %d" % [b.result,b.losses[0],b.escaped[0],b.side_size-b.losses[0],b.losses[1],b.escaped[1],b.side_size-b.losses[1],b.equipment[0],b.equipment[1]]
+
+func show_world(food: int,loose: int,settled: bool) -> void:
+	if settled:
+		result_text.text+="\n已结算到河关军籍 · 本军存粮 %d · 战场遗留兵器 %d" % [food,loose]

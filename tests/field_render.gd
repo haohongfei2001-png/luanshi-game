@@ -45,6 +45,7 @@ func _run() -> void:
 		for count: int in Battle.SCALES:
 			await _measure(count)
 			if not failures.is_empty(): break
+		if failures.is_empty(): await _paired_detail()
 		if failures.is_empty():
 			var held:=field.battle
 			shell.open_campaign()
@@ -124,7 +125,7 @@ func _measure(count: int) -> void:
 		"wall_seconds":span/1000.0,"fps":clips.size()*1000.0/maxf(span,0.01),"mean_ms":span/maxi(1,clips.size()),"p95_ms":_pct(clips,0.95),"p99_ms":_pct(clips,0.99),
 		"sim_ms_per_tick":float(field.sim_us-sim_begin)/maxi(1,b.tick-first_tick)/1000.0,"view_script_ms_per_frame":float(field.view_us-view_begin)/maxi(1,clips.size())/1000.0,
 		"render_cpu_p95_ms":_pct(cpu,0.95),"render_gpu_p95_ms":_pct(gpu,0.95),"draw_calls_p95":_pct(draws,0.95),
-		"static_memory_bytes":OS.get_static_memory_usage(),"input_observed_ms":latency,"peak_visible_combat_poses":peak_poses,"hits_during_sample":b.hits[0]+b.hits[1]-before_hits})
+		"static_memory_bytes":OS.get_static_memory_usage(),"input_observed_ms":latency,"peak_visible_combat_poses":peak_poses,"last_visible_soldiers":field.view.visible_soldiers,"last_high_detail_soldiers":field.view.high_detail_soldiers,"hits_during_sample":b.hits[0]+b.hits[1]-before_hits})
 	totals.append(record)
 	print("FIELD_FRAME_SAMPLE "+JSON.stringify(record))
 	var pic:=root.get_texture().get_image()
@@ -170,6 +171,41 @@ func _movie() -> void:
 			var pic:=root.get_texture().get_image()
 			pic.resize(768,480,Image.INTERPOLATE_BILINEAR)
 			check(pic.save_jpg("res://artifacts/field-film/frame-%03d.jpg"%i,0.88)==OK,"Movie frame write")
+			if frame==174: check(pic.save_jpg("res://artifacts/field-close.jpg",0.94)==OK,"Close combat still")
 			i+=1
 	check(i==120 and field.battle.hits[0]>0 and field.battle.hits[1]>0,"Recorded active battle across camera movement")
 	print("FIELD_FILM_FACTS "+JSON.stringify(field.battle.report()))
+
+func _paired_detail() -> void:
+	# Compare the same live identities, poses, camera, viewport and simulation tick
+	# twice. Only the crowd mesh and its shadow submission change. This isolates
+	# renderer cost; the real-time four-scale pass above measures player frame time.
+	field.set_physics_process(false)
+	field.follow=false
+	field.camera.size=28
+	field.pan_to(Vector2(1,-18))
+	var samples: Array=[[],[]]
+	var triangles := [0,0]
+	var visible := -1
+	for frame in 12:
+		field.battle.step()
+		for half in 2:
+			var ref: int=(frame+half)%2
+			field.view.reference_detail=bool(ref)
+			await RenderingServer.frame_post_draw
+			var before:=Time.get_ticks_usec()
+			await RenderingServer.frame_post_draw
+			if frame>1:
+				samples[ref].append((Time.get_ticks_usec()-before)/1000.0)
+			triangles[ref]=RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
+			if half==0: visible=field.view.visible_soldiers
+			else: check(visible==field.view.visible_soldiers,"LOD keeps identical visible identities on paired frames")
+	for series in samples: series.sort()
+	var pair: Dictionary={"poses":10,"visible_soldiers_last":visible,"per_side":field.battle.side_size,
+		"optimized_median_render_ms":samples[0][5],"full_detail_median_render_ms":samples[1][5],
+		"optimized_primitives":triangles[0],"full_detail_primitives":triangles[1]}
+	print("FIELD_PAIRED_LOD "+JSON.stringify(pair))
+	var file:=FileAccess.open("res://artifacts/field-lod-paired.json",FileAccess.WRITE)
+	file.store_string(JSON.stringify(pair,"  "))
+	field.view.reference_detail=false
+	field.set_physics_process(true)

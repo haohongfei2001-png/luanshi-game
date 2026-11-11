@@ -6,9 +6,11 @@ const Landscape := preload("res://scripts/field/landscape.gd")
 const Hud := preload("res://scripts/field/hud.gd")
 const Sound := preload("res://scripts/field/sound.gd")
 const Store := preload("res://scripts/field/save.gd")
+const FieldWorld := preload("res://scripts/field/campaign.gd")
 const Actions := preload("res://scripts/input_actions.gd")
 signal campaign_requested
 var battle: Battle
+var theater: FieldWorld
 var view: Figures
 var map := Landscape.new()
 var hud := Hud.new()
@@ -25,6 +27,8 @@ var view_us := 0
 var max_step_us := 0
 var selections := 512
 var last_sound_tick := -20
+var last_shot_tick := -20
+var frame_log: RefCounted
 
 func _ready() -> void:
 	Actions.install()
@@ -50,6 +54,9 @@ func _ready() -> void:
 			var count := arg.trim_prefix("--field-size=").to_int()
 			if count in Battle.SCALES: selections=count
 	new_muster(selections)
+	if "--field-profile" in OS.get_cmdline_user_args():
+		frame_log = preload("res://scripts/field/frame_log.gd").new()
+		frame_log.open(get_viewport())
 
 func new_muster(count: int) -> void:
 	var fresh := Battle.new()
@@ -63,6 +70,10 @@ func _adopt(fresh: Battle) -> void:
 		remove_child(view)
 		view.free()
 	battle=fresh
+	theater=FieldWorld.new()
+	if not theater.bind(fresh):
+		push_error("Field roster does not match opening inventory")
+		return
 	selections=battle.side_size
 	view=Figures.new()
 	add_child(view)
@@ -76,6 +87,9 @@ func _adopt(fresh: Battle) -> void:
 
 func deploy() -> void:
 	if battle.result!="" or battle.started: return
+	if not theater.reserve():
+		battle.notice="军籍与库存不符，无法出阵"
+		return
 	battle.start()
 	hud.order_panel.hide()
 	audio.cue("horn",-10)
@@ -168,11 +182,26 @@ func _physics_process(delta: float) -> void:
 		battle.input_state(Actions.movement(),_screen_ground(pointer)-battle.hero.pos)
 		if Input.is_action_pressed("attack") and (Input.is_physical_key_pressed(KEY_J) or get_viewport().gui_get_hovered_control()==null):
 			battle.action(0)
+		var arrows_before := battle.arrow_count
+		var gate_before := battle.gate_hp
 		var start := Time.get_ticks_usec()
 		battle.step()
+		if battle.tick%20==0 or battle.result!="":
+			if not theater.sync() or (battle.result!="" and theater.settle().is_empty()):
+				paused=true
+				push_error("Field world clock or settlement audit failed")
+				return
 		var cost := Time.get_ticks_usec()-start
 		sim_us+=cost
 		max_step_us=maxi(max_step_us,cost)
+		if battle.gate_hp<gate_before and camera_center.distance_to(Ground.GATE)<32:
+			audio.cue("wood",-12)
+		if battle.arrow_count>arrows_before and battle.tick-last_shot_tick>=8:
+			for shot in battle.shots:
+				if shot.distance<2.0 and camera_center.distance_squared_to(shot.pos)<100:
+					audio.cue("shot",-21)
+					last_shot_tick=battle.tick
+					break
 		if battle.tick-last_sound_tick>=5:
 			for id in battle._near(camera_center,minf(camera.size*0.40,12),1):
 				if battle.roster[id].flash>=0.20:
@@ -184,7 +213,7 @@ func _draw_field() -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
 	var half_extent := Vector2(camera.size*viewport_size.x/maxf(viewport_size.y,1)*0.5+4,camera.size*0.68+6)
 	var t := Time.get_ticks_usec()
-	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size<49)
+	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	map.update_battle(battle)
 	view_us+=Time.get_ticks_usec()-t
 
@@ -193,10 +222,15 @@ func _process(delta: float) -> void:
 	if follow: camera_center=camera_center.lerp(battle.hero.pos,1.0-exp(-delta*7.5))
 	_camera()
 	_draw_field()
+	if frame_log: frame_log.sample(self)
 	ui_clock+=delta
 	if ui_clock>=0.13:
 		ui_clock=0
 		hud.update_model(battle,paused)
+		hud.show_world(theater.own_supply(),theater.loose_weapons,not theater.receipt.is_empty())
 
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT and battle and battle.started: paused=true
+
+func _exit_tree() -> void:
+	if frame_log: frame_log.interrupt("left_battlefield",self)

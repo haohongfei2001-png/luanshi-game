@@ -129,3 +129,44 @@ static func horse(cart: bool = false) -> ArrayMesh:
 				b.rod(Vector3(end.x,0.58,-1.84),end,0.034,0.023,WOOD)
 				b.rod(end,next,0.062,0.062,HIDE)
 	return b.finish()
+
+## At roughly 10–30 px tall, keep the limb joints, livery and weapon silhouette.
+## Each limb has an open triangular cross section; details are in the close mesh.
+static func silhouette(kit: int) -> ArrayMesh:
+	var b:=Builder.new()
+	b.dye=1
+	b.loft([Vector3(0,0.49,0),Vector3(0,1.24,0),Vector3(0,1.34,0)],[Vector2(0.32,0.20),Vector2(0.29,0.18),Vector2(0.16,0.13)],5,CLOTH)
+	b.dye=0
+	b.rod(Vector3(0,0.89,0),Vector3(0,0.96,0),0.245,0.24,HIDE,5)
+	b.loft([Vector3(0,1.35,0.016),Vector3(0,1.56,0.02)],[Vector2(0.105,0.13),Vector2(0.15,0.15)],5,SKIN)
+	b.rod(Vector3(0,1.54,0),Vector3(0,1.73,-0.025),0.177,0.07,IRON,5)
+	for sign_x: float in [-1,1]:
+		b.joint=1 if sign_x<0 else 2
+		b.rod(Vector3(sign_x*0.15,0.60,0),Vector3(sign_x*0.16,0.08,0.025),0.104,0.073,HIDE,3)
+		b.joint=4 if sign_x<0 else 3
+		b.dye=1
+		b.rod(Vector3(sign_x*0.24,1.26,0),Vector3(sign_x*0.34,1.01,0.08),0.11,0.07,CLOTH,3)
+		b.dye=0
+		b.rod(Vector3(sign_x*0.34,1.01,0.08),Vector3(sign_x*0.34,1.01,0.35),0.066,0.046,SKIN,3)
+	b.joint=3
+	if kit in [Arms.Kit.SPEAR,Arms.Kit.STAFF,Arms.Kit.GLAIVE]:
+		var length:=1.45 if kit==Arms.Kit.STAFF else 1.94
+		b.rod(Vector3(0.34,0.93,-0.61),Vector3(0.34,1.14,length),0.044,0.033,WOOD,3)
+		if kit!=Arms.Kit.STAFF:
+			b.rod(Vector3(0.34,1.14,length-0.19),Vector3(0.34,1.20,length+0.33),0.13 if kit==Arms.Kit.GLAIVE else 0.072,0.005,EDGE,3)
+	elif kit==Arms.Kit.BOW:
+		for s: float in [-1,1]:
+			b.rod(Vector3(0.34,1.03,0.37),Vector3(0.34,1.03+s*0.65,0.22),0.045,0.017,WOOD,3)
+			b.rod(Vector3(0.34,1.03+s*0.65,0.22),Vector3(0.34,1.03,0.05),0.012,0.012,CLOTH,3)
+	elif kit==Arms.Kit.CROSSBOW:
+		b.rod(Vector3(0.34,1.04,0.06),Vector3(0.34,1.08,0.85),0.064,0.045,WOOD,3)
+		b.rod(Vector3(-0.09,1.07,0.66),Vector3(0.77,1.07,0.66),0.040,0.030,IRON,3)
+	else:
+		_blade(b,Vector3(0.34,1.01,0.33),0.82,0.07,kit==Arms.Kit.DAO)
+		if kit==Arms.Kit.SHIELD:
+			b.joint=4
+			b.block(Vector3(-0.34,1.0,0.42),Vector3(0.46,0.8,0.085),HIDE)
+		elif kit==Arms.Kit.DUAL:
+			b.joint=4
+			_blade(b,Vector3(-0.34,1.01,0.33),0.63,0.052,false)
+	return b.finish()

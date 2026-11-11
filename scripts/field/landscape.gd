@@ -17,13 +17,14 @@ func _ready() -> void:
 	world.environment.background_color = Color("a7b6a5")
 	world.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	world.environment.ambient_light_color = Color("e2e3ce")
-	world.environment.ambient_light_energy = 0.76
+	world.environment.ambient_light_energy = 0.52
 	add_child(world)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-53,-31,0)
 	sun.light_color = Color("ffedce")
-	sun.light_energy = 1.02
+	sun.light_energy = 0.76
 	sun.shadow_enabled = true
+	sun.shadow_opacity = 0.76
 	sun.directional_shadow_max_distance = 75.0
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	add_child(sun)
@@ -74,11 +75,8 @@ func _ready() -> void:
 func _mesh(builder: Builder,parent: Node3D) -> MeshInstance3D:
 	var mesh := MeshInstance3D.new()
 	mesh.mesh = builder.finish()
-	var mat := StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true
-	mat.vertex_color_is_srgb = true
-	mat.roughness = 0.94
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var mat := ShaderMaterial.new()
+	mat.shader = preload("res://scripts/field/ground.gdshader")
 	mesh.material_override = mat
 	parent.add_child(mesh)
 	return mesh
@@ -87,20 +85,15 @@ func _point(x: float,z: float) -> Vector3:
 	return Vector3(x,Ground.height(Vector2(x,z)),z)
 
 func _earth(b: Builder) -> void:
-	var grass := Color("879064")
+	b.joint=1
 	for x in range(-126,126,3):
 		for z in range(-72,72,3):
-			var p := Vector2(x+1.5,z+1.5)
-			var noise := sin(x*0.29+z*0.08)*0.035 + sin(z*0.49-x*0.22)*0.025
-			var col := grass.lerp(Color("ab9b6d"),clampf(0.40+sin(p.x*0.059+p.y*0.13)*0.24,0,1)).lightened(noise)
-			if absf(p.y) < 3.1 or absf(p.y-Ground.crossing(p.y)) < 2.4 and p.x < 10 or (p.x > Ground.WALL_X and p.x < Ground.BACK_X and absf(p.y)<Ground.WALL_Z):
-				col = DIRT.lightened(noise)
-			elif p.x < -49 and p.y > 17 and p.y < 43:
-				col = Color("8e8657") if (x/3)%3==0 else Color("9a905e")
-			b.quad(_point(x,z),_point(x,z+3),_point(x+3,z+3),_point(x+3,z),col)
+			b.quad(_point(x,z),_point(x,z+3),_point(x+3,z+3),_point(x+3,z),Color.WHITE)
+	b.joint=2
 	var water := Color("577d78")
 	b.quad(Vector3(Ground.RIVER_X-4.8,-0.33,-72),Vector3(Ground.RIVER_X-4.8,-0.33,72),
 		Vector3(Ground.RIVER_X+4.8,-0.33,72),Vector3(Ground.RIVER_X+4.8,-0.33,-72),water)
+	b.joint=0
 	for z: float in Ground.CROSSINGS:
 		var center := Vector3(Ground.RIVER_X,0,z)
 		b.block(center,Vector3(13.2,0.26,7.9),WOOD)
@@ -139,6 +132,16 @@ func _tower(b: Builder,p: Vector3) -> void:
 
 func _fort(b: Builder) -> void:
 	for side: float in [-1,1]:
+		var inner := Ground.WALL_X+1.4
+		var outer := Ground.WALL_X+4.6
+		var ramp_start := Vector3(inner,0.03,side*5.5)
+		var crest := Vector3(inner,3.25,side*(5.5+3.25/0.43))
+		var end := Vector3(inner,3.25,side*(Ground.WALL_Z-1.2))
+		var w := Vector3(outer-inner,0,0)
+		b.quad(ramp_start,crest,crest+w,ramp_start+w,STONE.lightened(0.10))
+		b.quad(crest,end,end+w,crest+w,LIME)
+		b.tri(ramp_start+w,crest+w,Vector3(outer,0,crest.z),STONE)
+		b.quad(crest+w,end+w,Vector3(outer,0,end.z),Vector3(outer,0,crest.z),STONE)
 		var z := side*(Ground.WALL_Z+Ground.GATE_HALF)*0.5
 		var length := Ground.WALL_Z-Ground.GATE_HALF
 		b.block(Vector3(Ground.WALL_X,1.65,z),Vector3(2.6,3.3,length),LIME)
