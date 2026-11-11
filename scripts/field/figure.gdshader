@@ -17,9 +17,9 @@ vec3 bend_y(vec3 p, vec3 pivot, float a) {
 }
 
 void vertex() {
-	int code=int(floor(INSTANCE_CUSTOM.r*32.0));
+	int code=int(floor(INSTANCE_CUSTOM.r*64.0));
 	int state=code%8;
-	int slot=code/8;
+	int slot=(code/8)%4;
 	float p=INSTANCE_CUSTOM.g;
 	float walk=sin(INSTANCE_CUSTOM.b*6.28318);
 	int joint=int(round(UV2.x));
@@ -33,7 +33,10 @@ void vertex() {
 		float swing=joint==3 ? -0.14*walk : 0.14*walk;
 		if (state==1 || state==2) {
 			float beat=state==1 ? smoothstep(0.0,0.74,p)-1.9*smoothstep(0.74,1.0,p) : -0.9*(1.0-p);
-			if (kit==3 || (kit==0 && slot==2) || kit==7) {
+			if (code>=32) {
+				v.z-=beat*0.42;
+				swing+=beat*0.36;
+			} else if (kit==3 || (kit==0 && slot==2) || kit==7) {
 				v.z-=beat*(joint==3 ? 0.48 : 0.18);
 				swing+=beat*0.28;
 			} else if (kit==6) {

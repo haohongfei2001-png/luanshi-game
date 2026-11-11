@@ -52,6 +52,7 @@ func _initialize() -> void:
 	_test_resume()
 	_test_player_kits()
 	_test_world_settlement()
+	_test_quivers_and_acknowledgments()
 	print("FIELD_SIM_" + ("PASS" if failures.is_empty() else "FAIL") + " " + JSON.stringify(failures))
 	quit(0 if failures.is_empty() else 1)
 
@@ -153,6 +154,7 @@ func _test_world_settlement() -> void:
 	check(not first.is_empty() and w.audit().is_empty(),"World settlement conserves soldiers, gear, civilians and food")
 	var snapshot:=w.snapshot()
 	check(snapshot.hour>=1 and snapshot.convoys.size()>0 and snapshot.ledger.food_consumed>0,"Offscreen supply departed and both sides ate on the same clock")
+	check(w.audit_quivers() and first.has("ammunition") and snapshot.field_ammo_spent[0]+snapshot.field_ammo_spent[1]==b.arrow_count,"World counts every expended arrow and bolt")
 	check(first==w.settle() and snapshot==w.snapshot(),"Repeated settlement has no second effect")
 	var resumed:=FieldWorld.new()
 	check(resumed.bind(b) and resumed.snapshot()==snapshot and resumed.receipt==first,"Terminal save rebuilds identical clock, inventory, receipt and delayed reports")
@@ -180,4 +182,75 @@ func _test_world_settlement() -> void:
 	siege.step()
 	check(siege.result=="夺取城内阵地" and siege_world.sync() and not siege_world.settle().is_empty(),"Court control produces a non-annihilation settlement")
 	var world:=siege_world.snapshot()
-	check(world.cities.hequ.owner=="sheng" and world.armies.hequ_remnant.soldiers==siege.side_size+siege.companies_per_side and siege_world.audit().is_empty(),"Living garrison leaves on an actual road with its equipment")
+	check(world.cities.hequ.owner=="sheng" and world.armies.hequ_remnant.soldiers==siege.side_size+siege.companies_per_side and siege_world.audit().is_empty() and siege_world.audit_quivers() and world.armies.hequ_remnant.field_ammo[0]>0,"Living garrison leaves on an actual road with its equipment")
+
+func _test_quivers_and_acknowledgments() -> void:
+	const Save := preload("res://scripts/field/save.gd")
+	var b:=Battle.new()
+	b.setup(20,Battle.SEED,Arms.Kit.BOW)
+	b.start()
+	var archer:=b.hero
+	b.input_state(Vector2.ZERO,Vector2.RIGHT)
+	var initial:=archer.ammo
+	for volley in ceili(initial/3.0):
+		var before:=archer.ammo
+		b._begin(archer,1,Vector2.RIGHT)
+		check(archer.ammo==before,"A cancelled draw costs no missile")
+		b._release(archer,b._committed_move(archer))
+	check(archer.ammo==0 and b.arrow_count==initial and b.shots.size()==initial,"Only issued arrows fly, including a short last volley")
+	archer.state=Battle.State.MARCH
+	check(not b.action(1) and b.action(0) and archer.stock_strike,"Empty ranged kit uses a real short strike")
+	b._release(archer,b._committed_move(archer))
+	check(b.arrow_count==initial,"Stock blow creates no projectile")
+	var data:=Save.snapshot(b)
+	check(Save.restore(data)!=null,"Empty quiver and stock animation round trip")
+	var bad:=data.duplicate(true)
+	bad.units[archer.id][Save.UNIT.find(&"ammo")]=1
+	check(Save.restore(bad)==null,"Reject unaccounted ammunition")
+	var old:=data.duplicate(true)
+	old.version=1
+	old.erase("legacy_missiles")
+	old.battle.pop_back()
+	for row in old.units:
+		row.pop_back()
+		row.pop_back()
+	var preserved:=Save.restore(old)
+	check(preserved!=null and preserved.legacy_missiles and preserved.arrow_count==initial,"Unmetered historical field retains its original rules")
+	if preserved: check(Save.restore(Save.snapshot(preserved)).legacy_missiles,"Saving again preserves historical behavior")
+
+	var signal_battle:=Battle.new()
+	signal_battle.setup(100)
+	signal_battle.start()
+	var officer:=signal_battle.roster[signal_battle.companies[0].officer_id]
+	signal_battle.hero.pos=Vector2(-75,0)
+	officer.pos=Vector2(-57,0)
+	check(not signal_battle.command(0,Battle.Mission.HOLD,Battle.Channel.VOICE),"Spoken order stays in earshot")
+	officer.pos=Vector2(-69,0)
+	check(signal_battle.command(0,Battle.Mission.HOLD,Battle.Channel.VOICE),"Nearby officer hears a spoken order")
+	for i in 15: signal_battle._dispatches()
+	check(signal_battle.companies[0].mission==Battle.Mission.HOLD,"Voice delivery applies the actual mission")
+	officer.pos=Vector2(-49,0)
+	signal_battle._rebuild_grid()
+	check(signal_battle.command(0,Battle.Mission.FLANK,Battle.Channel.COURIER),"Send a distant rider")
+	var saw_return:=false
+	for i in 240:
+		signal_battle._dispatches()
+		if not signal_battle.orders.is_empty() and signal_battle.orders[0].leg==1 and not saw_return:
+			saw_return=true
+			check(signal_battle.notice.contains("已发"),"Distant command does not reveal instant acknowledgment")
+	check(saw_return and signal_battle.orders.is_empty() and signal_battle.notice.contains("回报"),"Physical return reaches the player")
+	var company:=signal_battle.companies[0]
+	company.standing=3
+	officer.pos=signal_battle.hero.pos+Vector2(4,0)
+	signal_battle.command(0,Battle.Mission.PRESS,Battle.Channel.VOICE)
+	for i in 15: signal_battle._dispatches()
+	check(signal_battle.messages_refused==1 and company.mission==Battle.Mission.FLANK,"Depleted company can decline an attack and report it")
+	company.standing=company.initial
+	officer.pos=Vector2(-49,0)
+	signal_battle.roster[100].pos=Vector2(-57,0)
+	signal_battle._rebuild_grid()
+	signal_battle.command(0,Battle.Mission.WITHDRAW,Battle.Channel.COURIER)
+	for i in 65: signal_battle._dispatches()
+	check(signal_battle.messages_lost==1 and signal_battle.notice.contains("已发"),"Unseen interception is not reported at once")
+	for i in 280: signal_battle._dispatches()
+	check(signal_battle.notice.contains("超时") and company.mission==Battle.Mission.FLANK,"Late notice exposes the missing reply without hidden enemy positions")

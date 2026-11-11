@@ -12,9 +12,9 @@ const SCALES := [20, 100, 250, 512]
 const SEED := 61112
 enum State { MARCH, WINDUP, RECOVER, GUARD, STAGGER, ROUT, ESCAPED, DEAD }
 enum Mission { PRESS, HOLD, FLANK, ESCORT, INTERCEPT, RESERVE, WITHDRAW }
-enum Channel { FLAG, HORN, COURIER }
+enum Channel { FLAG, HORN, COURIER, VOICE }
 const MISSIONS := ["推进城门", "守住阵地", "侧翼推进", "护送冲车", "截击", "预备队", "撤离"]
-const CHANNELS := ["令旗", "号角", "传令兵"]
+const CHANNELS := ["令旗", "号角", "传令兵", "口令"]
 
 class Unit:
 	var id := 0
@@ -38,6 +38,8 @@ class Unit:
 	var timer := 0.0
 	var duration := 0.0
 	var move_slot := 0
+	var ammo := 0
+	var stock_strike := false
 	var hp := 62.0
 	var max_hp := 62.0
 	var armor := 0.0
@@ -86,8 +88,14 @@ class Dispatch:
 	var pos := Vector2.ZERO
 	var age := 0.0
 	var delay := 0.0
+	var leg := 0 # 0 outward, 1 returning with the officer’s reply, 2 missing
+	var due := 0.0
+	var refused := false
 
 var moves := Arms.library()
+var stock_blow := Arms.Move.new(Arms.Shape.BASH,1.25,0.72,0.27,0.56,8.0,1)
+# Field saves made before quivers existed retain the combat rules they were saved with.
+var legacy_missiles := false
 var roster: Array[Unit] = []
 var companies: Array[Company] = []
 var shots: Array[Shot] = []
@@ -108,6 +116,7 @@ var blocked_hits := 0
 var arrow_count := 0
 var messages_arrived := 0
 var messages_lost := 0
+var messages_refused := 0
 var notice := ""
 var gate_hp := 260.0
 var ram_hp := 150.0
@@ -172,6 +181,7 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 				u.engineer = team == 0 and c == bands / 2 and j >= 12 and j < 16
 				if n == 20 and j >= 16:
 					u.kit = Arms.Kit.BOW if file % 2 == 0 else Arms.Kit.CROSSBOW
+				u.ammo=Arms.issue(u.kit)
 				u.armor = 0.22 if u.kit == Arms.Kit.SHIELD else (0.12 if u.kit == Arms.Kit.GLAIVE else 0.05)
 				company.initial += 1
 				company.standing += 1
@@ -186,7 +196,7 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 		c.officer_id = u.id
 	hero = _add(0, 0, Vector2(-10, -3))
 	hero.hero = true
-	hero.kit = weapon
+	equip_hero(weapon)
 	hero.max_hp = Profiles.get_profile(Profiles.EARLY).max_hp
 	hero.hp = hero.max_hp
 	vehicle_pos[1] = hero.pos + Vector2(-1.8, 0)
@@ -194,6 +204,18 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR) -> void
 	grid.resize(COLS * ROWS)
 	links.resize(roster.size())
 	_rebuild_grid()
+
+func equip_hero(kit: int) -> void:
+	if started or kit<0 or kit>=Arms.NAMES.size(): return
+	hero.kit=kit
+	hero.ammo=Arms.issue(kit)
+
+func _basic(u: Unit) -> Arms.Move:
+	if not legacy_missiles and u.ammo==0 and u.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]: return stock_blow
+	return moves[u.kit][0]
+
+func _committed_move(u: Unit) -> Arms.Move:
+	return stock_blow if u.stock_strike else moves[u.kit][u.move_slot]
 
 func _add(team: int, squad: int, pos: Vector2) -> Unit:
 	var u := Unit.new()
@@ -229,7 +251,7 @@ func _rebuild_grid() -> void:
 
 func _assessment(u: Unit) -> void:
 	var best := -1
-	var reach := 29.0 if u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 6.8
+	var reach := 29.0 if (u.ammo>0 or legacy_missiles) and u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 6.8
 	var best_sq := reach*reach
 	var correction := Vector2.ZERO
 	var cell := _cell(u.pos)
@@ -268,7 +290,7 @@ func command(squad: int, mission: int, channel: int) -> bool:
 		return false
 	var c := companies[squad]
 	var officer := roster[c.officer_id]
-	if not active(officer):
+	if not active(officer) and (not started or _observed(officer.pos)):
 		notice = "本队军官已失去指挥能力"
 		return false
 	if not started:
@@ -276,6 +298,9 @@ func command(squad: int, mission: int, channel: int) -> bool:
 		notice = "已部署 · %02d队 %s" % [squad+1, MISSIONS[mission]]
 		return true
 	var distance := hero.pos.distance_to(officer.pos)
+	if channel == Channel.VOICE and (distance>12.0 or not Ground.clear_shot(hero.pos,officer.pos,gate_hp<=0)):
+		notice="军官听不清口令"
+		return false
 	if channel == Channel.FLAG and (distance > 34 or not Ground.clear_shot(hero.pos, officer.pos, gate_hp <= 0)):
 		notice = "军官看不到令旗"
 		return false
@@ -289,35 +314,67 @@ func command(squad: int, mission: int, channel: int) -> bool:
 	order.mission = mission
 	order.channel = channel
 	order.pos = hero.pos
-	order.delay = 0.24 + distance / (50.0 if channel == Channel.HORN else 30.0)
+	order.delay = 0.12+distance/36.0 if channel==Channel.VOICE else 0.24+distance/(50.0 if channel==Channel.HORN else 30.0)
+	order.due=maxf(6.0,4.0+distance*2.0/5.0)
 	orders.append(order)
 	notice = "%s已发 · %02d队" % [CHANNELS[channel], squad+1]
 	return true
 
+func _observed(pos: Vector2) -> bool:
+	return hero.pos.distance_squared_to(pos)<=144.0 and Ground.clear_shot(hero.pos,pos,gate_hp<=0)
+
+func _deliver(order: Dispatch,c: Company) -> void:
+	if order.serial<=c.delivered: return
+	c.delivered=order.serial
+	order.refused=c.standing*4<=c.initial and order.mission in [Mission.PRESS,Mission.FLANK]
+	if order.refused:
+		messages_refused+=1
+	else:
+		c.mission=order.mission
+		messages_arrived+=1
+
+func _report_order(order: Dispatch) -> void:
+	if order.refused: notice="%02d队回报 · 损失过重，无法推进" % (order.squad+1)
+	else: notice="%02d队回报 · %s" % [order.squad+1,MISSIONS[order.mission]]
+
 func _dispatches() -> void:
-	for at in range(orders.size()-1, -1, -1):
-		var order := orders[at]
-		var c := companies[order.squad]
-		var officer := roster[c.officer_id]
-		order.age += DT
-		var lost := not active(officer)
-		if order.channel == Channel.COURIER and not lost:
-			var heading := order.pos.direction_to(Ground.waypoint(order.pos, officer.pos))
-			order.pos = Ground.travel(order.pos, heading * 7.0 * DT, gate_hp <= 0)
-			lost = not _near(order.pos, 1.55, 1).is_empty() or order.age > 90.0
-			if not lost and order.pos.distance_squared_to(officer.pos) > 4:
-				continue
-		elif not lost and order.age < order.delay:
+	for at in range(orders.size()-1,-1,-1):
+		var order:=orders[at]
+		var c:=companies[order.squad]
+		var officer:=roster[c.officer_id]
+		order.age+=DT
+		if order.channel!=Channel.COURIER:
+			if order.age<order.delay: continue
+			if active(officer):
+				_deliver(order,c)
+				if _observed(officer.pos): _report_order(order)
+			else:
+				messages_lost+=1
+				notice="%02d队未回应" % (order.squad+1)
+			orders.remove_at(at)
 			continue
-		if lost:
-			messages_lost += 1
-			notice = "军令中断 · %02d队" % (order.squad+1)
-		elif order.serial > c.delivered:
-			c.delivered = order.serial
-			c.mission = order.mission
-			messages_arrived += 1
-			notice = "%02d队领命 · %s" % [order.squad+1, MISSIONS[c.mission]]
-		orders.remove_at(at)
+		if order.leg==2:
+			if order.age<order.due: continue
+			notice="%02d队超时未回报" % (order.squad+1)
+			orders.remove_at(at)
+			continue
+		var destination:=hero.pos if order.leg==1 else officer.pos
+		var direction:=order.pos.direction_to(Ground.waypoint(order.pos,destination))
+		order.pos=Ground.travel(order.pos,direction*7.0*DT,gate_hp<=0)
+		if (order.leg==0 and not active(officer)) or not _near(order.pos,1.55,1).is_empty() or order.age>90.0:
+			if order.leg==0: messages_lost+=1
+			if _observed(order.pos):
+				notice="%02d队传令中断" % (order.squad+1)
+				orders.remove_at(at)
+			else: order.leg=2
+			continue
+		if order.pos.distance_squared_to(destination)>4: continue
+		if order.leg==1:
+			_report_order(order)
+			orders.remove_at(at)
+		else:
+			_deliver(order,c)
+			order.leg=1
 
 func _objective(c: Company) -> Vector2:
 	if not active(roster[c.officer_id]):
@@ -358,12 +415,16 @@ func input_state(walk: Vector2, facing: Vector2) -> void:
 func action(slot: int) -> bool:
 	if slot < 0 or slot > 3 or not started or result != "" or hero_cds[slot] > 0 or hero.state != State.MARCH:
 		return false
+	if slot in [1,2] and not legacy_missiles and hero.ammo==0 and hero.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]:
+		notice="弹囊已空，可用普攻近身推击"
+		return false
 	_begin(hero, slot, aim)
 	hero_cds[slot] = 0.12 if slot == 0 else [0.0,3.6,4.5,4.2][slot]
 	return true
 
 func _begin(u: Unit, slot: int, direction: Vector2) -> void:
-	var move: Arms.Move = moves[u.kit][slot]
+	var move: Arms.Move = _basic(u) if slot==0 else moves[u.kit][slot]
+	u.stock_strike=move==stock_blow
 	u.move_slot = slot
 	u.locked = direction if direction.length_squared() > 0.1 else u.facing
 	u.facing = u.locked
@@ -397,14 +458,16 @@ func _release(u: Unit, move: Arms.Move) -> void:
 		_set_state(u, State.GUARD, move.recovery)
 		return
 	if move.shape in [Arms.Shape.ARROW, Arms.Shape.BOLT, Arms.Shape.FAN, Arms.Shape.PIERCE]:
-		var count := 3 if move.shape == Arms.Shape.FAN else 1
+		var requested := 3 if move.shape == Arms.Shape.FAN else 1
+		var count := requested if legacy_missiles else mini(requested,u.ammo)
+		if not legacy_missiles: u.ammo-=count
 		for j in count:
 			var shot := Shot.new()
 			shot.team = u.team
 			shot.source = u.id
 			shot.pos = u.pos + u.locked * 0.45
 			shot.previous = shot.pos
-			shot.direction = u.locked.rotated((j-1)*0.12 if count == 3 else 0.0)
+			shot.direction = u.locked.rotated((float(j)-(count-1)*0.5)*0.12)
 			shot.launch_height=Ground.deck_height(u.pos)
 			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
@@ -572,7 +635,7 @@ func _soldier(u: Unit) -> void:
 		var may_engage := v!=null and active(v) and (not protecting_ram or v.pos.distance_to(ram)<4.8)
 		if may_engage and (v.pos.distance_to(c.aim) <= chase or u.pos.distance_to(v.pos) < 8 or (c.mission == Mission.PRESS and not c.regrouping) or at_post):
 			var distance := u.pos.distance_to(v.pos)
-			var move: Arms.Move = moves[u.kit][0]
+			var move := _basic(u)
 			goal = u.station if at_post else v.pos
 			if distance <= move.reach and u.fatigue <= 0:
 				u.facing = u.pos.direction_to(v.pos)
@@ -602,9 +665,9 @@ func _state_step(u: Unit) -> void:
 	match u.state:
 		State.WINDUP:
 			if u.timer <= 0:
-				_release(u,moves[u.kit][u.move_slot])
+				_release(u,_committed_move(u))
 		State.RECOVER:
-			var move: Arms.Move = moves[u.kit][u.move_slot]
+			var move := _committed_move(u)
 			if move.shape == Arms.Shape.DOUBLE and not u.used_second and u.timer <= move.recovery * 0.55:
 				u.used_second = true
 				_melee(u, move)
@@ -698,4 +761,4 @@ func report() -> Dictionary:
 		"blocked_hits":blocked_hits,"projectiles":arrow_count,"dead":losses.duplicate(),
 		"escaped":escaped.duplicate(),"routing":[routed(0),routed(1)],"dropped_weapons":equipment.duplicate(),
 		"gate_hp":gate_hp,"ram_hp":ram_hp,"capture_sec":capture,
-		"orders_delivered":messages_arrived,"orders_lost":messages_lost,"hero_hp":hero.hp}
+		"orders_delivered":messages_arrived,"orders_lost":messages_lost,"orders_refused":messages_refused,"hero_hp":hero.hp}

@@ -26,6 +26,16 @@ func bind(model: Field) -> bool:
 		force.weapons=people+(1 if team==0 else 0)
 		force.food=people*3
 		_state.initial_force_roster[FORCES[team]]=people
+	if not field.legacy_missiles:
+		var opening := [[Arms.ARROWS_PER_QUIVER,Arms.BOLTS_PER_CASE],[0,0]]
+		for u in field.roster:
+			if u.hero or Arms.issue(u.kit)==0: continue
+			opening[u.team][_ammo_kind(u.kit)]+=Arms.issue(u.kit)
+		for team in 2:
+			_entity(FORCES[team]).field_ammo=opening[team].duplicate()
+		_state.field_ammo_initial=[opening[0][0]+opening[1][0],opening[0][1]+opening[1][1]]
+		_state.field_ammo_loose=[0,0]
+		_state.field_ammo_spent=[0,0]
 	_state.armies.relief.location="hequ"
 	_state.initial_totals=totals()
 	if not advance_seconds(START_SECONDS): return false
@@ -33,7 +43,30 @@ func bind(model: Field) -> bool:
 		if not reserve(): return false
 		if not sync(): return false
 		if field.result!="" and settle().is_empty(): return false
-	return audit().is_empty()
+	return audit().is_empty() and audit_quivers()
+
+static func _ammo_kind(kit: int) -> int:
+	return 1 if kit==Arms.Kit.CROSSBOW else 0
+
+func audit_quivers() -> bool:
+	if field.legacy_missiles: return true
+	var count := [0,0]
+	for pool: Dictionary in [_state.armies,_state.cities]:
+		for entity: Dictionary in pool.values():
+			var stock: Array=entity.get("field_ammo",[0,0])
+			for k in 2:
+				if stock[k]<0: return false
+				count[k]+=stock[k]
+	for k in 2: count[k]+=_state.field_ammo_loose[k]+_state.field_ammo_spent[k]
+	if _state.battle_locks.get("relief")==ENCOUNTER:
+		var used:=0
+		for u in field.roster:
+			var issued:=Arms.issue(u.kit)
+			if u.ammo<0 or u.ammo>issued: return false
+			count[_ammo_kind(u.kit)]+=issued
+			used+=issued-u.ammo
+		if used!=field.arrow_count: return false
+	return count==_state.field_ammo_initial
 
 func totals() -> Dictionary:
 	var all:=super.totals()
@@ -50,18 +83,27 @@ func reserve() -> bool:
 	if _state.battle_tickets.has(ENCOUNTER): return _state.battle_tickets[ENCOUNTER].status=="running"
 	var rosters := [[],[]]
 	var weapons := [0,0]
+	var ammunition := [[0,0],[0,0]]
 	for u in field.roster:
+		ammunition[u.team][_ammo_kind(u.kit)]+=Arms.issue(u.kit)
 		rosters[u.team].append({"id":u.id,"weapon":Arms.NAMES[u.kit],"officer":u.officer,"hero":u.hero})
 		weapons[u.team]+=_pieces(u.kit)
 	for team in 2:
 		var force:=_entity(FORCES[team])
 		if rosters[team].size()!=force.soldiers or weapons[team]>force.weapons: return false
+		if not field.legacy_missiles:
+			for k in 2:
+				if ammunition[team][k]>force.field_ammo[k]: return false
 	reserved_weapons=weapons
+	if not field.legacy_missiles:
+		for team in 2:
+			var force:=_entity(FORCES[team])
+			for k in 2: force.field_ammo[k]-=ammunition[team][k]
 	_state.battle_tickets[ENCOUNTER]={"battle_id":ENCOUNTER,"location":"hequ","participating_force_ids":FORCES.duplicate(),
 		"reserved_roster_snapshot":rosters,"time":_state.time_seconds,"status":"running"}
 	_state.battle_locks={"relief":ENCOUNTER,"hequ":ENCOUNTER}
 	_event("battle_started",{"battle_id":ENCOUNTER,"counts":[rosters[0].size(),rosters[1].size()]})
-	return audit().is_empty()
+	return audit().is_empty() and audit_quivers()
 
 func sync() -> bool:
 	if not field.started: return true
@@ -77,7 +119,7 @@ static func _pieces(kit: int) -> int:
 
 func settle() -> Dictionary:
 	if not receipt.is_empty(): return receipt.duplicate(true)
-	if field.result=="" or not sync() or not audit().is_empty(): return {}
+	if field.result=="" or not sync() or not audit().is_empty() or not audit_quivers(): return {}
 	var dead := [[],[]]
 	var living := [[],[]]
 	var fled := [[],[]]
@@ -134,6 +176,9 @@ func settle() -> Dictionary:
 			relief.soldiers-=left
 			relief.weapons-=left_gear
 		_march_home(relief,"river","pingling")
+	var arrow_ledger: Dictionary={}
+	if not field.legacy_missiles:
+		arrow_ledger=_settle_quivers(captured)
 	_state.commander.hp=field.hero.hp
 	_state.commander.alive=field.hero.hp>0
 	_state.campaign_ended=not _state.commander.alive
@@ -141,14 +186,41 @@ func settle() -> Dictionary:
 	var issued := {"battle_id":ENCOUNTER,"outcome":field.result,"ending_seconds":_state.time_seconds,
 		"dead_ids":dead,"living_ids":living,"escaped_ids":fled,"dropped_by_kit":loose_by_kit,
 		"loose_weapons":loose_weapons,"captured_gate":captured,"commander_alive":_state.commander.alive}
+	if not field.legacy_missiles: issued.ammunition=arrow_ledger
 	ticket.receipt=issued.duplicate(true)
 	_event("field_settled",{"battle_id":ENCOUNTER,"outcome":field.result,"dead":[dead[0].size(),dead[1].size()]})
-	if not audit().is_empty():
+	if not audit().is_empty() or not audit_quivers():
 		_state=before
 		loose_weapons=old_loose
 		return {}
 	receipt=issued
 	return receipt.duplicate(true)
+
+# Attribute every unspent arrow and bolt to its surviving carrier or its place
+# on the field. In-flight rounds are already expended on release.
+func _settle_quivers(captured: bool) -> Dictionary:
+	var fired := [[0,0],[0,0]]
+	var dropped := [[0,0],[0,0]]
+	var carried := [[0,0],[0,0]]
+	for u in field.roster:
+		var issued:=Arms.issue(u.kit)
+		if issued==0: continue
+		var k:=_ammo_kind(u.kit)
+		_state.field_ammo_spent[k]+=issued-u.ammo
+		fired[u.team][k]+=issued-u.ammo
+		if u.hp<=0:
+			_state.field_ammo_loose[k]+=u.ammo
+			dropped[u.team][k]+=u.ammo
+			continue
+		var dest:String=FORCES[u.team]
+		if captured and u.team==1: dest="hequ_remnant"
+		elif field.result=="成功撤离" and u.team==0 and not u.hero and u.state!=Field.State.ESCAPED:
+			dest="hequ_rearguard"
+		var force:=_entity(dest)
+		if not force.has("field_ammo"): force.field_ammo=[0,0]
+		force.field_ammo[k]+=u.ammo
+		carried[u.team][k]+=u.ammo
+	return {"types":["arrow","bolt"],"expended":fired,"dropped":dropped,"returned":carried}
 
 func _march_home(force: Dictionary,route: String,destination: String) -> void:
 	var arrival: float=_state.time_seconds+float(ROUTES[route].hours)*3600.0

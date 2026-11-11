@@ -11,6 +11,14 @@ const LABELS := [
 	["发弩", "贯穿矢", "快弩", "稳身"], ["掩盾刺", "盾击", "压盾进", "举盾"],
 	["交替斩", "连斩", "错步剪", "滑步"]]
 
+const ARROWS_PER_QUIVER := 20
+const BOLTS_PER_CASE := 12
+
+static func issue(kit: int) -> int:
+	if kit==Kit.BOW: return ARROWS_PER_QUIVER
+	if kit==Kit.CROSSBOW: return BOLTS_PER_CASE
+	return 0
+
 class Move:
 	var shape: int
 	var reach: float

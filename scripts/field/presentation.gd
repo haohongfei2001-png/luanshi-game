@@ -12,10 +12,7 @@ const GOLD := Color("c3a45e")
 class Batch:
 	var node: MultiMeshInstance3D
 	var mesh: MultiMesh
-	var close_mesh: Mesh
-	var wide_mesh: Mesh
 	var used := 0
-	var mode := true
 
 var battle: Battle
 var groups: Dictionary = {}
@@ -39,15 +36,13 @@ func _material(col: Color, kit: int, animal: bool=false) -> ShaderMaterial:
 	mat.set_shader_parameter("animal",animal)
 	return mat
 
-func _batch(close_mesh: Mesh,wide_mesh: Mesh,mat: Material,capacity: int) -> Batch:
+func _batch(geometry: Mesh,mat: Material,capacity: int) -> Batch:
 	var g := Batch.new()
-	g.close_mesh = close_mesh
-	g.wide_mesh = wide_mesh
 	g.node = MultiMeshInstance3D.new()
 	g.mesh = MultiMesh.new()
 	g.mesh.transform_format = MultiMesh.TRANSFORM_3D
 	g.mesh.use_custom_data = true
-	g.mesh.mesh = close_mesh
+	g.mesh.mesh = geometry
 	g.mesh.instance_count = capacity
 	g.mesh.visible_instance_count = 0
 	g.mesh.custom_aabb = AABB(Vector3(-124,-3,-68),Vector3(248,19,136))
@@ -71,14 +66,14 @@ func configure(model: Battle) -> void:
 		var kit := key % 10
 		var col := GOLD if key >= 20 else (FRIEND if key < 10 else FOE)
 		var mat := _material(col,kit)
-		groups[key] = _batch(near_mesh[kit],near_mesh[kit],mat,counts[key])
+		groups[key] = _batch(near_mesh[kit],mat,counts[key])
 		if key<20:
-			groups[30+key]=_batch(far_mesh[kit],far_mesh[kit],mat,counts[key])
+			groups[30+key]=_batch(far_mesh[kit],mat,counts[key])
 			groups[30+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
-			groups[20+kit] = _batch(near_mesh[kit],far_mesh[kit],_material(GOLD,kit),1)
+			groups[20+kit] = _batch(near_mesh[kit],_material(GOLD,kit),1)
 	var shadow_mesh := Builder.new()
 	var rim:=shadow_mesh.ring(Vector3.ZERO,Vector2(0.39,0.27),8)
 	for k in 8:
@@ -89,17 +84,17 @@ func configure(model: Battle) -> void:
 	shade.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA
 	shade.cull_mode=BaseMaterial3D.CULL_DISABLED
 	var sm:=shadow_mesh.finish()
-	contact=_batch(sm,sm,shade,battle.roster.size())
+	contact=_batch(sm,shade,battle.roster.size())
 	contact.node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var mount_mesh := Figures.horse()
-	horse = _batch(mount_mesh,mount_mesh,_material(FRIEND,0,true),battle.side_size*2+1)
+	horse = _batch(mount_mesh,_material(FRIEND,0,true),battle.side_size*2+1)
 	var wagon := Figures.horse(true)
-	cart = _batch(wagon,wagon,_material(FRIEND,0,true),1)
+	cart = _batch(wagon,_material(FRIEND,0,true),1)
 	var b := Builder.new()
 	b.rod(Vector3(0,0,-0.41),Vector3(0,0,0.40),0.027,0.016,Color("4b3728"),4)
 	b.rod(Vector3(0,0,0.34),Vector3(0,0,0.48),0.055,0.001,Color("a8aaa2"),4)
 	var am := b.finish()
-	arrows = _batch(am,am,_material(FRIEND,0),64)
+	arrows = _batch(am,_material(FRIEND,0),64)
 	var flag := Builder.new()
 	flag.rod(Vector3(0,0,0),Vector3(0,3.65,0),0.045,0.036,Color("796343"))
 	flag.dye = 1
@@ -109,8 +104,8 @@ func configure(model: Battle) -> void:
 	flag.block(Vector3(0.38,3.11,0.02),Vector3(0.13,0.42,0.09),GOLD)
 	var fm := flag.finish()
 	for team in 2:
-		standards.append(_batch(fm,fm,_material(FRIEND if team==0 else FOE,0),battle.companies_per_side))
-	runners = _batch(near_mesh[Arms.Kit.SWORD],far_mesh[Arms.Kit.SWORD],_material(Color("c49b5c"),0),8)
+		standards.append(_batch(fm,_material(FRIEND if team==0 else FOE,0),battle.companies_per_side))
+	runners = _batch(near_mesh[Arms.Kit.SWORD],_material(Color("c49b5c"),0),8)
 
 func _key(u: Battle.Unit) -> int:
 	return u.kit + (20 if u.hero else 10*u.team)
@@ -148,10 +143,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var base := Ground.unit_point(p)
 		var angle := atan2(u.facing.x,u.facing.y)
 		var progress := clampf(1.0-u.timer/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
-		var code := u.state + 8*u.move_slot
-		var data := Color((code+0.5)/32.0,progress,u.stride,clampf(u.flash/0.22,0,1))
+		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
+		var data := Color((code+0.5)/64.0,progress,u.stride,clampf(u.flash/0.22,0,1))
 		if u.mounted:
-			_put(horse,base,angle,Color((u.state+0.5)/32,progress,u.stride,data.a))
+			_put(horse,base,angle,Color((u.state+0.5)/64,progress,u.stride,data.a))
 			base.y += 0.81
 		if u.hero and battle.vehicle != 0:
 			var heading := battle.riding_heading
@@ -178,7 +173,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
 		var heading := battle.riding_heading if battle.vehicle == id else Vector2.RIGHT
 		var stride := battle.hero.stride if battle.vehicle == id else 0.0
-		_put(horse if id==1 else cart,Ground.unit_point(pos),atan2(heading.x,heading.y),Color((state+0.5)/32.0,1,stride,0))
+		_put(horse if id==1 else cart,Ground.unit_point(pos),atan2(heading.x,heading.y),Color((state+0.5)/64.0,1,stride,0))
 	for s in battle.shots:
 		var p := s.previous.lerp(s.pos,alpha)
 		var fraction := s.distance / maxf(1,s.distance+s.remaining)
@@ -186,8 +181,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var altitude := lerpf(s.launch_height,Ground.deck_height(p),fraction)+h
 		_put(arrows,Vector3(p.x,altitude,p.y),atan2(s.direction.x,s.direction.y),Color(0,0,0,0))
 	for order in battle.orders:
-		if order.channel==Battle.Channel.COURIER:
-			var dir := order.pos.direction_to(battle.roster[battle.companies[order.squad].officer_id].pos)
+		if order.channel==Battle.Channel.COURIER and order.leg!=2:
+			var destination:=battle.hero.pos if order.leg==1 else battle.roster[battle.companies[order.squad].officer_id].pos
+			var dir := order.pos.direction_to(destination)
 			_put(runners,Ground.unit_point(order.pos),atan2(dir.x,dir.y),Color(0,0,fposmod(order.age*3,1.0),0))
 	for g: Batch in groups.values():
 		g.mesh.visible_instance_count = g.used
