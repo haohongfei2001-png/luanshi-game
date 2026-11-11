@@ -16,6 +16,8 @@ A character-driven war RPG with MOBA-style isometric 3D combat, soldiers who req
 
 **Owner's simplicity clarification (2026-11-12):** Historical battles, terrain, units and devices from late Tang to Qing are an **inspiration library, not a required checklist of gameplay systems**. Choose only additions that make the game meaningfully more fun or tactically varied. Players should primarily fight and give a few understandable orders; supply, water, weather, ammunition and other detailed simulation should usually be handled automatically. An excellent, approachable 512v512 battle matters more than recreating every war type. [Owner decision §1K](docs/PRODUCT_DECISIONS.md). Unselected historical scenario entries are not delivery failures.
 
+**Codex single-master-task handoff:** [End-to-end autonomous battle V1 mandate](docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md). This is the current engineering execution entrypoint: preserve and integrate the playable river-gate PR chain, continue quality, command, opponent generals, performance, real gameplay and macOS delivery without asking the owner to send the next instructions after each subtask. Actual task lifetime is bounded by Codex platform execution; checkpoint verified changes and recover from GitHub. Story writing remains owner-reserved. [Master tracker #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12).
+
 ## Historical initial prototype / current regression baseline (not the owner-approved final battle V1)
 
 - One controllable 3D character with movement, basic attack, and three skills
