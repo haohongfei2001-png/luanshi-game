@@ -58,10 +58,12 @@ func setup(b, ranked: bool = true) -> void:
 	first_primary = b.companies[0].officer_id
 	escort_of.resize(b.roster.size())
 	escort_of.fill(-1)
+	var ordinals := [0, 0]
 	for i in b.companies.size():
 		var c = b.companies[i]
 		var r := Command.new()
-		r.rank = mini(i % b.companies_per_side, Rank.CAPTAIN)
+		r.rank = mini(ordinals[c.team], Rank.CAPTAIN)
+		ordinals[c.team] += 1
 		r.primary = c.officer_id
 		r.leader = r.primary
 		var u = b.roster[r.primary]
@@ -508,7 +510,7 @@ func _valid_record(b, r: Command) -> bool:
 	for ready in [r.offense_ready, r.defense_ready]:
 		if ready < 0 or ready > b.tick + 78:
 			return false
-	if r.pressure < 0 or r.pressure > b.side_size + b.companies_per_side + 1:
+	if r.pressure < 0 or r.pressure > b.roster.size():
 		return false
 	if r.handovers < 0 or r.handovers > r.deputies.size() or r.skills < 0 or r.skills > b.attacks or r.kills < 0 or r.kills > u.impacts:
 		return false
