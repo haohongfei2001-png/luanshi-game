@@ -1,0 +1,8 @@
+Godot: 4.6.3.stable.official.7d41c59c4
+Original source: 84cc5f8a881bcf07c5894c52ca31c7c31094adf4
+Regeneration source: local c0c6d53, tree b39852b10b62050609166e5e8f4018c25aad781e
+Public equivalent exact tree: e337c3f56accffa5ba7293f90bf85197397a0007
+Command: archive source; editor --import; --script capture_world6_fixtures.gd -- output
+Comparison: every original provenance SHA-256 and original byte string
+RESULT: 12 files, 0 differences, PASS
+No HP, RNG, timers, outcomes, resource accounts, receipts or fixture expectations changed.

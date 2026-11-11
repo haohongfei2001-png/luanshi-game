@@ -1,0 +1,398 @@
+extends Node3D
+const Battle := preload("res://scripts/field/battle.gd")
+const Ground := preload("res://scripts/field/ground.gd")
+const Figures := preload("res://scripts/field/presentation.gd")
+const Landscape := preload("res://scripts/field/landscape.gd")
+const Hud := preload("res://scripts/field/hud.gd")
+const Sound := preload("res://scripts/field/sound.gd")
+const Store := preload("res://scripts/field/save.gd")
+const FieldWorld := preload("res://scripts/field/campaign.gd")
+const Actions := preload("res://scripts/input_actions.gd")
+signal campaign_requested
+var battle: Battle
+var theater: FieldWorld
+var view: Figures
+var map := Landscape.new()
+var hud := Hud.new()
+var audio := Sound.new()
+var camera := Camera3D.new()
+var camera_center := Vector2.ZERO
+var camera_pitch:=deg_to_rad(51.0)
+var camera_yaw:=deg_to_rad(-33.0)
+var orbiting:=false
+var follow := true
+var paused := false
+var pan := false
+var carry := 0.0
+var ui_clock := 0.0
+var sim_us := 0
+var view_us := 0
+var max_step_us := 0
+var selections := 512
+var last_sound_tick := -20
+var last_shot_tick := -20
+var frame_log: RefCounted
+var detail_preset:=0
+var last_hero_hit:=-100
+var step_distance:=0.0
+const QUALITY_FILE:="user://river-gate-graphics.cfg"
+
+func _ready() -> void:
+	Actions.install()
+	add_child(map)
+	add_child(camera)
+	camera.projection=Camera3D.PROJECTION_ORTHOGONAL
+	camera.size=26.0
+	camera.far=360
+	camera.current=true
+	add_child(hud)
+	add_child(audio)
+	hud.deploy.connect(deploy)
+	hud.pause.connect(toggle_pause)
+	hud.terrain_chosen.connect(pan_to)
+	hud.quality_changed.connect(func(index: int): set_quality(index,true))
+	hud.campaign.connect(func(): campaign_requested.emit())
+	hud.plan_requested.connect(func(style: int):
+		if battle.started or style==0: return
+		for i in battle.companies_per_side:
+			var mission:=Battle.Mission.PRESS
+			if style==1:
+				if i in [2,7]: mission=Battle.Mission.ESCORT
+				elif i in [0,4]: mission=Battle.Mission.FLANK
+			else: mission=Battle.Mission.HOLD if i%4==3 else Battle.Mission.WITHDRAW
+			battle.command(i,mission,Battle.Channel.FLAG)
+		hud.select_company(battle,hud.unit.selected)
+		battle.notice="全军任务已分配，可逐队调整")
+	hud.muster_apply.connect(func(index: int,slot: int,shape: int,front: int):
+		if battle.deploy_company(index,slot,shape,front):
+			battle.notice="部署已定 · %02d 队 %s" % [index+1,Battle.FORMATIONS[shape]]
+			hud.select_company(battle,index)
+			pan_to(battle.companies[index].home))
+	hud.unit.item_selected.connect(func(i: int):
+		hud.select_company(battle,i)
+		if not battle.started: pan_to(battle.companies[i].home))
+	hud.camp_requested.connect(func():
+		if theater.enter_camp(): _refresh_hud())
+	hud.camp_order.connect(func(command: String):
+		if theater.camp_order(command): _refresh_hud())
+	hud.camp_wait.connect(func():
+		if theater.wait_at_camp(): _refresh_hud())
+	hud.back_report.connect(func():
+		battle.at_camp=false
+		_refresh_hud())
+	hud.retry.connect(func(): new_muster(selections))
+	hud.weapon_changed.connect(func(i: int):
+		battle.equip_hero(i))
+	hud.order_requested.connect(_order)
+	hud.save_requested.connect(_save)
+	hud.load_requested.connect(_load)
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--field-size="):
+			var count := arg.trim_prefix("--field-size=").to_int()
+			if count in Battle.SCALES: selections=count
+	var cfg:=ConfigFile.new()
+	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,2)
+	new_muster(selections)
+	if "--field-profile" in OS.get_cmdline_user_args():
+		frame_log = preload("res://scripts/field/frame_log.gd").new()
+		frame_log.open(get_viewport())
+
+func new_muster(count: int) -> void:
+	var fresh := Battle.new()
+	fresh.setup(count)
+	_adopt(fresh)
+	paused=false
+	hud.order_panel.show()
+
+func _adopt(fresh: Battle) -> void:
+	if view:
+		remove_child(view)
+		view.free()
+	battle=fresh
+	theater=FieldWorld.new()
+	if not theater.bind(fresh):
+		push_error("Field roster does not match opening inventory")
+		return
+	selections=battle.side_size
+	view=Figures.new()
+	add_child(view)
+	view.configure(battle)
+	set_quality(detail_preset)
+	camera_center=battle.hero.pos
+	follow=true
+	last_hero_hit=-100
+	step_distance=0
+	carry=0
+	hud.bind(battle)
+	_refresh_hud()
+	_camera()
+	_draw_field()
+
+func set_quality(which: int,remember: bool=false) -> void:
+	if which<0 or which>2: return
+	if frame_log and which!=detail_preset: frame_log.interrupt("changed_graphics",self)
+	detail_preset=which
+	var vp:=get_viewport()
+	vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
+	vp.scaling_3d_scale=[1.0,0.85,0.70][which]
+	map.sun.shadow_enabled=which!=2
+	map.sun.directional_shadow_max_distance=75.0 if which==0 else 48.0
+	view.contact_for_all=not map.sun.shadow_enabled
+	hud.quality.select(which)
+	if remember:
+		var cfg:=ConfigFile.new()
+		cfg.set_value("display","preset",which)
+		cfg.save(QUALITY_FILE)
+
+func deploy() -> void:
+	if battle.result!="" or battle.started: return
+	if not theater.reserve():
+		battle.notice="军籍与库存不符，无法出阵"
+		return
+	battle.start()
+	follow=true
+	hud.order_panel.hide()
+	audio.cue("horn",-10)
+	hud.update_model(battle,paused)
+
+func toggle_pause() -> void:
+	if battle.started and battle.result=="":
+		paused=not paused
+		hud.update_model(battle,paused)
+
+func _order(company: int,mission: int,channel: int) -> void:
+	if battle.command(company,mission,channel):
+		if battle.started:
+			hud.order_panel.hide()
+			get_viewport().gui_release_focus()
+			if channel==Battle.Channel.HORN: audio.cue("horn",-10)
+	hud.update_model(battle,paused)
+
+func _save() -> void:
+	battle.notice = "战场进度已保存" if Store.save(battle)==OK else "保存失败，原存档仍可使用"
+	hud.update_model(battle,paused)
+
+func _load() -> void:
+	var saved := Store.load_quick()
+	if saved:
+		_adopt(saved)
+		paused=saved.started and saved.result==""
+		hud.order_panel.visible=not saved.started
+		battle.notice="已恢复战场"
+	else:
+		battle.notice="未找到可用的战场存档"
+	hud.update_model(battle,paused)
+
+func _camera() -> void:
+	var p := Ground.unit_point(camera_center)
+	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
+	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*77.5
+	camera.look_at(p)
+	camera.current=true
+
+func pan_to(p: Vector2) -> void:
+	follow=false
+	camera_center=p.clamp(-Ground.LIMIT,Ground.LIMIT)
+	_camera()
+
+func _screen_ground(point: Vector2) -> Vector2:
+	var origin:=camera.project_ray_origin(point)
+	var dir:=camera.project_ray_normal(point)
+	# Traverse from above the tallest deck to below the river bed, then refine
+	# the first surface. Iterating from a flat plane misses uphill narrow attacks.
+	var top: float=(5.8-origin.y)/dir.y
+	var bottom: float=(-1.3-origin.y)/dir.y
+	var previous:=top
+	for sample in range(1,13):
+		var at:=lerpf(top,bottom,sample/12.0)
+		var p:=origin+dir*at
+		if p.y<=Ground.deck_height(Vector2(p.x,p.z)):
+			var lo:=previous
+			var hi:=at
+			for i in 10:
+				var mid: float=(lo+hi)*0.5
+				var q:=origin+dir*mid
+				if q.y>Ground.deck_height(Vector2(q.x,q.z)): lo=mid
+				else: hi=mid
+			p=origin+dir*((lo+hi)*0.5)
+			return Vector2(p.x,p.z)
+		previous=at
+	var end:=origin+dir*bottom
+	return Vector2(end.x,end.z)
+
+func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
+	var floor_point:=_screen_ground(screen)
+	if not target_figures: return floor_point
+	var best:=floor_point
+	var best_score:=INF
+	# A cursor resting on a visible torso selects that ground direction at the
+	# start of the strike. Melee reach, flight and obstruction remain in Battle.
+	for id in battle._near(floor_point,4.8,1):
+		var u:=battle.roster[id]
+		if battle.hero.pos.distance_squared_to(u.pos)>34.0*34.0: continue
+		var elevated:=Ground.parapet(u.pos)>2.75 or Ground.parapet(battle.hero.pos)>2.75
+		if not Ground.clear_shot(battle.hero.pos,u.pos,battle.gate_hp<=0,elevated): continue
+		var foot:=Ground.unit_point(u.pos)
+		var head:=foot+Vector3.UP*(2.45 if u.mounted else 1.70)
+		var low:=camera.unproject_position(foot)
+		var high:=camera.unproject_position(head)
+		var radius:=maxf(2.0,high.distance_to(camera.unproject_position(head+Vector3.RIGHT*0.32)))
+		var d:=screen.distance_to(Geometry2D.get_closest_point_to_segment(screen,low,high))
+		if d<=radius:
+			var score:=d/radius+0.001*screen.distance_to(low)
+			if score<best_score:
+				best_score=score
+				best=u.pos
+	return best
+
+func _input(e: InputEvent) -> void:
+	if not battle or not is_visible_in_tree() or e.is_echo() or battle.result!="": return
+	if e.is_action_pressed("field_orders"):
+		for menu in [hud.weapon,hud.plan,hud.unit,hud.mission,hud.channel,hud.quality,hud.shape,hud.front,hud.slot]:
+			if menu.get_popup().visible: return
+		hud.order_panel.visible=not hud.order_panel.visible
+		get_viewport().gui_release_focus()
+		get_viewport().set_input_as_handled()
+
+func _unhandled_input(e: InputEvent) -> void:
+	if not battle or e.is_echo(): return
+	if e is InputEventMouseButton:
+		match e.button_index:
+			MOUSE_BUTTON_RIGHT:
+				pan=e.pressed
+			MOUSE_BUTTON_MIDDLE:
+				orbiting=e.pressed
+			MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN:
+				if e.pressed:
+					camera.size=clampf(camera.size*(0.83 if e.button_index==MOUSE_BUTTON_WHEEL_UP else 1.20),5.8,115)
+	elif e is InputEventMouseMotion and orbiting:
+		if e.button_mask & MOUSE_BUTTON_MASK_MIDDLE:
+			camera_yaw=wrapf(camera_yaw-e.relative.x*0.009,-PI,PI)
+			_camera()
+		else: orbiting=false
+	elif e is InputEventMouseMotion and pan:
+		if e.button_mask & MOUSE_BUTTON_MASK_RIGHT:
+			pan_to(camera_center+_screen_ground(e.position-e.relative)-_screen_ground(e.position))
+		else:
+			pan=false
+	if e.is_action_pressed("field_deploy"): deploy()
+	elif e.is_action_pressed("pause_battle"): toggle_pause()
+	elif e.is_action_pressed("field_center"): follow=true
+	elif e.is_action_pressed("toggle_help"): hud.toggle_help=not hud.toggle_help
+	elif e.is_action_pressed("campaign_quicksave"): _save()
+	elif e.is_action_pressed("campaign_quickload"): _load()
+	elif e.is_action_pressed("field_mount") and not paused: battle.mount(1)
+	elif e.is_action_pressed("field_chariot") and not paused: battle.mount(2)
+	elif e.is_action_pressed("order_attack"): _order(hud.unit.selected,Battle.Mission.PRESS,hud.channel.selected)
+	elif e.is_action_pressed("order_follow"): _order(hud.unit.selected,Battle.Mission.HOLD,hud.channel.selected)
+	elif e.is_action_pressed("order_retreat"): _order(hud.unit.selected,Battle.Mission.WITHDRAW,hud.channel.selected)
+	elif not paused and battle.started and battle.result=="":
+		if e.is_action_pressed("attack"):
+			battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
+			battle.press_action(0)
+		for i in 3:
+			if e.is_action_pressed(["sweep","lunge","guard"][i]):
+				battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(get_viewport().get_mouse_position(),true)-battle.hero.pos)
+				battle.press_action(i+1)
+
+func _physics_process(delta: float) -> void:
+	if not battle or paused or not battle.started or battle.result!="": return
+	carry+=delta
+	while carry+0.000001>=Battle.DT:
+		carry=maxf(0,carry-Battle.DT)
+		var pointer := get_viewport().get_mouse_position()
+		var attacking:=Input.is_action_pressed("attack") and (Input.is_physical_key_pressed(KEY_J) or get_viewport().gui_get_hovered_control()==null)
+		battle.input_state(Actions.movement().rotated(-camera_yaw),_aim_point(pointer,attacking)-battle.hero.pos)
+		battle.sprinting=Input.is_action_pressed("field_sprint")
+		if attacking and battle.buffered_slot<0:
+			battle.action(0)
+		var arrows_before := battle.arrow_count
+		var gate_before := battle.gate_hp
+		var personal:=battle.hero.impacts
+		var blocked:=battle.blocked_hits
+		var motion_before:=battle.hero.pos
+		var pose_before:=battle.hero.state
+		var start := Time.get_ticks_usec()
+		battle.step()
+		if battle.tick%20==0 or battle.result!="":
+			if not theater.sync() or (battle.result!="" and theater.settle().is_empty()):
+				paused=true
+				push_error("Field world clock or settlement audit failed")
+				return
+		var cost := Time.get_ticks_usec()-start
+		sim_us+=cost
+		max_step_us=maxi(max_step_us,cost)
+		var near_hero:=camera_center.distance_squared_to(battle.hero.pos)<400
+		if battle.hero.impacts>personal:
+			last_hero_hit=battle.tick
+			if near_hero: _cue_at("impact",-8,battle.hero.pos)
+		if near_hero and pose_before==Battle.State.WINDUP and battle.hero.state==Battle.State.RECOVER and battle.hero.kit not in [5,6]:
+			_cue_at("swing",-19,battle.hero.pos)
+		step_distance+=motion_before.distance_to(battle.hero.pos)
+		var step_length:=2.40 if battle.vehicle!=0 else 1.28
+		if step_distance>=step_length:
+			step_distance=fmod(step_distance,step_length)
+			if near_hero: _cue_at("step" if battle.vehicle==0 else "hoof",-21 if battle.vehicle==0 else -15,battle.hero.pos)
+		if battle.tick%161==1: audio.cue("wind",-28,0.45)
+		if battle.tick in [4,13,24] or (battle.gate_hp==0 and gate_before>0): _cue_at("drum",-14,battle.ram)
+		if battle.gate_hp<gate_before and camera_center.distance_to(Ground.GATE)<32:
+			_cue_at("wood",-12,Ground.GATE)
+		if battle.arrow_count>arrows_before and battle.tick-last_shot_tick>=8:
+			for shot in battle.shots:
+				if shot.distance<2.0 and camera_center.distance_squared_to(shot.pos)<100:
+					_cue_at("shot",-18,shot.pos)
+					last_shot_tick=battle.tick
+					break
+		if battle.tick-last_sound_tick>=5:
+			for id in battle._near(camera_center,minf(camera.size*0.40,12),1):
+				if battle.roster[id].flash>=0.20:
+					_cue_at("shield" if battle.blocked_hits>blocked and battle.roster[id].state==Battle.State.GUARD else "clash",-17,battle.roster[id].pos)
+					last_sound_tick=battle.tick
+					break
+
+func _cue_at(kind: String,level: float,at: Vector2) -> void:
+	var offset:=at-camera_center
+	var right:=Vector2(camera.basis.x.x,camera.basis.x.z)
+	audio.cue(kind,level-minf(12.0,offset.length()*0.22),clampf(offset.dot(right)/maxf(5,camera.size*0.45),-1,1))
+
+func _draw_field() -> void:
+	var viewport_size := get_viewport().get_visible_rect().size
+	var hw:=camera.size*viewport_size.x/maxf(viewport_size.y,1)*0.5
+	var hd:=0.5*camera.size/sin(camera_pitch)
+	var co:=absf(cos(camera_yaw))
+	var si:=absf(sin(camera_yaw))
+	var half_extent:=Vector2(co*hw+si*hd+4,si*hw+co*hd+6)
+	var hero:=battle.hero
+	hud.marker.visible=battle.result=="" and camera.is_position_in_frustum(Ground.unit_point(hero.pos))
+	if hud.marker.visible:
+		var hp:=Ground.unit_point(hero.before.lerp(hero.pos,clampf(carry/Battle.DT,0,1)))
+		var at:=camera.unproject_position(hp)
+		var ahead:=camera.unproject_position(hp+Vector3(hero.facing.x,0,hero.facing.y))
+		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1))
+	var t := Time.get_ticks_usec()
+	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
+	map.update_battle(battle)
+	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="")
+	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,half_extent-Vector2(4,6))
+	view_us+=Time.get_ticks_usec()-t
+
+func _process(delta: float) -> void:
+	if not battle: return
+	if follow: camera_center=camera_center.lerp(battle.hero.pos,1.0-exp(-delta*7.5))
+	_camera()
+	_draw_field()
+	if frame_log: frame_log.sample(self)
+	ui_clock+=delta
+	if ui_clock>=0.13:
+		ui_clock=0
+		_refresh_hud()
+
+func _refresh_hud() -> void:
+	hud.update_model(battle,paused)
+	if not theater.receipt.is_empty(): hud.show_receipt(battle,theater.receipt,theater.player_view())
+
+func _notification(what: int) -> void:
+	if what==NOTIFICATION_APPLICATION_FOCUS_OUT and battle and battle.started: paused=true
+
+func _exit_tree() -> void:
+	if frame_log: frame_log.interrupt("left_battlefield",self)

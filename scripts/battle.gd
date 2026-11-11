@@ -1,5 +1,7 @@
 extends Node3D
 
+signal field_requested
+
 const Simulation := preload("res://scripts/battle_sim.gd")
 const UnitView := preload("res://scripts/unit_view.gd")
 const InputActions := preload("res://scripts/input_actions.gd")
@@ -7,17 +9,23 @@ const Strategy := preload("res://scripts/strategy_view.gd")
 const Hud := preload("res://scripts/battle_hud.gd")
 const Adapter := preload("res://scripts/battle_adapter.gd")
 const SavePanel := preload("res://scripts/campaign_save_panel.gd")
+const YouthPanel := preload("res://scripts/youth_ui.gd")
 const Store := preload("res://scripts/campaign_store.gd")
 const World := preload("res://scripts/world_sim.gd")
 var campaign_store := Store.new("campaign")
 var save_panel: Control
 var save_busy := false
 var strategy: Control
+var youth: Control
+var youth_busy := false
+var paused_before_youth := false
+var youth_return_to_map := false
 var paused_before_strategy := false
 var sim := Simulation.new()
 # Training is deliberately separate. Only adapter-backed encounters affect the campaign.
 var training_sim: BattleSimulation
 var training_paused := false
+var training_profile_id := "early_v1"
 var campaign_adapter: RefCounted
 var campaign_settlement: Dictionary = {}
 var camera: Camera3D
@@ -41,6 +49,20 @@ var rendered_frames := 0
 
 func _ready() -> void:
 	var arguments := OS.get_cmdline_user_args()
+	if "--youth-smoke-prepare" in arguments or "--youth-smoke-resume" in arguments:
+		set_process(false)
+		set_physics_process(false)
+		set_process_input(false)
+		set_process_unhandled_input(false)
+		var phase := "prepare" if "--youth-smoke-prepare" in arguments else "resume"
+		var smoke_id := "export_v1"
+		for argument in arguments:
+			if argument.begins_with("--youth-smoke-id="):
+				smoke_id = argument.trim_prefix("--youth-smoke-id=")
+		var proof: Dictionary = preload("res://scripts/youth_persistence_smoke.gd").run(phase, smoke_id)
+		print("YOUTH_RUNTIME_%s_%s %s" % [phase.to_upper(), "PASS" if proof.ok else "FAIL", JSON.stringify(proof)])
+		get_tree().quit(0 if proof.ok else 1)
+		return
 	if "--persistence-smoke-prepare" in arguments or "--persistence-smoke-resume" in arguments:
 		set_process(false)
 		set_physics_process(false)
@@ -58,6 +80,10 @@ func _ready() -> void:
 	for argument in arguments:
 		if argument.begins_with("--campaign-save-id="):
 			campaign_store = Store.new(argument.trim_prefix("--campaign-save-id="))
+		if argument.begins_with("--training-profile="):
+			var requested := argument.trim_prefix("--training-profile=")
+			if requested in Simulation.HeroProfiles.gameplay_ids():
+				training_profile_id = requested
 	InputActions.install()
 	scene_smoke = "--smoke-scene" in OS.get_cmdline_user_args()
 	campaign_smoke = "--campaign-smoke" in OS.get_cmdline_user_args()
@@ -72,6 +98,8 @@ func _ready() -> void:
 	hud.pause_requested.connect(_toggle_pause)
 	hud.strategy_requested.connect(_toggle_strategy)
 	hud.saves_requested.connect(_open_save_panel)
+	hud.youth_requested.connect(_open_youth)
+	hud.field_requested.connect(func(): field_requested.emit())
 	strategy = Strategy.new()
 	strategy.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	canvas.add_child(strategy)
@@ -80,6 +108,18 @@ func _ready() -> void:
 	strategy.assault_requested.connect(_start_campaign_battle)
 	strategy.campaign_reset.connect(_on_campaign_reset)
 	strategy.saves_requested.connect(_open_save_panel)
+	strategy.youth_requested.connect(_open_youth)
+	youth = YouthPanel.new()
+	youth.world = strategy.world
+	youth.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	canvas.add_child(youth)
+	youth.hide()
+	youth.close_requested.connect(_close_youth)
+	youth.map_requested.connect(_open_youth_map)
+	youth.saves_requested.connect(_open_save_panel)
+	youth.start_requested.connect(_start_youth)
+	youth.action_requested.connect(_youth_action)
+	youth.battle_requested.connect(_start_campaign_battle)
 	save_panel = SavePanel.new()
 	save_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	canvas.add_child(save_panel)
@@ -93,7 +133,7 @@ func _ready() -> void:
 	_restart()
 	if campaign_smoke:
 		_start_campaign_smoke()
-	print("LUANSHI_READY engine=%s soldiers=%d+%d renderer=%s" % [Engine.get_version_info().string, sim.alive_count(0), sim.alive_count(1), RenderingServer.get_current_rendering_method()])
+	print("LUANSHI_READY engine=%s soldiers=%d+%d renderer=%s profile=%s" % [Engine.get_version_info().string, sim.alive_count(0), sim.alive_count(1), RenderingServer.get_current_rendering_method(), sim.hero_profile.id])
 
 func _build_battlefield() -> void:
 	var environment := WorldEnvironment.new()
@@ -159,14 +199,16 @@ func _build_battlefield() -> void:
 func _restart() -> void:
 	if save_panel != null and save_panel.visible:
 		return
+	if youth != null and youth.visible:
+		return
 	if strategy != null and strategy.visible:
 		return
 	if campaign_adapter != null:
 		# R never rewinds a campaign transaction or revives its commander.
 		if sim.ended and campaign_settlement.get("ok", false):
-			_toggle_strategy()
+			_open_youth() if _is_youth() else _toggle_strategy()
 		return
-	sim.reset()
+	sim.reset(184, training_profile_id)
 	paused = false
 	_rebuild_unit_views()
 
@@ -186,9 +228,14 @@ func _rebuild_unit_views() -> void:
 	_refresh_hud()
 
 func _start_campaign_battle() -> void:
-	if save_busy or (campaign_adapter != null and not sim.ended):
+	if save_busy or youth_busy or (campaign_adapter != null and not sim.ended):
 		return
 	var current: Dictionary = strategy.world.player_view()
+	if _is_youth():
+		if current.campaign_ended or not current.active_battle.is_empty() or not strategy.world.youth_view().get("battle_ready", false):
+			return
+		_request_save_operation("prebattle")
+		return
 	if current.campaign_ended or not current.active_battle.is_empty() or current.local_city.get("id", "") != "hequ" or current.local_city.get("owner", "") == current.army.owner or current.local_city.get("soldiers", 0) <= 0 or current.army.soldiers <= 0:
 		strategy.set_feedback("Assault unavailable: no eligible local hostile force.")
 		return
@@ -199,15 +246,18 @@ func _begin_campaign_battle(checkpoint: Dictionary) -> void:
 	var started: Dictionary = next_adapter.begin_local_depot()
 	if not started.get("ok", false):
 		strategy.set_feedback("Assault unavailable: " + str(started.get("reason", "The force cannot engage.")))
+		if _is_youth():
+			youth.set_feedback("无法进入战场：" + str(started.get("reason", "条件不符")))
 		return
 	if campaign_adapter == null:
-		training_paused = paused_before_strategy
+		training_paused = paused_before_youth if youth.visible else paused_before_strategy
 	campaign_adapter = next_adapter
 	campaign_settlement = {}
 	sim = campaign_adapter.simulation
 	paused = false
 	paused_before_strategy = false
 	strategy.hide()
+	youth.hide()
 	hud.show()
 	strategy.set_battle_context(true, true)
 	_rebuild_unit_views()
@@ -222,6 +272,8 @@ func _settle_campaign_battle() -> void:
 	if campaign_settlement.get("ok", false):
 		strategy.set_battle_context(true, false)
 		strategy.show_battle_result(sim.report())
+		if _is_youth():
+			youth.refresh()
 	else:
 		# A rejected settlement must not unlock actions, discard the roster or reset the world.
 		paused = true
@@ -243,6 +295,7 @@ func _open_save_panel() -> void:
 		return
 	# A separate presentation gate freezes play without changing the prior pause.
 	strategy.interaction_blocked = true
+	youth.set_blocked(true)
 	save_panel.set_context(strategy.world.player_view())
 	save_panel.show()
 	cursor.hide()
@@ -255,10 +308,11 @@ func _close_save_panel() -> void:
 		return
 	save_panel.hide()
 	strategy.interaction_blocked = false
+	youth.set_blocked(youth_busy)
 	get_viewport().gui_release_focus()
 
 func _request_save_operation(operation: String, id: String = "", checkpoint: bool = false) -> void:
-	if save_busy:
+	if save_busy or youth_busy:
 		return
 	_open_save_panel()
 	save_busy = true
@@ -348,6 +402,7 @@ func _load_campaign(id: String, checkpoint: bool = false) -> Dictionary:
 		campaign_adapter.resume(active)
 		sim = campaign_adapter.simulation
 		strategy.hide()
+		youth.hide()
 		hud.show()
 		paused = true
 		paused_before_strategy = true
@@ -365,10 +420,114 @@ func _load_campaign(id: String, checkpoint: bool = false) -> Dictionary:
 			strategy.show_saved_battle_result(strategy.world.battle_ticket(last_id))
 		else:
 			strategy.set_feedback("Campaign loaded. Earlier saves and life checkpoints remain available.")
+	if active.is_empty() and _is_youth():
+		youth.preview_new_life = false
+		strategy.hide()
+		youth.refresh()
+		youth.show()
+		paused_before_youth = true
+		youth_return_to_map = false
+	elif active.is_empty():
+		youth.hide()
 	_rebuild_unit_views()
 	save_panel.set_context(strategy.world.player_view())
 	save_panel.set_feedback("Loaded '%s'. %s" % [id, "Battle is paused. Close this panel, then Resume to continue." if not active.is_empty() else "Campaign restored. Close this panel to return to the map."])
 	return {"ok": true}
+
+
+func _is_youth() -> bool:
+	return strategy != null and strategy.world.has_method("youth_view") and strategy.world.youth_view().get("enabled", false)
+
+func _open_youth() -> void:
+	if save_panel.visible or youth_busy:
+		return
+	if not youth.visible:
+		paused_before_youth = paused_before_strategy if strategy.visible else paused
+		youth_return_to_map = strategy.visible and not _is_youth()
+	paused = true
+	strategy.hide()
+	hud.hide()
+	youth.refresh()
+	youth.show()
+	cursor.hide()
+
+func _close_youth() -> void:
+	if save_busy or youth_busy or save_panel.visible:
+		return
+	youth.hide()
+	if youth_return_to_map:
+		strategy.refresh()
+		strategy.show()
+	else:
+		hud.show()
+		paused = paused_before_youth
+	get_viewport().gui_release_focus()
+
+func _open_youth_map() -> void:
+	if save_busy or youth_busy or save_panel.visible:
+		return
+	youth.hide()
+	hud.hide()
+	paused_before_strategy = paused_before_youth
+	paused = true
+	strategy.refresh()
+	strategy.show()
+
+func _start_youth(enlistment: String, motivation: String) -> void:
+	if save_busy or youth_busy or not strategy.world.player_view().active_battle.is_empty():
+		return
+	youth_busy = true
+	youth.set_blocked(true)
+	youth.set_feedback("正在保存当前世界；存好之后才建立新人生……")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var saved: Dictionary = _save_life_checkpoint("before_youth")
+	if not saved.ok:
+		youth_busy = false
+		youth.set_blocked(false)
+		youth.set_feedback("没有开始新人生。当前世界保持不变。" + _save_error(saved))
+		return
+	var candidate := World.new()
+	var result: Dictionary = candidate.start_youth(enlistment, motivation)
+	if result.get("ok", false):
+		result = strategy.world.restore_campaign_state(candidate.export_campaign_state())
+	if result.get("ok", false):
+		if campaign_adapter == null:
+			training_paused = paused_before_youth
+		campaign_adapter = null
+		campaign_settlement = {}
+		sim = training_sim
+		paused = true
+		paused_before_youth = training_paused
+		youth_return_to_map = false
+		strategy.set_battle_context(false, false)
+		_rebuild_unit_views()
+		youth.preview_new_life = false
+		var begun: Dictionary = _save_life_checkpoint("youth_start")
+		youth.set_feedback("旧世界已保存为人生节点。新人生已入册。" if begun.ok else "新人生已开始，但新节点保存失败。" + _save_error(begun))
+	else:
+		youth.set_feedback("无法开始新人生：" + str(result.get("reason", "unknown")))
+	youth_busy = false
+	youth.set_blocked(false)
+	strategy.refresh()
+
+func _youth_action(action_id: String) -> void:
+	if save_busy or youth_busy or not _is_youth():
+		return
+	youth_busy = true
+	youth.set_blocked(true)
+	youth.set_feedback("正在保存行动前节点并核对军令……")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var saved: Dictionary = _save_life_checkpoint("youth_choice")
+	if saved.ok:
+		var result: Dictionary = strategy.world.youth_action(action_id)
+		youth.set_feedback("此事已记入军旅。以下显示当前可知的结果。" if result.get("ok", false) else "当前不能这样做：" + str(result.get("reason", "unknown")))
+	else:
+		youth.set_feedback("行动尚未执行，保存节点失败。" + _save_error(saved))
+	youth_busy = false
+	youth.set_blocked(false)
+	strategy.refresh()
 
 func _save_error(result: Dictionary) -> String:
 	var reason: String = result.get("reason", "unknown_error")
@@ -381,6 +540,9 @@ func _save_error(result: Dictionary) -> String:
 
 func _refresh_hud() -> void:
 	hud.campaign_mode = campaign_adapter != null
+	hud.youth_context = strategy.world.youth_view() if _is_youth() and campaign_adapter != null else {}
+	if not hud.youth_context.is_empty():
+		hud.youth_context["battle_purpose"] = campaign_adapter.ticket.get("purpose", "")
 	hud.settlement_complete = campaign_settlement.get("ok", false)
 	hud.update_state(sim, paused, Engine.get_frames_per_second())
 
@@ -401,7 +563,7 @@ func _process(_delta: float) -> void:
 		print("VISUAL_CAPTURE " + str(error))
 
 func _input(event: InputEvent) -> void:
-	if save_busy:
+	if save_busy or youth_busy:
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_echo():
@@ -419,14 +581,20 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_pressed("pause_battle") or event.is_action_pressed("toggle_strategy"):
 			_close_save_panel()
 			get_viewport().set_input_as_handled()
+	elif youth.visible and event.is_action_pressed("pause_battle"):
+		_close_youth()
+		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("toggle_strategy"):
-		_toggle_strategy()
+		_open_youth_map() if youth.visible else _toggle_strategy()
 		get_viewport().set_input_as_handled()
 
 func _toggle_strategy() -> void:
-	if save_panel.visible:
+	if save_panel.visible or youth_busy:
 		return
 	if strategy.visible:
+		if _is_youth():
+			_open_youth()
+			return
 		strategy.hide()
 		hud.show()
 		paused = paused_before_strategy
@@ -439,7 +607,7 @@ func _toggle_strategy() -> void:
 		cursor.hide()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if strategy.visible or save_panel.visible:
+	if strategy.visible or save_panel.visible or youth.visible or youth_busy:
 		return
 	if event.is_action_pressed("pause_battle"):
 		_toggle_pause()
@@ -457,21 +625,23 @@ func _notification(what: int) -> void:
 		paused = true
 
 func _toggle_pause() -> void:
-	if strategy.visible or save_panel.visible:
+	if strategy.visible or save_panel.visible or youth.visible or youth_busy:
 		return
 	if not sim.ended:
 		paused = not paused
 
 func _request_action(action: String) -> void:
-	if paused or sim.ended or save_panel.visible:
+	if paused or sim.ended or save_panel.visible or youth.visible or youth_busy:
 		return
 	if action.begins_with("order_"):
+		if _is_youth() and campaign_adapter != null and strategy.world.youth_view().get("command_authority", "withdrawal_only") != "squad" and action != "order_retreat":
+			return
 		sim.issue_order(action.trim_prefix("order_"))
 	else:
 		sim.use_action(action)
 
 func _physics_process(delta: float) -> void:
-	if strategy.visible or save_panel.visible:
+	if strategy.visible or save_panel.visible or youth.visible or youth_busy:
 		return
 	if sim.units.is_empty():
 		return
@@ -521,7 +691,7 @@ func _physics_process(delta: float) -> void:
 				push_error("Scene smoke did not produce its required visual evidence")
 				get_tree().quit(1)
 				return
-			print("SCENE_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report(), "frame_timing": _frame_timing()}))
+			print("SCENE_SMOKE_PASS " + JSON.stringify({"hero_profile": Simulation.HeroProfiles.profile_reference(sim.hero_profile.id), "steps": smoke_steps, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0, "actions": smoke_actions, "report": sim.report(), "frame_timing": _frame_timing()}))
 			get_tree().quit(0)
 
 func _start_campaign_smoke() -> void:
@@ -556,7 +726,7 @@ func _finish_campaign_smoke() -> void:
 		push_error("Campaign smoke did not finish a conserved, exactly-once encounter: " + JSON.stringify(campaign_settlement))
 		get_tree().quit(1)
 		return
-	print("CAMPAIGN_SMOKE_PASS " + JSON.stringify({"steps": smoke_steps, "report": report,
+	print("CAMPAIGN_SMOKE_PASS " + JSON.stringify({"hero_profile": Simulation.HeroProfiles.profile_reference(sim.hero_profile.id), "steps": smoke_steps, "report": report,
 		"settlement": campaign_settlement, "army": current.army, "world_time_seconds": current.time_seconds,
 		"actions": smoke_actions, "mean_simulation_ms": float(simulation_usec) / max(physics_steps, 1) / 1000.0,
 		"frame_timing": _frame_timing()}))
@@ -575,11 +745,23 @@ func _smoke_input() -> void:
 	var target_id := sim._nearest_enemy(sim.player())
 	if target_id >= 0:
 		var offset: Vector2 = sim.units[target_id].pos - sim.player().pos
-		sim.set_player_input(offset.normalized() if offset.length() > 2.3 else Vector2.ZERO, offset)
-		if offset.length() < 7:
-			for action in ["attack", "sweep", "lunge", "guard"]:
+		# Profile-aware standoff and real input, not the old 360HP charge policy.
+		var distance := offset.length()
+		var movement := offset.normalized() if distance > sim.player().range * 0.95 else Vector2.ZERO
+		if distance < sim.player().range * 0.92:
+			movement = -offset.normalized()
+		sim.set_player_input(movement, offset)
+		if smoke_steps % 6 == 0:
+			var profile: Dictionary = sim.hero_profile
+			var eligible := []
+			if distance <= 1.9: eligible.append("guard")
+			if distance <= profile.sweep_range: eligible.append("sweep")
+			if distance > 0.65 and distance <= profile.lunge_distance: eligible.append("lunge")
+			if distance <= sim.player().range: eligible.append("attack")
+			for action in eligible:
 				if sim.use_action(action):
 					smoke_actions[action] = true
+					break
 
 func _sync_visuals(delta: float) -> void:
 	for i in range(views.size()):

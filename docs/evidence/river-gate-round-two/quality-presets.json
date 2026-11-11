@@ -1,0 +1,303 @@
+{
+  "build_source": "77ad69619972975a015fa2890a75d5993e87e68c",
+  "package_sha256": "3e0c85b00965aa92f76c143564f2205f63b0a9c96d3e7a4a16d0d9d09a2837a9",
+  "harness": "192eb0ba523c52a73c2ce9efbefae888bb732c39",
+  "run": 43112250498,
+  "archive": {
+    "id": 13896702569,
+    "sha256": "sha256:9a2672208e4878b32238930e351afe89d4d1567dbed19de36f38b127badcf48f",
+    "expires_at": "2027-02-09T22:29:56Z"
+  },
+  "earlier": {
+    "run": 43111764025,
+    "status": "INCOMPLETE",
+    "detail": "The fresh first process exceeded the original 60-second command bound; no preset scores were accepted. The final harness separates a headless package warm-up and writes diagnostics to disk."
+  },
+  "measurement": "Four 24s tours on one hosted macOS runner; 512 per side + hero/officers; identical build, scripted panning, fixed simulation seed, real-time uncapped rendering, no MovieWriter. actual_internal_px is the recorder estimate derived from the render texture size times the active preset scale, not a system GPU counter. Window/root report and effective internal estimates are distinct.",
+  "trials": [
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "four_second_windows": [
+        {
+          "frames": 560,
+          "hits": 501,
+          "tick": 181,
+          "visible": 599,
+          "wall_seconds": 4.004683
+        },
+        {
+          "frames": 518,
+          "hits": 427,
+          "tick": 261,
+          "visible": 574,
+          "wall_seconds": 4.006226
+        },
+        {
+          "frames": 458,
+          "hits": 90,
+          "tick": 341,
+          "visible": 761,
+          "wall_seconds": 4.001613
+        },
+        {
+          "frames": 494,
+          "hits": 90,
+          "tick": 421,
+          "visible": 664,
+          "wall_seconds": 4.001005
+        },
+        {
+          "frames": 690,
+          "hits": 99,
+          "tick": 502,
+          "visible": 459,
+          "wall_seconds": 4.017764
+        }
+      ],
+      "fps": 136.718645857217,
+      "frames": 3282,
+      "hits_in_window": 1252,
+      "mean_ms": 7.31429128580134,
+      "p95_ms": 18.178,
+      "p99_ms": 27.191,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "processor": "Apple M1 (Virtual)",
+      "render_cpu_p95_ms": 0.453000009059906,
+      "render_gpu_p95_ms": null,
+      "renderer": "mobile",
+      "scale": 1,
+      "seconds": 24.005504,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": true,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "clear-A",
+      "preset": 0,
+      "actual_internal_px": [
+        720,
+        450
+      ],
+      "max_rss_bytes": 402898944,
+      "archive_sha256": "3e0c85b00965aa92f76c143564f2205f63b0a9c96d3e7a4a16d0d9d09a2837a9"
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "four_second_windows": [
+        {
+          "frames": 468,
+          "hits": 501,
+          "tick": 181,
+          "visible": 598,
+          "wall_seconds": 4.046539
+        },
+        {
+          "frames": 239,
+          "hits": 427,
+          "tick": 261,
+          "visible": 574,
+          "wall_seconds": 4.012883
+        },
+        {
+          "frames": 202,
+          "hits": 82,
+          "tick": 337,
+          "visible": 763,
+          "wall_seconds": 4.010496
+        },
+        {
+          "frames": 352,
+          "hits": 93,
+          "tick": 418,
+          "visible": 664,
+          "wall_seconds": 4.008458
+        },
+        {
+          "frames": 597,
+          "hits": 102,
+          "tick": 498,
+          "visible": 455,
+          "wall_seconds": 4.002396
+        }
+      ],
+      "fps": 96.811636783725,
+      "frames": 2325,
+      "hits_in_window": 1247,
+      "mean_ms": 10.3293367741935,
+      "p95_ms": 25.625,
+      "p99_ms": 39.146,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "processor": "Apple M1 (Virtual)",
+      "render_cpu_p95_ms": 0.551999986171722,
+      "render_gpu_p95_ms": null,
+      "renderer": "mobile",
+      "scale": 0.850000023841858,
+      "seconds": 24.015708,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": true,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "balanced",
+      "preset": 1,
+      "actual_internal_px": [
+        612,
+        383
+      ],
+      "max_rss_bytes": 351633408,
+      "archive_sha256": "3e0c85b00965aa92f76c143564f2205f63b0a9c96d3e7a4a16d0d9d09a2837a9"
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "four_second_windows": [
+        {
+          "frames": 455,
+          "hits": 501,
+          "tick": 181,
+          "visible": 598,
+          "wall_seconds": 4.000697
+        },
+        {
+          "frames": 459,
+          "hits": 413,
+          "tick": 258,
+          "visible": 576,
+          "wall_seconds": 4.007358
+        },
+        {
+          "frames": 463,
+          "hits": 97,
+          "tick": 338,
+          "visible": 762,
+          "wall_seconds": 4.000313
+        },
+        {
+          "frames": 633,
+          "hits": 92,
+          "tick": 418,
+          "visible": 664,
+          "wall_seconds": 4.000358
+        },
+        {
+          "frames": 704,
+          "hits": 102,
+          "tick": 498,
+          "visible": 455,
+          "wall_seconds": 4.000437
+        }
+      ],
+      "fps": 143.195260799316,
+      "frames": 3437,
+      "hits_in_window": 1248,
+      "mean_ms": 6.983471341286,
+      "p95_ms": 15.569,
+      "p99_ms": 25.067,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "processor": "Apple M1 (Virtual)",
+      "render_cpu_p95_ms": 0.363000005483627,
+      "render_gpu_p95_ms": null,
+      "renderer": "mobile",
+      "scale": 0.699999988079071,
+      "seconds": 24.002191,
+      "shadows": false,
+      "static_bytes": null,
+      "tour": true,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "performance",
+      "preset": 2,
+      "actual_internal_px": [
+        504,
+        315
+      ],
+      "max_rss_bytes": 352043008,
+      "archive_sha256": "3e0c85b00965aa92f76c143564f2205f63b0a9c96d3e7a4a16d0d9d09a2837a9"
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "four_second_windows": [
+        {
+          "frames": 413,
+          "hits": 501,
+          "tick": 181,
+          "visible": 598,
+          "wall_seconds": 4.000289
+        },
+        {
+          "frames": 456,
+          "hits": 427,
+          "tick": 261,
+          "visible": 574,
+          "wall_seconds": 4.006111
+        },
+        {
+          "frames": 441,
+          "hits": 90,
+          "tick": 341,
+          "visible": 761,
+          "wall_seconds": 4.001164
+        },
+        {
+          "frames": 621,
+          "hits": 90,
+          "tick": 421,
+          "visible": 664,
+          "wall_seconds": 4.001365
+        },
+        {
+          "frames": 621,
+          "hits": 99,
+          "tick": 501,
+          "visible": 459,
+          "wall_seconds": 4.002048
+        }
+      ],
+      "fps": 133.810067107915,
+      "frames": 3212,
+      "hits_in_window": 1252,
+      "mean_ms": 7.47327926525529,
+      "p95_ms": 17.294,
+      "p99_ms": 25.473,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "processor": "Apple M1 (Virtual)",
+      "render_cpu_p95_ms": 0.456999987363815,
+      "render_gpu_p95_ms": null,
+      "renderer": "mobile",
+      "scale": 1,
+      "seconds": 24.004173,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": true,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "clear-B",
+      "preset": 0,
+      "actual_internal_px": [
+        720,
+        450
+      ],
+      "max_rss_bytes": 352403456,
+      "archive_sha256": "3e0c85b00965aa92f76c143564f2205f63b0a9c96d3e7a4a16d0d9d09a2837a9"
+    }
+  ]
+}

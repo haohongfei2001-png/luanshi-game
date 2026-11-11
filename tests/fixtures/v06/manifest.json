@@ -1,0 +1,41 @@
+{
+	"fixtures": {
+		"cancelled": {
+			"checkpoint": false,
+			"continuation_sha256": "6dd4e46089b254880e11314201e6906feeb6d16f11d5049f7bbd641f2f2d9695",
+			"state_sha256": "2cba25edea3771a0d5c715a6cd34857a7d609b490978c1aaf9924a78f30d3c6a"
+		},
+		"committed": {
+			"checkpoint": false,
+			"continuation_sha256": "10c00348a66241f4350bbb5dfb45d30a5830e67fac5878bb092264100a53d1f0",
+			"state_sha256": "10c00348a66241f4350bbb5dfb45d30a5830e67fac5878bb092264100a53d1f0"
+		},
+		"dead": {
+			"checkpoint": false,
+			"continuation_sha256": "847f8e594e3b5189039ffa19cb5c582a76f8b4f4893b11df52bfa05b0a6e1415",
+			"state_sha256": "5c1ccaee234a5ebae8dd5db44d90eb42586d9edbe3caddc34fb92f5a1a636ccc"
+		},
+		"life_node": {
+			"checkpoint": true,
+			"continuation_sha256": "a0d769481beff916c56a2589a9ac76c6831dd804032baadbe5226a026720b631",
+			"state_sha256": "847f8e594e3b5189039ffa19cb5c582a76f8b4f4893b11df52bfa05b0a6e1415"
+		},
+		"pending": {
+			"checkpoint": false,
+			"continuation_sha256": "10c00348a66241f4350bbb5dfb45d30a5830e67fac5878bb092264100a53d1f0",
+			"state_sha256": "5ec9d60ccb5a89745a90e83cc800c25c2dfc3c12e6a3255d2c0a0553890a74a0"
+		},
+		"running": {
+			"checkpoint": false,
+			"continuation_sha256": "d6bd4de9aa5f67fbf4f013fe21c14a29d9b538590c0b9208a07c63c71fde7626",
+			"state_sha256": "dddd0f54be708bea7700758bfadf0f570a3134d9996a5021e59eb0d75827f15c",
+			"trace_frame_count": 1773,
+			"trace_sha256": "94277f6f91ba0767d3c7245fbc5729bc70e45d864b20dcaa31e44f854637fa6c",
+			"whole_fight_sha256": "6f02eca3229213c3466acc6ea2d58d0e770ae7bb51ae070f63738e230fe64eff"
+		}
+	},
+	"godot": "4.6.3.stable.official.7d41c59c4",
+	"original_generation_source_commit": "37beae24b60f841a5d9e1137a747271acb00695c",
+	"source_commit": "e86a1ad2ecbeadfba53d59a1ed6b8cebee7f366b",
+	"source_tree": "8b5bcf4f3298bf68bd9c4198e1828e5c66cda7df"
+}

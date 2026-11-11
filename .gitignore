@@ -27,3 +27,11 @@ exports/
 .local-*/
 builds/
 artifacts/
+
+# Portable CI harness caches
+__pycache__/
+*.pyc
+
+# Restored from a pinned upstream blob before editor import.
+/assets/fonts/NotoSansSC-Regular.otf
+/assets/build-revision.txt

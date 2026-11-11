@@ -14,9 +14,11 @@ concurrency:
 jobs:
   verify-and-export:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Legacy profile parity materializes its preserved source commit.
       - name: Install verified official Godot and export templates
         run: |
           set -euo pipefail
@@ -32,7 +34,20 @@ jobs:
       - name: Test simulation and real scene lifecycle
         env:
           XDG_DATA_HOME: /home/runner/.local/share
-        run: ./tools/test.sh
+        run: timeout 5m ./tools/test.sh
+      - name: Measure contact at four army sizes and record a separate 512v512 run
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
+          ./tools/test-field-journey.sh
+          ./tools/test-field-render.sh
+      - name: Verify youth narrative interface and real input path
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/test-youth-ui.sh
+      - name: Verify finite hero calibration and legacy parity
+        env:
+          XDG_DATA_HOME: /home/runner/.local/share
+        run: ./tools/calibrate-combat.sh
       - name: Exercise rendered scene with software OpenGL
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
@@ -71,6 +86,15 @@ jobs:
           for image in save-slots life-checkpoints battle-load saved-result; do test -s "artifacts/$image-proof.png"; done
           grep -q CAMPAIGN_SAVE_VISUAL_PASS artifacts/save-visual.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/save-visual.log; then exit 1; fi
+      - name: Exercise youth life with real graphics and Chinese glyphs
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/youth_visual.gd 2>&1 | tee artifacts/youth-visual.log
+          for image in enlistment first-battle injustice active-save withdrawal endpoint records; do test -s "artifacts/youth-$image-proof.png"; done
+          grep -q YOUTH_VISUAL_PASS artifacts/youth-visual.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/youth-visual.log; then exit 1; fi
       - name: Build macOS and verify exported Linux game
         run: ./tools/export.sh
       - name: Upload macOS playable
@@ -85,6 +109,17 @@ jobs:
           name: Luanshi-Linux-${{ github.sha }}
           path: builds/Luanshi-linux.tar.gz
           if-no-files-found: error
+      - name: Upload gameplay footage
+        uses: actions/upload-artifact@v4
+        with:
+          name: gameplay-${{ github.sha }}
+          path: |
+            artifacts/river-gate-512.mp4
+            artifacts/player-nine-weapons.mp4
+            artifacts/river-gate-full-siege.mp4
+            artifacts/river-gate-journey.mp4
+            artifacts/river-gate-review.mp4
+          if-no-files-found: error
       - name: Upload evidence and hashes
         if: always()
         uses: actions/upload-artifact@v4
@@ -93,6 +128,10 @@ jobs:
           path: |
             artifacts/
             builds/SHA256SUMS
+            !artifacts/field-film/**
+            !artifacts/kit-film/**
+            !artifacts/siege-film/**
+            !artifacts/*.mp4
           if-no-files-found: warn
   macos-runtime:
     needs: verify-and-export
@@ -119,15 +158,94 @@ jobs:
           "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --campaign-smoke --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/campaign.log
           grep -q CAMPAIGN_SMOKE_PASS mac-evidence/campaign.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/campaign.log; then exit 1; fi
+          "$APP/Contents/MacOS/$BIN" --headless --quit-after 1100 --fixed-fps 60 -- --field-check 2>&1 | tee mac-evidence/field.log
+          grep -q '^FIELD_PACKAGE_PASS' mac-evidence/field.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/field.log; then exit 1; fi
           for phase in prepare resume; do
             "$APP/Contents/MacOS/$BIN" --headless -- --persistence-smoke-$phase --persistence-smoke-id="native_${GITHUB_RUN_ID}" 2>&1 | tee "mac-evidence/persistence-$phase.log"
           done
           grep -q PERSISTENCE_SMOKE_PREPARE_PASS mac-evidence/persistence-prepare.log
           grep -q PERSISTENCE_SMOKE_RESUME_PASS mac-evidence/persistence-resume.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/persistence-*.log; then exit 1; fi
+          for phase in prepare resume; do
+            "$APP/Contents/MacOS/$BIN" --headless -- --youth-smoke-$phase --youth-smoke-id="native_${GITHUB_RUN_ID}" 2>&1 | tee "mac-evidence/youth-$phase.log"
+          done
+          grep -q YOUTH_RUNTIME_PREPARE_PASS mac-evidence/youth-prepare.log
+          grep -q YOUTH_RUNTIME_RESUME_PASS mac-evidence/youth-resume.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/youth-*.log; then exit 1; fi
+      - name: Render the exported siege and compare two macOS backends on identical hardware
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, plistlib, re, shutil, subprocess
+          base = pathlib.Path("mac-evidence").resolve()
+          app = next(pathlib.Path("package/unpacked").glob("*.app"))
+          exe = app / "Contents/MacOS" / plistlib.loads((app / "Contents/Info.plist").read_bytes())["CFBundleExecutable"]
+          digest = hashlib.sha256(pathlib.Path("package/Luanshi-macOS.zip").read_bytes()).hexdigest()
+          print("SOURCE_ARCHIVE_SHA256", digest)
+          plans = [("compat-1", "gl_compatibility"), ("default-metal-1", "mobile"), ("default-metal-2", "mobile"), ("compat-2", "gl_compatibility")]
+          records = []
+          unavailable = set()
+          for name, method in plans:
+              if method in unavailable:
+                  continue
+              image = base / (name + ".png")
+              args = ["/usr/bin/time", "-l", str(exe)]
+              if method == "gl_compatibility":
+                  args += ["--rendering-method", "gl_compatibility"]
+              args += ["--resolution", "1000x600", "--audio-driver", "Dummy", "--disable-vsync", "--", "--field-check", "--field-profile", "--field-proof=" + str(image)]
+              if name == "default-metal-2":
+                  args.append("--field-window-tour")
+              try:
+                  test = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=70)
+                  log = test.stdout.decode(errors="replace")
+                  code = test.returncode
+              except subprocess.TimeoutExpired as exc:
+                  log = (exc.stdout or b"").decode(errors="replace")
+                  code = 124
+              (base / (name + ".log")).write_text(log)
+              for line in log.splitlines():
+                  if line.startswith("FIELD_PROFILE_FILE "):
+                      session_file = pathlib.Path(line.partition(" ")[2])
+                      if session_file.is_file():
+                          shutil.copy2(session_file, base / (name + "-session.jsonl"))
+              rows = [json.loads(s.partition(" ")[2]) for s in log.splitlines() if s.startswith("FIELD_HOST_WINDOW ")]
+              row = rows[0] if rows else {}
+              resident = re.search(r"^\s*(\d+)\s+maximum resident set size", log, re.M)
+              row.update(label=name, returncode=code, requested_method=method, max_rss_bytes=int(resident.group(1)) if resident else None)
+              valid = code == 0 and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method and image.exists() and image.stat().st_size > 4096 and row.get("hits_in_window",0)>0 and not any(m in log for m in ("SCRIPT ERROR","SHADER ERROR","ERROR:"))
+              row["validated"] = valid
+              records.append(row)
+              print("RENDERER_TRIAL", json.dumps(row), flush=True)
+              if not valid:
+                  unavailable.add(method)
+                  print("DIAGNOSTIC", log[-2000:], flush=True)
+          (base / "renderer-comparison.json").write_text(json.dumps({"archive_sha256":digest,"source_run":os.environ["GITHUB_RUN_ID"],"samples":records},indent=2))
+          if len(records) != 4 or not all(r["validated"] for r in records):
+              raise SystemExit("The native Mac default or its compatibility path did not pass the window trials.")
+          PY
       - name: Upload native macOS evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: macos-verification-${{ github.sha }}
           path: mac-evidence/
+
+  review-footage:
+    name: Preserve review video bytes
+    needs: verify-and-export
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: gameplay-${{ github.sha }}
+          path: review
+      - name: Deliver the already encoded copy for the Git evidence record
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, pathlib
+          data=next(pathlib.Path('review').rglob('river-gate-review.mp4')).read_bytes()
+          print('JOURNEY_DIGEST',len(data),hashlib.sha256(data).hexdigest(),flush=True)
+          wire=base64.b64encode(data).decode()
+          for i in range(0,len(wire),32000): print('JOURNEY_PART',i//32000,wire[i:i+32000],flush=True)
+          PY

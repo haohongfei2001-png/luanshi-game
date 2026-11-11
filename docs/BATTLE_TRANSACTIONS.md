@@ -38,7 +38,7 @@ if start.ok:
   returns `{ok: false, reason}` and leaves world state unchanged.
 - `result`: `victory`, `retreat` or `commander_dead`. A local `victory` does **not**
   necessarily mean depot capture if unengaged defenders remain.
-- `player_view()` adds `time_seconds`, `campaign_ended`, `commander` (alive/hp/max_hp/army)
+- `player_view()` adds `time_seconds`, `campaign_ended`, `commander` (alive/hp/max_hp/army/hero_profile)
   and `active_battle` (empty string or ticket ID). It still does not expose remote truth.
 - `battle.report()` keeps the existing ordinary-soldier counts, excluding the separately
   reported commander. Use `alive_count(0, true)` for the full campaign deployment.
@@ -62,7 +62,7 @@ settle against a new campaign on the same world instance.
 ## Reservation and equipment
 
 Tickets record location, start time, stable battle ID, participating force IDs,
-reserved individual roster entries, deterministic tactical seed and status. IDs for
+reserved individual roster entries, immutable hero profile identity/revision, deterministic tactical seed and status. IDs for
 aggregate ordinary soldiers are scoped to the encounter; the commander has a persistent
 identity. Forces are not copied or deducted from world totals during reservation.
 
@@ -159,10 +159,10 @@ Anping siege combat is still the older aggregate scenario. The old `seize_depot(
 method remains a deterministic compatibility scenario for earlier world tests only;
 the interactive depot button must use this adapter. It cannot bypass active locks.
 
-Save/load of an in-progress bound battle and durable transaction receipts across a
-process restart remain **pending**; a JSON world snapshot is debug data, not a claimed
-complete campaign save implementation. Multi-world outcome import is unsupported.
-No claim is made that WRL-07 save/reload acceptance or all G2/G3 requirements are done.
+Save/load of an in-progress bound battle and durable once-only receipts are implemented
+through the explicit loader in [CAMPAIGN_SAVES.md](CAMPAIGN_SAVES.md). New worlds use
+100HP early_v1. Old v0.6 saves retain their explicit legacy profile through migration.
+Multi-world outcome import remains unsupported. This is not full G2/G3 acceptance.
 
 ## Reproducible tests
 

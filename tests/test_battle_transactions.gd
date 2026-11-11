@@ -203,7 +203,7 @@ func _test_retreat_and_death() -> void:
 	check(state.ledger.weapons_destroyed == 2 and world.audit().is_empty(), "unrecoverable weapons ledgered once")
 	check(not state.campaign_ended and state.battle_locks.is_empty(), "living commander retains campaign after retreat")
 	var next := begin(world)
-	check(next.simulation.player().hp == state.commander.hp and state.commander.hp == 330.0, "commander injury persists into next actual battle")
+	check(next.simulation.player().hp == state.commander.hp and state.commander.hp == state.commander.max_hp - 30.0, "commander injury persists into next actual battle")
 	check(next.simulation.units.size() == 34, "next actual roster does not resurrect lost enemy")
 	next.simulation._hurt(next.simulation.player(), 1000, false)
 	next.simulation.step(BattleSimulation.FIXED_DELTA)

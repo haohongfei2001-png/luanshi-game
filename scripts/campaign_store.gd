@@ -97,7 +97,8 @@ func decode_campaign(bytes: PackedByteArray) -> Dictionary:
 	var envelope: Variant = json.data
 	if not Schema.keys(envelope, ["format", "schema_version", "encoding", "uncompressed_bytes", "payload", "sha256"]) or not envelope.format is String or envelope.format != FORMAT or not envelope.schema_version is float or envelope.schema_version != SAVE_VERSION:
 		return _error("unsupported_save_schema")
-	# v1 is the first actual loader. No migration from prior debug snapshots exists.
+	# Envelope v1 remains the exact typed transport. World5 is explicitly migrated
+	# to World6 by the authority; earlier debug snapshots are unsupported.
 	if not envelope.encoding is String or envelope.encoding != ENCODING or not envelope.uncompressed_bytes is float or not is_finite(envelope.uncompressed_bytes) or envelope.uncompressed_bytes < 1 or envelope.uncompressed_bytes > MAX_RAW_BYTES or floor(envelope.uncompressed_bytes) != envelope.uncompressed_bytes:
 		return _error("invalid_payload_size_or_encoding")
 	var canonical: Dictionary = envelope.duplicate()
@@ -125,7 +126,7 @@ func decode_campaign(bytes: PackedByteArray) -> Dictionary:
 	var validation := candidate.restore_campaign_state(decoded.value)
 	if not validation.ok:
 		return validation
-	return {"ok": true, "state": decoded.value}
+	return {"ok": true, "state": candidate.export_campaign_state()}
 
 func _save(world: WorldSimulation, kind: String, id: String) -> Dictionary:
 	var encoded := encode_campaign(world)

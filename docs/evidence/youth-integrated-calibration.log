@@ -1,0 +1,17 @@
+Verified implementation: bb6654f0cad1e79b00789935f096134bdf476c3f
+Environment: Linux cloud, official Godot 4.6.3; headless, not visual/M5 acceptance.
+Command: XDG_DATA_HOME=/workspace/shared/godot-data XDG_CONFIG_HOME=/workspace/shared/godot-config XDG_CACHE_HOME=/workspace/shared/godot-cache ./tools/calibrate-combat.sh
+Exit: 0
+
+4.6.3.stable.official.7d41c59c4
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+HERO_PROFILE_TESTS {"checks":59,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+COMBAT_CALIBRATION_TESTS {"checks":320,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LEGACY_PROFILE_PARITY {"checks":1120,"failures":[]}
+4db8d665b7d5de8aa01d7ba07cc98fde13658619ffbf9624608cffb99aef6b93  artifacts/combat-calibration.json
+COMBAT_CALIBRATION_REPEAT_PASS
