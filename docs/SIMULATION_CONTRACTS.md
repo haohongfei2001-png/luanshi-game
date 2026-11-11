@@ -215,6 +215,60 @@ load_campaign(save) -> WorldState
 3. 主角战死后旧友/婚姻/子嗣信息仅用于当时可知的局末总结；不强制操控继承人。
 4. 玩家未遭战败或成功撤离时永不凭剧情强制被俘，罕见真实被俘则能按本来的 `CaptivityState` 接续。
 
+## 9D. 百年战争压缩的世界时代与技术演变模型（2026-11-12 新长期契约）
+
+**只定义接口和不变量，不要求 Dot 当前 G2/G3 立即实现全部时代与海军**。完整战争压力谱系、用户决策与可达性见 `CENTURY_WAR_ERA_CAMPAIGN_V0_1.md` / `PRODUCT_DECISIONS.md` §1E。
+
+### 时代不能是剧情章节枚举
+
+建议把世界状态分成**相互作用但不完全同步**的对象，而不是 `current_dynasty = Tang`, 过关后 `Song`：
+- `EraPressure`：id, kind (military_fragmentation / northern_rivals / territorial_split / succession / dual_front_fiscal / coastal_foreign_pressure), actors, initiating_causes, earliest_possible_time, current_intensity, trigger_conditions, countermeasures, resolved_or_transformed_by。它是**压力/风险**，而非固定结果。
+- `PoliticalOrder`：polity_id, form, legitimacy_sources, central_army, provincial_forces, regional_autonomy, fiscal_capacity, court_factions, succession_rules, capital_city_ids, active_claimants。中央与地方均可因战争/财政改变。
+- `CapitalPolicy`：principal_seat, secondary_seat, army_hq, northern_garrison_locations, tax_origins, supply_routes, grain_transport_cost, capital_exposure, local_command_autonomy。南京/北京只是重要可选城市的地理原型，效果来自地图/供应链。
+- `FiscalPressure`：tax_rates_by_region, taxable_population, weather_and_harvest, collection_efficiency, court_spending, corruption/leakage, military_pay, grain_stock, legitimacy_and_unrest, roads_and_grain_canals。税赋与民变不是同一个布尔变量。
+- `TechnologyDomain`：polity, metallurgy, powder_arms, artillery, shipbuilding, navigation, industrial_workshops, transport, taxation, military_organization, education_and_diffusion, knowledge_sources, effective_deployed_capacity。区分已知、可制造、已训练与实际装备率。
+- `ForeignPolity`：独立的人口、疆域、内部派系、军力、野心、技术、财政、外交与资源；草原联盟和新兴北方集团不能仅因为故事需要改名重生。若合并/吞并产生新敌，记录 `PoliticalSuccessionEvent` 和实际兵员/领土来源。
+- `DynasticTransition`：前政权是否实质失去首都/军队/税收控制，征服者、残存地区、合法性主张、继承关系及战役记录。新皇朝不是点击“统一”后凭空刷新一整套军粮和人口。
+- `NavalForce`：船只数量与类型、造船/维修产能、船员训练、舰炮、火药粮草、港口补给、航路、天气/水文。第一阶段允许在世界战略层聚合模拟，不要求马上渲染海战。
+
+### 历史压力推进与年龄
+
+建议一个 `ScenarioGenerator / EraEngine` 只在世界真实人口/财政/政治/军事/技术条件满足时把新的压力放入同一 WorldEventQueue。**绝不根据玩家刚赢一仗就瞬间写入新朝/新装备**。
+- 历史参考时间的“数百年”映射为**浓缩的世界演变速度/更强的外部扩散与危机频度**，但 `WorldClock` 仍以真实游戏内时日驱动人物年龄、行军、粮耗、生产。
+- `EraEngine` 的阶段只是风险原型标签，经济与武备能力是真实连续变量；一场战争中仍可能用旧装备对新火器。
+- 用户明确要求存在从约15岁到自然老年、能够遭遇 E0–E7 的合法高水平路线，目标测试不得依赖永久健康、瞬时物资、无条件赢战或切换继承人。
+- 短程版本用可配置 `acceleration_profile` 和初始外部预存技术/政治条件（体现作者确立的架空历史）来实现总体速度，而不是强制玩家按世纪等待。该 profile 须记录在存档与 QA，世界模拟全局一致。
+- 玩家中途失去政权、退守南方或不思进取时，其他势力的政治/技术/战争仍会演化；玩家失去主权不等于年龄停止或整个世界科技停止。
+
+### 产业链与外交/财政核对
+
+- 开放贸易和科研不直接生成现代军舰： `contact -> knowledge -> skilled_personnel -> production_facilities -> supply -> training -> deployed_units` 需要合法时间与消耗。政策与改革提升效率但受实际世界资源限制。
+- 参考历史清末能力是平衡/美术上限的**目标带宽**，不是所有玩家每个属性固定锁死。长期开放可使相关领域略好，却不保证工业代际碾压领先海权国。
+- 带来财政收益的南方税赋若需北运，真实商路/运河/海运的风险、军费、仓库与截运会产生代价。首都选北京可以有指挥利益及自身暴露风险，不允许设为绝对“选对免疫入侵”。
+- 税收变化影响实际征收率、逃亡/叛乱动员、部队工资与财政，既可让民变滋生也可削弱北境防守；不得硬写 `if tax_raised: spawn_li_zicheng` / `else: spawn_qing`。
+- 海上末战与近代舰队战争需读取真实港口、造舰材料、修理、船员、燃料/粮草、军备与国库；“剧情海战”造成的损失必须回写世界。
+
+### 接口建议（行为而非强制函数名）
+
+```text
+evaluate_era_pressures(world) -> Array<EraPressureChange>
+apply_governance_policy(world, polity_id, policy) -> Events/Refusal
+simulate_foreign_innovation(world, years_or_months) -> TechDiffusionEvents
+plan_and_build_unit(world, tech_profile, stock, facilities, training) -> Job
+recompute_north_south_logistics(world, capital_policy) -> FiscalAndCommandCosts
+resolve_world_crisis(world, conflict_id, actions) -> ConflictOutcome
+replay_successful_lifetime(seed, action_script) -> ReachabilityEvidence
+```
+
+### 测试必须证明的边界
+
+1. **一路成功可达性**：从约15岁起，合法世界状态和自然寿命可以经过 E0–E7 的主要压力原型，至少一次遭遇外来舰炮威胁；不通过暗改年龄/血条/兵力达成。
+2. **不可自动重演**：同一关键阶段中，有玩家保卫北方的分支，不应仍强制给他“崖山亡国”；京师守住不应被脚本判亡国。
+3. **首都与税制测试**：南京/北京在真实军事和财政结构下产生不同代价；高税/低税/改革路径均有资源结果，不是单一布尔结局。
+4. **海军与军工测试**：只拥有新技术设计图而没有造船设施/熟练工/财政的政权，不能直接得到海军战力。
+5. **政治沿革**：北元式联盟与后金式政权之间若存在继承、联盟或兼并，能在人物、兵力与领土日志中追溯，而非简单改名刷新国家。
+6. **未能晋级仍有生命**：丧失首都、战败或流亡时，主角如果没死，个人剧情与世界技术仍向前。
+
 ## 10. 交接条件
 
 Dot 完成首个世界三城架构时，应提交：模块接口说明、示例保存文件的**脱敏版本**、三种安平救援不同结果的测试脚本与日志、资源守恒测试、战斗结算恰好一次测试。此后可进入剧情层；不需要再问用户选哪个架构。
