@@ -1,0 +1,81 @@
+name: Archive the reviewed river gate RC4 build
+on:
+  push:
+    branches: [codex/archive-river-gate-rc4]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  verify_artifacts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      VERIFIED_SHA: '6e36e8f69526f2caf25501da5a777f63484f3162'
+      BUILD_SHA: 'b0f44c491fb47634539e73571cabf2c73519575b'
+      VERIFIED_RUN: '43268026943'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: packer
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/river-gate-rc4-evidence
+          path: game
+      - uses: actions/checkout@v4
+        with:
+          ref: b0f44c491fb47634539e73571cabf2c73519575b
+          path: tested
+      - name: Download the package, films and raw logs of the exact PR build
+        working-directory: game
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/receipts"
+          state=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN" --jq '[.head_sha,.event,.conclusion]|join(" ")')
+          test "$state" = "$VERIFIED_SHA pull_request success"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN/artifacts?per_page=100" > "$RUNNER_TEMP/receipts/artifacts.json"
+          download() { gh run download "$VERIFIED_RUN" -R "$GITHUB_REPOSITORY" -n "$1-$BUILD_SHA" -D "$RUNNER_TEMP/receipts/$2"; }
+          download verification engineering
+          download field-verification field
+          download macos-verification mac
+          download river-art visual
+          download gameplay gameplay
+          download Luanshi-macOS package
+      - name: Resume a breach save written by the original RC3 game
+        working-directory: tested
+        run: |
+          set -euo pipefail
+          engine_base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$engine_base/Godot_v4.6.3-stable_linux.x86_64.zip" -o "$RUNNER_TEMP/rc3-engine.zip"
+          echo "a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  $RUNNER_TEMP/rc3-engine.zip" | sha512sum -c -
+          unzip -q "$RUNNER_TEMP/rc3-engine.zip" -d "$RUNNER_TEMP/rc3-engine"
+          engine="$RUNNER_TEMP/rc3-engine/Godot_v4.6.3-stable_linux.x86_64"
+          old=799e1e41a098bf534b63f699ea6f683e4707306f
+          git fetch -q --depth=1 origin "$old"
+          for role in previous current; do
+            ref="$old"
+            if [[ $role == current ]]; then ref="$BUILD_SHA"; fi
+            mkdir -p "$RUNNER_TEMP/$role-field"
+            git archive "$ref" scripts | tar -x -C "$RUNNER_TEMP/$role-field"
+            cp tests/field_history_probe.gd "$RUNNER_TEMP/$role-field/probe.gd"
+            printf 'config_version=5\n[application]\nconfig/name="River-gate compatibility check"\n' > "$RUNNER_TEMP/$role-field/project.godot"
+          done
+          export LUANSHI_HISTORY_DIR="$RUNNER_TEMP/previous-field"
+          "$engine" --headless --path "$LUANSHI_HISTORY_DIR" --script res://probe.gd -- --write-original --gate-replay
+          "$engine" --headless --path "$RUNNER_TEMP/current-field" --script res://probe.gd -- --gate-replay | tee "$RUNNER_TEMP/receipts/rc3-resume.log"
+          grep -q '^FIELD_HISTORY_PASS ' "$RUNNER_TEMP/receipts/rc3-resume.log"
+      - name: Verify the game ZIP and preserve actual graphics and measurements
+        working-directory: game
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null || ! /usr/bin/python3 -c 'from PIL import Image'; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg python3-pil
+          fi
+          /usr/bin/python3 "$GITHUB_WORKSPACE/packer/tools/collect-verified-rc4.py"
+          git add docs/evidence/river-gate-v1-rc4
+          git config user.name 'Luanshi acceptance archive'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Preserve the RC4 live movement films, stock save replay and raw measurements'
+          git push origin HEAD:refs/heads/codex/river-gate-rc4-evidence
