@@ -10,9 +10,10 @@ from figure_mesh import add
 
 def decoded(bank,b,kit,clip,frame):
     x=frame%8*48+b*3;y=(kit*16+clip)*4+frame//8
-    q=[v/255*2-1 for v in bank.getpixel((x,y))]
-    length=sqrt(sum(v*v for v in q))
     hi=bank.getpixel((x+1,y));lo=bank.getpixel((x+2,y))
+    tails=(hi[3]>>4,hi[3]%16,lo[3]>>4,lo[3]%16)
+    q=[((v*16+tail)/4095)*2-1 for v,tail in zip(bank.getpixel((x,y)),tails)]
+    length=sqrt(sum(v*v for v in q))
     t=tuple(((hi[k]*256+lo[k])/65535-.5)*6 for k in range(3))
     return tuple(v/length for v in q),t
 
@@ -42,5 +43,5 @@ if __name__=="__main__":
     args=parser.parse_args()
     rows=measure()
     print("RIVER_GRIP_AUDIT",json.dumps(rows))
-    if not args.report_only and any(r["worst_wrist_m"]>.008 or r["worst_nock_m"]>.0001 or r["baked_wrist_m"]>.034 for r in rows):
+    if not args.report_only and any(r["worst_wrist_m"]>.008 or r["worst_nock_m"]>.0001 or r["baked_wrist_m"]>.0022 for r in rows):
         raise SystemExit("Forearm or nocking point lost contact with its working hand")

@@ -192,8 +192,9 @@ def bake_motion(out):
                 t=frame/(FRAMES if clip in (0,1,12,15) else FRAMES-1)
                 for b,(q,offset) in enumerate(pose(kit,clip,t)):
                     x=frame%8*BONES*3+b*3; y=(kit*CLIPS+clip)*4+frame//8
-                    px[x,y]=tuple(max(0,min(255,round((n*.5+.5)*255))) for n in q)
+                    quat=[max(0,min(4095,round((n*.5+.5)*4095))) for n in q]
+                    px[x,y]=tuple(n>>4 for n in quat)
                     v=[max(0,min(65535,round((n/6+.5)*65535))) for n in offset]
-                    px[x+1,y]=(*(n//256 for n in v),255)
-                    px[x+2,y]=(*(n%256 for n in v),255)
+                    px[x+1,y]=(*(n//256 for n in v),(quat[0]%16)*16+quat[1]%16)
+                    px[x+2,y]=(*(n%256 for n in v),(quat[2]%16)*16+quat[3]%16)
     tex.save(out/"company_motion.png",optimize=True)
