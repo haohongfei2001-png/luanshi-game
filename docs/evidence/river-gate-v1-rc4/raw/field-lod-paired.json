@@ -1,13 +1,13 @@
 {
-  "full_detail_median_render_ms": 803.101,
+  "full_detail_median_render_ms": 797.174,
   "full_detail_primitives": 3401218,
-  "optimized_median_render_ms": 249.351,
+  "optimized_median_render_ms": 246.461,
   "optimized_primitives": 818780,
   "per_side": 512,
   "poses": 10,
-  "previous_officer_detail_ms": 261.108,
+  "previous_officer_detail_ms": 257.853,
   "previous_officer_detail_primitives": 873350,
-  "previous_two_lods_median_ms": 300.608,
+  "previous_two_lods_median_ms": 297.943,
   "previous_two_lods_primitives": 1057506,
   "visible_soldiers_last": 488
 }

@@ -1,0 +1,32 @@
+[
+  {
+    "game_file": "root-turf.png",
+    "author": "Amal Kumar",
+    "asset_page": "https://polyhaven.com/a/sparse_grass",
+    "license": "CC0 1.0 Universal",
+    "license_source": "https://polyhaven.com/license",
+    "original": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sparse_grass/sparse_grass_diff_1k.jpg",
+    "source_sha256": "ae94f2b34597b9108eefd88217f55eccaec6d6b382e858a478ee92df90e66617",
+    "game_png_sha256": "8be6b3cfb046ed966d56700833429b470da2f3ced935d9b7ed69990c3a42c62b"
+  },
+  {
+    "game_file": "compacted-loam.png",
+    "author": "Rob Tuytel",
+    "asset_page": "https://polyhaven.com/a/brown_mud_dry",
+    "license": "CC0 1.0 Universal",
+    "license_source": "https://polyhaven.com/license",
+    "original": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud_dry/brown_mud_dry_diff_1k.jpg",
+    "source_sha256": "a56281b644de614787340f3db45e28d2f72ec32fc19a442f99002bae0ab11398",
+    "game_png_sha256": "c3a737c4adde0bd68ef72f7f7ca77f23af157f3f30e57611c9566da550577d4a"
+  },
+  {
+    "game_file": "bank-silt.png",
+    "author": "Dario Barresi",
+    "asset_page": "https://polyhaven.com/a/sandy_gravel_02",
+    "license": "CC0 1.0 Universal",
+    "license_source": "https://polyhaven.com/license",
+    "original": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sandy_gravel_02/sandy_gravel_02_diff_1k.jpg",
+    "source_sha256": "c9d143db07db9a6be2eba285fae961d868520422ee5fa4d38d55da24f9968d51",
+    "game_png_sha256": "29ef60ed2054641a0915536d42ccd136ddc75318a9a7bba03a4faa9901705633"
+  }
+]
