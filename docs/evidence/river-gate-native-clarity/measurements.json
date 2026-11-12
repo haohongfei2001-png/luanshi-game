@@ -1,0 +1,4365 @@
+{
+  "source": "2293008c2d76dcbd788aeaef0fb871de1bc8eee1",
+  "provenance": {
+    "1280-0": {
+      "engine": "4.6.3-stable (official)",
+      "driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "renderer": "mobile",
+      "default": {
+        "hidpi": true,
+        "logical": [
+          1280.0,
+          800.0
+        ],
+        "msaa": 0,
+        "preset": 0,
+        "resizable": true,
+        "scale": 1.0,
+        "screen_aa": 0,
+        "shadow": true,
+        "taa": false,
+        "window": [
+          1280,
+          800
+        ]
+      },
+      "samples": 0,
+      "width": 1280
+    },
+    "1280-2": {
+      "engine": "4.6.3-stable (official)",
+      "driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "renderer": "mobile",
+      "default": {
+        "hidpi": true,
+        "logical": [
+          1280.0,
+          800.0
+        ],
+        "msaa": 0,
+        "preset": 0,
+        "resizable": true,
+        "scale": 1.0,
+        "screen_aa": 0,
+        "shadow": true,
+        "taa": false,
+        "window": [
+          1280,
+          800
+        ]
+      },
+      "samples": 2,
+      "width": 1280
+    },
+    "1280-4": {
+      "engine": "4.6.3-stable (official)",
+      "driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "renderer": "mobile",
+      "default": {
+        "hidpi": true,
+        "logical": [
+          1280.0,
+          800.0
+        ],
+        "msaa": 0,
+        "preset": 0,
+        "resizable": true,
+        "scale": 1.0,
+        "screen_aa": 0,
+        "shadow": true,
+        "taa": false,
+        "window": [
+          1280,
+          800
+        ]
+      },
+      "samples": 4,
+      "width": 1280
+    },
+    "1920-0": {
+      "engine": "4.6.3-stable (official)",
+      "driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "renderer": "mobile",
+      "default": {
+        "hidpi": true,
+        "logical": [
+          1280.0,
+          800.0
+        ],
+        "msaa": 0,
+        "preset": 0,
+        "resizable": true,
+        "scale": 1.0,
+        "screen_aa": 0,
+        "shadow": true,
+        "taa": false,
+        "window": [
+          1920,
+          1200
+        ]
+      },
+      "samples": 0,
+      "width": 1920
+    },
+    "1920-2": {
+      "engine": "4.6.3-stable (official)",
+      "driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "renderer": "mobile",
+      "default": {
+        "hidpi": true,
+        "logical": [
+          1280.0,
+          800.0
+        ],
+        "msaa": 0,
+        "preset": 0,
+        "resizable": true,
+        "scale": 1.0,
+        "screen_aa": 0,
+        "shadow": true,
+        "taa": false,
+        "window": [
+          1920,
+          1200
+        ]
+      },
+      "samples": 2,
+      "width": 1920
+    },
+    "1920-4": {
+      "engine": "4.6.3-stable (official)",
+      "driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "renderer": "mobile",
+      "default": {
+        "hidpi": true,
+        "logical": [
+          1280.0,
+          800.0
+        ],
+        "msaa": 0,
+        "preset": 0,
+        "resizable": true,
+        "scale": 1.0,
+        "screen_aa": 0,
+        "shadow": true,
+        "taa": false,
+        "window": [
+          1920,
+          1200
+        ]
+      },
+      "samples": 4,
+      "width": 1920
+    },
+    "3840-4": {
+      "engine": "4.6.3-stable (official)",
+      "driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "renderer": "mobile",
+      "default": {
+        "hidpi": true,
+        "logical": [
+          1280.0,
+          800.0
+        ],
+        "msaa": 0,
+        "preset": 0,
+        "resizable": true,
+        "scale": 1.0,
+        "screen_aa": 0,
+        "shadow": true,
+        "taa": false,
+        "window": [
+          3840,
+          2400
+        ]
+      },
+      "samples": 4,
+      "width": 3840
+    }
+  },
+  "scores": {
+    "1280-0-mounted": {
+      "edge_error": 3.6668,
+      "linear_edge_error": 3.763,
+      "object_detail_error": 2.1626,
+      "object_detail_gradient": 6.3316,
+      "reference_detail_gradient": 5.7244,
+      "motion_edge_error": 4.9449,
+      "band_pixels": 39408.0,
+      "object_pixels": 54397.2,
+      "samples": 30,
+      "wall_p50_ms": 237.493,
+      "wall_p95_ms": 252.195,
+      "wall_p99_ms": 253.784
+    },
+    "1280-2-mounted": {
+      "edge_error": 3.6668,
+      "linear_edge_error": 3.763,
+      "object_detail_error": 2.1626,
+      "object_detail_gradient": 6.3316,
+      "reference_detail_gradient": 5.7244,
+      "motion_edge_error": 4.9449,
+      "band_pixels": 39408.0,
+      "object_pixels": 54397.2,
+      "samples": 30,
+      "wall_p50_ms": 233.856,
+      "wall_p95_ms": 255.543,
+      "wall_p99_ms": 268.207
+    },
+    "1280-4-mounted": {
+      "edge_error": 2.5437,
+      "linear_edge_error": 2.5172,
+      "object_detail_error": 1.4712,
+      "object_detail_gradient": 5.8636,
+      "reference_detail_gradient": 5.7244,
+      "motion_edge_error": 3.3414,
+      "band_pixels": 39408.0,
+      "object_pixels": 54397.2,
+      "samples": 30,
+      "wall_p50_ms": 549.887,
+      "wall_p95_ms": 569.263,
+      "wall_p99_ms": 572.596
+    },
+    "1280-0-contact": {
+      "edge_error": 4.127,
+      "linear_edge_error": 4.219,
+      "object_detail_error": 2.9296,
+      "object_detail_gradient": 8.3569,
+      "reference_detail_gradient": 7.334,
+      "motion_edge_error": 5.6031,
+      "band_pixels": 22263.6,
+      "object_pixels": 12915.4,
+      "samples": 30,
+      "wall_p50_ms": 177.919,
+      "wall_p95_ms": 193.088,
+      "wall_p99_ms": 193.884
+    },
+    "1280-2-contact": {
+      "edge_error": 4.127,
+      "linear_edge_error": 4.219,
+      "object_detail_error": 2.9296,
+      "object_detail_gradient": 8.3569,
+      "reference_detail_gradient": 7.334,
+      "motion_edge_error": 5.6031,
+      "band_pixels": 22263.6,
+      "object_pixels": 12915.4,
+      "samples": 30,
+      "wall_p50_ms": 176.522,
+      "wall_p95_ms": 193.073,
+      "wall_p99_ms": 193.751
+    },
+    "1280-4-contact": {
+      "edge_error": 3.025,
+      "linear_edge_error": 3.0796,
+      "object_detail_error": 1.8996,
+      "object_detail_gradient": 7.6143,
+      "reference_detail_gradient": 7.334,
+      "motion_edge_error": 4.0717,
+      "band_pixels": 22263.6,
+      "object_pixels": 12915.4,
+      "samples": 30,
+      "wall_p50_ms": 364.333,
+      "wall_p95_ms": 381.513,
+      "wall_p99_ms": 383.44
+    },
+    "1920-0-mounted": {
+      "edge_error": 2.9678,
+      "linear_edge_error": 3.0337,
+      "object_detail_error": 1.472,
+      "object_detail_gradient": 4.8011,
+      "reference_detail_gradient": 4.4601,
+      "motion_edge_error": 3.9062,
+      "band_pixels": 73884.2,
+      "object_pixels": 134031.4,
+      "samples": 30,
+      "wall_p50_ms": 389.333,
+      "wall_p95_ms": 408.429,
+      "wall_p99_ms": 411.744
+    },
+    "1920-2-mounted": {
+      "edge_error": 2.9678,
+      "linear_edge_error": 3.0337,
+      "object_detail_error": 1.472,
+      "object_detail_gradient": 4.8011,
+      "reference_detail_gradient": 4.4601,
+      "motion_edge_error": 3.9062,
+      "band_pixels": 73884.2,
+      "object_pixels": 134031.4,
+      "samples": 30,
+      "wall_p50_ms": 391.226,
+      "wall_p95_ms": 406.646,
+      "wall_p99_ms": 407.759
+    },
+    "1920-4-mounted": {
+      "edge_error": 2.0758,
+      "linear_edge_error": 2.0604,
+      "object_detail_error": 1.0204,
+      "object_detail_gradient": 4.5603,
+      "reference_detail_gradient": 4.4601,
+      "motion_edge_error": 2.6633,
+      "band_pixels": 73884.2,
+      "object_pixels": 134031.4,
+      "samples": 30,
+      "wall_p50_ms": 857.487,
+      "wall_p95_ms": 880.952,
+      "wall_p99_ms": 882.451
+    },
+    "1920-0-contact": {
+      "edge_error": 3.5297,
+      "linear_edge_error": 3.5914,
+      "object_detail_error": 1.814,
+      "object_detail_gradient": 5.9256,
+      "reference_detail_gradient": 5.4467,
+      "motion_edge_error": 4.714,
+      "band_pixels": 39382.6,
+      "object_pixels": 32453.4,
+      "samples": 30,
+      "wall_p50_ms": 304.316,
+      "wall_p95_ms": 319.815,
+      "wall_p99_ms": 321.609
+    },
+    "1920-2-contact": {
+      "edge_error": 3.5297,
+      "linear_edge_error": 3.5914,
+      "object_detail_error": 1.814,
+      "object_detail_gradient": 5.9256,
+      "reference_detail_gradient": 5.4467,
+      "motion_edge_error": 4.714,
+      "band_pixels": 39382.6,
+      "object_pixels": 32453.4,
+      "samples": 30,
+      "wall_p50_ms": 305.183,
+      "wall_p95_ms": 320.451,
+      "wall_p99_ms": 321.867
+    },
+    "1920-4-contact": {
+      "edge_error": 2.5207,
+      "linear_edge_error": 2.5409,
+      "object_detail_error": 1.1736,
+      "object_detail_gradient": 5.5359,
+      "reference_detail_gradient": 5.4467,
+      "motion_edge_error": 3.3543,
+      "band_pixels": 39382.6,
+      "object_pixels": 32453.4,
+      "samples": 30,
+      "wall_p50_ms": 585.995,
+      "wall_p95_ms": 606.968,
+      "wall_p99_ms": 610.527
+    }
+  },
+  "captures": {
+    "1920-0": {
+      "frames": [
+        {
+          "camera_high_models": 43,
+          "camera_rank_models": 0,
+          "center": [
+            -11.8000001907349,
+            -3.0
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.7449998855591,
+            -2.97900009155273
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0,
+          "color_png_sha256": "8e77517dcdc3904670ae393f68ee5c6a70a5f32ce69fd0a35669473c86389762"
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6900005340576,
+            -2.95799994468689
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6350002288818,
+            -2.93700003623962
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.5799999237061,
+            -2.91599988937378
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.47159600257874,
+            -31.0614109039307
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.52659606933594,
+            -31.0404109954834
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0,
+          "color_png_sha256": "561a98e4b82580d2173748bc0a47560531dee88343a2a0e61f9ae22c1e16679d"
+        },
+        {
+          "camera_high_models": 16,
+          "camera_rank_models": 0,
+          "center": [
+            2.58159589767456,
+            -31.0194110870361
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 17,
+          "camera_rank_models": 0,
+          "center": [
+            2.63659596443176,
+            -30.9984111785889
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 18,
+          "camera_rank_models": 0,
+          "center": [
+            2.69159603118896,
+            -30.9774112701416
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        }
+      ],
+      "timing_us": {
+        "contact": [
+          312498,
+          299212,
+          301597,
+          320158,
+          301437,
+          304462,
+          312641,
+          297495,
+          299645,
+          316206,
+          301954,
+          302000,
+          313396,
+          303512,
+          304433,
+          322202,
+          308798,
+          298366,
+          318451,
+          304159,
+          303184,
+          314318,
+          304199,
+          298154,
+          318032,
+          297340,
+          302836,
+          319395,
+          304454,
+          305850
+        ],
+        "mounted": [
+          411003,
+          393765,
+          389176,
+          404061,
+          393240,
+          386200,
+          401393,
+          394214,
+          391488,
+          412046,
+          389490,
+          386434,
+          405284,
+          385243,
+          388779,
+          401838,
+          383820,
+          388012,
+          404881,
+          384642,
+          384325,
+          398097,
+          387600,
+          384923,
+          405069,
+          381866,
+          380305,
+          401428,
+          381450,
+          383094
+        ]
+      }
+    },
+    "1280-2": {
+      "frames": [
+        {
+          "camera_high_models": 43,
+          "camera_rank_models": 0,
+          "center": [
+            -11.8000001907349,
+            -3.0
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.7449998855591,
+            -2.97900009155273
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0,
+          "color_png_sha256": "b43fb2b2c0f186cb1a8fe2c17ec8c039497d283c08b33daaa555c0e45968eca1"
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6900005340576,
+            -2.95799994468689
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6350002288818,
+            -2.93700003623962
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.5799999237061,
+            -2.91599988937378
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.47159600257874,
+            -31.0614109039307
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.52659606933594,
+            -31.0404109954834
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0,
+          "color_png_sha256": "e540a83c37fdb36094be5dfb25f35f94db8e59b928d7746eaa4f4d6c991a86c6"
+        },
+        {
+          "camera_high_models": 16,
+          "camera_rank_models": 0,
+          "center": [
+            2.58159589767456,
+            -31.0194110870361
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 17,
+          "camera_rank_models": 0,
+          "center": [
+            2.63659596443176,
+            -30.9984111785889
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 18,
+          "camera_rank_models": 0,
+          "center": [
+            2.69159603118896,
+            -30.9774112701416
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        }
+      ],
+      "timing_us": {
+        "contact": [
+          193955,
+          173358,
+          176494,
+          190223,
+          172570,
+          171232,
+          190510,
+          174950,
+          173872,
+          190426,
+          174658,
+          176588,
+          193253,
+          177254,
+          174589,
+          192313,
+          176145,
+          176550,
+          189372,
+          174110,
+          174720,
+          191696,
+          175508,
+          182838,
+          190626,
+          175828,
+          174486,
+          192852,
+          177512,
+          173831
+        ],
+        "mounted": [
+          251212,
+          240323,
+          233752,
+          248946,
+          233054,
+          229282,
+          253639,
+          233285,
+          231543,
+          257100,
+          232511,
+          230971,
+          247737,
+          232405,
+          234618,
+          272743,
+          231108,
+          233929,
+          248698,
+          233294,
+          231205,
+          252806,
+          231348,
+          234714,
+          245754,
+          227834,
+          235441,
+          252430,
+          233782,
+          231388
+        ]
+      }
+    },
+    "1920-4": {
+      "frames": [
+        {
+          "camera_high_models": 43,
+          "camera_rank_models": 0,
+          "center": [
+            -11.8000001907349,
+            -3.0
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.7449998855591,
+            -2.97900009155273
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0,
+          "color_png_sha256": "a6a19a6d0e9aaf6f95c9d3722cae0d3311ed088cb43535ed77580d3f787433f2"
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6900005340576,
+            -2.95799994468689
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6350002288818,
+            -2.93700003623962
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.5799999237061,
+            -2.91599988937378
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.47159600257874,
+            -31.0614109039307
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.52659606933594,
+            -31.0404109954834
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0,
+          "color_png_sha256": "a60abd0683e6451ea15d4fe54d56afb21b672b647298d26eb63706fe2e20490c"
+        },
+        {
+          "camera_high_models": 16,
+          "camera_rank_models": 0,
+          "center": [
+            2.58159589767456,
+            -31.0194110870361
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 17,
+          "camera_rank_models": 0,
+          "center": [
+            2.63659596443176,
+            -30.9984111785889
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 18,
+          "camera_rank_models": 0,
+          "center": [
+            2.69159603118896,
+            -30.9774112701416
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        }
+      ],
+      "timing_us": {
+        "contact": [
+          590393,
+          580417,
+          577873,
+          602269,
+          579742,
+          582763,
+          597221,
+          584611,
+          575346,
+          598180,
+          585172,
+          578062,
+          611358,
+          580718,
+          584357,
+          592190,
+          589938,
+          582163,
+          598252,
+          583417,
+          582619,
+          599990,
+          586819,
+          581915,
+          605106,
+          583913,
+          600207,
+          608492,
+          599099,
+          598413
+        ],
+        "mounted": [
+          870165,
+          855217,
+          850954,
+          876341,
+          844653,
+          849091,
+          866049,
+          855391,
+          846031,
+          864528,
+          850635,
+          856731,
+          877234,
+          856005,
+          852069,
+          879780,
+          845862,
+          839932,
+          874912,
+          850506,
+          860364,
+          881910,
+          853495,
+          856323,
+          877477,
+          866830,
+          862682,
+          882672,
+          861450,
+          858243
+        ]
+      }
+    },
+    "1920-2": {
+      "frames": [
+        {
+          "camera_high_models": 43,
+          "camera_rank_models": 0,
+          "center": [
+            -11.8000001907349,
+            -3.0
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.7449998855591,
+            -2.97900009155273
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0,
+          "color_png_sha256": "8e77517dcdc3904670ae393f68ee5c6a70a5f32ce69fd0a35669473c86389762"
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6900005340576,
+            -2.95799994468689
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6350002288818,
+            -2.93700003623962
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.5799999237061,
+            -2.91599988937378
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.47159600257874,
+            -31.0614109039307
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.52659606933594,
+            -31.0404109954834
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0,
+          "color_png_sha256": "561a98e4b82580d2173748bc0a47560531dee88343a2a0e61f9ae22c1e16679d"
+        },
+        {
+          "camera_high_models": 16,
+          "camera_rank_models": 0,
+          "center": [
+            2.58159589767456,
+            -31.0194110870361
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 17,
+          "camera_rank_models": 0,
+          "center": [
+            2.63659596443176,
+            -30.9984111785889
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 18,
+          "camera_rank_models": 0,
+          "center": [
+            2.69159603118896,
+            -30.9774112701416
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 1,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1920,
+            1200
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        }
+      ],
+      "timing_us": {
+        "contact": [
+          313906,
+          298063,
+          301116,
+          320694,
+          307716,
+          304885,
+          322346,
+          305481,
+          298406,
+          318996,
+          298487,
+          301020,
+          320154,
+          300913,
+          303450,
+          316895,
+          301171,
+          297884,
+          314724,
+          301945,
+          300005,
+          313762,
+          310891,
+          300575,
+          314635,
+          302047,
+          307484,
+          315941,
+          305509,
+          302982
+        ],
+        "mounted": [
+          407918,
+          388707,
+          401544,
+          402822,
+          395591,
+          387236,
+          404560,
+          392979,
+          387708,
+          407370,
+          389695,
+          388673,
+          405762,
+          387352,
+          391467,
+          404054,
+          389788,
+          391806,
+          401424,
+          384625,
+          389332,
+          405031,
+          388210,
+          390986,
+          402143,
+          390361,
+          386172,
+          403196,
+          386638,
+          386405
+        ]
+      }
+    },
+    "1280-0": {
+      "frames": [
+        {
+          "camera_high_models": 43,
+          "camera_rank_models": 0,
+          "center": [
+            -11.8000001907349,
+            -3.0
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.7449998855591,
+            -2.97900009155273
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0,
+          "color_png_sha256": "b43fb2b2c0f186cb1a8fe2c17ec8c039497d283c08b33daaa555c0e45968eca1"
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6900005340576,
+            -2.95799994468689
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6350002288818,
+            -2.93700003623962
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.5799999237061,
+            -2.91599988937378
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.47159600257874,
+            -31.0614109039307
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.52659606933594,
+            -31.0404109954834
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0,
+          "color_png_sha256": "e540a83c37fdb36094be5dfb25f35f94db8e59b928d7746eaa4f4d6c991a86c6"
+        },
+        {
+          "camera_high_models": 16,
+          "camera_rank_models": 0,
+          "center": [
+            2.58159589767456,
+            -31.0194110870361
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 17,
+          "camera_rank_models": 0,
+          "center": [
+            2.63659596443176,
+            -30.9984111785889
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 18,
+          "camera_rank_models": 0,
+          "center": [
+            2.69159603118896,
+            -30.9774112701416
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 0,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        }
+      ],
+      "timing_us": {
+        "contact": [
+          187522,
+          171458,
+          175369,
+          193473,
+          179892,
+          172391,
+          188371,
+          173104,
+          179549,
+          190165,
+          176582,
+          172092,
+          190410,
+          178113,
+          175339,
+          190622,
+          175078,
+          174211,
+          192617,
+          177726,
+          173453,
+          191396,
+          178635,
+          176748,
+          194052,
+          177277,
+          178519,
+          191393,
+          174386,
+          173345
+        ],
+        "mounted": [
+          252035,
+          235648,
+          236412,
+          250901,
+          242365,
+          235305,
+          252325,
+          237268,
+          239363,
+          250583,
+          240424,
+          235503,
+          254380,
+          236528,
+          237719,
+          251622,
+          236536,
+          234362,
+          248407,
+          233674,
+          238724,
+          249158,
+          230051,
+          230665,
+          247661,
+          235881,
+          231769,
+          249995,
+          232447,
+          233180
+        ]
+      }
+    },
+    "1280-4": {
+      "frames": [
+        {
+          "camera_high_models": 43,
+          "camera_rank_models": 0,
+          "center": [
+            -11.8000001907349,
+            -3.0
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.7449998855591,
+            -2.97900009155273
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0,
+          "color_png_sha256": "fe546a3960f41e6ffcaa5f66f5b983a9e61e3c15754786b982c1316939797577"
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6900005340576,
+            -2.95799994468689
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6350002288818,
+            -2.93700003623962
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.5799999237061,
+            -2.91599988937378
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.47159600257874,
+            -31.0614109039307
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.52659606933594,
+            -31.0404109954834
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0,
+          "color_png_sha256": "74c89c0763e6c58cfafdde2a7f7169ac20fe00443c59c62b555ea164308d2851"
+        },
+        {
+          "camera_high_models": 16,
+          "camera_rank_models": 0,
+          "center": [
+            2.58159589767456,
+            -31.0194110870361
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 17,
+          "camera_rank_models": 0,
+          "center": [
+            2.63659596443176,
+            -30.9984111785889
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 18,
+          "camera_rank_models": 0,
+          "center": [
+            2.69159603118896,
+            -30.9774112701416
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            1280,
+            800
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        }
+      ],
+      "timing_us": {
+        "contact": [
+          377558,
+          356438,
+          359785,
+          384099,
+          360044,
+          359533,
+          381129,
+          361345,
+          364669,
+          380610,
+          361069,
+          364116,
+          378316,
+          361437,
+          360352,
+          377713,
+          364503,
+          361236,
+          377285,
+          361715,
+          363442,
+          381828,
+          367073,
+          362543,
+          378986,
+          363990,
+          364163,
+          379351,
+          374682,
+          367384
+        ],
+        "mounted": [
+          573093,
+          549819,
+          552238,
+          566675,
+          554100,
+          543407,
+          562649,
+          540447,
+          546080,
+          565327,
+          538046,
+          543200,
+          562777,
+          539806,
+          543677,
+          566376,
+          540310,
+          540907,
+          565210,
+          546943,
+          547490,
+          565913,
+          549955,
+          548625,
+          566117,
+          546106,
+          558702,
+          571380,
+          550779,
+          543328
+        ]
+      }
+    },
+    "3840-4": {
+      "frames": [
+        {
+          "camera_high_models": 43,
+          "camera_rank_models": 0,
+          "center": [
+            -11.8000001907349,
+            -3.0
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.7449998855591,
+            -2.97900009155273
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 145,
+          "visible_ids": "a674a451d5975e0a8ba49bf181c09f7cb88749504094240065d8ac6dc0b31eb6",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            17,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0,
+          "color_png_sha256": "35e6c75bc6d4596bab853f3073a8d04329e6398546ab7316876df118f9749fab"
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6900005340576,
+            -2.95799994468689
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 10,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 254,
+          "tick": 8,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.6350002288818,
+            -2.93700003623962
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 44,
+          "camera_rank_models": 0,
+          "center": [
+            -11.5799999237061,
+            -2.91599988937378
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "mounted",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 16,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 254,
+          "tick": 9,
+          "vehicle": 1,
+          "visible_alive": 144,
+          "visible_ids": "9f82bb310fc4ebdf17db77f549267742443e216a07cf0b39a32cdb0c399c5dc4",
+          "visible_kits": [
+            19,
+            28,
+            15,
+            25,
+            13,
+            14,
+            16,
+            14,
+            0
+          ],
+          "visible_mounted": 9,
+          "visible_officers": 3,
+          "yaw": 1.09,
+          "zoom": 14.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.47159600257874,
+            -31.0614109039307
+          ],
+          "frame": 0,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 15,
+          "camera_rank_models": 0,
+          "center": [
+            2.52659606933594,
+            -31.0404109954834
+          ],
+          "frame": 1,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 202,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 109,
+          "visible_ids": "2b9b8f95070da79c2a7807705d40f70215a8fc7741d4fbc61d9ee9905f0bc89c",
+          "visible_kits": [
+            20,
+            20,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 3,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0,
+          "color_png_sha256": "ff4c4d8ed32f75b1dbb12837d1555b628c984ec0ec1c73b174ea055fa1ae4a37"
+        },
+        {
+          "camera_high_models": 16,
+          "camera_rank_models": 0,
+          "center": [
+            2.58159589767456,
+            -31.0194110870361
+          ],
+          "frame": 2,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 75,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 203,
+          "tick": 65,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 17,
+          "camera_rank_models": 0,
+          "center": [
+            2.63659596443176,
+            -30.9984111785889
+          ],
+          "frame": 3,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        },
+        {
+          "camera_high_models": 18,
+          "camera_rank_models": 0,
+          "center": [
+            2.69159603118896,
+            -30.9774112701416
+          ],
+          "frame": 4,
+          "hits": [
+            261,
+            141
+          ],
+          "losses": [
+            26,
+            62
+          ],
+          "msaa": 2,
+          "ordinary": [
+            512,
+            512
+          ],
+          "scale_3d": 1.0,
+          "scene": "contact",
+          "seed": 61112,
+          "shadow": true,
+          "shots_in_flight": 81,
+          "size": [
+            3840,
+            2400
+          ],
+          "submitted": 203,
+          "tick": 66,
+          "vehicle": 1,
+          "visible_alive": 110,
+          "visible_ids": "f9566f622020ca62e000dc1f69fa7211318be6d1c4eca8150a1a5fac98e1adac",
+          "visible_kits": [
+            20,
+            21,
+            13,
+            13,
+            13,
+            12,
+            11,
+            7,
+            0
+          ],
+          "visible_mounted": 4,
+          "visible_officers": 3,
+          "yaw": -0.576,
+          "zoom": 18.0
+        }
+      ],
+      "timing_us": {
+        "contact": [],
+        "mounted": []
+      }
+    }
+  },
+  "description": "Public Ubuntu Xvfb / Mesa CPU Vulkan Mobile, 5 moving native PNG per view; exact matched simulation, 1:1 native. Actor coverage derived from an additional reference-only output with actors invisible. Edge and motion errors are RGB code-value MAE with lower better. Whole-frame hardware throughput from 30 samples per view after 12 warm; includes actual shadow and live simulation. This is not an Apple GPU benchmark."
+}
