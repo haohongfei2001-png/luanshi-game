@@ -1,10 +1,11 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
+from field_armour import field_helmet, shoulders, skirts
 from figure_mesh import Surface, add, lerp
 
 def costume(look,rank=False):
     s=Surface(False)
-    heavy=look in ("guard","officer","player")
+    heavy=look in ("regular","guard","officer","player")
     if rank:
         def body(p):
             if p[1]<.86: return (LT if p[0]<0 else RT,HIPS,.35)
@@ -13,7 +14,9 @@ def costume(look,rank=False):
         s.rings([(hem,.255,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
                  (1.447,.083,.07,0,0)],"dyed",body,6)
         if heavy:
-            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lamellar",CHEST,6)
+            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lames",CHEST,8)
+            shoulders(s,look,CHEST,(LU,RU),rank=True)
+            skirts(s,look,HIPS,(LT,RT),rank=True)
         if look in ("player","officer"):
             s.ribbon([(-.13,1.412,-.092),(-.10,1.23,-.187),(-.109,.89,-.205),(-.112,.56,-.228)],.19,"mantle",CHEST)
     else:
@@ -24,13 +27,10 @@ def costume(look,rank=False):
         s.rings([(1.426,.050,.057,0,.026),(1.495,.060,.071,0,.044),(1.550,.081,.083,0,.051),
                  (1.635,.085,.099,0,.034),(1.703,.065,.077,0,.018)],"skin",HEAD,ns)
         if heavy:
-            s.rings([(1.587,.105,.113,0,.004),(1.635,.106,.116,0,-.001),(1.706,.079,.083,0,-.002),
-                     (1.735,.024,.023,0,-.006)],"iron",HEAD,ns)
-            if look in ("player","officer"):
-                s.tube([(0,1.72,.030),(0,1.758,-.057),(.016,1.69,-.147),(.029,1.61,-.17)],[.012,.029,.024,.004],"sash",HEAD,4)
+            field_helmet(s,look,HEAD,rank=True)
         else:
-            s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"hair",HEAD,ns)
-            s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"headcloth" if look=="levy" else "dyed",HEAD,ns)
+            s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"facing" if look=="archer" else "hair",HEAD,ns)
+            s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"headcloth",HEAD,ns)
     else:
         head(s,look,HEAD)
     n=3 if rank else 5

@@ -1,6 +1,6 @@
 # 河关军容资产
 
-河关的五种衣装、甲片、披风、头巾、马尾盔缨、九种兵器、调色和动作由本项目制作。游戏从 `river_company.glb` 合批绘制近、中、远三档，并从同一个动作库读取步伐、发力和失衡。躯干和袖子共用缝边顶点。持械手和武器共用握点。角色进入新的显示距离后沿用同一套姿势与相位。
+河关的六种衣装、甲片、披风、头巾、马尾盔缨、九种兵器、调色和动作由本项目制作。游戏从 `river_company.glb` 合批绘制近、中、远三档，并从同一个动作库读取步伐、发力和失衡。躯干和袖子共用缝边顶点。持械手和武器共用握点。角色进入新的显示距离后沿用同一套姿势与相位。
 
 脸和耳朵的形体使用 MakeHuman 团队的 HM08 头部网格及青年男性形态，已按 CC0 1.0 公开。取材文件为 `data/3dobjs/base.obj` 和 `data/targets/macrodetails/asian-male-young.target`。来源的版本、Git blob 校验、裁取范围和简化方法见 `tools/art/reduce_field_head.py`。额头、帽檐、眼睑、布料、铁甲和双色披风在游戏内重新贴图与装配。 [上游资产原文](https://github.com/makehumancommunity/makehuman/tree/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data) · [上游 CC0 授权](https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md)
 
@@ -9,3 +9,9 @@ Python 3 与 Pillow 可用时，运行 `python3 tools/art/bake_river_company.py`
 角色的布褶、夹袄、铁札、绛红披衣和三张头像使用为本项目单独创作的 AI 辅助平涂素材。原始画材在 tools/art/source 里，painted_company.py 分出材质、对齐眼鼻与下颌、烘进正式资产。三张头像都是虚构人物。贴图与持械骨架在实际战场里共用，远阵保留较低面数。主角靛衣和绛披、军官与士卒的衣料由装备区分。
 
 动作库将相邻姿势按同骨、同分量放在一起。GPU 对相邻姿势连续采样，走路和跑步循环在首尾相接。建模和面料原画保存于 [画材目录](../../../tools/art/source/README.md)。
+
+## 河关军士的盔甲
+
+枪兵和刀兵的战袍外着短甲身、披膊和分片甲裙。盾兵、长刀兵及军官的裙甲较长。弓手戴软巾，有箭箙，轻装兵保留发髻。三档模型采用同一组兜鍪、护耳、裙甲开衩与肩甲轮廓，按镜头距离改变截面采样数。
+
+兜鍪轮廓、护耳和甲裙的形制参考唐代武士俑。故宫藏三彩武士俑可见前后甲身与肩带，普林斯顿藏武士俑可见护耳与甲裙的叠札，旧金山亚洲艺术博物馆藏品记录了盔顶、披膊、袍裤与靴的组合。墓葬俑表现理想化的军容。游戏对河关军需与衣料配色做了简化，盔甲几何、札片与绑带纹理均由本项目绘制。[故宫博物院](https://www.dpm.org.cn/collection/sculpture/233426.html) · [普林斯顿大学艺术博物馆](https://artmuseum.princeton.edu/art/collections/objects/33588) · [旧金山亚洲艺术博物馆](https://searchcollection.asianart.org/objects/4875/warrior)

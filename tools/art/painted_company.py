@@ -1,6 +1,6 @@
 """Register the original river-company paint sheets to outfit and face UVs."""
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 
 SOURCE=Path(__file__).with_name("source")
 
@@ -56,7 +56,10 @@ def materials(size):
     quilt=ImageOps.autocontrast(ImageOps.grayscale(quarter(1,0)),cutoff=1)
     red=quarter(1,1)
     red=red.point([min(255,round(i*1.22+5)) for i in range(256)]*3)
-    cloth=ImageOps.colorize(cotton,(86,91,98),(211,201,179))
+    # Keep the broad fold in the dye. Subpixel weave from the paint study
+    # must not turn a receding sleeve into a glittering bank of threads.
+    cotton=Image.blend(cotton.filter(ImageFilter.GaussianBlur(2.2)),cotton,.28)
+    cloth=ImageOps.colorize(cotton,(99,98,96),(184,178,161))
     padded=ImageOps.colorize(quilt,(53,57,64),(144,137,118))
     armor=quarter(0,1)
     armor=armor.point([min(255,round(i*1.19+7)) for i in range(256)]*3)

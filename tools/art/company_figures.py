@@ -2,6 +2,7 @@
 The yoke has real armholes: the first sleeve row is the edge of the torso mesh.
 """
 from math import atan2, cos, exp, hypot, pi, sin
+from field_armour import shoulders, skirts
 from field_visage import head
 from figure_atlas import uv
 from figure_mesh import Surface, TAU, add, lerp
@@ -20,7 +21,7 @@ def smoothstep_cloth(x):
 def coat(s,look):
     close=s.detail
     n=24 if close else 12
-    start={"levy":.575,"archer":.667,"guard":.601,"officer":.494,"player":.528}[look]
+    start={"levy":.575,"archer":.667,"regular":.565,"guard":.601,"officer":.494,"player":.528}[look]
     hem=[(start,.254,.183),(.75,.241,.170),(.86,.211,.15),(.96,.177,.135),
          (1.075,.19,.141),(1.185,.219,.151),(1.255,.233,.153),(1.327,.245,.142),
          (1.408,.199,.100),(1.456,.077,.074)]
@@ -44,13 +45,13 @@ def coat(s,look):
         # Cloth bunches above the cinch and opens back out across the shoulder blades.
         radius+=.009*exp(-((y-1.045)/.092)**2)*cos(5*a+.8)+.006*exp(-((y-1.25)/.11)**2)*cos(3*a-.65)
         return ((rx+radius)*sin(a),y,(rz+radius)*cos(a)-.009*(1-cos(a))-.006)
-    heavy=look in ("guard","officer","player")
+    heavy=look in ("regular","guard","officer","player")
     vertices={}
     def body_vertex(c,r,material):
         key=(c,r,material)
         if key not in vertices:
             p=point(c,r)
-            v=1-clamp((p[1]-.966)/.43) if material=="lamellar" else clamp((1.46-p[1])/(1.46-start))
+            v=1-clamp((p[1]-.966)/.43) if material=="lames" else clamp((1.46-p[1])/(1.46-start))
             vertices[key]=s.vertex(p,uv(material,c/n,v),cloth(p))
         return vertices[key]
     span=3 if close else 2
@@ -60,7 +61,7 @@ def coat(s,look):
             if lo<=r<hi and any(center-span<=c<center+span for center in slots): continue
             material="coat"
             if heavy and 3<=r<=7:
-                material="lamellar"
+                material="lames"
             elif look=="archer" and 3<=r<=7:
                 material="quilt"
             elif r<=1 and (c>=3*n//4 or c<n//8):
@@ -81,9 +82,9 @@ def coat(s,look):
             length=max(.001,hypot(lateral,front))
             circle.append((lateral/length,front/length))
         upper,fore=(LU,LF) if side<0 else (RU,RF)
-        sleeve=[(.238,1.356,.087,.10,-.004),(.249,1.283,.092,.094,0),
-                (.254,1.202,.069,.077,.008),(.259,1.146,.080,.079,.019),
-                (.262,1.115,.067,.061,.024),(.264,1.075,.063,.056,.032)]
+        sleeve=[(.231,1.357,.069,.089,-.003),(.246,1.299,.083,.086,0),
+                (.251,1.227,.074,.078,.007),(.257,1.155,.065,.071,.017),
+                (.260,1.110,.067,.069,.023),(.264,1.075,.058,.054,.032)]
         if not close: sleeve=[sleeve[i] for i in (0,2,3,5)]
         for j,(cx,y,rx,rz,cz) in enumerate(sleeve):
             ring=[]
@@ -96,7 +97,7 @@ def coat(s,look):
         # A trim boundary duplicates UVs only. A triangle joining two atlas tiles
         # would pick up iron or skin halfway across the sleeve when the arm turns.
         edge=len(rows)-1
-        panels=[(0,2,"lamellar"),(2,edge-1,"dyed")] if heavy else [(0,edge-1,"dyed")]
+        panels=[(0,edge-1,"dyed")]
         panels.append((edge-1,edge,"headcloth"))
         for first,last,material in panels:
             def sleeve_point(u,v):
@@ -123,7 +124,7 @@ def coat(s,look):
         a=TAU*u
         p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))
         return p,cloth(p)
-    s.grid(20 if close else 10,2,belt,"sash" if heavy else "leather")
+    s.grid(20 if close else 10,2,belt,"leather" if look=="regular" else ("sash" if heavy else "leather"))
     if look in ("archer","player","officer"):
         for front in (True,False):
             def baldric(u,v):
@@ -140,16 +141,16 @@ def coat(s,look):
 
 def equipment(s,look):
     close=s.detail
-    heavy=look in ("guard","officer","player")
+    heavy=look in ("regular","guard","officer","player")
     if heavy:
+        shoulders(s,look,CHEST,(LU,RU))
+        skirts(s,look,HIPS,(LT,RT))
+        # Two shoulder fastenings suspend the front and back without filling the neckline.
         for side in (-1,1):
-            bone=LT if side<0 else RT
-            def tassets(u,v):
-                a=side*(.41+u*1.90)
-                rx=.263-.064*v
-                ry=.57+.397*v+.048*(u-.48)**2
-                return (rx*sin(a),ry,(.183-.034*v)*cos(a)-.012),(bone,HIPS,.42*(1-v))
-            s.grid(7 if close else 3,3 if close else 1,tassets,"lamellar")
+            path=[(side*.130,1.318,.129),(side*.143,1.382,.103),
+                  (side*.138,1.431,.049),(side*.134,1.442,-.026),
+                  (side*.144,1.398,-.107),(side*.150,1.314,-.150)]
+            s.ribbon(path,.031,"leather",CHEST)
     if look in ("player","officer"):
         # Asymmetric half-mantle with a split over the left hip; a readable back
         # silhouette even with a spear lifted or the front arm hidden by the shield.

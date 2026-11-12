@@ -117,13 +117,15 @@ void fragment(){
     vec3 response=texture(response_atlas,UV).rgb;
     float fibre=dot(colour,vec3(.27,.54,.19));
     // A bolt of faded indigo or madder shows exposed natural fibre in the worn lots.
-    float fibre_exposed=.035+.31*smoothstep(.10,.92,cloth_lot);
+    float fibre_exposed=.025+.145*smoothstep(.10,.92,cloth_lot);
     vec3 dyed=mix(livery.rgb,vec3(.24,.213,.171),fibre_exposed)*clamp(.32+1.86*fibre,.43,1.40);
     colour=mix(colour,dyed,response.b);
     colour*=mix(vec3(1.),vec3(.53,.67,.79),sewn_shadow);
     colour*=mix(1.0,.73,fallen);
     ALBEDO=mix(colour,vec3(.57,.29,.15),flash*.23);
-    ROUGHNESS=clamp(response.r,.24,1.);
-    METALLIC=response.g*.66;
-    SPECULAR=mix(.25,.56,response.g);
+    // At battlefield scale a polished spot crosses a whole cheek or helmet.
+    // The worn iron still turns in the light; the brighter edge is part of the blade.
+    ROUGHNESS=clamp(response.r,.62,1.);
+    METALLIC=response.g*.43;
+    SPECULAR=mix(.13,.31,response.g);
 }

@@ -19,6 +19,7 @@ static func _load_pieces() -> void:
 static func costume(kit: int) -> String:
 	if kit in [5,6]: return "Archer"
 	if kit in [4,7]: return "Guard"
+	if kit in [1,3]: return "Regular"
 	return "Levy"
 
 static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -> ArrayMesh:
