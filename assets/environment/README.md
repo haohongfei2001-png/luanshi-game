@@ -12,6 +12,6 @@
 
 `bank-willows.gltf` 的老柳与幼柳各有独立木质网格、弯折垂枝和叶帘，缩放后共同并入战场的静态树群批次。`willow-sprays.png` 是原创 512 × 256 河岸图集，包含两种垂柳叶幕、一种树梢和一簇莎草。`foothills.json` 固定大树的位置与朝水的方向。运行 `node tools/env_river_paint.mjs` 会调用 `tools/env_willow.mjs`，重建柳树网格、图集、树位与相应地表着色。
 
-主战区地表使用 512 × 512 可平铺颜色与交界高度贴图。草根采用 [Amal Kumar 的 Sparse Grass](https://polyhaven.com/a/sparse_grass)，压实土采用 [Rob Tuytel 的 Brown Mud Dry](https://polyhaven.com/a/brown_mud_dry)，湿砂采用 [Dario Barresi 的 Sandy Gravel 02](https://polyhaven.com/a/sandy_gravel_02)。三项原始扫描适用 [Poly Haven CC0](https://polyhaven.com/license)。项目对其做了色阶分组、抑制细小亮斑、色彩整理和高度蒙版制作。游戏直接读取仓库里的 PNG。可用 Pillow 11.3.0 运行 `python3 tools/env_ground_materials.py` 重建，脚本检查来源校验值。
+主战区地表使用 512 × 512 可平铺颜色与交界高度贴图。草根采用 [Amal Kumar 的 Sparse Grass](https://polyhaven.com/a/sparse_grass)，压实土采用 [Rob Tuytel 的 Brown Mud Dry](https://polyhaven.com/a/brown_mud_dry)，湿砂采用 [Dario Barresi 的 Sandy Gravel 02](https://polyhaven.com/a/sandy_gravel_02)。三项原始扫描适用 [Poly Haven CC0](https://polyhaven.com/license)。项目对其做了色阶分组、抑制细小亮斑、色彩整理和高度蒙版制作。游戏直接读取仓库里的 PNG。可用 Pillow 11.3.0 运行 `python3 tools/env_ground_materials.py` 重建，脚本对三份源 JPG 核验 SHA-256，游戏运行时不访问素材网站。
 
 `soil-cover.png` 由 `node tools/env_river_paint.mjs` 从河关道路、营地、坡地旧田和河岸生成。四个线性通道依次记录裸土覆盖、湿砂、地表明暗和到道路中心线的相对距离。车辙随桥头和道路弯曲。近景草冠与土沿使用材料高度过渡。
