@@ -1,47 +1,47 @@
 {
-  "source_sha": "6e36e8f69526f2caf25501da5a777f63484f3162",
-  "workflow_run": 43268026943,
-  "source_url": "https://github.com/haohongfei2001-png/luanshi-game/commit/6e36e8f69526f2caf25501da5a777f63484f3162",
-  "workflow_url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943",
+  "source_sha": "d2f0180c0865b3746bef11e43a2239659188fa6f",
+  "workflow_run": 43275529020,
+  "source_url": "https://github.com/haohongfei2001-png/luanshi-game/commit/d2f0180c0865b3746bef11e43a2239659188fa6f",
+  "workflow_url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020",
   "artifacts": {
-    "macos-verification-b0f44c491fb47634539e73571cabf2c73519575b": {
-      "id": 13968392244,
-      "expires_at": "2027-02-10T17:18:29Z",
-      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13968392244"
+    "Luanshi-Linux-f8129247cffe207f6fa0575e0cab3851662e5b96": {
+      "id": 13971186282,
+      "expires_at": "2027-02-10T18:01:38Z",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13971186282"
     },
-    "Luanshi-macOS-b0f44c491fb47634539e73571cabf2c73519575b": {
-      "id": 13968240852,
-      "expires_at": "2027-02-10T17:18:29Z",
-      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13968240852"
+    "gameplay-f8129247cffe207f6fa0575e0cab3851662e5b96": {
+      "id": 13971123006,
+      "expires_at": "2027-02-10T18:01:38Z",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13971123006"
     },
-    "river-art-b0f44c491fb47634539e73571cabf2c73519575b": {
-      "id": 13967820995,
-      "expires_at": "2027-02-10T17:18:29Z",
-      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13967820995"
+    "river-art-f8129247cffe207f6fa0575e0cab3851662e5b96": {
+      "id": 13970906990,
+      "expires_at": "2027-02-10T18:01:38Z",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13970906990"
     },
-    "field-verification-b0f44c491fb47634539e73571cabf2c73519575b": {
-      "id": 13967414100,
-      "expires_at": "2027-02-10T17:18:29Z",
-      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13967414100"
+    "field-verification-f8129247cffe207f6fa0575e0cab3851662e5b96": {
+      "id": 13970513608,
+      "expires_at": "2027-02-10T18:01:38Z",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13970513608"
     },
-    "gameplay-b0f44c491fb47634539e73571cabf2c73519575b": {
-      "id": 13967254591,
-      "expires_at": "2027-02-10T17:18:29Z",
-      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13967254591"
+    "verification-f8129247cffe207f6fa0575e0cab3851662e5b96": {
+      "id": 13970082740,
+      "expires_at": "2027-02-10T18:01:38Z",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13970082740"
     },
-    "Luanshi-Linux-b0f44c491fb47634539e73571cabf2c73519575b": {
-      "id": 13966888222,
-      "expires_at": "2027-02-10T17:18:29Z",
-      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13966888222"
+    "Luanshi-macOS-f8129247cffe207f6fa0575e0cab3851662e5b96": {
+      "id": 13970062784,
+      "expires_at": "2027-02-10T18:01:38Z",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13970062784"
     },
-    "verification-b0f44c491fb47634539e73571cabf2c73519575b": {
-      "id": 13966798420,
-      "expires_at": "2027-02-10T17:18:29Z",
-      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13966798420"
+    "macos-verification-f8129247cffe207f6fa0575e0cab3851662e5b96": {
+      "id": 13969574833,
+      "expires_at": "2027-02-10T18:01:38Z",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13969574833"
     }
   },
-  "macos_zip_sha256": "691b1d77a3460e553b8002ad583d303c52b34af242248493d056534fade017c9",
-  "macos_zip_bytes": 74346210,
+  "macos_zip_sha256": "d91e3097ece6199b99c607457263d570ef49cb99a3be033f4bde6f688799052c",
+  "macos_zip_bytes": 74917359,
   "package_version": "16004",
   "actual_target_m5": "NOT_RUN",
   "paired_cameras": {
@@ -209,6 +209,88 @@
         ],
         "yaw": -0.54,
         "zoom": 31.0
+      },
+      {
+        "center": [
+          -35.7999992370605,
+          -8.39999961853027
+        ],
+        "close": 0,
+        "contact": [
+          0,
+          0
+        ],
+        "fighting": 5,
+        "gate_hp": 260.0,
+        "in_frame_count": 14,
+        "in_frame_ids_sha256": "c2e05a0e812d671f949051bc5bd30c0768a50d0ab3c222834065e76d5ee1ada9",
+        "internal_scale": 1.0,
+        "kind": "bank",
+        "label": "bank",
+        "losses": [
+          0,
+          0
+        ],
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ],
+        "ranks": 0,
+        "seed": 61112,
+        "shadows": true,
+        "tick": 8,
+        "visible": 78,
+        "window": [
+          1280,
+          800
+        ],
+        "yaw": -0.54,
+        "zoom": 17.0
+      },
+      {
+        "center": [
+          -23.7999992370605,
+          13.8000001907349
+        ],
+        "close": 12,
+        "contact": [
+          0,
+          0
+        ],
+        "fighting": 43,
+        "gate_hp": 260.0,
+        "in_frame_count": 182,
+        "in_frame_ids_sha256": "c13143c5ee33ced196d40aae724619315f3bd5ce52e8f795db72a971d8cf3211",
+        "internal_scale": 1.0,
+        "kind": "margin",
+        "label": "margin",
+        "losses": [
+          0,
+          0
+        ],
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ],
+        "ranks": 172,
+        "seed": 61112,
+        "shadows": true,
+        "tick": 8,
+        "visible": 255,
+        "window": [
+          1280,
+          800
+        ],
+        "yaw": -0.64,
+        "zoom": 23.0
       },
       {
         "center": [
@@ -706,6 +788,88 @@
       },
       {
         "center": [
+          -35.7999992370605,
+          -8.39999961853027
+        ],
+        "close": 0,
+        "contact": [
+          0,
+          0
+        ],
+        "fighting": 5,
+        "gate_hp": 260.0,
+        "in_frame_count": 14,
+        "in_frame_ids_sha256": "c2e05a0e812d671f949051bc5bd30c0768a50d0ab3c222834065e76d5ee1ada9",
+        "internal_scale": 1.0,
+        "kind": "bank",
+        "label": "bank",
+        "losses": [
+          0,
+          0
+        ],
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ],
+        "ranks": 0,
+        "seed": 61112,
+        "shadows": true,
+        "tick": 8,
+        "visible": 78,
+        "window": [
+          1280,
+          800
+        ],
+        "yaw": -0.54,
+        "zoom": 17.0
+      },
+      {
+        "center": [
+          -23.7999992370605,
+          13.8000001907349
+        ],
+        "close": 12,
+        "contact": [
+          0,
+          0
+        ],
+        "fighting": 43,
+        "gate_hp": 260.0,
+        "in_frame_count": 182,
+        "in_frame_ids_sha256": "c13143c5ee33ced196d40aae724619315f3bd5ce52e8f795db72a971d8cf3211",
+        "internal_scale": 1.0,
+        "kind": "margin",
+        "label": "margin",
+        "losses": [
+          0,
+          0
+        ],
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ],
+        "ranks": 172,
+        "seed": 61112,
+        "shadows": true,
+        "tick": 8,
+        "visible": 255,
+        "window": [
+          1280,
+          800
+        ],
+        "yaw": -0.64,
+        "zoom": 23.0
+      },
+      {
+        "center": [
           -66.0,
           -19.0
         ],
@@ -1047,7 +1211,7 @@
       "decision": "",
       "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
       "display": "X11",
-      "draw_calls_p95": 100.0,
+      "draw_calls_p95": 103.0,
       "dropped_weapons": [
         3,
         3
@@ -1056,7 +1220,7 @@
         0,
         0
       ],
-      "fps": 6.56311385624287,
+      "fps": 6.74368176026279,
       "frame_samples": 20,
       "gate_hp": 260.0,
       "hero_hp": 100.0,
@@ -1065,12 +1229,12 @@
         17
       ],
       "hits_during_sample": 33,
-      "input_observed_ms": 136.581,
+      "input_observed_ms": 131.979,
       "last_high_detail_soldiers": 20,
       "last_rank_soldiers": 0,
       "last_visible_soldiers": 40,
-      "mean_ms": 152.3667,
-      "median_ms": 150.918,
+      "mean_ms": 148.28695,
+      "median_ms": 147.088,
       "mission": "夺取河关",
       "officer_corps": {
         "active_commands": [
@@ -1123,17 +1287,17 @@
         20,
         20
       ],
-      "p95_ms": 160.469,
-      "p99_ms": 163.756,
+      "p95_ms": 158.075,
+      "p99_ms": 158.882,
       "peak_visible_combat_poses": 23,
       "projectiles": 20,
       "ram_hp": 150.0,
       "ram_strokes": 0,
-      "render_cpu_p95_ms": 151.557998657227,
-      "render_gpu_p95_ms": 151.679000854492,
+      "render_cpu_p95_ms": 148.95100402832,
+      "render_gpu_p95_ms": 149.554992675781,
       "render_scale": 1.0,
       "renderer": "gl_compatibility",
-      "resident_kib": 471384,
+      "resident_kib": 474368,
       "result": "",
       "routing": [
         0,
@@ -1141,16 +1305,16 @@
       ],
       "seed": 61112,
       "shadows": true,
-      "sim_ms_per_tick": 0.79,
+      "sim_ms_per_tick": 0.894960784313725,
       "soldiers_per_side": 20,
-      "static_memory_bytes": 65443226,
+      "static_memory_bytes": 65536232,
       "tick": 72,
-      "view_script_ms_per_frame": 0.5912,
+      "view_script_ms_per_frame": 0.63655,
       "viewport_px": [
         1280,
         800
       ],
-      "wall_seconds": 3.047334
+      "wall_seconds": 2.965739
     },
     {
       "attacks": 229,
@@ -1164,7 +1328,7 @@
       "decision": "",
       "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
       "display": "X11",
-      "draw_calls_p95": 123.0,
+      "draw_calls_p95": 126.0,
       "dropped_weapons": [
         15,
         23
@@ -1173,7 +1337,7 @@
         0,
         0
       ],
-      "fps": 5.15118336847728,
+      "fps": 5.05256690609097,
       "frame_samples": 20,
       "gate_hp": 260.0,
       "hero_hp": 100.0,
@@ -1182,12 +1346,12 @@
         78
       ],
       "hits_during_sample": 172,
-      "input_observed_ms": 176.384,
+      "input_observed_ms": 185.27,
       "last_high_detail_soldiers": 19,
       "last_rank_soldiers": 72,
       "last_visible_soldiers": 183,
-      "mean_ms": 194.13015,
-      "median_ms": 195.923,
+      "mean_ms": 197.9192,
+      "median_ms": 198.399,
       "mission": "夺取河关",
       "officer_corps": {
         "active_commands": [
@@ -1240,17 +1404,17 @@
         100,
         100
       ],
-      "p95_ms": 198.42,
-      "p99_ms": 202.799,
+      "p95_ms": 207.28,
+      "p99_ms": 208.668,
       "peak_visible_combat_poses": 91,
       "projectiles": 114,
       "ram_hp": 150.0,
       "ram_strokes": 0,
-      "render_cpu_p95_ms": 168.882995605469,
-      "render_gpu_p95_ms": 181.723999023438,
+      "render_cpu_p95_ms": 185.904998779297,
+      "render_gpu_p95_ms": 186.647003173828,
       "render_scale": 1.0,
       "renderer": "gl_compatibility",
-      "resident_kib": 537136,
+      "resident_kib": 509524,
       "result": "",
       "routing": [
         0,
@@ -1258,16 +1422,16 @@
       ],
       "seed": 61112,
       "shadows": true,
-      "sim_ms_per_tick": 3.65392156862745,
+      "sim_ms_per_tick": 3.99333333333333,
       "soldiers_per_side": 100,
-      "static_memory_bytes": 66758080,
+      "static_memory_bytes": 66851562,
       "tick": 69,
-      "view_script_ms_per_frame": 1.8705,
+      "view_script_ms_per_frame": 2.08955,
       "viewport_px": [
         1280,
         800
       ],
-      "wall_seconds": 3.882603
+      "wall_seconds": 3.958384
     },
     {
       "attacks": 389,
@@ -1290,7 +1454,7 @@
         0,
         0
       ],
-      "fps": 4.50468814156613,
+      "fps": 4.5275429680806,
       "frame_samples": 20,
       "gate_hp": 260.0,
       "hero_hp": 100.0,
@@ -1299,12 +1463,12 @@
         114
       ],
       "hits_during_sample": 262,
-      "input_observed_ms": 214.287,
+      "input_observed_ms": 213.598,
       "last_high_detail_soldiers": 17,
       "last_rank_soldiers": 135,
       "last_visible_soldiers": 285,
-      "mean_ms": 221.99095,
-      "median_ms": 223.368,
+      "mean_ms": 220.87035,
+      "median_ms": 221.995,
       "mission": "夺取河关",
       "officer_corps": {
         "active_commands": [
@@ -1357,17 +1521,17 @@
         250,
         250
       ],
-      "p95_ms": 232.252,
-      "p99_ms": 233.558,
+      "p95_ms": 232.567,
+      "p99_ms": 238.601,
       "peak_visible_combat_poses": 112,
       "projectiles": 227,
       "ram_hp": 150.0,
       "ram_strokes": 0,
-      "render_cpu_p95_ms": 195.195999145508,
-      "render_gpu_p95_ms": 196.106994628906,
+      "render_cpu_p95_ms": 189.470993041992,
+      "render_gpu_p95_ms": 192.639999389648,
       "render_scale": 1.0,
       "renderer": "gl_compatibility",
-      "resident_kib": 547928,
+      "resident_kib": 555220,
       "result": "",
       "routing": [
         0,
@@ -1375,16 +1539,16 @@
       ],
       "seed": 61112,
       "shadows": true,
-      "sim_ms_per_tick": 9.71242,
+      "sim_ms_per_tick": 10.3,
       "soldiers_per_side": 250,
-      "static_memory_bytes": 68945364,
+      "static_memory_bytes": 69038438,
       "tick": 66,
-      "view_script_ms_per_frame": 2.98115,
+      "view_script_ms_per_frame": 3.25955,
       "viewport_px": [
         1280,
         800
       ],
-      "wall_seconds": 4.439819
+      "wall_seconds": 4.417407
     },
     {
       "attacks": 491,
@@ -1407,7 +1571,7 @@
         0,
         0
       ],
-      "fps": 3.63142753595295,
+      "fps": 3.63405766159292,
       "frame_samples": 20,
       "gate_hp": 260.0,
       "hero_hp": 100.0,
@@ -1416,12 +1580,12 @@
         105
       ],
       "hits_during_sample": 288,
-      "input_observed_ms": 271.923,
+      "input_observed_ms": 274.062,
       "last_high_detail_soldiers": 19,
       "last_rank_soldiers": 302,
       "last_visible_soldiers": 461,
-      "mean_ms": 275.3738,
-      "median_ms": 275.655,
+      "mean_ms": 275.1745,
+      "median_ms": 277.887,
       "mission": "夺取河关",
       "officer_corps": {
         "active_commands": [
@@ -1474,17 +1638,17 @@
         512,
         512
       ],
-      "p95_ms": 295.405,
-      "p99_ms": 296.633,
+      "p95_ms": 292.568,
+      "p99_ms": 293.383,
       "peak_visible_combat_poses": 131,
       "projectiles": 341,
       "ram_hp": 150.0,
       "ram_strokes": 0,
-      "render_cpu_p95_ms": 216.680999755859,
-      "render_gpu_p95_ms": 217.453002929688,
+      "render_cpu_p95_ms": 214.809997558594,
+      "render_gpu_p95_ms": 215.537002563477,
       "render_scale": 1.0,
       "renderer": "gl_compatibility",
-      "resident_kib": 583244,
+      "resident_kib": 590944,
       "result": "",
       "routing": [
         0,
@@ -1492,21 +1656,21 @@
       ],
       "seed": 61112,
       "shadows": true,
-      "sim_ms_per_tick": 20.90734,
+      "sim_ms_per_tick": 22.15246,
       "soldiers_per_side": 512,
-      "static_memory_bytes": 72788319,
+      "static_memory_bytes": 72881393,
       "tick": 66,
-      "view_script_ms_per_frame": 4.8654,
+      "view_script_ms_per_frame": 5.2617,
       "viewport_px": [
         1280,
         800
       ],
-      "wall_seconds": 5.507476
+      "wall_seconds": 5.50349
     }
   ],
   "native_windows": {
-    "archive_sha256": "691b1d77a3460e553b8002ad583d303c52b34af242248493d056534fade017c9",
-    "source_run": "43268026943",
+    "archive_sha256": "d91e3097ece6199b99c607457263d570ef49cb99a3be033f4bde6f688799052c",
+    "source_run": "43275529020",
     "samples": [
       {
         "adapter": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))",
@@ -1528,28 +1692,28 @@
           600
         ],
         "four_second_windows": [],
-        "fps": 38.9687953135788,
-        "frames": 138,
-        "gpu_timer_status": "measured",
-        "hits_in_window": 409,
+        "fps": 41.4633141967832,
+        "frames": 146,
+        "gpu_timer_status": "no_nonzero_device_timestamps",
+        "hits_in_window": 398,
         "input_to_postdraw_ms": [
-          15.2040004730225,
-          18.7919998168945,
-          35.1380004882812
+          31.4780006408691,
+          16.5729999542236,
+          16.1550006866455
         ],
-        "mean_ms": 25.6615579710145,
-        "p50_ms": 24.34,
-        "p95_ms": 47.148,
-        "p99_ms": 61.373,
+        "mean_ms": 24.1177054794521,
+        "p50_ms": 22.188,
+        "p95_ms": 34.66,
+        "p99_ms": 77.25,
         "panned": true,
         "per_side": 512,
         "platform": "macOS",
         "preset": 0,
         "processor": "Apple M1 (Virtual)",
-        "render_cpu_p95_ms": 22.5540008544922,
-        "render_cpu_samples": 138,
-        "render_gpu_p95_ms": 8302.3828125,
-        "render_gpu_samples": 46,
+        "render_cpu_p95_ms": 19.3360004425049,
+        "render_cpu_samples": 146,
+        "render_gpu_p95_ms": null,
+        "render_gpu_samples": 0,
         "render_target_px": [
           960,
           600
@@ -1564,14 +1728,14 @@
           1024,
           768
         ],
-        "seconds": 3.541295,
+        "seconds": 3.521185,
         "shadows": true,
-        "sim_cpu_ms_per_frame": 6.72789855072464,
-        "sim_cpu_total_ms": 928.45,
+        "sim_cpu_ms_per_frame": 5.74795890410959,
+        "sim_cpu_total_ms": 839.202,
         "static_bytes": null,
         "tour": false,
-        "view_script_ms_per_frame": 3.23952173913043,
-        "view_script_total_ms": 447.054,
+        "view_script_ms_per_frame": 3.0341301369863,
+        "view_script_total_ms": 442.983,
         "viewport": [
           1000,
           600
@@ -1589,18 +1753,18 @@
           600
         ],
         "uses_default_window": false,
-        "max_rss_bytes": 467451904,
+        "max_rss_bytes": 500514816,
         "app_data_absent_at_spawn": true,
         "activation_requested": true,
         "last_boot_stage": "contact_complete",
         "launch_milestones_ms": {
-          "scene_ready": 11617.0,
-          "first_post_draw": 24420.1,
-          "foreground_ready": 25134.7,
-          "deployed": 25140.0,
-          "first_tick": 25223.9,
-          "first_hit": 25927.0,
-          "contact_complete": 30197.5
+          "scene_ready": 7143.8,
+          "first_post_draw": 15942.2,
+          "foreground_ready": 16427.8,
+          "deployed": 16430.6,
+          "first_tick": 16506.1,
+          "first_hit": 17212.1,
+          "contact_complete": 21455.4
         }
       },
       {
@@ -1623,26 +1787,26 @@
           600
         ],
         "four_second_windows": [],
-        "fps": 87.3441470715591,
-        "frames": 306,
+        "fps": 164.143893961332,
+        "frames": 575,
         "gpu_timer_status": "no_nonzero_device_timestamps",
-        "hits_in_window": 398,
+        "hits_in_window": 401,
         "input_to_postdraw_ms": [
-          5.65999984741211,
-          9.31599998474121,
-          5.34100008010864
+          4.42500019073486,
+          5.82999992370605,
+          4.63700008392334
         ],
-        "mean_ms": 11.4489640522876,
-        "p50_ms": 7.572,
-        "p95_ms": 27.207,
-        "p99_ms": 31.695,
+        "mean_ms": 6.09221565217391,
+        "p50_ms": 4.647,
+        "p95_ms": 15.022,
+        "p99_ms": 16.616,
         "panned": true,
         "per_side": 512,
         "platform": "macOS",
         "preset": 0,
         "processor": "Apple M1 (Virtual)",
-        "render_cpu_p95_ms": 0.658999979496002,
-        "render_cpu_samples": 306,
+        "render_cpu_p95_ms": 0.444999992847443,
+        "render_cpu_samples": 575,
         "render_gpu_p95_ms": null,
         "render_gpu_samples": 0,
         "render_target_px": [
@@ -1659,14 +1823,14 @@
           1024,
           768
         ],
-        "seconds": 3.503383,
+        "seconds": 3.503024,
         "shadows": true,
-        "sim_cpu_ms_per_frame": 4.09088562091503,
-        "sim_cpu_total_ms": 1251.811,
+        "sim_cpu_ms_per_frame": 1.37808,
+        "sim_cpu_total_ms": 792.396,
         "static_bytes": null,
         "tour": false,
-        "view_script_ms_per_frame": 5.16402614379085,
-        "view_script_total_ms": 1580.192,
+        "view_script_ms_per_frame": 3.26109043478261,
+        "view_script_total_ms": 1875.127,
         "viewport": [
           1000,
           600
@@ -1684,18 +1848,18 @@
           600
         ],
         "uses_default_window": false,
-        "max_rss_bytes": 517373952,
+        "max_rss_bytes": 531120128,
         "app_data_absent_at_spawn": true,
         "activation_requested": true,
         "last_boot_stage": "contact_complete",
         "launch_milestones_ms": {
-          "scene_ready": 28678.6,
-          "first_post_draw": 44655.4,
-          "foreground_ready": 46791.5,
-          "deployed": 46820.8,
-          "first_tick": 47362.2,
-          "first_hit": 47994.3,
-          "contact_complete": 52235.5
+          "scene_ready": 21752.5,
+          "first_post_draw": 33227.1,
+          "foreground_ready": 34881.5,
+          "deployed": 34887.0,
+          "first_tick": 34937.7,
+          "first_hit": 35641.0,
+          "contact_complete": 39900.8
         }
       },
       {
@@ -1719,61 +1883,61 @@
         ],
         "four_second_windows": [
           {
-            "frames": 475,
+            "frames": 627,
             "hits": 474,
             "tick": 181,
             "visible": 452,
-            "wall_seconds": 4.005181
+            "wall_seconds": 4.00091
           },
           {
-            "frames": 582,
+            "frames": 684,
             "hits": 437,
             "tick": 261,
-            "visible": 373,
-            "wall_seconds": 4.000599
+            "visible": 372,
+            "wall_seconds": 4.000851
           },
           {
-            "frames": 391,
+            "frames": 562,
             "hits": 73,
             "tick": 341,
             "visible": 436,
-            "wall_seconds": 4.004816
+            "wall_seconds": 4.004537
           },
           {
-            "frames": 509,
+            "frames": 802,
             "hits": 26,
             "tick": 421,
-            "visible": 355,
-            "wall_seconds": 4.031958
+            "visible": 354,
+            "wall_seconds": 4.005344
           },
           {
-            "frames": 499,
+            "frames": 806,
             "hits": 40,
-            "tick": 502,
-            "visible": 290,
-            "wall_seconds": 4.000667
+            "tick": 501,
+            "visible": 288,
+            "wall_seconds": 4.001428
           }
         ],
-        "fps": 121.151184554874,
-        "frames": 2908,
+        "fps": 174.161768366931,
+        "frames": 4180,
         "gpu_timer_status": "no_nonzero_device_timestamps",
-        "hits_in_window": 1106,
+        "hits_in_window": 1104,
         "input_to_postdraw_ms": [
-          6.86800003051758,
-          8.01200008392334,
-          6.28700017929077
+          7.67700004577637,
+          6.12799978256226,
+          3.92600011825562
         ],
-        "mean_ms": 8.25414958734526,
-        "p50_ms": 5.953,
-        "p95_ms": 20.165,
-        "p99_ms": 28.863,
+        "mean_ms": 5.74178827751196,
+        "p50_ms": 4.452,
+        "p95_ms": 13.883,
+        "p99_ms": 17.824,
         "panned": true,
         "per_side": 512,
         "platform": "macOS",
         "preset": 0,
         "processor": "Apple M1 (Virtual)",
-        "render_cpu_p95_ms": 0.591000020503998,
-        "render_cpu_samples": 2908,
+        "render_cpu_p95_ms": 0.472000002861023,
+        "render_cpu_samples": 4180,
         "render_gpu_p95_ms": null,
         "render_gpu_samples": 0,
         "render_target_px": [
@@ -1790,14 +1954,14 @@
           1024,
           768
         ],
-        "seconds": 24.003067,
+        "seconds": 24.000675,
         "shadows": true,
-        "sim_cpu_ms_per_frame": 2.21287310866575,
-        "sim_cpu_total_ms": 6435.035,
+        "sim_cpu_ms_per_frame": 1.17008468899522,
+        "sim_cpu_total_ms": 4890.954,
         "static_bytes": null,
         "tour": true,
-        "view_script_ms_per_frame": 3.88952751031637,
-        "view_script_total_ms": 11310.746,
+        "view_script_ms_per_frame": 3.06695071770335,
+        "view_script_total_ms": 12819.854,
         "viewport": [
           1000,
           600
@@ -1815,18 +1979,18 @@
           600
         ],
         "uses_default_window": false,
-        "max_rss_bytes": 521142272,
+        "max_rss_bytes": 534806528,
         "app_data_absent_at_spawn": true,
         "activation_requested": true,
         "last_boot_stage": "contact_complete",
         "launch_milestones_ms": {
-          "scene_ready": 5819.1,
-          "first_post_draw": 6338.4,
-          "foreground_ready": 8549.6,
-          "deployed": 8580.3,
-          "first_tick": 8650.9,
-          "first_hit": 9335.2,
-          "contact_complete": 13567.1
+          "scene_ready": 3495.7,
+          "first_post_draw": 3739.9,
+          "foreground_ready": 5681.1,
+          "deployed": 5685.0,
+          "first_tick": 5752.9,
+          "first_hit": 6446.6,
+          "contact_complete": 10693.7
         }
       },
       {
@@ -1849,26 +2013,26 @@
           510
         ],
         "four_second_windows": [],
-        "fps": 116.100451137257,
-        "frames": 407,
+        "fps": 175.941020691748,
+        "frames": 617,
         "gpu_timer_status": "no_nonzero_device_timestamps",
         "hits_in_window": 401,
         "input_to_postdraw_ms": [
-          4.49499988555908,
-          6.56400012969971,
-          6.41099977493286
+          3.40799999237061,
+          4.68599987030029,
+          4.52400016784668
         ],
-        "mean_ms": 8.61323095823096,
-        "p50_ms": 5.647,
-        "p95_ms": 20.844,
-        "p99_ms": 32.986,
+        "mean_ms": 5.68372285251216,
+        "p50_ms": 4.425,
+        "p95_ms": 14.718,
+        "p99_ms": 16.177,
         "panned": true,
         "per_side": 512,
         "platform": "macOS",
         "preset": 1,
         "processor": "Apple M1 (Virtual)",
-        "render_cpu_p95_ms": 0.563000023365021,
-        "render_cpu_samples": 407,
+        "render_cpu_p95_ms": 0.412000000476837,
+        "render_cpu_samples": 617,
         "render_gpu_p95_ms": null,
         "render_gpu_samples": 0,
         "render_target_px": [
@@ -1885,14 +2049,14 @@
           1024,
           768
         ],
-        "seconds": 3.505585,
+        "seconds": 3.506857,
         "shadows": true,
-        "sim_cpu_ms_per_frame": 2.71571253071253,
-        "sim_cpu_total_ms": 1105.295,
+        "sim_cpu_ms_per_frame": 1.2654489465154,
+        "sim_cpu_total_ms": 780.782,
         "static_bytes": null,
         "tour": false,
-        "view_script_ms_per_frame": 4.06802211302211,
-        "view_script_total_ms": 1655.685,
+        "view_script_ms_per_frame": 3.11190761750405,
+        "view_script_total_ms": 1920.047,
         "viewport": [
           1000,
           600
@@ -1910,18 +2074,18 @@
           600
         ],
         "uses_default_window": false,
-        "max_rss_bytes": 522125312,
+        "max_rss_bytes": 532463616,
         "app_data_absent_at_spawn": true,
         "activation_requested": true,
         "last_boot_stage": "contact_complete",
         "launch_milestones_ms": {
-          "scene_ready": 5612.8,
-          "first_post_draw": 6000.9,
-          "foreground_ready": 7618.3,
-          "deployed": 7628.1,
-          "first_tick": 7966.3,
-          "first_hit": 8852.7,
-          "contact_complete": 13083.9
+          "scene_ready": 3680.3,
+          "first_post_draw": 3923.0,
+          "foreground_ready": 5406.0,
+          "deployed": 5411.6,
+          "first_tick": 5666.0,
+          "first_hit": 6451.7,
+          "contact_complete": 10692.9
         }
       },
       {
@@ -1944,26 +2108,26 @@
           420
         ],
         "four_second_windows": [],
-        "fps": 80.2469893814099,
-        "frames": 281,
+        "fps": 191.846413242884,
+        "frames": 672,
         "gpu_timer_status": "no_nonzero_device_timestamps",
-        "hits_in_window": 375,
+        "hits_in_window": 401,
         "input_to_postdraw_ms": [
-          4.97599983215332,
-          207.578002929688,
-          6.28399991989136
+          3.32399988174438,
+          5.00799989700317,
+          4.59299993515015
         ],
-        "mean_ms": 12.4615266903915,
-        "p50_ms": 6.583,
-        "p95_ms": 33.537,
-        "p99_ms": 73.607,
+        "mean_ms": 5.21250297619048,
+        "p50_ms": 4.184,
+        "p95_ms": 14.327,
+        "p99_ms": 15.875,
         "panned": true,
         "per_side": 512,
         "platform": "macOS",
         "preset": 2,
         "processor": "Apple M1 (Virtual)",
-        "render_cpu_p95_ms": 0.465000003576279,
-        "render_cpu_samples": 281,
+        "render_cpu_p95_ms": 0.266000002622604,
+        "render_cpu_samples": 672,
         "render_gpu_p95_ms": null,
         "render_gpu_samples": 0,
         "render_target_px": [
@@ -1980,14 +2144,14 @@
           1024,
           768
         ],
-        "seconds": 3.501689,
+        "seconds": 3.502802,
         "shadows": false,
-        "sim_cpu_ms_per_frame": 3.92766548042705,
-        "sim_cpu_total_ms": 1103.674,
+        "sim_cpu_ms_per_frame": 1.15204166666667,
+        "sim_cpu_total_ms": 774.172,
         "static_bytes": null,
         "tour": false,
-        "view_script_ms_per_frame": 4.76489679715302,
-        "view_script_total_ms": 1338.936,
+        "view_script_ms_per_frame": 3.09368601190476,
+        "view_script_total_ms": 2078.957,
         "viewport": [
           1000,
           600
@@ -2005,18 +2169,18 @@
           600
         ],
         "uses_default_window": false,
-        "max_rss_bytes": 519323648,
+        "max_rss_bytes": 523550720,
         "app_data_absent_at_spawn": true,
         "activation_requested": true,
         "last_boot_stage": "contact_complete",
         "launch_milestones_ms": {
-          "scene_ready": 4042.8,
-          "first_post_draw": 4249.6,
-          "foreground_ready": 5903.7,
-          "deployed": 5917.2,
-          "first_tick": 6251.4,
-          "first_hit": 7035.0,
-          "contact_complete": 11280.8
+          "scene_ready": 5483.0,
+          "first_post_draw": 5840.9,
+          "foreground_ready": 7313.7,
+          "deployed": 7315.8,
+          "first_tick": 7495.2,
+          "first_hit": 8235.0,
+          "contact_complete": 12484.5
         }
       },
       {
@@ -2039,26 +2203,26 @@
           600
         ],
         "four_second_windows": [],
-        "fps": 41.9088661770077,
-        "frames": 147,
+        "fps": 45.163526049981,
+        "frames": 159,
         "gpu_timer_status": "no_nonzero_device_timestamps",
-        "hits_in_window": 398,
+        "hits_in_window": 401,
         "input_to_postdraw_ms": [
-          14.28600025177,
-          23.1149997711182,
-          17.7549991607666
+          14.0950002670288,
+          35.076000213623,
+          16.238000869751
         ],
-        "mean_ms": 23.8612993197279,
-        "p50_ms": 22.595,
-        "p95_ms": 36.363,
-        "p99_ms": 40.323,
+        "mean_ms": 22.1417610062893,
+        "p50_ms": 20.167,
+        "p95_ms": 34.07,
+        "p99_ms": 35.175,
         "panned": true,
         "per_side": 512,
         "platform": "macOS",
         "preset": 0,
         "processor": "Apple M1 (Virtual)",
-        "render_cpu_p95_ms": 20.4489994049072,
-        "render_cpu_samples": 147,
+        "render_cpu_p95_ms": 18.5249996185303,
+        "render_cpu_samples": 159,
         "render_gpu_p95_ms": null,
         "render_gpu_samples": 0,
         "render_target_px": [
@@ -2075,14 +2239,14 @@
           1024,
           768
         ],
-        "seconds": 3.507611,
+        "seconds": 3.52054,
         "shadows": true,
-        "sim_cpu_ms_per_frame": 5.51463265306122,
-        "sim_cpu_total_ms": 810.651,
+        "sim_cpu_ms_per_frame": 4.84891194968553,
+        "sim_cpu_total_ms": 770.977,
         "static_bytes": null,
         "tour": false,
-        "view_script_ms_per_frame": 3.06696598639456,
-        "view_script_total_ms": 450.844,
+        "view_script_ms_per_frame": 2.86508805031447,
+        "view_script_total_ms": 455.549,
         "viewport": [
           1000,
           600
@@ -2100,18 +2264,18 @@
           600
         ],
         "uses_default_window": false,
-        "max_rss_bytes": 484098048,
+        "max_rss_bytes": 503545856,
         "app_data_absent_at_spawn": true,
         "activation_requested": false,
         "last_boot_stage": "contact_complete",
         "launch_milestones_ms": {
-          "scene_ready": 2112.7,
-          "first_post_draw": 3973.7,
-          "foreground_ready": 4657.6,
-          "deployed": 4661.8,
-          "first_tick": 4726.3,
-          "first_hit": 5425.8,
-          "contact_complete": 9673.4
+          "scene_ready": 1340.1,
+          "first_post_draw": 2804.5,
+          "foreground_ready": 3322.9,
+          "deployed": 3326.0,
+          "first_tick": 3408.3,
+          "first_hit": 4105.2,
+          "contact_complete": 8359.3
         }
       }
     ],
@@ -2136,28 +2300,28 @@
         600
       ],
       "four_second_windows": [],
-      "fps": 25.9103549222009,
-      "frames": 120,
+      "fps": 51.7140067671472,
+      "frames": 182,
       "gpu_timer_status": "measured",
-      "hits_in_window": 576,
+      "hits_in_window": 401,
       "input_to_postdraw_ms": [
-        20.2900009155273,
-        53.9560012817383,
-        45.0530014038086
+        13.4490003585815,
+        20.6520004272461,
+        15.3450002670288
       ],
-      "mean_ms": 38.5946083333333,
-      "p50_ms": 35.79,
-      "p95_ms": 65.983,
-      "p99_ms": 94.789,
+      "mean_ms": 19.3371208791209,
+      "p50_ms": 16.731,
+      "p95_ms": 31.869,
+      "p99_ms": 34.591,
       "panned": true,
       "per_side": 512,
       "platform": "macOS",
       "preset": 0,
       "processor": "Apple M1 (Virtual)",
-      "render_cpu_p95_ms": 33.9609985351562,
-      "render_cpu_samples": 120,
-      "render_gpu_p95_ms": 6623.6328125,
-      "render_gpu_samples": 80,
+      "render_cpu_p95_ms": 16.1110000610352,
+      "render_cpu_samples": 182,
+      "render_gpu_p95_ms": 6655.59814453125,
+      "render_gpu_samples": 182,
       "render_target_px": [
         960,
         600
@@ -2172,14 +2336,14 @@
         1024,
         768
       ],
-      "seconds": 4.631353,
+      "seconds": 3.519356,
       "shadows": true,
-      "sim_cpu_ms_per_frame": 12.1338166666667,
-      "sim_cpu_total_ms": 1456.058,
+      "sim_cpu_ms_per_frame": 4.24081318681319,
+      "sim_cpu_total_ms": 771.828,
       "static_bytes": null,
       "tour": false,
-      "view_script_ms_per_frame": 3.80958333333333,
-      "view_script_total_ms": 457.15,
+      "view_script_ms_per_frame": 2.83221978021978,
+      "view_script_total_ms": 515.464,
       "viewport": [
         1000,
         600
@@ -2197,22 +2361,22 @@
         600
       ],
       "uses_default_window": false,
-      "max_rss_bytes": 483966976,
+      "max_rss_bytes": 502841344,
       "app_data_absent_at_spawn": true,
       "activation_requested": true,
       "last_boot_stage": "contact_complete",
       "launch_milestones_ms": {
-        "scene_ready": 1596.6,
-        "first_post_draw": 3329.9,
-        "foreground_ready": 3705.5,
-        "deployed": 3710.0,
-        "first_tick": 3789.4,
-        "first_hit": 6047.9,
-        "contact_complete": 10289.8,
-        "control_armed": 3789.4,
-        "focus_paused": 4489.4,
-        "still_paused_after_foreground": 5398.8,
-        "resume_pressed": 5399.0
+        "scene_ready": 1413.6,
+        "first_post_draw": 3004.4,
+        "foreground_ready": 3427.3,
+        "deployed": 3430.4,
+        "first_tick": 3500.4,
+        "first_hit": 5750.2,
+        "contact_complete": 9976.5,
+        "control_armed": 3500.4,
+        "focus_paused": 3605.3,
+        "still_paused_after_foreground": 5068.4,
+        "resume_pressed": 5068.4
       }
     },
     "shipping_window": {
@@ -2236,61 +2400,61 @@
       ],
       "four_second_windows": [
         {
-          "frames": 243,
+          "frames": 641,
           "hits": 472,
           "tick": 181,
           "visible": 452,
-          "wall_seconds": 4.016578
+          "wall_seconds": 4.002963
         },
         {
-          "frames": 113,
-          "hits": 478,
-          "tick": 262,
+          "frames": 695,
+          "hits": 475,
+          "tick": 261,
           "visible": 375,
-          "wall_seconds": 4.033162
+          "wall_seconds": 4.002084
         },
         {
-          "frames": 191,
-          "hits": 84,
-          "tick": 342,
+          "frames": 669,
+          "hits": 86,
+          "tick": 341,
           "visible": 442,
-          "wall_seconds": 4.009888
+          "wall_seconds": 4.002368
         },
         {
-          "frames": 204,
-          "hits": 47,
-          "tick": 423,
-          "visible": 371,
-          "wall_seconds": 4.029758
+          "frames": 732,
+          "hits": 48,
+          "tick": 421,
+          "visible": 370,
+          "wall_seconds": 4.001469
         },
         {
-          "frames": 218,
-          "hits": 28,
-          "tick": 503,
+          "frames": 700,
+          "hits": 26,
+          "tick": 501,
           "visible": 264,
-          "wall_seconds": 4.002769
+          "wall_seconds": 4.004732
         }
       ],
-      "fps": 48.8739980830393,
-      "frames": 1173,
+      "fps": 176.470514718166,
+      "frames": 4236,
       "gpu_timer_status": "no_nonzero_device_timestamps",
       "hits_in_window": 1159,
       "input_to_postdraw_ms": [
-        12.5080003738403,
-        7.13199996948242,
-        41.0419998168945
+        4.40899991989136,
+        7.83799982070923,
+        4.02299976348877
       ],
-      "mean_ms": 20.4607774936061,
-      "p50_ms": 17.498,
-      "p95_ms": 49.896,
-      "p99_ms": 79.211,
+      "mean_ms": 5.66666902738433,
+      "p50_ms": 4.624,
+      "p95_ms": 13.242,
+      "p99_ms": 15.944,
       "panned": true,
       "per_side": 512,
       "platform": "macOS",
       "preset": 0,
       "processor": "Apple M1 (Virtual)",
-      "render_cpu_p95_ms": 0.815999984741211,
-      "render_cpu_samples": 1173,
+      "render_cpu_p95_ms": 0.470999985933304,
+      "render_cpu_samples": 4236,
       "render_gpu_p95_ms": null,
       "render_gpu_samples": 0,
       "render_target_px": [
@@ -2307,14 +2471,14 @@
         1024,
         768
       ],
-      "seconds": 24.000492,
+      "seconds": 24.00401,
       "shadows": true,
-      "sim_cpu_ms_per_frame": 8.2061346973572,
-      "sim_cpu_total_ms": 9625.796,
+      "sim_cpu_ms_per_frame": 1.13026133144476,
+      "sim_cpu_total_ms": 4787.787,
       "static_bytes": null,
       "tour": true,
-      "view_script_ms_per_frame": 5.05336658141518,
-      "view_script_total_ms": 5927.599,
+      "view_script_ms_per_frame": 3.08371033994334,
+      "view_script_total_ms": 13062.597,
       "viewport": [
         1024,
         645
@@ -2332,18 +2496,18 @@
         640
       ],
       "uses_default_window": true,
-      "max_rss_bytes": 517275648,
+      "max_rss_bytes": 534691840,
       "app_data_absent_at_spawn": true,
       "activation_requested": true,
       "last_boot_stage": "contact_complete",
       "launch_milestones_ms": {
-        "scene_ready": 8358.0,
-        "first_post_draw": 8634.4,
-        "foreground_ready": 11662.4,
-        "deployed": 11674.4,
-        "first_tick": 11905.1,
-        "first_hit": 12524.1,
-        "contact_complete": 16771.8
+        "scene_ready": 3649.2,
+        "first_post_draw": 3804.9,
+        "foreground_ready": 5195.7,
+        "deployed": 5197.9,
+        "first_tick": 5542.6,
+        "first_hit": 6141.7,
+        "contact_complete": 10396.3
       }
     }
   },
@@ -2838,28 +3002,28 @@
   },
   "footage": {
     "player-nine-weapons.mp4": {
-      "bytes": 845497,
-      "sha256": "fea65af2e707ad9e0097a1fd27bf013373a21ebded6bff9dfddcc2d2d7a9960b"
+      "bytes": 1006299,
+      "sha256": "f948470527458a3d690d84960ae6edc4a1d9e4a06063b4577d93212735e0fe87"
     },
     "river-gate-review.mp4": {
-      "bytes": 901571,
-      "sha256": "a4766b54a8290b41ed8550579863509a84f485a368ff863c696fe3b6265cd155"
+      "bytes": 910568,
+      "sha256": "93e7e9b6accf92da2352e4b020a47f4ccf707b04831eb032c0d1ceb9edefeb66"
     },
     "river-gate-journey.mp4": {
-      "bytes": 23521501,
-      "sha256": "085b3f98ed877b7696c382465033885ff87f46ea371f918c569f3d03949d1e87"
+      "bytes": 23388507,
+      "sha256": "a17499ad8cdaecd6a624ea6d3396468b2a08f7000fc70d887c74c186a03c4d25"
     },
     "river-gate-full-siege.mp4": {
-      "bytes": 14125764,
-      "sha256": "02cc6cb5142ce07a9a2683c7e897e7ce6cb6561676e7ff0b014386126b3b7509"
+      "bytes": 14043214,
+      "sha256": "8570cecbf0689a2003cfe29f38f68844ae3e9bf94b74ca937ff3e7270d2a2f1e"
     },
     "river-gate-512.mp4": {
-      "bytes": 6215009,
-      "sha256": "5a14b714ca9848752a65b4a5c4f03a75382976dbbc2846872bcdf581b74dbcfa"
+      "bytes": 6237877,
+      "sha256": "6251caf865afd7c4642aadd36a61eb4fdd824ea8878658c16d418be38c04e85f"
     },
     "battlefield-motion.mp4": {
-      "bytes": 49894520,
-      "sha256": "6f1003950cbbeba8bc1a6668f8aaefa86fd915ef81a3c1fb80ac9e6f05c3891e",
+      "bytes": 49480750,
+      "sha256": "17396ca45cc9254949ab1937988ff7560b0b6e3a268982ef9fbd8099e4fdeb79",
       "streams": [
         {
           "codec_name": "h264",
@@ -2879,8 +3043,8 @@
       ]
     },
     "before-after.mp4": {
-      "bytes": 3633383,
-      "sha256": "dc46e19f8dd972bc8a10509a99c6d61309afcff301a6775233bda509040df6bc",
+      "bytes": 3637217,
+      "sha256": "ecc9d3a60d0208892cbb957a6b245fbf4550ba2a6b56bef71d1bdce7d365fda1",
       "streams": [
         {
           "codec_name": "h264",
@@ -2893,8 +3057,8 @@
       ]
     },
     "footwork-pair.mp4": {
-      "bytes": 5957756,
-      "sha256": "8ffb81c5adbcb5ee578f2e746e6396390e50212675b00e74e28876184195827c",
+      "bytes": 5989737,
+      "sha256": "f132519dd3c078f1932bd49176e7cd273378d70ec357f4e9d70446ba642d8440",
       "streams": [
         {
           "codec_name": "h264",
@@ -2914,8 +3078,8 @@
       ]
     },
     "nine-weapons.mp4": {
-      "bytes": 845497,
-      "sha256": "fea65af2e707ad9e0097a1fd27bf013373a21ebded6bff9dfddcc2d2d7a9960b",
+      "bytes": 1006299,
+      "sha256": "f948470527458a3d690d84960ae6edc4a1d9e4a06063b4577d93212735e0fe87",
       "streams": [
         {
           "codec_name": "h264",
@@ -2928,8 +3092,8 @@
       ]
     },
     "playthrough.mp4": {
-      "bytes": 23521501,
-      "sha256": "085b3f98ed877b7696c382465033885ff87f46ea371f918c569f3d03949d1e87",
+      "bytes": 23388507,
+      "sha256": "a17499ad8cdaecd6a624ea6d3396468b2a08f7000fc70d887c74c186a03c4d25",
       "streams": [
         {
           "codec_name": "h264",
@@ -2969,16 +3133,16 @@
     "mean_db": -32.7
   },
   "microscope": {
-    "full_detail_median_render_ms": 780.996,
-    "full_detail_primitives": 3332666,
-    "optimized_median_render_ms": 252.499,
-    "optimized_primitives": 790900,
+    "full_detail_median_render_ms": 803.101,
+    "full_detail_primitives": 3401218,
+    "optimized_median_render_ms": 249.351,
+    "optimized_primitives": 818780,
     "per_side": 512,
     "poses": 10,
-    "previous_officer_detail_ms": 263.633,
-    "previous_officer_detail_primitives": 847040,
-    "previous_two_lods_median_ms": 297.756,
-    "previous_two_lods_primitives": 1007596,
+    "previous_officer_detail_ms": 261.108,
+    "previous_officer_detail_primitives": 873350,
+    "previous_two_lods_median_ms": 300.608,
+    "previous_two_lods_primitives": 1057506,
     "visible_soldiers_last": 488
   },
   "natural_siege": {
@@ -3109,7 +3273,7 @@
     "soldiers_per_side": 512,
     "tick": 1000
   },
-  "tested_build_sha": "b0f44c491fb47634539e73571cabf2c73519575b",
+  "tested_build_sha": "f8129247cffe207f6fa0575e0cab3851662e5b96",
   "art_status": "ART_REVIEW_REQUIRED",
   "reference_art": "ART_DIRECTION_REJECTED",
   "long_film_streams": [
@@ -3440,5 +3604,827 @@
       "tick": 700
     }
   },
-  "alternate_endings": []
+  "alternate_endings": [],
+  "fractional_foot_motion": {
+    "source_url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43270239615",
+    "baseline": "6e36e8f69526f2caf25501da5a777f63484f3162",
+    "filtered": "ace497bed03f932b855dc2e01499c1563b5788ed",
+    "metrics": "max range of planted shoe position including 16 subframes per authored key in 16 gait headings, PNG decoding; paired software GPU samples 1280x800",
+    "foot": [
+      {
+        "sampling": "nearest",
+        "peak_metres": 0.079089,
+        "eight_walk_then_eight_run": [
+          0.05177,
+          0.05167,
+          0.05168,
+          0.05167,
+          0.05168,
+          0.05167,
+          0.05168,
+          0.05173,
+          0.07909,
+          0.07905,
+          0.07909,
+          0.07905,
+          0.07909,
+          0.07905,
+          0.07909,
+          0.07905
+        ]
+      },
+      {
+        "sampling": "filtered",
+        "peak_metres": 0.000765,
+        "eight_walk_then_eight_run": [
+          0.00053,
+          0.00047,
+          0.00014,
+          0.00023,
+          0.0002,
+          0.00024,
+          0.00018,
+          0.0005,
+          0.00029,
+          0.00036,
+          0.00021,
+          0.00069,
+          0.00077,
+          0.00069,
+          0.00021,
+          0.00036
+        ]
+      }
+    ],
+    "render": {
+      "before": [
+        {
+          "camera_size": 26,
+          "case": "line",
+          "dead": [
+            35,
+            78
+          ],
+          "draws": 164,
+          "hits": [
+            332,
+            174
+          ],
+          "memory_bytes": 72535257,
+          "p50_ms": 221.748,
+          "p95_ms": 228.18,
+          "p99_ms": 229.115,
+          "per_side": 512,
+          "render_cpu95_ms": 217.149002075195,
+          "render_gpu95_ms": 217.757995605469,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 94,
+          "triangles": 751696,
+          "visible": 461
+        },
+        {
+          "camera_size": 12,
+          "case": "melee",
+          "dead": [
+            71,
+            111
+          ],
+          "draws": 137,
+          "hits": [
+            474,
+            307
+          ],
+          "memory_bytes": 72551514,
+          "p50_ms": 267.533,
+          "p95_ms": 275.597,
+          "p99_ms": 276.379,
+          "per_side": 512,
+          "render_cpu95_ms": 267.406005859375,
+          "render_gpu95_ms": 268.054992675781,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 144,
+          "triangles": 1014808,
+          "visible": 283
+        },
+        {
+          "camera_size": 27,
+          "case": "gate",
+          "dead": [
+            186,
+            219
+          ],
+          "draws": 137,
+          "hits": [
+            975,
+            762
+          ],
+          "memory_bytes": 72487414,
+          "p50_ms": 203.589,
+          "p95_ms": 209.858,
+          "p99_ms": 212.301,
+          "per_side": 512,
+          "render_cpu95_ms": 198.580001831055,
+          "render_gpu95_ms": 199.203002929688,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 539,
+          "triangles": 868832,
+          "visible": 394
+        },
+        {
+          "camera_size": 50,
+          "case": "pan",
+          "dead": [
+            192,
+            225
+          ],
+          "draws": 176,
+          "hits": [
+            1007,
+            791
+          ],
+          "memory_bytes": 72545459,
+          "p50_ms": 188.963,
+          "p95_ms": 201.465,
+          "p99_ms": 203.63,
+          "per_side": 512,
+          "render_cpu95_ms": 194.281005859375,
+          "render_gpu95_ms": 194.889999389648,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 604,
+          "triangles": 677186,
+          "visible": 563
+        }
+      ],
+      "after": [
+        {
+          "camera_size": 26,
+          "case": "line",
+          "dead": [
+            35,
+            78
+          ],
+          "draws": 164,
+          "hits": [
+            332,
+            174
+          ],
+          "memory_bytes": 72536481,
+          "p50_ms": 222.772,
+          "p95_ms": 231.393,
+          "p99_ms": 232.404,
+          "per_side": 512,
+          "render_cpu95_ms": 218.774002075195,
+          "render_gpu95_ms": 219.296997070312,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 94,
+          "triangles": 751696,
+          "visible": 461
+        },
+        {
+          "camera_size": 12,
+          "case": "melee",
+          "dead": [
+            71,
+            111
+          ],
+          "draws": 137,
+          "hits": [
+            474,
+            307
+          ],
+          "memory_bytes": 72552738,
+          "p50_ms": 271.767,
+          "p95_ms": 277.33,
+          "p99_ms": 278.391,
+          "per_side": 512,
+          "render_cpu95_ms": 270.299987792969,
+          "render_gpu95_ms": 270.941009521484,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 144,
+          "triangles": 1014808,
+          "visible": 283
+        },
+        {
+          "camera_size": 27,
+          "case": "gate",
+          "dead": [
+            186,
+            219
+          ],
+          "draws": 137,
+          "hits": [
+            975,
+            762
+          ],
+          "memory_bytes": 72488638,
+          "p50_ms": 205.596,
+          "p95_ms": 209.836,
+          "p99_ms": 209.883,
+          "per_side": 512,
+          "render_cpu95_ms": 201.005996704102,
+          "render_gpu95_ms": 201.630004882812,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 539,
+          "triangles": 868832,
+          "visible": 394
+        },
+        {
+          "camera_size": 50,
+          "case": "pan",
+          "dead": [
+            192,
+            225
+          ],
+          "draws": 176,
+          "hits": [
+            1007,
+            791
+          ],
+          "memory_bytes": 72546683,
+          "p50_ms": 188.496,
+          "p95_ms": 203.511,
+          "p99_ms": 205.055,
+          "per_side": 512,
+          "render_cpu95_ms": 198.419006347656,
+          "render_gpu95_ms": 198.376007080078,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 604,
+          "triangles": 677186,
+          "visible": 563
+        }
+      ]
+    }
+  },
+  "willow_cost": {
+    "run": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43274207432",
+    "full_resolution": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43274207432/artifacts/13968714450",
+    "source": "3a0a0d3099409cb6b5e7128f32a31fde2b4ad4a1",
+    "baseline": "314b9dee2f16fa43851783132dc25e915d00f182",
+    "metrics": "同一台托管 llvmpipe 的 56 帧窗口对比，原始间隔见来源",
+    "window": [
+      1280,
+      800
+    ],
+    "source_evidence": "https://github.com/haohongfei2001-png/luanshi-game/blob/97698f8d614f0f292aaf921888783afcab22118a/artifacts/willow-review/record.json",
+    "fields": [
+      "source_sha",
+      "before_sha",
+      "harness_sha",
+      "run",
+      "full_resolution",
+      "original_viewport",
+      "preview",
+      "seed",
+      "units",
+      "images",
+      "frames",
+      "samples"
+    ],
+    "samples": [
+      {
+        "draw_frames": [
+          143.284,
+          137.528,
+          137.056,
+          135.348,
+          135.78,
+          134.514,
+          136.14,
+          136.9,
+          134.833,
+          133.983,
+          136.249,
+          133.874,
+          134.314,
+          135.649,
+          132.839,
+          134.223,
+          134.174,
+          135.204,
+          131.665,
+          131.973,
+          132.573,
+          132.844,
+          132.475,
+          134.019,
+          134.898,
+          133.02,
+          133.106,
+          130.367,
+          131.605,
+          131.2,
+          134.041,
+          129.739,
+          130.069,
+          130.518,
+          130.766,
+          128.954,
+          131.803,
+          131.282,
+          136.698,
+          132.601,
+          136.896,
+          132.955,
+          130.055,
+          131.523,
+          132.271,
+          132.345,
+          137.843,
+          130.621,
+          130.844,
+          132.37,
+          131.819,
+          134.301,
+          135.907,
+          132.226,
+          129.92,
+          130.008
+        ],
+        "hits": [
+          448,
+          271
+        ],
+        "label": "ford",
+        "ordinary": [
+          512,
+          512
+        ],
+        "p50_ms": 132.955,
+        "p95_ms": 137.528,
+        "p99_ms": 143.284,
+        "tick": 129,
+        "window": [
+          1280,
+          800
+        ]
+      },
+      {
+        "draw_frames": [
+          234.48,
+          233.02,
+          241.093,
+          235.73,
+          238.386,
+          234.587,
+          235.181,
+          239.183,
+          245.72,
+          238.752,
+          234.892,
+          239.643,
+          234.424,
+          234.376,
+          237.262,
+          237.978,
+          233.611,
+          234.119,
+          237.359,
+          233.026,
+          239.488,
+          240.482,
+          240.991,
+          240.406,
+          240.7,
+          243.63,
+          240.777,
+          239.06,
+          250.22,
+          240.633,
+          242.013,
+          242.6,
+          246.277,
+          246.486,
+          256.902,
+          243.053,
+          241.552,
+          249.42,
+          244.647,
+          257.997,
+          254.291,
+          257.761,
+          252.481,
+          256.91,
+          279.479,
+          270.612,
+          270.792,
+          256.042,
+          261.468,
+          259.226,
+          270.365,
+          258.892,
+          260.121,
+          258.546,
+          257.291,
+          258.746
+        ],
+        "hits": [
+          655,
+          458
+        ],
+        "label": "field",
+        "ordinary": [
+          512,
+          512
+        ],
+        "p50_ms": 242.013,
+        "p95_ms": 270.612,
+        "p99_ms": 279.479,
+        "tick": 193,
+        "window": [
+          1280,
+          800
+        ]
+      },
+      {
+        "draw_frames": [
+          155.703,
+          156.531,
+          155.303,
+          158.953,
+          154.518,
+          155.178,
+          154.771,
+          151.842,
+          153.58,
+          151.809,
+          157.482,
+          152.981,
+          151.698,
+          154.588,
+          154.728,
+          154.208,
+          157.37,
+          154.595,
+          152.2,
+          150.922,
+          153.995,
+          152.375,
+          151.781,
+          154.512,
+          153.771,
+          149.347,
+          154.756,
+          149.495,
+          148.831,
+          151.801,
+          149.85,
+          150.7,
+          149.97,
+          149.69,
+          148.666,
+          150.602,
+          154.988,
+          147.949,
+          149.231,
+          149.362,
+          150.212,
+          151.576,
+          152.226,
+          155.019,
+          149.328,
+          152.21,
+          155.742,
+          152.581,
+          151.746,
+          150.553,
+          155.825,
+          149.912,
+          150.091,
+          151.422,
+          150.48,
+          150.077
+        ],
+        "hits": [
+          448,
+          271
+        ],
+        "label": "ford",
+        "ordinary": [
+          512,
+          512
+        ],
+        "p50_ms": 152.2,
+        "p95_ms": 157.37,
+        "p99_ms": 158.953,
+        "tick": 129,
+        "window": [
+          1280,
+          800
+        ]
+      },
+      {
+        "draw_frames": [
+          248.246,
+          244.964,
+          248.684,
+          245.796,
+          252.592,
+          245.899,
+          247.05,
+          245.322,
+          245.766,
+          245.19,
+          246.712,
+          245.457,
+          248.998,
+          246.247,
+          246.63,
+          244.857,
+          251.735,
+          244.004,
+          245.704,
+          247.195,
+          254.45,
+          249.931,
+          250.472,
+          245.917,
+          251.43,
+          260.032,
+          255.541,
+          250.73,
+          258.554,
+          249.007,
+          250.062,
+          249.276,
+          256.547,
+          255.066,
+          252.906,
+          249.975,
+          253.812,
+          251.778,
+          249.638,
+          254.103,
+          251.715,
+          252.675,
+          258.969,
+          261.103,
+          267.331,
+          247.507,
+          270.039,
+          266.12,
+          258.355,
+          256.773,
+          252.899,
+          254.159,
+          257.911,
+          256.109,
+          255.104,
+          254.981
+        ],
+        "hits": [
+          655,
+          458
+        ],
+        "label": "field",
+        "ordinary": [
+          512,
+          512
+        ],
+        "p50_ms": 251.43,
+        "p95_ms": 266.12,
+        "p99_ms": 270.039,
+        "tick": 193,
+        "window": [
+          1280,
+          800
+        ]
+      }
+    ]
+  },
+  "garment_cost": {
+    "run": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43274354516",
+    "before": "6e36e8f69526f2caf25501da5a777f63484f3162",
+    "after": "100946c76df142e08a5ac4e97b735309ba33b8ca",
+    "settings": "1280x800 same cloud software GPU, commit pair in the same job; four 32-frame windows",
+    "frames": {
+      "before": [
+        {
+          "camera_size": 26,
+          "case": "line",
+          "dead": [
+            35,
+            78
+          ],
+          "draws": 164,
+          "hits": [
+            332,
+            174
+          ],
+          "memory_bytes": 72535233,
+          "p50_ms": 126.721,
+          "p95_ms": 135.287,
+          "p99_ms": 139.568,
+          "per_side": 512,
+          "render_cpu95_ms": 98.7180023193359,
+          "render_gpu95_ms": 128.800003051758,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 94,
+          "triangles": 751696,
+          "visible": 461
+        },
+        {
+          "camera_size": 12,
+          "case": "melee",
+          "dead": [
+            71,
+            111
+          ],
+          "draws": 137,
+          "hits": [
+            474,
+            307
+          ],
+          "memory_bytes": 72551490,
+          "p50_ms": 152.065,
+          "p95_ms": 155.461,
+          "p99_ms": 156.097,
+          "per_side": 512,
+          "render_cpu95_ms": 150.223999023438,
+          "render_gpu95_ms": 150.578002929688,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 144,
+          "triangles": 1014808,
+          "visible": 283
+        },
+        {
+          "camera_size": 27,
+          "case": "gate",
+          "dead": [
+            186,
+            219
+          ],
+          "draws": 137,
+          "hits": [
+            975,
+            762
+          ],
+          "memory_bytes": 72487390,
+          "p50_ms": 116.415,
+          "p95_ms": 119.539,
+          "p99_ms": 123.513,
+          "per_side": 512,
+          "render_cpu95_ms": 112.819000244141,
+          "render_gpu95_ms": 113.227996826172,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 539,
+          "triangles": 868832,
+          "visible": 394
+        },
+        {
+          "camera_size": 50,
+          "case": "pan",
+          "dead": [
+            192,
+            225
+          ],
+          "draws": 176,
+          "hits": [
+            1007,
+            791
+          ],
+          "memory_bytes": 72545435,
+          "p50_ms": 107.848,
+          "p95_ms": 115.452,
+          "p99_ms": 116.693,
+          "per_side": 512,
+          "render_cpu95_ms": 111.450996398926,
+          "render_gpu95_ms": 111.761001586914,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 604,
+          "triangles": 677186,
+          "visible": 563
+        }
+      ],
+      "after": [
+        {
+          "camera_size": 26,
+          "case": "line",
+          "dead": [
+            35,
+            78
+          ],
+          "draws": 164,
+          "hits": [
+            332,
+            174
+          ],
+          "memory_bytes": 72551303,
+          "p50_ms": 132.631,
+          "p95_ms": 177.258,
+          "p99_ms": 197.562,
+          "per_side": 512,
+          "render_cpu95_ms": 170.712997436523,
+          "render_gpu95_ms": 171.055999755859,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 94,
+          "triangles": 764488,
+          "visible": 461
+        },
+        {
+          "camera_size": 12,
+          "case": "melee",
+          "dead": [
+            71,
+            111
+          ],
+          "draws": 137,
+          "hits": [
+            474,
+            307
+          ],
+          "memory_bytes": 72567560,
+          "p50_ms": 170.043,
+          "p95_ms": 175.718,
+          "p99_ms": 175.737,
+          "per_side": 512,
+          "render_cpu95_ms": 170.462997436523,
+          "render_gpu95_ms": 170.798004150391,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 144,
+          "triangles": 1034439,
+          "visible": 283
+        },
+        {
+          "camera_size": 27,
+          "case": "gate",
+          "dead": [
+            186,
+            219
+          ],
+          "draws": 137,
+          "hits": [
+            975,
+            762
+          ],
+          "memory_bytes": 72503460,
+          "p50_ms": 122.666,
+          "p95_ms": 128.088,
+          "p99_ms": 128.373,
+          "per_side": 512,
+          "render_cpu95_ms": 122.323997497559,
+          "render_gpu95_ms": 122.662002563477,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 539,
+          "triangles": 869768,
+          "visible": 394
+        },
+        {
+          "camera_size": 50,
+          "case": "pan",
+          "dead": [
+            192,
+            225
+          ],
+          "draws": 176,
+          "hits": [
+            1007,
+            791
+          ],
+          "memory_bytes": 72561505,
+          "p50_ms": 110.555,
+          "p95_ms": 122.88,
+          "p99_ms": 123.897,
+          "per_side": 512,
+          "render_cpu95_ms": 115.86499786377,
+          "render_gpu95_ms": 116.206001281738,
+          "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+          "samples": 32,
+          "seed": 61112,
+          "tick": 604,
+          "triangles": 674898,
+          "visible": 563
+        }
+      ]
+    }
+  }
 }

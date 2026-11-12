@@ -6,9 +6,9 @@ OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Usi
 Movie Maker mode enabled, recording movie in 1280×800 @ 30 FPS...
 FIELD_MOTION_RECEIPT {"actions_seen":[0,1,2],"distance_m":19.4658599495888,"end_tick":80,"errors":[],"hero_hits":1,"hero_hp":0.0,"hero_received":5,"move_directions":[-2,2,0,4],"ordinary":[512,512],"seed":61112,"start_tick":2,"view_size":10.2415046691895}
 --------------------------------------------------------------------------------
-Done recording movie at path: /tmp/tmp.e44DWy8zvS/after-motion.avi
-125 frames at 30 FPS (movie length: 00:00:04:05), recorded in 00:00:39 (10% of real-time speed).
-CPU render time: 29.82 seconds (average: 238.59 ms/frame)
-GPU render time: 30.06 seconds (average: 240.45 ms/frame)
-Encoding time: 2.42 seconds (average: 19.33 ms/frame)
+Done recording movie at path: /tmp/tmp.tcrSKR8tSb/after-motion.avi
+125 frames at 30 FPS (movie length: 00:00:04:05), recorded in 00:00:41 (9% of real-time speed).
+CPU render time: 32.39 seconds (average: 259.10 ms/frame)
+GPU render time: 32.62 seconds (average: 260.96 ms/frame)
+Encoding time: 2.38 seconds (average: 19.00 ms/frame)
 --------------------------------------------------------------------------------
