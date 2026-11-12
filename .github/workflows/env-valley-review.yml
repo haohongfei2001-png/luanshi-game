@@ -33,7 +33,7 @@ jobs:
           rows=json.loads((root/'frames.json').read_text())
           assert all(r['ordinary']==[512,512] and r['window']==[1280,800] and r['internal_scale']==1 and r['shadows'] for r in rows)
           for name in ['ranks','gate','hero','ford','camp','formation']:
-              d=(root/(name+'.jpg')).read_bytes()
+              d=(root/(name+'-view.jpg')).read_bytes()
               wire=base64.b64encode(d).decode()
               for i in range(0,len(wire),20000):
                   print('RIVER_PAINT_JPEG',name,i//20000,wire[i:i+20000])

@@ -11,6 +11,10 @@ varying float part;
 varying vec3 pigment;
 
 void vertex() {
+	if(UV2.x>14.5 && UV2.x<15.5) {
+		float loose=clamp((6.18-VERTEX.y)/1.7,0.0,1.0);
+		VERTEX.x+=loose*.10*sin(TIME*2.2+VERTEX.z*1.9);
+	}
 	local_pos=VERTEX;
 	local_normal=NORMAL;
 	part=UV2.x;
@@ -28,10 +32,11 @@ void fragment() {
 		// world space. Fine surface marks disappear into mipmaps at army scale.
 		vec3 underpaint=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
 		float dry=smoothstep(-0.015,0.023,underpaint.r-underpaint.g);
-		vec3 grass=texture(fieldbed,p*vec2(0.126,0.171)).rgb;
+		vec3 grass=texture(fieldbed,p*vec2(.155,.199)).rgb;
+		vec3 close_marks=texture(fieldbed,p*vec2(.48,.58)+vec2(.12,.32)).rgb;
 		vec3 grain=texture(fieldbed,p*vec2(0.213,0.261)+vec2(.57,.26)).rgb;
-		float turf_value=.82+.33*grass.g+.14*grass.r;
-		float path_value=.87+.20*grain.r+.080*smoothstep(.55,.80,grain.b);
+		float turf_value=.86+.22*grass.g+.12*grass.r+.12*(close_marks.g-.44);
+		float path_value=.85+.17*grain.r+.105*close_marks.r+.070*smoothstep(.55,.80,close_marks.b);
 		color=underpaint*mix(turf_value,path_value,dry);
 	} else if (part>1.5 && part<2.5) {
 		float bank=abs(p.x+32.0);
@@ -75,8 +80,10 @@ void fragment() {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;
 		} else if (part>12.5 && part<13.5) {
-			float reeds=texture(fieldbed,p*.37).g;
-			color*=.86+.22*reeds;
+			vec3 flecks=texture(fieldbed,p*.37).rgb;
+			float dry_edge=smoothstep(4.55,6.02,abs(p.x+32.0));
+			vec3 shore=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
+			color=mix(shallows.rgb*.79+vec3(.022,.017,.008)*flecks.b,shore,dry_edge)*(.88+.23*flecks.r);
 		}
 	}
 	ALBEDO=color;

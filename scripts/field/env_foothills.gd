@@ -3,9 +3,10 @@ extends RefCounted
 const Ground := preload("res://scripts/field/ground.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const PLAN := preload("res://assets/environment/foothills.json")
-const BARK := Color("6b6651")
-const LIMESTONE := Color("7e8880")
-const TOP := Color("a0a28c")
+const STANDS := preload("res://assets/environment/stand-placements.json")
+const BARK := Color("605d49")
+const LIMESTONE := Color("64716a")
+const TOP := Color("818a78")
 var cells: Dictionary={}
 var leaf_material:=ShaderMaterial.new()
 var ground_material: ShaderMaterial
@@ -51,41 +52,84 @@ func _spray(patch: Patch,base: Vector3,tip: Vector3,side: Vector3,tile: int,ligh
 		patch.leaves.add_vertex(points[i])
 	patch.sprays+=1
 
+# Each profile describes a branching crown in local tree heights. The crown
+# forks intentionally differ in height, reach and width within the same tree.
+const CROWNS := [
+	[Vector4(-.20,.63,.03,.25),Vector4(.16,.70,-.12,.24),Vector4(.05,.79,.18,.22),Vector4(-.06,.85,-.02,.207),Vector4(.25,.63,.12,.16)],
+	[Vector4(-.22,.58,.11,.203),Vector4(.20,.65,-.14,.223),Vector4(.02,.70,.23,.207),Vector4(-.09,.79,-.16,.223),Vector4(.09,.90,.03,.182),Vector4(.28,.74,.09,.14)],
+	[Vector4(-.06,.48,.02,.17),Vector4(.10,.61,-.05,.163),Vector4(-.08,.72,.10,.156),Vector4(.04,.82,-.03,.148),Vector4(-.02,.93,.01,.112)]
+]
+
+func _canopy_vertex(surface: SurfaceTool,point: Vector3,normal: Vector3,grade: float,kind: int) -> void:
+	surface.set_normal(normal)
+	surface.set_color(Color(clampf(grade,0.03,0.98),float(kind)*0.5,0.0))
+	surface.set_uv(Vector2(point.x*1.4+point.z*.51,point.y*1.63+point.z*.57))
+	surface.set_uv2(Vector2(0.21,1.0))
+	surface.add_vertex(point)
+
+func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation: float) -> void:
+	var widths: Array[float]=[0.13,0.76,1.0,0.76,0.17]
+	var levels: Array[float]=[-0.72,-0.43,0.03,0.65,0.94]
+	var points: Array[Vector3]=[]
+	var normals: Array[Vector3]=[]
+	var grades: Array[float]=[]
+	var sides:=9
+	for ring in levels.size():
+		for i in sides:
+			var a:=rotation+TAU*i/sides+0.089*sin(i*1.7+ring)
+			var n:=Vector3(cos(a),0.0,sin(a))
+			var width:=radius*widths[ring]*(1.0+0.115*sin(a*3.0+rotation)+0.075*cos(a*5.0+ring))
+			points.append(p+n*width+Vector3.UP*tall*(levels[ring]+0.046*cos(a*2.0+rotation)))
+			normals.append((n*(0.48+widths[ring]*0.42)+Vector3.UP*(levels[ring]+0.23)*1.22).normalized())
+			grades.append(0.16+ring*0.165+sin(a*3.0+ring)*0.046)
+	for ring in range(levels.size()-1):
+		for i in sides:
+			var j:=(i+1)%sides
+			var low:=ring*sides
+			var up:=low+sides
+			for index:int in [low+i,up+i,low+j,low+j,up+i,up+j]:
+				_canopy_vertex(patch.leaves,points[index],normals[index],grades[index],kind)
+	for i in sides:
+		var last:=(levels.size()-1)*sides
+		_canopy_vertex(patch.leaves,points[last+i],normals[last+i],grades[last+i],kind)
+		_canopy_vertex(patch.leaves,p+Vector3.UP*tall*0.97,Vector3.UP,0.88,kind)
+		_canopy_vertex(patch.leaves,points[last+(i+1)%sides],normals[last+(i+1)%sides],0.84,kind)
+	patch.sprays+=1
+
 func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
-	var at:=ground_point(p)
-	var rot:=rng.randf_range(0.0,TAU)
-	var tilt:=Vector3(cos(rot),0,sin(rot))*h*(0.15 if kind==0 else 0.072)
-	var root:=at+Vector3.UP*h*0.04
-	var fork:=at+tilt*0.46+Vector3.UP*h*0.39
-	var leader:=at+tilt+Vector3.UP*h*0.94
+	var foot:=ground_point(p)
+	var spin:=rng.randf_range(0.0,TAU)
+	var turn:=Basis(Vector3.UP,spin)
+	var bend:=turn*Vector3(0.08,0.0,-0.045)*h
+	var fork:=foot+Vector3.UP*h*0.37+bend
 	patch.stone.joint=11
 	for i in 4:
-		var a:=rot+i*TAU/4
-		var toe:=at+Vector3(cos(a),0,sin(a))*h*rng.randf_range(0.09,0.14)
-		patch.stone.rod(toe,fork.lerp(root,0.74),h*0.014,h*0.051,BARK,5)
-	patch.stone.rod(root,fork,h*0.069,h*0.048,BARK,7)
-	patch.stone.rod(fork,leader,h*0.049,h*0.010,BARK.lightened(0.065),6)
+		var a:=spin+i*TAU/4.0+rng.randf_range(-0.3,0.32)
+		var toe:=foot+Vector3(cos(a),0,sin(a))*h*rng.randf_range(.07,.113)
+		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,5)
+	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,7)
 	var tile:=1 if kind==0 else 0 if kind==1 else 3
-	for tier in 3:
-		var count:=7-tier
-		var branch_root:=fork.lerp(leader,[0.0,0.37,0.69][tier])
-		for i in count:
-			var angle:=rot+tier*1.77+TAU*i/count+rng.randf_range(-0.16,0.16)
-			var dir:=Vector3(cos(angle),0,sin(angle))
-			var reach:float=h*[0.37,0.31,0.18][tier]*rng.randf_range(0.82,1.16)
-			var elbow:Vector3=branch_root+dir*reach*0.58+Vector3.UP*h*0.10
-			var end:Vector3=branch_root+dir*reach+Vector3.UP*h*(0.16 if kind==0 else 0.22)
-			patch.stone.rod(branch_root,elbow,h*0.027,h*0.017,BARK,5)
-			patch.stone.rod(elbow,end,h*0.017,h*0.008,BARK.lightened(0.06),5)
-			for s in 4:
-				var a:=angle+(s-1.5)*0.79
-				var spread:=Vector3(cos(a),0,sin(a))
-				var start:=end.lerp(elbow,0.38 if s in [0,3] else 0.17)
-				var width:=h*(0.13 if kind==0 else 0.154)*rng.randf_range(0.82,1.20)
-				var outer:=start+spread*h*(0.12 if kind==0 else 0.20)
-				outer.y+=h*(rng.randf_range(-0.33,-0.23) if kind==0 else rng.randf_range(0.055,0.17))
-				var across:=Vector3(-spread.z,0,spread.x)*width
-				_spray(patch,start,outer,across,tile,0.42+tier*0.12+rng.randf()*0.17)
+	for index in CROWNS[kind].size():
+		var knot:Vector4=CROWNS[kind][index]
+		var center:=foot+turn*Vector3(knot.x,knot.y,knot.z)*h+bend*0.37
+		var elbow:=fork.lerp(center,0.63)+turn*Vector3(.028,.005,-.031)*h
+		var radius:=knot.w*h*rng.randf_range(.91,1.07)
+		var base:=fork.lerp(foot,0.13 if index<2 else 0.0)
+		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,6)
+		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),5)
+		var tall:=radius*(1.18 if kind==2 else 0.87 if kind==1 else 0.76)
+		_lobe(patch,center,radius,tall,kind,spin+index*1.94)
+		# Sparse real sprays soften the outline. The light and dark crown volumes
+		# carry the silhouette, including on distant trees and after rotation.
+		var sprays:=8 if kind==0 else 5
+		for j in sprays:
+			var a:=spin+index*.93+j*TAU/sprays+rng.randf_range(-.27,.27)
+			var radial:=Vector3(cos(a),0,sin(a))
+			var start:=center+radial*radius*.68+Vector3.UP*tall*rng.randf_range(-.14,.45)
+			var end:=start+radial*radius*(.51 if kind==0 else .59)
+			end.y+=radius*(rng.randf_range(-1.24,-.65) if kind==0 else rng.randf_range(-.28,.41))
+			var across:=Vector3(-radial.z,0,radial.x)*radius*(.43 if kind==0 else .46)
+			_spray(patch,start,end,across,tile,rng.randf_range(.46,.82))
 
 func _bake_trees() -> void:
 	# SurfaceTool appends transformed prototype vertices in native code. All trees
@@ -96,9 +140,9 @@ func _bake_trees() -> void:
 			_tree(prototype,Vector2.ZERO,1.0,kind)
 			trees.append({"wood":prototype.stone.surface.commit(),"leaves":prototype.leaves.commit()})
 
-func _plant(patch: Patch,p: Vector2,height: float,kind: int) -> void:
-	var source:=trees[2*kind+rng.randi_range(0,1)]
-	var basis:=Basis(Vector3.UP,rng.randf_range(0.0,TAU)).scaled(Vector3.ONE*height)
+func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: float) -> void:
+	var source:=trees[2*kind+variant]
+	var basis:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*height)
 	var placement:=Transform3D(basis,ground_point(p))
 	patch.stone.surface.append_from(source.wood,0,placement)
 	patch.leaves.append_from(source.leaves,0,placement)
@@ -122,7 +166,7 @@ func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: 
 	var ledge: Array[Vector3]=[]
 	var capstone: Array[Vector3]=[]
 	for v in ring:
-		var footprint:=side*v.x*length+across*v.y*width
+		var footprint:=(side*v.x*length+across*v.y*width)*rng.randf_range(0.88,1.11)
 		var q:=p+footprint
 		var base:=ground_point(q)
 		var relief:=height*(0.80+0.18*v.y+rng.randf_range(-0.07,0.07))
@@ -133,24 +177,24 @@ func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: 
 	var middle:=ground_point(p+side*length*0.17)
 	middle.y+=minf(height*1.02,0.21) if walkable else height*1.02
 	patch.stone.joint=12
-	var palette:=rng.randf_range(-0.06,0.045)
+	var palette:=rng.randf_range(-0.08,0.04)
+	var paving:=height<0.08
+	var cap_tone:=Color("85806f") if paving else TOP
+	var face_tone:=Color("726d5e") if paving else LIMESTONE
 	for i in ring.size():
 		var j:=(i+1)%ring.size()
-		var face:=LIMESTONE.lightened(palette+0.035*((i+1)%4))
+		var face:=face_tone.lightened(palette+0.035*((i+1)%4))
 		patch.stone.quad(low[i],ledge[i],ledge[j],low[j],face.darkened(0.20))
 		patch.stone.quad(ledge[i],capstone[i],capstone[j],ledge[j],face)
-		patch.stone.tri(capstone[j],capstone[i],middle,TOP.lightened(palette+0.025*(i%3)))
+		patch.stone.tri(capstone[j],capstone[i],middle,cap_tone.lightened(palette+0.025*(i%3)))
 
 func _stands(plan: Dictionary) -> void:
+	for place:Array in STANDS.data:
+		var p:=Vector2(float(place[0]),float(place[1]))
+		_plant(_cell(p),p,float(place[2]),int(place[3]),int(place[4]),float(place[5]))
 	for group:Array in plan.groves:
 		var center:=Vector2(float(group[0]),float(group[1]))
 		var radius:=float(group[2])
-		var count:=clampi(roundi(radius*0.78),2,8)
-		for i in count:
-			var a:=i*2.40+rng.randf_range(-0.28,0.28)
-			var p:=center+Vector2(cos(a),sin(a))*radius*sqrt((i+0.15)/count)*0.72
-			if absf(p.x-Ground.RIVER_X)<4.85: continue
-			_plant(_cell(p),p,float(group[3])*rng.randf_range(0.73,1.12),int(group[4]))
 		for i in roundi(radius*3):
 			var a:=rng.randf_range(0.0,TAU)
 			var p:=center+Vector2(cos(a),sin(a))*rng.randf_range(radius*0.55,radius*1.35)
@@ -181,15 +225,16 @@ func _pavers(plan: Dictionary) -> void:
 		# Remnants of the surfaced cart road become more continuous at the gatehouse.
 		for row in 5:
 			for column in 6:
-				if rng.randf()<(0.13 if p.x>30.0 else 0.57): continue
+				if rng.randf()<(0.09 if p.x>30.0 else 0.64): continue
 				var q:=p+Vector2((column-2.5+(row%2)*0.32)*extent/3.30,(row-2)*0.51)
 				q+=Vector2(rng.randf_range(-0.075,0.075),rng.randf_range(-0.055,0.055))
-				_shelf(_cell(q),q,rng.randf_range(0.35,0.64),rng.randf_range(0.31,0.52),rng.randf_range(0.027,0.063),rng.randf_range(-0.24,0.19),true)
+				_shelf(_cell(q),q,rng.randf_range(0.35,0.61),rng.randf_range(0.32,0.53),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
 
 func build(parent: Node3D,material: ShaderMaterial) -> void:
 	ground_material=material
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
+	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
 	rng.seed=64127
 	_bake_trees()
 	var plan:Dictionary=PLAN.data

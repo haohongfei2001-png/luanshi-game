@@ -55,6 +55,9 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 	await RenderingServer.frame_post_draw
 	var pic:=root.get_texture().get_image()
 	success=pic.save_jpg(directory+"/"+label+".jpg",.95)==OK and success
+	var preview:=pic.duplicate() as Image
+	preview.resize(896,560,Image.INTERPOLATE_LANCZOS)
+	success=preview.save_jpg(directory+"/"+label+"-view.jpg",0.82)==OK and success
 	var item:={"label":label,"kind":kind,"tick":b.tick,"center":[point.x,point.y],"yaw":yaw,"zoom":zoom,
 		"seed":Battle.SEED,"ordinary":Array(b.ordinary_counts),"officers":Array(b.command_counts),
 		"contact":[b.hits[0],b.hits[1]],"losses":[b.losses[0],b.losses[1]],"gate_hp":b.gate_hp,
@@ -105,7 +108,15 @@ func _run() -> void:
 	await _snap("ranks","line",51.0,-.576)
 	await _snap("contact","line",13.0,-.576)
 	await _snap("formation","line",26.0,-.576)
+	var start:=_target("line")
 	var initial_hits: int=b.hits[0]+b.hits[1]
+	for i in 80:
+		_advance(66+i*2)
+		var point:=start.lerp(_target("line"),.22*smoothstep(0,79,i))
+		_view(point,lerpf(13.0,22.0,smoothstep(0,79,i)),-.576)
+		await RenderingServer.frame_post_draw
+		var shot:=root.get_texture().get_image()
+		success=success and not shot.is_empty()
 	_advance(490)
 	await _snap("siege","ram",19.0,-.65)
 	await _snap("gate","gate",34.0,-.89)
