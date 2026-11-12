@@ -18,14 +18,30 @@ jobs:
           path: lab
       - uses: actions/checkout@v4
         with:
-          ref: 8e780c0c5fcd9fd59d343133381fe34b6a430d7a
+          ref: bad1814f3c905d321dae5ca142d27bd5a9ca5e4e
           path: game
       - name: Reproduce baked art and import with Godot 4.6.3
         working-directory: game
         shell: bash
         run: |
           set -euo pipefail
-          node tools/art/bake_mounts.mjs --check
+          if ! node tools/art/bake_mounts.mjs --check; then
+            mkdir -p "$RUNNER_TEMP/saddlery"
+            cp assets/art/mounts/mounts.bin "$RUNNER_TEMP/original.bin"
+            cp assets/art/mounts/mount-atlas.png "$RUNNER_TEMP/original.png"
+            node tools/art/bake_mounts.mjs
+            python3 - <<'PY'
+          from pathlib import Path
+          import json,os
+          d=Path(os.environ['RUNNER_TEMP'])
+          for name,fn in [('bin','mounts.bin'),('png','mount-atlas.png')]:
+              a=(d/('original.'+name)).read_bytes(); b=(Path('assets/art/mounts')/fn).read_bytes()
+              delta=[(i,y) for i,(x,y) in enumerate(zip(a,b)) if x!=y]
+              print('MOUNT_BAKE_DELTA',name,len(a),len(b),len(delta),json.dumps(delta[:100]))
+          (d/'saddlery/bake-failed').touch()
+          PY
+            git restore assets/art/mounts
+          fi
           curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/mount-editor.zip
           echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/mount-editor.zip' | sha512sum -c -
           unzip -q /tmp/mount-editor.zip -d /tmp/mount-editor
@@ -55,6 +71,7 @@ jobs:
               data=base64.b64encode(f.getvalue()).decode()
               for i in range(0,len(data),4096): print('MOUNT_JPEG',name,i,data[i:i+4096])
           PY
+          test ! -f "$TAIL_ART_OUT/bake-failed"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
