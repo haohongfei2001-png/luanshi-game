@@ -74,26 +74,30 @@ func _canopy_vertex(surface: SurfaceTool,point: Vector3,normal: Vector3,grade: f
 	surface.set_uv2(Vector2(clampf(grade,0.03,0.98),1.0+float(kind)*0.25))
 	surface.add_vertex(point)
 
+# A fork carries two or three overlapping clusters of leaves. Scalloped edges and
+# an offset high point show their direction even when a canopy frames a close fight.
 func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation: float) -> void:
-	var widths: Array[float]=[0.26,1.0,0.80,0.17]
-	var levels: Array[float]=[-0.66,-0.08,0.57,0.93]
+	var widths: Array[float]=[.52,1.0,.82,.33]
+	var levels: Array[float]=[-.46,-.04,.54,.85]
 	var points: Array[Vector3]=[]
 	var normals: Array[Vector3]=[]
 	var grades: Array[float]=[]
-	var sides:=8
+	var sides:=12 if kind==1 else 10
+	var sweep:=Vector3(cos(rotation),0,sin(rotation))
+	var side:=Vector3(-sweep.z,0,sweep.x)
 	for ring in levels.size():
 		for i in sides:
-			var a:=rotation+TAU*i/sides+0.089*sin(i*1.7+ring)
-			var n:=Vector3(cos(a),0.0,sin(a))
-			var width:=radius*widths[ring]*(1.0+0.15*sin(a*3.0+rotation)+0.085*cos(a*5.0+ring))
-			var sweep:=Vector3(cos(rotation),0,sin(rotation))
-			var side:=Vector3(-sweep.z,0,sweep.x)
-			var along:=n.dot(sweep)
-			var branch:=sweep*width*(along*1.32+.095)+side*width*n.dot(side)*.81
-			var lift:=tall*(levels[ring]*.81-.23*along+.071*cos(a*2.0+rotation))
+			var a:=TAU*i/sides+.045*sin(i*1.7+ring)
+			var across:=sin(a)
+			var along:=cos(a)
+			var notch:=.14 if i%3==1 else -.025
+			var taper:=1.0+.115*sin(a*3.0+rotation)-notch+.064*cos(a*5.0+.7)
+			var reach:=radius*widths[ring]*taper
+			var branch:=sweep*(reach*along*1.19+radius*.115*ring/3.0)+side*reach*across*.82
+			var lift:=tall*(levels[ring]-.18*along+.072*cos(a*2.0+rotation)-notch)
 			points.append(p+branch+Vector3.UP*lift)
-			normals.append((n*(0.48+widths[ring]*0.42)+Vector3.UP*(levels[ring]+0.23)*1.22).normalized())
-			grades.append(0.15+ring*0.23+sin(a*3.0+ring)*0.046)
+			normals.append(((sweep*along+side*across)*(.59+widths[ring]*.27)+Vector3.UP*(levels[ring]+.20)*1.23).normalized())
+			grades.append(.13+ring*.235+.054*sin(a*3.0+rotation))
 	for ring in range(levels.size()-1):
 		for i in sides:
 			var j:=(i+1)%sides
@@ -101,11 +105,12 @@ func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation:
 			var up:=low+sides
 			for index:int in [low+i,low+j,up+i,low+j,up+j,up+i]:
 				_canopy_vertex(patch.leaves,points[index],normals[index],grades[index],kind)
+	var centre:=p+sweep*radius*.16+Vector3.UP*tall*.91
+	var last:=(levels.size()-1)*sides
 	for i in sides:
-		var last:=(levels.size()-1)*sides
 		_canopy_vertex(patch.leaves,points[last+i],normals[last+i],grades[last+i],kind)
-		_canopy_vertex(patch.leaves,points[last+(i+1)%sides],normals[last+(i+1)%sides],0.84,kind)
-		_canopy_vertex(patch.leaves,p+Vector3.UP*tall*0.97,Vector3.UP,0.88,kind)
+		_canopy_vertex(patch.leaves,points[last+(i+1)%sides],normals[last+(i+1)%sides],.81,kind)
+		_canopy_vertex(patch.leaves,centre,Vector3.UP,.86,kind)
 	patch.sprays+=1
 
 func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
@@ -130,7 +135,13 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,5)
 		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),4)
 		var tall:=radius*(1.18 if kind==2 else 0.87 if kind==1 else 0.76)
-		_lobe(patch,center,radius,tall,kind,spin+index*1.94)
+		var heading:=spin+index*1.94
+		var limb:=Vector3(cos(heading),0,sin(heading))
+		var fork_side:=Vector3(-limb.z,0,limb.x)
+		_lobe(patch,center-limb*radius*.13,radius*.86,tall*.72,kind,heading+.18)
+		_lobe(patch,center+limb*radius*.43+Vector3.UP*tall*.27,radius*.63,tall*.61,kind,heading-.65)
+		if kind==1 and index%2==0:
+			_lobe(patch,center-fork_side*radius*.41-Vector3.UP*tall*.17,radius*.52,tall*.53,kind,heading+1.13)
 		# Sparse real sprays soften the outline. The light and dark crown volumes
 		# carry the silhouette, including on distant trees and after rotation.
 		var sprays:=8 if kind==0 else 5
@@ -293,6 +304,7 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
+	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
 	rng.seed=64127
 	_bake_trees()

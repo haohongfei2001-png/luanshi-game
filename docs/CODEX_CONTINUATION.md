@@ -12,6 +12,8 @@
 
 自审第一轮 15 对实机画面后，保留衣装明暗分层，重绘草地、碎石与道路交界。普通兵出征时的兵种、人数和军械按编制冻结，军官与玩家保留独立记录。运行 `godot --headless --path . --script tests/field_cohort_muster.gd` 可核对两种记录的实测大小、1,024 至 10,000 普通兵的 24 步模拟与战后结算。每帧图形性能另行实测。
 
+4621944adf8e30dda2516b4291e7a0ceebc011d7 的分队军籍已在托管 Godot 实测，1,024 普通兵的两种序列化记录为 106,512 / 5,832 字节，10,000 人为 1,039,056 / 54,336 字节。万人档 24 步 P95 为 248.632 ms。普通兵仍为独立活动角色。根据玩家镜头自审，近景硬叶树冠出现完整椭球，现由两至三组不等的叶群和原创叶簇色罩构成，水边柳树独立保留。空间查询同步用真实战场的每兵目标、分离力、击中和完整存档做同机成对对照。
+
 云端下一次复现：`git fetch origin main codex/river-gate-animation-rc6`，在干净工作树检出该分支，运行 `./tools/prepare-font.sh && ./tools/compare-river-art.sh`。完整回归入口为 `./tools/test-field-journey.sh && ./tools/test-field-render.sh`。美术实机自审、当前候选性能和整套 CI 以本次运行的记录更新，M5 真机 `NOT_RUN`。
 
 <!-- river-gate-current-review -->

@@ -3,6 +3,7 @@ render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D leaf_marks : filter_linear_mipmap, repeat_enable;
+uniform sampler2D canopy_paint : filter_linear_mipmap, repeat_enable;
 uniform vec4 deep_leaf : source_color = vec4(.15,.238,.216,1.0);
 uniform vec4 elm : source_color = vec4(.31,.401,.284,1.0);
 uniform vec4 sun_elm : source_color = vec4(.495,.565,.355,1.0);
@@ -37,15 +38,18 @@ void fragment() {
 		tone+=vec3(.010,.016,.011)*crest;
 		opacity=brush.a;
 	} else if(crown>.5) {
-		float marks=texture(leaf_marks,UV*0.85).g;
-		vec3 light=mix(sun_elm.rgb,sun_ash.rgb,smoothstep(.65,.95,paint.g));
-		vec3 mid=elm.rgb*mix(vec3(.88,1.0,.95),vec3(1.05,1.0,.84),paint.g);
-		float value=clamp(paint.r+(marks-.46)*.10,0.0,1.0);
-		tone=mix(deep_leaf.rgb,mid,smoothstep(.14,.42,value));
-		tone=mix(tone,light,smoothstep(.58,.81,value)*.87);
-		vec2 brush_uv=fract(UV*3.0)*.466+vec2(.017,.017);
-		vec4 brush=texture(ink,brush_uv);
-		tone=mix(tone,brush.rgb*(.71+.43*value),brush.a*(.07+.12*value));
+		vec3 leaf=texture(canopy_paint,UV*1.73).rgb;
+		vec3 sun=mix(sun_elm.rgb,sun_ash.rgb,smoothstep(.65,.95,paint.g));
+		vec3 mid=elm.rgb*mix(vec3(.88,1.,.95),vec3(1.05,1.,.84),paint.g);
+		float grade=clamp(paint.r+.065*leaf.r-.10*leaf.b,0.,1.);
+		float shade_band=smoothstep(.275,.40,grade);
+		float crown_band=smoothstep(.62,.75,grade);
+		tone=mix(deep_leaf.rgb,mid,shade_band);
+		tone=mix(tone,sun,crown_band*.84);
+		// One painterly shape crosses a few leaves. Mip filtering removes the
+		// small stems at formation distance without dissolving the crown outline.
+		tone*=1.-.21*leaf.b;
+		tone=mix(tone,sun,leaf.r*(.21+.25*crown_band));
 	} else {
 		vec4 glyph=texture(ink,UV);
 		float interior=mix(.55,.90,paint.r);

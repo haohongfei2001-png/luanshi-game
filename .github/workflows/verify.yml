@@ -35,6 +35,8 @@ jobs:
         env:
           XDG_DATA_HOME: /home/runner/.local/share
         run: timeout 5m ./tools/test.sh
+      - name: Compare exact target selection and full fixed steps on this runner
+        run: python3 tools/compare-river-targets.py
       - name: Measure field reservations and casualties at four army sizes
         run: |
           set -euo pipefail

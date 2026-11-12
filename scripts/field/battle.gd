@@ -183,6 +183,8 @@ var links := PackedInt32Array()
 # Same IDs and order as grid, restricted to one side for target and weapon queries.
 var team_grid := PackedInt32Array()
 var team_links := PackedInt32Array()
+var hostile_min_x:=PackedFloat64Array([INF,INF])
+var hostile_max_x:=PackedFloat64Array([-INF,-INF])
 
 func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true,ranked_officers: bool=true,defenders: int=-1) -> void:
 	if defenders==-1: defenders=n
@@ -381,12 +383,22 @@ func _cell(p: Vector2) -> Vector2i:
 	return Vector2i(clampi(floori((p.x + 124) / CELL), 0, COLS-1), clampi(floori((p.y + 70) / CELL), 0, ROWS-1))
 
 func _rebuild_grid() -> void:
+	var west0:=INF
+	var west1:=INF
+	var east0:=-INF
+	var east1:=-INF
 	grid.fill(-1)
 	team_grid.fill(-1)
 	if soft_crowd: density.clear()
 	for i in range(roster.size()-1, -1, -1):
 		var u := roster[i]
 		if active(u):
+			if u.team==0:
+				west0=minf(west0,u.pos.x)
+				east0=maxf(east0,u.pos.x)
+			else:
+				west1=minf(west1,u.pos.x)
+				east1=maxf(east1,u.pos.x)
 			var cell := _cell(u.pos)
 			var ix := cell.y * COLS + cell.x
 			links[i] = grid[ix]
@@ -397,6 +409,11 @@ func _rebuild_grid() -> void:
 			if soft_crowd:
 				var weight:=2.6 if u.hero and vehicle==2 else (1.65 if u.mounted or (u.hero and vehicle==1) else 1.0)
 				u.density_cell=density.register(u.pos,weight,u.pos.x>Ground.WALL_X and Ground.parapet(u.pos)>1.2)
+	# Each side looks up its opponent's width, computed from the unclamped positions.
+	hostile_min_x[0]=west1
+	hostile_max_x[0]=east1
+	hostile_min_x[1]=west0
+	hostile_max_x[1]=east0
 
 func _assessment(u: Unit) -> void:
 	var best := -1
@@ -412,13 +429,25 @@ func _assessment(u: Unit) -> void:
 	var enemy_offset:=(1-u.team)*COLS*ROWS
 	var open := gate_hp <= 0
 	var elevated := u.wall_post and Ground.parapet(u.pos)>2.75
-	for ring in range(ceili(reach/CELL)+1):
+	var rings:=ceili(reach/CELL)
+	# Files beyond the opponent's frontage cannot yield a weapon target. Adjacent
+	# mixed cells still contribute the identical contact forces in ID order.
+	if pos.x+reach<hostile_min_x[u.team] or pos.x-reach>hostile_max_x[u.team]:
+		rings=1
+	for ring in range(rings+1):
 		for y in range(maxi(0,cell.y-ring),mini(ROWS-1,cell.y+ring)+1):
 			for x in range(maxi(0,cell.x-ring),mini(COLS-1,cell.x+ring)+1):
 				if ring>0 and absi(x-cell.x)!=ring and absi(y-cell.y)!=ring: continue
 				var id_cell:=y*COLS+x
 				var close_cell:=x>=close_lo.x and x<=close_hi.x and y>=close_lo.y and y<=close_hi.y
 				var i:=grid[id_cell] if close_cell else team_grid[id_cell+enemy_offset]
+				if i<0: continue
+				if not close_cell and x>0 and x<COLS-1 and y>0 and y<ROWS-1:
+					var left:=x*CELL-124.0
+					var near_x:=clampf(pos.x,left,left+CELL)-pos.x
+					var top:=y*CELL-70.0
+					var near_z:=clampf(pos.y,top,top+CELL)-pos.y
+					if near_x*near_x+near_z*near_z>best_sq: continue
 				while i!=-1:
 					var other := roster[i]
 					var d := other.pos-pos
