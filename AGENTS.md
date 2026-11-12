@@ -2,6 +2,12 @@
 
 This repository currently contains an early battle prototype, but the **long-term assignment is a complete single-player game** under docs/FINAL_VISION_ACCEPTANCE.md. Implement incrementally; do not mistake the first prototype for project completion.
 
+## 2026-11-12 Owner priority correction: VISUAL QUALITY P0
+
+The owner says the current game still looks too rough; **visual foundations must be addressed before minor combat-readability and performance tuning**. Read `docs/VISUAL_QUALITY_TARGET_V1.md` and the latest `docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md`. Current characters/environment are largely procedural primitives in `scripts/field/figures.gd` and `scripts/field/landscape.gd`; this is a foundational asset-quality gap, not merely a lighting bug.
+
+Build a high-quality **integrated in-game vertical slice** first: player, common soldier, archer, elite/challenger, horse, several true weapon grips/actions and one coherent river-gate environment. Improve model proportions, faces/hands, clothing/armor, materials, weapons, rig/animation, terrain/building/vegetation and lighting at normal gameplay camera distances. Use legitimate original/redistributable assets and actual Godot integration; static concept/Blender renders do not count. Preserve small-scale restrained realism, MultiMesh, near/mid/far LOD, soft crowd density and performance. Once the visual slice is genuinely good, propagate its quality standard across troop types/scene. Do not ask the owner to approve every ordinary art decision.
+
 ## 2026-11-12 MASTER EXECUTION MANDATE — read before development
 
 **Primary task: [docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md](docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md).** The owner does **not** want to relay messages between ChatGPT and Codex after each PR. Continue autonomously within the actual execution runtime: integrate current river-gate playable candidate and validated PR chain, repair remaining quality/performance, finish nine weapons, bilateral strong generals, realistic military outcomes and one polished easy-to-play 512v512 battle, validate Linux/macOS, archive evidence, deliver an installable candidate. Do not stop at each phase to ask for another user message. Historical wars are optional inspiration, not a checklist. Formal literary plot stays blank. Actual M5 hardware access is a separate gated permission; mark unverified and do everything else.
