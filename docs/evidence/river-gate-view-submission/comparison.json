@@ -1,0 +1,456 @@
+{
+  "base": "22d5c85abf18296c0d299075f68e287102b004e7",
+  "candidate": "f8ba442e25a7795b54d082234a7cac2ed37454f0",
+  "experiment": "0a61c2001e67a38f1bd0b3638618ab9cfb85684b",
+  "run": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43286228399",
+  "artifact": {
+    "id": 13975496371,
+    "size": 23662837,
+    "sha256": "sha256:ad5abedba475ac83f9f40b9db7f1e54efe6d596fa7a53d41399d2b4ffd7e7f16",
+    "expires_at": "2026-12-27T19:10:13Z"
+  },
+  "description": "Same GitHub-hosted Ubuntu 24.04 X11 software renderer with pinned Godot 4.6.3, editor checkout, default preset, internal 1280x800, full shadows and 512+512 ordinary soldiers. A0/B0/B1/A1, one 20-Hz battle tick per three displayed phases. Wall timing includes the scheduled simulation step, display and post-draw signal.",
+  "cases": {
+    "close": {
+      "A0": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 279.9292,
+          "p50_ms": 276.002,
+          "p95_ms": 297.671,
+          "p99_ms": 301.75
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 5.0076,
+          "p50_ms": 5.111,
+          "p95_ms": 5.415,
+          "p99_ms": 6.85
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 6.7239,
+          "p50_ms": 0,
+          "p95_ms": 20.875,
+          "p99_ms": 22.269
+        },
+        "median_visible_ordinary": 392
+      },
+      "B0": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 278.7114,
+          "p50_ms": 273.957,
+          "p95_ms": 295.035,
+          "p99_ms": 297.2
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 4.7259,
+          "p50_ms": 4.83,
+          "p95_ms": 5.121,
+          "p99_ms": 6.526
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 6.7304,
+          "p50_ms": 0,
+          "p95_ms": 21.034,
+          "p99_ms": 22.064
+        },
+        "median_visible_ordinary": 392
+      },
+      "B1": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 278.3889,
+          "p50_ms": 273.741,
+          "p95_ms": 295.068,
+          "p99_ms": 300.257
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 4.6565,
+          "p50_ms": 4.801,
+          "p95_ms": 5.006,
+          "p99_ms": 5.163
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 6.7929,
+          "p50_ms": 0,
+          "p95_ms": 21.347,
+          "p99_ms": 21.972
+        },
+        "median_visible_ordinary": 392
+      },
+      "A1": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 279.109,
+          "p50_ms": 274.164,
+          "p95_ms": 296.014,
+          "p99_ms": 304.018
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 4.9569,
+          "p50_ms": 5.064,
+          "p95_ms": 5.446,
+          "p99_ms": 6.065
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 6.7331,
+          "p50_ms": 0,
+          "p95_ms": 21.201,
+          "p99_ms": 22.501
+        },
+        "median_visible_ordinary": 392
+      },
+      "baseline": {
+        "full_frame": {
+          "n": 258,
+          "mean_ms": 279.5191,
+          "p50_ms": 275.219,
+          "p95_ms": 297.671,
+          "p99_ms": 303.393
+        },
+        "display_script": {
+          "n": 258,
+          "mean_ms": 4.9823,
+          "p50_ms": 5.085,
+          "p95_ms": 5.446,
+          "p99_ms": 6.7
+        },
+        "sim": {
+          "n": 258,
+          "mean_ms": 6.7285,
+          "p50_ms": 0,
+          "p95_ms": 21.201,
+          "p99_ms": 22.501
+        },
+        "median_visible_ordinary": 392
+      },
+      "candidate": {
+        "full_frame": {
+          "n": 258,
+          "mean_ms": 278.5502,
+          "p50_ms": 273.92,
+          "p95_ms": 295.068,
+          "p99_ms": 300.257
+        },
+        "display_script": {
+          "n": 258,
+          "mean_ms": 4.6912,
+          "p50_ms": 4.805,
+          "p95_ms": 5.062,
+          "p99_ms": 6.323
+        },
+        "sim": {
+          "n": 258,
+          "mean_ms": 6.7617,
+          "p50_ms": 0,
+          "p95_ms": 21.28,
+          "p99_ms": 22.064
+        },
+        "median_visible_ordinary": 392
+      }
+    },
+    "tour": {
+      "A0": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 208.4623,
+          "p50_ms": 212.983,
+          "p95_ms": 232.213,
+          "p99_ms": 235.779
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 5.3996,
+          "p50_ms": 5.465,
+          "p95_ms": 6.698,
+          "p99_ms": 6.846
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 5.2993,
+          "p50_ms": 0,
+          "p95_ms": 16.159,
+          "p99_ms": 17.145
+        },
+        "median_visible_ordinary": 453
+      },
+      "B0": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 207.9034,
+          "p50_ms": 213.108,
+          "p95_ms": 232.43,
+          "p99_ms": 233.101
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 5.087,
+          "p50_ms": 5.129,
+          "p95_ms": 6.306,
+          "p99_ms": 6.437
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 5.3498,
+          "p50_ms": 0,
+          "p95_ms": 16.399,
+          "p99_ms": 17.927
+        },
+        "median_visible_ordinary": 453
+      },
+      "B1": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 210.0838,
+          "p50_ms": 214.548,
+          "p95_ms": 236.271,
+          "p99_ms": 240.276
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 5.1524,
+          "p50_ms": 5.276,
+          "p95_ms": 6.376,
+          "p99_ms": 7.21
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 5.4387,
+          "p50_ms": 0,
+          "p95_ms": 16.711,
+          "p99_ms": 17.804
+        },
+        "median_visible_ordinary": 453
+      },
+      "A1": {
+        "full_frame": {
+          "n": 129,
+          "mean_ms": 208.5395,
+          "p50_ms": 213.508,
+          "p95_ms": 234.111,
+          "p99_ms": 237.136
+        },
+        "display_script": {
+          "n": 129,
+          "mean_ms": 5.4104,
+          "p50_ms": 5.585,
+          "p95_ms": 6.606,
+          "p99_ms": 6.823
+        },
+        "sim": {
+          "n": 129,
+          "mean_ms": 5.3523,
+          "p50_ms": 0,
+          "p95_ms": 16.408,
+          "p99_ms": 17.147
+        },
+        "median_visible_ordinary": 453
+      },
+      "baseline": {
+        "full_frame": {
+          "n": 258,
+          "mean_ms": 208.5009,
+          "p50_ms": 213.272,
+          "p95_ms": 233.669,
+          "p99_ms": 237.136
+        },
+        "display_script": {
+          "n": 258,
+          "mean_ms": 5.405,
+          "p50_ms": 5.549,
+          "p95_ms": 6.67,
+          "p99_ms": 6.846
+        },
+        "sim": {
+          "n": 258,
+          "mean_ms": 5.3258,
+          "p50_ms": 0,
+          "p95_ms": 16.266,
+          "p99_ms": 17.147
+        },
+        "median_visible_ordinary": 453
+      },
+      "candidate": {
+        "full_frame": {
+          "n": 258,
+          "mean_ms": 208.9936,
+          "p50_ms": 213.404,
+          "p95_ms": 233.101,
+          "p99_ms": 237.836
+        },
+        "display_script": {
+          "n": 258,
+          "mean_ms": 5.1197,
+          "p50_ms": 5.171,
+          "p95_ms": 6.337,
+          "p99_ms": 6.628
+        },
+        "sim": {
+          "n": 258,
+          "mean_ms": 5.3942,
+          "p50_ms": 0,
+          "p95_ms": 16.65,
+          "p99_ms": 17.927
+        },
+        "median_visible_ordinary": 453
+      }
+    }
+  },
+  "parity": {
+    "semantic_errors": [],
+    "pixel_comparisons": [
+      {
+        "case": "close",
+        "frame": 33,
+        "tag": "A0",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 93,
+        "tag": "A0",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 153,
+        "tag": "A0",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 33,
+        "tag": "B0",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 93,
+        "tag": "B0",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 153,
+        "tag": "B0",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 33,
+        "tag": "B1",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 93,
+        "tag": "B1",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 153,
+        "tag": "B1",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 33,
+        "tag": "A1",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 93,
+        "tag": "A1",
+        "pixel_equal": true
+      },
+      {
+        "case": "close",
+        "frame": 153,
+        "tag": "A1",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 33,
+        "tag": "A0",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 93,
+        "tag": "A0",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 153,
+        "tag": "A0",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 33,
+        "tag": "B0",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 93,
+        "tag": "B0",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 153,
+        "tag": "B0",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 33,
+        "tag": "B1",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 93,
+        "tag": "B1",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 153,
+        "tag": "B1",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 33,
+        "tag": "A1",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 93,
+        "tag": "A1",
+        "pixel_equal": true
+      },
+      {
+        "case": "tour",
+        "frame": 153,
+        "tag": "A1",
+        "pixel_equal": true
+      }
+    ]
+  }
+}
