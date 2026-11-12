@@ -4,11 +4,18 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## RC3 已装入河关正式战役，候选包验收中
+## 当前可玩候选 0.16.0-rc.3
 
-回退点为 RC2 游戏代码 71889537。新衣甲、九种握持兵器、骨骼动作、坐骑与牵引车、门楼和营地均在原战斗入口运行。使用 `./tools/compare-river-art.sh` 重放同军籍同相机的十二个机位及正常速度实战。四档实际帧时和窗口输入由 `./tools/test-field-render.sh` 测量；`./tools/test-field-journey.sh` 记录战前至战后。早期候选软件渲染器护送回归超时，已缩减中景几何并将阴影和主角近景分别处理，保留失败运行 43224638297。候选包、托管 Mac 原生尺寸和冷启动结果以新的完整 CI 为准；M5 真机待测。
+游戏源码 `799e1e41a098bf534b63f699ea6f683e4707306f` 已合入 main 并完成主线五项 CI。可回退游戏基线为 RC2 `71889537db0d74b9cf6f372d50c830e9e5e32278`。[游戏 PR #31](https://github.com/haohongfei2001-png/luanshi-game/pull/31) · [主线构建](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43245656470) · [macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43245656470/artifacts/13956928552) · [验收、录像及原始数据](evidence/river-gate-v1-rc3/PLAYTEST.md)
 
-## 当前主线已合入候选 0.16.0-rc.2（2026-11-12，当前可玩基线）
+- 正式战役使用原创衣甲、脸手、九武器、16 骨骼姿势、马具、牵引车和河关地景。十二组同机位实战保留相同画内士兵、命中、伤亡与地形目标。近、中、远景军容与中景阴影合批已进游戏。
+- 主角、双方 512 名普通兵与 32 名军官贯穿部署、战斗、战报、行军、存读档。原始 RC2 破门档从 629 步推进到 746 步，逐字段差异为零。九武器、两种载具、军官救援与继任均有独立回归。
+- `Apple M1 (Virtual)` 默认清晰档实绘 1024×640，巡场 24.0 秒，P50/P95/P99 为 6.02 / 17.59 / 29.13 ms。八次新游戏数据进程启动均留存时间线。真实 M5 为 **NOT_RUN**。
+- 首轮重模后软件渲染的第二场护送超时。已缩减中景几何、降低近兵投影成本并按斜视锥剔除屏外提交，完整回归已通过。软件渲染高速横移仍有长帧。自动跟随俯角在 11 对同景画面中改善中位数为零，4 对变差，保留手动镜头。 [首次失败](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43224638297) · [遮挡对照](https://github.com/haohongfei2001-png/luanshi-game/blob/072ebed4f53bee02c990f9f948ec5f9bafbf25e3/docs/evidence/river-gate-camera-lab/READBACK.md)
+
+**续接入口**　在云端工作树执行 `git fetch origin main`，从最新 `origin/main` 建立独立分支，运行 `./tools/compare-river-art.sh` 重放十二个机位。若继续压低镜头横移长帧，运行 `godot --path . --resolution 1280x800 --disable-vsync --audio-driver Dummy --script tests/company_render_cost.gd -- --field-size=512`。兵员、装备和士气的后续迁移按 PRODUCT_DECISIONS §1P 与 SIMULATION_CONTRACTS §9H，保留旧档结算和当前实战影像作为基准。
+
+## 上一候选 0.16.0-rc.2（2026-11-12，回退基线）
 
 **可玩代码/证据基线**：`7aa2934080e1618ad61e670ec00d40a94714b852`；其后 main 可能有文档更新，Codex 每次启动都必须 fetch 实时 `origin/main`。PR #29 玩法、PR #30 证据已合并，不得重复开发/合并。
 
@@ -18,7 +25,7 @@
 - 59 秒完整战役录像、原始截图、测量和 macOS 候选包。M1 Virtual 512v512 清晰档 24 秒巡场平均 121.9 FPS，但 P95 21.93 ms、P99 30.29 ms；M5 真机仍未测。
 
 ### 视觉质量问题已升级为当前 P0（先美术基础，后零碎优化）
-代码结构审计（实时 main）发现：
+当时对 RC2 的代码与资产审计发现：
 - `scripts/field/figures.gd` 用基础 rod/block/loft 程序几何构造角色；
 - `scripts/field/figure.gdshader` 通过顶点变形表达多种动作；
 - `scripts/field/landscape.gd` 通过程序化几何构造地面、河流、城门、营寨、植被和冲车；
@@ -53,7 +60,7 @@
 - 两个独立指标：**士气**影响战斗力/阵型/命令服从/忠诚倾向；**战斗强迫性**由首府/政权威望、合法性、军纪、使命、指挥链/副将继任、退路/投降条件形成，决定低士气时仍会否守阵/服从/继续抵抗/有序撤退。它不是攻击力加成。
 - 主帅阵亡不自动胜利/溃败：高首府威望+合法继任者可稳定军心；无继任、权威弱、原本军心低且被包围则可能逃散/投降。
 - 当前代码已有士兵归一化士气、局部 ROUT、目标层崩溃计数和军官继任；尚缺独立强迫性、主帅自主逃跑/投降、有序战略撤退及溃逃追击选择。Codex 应审查 `battle.gd`/`field_objectives.gd`/`officer_corps.gd` 后增量开发，避免重复造轮子。
-- 视觉纵切片仍是当前 P0；[PR #31 RC3](https://github.com/haohongfei2001-png/luanshi-game/pull/31) 正在整合原创角色/兵器/马匹/场景资产。不要因新规则中断视觉主线；视觉基础稳定后，士气/强迫性/结局系统是下一重要玩法阶段。若并行，必须文件隔离。
+- 视觉纵切片仍是当前 P0；[PR #31 RC3](https://github.com/haohongfei2001-png/luanshi-game/pull/31) 已合入原创角色、兵器、马匹与场景资产。不要因新规则中断视觉主线；视觉基础稳定后，士气/强迫性/结局系统是下一重要玩法阶段。若并行，必须文件隔离。
 - 玩家只做简单追击/停止选择，不做逐兵微操；普通兵轻量 FSM，后台聚合计算，剧情继续留空。
 
 ### 新增 Owner 数据粒度决定（§1O，2026-11-12）

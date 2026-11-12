@@ -1,3 +1,7 @@
+# 河关 0.16.0-rc.3
+
+主线游戏源码 `799e1e41a098bf534b63f699ea6f683e4707306f`。原创人物、衣甲、握持动作、马车及城门与营地已随可运行的 macOS 游戏包实测。托管 Apple M1 虚拟机默认清晰档 1024×640，P95 17.59 ms，P99 29.13 ms。真实 MacBook Air M5 待测。完整军议、实战、战后行军与历史存档结果已归档。 [下载游戏](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43245656470/artifacts/13956928552) · [同镜头画面、连续实录及验收](evidence/river-gate-v1-rc3/PLAYTEST.md) · [工程续接](CODEX_CONTINUATION.md)
+
 ## Owner data-model simplification — ordinary troops aggregate by cohort (2026-11-12)
 
 New authority: PRODUCT_DECISIONS.md §1P; implementation contract SIMULATION_CONTRACTS.md §9H; acceptance BF-COHORT-01..11 in ACCEPTANCE_MATRIX.md §7F-I. Ordinary soldiers do not need persistent individual morale, injury, weapon ownership, capture identity or permanent IDs. Track ready/wounded/unarmed/routed/captured/dead counts and equipment inventory by cohort/formation. Near-camera actors may be temporary representations for individual animation/hits/death, then write state transitions back to aggregate counts and be recycled. Offscreen forces are cohort/event simulated. Only player, named characters and important commanders/elite characters retain personal records. Maintain troop/equipment conservation and visible individual combat; this is a data-model simplification, not a reduction to a fake single army health bar. This supersedes the earlier sparse-per-soldier exception approach for ordinary troops.
@@ -14,11 +18,11 @@ New locked product decision: `PRODUCT_DECISIONS.md §1N`. Full spec: [BATTLE_MOR
 
 Battles can conclude through annihilation, disorganized rout (player chooses pursuit or halt), organized strategic withdrawal, surrender, or existing objective completion. Two independent values govern unit/force behavior: morale (combat effectiveness, formation, obedience and gradual loyalty) and combat compulsion (authority/legitimacy including local capital prestige, discipline, mission necessity, succession and available options). Killing the commander alone never guarantees victory or rout: a recognized deputy with strong local authority may take command and keep the army fighting; absent succession plus low authority/morale and encirclement may trigger collapse. Existing soldier morale, objective adjudication and officer succession code should be extended rather than replaced. **This is a design decision, not yet an implementation claim.**
 
-# CURRENT OWNER PRIORITY UPDATE — 2026-11-12 (RC2 merged)
+# Owner priority at the RC2 baseline — 2026-11-12
 
 **Latest baseline:** playable `0.16.0-rc.2` is merged; see [RC2 evidence](evidence/river-gate-v1-rc2/PLAYTEST.md), [CODEX_CONTINUATION.md](CODEX_CONTINUATION.md), and [master execution mandate](CODEX_MASTER_EXECUTION_MANDATE_20261112.md).
 
-**Current next P0 is visual quality, not another feature batch.** The owner judges the actual game image still too rough. Source inspection confirms key characters and battlefield are still predominantly procedurally generated with basic mesh primitives:
+**The RC2 playtest set in-game visual quality as P0.** At that baseline the owner judged the image too rough. Source inspection found key characters and battlefield are still predominantly procedurally generated with basic mesh primitives:
 - `scripts/field/figures.gd` creates character geometry from `rod/block/loft/quad` primitives.
 - `scripts/field/figure.gdshader` deforms vertices for most movement/weapon actions.
 - `scripts/field/landscape.gd` generates the battlefield, vegetation, gate, camp and ram procedurally.
