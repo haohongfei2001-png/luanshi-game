@@ -1,0 +1,37 @@
+name: Exact field submission comparison
+on:
+  push:
+    branches: [codex/river-gate-view-submission-lab]
+    paths: ['scripts/field/presentation.gd','tests/view_submission_trial.gd','tools/view_submission_trial.py','.github/workflows/view-submission-trial.yml']
+permissions:
+  contents: read
+jobs:
+  trial:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Import the game with the verified editor
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/view-editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/view-editor.zip' | sha512sum -c -
+          unzip -q /tmp/view-editor.zip -d /tmp/view-editor
+          sudo install /tmp/view-editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path .
+      - name: Cross the two source versions in one game-window host
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          VIEW_OUT: ${{ runner.temp }}/field-submission
+          VIEW_PIXELS: ${{ runner.temp }}/field-submission-rgba
+        run: xvfb-run -a -s '-screen 0 1440x900x24' python3 tools/view_submission_trial.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: field-submission-pairs
+          path: ${{ runner.temp }}/field-submission/
+          retention-days: 45
