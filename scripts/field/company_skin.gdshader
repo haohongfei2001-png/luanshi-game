@@ -1,8 +1,7 @@
 shader_type spatial;
-render_mode cull_disabled, diffuse_burley, specular_schlick_ggx;
+render_mode cull_disabled, diffuse_lambert, specular_disabled;
 
 uniform sampler2D cloth_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
-uniform sampler2D response_atlas : filter_linear_mipmap, repeat_disable;
 uniform sampler2D motion_bank : filter_linear, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform int kit = 0;
@@ -13,6 +12,8 @@ varying flat float flash;
 varying flat float cloth_lot;
 varying flat float fallen;
 varying float sewn_shadow;
+varying flat int cloth_panel;
+varying vec2 shield_face;
 
 vec3 rotated(vec4 q, vec3 v) {
     return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
@@ -85,6 +86,9 @@ void vertex() {
         nrm=mix(nrm,step_nrm,leg_weight);
     }
     ivec2 swatch=ivec2(UV*vec2(8.,4.));
+    // Shield panels have separate UV islands. A single bind-space band crosses their seams
+    // and follows the left hand through a block or bash.
+    shield_face=(VERTEX.xy-vec2(-.273,.966))/vec2(.48,.79);
     bool cape=swatch.y==2 && (swatch.x==3 || swatch.x==7);
     if (cape) {
         // Folded at the shoulder fastening, free at the two tails. The hem lags
@@ -109,24 +113,33 @@ void vertex() {
         if (cloth_lot>.72) UV+=vec2(.125,.25);
         else if (cloth_lot>.31) UV.y+=.25;
     }
+    cloth_panel=int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0));
     flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
-void fragment(){
-    vec3 colour=texture(cloth_atlas,UV).rgb;
-    vec3 response=texture(response_atlas,UV).rgb;
-    float fibre=dot(colour,vec3(.27,.54,.19));
-    // A bolt of faded indigo or madder shows exposed natural fibre in the worn lots.
-    float fibre_exposed=.025+.145*smoothstep(.10,.92,cloth_lot);
-    vec3 dyed=mix(livery.rgb,vec3(.24,.213,.171),fibre_exposed)*clamp(.32+1.86*fibre,.43,1.40);
-    // A deep, worn dye leaves the illuminated face and blade one value above the tunic.
-    colour=mix(colour,dyed*mix(.88,1.0,smoothstep(.35,.78,fibre)),response.b);
-    colour*=mix(vec3(1.),vec3(.53,.67,.79),sewn_shadow);
-    colour*=mix(1.0,.73,fallen);
-    ALBEDO=mix(colour,vec3(.57,.29,.15),flash*.23);
-    // At battlefield scale a polished spot crosses a whole cheek or helmet.
-    // The worn iron still turns in the light; the brighter edge is part of the blade.
-    ROUGHNESS=clamp(response.r,.62,1.);
-    METALLIC=response.g*.43;
-    SPECULAR=mix(.13,.31,response.g);
+void fragment() {
+    vec3 ink = texture(cloth_atlas, UV).rgb;
+    // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
+    // their own values even where soldiers overlap in the default orthographic view.
+    float dye = 0.0;
+    if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = 0.97;
+    else if (cloth_panel == 22 || cloth_panel == 31) dye = 0.84;
+    else if (cloth_panel == 11 || cloth_panel == 26) dye = 0.43;
+    vec3 bolt = livery.rgb * mix(0.91, 1.09, cloth_lot);
+    float fold = dot(ink, vec3(.28, .56, .16));
+    float mid = OUTPUT_IS_SRGB ? .73 : .52;
+    vec3 colour = mix(ink, bolt * clamp(fold / mid, .64, 1.24), dye);
+    if (cloth_panel == 13) {
+        float stripe = abs(shield_face.y - .10 * shield_face.x - .025);
+        float edge = clamp(fwidth(stripe), .006, .065);
+        colour = mix(colour, bolt, .93 * (1.0 - smoothstep(.12-edge, .12+edge, stripe)));
+    }
+    float silhouette = 1.0 - smoothstep(.045, .30, abs(dot(normalize(NORMAL), normalize(VIEW))));
+    colour *= (1.0 - .105 * silhouette) * (1.0 - .42 * sewn_shadow);
+    colour *= mix(1.0, .73, fallen);
+    ALBEDO = mix(colour, vec3(.65,.35,.19), flash * .24);
+    ROUGHNESS = .93;
+    SPECULAR = 0.0;
 }
+
+#include "res://scripts/field/cloth_light.gdshaderinc"

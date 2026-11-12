@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="512" viewBox="0 0 512 256">
+<title>River company garment, skin and equipment colours</title>
+<defs><clipPath id="swatch"><path d="M0 0H64V64H0Z"/></clipPath></defs>
+  <!-- unbleached hemp -->
+  <g transform="translate(0 0)"><g clip-path="url(#swatch)"><path fill="#c6b38b" d="M0 0H64V64H0Z"/><path fill="#b4a17d" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#d3c199" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
+  <!-- dyed sleeve -->
+  <g transform="translate(64 0)"><g clip-path="url(#swatch)"><path fill="#c8c1af" d="M0 0H64V64H0Z"/><path fill="#afa899" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#d6cfbb" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
+  <!-- rawhide -->
+  <g transform="translate(128 0)"><g clip-path="url(#swatch)"><path fill="#784f39" d="M0 0H64V64H0Z"/><path fill="#946c4c" d="M6 0 Q10 28 7 64 H10 Q15 31 13 0 Z"/></g></g>
+  <!-- lamellar -->
+  <g transform="translate(192 0)"><g clip-path="url(#swatch)"><path fill="#68757a" d="M0 0H64V64H0Z"/><path fill="#465255" d="M0 11 Q18 15 34 12 T64 11 V16 H0 Z"/><path fill="#839195" d="M0 10 Q18 13 35 11 T64 10 V11.5 Q48 13 32 12.7 T0 11.8 Z"/><path fill="#58626a" d="M6 2 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M28 2 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M50 2 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#465255" d="M0 27 Q18 31 34 28 T64 27 V32 H0 Z"/><path fill="#839195" d="M0 26 Q18 29 35 27 T64 26 V27.5 Q48 29 32 28.7 T0 27.8 Z"/><path fill="#58626a" d="M13 18 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M35 18 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M57 18 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#465255" d="M0 43 Q18 47 34 44 T64 43 V48 H0 Z"/><path fill="#839195" d="M0 42 Q18 45 35 43 T64 42 V43.5 Q48 45 32 44.7 T0 43.8 Z"/><path fill="#58626a" d="M6 34 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M28 34 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M50 34 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#465255" d="M0 59 Q18 63 34 60 T64 59 V64 H0 Z"/><path fill="#839195" d="M0 58 Q18 61 35 59 T64 58 V59.5 Q48 61 32 60.7 T0 59.8 Z"/><path fill="#58626a" d="M13 50 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M35 50 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#58626a" d="M57 50 l2.5 .2 -.9 6 -1.9 1 Z"/></g></g>
+  <!-- forged iron -->
+  <g transform="translate(256 0)"><g clip-path="url(#swatch)"><path fill="#667880" d="M0 0H64V64H0Z"/><path fill="#819399" d="M0 0 H10 L9 64 H0 Z"/></g></g>
+  <!-- weapon bevel -->
+  <g transform="translate(320 0)"><g clip-path="url(#swatch)"><path fill="#c3c9c0" d="M0 0H64V64H0Z"/></g></g>
+  <!-- bronze clasp -->
+  <g transform="translate(384 0)"><g clip-path="url(#swatch)"><path fill="#ae8a50" d="M0 0H64V64H0Z"/><path fill="#c8ad77" d="M0 0 H64 V6 H0 Z"/></g></g>
+  <!-- oiled wood -->
+  <g transform="translate(448 0)"><g clip-path="url(#swatch)"><path fill="#805936" d="M0 0H64V64H0Z"/><path fill="#986c42" d="M8 0 Q17 23 13 64 H17 Q20 26 14 0 Z M46 4 Q51 13 50 48 L53 44 Q55 18 46 4 Z"/></g></g>
+  <!-- hands and neck -->
+  <g transform="translate(0 64)"><g clip-path="url(#swatch)"><path fill="#d0a17c" d="M0 0H64V64H0Z"/></g></g>
+  <!-- hair -->
+  <g transform="translate(64 64)"><g clip-path="url(#swatch)"><path fill="#3c3733" d="M0 0H64V64H0Z"/><path fill="#4b4540" d="M5 0 Q16 32 11 64 H15 Q20 34 14 0 Z"/></g></g>
+  <!-- linen facing -->
+  <g transform="translate(128 64)"><g clip-path="url(#swatch)"><path fill="#dcca9e" d="M0 0H64V64H0Z"/></g></g>
+  <!-- padded jacket -->
+  <g transform="translate(192 64)"><g clip-path="url(#swatch)"><path fill="#9c967e" d="M0 0H64V64H0Z"/><path fill="#827e6b" d="M10 0 H12 V64 H10 Z M30 0 H32 V64 H30 Z M51 0 H53 V64 H51 Z"/></g></g>
+  <!-- boots -->
+  <g transform="translate(256 64)"><g clip-path="url(#swatch)"><path fill="#4d4440" d="M0 0H64V64H0Z"/></g></g>
+  <!-- shield boards -->
+  <g transform="translate(320 64)"><g clip-path="url(#swatch)"><path fill="#966a43" d="M0 0H64V64H0Z"/><path fill="#795236" d="M13 0 H15 V64 H13 Z M40 0 H42 V64 H40 Z"/></g></g>
+  <!-- binding -->
+  <g transform="translate(384 64)"><g clip-path="url(#swatch)"><path fill="#916e53" d="M0 0H64V64H0Z"/><path fill="#755743" d="M0 10 L64 24 V28 L0 14 Z M0 39 L64 53 V57 L0 43 Z"/></g></g>
+  <!-- felt trousers -->
+  <g transform="translate(448 64)"><g clip-path="url(#swatch)"><path fill="#59636c" d="M0 0H64V64H0Z"/><path fill="#4b555d" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#647078" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
+  <!-- face A -->
+  <g transform="translate(0 128)"><g clip-path="url(#swatch)"><path fill="#d6a680" d="M0 0H64V64H0Z"/><path fill="#bd8b6b" d="M0 0 H13 Q9 15 12 28 Q12 39 22 48 L27 63 H0 Z M64 4 V64 H36 Q45 53 48 44 Q56 35 55 22 Z"/><path fill="#e0b38f" d="M26 8 Q34 4 40 11 L37 18 Q30 16 24 19 Z M37 32 Q44 27 51 30 L45 35 L38 36 Z M16 32 L24 33 L24 36 Q18 37 16 32 Z"/><path fill="#54463c" d="M12 22 Q17 20 26 23 L25 25 Q18 23 13 24 Z M38 23 Q47 19 52 21 L51 23 Q45 22 38 25 Z"/><path fill="#bd8b6b" d="M29 25 L32 25 Q31 32 28 37 L31 39 L26 38 Z M36 36 L39 38 L34 39 Z"/><path fill="#54463c" d="M15 28 Q21 25 26 28 Q22 28 19 29 Z M38 28 Q43 25 49 27 Q45 27 41 29 Z"/><path fill="#925f51" d="M24 45 Q28 43.5 31 44.1 Q34 43.8 39 44.9 L33 46 L27 46.3 Z"/></g></g>
+  <!-- eye -->
+  <g transform="translate(64 128)"><g clip-path="url(#swatch)"><path fill="#bb9f85" d="M0 0H64V64H0Z"/><ellipse cx="32" cy="32" rx="7" ry="15" fill="#483d35"/></g></g>
+  <!-- headcloth -->
+  <g transform="translate(128 128)"><g clip-path="url(#swatch)"><path fill="#c5b18b" d="M0 0H64V64H0Z"/><path fill="#a89472" d="M0 12 Q23 18 64 14 V17 Q24 22 0 16 Z"/></g></g>
+  <!-- officer mantle -->
+  <g transform="translate(192 128)"><g clip-path="url(#swatch)"><path fill="#9da9a9" d="M0 0H64V64H0Z"/><path fill="#879494" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#b6bcaf" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
+  <!-- woven sash -->
+  <g transform="translate(256 128)"><g clip-path="url(#swatch)"><path fill="#a4573e" d="M0 0H64V64H0Z"/><path fill="#8c4638" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#ba7350" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
+  <!-- quiver -->
+  <g transform="translate(320 128)"><g clip-path="url(#swatch)"><path fill="#78513c" d="M0 0H64V64H0Z"/><path fill="#a07a51" d="M0 4 H64 V10 H0 Z"/></g></g>
+  <!-- lower robe -->
+  <g transform="translate(384 128)"><g clip-path="url(#swatch)"><path fill="#a5aba4" d="M0 0H64V64H0Z"/><path fill="#909893" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#b6bcb2" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
+  <!-- player mantle -->
+  <g transform="translate(448 128)"><g clip-path="url(#swatch)"><path fill="#415e78" d="M0 0H64V64H0Z"/><path fill="#334b62" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#526f85" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/><path fill="#bc9f67" d="M0 54 Q27 57 64 54 V57 Q30 60 0 57 Z"/></g></g>
+  <!-- face B -->
+  <g transform="translate(0 192)"><g clip-path="url(#swatch)"><path fill="#cd9a73" d="M0 0H64V64H0Z"/><path fill="#b88765" d="M0 0 H13 Q9 15 12 28 Q12 39 22 48 L27 63 H0 Z M64 4 V64 H36 Q45 53 48 44 Q56 35 55 22 Z"/><path fill="#dbac82" d="M26 8 Q34 4 40 11 L37 18 Q30 16 24 19 Z M37 32 Q44 27 51 30 L45 35 L38 36 Z M16 32 L24 33 L24 36 Q18 37 16 32 Z"/><path fill="#514034" d="M12 23 Q16 18 26 23 L25 25 L14 23 Z M38 23 Q47 17 52 21 L50 23 L38 25 Z"/><path fill="#b88765" d="M29 25 L32 25 Q31 32 28 37 L31 39 L26 38 Z M36 36 L39 38 L34 39 Z"/><path fill="#514034" d="M15 28 Q21 25 26 28 Q22 28 19 29 Z M38 28 Q43 25 49 27 Q45 27 41 29 Z"/><path fill="#925f51" d="M24 45 Q28 43.5 31 44.1 Q34 43.8 39 44.9 L33 46 L27 46.3 Z"/></g></g>
+  <!-- face C -->
+  <g transform="translate(64 192)"><g clip-path="url(#swatch)"><path fill="#c79774" d="M0 0H64V64H0Z"/><path fill="#ae8062" d="M0 0 H13 Q9 15 12 28 Q12 39 22 48 L27 63 H0 Z M64 4 V64 H36 Q45 53 48 44 Q56 35 55 22 Z"/><path fill="#d8a782" d="M26 8 Q34 4 40 11 L37 18 Q30 16 24 19 Z M37 32 Q44 27 51 30 L45 35 L38 36 Z M16 32 L24 33 L24 36 Q18 37 16 32 Z"/><path fill="#514137" d="M12 22 Q17 20 26 23 L25 25 Q18 23 13 24 Z M38 23 Q47 19 52 21 L51 23 Q45 22 38 25 Z"/><path fill="#ae8062" d="M29 25 L32 25 Q31 32 28 37 L31 39 L26 38 Z M36 36 L39 38 L34 39 Z"/><path fill="#514137" d="M15 28 Q21 25 26 28 Q22 28 19 29 Z M38 28 Q43 25 49 27 Q45 27 41 29 Z"/><path fill="#925f51" d="M24 45 Q28 43.5 31 44.1 Q34 43.8 39 44.9 L33 46 L27 46.3 Z"/><path fill="#75594b" d="M19 42 Q24 40 30 41.5 L30 43 L24 42.4 Z M34 41.5 Q40 40 44 42 L37 42.4 L33 43 Z M26 52 Q32 53 38 51.5 L34 55 L29 55 Z"/></g></g>
+  <!-- collar -->
+  <g transform="translate(128 192)"><g clip-path="url(#swatch)"><path fill="#687372" d="M0 0H64V64H0Z"/></g></g>
+  <!-- cross-collared coat -->
+  <g transform="translate(192 192)"><g clip-path="url(#swatch)"><path fill="#c5beaa" d="M0 0H64V64H0Z"/><path fill="#aea793" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#d0c9b7" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/><path fill="#8b877a" d="M0 12 L12 27 L16 38 L14 38 L0 19 Z M64 11 L54 20 L59 21 L64 16 Z"/></g></g>
+  <!-- helmet bowl -->
+  <g transform="translate(256 192)"><g clip-path="url(#swatch)"><path fill="#55646c" d="M0 0H64V64H0Z"/></g></g>
+  <!-- helmet binding -->
+  <g transform="translate(320 192)"><g clip-path="url(#swatch)"><path fill="#8e958c" d="M0 0H64V64H0Z"/></g></g>
+  <!-- armour courses -->
+  <g transform="translate(384 192)"><g clip-path="url(#swatch)"><path fill="#69787c" d="M0 0H64V64H0Z"/><path fill="#46565c" d="M0 11 Q18 15 34 12 T64 11 V16 H0 Z"/><path fill="#859499" d="M0 10 Q18 13 35 11 T64 10 V11.5 Q48 13 32 12.7 T0 11.8 Z"/><path fill="#54626a" d="M6 2 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M28 2 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M50 2 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#46565c" d="M0 27 Q18 31 34 28 T64 27 V32 H0 Z"/><path fill="#859499" d="M0 26 Q18 29 35 27 T64 26 V27.5 Q48 29 32 28.7 T0 27.8 Z"/><path fill="#54626a" d="M13 18 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M35 18 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M57 18 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#46565c" d="M0 43 Q18 47 34 44 T64 43 V48 H0 Z"/><path fill="#859499" d="M0 42 Q18 45 35 43 T64 42 V43.5 Q48 45 32 44.7 T0 43.8 Z"/><path fill="#54626a" d="M6 34 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M28 34 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M50 34 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#46565c" d="M0 59 Q18 63 34 60 T64 59 V64 H0 Z"/><path fill="#859499" d="M0 58 Q18 61 35 59 T64 58 V59.5 Q48 61 32 60.7 T0 59.8 Z"/><path fill="#54626a" d="M13 50 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M35 50 l2.5 .2 -.9 6 -1.9 1 Z"/><path fill="#54626a" d="M57 50 l2.5 .2 -.9 6 -1.9 1 Z"/></g></g>
+  <!-- girdle -->
+  <g transform="translate(448 192)"><g clip-path="url(#swatch)"><path fill="#aba18c" d="M0 0H64V64H0Z"/><path fill="#928979" d="M0 22 Q36 14 64 20 V25 Q32 20 0 26 Z M0 48 Q25 42 64 41 V46 Q25 47 0 51 Z"/></g></g>
+</svg>

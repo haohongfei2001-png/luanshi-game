@@ -40,12 +40,12 @@ void fragment() {
 		float marks=texture(leaf_marks,UV*0.85).g;
 		vec3 light=mix(sun_elm.rgb,sun_ash.rgb,smoothstep(.65,.95,paint.g));
 		vec3 mid=elm.rgb*mix(vec3(.88,1.0,.95),vec3(1.05,1.0,.84),paint.g);
-		float value=clamp(paint.r+(marks-.46)*.23,0.0,1.0);
-		tone=mix(deep_leaf.rgb,mid,smoothstep(.03,.57,value));
-		tone=mix(tone,light,smoothstep(.47,.94,value)*.89);
+		float value=clamp(paint.r+(marks-.46)*.10,0.0,1.0);
+		tone=mix(deep_leaf.rgb,mid,smoothstep(.14,.42,value));
+		tone=mix(tone,light,smoothstep(.58,.81,value)*.87);
 		vec2 brush_uv=fract(UV*3.0)*.466+vec2(.017,.017);
 		vec4 brush=texture(ink,brush_uv);
-		tone=mix(tone,brush.rgb*(.71+.43*value),brush.a*(.17+.22*value));
+		tone=mix(tone,brush.rgb*(.71+.43*value),brush.a*(.07+.12*value));
 	} else {
 		vec4 glyph=texture(ink,UV);
 		float interior=mix(.55,.90,paint.r);

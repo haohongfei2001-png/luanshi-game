@@ -3,16 +3,11 @@ render_mode diffuse_lambert, cull_disabled;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
-uniform sampler2D root_turf : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
-uniform sampler2D compacted_loam : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
-uniform sampler2D bank_silt : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
-// Regional midtones for the scanned ground; suppress very bright tiny pebbles
-// while retaining the larger road, field and riverbank patterns beneath the soldiers.
-uniform vec4 turf_midtone : source_color = vec4(.33,.32,.20,1.);
-uniform vec4 road_midtone : source_color = vec4(.40,.34,.24,1.);
-uniform vec4 bank_midtone : source_color = vec4(.35,.31,.24,1.);
-uniform vec4 deep_water : source_color = vec4(.115,.253,.260,1.0);
-uniform vec4 shallows : source_color = vec4(.305,.437,.372,1.0);
+uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D compacted_loam : source_color, repeat_enable, filter_linear_mipmap;
+uniform vec4 river_silt : source_color = vec4(.39,.40,.31,1.);
+uniform vec4 deep_water : source_color = vec4(.13,.31,.34,1.0);
+uniform vec4 shallows : source_color = vec4(.33,.48,.42,1.0);
 varying vec3 local_pos;
 varying vec3 local_normal;
 varying float part;
@@ -39,34 +34,25 @@ void vertex() {
 	}
 }
 
-vec3 painted_ground(vec2 p,float shore) {
-	vec4 cover=texture(soil_cover,(p+vec2(168.0,108.0))/vec2(336.0,216.0));
-	vec2 shear=vec2(cover.b-.48,cover.r-.43)*.19;
-	// At the formation camera the fine stems and individual soil grains
-	// average within a screen pixel; keep the larger root and clod groups.
-	float pixel_span=max(length(dFdx(p)),length(dFdy(p)));
-	float lod_bias=.05+1.13*smoothstep(.019,.062,pixel_span);
-	vec4 turf=texture(root_turf,mat2(vec2(.21,.064),vec2(-.064,.21))*p+shear,lod_bias);
-	vec4 loam=texture(compacted_loam,mat2(vec2(.257,-.043),vec2(.043,.257))*p-shear,lod_bias);
-	// Higher root crowns extend into the shoulder. The track fades into
-	// the actual old field or wet river edge instead of using a colour key.
-	float mineral=smoothstep(.09,.86,cover.r+(loam.a-turf.a)*.35);
-	vec3 surface=mix(turf.rgb,loam.rgb,mineral);
-	vec3 midtone=mix(turf_midtone.rgb,road_midtone.rgb,mineral);
-	float wash=max(cover.g,shore);
-	if(wash>.018) {
-		vec4 silt=texture(bank_silt,p*vec2(.250,.225)+vec2(.28,-.17)+shear,lod_bias);
-		float margin=smoothstep(.05,.86,wash+(silt.a-turf.a)*.27);
-		surface=mix(surface,silt.rgb,margin);
-		midtone=mix(midtone,bank_midtone.rgb,margin);
-	}
-	// Sediment and grass fill lengths of wheel wear differently on each
-	// side of a bend. Keep the crown of the cart road in the soil surface.
-	float shoulder=1.0-smoothstep(.028,.103,abs(cover.a-.385+(loam.a-.52)*.067));
-	float deposit=abs(fract(dot(p,vec2(.161,.074))+cover.b*.51)-.5)*2.0;
-	float exposed=smoothstep(.17,.81,deposit+(loam.a-.5)*.58);
-	float worn=shoulder*smoothstep(.68,.93,cover.r)*(1.0-wash)*(.24+.76*exposed);
-	return mix(surface,midtone,.27)*(.79+.30*cover.b-.127*worn);
+vec3 painted_ground(vec2 p, float shore) {
+    // The map painting locates pasture, cultivated strips, camp lanes and shaded
+    // ground under each tree. These landmarks stay in world space at every zoom.
+    vec2 mapped = (p + vec2(168.0,108.0)) / vec2(336.0,216.0);
+    vec4 cover = texture(soil_cover,mapped);
+    vec3 colour = texture(floodplain,mapped).rgb;
+    float wet = max(cover.g,shore);
+    colour = mix(colour,river_silt.rgb, .46 * smoothstep(.16,.95,wet));
+    float rut = 1.0-smoothstep(.033,.112,abs(cover.a-.385));
+    colour *= 1.0-.095*rut*smoothstep(.68,.94,cover.r)*(1.0-wet);
+    // Closer than a boot's width, one low-contrast material sample breaks up the
+    // dry earth. Beyond that distance the broad map and cart tracks carry the lane.
+    float footprint=max(length(dFdx(p)),length(dFdy(p)));
+    float close_soil=(1.0-smoothstep(.010,.035,footprint))*cover.r;
+    if (close_soil>.035) {
+        float grain=texture(compacted_loam,p*.22,2.1).a;
+        colour*=1.0+(grain-.5)*.14*close_soil;
+    }
+    return colour;
 }
 
 void fragment() {
@@ -97,18 +83,18 @@ void fragment() {
 			vec2 grain_uv=vec2(local_pos.x*0.31,(local_pos.z+local_pos.y)*0.94);
 			if (part>9.5) grain_uv=part>10.5?vec2(local_pos.y*0.31,(local_pos.x+local_pos.z)*0.94):vec2(local_pos.z*0.31,(local_pos.x+local_pos.y)*0.94);
 			float grain=texture(joinery,grain_uv).r;
-			color*=0.70+grain*0.51;
+			color*=0.86+grain*0.26;
 			roughness=0.84;
 		} else if (part<4.5) {
 			float block=texture(joinery,vec2(side,across)*vec2(0.22,0.32)).g;
-			color*=0.56+0.75*block;
+			color*=0.77+0.39*block;
 		} else if (part<5.5) {
 			float course=texture(joinery,p*0.48).b;
-			color*=0.79+0.39*course;
+			color*=0.88+0.22*course;
 			roughness=0.75; specularity=0.24;
 		} else if (part<6.5) {
 			float weave=texture(joinery,vec2(side*0.85,across*1.3)).b;
-			color*=0.69+0.57*weave;
+			color*=0.84+0.28*weave;
 		} else if (part<7.5) {
 			vec3 foliage=texture(fieldbed,vec2(local_pos.x*0.64+local_pos.z*0.35,local_pos.y*0.48)).rgb;
 			color*=0.79+foliage.g*0.40;

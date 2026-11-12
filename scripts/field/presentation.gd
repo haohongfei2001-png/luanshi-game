@@ -7,10 +7,10 @@ const CompanyArt := preload("res://scripts/field/company_art.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
-const FRIEND := Color("394d66")
-const FOE := Color("8e4b3d")
+const FRIEND := Color("456e86")
+const FOE := Color("aa5844")
 const CLOTH_COLOR:=Color("dbcba4")
-const PLAYER_CLOTH:=Color("2d405b")
+const PLAYER_CLOTH:=Color("304f6f")
 const GOLD := Color("b69c66")
 
 class Batch:

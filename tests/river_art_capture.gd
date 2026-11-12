@@ -59,6 +59,7 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 	# Keep the older lightweight review view available beside the original pixels.
 	success=pic.save_jpg(directory+"/"+label+".jpg",.95)==OK and success
 	var item:={"label":label,"kind":kind,"tick":b.tick,"center":[point.x,point.y],"yaw":yaw,"zoom":zoom,
+		"hero_state":int(b.hero.state),"hero_kit":b.hero.kit,"hero_slot":b.hero.move_slot,
 		"seed":Battle.SEED,"ordinary":Array(b.ordinary_counts),"officers":Array(b.command_counts),
 		"contact":[b.hits[0],b.hits[1]],"losses":[b.losses[0],b.losses[1]],"gate_hp":b.gate_hp,
 		"visible":field.view.visible_soldiers,"fighting":field.view.visible_fighting,"close":field.view.high_detail_soldiers,
@@ -103,6 +104,12 @@ func _run() -> void:
 	await _snap("bank","bank",17.0,-.54)
 	await _snap("margin","margin",23.0,-.64)
 	await _snap("camp","camp",30.0,-.54)
+	# A normal-scale input sample, using the same button path as play.
+	_view(b.hero.pos,22.0,-.576)
+	field._submit_attack(0)
+	_advance(11)
+	success=success and b.hero.state in [Battle.State.WINDUP,Battle.State.RECOVER]
+	await _snap("player-action","hero",22.0,-.576)
 	_advance(65)
 	await _snap("officer","officer",7.8,-1.42)
 	await _snap("bowline","archer",8.6,1.12)

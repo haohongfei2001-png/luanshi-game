@@ -3,8 +3,7 @@ extends RefCounted
 ## motion bank. Merge shared body/weapon geometry once, retaining one draw per crowd batch.
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
 const SKIN := preload("res://scripts/field/company_skin.gdshader")
-const FABRIC := preload("res://assets/river_gate/figures/cloth_and_iron.png")
-const RESPONSE := preload("res://assets/river_gate/figures/surface_response.png")
+const FABRIC := preload("res://assets/river_gate/figures/campaign_colours.svg")
 const MOTION := preload("res://assets/river_gate/figures/company_motion.png")
 static var pieces: Dictionary = {}
 static var assembled: Dictionary = {}
@@ -55,7 +54,6 @@ static func material(colour: Color, kit: int, player: bool=false) -> ShaderMater
 	var result:=ShaderMaterial.new()
 	result.shader=SKIN
 	result.set_shader_parameter("cloth_atlas", FABRIC)
-	result.set_shader_parameter("response_atlas", RESPONSE)
 	result.set_shader_parameter("motion_bank", MOTION)
 	result.set_shader_parameter("livery", colour)
 	result.set_shader_parameter("kit", kit)

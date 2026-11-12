@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Replay RC4 and this shipping revision on one GPU, with the same seed, camera and live orders.
+# Replay RC5 and this shipping revision on one GPU, with the same seed, camera and live orders.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 repo_dir=$PWD
-baseline=2293008c2d76dcbd788aeaef0fb871de1bc8eee1
+baseline=d16244aa1a7b360516d1a7819174a4ab741a007a
 out=$PWD/artifacts/river-art-comparison
 work=$(mktemp -d)
 mkdir -p "$out"
@@ -47,13 +47,13 @@ root=pathlib.Path(sys.argv[1])
 left,right=[json.loads((root/s/"frames.json").read_text()) for s in ("before","after")]
 assert len(left)==len(right)>=10
 for old,new in zip(left,right):
-    for key in ("label","tick","center","yaw","zoom","seed","ordinary","officers","contact","losses","gate_hp","in_frame_count","in_frame_ids_sha256","window","internal_scale","shadows"):
+    for key in ("label","tick","hero_state","hero_kit","hero_slot","center","yaw","zoom","seed","ordinary","officers","contact","losses","gate_hp","in_frame_count","in_frame_ids_sha256","window","internal_scale","msaa_3d","screen_space_aa","shadows"):
         assert old[key]==new[key], (key,old,new)
     assert new["shadows"] and new["internal_scale"]==1
     name=new["label"]
     l,r=[Image.open(root/s/(name+".png")).convert("RGB") for s in ("before","after")]
     assert l.size==r.size==(1920,1200), (name,l.size,r.size)
-    if name in ("hero","officer","contact","formation"):
+    if name in ("hero","officer","contact","formation","player-action"):
         # Equal coordinates on the delivered PNG. Never interpolate the comparison of fine edges.
         w,h=l.size
         box=(w//2-258,h//2-247,w//2+258,h//2+176)
@@ -67,7 +67,7 @@ for old,new in zip(left,right):
     for i,pic in enumerate((l,r)):
         pair.paste(pic.resize((800,500),Image.Resampling.LANCZOS),(i*800,0))
     pair.save(root/(name+"-pair.jpg"),quality=91)
-    if name in ("hero","contact","saddle","gate","formation","camp","bowline","officer","bank"):
+    if name in ("hero","contact","saddle","gate","formation","camp","bowline","officer","bank","player-action"):
         sample=io.BytesIO()
         pair.resize((1024,320),Image.Resampling.LANCZOS).save(sample,"JPEG",quality=81)
         print("RIVER_PAIR_JPEG",name,base64.b64encode(sample.getvalue()).decode())
