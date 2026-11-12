@@ -25,6 +25,7 @@ var reference_detail := false
 var reference_two_lods:=false
 var reference_officer_detail:=false
 var rank_soldiers:=0
+var lod_by_id:=PackedByteArray()
 var high_detail_soldiers := 0
 var horse: Batch
 var horse_rank: Batch
@@ -62,6 +63,8 @@ func _batch(geometry: Mesh,mat: Material,capacity: int) -> Batch:
 
 func configure(model: Battle) -> void:
 	battle = model
+	lod_by_id.resize(battle.roster.size())
+	lod_by_id.fill(255)
 	var near_mesh: Array[Mesh] = []
 	var far_mesh: Array[Mesh] = []
 	var ranks_mesh: Array[Mesh]=[]
@@ -88,7 +91,14 @@ func configure(model: Battle) -> void:
 		if not u.officer: continue
 		var officer_key := 90 + _key(u)
 		if not groups.has(officer_key):
-			groups[officer_key]=_batch(CompanyArt.fighter(u.kit,"Officer",true),CompanyArt.material(FRIEND if u.team==0 else FOE,u.kit),battle.command_counts[u.team])
+			var side_colour:=FRIEND if u.team==0 else FOE
+			var mat:=CompanyArt.material(side_colour,u.kit)
+			var capacity:int=battle.command_counts[u.team]
+			groups[officer_key]=_batch(CompanyArt.fighter(u.kit,"Officer",true),mat,capacity)
+			groups[officer_key+30]=_batch(CompanyArt.fighter(u.kit,"Officer",false),mat,capacity)
+			groups[officer_key+60]=_batch(Figures.ranks(u.kit,true),_material(side_colour,u.kit),capacity)
+			groups[officer_key+30].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			groups[officer_key+60].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
@@ -202,19 +212,21 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			if battle.vehicle == 2 and not battle.seat_origin:
 				base -= Vector3(heading.x,0,heading.y)*1.83
 			base.y += 0.73 if battle.vehicle==1 else 0.91
-		var full := reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<190))) or (zoom<17 and distance_sq<110) or (zoom<36 and distance_sq<19)
-		var key:=_key(u)
-		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and distance_sq>170.0)):
-			key+=60
-			rank_soldiers+=1
-		elif not full:
-			key+=30
-		elif u.officer:
-			key+=90
-		elif not u.hero:
+		var was_close:=lod_by_id[u.id]==0
+		var was_rank:=lod_by_id[u.id]==2
+		var full:=reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<(209.0 if was_close else 178.0)))) or (zoom<17 and distance_sq<(121.0 if was_close else 102.0)) or (zoom<36 and distance_sq<(23.0 if was_close else 17.0))
+		var tier:=0
+		if not full:
+			tier=1
+			if not reference_two_lods and (zoom>=40 or (zoom>=23 and distance_sq>(151.0 if was_rank else 181.0))):
+				tier=2
+				rank_soldiers+=1
+		elif not u.hero and not u.officer:
 			high_detail_soldiers+=1
-		if key<60 or key>=90:
-			# Persistent cloth lots are tied to roster identity across camera/LOD changes.
+		lod_by_id[u.id]=tier
+		var key:=_key(u)+30*tier+(90 if u.officer else 0)
+		if tier!=2:
+			# Cloth lots follow the individual through camera, load and detail changes.
 			data.a=(float((u.id*5+u.squad*3)%8)+0.055+0.88*data.a)/8.0
 			if u.state==Battle.State.MARCH: data.g=clampf(travelled*15.0,0.0,1.0)
 		if not full or contact_for_all:

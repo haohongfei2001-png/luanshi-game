@@ -228,14 +228,24 @@ static func silhouette(kit: int) -> ArrayMesh:
 
 # Wide-view bodies still have independently articulated arms, legs, head, weapons
 # and faction cloth. The hidden end caps and armor plates cost more than their pixels.
-static func ranks(kit: int) -> ArrayMesh:
+static func ranks(kit: int, officer: bool=false) -> ArrayMesh:
 	var b:=Builder.new()
 	b.open_ends=true
 	b.dye=1
 	b.loft([Vector3(0,0.48,0),Vector3(0,1.30,0)],[Vector2(0.32,0.22),Vector2(0.31,0.18)],4,CLOTH)
 	b.dye=0
 	b.rod(Vector3(0,1.30,0),Vector3(0,1.60,0.024),0.104,0.151,SKIN,4)
-	b.rod(Vector3(0,1.55,0),Vector3(0,1.76,-0.03),0.183,0.04,IRON,4)
+	var armoured:=officer or kit in [Arms.Kit.SHIELD,Arms.Kit.GLAIVE]
+	if armoured:
+		b.rod(Vector3(0,1.58,0),Vector3(0,1.75,-0.016),0.149,0.040,IRON,5)
+		b.rod(Vector3(0,1.00,0),Vector3(0,1.32,-0.001),0.207,0.235,IRON.darkened(0.16),4)
+	else:
+		b.rod(Vector3(0,1.59,-0.015),Vector3(0,1.71,-0.026),0.14,0.074,HAIR,4)
+		b.rod(Vector3(0,1.623,-0.009),Vector3(0,1.655,-0.011),0.151,0.147,CLOTH if kit!=Arms.Kit.BOW else HIDE,4)
+		b.rod(Vector3(0,1.70,-0.045),Vector3(0,1.758,-0.051),0.046,0.032,HAIR,4)
+	b.rod(Vector3(0,0.91,0),Vector3(0,0.975,0),0.24,0.23,HIDE,4)
+	if kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW]:
+		b.rod(Vector3(-0.16,0.84,-0.18),Vector3(0.11,1.43,-0.202),0.066,0.076,HIDE,4)
 	for side: float in [-1.0,1.0]:
 		b.joint=1 if side<0 else 2
 		b.rod(Vector3(side*0.14,0.61,0),Vector3(side*0.16,0.045,0.045),0.104,0.081,HIDE,3)

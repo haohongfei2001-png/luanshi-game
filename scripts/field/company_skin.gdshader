@@ -43,7 +43,7 @@ void vertex() {
     else if(state==6) {clip=13;}
     else {clip=14;}
     // Mounted legs use the saddle pose while the upper body keeps its live attack clip.
-    if(code>=64 && (first>=9 && first<=14)) {clip=15;phase=INSTANCE_CUSTOM.b;}
+    if(code>=64 && (state==0 || (first>=9 && first<=14))) {clip=15;phase=INSTANCE_CUSTOM.b;}
     int sample_kit=(code/32)%2==1 && (state==1 || state==2) ? 2:kit;
     int frame=clamp(int(phase*31.0+.5),0,31);
     ivec2 tile=ivec2((frame%8)*48,(sample_kit*16+clip)*4+frame/8);

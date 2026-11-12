@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://djmj74tf53rba"
+path="res://.godot/imported/cloth_and_iron.png-24d28e10d3e3efb9e4041fb9817b91a3.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/river_gate/figures/cloth_and_iron.png"
+dest_files=["res://.godot/imported/cloth_and_iron.png-24d28e10d3e3efb9e4041fb9817b91a3.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

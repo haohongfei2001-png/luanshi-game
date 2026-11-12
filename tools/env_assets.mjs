@@ -116,7 +116,11 @@ class Joinery {
         this.indices=[[],[]];
     }
     vertex(p,n,c) {
-        const value=[...p,...n,...c], key=value.map(k=>Math.round(k*100000)).join("/");
+        // Quantize before packing. Small libm differences between JS engines must not
+        // create different glTF bytes for the same authored joint.
+        const rounded=k=>Math.round(k*1000000)/1000000 || 0;
+        const value=[...p.map(rounded),...n.map(rounded),...c];
+        const key=value.map(k=>Math.round(k*100000)).join("/");
         if (!this.lookup.has(key)) {
             this.lookup.set(key,this.verts.length);
             this.verts.push(value);
