@@ -10,6 +10,8 @@
 
 六类衣装、队列、主角、双方军官和坐骑已接入新色稿/分级光照。地图使用原有耕地、营道、林荫和河岸的位置重新组织地表。披膊、布衬、轻兵垂巾与军官后领已制作三档几何，共用既有骨架与 MultiMesh。默认镜头新增一次主角真实起手的配对采集。亲历夺城或撤离后，幸存者带走当地战果，营地可读，远方军报仍须传递。有快存时，战前部署可以直接点「继续上次战役」，恢复战场、营地或在途部队。RC5 的两场护送被同一 510 秒 llvmpipe 时限截断，现记录两条路线的部署、进展、破门和战报，片段与护送可以在独立的图形运行器上并行。沿用 512v512、原生渲染和 4× MSAA。
 
+自审第一轮 15 对实机画面后，保留衣装明暗分层，重绘草地、碎石与道路交界。普通兵出征时的兵种、人数和军械按编制冻结，军官与玩家保留独立记录。运行 `godot --headless --path . --script tests/field_cohort_muster.gd` 可核对两种记录的实测大小、1,024 至 10,000 普通兵的 24 步模拟与战后结算。每帧图形性能另行实测。
+
 云端下一次复现：`git fetch origin main codex/river-gate-animation-rc6`，在干净工作树检出该分支，运行 `./tools/prepare-font.sh && ./tools/compare-river-art.sh`。完整回归入口为 `./tools/test-field-journey.sh && ./tools/test-field-render.sh`。美术实机自审、当前候选性能和整套 CI 以本次运行的记录更新，M5 真机 `NOT_RUN`。
 
 <!-- river-gate-current-review -->

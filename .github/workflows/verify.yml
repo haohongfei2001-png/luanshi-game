@@ -35,6 +35,12 @@ jobs:
         env:
           XDG_DATA_HOME: /home/runner/.local/share
         run: timeout 5m ./tools/test.sh
+      - name: Measure field reservations and casualties at four army sizes
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/field_cohort_muster.gd 2>&1 | tee artifacts/field-cohort-muster.log
+          grep -q '^FIELD_COHORT_MUSTER_PASS' artifacts/field-cohort-muster.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-cohort-muster.log; then exit 1; fi
       - name: Verify youth narrative interface and real input path
         env:
           XDG_DATA_HOME: /home/runner/.local/share

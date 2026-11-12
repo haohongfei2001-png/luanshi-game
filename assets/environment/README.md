@@ -15,3 +15,5 @@
 主战区地表使用 512 × 512 可平铺颜色与交界高度贴图。草根采用 [Amal Kumar 的 Sparse Grass](https://polyhaven.com/a/sparse_grass)，压实土采用 [Rob Tuytel 的 Brown Mud Dry](https://polyhaven.com/a/brown_mud_dry)，湿砂采用 [Dario Barresi 的 Sandy Gravel 02](https://polyhaven.com/a/sandy_gravel_02)。三项原始扫描适用 [Poly Haven CC0](https://polyhaven.com/license)。项目对其做了色阶分组、抑制细小亮斑、色彩整理和高度蒙版制作。游戏直接读取仓库里的 PNG。可用 Pillow 11.3.0 运行 `python3 tools/env_ground_materials.py` 重建，脚本对三份源 JPG 核验 SHA-256，游戏运行时不访问素材网站。
 
 `soil-cover.png` 由 `node tools/env_river_paint.mjs` 从河关道路、营地、坡地旧田和河岸生成。四个线性通道依次记录裸土覆盖、湿砂、地表明暗和到道路中心线的相对距离。车辙随桥头和道路弯曲。近景草冠与土沿使用材料高度过渡。
+
+`verge-and-track.svg` 是原创可平铺地表色罩。草丛的短叶、根际土色和零散路石分在三个线性通道，按世界地图上的草场、车道、坡田和潮湿河岸分别显现。远镜头使用 mipmap 滤除脚边细节。

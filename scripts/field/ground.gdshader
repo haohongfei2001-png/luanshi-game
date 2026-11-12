@@ -4,7 +4,7 @@ uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
-uniform sampler2D compacted_loam : source_color, repeat_enable, filter_linear_mipmap;
+uniform sampler2D verge_track : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform vec4 river_silt : source_color = vec4(.39,.40,.31,1.);
 uniform vec4 deep_water : source_color = vec4(.13,.31,.34,1.0);
 uniform vec4 shallows : source_color = vec4(.33,.48,.42,1.0);
@@ -44,14 +44,19 @@ vec3 painted_ground(vec2 p, float shore) {
     colour = mix(colour,river_silt.rgb, .46 * smoothstep(.16,.95,wet));
     float rut = 1.0-smoothstep(.033,.112,abs(cover.a-.385));
     colour *= 1.0-.095*rut*smoothstep(.68,.94,cover.r)*(1.0-wet);
-    // Closer than a boot's width, one low-contrast material sample breaks up the
-    // dry earth. Beyond that distance the broad map and cart tracks carry the lane.
-    float footprint=max(length(dFdx(p)),length(dFdy(p)));
-    float close_soil=(1.0-smoothstep(.010,.035,footprint))*cover.r;
-    if (close_soil>.035) {
-        float grain=texture(compacted_loam,p*.22,2.1).a;
-        colour*=1.0+(grain-.5)*.14*close_soil;
-    }
+    // Discrete marks supply the middle scale between a whole meadow and a boot.
+    // The road mask continues through the junctions and independently clips the grass.
+    vec2 ground_uv=vec2(p.x*.131+p.y*.026,p.y*.146-p.x*.019);
+    vec3 marks=texture(verge_track,ground_uv).rgb;
+    float turf=(1.0-smoothstep(.32,.86,cover.r))*(1.0-.68*wet);
+    float worn=smoothstep(.35,.85,cover.r)*(1.0-.55*wet);
+    float grass_shelf=smoothstep(.28,.68,cover.b);
+    float cropped_edge=4.0*cover.r*(1.0-cover.r);
+    colour*=mix(.86,.96,grass_shelf);
+    colour*=1.0-.14*marks.b*turf-.13*marks.r*turf;
+    colour+=vec3(.028,.034,.012)*marks.r*turf*grass_shelf;
+    colour*=1.0-.15*cropped_edge*(.36+.64*marks.r);
+    colour+=vec3(.037,.030,.018)*marks.g*(.18+.82*worn);
     return colour;
 }
 
