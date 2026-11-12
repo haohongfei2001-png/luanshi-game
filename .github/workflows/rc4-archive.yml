@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
-      VERIFIED_SHA: '22d5c85abf18296c0d299075f68e287102b004e7'
-      BUILD_SHA: 'c0c66ed43bf0bad4c86429d812466e8880d09512'
-      VERIFIED_RUN: '43280282660'
+      VERIFIED_SHA: '2293008c2d76dcbd788aeaef0fb871de1bc8eee1'
+      BUILD_SHA: 'eabe0b211892064b2dce9270d72468cfcff3c412'
+      VERIFIED_RUN: '43288570098'
       VERIFIED_EVENT: 'pull_request'
-      REVIEW_CODE_HEAD: '22d5c85abf18296c0d299075f68e287102b004e7'
-      REVIEW_CI: '43280282660'
+      REVIEW_CODE_HEAD: '2293008c2d76dcbd788aeaef0fb871de1bc8eee1'
+      REVIEW_CI: '43288570098'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,7 +26,7 @@ jobs:
           path: game
       - uses: actions/checkout@v4
         with:
-          ref: c0c66ed43bf0bad4c86429d812466e8880d09512
+          ref: eabe0b211892064b2dce9270d72468cfcff3c412
           path: tested
       - name: Download the package, films and raw logs of the exact PR build
         working-directory: game
@@ -45,6 +45,13 @@ jobs:
           download river-art visual
           download gameplay gameplay
           download Luanshi-macOS package
+          pigment_run=43287903198
+          pigment_state=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$pigment_run" --jq '[.head_sha,.conclusion]|join(" ")')
+          test "$pigment_state" = "a1c663f21c9ff6a045fd9231c5036494556005c4 success"
+          gh run download "$pigment_run" -R "$GITHUB_REPOSITORY" -n actual-renderer-pigment -D "$RUNNER_TEMP/receipts/pigment"
+          git fetch -q --depth=1 origin c78d1fc43139ffef63ca4bee79c6750160849ea1
+          git show c78d1fc43139ffef63ca4bee79c6750160849ea1:docs/evidence/river-gate-v1-rc4/macos-window.png > "$RUNNER_TEMP/receipts/previous-native.png"
+
       - name: Resume a breach save written by the original RC3 game
         working-directory: tested
         run: |
