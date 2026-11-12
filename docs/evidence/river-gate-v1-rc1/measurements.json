@@ -1,0 +1,2871 @@
+{
+  "source_sha": "efcd91533e7cd50309375d1ab90138a041e7f674",
+  "version": "0.16.0-rc.1",
+  "ci": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051",
+  "pull_request": "https://github.com/haohongfei2001-png/luanshi-game/pull/27",
+  "jobs": [
+    {
+      "name": "verify-and-export",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/job/130947396850",
+      "conclusion": "success"
+    },
+    {
+      "name": "Preserve review video bytes",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/job/130951822897",
+      "conclusion": "success"
+    },
+    {
+      "name": "macos-runtime",
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/job/130951822901",
+      "conclusion": "success"
+    }
+  ],
+  "macos_archive_sha256": "0abed710f526225276d0f1565df183f80d319b794044302153a5eea25567d610",
+  "artifacts": {
+    "macos-verification": {
+      "id": 13913080673,
+      "download": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/artifacts/13913080673",
+      "bytes": 2693603,
+      "expires_at": "2027-02-10T03:16:43Z",
+      "outer_sha256": "sha256:5320d1b1518bb009ae43dd3879029e33dc8fab17702a9aecdfd91b05976058a5",
+      "name": "macos-verification-efcd91533e7cd50309375d1ab90138a041e7f674"
+    },
+    "verification": {
+      "id": 13913065424,
+      "download": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/artifacts/13913065424",
+      "bytes": 7959972,
+      "expires_at": "2027-02-10T03:16:43Z",
+      "outer_sha256": "sha256:e2d338f8eafd707a5f8f703b6034689265806f74d1bf153e01ffc5929eead795",
+      "name": "verification-efcd91533e7cd50309375d1ab90138a041e7f674"
+    },
+    "Luanshi-Linux": {
+      "id": 13912917018,
+      "download": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/artifacts/13912917018",
+      "bytes": 35231830,
+      "expires_at": "2027-02-10T03:16:43Z",
+      "outer_sha256": "sha256:3c92809715769e995caedc62024d4e9768415215d757e3a41f6febe0b1578ba0",
+      "name": "Luanshi-Linux-efcd91533e7cd50309375d1ab90138a041e7f674"
+    },
+    "Luanshi-macOS": {
+      "id": 13912902186,
+      "download": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/artifacts/13912902186",
+      "bytes": 70243081,
+      "expires_at": "2027-02-10T03:16:43Z",
+      "outer_sha256": "sha256:7113038cc93cdba8242776abf006e28c3808a011d4881f973b505e0863b7d25a",
+      "name": "Luanshi-macOS-efcd91533e7cd50309375d1ab90138a041e7f674"
+    },
+    "gameplay": {
+      "id": 13911799967,
+      "download": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/artifacts/13911799967",
+      "bytes": 36075597,
+      "expires_at": "2027-02-10T03:16:43Z",
+      "outer_sha256": "sha256:ca6da35ad43fc18380d232872e2d98b710e3454f78c5426edfd30d6daf9bb66f",
+      "name": "gameplay-efcd91533e7cd50309375d1ab90138a041e7f674"
+    }
+  },
+  "linux": {
+    "JOURNEY_PASS": [
+      {
+        "attacks": 4351,
+        "blocked_hits": 43,
+        "camp_hours": 1,
+        "camp_resumed": true,
+        "capture_sec": 6,
+        "crew_replacements": 1,
+        "dead": [
+          260,
+          295
+        ],
+        "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+        "dropped_weapons": [
+          260,
+          295
+        ],
+        "errors": [],
+        "escaped": [
+          13,
+          124
+        ],
+        "gate_hp": 0,
+        "hero_ammo": 13,
+        "hero_hp": 100,
+        "hero_impacts": 7,
+        "hits": [
+          1393,
+          1121
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            2,
+            2
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            1024,
+            1040
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [
+              1024,
+              1025,
+              1027,
+              1028,
+              1029,
+              1031,
+              1032,
+              1033,
+              1034,
+              1036,
+              1037,
+              1039
+            ],
+            [
+              1040,
+              1041,
+              1042,
+              1043,
+              1044,
+              1045,
+              1046,
+              1047,
+              1048,
+              1049,
+              1050,
+              1051,
+              1052,
+              1053,
+              1054,
+              1055
+            ]
+          ],
+          "kills": [
+            8,
+            4
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            62,
+            20
+          ],
+          "successions": [
+            8,
+            7
+          ],
+          "wounded": [
+            [
+              1030,
+              1035,
+              1038
+            ],
+            []
+          ]
+        },
+        "officers": 32,
+        "orders_delivered": 1,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          512,
+          512
+        ],
+        "popup_semantic_fallbacks": 0,
+        "projectiles": 2525,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "result": "夺取城内阵地",
+        "routing": [
+          34,
+          32
+        ],
+        "screens": [
+          "01-muster",
+          "02-deploy",
+          "03-gate",
+          "04-contact",
+          "05-breach",
+          "06-report",
+          "07-camp"
+        ],
+        "seed": 61112,
+        "soldiers_per_side": 512,
+        "tick": 1065
+      }
+    ],
+    "JOURNEY_MIX": [
+      {
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 800,
+            "duration": "60.800000",
+            "nb_frames": "912"
+          },
+          {
+            "codec_name": "aac",
+            "channels": 2,
+            "duration": "60.800000",
+            "nb_frames": "2851"
+          }
+        ],
+        "peak_db": -10.6,
+        "mean_db": -32.8
+      }
+    ],
+    "JOURNEY_ARCHIVE": [
+      {
+        "bytes": 909944,
+        "sha256": "8d384f7835cd0cafb996b2d88e4d2bd3ea248074c20eb07b30832db1f8f70907",
+        "original_sha256": "890ebae85eb5ca9fbb98510222d45297541940084ddf2df4d1b774a2359eadf7",
+        "streams": [
+          {
+            "codec_name": "h264",
+            "duration": "60.800000",
+            "nb_frames": "912"
+          },
+          {
+            "codec_name": "aac",
+            "channels": 2,
+            "duration": "60.800000",
+            "nb_frames": "2851"
+          }
+        ]
+      }
+    ],
+    "FIELD_HISTORY_PASS": [
+      {
+        "different_keys": [],
+        "expected_tick": 235,
+        "hits": [
+          273,
+          266
+        ],
+        "resumed_tick": 235,
+        "source_version": 3,
+        "start_tick": 161
+      }
+    ],
+    "FIELD_PATROL_ROUTE": [
+      {
+        "convoys": 3,
+        "garrison": [
+          15,
+          15,
+          576
+        ],
+        "hours": 3,
+        "relief": [
+          60,
+          30,
+          102
+        ]
+      }
+    ],
+    "FIELD_PATROL_ENCOUNTER": [
+      {
+        "army": 34,
+        "end": "成功撤离",
+        "officers": [
+          1,
+          1
+        ],
+        "ordinary": [
+          27,
+          14
+        ],
+        "rearguard": 26,
+        "seconds": 10819.1,
+        "uncommitted": 31,
+        "unused_weapons": 1,
+        "weapons": 30
+      }
+    ],
+    "FIELD_PATROL_REJECT": [
+      {
+        "quickload_button": true,
+        "retained_world": true
+      }
+    ],
+    "FIELD_ESCORT_GUI_PASS": [
+      {
+        "attacks": 3207,
+        "blocked_hits": 17,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "dead": [
+          174,
+          232
+        ],
+        "decision": "城门先由先锋攻开，役兵护送冲车抵达门洞。",
+        "dropped_weapons": [
+          174,
+          232
+        ],
+        "errors": [],
+        "escaped": [
+          4,
+          93
+        ],
+        "gate_hp": 0,
+        "hero_hp": 100,
+        "hits": [
+          1008,
+          715
+        ],
+        "mission": "护送冲车",
+        "officer_corps": {
+          "active_commands": [
+            13,
+            6
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            1024,
+            1040
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [
+              1024,
+              1028
+            ],
+            [
+              1040,
+              1041,
+              1042,
+              1043,
+              1044,
+              1045,
+              1046,
+              1047,
+              1048,
+              1049
+            ]
+          ],
+          "kills": [
+            4,
+            4
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            23,
+            15
+          ],
+          "successions": [
+            1,
+            2
+          ],
+          "wounded": [
+            [
+              1025
+            ],
+            []
+          ]
+        },
+        "officers": 32,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          512,
+          512
+        ],
+        "patrol": [
+          27,
+          14
+        ],
+        "popup_semantic_fallbacks": 0,
+        "projectiles": 2074,
+        "ram_hp": 150,
+        "ram_strokes": 1,
+        "result": "护送冲车成功",
+        "routing": [
+          12,
+          9
+        ],
+        "screens": [
+          "patrol-muster",
+          "escort-approach",
+          "escort-report"
+        ],
+        "seed": 61112,
+        "soldiers_per_side": 512,
+        "tick": 724
+      }
+    ],
+    "FIELD_ASYMMETRIC": [
+      {
+        "companies": [
+          21,
+          13
+        ],
+        "counts": [
+          641,
+          389
+        ],
+        "hits": [
+          427,
+          259
+        ],
+        "roster": 1065
+      }
+    ],
+    "FIELD_CROWD": [
+      {
+        "original": 80,
+        "peak_half_metre_cell": 4,
+        "remaining_at_origin": 0,
+        "span_m": [
+          6.68933296203613,
+          6.38235855102539
+        ]
+      }
+    ],
+    "FIELD_TRAFFIC_AB": [
+      {
+        "after": {
+          "after_breach_6s": {
+            "crowded_pairs": 238,
+            "gate_crossers": 59,
+            "hull_occupant_samples": 0,
+            "low_motion_passage_samples": 35,
+            "overlapping_person_samples": 349,
+            "peak_3m_square": 14,
+            "peak_half_metre_cell": 3,
+            "peak_same_coordinate": 1,
+            "samples": 12
+          },
+          "breach": 629,
+          "bridge_crossers": 32,
+          "bridge_file_metres": [
+            -4,
+            -3,
+            -2,
+            -1,
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "crowded_pairs": 742,
+          "dead": [
+            263,
+            304
+          ],
+          "dropped_weapons": [
+            263,
+            304
+          ],
+          "end": "夺取城内阵地",
+          "escaped": [
+            7,
+            106
+          ],
+          "escort_formation": [
+            {
+              "depth_m": 19.74,
+              "frontage_m": 14.53,
+              "occupied_1m_cells": 49,
+              "ordinary": 53,
+              "tick": 200
+            },
+            {
+              "depth_m": 25.82,
+              "frontage_m": 15.89,
+              "occupied_1m_cells": 47,
+              "ordinary": 47,
+              "tick": 400
+            },
+            {
+              "depth_m": 13.91,
+              "frontage_m": 16.26,
+              "occupied_1m_cells": 43,
+              "ordinary": 45,
+              "tick": 600
+            }
+          ],
+          "gate_contact": 517,
+          "gate_crossers": 163,
+          "gate_hp": 0,
+          "hits": [
+            1365,
+            1088
+          ],
+          "hull_occupant_samples": 0,
+          "low_motion_passage_samples": 16,
+          "ordinary": [
+            512,
+            512
+          ],
+          "overlapping_person_samples": 1010,
+          "peak_3m_square": 19,
+          "peak_half_metre_cell": 3,
+          "peak_same_coordinate": 1,
+          "ram_farthest_x": 38.0927200317383,
+          "ram_hp": 150,
+          "ram_strikes": 0,
+          "samples": 53,
+          "service": [
+            [
+              200,
+              6,
+              260,
+              0,
+              [
+                [
+                  76,
+                  0,
+                  2.2
+                ],
+                [
+                  77,
+                  0,
+                  1.3
+                ],
+                [
+                  78,
+                  0,
+                  1.8
+                ],
+                [
+                  79,
+                  2,
+                  1.5
+                ]
+              ]
+            ],
+            [
+              400,
+              21,
+              260,
+              0,
+              [
+                [
+                  76,
+                  0,
+                  2.2
+                ],
+                [
+                  77,
+                  0,
+                  2.2
+                ],
+                [
+                  79,
+                  0,
+                  1.8
+                ]
+              ]
+            ],
+            [
+              600,
+              36,
+              79.6,
+              22,
+              [
+                [
+                  76,
+                  0,
+                  2.2
+                ],
+                [
+                  77,
+                  0,
+                  2.2
+                ],
+                [
+                  79,
+                  0,
+                  1.8
+                ]
+              ]
+            ],
+            [
+              800,
+              38.1,
+              0,
+              29,
+              [
+                [
+                  76,
+                  0,
+                  17.9
+                ],
+                [
+                  77,
+                  2,
+                  17.7
+                ]
+              ]
+            ],
+            [
+              1000,
+              38.1,
+              0,
+              19,
+              []
+            ]
+          ],
+          "sim_tick_ms": {
+            "p50": 9.59,
+            "p95": 12.873,
+            "p99": 14.219,
+            "samples": 521
+          },
+          "soft_crowd": true,
+          "tick": 1015,
+          "traffic_lanes": true,
+          "wall_defenders": 192
+        },
+        "before": {
+          "after_breach_6s": {
+            "crowded_pairs": 1125,
+            "gate_crossers": 144,
+            "hull_occupant_samples": 16,
+            "low_motion_passage_samples": 49,
+            "overlapping_person_samples": 1180,
+            "peak_3m_square": 34,
+            "peak_half_metre_cell": 4,
+            "peak_same_coordinate": 1,
+            "samples": 12
+          },
+          "breach": 654,
+          "bridge_crossers": 32,
+          "bridge_file_metres": [
+            -4,
+            -3,
+            -2,
+            -1,
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "crowded_pairs": 1897,
+          "dead": [
+            266,
+            322
+          ],
+          "dropped_weapons": [
+            266,
+            322
+          ],
+          "end": "夺取城内阵地",
+          "escaped": [
+            16,
+            100
+          ],
+          "escort_formation": [
+            {
+              "depth_m": 19.53,
+              "frontage_m": 7.06,
+              "occupied_1m_cells": 50,
+              "ordinary": 59,
+              "tick": 200
+            },
+            {
+              "depth_m": 19.02,
+              "frontage_m": 8.47,
+              "occupied_1m_cells": 47,
+              "ordinary": 56,
+              "tick": 400
+            },
+            {
+              "depth_m": 10.79,
+              "frontage_m": 7.54,
+              "occupied_1m_cells": 43,
+              "ordinary": 55,
+              "tick": 600
+            }
+          ],
+          "gate_contact": 514,
+          "gate_crossers": 194,
+          "gate_hp": 0,
+          "hits": [
+            1444,
+            1144
+          ],
+          "hull_occupant_samples": 394,
+          "low_motion_passage_samples": 37,
+          "ordinary": [
+            512,
+            512
+          ],
+          "overlapping_person_samples": 1929,
+          "peak_3m_square": 42,
+          "peak_half_metre_cell": 7,
+          "peak_same_coordinate": 2,
+          "ram_farthest_x": 39.8924407958984,
+          "ram_hp": 146.32,
+          "ram_strikes": 0,
+          "samples": 53,
+          "service": [
+            [
+              200,
+              6,
+              260,
+              0,
+              [
+                [
+                  76,
+                  0,
+                  1.3
+                ],
+                [
+                  77,
+                  0,
+                  0.8
+                ],
+                [
+                  78,
+                  0,
+                  1.8
+                ],
+                [
+                  79,
+                  0,
+                  1.1
+                ]
+              ]
+            ],
+            [
+              400,
+              21,
+              260,
+              0,
+              [
+                [
+                  77,
+                  0,
+                  1.1
+                ],
+                [
+                  78,
+                  0,
+                  1.3
+                ],
+                [
+                  79,
+                  0,
+                  1.6
+                ]
+              ]
+            ],
+            [
+              600,
+              36,
+              138.8,
+              39,
+              [
+                [
+                  77,
+                  0,
+                  1.1
+                ],
+                [
+                  78,
+                  0,
+                  1.1
+                ],
+                [
+                  79,
+                  0,
+                  1.6
+                ]
+              ]
+            ],
+            [
+              800,
+              39.9,
+              0,
+              7,
+              [
+                [
+                  77,
+                  0,
+                  14.5
+                ],
+                [
+                  78,
+                  4,
+                  15.6
+                ],
+                [
+                  79,
+                  0,
+                  12.1
+                ]
+              ]
+            ],
+            [
+              1000,
+              39.9,
+              0,
+              25,
+              [
+                [
+                  77,
+                  5,
+                  11.7
+                ]
+              ]
+            ]
+          ],
+          "sim_tick_ms": {
+            "p50": 7.734,
+            "p95": 10.333,
+            "p99": 11.534,
+            "samples": 521
+          },
+          "soft_crowd": false,
+          "tick": 1025,
+          "traffic_lanes": false,
+          "wall_defenders": 192
+        },
+        "every_ticks": 10,
+        "overlap_m": 0.52,
+        "seed": 61112,
+        "window_ticks": [
+          100,
+          620
+        ]
+      }
+    ],
+    "FIELD_NATURAL_SIEGE": [
+      {
+        "attacks": 4244,
+        "blocked_hits": 61,
+        "capture_sec": 6,
+        "crew_replacements": 1,
+        "dead": [
+          263,
+          304
+        ],
+        "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+        "dropped_weapons": [
+          263,
+          304
+        ],
+        "escaped": [
+          7,
+          106
+        ],
+        "farthest_ram_x": 38.0927200317383,
+        "first_gate_damage_tick": 517,
+        "gate_breach_tick": 629,
+        "gate_hp": 0,
+        "hero_hp": 100,
+        "hits": [
+          1365,
+          1088
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            8,
+            2
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            1024,
+            1040
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [
+              1024,
+              1028,
+              1032,
+              1033,
+              1034,
+              1035,
+              1037,
+              1038
+            ],
+            [
+              1040,
+              1041,
+              1042,
+              1043,
+              1044,
+              1045,
+              1046,
+              1047,
+              1048,
+              1049,
+              1050,
+              1051,
+              1052,
+              1053,
+              1054,
+              1055
+            ]
+          ],
+          "kills": [
+            14,
+            5
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            52,
+            22
+          ],
+          "successions": [
+            6,
+            5
+          ],
+          "wounded": [
+            [
+              1025,
+              1027,
+              1030
+            ],
+            []
+          ]
+        },
+        "officers": 32,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          512,
+          512
+        ],
+        "ordinary_surviving": [
+          249,
+          208
+        ],
+        "projectiles": 2375,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "result": "夺取城内阵地",
+        "routing": [
+          22,
+          16
+        ],
+        "seed": 61112,
+        "soldiers_per_side": 512,
+        "tick": 1015,
+        "world_receipt": true
+      }
+    ],
+    "FIELD_SIEGE_FILM_PASS": [
+      {
+        "attacks": 4244,
+        "blocked_hits": 61,
+        "breach_tick": 630,
+        "capture_fps": 10,
+        "capture_sec": 6,
+        "crew_replacements": 1,
+        "dead": [
+          263,
+          304
+        ],
+        "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+        "dropped_weapons": [
+          263,
+          304
+        ],
+        "escaped": [
+          7,
+          106
+        ],
+        "frames_captured": 509,
+        "gate_first_damage_tick": 518,
+        "gate_hp": 0,
+        "hero_hp": 100,
+        "hits": [
+          1365,
+          1088
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            8,
+            2
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            1024,
+            1040
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [
+              1024,
+              1028,
+              1032,
+              1033,
+              1034,
+              1035,
+              1037,
+              1038
+            ],
+            [
+              1040,
+              1041,
+              1042,
+              1043,
+              1044,
+              1045,
+              1046,
+              1047,
+              1048,
+              1049,
+              1050,
+              1051,
+              1052,
+              1053,
+              1054,
+              1055
+            ]
+          ],
+          "kills": [
+            14,
+            5
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            52,
+            22
+          ],
+          "successions": [
+            6,
+            5
+          ],
+          "wounded": [
+            [
+              1025,
+              1027,
+              1030
+            ],
+            []
+          ]
+        },
+        "officers": 32,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          512,
+          512
+        ],
+        "ordinary_survivors": [
+          249,
+          208
+        ],
+        "projectiles": 2375,
+        "quivers_balanced": true,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "receipt": true,
+        "result": "夺取城内阵地",
+        "routing": [
+          22,
+          16
+        ],
+        "seed": 61112,
+        "soldiers_per_side": 512,
+        "tick": 1015
+      }
+    ],
+    "FIELD_SCALE": [
+      {
+        "attacks": 123,
+        "blocked_hits": 5,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "damaged_soldiers": [
+          18,
+          17
+        ],
+        "dead": [
+          14,
+          14
+        ],
+        "decision": "",
+        "dropped_weapons": [
+          14,
+          14
+        ],
+        "engaged_lanes": 2,
+        "escaped": [
+          0,
+          0
+        ],
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hits": [
+          53,
+          54
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            1,
+            0
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            40,
+            41
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            []
+          ],
+          "kills": [
+            2,
+            0
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            2,
+            3
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            [
+              41
+            ]
+          ]
+        },
+        "officers": 2,
+        "orders_delivered": 1,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          20,
+          20
+        ],
+        "projectiles": 39,
+        "ram_hp": 119.92,
+        "ram_strokes": 0,
+        "result": "",
+        "routing": [
+          1,
+          1
+        ],
+        "seed": 61112,
+        "sim_p95_ms": 0.478,
+        "soldiers_per_side": 20,
+        "tick": 360
+      },
+      {
+        "attacks": 708,
+        "blocked_hits": 11,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "damaged_soldiers": [
+          79,
+          96
+        ],
+        "dead": [
+          62,
+          76
+        ],
+        "decision": "守军失去关前阵地，存留战力 3 对 18，可指挥部队 1 支。",
+        "dropped_weapons": [
+          62,
+          76
+        ],
+        "engaged_lanes": 5,
+        "escaped": [
+          0,
+          0
+        ],
+        "gate_hp": 260,
+        "hero_hp": 80.8853604793549,
+        "hits": [
+          307,
+          261
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            1,
+            1
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            200,
+            204
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [
+              201,
+              202,
+              203
+            ],
+            [
+              204,
+              205,
+              206
+            ]
+          ],
+          "kills": [
+            1,
+            3
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            10,
+            7
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            []
+          ]
+        },
+        "officers": 8,
+        "orders_delivered": 1,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          100,
+          100
+        ],
+        "projectiles": 364,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "result": "守军溃退",
+        "routing": [
+          10,
+          20
+        ],
+        "seed": 61112,
+        "sim_p95_ms": 2.426,
+        "soldiers_per_side": 100,
+        "tick": 340
+      },
+      {
+        "attacks": 1324,
+        "blocked_hits": 32,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "damaged_soldiers": [
+          140,
+          160
+        ],
+        "dead": [
+          93,
+          133
+        ],
+        "decision": "",
+        "dropped_weapons": [
+          93,
+          133
+        ],
+        "engaged_lanes": 8,
+        "escaped": [
+          0,
+          0
+        ],
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hits": [
+          540,
+          397
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            6,
+            3
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            500,
+            508
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [
+              504
+            ],
+            [
+              508,
+              509,
+              510,
+              511,
+              512
+            ]
+          ],
+          "kills": [
+            1,
+            3
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            14,
+            10
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [
+              503
+            ],
+            []
+          ]
+        },
+        "officers": 16,
+        "orders_delivered": 1,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          250,
+          250
+        ],
+        "projectiles": 739,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "result": "",
+        "routing": [
+          11,
+          27
+        ],
+        "seed": 61112,
+        "sim_p95_ms": 6.272,
+        "soldiers_per_side": 250,
+        "tick": 360
+      },
+      {
+        "attacks": 2626,
+        "blocked_hits": 25,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "damaged_soldiers": [
+          238,
+          320
+        ],
+        "dead": [
+          163,
+          215
+        ],
+        "decision": "",
+        "dropped_weapons": [
+          163,
+          215
+        ],
+        "engaged_lanes": 8,
+        "escaped": [
+          0,
+          0
+        ],
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hits": [
+          979,
+          663
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            15,
+            6
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            1024,
+            1040
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            [
+              1040,
+              1041,
+              1042,
+              1043,
+              1044,
+              1045,
+              1046,
+              1047,
+              1048,
+              1049
+            ]
+          ],
+          "kills": [
+            3,
+            4
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            35,
+            12
+          ],
+          "successions": [
+            0,
+            4
+          ],
+          "wounded": [
+            [
+              1029
+            ],
+            []
+          ]
+        },
+        "officers": 32,
+        "orders_delivered": 1,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          512,
+          512
+        ],
+        "projectiles": 1444,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "result": "",
+        "routing": [
+          9,
+          104
+        ],
+        "seed": 61112,
+        "sim_p95_ms": 15.991,
+        "soldiers_per_side": 512,
+        "tick": 360
+      }
+    ],
+    "FIELD_FRAME_SAMPLE": [
+      {
+        "attacks": 56,
+        "blocked_hits": 5,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "dead": [
+          5,
+          3
+        ],
+        "decision": "",
+        "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "display": "X11",
+        "draw_calls_p95": 75,
+        "dropped_weapons": [
+          5,
+          3
+        ],
+        "escaped": [
+          0,
+          0
+        ],
+        "fps": 25.9440340982796,
+        "frame_samples": 73,
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hits": [
+          22,
+          24
+        ],
+        "hits_during_sample": 42,
+        "input_observed_ms": 31.821,
+        "last_high_detail_soldiers": 20,
+        "last_rank_soldiers": 0,
+        "last_visible_soldiers": 40,
+        "mean_ms": 38.5445068493151,
+        "median_ms": 38.536,
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            1,
+            1
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            40,
+            41
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            []
+          ],
+          "kills": [
+            0,
+            0
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            0,
+            0
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            []
+          ]
+        },
+        "officers": 2,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          20,
+          20
+        ],
+        "p95_ms": 42.931,
+        "p99_ms": 46.258,
+        "peak_visible_combat_poses": 23,
+        "projectiles": 20,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "render_cpu_p95_ms": 19.3689994812012,
+        "render_gpu_p95_ms": 38.3409996032715,
+        "render_scale": 1,
+        "renderer": "gl_compatibility",
+        "resident_kib": 351172,
+        "result": "",
+        "routing": [
+          0,
+          0
+        ],
+        "seed": 61112,
+        "shadows": true,
+        "sim_ms_per_tick": 0.700927272727273,
+        "soldiers_per_side": 20,
+        "static_memory_bytes": 62479728,
+        "tick": 75,
+        "view_script_ms_per_frame": 0.333890410958904,
+        "viewport_px": [
+          1280,
+          800
+        ],
+        "wall_seconds": 2.813749
+      },
+      {
+        "attacks": 258,
+        "blocked_hits": 7,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "dead": [
+          16,
+          24
+        ],
+        "decision": "",
+        "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "display": "X11",
+        "draw_calls_p95": 90,
+        "dropped_weapons": [
+          16,
+          24
+        ],
+        "escaped": [
+          0,
+          0
+        ],
+        "fps": 20.3496062351194,
+        "frame_samples": 58,
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hits": [
+          105,
+          86
+        ],
+        "hits_during_sample": 186,
+        "input_observed_ms": 46.783,
+        "last_high_detail_soldiers": 20,
+        "last_rank_soldiers": 83,
+        "last_visible_soldiers": 196,
+        "mean_ms": 49.141,
+        "median_ms": 48.827,
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            4,
+            4
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            200,
+            204
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            []
+          ],
+          "kills": [
+            0,
+            1
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            0,
+            2
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            []
+          ]
+        },
+        "officers": 8,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          100,
+          100
+        ],
+        "p95_ms": 53.249,
+        "p99_ms": 73.048,
+        "peak_visible_combat_poses": 100,
+        "projectiles": 120,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "render_cpu_p95_ms": 22.5400009155273,
+        "render_gpu_p95_ms": 43.8600006103516,
+        "render_scale": 1,
+        "renderer": "gl_compatibility",
+        "resident_kib": 373956,
+        "result": "",
+        "routing": [
+          0,
+          0
+        ],
+        "seed": 61112,
+        "shadows": true,
+        "sim_ms_per_tick": 2.65346428571429,
+        "soldiers_per_side": 100,
+        "static_memory_bytes": 63522002,
+        "tick": 73,
+        "view_script_ms_per_frame": 0.885241379310345,
+        "viewport_px": [
+          1280,
+          800
+        ],
+        "wall_seconds": 2.850178
+      },
+      {
+        "attacks": 435,
+        "blocked_hits": 11,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "dead": [
+          20,
+          40
+        ],
+        "decision": "",
+        "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "display": "X11",
+        "draw_calls_p95": 89,
+        "dropped_weapons": [
+          20,
+          40
+        ],
+        "escaped": [
+          0,
+          0
+        ],
+        "fps": 16.8625296323828,
+        "frame_samples": 48,
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hits": [
+          182,
+          133
+        ],
+        "hits_during_sample": 311,
+        "input_observed_ms": 56.34,
+        "last_high_detail_soldiers": 22,
+        "last_rank_soldiers": 154,
+        "last_visible_soldiers": 311,
+        "mean_ms": 59.3030833333333,
+        "median_ms": 58.391,
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            8,
+            8
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            500,
+            508
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            []
+          ],
+          "kills": [
+            0,
+            0
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            0,
+            2
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            []
+          ]
+        },
+        "officers": 16,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          250,
+          250
+        ],
+        "p95_ms": 65.46,
+        "p99_ms": 66.486,
+        "peak_visible_combat_poses": 130,
+        "projectiles": 240,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "render_cpu_p95_ms": 26.0389995574951,
+        "render_gpu_p95_ms": 49.4119987487793,
+        "render_scale": 1,
+        "renderer": "gl_compatibility",
+        "resident_kib": 383856,
+        "result": "",
+        "routing": [
+          0,
+          1
+        ],
+        "seed": 61112,
+        "shadows": true,
+        "sim_ms_per_tick": 6.63501785714286,
+        "soldiers_per_side": 250,
+        "static_memory_bytes": 65440787,
+        "tick": 72,
+        "view_script_ms_per_frame": 1.45489583333333,
+        "viewport_px": [
+          1280,
+          800
+        ],
+        "wall_seconds": 2.846548
+      },
+      {
+        "attacks": 574,
+        "blocked_hits": 8,
+        "capture_sec": 0,
+        "crew_replacements": 0,
+        "dead": [
+          17,
+          58
+        ],
+        "decision": "",
+        "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "display": "X11",
+        "draw_calls_p95": 89,
+        "dropped_weapons": [
+          17,
+          58
+        ],
+        "escaped": [
+          0,
+          0
+        ],
+        "fps": 11.1121528754432,
+        "frame_samples": 32,
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hits": [
+          239,
+          122
+        ],
+        "hits_during_sample": 357,
+        "input_observed_ms": 74.007,
+        "last_high_detail_soldiers": 24,
+        "last_rank_soldiers": 388,
+        "last_visible_soldiers": 558,
+        "mean_ms": 89.9915625,
+        "median_ms": 91.953,
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            16,
+            16
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            1024,
+            1040
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            []
+          ],
+          "kills": [
+            0,
+            0
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            0,
+            4
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            []
+          ]
+        },
+        "officers": 32,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          512,
+          512
+        ],
+        "p95_ms": 97.846,
+        "p99_ms": 98.316,
+        "peak_visible_combat_poses": 166,
+        "projectiles": 359,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "render_cpu_p95_ms": 32.1150016784668,
+        "render_gpu_p95_ms": 58.8969993591309,
+        "render_scale": 1,
+        "renderer": "gl_compatibility",
+        "resident_kib": 398460,
+        "result": "",
+        "routing": [
+          0,
+          2
+        ],
+        "seed": 61112,
+        "shadows": true,
+        "sim_ms_per_tick": 15.6549824561404,
+        "soldiers_per_side": 512,
+        "static_memory_bytes": 68824650,
+        "tick": 73,
+        "view_script_ms_per_frame": 2.61721875,
+        "viewport_px": [
+          1280,
+          800
+        ],
+        "wall_seconds": 2.87973
+      }
+    ],
+    "FIELD_PAIRED_LOD": [
+      {
+        "full_detail_median_render_ms": 250.78,
+        "full_detail_primitives": 1417172,
+        "optimized_median_render_ms": 67.373,
+        "optimized_primitives": 219323,
+        "per_side": 512,
+        "poses": 10,
+        "previous_officer_detail_ms": 76.755,
+        "previous_officer_detail_primitives": 243037,
+        "previous_two_lods_median_ms": 84.611,
+        "previous_two_lods_primitives": 297668,
+        "visible_soldiers_last": 592
+      }
+    ],
+    "FIELD_VEHICLE_INPUTS": [
+      [
+        {
+          "dismounted": true,
+          "distance": 6.79648733139038,
+          "skill": true,
+          "speed": 6.875,
+          "turn_z": 0.838670551776886,
+          "vehicle": "horse"
+        },
+        {
+          "dismounted": true,
+          "distance": 4.30946683883667,
+          "skill": true,
+          "speed": 4.375,
+          "turn_z": 0.998597502708435,
+          "vehicle": "cart"
+        }
+      ]
+    ],
+    "FIELD_WEAPON_INPUT": [
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 0,
+        "hits": 3,
+        "max_body_pick_error": 0,
+        "max_ground_error": 0.000281979737337679,
+        "max_live_body_pick_error": 0,
+        "quiver": 0,
+        "skill_input": true,
+        "target_hp": 3.95274472236633,
+        "weapon": "剑"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 0,
+        "hits": 2,
+        "max_body_pick_error": 0,
+        "max_ground_error": 0.000444424513261765,
+        "max_live_body_pick_error": 0,
+        "quiver": 0,
+        "skill_input": true,
+        "target_hp": 16.5621914410591,
+        "weapon": "刀"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 12.62993527174,
+        "hits": 3,
+        "max_body_pick_error": 0,
+        "max_ground_error": 0.000389416876714677,
+        "max_live_body_pick_error": 0,
+        "quiver": 0,
+        "skill_input": true,
+        "target_hp": 13.3510813426971,
+        "weapon": "棍"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 0,
+        "hits": 3,
+        "max_body_pick_error": 0,
+        "max_ground_error": 0.000281979737337679,
+        "max_live_body_pick_error": 0,
+        "quiver": 0,
+        "skill_input": true,
+        "target_hp": 16.2401385760307,
+        "weapon": "枪"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 0,
+        "hits": 3,
+        "max_body_pick_error": 0,
+        "max_ground_error": 0.000389416876714677,
+        "max_live_body_pick_error": 0,
+        "quiver": 0,
+        "skill_input": true,
+        "target_hp": 5.60456982469558,
+        "weapon": "长刀"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 62.7239122390747,
+        "hits": 5,
+        "max_body_pick_error": 2.95519256591797,
+        "max_ground_error": 0.000409476255299523,
+        "max_live_body_pick_error": 0,
+        "quiver": 15,
+        "skill_input": true,
+        "target_hp": 0,
+        "weapon": "弓"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 25.6582952737808,
+        "hits": 3,
+        "max_body_pick_error": 2.95519256591797,
+        "max_ground_error": 0.000409476255299523,
+        "max_live_body_pick_error": 0,
+        "quiver": 9,
+        "skill_input": true,
+        "target_hp": 0,
+        "weapon": "弩"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 21.3334900856018,
+        "hits": 3,
+        "max_body_pick_error": 0,
+        "max_ground_error": 0.000389416876714677,
+        "max_live_body_pick_error": 0,
+        "quiver": 0,
+        "skill_input": true,
+        "target_hp": 15.3985342001915,
+        "weapon": "剑盾"
+      },
+      {
+        "defense_seen": true,
+        "e_and_space": [
+          2,
+          3
+        ],
+        "hero_hp": 63.7457748651505,
+        "hits": 5,
+        "max_body_pick_error": 3.01192426681519,
+        "max_ground_error": 0.000281979737337679,
+        "max_live_body_pick_error": 0,
+        "quiver": 0,
+        "skill_input": true,
+        "target_hp": 0,
+        "weapon": "双剑"
+      }
+    ],
+    "FIELD_OFFICER_MANIFEST": [
+      {
+        "existing_billets": 128,
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ]
+      }
+    ],
+    "FIELD_OFFICER_CONTACT": [
+      {
+        "dead": [
+          1,
+          1
+        ],
+        "kills": [
+          1,
+          1
+        ],
+        "skills": [
+          2,
+          2
+        ],
+        "ticks": 230
+      }
+    ],
+    "FIELD_OFFICER_DUEL": [
+      {
+        "blocked": 7.88665494918823,
+        "exposed": 35.8484315872192,
+        "out_of_reach": 0
+      }
+    ],
+    "FIELD_OFFICER_CHALLENGE": [
+      {
+        "challenger": 206,
+        "player_distance": 15.9600105285645,
+        "seen_tick": 10
+      }
+    ],
+    "FIELD_OFFICER_RESCUE": [
+      {
+        "guard": 0,
+        "largest_step": 0.158789128065109,
+        "rescued": [
+          [
+            40
+          ],
+          []
+        ],
+        "ticks": 57
+      }
+    ],
+    "FIELD_OFFICER_SUCCESSION": [
+      {
+        "active_commands": [
+          1,
+          1
+        ],
+        "captives": [
+          [],
+          []
+        ],
+        "commanders": [
+          40,
+          41
+        ],
+        "evacuated": [
+          [],
+          []
+        ],
+        "fallen": [
+          [
+            40
+          ],
+          [
+            41
+          ]
+        ],
+        "kills": [
+          0,
+          0
+        ],
+        "ranked": true,
+        "rescued": [
+          [],
+          []
+        ],
+        "skills": [
+          0,
+          0
+        ],
+        "successions": [
+          1,
+          1
+        ],
+        "wounded": [
+          [],
+          []
+        ]
+      }
+    ],
+    "FIELD_OFFICER_WORLD": [
+      {
+        "ordinary_dead": [
+          0,
+          0
+        ],
+        "outcome": "主将阵亡",
+        "prisoners": [
+          [
+            40
+          ],
+          []
+        ],
+        "ticks": 89
+      }
+    ],
+    "FIELD_OFFICER_CUSTODY": [
+      {
+        "fatal": [
+          [
+            40
+          ],
+          []
+        ],
+        "holder": 37,
+        "prisoner": 40
+      }
+    ],
+    "FIELD_ALTERNATE": [
+      [
+        {
+          "attacks": 0,
+          "blocked_hits": 0,
+          "capture_sec": 0,
+          "case": "withdrawal",
+          "crew_replacements": 0,
+          "dead": [
+            0,
+            0
+          ],
+          "decision": "主将与撤出人员到达西营，仍在关前的部队留作后卫。",
+          "dropped_weapons": [
+            0,
+            0
+          ],
+          "escaped": [
+            1,
+            0
+          ],
+          "gate_hp": 260,
+          "hero_hp": 100,
+          "hero_x": -90.6128158569336,
+          "hits": [
+            0,
+            0
+          ],
+          "mission": "夺取河关",
+          "officer_corps": {
+            "active_commands": [
+              0,
+              1
+            ],
+            "captives": [
+              [],
+              []
+            ],
+            "commanders": [
+              40,
+              41
+            ],
+            "evacuated": [
+              [],
+              []
+            ],
+            "fallen": [
+              [],
+              []
+            ],
+            "kills": [
+              0,
+              0
+            ],
+            "ranked": true,
+            "rescued": [
+              [],
+              []
+            ],
+            "skills": [
+              0,
+              0
+            ],
+            "successions": [
+              0,
+              0
+            ],
+            "wounded": [
+              [],
+              []
+            ]
+          },
+          "officers": 2,
+          "orders_delivered": 0,
+          "orders_lost": 0,
+          "orders_refused": 0,
+          "ordinary_rosters": [
+            20,
+            20
+          ],
+          "projectiles": 0,
+          "ram_hp": 150,
+          "ram_strokes": 0,
+          "receipt": true,
+          "result": "成功撤离",
+          "routing": [
+            0,
+            0
+          ],
+          "seed": 61112,
+          "soldiers_per_side": 20,
+          "survivors_can_continue": true,
+          "tick": 684
+        },
+        {
+          "attacks": 11,
+          "blocked_hits": 0,
+          "capture_sec": 0,
+          "case": "defeat",
+          "crew_replacements": 0,
+          "dead": [
+            0,
+            0
+          ],
+          "decision": "主将阵亡，余军按在场军籍结算，河关仍由原守军控制。",
+          "dropped_weapons": [
+            0,
+            0
+          ],
+          "escaped": [
+            0,
+            0
+          ],
+          "gate_hp": 260,
+          "hero_hp": 0,
+          "hero_x": 3.47492909431458,
+          "hits": [
+            0,
+            5
+          ],
+          "mission": "夺取河关",
+          "officer_corps": {
+            "active_commands": [
+              1,
+              1
+            ],
+            "captives": [
+              [],
+              []
+            ],
+            "commanders": [
+              40,
+              41
+            ],
+            "evacuated": [
+              [],
+              []
+            ],
+            "fallen": [
+              [],
+              []
+            ],
+            "kills": [
+              0,
+              0
+            ],
+            "ranked": true,
+            "rescued": [
+              [],
+              []
+            ],
+            "skills": [
+              0,
+              0
+            ],
+            "successions": [
+              0,
+              0
+            ],
+            "wounded": [
+              [],
+              []
+            ]
+          },
+          "officers": 2,
+          "orders_delivered": 0,
+          "orders_lost": 0,
+          "orders_refused": 0,
+          "ordinary_rosters": [
+            20,
+            20
+          ],
+          "projectiles": 4,
+          "ram_hp": 150,
+          "ram_strokes": 0,
+          "receipt": true,
+          "result": "主将阵亡",
+          "routing": [
+            0,
+            0
+          ],
+          "seed": 61112,
+          "soldiers_per_side": 20,
+          "survivors_can_continue": false,
+          "tick": 43
+        }
+      ]
+    ],
+    "FIELD_PORTRAIT": [
+      {
+        "crop_px": [
+          156,
+          206
+        ],
+        "face_skin_pixels": 119,
+        "hand_skin_pixels": 142,
+        "zoom": 5.80000019073486
+      }
+    ]
+  },
+  "native_macos": [
+    {
+      "adapter": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))",
+      "display": "macOS",
+      "estimated_internal_px": [
+        720,
+        450
+      ],
+      "four_second_windows": [],
+      "fps": 63.2017673719452,
+      "frames": 222,
+      "hits_in_window": 404,
+      "input_to_postdraw_ms": [
+        13.6470003128052,
+        12.3669996261597,
+        11.548999786377
+      ],
+      "mean_ms": 15.8223423423423,
+      "p50_ms": 12.648,
+      "p95_ms": 25.812,
+      "p99_ms": 28.126,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 0,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 11.6379995346069,
+      "render_gpu_p95_ms": null,
+      "render_target_px": [
+        720,
+        450
+      ],
+      "renderer": "gl_compatibility",
+      "scale": 1,
+      "seconds": 3.51256,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": false,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "compat-1",
+      "returncode": 0,
+      "requested_method": "gl_compatibility",
+      "max_rss_bytes": 346587136,
+      "validated": true
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "estimated_internal_px": [
+        720,
+        450
+      ],
+      "four_second_windows": [],
+      "fps": 266.257262795347,
+      "frames": 932,
+      "hits_in_window": 400,
+      "input_to_postdraw_ms": [
+        2.69300007820129,
+        3.45900011062622,
+        5.81899976730347
+      ],
+      "mean_ms": 3.7557660944206,
+      "p50_ms": 2.82,
+      "p95_ms": 13.688,
+      "p99_ms": 15.715,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 0,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 0.171000003814697,
+      "render_gpu_p95_ms": null,
+      "render_target_px": [
+        720,
+        450
+      ],
+      "renderer": "mobile",
+      "scale": 1,
+      "seconds": 3.500374,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": false,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "default-metal-1",
+      "returncode": 0,
+      "requested_method": "mobile",
+      "max_rss_bytes": 416612352,
+      "validated": true
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "estimated_internal_px": [
+        720,
+        450
+      ],
+      "four_second_windows": [
+        {
+          "frames": 1035,
+          "hits": 472,
+          "tick": 181,
+          "visible": 581,
+          "wall_seconds": 4.011203
+        },
+        {
+          "frames": 952,
+          "hits": 448,
+          "tick": 261,
+          "visible": 545,
+          "wall_seconds": 4.002635
+        },
+        {
+          "frames": 818,
+          "hits": 103,
+          "tick": 341,
+          "visible": 729,
+          "wall_seconds": 4.002771
+        },
+        {
+          "frames": 1160,
+          "hits": 34,
+          "tick": 421,
+          "visible": 639,
+          "wall_seconds": 4.001134
+        },
+        {
+          "frames": 1135,
+          "hits": 38,
+          "tick": 500,
+          "visible": 544,
+          "wall_seconds": 4.001768
+        }
+      ],
+      "fps": 267.734661035045,
+      "frames": 6426,
+      "hits_in_window": 1146,
+      "input_to_postdraw_ms": [
+        2.75200009346008,
+        2.96099996566772,
+        2.73900008201599
+      ],
+      "mean_ms": 3.73504123871771,
+      "p50_ms": 2.933,
+      "p95_ms": 11.263,
+      "p99_ms": 14.446,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 0,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 0.163000002503395,
+      "render_gpu_p95_ms": null,
+      "render_target_px": [
+        720,
+        450
+      ],
+      "renderer": "mobile",
+      "scale": 1,
+      "seconds": 24.001375,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": true,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "default-metal-2",
+      "returncode": 0,
+      "requested_method": "mobile",
+      "max_rss_bytes": 359202816,
+      "validated": true
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "estimated_internal_px": [
+        612,
+        383
+      ],
+      "four_second_windows": [],
+      "fps": 258.891380967639,
+      "frames": 909,
+      "hits_in_window": 404,
+      "input_to_postdraw_ms": [
+        2.59200000762939,
+        3.15100002288818,
+        3.12800002098083
+      ],
+      "mean_ms": 3.86262376237624,
+      "p50_ms": 2.922,
+      "p95_ms": 14.018,
+      "p99_ms": 16.576,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 1,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 0.17399999499321,
+      "render_gpu_p95_ms": null,
+      "render_target_px": [
+        720,
+        450
+      ],
+      "renderer": "mobile",
+      "scale": 0.850000023841858,
+      "seconds": 3.511125,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": false,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "balanced-metal",
+      "returncode": 0,
+      "requested_method": "mobile",
+      "max_rss_bytes": 358334464,
+      "validated": true
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "display": "macOS",
+      "estimated_internal_px": [
+        504,
+        315
+      ],
+      "four_second_windows": [],
+      "fps": 248.089341785651,
+      "frames": 871,
+      "hits_in_window": 404,
+      "input_to_postdraw_ms": [
+        2.57999992370605,
+        4.42600011825562,
+        4.48999977111816
+      ],
+      "mean_ms": 4.03080597014925,
+      "p50_ms": 3.073,
+      "p95_ms": 14.05,
+      "p99_ms": 15.772,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 2,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 0.153999999165535,
+      "render_gpu_p95_ms": null,
+      "render_target_px": [
+        720,
+        450
+      ],
+      "renderer": "mobile",
+      "scale": 0.699999988079071,
+      "seconds": 3.510832,
+      "shadows": false,
+      "static_bytes": null,
+      "tour": false,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "performance-metal",
+      "returncode": 0,
+      "requested_method": "mobile",
+      "max_rss_bytes": 359481344,
+      "validated": true
+    },
+    {
+      "adapter": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))",
+      "display": "macOS",
+      "estimated_internal_px": [
+        720,
+        450
+      ],
+      "four_second_windows": [],
+      "fps": 59.4735029893261,
+      "frames": 209,
+      "hits_in_window": 404,
+      "input_to_postdraw_ms": [
+        13.0469999313354,
+        12.9289999008179,
+        12.6780004501343
+      ],
+      "mean_ms": 16.8142105263158,
+      "p50_ms": 13.437,
+      "p95_ms": 26.737,
+      "p99_ms": 28.453,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 0,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 11.9499998092651,
+      "render_gpu_p95_ms": null,
+      "render_target_px": [
+        720,
+        450
+      ],
+      "renderer": "gl_compatibility",
+      "scale": 1,
+      "seconds": 3.51417,
+      "shadows": true,
+      "static_bytes": null,
+      "tour": false,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "compat-2",
+      "returncode": 0,
+      "requested_method": "gl_compatibility",
+      "max_rss_bytes": 329416704,
+      "validated": true
+    }
+  ],
+  "m5_air": "DEVICE_NOT_TESTED",
+  "archived_media": {
+    "journey-01-muster.jpg": {
+      "bytes": 55576,
+      "sha256": "883ef2735d26b556c610b156b710e3bc232ef398e80793426c61bc3445e1fa10"
+    },
+    "journey-04-contact.jpg": {
+      "bytes": 58797,
+      "sha256": "379b40878b091ae9e1dc0df9119b191453a4075a24fd55e499be46b47c7cd3be"
+    },
+    "journey-05-breach.jpg": {
+      "bytes": 52682,
+      "sha256": "b482433fee39a8bf6336db63372751664785cf87bda502cab2045d8d87566a2a"
+    },
+    "journey-06-report.jpg": {
+      "bytes": 51221,
+      "sha256": "dd1aa26549e34fd5378c31912d0dd5ed77a89305de7c0b00bc522a309f1f8b53"
+    },
+    "journey-07-camp.jpg": {
+      "bytes": 44292,
+      "sha256": "cbcaa76b0bc6b8ae3e79dcecc99879f05da25792559c84f0612305b9aa77f055"
+    },
+    "journey-patrol-muster.jpg": {
+      "bytes": 36436,
+      "sha256": "fa0336ce134420245a370fa2ff933b7812d248b232a1ca9db71db0b838903ee7"
+    },
+    "journey-escort-report.jpg": {
+      "bytes": 59630,
+      "sha256": "484225f013d8337904ded3108209a1fda170e14ef851e911cac3f480b86d84a5"
+    },
+    "soldier-close.jpg": {
+      "bytes": 16581,
+      "sha256": "b4105a958994a98d54a4cf647c930a2ea8097cbc64203f015945e33e202bed83"
+    },
+    "playthrough.mp4": {
+      "bytes": 909944,
+      "sha256": "8d384f7835cd0cafb996b2d88e4d2bd3ea248074c20eb07b30832db1f8f70907"
+    }
+  }
+}

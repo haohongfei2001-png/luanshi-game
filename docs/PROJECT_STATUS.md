@@ -1,5 +1,9 @@
 # Project status / resumable handoff
 
+## 河关 0.16.0-rc.1
+
+已合入主线的河关 0.16.0-rc.1 从军议可连续打到伤亡、缴获、战后行军和读档。标准会战含双方各 512 名普通兵、32 名军官及玩家，平陵巡防按实际军籍出阵。托管的 macOS 程序已开窗并完成千人交战采样，真实 M5 Air 持续性能待测。 主线提交 `efcd91533e7c`。[试玩包与录像](evidence/river-gate-v1-rc1/PLAYTEST.md) · [主线运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051)
+
 ## 归档 · 城头撤离修复
 
 `b6fa818` 修复城头弓手溃逃时卡在墙沿的缺陷，Linux 和托管原生 macOS 均已通过。四个坡道组合均能真实撤离，常规千人攻城在 39.05 模拟秒结束。上一版同场预备队长测为 196 秒、2,210 帧。两版已有[可下载包、真实游戏录像和实测数据](evidence/river-gate-20261112/README.md)。真实 M5 的持续性能待实机验收。

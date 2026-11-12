@@ -4,6 +4,8 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
+**河关 0.16.0-rc.1** · [下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051/artifacts/13912902186) · [观看实际攻城录像](docs/evidence/river-gate-v1-rc1/playthrough.mp4) · [帧时间、校验值和已知问题](docs/evidence/river-gate-v1-rc1/PLAYTEST.md)
+
 河关战役从军议进入。默认会战部署双方各 512 名普通兵，另有军官与玩家。也可选择「平陵巡防」按三城的现有兵力、军械出阵。请在 [Linux 与原生 macOS 构建记录](https://github.com/haohongfei2001-png/luanshi-game/actions/workflows/verify.yml?query=branch%3Amain) 下载对应的构建与实录。源码使用 Godot 4.6.3，先执行 `./tools/prepare-font.sh`，再执行 `godot --path .`。右上角「三城旧档」可进入已有战役。 [中文操作](docs/PLAYING_ZH.md) · [当前交付记录](docs/CODEX_CONTINUATION.md)
 
 ## Vision
