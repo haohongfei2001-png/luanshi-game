@@ -285,6 +285,22 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 		for side:float in [-1.0,1.0]:
 			var strip:=Builder.new()
 			_roof(strip,base,w,d,rise,SLATE,side)
+			# When the near pitch clears the fight, the far eave still rests on
+			# the back gallery's posts, sill and open lattice windows.
+			var along:=Vector3.RIGHT if w>=d else Vector3.BACK
+			var reach:=maxf(w,d)*0.77
+			var gallery:=base+axis*side*minf(w,d)*0.71
+			strip.joint=11
+			for station:float in [-1.0,-0.34,0.34,1.0]:
+				var post:=gallery+along*reach*station
+				strip.rod(post-Vector3.UP*1.78,post+Vector3.UP*0.10,0.105,0.09,WOOD,6)
+			strip.joint=10 if along==Vector3.BACK else 3
+			for drop:float in [0.19,1.06,1.53]:
+				var start:=gallery-along*reach-Vector3.UP*drop
+				strip.rod(start,start+along*reach*2,0.069,0.069,WOOD,4)
+			for slit in 12:
+				var basepoint:=gallery+along*reach*(-0.92+slit*0.168)-Vector3.UP*1.51
+				strip.rod(basepoint,basepoint+Vector3.UP*0.45,0.033,0.033,WOOD.darkened(0.08),4)
 			var lip:=_mesh(strip,self)
 			lip.visible=false
 			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.75+Vector3.UP*0.29,
@@ -398,7 +414,7 @@ func _dress_gate(b: Builder) -> void:
 		b.joint=11
 		b.rod(flag,flag+Vector3.UP*3.20,0.075,0.046,WOOD,7)
 		var tip:=flag+Vector3.UP*2.93
-		b.joint=6
+		b.joint=15
 		var cloth:=Color("8e493e")
 		var mid:=tip+Vector3(-0.17,-0.16,side*0.66)
 		var tail:=tip+Vector3(-0.36,-0.07,side*1.34)

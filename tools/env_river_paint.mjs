@@ -1,4 +1,4 @@
-// Original river-gate region painting and four leaf-spray cutouts. No external assets or packages.
+// Original river-gate region painting and four leaf sprays. No third-party assets or packages.
 import {readFileSync,writeFileSync} from "node:fs";
 const cap=(n,a=0,b=1)=>Math.max(a,Math.min(b,n));
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -60,12 +60,13 @@ function path_segments(roads){
 function paintGround(plan){
     const w=512,h=336,raw=new Uint8Array(w*h*3), road=path_segments(plan.roads);
     const [left,near,right,far]=plan.bounds;
+    const stems=plan.trees;
     for(let py=0;py<h;py++) for(let px=0;px<w;px++){
         const x=lerp(left,right,(px+0.5)/w),z=lerp(near,far,(py+0.5)/h);
         const broad=value(x,z,0.068,426), small=value(x+0.36*z,z,0.31,172), stroke=value(x-z*.35,z+x*.12,0.56,42);
         const bed=Math.hypot((x-8)/32,(z+35)/16),river=Math.abs(x+32);
-        let c=mix([83,107,77],[126,143,95],0.25+broad*.64);
-        c=mix(c,[146,148,96],smooth(0.57,0.89,small*.42+broad*.58)*0.72);
+        let c=mix([73,94,73],[116,132,90],0.25+broad*.64);
+        c=mix(c,[134,139,95],smooth(0.57,0.89,small*.42+broad*.58)*0.72);
         c=mix(c,[95,120,112],(1-smooth(0.55,1.3,bed))*(0.20+0.45*broad));
         const wet=(1-smooth(5.1,14.3,river+1.8*(small-0.5)));
         c=mix(c,[67,110,87],wet*0.79);
@@ -84,6 +85,14 @@ function paintGround(plan){
             const d=dx*dx+dz*dz;
             if(d<4.4)c=mix(c,[68,88,71],(1-smooth(0.18,3.8,d+.4*(small-.5)))*0.55);
         }
+        for(const [cx,cz,height] of stems){
+            const dx=x-cx,dz=z-cz, radius=height*.46;
+            if(Math.abs(dx)>radius*1.7 || Math.abs(dz)>radius*1.7)continue;
+            const d=(dx*dx+dz*dz)/(radius*radius);
+            const shelter=1-smooth(.15,1.92,d+.14*(small-.5));
+            c=mix(c,[60,75,58],shelter*.50);
+            c=mix(c,[100,91,66],(1-smooth(.015,.22,d))*.69);
+        }
         for(const [cx,cz,len,height,a] of plan.outcrops){
             const dx=x-cx,dz=z-cz,co=Math.cos(a),si=Math.sin(a);
             const u=(dx*co+dz*si)/(len*.65),v=(-dx*si+dz*co)/(height+0.81),d=u*u+v*v;
@@ -95,7 +104,7 @@ function paintGround(plan){
         const [d,wide]=road(x,z),jag=(small-.52)*1.25+(stroke-.5)*.57,edge=d-wide+jag;
         const shoulder=1-smooth(-0.65,2.45,edge), packed=1-smooth(-0.60,0.65,edge);
         const ruts=(1-smooth(.07,.40,Math.abs(d-(wide>2?1.25:.64)+0.11*(small-.5))));
-        const tread=mix([135,121,95],[168,153,119],.17+.49*broad+.35*small);
+        const tread=mix([128,119,98],[157,147,119],.17+.49*broad+.35*small);
         c=mix(c,[132,137,95],shoulder*.46);
         c=mix(c,mul(tread,1-.093*ruts*(.46+.54*small)),packed);
         const yard=(1-smooth(18.6,22.4,Math.abs(z)))*smooth(45,52,x)*(1-smooth(86,91,x));
@@ -109,6 +118,20 @@ function paintGround(plan){
         c.forEach((val,k)=>{raw[n+k]=Math.round(cap(val*tone,0,255));});
     }
     return png(raw,w,h,3);
+}
+function standLayout(plan) {
+    const random=dice(7624), trees=[];
+    for(const [x,z,r,h,type] of plan.groves) {
+        const n=Math.max(2,Math.min(8,Math.round(r*.68)));
+        for(let i=0;i<n;i++){
+            const a=i*2.4+(random()-.5)*.62;
+            const d=r*Math.sqrt((i+.12)/n)*.91;
+            const px=x+Math.cos(a)*d,pz=z+Math.sin(a)*d;
+            if(Math.abs(px+32)<4.9)continue;
+            trees.push([px,pz,h*(.76+.42*random()),type,Math.floor(random()*2),random()*Math.PI*2].map(v=>Math.round(v*10000)/10000));
+        }
+    }
+    return trees;
 }
 function paintLeafSprays(){
     const size=256,raw=new Uint8Array(size*size*4),rng=dice(36022);
@@ -182,5 +205,7 @@ function paintLeafSprays(){
 
 const dir=new URL("../assets/environment/",import.meta.url);
 const plan=JSON.parse(readFileSync(new URL("foothills.json",dir),"utf8"));
+plan.trees=standLayout(plan);
+writeFileSync(new URL("stand-placements.json",dir),"[\n"+plan.trees.map(t=>"  "+JSON.stringify(t)).join(",\n")+"\n]\n");
 writeFileSync(new URL("floodplain-paint.png",dir),paintGround(plan));
 writeFileSync(new URL("leaf-sprays.png",dir),paintLeafSprays());
