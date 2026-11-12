@@ -13,11 +13,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: codex/rc3-figure-atelier
+          fetch-depth: 0
       - name: Build artist sources into distributable Godot assets
         run: |
           set -euo pipefail
           /usr/bin/python3 -c 'from PIL import Image' || (sudo apt-get update -qq && sudo apt-get install -y -qq python3-pil)
+          mkdir -p /tmp/prior-grips
+          git archive 0380f4128d8a5fffd5727e8c682365762a4b56e4 tools/art assets/river_gate/figures/company_motion.png | tar xf - -C /tmp/prior-grips
+          cp tools/art/check_company_motion.py /tmp/prior-grips/tools/art/
+          /usr/bin/python3 /tmp/prior-grips/tools/art/check_company_motion.py --report-only
           /usr/bin/python3 tools/art/bake_river_company.py
+          /usr/bin/python3 tools/art/check_company_motion.py
           sha256sum assets/river_gate/figures/*.glb assets/river_gate/figures/*.png
           git config user.name 'Luanshi asset baker'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

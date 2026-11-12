@@ -32,6 +32,16 @@ def placed(rest,target,q):
     return q,sub(target,rot(q,rest))
 def trans(m,p): return add(rot(m[0],p),m[1])
 def chain(m,n): return qm(m[0],n[0]),add(rot(m[0],n[1]),m[1])
+def limit_grip(p,center,radius):
+    d=sub(p,center); span=sqrt(dot(d,d))
+    return add(center,mul(d,radius/span)) if span>radius else p
+
+def reachable(chest,side,rotation):
+    a,b,c=arm_nodes(side)
+    reach=sqrt(dot(sub(a,b),sub(a,b)))+sqrt(dot(sub(b,c),sub(b,c)))-.003
+    # This is a sphere for the palm/socket, with the actual wrist offset removed.
+    return sub(trans(chest,a),rot(rotation,sub(c,grip(side)))),reach
+
 def two_link(binds,root,end,pole):
     a,b,c=binds
     upper,lower=sqrt(dot(sub(b,a),sub(b,a))),sqrt(dot(sub(c,b),sub(c,b)))
@@ -100,6 +110,7 @@ def pose(kit,clip,t):
     if clip in (10,13):
         hand=(.122,1.326,.245,-60,-32,8) if kit not in TWO_HAND else (.104,1.232,.013,-31,-23,6)
         lean=9;crouch=.092 if clip==10 else .212
+    if ride: lean=17;crouch=.103;shift=.034
     if clip==11: lean=-18*(1-t);turn=-14*(1-t);crouch=.07*(1-t)
     if clip==14: crouch=.13*smooth(t)
     waist=(0,.86,0)
@@ -112,8 +123,21 @@ def pose(kit,clip,t):
     anchor=add(hand[:3],(0,-crouch,shift))
     aim=euler(*hand[3:])
     offq=aim
+    right,radius=reachable(chest,1,aim)
+    anchor=limit_grip(anchor,right,radius)
     if kit in TWO_HAND:
-        off=add(anchor,rot(aim,(0,0,FRONT_GRIP[kit])))
+        slide=0.
+        if attack and slot<3 and kit in (2,3,4):
+            slide=smooth(max(0,(t-.62)/.38)) if clip<=5 else 1-smooth(t)
+        support=rot(aim,(0,0,FRONT_GRIP[kit]-(.18 if kit!=6 else 0)*slide))
+        if not ride:
+            # Intersect both wrist reach spheres. Sliding the support hand and
+            # correcting the weapon as a rigid body keeps both grips on the shaft.
+            left,left_radius=reachable(chest,-1,aim)
+            support_center=sub(left,support)
+            for _ in range(12):
+                anchor=limit_grip(limit_grip(anchor,support_center,left_radius),right,radius)
+        off=add(anchor,support)
     elif kit==5:
         off=add(anchor,rot(aim,(0,0,-pull)))
     elif kit==7:
@@ -134,6 +158,8 @@ def pose(kit,clip,t):
     if kit==6 and 6<=clip<=9:
         load=sin(pi*t)**2
         off=lerp(off,add(anchor,rot(aim,(0,.073,-.066))),load)
+    left,left_radius=reachable(chest,-1,offq)
+    off=limit_grip(off,left,left_radius)
     for side,end,q in ((-1,off,offq),(1,anchor,aim)):
         upper,fore,hn=(LU,LF,LH) if side<0 else (RU,RF,RH)
         binds=arm_nodes(side)
@@ -141,7 +167,8 @@ def pose(kit,clip,t):
         wrist=trans(hand_m,binds[2])
         ms[upper],ms[fore]=two_link(binds,trans(chest,binds[0]),wrist,(side*.65,-.52,-.83))
         ms[hn]=hand_m
-    ms[NOCK]=placed(add(grip(1),(0,0,-.159)),off,aim)
+    nock=add(anchor,rot(aim,(0,0,-.159))) if ride else off
+    ms[NOCK]=placed(add(grip(1),(0,0,-.159)),nock,aim)
     for side in (-1,1):
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
         binds=leg_nodes(side)
