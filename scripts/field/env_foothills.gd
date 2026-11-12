@@ -9,22 +9,27 @@ const LIMESTONE := Color("64716a")
 const TOP := Color("818a78")
 var cells: Dictionary={}
 var leaf_material:=ShaderMaterial.new()
-var ground_material: ShaderMaterial
+var terrain_tiles: Dictionary
 var rng:=RandomNumberGenerator.new()
 var trees: Array[Dictionary]=[]
 
 class Patch:
-	var stone:=Builder.new()
+	var stone:Builder
 	var leaves:=SurfaceTool.new()
 	var sprays:=0
-	var has_solids:=false
-	func _init() -> void:
-		stone.open_ends=true
+	func _init(tile: Builder=null) -> void:
+		stone=tile if tile!=null else Builder.new()
+		if tile==null: stone.open_ends=true
 		leaves.begin(Mesh.PRIMITIVE_TRIANGLES)
 
+static func tile_key(p: Vector2) -> Vector2i:
+	return Vector2i(floori(p.x/42.0),floori(p.y/36.0))
+
 func _cell(p: Vector2) -> Patch:
-	var key:=Vector2i(floori(p.x/26.0),floori(p.y/26.0))
-	if not cells.has(key): cells[key]=Patch.new()
+	# Ground and trunks share existing 42 × 36 m opaque draws. A leaf crown
+	# can be culled at half that span without splitting the supporting terrain.
+	var key:=Vector2i(floori(p.x/21.0),floori(p.y/18.0))
+	if not cells.has(key): cells[key]=Patch.new(terrain_tiles[tile_key(p)])
 	return cells[key]
 
 static func ground_point(p: Vector2) -> Vector3:
@@ -68,12 +73,12 @@ func _canopy_vertex(surface: SurfaceTool,point: Vector3,normal: Vector3,grade: f
 	surface.add_vertex(point)
 
 func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation: float) -> void:
-	var widths: Array[float]=[0.13,0.76,1.0,0.76,0.17]
-	var levels: Array[float]=[-0.72,-0.43,0.03,0.65,0.94]
+	var widths: Array[float]=[0.26,1.0,0.80,0.17]
+	var levels: Array[float]=[-0.66,-0.08,0.57,0.93]
 	var points: Array[Vector3]=[]
 	var normals: Array[Vector3]=[]
 	var grades: Array[float]=[]
-	var sides:=9
+	var sides:=8
 	for ring in levels.size():
 		for i in sides:
 			var a:=rotation+TAU*i/sides+0.089*sin(i*1.7+ring)
@@ -81,7 +86,7 @@ func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation:
 			var width:=radius*widths[ring]*(1.0+0.115*sin(a*3.0+rotation)+0.075*cos(a*5.0+ring))
 			points.append(p+n*width+Vector3.UP*tall*(levels[ring]+0.046*cos(a*2.0+rotation)))
 			normals.append((n*(0.48+widths[ring]*0.42)+Vector3.UP*(levels[ring]+0.23)*1.22).normalized())
-			grades.append(0.16+ring*0.165+sin(a*3.0+ring)*0.046)
+			grades.append(0.15+ring*0.23+sin(a*3.0+ring)*0.046)
 	for ring in range(levels.size()-1):
 		for i in sides:
 			var j:=(i+1)%sides
@@ -106,8 +111,8 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 	for i in 4:
 		var a:=spin+i*TAU/4.0+rng.randf_range(-0.3,0.32)
 		var toe:=foot+Vector3(cos(a),0,sin(a))*h*rng.randf_range(.07,.113)
-		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,5)
-	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,7)
+		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,4)
+	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,6)
 	var tile:=1 if kind==0 else 0 if kind==1 else 3
 	for index:int in CROWNS[kind].size():
 		var knot:Vector4=CROWNS[kind][index]
@@ -115,8 +120,8 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		var elbow:=fork.lerp(center,0.63)+turn*Vector3(.028,.005,-.031)*h
 		var radius:=knot.w*h*rng.randf_range(.91,1.07)
 		var base:=fork.lerp(foot,0.13 if index<2 else 0.0)
-		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,6)
-		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),5)
+		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,5)
+		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),4)
 		var tall:=radius*(1.18 if kind==2 else 0.87 if kind==1 else 0.76)
 		_lobe(patch,center,radius,tall,kind,spin+index*1.94)
 		# Sparse real sprays soften the outline. The light and dark crown volumes
@@ -147,7 +152,6 @@ func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: fl
 	patch.stone.surface.append_from(source.wood,0,placement)
 	patch.leaves.append_from(source.leaves,0,placement)
 	patch.sprays+=1
-	patch.has_solids=true
 
 func _tuft(patch: Patch,p: Vector2,size: float,kind: int=2) -> void:
 	var at:=ground_point(p)+Vector3.UP*0.012
@@ -158,7 +162,6 @@ func _tuft(patch: Patch,p: Vector2,size: float,kind: int=2) -> void:
 		_spray(patch,at,at+fore*size*0.35+Vector3.UP*size,Vector3(-fore.z,0,fore.x)*size*0.59,kind,rng.randf_range(0.51,0.86))
 
 func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: float,walkable: bool) -> void:
-	patch.has_solids=true
 	var side:=Vector2(cos(a),sin(a))
 	var across:=Vector2(-side.y,side.x)
 	var ring: Array[Vector2]=[Vector2(-0.97,-0.29),Vector2(-0.64,-0.59),Vector2(0.12,-0.64),Vector2(0.91,-0.31),Vector2(0.98,0.13),Vector2(0.49,0.54),Vector2(-0.28,0.63),Vector2(-0.87,0.37)]
@@ -179,13 +182,17 @@ func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: 
 	patch.stone.joint=12
 	var palette:=rng.randf_range(-0.08,0.04)
 	var paving:=height<0.08
-	var cap_tone:=Color("85806f") if paving else TOP
-	var face_tone:=Color("726d5e") if paving else LIMESTONE
+	var cap_tone:=Color("a3947c") if paving else TOP
+	var face_tone:=Color("887b68") if paving else LIMESTONE
 	for i in ring.size():
 		var j:=(i+1)%ring.size()
 		var face:=face_tone.lightened(palette+0.035*((i+1)%4))
-		patch.stone.quad(low[i],ledge[i],ledge[j],low[j],face.darkened(0.20))
-		patch.stone.quad(ledge[i],capstone[i],capstone[j],ledge[j],face)
+		if paving:
+			# Inset path fragments have one narrow edge at boot height.
+			patch.stone.quad(low[i],capstone[i],capstone[j],low[j],face)
+		else:
+			patch.stone.quad(low[i],ledge[i],ledge[j],low[j],face.darkened(0.20))
+			patch.stone.quad(ledge[i],capstone[i],capstone[j],ledge[j],face)
 		patch.stone.tri(capstone[j],capstone[i],middle,cap_tone.lightened(palette+0.025*(i%3)))
 
 func _stands(plan: Dictionary) -> void:
@@ -230,8 +237,8 @@ func _pavers(plan: Dictionary) -> void:
 				q+=Vector2(rng.randf_range(-0.075,0.075),rng.randf_range(-0.055,0.055))
 				_shelf(_cell(q),q,rng.randf_range(0.35,0.61),rng.randf_range(0.32,0.53),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
 
-func build(parent: Node3D,material: ShaderMaterial) -> void:
-	ground_material=material
+func build(parent: Node3D,tiles: Dictionary) -> void:
+	terrain_tiles=tiles
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
@@ -241,11 +248,6 @@ func build(parent: Node3D,material: ShaderMaterial) -> void:
 	_stands(plan)
 	_pavers(plan)
 	for patch:Patch in cells.values():
-		if patch.has_solids:
-			var rocks:=MeshInstance3D.new()
-			rocks.mesh=patch.stone.finish()
-			rocks.material_override=ground_material
-			parent.add_child(rocks)
 		if patch.sprays>0:
 			patch.leaves.index()
 			var leaves:=MeshInstance3D.new()

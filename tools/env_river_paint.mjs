@@ -112,6 +112,14 @@ function paintGround(plan){
         if(x>-96&&x<-58&&Math.abs(z)<23){
             const tent=cap(Math.round((-64-x)/6.1),0,4),e=Math.hypot((x+64+tent*6.1)/2.8,(Math.abs(z)-8.2-(tent%2)*6)/3.0);
             c=mix(c,[139,129,101],(1-smooth(.5,1.29,e))*.69);
+            const aisle=Math.hypot((x+69.6)/10.4,(z+18.8+.13*(x+69.6))/2.41);
+            const canopy=Math.hypot((x+65.25)/2.81,(z+18.65)/1.88);
+            c=mix(c,mix([122,113,90],[144,128,99],small), (1-smooth(.48,1.18,aisle+.26*(small-.5)))*.87);
+            c=mix(c,[88,86,69],(1-smooth(.54,1.17,canopy))*.72);
+            for(const [fx,fz] of [[-70.18,-20.62],[-82.43,19.18]]){
+                const hearth=Math.hypot((x-fx)/1.22,(z-fz)/1.03);
+                c=mix(c,[78,79,64],(1-smooth(.44,1.30,hearth))*.84);
+            }
         }
         const tone=.97+.044*stroke+.027*(small-.44);
         const n=(py*w+px)*3;
