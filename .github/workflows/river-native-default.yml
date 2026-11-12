@@ -1,0 +1,63 @@
+name: Native quality startup and resize
+on:
+  push:
+    branches: [codex/river-gate-native-clarity-lab]
+    paths: ['.github/workflows/river-native-default.yml', 'tests/river_native_default.gd']
+permissions:
+  contents: read
+jobs:
+  shipping:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    env:
+      SOURCE: a6bd5043e75721f9db0888db790f1c32d55e9da5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Boot actual shipping source after a native window resize and a saved preset
+        run: |
+          set -euo pipefail
+          cp tests/river_native_default.gd /tmp/river_native_default.gd
+          cp -r docs/evidence/river-gate-native-clarity /tmp/river-native-frames
+          git fetch --depth=1 origin "$SOURCE"
+          git checkout --detach "$SOURCE"
+          test "$(git rev-parse HEAD)" = "$SOURCE"
+          cp /tmp/river_native_default.gd tests/river_native_default.gd
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/clarity-godot
+          sudo install /tmp/clarity-godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          sudo apt-get install --no-install-recommends -y mesa-vulkan-drivers vulkan-tools
+          export VK_DRIVER_FILES="$(python3 -c 'import glob; print(glob.glob("/usr/share/vulkan/icd.d/lvp_icd*.json")[0])')"
+          export VK_ICD_FILENAMES="$VK_DRIVER_FILES"
+          mkdir -p artifacts
+          xvfb-run -a vulkaninfo > /tmp/river-vulkaninfo.txt 2>&1
+          awk '/deviceName|framebufferColorSampleCounts:|framebufferDepthSampleCounts:/{print; if ($0 ~ /SampleCounts:/) {for(i=0;i<3;i++){getline;print}}}' /tmp/river-vulkaninfo.txt | tee artifacts/native-vulkan-sample-counts.txt
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path .
+          xvfb-run -a -s '-screen 0 1984x1264x24' godot --path . --resolution 1280x800 --rendering-method mobile --rendering-driver vulkan --audio-driver Dummy --disable-vsync --fixed-fps 60 --script tests/river_native_default.gd 2>&1 | tee artifacts/native-startup-resize.log
+          grep -q CLAR_NATIVE_DEFAULT artifacts/native-startup-resize.log
+          if grep -E 'SCRIPT ERROR|Shader compilation failed|Validation Error' artifacts/native-startup-resize.log; then exit 1; fi
+      - name: Read lossless side-by-side pixels from retained native gameplay
+        run: |
+          python3 -m venv /tmp/clarity-preview-python
+          /tmp/clarity-preview-python/bin/pip install -q 'pillow==11.2.1'
+          /tmp/clarity-preview-python/bin/python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import base64,io,textwrap
+          for scene,width in [('mounted',1280),('contact',1920)]:
+              box=(width//2-132,width*5//16-120,width//2+132,width*5//16+60)
+              pair=Image.new('RGB',(528,180))
+              for j,msaa in enumerate((0,4)):
+                  src=Path('/tmp/river-native-frames')/f'{scene}-{width}-msaa{msaa}.png'
+                  with Image.open(src) as frame: pair.paste(frame.crop(box),(j*264,0))
+              out=io.BytesIO()
+              pair.save(out,format='WEBP',lossless=True,method=6)
+              for chunk in textwrap.wrap(base64.b64encode(out.getvalue()).decode(),2048):
+                  print('CLAR_PIX_'+scene.upper(),chunk)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-native-production-startup
+          path: artifacts/native-*
