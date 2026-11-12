@@ -1,0 +1,76 @@
+name: Archive the verified RC3 game and art records
+on:
+  push:
+    branches: [codex/rc3-archive-verified]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      VERIFIED_SHA: '799e1e41a098bf534b63f699ea6f683e4707306f'
+      VERIFIED_RUN: '43245656470'
+      CPU_FACTS: '{"20":{"base":{"p50":0.215,"p95":0.629,"p99":0.953,"max":1.169,"mean":0.253,"n":2700},"core":{"p50":0.222,"p95":0.626,"p99":0.934,"max":1.105,"mean":0.256,"n":2700}},"100":{"base":{"p50":1.46,"p95":4.538,"p99":4.888,"max":5.059,"mean":1.933,"n":1000},"core":{"p50":1.442,"p95":4.156,"p99":4.514,"max":5.406,"mean":1.864,"n":1000}},"250":{"base":{"p50":5.283,"p95":9.815,"p99":11.877,"max":13.399,"mean":5.387,"n":2650},"core":{"p50":4.916,"p95":8.597,"p99":10.34,"max":12.953,"mean":4.996,"n":2650}},"512":{"base":{"p50":17.011,"p95":26.725,"p99":29.391,"max":34.893,"mean":16.845,"n":2000},"core":{"p50":13.808,"p95":20.753,"p99":22.464,"max":24.123,"mean":13.653,"n":2000}}}'
+      DRAW_FACTS: '[{"camera_size":26,"case":"line","dead":[35,78],"draws":149,"hits":[332,174],"memory_bytes":69949215,"p50_ms":256.341,"p95_ms":277.442,"p99_ms":285.504,"per_side":512,"render_cpu95_ms":264.6669921875,"render_gpu95_ms":267.434997558594,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":94,"triangles":831842,"visible":562},{"camera_size":12,"case":"melee","dead":[71,111],"draws":128,"hits":[474,307],"memory_bytes":69955526,"p50_ms":403.357,"p95_ms":415.179,"p99_ms":416.736,"per_side":512,"render_cpu95_ms":404.858001708984,"render_gpu95_ms":408.316009521484,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":144,"triangles":2067326,"visible":383},{"camera_size":27,"case":"gate","dead":[186,219],"draws":128,"hits":[975,762],"memory_bytes":69888870,"p50_ms":194.44,"p95_ms":203.94,"p99_ms":206.205,"per_side":512,"render_cpu95_ms":190.177993774414,"render_gpu95_ms":190.123001098633,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":539,"triangles":990721,"visible":575},{"camera_size":50,"case":"pan","dead":[192,225],"draws":143,"hits":[1007,791],"memory_bytes":69943090,"p50_ms":128.188,"p95_ms":139.385,"p99_ms":146.208,"per_side":512,"render_cpu95_ms":127.290000915527,"render_gpu95_ms":129.022003173828,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":604,"triangles":531527,"visible":791},{"camera_size":26,"case":"line","dead":[35,78],"draws":151,"hits":[332,174],"memory_bytes":70597497,"p50_ms":186.768,"p95_ms":199.965,"p99_ms":200.692,"per_side":512,"render_cpu95_ms":190.65299987793,"render_gpu95_ms":191.533996582031,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":94,"triangles":513543,"visible":461},{"camera_size":12,"case":"melee","dead":[71,111],"draws":122,"hits":[474,307],"memory_bytes":70612559,"p50_ms":252.876,"p95_ms":265.591,"p99_ms":267.482,"per_side":512,"render_cpu95_ms":258.712005615234,"render_gpu95_ms":259.727996826172,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":144,"triangles":780698,"visible":283},{"camera_size":27,"case":"gate","dead":[186,219],"draws":131,"hits":[975,762],"memory_bytes":70545903,"p50_ms":181.561,"p95_ms":196.601,"p99_ms":199.652,"per_side":512,"render_cpu95_ms":182.559997558594,"render_gpu95_ms":183.106994628906,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":539,"triangles":676296,"visible":394},{"camera_size":50,"case":"pan","dead":[192,225],"draws":146,"hits":[1007,791],"memory_bytes":70603521,"p50_ms":134.672,"p95_ms":150.153,"p99_ms":152.474,"per_side":512,"render_cpu95_ms":142.787994384766,"render_gpu95_ms":143.610000610352,"renderer":"llvmpipe (LLVM 20.1.2, 256 bits)","samples":32,"seed":61112,"tick":604,"triangles":442635,"visible":563}]'
+      GRIP_FACTS: '{"previous":[{"kit":0,"measurements":1024,"p95_m":0.020404,"worst_wrist_m":0.13773,"baked_wrist_m":0.136808,"worst_nock_m":0},{"kit":1,"measurements":1024,"p95_m":0.035421,"worst_wrist_m":0.13773,"baked_wrist_m":0.136808,"worst_nock_m":0},{"kit":2,"measurements":1024,"p95_m":0.163426,"worst_wrist_m":0.405736,"baked_wrist_m":0.401135,"worst_nock_m":0},{"kit":3,"measurements":1024,"p95_m":0.228845,"worst_wrist_m":0.339978,"baked_wrist_m":0.34218,"worst_nock_m":0},{"kit":4,"measurements":1024,"p95_m":0.251918,"worst_wrist_m":0.511265,"baked_wrist_m":0.512784,"worst_nock_m":0},{"kit":5,"measurements":1024,"p95_m":0.091426,"worst_wrist_m":0.251626,"baked_wrist_m":0.257243,"worst_nock_m":0},{"kit":6,"measurements":1024,"p95_m":0.123093,"worst_wrist_m":0.194365,"baked_wrist_m":0.19504,"worst_nock_m":0},{"kit":7,"measurements":1024,"p95_m":0,"worst_wrist_m":0.13773,"baked_wrist_m":0.136808,"worst_nock_m":0},{"kit":8,"measurements":1024,"p95_m":0.01047,"worst_wrist_m":0.13773,"baked_wrist_m":0.136808,"worst_nock_m":0}],"fitted":[{"kit":0,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.018058,"worst_nock_m":0},{"kit":1,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.018058,"worst_nock_m":0},{"kit":2,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.020026,"worst_nock_m":0},{"kit":3,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.01872,"worst_nock_m":0},{"kit":4,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.019008,"worst_nock_m":0},{"kit":5,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.017736,"worst_nock_m":0},{"kit":6,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.016652,"worst_nock_m":0},{"kit":7,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.017085,"worst_nock_m":0},{"kit":8,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.018616,"worst_nock_m":0}],"final":[{"kit":0,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001121,"worst_nock_m":0},{"kit":1,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001152,"worst_nock_m":0},{"kit":2,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001075,"worst_nock_m":0},{"kit":3,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001236,"worst_nock_m":0},{"kit":4,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001036,"worst_nock_m":0},{"kit":5,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001052,"worst_nock_m":0},{"kit":6,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001183,"worst_nock_m":0},{"kit":7,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001069,"worst_nock_m":0},{"kit":8,"measurements":1024,"p95_m":0,"worst_wrist_m":0,"baked_wrist_m":0.001107,"worst_nock_m":0}]}'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: packer
+      - uses: actions/checkout@v4
+        with:
+          ref: 799e1e41a098bf534b63f699ea6f683e4707306f
+          path: game
+      - name: Read exact, independent main-run outputs
+        working-directory: game
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/receipts"
+          state=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN" --jq '[.head_sha,.head_branch,.conclusion]|join(" ")')
+          test "$state" = "$VERIFIED_SHA main success"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN/artifacts?per_page=100" > "$RUNNER_TEMP/receipts/artifacts.json"
+          download() { gh run download "$VERIFIED_RUN" -R "$GITHUB_REPOSITORY" -n "$1-$VERIFIED_SHA" -D "$RUNNER_TEMP/receipts/$2"; }
+          download verification engineering
+          download field-verification field
+          download macos-verification mac
+          download river-art visual
+          download gameplay gameplay
+          download Luanshi-macOS package
+      - name: Resume a breach save written by the original RC2 game
+        working-directory: game
+        run: |
+          set -euo pipefail
+          engine_base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$engine_base/Godot_v4.6.3-stable_linux.x86_64.zip" -o "$RUNNER_TEMP/rc2-engine.zip"
+          echo "a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  $RUNNER_TEMP/rc2-engine.zip" | sha512sum -c -
+          unzip -q "$RUNNER_TEMP/rc2-engine.zip" -d "$RUNNER_TEMP/rc2-engine"
+          engine="$RUNNER_TEMP/rc2-engine/Godot_v4.6.3-stable_linux.x86_64"
+          old=71889537db0d74b9cf6f372d50c830e9e5e32278
+          git fetch -q --depth=1 origin "$old"
+          for role in previous current; do
+            ref="$old"
+            if [[ $role == current ]]; then ref="$VERIFIED_SHA"; fi
+            mkdir -p "$RUNNER_TEMP/$role-field"
+            git archive "$ref" scripts | tar -x -C "$RUNNER_TEMP/$role-field"
+            cp tests/field_history_probe.gd "$RUNNER_TEMP/$role-field/probe.gd"
+            printf 'config_version=5\n[application]\nconfig/name="River-gate compatibility check"\n' > "$RUNNER_TEMP/$role-field/project.godot"
+          done
+          export LUANSHI_HISTORY_DIR="$RUNNER_TEMP/previous-field"
+          "$engine" --headless --path "$LUANSHI_HISTORY_DIR" --script res://probe.gd -- --write-original --gate-replay
+          "$engine" --headless --path "$RUNNER_TEMP/current-field" --script res://probe.gd -- --gate-replay | tee "$RUNNER_TEMP/receipts/rc2-resume.log"
+          grep -q '^FIELD_HISTORY_PASS ' "$RUNNER_TEMP/receipts/rc2-resume.log"
+      - name: Verify the game ZIP and preserve actual graphics and measurements
+        working-directory: game
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -c 'from PIL import Image' || (sudo apt-get update -qq && sudo apt-get install -y -qq python3-pil)
+          /usr/bin/python3 "$GITHUB_WORKSPACE/packer/tools/collect-verified-rc3.py"
+          git add docs/evidence/river-gate-v1-rc3
+          git config user.name 'Luanshi acceptance archive'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive the verified RC3 game film, matched live screenshots and raw frame times'
+          git push origin HEAD:refs/heads/codex/river-gate-rc3-evidence
