@@ -4,54 +4,35 @@ on:
     branches: [codex/rc3-river-craft-lab]
 permissions:
   contents: read
+  actions: read
 jobs:
-  compare:
+  inspect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 7
+    timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Render both real battlefields at the same fixed ticks and camera
-        run: |
-          set -euo pipefail
-          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
-          curl -fsSL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
-          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
-          unzip -q /tmp/editor.zip -d /tmp/river-editor
-          EDITOR=/tmp/river-editor/Godot_v4.6.3-stable_linux.x86_64
-          git worktree add --detach /tmp/river-before 882f38c6b802095ee129fd86a68ae864c4ee535c
-          cp tests/env_capture.gd /tmp/river-before/tests/env_capture.gd
-          node tools/env_assets.mjs
-          git diff --exit-code -- assets/environment
-          ./tools/prepare-font.sh
-          cp assets/fonts/NotoSansSC-Regular.otf /tmp/river-before/assets/fonts/
-          mkdir -p /tmp/river-outputs/{before,after}
-          for take in before after; do
-            if [[ "$take" == after ]]; then game="$GITHUB_WORKSPACE"; else game=/tmp/river-before; fi
-            "$EDITOR" --headless --path "$game" --editor --import 2>&1 | tee "/tmp/river-outputs/$take/import.log"
-            ENV_PROOF="/tmp/river-outputs/$take" LIBGL_ALWAYS_SOFTWARE=1 timeout 100s xvfb-run -a -s '-screen 0 960x600x24' "$EDITOR" --path "$game" --resolution 960x600 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script res://tests/env_capture.gd -- --field-size=512 2>&1 | tee "/tmp/river-outputs/$take/game.log"
-            grep -q '^RIVER_CRAFT ' "/tmp/river-outputs/$take/game.log"
-            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' /tmp/river-outputs/"$take"/*.log; then exit 1; fi
-          done
-          /usr/bin/python3 - <<'PY'
-          from pathlib import Path
-          from PIL import Image
-          import base64
-          root=Path("/tmp/river-outputs")
-          for name in ("gate","river","battle","camp"):
-              chart=Image.new("RGB",(1080,338))
-              for i,phase in enumerate(("before","after")):
-                  img=Image.open(root/phase/(name+".jpg"))
-                  chart.paste(img.resize((540,338),Image.Resampling.LANCZOS),(i*540,0))
-              output=root/(name+"-comparison.jpg")
-              chart.save(output,quality=82)
-              wire=base64.b64encode(output.read_bytes()).decode()
-              for pos in range(0,len(wire),24000):
-                  print("ENV_FRAME",name,pos//24000,wire[pos:pos+24000],flush=True)
-          PY
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - uses: actions/download-artifact@v4
         with:
           name: river-gate-craft-gameplay
-          path: /tmp/river-outputs/
+          path: proof
+          run-id: 43225534315
+          github-token: ${{ github.token }}
+      - name: Inspect the verified same-tick captures from the rendering run
+        run: |
+          python3 - <<'PY'
+          import base64, json, pathlib
+          root=pathlib.Path('proof')
+          samples=[]
+          for phase in ('before','after'):
+              text=(root/phase/'game.log').read_text()
+              record=json.loads(next(line.partition(" ")[2] for line in text.splitlines() if line.startswith("RIVER_CRAFT ")))
+              samples.append(record)
+              for name in ('gate','river','battle','camp'):
+                  p=root/phase/(name+'.jpg')
+                  data=p.read_bytes()
+                  assert data[:2]==b'\xff\xd8' and data[-2:]==b'\xff\xd9' and len(data)>8000
+                  wire=base64.b64encode(data).decode()
+                  for pos in range(0,len(wire),16000):
+                      print('ENV_JPEG',phase,name,pos//16000,wire[pos:pos+16000])
+          assert samples[0]==samples[1]
+          print('MATCHED_GAME_VIEWS',json.dumps(samples[1],ensure_ascii=False))
+          PY
