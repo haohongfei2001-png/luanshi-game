@@ -126,6 +126,11 @@ def pose(kit,clip,t):
     else:
         off=(-.263,1.023+.072*walk-crouch,.153-.127*walk+shift)
         offq=euler(-19,-19,-24)
+    if ride:
+        # Reins hang into the off hand above the saddle. The two-handed support
+        # socket returns to the weapon on its actual windup/release clip.
+        off=(-.167,.845,.233)
+        offq=euler(-24,-9,-18)
     if kit==6 and 6<=clip<=9:
         load=sin(pi*t)**2
         off=lerp(off,add(anchor,rot(aim,(0,.073,-.066))),load)

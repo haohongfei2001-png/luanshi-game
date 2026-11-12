@@ -6,6 +6,7 @@ from company_weapons import weapon
 from company_motion import bake_motion
 from figure_atlas import make_atlas
 from figure_mesh import Library
+import company_line
 
 def main():
     dest=Path(__file__).resolve().parents[2]/"assets/river_gate/figures"
@@ -13,9 +14,12 @@ def main():
     library=Library()
     for detailed,suffix in ((True,"Close"),(False,"Line")):
         for look in ("levy","archer","guard","officer","player"):
-            library.insert(look.capitalize()+suffix,costume(look,detailed))
+            surface=costume(look,True) if detailed else company_line.costume(look)
+            library.insert(look.capitalize()+suffix,surface)
+            print(look,suffix,len(surface.faces),"triangles")
         for kit in range(9):
-            library.insert("Arms"+str(kit)+suffix,weapon(kit,detailed))
+            surface=weapon(kit,True) if detailed else company_line.arms(kit)
+            library.insert("Arms"+str(kit)+suffix,surface)
     library.save(dest/"river_company.glb")
     make_atlas(dest)
     bake_motion(dest)
