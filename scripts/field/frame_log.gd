@@ -19,7 +19,7 @@ var active_seconds := 0.0
 var observed: Object
 var first_camera := Vector2.ZERO
 var attachment_size:=Vector2i.ZERO
-var size_generation:=0
+var size_pending:=false
 
 func open(viewport: Viewport) -> void:
 	var dir := ProjectSettings.globalize_path("user://frame-times")
@@ -38,18 +38,20 @@ func open(viewport: Viewport) -> void:
 		_queue_size_measurement(viewport)
 
 func _queue_size_measurement(viewport: Viewport) -> void:
-	size_generation+=1
+	if size_pending: return
+	size_pending=true
+	interrupt("viewport_resized")
 	attachment_size=Vector2i.ZERO
-	RenderingServer.frame_post_draw.connect(_measure_size.bind(viewport,size_generation),CONNECT_ONE_SHOT)
+	RenderingServer.frame_post_draw.connect(_measure_size.bind(viewport),CONNECT_ONE_SHOT)
 
-func _measure_size(viewport: Viewport,generation: int) -> void:
-	if generation!=size_generation or not is_instance_valid(viewport): return
+func _measure_size(viewport: Viewport) -> void:
+	size_pending=false
+	if not is_instance_valid(viewport): return
 	# Root ViewportTexture reports logical canvas dimensions on a stretched window.
 	# Read back once at launch/resize and keep the GPU readback out of frame intervals.
 	var pic:=viewport.get_texture().get_image()
 	if pic==null or pic.is_empty(): return
 	attachment_size=pic.get_size()
-	interrupt("viewport_resized")
 	_write({"kind":"render_attachment","actual_px":[attachment_size.x,attachment_size.y]})
 
 func accepted(slot: int,at: int) -> void:
@@ -74,7 +76,7 @@ func _write(row: Dictionary) -> void:
 	file.flush()
 
 func sample(scene) -> void:
-	if not file: return
+	if not file or size_pending: return
 	var b=scene.battle
 	if observed!=b:
 		interrupt("new_battle")

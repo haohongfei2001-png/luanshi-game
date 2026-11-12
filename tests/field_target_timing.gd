@@ -17,7 +17,7 @@ func _sample(per_side: int) -> void:
 	var grid_times: Array[int]=[]
 	var step_times: Array[int]=[]
 	var signatures:=PackedStringArray()
-	var contacts:=battle.hits[0]+battle.hits[1]
+	var contacts: int=battle.hits[0]+battle.hits[1]
 	for round_index in 5:
 		var start:=Time.get_ticks_usec()
 		battle._rebuild_grid()
