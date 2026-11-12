@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://bie41ma125y0p"
+path="res://.godot/imported/leaf-sprays.png-ba936687648278ce486c73398eb93712.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/leaf-sprays.png"
+dest_files=["res://.godot/imported/leaf-sprays.png-ba936687648278ce486c73398eb93712.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

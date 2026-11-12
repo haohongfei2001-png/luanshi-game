@@ -1,6 +1,7 @@
 extends Node3D
 const Ground := preload("res://scripts/field/ground.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
+const Foothills := preload("res://scripts/field/env_foothills.gd")
 const WOOD := Color("796752")
 const LIME := Color("a18c75")
 const SLATE := Color("576260")
@@ -18,10 +19,10 @@ func _ready() -> void:
 	var world := WorldEnvironment.new()
 	world.environment = Environment.new()
 	world.environment.background_mode = Environment.BG_COLOR
-	world.environment.background_color = Color("a7b6a5")
+	world.environment.background_color = Color("9daea5")
 	world.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	world.environment.ambient_light_color = Color("e2e3ce")
-	world.environment.ambient_light_energy = 0.52
+	world.environment.ambient_light_color = Color("d5dfd6")
+	world.environment.ambient_light_energy = 0.56
 	add_child(world)
 	sun.rotation_degrees = Vector3(-53,-31,0)
 	sun.light_color = Color("ffedce")
@@ -32,14 +33,17 @@ func _ready() -> void:
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	add_child(sun)
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
+	surface_material.set_shader_parameter("land_paint",preload("res://assets/environment/floodplain-paint.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
 	surface_material.set_shader_parameter("joinery",preload("res://assets/environment/joinery.png"))
 	_ground_tiles()
 	var river:=Builder.new()
 	_crossings(river)
+	_shore(river)
 	_mesh(river,self)
 	var city:=Builder.new()
 	_fort(city)
+	_dress_gate(city)
 	_mesh(city,self)
 	var tents:=Builder.new()
 	_camp(tents)
@@ -47,15 +51,7 @@ func _ready() -> void:
 	var vegetation:={}
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 8725
-	for i in 164:
-		var p := Vector2.ZERO
-		if i < 60:
-			var angle := rng.randf_range(0,TAU)
-			p = Ground.GROVE + Vector2(cos(angle),sin(angle))*sqrt(rng.randf())*13.0
-		else:
-			p = Vector2(rng.randf_range(-112,110),rng.randf_range(-62,62))
-			if absf(p.y) < 40 or absf(p.x-Ground.RIVER_X)<7: continue
-		_tree(_vegetation_cell(vegetation,p),Ground.unit_point(p),rng.randf_range(1.9,3.9),i%4)
+	Foothills.new().build(self,surface_material)
 	_bank_litter(vegetation,rng)
 	for patch: Builder in vegetation.values(): _mesh(patch,self)
 	var door:=Builder.new()
@@ -85,7 +81,7 @@ func _mesh(builder: Builder,parent: Node3D) -> MeshInstance3D:
 	return mesh
 
 func _point(x: float,z: float) -> Vector3:
-	return Vector3(x,Ground.height(Vector2(x,z)),z)
+	return Foothills.ground_point(Vector2(x,z))
 
 func _vegetation_cell(patches: Dictionary,p: Vector2) -> Builder:
 	var key:=Vector2i(floori(p.x/36),floori(p.y/36))
@@ -93,8 +89,8 @@ func _vegetation_cell(patches: Dictionary,p: Vector2) -> Builder:
 	return patches[key]
 
 func _ground_tiles() -> void:
-	for x0 in range(-126,126,42):
-		for z0 in range(-72,72,36):
+	for x0 in range(-168,168,42):
+		for z0 in range(-108,108,36):
 			var land:=Builder.new()
 			land.joint=1
 			for x in range(x0,x0+42,3):
@@ -128,22 +124,58 @@ func _bank_litter(patches: Dictionary,rng: RandomNumberGenerator) -> void:
 					b.rod(tip-Vector3.UP*0.08,tip+Vector3.UP*0.06,0.031,0.022,Color("7d6a50"),4)
 		b.joint=0
 
+func _shore(b: Builder) -> void:
+	b.joint=13
+	for side:float in [-1.0,1.0]:
+		var last: Array[Vector3]=[]
+		for step in range(-108,109):
+			var z:=float(step)
+			var clear:=smoothstep(4.0,8.0,absf(z-Ground.crossing(z)))
+			var bend:=clear*(0.52*sin(z*0.38+side*1.9)+0.33*sin(z*0.14-side))
+			var x:=Ground.RIVER_X+side*(4.32+bend)
+			var inner:=Vector3(x,-0.359,z)
+			var shelf:=Vector3(x+side*0.51,-0.21+0.043*sin(z*0.83),z)
+			var lip:=_point(Ground.RIVER_X+side*(6.04+bend*0.31),z)+Vector3.UP*0.015
+			var row: Array[Vector3]=[inner,shelf,lip]
+			if not last.is_empty():
+				var damp:=Color("82958a").lightened(0.040*sin(z*0.49))
+				b.quad(last[0],row[0],row[1],last[1],damp.darkened(0.09))
+				b.quad(last[1],row[1],row[2],last[2],damp)
+			last=row
+	b.joint=0
+
 func _crossings(b: Builder) -> void:
 	b.joint=2
 	var water:=Color("577d78")
-	b.quad(Vector3(Ground.RIVER_X-4.8,-0.33,-72),Vector3(Ground.RIVER_X-4.8,-0.33,72),
-		Vector3(Ground.RIVER_X+4.8,-0.33,72),Vector3(Ground.RIVER_X+4.8,-0.33,-72),water)
+	b.quad(Vector3(Ground.RIVER_X-6.8,-0.33,-108),Vector3(Ground.RIVER_X-6.8,-0.33,108),
+		Vector3(Ground.RIVER_X+6.8,-0.33,108),Vector3(Ground.RIVER_X+6.8,-0.33,-108),water)
 	for z:float in Ground.CROSSINGS:
 		var center:=Vector3(Ground.RIVER_X,0,z)
 		b.joint=3
 		b.block(center-Vector3.UP*0.064,Vector3(13.20,0.24,7.80),WOOD.darkened(0.19))
 		b.joint=10
 		for i in range(-13,14):
-			var length:=7.81+0.07*sin(i*13.0+z)
-			var worn:=WOOD.lightened(0.035*posmod(i*7,5))
-			b.block(center+Vector3(i*0.482,0.085,0),Vector3(0.47,0.09,length),worn)
+			var length:=7.80+0.085*sin(i*13.0+z)
+			var seam:=1.02*sin(i*1.14+z*0.13)
+			var worn:=WOOD.lightened(0.018*posmod(i*7,5))
+			for edge_sign:float in [-1.0,1.0]:
+				var end:=edge_sign*length*0.5
+				b.block(center+Vector3(i*0.482,0.085,(end+seam)*0.5),Vector3(0.47,0.09,absf(end-seam)-0.021),worn.lightened(0.025*edge_sign))
+		b.joint=3
+		for wheel:float in [-1.22,1.22]:
+			for seam in 4:
+				var x:float=-4.9+seam*3.25
+				b.block(center+Vector3(x,0.136,wheel),Vector3(3.19,0.021,0.29),Color("9b8c70").lightened((seam%2)*0.018))
 		for side:float in [-1.0,1.0]:
 			var edge:=center+Vector3(0,0,side*4)
+			b.joint=3
+			for start_x:float in [-5.97,-2.04,2.05]:
+				b.rod(edge+Vector3(start_x+0.13,0.35,0),edge+Vector3(start_x+1.99,0.80,0),0.056,0.055,WOOD,5)
+			b.joint=12
+			for pier:float in [-2.03,2.03]:
+				var stone:=edge+Vector3(pier,-0.30,side*0.16)
+				b.loft([stone,stone+Vector3.UP*0.33,stone+Vector3.UP*0.42],
+					[Vector2(0.48,0.80),Vector2(0.39,0.68),Vector2(0.32,0.60)],6,Color("858c80"))
 			b.joint=4
 			var abutment:=center+Vector3(side*5.85,-0.36,0)
 			b.block(abutment,Vector3(1.34,0.66,8.07),STONE.darkened(0.06))
@@ -176,7 +208,7 @@ func _roof_quad(b: Builder,a: Vector3,c: Vector3,d: Vector3,end: Vector3,paint: 
 	else:
 		b.quad(a,c,d,end,paint)
 
-func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) -> void:
+func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,retained_side: float=0.0) -> void:
 	var along:=Vector3.RIGHT if w>=d else Vector3.BACK
 	var across:=Vector3.BACK if w>=d else Vector3.RIGHT
 	var length:=maxf(w,d)
@@ -186,6 +218,7 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) ->
 	var ridge:=maxf(0.55,length-depth*0.65)
 	b.joint=5
 	for sign_side: float in [-1.0,1.0]:
+		if retained_side!=0.0 and sign_side!=retained_side: continue
 		var normal:=across*sign_side
 		for column in columns:
 			var x0:float=length*(2.0*column/columns-1.0)
@@ -194,7 +227,7 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) ->
 			# terminate at the diagonal hips instead of converging like fan blades.
 			var starts:=clampf((absf(x0)-ridge)/(length-ridge),0.0,1.0)
 			var shade:=col.lightened(0.018*((column*7)%5))
-			for row in rows:
+			for row in range(2 if retained_side!=0.0 else 0,rows):
 				var t0:=float(row)/rows
 				var t1:=float(row+1)/rows
 				var w0:=lerpf(ridge,length,t0)
@@ -212,6 +245,7 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) ->
 				if row==rows-1:
 					b.rod(c+Vector3.UP*0.036,c+Vector3.UP*0.036+normal*0.075,0.053,0.056,col.lightened(0.11),5)
 					b.rod(c-Vector3.UP*0.041,end-Vector3.UP*0.041,0.060,0.060,WOOD,5)
+		if retained_side!=0.0: continue
 		for end_sign: float in [-1.0,1.0]:
 			var top:=base+along*ridge*end_sign+Vector3.UP*rise
 			var edge:=_roof_point(base,along,normal,length,depth,rise,end_sign*length,1.0)
@@ -221,6 +255,7 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) ->
 			else:
 				b.tri(top,edge,half_end,col)
 			b.rod(top,edge,0.065,0.077,col.lightened(0.11),5)
+	if retained_side!=0.0: return
 	b.rod(base-along*ridge+Vector3.UP*rise,base+along*ridge+Vector3.UP*rise,0.12,0.12,col.lightened(0.15),7)
 	for end_sign: float in [-1.0,1.0]:
 		var cap:=base+along*(end_sign*ridge)+Vector3.UP*rise
@@ -244,7 +279,17 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 	_roof(cover,base,w,d,rise,SLATE)
 	_brackets(frame,base,w,d)
 	var node:=_mesh(cover,self)
-	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d})
+	var pieces: Array[Dictionary]=[]
+	if absf(base.x-Ground.WALL_X)<3.0 and absf(base.z)<11.0:
+		var axis:=Vector3.BACK if w>=d else Vector3.RIGHT
+		for side:float in [-1.0,1.0]:
+			var strip:=Builder.new()
+			_roof(strip,base,w,d,rise,SLATE,side)
+			var lip:=_mesh(strip,self)
+			lip.visible=false
+			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.75+Vector3.UP*0.29,
+				"w":w if w>=d else w*0.30,"d":d if d>w else d*0.30})
+	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d,"pieces":pieces})
 	for side: float in [-1,1]:
 		frame.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
 		frame.block(base+Vector3(side*w*0.84,-0.09,0),Vector3(0.19,0.18,d*1.70),WOOD)
@@ -282,6 +327,11 @@ func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live
 		var node: MeshInstance3D=roof.node
 		if occluding: has_open_roof=true
 		if node.visible==occluding: node.visible=not occluding
+		if roof.has("pieces"):
+			for piece:Dictionary in roof.pieces:
+				var far_eave:MeshInstance3D=piece.node
+				var normal:Vector3=piece.normal
+				far_eave.visible=occluding and direction.dot(normal)<0.0 and not _between(p,p+direction,piece) and not _between(h,h+direction,piece) and not _between(door,door+direction,piece)
 
 func _sight_deck(timber: Builder,at: Vector3,w: float,d: float) -> void:
 	var node:=_mesh(timber,self)
@@ -313,6 +363,53 @@ func _tower(b: Builder,p: Vector3) -> void:
 		for x: float in [-1.1,0,1.1]:
 			b.block(p+Vector3(x,4.72,side*2.2),Vector3(0.085,0.65,0.095),WOOD)
 	_cover(b,p+Vector3(0,6.55,0),3.62,3.37,1.45)
+
+# The front curtain is rammed earth above a battered stone plinth. Its
+# quoins and copings follow the existing collision and parapet footprint.
+func _dress_gate(b: Builder) -> void:
+	var rng:=RandomNumberGenerator.new()
+	rng.seed=14709
+	for side:float in [-1.0,1.0]:
+		for row in 3:
+			var z:=Ground.GATE_HALF+0.035
+			while z<Ground.WALL_Z-0.15:
+				var length:=minf(rng.randf_range(0.80,1.68),Ground.WALL_Z-z)
+				var y:=row*0.31
+				var out:=Ground.WALL_X-1.51+row*0.044+rng.randf_range(-0.032,0.025)
+				var a:=Vector3(out,y+0.021,side*(z+0.018))
+				var c:=Vector3(out,y+0.021,side*(z+length-0.024))
+				var d:=Vector3(out+0.045,y+0.302,side*(z+length-0.055))
+				var end:=Vector3(out+0.033,y+0.31,side*(z+0.062))
+				b.joint=12
+				var tone:=Color("93988d").lightened(rng.randf_range(-0.10,0.11))
+				b.quad(a,c,d,end,tone.darkened(0.06))
+				b.quad(end,d,d+Vector3(0.17,0.036,0),end+Vector3(0.16,0.031,0),tone)
+				b.quad(a,end,end+Vector3(0.11,0,0),a+Vector3(0.11,0,0),tone.darkened(0.25))
+				z+=maxf(0.15,length)
+		for i in range(6,23,2):
+			b.joint=12
+			b.block(Vector3(Ground.WALL_X-1.07,3.948,side*i),Vector3(0.59,0.084,1.43),Color("969689"))
+		# Gate jambs turn into the throat. Battles can still pass below the lintel.
+		for row in 6:
+			var h:=0.25+row*0.56
+			b.joint=12
+			b.block(Vector3(Ground.WALL_X-1.31,h,side*4.19),Vector3(0.64,0.51,0.45+(row%2)*0.16),Color("949487").lightened((row%3)*0.026))
+		var flag:=Vector3(Ground.WALL_X-1.38,3.29,side*9.45)
+		b.joint=11
+		b.rod(flag,flag+Vector3.UP*3.20,0.075,0.046,WOOD,7)
+		var tip:=flag+Vector3.UP*2.93
+		b.joint=6
+		var cloth:=Color("8e493e")
+		var mid:=tip+Vector3(-0.17,-0.16,side*0.66)
+		var tail:=tip+Vector3(-0.36,-0.07,side*1.34)
+		b.quad(tip,mid,mid-Vector3.UP*1.63,tip-Vector3.UP*1.73,cloth)
+		b.quad(mid,tail,tail-Vector3.UP*1.55,mid-Vector3.UP*1.63,cloth.lightened(0.065))
+		b.tri(mid-Vector3.UP*1.63,tail-Vector3.UP*1.55,tail-Vector3.UP*1.96,cloth.darkened(0.07))
+		var edge:=Vector3(-0.015,-0.18,0)
+		b.quad(tip+edge,mid+edge,mid+edge-Vector3.UP*0.089,tip+edge-Vector3.UP*0.089,Color("b8a47d"))
+	b.joint=10
+	b.block(Vector3(Ground.WALL_X-1.45,3.68,0),Vector3(0.57,0.30,8.66),Color("71574a"))
+	b.block(Vector3(Ground.WALL_X-1.50,3.92,0),Vector3(0.69,0.14,8.92),Color("8b7258"))
 
 func _fort(b: Builder) -> void:
 	for side: float in [-1,1]:
@@ -434,30 +531,6 @@ func _camp(b: Builder) -> void:
 		cart.position=placement
 		cart.rotation.y=-0.21 if placement.z<0 else 0.48
 		add_child(cart)
-
-func _tree(b: Builder,p: Vector3,h: float,variant: int) -> void:
-	var crown:=p+Vector3(0.09,h*0.55,-0.06)
-	var wood:=Color("6c604c")
-	b.joint=11
-	b.rod(p,crown,h*0.065,h*0.038,wood,7)
-	var palettes: Array[Color]=[Color("596d50"),Color("6c7950"),Color("7c8052"),Color("64764f")]
-	var leaf:=palettes[variant]
-	var turn:=p.x*1.7+p.z*0.9
-	for limb in 4:
-		var angle:=turn+limb*TAU/3.0
-		var lateral:=Vector3(cos(angle),0,sin(angle))
-		var tip:=crown+lateral*(h*(0.19 if limb<3 else 0.03))+Vector3.UP*h*(0.16 if limb<3 else 0.37)
-		b.joint=11
-		b.rod(crown-Vector3.UP*0.19,tip,h*0.032,h*0.011,wood,5)
-		var size:=h*(0.22 if limb<3 else 0.17)
-		b.joint=7
-		var low:=tip-Vector3.UP*size*0.53
-		var mid:=tip+lateral*size*0.14
-		var top:=tip+Vector3.UP*size*(0.93 if variant==2 else 0.77)
-		b.loft([low,mid,top],[Vector2(size*0.56,size*0.54),Vector2(size*1.1,size*0.94),Vector2(size*0.22,size*0.30)],6,leaf.lightened(0.034*limb))
-		if variant==0 and limb<3:
-			b.rod(mid+lateral*size*0.62,low+lateral*size*0.81-Vector3.UP*size*0.55,size*0.24,size*0.035,leaf.darkened(0.08),4)
-	b.joint=0
 
 func update_battle(battle) -> void:
 	gate.visible = battle.gate_hp > 0
