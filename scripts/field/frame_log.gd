@@ -18,6 +18,8 @@ var first_view := 0
 var active_seconds := 0.0
 var observed: Object
 var first_camera := Vector2.ZERO
+var attachment_size:=Vector2i.ZERO
+var size_generation:=0
 
 func open(viewport: Viewport) -> void:
 	var dir := ProjectSettings.globalize_path("user://frame-times")
@@ -31,6 +33,24 @@ func open(viewport: Viewport) -> void:
 		"adapter":RenderingServer.get_video_adapter_name(),"godot":Engine.get_version_info().string,"build":ProjectSettings.get_setting("application/config/version"),
 		"driver":DisplayServer.get_name(),"vsync":DisplayServer.window_get_vsync_mode(),"file":file.get_path().get_file()})
 	print("FIELD_PROFILE_FILE "+name)
+	if DisplayServer.get_name()!="headless":
+		viewport.size_changed.connect(_queue_size_measurement.bind(viewport))
+		_queue_size_measurement(viewport)
+
+func _queue_size_measurement(viewport: Viewport) -> void:
+	size_generation+=1
+	attachment_size=Vector2i.ZERO
+	RenderingServer.frame_post_draw.connect(_measure_size.bind(viewport,size_generation),CONNECT_ONE_SHOT)
+
+func _measure_size(viewport: Viewport,generation: int) -> void:
+	if generation!=size_generation or not is_instance_valid(viewport): return
+	# Root ViewportTexture reports logical canvas dimensions on a stretched window.
+	# Read back once at launch/resize and keep the GPU readback out of frame intervals.
+	var pic:=viewport.get_texture().get_image()
+	if pic==null or pic.is_empty(): return
+	attachment_size=pic.get_size()
+	interrupt("viewport_resized")
+	_write({"kind":"render_attachment","actual_px":[attachment_size.x,attachment_size.y]})
 
 func accepted(slot: int,at: int) -> void:
 	if file:
@@ -109,13 +129,14 @@ func _flush(scene) -> void:
 	if wall.is_empty(): return
 	var b=scene.battle
 	var vp: Viewport=scene.get_viewport()
-	var target:=vp.get_texture().get_size()
+	var target:=attachment_size
+	var logical:=vp.get_texture().get_size()
 	var window:=DisplayServer.window_get_size()
 	var memory:=OS.get_static_memory_usage()
 	_write({"kind":"frames","seed":b.rng.seed,"ordinary_rosters":[b.ordinary_counts[0],b.ordinary_counts[1]],"per_side":b.side_size if b.ordinary_counts[0]==b.ordinary_counts[1] else null,"start_tick":first_tick,"end_tick":b.tick,
 		"engaged_wall_seconds":active_seconds,"viewport":[vp.get_visible_rect().size.x,vp.get_visible_rect().size.y],
-		"window_px":[window.x,window.y],"render_target_px":[target.x,target.y],
-		"estimated_internal_px":[roundi(target.x*vp.scaling_3d_scale),roundi(target.y*vp.scaling_3d_scale)],"internal_scale":vp.scaling_3d_scale,"preset":scene.detail_preset,"shadows":scene.map.sun.shadow_enabled,"shadow_max_m":scene.map.sun.directional_shadow_max_distance,"camera_size":scene.camera.size,"camera_travel":first_camera.distance_to(scene.camera_center),
+		"window_px":[window.x,window.y],"reported_viewport_texture_px":[logical.x,logical.y],"render_target_px":[target.x,target.y] if target.x>0 else null,
+		"estimated_internal_px":[roundi(target.x*vp.scaling_3d_scale),roundi(target.y*vp.scaling_3d_scale)] if target.x>0 else null,"internal_scale":vp.scaling_3d_scale,"preset":scene.detail_preset,"shadows":scene.map.sun.shadow_enabled,"shadow_max_m":scene.map.sun.directional_shadow_max_distance,"camera_size":scene.camera.size,"camera_travel":first_camera.distance_to(scene.camera_center),
 		"visible_soldiers":scene.view.visible_soldiers,"visible_combat_poses":scene.view.visible_fighting,
 		"hits_in_window":b.hits[0]+b.hits[1]-first_hits,"losses":b.losses,"gate_hp":b.gate_hp,"outcome":b.result,
 		"sim_cpu_ms":float(scene.sim_us-first_sim)/1000.0,"view_script_ms":float(scene.view_us-first_view)/1000.0,

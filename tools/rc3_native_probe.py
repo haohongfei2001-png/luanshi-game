@@ -158,6 +158,13 @@ def trial(executable, output, data_dir, helper, plan):
             header = stream.read(24)
         if header[:8] == b"\x89PNG\r\n\x1a\n" and header[12:16] == b"IHDR":
             png_size = list(struct.unpack(">II", header[16:24]))
+    session_file = output / (label + "-session.jsonl")
+    session_rows = [json.loads(line) for line in session_file.read_text().splitlines()] if session_file.is_file() else []
+    attachments = [sample.get("actual_px") for sample in session_rows if sample.get("kind") == "render_attachment"]
+    frame_rows = [sample for sample in session_rows if sample.get("kind") == "frames"]
+    session_matches_image = bool(attachments and frame_rows) and attachments[-1] == png_size and all(
+        sample.get("render_target_px") == png_size for sample in frame_rows
+    )
     stages = {event["stage"]: event for event in events}
     expected = ["scene_ready", "first_post_draw", "foreground_ready", "deployed", "first_tick",
                 "first_hit", "contact_complete"]
@@ -167,7 +174,7 @@ def trial(executable, output, data_dir, helper, plan):
              and all(Path(event["data_dir"]) == data_dir for event in events)
              and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method
              and image.is_file() and image.stat().st_size > 4096 and row.get("hits_in_window", 0) > 0
-             and bool(png_size) and row.get("render_target_px") == png_size
+             and bool(png_size) and row.get("render_target_px") == png_size and session_matches_image
              and row.get("preset") == quality and row.get("shadows") == (quality != 2)
              and row.get("requested_msaa_samples") == (4 if quality == 0 else 1)
              and abs(row.get("scale", 0) - [1.0, 0.85, 0.70, 1.0][quality]) < 0.001
@@ -175,7 +182,7 @@ def trial(executable, output, data_dir, helper, plan):
     requested = [1280, 800] if default_size else [1000, 600]
     if default_size:
         valid = valid and png_size[0] >= 1000 and png_size[1] >= 600
-    row.update(label=label, returncode=code, requested_method=method, validated=valid,
+    row.update(label=label, session_matches_image=session_matches_image, returncode=code, requested_method=method, validated=valid,
                requested_window_px=requested, png_ihdr_px=png_size, uses_default_window=default_size,
                max_rss_bytes=int(rss.group(1)) if rss else None, app_data_absent_at_spawn=empty_at_launch,
                activation_requested=promoted, last_boot_stage=events[-1]["stage"] if events else None,
