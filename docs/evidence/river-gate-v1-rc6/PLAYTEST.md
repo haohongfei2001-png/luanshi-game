@@ -30,7 +30,7 @@
 
 在另一台全新托管 Mac 上，对相同内层 ZIP 以相同的 75 秒时限独立运行九次，9 次进战。第一次默认 Metal 首帧 56.8 秒。在第 45 秒采集的线程栈中，Godot 正等待移动渲染器的阴影绘制任务，Metal 编译请求线程同时工作。第一次超时没有留下调用栈，确切原因仍未确认。 [同包完整复核及调用栈](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43330059050/job/131572221262)
 
-已在独立分支启动 macOS 原生着色器烘焙实验，先验证 PCK 内的实际数据，再由另一台托管机启动。 [独立实验](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43331468765)
+另制原生 Metal 预编译包，在 PCK 内核对 45 组着色程序、7,192,068 字节。该路线已否决。兼容后端三项通过，Metal 六项各有 111 条渲染错误，首条为 `Shader was generated for a newer Apple GPU`。Godot 4.6.3 在 macOS 用 Apple7 配置烘焙，托管虚拟图形设备报告 Apple5。虽然进程进入交战，图形错误使该包不适合作为候选。交付继续使用上面的主线 ZIP。 [烘焙及真窗口验证](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43331468765) · [从六份真实日志提取的错误](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43333095137) · [Godot 4.6.3 原生烘焙实现](https://github.com/godotengine/godot/blob/4.6.3-stable/editor/shader/shader_baker/shader_baker_export_plugin_platform_metal.cpp)
 
 ## 实际游玩
 
@@ -52,7 +52,7 @@
 
 - 托管 macOS，Apple M1 (Virtual)，Apple Paravirtual device (Apple5)。默认清晰档实际附件 1024×640、内部缩放 1、4× MSAA、阴影开启。24.0 秒、4989 帧、期间新命中 1125。平均 207.8 FPS，P50 / P95 / P99 为 4.06 / 11.45 / 13.56 ms，进程峰值 RSS 576.7 MiB。原始逐帧及分段文件在 [macOS 验证归档](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43323872275/artifacts/13993475538)。
 
-- 同一宿主共 9 次新进程，启动前游戏数据为空，系统与显卡缓存保留。9 次取得首帧、进入交战、记录命中并校验 PNG 与原始分段的实际像素。第一次兼容后端首帧 13.8 秒，第一次默认 Metal 为 30.9 秒。该样本仍有首帧等待。真实 MacBook Air M5 为 **NOT_RUN**。
+- 同一宿主共 9 次新进程，启动前游戏数据为空，系统与显卡缓存保留。9 次取得首帧、进入交战、记录命中并校验 PNG 与原始分段的实际像素。第一次兼容后端首帧 13.8 秒，第一次默认 Metal 为 30.9 秒。该 PR 包样本仍有首帧等待。真实 MacBook Air M5 为 **NOT_RUN**。
 
 Linux 云端软件光栅、实战窗口的四档数据如下。各机测量负载及采样方法详见 JSON。
 
