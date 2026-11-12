@@ -3,7 +3,7 @@ render_mode cull_disabled, diffuse_burley, specular_schlick_ggx;
 
 uniform sampler2D cloth_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D response_atlas : filter_linear_mipmap, repeat_disable;
-uniform sampler2D motion_bank : filter_nearest, repeat_disable;
+uniform sampler2D motion_bank : filter_linear, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform int kit = 0;
 uniform int travelling_attack_legs = -1;
@@ -16,21 +16,24 @@ varying float sewn_shadow;
 vec3 rotated(vec4 q, vec3 v) {
     return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
 }
-void skin(int bone, ivec2 tile, vec3 bind_vertex, vec3 bind_normal, out vec3 pos, out vec3 nrm) {
-    ivec2 address=tile+ivec2(bone*3,0);
-    vec4 q8=texelFetch(motion_bank,address,0);
-    vec4 hi=texelFetch(motion_bank,address+ivec2(1,0),0);
-    vec4 lo=texelFetch(motion_bank,address+ivec2(2,0),0);
-    int xy=int(hi.a*255.0+.5), zw=int(lo.a*255.0+.5);
-    vec4 tail=vec4(float(xy>>4),float(xy%16),float(zw>>4),float(zw%16));
-    vec4 q=normalize((q8*4080.0+tail)*(2.0/4095.0)-1.0);
-    vec3 translation=((hi.rgb*256.0+lo.rgb)/257.0-.5)*6.0;
+// Horizontal filtering advances continuously through the 32 keys of a clip.
+vec2 clip_address(int weapon, int clip, float progress) {
+    bool loop = clip==0 || clip==1 || clip==12 || clip>=15;
+    float key = clamp(progress,0.0,1.0) * (loop ? 32.0 : 31.0);
+    return vec2(key+.5,float((weapon*31+clip)*4)+.5);
+}
+void skin(int bone, vec2 tile, vec3 bind_vertex, vec3 bind_normal, out vec3 pos, out vec3 nrm) {
+    vec2 texel=1.0/vec2(textureSize(motion_bank,0));
+    vec2 address=(tile+vec2(float(bone*33),0))*texel;
+    vec2 row=vec2(0.,texel.y);
+    vec4 q_hi=textureLod(motion_bank,address,0.);
+    vec4 q_lo=textureLod(motion_bank,address+row,0.);
+    vec3 t_hi=textureLod(motion_bank,address+2.0*row,0.).rgb;
+    vec3 t_lo=textureLod(motion_bank,address+3.0*row,0.).rgb;
+    vec4 q=normalize((q_hi*256.+q_lo)*(2./257.)-1.);
+    vec3 translation=((t_hi*256.+t_lo)/257.-.5)*6.;
     pos=rotated(q,bind_vertex)+translation;
     nrm=rotated(q,bind_normal);
-}
-ivec2 tile_for(int weapon, int clip, float progress) {
-    int frame=clamp(int(progress*31.0+.5),0,31);
-    return ivec2((frame%8)*48,(weapon*31+clip)*4+frame/8);
 }
 void vertex() {
     int code=int(floor(INSTANCE_CUSTOM.r*128.0));
@@ -55,7 +58,7 @@ void vertex() {
     // Mounted legs use the saddle pose while the upper body keeps its live attack clip.
     if(code>=64 && (state==0 || (first>=9 && first<=14))) {clip=15;phase=INSTANCE_CUSTOM.b;}
     int sample_kit=(code/32)%2==1 && (state==1 || state==2) ? 2:kit;
-    ivec2 tile=tile_for(sample_kit,clip,phase);
+    vec2 tile=clip_address(sample_kit,clip,phase);
     vec3 pos,nrm;
     skin(first,tile,VERTEX,NORMAL,pos,nrm);
     if(first!=second && blend<.999) {
@@ -67,7 +70,7 @@ void vertex() {
     // Only the on-foot player may keep travelling through a weapon action. The
     // pelvis and coat keep the strike; weight passes to the running pose at the knee.
     if (travelling_attack_legs>=0 && (state==1 || state==2 || state==3) && VERTEX.y<.87) {
-        ivec2 foot_tile=tile_for(kit,travelling_attack_legs,travelling_leg_phase);
+        vec2 foot_tile=clip_address(kit,travelling_attack_legs,travelling_leg_phase);
         vec3 step_pos,step_nrm;
         skin(first,foot_tile,VERTEX,NORMAL,step_pos,step_nrm);
         if(first!=second && blend<.999) {

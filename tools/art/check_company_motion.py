@@ -9,12 +9,19 @@ from company_motion import CLIPS, FRAMES, LF, LH, RF, RH, NOCK, LB, arm_nodes, g
 from figure_mesh import add
 
 def decoded(bank,b,kit,clip,frame):
-    x=frame%8*48+b*3;y=(kit*CLIPS+clip)*4+frame//8
-    hi=bank.getpixel((x+1,y));lo=bank.getpixel((x+2,y))
-    tails=(hi[3]>>4,hi[3]%16,lo[3]>>4,lo[3]%16)
-    q=[((v*16+tail)/4095)*2-1 for v,tail in zip(bank.getpixel((x,y)),tails)]
+    # Reconstruct the value sampled by a linearly filtered shader, including subkeys.
+    x=b*(FRAMES+1)+int(frame)
+    y=(kit*CLIPS+clip)*4
+    fraction=frame-int(frame)
+    def raw(row):
+        a=bank.getpixel((x,y+row))
+        if fraction==0: return a
+        n=bank.getpixel((x+1,y+row))
+        return [first*(1-fraction)+last*fraction for first,last in zip(a,n)]
+    q_hi,q_lo,t_hi,t_lo=[raw(row) for row in range(4)]
+    q=[(hi*256+lo)/65535*2-1 for hi,lo in zip(q_hi,q_lo)]
     length=sqrt(sum(v*v for v in q))
-    t=tuple(((hi[k]*256+lo[k])/65535-.5)*6 for k in range(3))
+    t=tuple(((t_hi[k]*256+t_lo[k])/65535-.5)*6 for k in range(3))
     return tuple(v/length for v in q),t
 
 def planted_drift(bank):
@@ -26,7 +33,8 @@ def planted_drift(bank):
         stance=.355 if running else .51
         metres_per_cycle=1/(.42 if running else .68)
         points=[]
-        for frame in range(FRAMES):
+        for subkey in range(FRAMES*8):
+            frame=subkey/8
             phase=frame/FRAMES
             if not .25*stance<=phase<=.70*stance: continue
             foot=trans(decoded(bank,LB,3,clip,frame),leg_nodes(-1)[2])
