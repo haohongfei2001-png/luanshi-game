@@ -1,0 +1,780 @@
+{
+  "source_sha": "3a0a0d3099409cb6b5e7128f32a31fde2b4ad4a1",
+  "before_sha": "314b9dee2f16fa43851783132dc25e915d00f182",
+  "harness_sha": "15faebb1b5229f68a52485eb3c0b8613710924ff",
+  "run": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43274207432",
+  "full_resolution": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43274207432/artifacts/13968714450",
+  "original_viewport": [
+    1280,
+    800
+  ],
+  "preview": [
+    896,
+    560
+  ],
+  "seed": 61112,
+  "units": [
+    512,
+    512
+  ],
+  "images": [
+    "after_ford",
+    "after_bank",
+    "after_ranks",
+    "before_ford",
+    "before_bank",
+    "after_margin"
+  ],
+  "frames": [
+    {
+      "center": [
+        -32,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 131,
+      "fighting": 50,
+      "flat_pixel_neighborhood_fraction": 0.0026715645349808,
+      "gate_hp": 260,
+      "in_frame_count": 225,
+      "in_frame_ids_sha256": "3b416935ff0125b01ec4ddafe216c802b987905c55c9dcaaafe0e1b270a7a4d6",
+      "internal_scale": 1,
+      "kind": "bridge",
+      "label": "ford",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 451084,
+      "ranks": 320,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 336,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 31
+    },
+    {
+      "center": [
+        -35.7999992370605,
+        -8.39999961853027
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 94,
+      "fighting": 5,
+      "flat_pixel_neighborhood_fraction": 0.00834863917181499,
+      "gate_hp": 260,
+      "in_frame_count": 14,
+      "in_frame_ids_sha256": "c2e05a0e812d671f949051bc5bd30c0768a50d0ab3c222834065e76d5ee1ada9",
+      "internal_scale": 1,
+      "kind": "bank",
+      "label": "bank",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 429486,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 78,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 17
+    },
+    {
+      "center": [
+        -23.7999992370605,
+        13.8000001907349
+      ],
+      "close": 12,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 133,
+      "fighting": 43,
+      "flat_pixel_neighborhood_fraction": 0.0055101018533979,
+      "gate_hp": 260,
+      "in_frame_count": 182,
+      "in_frame_ids_sha256": "c13143c5ee33ced196d40aae724619315f3bd5ce52e8f795db72a971d8cf3211",
+      "internal_scale": 1,
+      "kind": "margin",
+      "label": "margin",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 515499,
+      "ranks": 172,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 255,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.64,
+      "zoom": 23
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 185,
+      "fighting": 121,
+      "flat_pixel_neighborhood_fraction": 0.0058440474202705,
+      "gate_hp": 260,
+      "in_frame_count": 459,
+      "in_frame_ids_sha256": "4f366865a9258d5e2214dfc157d266b806affbe0ce6e47a3c68ba6e0310deb12",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "ranks",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 518964,
+      "ranks": 567,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 551,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 51
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 15,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 150,
+      "fighting": 65,
+      "flat_pixel_neighborhood_fraction": 0.00801469360494239,
+      "gate_hp": 260,
+      "in_frame_count": 196,
+      "in_frame_ids_sha256": "8893515327a9bfbaa14ec7a9852490da4b2bddb6c6dc2fb7dd7b04eb6402650f",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "formation",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 476951,
+      "ranks": 184,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 277,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 26
+    },
+    {
+      "center": [
+        -32,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 137,
+      "fighting": 50,
+      "flat_pixel_neighborhood_fraction": 0.0043412923693438,
+      "gate_hp": 260,
+      "in_frame_count": 225,
+      "in_frame_ids_sha256": "3b416935ff0125b01ec4ddafe216c802b987905c55c9dcaaafe0e1b270a7a4d6",
+      "internal_scale": 1,
+      "kind": "bridge",
+      "label": "ford",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 489133,
+      "ranks": 320,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 336,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 31
+    },
+    {
+      "center": [
+        -35.7999992370605,
+        -8.39999961853027
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 97,
+      "fighting": 5,
+      "flat_pixel_neighborhood_fraction": 0.00884955752212389,
+      "gate_hp": 260,
+      "in_frame_count": 14,
+      "in_frame_ids_sha256": "c2e05a0e812d671f949051bc5bd30c0768a50d0ab3c222834065e76d5ee1ada9",
+      "internal_scale": 1,
+      "kind": "bank",
+      "label": "bank",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 461583,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 78,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 17
+    },
+    {
+      "center": [
+        -23.7999992370605,
+        13.8000001907349
+      ],
+      "close": 12,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 133,
+      "fighting": 43,
+      "flat_pixel_neighborhood_fraction": 0.0108532309233595,
+      "gate_hp": 260,
+      "in_frame_count": 182,
+      "in_frame_ids_sha256": "c13143c5ee33ced196d40aae724619315f3bd5ce52e8f795db72a971d8cf3211",
+      "internal_scale": 1,
+      "kind": "margin",
+      "label": "margin",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 547777,
+      "ranks": 172,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 255,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.64,
+      "zoom": 23
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 186,
+      "fighting": 121,
+      "flat_pixel_neighborhood_fraction": 0.0068458841208883,
+      "gate_hp": 260,
+      "in_frame_count": 459,
+      "in_frame_ids_sha256": "4f366865a9258d5e2214dfc157d266b806affbe0ce6e47a3c68ba6e0310deb12",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "ranks",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 539680,
+      "ranks": 567,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 551,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 51
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 15,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 148,
+      "fighting": 65,
+      "flat_pixel_neighborhood_fraction": 0.00768074803806979,
+      "gate_hp": 260,
+      "in_frame_count": 196,
+      "in_frame_ids_sha256": "8893515327a9bfbaa14ec7a9852490da4b2bddb6c6dc2fb7dd7b04eb6402650f",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "formation",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 484843,
+      "ranks": 184,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 277,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 26
+    }
+  ],
+  "samples": [
+    {
+      "draw_frames": [
+        143.284,
+        137.528,
+        137.056,
+        135.348,
+        135.78,
+        134.514,
+        136.14,
+        136.9,
+        134.833,
+        133.983,
+        136.249,
+        133.874,
+        134.314,
+        135.649,
+        132.839,
+        134.223,
+        134.174,
+        135.204,
+        131.665,
+        131.973,
+        132.573,
+        132.844,
+        132.475,
+        134.019,
+        134.898,
+        133.02,
+        133.106,
+        130.367,
+        131.605,
+        131.2,
+        134.041,
+        129.739,
+        130.069,
+        130.518,
+        130.766,
+        128.954,
+        131.803,
+        131.282,
+        136.698,
+        132.601,
+        136.896,
+        132.955,
+        130.055,
+        131.523,
+        132.271,
+        132.345,
+        137.843,
+        130.621,
+        130.844,
+        132.37,
+        131.819,
+        134.301,
+        135.907,
+        132.226,
+        129.92,
+        130.008
+      ],
+      "hits": [
+        448,
+        271
+      ],
+      "label": "ford",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 132.955,
+      "p95_ms": 137.528,
+      "p99_ms": 143.284,
+      "tick": 129,
+      "window": [
+        1280,
+        800
+      ]
+    },
+    {
+      "draw_frames": [
+        234.48,
+        233.02,
+        241.093,
+        235.73,
+        238.386,
+        234.587,
+        235.181,
+        239.183,
+        245.72,
+        238.752,
+        234.892,
+        239.643,
+        234.424,
+        234.376,
+        237.262,
+        237.978,
+        233.611,
+        234.119,
+        237.359,
+        233.026,
+        239.488,
+        240.482,
+        240.991,
+        240.406,
+        240.7,
+        243.63,
+        240.777,
+        239.06,
+        250.22,
+        240.633,
+        242.013,
+        242.6,
+        246.277,
+        246.486,
+        256.902,
+        243.053,
+        241.552,
+        249.42,
+        244.647,
+        257.997,
+        254.291,
+        257.761,
+        252.481,
+        256.91,
+        279.479,
+        270.612,
+        270.792,
+        256.042,
+        261.468,
+        259.226,
+        270.365,
+        258.892,
+        260.121,
+        258.546,
+        257.291,
+        258.746
+      ],
+      "hits": [
+        655,
+        458
+      ],
+      "label": "field",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 242.013,
+      "p95_ms": 270.612,
+      "p99_ms": 279.479,
+      "tick": 193,
+      "window": [
+        1280,
+        800
+      ]
+    },
+    {
+      "draw_frames": [
+        155.703,
+        156.531,
+        155.303,
+        158.953,
+        154.518,
+        155.178,
+        154.771,
+        151.842,
+        153.58,
+        151.809,
+        157.482,
+        152.981,
+        151.698,
+        154.588,
+        154.728,
+        154.208,
+        157.37,
+        154.595,
+        152.2,
+        150.922,
+        153.995,
+        152.375,
+        151.781,
+        154.512,
+        153.771,
+        149.347,
+        154.756,
+        149.495,
+        148.831,
+        151.801,
+        149.85,
+        150.7,
+        149.97,
+        149.69,
+        148.666,
+        150.602,
+        154.988,
+        147.949,
+        149.231,
+        149.362,
+        150.212,
+        151.576,
+        152.226,
+        155.019,
+        149.328,
+        152.21,
+        155.742,
+        152.581,
+        151.746,
+        150.553,
+        155.825,
+        149.912,
+        150.091,
+        151.422,
+        150.48,
+        150.077
+      ],
+      "hits": [
+        448,
+        271
+      ],
+      "label": "ford",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 152.2,
+      "p95_ms": 157.37,
+      "p99_ms": 158.953,
+      "tick": 129,
+      "window": [
+        1280,
+        800
+      ]
+    },
+    {
+      "draw_frames": [
+        248.246,
+        244.964,
+        248.684,
+        245.796,
+        252.592,
+        245.899,
+        247.05,
+        245.322,
+        245.766,
+        245.19,
+        246.712,
+        245.457,
+        248.998,
+        246.247,
+        246.63,
+        244.857,
+        251.735,
+        244.004,
+        245.704,
+        247.195,
+        254.45,
+        249.931,
+        250.472,
+        245.917,
+        251.43,
+        260.032,
+        255.541,
+        250.73,
+        258.554,
+        249.007,
+        250.062,
+        249.276,
+        256.547,
+        255.066,
+        252.906,
+        249.975,
+        253.812,
+        251.778,
+        249.638,
+        254.103,
+        251.715,
+        252.675,
+        258.969,
+        261.103,
+        267.331,
+        247.507,
+        270.039,
+        266.12,
+        258.355,
+        256.773,
+        252.899,
+        254.159,
+        257.911,
+        256.109,
+        255.104,
+        254.981
+      ],
+      "hits": [
+        655,
+        458
+      ],
+      "label": "field",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 251.43,
+      "p95_ms": 266.12,
+      "p99_ms": 270.039,
+      "tick": 193,
+      "window": [
+        1280,
+        800
+      ]
+    }
+  ]
+}
