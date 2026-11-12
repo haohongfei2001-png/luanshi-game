@@ -12,14 +12,14 @@ from pathlib import Path
 
 from PIL import Image, ImageFilter, ImageOps
 
-# Published Poly Haven checksums. Each stored RGB is colour, alpha is a
+# SHA-256 of the original, verified public CC0 albedos. Stored RGB is colour; alpha is a
 # derived height mask for joining the roots to the exposed earth at their edge.
 SOURCES = {
-    "root-turf": ("sparse_grass", "5d0aba796e1b5882555161c16b10ee9d",
+    "root-turf": ("sparse_grass", "ae94f2b34597b9108eefd88217f55eccaec6d6b382e858a478ee92df90e66617",
                   ((38, 49, 42), (67, 85, 57), (112, 121, 82))),
-    "compacted-loam": ("brown_mud_dry", "0c0ad82fec60f091690c69c23657cb74",
+    "compacted-loam": ("brown_mud_dry", "a56281b644de614787340f3db45e28d2f72ec32fc19a442f99002bae0ab11398",
                        ((60, 51, 38), (101, 86, 65), (150, 132, 104))),
-    "bank-silt": ("sandy_gravel_02", "e8f0496f1e0e923514470171de033bf9",
+    "bank-silt": ("sandy_gravel_02", "c9d143db07db9a6be2eba285fae961d868520422ee5fa4d38d55da24f9968d51",
                   ((43, 52, 48), (72, 76, 63), (119, 112, 87))),
 }
 
@@ -36,7 +36,7 @@ def source_bytes(asset: str, expected: str, cache: Path) -> bytes:
         })
         with urllib.request.urlopen(request, timeout=30) as response:
             data = response.read()
-    if hashlib.md5(data).hexdigest() != expected:
+    if hashlib.sha256(data).hexdigest() != expected:
         raise ValueError(f"Source checksum mismatch for {asset}")
     if not dest.exists():
         dest.write_bytes(data)

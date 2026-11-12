@@ -65,6 +65,7 @@ func _ground_readback(pic: Image,center: Vector2) -> Dictionary:
 		var box:=Rect2(a,Vector2.ZERO).expand(c).grow(.71*height_px)
 		silhouettes.append(box)
 	var samples: Array[float]=[]
+	var detail: Array[float]=[]
 	var footprint:=minf(25.0,field.camera.size*1.1)
 	for i in 41:
 		for j in 41:
@@ -80,10 +81,18 @@ func _ground_readback(pic: Image,center: Vector2) -> Dictionary:
 					break
 			if covered: continue
 			var pixel:=pic.get_pixel(roundi(screen.x),roundi(screen.y))
-			samples.append((.2126*pixel.r+.7152*pixel.g+.0722*pixel.b)*255)
+			var y:float=(.2126*pixel.r+.7152*pixel.g+.0722*pixel.b)*255
+			samples.append(y)
+			var differences:=0.0
+			for d:Vector2i in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]:
+				var v:=pic.get_pixel(roundi(screen.x)+d.x,roundi(screen.y)+d.y)
+				differences+=absf(y-(.2126*v.r+.7152*v.g+.0722*v.b)*255)
+			detail.append(differences*.25)
 	samples.sort()
+	detail.sort()
 	if samples.is_empty(): return {"count":0}
-	return {"count":samples.size(),"Y10":snappedf(samples[floori((samples.size()-1)*.10)],.1),
+	return {"count":samples.size(),"one_pixel_Y50":snappedf(detail[floori((detail.size()-1)*.50)],.01),
+		"one_pixel_Y90":snappedf(detail[floori((detail.size()-1)*.90)],.01),"Y10":snappedf(samples[floori((samples.size()-1)*.10)],.1),
 		"Y50":snappedf(samples[floori((samples.size()-1)*.50)],.1),"Y90":snappedf(samples[floori((samples.size()-1)*.90)],.1)}
 
 func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
@@ -180,6 +189,15 @@ func _run() -> void:
 	await _snap("ranks","line",51.0,-.576)
 	await _snap("contact","line",13.0,-.576)
 	await _snap("formation","line",26.0,-.576)
+	if "--stills-only" in OS.get_cmdline_user_args():
+		var stills:=FileAccess.open(directory+"/frames.json",FileAccess.WRITE)
+		stills.store_string(JSON.stringify(shots,"  "))
+		stills.close()
+		print("SOIL_STILLS_PASS ",b.tick)
+		scene.queue_free()
+		await process_frame
+		quit(0 if success else 1)
+		return
 	await _cost("contact","line",13.0,-.576)
 	await _cost("ford","bridge",31.0,-.54)
 	var f:=FileAccess.open(directory+"/frames.json",FileAccess.WRITE)

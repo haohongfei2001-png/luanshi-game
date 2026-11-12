@@ -28,21 +28,29 @@ void vertex() {
 vec3 painted_ground(vec2 p,float shore) {
 	vec4 cover=texture(soil_cover,(p+vec2(168.0,108.0))/vec2(336.0,216.0));
 	vec2 shear=vec2(cover.b-.48,cover.r-.43)*.19;
-	vec4 turf=texture(root_turf,mat2(vec2(.21,.064),vec2(-.064,.21))*p+shear);
-	vec4 loam=texture(compacted_loam,mat2(vec2(.257,-.043),vec2(.043,.257))*p-shear);
+	// At the formation camera the fine stems and individual soil grains
+	// average within a screen pixel; keep the larger root and clod groups.
+	float pixel_span=max(length(dFdx(p)),length(dFdy(p)));
+	float lod_bias=.05+1.13*smoothstep(.019,.062,pixel_span);
+	vec4 turf=texture(root_turf,mat2(vec2(.21,.064),vec2(-.064,.21))*p+shear,lod_bias);
+	vec4 loam=texture(compacted_loam,mat2(vec2(.257,-.043),vec2(.043,.257))*p-shear,lod_bias);
 	// Higher root crowns extend into the shoulder. The track fades into
 	// the actual old field or wet river edge instead of using a colour key.
 	float mineral=smoothstep(.09,.86,cover.r+(loam.a-turf.a)*.35);
 	vec3 surface=mix(turf.rgb,loam.rgb,mineral);
 	float wash=max(cover.g,shore);
 	if(wash>.018) {
-		vec4 silt=texture(bank_silt,p*vec2(.250,.225)+vec2(.28,-.17)+shear);
+		vec4 silt=texture(bank_silt,p*vec2(.250,.225)+vec2(.28,-.17)+shear,lod_bias);
 		float margin=smoothstep(.05,.86,wash+(silt.a-turf.a)*.27);
 		surface=mix(surface,silt.rgb,margin);
 	}
-	float shoulder=1.0-smoothstep(.040,.130,abs(cover.a-.385+(loam.a-.52)*.038));
-	float worn=shoulder*smoothstep(.68,.93,cover.r)*(1.0-wash);
-	return surface*(.79+.30*cover.b-.185*worn);
+	// Sediment and grass fill lengths of wheel wear differently on each
+	// side of a bend. Keep the crown of the cart road in the soil surface.
+	float shoulder=1.0-smoothstep(.028,.103,abs(cover.a-.385+(loam.a-.52)*.067));
+	float deposit=abs(fract(dot(p,vec2(.161,.074))+cover.b*.51)-.5)*2.0;
+	float exposed=smoothstep(.17,.81,deposit+(loam.a-.5)*.58);
+	float worn=shoulder*smoothstep(.68,.93,cover.r)*(1.0-wash)*(.24+.76*exposed);
+	return surface*(.79+.30*cover.b-.127*worn);
 }
 
 void fragment() {

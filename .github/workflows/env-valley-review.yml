@@ -21,7 +21,7 @@ jobs:
           echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
           unzip -q /tmp/editor.zip -d /tmp/river-editor
           editor=/tmp/river-editor/Godot_v4.6.3-stable_linux.x86_64
-          mkdir -p artifacts/{before,after}
+          mkdir -p artifacts/{before,first,after}
           touch artifacts/.gdignore
           python3 -m pip -q install --target /tmp/river-image-tools Pillow==11.3.0
           export PYTHONPATH=/tmp/river-image-tools
@@ -40,44 +40,61 @@ jobs:
           git diff --exit-code --stat -- assets/environment
           ./tools/prepare-font.sh
           git worktree add --detach /tmp/bank-before 3a0a0d3099409cb6b5e7128f32a31fde2b4ad4a1
-          cp tests/env_valley_review.gd /tmp/bank-before/tests/
-          cp assets/fonts/NotoSansSC-Regular.otf /tmp/bank-before/assets/fonts/
-          mkdir -p /tmp/bank-before/artifacts
-          touch /tmp/bank-before/artifacts/.gdignore
-          for project in /tmp/bank-before .; do
+          git worktree add --detach /tmp/soil-first 0b782835a40e663f656b788b9d50374b1e9ae6e6
+          for original in /tmp/bank-before /tmp/soil-first; do
+            cp tests/env_valley_review.gd "$original/tests/"
+            cp assets/fonts/NotoSansSC-Regular.otf "$original/assets/fonts/"
+            mkdir -p "$original/artifacts"
+            touch "$original/artifacts/.gdignore"
+          done
+          for project in /tmp/bank-before /tmp/soil-first .; do
             sample=before
+            extra=()
             if [ "$project" = "." ]; then sample=after; fi
+            if [ "$project" = "/tmp/soil-first" ]; then sample=first; extra=(--stills-only); fi
             "$editor" --headless --editor --import --path "$project" >"artifacts/$sample/import.log" 2>&1
             if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "artifacts/$sample/import.log"; then exit 1; fi
-            LIBGL_ALWAYS_SOFTWARE=1 timeout 155s xvfb-run -a -s '-screen 0 1280x800x24' "$editor" --path "$project" --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script res://tests/env_valley_review.gd -- --field-size=512 2>&1 | tee "artifacts/$sample/window.log"
+            LIBGL_ALWAYS_SOFTWARE=1 timeout 155s xvfb-run -a -s '-screen 0 1280x800x24' "$editor" --path "$project" --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script res://tests/env_valley_review.gd -- --field-size=512 "${extra[@]}" 2>&1 | tee "artifacts/$sample/window.log"
             if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "artifacts/$sample/window.log"; then exit 1; fi
-            grep -q 'RIVER_ART_PASS ticks=193' "artifacts/$sample/window.log"
+            if [ "$sample" = first ]; then
+              grep -q 'SOIL_STILLS_PASS 65' "artifacts/$sample/window.log"
+            else
+              grep -q 'RIVER_ART_PASS ticks=193' "artifacts/$sample/window.log"
+            fi
             cp "$project"/artifacts/river-art/{*.jpg,frames.json} "artifacts/$sample/"
           done
           python3 - <<'PY'
-          import json,base64,pathlib,platform
+          import json,base64,pathlib,platform,subprocess,os,concurrent.futures
           root=pathlib.Path('artifacts')
           def frames(stage):
               return {row['label']:row for row in json.loads((root/stage/'frames.json').read_text())}
           def costs(stage):
               return {row['label']:row for row in [json.loads(l.partition(' ')[2]) for l in (root/stage/'window.log').read_text().splitlines() if l.startswith('WILLOW_COST ')]}
-          a,b=frames('before'),frames('after'); ca,cb=costs('before'),costs('after')
+          a,first,b=frames('before'),frames('first'),frames('after'); ca,cb=costs('before'),costs('after')
           for label,post in b.items():
-              pre=a[label]
-              assert all(post[k]==pre[k] for k in ['tick','center','zoom','yaw','ordinary','contact','in_frame_ids_sha256','window','internal_scale','shadows'])
+              pre=a[label]; initial=first[label]
+              assert all(post[k]==pre[k]==initial[k] for k in ['tick','center','zoom','yaw','ordinary','contact','in_frame_ids_sha256','window','internal_scale','shadows'])
               assert post['ordinary']==[512,512] and post['window']==[1280,800] and post['shadows'] and post['internal_scale']==1
               print('RIVER_GEOMETRY',label,pre['draw_calls'],post['draw_calls'],pre['primitives'],post['primitives'])
               print('GROUND_FLATNESS',label,round(pre['flat_pixel_neighborhood_fraction'],4),round(post['flat_pixel_neighborhood_fraction'],4))
               if label in ('contact','formation','hero','ford'):
-                  print('SOIL_VALUES',label,pre['ground_readback'],post['ground_readback'])
+                  print('SOIL_VALUES',label,pre['ground_readback'],initial['ground_readback'],post['ground_readback'])
                   assert pre['ground_readback']['count']==post['ground_readback']['count']
                   assert post['flat_pixel_neighborhood_fraction'] < pre['flat_pixel_neighborhood_fraction']+.055
           for label,post in cb.items():
               pre=ca[label]
               assert pre['hits']==post['hits'] and pre['tick']==post['tick'] and post['ordinary']==[512,512]
               print('WILLOW_TIMES',label,[round(pre[k],2) for k in ['p50_ms','p95_ms','p99_ms']],[round(post[k],2) for k in ['p50_ms','p95_ms','p99_ms']])
-          (root/'comparison.json').write_text(json.dumps({'before':a,'after':b,'before_wall':ca,'after_wall':cb,'cpu':platform.machine()},indent=2))
-          for stage,name in [('after','contact'),('before','contact'),('after','hero'),('before','hero'),('after','formation'),('before','formation'),('after','ford'),('before','ford')]:
+          (root/'comparison.json').write_text(json.dumps({'before':a,'first':first,'after':b,'before_wall':ca,'after_wall':cb,'cpu':platform.machine()},indent=2))
+          def keep_frame(item):
+              stage,name=item; view=(root/stage/(name+'.jpg')).read_bytes()
+              payload=json.dumps({'encoding':'base64','content':base64.b64encode(view).decode()})
+              resp=subprocess.run(['gh','api','--method','POST','repos/'+os.environ['GITHUB_REPOSITORY']+'/git/blobs','--input','-'],
+                  input=payload,text=True,capture_output=True,check=True)
+              return stage,name,json.loads(resp.stdout)['sha'],len(view)
+          ordered=[(s,n) for s in ['before','first','after'] for n in ['contact','formation','hero','ford']]
+          for row in concurrent.futures.ThreadPoolExecutor(max_workers=3).map(keep_frame,ordered): print('SOIL_FRAME_BLOB',*row)
+          for stage,name in [('after','contact'),('after','hero'),('after','formation'),('first','formation'),('after','ford'),('first','ford')]:
               data=(root/stage/(name+'-view.jpg')).read_bytes()
               name=stage+'_'+name
               wire=base64.b64encode(data).decode()
@@ -90,4 +107,5 @@ jobs:
           path: |
             artifacts/before
             artifacts/after
+            artifacts/first
             artifacts/comparison.json
