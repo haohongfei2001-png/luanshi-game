@@ -4,22 +4,20 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 0.16.0-rc.6 集成候选
+## 河关 0.16.0-rc.6
 
-开发分支 `codex/river-gate-animation-rc6`。集成基线 `d4728d033af5bdc7c303079fcbe7a6f256153c31` 保留了 main 的正式美术方向、旧证据与 PR #34 的 RC5 游戏。护送修复源提交 `1e77288db84595871679c3795a63c5d8dc69752f`。本阶段聚焦唐末、五代式河关，不新增明清内容。
+游戏源码 `89416f926e725d93d0ef86138dcbf333b9211576`，合入 main 的源码 `d6b03507c4ace8582ab9f821e604c499616b8dab`。PR 验证导出 `b067e79cce519a9cdf1abf3b3ff5acb080b38698`。角色和地图的三轮真实游戏窗口复查、操作回归、资源和性能数字均已归档。 [实机记录、包与运行命令](evidence/river-gate-v1-rc6/PLAYTEST.md) · [千人交战原片](evidence/river-gate-v1-rc6/playthrough-review.mp4) · [当前 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43327368519) · [可回退阶段](https://github.com/haohongfei2001-png/luanshi-game/commit/4621944adf8e30dda2516b4291e7a0ceebc011d7)
 
-六类衣装、队列、主角、双方军官和坐骑已接入新色稿/分级光照。地图使用原有耕地、营道、林荫和河岸的位置重新组织地表。披膊、布衬、轻兵垂巾与军官后领已制作三档几何，共用既有骨架与 MultiMesh。默认镜头新增一次主角真实起手的配对采集。亲历夺城或撤离后，幸存者带走当地战果，营地可读，远方军报仍须传递。有快存时，战前部署可以直接点「继续上次战役」，恢复战场、营地或在途部队。RC5 的两场护送被同一 510 秒 llvmpipe 时限截断，现记录两条路线的部署、进展、破门和战报，片段与护送可以在独立的图形运行器上并行。沿用 512v512、原生渲染和 4× MSAA。
+正常战场已经使用六类衣甲与配套头巾、披膊、领衬，九套实际武器动作、部队、将领、坐骑、河岸、营地和城门采用同一美术方向。军议可点击继续旧档，战后幸存者带走亲历的战果，驻营与行军可接续。军械按队与武器登记，同时核对每个单位和伤亡。
 
-自审第一轮 15 对实机画面后，保留衣装明暗分层，重绘草地、碎石与道路交界。普通兵出征时的兵种、人数和军械按编制冻结，军官与玩家保留独立记录。运行 `godot --headless --path . --script tests/field_cohort_muster.gd` 可核对两种记录的实测大小、1,024 至 10,000 普通兵的 24 步模拟与战后结算。每帧图形性能另行实测。
+同机位重放保留兵力、命中和动作。对 1,024 与 5,000 人两组实战，分别测量寻敌与完整模拟步，逐人校验目标、让位量和整个战斗存档。托管 Apple M1 (Virtual) 默认实际 1024×640、4× MSAA、阴影，24 秒窗口的 P95/P99 为 11.45 / 13.56 ms。该 PR 包九次空游戏数据启动都有首帧和命中。主线同树重建后，冷启动首轮 8/9，首次 Metal 在场景回调前超出 75 秒；相同包在独立托管机复测 9/9。主线默认档 P95/P99 为 14.77 / 20.61 ms。阴影绘制等待和 Metal 编译已在一次慢启动中测到。独立 Metal 烘焙包已拒绝，Apple7 着色程序在托管 Apple5 设备上每次报告 111 条错误。另见 [主线冷启证据](evidence/river-gate-v1-rc6/PLAYTEST.md#主线重建与独立冷启复核)。M5 实机 **NOT_RUN**，5,000 / 10,000 人的短程 CPU 数据不足以证明可玩帧率。
 
-4621944adf8e30dda2516b4291e7a0ceebc011d7 的分队军籍已在托管 Godot 实测，1,024 普通兵的两种序列化记录为 106,512 / 5,832 字节，10,000 人为 1,039,056 / 54,336 字节。万人档 24 步 P95 为 248.632 ms。普通兵仍为独立活动角色。根据玩家镜头自审，近景硬叶树冠出现完整椭球，现由两至三组不等的叶群和原创叶簇色罩构成，水边柳树独立保留。原生大图还暴露了过亮的浅蓝甲面，随后按兜鍪、铁札、盾木、战袍分别压低中间色值，刀刃保留明亮识别。托管窗体实拍 1024×640，旧分段日志却受 UI 伸缩影响记成 820×512。性能记录器现在用首帧和窗口缩放后的真实帧附件尺寸，与独立 PNG 核对。空间查询同步用真实战场的每兵目标、分离力、击中和完整存档做同机成对对照。
-
-云端下一次复现：`git fetch origin main codex/river-gate-animation-rc6`，在干净工作树检出该分支，运行 `./tools/prepare-font.sh && ./tools/compare-river-art.sh`。完整回归入口为 `./tools/test-field-journey.sh && ./tools/test-field-render.sh`。美术实机自审、当前候选性能和整套 CI 以本次运行的记录更新，M5 真机 `NOT_RUN`。
+启动方向下一步是在显示军议与有效输入之前，分段加载近景、阴影与部队资源，并用同一 75 秒时限核对第一帧、军议可操作时刻和实际部署。美术下一项在同一种子门前接敌镜头细看主角、盾肩与枪头重叠的位置，分开量取近景蒙皮/远景批次的 CPU 时间。维持画质、伤亡和军阵。云端复现从 `git fetch origin main && git switch --detach d6b03507c4ace8582ab9f821e604c499616b8dab && ./tools/prepare-font.sh && ./tools/compare-river-art.sh` 开始。原生包的帧时可用 `python3 tools/rc3_native_probe.py <内层ZIP> <解压目录> <证据目录>` 在托管 macOS 重放。
 
 <!-- river-gate-current-review -->
-## 河关 0.16.0-rc.4 可玩候选
+## 历史记录 · 河关 0.16.0-rc.4
 
-主线的游戏代码仍为 RC3。RC4 的完整游戏来自开放的 PR #34。美术状态为 **ART_REVIEW_REQUIRED**。常用俯斜游玩视角参考第二张美术方向稿，角色近景用于检查动作与材质。当前优先继续提升正常战斗视角的人物与环境，RC3 的阶段排程留作历史记录。 [实机连续片段](evidence/river-gate-v1-rc4/battlefield-motion.mp4) · [实际游玩流程](evidence/river-gate-v1-rc4/playthrough.mp4) · [配对实机画面](evidence/river-gate-v1-rc4/before-after.mp4) · [美术方向稿](art-direction/river-gate/battle-view.png)
+归档这份 RC4 记录时，主线游戏代码为 RC3。RC4 的完整游戏来自开放的 PR #34。美术状态为 **ART_REVIEW_REQUIRED**。常用俯斜游玩视角参考第二张美术方向稿，角色近景用于检查动作与材质。当前优先继续提升正常战斗视角的人物与环境，RC3 的阶段排程留作历史记录。 [实机连续片段](evidence/river-gate-v1-rc4/battlefield-motion.mp4) · [实际游玩流程](evidence/river-gate-v1-rc4/playthrough.mp4) · [配对实机画面](evidence/river-gate-v1-rc4/before-after.mp4) · [美术方向稿](art-direction/river-gate/battle-view.png)
 
 本候选的游戏源码为 `2293008c2d76dcbd788aeaef0fb871de1bc8eee1`，CI 实际导出的提交为 `eabe0b211892064b2dce9270d72468cfcff3c412`。从 Actions 归档解出 `Luanshi-macOS.zip` 后，内层 ZIP 的 SHA-256 应为 `c560adb20aad487ef89aad77c23b531948c828d9d108c13fac5704293cc8249a`。 [源码](https://github.com/haohongfei2001-png/luanshi-game/commit/2293008c2d76dcbd788aeaef0fb871de1bc8eee1) · [游戏 PR](https://github.com/haohongfei2001-png/luanshi-game/pull/34) · [macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43288570098/artifacts/13975154019) · [五项 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43288570098)
 
