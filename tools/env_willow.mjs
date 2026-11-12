@@ -35,7 +35,7 @@ function bole(m,points,radii,sides,seed){
             const radial=norm(add(times(side,Math.cos(a)),times(back,Math.sin(a))));
             const r=radii[row]*profile[i]*(1+.049*Math.cos(i*3.7+row));
             const dark=(row===0?.87:1)*palette[i],stain=.035*Math.sin(i*2+row*.4);
-            ring.push(vert(m,add(points[row],times(radial,r)),radial,[i/sides,row*.56],[17,0],
+            ring.push(vert(m,add(points[row],times(radial,r)),radial,[i/sides,row*.56],[0,4.33+palette[i]*.22],
                 [(0.34+stain)*dark,(.303+stain*.56)*dark,(.248+stain*.34)*dark]));
             normals.push(radial);
         }
@@ -58,23 +58,30 @@ function spray(m,start,out,spread,fall,width,turn,tile,value){
         add(add(add(start,times(axis,spread*.96)),times(side,turn*.67)),[0,-fall*.49,0]),
         add(add(add(start,times(axis,spread*.88)),times(side,turn)),[0,-fall,0])
     ];
-    const widths=[.29,.84,1.0,.83,.39],tValues=[0,.19,.39,.68,1],ids=[];
-    for(let row=0;row<centers.length;row++){
+    const widths=[.24,.81,1.0,.77,.29],tValues=[0,.19,.39,.68,1],rows=tile===2?[0,1,2,4]:[0,1,2,3,4];
+    const ids=[];
+    for(const row of rows){
         const t=tValues[row],ring=[],facing=norm(add(times(axis,.18+t*.64),[0,1.12-t*.44,0]));
-        for(let k=-1;k<=1;k++){
+        const sections=row===4?[-1,1]:[-1,0,1];
+        for(const k of sections){
             let p=add(centers[row],times(side,k*width*widths[row]));
-            p=add(p,times(axis,Math.abs(k)*width*(.12+.16*t)));
-            p[1]-=Math.abs(k)*width*(.22+.13*Math.sin(row*1.43+turn));
+            p=add(p,times(axis,Math.abs(k)*width*(.12+.16*t)+k*width*.12*Math.sin(row+.5+turn)));
+            p[1]-=Math.abs(k)*width*(.22+.13*Math.sin(row*1.43+turn))+k*width*.14*Math.sin(row+.7+turn);
             const n=norm(add(facing,times(side,k*.29)));
+            const light=value*(.85+.13*(1-t))+.047*Math.cos(k*1.67+row*.4+turn);
             ring.push(vert(m,p,n,[(tile+.023+(.954*(k+1)*.5))*.25,.015+t*.97],
-                [t,2.5+value*.4],[.8,.8,.8]));
+                [t,2.5+light*.4],[.8,.8,.8]));
         }
         ids.push(ring);
     }
-    for(let i=0;i+1<ids.length;i++)for(let j=0;j<2;j++){
-        const n=norm(add(times(axis,.36+i*.12),[0,.88-i*.08,0]));
-        tri(m,ids[i][j],ids[i][j+1],ids[i+1][j+1],n);
-        tri(m,ids[i][j],ids[i+1][j+1],ids[i+1][j],n);
+    for(let i=0;i+1<ids.length;i++){
+        const n=norm(add(times(axis,.36+i*.12),[0,.88-i*.08,0])),a=ids[i],b=ids[i+1];
+        if(b.length===2){
+            tri(m,a[0],a[1],b[0],n);tri(m,a[1],b[1],b[0],n);tri(m,a[1],a[2],b[1],n);
+        }else for(let j=0;j<2;j++){
+            tri(m,a[j],a[j+1],b[j+1],n);
+            tri(m,a[j],b[j+1],b[j],n);
+        }
     }
 }
 const OLD_BOUGHS=[
@@ -100,20 +107,20 @@ function makeTree(old){
         [.57,1.94,-.13],[.86,2.34,-.04],[1.17,2.7,-.2]]:
         [[0,-.16,0],[.04,.28,.02],[.04,.66,-.07],[.13,1.18,0],[.23,1.67,.07],[.39,2.08,.03]];
     bole(wood,trunk,old?[.60,.56,.48,.395,.35,.29,.24]:[.36,.33,.245,.20,.155,.128],old?13:9,356);
-    const roots=old?7:5;
+    const roots=old?5:4;
     for(let j=0;j<roots;j++){
         const a=j*TAU/roots+.4*rng(),dir=[Math.cos(a),0,Math.sin(a)],side=[-dir[2],0,dir[0]];
         const reach=(old?1.6:1.01)*(.72+.68*rng())*(dir[0]>.68?1.32:1.0);
-        const end=add(times(dir,reach),[0,dir[0]>.55?-.40:-.10,0]);
+        const end=add(add(times(dir,reach),times(side,reach*(rng()-.50)*.33)),[0,dir[0]>.55?-.42:-.16,0]);
         bole(wood,[add(times(dir,.12),[0,old?.61:.39,0]),add(times(dir,reach*.36),[0,.18,0]),
-            add(add(times(dir,reach*.75),times(side,reach*.10)),[0,.055,0]),end],old?[.32,.22,.105,.022]:[.17,.115,.062,.014],6,90+j);
+            add(add(times(dir,reach*.74),times(side,reach*.18)),[0,-.012,0]),end],old?[.27,.184,.084,.015]:[.155,.100,.054,.013],5,90+j);
     }
     bones.forEach((b,index)=>{
         const size=(old?1:.71)*(.93+rng()*.14);
-        const sections=old?7:6;
+        const sections=old?6:5;
         const path=Array.from({length:sections},(_,j)=>bezier(...b,j/(sections-1)));
         const radii=path.map((_,j)=>size*(.035+.215*(1-j/(sections-1))**1.22));
-        bole(wood,path,radii,7,216+index);
+        bole(wood,path,radii,old?6:5,216+index);
         const forward=norm([b[3][0]-b[1][0],0,b[3][2]-b[1][2]]),across=[-forward[2],0,forward[0]];
         // A warm top plate and two darker banks on each bough. Twigs leave
         // unequal gaps and ends hang at different heights over the river.
@@ -125,7 +132,7 @@ function makeTree(old){
             const reach=(old?.97:.69)*(.80+.46*rng());
             const tip=add(add(start,times(branchDir,reach)),[0,.14+reach*.23,0]);
             bole(wood,[start,add(add(start,times(branchDir,reach*.45)),[0,.24,0]),tip],
-                [.082,.053,.020].map(r=>r*size),5,321+j+index*7);
+                [.082,.053,.020].map(r=>r*size),4,321+j+index*7);
             const tail=(old?2.17:1.39)*(.76+.55*rng())*(1.16-.21*at);
             spray(leaves,tip,branchDir,reach*.91,tail,size*(.41+.20*rng()),(rng()-.5)*reach*.81,j%2,.32+.40*rng());
             const crownDir=norm(add(times(forward,.95),times(across,sign*.36)));
@@ -145,6 +152,18 @@ function makeTree(old){
         spray(leaves,b[3],forward,size*(1.14+.28*rng()),size*(2.35+rng()*.62),
             size*(.56+.11*rng()),(rng()-.5)*.66,index%2,.50+.21*rng());
     });
+    if(old){
+        // The central leader bends inland before curling over the exposed
+        // bank. Its hanging tips partly shade the fork, with light between.
+        const spine=[[.91,2.30,-.09],[.54,3.37,-.41],[.42,4.42,-.05],[.95,5.11,.02]];
+        bole(wood,spine,[.19,.123,.078,.035],6,812);
+        for(let j=0;j<4;j++){
+            const h=bezier(...spine,.56+j*.14);
+            const a=1.28+j*1.58;
+            const dir=[Math.cos(a),0,Math.sin(a)];
+            spray(leaves,h,dir,1.24+j*.09,1.21+.29*Math.cos(j),.70+.12*Math.sin(.9*j),.17*Math.cos(j),j%2===0?2:0,.53+j*.049);
+        }
+    }
     return [wood,leaves];
 }
 function base64(bytes){
@@ -253,6 +272,19 @@ export function willowInk(){
             const x=sx+dx,y=sy+dy;
             line(x-dx*.10,y-dy*.12,x,y,1.12,[105,107,65]);
             leaf(x-dx*.032,y-dy*.035,dx*.11,dy*.075,2.1,[137,127,78],.1);
+        }
+    }
+    // Retain the natural hanging points inside each sprite. This ragged
+    // perimeter prevents a dense, overlapping spray from exposing a cut rectangle.
+    for(let s=0;s<3;s++)for(let y=2;y<254;y++){
+        const t=y/255,center=63+6*Math.sin(t*4.9+s*1.71)+2.6*Math.sin(t*14.8+s);
+        const half=15+44*Math.pow(Math.sin(t*Math.PI),.58)-6*t;
+        const left=center-half+4.2*Math.sin(y*.097+s)+1.8*Math.sin(y*.316+s);
+        const right=center+half+5.1*Math.sin(y*.079+s+1.8)+2.8*Math.cos(y*.244+s);
+        for(let x=2;x<126;x++){
+            const i=(y*W+s*128+x)*4+3;
+            const edge=Math.min(x-left,right-x);
+            raw[i]=Math.round(raw[i]*clamp((edge+1.5)/3.5));
         }
     }
     return raw;

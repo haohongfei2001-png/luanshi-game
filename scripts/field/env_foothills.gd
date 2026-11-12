@@ -166,12 +166,18 @@ func _bake_trees() -> void:
 			trees.append({"wood":prototype.stone.surface.commit(),"leaves":prototype.leaves.commit()})
 
 func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: float) -> void:
-	var source:=trees[2*kind+variant]
-	var source_height:=5.63 if variant==0 else 4.91
+	var shape:=1 if kind==0 and height<5.48 else variant
+	var source:=trees[2*kind+shape]
+	var source_height:=5.63 if shape==0 else 4.91
 	var scale_factor:=height/source_height if kind==0 else height
 	var basis:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*scale_factor)
 	var placement:=Transform3D(basis,ground_point(p))
-	patch.stone.surface.append_from(source.wood,0,placement)
+	if kind==0:
+		# Both imported parts retain their own bark or foliage tags. Cull the
+		# whole willow in a single grove draw, independently of the terrain tile.
+		patch.leaves.append_from(source.wood,0,placement)
+	else:
+		patch.stone.surface.append_from(source.wood,0,placement)
 	patch.leaves.append_from(source.leaves,0,placement)
 	patch.sprays+=1
 

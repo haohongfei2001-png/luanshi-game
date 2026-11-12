@@ -60,8 +60,9 @@ jobs:
               assert pre['hits']==post['hits'] and pre['tick']==post['tick'] and post['ordinary']==[512,512]
               print('WILLOW_TIMES',label,[round(pre[k],2) for k in ['p50_ms','p95_ms','p99_ms']],[round(post[k],2) for k in ['p50_ms','p95_ms','p99_ms']])
           (root/'comparison.json').write_text(json.dumps({'before':a,'after':b,'before_wall':ca,'after_wall':cb,'cpu':platform.machine()},indent=2))
-          for name in ['ford','bank','margin','ranks']:
-              data=(root/'after'/(name+'-view.jpg')).read_bytes()
+          for stage,name in [('after','ford'),('after','bank'),('after','ranks'),('before','ford'),('before','bank'),('after','margin')]:
+              data=(root/stage/(name+'-view.jpg')).read_bytes()
+              name=stage+'_'+name
               wire=base64.b64encode(data).decode()
               for i in range(0,len(wire),24000): print('RIVER_PAINT_JPEG',name,i//24000,wire[i:i+24000])
           PY

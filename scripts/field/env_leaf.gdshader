@@ -9,6 +9,7 @@ uniform vec4 sun_elm : source_color = vec4(.495,.565,.355,1.0);
 uniform vec4 sun_ash : source_color = vec4(.54,.52,.32,1.0);
 varying vec3 paint;
 varying float crown;
+varying vec2 bark_uv;
 
 void vertex() {
 	float breeze=sin(TIME*1.22+VERTEX.x*.83+VERTEX.z*.44)*.025;
@@ -16,15 +17,24 @@ void vertex() {
 	VERTEX.x+=breeze*UV2.x;
 	VERTEX.z+=breeze*.53*UV2.x;
 	crown=UV2.y;
+	bark_uv=UV;
 	paint=crown>.5?vec3(UV2.x,(UV2.y-1.0)*2.0,0.0):COLOR.rgb;
 }
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>2.1) {
+	if(crown>4.0) {
+		float ridge=clamp((crown-4.33)/.22,0.0,1.5);
+		float vein=texture(leaf_marks,vec2(bark_uv.x*3.7,bark_uv.y*.108)).g;
+		float groove=.5+.5*sin(bark_uv.x*71.3+bark_uv.y*.92+vein*1.51);
+		float grain=smoothstep(.16,.82,.42*ridge+.33*groove+.25*vein);
+		tone=mix(vec3(.046,.050,.037),vec3(.139,.124,.083),grain);
+	} else if(crown>2.1) {
 		vec4 brush=texture(willow_ink,UV);
 		float light=clamp((crown-2.5)*2.50,0.0,1.0);
-		tone=pow(brush.rgb,vec3(1.13))*vec3(.62,.69,.75)*(.62+.47*light);
+		float crest=smoothstep(.39,.82,light);
+		tone=pow(brush.rgb,vec3(1.07))*vec3(.66,.76,.80)*(.63+.66*light);
+		tone+=vec3(.010,.016,.011)*crest;
 		opacity=brush.a;
 	} else if(crown>.5) {
 		float marks=texture(leaf_marks,UV*0.85).g;
