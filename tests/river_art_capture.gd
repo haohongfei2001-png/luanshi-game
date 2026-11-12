@@ -1,5 +1,5 @@
 extends SceneTree
-## Run this same recorder on the untouched RC3 checkout and the new shipping scene.
+## Run this same recorder on the previous playable checkout and the new shipping scene.
 ## It moves the player's camera only. All units, deliveries, blows and casualties
 ## advance through the 20 Hz controller; exported frames replay at normal speed.
 const Field := preload("res://scripts/field/controller.gd")
@@ -55,13 +55,16 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 	_view(point,zoom,yaw)
 	await RenderingServer.frame_post_draw
 	var pic:=root.get_texture().get_image()
+	success=pic.save_png(directory+"/"+label+".png")==OK and success
+	# Keep the older lightweight review view available beside the original pixels.
 	success=pic.save_jpg(directory+"/"+label+".jpg",.95)==OK and success
 	var item:={"label":label,"kind":kind,"tick":b.tick,"center":[point.x,point.y],"yaw":yaw,"zoom":zoom,
 		"seed":Battle.SEED,"ordinary":Array(b.ordinary_counts),"officers":Array(b.command_counts),
 		"contact":[b.hits[0],b.hits[1]],"losses":[b.losses[0],b.losses[1]],"gate_hp":b.gate_hp,
 		"visible":field.view.visible_soldiers,"fighting":field.view.visible_fighting,"close":field.view.high_detail_soldiers,
 		"ranks":field.view.rank_soldiers,"window":[pic.get_width(),pic.get_height()],
-		"internal_scale":root.scaling_3d_scale,"shadows":field.map.sun.shadow_enabled}
+		"internal_scale":root.scaling_3d_scale,"msaa_3d":root.msaa_3d,"screen_space_aa":root.screen_space_aa,
+		"shadows":field.map.sun.shadow_enabled}
 	# Compare physically on-screen identities between versions. The old rotated
 	# world AABB also submitted many soldiers wholly outside the camera corners.
 	var on_screen:=PackedInt32Array()
