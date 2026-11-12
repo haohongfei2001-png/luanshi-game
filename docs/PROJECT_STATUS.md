@@ -1,3 +1,9 @@
+## Owner decision update — battle outcomes, morale and combat compulsion (2026-11-12)
+
+New locked product decision: `PRODUCT_DECISIONS.md §1N`. Full spec: [BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md](BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md); simulation contract §9F; acceptance BF-WILL-01..15 in `ACCEPTANCE_MATRIX.md §7F-G`.
+
+Battles can conclude through annihilation, disorganized rout (player chooses pursuit or halt), organized strategic withdrawal, surrender, or existing objective completion. Two independent values govern unit/force behavior: morale (combat effectiveness, formation, obedience and gradual loyalty) and combat compulsion (authority/legitimacy including local capital prestige, discipline, mission necessity, succession and available options). Killing the commander alone never guarantees victory or rout: a recognized deputy with strong local authority may take command and keep the army fighting; absent succession plus low authority/morale and encirclement may trigger collapse. Existing soldier morale, objective adjudication and officer succession code should be extended rather than replaced. **This is a design decision, not yet an implementation claim.**
+
 # CURRENT OWNER PRIORITY UPDATE — 2026-11-12 (RC2 merged)
 
 **Latest baseline:** playable `0.16.0-rc.2` is merged; see [RC2 evidence](evidence/river-gate-v1-rc2/PLAYTEST.md), [CODEX_CONTINUATION.md](CODEX_CONTINUATION.md), and [master execution mandate](CODEX_MASTER_EXECUTION_MANDATE_20261112.md).
