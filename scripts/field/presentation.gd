@@ -83,6 +83,11 @@ func configure(model: Battle) -> void:
 		var detailed: Mesh = CompanyArt.fighter(kit, "Player", true) if key>=20 else near_mesh[kit]
 		groups[key] = _batch(detailed,mat,counts[key])
 		if key<20:
+			# The hand-stitched body is visible in the colour pass. At shadow-map
+			# scale the matching wrist, shaft and robe silhouette fits the same pose.
+			groups[key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			groups[200+key]=_batch(far_mesh[kit],mat,counts[key])
+			groups[200+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
 			groups[30+key]=_batch(far_mesh[kit],mat,counts[key])
 			groups[30+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			groups[60+key]=_batch(ranks_mesh[kit],_material(col,kit),counts[key])
@@ -152,11 +157,16 @@ func configure(model: Battle) -> void:
 func _key(u: Battle.Unit) -> int:
 	return u.kit + (20 if u.hero else 10*u.team)
 
-func _put(g: Batch,pos: Vector3,angle: float,data: Color,stretch: float=1.0) -> void:
+func _put(g: Batch,pos: Vector3,angle: float,data: Color,stretch: float=1.0,caster: Batch=null) -> void:
 	var basis := Basis(Vector3.UP,angle).scaled(Vector3.ONE*stretch)
-	g.mesh.set_instance_transform(g.used,Transform3D(basis,pos))
+	var transform_3d:=Transform3D(basis,pos)
+	g.mesh.set_instance_transform(g.used,transform_3d)
 	g.mesh.set_instance_custom_data(g.used,data)
 	g.used += 1
+	if caster!=null:
+		caster.mesh.set_instance_transform(caster.used,transform_3d)
+		caster.mesh.set_instance_custom_data(caster.used,data)
+		caster.used+=1
 
 func _reserve(g: Batch,count: int) -> void:
 	if count > g.mesh.instance_count:
@@ -181,6 +191,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	_reserve(runners,battle.orders.size())
 	for g in standards:
 		g.used = 0
+	# Orthographic zoom determines how much of the army actually occupies face-scale pixels.
+	var portrait_radius:=lerpf(9.5,5.2,smoothstep(7.2,16.8,zoom))
+	var portrait_radius_sq:=portrait_radius*portrait_radius
 	for u in battle.roster:
 		if u.state == Battle.State.ESCAPED: continue
 		var p := u.before.lerp(u.pos,alpha)
@@ -214,7 +227,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			base.y += 0.73 if battle.vehicle==1 else 0.91
 		var was_close:=lod_by_id[u.id]==0
 		var was_rank:=lod_by_id[u.id]==2
-		var full:=reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<(209.0 if was_close else 178.0)))) or (zoom<17 and distance_sq<(121.0 if was_close else 102.0)) or (zoom<36 and distance_sq<(23.0 if was_close else 17.0))
+		var full:=reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<(209.0 if was_close else 178.0)))) or (zoom<17 and distance_sq<portrait_radius_sq*(1.14 if was_close else 1.0)) or (zoom<36 and distance_sq<(23.0 if was_close else 17.0))
 		var tier:=0
 		if not full:
 			tier=1
@@ -231,7 +244,8 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			if u.state==Battle.State.MARCH: data.g=clampf(travelled*15.0,0.0,1.0)
 		if not full or contact_for_all:
 			_put(contact,ground+Vector3.UP*0.035,angle,Color(0,0,0,0))
-		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0)
+		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
+		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0,caster)
 		if not u.hero and not u.officer:
 			visible_soldiers += 1
 			if u.state in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD,Battle.State.STAGGER]:
