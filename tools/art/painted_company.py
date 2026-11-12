@@ -66,7 +66,7 @@ def materials(size):
     # Retain the painted overlaps as readable courses. Compression of their value
     # range separates the iron face from its recessed lacing without specular pinpoints.
     relief=ImageOps.autocontrast(ImageOps.grayscale(armor),cutoff=(1,2))
-    lames=ImageOps.colorize(relief,(51,52,53),(150,141,120),midtone=(87,87,83),midpoint=141)
+    lames=ImageOps.colorize(relief,(51,52,53),(150,141,120),mid=(87,87,83),midpoint=141)
     with Image.open(SOURCE/"river_face_study.png") as image:
         faces=image.convert("RGB")
     return {"dyed":cloth,"coat":_crossed_front(cloth),"quilt":padded,"lamellar":armor,"lames":lames,"hero_mantle":red,
