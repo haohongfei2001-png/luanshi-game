@@ -101,6 +101,15 @@ void vertex() {
         pos.z-=hem_weight*(travel*(.072+.023*ripple)+beat*.045);
         pos.x+=hem_weight*(travel*.024*ripple+beat*(state==1 ? .045 : -.050));
     }
+    // The free end of a cloth knot catches up after the head turns. Its root stays
+    // with the original skull joint, and the same gait phase drives all three LODs.
+    if ((swatch==ivec2(2,2) || swatch==ivec2(1,0)) && first==2 && VERTEX.z<-.082) {
+        float loose=1.0-smoothstep(1.44,1.627,VERTEX.y);
+        float pace=(state==5 || (state==0 && INSTANCE_CUSTOM.g>.001)) ? 1.0 : .18;
+        float flick=sin(6.28318*INSTANCE_CUSTOM.b+VERTEX.x*7.0);
+        pos.x+=loose*(.012*flick*pace);
+        pos.z-=loose*.018*pace;
+    }
     // Broad painted occlusion stays on the garment as the shoulder or hem turns.
     float armhole=smoothstep(.12,.23,abs(VERTEX.x))*(1.0-smoothstep(.035,.105,abs(VERTEX.y-1.285)));
     float hem=1.0-smoothstep(.52,1.38,VERTEX.y);

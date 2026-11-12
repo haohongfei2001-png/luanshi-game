@@ -391,7 +391,12 @@ func show_receipt(b: Battle,receipt: Dictionary,world: Dictionary) -> void:
 		if not world.reports.is_empty():
 			var latest: Dictionary=world.reports.back()
 			var subject: String={"hequ":"河关","pingling":"平陵","anping":"安平","relief":"本军"}.get(latest.subject,"沿线")
-			result_text.text+="\n最近送达：%s，约 %d 小时前观测。" % [subject,maxi(0,floori((world.time_seconds-latest.observed_at_seconds)/3600.0))]
+			var age:=maxi(0,floori((world.time_seconds-latest.observed_at_seconds)/3600.0))
+			if latest.contents.get("battle_id","")==receipt.get("battle_id","") and latest.contents.has("outcome"):
+				var holding: String="我军守驻" if latest.contents.get("owner","")==army.owner else "守军仍在"
+				result_text.text+="\n%s亲历：%s，%s。" % [subject,latest.contents.outcome,holding]
+			else:
+				result_text.text+="\n最近送达：%s，约 %d 小时前观测。" % [subject,age]
 	else:
 		var parts:=PackedStringArray()
 		for kit in Arms.NAMES:

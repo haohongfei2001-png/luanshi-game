@@ -267,6 +267,7 @@ jobs:
         run: |
           python3 tools/art/check_company_motion.py
           node tools/art/bake_mounts.mjs --check
+          node tools/art/bake_field_garments.mjs --check
       - name: Replay two game revisions on the same display
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

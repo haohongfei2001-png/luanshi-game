@@ -71,6 +71,11 @@ for old,new in zip(left,right):
         sample=io.BytesIO()
         pair.resize((1024,320),Image.Resampling.LANCZOS).save(sample,"JPEG",quality=81)
         print("RIVER_PAIR_JPEG",name,base64.b64encode(sample.getvalue()).decode())
+    if name in ("player-action","formation","gate"):
+        # One normal-view frame at the captured dimensions, easy to inspect outside the ZIP.
+        sample=io.BytesIO()
+        r.save(sample,"JPEG",quality=89,subsampling=0)
+        print("RIVER_WINDOW_JPEG",name,base64.b64encode(sample.getvalue()).decode())
 print("RIVER_PAIR_PASS",len(left))
 PY
 ffmpeg -nostdin -loglevel error -y -i "$out/before.mp4" -i "$out/after.mp4" -filter_complex '[0:v]scale=768:480[l];[1:v]scale=768:480[r];[l][r]hstack=inputs=2' -c:v libx264 -crf 22 -pix_fmt yuv420p -movflags +faststart "$out/river-contact-pair.mp4"

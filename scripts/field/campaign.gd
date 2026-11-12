@@ -170,6 +170,9 @@ func settle() -> Dictionary:
 				if team==0 and (u.hero or u.state==Field.State.ESCAPED):
 					withdrawing_people+=1
 					withdrawing_gear+=pieces
+	# Withdrawal below starts a march. Remember what the player could actually
+	# witness at the gate before moving their army to the campaign route.
+	var witnessed_here: bool=field.hero.hp>0 and _state.armies.relief.location=="hequ"
 	var before:=_state.duplicate(true)
 	var old_loose:=loose_weapons
 	for team in 2:
@@ -233,6 +236,13 @@ func settle() -> Dictionary:
 	if not field.legacy_missiles: issued.ammunition=arrow_ledger
 	ticket.receipt=issued.duplicate(true)
 	_event("field_settled",{"battle_id":ENCOUNTER,"outcome":field.result,"dead":[dead[0].size(),dead[1].size()]})
+	if witnessed_here:
+		var city: Dictionary=_state.cities.hequ
+		var observed: Dictionary={"battle_id":ENCOUNTER,"outcome":field.result,"owner":city.owner}
+		if city.owner==_state.armies.relief.owner:
+			observed.merge({"soldiers":city.soldiers,"food":city.food,"fort":city.fort})
+		_queue_report("hequ","亲历斥候",_state.hour,_state.hour,observed)
+		_deliver_reports()
 	if not audit().is_empty() or not audit_quivers():
 		_state=before
 		loose_weapons=old_loose

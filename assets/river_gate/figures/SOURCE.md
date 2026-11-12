@@ -17,3 +17,5 @@ Python 3 与 Pillow 可用时，运行 `python3 tools/art/bake_river_company.py`
 兜鍪轮廓、护耳和甲裙的形制参考唐代武士俑。故宫藏三彩武士俑可见前后甲身与肩带，普林斯顿藏武士俑可见护耳与甲裙的叠札，旧金山亚洲艺术博物馆藏品记录了盔顶、披膊、袍裤与靴的组合。墓葬俑表现理想化的军容。游戏对河关军需与衣料配色做了简化，盔甲几何、札片与绑带纹理均由本项目绘制。[故宫博物院](https://www.dpm.org.cn/collection/sculpture/233426.html) · [普林斯顿大学艺术博物馆](https://artmuseum.princeton.edu/art/collections/objects/33588) · [旧金山亚洲艺术博物馆](https://searchcollection.asianart.org/objects/4875/warrior)
 
 RC6 使用本项目绘制的 `campaign_colours.svg` 作为六种衣装、皮肤和九武器共用的色稿。共 32 个图格，与现有近中远三档网格的 UV 对齐。披风、盾面、面容、甲札与刀刃有独立色面，明暗取自游戏里的真实光源。旧版画材和重建脚本保留供版本复现。
+
+各级甲兵披膊的铁片、束边和可见布衬、轻装兵软巾的垂结以及军官肩领来自原创附件 `field_garments.gltf`。它们绑定至原有躯干、头部与上臂，在载入时与身体和武器拼为同一张网格。用 `node tools/art/bake_field_garments.mjs --check` 核对三档实装模型与作者源文件。

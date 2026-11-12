@@ -2,6 +2,7 @@ extends RefCounted
 ## Imported original meshes share a costume atlas, the metre-scale hand bind and a baked
 ## motion bank. Merge shared body/weapon geometry once, retaining one draw per crowd batch.
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
+const GARMENTS := preload("res://assets/river_gate/figures/field_garments.gltf")
 const SKIN := preload("res://scripts/field/company_skin.gdshader")
 const FABRIC := preload("res://assets/river_gate/figures/campaign_colours.svg")
 const MOTION := preload("res://assets/river_gate/figures/company_motion.png")
@@ -10,10 +11,11 @@ static var assembled: Dictionary = {}
 
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
-	var library: Node = LIBRARY.instantiate()
-	for part in library.find_children("*", "MeshInstance3D", true, false):
-		pieces[String(part.name)]=part.mesh
-	library.free()
+	for asset: PackedScene in [LIBRARY, GARMENTS]:
+		var library := asset.instantiate()
+		for part in library.find_children("*", "MeshInstance3D", true, false):
+			pieces[String(part.name)]=part.mesh
+		library.free()
 
 static func costume(kit: int) -> String:
 	if kit in [5,6]: return "Archer"
@@ -32,17 +34,19 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	# Copy packed indexed arrays only. SurfaceTool would expand every triangle,
 	# and importer-generated tangents/lightmap data have no role in these materials.
 	var arrays:=body.surface_get_arrays(0)
-	var gear:=arms.surface_get_arrays(0)
-	var vertex_offset: int=arrays[Mesh.ARRAY_VERTEX].size()
-	for attr: int in [Mesh.ARRAY_VERTEX,Mesh.ARRAY_NORMAL,Mesh.ARRAY_TEX_UV,Mesh.ARRAY_TEX_UV2]:
-		var combined = arrays[attr]
-		combined.append_array(gear[attr])
-		arrays[attr]=combined
-	var indices: PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
-	var second: PackedInt32Array=gear[Mesh.ARRAY_INDEX]
-	for i in second.size(): second[i]+=vertex_offset
-	indices.append_array(second)
-	arrays[Mesh.ARRAY_INDEX]=indices
+	var garment: ArrayMesh=pieces[look+lod+"Trim"]
+	for attachment: ArrayMesh in [arms, garment]:
+		var gear:=attachment.surface_get_arrays(0)
+		var vertex_offset: int=arrays[Mesh.ARRAY_VERTEX].size()
+		for attr: int in [Mesh.ARRAY_VERTEX,Mesh.ARRAY_NORMAL,Mesh.ARRAY_TEX_UV,Mesh.ARRAY_TEX_UV2]:
+			var combined = arrays[attr]
+			combined.append_array(gear[attr])
+			arrays[attr]=combined
+		var indices: PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
+		var extra: PackedInt32Array=gear[Mesh.ARRAY_INDEX]
+		for i in extra.size(): extra[i]+=vertex_offset
+		indices.append_array(extra)
+		arrays[Mesh.ARRAY_INDEX]=indices
 	for attr: int in [Mesh.ARRAY_TANGENT,Mesh.ARRAY_COLOR,Mesh.ARRAY_CUSTOM0,Mesh.ARRAY_CUSTOM1,Mesh.ARRAY_CUSTOM2,Mesh.ARRAY_CUSTOM3,Mesh.ARRAY_BONES,Mesh.ARRAY_WEIGHTS]:
 		arrays[attr]=null
 	var result:=ArrayMesh.new()
