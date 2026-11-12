@@ -8,13 +8,13 @@
       "default": {
         "hidpi": true,
         "logical": [
-          1280.0,
-          800.0
+          1280,
+          800
         ],
         "msaa": 0,
         "preset": 0,
         "resizable": true,
-        "scale": 1.0,
+        "scale": 1,
         "screen_aa": 0,
         "shadow": true,
         "taa": false,
@@ -33,13 +33,13 @@
       "default": {
         "hidpi": true,
         "logical": [
-          1280.0,
-          800.0
+          1280,
+          800
         ],
         "msaa": 0,
         "preset": 0,
         "resizable": true,
-        "scale": 1.0,
+        "scale": 1,
         "screen_aa": 0,
         "shadow": true,
         "taa": false,
@@ -58,13 +58,13 @@
       "default": {
         "hidpi": true,
         "logical": [
-          1280.0,
-          800.0
+          1280,
+          800
         ],
         "msaa": 0,
         "preset": 0,
         "resizable": true,
-        "scale": 1.0,
+        "scale": 1,
         "screen_aa": 0,
         "shadow": true,
         "taa": false,
@@ -83,13 +83,13 @@
       "default": {
         "hidpi": true,
         "logical": [
-          1280.0,
-          800.0
+          1280,
+          800
         ],
         "msaa": 0,
         "preset": 0,
         "resizable": true,
-        "scale": 1.0,
+        "scale": 1,
         "screen_aa": 0,
         "shadow": true,
         "taa": false,
@@ -108,13 +108,13 @@
       "default": {
         "hidpi": true,
         "logical": [
-          1280.0,
-          800.0
+          1280,
+          800
         ],
         "msaa": 0,
         "preset": 0,
         "resizable": true,
-        "scale": 1.0,
+        "scale": 1,
         "screen_aa": 0,
         "shadow": true,
         "taa": false,
@@ -133,13 +133,13 @@
       "default": {
         "hidpi": true,
         "logical": [
-          1280.0,
-          800.0
+          1280,
+          800
         ],
         "msaa": 0,
         "preset": 0,
         "resizable": true,
-        "scale": 1.0,
+        "scale": 1,
         "screen_aa": 0,
         "shadow": true,
         "taa": false,
@@ -158,13 +158,13 @@
       "default": {
         "hidpi": true,
         "logical": [
-          1280.0,
-          800.0
+          1280,
+          800
         ],
         "msaa": 0,
         "preset": 0,
         "resizable": true,
-        "scale": 1.0,
+        "scale": 1,
         "screen_aa": 0,
         "shadow": true,
         "taa": false,
@@ -185,7 +185,7 @@
       "object_detail_gradient": 6.3316,
       "reference_detail_gradient": 5.7244,
       "motion_edge_error": 4.9449,
-      "band_pixels": 39408.0,
+      "band_pixels": 39408,
       "object_pixels": 54397.2,
       "samples": 30,
       "wall_p50_ms": 237.493,
@@ -199,7 +199,7 @@
       "object_detail_gradient": 6.3316,
       "reference_detail_gradient": 5.7244,
       "motion_edge_error": 4.9449,
-      "band_pixels": 39408.0,
+      "band_pixels": 39408,
       "object_pixels": 54397.2,
       "samples": 30,
       "wall_p50_ms": 233.856,
@@ -213,7 +213,7 @@
       "object_detail_gradient": 5.8636,
       "reference_detail_gradient": 5.7244,
       "motion_edge_error": 3.3414,
-      "band_pixels": 39408.0,
+      "band_pixels": 39408,
       "object_pixels": 54397.2,
       "samples": 30,
       "wall_p50_ms": 549.887,
@@ -355,23 +355,23 @@
           "camera_rank_models": 0,
           "center": [
             -11.8000001907349,
-            -3.0
+            -3
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -399,7 +399,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -410,19 +411,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -450,8 +451,9 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0,
-          "color_png_sha256": "8e77517dcdc3904670ae393f68ee5c6a70a5f32ce69fd0a35669473c86389762"
+          "zoom": 14,
+          "color_png_sha256": "8e77517dcdc3904670ae393f68ee5c6a70a5f32ce69fd0a35669473c86389762",
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -462,19 +464,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -502,7 +504,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -513,19 +516,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -553,7 +556,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 44,
@@ -564,19 +568,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -604,7 +608,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 15,
@@ -615,19 +620,19 @@
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -655,7 +660,8 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 15,
@@ -666,19 +672,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -706,8 +712,9 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0,
-          "color_png_sha256": "561a98e4b82580d2173748bc0a47560531dee88343a2a0e61f9ae22c1e16679d"
+          "zoom": 18,
+          "color_png_sha256": "561a98e4b82580d2173748bc0a47560531dee88343a2a0e61f9ae22c1e16679d",
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 16,
@@ -718,19 +725,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -758,7 +765,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 17,
@@ -769,19 +777,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -809,7 +817,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         },
         {
           "camera_high_models": 18,
@@ -820,19 +829,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -860,7 +869,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         }
       ],
       "timing_us": {
@@ -937,23 +947,23 @@
           "camera_rank_models": 0,
           "center": [
             -11.8000001907349,
-            -3.0
+            -3
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -981,7 +991,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -992,19 +1003,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1032,8 +1043,9 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0,
-          "color_png_sha256": "b43fb2b2c0f186cb1a8fe2c17ec8c039497d283c08b33daaa555c0e45968eca1"
+          "zoom": 14,
+          "color_png_sha256": "b43fb2b2c0f186cb1a8fe2c17ec8c039497d283c08b33daaa555c0e45968eca1",
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -1044,19 +1056,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1084,7 +1096,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -1095,19 +1108,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1135,7 +1148,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 44,
@@ -1146,19 +1160,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1186,7 +1200,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 15,
@@ -1197,19 +1212,19 @@
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1237,7 +1252,8 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 15,
@@ -1248,19 +1264,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1288,8 +1304,9 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0,
-          "color_png_sha256": "e540a83c37fdb36094be5dfb25f35f94db8e59b928d7746eaa4f4d6c991a86c6"
+          "zoom": 18,
+          "color_png_sha256": "e540a83c37fdb36094be5dfb25f35f94db8e59b928d7746eaa4f4d6c991a86c6",
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 16,
@@ -1300,19 +1317,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1340,7 +1357,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 17,
@@ -1351,19 +1369,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1391,7 +1409,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         },
         {
           "camera_high_models": 18,
@@ -1402,19 +1421,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1442,7 +1461,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         }
       ],
       "timing_us": {
@@ -1519,23 +1539,23 @@
           "camera_rank_models": 0,
           "center": [
             -11.8000001907349,
-            -3.0
+            -3
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1563,7 +1583,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -1574,19 +1595,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1614,8 +1635,9 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0,
-          "color_png_sha256": "a6a19a6d0e9aaf6f95c9d3722cae0d3311ed088cb43535ed77580d3f787433f2"
+          "zoom": 14,
+          "color_png_sha256": "a6a19a6d0e9aaf6f95c9d3722cae0d3311ed088cb43535ed77580d3f787433f2",
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -1626,19 +1648,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1666,7 +1688,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -1677,19 +1700,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1717,7 +1740,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 44,
@@ -1728,19 +1752,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -1768,7 +1792,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 15,
@@ -1779,19 +1804,19 @@
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1819,7 +1844,8 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 15,
@@ -1830,19 +1856,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1870,8 +1896,9 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0,
-          "color_png_sha256": "a60abd0683e6451ea15d4fe54d56afb21b672b647298d26eb63706fe2e20490c"
+          "zoom": 18,
+          "color_png_sha256": "a60abd0683e6451ea15d4fe54d56afb21b672b647298d26eb63706fe2e20490c",
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 16,
@@ -1882,19 +1909,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1922,7 +1949,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 17,
@@ -1933,19 +1961,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -1973,7 +2001,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         },
         {
           "camera_high_models": 18,
@@ -1984,19 +2013,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -2024,7 +2053,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         }
       ],
       "timing_us": {
@@ -2101,23 +2131,23 @@
           "camera_rank_models": 0,
           "center": [
             -11.8000001907349,
-            -3.0
+            -3
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2145,7 +2175,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -2156,19 +2187,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2196,8 +2227,9 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0,
-          "color_png_sha256": "8e77517dcdc3904670ae393f68ee5c6a70a5f32ce69fd0a35669473c86389762"
+          "zoom": 14,
+          "color_png_sha256": "8e77517dcdc3904670ae393f68ee5c6a70a5f32ce69fd0a35669473c86389762",
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -2208,19 +2240,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2248,7 +2280,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -2259,19 +2292,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2299,7 +2332,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 44,
@@ -2310,19 +2344,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2350,7 +2384,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 15,
@@ -2361,19 +2396,19 @@
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -2401,7 +2436,8 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 15,
@@ -2412,19 +2448,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -2452,8 +2488,9 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0,
-          "color_png_sha256": "561a98e4b82580d2173748bc0a47560531dee88343a2a0e61f9ae22c1e16679d"
+          "zoom": 18,
+          "color_png_sha256": "561a98e4b82580d2173748bc0a47560531dee88343a2a0e61f9ae22c1e16679d",
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 16,
@@ -2464,19 +2501,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -2504,7 +2541,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 17,
@@ -2515,19 +2553,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -2555,7 +2593,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         },
         {
           "camera_high_models": 18,
@@ -2566,19 +2605,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 1,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -2606,7 +2645,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         }
       ],
       "timing_us": {
@@ -2683,23 +2723,23 @@
           "camera_rank_models": 0,
           "center": [
             -11.8000001907349,
-            -3.0
+            -3
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2727,7 +2767,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -2738,19 +2779,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2778,8 +2819,9 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0,
-          "color_png_sha256": "b43fb2b2c0f186cb1a8fe2c17ec8c039497d283c08b33daaa555c0e45968eca1"
+          "zoom": 14,
+          "color_png_sha256": "b43fb2b2c0f186cb1a8fe2c17ec8c039497d283c08b33daaa555c0e45968eca1",
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -2790,19 +2832,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2830,7 +2872,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -2841,19 +2884,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2881,7 +2924,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 44,
@@ -2892,19 +2936,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -2932,7 +2976,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 15,
@@ -2943,19 +2988,19 @@
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -2983,7 +3028,8 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 15,
@@ -2994,19 +3040,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3034,8 +3080,9 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0,
-          "color_png_sha256": "e540a83c37fdb36094be5dfb25f35f94db8e59b928d7746eaa4f4d6c991a86c6"
+          "zoom": 18,
+          "color_png_sha256": "e540a83c37fdb36094be5dfb25f35f94db8e59b928d7746eaa4f4d6c991a86c6",
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 16,
@@ -3046,19 +3093,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3086,7 +3133,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 17,
@@ -3097,19 +3145,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3137,7 +3185,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         },
         {
           "camera_high_models": 18,
@@ -3148,19 +3197,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 0,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3188,7 +3237,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         }
       ],
       "timing_us": {
@@ -3265,23 +3315,23 @@
           "camera_rank_models": 0,
           "center": [
             -11.8000001907349,
-            -3.0
+            -3
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3309,7 +3359,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -3320,19 +3371,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3360,8 +3411,9 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0,
-          "color_png_sha256": "fe546a3960f41e6ffcaa5f66f5b983a9e61e3c15754786b982c1316939797577"
+          "zoom": 14,
+          "color_png_sha256": "fe546a3960f41e6ffcaa5f66f5b983a9e61e3c15754786b982c1316939797577",
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -3372,19 +3424,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3412,7 +3464,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -3423,19 +3476,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3463,7 +3516,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 44,
@@ -3474,19 +3528,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3514,7 +3568,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 15,
@@ -3525,19 +3580,19 @@
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3565,7 +3620,8 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 15,
@@ -3576,19 +3632,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3616,8 +3672,9 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0,
-          "color_png_sha256": "74c89c0763e6c58cfafdde2a7f7169ac20fe00443c59c62b555ea164308d2851"
+          "zoom": 18,
+          "color_png_sha256": "74c89c0763e6c58cfafdde2a7f7169ac20fe00443c59c62b555ea164308d2851",
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 16,
@@ -3628,19 +3685,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3668,7 +3725,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 17,
@@ -3679,19 +3737,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3719,7 +3777,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         },
         {
           "camera_high_models": 18,
@@ -3730,19 +3789,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -3770,7 +3829,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         }
       ],
       "timing_us": {
@@ -3847,23 +3907,23 @@
           "camera_rank_models": 0,
           "center": [
             -11.8000001907349,
-            -3.0
+            -3
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3891,7 +3951,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -3902,19 +3963,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3942,8 +4003,9 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0,
-          "color_png_sha256": "35e6c75bc6d4596bab853f3073a8d04329e6398546ab7316876df118f9749fab"
+          "zoom": 14,
+          "color_png_sha256": "35e6c75bc6d4596bab853f3073a8d04329e6398546ab7316876df118f9749fab",
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -3954,19 +4016,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -3994,7 +4056,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 10
         },
         {
           "camera_high_models": 44,
@@ -4005,19 +4068,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -4045,7 +4108,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 44,
@@ -4056,19 +4120,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            0,
+            0
           ],
           "losses": [
-            26,
-            62
+            0,
+            0
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "mounted",
           "seed": 61112,
           "shadow": true,
@@ -4096,7 +4160,8 @@
           "visible_mounted": 9,
           "visible_officers": 3,
           "yaw": 1.09,
-          "zoom": 14.0
+          "zoom": 14,
+          "arrows_fired": 16
         },
         {
           "camera_high_models": 15,
@@ -4107,19 +4172,19 @@
           ],
           "frame": 0,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -4147,7 +4212,8 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 15,
@@ -4158,19 +4224,19 @@
           ],
           "frame": 1,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -4198,8 +4264,9 @@
           "visible_mounted": 3,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0,
-          "color_png_sha256": "ff4c4d8ed32f75b1dbb12837d1555b628c984ec0ec1c73b174ea055fa1ae4a37"
+          "zoom": 18,
+          "color_png_sha256": "ff4c4d8ed32f75b1dbb12837d1555b628c984ec0ec1c73b174ea055fa1ae4a37",
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 16,
@@ -4210,19 +4277,19 @@
           ],
           "frame": 2,
           "hits": [
-            261,
-            141
+            179,
+            88
           ],
           "losses": [
-            26,
-            62
+            13,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -4250,7 +4317,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 318
         },
         {
           "camera_high_models": 17,
@@ -4261,19 +4329,19 @@
           ],
           "frame": 3,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -4301,7 +4369,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         },
         {
           "camera_high_models": 18,
@@ -4312,19 +4381,19 @@
           ],
           "frame": 4,
           "hits": [
-            261,
-            141
+            183,
+            91
           ],
           "losses": [
-            26,
-            62
+            14,
+            42
           ],
           "msaa": 2,
           "ordinary": [
             512,
             512
           ],
-          "scale_3d": 1.0,
+          "scale_3d": 1,
           "scene": "contact",
           "seed": 61112,
           "shadow": true,
@@ -4352,7 +4421,8 @@
           "visible_mounted": 4,
           "visible_officers": 3,
           "yaw": -0.576,
-          "zoom": 18.0
+          "zoom": 18,
+          "arrows_fired": 324
         }
       ],
       "timing_us": {
@@ -4361,5 +4431,199 @@
       }
     }
   },
-  "description": "Public Ubuntu Xvfb / Mesa CPU Vulkan Mobile, 5 moving native PNG per view; exact matched simulation, 1:1 native. Actor coverage derived from an additional reference-only output with actors invisible. Edge and motion errors are RGB code-value MAE with lower better. Whole-frame hardware throughput from 30 samples per view after 12 warm; includes actual shadow and live simulation. This is not an Apple GPU benchmark."
+  "description": "Public Ubuntu Xvfb / Mesa CPU Vulkan Mobile, 5 moving native PNG per view; exact matched simulation, 1:1 native. Actor coverage derived from an additional reference-only output with actors invisible. Edge and motion errors are RGB code-value MAE with lower better. Whole-frame hardware throughput from 30 samples per view after 12 warm; includes actual shadow and live simulation. This is not an Apple GPU benchmark.",
+  "production": {
+    "source": "a6bd5043e75721f9db0888db790f1c32d55e9da5",
+    "startup_resize_run": 43299463298,
+    "framebuffer_sample_counts": [
+      1,
+      4
+    ],
+    "startup": {
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "failures": [],
+      "hidpi": true,
+      "passes": [
+        {
+          "image": [
+            1280,
+            800
+          ],
+          "msaa": 2,
+          "preset": 0,
+          "scale": 1,
+          "screen_aa": 0,
+          "shadows": true,
+          "taa": false,
+          "window": [
+            1280,
+            800
+          ]
+        },
+        {
+          "image": [
+            1920,
+            1200
+          ],
+          "msaa": 2,
+          "preset": 0,
+          "scale": 1,
+          "screen_aa": 0,
+          "shadows": true,
+          "taa": false,
+          "window": [
+            1920,
+            1200
+          ]
+        },
+        {
+          "image": [
+            1920,
+            1200
+          ],
+          "msaa": 0,
+          "preset": 3,
+          "scale": 1,
+          "screen_aa": 0,
+          "shadows": true,
+          "taa": false,
+          "window": [
+            1920,
+            1200
+          ]
+        },
+        {
+          "image": [
+            1920,
+            1200
+          ],
+          "msaa": 0,
+          "preset": 2,
+          "scale": 0.699999988079071,
+          "screen_aa": 0,
+          "shadows": false,
+          "taa": false,
+          "window": [
+            1920,
+            1200
+          ]
+        },
+        {
+          "image": [
+            1920,
+            1200
+          ],
+          "msaa": 0,
+          "preset": 1,
+          "scale": 0.850000023841858,
+          "screen_aa": 0,
+          "shadows": true,
+          "taa": false,
+          "window": [
+            1920,
+            1200
+          ]
+        },
+        {
+          "image": [
+            1920,
+            1200
+          ],
+          "msaa": 0,
+          "preset": 1,
+          "scale": 0.850000023841858,
+          "screen_aa": 0,
+          "shadows": true,
+          "taa": false,
+          "window": [
+            1920,
+            1200
+          ]
+        },
+        {
+          "image": [
+            1920,
+            1200
+          ],
+          "msaa": 2,
+          "preset": 0,
+          "scale": 1,
+          "screen_aa": 0,
+          "shadows": true,
+          "taa": false,
+          "window": [
+            1920,
+            1200
+          ]
+        }
+      ],
+      "renderer": "mobile"
+    }
+  },
+  "combat_receipt": {
+    "replay_source": "a6bd5043e75721f9db0888db790f1c32d55e9da5",
+    "ticks": {
+      "8": {
+        "arrows": 10,
+        "hits": [
+          0,
+          0
+        ],
+        "losses": [
+          0,
+          0
+        ],
+        "tick": 8
+      },
+      "9": {
+        "arrows": 16,
+        "hits": [
+          0,
+          0
+        ],
+        "losses": [
+          0,
+          0
+        ],
+        "tick": 9
+      },
+      "65": {
+        "arrows": 318,
+        "hits": [
+          179,
+          88
+        ],
+        "losses": [
+          13,
+          42
+        ],
+        "tick": 65
+      },
+      "66": {
+        "arrows": 324,
+        "hits": [
+          183,
+          91
+        ],
+        "losses": [
+          14,
+          42
+        ],
+        "tick": 66
+      },
+      "80": {
+        "arrows": 366,
+        "hits": [
+          261,
+          141
+        ],
+        "losses": [
+          26,
+          62
+        ],
+        "tick": 80
+      }
+    },
+    "correction": "The original capture serialized a mutable Array reference for hits/losses. This file substitutes integer pairs from an independent same-seed shipping replay on the identical battle source, including the original end-of-run totals at tick 80. All framebuffer PNGs, edge scores, raw wall samples, visible identities, ticks, and camera transforms are unchanged."
+  }
 }

@@ -70,8 +70,8 @@ func _snapshot(label: String, i: int) -> void:
 	frames.append({"scene":label,"frame":i,"tick":b.tick,"center":[field.camera_center.x,field.camera_center.y],
 		"yaw":field.camera_yaw,"zoom":field.camera.size,"seed":Battle.SEED,"ordinary":Array(b.ordinary_counts),
 		"visible_ids":Marshalls.raw_to_base64(ids.to_byte_array()).sha256_text(),"visible_alive":ids.size(),
-		"visible_kits":Array(kits),"visible_mounted":mounted,"visible_officers":officers,"hits":Array(b.hits),
-		"losses":Array(b.losses),"shots_in_flight":b.shots.size(),"vehicle":b.vehicle,
+		"visible_kits":Array(kits),"visible_mounted":mounted,"visible_officers":officers,"hits":[b.hits[0],b.hits[1]],
+		"losses":[b.losses[0],b.losses[1]],"arrows_fired":b.arrow_count,"shots_in_flight":b.shots.size(),"vehicle":b.vehicle,
 		"camera_high_models":field.view.high_detail_soldiers,"camera_rank_models":field.view.rank_soldiers,
 		"submitted":field.view.visible_soldiers,"size":[picture.get_width(),picture.get_height()],"scale_3d":root.scaling_3d_scale,
 		"msaa":root.msaa_3d,"shadow":field.map.sun.shadow_enabled})
