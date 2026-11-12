@@ -1,0 +1,391 @@
+{
+  "live_source": "1f07f16b749ed0155b01b22cdb4a47f106b1c632",
+  "experiment_source": "f26d832b12d9fd07b7bc55acbb2f1fd2f2531363",
+  "decision": "DO_NOT_SHIP: median zero and some grip/blade occlusion increased",
+  "seed": 61112,
+  "ordinary": [
+    512,
+    512
+  ],
+  "host": "GitHub Actions Ubuntu 24.04 / Xvfb / llvmpipe; Godot 4.6.3; 1040x650 at 100% and shadows enabled; not an M5 measurement",
+  "actual_render_ci": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43237035082",
+  "artifact_id": 13953351642,
+  "sites": {
+    "field": {
+      "samples": 3,
+      "tick": 141,
+      "outcome": "主将阵亡"
+    },
+    "ram": {
+      "samples": 8,
+      "tick": 234,
+      "outcome": "sample cap; still in battle"
+    },
+    "gate": {
+      "samples": 0,
+      "tick": 1050,
+      "outcome": "夺取城内阵地; no eligible tilt sample"
+    }
+  },
+  "camera_call_microseconds": {
+    "n": 5699,
+    "p50": 4,
+    "p95": 25,
+    "p99": 161,
+    "max": 266
+  },
+  "pairs": [
+    {
+      "angle": 2.7,
+      "center": "(1.707808, -2.245044)",
+      "fragments": {
+        "assisted": [
+          58,
+          188
+        ],
+        "original": [
+          53,
+          175
+        ]
+      },
+      "hero_impacts": 1,
+      "hits": [
+        364,
+        195
+      ],
+      "kit": 3,
+      "label": "field-0100-87",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "field",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 100,
+      "yaw": 1.51843644923507,
+      "zoom": 13
+    },
+    {
+      "angle": 4.05,
+      "center": "(1.988615, -2.127282)",
+      "fragments": {
+        "assisted": [
+          297,
+          328
+        ],
+        "original": [
+          294,
+          322
+        ]
+      },
+      "hero_impacts": 1,
+      "hits": [
+        389,
+        215
+      ],
+      "kit": 3,
+      "label": "field-0107--93",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "field",
+      "seed": 61112,
+      "site": "ram",
+      "state": 1,
+      "tick": 107,
+      "yaw": -1.62315620435473,
+      "zoom": 13
+    },
+    {
+      "angle": 12,
+      "center": "(2.455346, -2.061869)",
+      "fragments": {
+        "assisted": [
+          312,
+          318
+        ],
+        "original": [
+          273,
+          277
+        ]
+      },
+      "hero_impacts": 2,
+      "hits": [
+        409,
+        234
+      ],
+      "kit": 3,
+      "label": "field-0116-87",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "field",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 116,
+      "yaw": 1.51843644923507,
+      "zoom": 13
+    },
+    {
+      "angle": 2.7,
+      "center": "(-0.114778, -1.88042)",
+      "fragments": {
+        "assisted": [
+          127,
+          128
+        ],
+        "original": [
+          132,
+          132
+        ]
+      },
+      "hero_impacts": 0,
+      "hits": [
+        353,
+        192
+      ],
+      "kit": 1,
+      "label": "ram-0098--93",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 1,
+      "tick": 98,
+      "yaw": -1.62315620435473,
+      "zoom": 13
+    },
+    {
+      "angle": 2.7,
+      "center": "(0.164598, -2.036297)",
+      "fragments": {
+        "assisted": [
+          47,
+          168
+        ],
+        "original": [
+          43,
+          165
+        ]
+      },
+      "hero_impacts": 1,
+      "hits": [
+        386,
+        206
+      ],
+      "kit": 1,
+      "label": "ram-0104--33",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 104,
+      "yaw": -0.575958653158129,
+      "zoom": 13
+    },
+    {
+      "angle": 4,
+      "center": "(1.432561, -1.553466)",
+      "fragments": {
+        "assisted": [
+          60,
+          210
+        ],
+        "original": [
+          80,
+          223
+        ]
+      },
+      "hero_impacts": 2,
+      "hits": [
+        415,
+        243
+      ],
+      "kit": 1,
+      "label": "ram-0120--33",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 120,
+      "yaw": -0.575958653158129,
+      "zoom": 13
+    },
+    {
+      "angle": 2.7,
+      "center": "(1.432561, -1.553466)",
+      "fragments": {
+        "assisted": [
+          0,
+          29
+        ],
+        "original": [
+          0,
+          32
+        ]
+      },
+      "hero_impacts": 2,
+      "hits": [
+        415,
+        243
+      ],
+      "kit": 1,
+      "label": "ram-0120--93",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 120,
+      "yaw": -1.62315620435473,
+      "zoom": 13
+    },
+    {
+      "angle": 2.7,
+      "center": "(7.825515, -3.076526)",
+      "fragments": {
+        "assisted": [
+          94,
+          94
+        ],
+        "original": [
+          99,
+          99
+        ]
+      },
+      "hero_impacts": 2,
+      "hits": [
+        735,
+        514
+      ],
+      "kit": 1,
+      "label": "ram-0208--33",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 208,
+      "yaw": -0.575958653158129,
+      "zoom": 13
+    },
+    {
+      "angle": 2.7,
+      "center": "(8.390055, -2.442312)",
+      "fragments": {
+        "assisted": [
+          107,
+          136
+        ],
+        "original": [
+          90,
+          139
+        ]
+      },
+      "hero_impacts": 2,
+      "hits": [
+        760,
+        548
+      ],
+      "kit": 1,
+      "label": "ram-0216--93",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 216,
+      "yaw": -1.62315620435473,
+      "zoom": 13
+    },
+    {
+      "angle": 6,
+      "center": "(9.53095, -0.996778)",
+      "fragments": {
+        "assisted": [
+          86,
+          141
+        ],
+        "original": [
+          66,
+          136
+        ]
+      },
+      "hero_impacts": 4,
+      "hits": [
+        820,
+        585
+      ],
+      "kit": 1,
+      "label": "ram-0232--93",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 232,
+      "yaw": -1.62315620435473,
+      "zoom": 13
+    },
+    {
+      "angle": 2.7,
+      "center": "(9.930518, -0.981223)",
+      "fragments": {
+        "assisted": [
+          208,
+          243
+        ],
+        "original": [
+          207,
+          244
+        ]
+      },
+      "hero_impacts": 4,
+      "hits": [
+        829,
+        588
+      ],
+      "kit": 1,
+      "label": "ram-0234-87",
+      "ordinary": [
+        512,
+        512
+      ],
+      "scenario": "ram",
+      "seed": 61112,
+      "site": "ram",
+      "state": 2,
+      "tick": 234,
+      "yaw": 1.51843644923507,
+      "zoom": 13
+    }
+  ]
+}
