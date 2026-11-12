@@ -1,0 +1,220 @@
+{
+  "run": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43274354516",
+  "before": "6e36e8f69526f2caf25501da5a777f63484f3162",
+  "after": "100946c76df142e08a5ac4e97b735309ba33b8ca",
+  "settings": "1280x800 same cloud software GPU, commit pair in the same job; four 32-frame windows",
+  "frames": {
+    "before": [
+      {
+        "camera_size": 26,
+        "case": "line",
+        "dead": [
+          35,
+          78
+        ],
+        "draws": 164,
+        "hits": [
+          332,
+          174
+        ],
+        "memory_bytes": 72535233,
+        "p50_ms": 126.721,
+        "p95_ms": 135.287,
+        "p99_ms": 139.568,
+        "per_side": 512,
+        "render_cpu95_ms": 98.7180023193359,
+        "render_gpu95_ms": 128.800003051758,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 94,
+        "triangles": 751696,
+        "visible": 461
+      },
+      {
+        "camera_size": 12,
+        "case": "melee",
+        "dead": [
+          71,
+          111
+        ],
+        "draws": 137,
+        "hits": [
+          474,
+          307
+        ],
+        "memory_bytes": 72551490,
+        "p50_ms": 152.065,
+        "p95_ms": 155.461,
+        "p99_ms": 156.097,
+        "per_side": 512,
+        "render_cpu95_ms": 150.223999023438,
+        "render_gpu95_ms": 150.578002929688,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 144,
+        "triangles": 1014808,
+        "visible": 283
+      },
+      {
+        "camera_size": 27,
+        "case": "gate",
+        "dead": [
+          186,
+          219
+        ],
+        "draws": 137,
+        "hits": [
+          975,
+          762
+        ],
+        "memory_bytes": 72487390,
+        "p50_ms": 116.415,
+        "p95_ms": 119.539,
+        "p99_ms": 123.513,
+        "per_side": 512,
+        "render_cpu95_ms": 112.819000244141,
+        "render_gpu95_ms": 113.227996826172,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 539,
+        "triangles": 868832,
+        "visible": 394
+      },
+      {
+        "camera_size": 50,
+        "case": "pan",
+        "dead": [
+          192,
+          225
+        ],
+        "draws": 176,
+        "hits": [
+          1007,
+          791
+        ],
+        "memory_bytes": 72545435,
+        "p50_ms": 107.848,
+        "p95_ms": 115.452,
+        "p99_ms": 116.693,
+        "per_side": 512,
+        "render_cpu95_ms": 111.450996398926,
+        "render_gpu95_ms": 111.761001586914,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 604,
+        "triangles": 677186,
+        "visible": 563
+      }
+    ],
+    "after": [
+      {
+        "camera_size": 26,
+        "case": "line",
+        "dead": [
+          35,
+          78
+        ],
+        "draws": 164,
+        "hits": [
+          332,
+          174
+        ],
+        "memory_bytes": 72551303,
+        "p50_ms": 132.631,
+        "p95_ms": 177.258,
+        "p99_ms": 197.562,
+        "per_side": 512,
+        "render_cpu95_ms": 170.712997436523,
+        "render_gpu95_ms": 171.055999755859,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 94,
+        "triangles": 764488,
+        "visible": 461
+      },
+      {
+        "camera_size": 12,
+        "case": "melee",
+        "dead": [
+          71,
+          111
+        ],
+        "draws": 137,
+        "hits": [
+          474,
+          307
+        ],
+        "memory_bytes": 72567560,
+        "p50_ms": 170.043,
+        "p95_ms": 175.718,
+        "p99_ms": 175.737,
+        "per_side": 512,
+        "render_cpu95_ms": 170.462997436523,
+        "render_gpu95_ms": 170.798004150391,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 144,
+        "triangles": 1034439,
+        "visible": 283
+      },
+      {
+        "camera_size": 27,
+        "case": "gate",
+        "dead": [
+          186,
+          219
+        ],
+        "draws": 137,
+        "hits": [
+          975,
+          762
+        ],
+        "memory_bytes": 72503460,
+        "p50_ms": 122.666,
+        "p95_ms": 128.088,
+        "p99_ms": 128.373,
+        "per_side": 512,
+        "render_cpu95_ms": 122.323997497559,
+        "render_gpu95_ms": 122.662002563477,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 539,
+        "triangles": 869768,
+        "visible": 394
+      },
+      {
+        "camera_size": 50,
+        "case": "pan",
+        "dead": [
+          192,
+          225
+        ],
+        "draws": 176,
+        "hits": [
+          1007,
+          791
+        ],
+        "memory_bytes": 72561505,
+        "p50_ms": 110.555,
+        "p95_ms": 122.88,
+        "p99_ms": 123.897,
+        "per_side": 512,
+        "render_cpu95_ms": 115.86499786377,
+        "render_gpu95_ms": 116.206001281738,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 604,
+        "triangles": 674898,
+        "visible": 563
+      }
+    ]
+  }
+}

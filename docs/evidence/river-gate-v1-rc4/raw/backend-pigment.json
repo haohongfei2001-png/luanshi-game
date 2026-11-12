@@ -1,0 +1,552 @@
+{
+  "gate": {
+    "combat": {
+      "center": [
+        48.0,
+        0.0
+      ],
+      "close": 0,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 16,
+      "gate_hp": 260.0,
+      "in_frame_count": 301,
+      "in_frame_ids_sha256": "aa7fcebf05b3935d4bf5264099575ef0bcb1f0722c60e891ab107b0d0c21786e",
+      "internal_scale": 1.0,
+      "kind": "gate",
+      "label": "gate",
+      "losses": [
+        180,
+        219
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 335,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 392,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.89,
+      "zoom": 30.0
+    },
+    "groups": {
+      "timber": {
+        "pixels": 38519,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              119.0,
+              94.0,
+              60.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              152.0,
+              133.0,
+              108.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 38.883
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              119.0,
+              94.0,
+              60.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              122.0,
+              97.0,
+              65.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 3.786
+          }
+        }
+      },
+      "masonry": {
+        "pixels": 118340,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              156.0,
+              134.0,
+              100.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              164.0,
+              157.0,
+              135.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 21.576
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              156.0,
+              134.0,
+              100.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              153.0,
+              139.0,
+              103.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 8.493
+          }
+        }
+      },
+      "roof": {
+        "pixels": 90408,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              92.0,
+              105.0,
+              91.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              139.0,
+              145.0,
+              129.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 39.739
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              92.0,
+              105.0,
+              91.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              94.0,
+              102.0,
+              86.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 3.134
+          }
+        }
+      }
+    }
+  },
+  "bridge": {
+    "combat": {
+      "center": [
+        -32.0,
+        0.0
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 51,
+      "gate_hp": 260.0,
+      "in_frame_count": 44,
+      "in_frame_ids_sha256": "499c49b6fcbe3ee02cbfa0c0839ba3b56fe7f2228b13b67ce529cf53511bfdcf",
+      "internal_scale": 1.0,
+      "kind": "bridge",
+      "label": "bridge",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 119,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 122,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 23.0
+    },
+    "groups": {
+      "timber": {
+        "pixels": 105115,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              136.0,
+              108.0,
+              72.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              164.0,
+              146.0,
+              117.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 37.586
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              136.0,
+              108.0,
+              72.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              137.0,
+              108.0,
+              72.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 3.013
+          }
+        }
+      },
+      "masonry": {
+        "pixels": 21236,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              153.0,
+              161.0,
+              119.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              174.0,
+              175.0,
+              145.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 20.029
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              153.0,
+              161.0,
+              119.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              150.0,
+              153.0,
+              111.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 7.604
+          }
+        }
+      }
+    }
+  },
+  "camp": {
+    "combat": {
+      "center": [
+        -66.0,
+        -19.0
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 0,
+      "gate_hp": 260.0,
+      "in_frame_count": 0,
+      "in_frame_ids_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "internal_scale": 1.0,
+      "kind": "camp",
+      "label": "camp",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 4,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 4,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 30.0
+    },
+    "groups": {
+      "timber": {
+        "pixels": 6252,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              111.0,
+              87.0,
+              55.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              150.0,
+              134.0,
+              106.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 42.493
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              111.0,
+              87.0,
+              55.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              114.0,
+              89.0,
+              57.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 2.199
+          }
+        }
+      },
+      "masonry": {
+        "pixels": 3386,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              142.0,
+              152.0,
+              113.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              167.0,
+              169.0,
+              141.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 26.46
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              142.0,
+              152.0,
+              113.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              140.0,
+              145.0,
+              106.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 6.247
+          }
+        }
+      }
+    }
+  },
+  "outer_gate": {
+    "combat": {
+      "center": [
+        48.0,
+        0.0
+      ],
+      "close": 0,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 16,
+      "gate_hp": 260.0,
+      "in_frame_count": 154,
+      "in_frame_ids_sha256": "a39018e87a5fd84beb097a80a8a9e63338bccfe336c99c3e096537a4cb40a7d6",
+      "internal_scale": 1.0,
+      "kind": "gate",
+      "label": "outer_gate",
+      "losses": [
+        180,
+        219
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 268,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 0.82,
+      "zoom": 21.0
+    },
+    "groups": {
+      "timber": {
+        "pixels": 79563,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              105.0,
+              83.0,
+              52.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              139.0,
+              125.0,
+              99.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 41.71
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              105.0,
+              83.0,
+              52.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              114.0,
+              88.0,
+              57.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 7.696
+          }
+        }
+      },
+      "masonry": {
+        "pixels": 166033,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              132.0,
+              125.0,
+              96.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              144.0,
+              142.0,
+              125.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 26.222
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              132.0,
+              125.0,
+              96.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              136.0,
+              126.0,
+              98.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 12.724
+          }
+        }
+      },
+      "roof": {
+        "pixels": 82920,
+        "samples": {
+          "before_gl_compatibility": {
+            "median_rgb": [
+              91.0,
+              103.0,
+              89.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "before_mobile": {
+            "median_rgb": [
+              137.0,
+              143.0,
+              128.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 39.814
+          },
+          "after_gl_compatibility": {
+            "median_rgb": [
+              91.0,
+              103.0,
+              89.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 0.0
+          },
+          "after_mobile": {
+            "median_rgb": [
+              92.0,
+              101.0,
+              85.0
+            ],
+            "mean_abs_rgb_error_to_opengl": 3.094
+          }
+        }
+      }
+    }
+  }
+}

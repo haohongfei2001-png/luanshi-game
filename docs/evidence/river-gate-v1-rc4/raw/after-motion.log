@@ -1,0 +1,14 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+Movie Maker mode enabled, recording movie in 1280×800 @ 30 FPS...
+FIELD_MOTION_RECEIPT {"actions_seen":[0,1,2],"distance_m":19.4658599495888,"end_tick":80,"errors":[],"hero_hits":1,"hero_hp":0.0,"hero_received":5,"move_directions":[-2,2,0,4],"ordinary":[512,512],"seed":61112,"start_tick":2,"view_size":10.2415046691895}
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/tmp.P0PY1Tb2UL/after-motion.avi
+125 frames at 30 FPS (movie length: 00:00:04:05), recorded in 00:00:32 (12% of real-time speed).
+CPU render time: 24.76 seconds (average: 198.09 ms/frame)
+GPU render time: 24.94 seconds (average: 199.55 ms/frame)
+Encoding time: 1.94 seconds (average: 15.49 ms/frame)
+--------------------------------------------------------------------------------

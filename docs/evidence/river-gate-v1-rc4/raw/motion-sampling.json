@@ -1,0 +1,266 @@
+{
+  "source_url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43270239615",
+  "baseline": "6e36e8f69526f2caf25501da5a777f63484f3162",
+  "filtered": "ace497bed03f932b855dc2e01499c1563b5788ed",
+  "metrics": "max range of planted shoe position including 16 subframes per authored key in 16 gait headings, PNG decoding; paired software GPU samples 1280x800",
+  "foot": [
+    {
+      "sampling": "nearest",
+      "peak_metres": 0.079089,
+      "eight_walk_then_eight_run": [
+        0.05177,
+        0.05167,
+        0.05168,
+        0.05167,
+        0.05168,
+        0.05167,
+        0.05168,
+        0.05173,
+        0.07909,
+        0.07905,
+        0.07909,
+        0.07905,
+        0.07909,
+        0.07905,
+        0.07909,
+        0.07905
+      ]
+    },
+    {
+      "sampling": "filtered",
+      "peak_metres": 0.000765,
+      "eight_walk_then_eight_run": [
+        0.00053,
+        0.00047,
+        0.00014,
+        0.00023,
+        0.0002,
+        0.00024,
+        0.00018,
+        0.0005,
+        0.00029,
+        0.00036,
+        0.00021,
+        0.00069,
+        0.00077,
+        0.00069,
+        0.00021,
+        0.00036
+      ]
+    }
+  ],
+  "render": {
+    "before": [
+      {
+        "camera_size": 26,
+        "case": "line",
+        "dead": [
+          35,
+          78
+        ],
+        "draws": 164,
+        "hits": [
+          332,
+          174
+        ],
+        "memory_bytes": 72535257,
+        "p50_ms": 221.748,
+        "p95_ms": 228.18,
+        "p99_ms": 229.115,
+        "per_side": 512,
+        "render_cpu95_ms": 217.149002075195,
+        "render_gpu95_ms": 217.757995605469,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 94,
+        "triangles": 751696,
+        "visible": 461
+      },
+      {
+        "camera_size": 12,
+        "case": "melee",
+        "dead": [
+          71,
+          111
+        ],
+        "draws": 137,
+        "hits": [
+          474,
+          307
+        ],
+        "memory_bytes": 72551514,
+        "p50_ms": 267.533,
+        "p95_ms": 275.597,
+        "p99_ms": 276.379,
+        "per_side": 512,
+        "render_cpu95_ms": 267.406005859375,
+        "render_gpu95_ms": 268.054992675781,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 144,
+        "triangles": 1014808,
+        "visible": 283
+      },
+      {
+        "camera_size": 27,
+        "case": "gate",
+        "dead": [
+          186,
+          219
+        ],
+        "draws": 137,
+        "hits": [
+          975,
+          762
+        ],
+        "memory_bytes": 72487414,
+        "p50_ms": 203.589,
+        "p95_ms": 209.858,
+        "p99_ms": 212.301,
+        "per_side": 512,
+        "render_cpu95_ms": 198.580001831055,
+        "render_gpu95_ms": 199.203002929688,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 539,
+        "triangles": 868832,
+        "visible": 394
+      },
+      {
+        "camera_size": 50,
+        "case": "pan",
+        "dead": [
+          192,
+          225
+        ],
+        "draws": 176,
+        "hits": [
+          1007,
+          791
+        ],
+        "memory_bytes": 72545459,
+        "p50_ms": 188.963,
+        "p95_ms": 201.465,
+        "p99_ms": 203.63,
+        "per_side": 512,
+        "render_cpu95_ms": 194.281005859375,
+        "render_gpu95_ms": 194.889999389648,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 604,
+        "triangles": 677186,
+        "visible": 563
+      }
+    ],
+    "after": [
+      {
+        "camera_size": 26,
+        "case": "line",
+        "dead": [
+          35,
+          78
+        ],
+        "draws": 164,
+        "hits": [
+          332,
+          174
+        ],
+        "memory_bytes": 72536481,
+        "p50_ms": 222.772,
+        "p95_ms": 231.393,
+        "p99_ms": 232.404,
+        "per_side": 512,
+        "render_cpu95_ms": 218.774002075195,
+        "render_gpu95_ms": 219.296997070312,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 94,
+        "triangles": 751696,
+        "visible": 461
+      },
+      {
+        "camera_size": 12,
+        "case": "melee",
+        "dead": [
+          71,
+          111
+        ],
+        "draws": 137,
+        "hits": [
+          474,
+          307
+        ],
+        "memory_bytes": 72552738,
+        "p50_ms": 271.767,
+        "p95_ms": 277.33,
+        "p99_ms": 278.391,
+        "per_side": 512,
+        "render_cpu95_ms": 270.299987792969,
+        "render_gpu95_ms": 270.941009521484,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 144,
+        "triangles": 1014808,
+        "visible": 283
+      },
+      {
+        "camera_size": 27,
+        "case": "gate",
+        "dead": [
+          186,
+          219
+        ],
+        "draws": 137,
+        "hits": [
+          975,
+          762
+        ],
+        "memory_bytes": 72488638,
+        "p50_ms": 205.596,
+        "p95_ms": 209.836,
+        "p99_ms": 209.883,
+        "per_side": 512,
+        "render_cpu95_ms": 201.005996704102,
+        "render_gpu95_ms": 201.630004882812,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 539,
+        "triangles": 868832,
+        "visible": 394
+      },
+      {
+        "camera_size": 50,
+        "case": "pan",
+        "dead": [
+          192,
+          225
+        ],
+        "draws": 176,
+        "hits": [
+          1007,
+          791
+        ],
+        "memory_bytes": 72546683,
+        "p50_ms": 188.496,
+        "p95_ms": 203.511,
+        "p99_ms": 205.055,
+        "per_side": 512,
+        "render_cpu95_ms": 198.419006347656,
+        "render_gpu95_ms": 198.376007080078,
+        "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "samples": 32,
+        "seed": 61112,
+        "tick": 604,
+        "triangles": 677186,
+        "visible": 563
+      }
+    ]
+  }
+}
