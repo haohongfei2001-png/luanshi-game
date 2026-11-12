@@ -50,6 +50,42 @@ func _view(point: Vector2,zoom: float,yaw: float) -> void:
 	field.pan_to(point)
 	field._process(Battle.DT)
 
+func _ground_readback(pic: Image,center: Vector2) -> Dictionary:
+	var width:=pic.get_width()
+	var height:=pic.get_height()
+	var silhouettes: Array[Rect2]=[]
+	var height_px:=height/field.camera.size
+	var b:=field.battle
+	for u in b.roster:
+		if u.state==Battle.State.ESCAPED: continue
+		var foot:=Ground.unit_point(u.before.lerp(u.pos,clampf(field.carry/Battle.DT,0.0,1.0)))
+		var a:=field.camera.unproject_position(foot)
+		var c:=field.camera.unproject_position(foot+Vector3.UP*(2.85 if u.mounted else 1.94))
+		if a.x< -height_px or a.x>width+height_px or a.y< -height_px or a.y>height+height_px: continue
+		var box:=Rect2(a,Vector2.ZERO).expand(c).grow(.71*height_px)
+		silhouettes.append(box)
+	var samples: Array[float]=[]
+	var footprint:=minf(25.0,field.camera.size*1.1)
+	for i in 41:
+		for j in 41:
+			var p:=center+Vector2((i-20)*footprint/20.0,(j-20)*footprint/20.0)
+			if p.x< -50.0 or p.x>42.0 or absf(p.x-Ground.RIVER_X)<7.3: continue
+			if p.distance_squared_to(b.ram)<10.4: continue
+			var screen:=field.camera.unproject_position(Ground.unit_point(p))
+			if screen.x<20 or screen.x>width-120 or screen.y<90 or screen.y>height-100: continue
+			var covered:=false
+			for box in silhouettes:
+				if box.has_point(screen):
+					covered=true
+					break
+			if covered: continue
+			var pixel:=pic.get_pixel(roundi(screen.x),roundi(screen.y))
+			samples.append((.2126*pixel.r+.7152*pixel.g+.0722*pixel.b)*255)
+	samples.sort()
+	if samples.is_empty(): return {"count":0}
+	return {"count":samples.size(),"Y10":snappedf(samples[floori((samples.size()-1)*.10)],.1),
+		"Y50":snappedf(samples[floori((samples.size()-1)*.50)],.1),"Y90":snappedf(samples[floori((samples.size()-1)*.90)],.1)}
+
 func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 	var b:=field.battle
 	var point:=_target(kind)
@@ -90,6 +126,7 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 			if identical: flat+=1
 			tested+=1
 	item["flat_pixel_neighborhood_fraction"]=float(flat)/float(tested)
+	if label in ["hero","contact","formation","ford"]: item["ground_readback"]=_ground_readback(pic,point)
 	item["draw_calls"]=int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 	item["primitives"]=int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
 	item["in_frame_count"]=on_screen.size()
@@ -132,14 +169,19 @@ func _run() -> void:
 	await process_frame
 	if not b.started or b.ordinary_counts!=PackedInt32Array([512,512]): quit(1); return
 	_advance(8)
+	await _snap("hero","hero",6.4,1.27)
+	await _snap("saddle","horse",7.8,1.09)
+	await _snap("cart","cart",10.0,-.65)
 	await _snap("ford","bridge",31.0,-.54)
-	await _snap("bank","bank",17.0,-.54)
-	await _snap("margin","margin",23.0,-.64)
+	await _snap("camp","camp",30.0,-.54)
 	_advance(65)
+	await _snap("officer","officer",7.8,-1.42)
+	await _snap("bowline","archer",8.6,1.12)
 	await _snap("ranks","line",51.0,-.576)
+	await _snap("contact","line",13.0,-.576)
 	await _snap("formation","line",26.0,-.576)
+	await _cost("contact","line",13.0,-.576)
 	await _cost("ford","bridge",31.0,-.54)
-	await _cost("field","line",34.0,-.576)
 	var f:=FileAccess.open(directory+"/frames.json",FileAccess.WRITE)
 	f.store_string(JSON.stringify(shots,"  "))
 	success=success and b.tick==193 and b.side_size==512 and b.hits[0]+b.hits[1]>0
