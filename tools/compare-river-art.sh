@@ -58,7 +58,7 @@ for old,new in zip(left,right):
     for i,pic in enumerate((l,r)):
         pair.paste(pic.resize((800,500),Image.Resampling.LANCZOS),(i*800,0))
     pair.save(root/(name+"-pair.jpg"),quality=91)
-    if name in ("hero","contact","saddle","gate","formation","camp","bowline","officer"):
+    if name in ("hero","contact","saddle","gate","formation","camp","bowline","officer","bank"):
         sample=io.BytesIO()
         pair.resize((1024,320),Image.Resampling.LANCZOS).save(sample,"JPEG",quality=81)
         print("RIVER_PAIR_JPEG",name,base64.b64encode(sample.getvalue()).decode())

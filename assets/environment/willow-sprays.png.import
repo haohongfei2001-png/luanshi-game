@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://dphxwchsn25cv"
+path="res://.godot/imported/willow-sprays.png-c7c9a8fea655c9755c0e3e384a6c0ae6.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/willow-sprays.png"
+dest_files=["res://.godot/imported/willow-sprays.png-c7c9a8fea655c9755c0e3e384a6c0ae6.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

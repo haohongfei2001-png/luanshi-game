@@ -7,3 +7,5 @@
 Python 3 与 Pillow 可用时，运行 `python3 tools/art/bake_river_company.py` 重建游戏模型、材质和动作。减面后的头部源数据 `tools/art/field_head.json` 随仓库提交，正常构建可离线运行。若重建该文件，运行 `python3 tools/art/reduce_field_head.py`。执行 `python3 tools/art/check_company_motion.py` 可量取量化后前臂与手腕的连接。动作的实际观感请用 `./tools/compare-river-art.sh` 在游戏窗口复核。
 
 角色的布褶、夹袄、铁札、绛红披衣和三张头像使用为本项目单独创作的 AI 辅助平涂素材。原始画材在 tools/art/source 里，painted_company.py 分出材质、对齐眼鼻与下颌、烘进正式资产。三张头像都是虚构人物。贴图与持械骨架在实际战场里共用，远阵保留较低面数。主角靛衣和绛披、军官与士卒的衣料由装备区分。
+
+动作库将相邻姿势按同骨、同分量放在一起。GPU 对相邻姿势连续采样，走路和跑步循环在首尾相接。建模和面料原画保存于 [画材目录](../../../tools/art/source/README.md)。

@@ -28,6 +28,8 @@ func _target(kind: String) -> Vector2:
 	if kind=="gate": return Ground.GATE
 	if kind=="camp": return Vector2(-66,-19)
 	if kind=="bridge": return Vector2(Ground.RIVER_X,Ground.crossing(0.0))
+	if kind=="bank": return Vector2(-35.8,-8.4)
+	if kind=="margin": return Vector2(-23.8,13.8)
 	if kind=="ram": return b.ram
 	if kind=="officer":
 		for u in b.roster:
@@ -95,6 +97,8 @@ func _run() -> void:
 	await _snap("saddle","horse",7.8,1.09)
 	await _snap("cart","cart",10.0,-.65)
 	await _snap("ford","bridge",31.0,-.54)
+	await _snap("bank","bank",17.0,-.54)
+	await _snap("margin","margin",23.0,-.64)
 	await _snap("camp","camp",30.0,-.54)
 	_advance(65)
 	await _snap("officer","officer",7.8,-1.42)

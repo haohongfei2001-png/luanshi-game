@@ -38,21 +38,23 @@ static func ground_point(p: Vector2) -> Vector3:
 	var rise:=skyline*(7.5+3.2*sin(p.x*0.095+p.y*0.032)+2.0*cos(p.y*0.14))
 	return Vector3(p.x,Ground.height(p)+rise,p.y)
 
-func _spray(patch: Patch,base: Vector3,tip: Vector3,side: Vector3,tile: int,light: float) -> void:
-	var tx:=float(tile%2)*0.5
-	var ty:=float(tile/2)*0.5
-	var v0:=ty+0.490 if tile!=1 else ty+0.010
-	var v1:=ty+0.010 if tile!=1 else ty+0.490
+func _spray(patch: Patch,base: Vector3,tip: Vector3,side: Vector3,tile: int,light: float,river_grass: bool=false) -> void:
+	var tx:=.75 if river_grass else float(tile%2)*.5
+	var ty:=float(tile/2)*.5
+	var u0:=tx+.010
+	var u1:=tx+(.238 if river_grass else .490)
+	var v0:=.99 if river_grass else (ty+.490 if tile!=1 else ty+.010)
+	var v1:=.01 if river_grass else (ty+.010 if tile!=1 else ty+.490)
 	var mid:=base.lerp(tip,0.55)+Vector3.UP*side.length()*0.15
 	var n:=side.cross(tip-base).normalized()
 	if n.y<0.0: n=-n
 	n=(n+Vector3.UP*0.85).normalized()
 	var points: Array[Vector3]=[base-side*0.61,base+side*0.61,mid-side,mid+side,tip-side*0.73,tip+side*0.73]
-	var uv: Array[Vector2]=[Vector2(tx+0.010,v0),Vector2(tx+0.490,v0),Vector2(tx+0.010,lerpf(v0,v1,0.55)),Vector2(tx+0.490,lerpf(v0,v1,0.55)),Vector2(tx+0.010,v1),Vector2(tx+0.490,v1)]
+	var uv: Array[Vector2]=[Vector2(u0,v0),Vector2(u1,v0),Vector2(u0,lerpf(v0,v1,0.55)),Vector2(u1,lerpf(v0,v1,0.55)),Vector2(u0,v1),Vector2(u1,v1)]
 	for i:int in [0,2,1,1,2,3,2,4,3,3,4,5]:
 		patch.leaves.set_color(Color(light,light,light))
 		patch.leaves.set_uv(uv[i])
-		patch.leaves.set_uv2(Vector2(0.0 if i<2 else 0.55 if i<4 else 1.0,0))
+		patch.leaves.set_uv2(Vector2(0.0 if i<2 else .55 if i<4 else 1.0,2.5+light*.4 if river_grass else 0.0))
 		patch.leaves.set_normal(n)
 		patch.leaves.add_vertex(points[i])
 	patch.sprays+=1
@@ -83,8 +85,13 @@ func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation:
 		for i in sides:
 			var a:=rotation+TAU*i/sides+0.089*sin(i*1.7+ring)
 			var n:=Vector3(cos(a),0.0,sin(a))
-			var width:=radius*widths[ring]*(1.0+0.115*sin(a*3.0+rotation)+0.075*cos(a*5.0+ring))
-			points.append(p+n*width+Vector3.UP*tall*(levels[ring]+0.046*cos(a*2.0+rotation)))
+			var width:=radius*widths[ring]*(1.0+0.15*sin(a*3.0+rotation)+0.085*cos(a*5.0+ring))
+			var sweep:=Vector3(cos(rotation),0,sin(rotation))
+			var side:=Vector3(-sweep.z,0,sweep.x)
+			var along:=n.dot(sweep)
+			var branch:=sweep*width*(along*1.32+.095)+side*width*n.dot(side)*.81
+			var lift:=tall*(levels[ring]*.81-.23*along+.071*cos(a*2.0+rotation))
+			points.append(p+branch+Vector3.UP*lift)
 			normals.append((n*(0.48+widths[ring]*0.42)+Vector3.UP*(levels[ring]+0.23)*1.22).normalized())
 			grades.append(0.15+ring*0.23+sin(a*3.0+ring)*0.046)
 	for ring in range(levels.size()-1):
@@ -136,20 +143,41 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 			var across:=Vector3(-radial.z,0,radial.x)*radius*(.43 if kind==0 else .46)
 			_spray(patch,start,end,across,tile,rng.randf_range(.46,.82))
 
+func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
+	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
+	var part:=SurfaceTool.new()
+	part.create_from(node.mesh,0)
+	# Static terrain already contains unindexed triangles. Appending glTF
+	# indices to that buffer would make only the newly indexed piece draw.
+	part.deindex()
+	return part.commit()
+
 func _bake_trees() -> void:
-	# SurfaceTool appends transformed prototype vertices in native code. All trees
-	# in each cell share their draw surfaces, including wind and shadow casting.
-	for kind in 3:
+	# The two swept-bole willow assets and the inland tree prototypes use the
+	# same static, spatially culled draw batches. Local +X points over water.
+	var willows:=preload("res://assets/environment/bank-willows.gltf").instantiate()
+	for prefix:String in ["Veteran","Coppice"]:
+		trees.append({"wood":_willow_part(willows,prefix+"Bark"),"leaves":_willow_part(willows,prefix+"Foliage")})
+	willows.free()
+	for kind in range(1,3):
 		for variant in 2:
 			var prototype:=Patch.new()
 			_tree(prototype,Vector2.ZERO,1.0,kind)
 			trees.append({"wood":prototype.stone.surface.commit(),"leaves":prototype.leaves.commit()})
 
 func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: float) -> void:
-	var source:=trees[2*kind+variant]
-	var basis:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*height)
+	var shape:=1 if kind==0 and height<5.48 else variant
+	var source:=trees[2*kind+shape]
+	var source_height:=5.63 if shape==0 else 4.91
+	var scale_factor:=height/source_height if kind==0 else height
+	var basis:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*scale_factor)
 	var placement:=Transform3D(basis,ground_point(p))
-	patch.stone.surface.append_from(source.wood,0,placement)
+	if kind==0:
+		# Both imported parts retain their own bark or foliage tags. Cull the
+		# whole willow in a single grove draw, independently of the terrain tile.
+		patch.leaves.append_from(source.wood,0,placement)
+	else:
+		patch.stone.surface.append_from(source.wood,0,placement)
 	patch.leaves.append_from(source.leaves,0,placement)
 	patch.sprays+=1
 
@@ -160,6 +188,29 @@ func _tuft(patch: Patch,p: Vector2,size: float,kind: int=2) -> void:
 		var a:=angle+i*TAU/3
 		var fore:=Vector3(cos(a),0,sin(a))
 		_spray(patch,at,at+fore*size*0.35+Vector3.UP*size,Vector3(-fore.z,0,fore.x)*size*0.59,kind,rng.randf_range(0.51,0.86))
+
+func _bank_sedge() -> void:
+	# Broken patches leave gravel bars and bridge landings exposed. The older
+	# growth is low, broad and darker at its foot beside the cut bank.
+	var plants:=RandomNumberGenerator.new()
+	plants.seed=38017
+	for bank:float in [-1.0,1.0]:
+		for k in 26:
+			var z:float=-63.0+k*4.98+plants.randf_range(-1.2,1.2)
+			if absf(z-Ground.crossing(z))<5.3 or plants.randf()<.26: continue
+			var center:=Vector2(Ground.RIVER_X+bank*plants.randf_range(5.4,7.13),z)
+			for j in plants.randi_range(3,6):
+				var q:=center+Vector2(plants.randf_range(-.54,.75),plants.randf_range(-1.17,1.25))
+				var base:=ground_point(q)
+				base.y=maxf(base.y,-.08)
+				var patch:=_cell(q)
+				for fan in 3:
+					var heading:=fan*TAU/3.0+plants.randf_range(-.45,.48)
+					var dir:=Vector3(cos(heading),0,sin(heading))
+					var h:=plants.randf_range(.38,.89)
+					var tip:=base+dir*h*.66+Vector3.UP*h
+					var across:=Vector3(-dir.z,0,dir.x)*plants.randf_range(.29,.60)
+					_spray(patch,base,tip,across,3,plants.randf_range(.30,.70),true)
 
 func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: float,walkable: bool) -> void:
 	var side:=Vector2(cos(a),sin(a))
@@ -241,11 +292,13 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	terrain_tiles=tiles
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
+	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
 	rng.seed=64127
 	_bake_trees()
 	var plan:Dictionary=PLAN.data
 	_stands(plan)
+	_bank_sedge()
 	_pavers(plan)
 	for patch:Patch in cells.values():
 		if patch.sprays>0:

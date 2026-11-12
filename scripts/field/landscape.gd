@@ -135,14 +135,24 @@ func _shore(b: Builder) -> void:
 				var dz:float=z-heel*side
 				spit+=exp(-dz*dz/(5.2 if dz<0.0 else 19.0))
 			var water_edge:=4.43+bend-0.94*spit
-			var inner:=Vector3(Ground.RIVER_X+side*(water_edge-.44),-.386,z)
-			var shelf:=Vector3(Ground.RIVER_X+side*(water_edge+.48),-.20+.055*sin(z*.67),z)
-			var high:=Vector3(Ground.RIVER_X+side*(5.54+bend*.54),-.081+.045*sin(z*.38+side),z)
+			# Between landings the turf overhangs a shallow exposed peat face.
+			# The broken toe projects into the same non-traversable water.
+			var undercut:=clear*smoothstep(-.22,.68,sin(z*.24+side*1.4)+.48*sin(z*.79))
+			var inner:=Vector3(Ground.RIVER_X+side*(water_edge-.44),-.388,z)
+			var shelf:=Vector3(Ground.RIVER_X+side*(water_edge+.24),-.263+.040*sin(z*.64),z)
+			var recess:=Vector3(Ground.RIVER_X+side*(water_edge+.49+.19*undercut),-.214+.025*sin(z*.67),z)
+			var sod:=Vector3(Ground.RIVER_X+side*(water_edge+.60-.32*undercut),-.140+.16*undercut,z)
+			var high:=Vector3(Ground.RIVER_X+side*(5.62+bend*.54),-.078+.037*sin(z*.38+side),z)
 			var lip:=_point(Ground.RIVER_X+side*(6.94+bend*.34),z)+Vector3.UP*.009
-			var row: Array[Vector3]=[inner,shelf,high,lip]
+			var row: Array[Vector3]=[inner,shelf,recess,sod,high,lip]
 			if not last.is_empty():
 				for band in range(row.size()-1):
-					_upward_quad(b,last[band],row[band],row[band+1],last[band+1],Color.WHITE)
+					b.joint=18 if band==2 and undercut>.24 else 13
+					if band==2 and undercut>.24:
+						if side<0.0: b.quad(last[band],row[band],row[band+1],last[band+1],Color.WHITE)
+						else: b.quad(row[band],last[band],last[band+1],row[band+1],Color.WHITE)
+					else:
+						_upward_quad(b,last[band],row[band],row[band+1],last[band+1],Color.WHITE)
 			last=row
 	b.joint=0
 

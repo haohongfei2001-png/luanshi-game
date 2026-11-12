@@ -1,5 +1,6 @@
 // Original river-gate region painting and four leaf sprays. No third-party assets or packages.
 import {readFileSync,writeFileSync} from "node:fs";
+import {willowLibrary,willowInk} from "./env_willow.mjs";
 const cap=(n,a=0,b=1)=>Math.max(a,Math.min(b,n));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const mix=(a,b,t)=>a.map((v,i)=>lerp(v,b[i],cap(t)));
@@ -65,12 +66,18 @@ function paintGround(plan){
         const x=lerp(left,right,(px+0.5)/w),z=lerp(near,far,(py+0.5)/h);
         const broad=value(x,z,0.068,426), small=value(x+0.36*z,z,0.31,172), stroke=value(x-z*.35,z+x*.12,0.56,42);
         const bed=Math.hypot((x-8)/32,(z+35)/16),river=Math.abs(x+32);
-        let c=mix([73,94,73],[116,132,90],0.25+broad*.64);
+        let c=mix([60,84,73],[108,125,88],0.24+broad*.64);
         c=mix(c,[134,139,95],smooth(0.57,0.89,small*.42+broad*.58)*0.72);
         c=mix(c,[95,120,112],(1-smooth(0.55,1.3,bed))*(0.20+0.45*broad));
         const wet=(1-smooth(5.1,14.3,river+1.8*(small-0.5)));
-        c=mix(c,[67,110,87],wet*0.79);
-        c=mix(c,[117,135,116],(1-smooth(4.1,6.3,river+0.72*(small-0.5)))*0.70);
+        c=mix(c,[47,85,72],wet*.83);
+        // Fold a narrow peat margin and a broken band of sedge into the bank.
+        const edgeRiver=river+.55*Math.sin(z*.48)+.67*Math.sin(z*.15)+(small-.5)*1.86;
+        const moss=(1-smooth(.42,1.74,Math.abs(edgeRiver-6.6)))*(.26+.50*broad);
+        const undercut=(1-smooth(.23,1.13,Math.abs(edgeRiver-5.01)))*(.36+.42*small);
+        c=mix(c,[97,110,73],moss);
+        c=mix(c,[58,72,58],undercut);
+        c=mix(c,[86,106,90],(1-smooth(3.5,5.0,edgeRiver))*.53);
         for(const [cx,cz,rx,rz,a] of plan.fields){
             const co=Math.cos(a),si=Math.sin(a),dx=x-cx,dz=z-cz,u=(dx*co+dz*si)/rx,v=(-dx*si+dz*co)/rz;
             const e=Math.pow(Math.abs(u),4)+Math.pow(Math.abs(v),4);
@@ -85,13 +92,18 @@ function paintGround(plan){
             const d=dx*dx+dz*dz;
             if(d<4.4)c=mix(c,[68,88,71],(1-smooth(0.18,3.8,d+.4*(small-.5)))*0.55);
         }
-        for(const [cx,cz,height] of stems){
+        for(const [cx,cz,height,species] of stems){
             const dx=x-cx,dz=z-cz, radius=height*.46;
             if(Math.abs(dx)>radius*1.7 || Math.abs(dz)>radius*1.7)continue;
             const d=(dx*dx+dz*dz)/(radius*radius);
             const shelter=1-smooth(.15,1.92,d+.14*(small-.5));
             c=mix(c,[60,75,58],shelter*.50);
             c=mix(c,[100,91,66],(1-smooth(.015,.22,d))*.69);
+            if(species===0){
+                const lean=(cx<-32?1:-1)*height*.25;
+                const up=((dx-lean)/(radius*1.17))**2+(dz/(radius*.90))**2;
+                c=mix(c,[43,63,53],(1-smooth(.12,1.68,up))*.47);
+            }
         }
         for(const [cx,cz,len,height,a] of plan.outcrops){
             const dx=x-cx,dz=z-cz,co=Math.cos(a),si=Math.sin(a);
@@ -139,7 +151,16 @@ function standLayout(plan) {
             trees.push([px,pz,h*(.76+.42*random()),type,Math.floor(random()*2),random()*Math.PI*2].map(v=>Math.round(v*10000)/10000));
         }
     }
-    return trees;
+    // The mature trees are placed beside the traversable approaches. Existing
+    // young floodplain willows lean towards the water; they retain their sizes.
+    const clear=trees.filter(([x,z,h,k])=>k!==0 || !plan.willows.some(w=>Math.hypot(w[0]-x,w[1]-z)<5.25));
+    for(const tree of clear){
+        if(tree[3]===0 && Math.abs(tree[0]+32)<15){
+            tree[5]=Math.round(((tree[0]<-32?0:Math.PI)+Math.sin(tree[5])*.69)*1e4)/1e4;
+        }
+    }
+    for(const [x,z,h,variant,heading] of plan.willows)clear.push([x,z,h,0,variant,heading]);
+    return clear;
 }
 function paintLeafSprays(){
     const size=256,raw=new Uint8Array(size*size*4),rng=dice(36022);
@@ -276,3 +297,6 @@ writeFileSync(new URL("stand-placements.json",dir),"[\n"+plan.trees.map(t=>"  "+
 writeFileSync(new URL("floodplain-paint.png",dir),paintGround(plan));
 writeFileSync(new URL("leaf-sprays.png",dir),paintLeafSprays());
 writeFileSync(new URL("trail-marks.png",dir),paintTrailMarks());
+
+writeFileSync(new URL("bank-willows.gltf",dir),willowLibrary());
+writeFileSync(new URL("willow-sprays.png",dir),png(willowInk(),512,256,4));
