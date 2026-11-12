@@ -4,6 +4,18 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+<!-- river-gate-current-review -->
+## 河关 RC4 美术复核中
+
+Owner 以《英雄联盟》的常用游玩视角和可信承重为参考。RC3 美术方向已退回。新候选保持 ART_REVIEW_REQUIRED。
+
+当前已完成五项 CI 的可回退源为 6e36e8f69526f2caf25501da5a777f63484f3162，实际打包树为 b0f44c491fb47634539e73571cabf2c73519575b。[游戏 PR #34](https://github.com/haohongfei2001-png/luanshi-game/pull/34) · [macOS ZIP](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13968240852) · [实战、时序与 SHA-256](evidence/river-gate-v1-rc4/PLAYTEST.md)
+
+近身士兵双手持械、跨步和后退、近远马匹、军营和渡口已实装。12 对同镜头、34 秒连续交战、九种武器、战后驻营和旧破门档通过回归。此阶段托管 M1 虚拟机 512 对 512 清晰档 1024×640，24 秒平均 48.9 FPS，P95 为 49.90 毫秒。真实 M5 待测。
+
+下一步在云端运行 `git fetch origin codex/river-gate-garrison-studies`，从该分支经窗口对照检查靛衣、绛披、面部、连续贴地动作，再整合河岸的实测版本。不要将效果图计入游戏验收。
+<!-- /river-gate-current-review -->
+
 ## 当前可玩候选 0.16.0-rc.3
 
 游戏源码 `799e1e41a098bf534b63f699ea6f683e4707306f` 已合入 main 并完成主线五项 CI。可回退游戏基线为 RC2 `71889537db0d74b9cf6f372d50c830e9e5e32278`。[游戏 PR #31](https://github.com/haohongfei2001-png/luanshi-game/pull/31) · [主线构建](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43245656470) · [macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43245656470/artifacts/13956928552) · [验收、录像及原始数据](evidence/river-gate-v1-rc3/PLAYTEST.md)
