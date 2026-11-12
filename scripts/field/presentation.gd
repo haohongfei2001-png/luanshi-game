@@ -17,8 +17,10 @@ class Batch:
 	var node: MultiMeshInstance3D
 	var mesh: MultiMesh
 	var used := 0
+	var submitted_count := 0
 
 var battle: Battle
+var batches: Array[Batch] = []
 var groups: Dictionary = {}
 var contact: Batch
 var contact_for_all:=false
@@ -47,12 +49,12 @@ func _material(col: Color, kit: int, animal: bool=false) -> ShaderMaterial:
 	mat.set_shader_parameter("animal",animal)
 	return mat
 
-func _batch(geometry: Mesh,mat: Material,capacity: int) -> Batch:
+func _batch(geometry: Mesh,mat: Material,capacity: int,custom_data: bool=true) -> Batch:
 	var g := Batch.new()
 	g.node = MultiMeshInstance3D.new()
 	g.mesh = MultiMesh.new()
 	g.mesh.transform_format = MultiMesh.TRANSFORM_3D
-	g.mesh.use_custom_data = true
+	g.mesh.use_custom_data = custom_data
 	g.mesh.mesh = geometry
 	g.mesh.instance_count = capacity
 	g.mesh.visible_instance_count = 0
@@ -60,6 +62,7 @@ func _batch(geometry: Mesh,mat: Material,capacity: int) -> Batch:
 	g.node.multimesh = g.mesh
 	g.node.material_override = mat
 	add_child(g.node)
+	batches.append(g)
 	return g
 
 func configure(model: Battle) -> void:
@@ -116,7 +119,7 @@ func configure(model: Battle) -> void:
 	var shade:=ShaderMaterial.new()
 	shade.shader=preload("res://scripts/field/foot_contact.gdshader")
 	var sm:=shadow_mesh.finish()
-	contact=_batch(sm,shade,battle.roster.size())
+	contact=_batch(sm,shade,battle.roster.size(),false)
 	contact.node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var mount_capacity:=battle.ordinary_counts[0]+battle.ordinary_counts[1]+1
 	horse = _batch(MountArt.mesh(false,true),MountArt.material(),mount_capacity)
@@ -155,8 +158,8 @@ func configure(model: Battle) -> void:
 func _key(u: Battle.Unit) -> int:
 	return u.kit + (20 if u.hero else 10*u.team)
 
-func _put(g: Batch,pos: Vector3,angle: float,data: Color,stretch: float=1.0,caster: Batch=null) -> void:
-	var basis := Basis(Vector3.UP,angle).scaled(Vector3.ONE*stretch)
+func _put(g: Batch,pos: Vector3,orientation: Basis,data: Color,stretch: float=1.0,caster: Batch=null) -> void:
+	var basis:=orientation if stretch==1.0 else orientation.scaled(Vector3.ONE*stretch)
 	var transform_3d:=Transform3D(basis,pos)
 	g.mesh.set_instance_transform(g.used,transform_3d)
 	g.mesh.set_instance_custom_data(g.used,data)
@@ -169,26 +172,18 @@ func _put(g: Batch,pos: Vector3,angle: float,data: Color,stretch: float=1.0,cast
 func _reserve(g: Batch,count: int) -> void:
 	if count > g.mesh.instance_count:
 		g.mesh.instance_count = maxi(count,g.mesh.instance_count*2)
+		g.submitted_count = -1 # A resized buffer needs a fresh visibility submission.
 
 func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) -> void:
 	visible_soldiers = 0
 	high_detail_soldiers=0
 	rank_soldiers=0
-	contact.used=0
 	visible_fighting = 0
 	shown_fallen = 0
-	for g: Batch in groups.values():
-		g.used = 0
-	horse_rank.used=0
-	cart_rank.used=0
-	horse.used = 0
-	cart.used = 0
-	arrows.used = 0
-	runners.used = 0
+	for batch in batches:
+		batch.used = 0
 	_reserve(arrows,battle.shots.size())
 	_reserve(runners,battle.orders.size())
-	for g in standards:
-		g.used = 0
 	# Orthographic zoom determines how much of the army actually occupies face-scale pixels.
 	MountArt.material().set_shader_parameter("stable_clock",(float(battle.tick)+alpha)*Battle.DT)
 	var cam:=get_viewport().get_camera_3d()
@@ -221,6 +216,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var angle := atan2(u.facing.x,u.facing.y)
 		if u.facing_before!=Vector2.ZERO and u.facing_before!=u.facing:
 			angle=lerp_angle(atan2(u.facing_before.x,u.facing_before.y),angle,alpha)
+		var orientation:=Basis(Vector3.UP,angle)
 		var progress := clampf(1.0-(u.timer+(1.0-alpha)*Battle.DT)/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
 		if u.officer and battle.corps.is_wounded(u.id):
@@ -234,7 +230,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
 			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
 			var mounts:=horse if zoom<36 and distance_sq<185.0 else horse_rank
-			_put(mounts,base,angle,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a,u.id))
+			_put(mounts,base,orientation,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a,u.id))
 			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
 			var gait:=clampf(travelled/(Battle.DT*4.0),0,1)
 			var hoof_phase:=fposmod(u.stride-(1.0-alpha)*travelled*.68,1.)
@@ -275,11 +271,13 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			var material: ShaderMaterial=groups[key].node.material_override
 			material.set_shader_parameter("travelling_attack_legs",gait if battle.vehicle==0 else -1)
 			material.set_shader_parameter("travelling_leg_phase",step_phase)
-		_put(contact,ground+Vector3.UP*.026,angle,Color(0,0,0,0))
+		# The sole shader reads only mesh coordinates, so this batch contains transforms alone.
+		contact.mesh.set_instance_transform(contact.used,Transform3D(orientation,ground+Vector3.UP*.026))
+		contact.used+=1
 		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
 		# Keep footwear on the ground. Modest stable stature variation travels through all three LODs.
 		var stature:=1.07 if u.hero or u.officer else (1.0 if u.mounted else .966+.0085*((u.id*7+u.squad*5)%9))
-		_put(groups[key],base,angle,data,stature,caster)
+		_put(groups[key],base,orientation,data,stature,caster)
 		if not u.hero and not u.officer:
 			visible_soldiers += 1
 			if u.state in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD,Battle.State.STAGGER]:
@@ -294,7 +292,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var role: String=battle.corps.title_of(battle,bearer)
 		var height:=1.25 if role=="战场主将" else (1.10 if role=="先锋" else 1.0)
 		var base:=Ground.unit_point(at)+Vector3(-0.32,0.81 if bearer.mounted else 0.0,0)
-		_put(standards[bearer.team],base,atan2(bearer.facing.x,bearer.facing.y),Color(0,0,0,0),height)
+		_put(standards[bearer.team],base,Basis(Vector3.UP,atan2(bearer.facing.x,bearer.facing.y)),Color(0,0,0,0),height)
 	for id in [1,2]:
 		var pos: Vector2 = battle.vehicle_pos[id]
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
@@ -304,20 +302,20 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var vehicle_batch:=horse if close else horse_rank
 		if id==2: vehicle_batch=cart if close else cart_rank
 		var moved:=battle.hero.pos.distance_to(battle.hero.before) if battle.vehicle==id else 0.0
-		_put(vehicle_batch,Ground.unit_point(pos),atan2(heading.x,heading.y),MountArt.pose(state,1.0,stride,moved,alpha,0.0,id))
+		_put(vehicle_batch,Ground.unit_point(pos),Basis(Vector3.UP,atan2(heading.x,heading.y)),MountArt.pose(state,1.0,stride,moved,alpha,0.0,id))
 	for s in battle.shots:
 		var p := s.previous.lerp(s.pos,alpha)
 		var fraction := s.distance / maxf(1,s.distance+s.remaining)
 		var h := 1.1 + (2.5 if s.arrow else 0.32)*sin(PI*fraction)
 		var altitude := lerpf(s.launch_height,Ground.deck_height(p),fraction)+h
-		_put(arrows,Vector3(p.x,altitude,p.y),atan2(s.direction.x,s.direction.y),Color(0,0,0,0))
+		_put(arrows,Vector3(p.x,altitude,p.y),Basis(Vector3.UP,atan2(s.direction.x,s.direction.y)),Color(0,0,0,0))
 	for order in battle.orders:
 		if order.channel==Battle.Channel.COURIER and order.leg!=2:
 			var recipient: Battle.Unit=battle.corps.recipient(battle,battle.companies[order.squad])
 			var destination:=battle.hero.pos if order.leg==1 else recipient.pos
 			var dir := order.pos.direction_to(destination)
-			_put(runners,Ground.unit_point(order.pos),atan2(dir.x,dir.y),Color(0,0,fposmod(order.age*3,1.0),0))
-	for g: Batch in groups.values():
-		g.mesh.visible_instance_count = g.used
-	for g: Batch in [contact,horse,horse_rank,cart,cart_rank,arrows,runners,standards[0],standards[1]]:
-		g.mesh.visible_instance_count = g.used
+			_put(runners,Ground.unit_point(order.pos),Basis(Vector3.UP,atan2(dir.x,dir.y)),Color(0,0,fposmod(order.age*3,1.0),0))
+	for batch in batches:
+		if batch.used!=batch.submitted_count:
+			batch.mesh.visible_instance_count=batch.used
+			batch.submitted_count=batch.used
