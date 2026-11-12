@@ -74,6 +74,8 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 		if u.mounted: foot.y+=.8
 		var projected:=field.camera.unproject_position(foot+Vector3.UP*.9)
 		if canvas.has_point(projected): on_screen.append(u.id)
+	item["draw_calls"]=int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+	item["primitives"]=int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
 	item["in_frame_count"]=on_screen.size()
 	item["in_frame_ids_sha256"]=Marshalls.raw_to_base64(on_screen.to_byte_array()).sha256_text()
 	success=success and field.view.visible_soldiers>=on_screen.size()
@@ -108,6 +110,9 @@ func _run() -> void:
 	await _snap("ranks","line",51.0,-.576)
 	await _snap("contact","line",13.0,-.576)
 	await _snap("formation","line",26.0,-.576)
+	if "--terrain-budget-only" in OS.get_cmdline_user_args():
+		quit(0 if success else 1)
+		return
 	var start:=_target("line")
 	var initial_hits: int=b.hits[0]+b.hits[1]
 	for i in 80:

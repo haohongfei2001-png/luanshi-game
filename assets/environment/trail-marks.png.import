@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://cglp2je2ycfnx"
+path="res://.godot/imported/trail-marks.png-d07c1c98600667832923aabef0104091.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/trail-marks.png"
+dest_files=["res://.godot/imported/trail-marks.png-d07c1c98600667832923aabef0104091.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

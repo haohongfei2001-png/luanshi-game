@@ -203,9 +203,68 @@ function paintLeafSprays(){
     return png(raw,size,size,4);
 }
 
+// Broken shale, dry stems and compressed seams, painted at ankle scale. A
+// transparent repeat keeps the large, nonrepeating land painting visible.
+function paintTrailMarks(){
+    const size=256, raw=new Uint8Array(size*size*4),random=dice(818627);
+    function put(x,y,c,a){
+        let i=(((y%size+size)%size)*size+(x%size+size)%size)*4;
+        const old=raw[i+3]/255, next=a+old*(1-a);
+        if(next<=0)return;
+        for(let k=0;k<3;k++)raw[i+k]=Math.round((c[k]*a+raw[i+k]*old*(1-a))/next);
+        raw[i+3]=Math.round(next*255);
+    }
+    function line(x0,y0,x1,y1,r,c,a){
+        const dx=x1-x0,dy=y1-y0,n=dx*dx+dy*dy;
+        for(let y=Math.floor(Math.min(y0,y1)-r-1);y<=Math.max(y0,y1)+r+1;y++) for(let x=Math.floor(Math.min(x0,x1)-r-1);x<=Math.max(x0,x1)+r+1;x++){
+            const u=cap(((x+.5-x0)*dx+(y+.5-y0)*dy)/Math.max(n,.0001));
+            const d=Math.hypot(x+.5-x0-u*dx,y+.5-y0-u*dy);
+            put(x,y,c,a*cap(r+.55-d));
+        }
+    }
+    function flake(x,y,rx,ry,angle,shade){
+        const co=Math.cos(angle),si=Math.sin(angle);
+        for(let j=-Math.ceil(rx+2);j<=Math.ceil(rx+2);j++)for(let k=-Math.ceil(rx+2);k<=Math.ceil(rx+2);k++){
+            const u=(k*co+j*si)/rx,v=(-k*si+j*co)/ry;
+            const face=Math.max(Math.abs(u)+.29*Math.abs(v),Math.abs(v)+.28*Math.abs(u),.62*(u+v));
+            if(face>=1.07)continue;
+            const edge=cap((1.07-face)*Math.min(rx,ry));
+            const light=face>.76?(0.73+.20*(1-(u+v)*.5)):(1.01+.06*(1-v)+.036*Math.cos(u*4+v*6));
+            put(Math.round(x)+k,Math.round(y)+j,mul(shade,light),edge*.78);
+        }
+    }
+    for(let cluster=0;cluster<36;cluster++){
+        const x=random()*size,y=random()*size;
+        let qx=x,qy=y,a=(random()-.5)*1.6;
+        for(let k=0;k<3+Math.floor(random()*5);k++){
+            const ex=qx+Math.cos(a)*(3+random()*5),ey=qy+Math.sin(a)*(3+random()*5);
+            line(qx,qy,ex,ey,.52+random()*.43,[83,78,62],.34);
+            if(k%3==1)line(qx,qy,qx+1.1,qy-2.9,.57,[100,92,73],.26);
+            qx=ex;qy=ey;a+=(random()-.5)*1.1;
+        }
+    }
+    for(let cluster=0;cluster<30;cluster++){
+        const x=random()*size,y=random()*size;
+        for(let s=0;s<3+random()*5;s++){
+            const rad=1.1+random()**2*5.8;
+            flake(x+(random()-.5)*29,y+(random()-.5)*22,rad,rad*(.43+random()*.50),random()*Math.PI,
+                mix([122,119,101],[170,162,134],random()));
+        }
+    }
+    for(let i=0;i<108;i++){
+        const x=random()*size,y=random()*size,w=2.0+random()*7.9,a=random()*Math.PI*2;
+        const dx=Math.cos(a)*w,dy=Math.sin(a)*w;
+        line(x+.4,y+.6,x+dx+.5,y+dy+.6,.48,[86,88,65],.30);
+        line(x,y,x+dx*.52,y+dy*.50,.60,[164,151,112],.52);
+        line(x+dx*.52,y+dy*.50,x+dx,y+dy-.29,.41,[182,172,133],.48);
+    }
+    return png(raw,size,size,4);
+}
+
 const dir=new URL("../assets/environment/",import.meta.url);
 const plan=JSON.parse(readFileSync(new URL("foothills.json",dir),"utf8"));
 plan.trees=standLayout(plan);
 writeFileSync(new URL("stand-placements.json",dir),"[\n"+plan.trees.map(t=>"  "+JSON.stringify(t)).join(",\n")+"\n]\n");
 writeFileSync(new URL("floodplain-paint.png",dir),paintGround(plan));
 writeFileSync(new URL("leaf-sprays.png",dir),paintLeafSprays());
+writeFileSync(new URL("trail-marks.png",dir),paintTrailMarks());

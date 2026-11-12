@@ -64,7 +64,7 @@ func _canopy_vertex(surface: SurfaceTool,point: Vector3,normal: Vector3,grade: f
 	surface.set_normal(normal)
 	surface.set_color(Color(clampf(grade,0.03,0.98),float(kind)*0.5,0.0))
 	surface.set_uv(Vector2(point.x*1.4+point.z*.51,point.y*1.63+point.z*.57))
-	surface.set_uv2(Vector2(0.21,1.0))
+	surface.set_uv2(Vector2(clampf(grade,0.03,0.98),1.0+float(kind)*0.25))
 	surface.add_vertex(point)
 
 func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation: float) -> void:
@@ -87,13 +87,13 @@ func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation:
 			var j:=(i+1)%sides
 			var low:=ring*sides
 			var up:=low+sides
-			for index:int in [low+i,up+i,low+j,low+j,up+i,up+j]:
+			for index:int in [low+i,low+j,up+i,low+j,up+j,up+i]:
 				_canopy_vertex(patch.leaves,points[index],normals[index],grades[index],kind)
 	for i in sides:
 		var last:=(levels.size()-1)*sides
 		_canopy_vertex(patch.leaves,points[last+i],normals[last+i],grades[last+i],kind)
-		_canopy_vertex(patch.leaves,p+Vector3.UP*tall*0.97,Vector3.UP,0.88,kind)
 		_canopy_vertex(patch.leaves,points[last+(i+1)%sides],normals[last+(i+1)%sides],0.84,kind)
+		_canopy_vertex(patch.leaves,p+Vector3.UP*tall*0.97,Vector3.UP,0.88,kind)
 	patch.sprays+=1
 
 func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
@@ -125,7 +125,7 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		for j in sprays:
 			var a:float=spin+index*.93+j*TAU/sprays+rng.randf_range(-.27,.27)
 			var radial:=Vector3(cos(a),0,sin(a))
-			var start:=center+radial*radius*.68+Vector3.UP*tall*rng.randf_range(-.14,.45)
+			var start:=center+radial*radius*.82+Vector3.UP*tall*rng.randf_range(-.14,.45)
 			var end:=start+radial*radius*(.51 if kind==0 else .59)
 			end.y+=radius*(rng.randf_range(-1.24,-.65) if kind==0 else rng.randf_range(-.28,.41))
 			var across:=Vector3(-radial.z,0,radial.x)*radius*(.43 if kind==0 else .46)

@@ -2,6 +2,7 @@ shader_type spatial;
 render_mode diffuse_lambert, cull_disabled;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D trail_marks : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D land_paint : source_color, filter_linear_mipmap, repeat_disable;
 uniform vec4 deep_water : source_color = vec4(0.22,0.37,0.36,1.0);
 uniform vec4 shallows : source_color = vec4(0.42,0.56,0.49,1.0);
@@ -38,6 +39,8 @@ void fragment() {
 		float turf_value=.86+.22*grass.g+.12*grass.r+.12*(close_marks.g-.44);
 		float path_value=.85+.17*grain.r+.105*close_marks.r+.070*smoothstep(.55,.80,close_marks.b);
 		color=underpaint*mix(turf_value,path_value,dry);
+		vec4 track=texture(trail_marks,p*vec2(.42,.45));
+		color=mix(color,track.rgb,track.a*(.14+.69*dry));
 	} else if (part>1.5 && part<2.5) {
 		float bank=abs(p.x+32.0);
 		float turn=sin(p.y*.42)*.42+sin(p.y*.15+1.1)*.30;
@@ -75,7 +78,10 @@ void fragment() {
 			vec2 bank_uv=vec2(side*0.31,across*0.87);
 			float compact=texture(joinery,bank_uv).r;
 			float lift=texture(fieldbed,vec2(side*0.068,across*0.73)).r;
-			color*=0.68+0.34*compact+0.24*lift;
+			float drip=texture(fieldbed,vec2(side*.12,across*.035)).g;
+			float footing=1.0-smoothstep(.55,1.56,local_pos.y+drip*.23);
+			float rain=smoothstep(.43,.71,drip)*smoothstep(.18,2.4,local_pos.y);
+			color*=.74+.29*compact+.16*lift-.105*footing-.065*rain;
 		} else if (part>11.5 && part<12.5) {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;

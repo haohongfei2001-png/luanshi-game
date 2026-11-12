@@ -10,6 +10,8 @@ jobs:
     timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Render the playable 1024-soldier field at the RC3 camera stops
         run: |
           set -euo pipefail
@@ -22,6 +24,14 @@ jobs:
           node tools/env_river_paint.mjs
           git diff --exit-code --stat -- assets/environment
           ./tools/prepare-font.sh
+          git worktree add --detach /tmp/original-field e8029ca8d0ca511cf283525625554c732b2e143c
+          cp tests/env_valley_review.gd /tmp/original-field/tests/
+          cp assets/fonts/NotoSansSC-Regular.otf /tmp/original-field/assets/fonts/
+          mkdir -p /tmp/original-field/artifacts
+          touch /tmp/original-field/artifacts/.gdignore
+          "$editor" --headless --editor --import --path /tmp/original-field >/tmp/original-field-import.log 2>&1
+          LIBGL_ALWAYS_SOFTWARE=1 timeout 90s xvfb-run -a -s '-screen 0 1280x800x24' "$editor" --path /tmp/original-field --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script res://tests/env_valley_review.gd -- --field-size=512 --terrain-budget-only >artifacts/original-geometry.log 2>&1
+          grep -q 'RIVER_ART_FRAME ' artifacts/original-geometry.log
           "$editor" --headless --editor --import --path . 2>&1 | tee artifacts/river-import.log
           if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/river-import.log; then exit 1; fi
           LIBGL_ALWAYS_SOFTWARE=1 timeout 180s xvfb-run -a -s '-screen 0 1280x800x24' "$editor" --path . --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/env_valley_review.gd -- --field-size=512 2>&1 | tee artifacts/valley-window.log
@@ -32,6 +42,12 @@ jobs:
           root=pathlib.Path("artifacts/river-art")
           rows=json.loads((root/'frames.json').read_text())
           assert all(r['ordinary']==[512,512] and r['window']==[1280,800] and r['internal_scale']==1 and r['shadows'] for r in rows)
+          before={r['label']:r for r in (json.loads(s.partition(' ')[2]) for s in pathlib.Path('artifacts/original-geometry.log').read_text().splitlines() if s.startswith('RIVER_ART_FRAME '))}
+          for r in rows:
+              if r['label'] in before:
+                  old=before[r['label']]
+                  assert all(old[k]==r[k] for k in ('tick','center','zoom','ordinary','contact','in_frame_ids_sha256','shadows','internal_scale'))
+                  print('RIVER_GEOMETRY',r['label'],old['draw_calls'],r['draw_calls'],old['primitives'],r['primitives'])
           for name in ['ranks','gate','hero','ford','camp','formation']:
               d=(root/(name+'-view.jpg')).read_bytes()
               wire=base64.b64encode(d).decode()
