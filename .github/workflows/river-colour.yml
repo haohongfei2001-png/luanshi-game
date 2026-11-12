@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 3
+          fetch-depth: 1
       - name: Install the verified Godot 4.6.3 binary and Mesa
         run: |
           set -euo pipefail
@@ -31,6 +31,7 @@ jobs:
           set -euo pipefail
           ls /usr/share/vulkan/icd.d/lvp*.json
           export VK_ICD_FILENAMES="$(ls /usr/share/vulkan/icd.d/lvp*.json | head -n1)"
+          git fetch --no-tags --depth=1 origin 22d5c85abf18296c0d299075f68e287102b004e7 455a58f233e276a5bbdc473387bfad09b4535bd2
           mkdir receipts
           for side in before after; do
             rev=22d5c85abf18296c0d299075f68e287102b004e7
