@@ -1,0 +1,87 @@
+name: Native battlefield clarity comparison
+on:
+  push:
+    branches: [codex/river-gate-native-clarity-lab]
+    paths:
+      - '.github/workflows/river-native-clarity.yml'
+      - 'tests/river_native_clarity.gd'
+      - 'tools/river_native_clarity.py'
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    permissions:
+      contents: write
+    env:
+      RAW: /tmp/river-native-raw
+      DELIVER: docs/evidence/river-gate-native-clarity
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the checked Godot build and software Vulkan
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/clarity-godot
+          sudo install /tmp/clarity-godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          sudo apt-get install --no-install-recommends -y xvfb mesa-vulkan-drivers
+          python3 -m venv /tmp/clarity-python
+          /tmp/clarity-python/bin/pip install -q 'numpy==2.2.6' 'pillow==11.2.1'
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path .
+      - name: Capture native and spatial reference from the real Vulkan game window
+        run: |
+          set -euo pipefail
+          mkdir -p "$RAW" "$DELIVER"
+          export VK_DRIVER_FILES="$(python3 -c 'import glob; print(glob.glob("/usr/share/vulkan/icd.d/lvp_icd*.json")[0])')"
+          export VK_ICD_FILENAMES="$VK_DRIVER_FILES"
+          env | sed -n '/^VK_DRIVER_FILES=/p' > "$RAW/host.txt"
+          lscpu >> "$RAW/host.txt"
+          uname -a >> "$RAW/host.txt"
+          git rev-parse HEAD >> "$RAW/host.txt"
+          sha256sum scripts/field/controller.gd project.godot scripts/field/company_skin.gdshader >> "$RAW/host.txt"
+          for cell in 1280-0 1920-4 1280-2 1920-0 1280-4 1920-2 3840-4; do
+            w="${cell%-*}"
+            aa="${cell#*-}"
+            h=$((w*5/8))
+            extra=()
+            if [ "$w" = 3840 ]; then extra+=(--reference); fi
+            mkdir -p "$RAW/$cell"
+            xvfb-run -a -s '-screen 0 3896x2448x24' godot --path . --resolution "${w}x${h}" --rendering-method mobile --rendering-driver vulkan --audio-driver Dummy --disable-vsync --fixed-fps 60 --script tests/river_native_clarity.gd -- --raw="$RAW/$cell" --width="$w" --samples="$aa" "${extra[@]}" 2>&1 | tee "$RAW/$cell/godot.log"
+            grep -q CLAR_SCENE_END "$RAW/$cell/godot.log"
+            if grep -E 'SCRIPT ERROR|Shader compilation failed|Validation Error' "$RAW/$cell/godot.log"; then exit 1; fi
+          done
+      - name: Compare changing armor and weapon boundaries against matched spatial reference
+        run: |
+          set -euo pipefail
+          /tmp/clarity-python/bin/python tools/river_native_clarity.py
+          cp "$RAW/host.txt" "$DELIVER/host.txt"
+          for w in 1280 1920; do
+            for mode in 0 2 4; do
+              for view in mounted contact; do
+                cp "$RAW/$w-$mode/$view-1.png" "$DELIVER/$view-$w-msaa$mode.png"
+              done
+            done
+          done
+          cd "$DELIVER"
+          sha256sum *.png measurements.json host.txt > SHA256SUMS
+      - name: Retain lossless frame sequences, wall samples, unmodified logs and high-resolution reference
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: river-native-clarity-originals
+          compression-level: 0
+          path: |
+            ${{ env.RAW }}
+            docs/evidence/river-gate-native-clarity
+      - name: Keep the original color frames addressable on this experiment branch
+        if: success()
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$DELIVER"
+          git commit -m 'Archive native Vulkan framebuffer comparisons and raw frame-time samples'
+          git push origin HEAD:refs/heads/codex/river-gate-native-clarity-lab
