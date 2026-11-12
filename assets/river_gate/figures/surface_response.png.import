@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b8m6728w2pfk6"
+path="res://.godot/imported/surface_response.png-e6c8609033f668cfaf3898b851fbdccd.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/river_gate/figures/surface_response.png"
+dest_files=["res://.godot/imported/surface_response.png-e6c8609033f668cfaf3898b851fbdccd.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

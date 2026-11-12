@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://cnq5a801kejyv"
+path="res://.godot/imported/company_motion.png-0f54b9d1bd3dd717c6fb8ab9b26015d0.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/river_gate/figures/company_motion.png"
+dest_files=["res://.godot/imported/company_motion.png-0f54b9d1bd3dd717c6fb8ab9b26015d0.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=false
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

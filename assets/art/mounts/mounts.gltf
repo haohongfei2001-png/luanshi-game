@@ -1,0 +1,423 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Luanshi / original river gate mount sculpture"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "RiverGateMounts",
+      "nodes": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "SaddleClose",
+      "mesh": 0
+    },
+    {
+      "name": "SaddleRank",
+      "mesh": 1
+    },
+    {
+      "name": "DraughtClose",
+      "mesh": 2
+    },
+    {
+      "name": "DraughtRank",
+      "mesh": 3
+    }
+  ],
+  "meshes": [
+    {
+      "name": "SaddleClose",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2,
+            "TEXCOORD_1": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "SaddleRank",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "TEXCOORD_0": 7,
+            "TEXCOORD_1": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "DraughtClose",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 10,
+            "NORMAL": 11,
+            "TEXCOORD_0": 12,
+            "TEXCOORD_1": 13
+          },
+          "indices": 14,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "DraughtRank",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 15,
+            "NORMAL": 16,
+            "TEXCOORD_0": 17,
+            "TEXCOORD_1": 18
+          },
+          "indices": 19,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 25272,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 25272,
+      "byteLength": 25272,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 50544,
+      "byteLength": 8424,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 58968,
+      "byteLength": 8424,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 67392,
+      "byteLength": 23028,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 90420,
+      "byteLength": 4212,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 94632,
+      "byteLength": 4212,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 98844,
+      "byteLength": 1404,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 100248,
+      "byteLength": 1404,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 101652,
+      "byteLength": 3540,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 105192,
+      "byteLength": 42336,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 147528,
+      "byteLength": 42336,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 189864,
+      "byteLength": 14112,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 203976,
+      "byteLength": 14112,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 218088,
+      "byteLength": 37944,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 256032,
+      "byteLength": 13092,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 269124,
+      "byteLength": 13092,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 282216,
+      "byteLength": 4364,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 286580,
+      "byteLength": 4364,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 290944,
+      "byteLength": 10884,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "mounts.bin",
+      "byteLength": 301828
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 2106,
+      "type": "VEC3",
+      "min": [
+        -0.34672999382019043,
+        0.0016899999463930726,
+        -1.1127500534057617
+      ],
+      "max": [
+        0.34672999382019043,
+        2.0077600479125977,
+        1.2502700090408325
+      ]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 2106,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5123,
+      "count": 2106,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5123,
+      "count": 2106,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5123,
+      "count": 11514,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 351,
+      "type": "VEC3",
+      "min": [
+        -0.3400000035762787,
+        0.008829999715089798,
+        -1.0935300588607788
+      ],
+      "max": [
+        0.3400000035762787,
+        2.006649971008301,
+        1.2505600452423096
+      ]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 351,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5123,
+      "count": 351,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5123,
+      "count": 351,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5123,
+      "count": 1770,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 3528,
+      "type": "VEC3",
+      "min": [
+        -0.9440000057220459,
+        -0.006000000052154064,
+        -2.427999973297119
+      ],
+      "max": [
+        0.9440000057220459,
+        2.0077600479125977,
+        1.2502700090408325
+      ]
+    },
+    {
+      "bufferView": 11,
+      "componentType": 5126,
+      "count": 3528,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 12,
+      "componentType": 5123,
+      "count": 3528,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 13,
+      "componentType": 5123,
+      "count": 3528,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 14,
+      "componentType": 5123,
+      "count": 18972,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 15,
+      "componentType": 5126,
+      "count": 1091,
+      "type": "VEC3",
+      "min": [
+        -0.9440000057220459,
+        -0.006000000052154064,
+        -2.427999973297119
+      ],
+      "max": [
+        0.9440000057220459,
+        2.006649971008301,
+        1.2505600452423096
+      ]
+    },
+    {
+      "bufferView": 16,
+      "componentType": 5126,
+      "count": 1091,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 17,
+      "componentType": 5123,
+      "count": 1091,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 18,
+      "componentType": 5123,
+      "count": 1091,
+      "type": "VEC2",
+      "normalized": true
+    },
+    {
+      "bufferView": 19,
+      "componentType": 5123,
+      "count": 5442,
+      "type": "SCALAR"
+    }
+  ],
+  "images": [
+    {
+      "uri": "mount-atlas.png"
+    }
+  ],
+  "textures": [
+    {
+      "source": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "SaddleryAtlas",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0,
+        "roughnessFactor": 0.78
+      }
+    }
+  ]
+}

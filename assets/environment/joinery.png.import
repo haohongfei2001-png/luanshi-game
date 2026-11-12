@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://chji01u3q5jqc"
+path="res://.godot/imported/joinery.png-7ad2fcbff1c727be04d2925354c0abec.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/joinery.png"
+dest_files=["res://.godot/imported/joinery.png-7ad2fcbff1c727be04d2925354c0abec.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

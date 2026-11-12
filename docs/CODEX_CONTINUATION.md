@@ -4,6 +4,10 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## RC3 已装入河关正式战役，候选包验收中
+
+回退点为 RC2 游戏代码 71889537。新衣甲、九种握持兵器、骨骼动作、坐骑与牵引车、门楼和营地均在原战斗入口运行。使用 `./tools/compare-river-art.sh` 重放同军籍同相机的十二个机位及正常速度实战。四档实际帧时和窗口输入由 `./tools/test-field-render.sh` 测量；`./tools/test-field-journey.sh` 记录战前至战后。早期候选软件渲染器护送回归超时，已缩减中景几何并将阴影和主角近景分别处理，保留失败运行 43224638297。候选包、托管 Mac 原生尺寸和冷启动结果以新的完整 CI 为准；M5 真机待测。
+
 ## 当前主线已合入候选 0.16.0-rc.2（2026-11-12，当前可玩基线）
 
 **可玩代码/证据基线**：`7aa2934080e1618ad61e670ec00d40a94714b852`；其后 main 可能有文档更新，Codex 每次启动都必须 fetch 实时 `origin/main`。PR #29 玩法、PR #30 证据已合并，不得重复开发/合并。
