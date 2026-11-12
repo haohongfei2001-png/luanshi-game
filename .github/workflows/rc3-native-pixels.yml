@@ -1,0 +1,106 @@
+name: Native window pixel accounting
+on:
+  push:
+    branches: [codex/rc3-native-pixels-lab]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Read the PNG headers and raw frame records from both immutable RC2 attempts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 13916728942 13917073833; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "/tmp/rc2-$id.zip"
+          done
+          python3 - <<'PY'
+          import hashlib, json, pathlib, struct, zipfile
+          for archive in sorted(pathlib.Path("/tmp").glob("rc2-*.zip")):
+              with zipfile.ZipFile(archive) as packet:
+                  for name in sorted(packet.namelist()):
+                      if not name.endswith(".png"): continue
+                      payload = packet.read(name)
+                      assert payload[:8] == b"\x89PNG\r\n\x1a\n" and payload[12:16] == b"IHDR"
+                      pixels = struct.unpack(">II",payload[16:24])
+                      frames = json.loads(packet.read(name[:-4]+"-frames.json"))
+                      print("RC2_PNG",json.dumps(dict(archive=archive.stem,png=name,sha256=hashlib.sha256(payload).hexdigest(),
+                          png_ihdr_px=pixels,window=frames["viewport"],scale=frames["scale"],legacy_root_texture_px=frames["render_target_px"],
+                          legacy_estimated_3d_px=frames["estimated_internal_px"],p95_ms=frames["p95_ms"])),flush=True)
+          PY
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified official Godot and export templates
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_export_templates.tpz" -o /tmp/templates.tpz
+          echo 'da606b61c10157844f8300172df374472665f95015495cb1a7cd132c40ede404faa96cc1016a4b9662db9909ddea69632c4948b2cd11163438dad4808881fb68  /tmp/templates.tpz' | sha512sum -c -
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+          unzip -j -q /tmp/templates.tpz 'templates/macos.zip' 'templates/version.txt' -d "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+      - name: Export the native package
+        run: |
+          set -euo pipefail
+          mkdir -p builds
+          touch builds/.gdignore
+          ./tools/prepare-font.sh
+          git rev-parse HEAD > assets/build-revision.txt
+          godot --headless --editor --path . --import
+          godot --headless --path . --script tools/write_notices.gd
+          godot --headless --path . --export-release macOS builds/Luanshi-macOS.zip
+          python3 tools/verify_macos.py builds/Luanshi-macOS.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-lab-game
+          path: builds/Luanshi-macOS.zip
+  launch:
+    needs: export
+    runs-on: macos-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-lab-game
+          path: package
+      - name: Exercise cold launches and foreground transitions
+        run: |
+          set -euo pipefail
+          mkdir -p mac-evidence
+          sw_vers | tee mac-evidence/host.log
+          uname -a | tee -a mac-evidence/host.log
+          ditto -x -k package/Luanshi-macOS.zip package/unpacked
+          python3 - <<'PY'
+          import hashlib, json, pathlib, plistlib, runpy, subprocess
+          probe = runpy.run_path("tools/rc3_native_probe.py")
+          output = pathlib.Path("mac-evidence").resolve()
+          app, = pathlib.Path("package/unpacked").resolve().glob("*.app")
+          binary = app/"Contents/MacOS"/plistlib.loads((app/"Contents/Info.plist").read_bytes())["CFBundleExecutable"]
+          data = pathlib.Path.home()/"Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish"
+          helper = output/"focus"
+          subprocess.run(["clang","-fobjc-arc","-framework","AppKit","-o",helper,"tools/macos_probe_focus.m"],check=True)
+          print("SOURCE_ARCHIVE_SHA256",hashlib.sha256(pathlib.Path("package/Luanshi-macOS.zip").read_bytes()).hexdigest())
+          records = []
+          for plan in [probe["PLANS"][1],probe["PLANS"][4],probe["SHIPPING"]]:
+              row = probe["trial"](binary,output,data,helper,plan)
+              print("NATIVE_SIZING_SAMPLE",json.dumps(row),flush=True)
+              records.append(row)
+          (output/"sizing.json").write_text(json.dumps(records,indent=2))
+          assert all(row["validated"] for row in records)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-first-launch-evidence
+          path: mac-evidence/
