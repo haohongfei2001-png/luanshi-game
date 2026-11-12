@@ -1,5 +1,9 @@
 # Project status / resumable handoff
 
+## 河关 0.16.0-rc.2
+
+破门后士兵沿所在列前进。三个种子的门前折返样本分别减少 86%、77%、82%。主线 `71889537db0d` 已完成 512v512 真实窗口攻城、护送与战后行军、双版本旧存档和托管原生 macOS 开窗。[最新可玩包、录像及数据](evidence/river-gate-v1-rc2/PLAYTEST.md)
+
 ## 河关 0.16.0-rc.1
 
 已合入主线的河关 0.16.0-rc.1 从军议可连续打到伤亡、缴获、战后行军和读档。标准会战含双方各 512 名普通兵、32 名军官及玩家，平陵巡防按实际军籍出阵。托管的 macOS 程序已开窗并完成千人交战采样，真实 M5 Air 持续性能待测。 主线提交 `efcd91533e7c`。[试玩包与录像](evidence/river-gate-v1-rc1/PLAYTEST.md) · [主线运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43147112051)

@@ -4,11 +4,19 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 门洞改进验证中
+## 当前主线试玩候选 0.16.0-rc.2
 
-独立云端在三场 512v512 真正破门后的六秒内，对照进入门洞后留在当前通行列的走法。三个种子的向后步进样本为 337 → 46、504 → 115、474 → 86，实际跨过门线的兵员为 74 → 74、79 → 82、75 → 82。均占领内庭。候选保留旧存档原有走法，下一步运行完整窗口、#24 与 RC1 原进程生成的存档回归，再验证 macOS 包。[首次对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43150230578) · [两场复测](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43150554277)
+| 项目 | 已核实的现场 |
+| --- | --- |
+| BASE_SHA / BRANCH / NEW_SHA | 从 RC1 `efcd91533e7cd50309375d1ab90138a041e7f674` 接续至 `main` `71889537db0d74b9cf6f372d50c830e9e5e32278`。[实现 #29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) |
+| TEST_STATUS / CI_URL | Ubuntu 的完整真实窗口、旧 v3 及 RC1 破门中 v4、九兵器、双边军官、六次托管 Mac 开窗均已通过。首次兼容窗口停在第 0 步，保留了失败和同包重测记录。[主线完整运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697) |
+| BUILD_URL / GAMEPLAY_EVIDENCE | [macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697/artifacts/13917576349)，内层压缩包 SHA-256 `ce539ea4e08477838d24df6d3d437b6057a8fd00ab77361172a07d672ed9c930`。[连续实录](evidence/river-gate-v1-rc2/playthrough.mp4) · [截图与完整试玩记录](evidence/river-gate-v1-rc2/PLAYTEST.md) |
+| PERF_METRICS | Apple M1 (Virtual)，512v512 巡场 24.0 秒，P50 / P95 / P99 为 5.69 / 21.93 / 30.29 ms，峰值 342 MiB。[各规模、画质及原始数据](evidence/river-gate-v1-rc2/measurements.json) |
+| 阶段结果 | 避免门前无谓折返。三个种子进门实际跨线人数持平或增加，撞入车体样本均为零。护送成功时遗留的撞门文字已修复。默认、先锋先行两种走法分别复测。[初次失败记录](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43153519636) · [窗口复测](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43155329275) |
+| BLOCKERS | M5 Air ≥20 分钟实机接战未测。高密度近身出招可能被前排挡住，狭口吞吐还受到真实交锋影响。 |
+| NEXT_COMMAND | 在授权云端从 NEW_SHA 实施下一次视觉比较。从 `./tools/test-field-render.sh` 生成相同近景姿态，检查盾缘、武器交叉与受击轮廓，同时复核帧时间。 |
 
-## 主线试玩候选 0.16.0-rc.1
+## 回退候选 0.16.0-rc.1
 
 | 事项 | 现场 |
 | --- | --- |
