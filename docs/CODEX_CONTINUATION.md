@@ -6,7 +6,7 @@
 
 ## 当前主线已合入候选 0.16.0-rc.2（2026-11-12，最新）
 
-**当前 main HEAD：** `7aa2934080e1618ad61e670ec00d40a94714b852`。河关玩法 PR [#29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) 已于 04:55 UTC 合入，交付证据 PR [#30](https://github.com/haohongfei2001-png/luanshi-game/pull/30) 已于 05:21 UTC 合入。不要重复合并旧 PR #24/#25，也不要从 71889537 旧主线继续覆盖新证据。
+**当前 main HEAD：** `7107bc992adc88da72d4fdfe3521b42ca9851d71`（随后仅追加本总指令/续接文档更新；当前可玩代码与证据基线仍为 `7aa2934080e1618ad61e670ec00d40a94714b852`）。河关玩法 PR [#29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) 已于 04:55 UTC 合入，交付证据 PR [#30](https://github.com/haohongfei2001-png/luanshi-game/pull/30) 已于 05:21 UTC 合入。不要重复合并旧 PR #24/#25，也不要从 71889537 旧主线继续覆盖新证据。
 
 | 项目 | 已核实结果 |
 | --- | --- |
