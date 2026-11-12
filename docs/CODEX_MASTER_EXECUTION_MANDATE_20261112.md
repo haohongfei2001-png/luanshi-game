@@ -51,8 +51,8 @@
 - 当前 `main` HEAD：`7aa2934080e1618ad61e670ec00d40a94714b852`。
 - 河关玩法 PR [#29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) 已合入，代码提交 `71889537db0d74b9cf6f372d50c830e9e5e32278`。
 - 试玩证据 PR [#30](https://github.com/haohongfei2001-png/luanshi-game/pull/30) 已合入，包含完整 59 秒带声录像、实帧、测量 JSON、安装包校验和旧存档记录。
-- [CI 43157917697](https://github.com/haohongfei-png/luanshi-game/actions/runs/43157917697) 最终 attempt 2 的 Linux/macOS/录像归档 job 全部成功。attempt 1 的 macOS runtime 曾停在第 0 步，原因未定位；同一包重测成功。
-- [macOS 候选包](https://github.com/haohongfei-png/luanshi-game/actions/runs/43157917697/artifacts/13917576349)，内层 ZIP SHA-256 `ce539ea4e08477838d24df6d3d437b6057a8fd00ab77361172a07d672ed9c930`。使用临时签名，尚未公证。
+- [CI 43157917697](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697) 最终 attempt 2 的 Linux/macOS/录像归档 job 全部成功。attempt 1 的 macOS runtime 曾停在第 0 步，原因未定位；同一包重测成功。
+- [macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697/artifacts/13917576349)，内层 ZIP SHA-256 `ce539ea4e08477838d24df6d3d437b6057a8fd00ab77361172a07d672ed9c930`。使用临时签名，尚未公证。
 - 当前已能从军议部署开始，连续完成 512v512 战斗、城门/护送目标、战果、行军和存读档。九种兵器实际输入、骑马/战车、双方军官交手/救离/俘获/继任已有对应验证。**不再重复实现这些已通过的入口与功能。**
 
 ### 已测量的密集军阵改进与未解决问题
