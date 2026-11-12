@@ -3,6 +3,8 @@ const Battle := preload("res://scripts/field/battle.gd")
 const Arms := preload("res://scripts/field/arms.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Figures := preload("res://scripts/field/figures.gd")
+const CompanyArt := preload("res://scripts/field/company_art.gd")
+const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
 const FRIEND := Color("3e7271")
@@ -25,6 +27,8 @@ var reference_officer_detail:=false
 var rank_soldiers:=0
 var high_detail_soldiers := 0
 var horse: Batch
+var horse_rank: Batch
+var cart_rank: Batch
 var cart: Batch
 var arrows: Batch
 var standards: Array[Batch] = []
@@ -62,8 +66,8 @@ func configure(model: Battle) -> void:
 	var far_mesh: Array[Mesh] = []
 	var ranks_mesh: Array[Mesh]=[]
 	for kit in Arms.NAMES.size():
-		near_mesh.append(Figures.fighter(kit,true))
-		far_mesh.append(Figures.silhouette(kit))
+		near_mesh.append(CompanyArt.fighter(kit, CompanyArt.costume(kit), true))
+		far_mesh.append(CompanyArt.fighter(kit, CompanyArt.costume(kit), false))
 		ranks_mesh.append(Figures.ranks(kit))
 	var counts := {}
 	for u in battle.roster:
@@ -72,17 +76,23 @@ func configure(model: Battle) -> void:
 	for key: int in counts:
 		var kit := key % 10
 		var col := GOLD if key >= 20 else (FRIEND if key < 10 else FOE)
-		var mat := _material(col,kit)
-		groups[key] = _batch(near_mesh[kit],mat,counts[key])
+		var mat := CompanyArt.material(col,kit)
+		var detailed: Mesh = CompanyArt.fighter(kit, "Player", true) if key>=20 else near_mesh[kit]
+		groups[key] = _batch(detailed,mat,counts[key])
 		if key<20:
 			groups[30+key]=_batch(far_mesh[kit],mat,counts[key])
 			groups[30+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			groups[60+key]=_batch(ranks_mesh[kit],mat,counts[key])
+			groups[60+key]=_batch(ranks_mesh[kit],_material(col,kit),counts[key])
 			groups[60+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for u in battle.roster:
+		if not u.officer: continue
+		var officer_key := 90 + _key(u)
+		if not groups.has(officer_key):
+			groups[officer_key]=_batch(CompanyArt.fighter(u.kit,"Officer",true),CompanyArt.material(FRIEND if u.team==0 else FOE,u.kit),battle.command_counts[u.team])
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
-			groups[20+kit] = _batch(near_mesh[kit],_material(GOLD,kit),1)
+			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(GOLD,kit),1)
 	var shadow_mesh := Builder.new()
 	var rim:=shadow_mesh.ring(Vector3.ZERO,Vector2(0.39,0.27),8)
 	for k in 8:
@@ -95,10 +105,12 @@ func configure(model: Battle) -> void:
 	var sm:=shadow_mesh.finish()
 	contact=_batch(sm,shade,battle.roster.size())
 	contact.node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var mount_mesh := Figures.horse()
-	horse = _batch(mount_mesh,_material(FRIEND,0,true),battle.ordinary_counts[0]+battle.ordinary_counts[1]+1)
-	var wagon := Figures.horse(true)
-	cart = _batch(wagon,_material(FRIEND,0,true),1)
+	var mount_capacity:=battle.ordinary_counts[0]+battle.ordinary_counts[1]+1
+	horse = _batch(MountArt.mesh(false,true),MountArt.material(),mount_capacity)
+	horse_rank = _batch(MountArt.mesh(false,false),MountArt.material(),mount_capacity)
+	horse_rank.node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	cart = _batch(MountArt.mesh(true,true),MountArt.material(),1)
+	cart_rank = _batch(MountArt.mesh(true,false),MountArt.material(),1)
 	var b := Builder.new()
 	b.rod(Vector3(0,0,-0.41),Vector3(0,0,0.40),0.027,0.016,Color("4b3728"),4)
 	b.rod(Vector3(0,0,0.34),Vector3(0,0,0.48),0.055,0.001,Color("a8aaa2"),4)
@@ -125,7 +137,7 @@ func configure(model: Battle) -> void:
 	garrison.quad(Vector3(0.12,3.14,0.045),Vector3(0.43,3.32,0.075),Vector3(0.72,3.10,0.13),Vector3(0.42,2.96,0.082),CLOTH_COLOR)
 	standards.append(_batch(fm,_material(FRIEND,0),battle.companies_per_side))
 	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.command_counts[1]))
-	runners = _batch(near_mesh[Arms.Kit.SWORD],_material(Color("c49b5c"),0),8)
+	runners = _batch(far_mesh[Arms.Kit.SWORD],CompanyArt.material(Color("ab8962"),0),8)
 
 func _key(u: Battle.Unit) -> int:
 	return u.kit + (20 if u.hero else 10*u.team)
@@ -149,6 +161,8 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	shown_fallen = 0
 	for g: Batch in groups.values():
 		g.used = 0
+	horse_rank.used=0
+	cart_rank.used=0
 	horse.used = 0
 	cart.used = 0
 	arrows.used = 0
@@ -163,6 +177,8 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if absf(p.x-center.x)>half_extent.x or absf(p.y-center.y)>half_extent.y: continue
 		var ground := Ground.unit_point(p)
 		var base := ground
+		var distance_sq:=p.distance_squared_to(center)
+		var travelled:=u.pos.distance_to(u.before)
 		var angle := atan2(u.facing.x,u.facing.y)
 		var progress := clampf(1.0-u.timer/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
@@ -170,21 +186,22 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			code=Battle.State.ESCAPED # Wounded pose; departed units are culled above.
 			progress=0.75 if battle.corps.support_partner(battle,u)>=0 else 0.0
 		if (u.mounted and u.hp>0) or (u.hero and battle.vehicle==1): code+=64
-		var data := Color((code+0.5)/128.0,progress,u.stride,clampf(u.flash/0.22,0,1))
+		var step_phase:=fposmod(u.stride-(1.0-alpha)*travelled*0.68,1.0)
+		var data := Color((code+0.5)/128.0,progress,step_phase,clampf(u.flash/0.22,0,1))
 		if u.mounted:
 			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
 			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
-			_put(horse,base,angle,Color((horse_pose+0.5)/128,0.0 if unhorsed else progress,0.0 if unhorsed else u.stride,data.a))
+			var mounts:=horse if zoom<36 and distance_sq<185.0 else horse_rank
+			_put(mounts,base,angle,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a))
 			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
-			base.y+=0.81*(1.0-fall)
+			base.y+=0.73*(1.0-fall)
 			var side:=u.facing.orthogonal()*fall*(0.91 if u.id%2==0 else -0.91)
 			base+=Vector3(side.x,0,side.y)
 		if u.hero and battle.vehicle != 0:
 			var heading := battle.riding_heading
 			if battle.vehicle == 2 and not battle.seat_origin:
 				base -= Vector3(heading.x,0,heading.y)*1.83
-			base.y += 0.83 if battle.vehicle==1 else 0.91
-		var distance_sq:=p.distance_squared_to(center)
+			base.y += 0.73 if battle.vehicle==1 else 0.91
 		var full := reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<190))) or (zoom<17 and distance_sq<110) or (zoom<36 and distance_sq<19)
 		var key:=_key(u)
 		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and distance_sq>170.0)):
@@ -192,8 +209,12 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			rank_soldiers+=1
 		elif not full:
 			key+=30
-		elif not u.hero and not u.officer:
+		elif u.officer:
+			key+=90
+		elif not u.hero:
 			high_detail_soldiers+=1
+		if (key<60 or key>=90) and u.state==Battle.State.MARCH:
+			data.g=clampf(travelled*15.0,0.0,1.0)
 		if not full or contact_for_all:
 			_put(contact,ground+Vector3.UP*0.035,angle,Color(0,0,0,0))
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0)
@@ -217,7 +238,11 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
 		var heading := battle.riding_heading if battle.vehicle == id else battle.parked_heading[id]
 		var stride := battle.hero.stride if battle.vehicle == id else 0.0
-		_put(horse if id==1 else cart,Ground.unit_point(pos),atan2(heading.x,heading.y),Color((state+0.5)/128.0,1,stride,0))
+		var close:=zoom<36 and pos.distance_squared_to(center)<225.0
+		var vehicle_batch:=horse if close else horse_rank
+		if id==2: vehicle_batch=cart if close else cart_rank
+		var moved:=battle.hero.pos.distance_to(battle.hero.before) if battle.vehicle==id else 0.0
+		_put(vehicle_batch,Ground.unit_point(pos),atan2(heading.x,heading.y),MountArt.pose(state,1.0,stride,moved,alpha))
 	for s in battle.shots:
 		var p := s.previous.lerp(s.pos,alpha)
 		var fraction := s.distance / maxf(1,s.distance+s.remaining)
@@ -232,5 +257,5 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			_put(runners,Ground.unit_point(order.pos),atan2(dir.x,dir.y),Color(0,0,fposmod(order.age*3,1.0),0))
 	for g: Batch in groups.values():
 		g.mesh.visible_instance_count = g.used
-	for g: Batch in [contact,horse,cart,arrows,runners,standards[0],standards[1]]:
+	for g: Batch in [contact,horse,horse_rank,cart,cart_rank,arrows,runners,standards[0],standards[1]]:
 		g.mesh.visible_instance_count = g.used
