@@ -1,0 +1,70 @@
+name: Fit the field armour and inspect original game pixels
+on:
+  push:
+    branches: ['codex/river-gate-armour-workshop']
+permissions:
+  contents: write
+jobs:
+  fit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: workshop
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/river-gate-clear-armour
+          path: game
+          fetch-depth: 0
+      - name: Bake exactly the reviewed outfit sources into the game
+        working-directory: game
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 3bd615a3292fd488ee0b0d5d446a8d891ab4c942
+          python3 -c 'import PIL' || python3 -m pip install Pillow
+          python3 tools/art/bake_river_company.py
+          python3 tools/art/check_company_motion.py
+          git add assets/river_gate/figures/{river_company.glb,cloth_and_iron.png,surface_response.png}
+          git diff --quiet -- assets/river_gate/figures/company_motion.png
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake Tang-style field helmets, lamellar skirts and troop clothing for all camera distances'
+          git push origin HEAD:refs/heads/codex/river-gate-clear-armour
+      - name: Install the verified game renderer
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/engine
+          sudo install /tmp/engine/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+      - name: Record both combatants at the same tick, zoom and camera
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -euo pipefail
+          mkdir -p receipts
+          for label in rc4 field; do
+            rev=2293008c2d76dcbd788aeaef0fb871de1bc8eee1
+            if [[ "$label" == field ]]; then rev=$(git -C game rev-parse HEAD); fi
+            out="$RUNNER_TEMP/$label"
+            mkdir -p "$out"
+            git -C game archive "$rev" | tar -x -C "$out"
+            cp workshop/tests/armour_sample.gd "$out/tests/"
+            (
+              cd "$out"
+              ./tools/prepare-font.sh
+              mkdir -p artifacts && touch artifacts/.gdignore
+              godot --headless --editor --import --path . > "$GITHUB_WORKSPACE/receipts/$label-import.log" 2>&1
+              timeout 170s xvfb-run -a -s '-screen 0 1600x1000x24' godot --path . --resolution 1600x1000 --disable-vsync --fixed-fps 20 --audio-driver Dummy --script res://tests/armour_sample.gd -- --field-size=512 > "$GITHUB_WORKSPACE/receipts/$label-window.log" 2>&1
+            )
+            log=receipts/$label-window.log
+            grep ARMOUR_WINDOW_PASS "$log"
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$log" "receipts/$label-import.log"; then exit 1; fi
+            cp -a "$out/artifacts/river-art" "receipts/$label"
+          done
+          python3 workshop/tools/inspect_armour_camera.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-size-armour-camera
+          path: receipts
