@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://cjpm2300cauls"
+path="res://.godot/imported/root-turf.png-ab033103b5b44279cc947a87e8542814.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/root-turf.png"
+dest_files=["res://.godot/imported/root-turf.png-ab033103b5b44279cc947a87e8542814.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

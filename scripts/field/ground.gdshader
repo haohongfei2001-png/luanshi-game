@@ -2,8 +2,10 @@ shader_type spatial;
 render_mode diffuse_lambert, cull_disabled;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
-uniform sampler2D trail_marks : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
-uniform sampler2D land_paint : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
+uniform sampler2D root_turf : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D compacted_loam : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D bank_silt : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform vec4 deep_water : source_color = vec4(.115,.253,.260,1.0);
 uniform vec4 shallows : source_color = vec4(.305,.437,.372,1.0);
 varying vec3 local_pos;
@@ -23,17 +25,24 @@ void vertex() {
 	pigment=pow(max(COLOR.rgb,vec3(0.0)),vec3(1.30));
 }
 
-vec3 painted_ground(vec2 p) {
-	vec3 underpaint=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
-	float dry=smoothstep(-0.015,0.023,underpaint.r-underpaint.g);
-	vec3 grass=texture(fieldbed,p*vec2(.155,.199)).rgb;
-	vec3 close_marks=texture(fieldbed,p*vec2(.48,.58)+vec2(.12,.32)).rgb;
-	vec3 grain=texture(fieldbed,p*vec2(0.213,0.261)+vec2(.57,.26)).rgb;
-	float turf_value=.86+.22*grass.g+.12*grass.r+.12*(close_marks.g-.44);
-	float path_value=.85+.17*grain.r+.105*close_marks.r+.070*smoothstep(.55,.80,close_marks.b);
-	vec3 floor_color=underpaint*mix(turf_value,path_value,dry);
-	vec4 track=texture(trail_marks,p*vec2(.42,.45));
-	return mix(floor_color,track.rgb,track.a*(.14+.69*dry));
+vec3 painted_ground(vec2 p,float shore) {
+	vec4 cover=texture(soil_cover,(p+vec2(168.0,108.0))/vec2(336.0,216.0));
+	vec2 shear=vec2(cover.b-.48,cover.r-.43)*.19;
+	vec4 turf=texture(root_turf,mat2(vec2(.21,.064),vec2(-.064,.21))*p+shear);
+	vec4 loam=texture(compacted_loam,mat2(vec2(.257,-.043),vec2(.043,.257))*p-shear);
+	// Higher root crowns extend into the shoulder. The track fades into
+	// the actual old field or wet river edge instead of using a colour key.
+	float mineral=smoothstep(.09,.86,cover.r+(loam.a-turf.a)*.35);
+	vec3 surface=mix(turf.rgb,loam.rgb,mineral);
+	float wash=max(cover.g,shore);
+	if(wash>.018) {
+		vec4 silt=texture(bank_silt,p*vec2(.250,.225)+vec2(.28,-.17)+shear);
+		float margin=smoothstep(.05,.86,wash+(silt.a-turf.a)*.27);
+		surface=mix(surface,silt.rgb,margin);
+	}
+	float shoulder=1.0-smoothstep(.040,.130,abs(cover.a-.385+(loam.a-.52)*.038));
+	float worn=shoulder*smoothstep(.68,.93,cover.r)*(1.0-wash);
+	return surface*(.79+.30*cover.b-.185*worn);
 }
 
 void fragment() {
@@ -44,7 +53,7 @@ void fragment() {
 	if (part>0.5 && part<1.5) {
 		// This painting fixes the routes, old fields, headlands and canopy beds in
 		// world space. Fine surface marks disappear into mipmaps at army scale.
-		color=painted_ground(p);
+		color=painted_ground(p,0.0);
 	} else if (part>1.5 && part<2.5) {
 		float bank=abs(p.x+32.0);
 		float turn=sin(p.y*.42)*.42+sin(p.y*.15+1.1)*.30;
@@ -91,12 +100,9 @@ void fragment() {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;
 		} else if (part>12.5 && part<13.5) {
-			vec3 flecks=texture(fieldbed,p*.37).rgb;
 			float bank=abs(p.x+32.0);
-			float edge=smoothstep(4.28,6.28,bank+.33*sin(p.y*.39)+.54*(flecks.g-.52));
-			vec3 silt=mix(shallows.rgb*.88,vec3(.110,.148,.095),.42+flecks.g*.21);
-			silt*=.85+.22*flecks.r+.11*smoothstep(.61,.84,flecks.b);
-			color=mix(silt,painted_ground(p),edge);
+			float lip=bank+.28*sin(p.y*.39)+.14*sin(p.y*.87+.44);
+			color=painted_ground(p,1.0-smoothstep(4.38,6.58,lip));
 		} else if(part>15.5 && part<16.5) {
 			float grain=texture(joinery,vec2(local_pos.z*.31,(local_pos.x+local_pos.y)*.94)).r;
 			float z=abs(p.y);

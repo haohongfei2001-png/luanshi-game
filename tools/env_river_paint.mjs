@@ -59,7 +59,7 @@ function path_segments(roads){
     }return [best,width];};
 }
 function paintGround(plan){
-    const w=512,h=336,raw=new Uint8Array(w*h*3), road=path_segments(plan.roads);
+    const w=512,h=336,raw=new Uint8Array(w*h*3),cover=new Uint8Array(w*h*4),road=path_segments(plan.roads);
     const [left,near,right,far]=plan.bounds;
     const stems=plan.trees;
     for(let py=0;py<h;py++) for(let px=0;px<w;px++){
@@ -78,12 +78,15 @@ function paintGround(plan){
         c=mix(c,[97,110,73],moss);
         c=mix(c,[58,72,58],undercut);
         c=mix(c,[86,106,90],(1-smooth(3.5,5.0,edgeRiver))*.53);
+        let tilled=0,campEarth=0;
         for(const [cx,cz,rx,rz,a] of plan.fields){
             const co=Math.cos(a),si=Math.sin(a),dx=x-cx,dz=z-cz,u=(dx*co+dz*si)/rx,v=(-dx*si+dz*co)/rz;
             const e=Math.pow(Math.abs(u),4)+Math.pow(Math.abs(v),4);
             const inPlot=(1-smooth(0.69,1.19,e+0.18*(small-.5)));
             if(inPlot>0){
                 const furrow=(Math.sin(v*rz*3.14+0.32*small)+1)/2;
+                const fallow=1-smooth(.04,.66,Math.abs(v+.19*Math.sin(u*2.53)+.14*(small-.5)));
+                tilled=Math.max(tilled,inPlot*(.22+.27*furrow+.23*fallow+.16*small));
                 c=mix(c,mix([122,120,79],[153,149,101],0.20+0.45*furrow+0.23*broad),inPlot*.78);
             }
         }
@@ -128,6 +131,7 @@ function paintGround(plan){
             const canopy=Math.hypot((x+65.25)/2.81,(z+18.65)/1.88);
             c=mix(c,mix([122,113,90],[144,128,99],small), (1-smooth(.48,1.18,aisle+.26*(small-.5)))*.87);
             c=mix(c,[88,86,69],(1-smooth(.54,1.17,canopy))*.72);
+            campEarth=Math.max((1-smooth(.45,1.31,e))*.71,(1-smooth(.40,1.23,aisle))*.83,(1-smooth(.54,1.17,canopy))*.79);
             for(const [fx,fz] of [[-70.18,-20.62],[-82.43,19.18]]){
                 const hearth=Math.hypot((x-fx)/1.22,(z-fz)/1.03);
                 c=mix(c,[78,79,64],(1-smooth(.44,1.30,hearth))*.84);
@@ -136,8 +140,19 @@ function paintGround(plan){
         const tone=.97+.044*stroke+.027*(small-.44);
         const n=(py*w+px)*3;
         c.forEach((val,k)=>{raw[n+k]=Math.round(cap(val*tone,0,255));});
+        // R is exposed mineral soil, G wet sand, B large-scale value, A
+        // unsigned road distance. Wheel depressions use metres through the
+        // bend; currently growing stubble never receives road tracks.
+        const loose=.25*smooth(.53,.86,broad*.40+small*.60);
+        const earth=Math.max(packed*.92+shoulder*.07,tilled,loose,yard*.87,campEarth);
+        const wetSand=(1-smooth(4.85,8.92,edgeRiver))*(.78+.19*small)*(1-.88*packed);
+        const luminance=(c[0]*.28+c[1]*.55+c[2]*.17)*tone;
+        const large=cap(.49+(luminance-lerp(98,139,earth))/62+.13*(broad-.50));
+        const cartDistance=cap(d/(wide>2?3.25:1.66));
+        const m=(py*w+px)*4;
+        [earth,wetSand,large,cartDistance].forEach((v,k)=>cover[m+k]=Math.round(cap(v)*255));
     }
-    return png(raw,w,h,3);
+    return {paint:png(raw,w,h,3),cover:png(cover,w,h,4)};
 }
 function standLayout(plan) {
     const random=dice(7624), trees=[];
@@ -294,7 +309,9 @@ const dir=new URL("../assets/environment/",import.meta.url);
 const plan=JSON.parse(readFileSync(new URL("foothills.json",dir),"utf8"));
 plan.trees=standLayout(plan);
 writeFileSync(new URL("stand-placements.json",dir),"[\n"+plan.trees.map(t=>"  "+JSON.stringify(t)).join(",\n")+"\n]\n");
-writeFileSync(new URL("floodplain-paint.png",dir),paintGround(plan));
+const ground=paintGround(plan);
+writeFileSync(new URL("floodplain-paint.png",dir),ground.paint);
+writeFileSync(new URL("soil-cover.png",dir),ground.cover);
 writeFileSync(new URL("leaf-sprays.png",dir),paintLeafSprays());
 writeFileSync(new URL("trail-marks.png",dir),paintTrailMarks());
 
