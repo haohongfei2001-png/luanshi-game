@@ -1,3 +1,9 @@
+## Owner decision update — shared combat data and group morale (2026-11-12)
+
+Authority: `PRODUCT_DECISIONS.md §1O`; full design: [BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md §3.3](BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md); simulation contract §9G; BF-DATA-01..10 in `ACCEPTANCE_MATRIX.md §7F-H`.
+
+Ordinary soldiers of the same troop/equipment/training batch share one combat profile (attack, defense/armor, weapon stats, speed, max HP). Army-level data such as baseline morale, combat compulsion, prestige, discipline and mission are shared; Company/Detachment owns current morale/cohesion/fatigue/local pressure. **Do not store independent attack/defense/armor/morale for every ordinary soldier.** Individual IDs, position, action and necessary current HP/wound/death/capture/rout remain unique so casualties are real. Current source still randomizes and decrements per-Unit morale in `battle.gd`, and copies armor values per Unit; this is a **future migration target after visual P0**, not yet implemented. Preserve old-save compatibility and do not interrupt current RC3 visual work.
+
 ## Owner decision update — battle outcomes, morale and combat compulsion (2026-11-12)
 
 New locked product decision: `PRODUCT_DECISIONS.md §1N`. Full spec: [BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md](BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md); simulation contract §9F; acceptance BF-WILL-01..15 in `ACCEPTANCE_MATRIX.md §7F-G`.
