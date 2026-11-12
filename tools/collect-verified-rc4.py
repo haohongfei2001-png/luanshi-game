@@ -33,7 +33,8 @@ with zipfile.ZipFile(archive) as z:
     import plistlib
     plist=plistlib.loads(z.read(bundles[0]))
     assert plist["CFBundleVersion"]=="16004"
-    assert b"MakeHuman" in z.read("THIRD_PARTY_NOTICES.txt")
+    notices=z.read("THIRD_PARTY_NOTICES.txt")
+    assert all(k in notices for k in (b"MakeHuman",b"Sparse Grass",b"Brown Mud Dry",b"Sandy Gravel 02",b"polyhaven.com/license"))
 assert all(m["validated"] for m in mac["samples"]) and mac["focus_control"]["validated"]
 assert mac["shipping_window"]["validated"]
 journey=markers("field","journey.log","JOURNEY_PASS")[0]
@@ -87,6 +88,10 @@ for key in ("view_size","start_tick","end_tick","hero_hits","hero_received","her
     assert action_receipts["before"][key]==action_receipts["after"][key],(key,action_receipts)
 save(get("gameplay","river-gate-journey.mp4"),dest/"playthrough.mp4")
 save(get("gameplay","player-nine-weapons.mp4"),dest/"nine-weapons.mp4")
+save(get("gameplay","river-gate-full-siege.mp4"),dest/"siege.mp4")
+save(get("mac","shipping-metal.png"),dest/"macos-window.png")
+with Image.open(dest/"macos-window.png") as native_image:
+    assert list(native_image.size)==mac["shipping_window"]["png_ihdr_px"]
 film=read("field","journey-archive.json")
 assert digest(dest/"playthrough.mp4")==film["original_sha256"]
 for name in ("journey-01-muster.jpg","journey-05-breach.jpg","journey-06-report.jpg","journey-07-camp.jpg","soldier-portrait.jpg","journey-vehicle-horse.jpg","journey-vehicle-cart.jpg"):
@@ -136,11 +141,69 @@ willow_study["samples"]=json.loads("[{\"draw_frames\":[143.284,137.528,137.056,1
 (raw/"willow-cost.json").write_text(json.dumps(willow_study,ensure_ascii=False,indent=2)+"\n")
 metrics["willow_cost"]=willow_study
 metrics["garment_cost"]=garment_study
+soil_study=json.loads("{\"base\":\"3a0a0d3099409cb6b5e7128f32a31fde2b4ad4a1\",\"first\":\"0b782835a40e663f656b788b9d50374b1e9ae6e6\",\"first_run\":43278490993,\"device\":\"Linux llvmpipe, Godot 4.6.3 compatibility\",\"resolution\":[1280,800],\"scope\":\"Isolated terrain A/B in a live 512+512 simulation with the same character and camera state\",\"before\":[{\"draw_frames\":[146.281,149.134,146.713,146.59,176.447,158.48,148.501,145.642,146.94,154.34,151.097,151.832,156.572,160.61,162.491,158.271,152.216,157.534,153.815,155.603,156.293,159.566,167.971,158.93,174.727,159.217,178.097,168.754,183.874,167.078,168.527,164.984,159.456,160.463,166.411,161.655,160.786,161.618,162.58,160.819,163.627,162.317,162.167,162.134,167.021,163.47,171.74,165.566,165.089,164.954,165.186,165.199,169.532,161.158,162.822,161.865],\"hits\":[448,271],\"label\":\"contact\",\"ordinary\":[512,512],\"p50_ms\":161.655,\"p95_ms\":176.447,\"p99_ms\":183.874,\"tick\":129,\"window\":[1280,800]},{\"draw_frames\":[112.468,110.184,112.789,110.763,116.082,113.082,112.064,110.532,113.396,113.85,112.828,110.718,110.231,114.656,110.84,110.811,109.572,109.196,109.772,109.377,111.118,113.881,115.45,111.557,109.254,111.345,110.808,110.63,111.696,110.361,110.035,116.949,122.621,111.707,109.627,109.817,110.072,109.595,112.182,109.647,109.421,115.327,114.689,110.981,110.147,109.372,110.797,111.381,110.938,110.36,113.694,110.09,108.701,110.041,109.921,109.571],\"hits\":[655,458],\"label\":\"ford\",\"ordinary\":[512,512],\"p50_ms\":110.808,\"p95_ms\":116.082,\"p99_ms\":122.621,\"tick\":193,\"window\":[1280,800]}],\"first_result\":[{\"draw_frames\":[146.427,141.846,141.523,142.428,146.281,153.484,145.546,150.207,153.52,155.027,157.394,155.859,148.667,147.457,154.538,148.113,148.099,154.381,149.153,152.493,156.444,158.185,153.928,154.724,155.356,155.162,156.44,159.719,157.711,154.634,154.765,156.344,157.619,163.007,158.425,157.084,158.038,156.634,157.538,157.38,157.818,158.793,157.961,158.671,157.027,160.264,165.433,160.473,159.95,161.452,160.244,159.065,160.431,158.85,157.942,156.587],\"hits\":[448,271],\"label\":\"contact\",\"ordinary\":[512,512],\"p50_ms\":156.587,\"p95_ms\":161.452,\"p99_ms\":165.433,\"tick\":129,\"window\":[1280,800]},{\"draw_frames\":[106.278,105.268,107.547,105.954,107.442,111.426,105.686,104.7,105.694,105.703,104.278,104.212,105.25,103.493,105.315,125.624,105.878,104.885,107.641,105.322,109.098,104.119,105.415,104.203,104.625,108.126,104.455,106.63,106.205,106.202,103.437,104.504,104.605,105.549,107.698,103.88,102.35,103.361,103.881,103.065,102.793,102.726,104.641,103.29,106.123,103.289,102.29,103.132,102.69,102.52,106.463,101.775,101.279,102.583,106.355,104.046],\"hits\":[655,458],\"label\":\"ford\",\"ordinary\":[512,512],\"p50_ms\":104.7,\"p95_ms\":109.098,\"p99_ms\":125.624,\"tick\":193,\"window\":[1280,800]}],\"sources\":[\"https://polyhaven.com/a/sparse_grass\",\"https://polyhaven.com/a/brown_mud_dry\",\"https://polyhaven.com/a/sandy_gravel_02\"],\"source_license\":\"https://polyhaven.com/license\",\"three_version_run\":43279682115,\"selected\":\"7cabd7bdd191ccbc0e23ca7cc54b400ef1a4bd16\",\"surface_readback\":[\"RIVER_ART_PASS ticks=193 seed=61112\",\"RIVER_ART_PASS ticks=193 seed=61112\",\"GROUND_FLATNESS hero 0.0202 0.0165\",\"GROUND_FLATNESS saddle 0.015 0.013\",\"GROUND_FLATNESS cart 0.0065 0.0023\",\"GROUND_FLATNESS ford 0.0065 0.0053\",\"GROUND_FLATNESS camp 0.0078 0.0033\",\"GROUND_FLATNESS officer 0.0063 0.004\",\"GROUND_FLATNESS bowline 0.0187 0.0112\",\"GROUND_FLATNESS ranks 0.0072 0.0038\",\"GROUND_FLATNESS contact 0.0045 0.0012\",\"GROUND_FLATNESS formation 0.0077 0.004\",\"WILLOW_TIMES contact [162.36, 171.38, 184.14] [159.74, 165.22, 166.97]\",\"WILLOW_TIMES ford [111.02, 118.17, 124.74] [107.25, 110.02, 111.5]\"],\"before_final_pair\":[{\"draw_frames\":[145.448,156.235,149.804,159.034,165.596,149.799,162.299,160.174,161.756,151.373,155.014,152.92,150.114,151.516,161.423,163.441,163.203,163.195,155.164,154.317,162.661,160.064,163.554,157.235,158.599,163.094,184.139,168.968,173.461,168.474,171.382,160.884,165.522,162.723,166.266,160.942,161.014,162.152,164.146,166.642,166.17,162.209,161.816,166.112,160.678,165.557,166.853,164.446,165.618,164.024,164.763,167.585,166.189,162.364,162.342,161.845],\"hits\":[448,271],\"label\":\"contact\",\"ordinary\":[512,512],\"p50_ms\":162.364,\"p95_ms\":171.382,\"p99_ms\":184.139,\"tick\":129,\"window\":[1280,800]},{\"draw_frames\":[110.786,110.781,118.574,114.085,111.018,114.123,113.444,113.075,111.494,118.173,124.738,114.9,111.547,111.695,111.112,110.981,111.813,110.034,110.755,110.655,112.517,111.568,114.527,116.338,114.962,114.291,110.797,110.615,110.667,112.63,113.588,110.658,110.775,112.023,110.426,112.795,109.269,110.082,109.9,114.24,109.837,112.691,112.268,110.793,109.985,109.821,110.332,109.765,113.089,110.049,109.039,109.407,110.942,110.227,110.373,108.548],\"hits\":[655,458],\"label\":\"ford\",\"ordinary\":[512,512],\"p50_ms\":111.018,\"p95_ms\":118.173,\"p99_ms\":124.738,\"tick\":193,\"window\":[1280,800]}],\"final_pair\":[{\"draw_frames\":[145.142,147.949,155.368,145.068,157.327,150.451,148.263,145.85,148.774,149.599,160.349,151.841,157.689,151.375,150.786,150.422,151.529,151.393,153.706,158.221,155.275,155.521,156.389,156.907,157.26,159.956,159.884,157.957,158.964,158.283,158.324,161.801,161.572,162.135,159.736,160.552,161.969,161.866,163.436,161.562,160.773,160.528,162.836,163.375,164.728,163.142,165.07,165.033,163.333,165.923,166.968,165.215,162.356,162.16,160.158,160.002],\"hits\":[448,271],\"label\":\"contact\",\"ordinary\":[512,512],\"p50_ms\":159.736,\"p95_ms\":165.215,\"p99_ms\":166.968,\"tick\":129,\"window\":[1280,800]},{\"draw_frames\":[107.615,109.544,111.503,107.904,108.188,109.583,109.225,108.683,110.37,108.411,106.998,109.405,107.535,110.018,108.007,106.634,106.64,107.249,105.627,107.108,110.018,109.197,107.854,106.949,107.153,109.179,106.412,105.379,107.946,108.967,108.187,105.754,107.5,104.992,105.573,106.87,103.874,105.24,106.647,108.721,106.704,107.067,108.079,106.172,107.589,106.125,106.904,105.625,104.306,109.754,104.954,104.752,106.364,107.136,108.44,104.835],\"hits\":[655,458],\"label\":\"ford\",\"ordinary\":[512,512],\"p50_ms\":107.249,\"p95_ms\":110.018,\"p99_ms\":111.503,\"tick\":193,\"window\":[1280,800]}],\"timing_scope\":\"Timings compare the willow-only and selected soil revisions. Screenshots also include the intervening soil variant.\"}")
+(raw/"soil-materials.json").write_text(json.dumps(soil_study,ensure_ascii=False,indent=2)+"\n")
+metrics["soil_material_ab"]=soil_study
+metrics["archive_run"]=int(os.environ["GITHUB_RUN_ID"])
+metrics["archive_source"]=os.environ["GITHUB_SHA"]
+metrics["integration_event"]=os.environ["VERIFIED_EVENT"]
+metrics["tested_review_head"]=os.environ["REVIEW_CODE_HEAD"]
+metrics["tested_review_run"]=int(os.environ["REVIEW_CI"])
+
+soil_credits=json.loads("[{\"game_file\":\"root-turf.png\",\"author\":\"Amal Kumar\",\"asset_page\":\"https://polyhaven.com/a/sparse_grass\",\"license\":\"CC0 1.0 Universal\",\"license_source\":\"https://polyhaven.com/license\",\"original\":\"https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sparse_grass/sparse_grass_diff_1k.jpg\",\"source_sha256\":\"ae94f2b34597b9108eefd88217f55eccaec6d6b382e858a478ee92df90e66617\",\"game_png_sha256\":\"8be6b3cfb046ed966d56700833429b470da2f3ced935d9b7ed69990c3a42c62b\"},{\"game_file\":\"compacted-loam.png\",\"author\":\"Rob Tuytel\",\"asset_page\":\"https://polyhaven.com/a/brown_mud_dry\",\"license\":\"CC0 1.0 Universal\",\"license_source\":\"https://polyhaven.com/license\",\"original\":\"https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud_dry/brown_mud_dry_diff_1k.jpg\",\"source_sha256\":\"a56281b644de614787340f3db45e28d2f72ec32fc19a442f99002bae0ab11398\",\"game_png_sha256\":\"c3a737c4adde0bd68ef72f7f7ca77f23af157f3f30e57611c9566da550577d4a\"},{\"game_file\":\"bank-silt.png\",\"author\":\"Dario Barresi\",\"asset_page\":\"https://polyhaven.com/a/sandy_gravel_02\",\"license\":\"CC0 1.0 Universal\",\"license_source\":\"https://polyhaven.com/license\",\"original\":\"https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sandy_gravel_02/sandy_gravel_02_diff_1k.jpg\",\"source_sha256\":\"c9d143db07db9a6be2eba285fae961d868520422ee5fa4d38d55da24f9968d51\",\"game_png_sha256\":\"29ef60ed2054641a0915536d42ccd136ddc75318a9a7bba03a4faa9901705633\"}]")
+for credit in soil_credits:
+    source_png=P(os.environ["GITHUB_WORKSPACE"])/"tested"/"assets"/"environment"/credit["game_file"]
+    assert digest(source_png)==credit["game_png_sha256"], credit["game_file"]
+(raw/"soil-sources.json").write_text(json.dumps(soil_credits,ensure_ascii=False,indent=2)+"\n")
+
 def word_link(title, path):
     return "["+title+"]("+path+")"
 def millisecond(x):
     return f"{x:.2f}"
+def frame_budget(values):
+    assert values and all(v>0 for v in values)
+    return dict(frames=len(values),over_16_67_ms=sum(v>16.67 for v in values),
+                over_33_33_ms=sum(v>33.33 for v in values),maximum_ms=max(values))
+
 native=mac["shipping_window"]
+native_walls=read("mac","shipping-metal-frames.json")["raw_wall_ms"]
+assert len(native_walls)==native["frames"]
+budget={"hosted_macos":frame_budget(native_walls),
+        "linux_software":{str(n):frame_budget(read("field","field-frame-times-"+str(n)+".json")["sorted_frame_ms"]) for n in (20,100,250,512)}}
+metrics["wall_frame_budget"]=budget
+def after_camera_commands(values, four_second_windows):
+    # All commands are issued after post_draw. The next frame begins at this index.
+    import math
+    boundaries = []
+    end_ms = 0
+    for index, duration in enumerate(values):
+        end_ms += duration
+        if end_ms >= 1250:
+            boundaries.append(index + 1)
+            break
+    frames_drawn = 0
+    for interval in four_second_windows:
+        frames_drawn += interval["frames"]
+        if frames_drawn < len(values):
+            boundaries.append(frames_drawn)
+    following, other = [], []
+    elapsed_ms = 0
+    last_pan_ms = None
+    for index, duration in enumerate(values):
+        if index in boundaries:
+            last_pan_ms = elapsed_ms
+        selected = last_pan_ms is not None and elapsed_ms-last_pan_ms < 500
+        (following if selected else other).append(duration)
+        elapsed_ms += duration
+    def describe(sample):
+        ordered = sorted(sample)
+        return dict(samples=len(sample),p50_ms=ordered[math.ceil(len(sample)*.50)-1],
+                    p95_ms=ordered[math.ceil(len(sample)*.95)-1],p99_ms=ordered[math.ceil(len(sample)*.99)-1],
+                    maximum_ms=ordered[-1])
+    return dict(command_after_frame_counts=boundaries,post_command_500ms=describe(following),other=describe(other))
+
+budget["hosted_macos"]["camera_tour"]=after_camera_commands(native_walls,native["four_second_windows"])
+(raw/"frame-budget.json").write_text(json.dumps(budget,indent=2)+"\n")
 package_artifact=next(v["url"] for k,v in artifact_rows.items() if k.startswith("Luanshi-macOS-"))
 reference="https://github.com/"+repo+"/commit/799e1e41a098bf534b63f699ea6f683e4707306f"
 center=action_receipts["after"]
@@ -151,7 +214,7 @@ doc=[
     "",
     "**美术状态为 ART_REVIEW_REQUIRED。** RC3 的人物美术已由 Owner 退回。这份候选把人物、动作、马匹和地形接入原战役。玩家的参考是《英雄联盟》实战镜头里清楚的轮廓、承重和挥击节奏。河关的兵器、衣甲、地图和声音均沿用本作设定。",
     "",
-    "[34 秒连续实战](battlefield-motion.mp4) · [同输入脚步对照](footwork-pair.mp4) · [从布阵到行军](playthrough.mp4) · [九种武器](nine-weapons.mp4) · "+word_link("macOS 候选包",package_artifact),
+    "[34 秒连续实战](battlefield-motion.mp4) · [同输入脚步对照](footwork-pair.mp4) · [从布阵到行军](playthrough.mp4) · [完整攻城实录](siege.mp4) · [macOS 候选包实际窗口](macos-window.png) · [九种武器](nine-weapons.mp4) · "+word_link("macOS 候选包",package_artifact),
     "",
     "![真实战斗片段](contact-loop.webp)",
     "",
@@ -178,13 +241,19 @@ doc += [
     "",
     "表中 macOS 为峰值 RSS，Linux 为各场景采样时的 RSS。不同宿主的结果分开读。真实 MacBook Air M5 为 **NOT_RUN**。实测采样含阵线接触、镜头平移、攻城、骑兵与投射物。软件绘制和虚拟显示器不代表玩家设备。["+ "逐帧时间、画质与设备" +"](measurements.json)",
     "",
+    "本次 Mac 巡场共 %d 帧，其中 %d 帧超过 16.67 毫秒，%d 帧超过 33.33 毫秒，最慢 %.2f 毫秒。Linux 的 512 对 512 采样了 %d 个渲染帧。 [超过预算的帧数](raw/frame-budget.json)"%(len(native_walls),budget["hosted_macos"]["over_16_67_ms"],budget["hosted_macos"]["over_33_33_ms"],budget["hosted_macos"]["maximum_ms"],budget["linux_software"]["512"]["frames"]),
+    "",
+    "把默认镜头巡场中每次平移命令后 500 毫秒与其余帧分开，前者 %d 帧、P95 %.2f 毫秒，其余 %d 帧、P95 %.2f 毫秒。按实际提交命令的帧号分组，同一时段还包含士兵移动与战斗更新。 [原始分组与 P99](raw/frame-budget.json)"%(budget["hosted_macos"]["camera_tour"]["post_command_500ms"]["samples"],budget["hosted_macos"]["camera_tour"]["post_command_500ms"]["p95_ms"],budget["hosted_macos"]["camera_tour"]["other"]["samples"],budget["hosted_macos"]["camera_tour"]["other"]["p95_ms"]),
+    "",
     "托管 Mac 正式游玩摄像巡场中，模拟与战场显示脚本平均每个渲染帧分别占 %.2f 与 %.2f 毫秒。渲染线程 CPU P95 为 %.2f 毫秒。%sLinux 千人窗口的每个模拟步平均 %.2f 毫秒，软件绘制计时的 P95 为 %.2f 毫秒。 [原生逐帧样本](raw/shipping-metal-frames.json) · [四档同宿主窗口](measurements.json)"%(native["sim_cpu_ms_per_frame"],native["view_script_ms_per_frame"],native["render_cpu_p95_ms"],("原生 GPU P95 为 %.2f 毫秒。"%native["render_gpu_p95_ms"] if native.get("render_gpu_p95_ms") is not None else "该次驱动没有交回非零 GPU 时间戳，原生 GPU 毫秒数保留为空。"),frames[-1]["sim_ms_per_tick"],frames[-1]["render_gpu_p95_ms"]),
     "",
-    "八次独立进程均以空游戏数据启动，覆盖兼容后端、Metal、焦点控制与默认窗口。系统图形驱动和 WindowServer 缓存按实际宿主状态保留。兼容后端第一次首帧 %.2f 秒，第二次 %.2f 秒。每次记录首帧、前台、部署、首次模拟和命中。 [原始时序和启动日志](raw/renderer-comparison.json)"%(mac["samples"][0]["launch_milestones_ms"]["first_post_draw"]/1000,mac["samples"][-1]["launch_milestones_ms"]["first_post_draw"]/1000),
+    "八次独立进程均以空游戏数据启动，覆盖兼容后端、Metal、焦点控制与默认窗口。系统图形驱动和 WindowServer 缓存按实际宿主状态保留。兼容后端第一次首帧 %.2f 秒，第二次 %.2f 秒。默认 Metal 首次 %.2f 秒，再开 %.2f 秒。每次记录首帧、前台、部署、首次模拟和命中。 [原始时序和启动日志](raw/renderer-comparison.json)"%(mac["samples"][0]["launch_milestones_ms"]["first_post_draw"]/1000,mac["samples"][-1]["launch_milestones_ms"]["first_post_draw"]/1000,next(s for s in mac["samples"] if s["label"]=="default-metal-1")["launch_milestones_ms"]["first_post_draw"]/1000,next(s for s in mac["samples"] if s["label"]=="default-metal-2")["launch_milestones_ms"]["first_post_draw"]/1000),
     "",
     "RC2 曾在首次兼容后端启动时停在模拟第 0 步。这次每个窗口均记录到实际命中。首开仍可能显著慢于再次打开，系统图形缓存及宿主差异仍待调查。 [RC2 失败现场](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697/job/130986662440) · [本版启动时序](raw/renderer-comparison.json)",
     "",
     "独立改动也保留了相同 GPU 与机位的对照。柳岸实装后的渡口软件绘制 P95 从 137.53 增至 157.37 毫秒。贴图与头部轮廓更新后，野战近身镜头的软件绘制 P95 从 155.46 增至 175.72 毫秒。完整包取样和单项实验分别记录。 [河岸对照](raw/willow-cost.json) · [角色对照](raw/garment-cost.json)",
+    "",
+    "常用镜头的浅色地面已换成沿车道、旧田和河岸混合的草根、压实土与湿砂。远镜头降低碎亮点和连续双车辙的对比度。在完全相同的十个机位，地表实验没有增加绘制批次或三角形。千人接阵的 56 帧软件绘制 P95 为 171.38 → 165.22 毫秒，渡口为 118.17 → 110.02 毫秒。 [逐帧样本](raw/soil-materials.json) · [四个机位的三版原图](https://github.com/haohongfei2001-png/luanshi-game/tree/71d1f296e417a715da72bb8bb7176c56b84ba798/artifacts/soil-material-review) · [来源与校验值](raw/soil-sources.json) · [材料授权](https://polyhaven.com/license)",
     "",
     "正常缩放下队伍装备与远景脸型仍有重复。密集门口前排偶尔会遮住主角持械手。柳冠体块与路面材质还有细化空间。是否达到美术方向以实际游玩画面为准。 [门洞](gate.jpg) · [接敌](contact.jpg) · [正常机位下的行列](formation-pair.jpg)",
     "",
@@ -195,9 +264,11 @@ doc += [
     "",
     "## 源码、素材与复现",
     "",
-    "- 候选源码 "+word_link(sha,url+"/commit/"+sha)+"，CI 实际导出的合并树提交 "+word_link(compiled,url+"/commit/"+compiled)+"。"+word_link("游戏 PR #34",url+"/pull/34")+" · "+word_link("CI 与产物",url+"/actions/runs/"+run)+" · "+word_link("RC3 可回退源码",reference),
+    "- 候选源码 "+word_link(sha,url+"/commit/"+sha)+"，CI 实际打包提交 "+word_link(compiled,url+"/commit/"+compiled)+"。"+word_link("游戏 PR #34",url+"/pull/34")+" · "+word_link("CI 与产物",url+"/actions/runs/"+run)+" · "+word_link("RC3 可回退源码",reference),
+    "- 游戏 PR 源码 "+word_link(os.environ["REVIEW_CODE_HEAD"],url+"/commit/"+os.environ["REVIEW_CODE_HEAD"])+" 已完成 "+word_link("独立的 PR 构建与回归",url+"/actions/runs/"+os.environ["REVIEW_CI"])+"。",
     "- macOS ZIP 内含可运行的 .app、中文指南及第三方许可。SHA-256 为 `"+apphash+"`。这个散列校验解开 Actions 外层归档后的 Luanshi-macOS.zip。通用 .app 采用临时签名，尚未进行 Apple 公证。",
-    "- 脸部基础网格与形态来自 MakeHuman 的 CC0 数据。衣料和三张虚构面孔采用本项目生成并按衣片、五官对齐的贴图，马具、器械、动作与场景由本项目制作。资产与再分发记录见 "+word_link("人物与动作",url+"/blob/"+sha+"/assets/river_gate/figures/SOURCE.md")+"、"+word_link("马匹",url+"/blob/"+sha+"/assets/art/mounts/README.md")+"、"+word_link("环境",url+"/blob/"+sha+"/assets/environment/README.md")+"。",
+    "- 脸部基础网格与形态来自 MakeHuman 的 CC0 数据。衣料和三张虚构面孔采用本项目生成并按衣片、五官对齐的贴图，马具、器械、动作与场景构图由本项目制作。草地与泥沙使用经调色和高度处理的 Poly Haven CC0 扫描，包内列有三位作者及来源。资产与再分发记录见 "+word_link("人物与动作",url+"/blob/"+sha+"/assets/river_gate/figures/SOURCE.md")+"、"+word_link("马匹",url+"/blob/"+sha+"/assets/art/mounts/README.md")+"、"+word_link("环境",url+"/blob/"+sha+"/assets/environment/README.md")+"。",
+    "- 原始图像来自正式引擎窗口，归档时逐项校验录像、包、素材来源散列及原始 RC3 存档。 "+word_link("归档执行",url+"/actions/runs/"+os.environ["GITHUB_RUN_ID"])+" · "+word_link("可复现的核验程序",url+"/blob/"+os.environ["GITHUB_SHA"]+"/tools/collect-verified-rc4.py"),
     "- 在有 Godot 4.6.3、Xvfb、FFmpeg 和 Python/Pillow 的云端环境签出候选源码，运行 `./tools/compare-river-art.sh` 复拍十四组镜头与正常速度实战。性能与输入流程可重跑 `./tools/test-field-journey.sh` 和 `./tools/test-field-render.sh`。原生启动复验使用 CI macos-runtime 作业。",
 ]
 (dest/"PLAYTEST.md").write_text("\n".join(doc)+"\n")

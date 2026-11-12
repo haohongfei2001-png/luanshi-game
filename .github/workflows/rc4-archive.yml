@@ -10,9 +10,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
-      VERIFIED_SHA: 'd2f0180c0865b3746bef11e43a2239659188fa6f'
-      BUILD_SHA: 'f8129247cffe207f6fa0575e0cab3851662e5b96'
-      VERIFIED_RUN: '43275529020'
+      VERIFIED_SHA: '22d5c85abf18296c0d299075f68e287102b004e7'
+      BUILD_SHA: 'c0c66ed43bf0bad4c86429d812466e8880d09512'
+      VERIFIED_RUN: '43280282660'
+      VERIFIED_EVENT: 'pull_request'
+      REVIEW_CODE_HEAD: '22d5c85abf18296c0d299075f68e287102b004e7'
+      REVIEW_CI: '43280282660'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +26,7 @@ jobs:
           path: game
       - uses: actions/checkout@v4
         with:
-          ref: f8129247cffe207f6fa0575e0cab3851662e5b96
+          ref: c0c66ed43bf0bad4c86429d812466e8880d09512
           path: tested
       - name: Download the package, films and raw logs of the exact PR build
         working-directory: game
@@ -33,7 +36,7 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/receipts"
           state=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN" --jq '[.head_sha,.event,.conclusion]|join(" ")')
-          test "$state" = "$VERIFIED_SHA pull_request success"
+          test "$state" = "$VERIFIED_SHA $VERIFIED_EVENT success"
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN/artifacts?per_page=100" > "$RUNNER_TEMP/receipts/artifacts.json"
           download() { gh run download "$VERIFIED_RUN" -R "$GITHUB_REPOSITORY" -n "$1-$BUILD_SHA" -D "$RUNNER_TEMP/receipts/$2"; }
           download verification engineering
