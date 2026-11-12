@@ -22,7 +22,7 @@ jobs:
               m=re.search(pattern,s,re.I)
               if m: print('SOURCE_LICENSE',re.sub('<[^>]+>',' ',s[max(0,m.start()-125):m.end()+185]))
           PY
-          curl -fsSL --max-time 20 'https://api.polyhaven.com/assets?t=textures' -o /tmp/terrain-catalog.json
+          curl -fsSL -A 'LuanshiGame-MaterialAuthoring (https://github.com/haohongfei2001-png/luanshi-game)' --max-time 20 'https://api.polyhaven.com/assets?t=textures' -o /tmp/terrain-catalog.json
           python3 - <<'PY'
           import json,re,urllib.request,concurrent.futures,base64,io
           from PIL import Image
@@ -30,19 +30,20 @@ jobs:
           ids=[k for k in catalog if re.search('grass|forest_floor|muddy|rocky_trail|sandy|brown_mud|dirt_floor',k)]
           for stem in ['grass','forest_floor','brown_mud','rocky_trail','sandy','muddy','dirt_floor']:
               print('SOURCE_IDS',stem,[k for k in ids if stem in k][:36])
-          preferred=['grass_1','grass_2','grass_3','grass_4','aerial_grass_rock','forrest_ground_01','forest_floor','forest_floor_01','brown_mud','brown_mud_02','brown_mud_03','rocky_trail_02','brown_mud_leaves_01','sandy_gravel','brown_muddy_ground','brown_planks_03']
-          chosen=list(dict.fromkeys(k for k in preferred if k in catalog))
-          for stem,count in [('grass',3),('forest_floor',2),('rocky_trail',2),('sandy',2)]:
-              chosen+=list(k for k in ids if stem in k and k not in chosen)[:count]
+          chosen=['grass_ground','leafy_grass','sparse_grass','withered_grass','dirt_floor','brown_mud_dry','rocky_trail','sandy_gravel','sandy_gravel_02']
+          def public(path):
+              req=urllib.request.Request(path,headers={'User-Agent':'LuanshiGame-MaterialAuthoring (https://github.com/haohongfei2001-png/luanshi-game)'})
+              try: return urllib.request.urlopen(req,timeout=18).read()
+              except urllib.error.HTTPError as exc: raise ValueError((path,exc.status,exc.read(160)))
           def fetch(k):
               try:
-                  f=json.load(urllib.request.urlopen('https://api.polyhaven.com/files/'+k,timeout=15))
+                  f=json.loads(public('https://api.polyhaven.com/files/'+k))
                   channel=f.get('Diffuse') or f.get('diff') or f.get('col') or f.get('albedo') or {}
                   if not channel:return k,list(f),None
                   variants=channel.get('1k') or channel.get('2k') or {}
                   imagefile=variants.get('jpg') or variants.get('png')
                   if not imagefile:return k,list(variants),None
-                  body=urllib.request.urlopen(imagefile['url'],timeout=15).read()
+                  body=public(imagefile['url'])
                   pic=Image.open(io.BytesIO(body)).convert('RGB');pic.thumbnail((124,124))
                   return k,[imagefile,catalog[k].get('authors'),catalog[k].get('tags')],pic
               except Exception as e:return k,str(e),None
