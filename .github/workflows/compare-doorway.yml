@@ -1,0 +1,36 @@
+name: Compare the existing river gate approach on one runner
+on:
+  push:
+    branches: [codex/river-gate-doorway-comparison]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  doorway:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+      - name: Install the repository-pinned Godot 4.6.3 editor
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/river-editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/river-editor.zip' | sha512sum -c -
+          unzip -q /tmp/river-editor.zip -d /tmp/river-editor
+          sudo install /tmp/river-editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path .
+      - name: Compare actual doorway entries, movement and outcomes at 512v512
+        run: |
+          set -euo pipefail
+          src=scripts/field/formation_traffic.gd
+          cp "$src" /tmp/candidate-traffic.gd
+          git show HEAD^:"$src" > "$src"
+          for trial in baseline candidate; do
+            if [ "$trial" = candidate ]; then cp /tmp/candidate-traffic.gd "$src"; fi
+            godot --headless --path . --script tests/doorway_comparison.gd 2>&1 | tee "/tmp/doorway-$trial.log"
+            grep -q "^GATE_FILE_TRIAL " "/tmp/doorway-$trial.log"
+            if grep -Eq "SCRIPT ERROR|Parse Error|ERROR:" "/tmp/doorway-$trial.log"; then exit 1; fi
+          done

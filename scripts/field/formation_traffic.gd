@@ -79,6 +79,11 @@ static func waypoint(p: Vector2, goal: Vector2, file_z: float, id: int, gate_ope
 				# The parked chassis occupies the centre file up to the opening.
 				# Keep both shoulders open from approach through the far doorpost.
 				lane = _side(lane, id) * (1.64 + minf(1.30, absf(lane) * 0.47))
+			# A fighter already between the jambs can advance in the nearest free file.
+			# Returning to its pre-breach rank here would turn it into the next rank.
+			if from_gate > -3.6 and absf(p.y) < Ground.GATE_HALF - 0.52:
+				if not ram_at_gate or (p.y * lane > 0.0 and absf(p.y) > HULL.y + 0.40):
+					return Vector2(Ground.WALL_X + direction * 2.30, lerpf(p.y, lane, 0.25))
 			return _passage(p, Ground.WALL_X, lane, 1.45, direction)
 	return Ground.waypoint(p, goal)
 
