@@ -276,7 +276,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			material.set_shader_parameter("travelling_leg_phase",step_phase)
 		_put(contact,ground+Vector3.UP*.026,angle,Color(0,0,0,0))
 		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
-		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0,caster)
+		# Keep footwear on the ground. Modest stable stature variation travels through all three LODs.
+		var stature:=1.07 if u.hero or u.officer else (1.0 if u.mounted else .966+.0085*((u.id*7+u.squad*5)%9))
+		_put(groups[key],base,angle,data,stature,caster)
 		if not u.hero and not u.officer:
 			visible_soldiers += 1
 			if u.state in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD,Battle.State.STAGGER]:

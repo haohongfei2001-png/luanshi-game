@@ -81,6 +81,8 @@ func _run() -> void:
 	if "--field-line-film" in OS.get_cmdline_user_args():
 		await _line_film(shell)
 		return
+	# Equal starting lens for the two input replays, regardless of the new-game default.
+	field.camera.size=26.0
 	await _click(field.hud.go)
 	var b:=field.battle
 	_check(b.started and b.ordinary_counts==PackedInt32Array([512,512]),"Expected a deployed full river battle")

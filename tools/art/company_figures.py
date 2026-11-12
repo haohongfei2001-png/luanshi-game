@@ -58,8 +58,6 @@ def coat(s,look):
                 material="lamellar"
             elif look=="archer" and 3<=r<=7:
                 material="quilt"
-            elif look=="levy" and r>=7:
-                material="headcloth"
             elif r<=1 and (c>=3*n//4 or c<n//8):
                 material="overskirt"
             s.quad(body_vertex(c,r,material),body_vertex(c+1,r,material),
@@ -68,8 +66,8 @@ def coat(s,look):
         left,right=center-span,center+span
         rim=([(c,lo) for c in range(left,right)]+[(right,r) for r in range(lo,hi)]
              +[(c,hi) for c in range(right,left,-1)]+[(left,r) for r in range(hi,lo,-1)])
-        previous=[body_vertex(c,r,"lamellar" if heavy else "dyed") for c,r in rim]
-        # Rotate each edge's section from the body side to the drooping sleeve.
+        # Both sides of an armhole use the garment's exact bind positions and skin weights.
+        rows=[[(point(c,r),cloth(point(c,r))) for c,r in rim]]
         circle=[]
         for c,r in rim:
             x,y,z=point(c,r)
@@ -84,22 +82,28 @@ def coat(s,look):
         if not close: sleeve=[sleeve[i] for i in (0,2,3,5)]
         for j,(cx,y,rx,rz,cz) in enumerate(sleeve):
             ring=[]
-            for i,(out,front) in enumerate(circle):
+            for out,front in circle:
                 bulge=.004*cos(atan2(front,out)*3+j*.74)
                 p=(side*(cx+(rx+bulge)*out),y-.009*front,(rz+bulge)*front+cz)
                 weight=(upper,CHEST,.76) if j==0 else (upper,fore,clamp((y-1.105)/.109))
-                mat="headcloth" if j==len(sleeve)-1 else ("lamellar" if heavy and j<=1 else "dyed")
-                ring.append(s.vertex(p,uv(mat,i/len(circle),j/(len(sleeve)-1)),weight))
-            for i in range(len(rim)):
-                k=(i+1)%len(rim)
-                s.quad(previous[i],previous[k],ring[k],ring[i])
-            previous=ring
+                ring.append((p,weight))
+            rows.append(ring)
+        # A trim boundary duplicates UVs only. A triangle joining two atlas tiles
+        # would pick up iron or skin halfway across the sleeve when the arm turns.
+        edge=len(rows)-1
+        panels=[(0,2,"lamellar"),(2,edge-1,"dyed")] if heavy else [(0,edge-1,"dyed")]
+        panels.append((edge-1,edge,"headcloth"))
+        for first,last,material in panels:
+            def sleeve_point(u,v):
+                row=first+round(v*(last-first))
+                return rows[row][round(u*len(rim))%len(rim)]
+            s.grid(len(rim),last-first,sleeve_point,material)
     # Broad, tapered cross collar follows the chest's contour to the side fastening.
     for side in (-1,1):
         path=[(side*.062,1.458,.048),(side*.103,1.403,.088),(side*.093,1.358,.123),
               (side*.041,1.302,.151),(-side*.025,1.241,.156)]
         if side==-1: path.extend([(.110,1.168,.128),(.155,1.104,.086)])
-        s.ribbon(path,.042 if close else .048,"headcloth",CHEST)
+        s.ribbon(path,.029 if look=="levy" else .038,"headcloth",CHEST)
     def body_at(a,y,offset=.010):
         # Sample the garment itself so a strap cannot cross through a rotating back.
         j=next((i for i in range(len(hem)-1) if hem[i][0]<=y<hem[i+1][0]),len(hem)-2)
