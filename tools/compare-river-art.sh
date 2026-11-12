@@ -37,7 +37,7 @@ root=pathlib.Path(sys.argv[1])
 left,right=[json.loads((root/s/"frames.json").read_text()) for s in ("before","after")]
 assert len(left)==len(right)>=10
 for old,new in zip(left,right):
-    for key in ("label","tick","center","yaw","zoom","seed","ordinary","officers","contact","losses","gate_hp","visible","window","internal_scale","shadows"):
+    for key in ("label","tick","center","yaw","zoom","seed","ordinary","officers","contact","losses","gate_hp","in_frame_count","in_frame_ids_sha256","window","internal_scale","shadows"):
         assert old[key]==new[key], (key,old,new)
     assert new["shadows"] and new["internal_scale"]==1
     name=new["label"]

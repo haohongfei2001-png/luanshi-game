@@ -60,6 +60,19 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 		"visible":field.view.visible_soldiers,"fighting":field.view.visible_fighting,"close":field.view.high_detail_soldiers,
 		"ranks":field.view.rank_soldiers,"window":[pic.get_width(),pic.get_height()],
 		"internal_scale":root.scaling_3d_scale,"shadows":field.map.sun.shadow_enabled}
+	# Compare physically on-screen identities between versions. The old rotated
+	# world AABB also submitted many soldiers wholly outside the camera corners.
+	var on_screen:=PackedInt32Array()
+	var canvas:=root.get_visible_rect()
+	for u in b.roster:
+		if u.hero or u.officer or u.state==Battle.State.ESCAPED: continue
+		var foot:=Ground.unit_point(u.before.lerp(u.pos,clampf(field.carry/Battle.DT,0,1)))
+		if u.mounted: foot.y+=.8
+		var projected:=field.camera.unproject_position(foot+Vector3.UP*.9)
+		if canvas.has_point(projected): on_screen.append(u.id)
+	item["in_frame_count"]=on_screen.size()
+	item["in_frame_ids_sha256"]=Marshalls.raw_to_base64(on_screen.to_byte_array()).sha256_text()
+	success=success and field.view.visible_soldiers>=on_screen.size()
 	shots.append(item)
 	print("RIVER_ART_FRAME "+JSON.stringify(item))
 

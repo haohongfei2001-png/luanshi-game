@@ -192,13 +192,30 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	for g in standards:
 		g.used = 0
 	# Orthographic zoom determines how much of the army actually occupies face-scale pixels.
+	var cam:=get_viewport().get_camera_3d()
+	var right:=Vector2.RIGHT
+	var vertical_xz:=Vector2.ZERO
+	var vertical_y:=0.0
+	var window:=get_viewport().get_visible_rect().size
+	var vertical_limit:=zoom*.5+4.2
+	var horizontal_limit:=zoom*.5*window.x/maxf(1.0,window.y)+4.2
+	var center_height:=Ground.unit_point(center).y
+	if cam:
+		right=Vector2(cam.global_basis.x.x,cam.global_basis.x.z)
+		vertical_xz=Vector2(cam.global_basis.y.x,cam.global_basis.y.z)
+		vertical_y=cam.global_basis.y.y
 	var portrait_radius:=lerpf(9.5,5.2,smoothstep(7.2,16.8,zoom))
 	var portrait_radius_sq:=portrait_radius*portrait_radius
 	for u in battle.roster:
 		if u.state == Battle.State.ESCAPED: continue
 		var p := u.before.lerp(u.pos,alpha)
 		if absf(p.x-center.x)>half_extent.x or absf(p.y-center.y)>half_extent.y: continue
+		var offset:=p-center
+		if cam and absf(offset.dot(right))>horizontal_limit: continue
 		var ground := Ground.unit_point(p)
+		# Test the oriented window in camera space. Keep enough padding for the
+		# longest blade, a raised banner, a mounted head and their projected shadows.
+		if cam and absf(offset.dot(vertical_xz)+(ground.y-center_height+1.0)*vertical_y)>vertical_limit: continue
 		var base := ground
 		var distance_sq:=p.distance_squared_to(center)
 		var travelled:=u.pos.distance_to(u.before)
