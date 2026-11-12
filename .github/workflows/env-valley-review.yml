@@ -1,4 +1,4 @@
-name: Painted river valley visual check
+name: Painted river valley focused comparison
 on:
   push:
     branches: [codex/river-gate-painted-landscape-review]
@@ -24,7 +24,7 @@ jobs:
           node tools/env_river_paint.mjs
           git diff --exit-code --stat -- assets/environment
           ./tools/prepare-font.sh
-          git worktree add --detach /tmp/original-field e8029ca8d0ca511cf283525625554c732b2e143c
+          git worktree add --detach /tmp/original-field d2067d7c71e17a4dce65ecbf0ed8523c8be19157
           cp tests/env_valley_review.gd /tmp/original-field/tests/
           cp assets/fonts/NotoSansSC-Regular.otf /tmp/original-field/assets/fonts/
           mkdir -p /tmp/original-field/artifacts
