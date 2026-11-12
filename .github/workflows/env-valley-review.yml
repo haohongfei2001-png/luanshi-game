@@ -1,4 +1,4 @@
-name: Painted river valley focused comparison
+name: Painted river valley spatial draw comparison
 on:
   push:
     branches: [codex/river-gate-painted-landscape-review]

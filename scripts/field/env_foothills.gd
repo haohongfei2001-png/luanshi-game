@@ -26,8 +26,10 @@ static func tile_key(p: Vector2) -> Vector2i:
 	return Vector2i(floori(p.x/42.0),floori(p.y/36.0))
 
 func _cell(p: Vector2) -> Patch:
-	var key:=tile_key(p)
-	if not cells.has(key): cells[key]=Patch.new(terrain_tiles[key])
+	# Ground and trunks share existing 42 × 36 m opaque draws. A leaf crown
+	# can be culled at half that span without splitting the supporting terrain.
+	var key:=Vector2i(floori(p.x/21.0),floori(p.y/18.0))
+	if not cells.has(key): cells[key]=Patch.new(terrain_tiles[tile_key(p)])
 	return cells[key]
 
 static func ground_point(p: Vector2) -> Vector3:
