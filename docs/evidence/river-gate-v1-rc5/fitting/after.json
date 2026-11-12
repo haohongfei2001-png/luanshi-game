@@ -1,0 +1,289 @@
+[
+  {
+    "center": [
+      -10.0,
+      -3.0
+    ],
+    "close": 85,
+    "contact": [
+      0,
+      0
+    ],
+    "fighting": 22,
+    "gate_hp": 260.0,
+    "in_frame_count": 40,
+    "in_frame_ids_sha256": "1c2fa3b469bfda18b362ff73ae06843bf213ef6a7c21e4c612d9aca16ac6c10b",
+    "internal_scale": 1.0,
+    "kind": "hero",
+    "label": "hero",
+    "losses": [
+      0,
+      0
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 8,
+    "visible": 113,
+    "window": [
+      1600,
+      1000
+    ],
+    "yaw": 1.27,
+    "zoom": 6.4
+  },
+  {
+    "center": [
+      -11.8000001907349,
+      -3.0
+    ],
+    "close": 91,
+    "contact": [
+      0,
+      0
+    ],
+    "fighting": 29,
+    "gate_hp": 260.0,
+    "in_frame_count": 73,
+    "in_frame_ids_sha256": "d7d352230aa1fcfe9e92d968aeee6cca527787863505a18e7d7ddc34315e8b61",
+    "internal_scale": 1.0,
+    "kind": "horse",
+    "label": "horse",
+    "losses": [
+      0,
+      0
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 8,
+    "visible": 171,
+    "window": [
+      1600,
+      1000
+    ],
+    "yaw": 1.09,
+    "zoom": 9.0
+  },
+  {
+    "center": [
+      6.52659225463867,
+      -26.5112113952637
+    ],
+    "close": 84,
+    "contact": [
+      179,
+      88
+    ],
+    "fighting": 25,
+    "gate_hp": 260.0,
+    "in_frame_count": 62,
+    "in_frame_ids_sha256": "bba120490ac1e40c6b06ba6d97de9e49925d6cb92da5b2c9d0bffd4af3c565e6",
+    "internal_scale": 1.0,
+    "kind": "officer",
+    "label": "officer",
+    "losses": [
+      13,
+      42
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 65,
+    "visible": 121,
+    "window": [
+      1600,
+      1000
+    ],
+    "yaw": -1.42,
+    "zoom": 7.8
+  },
+  {
+    "center": [
+      -9.13926982879639,
+      -32.7672271728516
+    ],
+    "close": 39,
+    "contact": [
+      179,
+      88
+    ],
+    "fighting": 27,
+    "gate_hp": 260.0,
+    "in_frame_count": 36,
+    "in_frame_ids_sha256": "b0543389b085ca946ff0493f304284d30db751cee9145409a495d08060c73402",
+    "internal_scale": 1.0,
+    "kind": "archer",
+    "label": "bowline",
+    "losses": [
+      13,
+      42
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 65,
+    "visible": 105,
+    "window": [
+      1600,
+      1000
+    ],
+    "yaw": 1.12,
+    "zoom": 8.6
+  },
+  {
+    "center": [
+      2.47159600257874,
+      -31.0614109039307
+    ],
+    "close": 38,
+    "contact": [
+      179,
+      88
+    ],
+    "fighting": 31,
+    "gate_hp": 260.0,
+    "in_frame_count": 76,
+    "in_frame_ids_sha256": "364dfe8ef289ba983782a63d7943b3a144b140db3868dfb52b19b5492dc2c196",
+    "internal_scale": 1.0,
+    "kind": "line",
+    "label": "contact",
+    "losses": [
+      13,
+      42
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 65,
+    "visible": 159,
+    "window": [
+      1600,
+      1000
+    ],
+    "yaw": -0.576,
+    "zoom": 13.0
+  },
+  {
+    "center": [
+      2.47159600257874,
+      -31.0614109039307
+    ],
+    "close": 20,
+    "contact": [
+      179,
+      88
+    ],
+    "fighting": 55,
+    "gate_hp": 260.0,
+    "in_frame_count": 148,
+    "in_frame_ids_sha256": "cc490481703000248c249c741ceb29743f4816d5f9c9a7300d4bd3b047d2ec58",
+    "internal_scale": 1.0,
+    "kind": "line",
+    "label": "follow",
+    "losses": [
+      13,
+      42
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 65,
+    "visible": 242,
+    "window": [
+      1600,
+      1000
+    ],
+    "yaw": -0.576,
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      2.47159600257874,
+      -31.0614109039307
+    ],
+    "close": 20,
+    "contact": [
+      179,
+      88
+    ],
+    "fighting": 86,
+    "gate_hp": 260.0,
+    "in_frame_count": 291,
+    "in_frame_ids_sha256": "36fcce69b4ef0b0614a1853a126f7e956879caa3b035a07b236acbf7df4efd5b",
+    "internal_scale": 1.0,
+    "kind": "line",
+    "label": "formation",
+    "losses": [
+      13,
+      42
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 269,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 65,
+    "visible": 372,
+    "window": [
+      1600,
+      1000
+    ],
+    "yaw": -0.576,
+    "zoom": 35.0
+  }
+]
