@@ -57,28 +57,6 @@ def field_helmet(surface, look, bone, rank=False):
                      4 if rank else (9 if surface.detail else 6), 1.27)
 
 
-def shoulders(surface, look, chest, upper_arms, rank=False):
-    """A narrow shoulder suspension turns into a broad, mobile upper-arm defence."""
-    light = look == "regular"
-    for side, upper in zip((-1,1), upper_arms):
-        def form(u, v):
-            a = (u - .5) * pi * 1.23
-            lower = 1.249 if light else 1.195
-            ry = sin(pi * v)
-            cx = .257 - .086 * v ** 1.55
-            rx = .088 - .057 * v + .023 * ry
-            rz = .103 - .034 * v + .010 * ry
-            y = lower + (1.436 - lower) * v + .036 * (1. - cos(a)) * (1. - v)
-            return (side * (cx + rx * cos(a)), y, -.003 + rz * sin(a)), (upper, chest, 1. - .84 * v ** 2)
-        n = 4 if rank else (12 if surface.detail else 7)
-        surface.grid(n, 2 if rank else 4, form, "lames")
-        if not rank:
-            def binding(u, v):
-                p, joints = form(u, .014 + .060 * v)
-                return (p[0] + side * .0018, p[1], p[2] + (u - .5) * .0024), joints
-            surface.grid(n, 1, binding, "iron_binding")
-
-
 def skirts(surface, look, hips, thighs, rank=False):
     """Left and right panels are suspended at the waist and can follow a stride independently."""
     light = look == "regular"

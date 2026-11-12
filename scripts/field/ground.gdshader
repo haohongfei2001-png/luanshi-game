@@ -6,6 +6,11 @@ uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D root_turf : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D compacted_loam : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D bank_silt : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+// Regional midtones for the scanned ground; suppress very bright tiny pebbles
+// while retaining the larger road, field and riverbank patterns beneath the soldiers.
+uniform vec4 turf_midtone : source_color = vec4(.33,.32,.20,1.);
+uniform vec4 road_midtone : source_color = vec4(.40,.34,.24,1.);
+uniform vec4 bank_midtone : source_color = vec4(.35,.31,.24,1.);
 uniform vec4 deep_water : source_color = vec4(.115,.253,.260,1.0);
 uniform vec4 shallows : source_color = vec4(.305,.437,.372,1.0);
 varying vec3 local_pos;
@@ -47,11 +52,13 @@ vec3 painted_ground(vec2 p,float shore) {
 	// the actual old field or wet river edge instead of using a colour key.
 	float mineral=smoothstep(.09,.86,cover.r+(loam.a-turf.a)*.35);
 	vec3 surface=mix(turf.rgb,loam.rgb,mineral);
+	vec3 midtone=mix(turf_midtone.rgb,road_midtone.rgb,mineral);
 	float wash=max(cover.g,shore);
 	if(wash>.018) {
 		vec4 silt=texture(bank_silt,p*vec2(.250,.225)+vec2(.28,-.17)+shear,lod_bias);
 		float margin=smoothstep(.05,.86,wash+(silt.a-turf.a)*.27);
 		surface=mix(surface,silt.rgb,margin);
+		midtone=mix(midtone,bank_midtone.rgb,margin);
 	}
 	// Sediment and grass fill lengths of wheel wear differently on each
 	// side of a bend. Keep the crown of the cart road in the soil surface.
@@ -59,7 +66,7 @@ vec3 painted_ground(vec2 p,float shore) {
 	float deposit=abs(fract(dot(p,vec2(.161,.074))+cover.b*.51)-.5)*2.0;
 	float exposed=smoothstep(.17,.81,deposit+(loam.a-.5)*.58);
 	float worn=shoulder*smoothstep(.68,.93,cover.r)*(1.0-wash)*(.24+.76*exposed);
-	return surface*(.79+.30*cover.b-.127*worn);
+	return mix(surface,midtone,.27)*(.79+.30*cover.b-.127*worn);
 }
 
 void fragment() {

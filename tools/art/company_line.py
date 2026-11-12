@@ -1,6 +1,6 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
-from field_armour import field_helmet, shoulders, skirts
+from field_armour import field_helmet, skirts
 from figure_mesh import Surface, add, lerp
 
 def costume(look,rank=False):
@@ -15,7 +15,6 @@ def costume(look,rank=False):
                  (1.447,.083,.07,0,0)],"dyed",body,6)
         if heavy:
             s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lames",CHEST,8)
-            shoulders(s,look,CHEST,(LU,RU),rank=True)
             skirts(s,look,HIPS,(LT,RT),rank=True)
         if look in ("player","officer"):
             s.ribbon([(-.13,1.412,-.092),(-.10,1.23,-.187),(-.109,.89,-.205),(-.112,.56,-.228)],.19,"mantle",CHEST)
@@ -39,7 +38,12 @@ def costume(look,rank=False):
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
         a,b,c=arm_nodes(side)
         if rank:
-            s.tube([a,b],[.084,.069],"dyed",upper,n)
+            if heavy:
+                hem=lerp(a,b,.59 if look=="regular" else .79)
+                s.tube([a,lerp(a,hem,.37),hem],[.081,.100,.082],"lames",upper,5)
+                s.tube([hem,b],[.070,.067],"dyed",upper,4)
+            else:
+                s.tube([a,b],[.084,.069],"dyed",upper,n)
         s.tube([b,lerp(b,c,.57),c],[.063,.057,.035],"leather" if heavy or look=="archer" else "headcloth",fore,n)
         p=grip(side)
         s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)

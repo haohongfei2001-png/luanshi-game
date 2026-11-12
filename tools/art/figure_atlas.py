@@ -13,7 +13,7 @@ PAD = 4
 NAMES = ["linen", "dyed", "leather", "lamellar", "iron", "edge", "brass", "timber",
          "skin", "hair", "lining", "quilt", "boots", "shield", "binding", "felt",
          "visage", "eye", "headcloth", "mantle", "sash", "quiver", "overskirt",
-         "hero_mantle", "visage_second", "visage_third", "facing", "coat", "black_iron", "iron_binding", "lames"]
+         "hero_mantle", "visage_second", "visage_third", "facing", "coat", "black_iron", "iron_binding", "lames", "girdle"]
 SURFACES = [
     ((174,153,124), (230,0,0)), ((178,173,151), (230,0,244)),
     ((87,63,46), (219,0,0)), ((95,110,114),(143,155,0)),
@@ -27,7 +27,8 @@ SURFACES = [
     ((188,167,129),(242,0,0)), ((61,87,103),(237,0,159)),
     ((139,56,42),(218,0,0)), ((94,60,39),(186,0,0)), ((87,94,101),(239,0,139)),
     ((110,42,39),(235,0,0)), ((172,125,96),(210,0,0)), ((172,125,96),(210,0,0)), ((61,65,67),(236,0,70)), ((150,150,146),(238,0,248)),
-    ((91,91,87),(205,96,0)), ((110,103,87),(201,73,0)), ((99,100,95),(210,83,0)),
+    ((69,73,75),(208,92,0)), ((97,94,85),(202,69,0)), ((89,88,81),(211,81,0)),
+    ((105,100,92),(234,0,211)),
 ]
 
 def adjusted(rgb, variation):
@@ -112,22 +113,6 @@ def make_atlas(out):
                         pen.ellipse((hx-2,y+4,hx+2,y+8), fill=(52,45,35))
                         pen.line((hx,y+6,hx+2,y+11),fill=(162,116,70),width=2)
                         rough.line((hx,y+6,hx+2,y+11),fill=(188,5,0),width=3)
-        if name=="lames":
-            # Overlapping rows read at battle distance. Restrict light edges to
-            # the underside of each row; scattered white rivets sparkle in motion.
-            for row in range(-1,5):
-                y=row*31
-                for col in range(-1,8):
-                    x=col*24+(row%2)*12
-                    value=rng.uniform(-5,6)
-                    body=adjusted(base,value)
-                    pen.rounded_rectangle((x,y,x+23,y+36),radius=4,fill=body)
-                    pen.line((x+2,y+3,x+2,y+24),fill=adjusted(body,-12),width=2)
-                    pen.line((x+1,y+26,x+4,y+29,x+21,y+29),fill=adjusted(body,-21),width=2)
-                    pen.line((x+5,y+27,x+19,y+27),fill=adjusted(body,12),width=2)
-                    for lx in (x+7,x+15):
-                        pen.line((lx,y+5,lx+2,y+13),fill=(109,88,65),width=2)
-                        rough.line((lx,y+5,lx+2,y+13),fill=(224,4,0),width=3)
         if name=="quilt":
             for x in range(0,TILE,15):
                 pen.line((x,0,x,TILE),fill=(110,99,80),width=2)

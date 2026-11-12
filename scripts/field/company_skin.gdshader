@@ -119,7 +119,8 @@ void fragment(){
     // A bolt of faded indigo or madder shows exposed natural fibre in the worn lots.
     float fibre_exposed=.025+.145*smoothstep(.10,.92,cloth_lot);
     vec3 dyed=mix(livery.rgb,vec3(.24,.213,.171),fibre_exposed)*clamp(.32+1.86*fibre,.43,1.40);
-    colour=mix(colour,dyed,response.b);
+    // A deep, worn dye leaves the illuminated face and blade one value above the tunic.
+    colour=mix(colour,dyed*mix(.88,1.0,smoothstep(.35,.78,fibre)),response.b);
     colour*=mix(vec3(1.),vec3(.53,.67,.79),sewn_shadow);
     colour*=mix(1.0,.73,fallen);
     ALBEDO=mix(colour,vec3(.57,.29,.15),flash*.23);

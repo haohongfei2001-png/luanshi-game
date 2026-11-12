@@ -2,7 +2,7 @@
 The yoke has real armholes: the first sleeve row is the edge of the torso mesh.
 """
 from math import atan2, cos, exp, hypot, pi, sin
-from field_armour import shoulders, skirts
+from field_armour import skirts
 from field_visage import head
 from figure_atlas import uv
 from figure_mesh import Surface, TAU, add, lerp
@@ -97,7 +97,14 @@ def coat(s,look):
         # A trim boundary duplicates UVs only. A triangle joining two atlas tiles
         # would pick up iron or skin halfway across the sleeve when the arm turns.
         edge=len(rows)-1
-        panels=[(0,edge-1,"dyed")]
+        if heavy:
+            # Use the fitted sleeve itself under the shoulder suspension. A second
+            # shell following a different arm weight can open holes during a thrust.
+            cap_end=(3 if look=="regular" else 4) if close else (2 if look=="regular" else 3)
+            panels=[(0,cap_end,"lames")]
+            if cap_end<edge-1: panels.append((cap_end,edge-1,"dyed"))
+        else:
+            panels=[(0,edge-1,"dyed")]
         panels.append((edge-1,edge,"headcloth"))
         for first,last,material in panels:
             def sleeve_point(u,v):
@@ -124,7 +131,7 @@ def coat(s,look):
         a=TAU*u
         p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))
         return p,cloth(p)
-    s.grid(20 if close else 10,2,belt,"leather" if look=="regular" else ("sash" if heavy else "leather"))
+    s.grid(20 if close else 10,2,belt,"girdle" if heavy else "leather")
     if look in ("archer","player","officer"):
         for front in (True,False):
             def baldric(u,v):
@@ -143,7 +150,6 @@ def equipment(s,look):
     close=s.detail
     heavy=look in ("regular","guard","officer","player")
     if heavy:
-        shoulders(s,look,CHEST,(LU,RU))
         skirts(s,look,HIPS,(LT,RT))
         # Two shoulder fastenings suspend the front and back without filling the neckline.
         for side in (-1,1):

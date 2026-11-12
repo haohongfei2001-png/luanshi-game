@@ -63,7 +63,11 @@ def materials(size):
     padded=ImageOps.colorize(quilt,(53,57,64),(144,137,118))
     armor=quarter(0,1)
     armor=armor.point([min(255,round(i*1.19+7)) for i in range(256)]*3)
+    # Retain the painted overlaps as readable courses. Compression of their value
+    # range separates the iron face from its recessed lacing without specular pinpoints.
+    relief=ImageOps.autocontrast(ImageOps.grayscale(armor),cutoff=(1,2))
+    lames=ImageOps.colorize(relief,(51,52,53),(150,141,120),midtone=(87,87,83),midpoint=141)
     with Image.open(SOURCE/"river_face_study.png") as image:
         faces=image.convert("RGB")
-    return {"dyed":cloth,"coat":_crossed_front(cloth),"quilt":padded,"lamellar":armor,"hero_mantle":red,
+    return {"dyed":cloth,"coat":_crossed_front(cloth),"quilt":padded,"lamellar":armor,"lames":lames,"hero_mantle":red,
             "visage":_face(faces,0,size),"visage_second":_face(faces,1,size),"visage_third":_face(faces,2,size)}
