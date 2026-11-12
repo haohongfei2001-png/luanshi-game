@@ -1,25 +1,35 @@
-name: Sew and view the field company
+name: Display the actual RC4 window stills
 on:
   push:
-    branches: ['codex/river-gate-figure-workshop']
+    branches: [codex/river-gate-figure-workshop]
 permissions:
+  actions: read
   contents: write
 jobs:
-  workshop:
+  stills:
     runs-on: ubuntu-24.04
-    timeout-minutes: 18
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: codex/river-gate-sewn-cuffs
-          fetch-depth: 0
-      - name: Bake the fitted mesh, materials and keyed motion into the playable branch
+          ref: codex/river-gate-rc4-evidence
+      - name: Copy the original resolved game-window frames from the finished visual job
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 9bffc6cca0f8c364e8c19f64ffbe93d210d4e8f4
-          python3 -c 'from PIL import Image' || python3 -m pip install Pillow
-          python3 tools/art/bake_river_company.py
-          python3 tools/art/check_company_motion.py
-          git add tools/art/field_head.json assets/river_gate/figures/river_company.glb assets/river_gate/figures/cloth_and_iron.png assets/river_gate/figures/surface_response.png assets/river_gate/figures/company_motion.png
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the resewn cuffs and narrow working collars into the game library'
-          git push origin HEAD:refs/heads/codex/river-gate-sewn-cuffs
+          gh run download 43268026943 -R "$GITHUB_REPOSITORY" -n river-art-b0f44c491fb47634539e73571cabf2c73519575b -D "$RUNNER_TEMP/plates"
+          frame=$(find "$RUNNER_TEMP/plates" -path "*/after/frames.json" -print -quit)
+          test -s "$frame"
+          plate=$(dirname "$(dirname "$frame")")
+          dest=docs/evidence/river-gate-v1-rc4
+          mkdir -p "$dest"
+          for shot in hero contact gate; do
+            cp "$plate/after/$shot.jpg" "$dest/$shot.jpg"
+            cp "$plate/$shot-pair.jpg" "$dest/$shot-pair.jpg"
+          done
+          cp "$plate/battlefield-motion.mp4" "$dest/battlefield-motion.mp4"
+          cp "$plate/footwork-pair.mp4" "$dest/footwork-pair.mp4"
+          git add -- "$dest"
+          git -c user.name="Luanshi acceptance archive" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Show the original RC4 window frames and the continuous take to the artist"
+          git push origin HEAD:refs/heads/codex/river-gate-rc4-evidence
