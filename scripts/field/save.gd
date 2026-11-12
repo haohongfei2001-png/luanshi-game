@@ -21,7 +21,7 @@ static func _rows(items: Array, fields: Array) -> Array:
 	return rows
 
 static func snapshot(b: Battle) -> Dictionary:
-	return {"version":4,"defenders":b.ordinary_counts[1],"world_patrol":b.world_patrol,"ram_crew":b.ram_crew.duplicate(),"reliefs":b.reliefs,"officer_corps":b.corps.snapshot(),"traffic_enabled":b.traffic_enabled,"soft_crowd":b.soft_crowd,"objectives":b.objectives.snapshot(),"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
+	return {"version":4,"defenders":b.ordinary_counts[1],"world_patrol":b.world_patrol,"ram_crew":b.ram_crew.duplicate(),"reliefs":b.reliefs,"officer_corps":b.corps.snapshot(),"traffic_enabled":b.traffic_enabled,"soft_crowd":b.soft_crowd,"keep_gate_file":b.keep_gate_file,"objectives":b.objectives.snapshot(),"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
 		"battle":_row(b,HEAD),"units":_rows(b.roster,UNIT),"companies":_rows(b.companies,COMPANY),
 		"orders":_rows(b.orders,ORDER),"shots":_rows(b.shots,SHOT),
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
@@ -60,6 +60,9 @@ static func restore(data: Variant) -> Battle:
 	b.traffic_enabled=modern and data.traffic_enabled
 	if not data.get("soft_crowd",false) is bool: return null
 	b.soft_crowd=modern and data.get("soft_crowd",false)
+	if not data.get("keep_gate_file",false) is bool: return null
+	# In-flight RC1 formations finish on the same files they used before saving.
+	b.keep_gate_file=modern and data.get("keep_gate_file",false)
 	b.objectives.enabled=modern
 	if not data.get("seat_origin",false) is bool: return null
 	b.seat_origin=data.version>=3 and data.get("seat_origin",false)

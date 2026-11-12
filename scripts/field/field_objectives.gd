@@ -19,8 +19,8 @@ var garrison_retiring := false
 
 func brief() -> String:
 	if task==Task.ESCORT:
-		return "护送有役兵的冲车至城门，掩护撞门三次。"
-	return "护送冲车破门，在守军争夺下占住内庭六秒。"
+		return "护送冲车撞门三次。若友军先破门，将冲车送到门洞。"
+	return "突破城门，在守军争夺下占住内庭六秒。"
 
 func strength(b) -> Dictionary:
 	var power := [0.0,0.0]

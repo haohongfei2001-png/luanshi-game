@@ -60,7 +60,7 @@ static func _passage(p: Vector2, x: float, z: float, half_depth: float, directio
 		return Vector2(x - direction * (half_depth + 1.48), z)
 	return Vector2(x + direction * (half_depth + 0.85), z)
 
-static func waypoint(p: Vector2, goal: Vector2, file_z: float, id: int, gate_open: bool, ram_at_gate: bool = false) -> Vector2:
+static func waypoint(p: Vector2, goal: Vector2, file_z: float, id: int, gate_open: bool, ram_at_gate: bool = false, keep_gate_file: bool = true) -> Vector2:
 	var direction := signf(goal.x - p.x)
 	if direction == 0.0:
 		return Ground.waypoint(p, goal)
@@ -79,6 +79,11 @@ static func waypoint(p: Vector2, goal: Vector2, file_z: float, id: int, gate_ope
 				# The parked chassis occupies the centre file up to the opening.
 				# Keep both shoulders open from approach through the far doorpost.
 				lane = _side(lane, id) * (1.64 + minf(1.30, absf(lane) * 0.47))
+			# A fighter already between the jambs can advance in the nearest free file.
+			# Crossing back to its assigned file here would send it into the following rank.
+			if keep_gate_file and from_gate > -3.6 and absf(p.y) < Ground.GATE_HALF - 0.52:
+				if not ram_at_gate or (p.y * lane > 0.0 and absf(p.y) > HULL.y + 0.40):
+					return Vector2(Ground.WALL_X + direction * 2.30, lerpf(p.y, lane, 0.25))
 			return _passage(p, Ground.WALL_X, lane, 1.45, direction)
 	return Ground.waypoint(p, goal)
 
