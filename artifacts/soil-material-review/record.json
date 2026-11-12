@@ -1,0 +1,1824 @@
+{
+  "sha": {
+    "before": "3a0a0d3099409cb6b5e7128f32a31fde2b4ad4a1",
+    "first": "0b782835a40e663f656b788b9d50374b1e9ae6e6",
+    "after": "7cabd7bdd191ccbc0e23ca7cc54b400ef1a4bd16",
+    "harness": "293cb08504cb45ec71b746bc2408ff1e47c7a748"
+  },
+  "run": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43279682115",
+  "archive": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43279682115/artifacts/13972471785",
+  "viewport": [
+    1280,
+    800
+  ],
+  "shadows": true,
+  "internal_scale": 1,
+  "seed": 61112,
+  "units": [
+    512,
+    512
+  ],
+  "renderer_notes": "Real Godot 4.6.3 Linux software-OpenGL window under Xvfb. Warm wall-clock intervals in live battle; not target Mac performance.",
+  "frames": [
+    {
+      "center": [
+        -10,
+        -3
+      ],
+      "close": 85,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 129,
+      "fighting": 22,
+      "flat_pixel_neighborhood_fraction": 0.0202037067957923,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 128.1,
+        "Y50": 141,
+        "Y90": 148.1,
+        "count": 36,
+        "one_pixel_Y50": 0.96,
+        "one_pixel_Y90": 2.11
+      },
+      "in_frame_count": 40,
+      "in_frame_ids_sha256": "1c2fa3b469bfda18b362ff73ae06843bf213ef6a7c21e4c612d9aca16ac6c10b",
+      "internal_scale": 1,
+      "kind": "hero",
+      "label": "hero",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 828115,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 113,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.27,
+      "zoom": 6.4
+    },
+    {
+      "center": [
+        -11.8000001907349,
+        -3
+      ],
+      "close": 96,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 131,
+      "fighting": 27,
+      "flat_pixel_neighborhood_fraction": 0.015027550509267,
+      "gate_hp": 260,
+      "in_frame_count": 61,
+      "in_frame_ids_sha256": "d54d5cea69ba3188e22a7a86890314682a2a179e30f969ed3f282168ed0184b2",
+      "internal_scale": 1,
+      "kind": "horse",
+      "label": "saddle",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 908774,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 155,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.09,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -12.8000001907349,
+        -0.799999952316284
+      ],
+      "close": 86,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 148,
+      "fighting": 38,
+      "flat_pixel_neighborhood_fraction": 0.0065119385540157,
+      "gate_hp": 260,
+      "in_frame_count": 99,
+      "in_frame_ids_sha256": "d64874a7b692e230e8aee480bda106018227ecae8ccc99ced3a4396f5b0f4bba",
+      "internal_scale": 1,
+      "kind": "cart",
+      "label": "cart",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 900634,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 212,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.65,
+      "zoom": 10
+    },
+    {
+      "center": [
+        -32,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 137,
+      "fighting": 50,
+      "flat_pixel_neighborhood_fraction": 0.0065119385540157,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 109.5,
+        "Y50": 130.7,
+        "Y90": 177.2,
+        "count": 257,
+        "one_pixel_Y50": 2.07,
+        "one_pixel_Y90": 6.59
+      },
+      "in_frame_count": 225,
+      "in_frame_ids_sha256": "3b416935ff0125b01ec4ddafe216c802b987905c55c9dcaaafe0e1b270a7a4d6",
+      "internal_scale": 1,
+      "kind": "bridge",
+      "label": "ford",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 490654,
+      "ranks": 315,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 336,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 31
+    },
+    {
+      "center": [
+        -66,
+        -19
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 97,
+      "fighting": 0,
+      "flat_pixel_neighborhood_fraction": 0.00784772082150609,
+      "gate_hp": 260,
+      "in_frame_count": 11,
+      "in_frame_ids_sha256": "cbb5d2b1bdf9e8ef9cdbff762d119968b02b24a69bb98435910c33b346b7ca09",
+      "internal_scale": 1,
+      "kind": "camp",
+      "label": "camp",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 419644,
+      "ranks": 28,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 27,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 30
+    },
+    {
+      "center": [
+        6.52659225463867,
+        -26.5112113952637
+      ],
+      "close": 84,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 161,
+      "fighting": 25,
+      "flat_pixel_neighborhood_fraction": 0.0063449657705794,
+      "gate_hp": 260,
+      "in_frame_count": 62,
+      "in_frame_ids_sha256": "bba120490ac1e40c6b06ba6d97de9e49925d6cb92da5b2c9d0bffd4af3c565e6",
+      "internal_scale": 1,
+      "kind": "officer",
+      "label": "officer",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 785996,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 121,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -1.42,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -9.13926982879639,
+        -32.7672271728516
+      ],
+      "close": 39,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 116,
+      "fighting": 27,
+      "flat_pixel_neighborhood_fraction": 0.0187009517448656,
+      "gate_hp": 260,
+      "in_frame_count": 36,
+      "in_frame_ids_sha256": "b0543389b085ca946ff0493f304284d30db751cee9145409a495d08060c73402",
+      "internal_scale": 1,
+      "kind": "archer",
+      "label": "bowline",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 582937,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 105,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.12,
+      "zoom": 8.6
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 186,
+      "fighting": 121,
+      "flat_pixel_neighborhood_fraction": 0.00717982968776089,
+      "gate_hp": 260,
+      "in_frame_count": 459,
+      "in_frame_ids_sha256": "4f366865a9258d5e2214dfc157d266b806affbe0ce6e47a3c68ba6e0310deb12",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "ranks",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 539680,
+      "ranks": 567,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 551,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 51
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 37,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 137,
+      "fighting": 31,
+      "flat_pixel_neighborhood_fraction": 0.0045082651527801,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 146.1,
+        "Y50": 165.1,
+        "Y90": 187.1,
+        "count": 245,
+        "one_pixel_Y50": 1.68,
+        "one_pixel_Y90": 3.45
+      },
+      "in_frame_count": 76,
+      "in_frame_ids_sha256": "364dfe8ef289ba983782a63d7943b3a144b140db3868dfb52b19b5492dc2c196",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "contact",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 563568,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 159,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 13
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 20,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 152,
+      "fighting": 65,
+      "flat_pixel_neighborhood_fraction": 0.00768074803806979,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 124.6,
+        "Y50": 153.4,
+        "Y90": 184.8,
+        "count": 398,
+        "one_pixel_Y50": 2.09,
+        "one_pixel_Y90": 4.57
+      },
+      "in_frame_count": 196,
+      "in_frame_ids_sha256": "8893515327a9bfbaa14ec7a9852490da4b2bddb6c6dc2fb7dd7b04eb6402650f",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "formation",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 503332,
+      "ranks": 171,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 277,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 26
+    },
+    {
+      "center": [
+        -10,
+        -3
+      ],
+      "close": 85,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 129,
+      "fighting": 22,
+      "flat_pixel_neighborhood_fraction": 0.0165303055601937,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 73.3,
+        "Y50": 93.2,
+        "Y90": 115.3,
+        "count": 36,
+        "one_pixel_Y50": 7.28,
+        "one_pixel_Y90": 12.25
+      },
+      "in_frame_count": 40,
+      "in_frame_ids_sha256": "1c2fa3b469bfda18b362ff73ae06843bf213ef6a7c21e4c612d9aca16ac6c10b",
+      "internal_scale": 1,
+      "kind": "hero",
+      "label": "hero",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 828115,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 113,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.27,
+      "zoom": 6.4
+    },
+    {
+      "center": [
+        -11.8000001907349,
+        -3
+      ],
+      "close": 96,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 131,
+      "fighting": 27,
+      "flat_pixel_neighborhood_fraction": 0.0130238771080314,
+      "gate_hp": 260,
+      "in_frame_count": 61,
+      "in_frame_ids_sha256": "d54d5cea69ba3188e22a7a86890314682a2a179e30f969ed3f282168ed0184b2",
+      "internal_scale": 1,
+      "kind": "horse",
+      "label": "saddle",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 908774,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 155,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.09,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -12.8000001907349,
+        -0.799999952316284
+      ],
+      "close": 86,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 148,
+      "fighting": 38,
+      "flat_pixel_neighborhood_fraction": 0.0025045917515445,
+      "gate_hp": 260,
+      "in_frame_count": 99,
+      "in_frame_ids_sha256": "d64874a7b692e230e8aee480bda106018227ecae8ccc99ced3a4396f5b0f4bba",
+      "internal_scale": 1,
+      "kind": "cart",
+      "label": "cart",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 900634,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 212,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.65,
+      "zoom": 10
+    },
+    {
+      "center": [
+        -32,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 137,
+      "fighting": 50,
+      "flat_pixel_neighborhood_fraction": 0.0053431290699616,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 74.7,
+        "Y50": 98.4,
+        "Y90": 115.8,
+        "count": 257,
+        "one_pixel_Y50": 5.69,
+        "one_pixel_Y90": 12.08
+      },
+      "in_frame_count": 225,
+      "in_frame_ids_sha256": "3b416935ff0125b01ec4ddafe216c802b987905c55c9dcaaafe0e1b270a7a4d6",
+      "internal_scale": 1,
+      "kind": "bridge",
+      "label": "ford",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 490654,
+      "ranks": 315,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 336,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 31
+    },
+    {
+      "center": [
+        -66,
+        -19
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 97,
+      "fighting": 0,
+      "flat_pixel_neighborhood_fraction": 0.0023376189681082,
+      "gate_hp": 260,
+      "in_frame_count": 11,
+      "in_frame_ids_sha256": "cbb5d2b1bdf9e8ef9cdbff762d119968b02b24a69bb98435910c33b346b7ca09",
+      "internal_scale": 1,
+      "kind": "camp",
+      "label": "camp",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 419644,
+      "ranks": 28,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 27,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 30
+    },
+    {
+      "center": [
+        6.52659225463867,
+        -26.5112113952637
+      ],
+      "close": 84,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 161,
+      "fighting": 25,
+      "flat_pixel_neighborhood_fraction": 0.0040073468024712,
+      "gate_hp": 260,
+      "in_frame_count": 62,
+      "in_frame_ids_sha256": "bba120490ac1e40c6b06ba6d97de9e49925d6cb92da5b2c9d0bffd4af3c565e6",
+      "internal_scale": 1,
+      "kind": "officer",
+      "label": "officer",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 785996,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 121,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -1.42,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -9.13926982879639,
+        -32.7672271728516
+      ],
+      "close": 39,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 116,
+      "fighting": 27,
+      "flat_pixel_neighborhood_fraction": 0.0111871764902321,
+      "gate_hp": 260,
+      "in_frame_count": 36,
+      "in_frame_ids_sha256": "b0543389b085ca946ff0493f304284d30db751cee9145409a495d08060c73402",
+      "internal_scale": 1,
+      "kind": "archer",
+      "label": "bowline",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 582937,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 105,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.12,
+      "zoom": 8.6
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 186,
+      "fighting": 121,
+      "flat_pixel_neighborhood_fraction": 0.0028385373184171,
+      "gate_hp": 260,
+      "in_frame_count": 459,
+      "in_frame_ids_sha256": "4f366865a9258d5e2214dfc157d266b806affbe0ce6e47a3c68ba6e0310deb12",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "ranks",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 539680,
+      "ranks": 567,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 551,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 51
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 37,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 137,
+      "fighting": 31,
+      "flat_pixel_neighborhood_fraction": 0.0011688094840541,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 90.7,
+        "Y50": 110,
+        "Y90": 130.3,
+        "count": 245,
+        "one_pixel_Y50": 7.12,
+        "one_pixel_Y90": 13.94
+      },
+      "in_frame_count": 76,
+      "in_frame_ids_sha256": "364dfe8ef289ba983782a63d7943b3a144b140db3868dfb52b19b5492dc2c196",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "contact",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 563568,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 159,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 13
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 20,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 152,
+      "fighting": 65,
+      "flat_pixel_neighborhood_fraction": 0.0038403740190349,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 86.2,
+        "Y50": 104.7,
+        "Y90": 128.6,
+        "count": 398,
+        "one_pixel_Y50": 6.11,
+        "one_pixel_Y90": 11.69
+      },
+      "in_frame_count": 196,
+      "in_frame_ids_sha256": "8893515327a9bfbaa14ec7a9852490da4b2bddb6c6dc2fb7dd7b04eb6402650f",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "formation",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 503332,
+      "ranks": 171,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 277,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 26
+    },
+    {
+      "center": [
+        -10,
+        -3
+      ],
+      "close": 85,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 129,
+      "fighting": 22,
+      "flat_pixel_neighborhood_fraction": 0.0165303055601937,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 73.3,
+        "Y50": 93.2,
+        "Y90": 115.3,
+        "count": 36,
+        "one_pixel_Y50": 7.07,
+        "one_pixel_Y90": 12.01
+      },
+      "in_frame_count": 40,
+      "in_frame_ids_sha256": "1c2fa3b469bfda18b362ff73ae06843bf213ef6a7c21e4c612d9aca16ac6c10b",
+      "internal_scale": 1,
+      "kind": "hero",
+      "label": "hero",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 828115,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 113,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.27,
+      "zoom": 6.4
+    },
+    {
+      "center": [
+        -11.8000001907349,
+        -3
+      ],
+      "close": 96,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 131,
+      "fighting": 27,
+      "flat_pixel_neighborhood_fraction": 0.0130238771080314,
+      "gate_hp": 260,
+      "in_frame_count": 61,
+      "in_frame_ids_sha256": "d54d5cea69ba3188e22a7a86890314682a2a179e30f969ed3f282168ed0184b2",
+      "internal_scale": 1,
+      "kind": "horse",
+      "label": "saddle",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 908774,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 155,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.09,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -12.8000001907349,
+        -0.799999952316284
+      ],
+      "close": 86,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 148,
+      "fighting": 38,
+      "flat_pixel_neighborhood_fraction": 0.0023376189681082,
+      "gate_hp": 260,
+      "in_frame_count": 99,
+      "in_frame_ids_sha256": "d64874a7b692e230e8aee480bda106018227ecae8ccc99ced3a4396f5b0f4bba",
+      "internal_scale": 1,
+      "kind": "cart",
+      "label": "cart",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 900634,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 212,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.65,
+      "zoom": 10
+    },
+    {
+      "center": [
+        -32,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 137,
+      "fighting": 50,
+      "flat_pixel_neighborhood_fraction": 0.0053431290699616,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 77.1,
+        "Y50": 98.7,
+        "Y90": 113.8,
+        "count": 257,
+        "one_pixel_Y50": 3.52,
+        "one_pixel_Y90": 7.09
+      },
+      "in_frame_count": 225,
+      "in_frame_ids_sha256": "3b416935ff0125b01ec4ddafe216c802b987905c55c9dcaaafe0e1b270a7a4d6",
+      "internal_scale": 1,
+      "kind": "bridge",
+      "label": "ford",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 490654,
+      "ranks": 315,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 336,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 31
+    },
+    {
+      "center": [
+        -66,
+        -19
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "draw_calls": 97,
+      "fighting": 0,
+      "flat_pixel_neighborhood_fraction": 0.003339455668726,
+      "gate_hp": 260,
+      "in_frame_count": 11,
+      "in_frame_ids_sha256": "cbb5d2b1bdf9e8ef9cdbff762d119968b02b24a69bb98435910c33b346b7ca09",
+      "internal_scale": 1,
+      "kind": "camp",
+      "label": "camp",
+      "losses": [
+        0,
+        0
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 419644,
+      "ranks": 28,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 27,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.54,
+      "zoom": 30
+    },
+    {
+      "center": [
+        6.52659225463867,
+        -26.5112113952637
+      ],
+      "close": 84,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 161,
+      "fighting": 25,
+      "flat_pixel_neighborhood_fraction": 0.0040073468024712,
+      "gate_hp": 260,
+      "in_frame_count": 62,
+      "in_frame_ids_sha256": "bba120490ac1e40c6b06ba6d97de9e49925d6cb92da5b2c9d0bffd4af3c565e6",
+      "internal_scale": 1,
+      "kind": "officer",
+      "label": "officer",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 785996,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 121,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -1.42,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -9.13926982879639,
+        -32.7672271728516
+      ],
+      "close": 39,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 116,
+      "fighting": 27,
+      "flat_pixel_neighborhood_fraction": 0.0111871764902321,
+      "gate_hp": 260,
+      "in_frame_count": 36,
+      "in_frame_ids_sha256": "b0543389b085ca946ff0493f304284d30db751cee9145409a495d08060c73402",
+      "internal_scale": 1,
+      "kind": "archer",
+      "label": "bowline",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 582937,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 105,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": 1.12,
+      "zoom": 8.6
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 186,
+      "fighting": 121,
+      "flat_pixel_neighborhood_fraction": 0.0038403740190349,
+      "gate_hp": 260,
+      "in_frame_count": 459,
+      "in_frame_ids_sha256": "4f366865a9258d5e2214dfc157d266b806affbe0ce6e47a3c68ba6e0310deb12",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "ranks",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 539680,
+      "ranks": 567,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 551,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 51
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 37,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 137,
+      "fighting": 31,
+      "flat_pixel_neighborhood_fraction": 0.0011688094840541,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 91.3,
+        "Y50": 110.3,
+        "Y90": 130.3,
+        "count": 245,
+        "one_pixel_Y50": 6.47,
+        "one_pixel_Y90": 12.74
+      },
+      "in_frame_count": 76,
+      "in_frame_ids_sha256": "364dfe8ef289ba983782a63d7943b3a144b140db3868dfb52b19b5492dc2c196",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "contact",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 563568,
+      "ranks": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 159,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 13
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 20,
+      "contact": [
+        179,
+        88
+      ],
+      "draw_calls": 152,
+      "fighting": 65,
+      "flat_pixel_neighborhood_fraction": 0.0040073468024712,
+      "gate_hp": 260,
+      "ground_readback": {
+        "Y10": 87.3,
+        "Y50": 105.6,
+        "Y90": 126.5,
+        "count": 398,
+        "one_pixel_Y50": 3.98,
+        "one_pixel_Y90": 8.05
+      },
+      "in_frame_count": 196,
+      "in_frame_ids_sha256": "8893515327a9bfbaa14ec7a9852490da4b2bddb6c6dc2fb7dd7b04eb6402650f",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "formation",
+      "losses": [
+        13,
+        42
+      ],
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "primitives": 503332,
+      "ranks": 171,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 277,
+      "window": [
+        1280,
+        800
+      ],
+      "yaw": -0.576,
+      "zoom": 26
+    }
+  ],
+  "costs": [
+    {
+      "draw_frames": [
+        145.448,
+        156.235,
+        149.804,
+        159.034,
+        165.596,
+        149.799,
+        162.299,
+        160.174,
+        161.756,
+        151.373,
+        155.014,
+        152.92,
+        150.114,
+        151.516,
+        161.423,
+        163.441,
+        163.203,
+        163.195,
+        155.164,
+        154.317,
+        162.661,
+        160.064,
+        163.554,
+        157.235,
+        158.599,
+        163.094,
+        184.139,
+        168.968,
+        173.461,
+        168.474,
+        171.382,
+        160.884,
+        165.522,
+        162.723,
+        166.266,
+        160.942,
+        161.014,
+        162.152,
+        164.146,
+        166.642,
+        166.17,
+        162.209,
+        161.816,
+        166.112,
+        160.678,
+        165.557,
+        166.853,
+        164.446,
+        165.618,
+        164.024,
+        164.763,
+        167.585,
+        166.189,
+        162.364,
+        162.342,
+        161.845
+      ],
+      "hits": [
+        448,
+        271
+      ],
+      "label": "contact",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 162.364,
+      "p95_ms": 171.382,
+      "p99_ms": 184.139,
+      "tick": 129,
+      "window": [
+        1280,
+        800
+      ]
+    },
+    {
+      "draw_frames": [
+        110.786,
+        110.781,
+        118.574,
+        114.085,
+        111.018,
+        114.123,
+        113.444,
+        113.075,
+        111.494,
+        118.173,
+        124.738,
+        114.9,
+        111.547,
+        111.695,
+        111.112,
+        110.981,
+        111.813,
+        110.034,
+        110.755,
+        110.655,
+        112.517,
+        111.568,
+        114.527,
+        116.338,
+        114.962,
+        114.291,
+        110.797,
+        110.615,
+        110.667,
+        112.63,
+        113.588,
+        110.658,
+        110.775,
+        112.023,
+        110.426,
+        112.795,
+        109.269,
+        110.082,
+        109.9,
+        114.24,
+        109.837,
+        112.691,
+        112.268,
+        110.793,
+        109.985,
+        109.821,
+        110.332,
+        109.765,
+        113.089,
+        110.049,
+        109.039,
+        109.407,
+        110.942,
+        110.227,
+        110.373,
+        108.548
+      ],
+      "hits": [
+        655,
+        458
+      ],
+      "label": "ford",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 111.018,
+      "p95_ms": 118.173,
+      "p99_ms": 124.738,
+      "tick": 193,
+      "window": [
+        1280,
+        800
+      ]
+    },
+    {
+      "draw_frames": [
+        145.142,
+        147.949,
+        155.368,
+        145.068,
+        157.327,
+        150.451,
+        148.263,
+        145.85,
+        148.774,
+        149.599,
+        160.349,
+        151.841,
+        157.689,
+        151.375,
+        150.786,
+        150.422,
+        151.529,
+        151.393,
+        153.706,
+        158.221,
+        155.275,
+        155.521,
+        156.389,
+        156.907,
+        157.26,
+        159.956,
+        159.884,
+        157.957,
+        158.964,
+        158.283,
+        158.324,
+        161.801,
+        161.572,
+        162.135,
+        159.736,
+        160.552,
+        161.969,
+        161.866,
+        163.436,
+        161.562,
+        160.773,
+        160.528,
+        162.836,
+        163.375,
+        164.728,
+        163.142,
+        165.07,
+        165.033,
+        163.333,
+        165.923,
+        166.968,
+        165.215,
+        162.356,
+        162.16,
+        160.158,
+        160.002
+      ],
+      "hits": [
+        448,
+        271
+      ],
+      "label": "contact",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 159.736,
+      "p95_ms": 165.215,
+      "p99_ms": 166.968,
+      "tick": 129,
+      "window": [
+        1280,
+        800
+      ]
+    },
+    {
+      "draw_frames": [
+        107.615,
+        109.544,
+        111.503,
+        107.904,
+        108.188,
+        109.583,
+        109.225,
+        108.683,
+        110.37,
+        108.411,
+        106.998,
+        109.405,
+        107.535,
+        110.018,
+        108.007,
+        106.634,
+        106.64,
+        107.249,
+        105.627,
+        107.108,
+        110.018,
+        109.197,
+        107.854,
+        106.949,
+        107.153,
+        109.179,
+        106.412,
+        105.379,
+        107.946,
+        108.967,
+        108.187,
+        105.754,
+        107.5,
+        104.992,
+        105.573,
+        106.87,
+        103.874,
+        105.24,
+        106.647,
+        108.721,
+        106.704,
+        107.067,
+        108.079,
+        106.172,
+        107.589,
+        106.125,
+        106.904,
+        105.625,
+        104.306,
+        109.754,
+        104.954,
+        104.752,
+        106.364,
+        107.136,
+        108.44,
+        104.835
+      ],
+      "hits": [
+        655,
+        458
+      ],
+      "label": "ford",
+      "ordinary": [
+        512,
+        512
+      ],
+      "p50_ms": 107.249,
+      "p95_ms": 110.018,
+      "p99_ms": 111.503,
+      "tick": 193,
+      "window": [
+        1280,
+        800
+      ]
+    }
+  ],
+  "original_files": [
+    {
+      "stage": "before",
+      "frame": "contact",
+      "sha": "399bb99e594d9864da953cd89c39d348b073c3e2",
+      "bytes": 380868
+    },
+    {
+      "stage": "before",
+      "frame": "formation",
+      "sha": "49b262f8f2d6ac88c3fe23a83abc3760025c0b65",
+      "bytes": 391106
+    },
+    {
+      "stage": "before",
+      "frame": "hero",
+      "sha": "68efc609bd938ed574fc424b7951769c89b68611",
+      "bytes": 436184
+    },
+    {
+      "stage": "before",
+      "frame": "ford",
+      "sha": "1a85aaf77be8d8999111bad2fb761e2a1f2aad61",
+      "bytes": 429288
+    },
+    {
+      "stage": "first",
+      "frame": "contact",
+      "sha": "d1fd45cd5d649641dd3176e6d00b81549323d748",
+      "bytes": 537463
+    },
+    {
+      "stage": "first",
+      "frame": "formation",
+      "sha": "d4f6ba01f328cd1f6e32a401c8eda9126a189ad3",
+      "bytes": 513003
+    },
+    {
+      "stage": "first",
+      "frame": "hero",
+      "sha": "43ea3cf41e59bd9a7f67019f13f5e3df93fd08e6",
+      "bytes": 525804
+    },
+    {
+      "stage": "first",
+      "frame": "ford",
+      "sha": "ff47189369deaeffadbb2abe536c70cffda871c8",
+      "bytes": 503804
+    },
+    {
+      "stage": "after",
+      "frame": "contact",
+      "sha": "e6670c0b3946b3b67eab7a42c3f4ac9dfd6aabe7",
+      "bytes": 527133
+    },
+    {
+      "stage": "after",
+      "frame": "formation",
+      "sha": "e9f95cf8a60bb2e22b0159b751130f531cfe6baa",
+      "bytes": 450487
+    },
+    {
+      "stage": "after",
+      "frame": "hero",
+      "sha": "7dfb09fee1190369fe65cc633570be306a1c41f4",
+      "bytes": 525495
+    },
+    {
+      "stage": "after",
+      "frame": "ford",
+      "sha": "e6cb2efd393f21bb0ea74e328cca6f7568630e8a",
+      "bytes": 448544
+    }
+  ]
+}
