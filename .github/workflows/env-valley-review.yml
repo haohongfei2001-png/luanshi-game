@@ -1,0 +1,45 @@
+name: Painted river valley visual check
+on:
+  push:
+    branches: [codex/river-gate-painted-landscape-review]
+permissions:
+  contents: read
+jobs:
+  picture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Render the playable 1024-soldier field at the RC3 camera stops
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/valley-editor
+          editor=/tmp/valley-editor/Godot_v4.6.3-stable_linux.x86_64
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          node tools/env_river_paint.mjs
+          git diff --exit-code --stat -- assets/environment
+          ./tools/prepare-font.sh
+          "$editor" --headless --editor --import --path . 2>&1 | tee artifacts/river-import.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/river-import.log; then exit 1; fi
+          LIBGL_ALWAYS_SOFTWARE=1 timeout 180s xvfb-run -a -s '-screen 0 1280x800x24' "$editor" --path . --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/env_valley_review.gd -- --field-size=512 2>&1 | tee artifacts/valley-window.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/valley-window.log; then exit 1; fi
+          grep -q RIVER_ART_PASS artifacts/valley-window.log
+          python3 - <<'PY'
+          import base64,json,pathlib
+          root=pathlib.Path("artifacts/river-art")
+          rows=json.loads((root/'frames.json').read_text())
+          assert all(r['ordinary']==[512,512] and r['window']==[1280,800] and r['internal_scale']==1 and r['shadows'] for r in rows)
+          for name in ['ranks','gate','hero','ford','camp','formation']:
+              d=(root/(name+'.jpg')).read_bytes()
+              wire=base64.b64encode(d).decode()
+              for i in range(0,len(wire),20000):
+                  print('RIVER_PAINT_JPEG',name,i//20000,wire[i:i+20000])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: painted-valley-window
+          path: artifacts/
