@@ -5,6 +5,7 @@ const Field := preload("res://scripts/field/battle.gd")
 const Arms := preload("res://scripts/field/arms.gd")
 const GroundMap := preload("res://scripts/field/ground.gd")
 const Patrol := preload("res://scripts/field/patrol_muster.gd")
+const Muster := preload("res://scripts/field/muster_cohorts.gd")
 const ENCOUNTER := "river_gate:1"
 const FORCES := ["relief","hequ"]
 const START_SECONDS := 3595.0
@@ -92,36 +93,45 @@ func totals() -> Dictionary:
 	return all
 
 func _reserved_for(entity: Dictionary,resource: String) -> int:
-	if resource=="weapons" and _state.battle_locks.get("relief")==ENCOUNTER:
+	if _state.battle_locks.get("relief")==ENCOUNTER:
+		var muster: Dictionary=_state.battle_tickets[ENCOUNTER].muster
 		for team in 2:
-			if is_same(entity,_entity(FORCES[team])): return reserved_weapons[team]
+			if is_same(entity,_entity(FORCES[team])):
+				return muster.people[team] if resource=="soldiers" else muster.weapons[team]
 	return super._reserved_for(entity,resource)
+
+func battle_ticket(battle_id: String) -> Dictionary:
+	var copy:=super.battle_ticket(battle_id)
+	if battle_id==ENCOUNTER and not copy.is_empty():
+		# Legacy inspectors request the individual roster explicitly. Hourly
+		# accounting and settlement only retain the compact muster below.
+		var rosters: Array=[[],[]]
+		for u in field.roster:
+			rosters[u.team].append({"id":u.id,"weapon":Arms.NAMES[u.kit],"officer":u.officer,"hero":u.hero})
+		copy["reserved_roster_snapshot"]=rosters
+	return copy
 
 func reserve() -> bool:
 	if _state.battle_tickets.has(ENCOUNTER): return _state.battle_tickets[ENCOUNTER].status=="running"
-	var rosters := [[],[]]
-	var weapons := [0,0]
-	var ammunition := [[0,0],[0,0]]
-	for u in field.roster:
-		ammunition[u.team][_ammo_kind(u.kit)]+=Arms.issue(u.kit)
-		rosters[u.team].append({"id":u.id,"weapon":Arms.NAMES[u.kit],"officer":u.officer,"hero":u.hero})
-		weapons[u.team]+=_pieces(u.kit)
+	var muster:=Muster.from_battle(field)
+	if muster.is_empty(): return false
+	var ammunition: Array=muster.ammunition
 	for team in 2:
 		var force:=_entity(FORCES[team])
-		if rosters[team].size()>force.soldiers or weapons[team]>force.weapons: return false
-		if not field.world_patrol and rosters[team].size()!=force.soldiers: return false
+		if muster.people[team]>force.soldiers or muster.weapons[team]>force.weapons: return false
+		if not field.world_patrol and muster.people[team]!=force.soldiers: return false
 		if not field.legacy_missiles:
 			for k in 2:
 				if ammunition[team][k]>force.field_ammo[k]: return false
-	reserved_weapons=weapons
+	reserved_weapons=[muster.weapons[0],muster.weapons[1]]
 	if not field.legacy_missiles:
 		for team in 2:
 			var force:=_entity(FORCES[team])
 			for k in 2: force.field_ammo[k]-=ammunition[team][k]
 	_state.battle_tickets[ENCOUNTER]={"battle_id":ENCOUNTER,"location":"hequ","participating_force_ids":FORCES.duplicate(),
-		"reserved_roster_snapshot":rosters,"time":_state.time_seconds,"status":"running"}
+		"muster":muster,"time":_state.time_seconds,"status":"running"}
 	_state.battle_locks={"relief":ENCOUNTER,"hequ":ENCOUNTER}
-	_event("battle_started",{"battle_id":ENCOUNTER,"counts":[rosters[0].size(),rosters[1].size()]})
+	_event("battle_started",{"battle_id":ENCOUNTER,"counts":[muster.people[0],muster.people[1]]})
 	return audit().is_empty() and audit_quivers()
 
 func sync() -> bool:
@@ -132,9 +142,6 @@ func sync() -> bool:
 	if target<_state.time_seconds: return false
 	_advance_clock_to(target)
 	return true
-
-static func _pieces(kit: int) -> int:
-	return 2 if kit==Arms.Kit.DUAL else 1
 
 func settle() -> Dictionary:
 	if not receipt.is_empty(): return receipt.duplicate(true)
@@ -150,26 +157,31 @@ func settle() -> Dictionary:
 	var withdrawing_gear:=0
 	var surviving_gear:=[0,0]
 	var ticket: Dictionary=_state.battle_tickets[ENCOUNTER]
-	for team in 2:
-		for entry in ticket.reserved_roster_snapshot[team]:
-			var u:=field.roster[int(entry.id)]
-			if u.team!=team or entry.weapon!=Arms.NAMES[u.kit] or entry.hero!=u.hero or entry.officer!=u.officer: return {}
-			var pieces:=_pieces(u.kit)
-			if u.hp<=0:
-				dead[team].append(u.id)
-				dropped[team]+=pieces
-				loose_by_kit[team][entry.weapon]=int(loose_by_kit[team].get(entry.weapon,0))+pieces
-			else:
-				living[team].append(u.id)
-				if u.officer and field.corps.is_captive(u.id):
-					captives[team].append(u.id)
-					taken_weapons[team]+=pieces
-					continue
-				surviving_gear[team]+=pieces
-				if u.state==Field.State.ESCAPED: fled[team].append(u.id)
-				if team==0 and (u.hero or u.state==Field.State.ESCAPED):
-					withdrawing_people+=1
-					withdrawing_gear+=pieces
+	# An ordinary soldier can change places within a weapon cohort without
+	# changing the issued equipment. Officer and player identities stay fixed.
+	if Muster.from_battle(field)!=ticket.muster: return {}
+	for u in field.roster:
+		var team:=u.team
+		var pieces:=Muster.pieces(u.kit)
+		if u.hp<=0:
+			dead[team].append(u.id)
+			dropped[team]+=pieces
+			var kit_name: String=Arms.NAMES[u.kit]
+			loose_by_kit[team][kit_name]=int(loose_by_kit[team].get(kit_name,0))+pieces
+		else:
+			living[team].append(u.id)
+			if u.officer and field.corps.is_captive(u.id):
+				captives[team].append(u.id)
+				taken_weapons[team]+=pieces
+				continue
+			surviving_gear[team]+=pieces
+			if u.state==Field.State.ESCAPED: fled[team].append(u.id)
+			if team==0 and (u.hero or u.state==Field.State.ESCAPED):
+				withdrawing_people+=1
+				withdrawing_gear+=pieces
+	# Withdrawal below starts a march. Remember what the player could actually
+	# witness at the gate before moving their army to the campaign route.
+	var witnessed_here: bool=field.hero.hp>0 and _state.armies.relief.location=="hequ"
 	var before:=_state.duplicate(true)
 	var old_loose:=loose_weapons
 	for team in 2:
@@ -190,7 +202,7 @@ func settle() -> Dictionary:
 			var body:=field.roster[int(id)]
 			if not _secured(body.pos): continue
 			var name_of_kit: String=Arms.NAMES[body.kit]
-			var pieces:=_pieces(body.kit)
+			var pieces:=Muster.pieces(body.kit)
 			spoils[name_of_kit]=int(spoils.get(name_of_kit,0))+pieces
 			reclaimed+=pieces
 		loose_weapons-=reclaimed
@@ -233,6 +245,13 @@ func settle() -> Dictionary:
 	if not field.legacy_missiles: issued.ammunition=arrow_ledger
 	ticket.receipt=issued.duplicate(true)
 	_event("field_settled",{"battle_id":ENCOUNTER,"outcome":field.result,"dead":[dead[0].size(),dead[1].size()]})
+	if witnessed_here:
+		var city: Dictionary=_state.cities.hequ
+		var observed: Dictionary={"battle_id":ENCOUNTER,"outcome":field.result,"owner":city.owner}
+		if city.owner==_state.armies.relief.owner:
+			observed.merge({"soldiers":city.soldiers,"food":city.food,"fort":city.fort})
+		_queue_report("hequ","亲历斥候",_state.hour,_state.hour,observed)
+		_deliver_reports()
 	if not audit().is_empty() or not audit_quivers():
 		_state=before
 		loose_weapons=old_loose

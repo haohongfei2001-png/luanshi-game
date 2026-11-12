@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://dhq420uior1bi"
+path="res://.godot/imported/compacted-loam.png-eb7551c4606715ce6ad63b5d104aa5b3.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/compacted-loam.png"
+dest_files=["res://.godot/imported/compacted-loam.png-eb7551c4606715ce6ad63b5d104aa5b3.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

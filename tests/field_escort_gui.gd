@@ -28,7 +28,10 @@ func _run() -> void:
 	quit(0 if errors.is_empty() else 1)
 
 func _play_escort(advance_vanguard: bool) -> Dictionary:
+	var route:="vanguard" if advance_vanguard else "regular"
+	var started_ms:=Time.get_ticks_msec()
 	var h:=field.hud
+	print("ESCORT_MUSTER route="+route)
 	await _choose(h.plan,3)
 	var b:=field.battle
 	_check(b.objectives.task==Battle.Objectives.Task.ESCORT,"Actual escort objective selected")
@@ -42,6 +45,11 @@ func _play_escort(advance_vanguard: bool) -> Dictionary:
 			await _click(h.issue)
 			_check(b.companies[company].mission==Battle.Mission.PRESS,"Selected vanguard received its task")
 	await _click(h.go)
+	if not _check(b.started, "%s deployment button started the escort" % route): return b.report()
+	print("ESCORT_DEPLOY route=%s muster_ms=%d viewport=%s scale=%.2f msaa=%d" % [route, Time.get_ticks_msec()-started_ms, root.size, root.scaling_3d_scale, root.msaa_3d])
+	var last_tick:=b.tick
+	var stalled_frames:=0
+	var next_progress_tick:=120
 	var prior:=0
 	var frames:=0
 	var delivery_text:=""
@@ -63,6 +71,17 @@ func _play_escort(advance_vanguard: bool) -> Dictionary:
 			delivery_tick=b.tick
 			if advance_vanguard: await _snap("escort-open-gate")
 		await process_frame
+		if b.tick!=last_tick:
+			last_tick=b.tick
+			stalled_frames=0
+		elif b.result=="":
+			stalled_frames+=1
+			if stalled_frames>=30:
+				_check(false, "%s escort stopped advancing for %d process frames at tick %d (paused=%s)" % [route,stalled_frames,b.tick,field.paused])
+				break
+		if b.tick>=next_progress_tick:
+			print("ESCORT_ADVANCE route=%s tick=%d ram_x=%.1f gate_hp=%.1f elapsed_ms=%d" % [route,b.tick,b.ram.x,b.gate_hp,Time.get_ticks_msec()-started_ms])
+			next_progress_tick=b.tick+120
 	await _frames(3)
 	if b.gate_hp<=0 and opened_tick<0:
 		opened_tick=b.tick
@@ -79,5 +98,5 @@ func _play_escort(advance_vanguard: bool) -> Dictionary:
 		await _frames(3)
 		_check(b.at_camp and h.wait_hour.visible and h.objective.text=="战后随军","Escort survivors enter a correctly titled camp")
 	var result:=b.report()
-	result.merge({"opened_tick":opened_tick,"ram_distance_at_open":distance_at_open,"delivery_tick":delivery_tick,"delivery_prompt":delivery_text,"report_title":report_title})
+	result.merge({"elapsed_ms":Time.get_ticks_msec()-started_ms,"opened_tick":opened_tick,"ram_distance_at_open":distance_at_open,"delivery_tick":delivery_tick,"delivery_prompt":delivery_text,"report_title":report_title})
 	return result

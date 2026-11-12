@@ -1,25 +1,34 @@
-"""Original river garrison material studies. Output is a padded, mip-safe 4x4 atlas.
+"""Original river garrison material studies. Output is a padded, mip-safe material atlas.
 
 Albedo contains colour and construction marks only. Its companion stores roughness,
 metal fraction and dyed-cloth coverage in RGB. The shader supplies the two liveries.
 """
-from math import cos, pi, sin
+from math import cos, exp, pi, sin
 from random import Random
 from PIL import Image, ImageDraw, ImageFilter
+from painted_company import materials
 
 TILE = 128
 PAD = 4
 NAMES = ["linen", "dyed", "leather", "lamellar", "iron", "edge", "brass", "timber",
-         "skin", "hair", "lining", "quilt", "boots", "shield", "binding", "felt"]
+         "skin", "hair", "lining", "quilt", "boots", "shield", "binding", "felt",
+         "visage", "eye", "headcloth", "mantle", "sash", "quiver", "overskirt",
+         "hero_mantle", "visage_second", "visage_third", "facing", "coat", "black_iron", "iron_binding", "lames", "girdle"]
 SURFACES = [
-    ((173,151,118), (230,0,0)), ((180,164,134), (222,0,240)),
-    ((92,60,43), (158,0,0)), ((103,104,91),(139,170,0)),
-    ((97,105,106),(113,200,0)), ((180,186,175),(81,219,0)),
-    ((159,127,77),(114,180,0)), ((132,92,58),(171,0,0)),
-    ((186,134,103),(172,0,0)), ((56,46,39),(170,0,0)),
-    ((213,194,154),(215,0,0)), ((147,129,102),(230,0,195)),
+    ((174,153,124), (230,0,0)), ((178,173,151), (230,0,244)),
+    ((87,63,46), (219,0,0)), ((95,110,114),(143,155,0)),
+    ((110,111,106),(190,130,0)), ((169,165,150),(154,169,0)),
+    ((137,113,76),(181,117,0)), ((132,92,58),(171,0,0)),
+    ((175,124,96),(209,0,0)), ((46,37,36),(209,0,0)),
+    ((213,194,154),(215,0,0)), ((111,103,89),(230,0,72)),
     ((67,51,42),(168,0,0)), ((124,77,49),(165,17,66)),
-    ((128,94,66),(189,0,0)), ((86,89,82),(235,0,30)),
+    ((111,81,66),(206,0,0)), ((72,78,84),(235,0,22)),
+    ((183,133,104),(210,0,0)), ((169,151,133),(191,0,0)),
+    ((188,167,129),(242,0,0)), ((61,87,103),(237,0,159)),
+    ((139,56,42),(218,0,0)), ((94,60,39),(186,0,0)), ((87,94,101),(239,0,139)),
+    ((110,42,39),(235,0,0)), ((172,125,96),(210,0,0)), ((172,125,96),(210,0,0)), ((61,65,67),(236,0,70)), ((150,150,146),(238,0,248)),
+    ((69,73,75),(208,92,0)), ((97,94,85),(202,69,0)), ((89,88,81),(211,81,0)),
+    ((105,100,92),(234,0,211)),
 ]
 
 def adjusted(rgb, variation):
@@ -27,12 +36,48 @@ def adjusted(rgb, variation):
 
 def uv(name, u, v):
     i = NAMES.index(name)
-    return ((i%4*TILE+PAD+u*(TILE-2*PAD))/(4*TILE),
-            (i//4*TILE+PAD+v*(TILE-2*PAD))/(4*TILE))
+    return ((i%8*TILE+PAD+u*(TILE-2*PAD))/(8*TILE),
+            (i//8*TILE+PAD+v*(TILE-2*PAD))/(4*TILE))
+
+def painted(name, base, x, y):
+    u,v=(x+.5)/TILE,(y+.5)/TILE
+    def blend(col, paint, amount):
+        return tuple(a+(b-a)*min(1,max(0,amount)) for a,b in zip(col,paint))
+    if name=="visage":
+        px,py=(u-.5)*1.9,8.13-v*2.63
+        a=abs(px)
+        def wash(cx,cy,wx,wy):
+            return exp(-((a-cx)/wx)**2-((py-cy)/wy)**2)
+        col=blend(base,(128,84,73),.44*wash(.64,6.74,.23,.62)+.48*wash(.24,5.94,.45,.19))
+        col=blend(col,(209,161,123),.52*wash(.45,6.81,.21,.17)+.50*wash(.04,7.36,.31,.31))
+        col=blend(col,(152,97,83),.48*wash(.49,6.62,.25,.22))
+        col=blend(col,(108,76,69),.62*wash(.315,7.04,.19,.092))
+        col=blend(col,(62,49,43),.90*wash(.303,7.179+.081*(a-.21)-.55*(a-.27)**2,.151,.031))
+        col=blend(col,(118,72,64),.64*wash(.061,6.55,.063,.047)+.72*wash(.073,6.288,.136,.045))
+        col=blend(col,(219,159,117),.54*wash(0,6.73,.07,.14)+.27*wash(.074,6.19,.11,.06))
+        return col
+    if name=="eye":
+        pupil=((u-.5)/.092)**2+((v-.5)/.215)**2
+        return blend((161,145,129),(52,40,34),max(0,min(1,(1.27-pupil)*3)))
+    if name in ("dyed","mantle","headcloth","sash","felt","quiver","binding","overskirt"):
+        # Broad shadows can still be read when the whole sleeve measures six pixels.
+        folds=cos(2*pi*(3*u+.26*v+.19*sin(2*pi*(u+v))))*.5+.5
+        cavity=(folds**3)*(.68 if name in ("mantle","dyed","felt") else .30)
+        value=10*(1-v)-14*v-25*cavity+8*(1-folds)**2
+        col=adjusted(base,value)
+        if name in ("mantle","sash","headcloth"):
+            border=min(abs(v-.090),abs(v-.91))
+            col=blend(col,(172,138,92),.56*exp(-(border/.012)**2))
+        if name=="binding":
+            seam=(v*3.5+u*.9)%1
+            col=blend(col,(58,53,54),.63*exp(-((seam-.45)/.075)**2))
+        return col
+    return None
 
 def make_atlas(out):
-    albedo = Image.new("RGB",(TILE*4,TILE*4))
+    albedo = Image.new("RGB",(TILE*8,TILE*4))
     response = Image.new("RGB",albedo.size)
+    paintings=materials(TILE)
     for index,name in enumerate(NAMES):
         base,pbr = SURFACES[index]
         rng = Random(61112+index)
@@ -54,7 +99,8 @@ def make_atlas(out):
                     h = 2*cos(y*.04)-abs(x-64)*.026
                 else:
                     h = 3*sin(x*.2+sin(y*.13))
-                pix[x,y]=adjusted(base,h+fleck)
+                paint=painted(name,base,x,y)
+                pix[x,y]=adjusted(paint if paint is not None else base,h*.37+fleck*.5 if paint is not None else h+fleck)
                 m[x,y]=(max(0,min(255,int(pbr[0]+fleck*2))),pbr[1],pbr[2])
         pen,rough=ImageDraw.Draw(tile),ImageDraw.Draw(mask)
         if name=="lamellar":
@@ -84,9 +130,11 @@ def make_atlas(out):
             for x in range(0,TILE,24):
                 pen.line((x,0,x,TILE),fill=(76,53,39),width=2)
                 pen.line((x+2,0,x+2,TILE),fill=(148,101,67))
+        if name in paintings:
+            tile=paintings[name]
         # Replicate edge texels so the neighbouring material cannot bleed into the seam.
         for src,atlas in ((tile,albedo),(mask,response)):
-            ox,oy=index%4*TILE,index//4*TILE
+            ox,oy=index%8*TILE,index//8*TILE
             inner=src.crop((PAD,PAD,TILE-PAD,TILE-PAD))
             padded=inner.resize((TILE,TILE))
             padded.paste(inner,(PAD,PAD))

@@ -5,3 +5,15 @@
 两张 128 × 128 循环纹理作为线性数据导入，并生成 mipmap。 `fieldbed.png` 的 RGB 分别存储碎土、草梗和河岸卵石；`joinery.png` 的 RGB 分别存储木纹、石砌面和织物纹理。地表、城门、木桥、营帐和植被共用现有的地形材质。屋面有分片筒瓦和起脊，门楼近景保留檐下斗栱与承重柱。
 
 以上网格、配色和纹理是本仓库为此战场创作的原创资产，未使用外部模型或贴图库。原始制作文件为 `tools/env_assets.mjs`。在仓库根目录运行 `node tools/env_assets.mjs` 可重建四个文件，生成过程不依赖第三方包。Godot 常规项目导入会处理这些资产。
+
+`floodplain-paint.png` 为原创 512 × 336 河关地表彩绘。主路、两条渡口支路、坡地熟田、石脊和树荫的位置来自 `foothills.json`。地图内的城门保留土筑墙体、错缝石基、木构额枋和可分离的远檐。`leaf-sprays.png` 是原创 256 × 256 带透明通道的叶簇图集，包括阔叶、垂柳、草穗和发黄的林冠。两张纹理均启用 mipmap，树枝和叶片分区合批。运行 `node tools/env_river_paint.mjs` 可重制两张纹理。此组资产未使用摄影、图库或其他游戏画面。
+
+`stand-placements.json` 由同一制作命令生成，树木的实际树位同时参与林下地表着色。`trail-marks.png` 是原创 256 × 256 循环地面叠绘，包含泥缝、断草和碎石；坡道、田地和主路按地表材质混合。门额的“河關”沿用现有 Noto Sans SC 字体及其 OFL 授权。
+
+`bank-willows.gltf` 的老柳与幼柳各有独立木质网格、弯折垂枝和叶帘，缩放后共同并入战场的静态树群批次。`willow-sprays.png` 是原创 512 × 256 河岸图集，包含两种垂柳叶幕、一种树梢和一簇莎草。`foothills.json` 固定大树的位置与朝水的方向。运行 `node tools/env_river_paint.mjs` 会调用 `tools/env_willow.mjs`，重建柳树网格、图集、树位与相应地表着色。
+
+主战区地表使用 512 × 512 可平铺颜色与交界高度贴图。草根采用 [Amal Kumar 的 Sparse Grass](https://polyhaven.com/a/sparse_grass)，压实土采用 [Rob Tuytel 的 Brown Mud Dry](https://polyhaven.com/a/brown_mud_dry)，湿砂采用 [Dario Barresi 的 Sandy Gravel 02](https://polyhaven.com/a/sandy_gravel_02)。三项原始扫描适用 [Poly Haven CC0](https://polyhaven.com/license)。项目对其做了色阶分组、抑制细小亮斑、色彩整理和高度蒙版制作。游戏直接读取仓库里的 PNG。可用 Pillow 11.3.0 运行 `python3 tools/env_ground_materials.py` 重建，脚本对三份源 JPG 核验 SHA-256，游戏运行时不访问素材网站。
+
+`soil-cover.png` 由 `node tools/env_river_paint.mjs` 从河关道路、营地、坡地旧田和河岸生成。四个线性通道依次记录裸土覆盖、湿砂、地表明暗和到道路中心线的相对距离。车辙随桥头和道路弯曲。近景草冠与土沿使用材料高度过渡。
+
+`verge-and-track.svg` 是原创可平铺地表色罩。草丛的短叶、根际土色和零散路石分在三个线性通道，按世界地图上的草场、车道、坡田和潮湿河岸分别显现。远镜头使用 mipmap 滤除脚边细节。

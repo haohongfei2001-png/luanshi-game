@@ -32,6 +32,7 @@ var unit := OptionButton.new()
 var mission := OptionButton.new()
 var channel := OptionButton.new()
 var go := Button.new()
+var continue_slot := Button.new()
 var change := Button.new()
 var help := Label.new()
 var result_box := PanelContainer.new()
@@ -66,6 +67,8 @@ var report_button := Button.new()
 var retry_button := Button.new()
 var graphic_toggle := Button.new()
 var graphic_row := VBoxContainer.new()
+var last_notice:=""
+var notice_tick:=-1000
 var phase := -1
 var career_alive:=true
 
@@ -76,52 +79,76 @@ func _ready() -> void:
 	root_control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root_control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	FontUI.apply_font(root_control)
-	var top := _panel(root_control,Control.PRESET_TOP_WIDE)
-	top.offset_left=16; top.offset_right=-16; top.offset_top=12
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation",16)
-	top.add_child(row)
-	_label(row,objective,21,Color("f2dfa6"))
-	_label(row,own,16,Color("d0ded0"))
-	own.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	_button(row,command_toggle,"军令  Tab",func(): order_panel.visible = not order_panel.visible)
-	_button(row,change,"暂停  P",func(): pause.emit())
-	_button(row,graphic_toggle,"画质",func(): graphic_row.visible=not graphic_row.visible)
-	_button(row,legacy,"三城旧档",func(): campaign.emit())
-	root_control.add_child(graphic_row)
-	graphic_row.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	graphic_row.offset_left=-225
-	graphic_row.offset_right=-16
-	graphic_row.offset_top=182
-	_select(graphic_row,quality,"画质",["清晰 · 100%","均衡 · 85%","性能 · 70%"])
-	quality.item_selected.connect(func(i: int): quality_changed.emit(i))
-	graphic_row.hide()
+	var top:=_panel(root_control,Control.PRESET_TOP_LEFT)
+	top.position=Vector2(16,13)
+	var objective_row:=HBoxContainer.new()
+	objective_row.add_theme_constant_override("separation",12)
+	top.add_child(objective_row)
+	_label(objective_row,objective,18,Color("efdfb2"))
+	_label(objective_row,own,14,Color("c4c8ba"))
+
+	var buttons:=HBoxContainer.new()
+	root_control.add_child(buttons)
+	buttons.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	buttons.offset_right=-16
+	buttons.offset_top=13
+	buttons.grow_horizontal=Control.GROW_DIRECTION_BEGIN
+	buttons.add_theme_constant_override("separation",5)
+	_button(buttons,command_toggle,"军令 Tab",func(): order_panel.visible=not order_panel.visible)
+	_button(buttons,change,"暂停 P",func(): pause.emit())
+	_button(buttons,graphic_toggle,"选项",func(): graphic_row.visible=not graphic_row.visible)
+	graphic_toggle.tooltip_text="画质、保存与读档"
+	_button(buttons,legacy,"三城旧档",func(): campaign.emit())
+
 	root_control.add_child(inset)
 	inset.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	inset.offset_left=-211
+	inset.offset_left=-178
 	inset.offset_right=-16
-	inset.offset_top=66
-	inset.offset_bottom=174
+	inset.offset_top=52
+	inset.offset_bottom=143
 	inset.chosen.connect(func(at: Vector2): terrain_chosen.emit(at))
-	var panel := _panel(root_control,Control.PRESET_BOTTOM_WIDE)
-	panel.offset_left=16; panel.offset_right=-16; panel.offset_bottom=-14
-	panel.grow_vertical=Control.GROW_DIRECTION_BEGIN
-	var bottom := VBoxContainer.new()
-	panel.add_child(bottom)
-	var vital := HBoxContainer.new()
+	root_control.add_child(graphic_row)
+	graphic_row.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	graphic_row.offset_left=-210
+	graphic_row.offset_right=-16
+	graphic_row.offset_top=150
+	_select(graphic_row,quality,"画质",["清晰 · 100%","均衡 · 85%","性能 · 70%"])
+	quality.item_selected.connect(func(i: int): quality_changed.emit(i))
+	var saves:=HBoxContainer.new()
+	graphic_row.add_child(saves)
+	_button(saves,save_button,"保存 F5",func(): save_requested.emit())
+	_button(saves,load_button,"读档 F9",func(): load_requested.emit())
+	graphic_row.hide()
+
+	var status:=_panel(root_control,Control.PRESET_BOTTOM_LEFT)
+	status.offset_left=16
+	status.offset_bottom=-15
+	status.grow_vertical=Control.GROW_DIRECTION_BEGIN
+	status.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var bottom:=VBoxContainer.new()
+	bottom.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	bottom.add_theme_constant_override("separation",3)
+	status.add_child(bottom)
+	var vital:=HBoxContainer.new()
+	vital.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	vital.add_theme_constant_override("separation",7)
 	bottom.add_child(vital)
-	_label(vital,condition,16,Color("efddad"))
-	health.custom_minimum_size=Vector2(135,14)
+	_label(vital,condition,15,Color("f2e4bc"))
+	health.custom_minimum_size=Vector2(88,7)
 	health.size_flags_vertical=Control.SIZE_SHRINK_CENTER
 	health.show_percentage=false
+	health.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var inset_track:=StyleBoxFlat.new()
+	inset_track.bg_color=Color("263536")
+	var fill:=StyleBoxFlat.new()
+	fill.bg_color=Color("a9b991")
+	health.add_theme_stylebox_override("background",inset_track)
+	health.add_theme_stylebox_override("fill",fill)
 	vital.add_child(health)
-	_label(vital,feedback,15,Color("c2cfc6"))
-	feedback.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	_button(vital,save_button,"保存 F5",func(): save_requested.emit())
-	_button(vital,load_button,"读档 F9",func(): load_requested.emit())
-	_label(bottom,action_text,15,Color("e6e4d2"))
+	_label(bottom,feedback,14,Color("e6cf96"))
+	_label(bottom,action_text,14,Color("dfdfcc"))
 	help.text="WASD 移动　Shift 疾跑　鼠标瞄准　滚轮缩放　右键平移　中键环视　C 跟随\nF 骑马 / 下马　V 登车 / 下车　1 推进　2 守阵　3 撤离"
-	_label(bottom,help,14,Color("aebdb0"))
+	_label(bottom,help,14,Color("bdc9bd"))
 	root_control.add_child(order_panel)
 	order_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	order_panel.position=Vector2(16,65)
@@ -154,6 +181,7 @@ func _ready() -> void:
 		orders.visible=not deployment.visible
 		details.text="返回兵器与任务" if deployment.visible else "调整阵位与兵种")
 	_button(stack,go,"开战    Enter",func(): deploy.emit())
+	_button(stack,continue_slot,"继续上次战役",func(): load_requested.emit())
 	root_control.add_child(result_box)
 	result_box.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	result_box.grow_horizontal=Control.GROW_DIRECTION_BOTH
@@ -178,14 +206,14 @@ func _ready() -> void:
 
 func _style() -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
-	s.bg_color=Color("1e302fef")
-	s.border_color=Color("8a8667")
+	s.bg_color=Color("1a2729dc")
+	s.border_color=Color("8e8870a0")
 	s.set_border_width_all(1)
 	s.set_corner_radius_all(4)
-	s.content_margin_left=14
-	s.content_margin_right=14
-	s.content_margin_top=8
-	s.content_margin_bottom=8
+	s.content_margin_left=10
+	s.content_margin_right=10
+	s.content_margin_top=5
+	s.content_margin_bottom=5
 	return s
 
 func _panel(parent: Control,preset: int) -> PanelContainer:
@@ -263,6 +291,7 @@ func update_model(b: Battle,paused: bool) -> void:
 	var now:=0 if not b.started else (1 if b.result=="" else 2)
 	if now!=phase:
 		phase=now
+		if phase!=0: continue_slot.hide()
 		deployment.hide()
 		orders.show()
 		details.text="调整阵位与兵种"
@@ -294,17 +323,22 @@ func update_model(b: Battle,paused: bool) -> void:
 		else:
 			objective.text="护送冲车 · 撞门 %d/%d" % [b.objectives.strokes,Battle.Objectives.ESCORT_STROKES]
 	elif b.gate_hp>0:
-		objective.text="城门 %d%%" % ceili(b.gate_hp/260.0*100.0)
+		objective.text="攻破关门　%d%%" % ceili(b.gate_hp/260.0*100.0)
 	else:
 		objective.text="内庭 %.1f / 6 秒" % b.capture
-	own.text="我军 %d / %d　初编军官 %d　守军初编 %d" % [b.side_size-b.losses[0]-b.escaped[0],b.side_size,b.companies_per_side,b.ordinary_counts[1]]
+	own.visible=not b.started or order_panel.visible or toggle_help
+	own.text="我军 %d　守军 %d" % [b.ordinary_counts[0]-b.losses[0]-b.escaped[0],b.ordinary_counts[1]-b.losses[1]-b.escaped[1]]
 	condition.text="%s · 生命 %d/%d　" % [Arms.NAMES[b.hero.kit],ceili(b.hero.hp),int(b.hero.max_hp)]
 	if b.hero.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] and not b.legacy_missiles:
 		condition.text+="%s %d　" % ["箭" if b.hero.kit==Arms.Kit.BOW else "弩矢",b.hero.ammo]
 	if b.vehicle!=0: condition.text+=("骑乘　" if b.vehicle==1 else "驾车　")
 	elif b.breath<0.98: condition.text+="气力 %d%%　" % roundi(b.breath*100)
 	health.value=b.hero.hp/b.hero.max_hp*100
-	feedback.text="　"+b.notice
+	if b.notice!=last_notice or b.tick<notice_tick:
+		last_notice=b.notice
+		notice_tick=b.tick
+	feedback.text=b.notice
+	feedback.visible=not b.notice.is_empty() and (order_panel.visible or b.tick-notice_tick<52)
 	help.visible=not b.started or toggle_help
 	weapon.disabled=b.started
 	go.visible=not b.started
@@ -316,7 +350,8 @@ func update_model(b: Battle,paused: bool) -> void:
 	for i in 4:
 		var delay := " %.1fs" % b.hero_cds[i] if b.hero_cds[i]>0 else ""
 		line.append("%s  %s%s" % [["左键/J","Q","E","空格"][i],names[i],delay])
-	action_text.text="　　 ".join(line)+"　　　 H 操作"
+	action_text.text="　 ".join(line)+"　 H 帮助"
+	action_text.visible=b.started and b.result==""
 	result_box.visible=b.result!=""
 	if result_box.visible:
 		travel_row.visible=b.at_camp
@@ -359,7 +394,12 @@ func show_receipt(b: Battle,receipt: Dictionary,world: Dictionary) -> void:
 		if not world.reports.is_empty():
 			var latest: Dictionary=world.reports.back()
 			var subject: String={"hequ":"河关","pingling":"平陵","anping":"安平","relief":"本军"}.get(latest.subject,"沿线")
-			result_text.text+="\n最近送达：%s，约 %d 小时前观测。" % [subject,maxi(0,floori((world.time_seconds-latest.observed_at_seconds)/3600.0))]
+			var age:=maxi(0,floori((world.time_seconds-latest.observed_at_seconds)/3600.0))
+			if latest.contents.get("battle_id","")==receipt.get("battle_id","") and latest.contents.has("outcome"):
+				var holding: String="我军守驻" if latest.contents.get("owner","")==army.owner else "守军仍在"
+				result_text.text+="\n%s亲历：%s，%s。" % [subject,latest.contents.outcome,holding]
+			else:
+				result_text.text+="\n最近送达：%s，约 %d 小时前观测。" % [subject,age]
 	else:
 		var parts:=PackedStringArray()
 		for kit in Arms.NAMES:

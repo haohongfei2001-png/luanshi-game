@@ -11,7 +11,7 @@ from company_weapons import TWO_HAND, FRONT_GRIP
 
 BONES=16
 FRAMES=32
-CLIPS=16
+CLIPS=31
 IDENT=(0.,0.,0.,1.)
 def qm(q,r):
     a,b=q[:3],r[:3]
@@ -55,7 +55,6 @@ def two_link(binds,root,end,pole):
 # Grip and blade orientation at chamber, impact (on release), and guard.
 # Values are measured around the torso, in metres and degrees, not percentage
 # damage/reach. A sweep, short thrust, shield shove and bow draw use different arcs.
-READY=(.205,1.102,.212,-16,-14,0)
 CHAMBER=[(.31,1.34,.054,-48,72,-22),(.31,1.40,.025,-76,41,-20),(.255,1.208,-.147,-11,65,-9),
          (.202,1.10,-.168,-4,-19,5),(.27,1.385,-.149,-58,40,-22),(.15,1.401,.39,0,-10,-9),
          (.093,1.29,.151,0,-3,0),(.251,1.17,-.067,-12,-20,-15),(.30,1.29,.055,-40,67,-16)]
@@ -63,9 +62,27 @@ CONTACT=[(-.105,1.106,.385,14,-49,12),(-.029,1.012,.424,30,-32,17),(-.117,1.097,
          (.066,1.23,.26,-3,-6,1),(-.093,1.068,.194,24,-40,13),(.143,1.402,.442,0,0,-9),
          (.111,1.298,.205,-3,0,0),(.115,1.167,.435,-1,-8,0),(-.084,1.078,.402,11,-51,-3)]
 def mix(a,b,t): return tuple(x+(y-x)*t for x,y in zip(a,b))
+def walking_foot(phase,running=False):
+    # A complete cycle advances 1 / .68 metres in Battle._step. While a foot
+    # bears weight its local Z recedes at exactly that rate, keeping it on the soil.
+    stance=.355 if running else .51
+    travel=1/(.42 if running else .68)
+    half=stance*travel*.5
+    if phase<stance:
+        u=phase/stance
+        pitch=-9*(1-smooth(min(1,u/.25)))+20*smooth(max(0,(u-.71)/.29))
+        return half-phase*travel,0.,pitch
+    u=(phase-stance)/(1-stance)
+    arc=sin(pi*u)
+    z=-half+2*half*smooth(u)-(1-stance)*travel*u*(1-u)*(1-2*u)
+    return z,(.225 if running else .13)*arc**1.5,20*(1-smooth(u))-9*smooth(u)-10*arc
+
 def pose(kit,clip,t):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
+    running=clip>=23
+    heading=((clip-23 if running else clip-15)*pi/4) if clip>=16 else 0.
+    if clip>=16: clip=0
     swing=sin(t*2*pi)
     move=clip in (0,12)
     slot=(clip-2)%4
@@ -73,10 +90,14 @@ def pose(kit,clip,t):
     walk=swing if move else 0.
     ride=clip==15
     crouch=0.; lean=0.; turn=0.; shift=0.; pull=.03
-    rest=READY
-    if kit in TWO_HAND: rest=(.16,1.075,-.04,-10,-17,0)
-    if kit==5: rest=(.177,1.19,.264,-8,-14,-18)
-    if kit==6: rest=(.143,1.155,.093,-3,-8,0)
+    # At rest a long arm rides diagonally with its point above its neighbours.
+    # Its authored chamber and impact still level the shaft at the original hit time.
+    rests=((.198,1.07,.17,-33,-22,-8),(.238,1.09,.12,-44,21,-13),
+           (.120,1.02,-.048,-33,18,-9),(.142,1.015,-.078,-48,-14,4),
+           (.167,1.059,-.072,-55,17,-8),(.164,1.075,.219,-5,-18,-32),
+           (.126,1.118,.084,16,-7,-5),(.216,1.125,.159,-34,-19,-2),
+           (.212,1.098,.142,-32,23,-12))
+    rest=rests[kit]
     hand=rest
     if clip==1 or move or ride:
         hand=tuple(rest[i]+(walk*.064 if i==2 and kit not in TWO_HAND else 0) for i in range(6))
@@ -113,14 +134,70 @@ def pose(kit,clip,t):
     if ride: lean=17;crouch=.103;shift=.034
     if clip==11: lean=-18*(1-t);turn=-14*(1-t);crouch=.07*(1-t)
     if clip==14: crouch=.13*smooth(t)
+    # The supporting hip rises while the opposite shoulder advances. A stationary
+    # soldier keeps both feet loaded and breathes on their own phase.
+    breath=sin(t*2*pi)
+    hip_yaw=turn*.38
+    shoulder_yaw=turn
+    hip_roll=0.
+    chest_roll=0.
+    sway=0.
+    if move:
+        hips=cos(t*2*pi)
+        sway=(.022 if running else .044)*sin(t*2*pi)
+        hip_yaw=7*hips
+        shoulder_yaw=-8.5*hips
+        hip_roll=4.0*walk
+        chest_roll=-3.3*walk
+        crouch=(.088+.050*cos(t*4*pi-.22)) if running else (.089+.026*cos(t*4*pi))
+        lean=12*cos(heading) if running else (9 if clip==12 else 5.8*cos(heading))
+        hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else
+                      (5.2 if running else 3.7)*walk if i==3 else 2.4*hips if i==4 else 0) for i,v in enumerate(hand))
+    elif clip==1:
+        crouch=.026+.007*breath
+        lean=3.8+1.1*breath
+        hip_yaw=-5.5
+        shoulder_yaw=8.0+2.6*breath
+        sway=.012+.005*breath
+        chest_roll=-2+.7*breath
+        hand=tuple(v+(.012*breath if i==1 else -.016*cos(t*2*pi) if i==2 else 0) for i,v in enumerate(hand))
+    elif attack:
+        load=force
+        ranged=kit in (5,6)
+        sway=(.026 if ranged else .064)*load
+        shift+=(-.032 if ranged else -.083)*load
+        crouch+=.040+.034*max(0,load)
+        hip_yaw=load*(8 if ranged else 21)-4
+        shoulder_yaw=load*(13 if ranged else 34)+4
+        hip_roll=3.8*load
+        chest_roll=-6.2*load
+        lean+=3.8*(1-load)
+    elif clip==10:
+        sway=-.034
+        hip_yaw=-12
+        shoulder_yaw=14
+        chest_roll=-5
+    elif clip==11:
+        sway=-.060*(1-t)
+        hip_yaw=9*(1-t)
+        shoulder_yaw=-24*(1-t)
+        chest_roll=11*(1-t)
+    elif clip==14:
+        give=smooth(t)
+        crouch=.05+.26*smooth(min(1,t/.64))
+        sway=-.093*give
+        shift=-.12*give
+        hip_roll=12*give
+        chest_roll=24*give
+        shoulder_yaw=-25*give
     waist=(0,.86,0)
-    pelvic=placed(waist,(0,.86-crouch,shift),euler(lean*.34,turn*.33,walk*1.6))
-    chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,turn,walk*2))
-    head_m=placed((0,1.427,.015),trans(chest,(0,1.427,.015)),euler(lean*.49,turn*.42,walk*1.1))
+    pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
+    chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
+    head_m=placed((0,1.427,.015),trans(chest,(0,1.427,.015)),euler(lean*.42,shoulder_yaw*.40,chest_roll*.28))
     ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
     ms[HIPS]=pelvic;ms[CHEST]=chest;ms[HEAD]=head_m
     # Hands meet a common weapon frame. Limb planes sit outward to keep elbows apart.
-    anchor=add(hand[:3],(0,-crouch,shift))
+    anchor=add(hand[:3],(sway*.72,-crouch,shift))
     aim=euler(*hand[3:])
     offq=aim
     right,radius=reachable(chest,1,aim)
@@ -172,29 +249,59 @@ def pose(kit,clip,t):
     for side in (-1,1):
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
         binds=leg_nodes(side)
-        foot=(side*(.155 if attack else .14),.123+max(0,side*cos(t*2*pi))**2*.105*(1 if move else 0),
-              -.014+side*(.22*walk if move else .091 if attack else .022))
-        if ride: foot=(side*.287,.276,.058)
+        lead=-1 if kit in (2,3,4,5,6,7) else 1
+        crouched=attack or clip in (10,11,13,14)
+        z=side*lead*(.160 if crouched else .075)
+        pitch=0.
+        lift=0.
+        if move:
+            z,lift,pitch=walking_foot((t+(.5 if side>0 else 0))%1.,running)
+        if clip==14:
+            z+=side*.17*smooth(t)
+            lift=.12*smooth(t) if side==1 else 0.
+            pitch=side*19*smooth(t)
+        foot_q=euler(pitch*cos(heading),side*(5.5 if not crouched else 9.)+8*sin(heading),-pitch*sin(heading))
+        # Roll about the heel or toe. Preserve the sole's actual contact height.
+        lowest=min(rot(foot_q,(dx,-.117,dz))[1] for dx in (-.05,.05) for dz in (-.072,.187))
+        foot=(side*(.179 if crouched else .143)+z*sin(heading),.006+lift-lowest,
+              z*cos(heading)-.014-side*.129*sin(heading))
+        if ride:
+            foot=(side*.287,.276,.058)
+            foot_q=euler(-8,side*5)
         ms[thigh],ms[shin]=two_link(binds,trans(pelvic,binds[0]),foot,(side*(1.1 if ride else .16),-.08,1))
-        ms[boot]=placed(binds[2],foot,euler(-walk*12*side if move else -8 if ride else 0,side*5))
+        ms[boot]=placed(binds[2],foot,foot_q)
     if clip==14:
-        k=smooth(min(1.,t/.91))
-        fall=placed((0,.10,0),(0,.10,0),euler(-82*k,14*k,12*k))
+        k=smooth(max(0.,min(1.,(t-.14)/.80)))
+        fall=placed((0,.10,0),(0,.10,0),euler(-76*k,18*k,29*k))
         ms=[chain(fall,m) for m in ms]
     return ms
 
+def cycling(clip):
+    return clip in (0,1,12,15) or clip>=16
+
 def bake_motion(out):
-    tex=Image.new("RGBA",(8*BONES*3,9*CLIPS*4))
+    # Each bone gets a strip of adjacent keys. The four RGBA8 rows are affine
+    # encodings, so GPU filtering can mix high/low bytes without a carry error.
+    # The extra endpoint joins the first key of loops or holds the last action key.
+    tex=Image.new("RGBA",((FRAMES+1)*BONES,9*CLIPS*4))
     px=tex.load()
     for kit in range(9):
         for clip in range(CLIPS):
-            for frame in range(FRAMES):
-                t=frame/(FRAMES if clip in (0,1,12,15) else FRAMES-1)
+            previous=[None]*BONES
+            y=(kit*CLIPS+clip)*4
+            for frame in range(FRAMES+1):
+                t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
                 for b,(q,offset) in enumerate(pose(kit,clip,t)):
-                    x=frame%8*BONES*3+b*3; y=(kit*CLIPS+clip)*4+frame//8
-                    quat=[max(0,min(4095,round((n*.5+.5)*4095))) for n in q]
-                    px[x,y]=tuple(n>>4 for n in quat)
-                    v=[max(0,min(65535,round((n/6+.5)*65535))) for n in offset]
-                    px[x+1,y]=(*(n//256 for n in v),(quat[0]%16)*16+quat[1]%16)
-                    px[x+2,y]=(*(n%256 for n in v),(quat[2]%16)*16+quat[3]%16)
+                    # q and -q describe the same rotation. Choose neighbours on
+                    # the same hemisphere before interpolation, including the wrap.
+                    if previous[b] and sum(a*c for a,c in zip(q,previous[b]))<0:
+                        q=tuple(-v for v in q)
+                    previous[b]=q
+                    quat=[max(0,min(65535,round((n*.5+.5)*65535))) for n in q]
+                    xyz=[max(0,min(65535,round((n/6+.5)*65535))) for n in offset]
+                    x=b*(FRAMES+1)+frame
+                    px[x,y]=tuple(n//256 for n in quat)
+                    px[x,y+1]=tuple(n%256 for n in quat)
+                    px[x,y+2]=(*(n//256 for n in xyz),255)
+                    px[x,y+3]=(*(n%256 for n in xyz),255)
     tex.save(out/"company_motion.png",optimize=True)

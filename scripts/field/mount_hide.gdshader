@@ -1,9 +1,12 @@
 shader_type spatial;
-render_mode cull_disabled, diffuse_burley, specular_schlick_ggx;
+render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D surface_atlas : source_color, filter_linear_mipmap, repeat_disable;
 varying flat float atlas_patch;
 varying flat float fallen;
 varying flat float hit;
+varying float coat_shade;
+varying flat float coat_lot;
+uniform float stable_clock = 0.0;
 
 vec3 rx(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(p.x,c*p.y-s*p.z,s*p.y+c*p.z);}
 vec3 rz(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(c*p.x-s*p.y,s*p.x+c*p.y,p.z);}
@@ -14,6 +17,7 @@ void vertex(){
 	float collapse=state==7?smoothstep(0.0,0.91,INSTANCE_CUSTOM.g):0.0;
 	float gait=state==7?0.0:clamp(INSTANCE_CUSTOM.g,0.0,1.0);
 	float phase=INSTANCE_CUSTOM.b*6.2831853;
+	float rest=sin(stable_clock*1.22+phase);
 	float bounce=sin(phase*2.0)*0.021*gait;
 	vec3 p=VERTEX,n=NORMAL;
 	if(bone>=1 && bone<=4){
@@ -36,11 +40,11 @@ void vertex(){
 		p.y=max(0.012,p.y);
 	}else if(bone==11){
 		vec3 poll=vec3(0,1.206,0.356);
-		float nod=(sin(phase*2.0+0.61)*0.038*gait-0.014*gait)*weight;
+		float nod=(sin(phase*2.0+0.61)*0.051*gait-0.014*gait+.014*rest*(1.0-gait))*weight;
 		p=poll+rx(p-poll,nod); n=rx(n,nod);p.y+=bounce*weight;
 	}else if(bone==12){
 		vec3 dock=vec3(0,1.29,-0.69);
-		float swish=weight*gait*(0.12*sin(phase+0.36)+0.05*sin(phase*2.0));
+		float swish=weight*(gait*(0.14*sin(phase+0.36)+0.05*sin(phase*2.0))+.036*sin(stable_clock*1.43+phase)*(1.0-gait));
 		p=dock+rz(p-dock,swish);n=rz(n,swish);p.y+=bounce;
 	}else if(bone==14){
 		vec3 hub=vec3(0,0.55,-1.83);
@@ -60,15 +64,24 @@ void vertex(){
 	VERTEX=p; NORMAL=normalize(n);
 	vec2 tile=floor(UV*4.0);
 	atlas_patch=tile.x+tile.y*4.0;
-	fallen=collapse;hit=clamp(INSTANCE_CUSTOM.a,0.0,1.0);
+	coat_shade=max(1.0-smoothstep(.44,.83,VERTEX.y),smoothstep(1.09,1.23,VERTEX.z)*.82);
+	coat_shade=max(coat_shade,.22*(1.0-smoothstep(.77,1.17,VERTEX.y)));
+	float pigment=INSTANCE_CUSTOM.a*4.0;
+	coat_lot=floor(pigment);
+	fallen=collapse;hit=clamp((fract(pigment)-.03)/.92,0.0,1.0);
 }
 void fragment(){
-	vec3 color=texture(surface_atlas,UV).rgb;
-	bool eye=atlas_patch>13.5&&atlas_patch<14.5;
-	bool metal=(atlas_patch>10.5&&atlas_patch<11.5)||(atlas_patch>12.5&&atlas_patch<13.5);
-	bool hide=atlas_patch>5.5&&atlas_patch<7.5;
-	ALBEDO=color*(1.0-fallen*0.22)*(1.0+hit*0.09);
-	METALLIC=metal?0.46:0.0;
-	ROUGHNESS=eye?0.29:(metal?0.50:(hide?0.62:(atlas_patch<3.5?0.77:0.88)));
-	SPECULAR=eye?0.43:(metal?0.49:(hide?0.28:0.21));
+	vec3 color=texture(surface_atlas,UV,1.1).rgb;
+	if(atlas_patch<1.5) {
+		vec3 bay=coat_lot<.5 ? vec3(.78,.69,.64) : (coat_lot<1.5 ? vec3(.56,.62,.70) : (coat_lot<2.5 ? vec3(.92,.89,.79) : vec3(.63,.56,.61)));
+		color*=bay*mix(vec3(1.),vec3(.36,.46,.53),coat_shade);
+	}
+    // Leather and mane keep a dark mass beneath the rider; shaped metal fittings
+    // already carry their own bright swatch in the shared tack atlas.
+    float grazing=1.0-smoothstep(.07,.36,abs(dot(normalize(NORMAL),normalize(VIEW))));
+    ALBEDO=color*(1.0-.08*grazing)*(1.0-fallen*.22)*(1.0+hit*.09);
+    ROUGHNESS=.94;
+    SPECULAR=0.0;
 }
+
+#include "res://scripts/field/cloth_light.gdshaderinc"

@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b3g5u4p1c6nr8"
+path="res://.godot/imported/campaign_colours.svg-18f0b6db326663c0c4d3445cfa0e6f4c.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/river_gate/figures/campaign_colours.svg"
+dest_files=["res://.godot/imported/campaign_colours.svg-18f0b6db326663c0c4d3445cfa0e6f4c.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

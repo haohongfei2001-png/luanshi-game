@@ -102,6 +102,7 @@ func _weapon(kit: int) -> void:
 	b._rebuild_grid()
 	field.camera.size=8.4
 	field.pan_to(b.hero.pos.lerp(enemy.pos,0.5))
+	if kit==Arms.Kit.SWORD: _check_orbit_aim(enemy)
 	var basic_connected:=false
 	var skill_attempted:=false
 	var skill_committed:=false
@@ -154,6 +155,20 @@ func _weapon(kit: int) -> void:
 	var row:={"e_and_space":committed,"defense_seen":defensive_effect,"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed,"max_ground_error":max_ground_error,"max_body_pick_error":cursor_error,"max_live_body_pick_error":live_cursor_error}
 	evidence.append(row)
 	print("FIELD_WEAPON_INPUT "+JSON.stringify(row))
+
+func _check_orbit_aim(enemy: Battle.Unit) -> void:
+	var saved_yaw:=field.camera_yaw
+	var chest:=Ground.unit_point(enemy.pos)+Vector3.UP*0.96
+	for yaw: float in [0.0,PI*0.5,PI,PI*1.5]:
+		field.camera_yaw=yaw
+		field._camera()
+		var across:=field.camera.global_transform.basis.x.normalized()
+		var edge:=field.camera.unproject_position(chest+across*0.27)
+		var outside:=field.camera.unproject_position(chest+across*0.44)
+		_check(field._aim_point(edge,true).distance_to(enemy.pos)<0.01,"A visible shoulder is selectable at yaw "+str(yaw))
+		_check(field._aim_point(outside,true).distance_to(field._screen_ground(outside))<0.01,"Bare ground beside the shoulder remains aimable at yaw "+str(yaw))
+	field.camera_yaw=saved_yaw
+	field._camera()
 
 func _portrait() -> void:
 	var entering_yaw:=field.camera_yaw

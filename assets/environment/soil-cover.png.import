@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b8xq3nb4e7s9b"
+path="res://.godot/imported/soil-cover.png-72678c186db93f7c25daf97b5d3496df.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/soil-cover.png"
+dest_files=["res://.godot/imported/soil-cover.png-72678c186db93f7c25daf97b5d3496df.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0
