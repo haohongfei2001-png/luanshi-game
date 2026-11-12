@@ -21,6 +21,7 @@ var contact: Batch
 var contact_for_all:=false
 var reference_detail := false
 var reference_two_lods:=false
+var reference_officer_detail:=false
 var rank_soldiers:=0
 var high_detail_soldiers := 0
 var horse: Batch
@@ -95,7 +96,7 @@ func configure(model: Battle) -> void:
 	contact=_batch(sm,shade,battle.roster.size())
 	contact.node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var mount_mesh := Figures.horse()
-	horse = _batch(mount_mesh,_material(FRIEND,0,true),battle.side_size*2+1)
+	horse = _batch(mount_mesh,_material(FRIEND,0,true),battle.ordinary_counts[0]+battle.ordinary_counts[1]+1)
 	var wagon := Figures.horse(true)
 	cart = _batch(wagon,_material(FRIEND,0,true),1)
 	var b := Builder.new()
@@ -123,7 +124,7 @@ func configure(model: Battle) -> void:
 	garrison.dye=0
 	garrison.quad(Vector3(0.12,3.14,0.045),Vector3(0.43,3.32,0.075),Vector3(0.72,3.10,0.13),Vector3(0.42,2.96,0.082),CLOTH_COLOR)
 	standards.append(_batch(fm,_material(FRIEND,0),battle.companies_per_side))
-	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.companies_per_side))
+	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.command_counts[1]))
 	runners = _batch(near_mesh[Arms.Kit.SWORD],_material(Color("c49b5c"),0),8)
 
 func _key(u: Battle.Unit) -> int:
@@ -160,23 +161,33 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if u.state == Battle.State.ESCAPED: continue
 		var p := u.before.lerp(u.pos,alpha)
 		if absf(p.x-center.x)>half_extent.x or absf(p.y-center.y)>half_extent.y: continue
-		var base := Ground.unit_point(p)
+		var ground := Ground.unit_point(p)
+		var base := ground
 		var angle := atan2(u.facing.x,u.facing.y)
 		var progress := clampf(1.0-u.timer/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
-		if u.mounted or (u.hero and battle.vehicle==1): code+=64
+		if u.officer and battle.corps.is_wounded(u.id):
+			code=Battle.State.ESCAPED # Wounded pose; departed units are culled above.
+			progress=0.75 if battle.corps.support_partner(battle,u)>=0 else 0.0
+		if (u.mounted and u.hp>0) or (u.hero and battle.vehicle==1): code+=64
 		var data := Color((code+0.5)/128.0,progress,u.stride,clampf(u.flash/0.22,0,1))
 		if u.mounted:
-			_put(horse,base,angle,Color((u.state+0.5)/128,progress,u.stride,data.a))
-			base.y += 0.81
+			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
+			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
+			_put(horse,base,angle,Color((horse_pose+0.5)/128,0.0 if unhorsed else progress,0.0 if unhorsed else u.stride,data.a))
+			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
+			base.y+=0.81*(1.0-fall)
+			var side:=u.facing.orthogonal()*fall*(0.91 if u.id%2==0 else -0.91)
+			base+=Vector3(side.x,0,side.y)
 		if u.hero and battle.vehicle != 0:
 			var heading := battle.riding_heading
 			if battle.vehicle == 2 and not battle.seat_origin:
 				base -= Vector3(heading.x,0,heading.y)*1.83
 			base.y += 0.83 if battle.vehicle==1 else 0.91
-		var full := reference_detail or u.hero or u.officer or (zoom<17 and p.distance_squared_to(center)<110) or (zoom<36 and p.distance_squared_to(center)<19)
+		var distance_sq:=p.distance_squared_to(center)
+		var full := reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<190))) or (zoom<17 and distance_sq<110) or (zoom<36 and distance_sq<19)
 		var key:=_key(u)
-		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and p.distance_squared_to(center)>170.0)):
+		if not full and not reference_two_lods and (zoom>=40 or (zoom>=23 and distance_sq>170.0)):
 			key+=60
 			rank_soldiers+=1
 		elif not full:
@@ -184,15 +195,23 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		elif not u.hero and not u.officer:
 			high_detail_soldiers+=1
 		if not full or contact_for_all:
-			_put(contact,Ground.unit_point(p)+Vector3.UP*0.035,angle,Color(0,0,0,0))
+			_put(contact,ground+Vector3.UP*0.035,angle,Color(0,0,0,0))
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0)
-		if u.officer and u.hp>0:
-			_put(standards[u.team],base+Vector3(-0.32,0,0),angle,Color(0,0,0,0))
-		elif not u.hero and not u.officer:
+		if not u.hero and not u.officer:
 			visible_soldiers += 1
 			if u.state in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD,Battle.State.STAGGER]:
 				visible_fighting += 1
 			if u.hp<=0: shown_fallen += 1
+	# A standard follows the current officer, including a successor drawn from the ranks.
+	for company in battle.companies:
+		if not battle.corps.can_command(battle,company): continue
+		var bearer: Battle.Unit=battle.corps.recipient(battle,company)
+		var at:=bearer.before.lerp(bearer.pos,alpha)
+		if absf(at.x-center.x)>half_extent.x or absf(at.y-center.y)>half_extent.y: continue
+		var role: String=battle.corps.title_of(battle,bearer)
+		var height:=1.25 if role=="战场主将" else (1.10 if role=="先锋" else 1.0)
+		var base:=Ground.unit_point(at)+Vector3(-0.32,0.81 if bearer.mounted else 0.0,0)
+		_put(standards[bearer.team],base,atan2(bearer.facing.x,bearer.facing.y),Color(0,0,0,0),height)
 	for id in [1,2]:
 		var pos: Vector2 = battle.vehicle_pos[id]
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
@@ -207,7 +226,8 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		_put(arrows,Vector3(p.x,altitude,p.y),atan2(s.direction.x,s.direction.y),Color(0,0,0,0))
 	for order in battle.orders:
 		if order.channel==Battle.Channel.COURIER and order.leg!=2:
-			var destination:=battle.hero.pos if order.leg==1 else battle.roster[battle.companies[order.squad].officer_id].pos
+			var recipient: Battle.Unit=battle.corps.recipient(battle,battle.companies[order.squad])
+			var destination:=battle.hero.pos if order.leg==1 else recipient.pos
 			var dir := order.pos.direction_to(destination)
 			_put(runners,Ground.unit_point(order.pos),atan2(dir.x,dir.y),Color(0,0,fposmod(order.age*3,1.0),0))
 	for g: Batch in groups.values():

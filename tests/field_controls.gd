@@ -87,7 +87,15 @@ func _weapon(kit: int) -> void:
 	var b:=field.battle
 	_key(KEY_ENTER,true); _key(KEY_ENTER,false)
 	_check(b.started and b.hero.kit==kit,"Deploy selected kit "+Arms.NAMES[kit])
-	var enemy:=b.roster[b.side_size]
+	# Stage a shield infantryman from the same roster who can engage locally.
+	# A bodyguard deliberately returns to his commander instead of holding a duel.
+	var enemy: Battle.Unit
+	for unit in b.roster:
+		if unit.team==1 and unit.kit==Arms.Kit.SHIELD and not unit.officer and b.corps.title_of(b,unit)=="":
+			enemy=unit
+			break
+	_check(enemy!=null,"A shield infantryman is available from the defended formation")
+	if enemy==null: return
 	b.hero.pos=Vector2(14,-46); b.hero.before=b.hero.pos
 	enemy.pos=b.hero.pos+Vector2(3.8 if kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] else 1.36,0)
 	enemy.before=enemy.pos
@@ -97,15 +105,21 @@ func _weapon(kit: int) -> void:
 	var basic_connected:=false
 	var skill_attempted:=false
 	var skill_committed:=false
+	var committed: Array[int]=[]
+	var defensive_effect:=false
+	var defense_pos:=Vector2.ZERO
 	var mouse_down:=false
 	var max_ground_error:=0.0
 	var cursor_error:=0.0
-	for n in 84:
+	var live_cursor_error:=0.0
+	for n in 170:
 		var foot:=Ground.unit_point(enemy.pos)
 		var floor_screen:=field.camera.unproject_position(foot)
 		max_ground_error=maxf(max_ground_error,field._screen_ground(floor_screen).distance_to(enemy.pos))
 		var aim:=field.camera.unproject_position(foot+Vector3.UP*0.95)
-		cursor_error=maxf(cursor_error,field._aim_point(aim,true).distance_to(enemy.pos))
+		var err:=field._aim_point(aim,true).distance_to(enemy.pos)
+		cursor_error=maxf(cursor_error,err)
+		if b.active(enemy): live_cursor_error=maxf(live_cursor_error,err)
 		root.warp_mouse(aim)
 		if n==2:
 			_mouse(MOUSE_BUTTON_LEFT,aim,true)
@@ -118,8 +132,17 @@ func _weapon(kit: int) -> void:
 			_key(KEY_Q,true); _key(KEY_Q,false)
 			skill_attempted=true
 			skill_committed=b.hero.move_slot==1 and b.hero.state==Battle.State.WINDUP
+		if skill_committed and b.hero.state==Battle.State.MARCH and committed.size()<2:
+			var slot:=2+committed.size()
+			var key:=KEY_E if slot==2 else KEY_SPACE
+			defense_pos=b.hero.pos
+			_key(key,true)
+			_key(key,false)
+			if b.hero.state==Battle.State.WINDUP and b.hero.move_slot==slot: committed.append(slot)
+		if committed.has(3):
+			defensive_effect=defensive_effect or b.hero.state==Battle.State.GUARD or b.hero.pos.distance_squared_to(defense_pos)>0.8
 		await RenderingServer.frame_post_draw
-		if n%3==0:
+		if n%4==0:
 			var pic:=root.get_texture().get_image()
 			pic.resize(640,400,Image.INTERPOLATE_BILINEAR)
 			_check(pic.save_jpg("res://artifacts/kit-film/frame-%03d.jpg"%frame_number,0.86)==OK,"Write action frame")
@@ -127,7 +150,8 @@ func _weapon(kit: int) -> void:
 	if mouse_down: _mouse(MOUSE_BUTTON_LEFT,root.get_mouse_position(),false)
 	_check(max_ground_error<0.04,"Ray intersects the actual sloping ground")
 	_check(basic_connected and skill_committed,"Mouse hit and Q windup for "+Arms.NAMES[kit])
-	var row:={"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed,"max_ground_error":max_ground_error,"max_body_pick_error":cursor_error}
+	_check(committed==[2,3] and defensive_effect,"E and Space produce committed movement or guard for "+Arms.NAMES[kit])
+	var row:={"e_and_space":committed,"defense_seen":defensive_effect,"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed,"max_ground_error":max_ground_error,"max_body_pick_error":cursor_error,"max_live_body_pick_error":live_cursor_error}
 	evidence.append(row)
 	print("FIELD_WEAPON_INPUT "+JSON.stringify(row))
 

@@ -58,6 +58,10 @@ void vertex() {
 				float set=state==1 ? smoothstep(0.0,0.9,p) : 1.0-p;
 				swing-=set*(kit==7 && joint==4 ? 1.15 : 0.41);
 				v.z+=set*(joint==4 ? 0.16 : 0.09);
+			} else if (slot==3 && (kit==0 || kit==4)) {
+				float ready=state==1 ? smoothstep(0.0,0.85,p) : 1.0-p;
+				v=bend_y(v,shoulder,-0.68*ready);
+				swing-=ready*(kit==4 ? 0.92 : 0.68);
 			} else if (kit==7 && slot==1) {
 				v.z-=beat*(joint==4 ? 0.49 : 0.06);
 				swing-=joint==4 ? 0.58 : 0.23;
@@ -88,7 +92,10 @@ void vertex() {
 				swing+=beat*(kit==4 ? 0.91 : 0.48);
 			}
 		}
-		if (state==3) {swing-=kit==7 && joint==4 ? 1.08 : (kit==3 ? 0.28 : 0.68); v.z+=kit==3 ? 0.23 : 0.13;}
+		if (state==3) {float lift=kit==7 && joint==4 ? 1.08 : (kit==3 ? 0.28 : (kit==4 ? 0.92 : 0.68));
+			swing-=lift;
+			if (kit==0 || kit==4) v=bend_y(v,shoulder,-0.68);
+			v.z+=kit==3 ? 0.23 : 0.13;}
 		v=bend_x(v,shoulder,swing);
 	}
 	if (!animal && !seated && (state==1 || state==2)) {
@@ -102,8 +109,20 @@ void vertex() {
 		v.y-=smoothstep(0.1,1.15,v.y)*0.19*dip;
 		v.z-=0.18*dip*smoothstep(0.4,1.3,v.y);
 	}
+	if (state==6 && !animal) {
+		float lowered=mix(0.61,0.34,p);
+		v=bend_x(v,vec3(0,0.34,0),-lowered);
+		v.y-=smoothstep(0.05,0.84,v.y)*lowered*0.39;
+		if (joint==4) v=bend_x(v,vec3(-0.25,1.24,0),-0.42-p*0.52);
+	}
 	if (state==4) {v=bend_x(v,vec3(0,0.45,0),-0.22*(1.0-p));}
-	if (state==7) {v=bend_x(v,vec3(0,0.11,0),-1.45*smoothstep(0.0,0.90,p));}
+	if (state==7) {
+		float fall=smoothstep(0.0,0.90,p);
+		float side=INSTANCE_CUSTOM.b<0.5 ? -1.0 : 1.0;
+		v=bend_x(v,vec3(0,0.11,0),-1.47*fall);
+		v=bend_y(v,vec3(0,0.11,0),side*(0.23+0.42*INSTANCE_CUSTOM.b)*fall);
+		v.y=max(v.y,0.035);
+	}
 	else if (state==5) {v=bend_x(v,vec3(0,0.5,0),0.15);}
 	VERTEX=v;
 	// Some instancing paths multiply vertex COLOR by the optional instance tint.

@@ -177,7 +177,7 @@ func _between(target: Vector3,eye: Vector3,roof: Dictionary) -> bool:
 	var cross_at:=target+t*ray
 	return absf(cross_at.x-center.x)<float(roof.w)+0.9 and absf(cross_at.z-center.z)<float(roof.d)+0.9
 
-func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live: bool) -> void:
+func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live: bool,assault_near: bool=false) -> void:
 	if not has_open_roof and focus.x<24 and hero.x<24: return
 	has_open_roof=false
 	var p:=Ground.unit_point(focus)+Vector3.UP*0.85
@@ -185,15 +185,40 @@ func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live
 	var door:=Ground.unit_point(Ground.GATE)+Vector3.UP*1.2
 	# In an orthographic camera the rays through every subject are parallel.
 	var direction:=eye-Ground.unit_point(focus)
+	var gate_inspection:=live and assault_near and focus.distance_squared_to(Ground.GATE)<245 and zoom< 42.0
 	for roof in roofs:
 		var occluding: bool=zoom<43 and (_between(p,p+direction,roof) or (live and _between(h,h+direction,roof)) or (focus.distance_squared_to(Ground.GATE)<150 and _between(door,door+direction,roof)))
+		var middle: Vector3=roof.center
+		if gate_inspection and absf(middle.x-Ground.WALL_X)<3 and absf(middle.z)<11:
+			if absf(middle.z)<1.0:
+				occluding=true
+			else:
+				for exit_x: float in [-2.6,1.5,5.0]:
+					var lane:=door+Vector3(exit_x,0,signf(middle.z)*2.7)
+					if _between(lane,lane+direction,roof):
+						occluding=true
+						break
 		var node: MeshInstance3D=roof.node
 		if occluding: has_open_roof=true
 		if node.visible==occluding: node.visible=not occluding
 
+func _sight_deck(timber: Builder,at: Vector3,w: float,d: float) -> void:
+	var node:=_mesh(timber,self)
+	roofs.append({"node":node,"center":at,"w":w,"d":d})
+
 func _tower(b: Builder,p: Vector3) -> void:
-	b.block(p+Vector3(0,2.15,0),Vector3(5.1,4.3,5.1),STONE)
-	b.block(p+Vector3(0,4.36,0),Vector3(5.65,0.28,5.65),WOOD)
+	# Keep masonry inside the actual wall footprint. Posts remain when a
+	# projecting watch floor cuts away along the player's line of sight.
+	b.block(p+Vector3(0,1.56,0),Vector3(2.58,3.12,4.96),STONE)
+	b.block(p+Vector3(0,0.31,0),Vector3(2.76,0.62,5.13),STONE.darkened(0.12))
+	var deck:=Builder.new()
+	for plank in 7:
+		deck.block(p+Vector3(0,4.36,(plank-3)*0.75),Vector3(5.48,0.15,0.73),WOOD.lightened(0.07*(plank%2)))
+	for x: float in [-1.86,1.86]:
+		deck.block(p+Vector3(x,4.18,0),Vector3(0.20,0.24,5.52),WOOD)
+		for z: float in [-1.95,1.95]:
+			b.rod(p+Vector3(x*0.60,3.06,z),p+Vector3(x,4.23,z),0.13,0.12,WOOD,4)
+	_sight_deck(deck,p+Vector3.UP*4.32,2.74,2.75)
 	for x: float in [-1.95,1.95]:
 		for z: float in [-1.95,1.95]:
 			b.block(p+Vector3(x,5.55,z),Vector3(0.28,2.5,0.28),WOOD)
@@ -238,7 +263,10 @@ func _fort(b: Builder) -> void:
 		b.block(Vector3(Ground.BACK_X,1.65,rear_center),Vector3(2.3,3.3,rear_length),LIME)
 	b.block(Vector3(Ground.BACK_X,3.05,0),Vector3(2.3,0.50,Ground.POSTERN_HALF*2.0),LIME)
 	b.block(Vector3(Ground.BACK_X+1.20,2.73,0),Vector3(0.25,0.23,Ground.POSTERN_HALF*2.0+0.45),WOOD)
-	b.block(Vector3(Ground.WALL_X,4.16,0),Vector3(4.1,0.5,9.5),WOOD)
+	var gallery:=Builder.new()
+	for plank in 9:
+		gallery.block(Vector3(Ground.WALL_X,4.16,(plank-4)*1.04),Vector3(4.1,0.21,1.02),WOOD.lightened(0.045*(plank%2)))
+	_sight_deck(gallery,Vector3(Ground.WALL_X,4.16,0),2.05,4.74)
 	_cover(b,Vector3(Ground.WALL_X,6.1,0),3.4,5.0,1.45)
 	# The entrance has its own lintel, lacquered plaque and watch pennants.
 	b.block(Vector3(Ground.WALL_X-2.10,4.25,0),Vector3(0.16,0.85,3.5),Color("61483a"))

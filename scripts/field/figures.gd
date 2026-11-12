@@ -47,12 +47,17 @@ static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 		b.block(Vector3(0,0.918,0.185),Vector3(0.09,0.055,0.038),BRASS)
 		b.rod(Vector3(-0.17,1.36,0.10),Vector3(0.08,1.13,0.20),0.036,0.029,HIDE)
 	# Shaped jaw, cheek, brow and helmet. The positive Z axis is the direction of contact.
-	b.loft([Vector3(0,1.34,0.015),Vector3(0,1.42,0.043),Vector3(0,1.53,0.018),Vector3(0,1.62,0)],
-		[Vector2(0.088,0.092),Vector2(0.123,0.13),Vector2(0.155,0.153),Vector2(0.142,0.14)],n,SKIN)
+	var head_segments:=12 if detailed else n
+	b.loft([Vector3(0,1.345,0.035),Vector3(0,1.398,0.048),Vector3(0,1.466,0.032),Vector3(0,1.526,0.018),Vector3(0,1.61,0)],
+		[Vector2(0.073,0.081),Vector2(0.112,0.122),Vector2(0.141,0.144),Vector2(0.152,0.154),Vector2(0.142,0.136)],head_segments,SKIN)
 	if detailed:
-		b.rod(Vector3(0,1.526,0.143),Vector3(0,1.475,0.174),0.028,0.026,SKIN)
+		b.quad(Vector3(-0.021,1.526,0.162),Vector3(0.018,1.526,0.162),Vector3(0.029,1.474,0.182),Vector3(-0.027,1.474,0.185),SKIN.lightened(0.06))
+		b.tri(Vector3(-0.027,1.474,0.185),Vector3(0.029,1.474,0.182),Vector3(0,1.462,0.167),Color("ab7960"))
 		for sign_x: float in [-1.0,1.0]:
-			b.block(Vector3(sign_x*0.064,1.526,0.15),Vector3(0.061,0.015,0.015),HAIR)
+			var eye:=Vector3(sign_x*0.065,1.518,0.161)
+			b.quad(eye+Vector3(-0.032,0,0),eye+Vector3(0,0.010,0.006),eye+Vector3(0.029,0.002,0),eye+Vector3(0,-0.004,0.004),Color("685040"))
+			b.rod(eye+Vector3(-0.030,0.020,-0.002),eye+Vector3(0.030,0.018,-0.001),0.008,0.005,HAIR,3)
+			b.tri(Vector3(sign_x*0.038,1.475,0.136),Vector3(sign_x*0.129,1.494,0.069),Vector3(sign_x*0.088,1.447,0.096),Color("c79473"))
 			b.rod(Vector3(sign_x*0.148,1.51,0.006),Vector3(sign_x*0.148,1.456,0.012),0.031,0.024,SKIN)
 	b.loft([Vector3(0,1.55,-0.023),Vector3(0,1.64,-0.023),Vector3(0,1.72,-0.035)],
 		[Vector2(0.184,0.185),Vector2(0.16,0.16),Vector2(0.053,0.053)],n,IRON if kit not in [Arms.Kit.BOW,Arms.Kit.STAFF] else HAIR)
@@ -60,7 +65,7 @@ static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 		b.rod(Vector3(0,1.57,-0.016),Vector3(0,1.593,-0.018),0.177,0.169,HIDE,8)
 		for side: float in [-1,1]:
 			b.block(Vector3(side*0.13,1.466,-0.055),Vector3(0.046,0.14,0.151),vest)
-		b.block(Vector3(0,1.431,0.161),Vector3(0.056,0.010,0.012),Color("8e5d49"))
+		b.quad(Vector3(-0.040,1.434,0.158),Vector3(-0.006,1.438,0.172),Vector3(0.038,1.432,0.159),Vector3(0.002,1.427,0.170),Color("96654f"))
 	b.dye = 1
 	b.rod(Vector3(0,1.70,-0.035),Vector3(0,1.79,-0.078),0.048,0.025,CLOTH)
 	b.dye = 0
@@ -120,8 +125,16 @@ static func fighter(kit: int, detailed: bool) -> ArrayMesh:
 				_blade(b,Vector3(-0.34,1.02,0.32),0.62,0.055,false)
 			if kit == Arms.Kit.SHIELD:
 				b.joint = 4
-				b.block(Vector3(-0.34,1.00,0.42),Vector3(0.47,0.80,0.088),HIDE)
-				b.block(Vector3(-0.34,1.00,0.48),Vector3(0.072,0.73,0.06),BRASS)
+				var middle:=Vector3(-0.34,1.0,0.51)
+				var rim: Array[Vector3]=[]
+				for corner in [Vector2(-0.15,0.39),Vector2(0.15,0.39),Vector2(0.25,0.28),Vector2(0.21,-0.28),Vector2(0.08,-0.42),Vector2(-0.08,-0.42),Vector2(-0.21,-0.28),Vector2(-0.25,0.28)]:
+					rim.append(middle+Vector3(corner.x,corner.y,-0.074))
+				for i in rim.size():
+					var next:=rim[(i+1)%rim.size()]
+					b.tri(middle,rim[i],next,Color("68513d") if i%2==0 else HIDE)
+					b.rod(rim[i],next,0.018,0.017,IRON,4)
+				b.rod(middle+Vector3(0,-0.35,-0.04),middle+Vector3(0,0.34,-0.04),0.032,0.033,BRASS,4)
+				b.rod(middle,middle+Vector3(0,0,0.058),0.094,0.042,IRON,6)
 	return b.finish()
 
 static func _blade(b: Builder, p: Vector3,length: float,width: float,curved: bool) -> void:
@@ -130,8 +143,15 @@ static func _blade(b: Builder, p: Vector3,length: float,width: float,curved: boo
 	var a := p + Vector3(0,0,0.15)
 	var m := a + Vector3(0,0.05 if curved else 0,length*0.68)
 	var tip := a + Vector3(0,0.19 if curved else 0,length)
-	b.quad(a-Vector3(0,width,0),a+Vector3(0,width,0),m+Vector3(0,width*1.15,0),m-Vector3(0,width,0),EDGE)
-	b.tri(m-Vector3(0,width,0),m+Vector3(0,width*1.15,0),tip,EDGE)
+	# A raised spine keeps the blade visible edge-on. The back of a dao has
+	# one darker face; both edges of the straight jian catch the light.
+	for side: float in [-1,1]:
+		var root_ridge:=a+Vector3(side*0.024,width*0.21 if curved else 0.0,0)
+		var mid_ridge:=m+Vector3(side*0.017,width*0.23 if curved else 0.0,0)
+		b.quad(a-Vector3(0,width,0),root_ridge,mid_ridge,m-Vector3(0,width,0),EDGE)
+		b.quad(root_ridge,a+Vector3(0,width,0),m+Vector3(0,width*1.15,0),mid_ridge,IRON if curved else EDGE.darkened(0.18))
+		b.tri(m-Vector3(0,width,0),mid_ridge,tip,EDGE)
+		b.tri(mid_ridge,m+Vector3(0,width*1.15,0),tip,IRON if curved else EDGE.darkened(0.18))
 
 static func horse(cart: bool = false) -> ArrayMesh:
 	var b := Builder.new()
