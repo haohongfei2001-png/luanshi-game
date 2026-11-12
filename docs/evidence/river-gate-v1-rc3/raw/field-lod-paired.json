@@ -1,0 +1,13 @@
+{
+  "full_detail_median_render_ms": 798.511,
+  "full_detail_primitives": 2944026,
+  "optimized_median_render_ms": 174.923,
+  "optimized_primitives": 554941,
+  "per_side": 512,
+  "poses": 10,
+  "previous_officer_detail_ms": 185.578,
+  "previous_officer_detail_primitives": 607040,
+  "previous_two_lods_median_ms": 209.115,
+  "previous_two_lods_primitives": 697140,
+  "visible_soldiers_last": 488
+}
