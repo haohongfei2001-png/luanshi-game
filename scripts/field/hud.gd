@@ -32,6 +32,7 @@ var unit := OptionButton.new()
 var mission := OptionButton.new()
 var channel := OptionButton.new()
 var go := Button.new()
+var continue_slot := Button.new()
 var change := Button.new()
 var help := Label.new()
 var result_box := PanelContainer.new()
@@ -180,6 +181,7 @@ func _ready() -> void:
 		orders.visible=not deployment.visible
 		details.text="返回兵器与任务" if deployment.visible else "调整阵位与兵种")
 	_button(stack,go,"开战    Enter",func(): deploy.emit())
+	_button(stack,continue_slot,"继续上次战役",func(): load_requested.emit())
 	root_control.add_child(result_box)
 	result_box.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	result_box.grow_horizontal=Control.GROW_DIRECTION_BOTH
@@ -289,6 +291,7 @@ func update_model(b: Battle,paused: bool) -> void:
 	var now:=0 if not b.started else (1 if b.result=="" else 2)
 	if now!=phase:
 		phase=now
+		if phase!=0: continue_slot.hide()
 		deployment.hide()
 		orders.show()
 		details.text="调整阵位与兵种"

@@ -163,6 +163,7 @@ func _adopt(fresh: Battle) -> bool:
 	step_distance=0
 	carry=0
 	hud.bind(battle)
+	hud.continue_slot.visible=not battle.started and FileAccess.file_exists(Store.FILE)
 	_refresh_hud()
 	_camera()
 	_draw_field()
@@ -210,7 +211,9 @@ func _order(company: int,mission: int,channel: int) -> void:
 	hud.update_model(battle,paused)
 
 func _save() -> void:
-	battle.notice = "战场进度已保存" if Store.save(battle)==OK else "保存失败，原存档仍可使用"
+	var ok:=Store.save(battle)==OK
+	if ok and not battle.started: hud.continue_slot.show()
+	battle.notice = "战场进度已保存" if ok else "保存失败，原存档仍可使用"
 	hud.update_model(battle,paused)
 
 func _load() -> void:
@@ -221,7 +224,7 @@ func _load() -> void:
 		battle.notice="已恢复战场"
 	else:
 		battle.notice="存档与军籍不符，当前战场已保留" if saved else "未找到可用的战场存档"
-	hud.update_model(battle,paused)
+	_refresh_hud()
 
 func _camera() -> void:
 	var p := Ground.unit_point(camera_center)

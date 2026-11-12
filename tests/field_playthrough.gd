@@ -189,6 +189,8 @@ func _run() -> void:
 		await _click(h.report_button)
 		await _click(h.retry_button)
 		_check(field.battle!=b and not field.battle.started and field.battle.side_size==512,"Restart returns to a fresh muster")
+		await _click(h.continue_slot)
+		_check(field.battle.at_camp and field.battle.aftermath_hours==hours and after==field.theater.player_view(),"Muster continue button restores the travelling army without a shortcut")
 	var facts:=b.report()
 	facts.merge({"hero_impacts":b.hero.impacts,"hero_ammo":b.hero.ammo,"camp_hours":hours,"camp_resumed":resume_ok,"screens":screens,"popup_semantic_fallbacks":menu_activations,"errors":errors})
 	var out:=FileAccess.open("res://artifacts/journey.json",FileAccess.WRITE)
