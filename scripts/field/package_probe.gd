@@ -5,8 +5,71 @@ const Arms := preload("res://scripts/field/arms.gd")
 const Battle := preload("res://scripts/field/battle.gd")
 const Field := preload("res://scripts/field/controller.gd")
 
+# The native verifier sends the same deployment signal a player can press after the
+# preparation screen appears. It must not deploy while Cocoa is still activating
+# a newly opened window: focus loss correctly pauses a running battle.
+static func _boot(tree: SceneTree, scene: Field, stage: String) -> void:
+	var b := scene.battle
+	print("FIELD_BOOT " + JSON.stringify({
+		"stage":stage, "engine_ms":Time.get_ticks_msec(), "pid":OS.get_process_id(),
+		"physics_frames":Engine.get_physics_frames(), "drawn_frames":Engine.get_frames_drawn(),
+		"focus":tree.root.has_focus(), "paused":scene.paused, "started":b.started,
+		"tick":b.tick, "hits":b.hits[0]+b.hits[1], "result":b.result,
+		"renderer":RenderingServer.get_current_rendering_method(), "data_dir":OS.get_user_data_dir()
+	}))
+
+static func _foreground_ready(tree: SceneTree, scene: Field) -> bool:
+	_boot(tree,scene,"scene_ready")
+	tree.root.focus_entered.connect(_boot.bind(tree,scene,"window_focus_in"))
+	tree.root.focus_exited.connect(_boot.bind(tree,scene,"window_focus_out"))
+	await RenderingServer.frame_post_draw
+	_boot(tree,scene,"first_post_draw")
+	var limit := Time.get_ticks_msec()+8000
+	var since := -1
+	while Time.get_ticks_msec()<limit:
+		var now := Time.get_ticks_msec()
+		if tree.root.has_focus():
+			if since<0: since=now
+			if now-since>=300:
+				_boot(tree,scene,"foreground_ready")
+				return true
+		else:
+			since=-1
+		await tree.process_frame
+	_boot(tree,scene,"foreground_timeout")
+	return false
+
+static func _check_focus_pause(tree: SceneTree, scene: Field) -> bool:
+	# The external macOS test app takes key/active status and gives it back.
+	# Only this explicit control exercise presses the verified HUD Resume button.
+	_boot(tree,scene,"control_armed")
+	var limit := Time.get_ticks_msec()+10000
+	while Time.get_ticks_msec()<limit and not scene.paused:
+		await tree.process_frame
+	if not scene.paused:
+		_boot(tree,scene,"pause_timeout")
+		return false
+	var stopped_at := scene.battle.tick
+	_boot(tree,scene,"focus_paused")
+	while Time.get_ticks_msec()<limit and not tree.root.has_focus():
+		await tree.process_frame
+	var allowed_resume := Time.get_ticks_msec()+300
+	while Time.get_ticks_msec()<allowed_resume:
+		await tree.process_frame
+	if not tree.root.has_focus() or not scene.paused or scene.battle.tick!=stopped_at:
+		_boot(tree,scene,"pause_not_preserved")
+		return false
+	_boot(tree,scene,"still_paused_after_foreground")
+	scene.hud.change.pressed.emit()
+	_boot(tree,scene,"resume_pressed")
+	return not scene.paused
+
 static func run(tree: SceneTree,scene: Field) -> void:
 	await tree.process_frame
+	var native_window := OS.get_name()=="macOS" and DisplayServer.get_name()!="headless"
+	if native_window and not await _foreground_ready(tree,scene):
+		tree.quit(1)
+		return
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--field-quality="):
 			var opt:=arg.trim_prefix("--field-quality=")
@@ -15,12 +78,31 @@ static func run(tree: SceneTree,scene: Field) -> void:
 	scene.hud.weapon.item_selected.emit(Arms.Kit.BOW)
 	scene.hud.go.pressed.emit()
 	var b:=scene.battle
+	if native_window:
+		_boot(tree,scene,"deployed")
+		if not b.started or scene.paused:
+			tree.quit(1)
+			return
 	b.command(0,Battle.Mission.PRESS,Battle.Channel.HORN)
 	var limit := Time.get_ticks_msec()+45000
+	var saw_tick := false
+	var saw_hit := false
 	while b.tick<100 and b.result=="" and Time.get_ticks_msec()<limit:
 		await tree.physics_frame
+		if native_window:
+			if not saw_tick and b.tick>0:
+				saw_tick=true
+				_boot(tree,scene,"first_tick")
+				if "--field-focus-control" in OS.get_cmdline_user_args():
+					if not await _check_focus_pause(tree,scene):
+						tree.quit(1)
+						return
+			if not saw_hit and b.hits[0]+b.hits[1]>0:
+				saw_hit=true
+				_boot(tree,scene,"first_hit")
 		if b.tick==35: scene.pan_to(Vector2(0,-20))
 		if b.tick==70: scene.pan_to(Vector2(0,20))
+	if native_window: _boot(tree,scene,"contact_complete" if b.tick>=100 else "contact_timeout")
 	var saved := Save.snapshot(b)
 	var loaded := Save.restore(bytes_to_var(var_to_bytes(saved)))
 	var ok: bool = b.side_size==512 and b.roster.size()==1057 and b.hits[0]>0 and b.hits[1]>0 and b.arrow_count>0 and b.tick>=100 and b.messages_arrived>0
