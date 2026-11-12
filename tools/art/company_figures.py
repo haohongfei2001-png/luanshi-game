@@ -13,6 +13,9 @@ def grip(s): return (s*.273,.943,.075)
 def leg_nodes(s):
     return ((s*.12,.858,-.012),(s*.134,.477,.021),(s*.141,.123,-.016))
 def clamp(x): return max(0,min(1,x))
+def smoothstep_cloth(x):
+    x=clamp(x)
+    return x*x*(3-2*x)
 
 def coat(s,look):
     close=s.detail
@@ -37,7 +40,9 @@ def coat(s,look):
         y+=hanging*(.088*biased+.018*sin(3*a+.9)-.018*cos(a))
         # A handful of long folds open from the girdle and continue to the hem.
         pleat=cos(7*a+.52*cos(2*a)-.48*hanging)
-        radius=hanging*(.012*pleat-.005*cos(3*a+.2))
+        radius=hanging*(.018*pleat-.006*cos(3*a+.2))
+        # Cloth bunches above the cinch and opens back out across the shoulder blades.
+        radius+=.009*exp(-((y-1.045)/.092)**2)*cos(5*a+.8)+.006*exp(-((y-1.25)/.11)**2)*cos(3*a-.65)
         return ((rx+radius)*sin(a),y,(rz+radius)*cos(a)-.009*(1-cos(a))-.006)
     heavy=look in ("guard","officer","player")
     vertices={}
@@ -98,12 +103,6 @@ def coat(s,look):
                 row=first+round(v*(last-first))
                 return rows[row][round(u*len(rim))%len(rim)]
             s.grid(len(rim),last-first,sleeve_point,material)
-    # Broad, tapered cross collar follows the chest's contour to the side fastening.
-    for side in (-1,1):
-        path=[(side*.062,1.458,.048),(side*.103,1.403,.088),(side*.093,1.358,.123),
-              (side*.041,1.302,.151),(-side*.025,1.241,.156)]
-        if side==-1: path.extend([(.110,1.168,.128),(.155,1.104,.086)])
-        s.ribbon(path,.029 if look=="levy" else .038,"headcloth",CHEST)
     def body_at(a,y,offset=.010):
         # Sample the garment itself so a strap cannot cross through a rotating back.
         j=next((i for i in range(len(hem)-1) if hem[i][0]<=y<hem[i+1][0]),len(hem)-2)
@@ -111,6 +110,29 @@ def coat(s,look):
         rx=hem[j][1]*(1-t)+hem[j+1][1]*t+offset
         rz=hem[j][2]*(1-t)+hem[j+1][2]*t+offset
         return (rx*sin(a),y,rz*cos(a)-.009*(1-cos(a))-.006)
+    # Cut two folded facings on the robe itself. Tangent in unwrapped garment
+    # space gives the lapel a width even when it crosses the chest diagonally.
+    def facing(path,width,offset):
+        samples=[]
+        for first,last in zip(path,path[1:]):
+            samples.extend([first,tuple((a+b)*.5 for a,b in zip(first,last))])
+        samples.append(path[-1])
+        def patch(u,v):
+            row=round(v*(len(samples)-1))
+            a,y=samples[row]
+            before=samples[max(0,row-1)]
+            after=samples[min(len(samples)-1,row+1)]
+            dx=(after[0]-before[0])*.19
+            dy=after[1]-before[1]
+            length=max(.001,hypot(dx,dy))
+            a-=dy/length*(u-.5)*width/.19
+            y+=dx/length*(u-.5)*width
+            p=body_at(a,y,offset)
+            return p,cloth(p)
+        s.grid(2,len(samples)-1,patch,"facing")
+    facing([(1.40,1.415),(.93,1.387),(.37,1.308),(-.14,1.234)],.051,.007)
+    facing([(-1.46,1.419),(-.94,1.393),(-.60,1.347),(-.18,1.274),
+            (.28,1.184),(.74,1.076),(1.03,.971)],.052 if heavy else .061,.011)
     def belt(u,v):
         a=TAU*u
         p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))
@@ -146,21 +168,26 @@ def equipment(s,look):
         # Asymmetric half-mantle with a split over the left hip; a readable back
         # silhouette even with a spear lifted or the front arm hidden by the shield.
         def mantle(u,v):
-            a=1.06+u*3.99
-            collar=.102
-            rx=collar+(.328-collar)*(1-v)**.65
-            rz=.089+(.242-.089)*(1-v)**.58
-            split=.128*max(0,1-abs(u-.70)*11)
-            bottom=.48+.27*u+split
-            y=bottom+(1.445-bottom)*v+.022*sin(3*a)*(1-v)
-            fold=(.014+.014*(1-v))*sin(5*a+v)
-            p=((rx+fold)*sin(a)-.011*(1-v),y,(rz+fold)*cos(a)-.028-.028*(1-v))
+            a=.77+u*4.51
+            # The cape rides over a shoulder, expands across the blades, and hangs
+            # free of the narrow waist. The open side clears the weapon arm.
+            rx=.107+.213*sin((1-v)*pi*.62)**.70
+            rz=.096+.118*sin((1-v)*pi*.62)**.74
+            split=.135*max(0,1-abs(u-.62)*7.5)
+            bottom=.478+.27*u+split
+            y=bottom+(1.453-bottom)*v+.031*sin(3*a+.25)*(1-v)
+            fold=(.009+.020*(1-v))*sin(5*a+.63*v)
+            p=((rx+fold)*sin(a)-.021*(1-v),y,(rz+fold)*cos(a)-.053-.028*(1-v))
             return p,(CHEST,HIPS,clamp(.18+v*.98))
-        cols=18 if close else 7
-        def crown(u,v): return mantle(u,.065+.935*v)
-        def edge(u,v): return mantle(u,v*.065)
-        s.grid(cols,6 if close else 3,crown,"mantle")
-        s.grid(cols,1,edge,"headcloth")
+        cloth_mat="hero_mantle" if look=="player" else "mantle"
+        # Split lower panels leave a real notch between the two short tails.
+        for left,right in ((0.,.62),(.62,1.)):
+            def tail(u,v):
+                gap=.046*(1-smoothstep_cloth(v/.36))
+                lo=left+(gap if left>0 else 0.)
+                hi=right-(gap if right<1 else 0.)
+                return mantle(lo+u*(hi-lo),v)
+            s.grid((12 if close else 5) if left==0 else (8 if close else 3),7 if close else 3,tail,cloth_mat)
         s.ribbon([(-.107,1.421,.087),(-.017,1.391,.123),(.089,1.343,.134),(.161,1.303,.136)],
                  .032,"sash",CHEST)
         s.oval((-.105,1.419,.099),(.033,.028,.018),"brass",CHEST,10 if close else 6,4)
@@ -189,9 +216,12 @@ def limbs(s,look):
         s.rings([(.078,.057,.065,ankle[0],-.010),(.118,.061,.066,ankle[0],-.006),
                  (.217,.057,.066,x,.006),(.332,.067,.076,x,.012),(.368,.064,.073,x,.009)],
                 "binding",ankle_blend,n)
-        s.rings([(.006,.065,.137,ankle[0],.059),(.024,.071,.145,ankle[0],.060),
-                 (.053,.070,.141,ankle[0],.064),(.092,.064,.099,ankle[0],.033),
-                 (.139,.058,.067,ankle[0],-.003)],"boots",boot,n)
+        def footwear(p,angle,row):
+            toe=max(0.,cos(angle))
+            return (ankle[0]+(p[0]-ankle[0])*(1-.23*toe**2),p[1]+.006*toe**4,p[2])
+        s.rings([(.006,.059,.129,ankle[0],.057),(.024,.065,.139,ankle[0],.058),
+                 (.053,.066,.131,ankle[0],.056),(.092,.060,.087,ankle[0],.029),
+                 (.139,.054,.063,ankle[0],-.003)],"boots",boot,n,footwear)
         el,wr=arm_nodes(side)[1:]
         s.tube([lerp(el,wr,.20),lerp(el,wr,.34),lerp(el,wr,.64),wr],
                [.064,.067,.054,.042],"leather" if look!="levy" else "headcloth",fore,n)
@@ -210,6 +240,9 @@ def costume(look,detail):
     s=Surface(detail)
     coat(s,look)
     limbs(s,look)
+    s.rings([(1.372,.071,.067,0,.005),(1.421,.062,.064,0,.008),
+             (1.485,.055,.069,0,.016),(1.521,.062,.071,0,.019)],"skin",
+            lambda p:(HEAD,CHEST,clamp((p[1]-1.391)/.115)),10)
     head(s,look,HEAD)
     equipment(s,look)
     return s

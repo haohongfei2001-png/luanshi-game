@@ -6,12 +6,14 @@ metal fraction and dyed-cloth coverage in RGB. The shader supplies the two liver
 from math import cos, exp, pi, sin
 from random import Random
 from PIL import Image, ImageDraw, ImageFilter
+from painted_company import materials
 
 TILE = 128
 PAD = 4
 NAMES = ["linen", "dyed", "leather", "lamellar", "iron", "edge", "brass", "timber",
          "skin", "hair", "lining", "quilt", "boots", "shield", "binding", "felt",
-         "visage", "eye", "headcloth", "mantle", "sash", "quiver", "overskirt"]
+         "visage", "eye", "headcloth", "mantle", "sash", "quiver", "overskirt",
+         "hero_mantle", "visage_second", "visage_third", "facing"]
 SURFACES = [
     ((174,153,124), (230,0,0)), ((178,173,151), (230,0,244)),
     ((92,60,43), (158,0,0)), ((95,110,114),(143,155,0)),
@@ -24,6 +26,7 @@ SURFACES = [
     ((183,133,104),(210,0,0)), ((169,151,133),(191,0,0)),
     ((188,167,129),(242,0,0)), ((61,87,103),(237,0,159)),
     ((139,56,42),(218,0,0)), ((94,60,39),(186,0,0)), ((87,94,101),(239,0,139)),
+    ((110,42,39),(235,0,0)), ((172,125,96),(210,0,0)), ((172,125,96),(210,0,0)), ((61,65,67),(236,0,70)),
 ]
 
 def adjusted(rgb, variation):
@@ -72,6 +75,7 @@ def painted(name, base, x, y):
 def make_atlas(out):
     albedo = Image.new("RGB",(TILE*8,TILE*4))
     response = Image.new("RGB",albedo.size)
+    paintings=materials(TILE)
     for index,name in enumerate(NAMES):
         base,pbr = SURFACES[index]
         rng = Random(61112+index)
@@ -124,6 +128,8 @@ def make_atlas(out):
             for x in range(0,TILE,24):
                 pen.line((x,0,x,TILE),fill=(76,53,39),width=2)
                 pen.line((x+2,0,x+2,TILE),fill=(148,101,67))
+        if name in paintings:
+            tile=paintings[name]
         # Replicate edge texels so the neighbouring material cannot bleed into the seam.
         for src,atlas in ((tile,albedo),(mask,response)):
             ox,oy=index%8*TILE,index//8*TILE

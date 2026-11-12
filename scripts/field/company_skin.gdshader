@@ -7,6 +7,7 @@ uniform sampler2D motion_bank : filter_linear, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform int kit = 0;
 uniform int travelling_attack_legs = -1;
+uniform bool player_costume = false;
 uniform float travelling_leg_phase = 0.0;
 varying flat float flash;
 varying flat float cloth_lot;
@@ -83,6 +84,19 @@ void vertex() {
         pos=mix(pos,step_pos,leg_weight);
         nrm=mix(nrm,step_nrm,leg_weight);
     }
+    ivec2 swatch=ivec2(UV*vec2(8.,4.));
+    bool cape=swatch.y==2 && (swatch.x==3 || swatch.x==7);
+    if (cape) {
+        // Folded at the shoulder fastening, free at the two tails. The hem lags
+        // movement and weapon release without adding a runtime cloth solver.
+        float hem_weight=1.0-smoothstep(.55,1.395,VERTEX.y);
+        bool moving=state==5 || (state==0 && INSTANCE_CUSTOM.g>.001);
+        float travel=moving ? ((clip>=23 || state==5) ? 1.0 : .57) : 0.0;
+        float beat=(state==1 || state==2) ? sin(clamp(phase,0.,1.)*3.14159) : 0.;
+        float ripple=sin(6.28318*INSTANCE_CUSTOM.b-VERTEX.y*4.1+VERTEX.x*5.0);
+        pos.z-=hem_weight*(travel*(.072+.023*ripple)+beat*.045);
+        pos.x+=hem_weight*(travel*.024*ripple+beat*(state==1 ? .045 : -.050));
+    }
     // Broad painted occlusion stays on the garment as the shoulder or hem turns.
     float armhole=smoothstep(.12,.23,abs(VERTEX.x))*(1.0-smoothstep(.035,.105,abs(VERTEX.y-1.285)));
     float hem=1.0-smoothstep(.52,1.38,VERTEX.y);
@@ -91,6 +105,10 @@ void vertex() {
     NORMAL=normalize(nrm);
     float wear=INSTANCE_CUSTOM.a*8.0;
     cloth_lot=floor(wear)/7.0;
+    if (swatch==ivec2(0,2) && !player_costume) {
+        if (cloth_lot>.72) UV+=vec2(.125,.25);
+        else if (cloth_lot>.31) UV.y+=.25;
+    }
     flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
@@ -99,8 +117,8 @@ void fragment(){
     vec3 response=texture(response_atlas,UV).rgb;
     float fibre=dot(colour,vec3(.27,.54,.19));
     // A bolt of faded indigo or madder shows exposed natural fibre in the worn lots.
-    float fibre_exposed=.10+.45*smoothstep(.10,.89,cloth_lot);
-    vec3 dyed=mix(livery.rgb,colour*vec3(.80,.80,.79),fibre_exposed)*(.58+fibre*.83)*mix(.86,1.02,cloth_lot);
+    float fibre_exposed=.035+.31*smoothstep(.10,.92,cloth_lot);
+    vec3 dyed=mix(livery.rgb,vec3(.24,.213,.171),fibre_exposed)*clamp(.32+1.86*fibre,.43,1.40);
     colour=mix(colour,dyed,response.b);
     colour*=mix(vec3(1.),vec3(.53,.67,.79),sewn_shadow);
     colour*=mix(1.0,.73,fallen);

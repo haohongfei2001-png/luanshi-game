@@ -7,9 +7,10 @@ const CompanyArt := preload("res://scripts/field/company_art.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
-const FRIEND := Color("355f6d")
-const FOE := Color("9f503d")
+const FRIEND := Color("394d66")
+const FOE := Color("8e4b3d")
 const CLOTH_COLOR:=Color("dbcba4")
+const PLAYER_CLOTH:=Color("2d405b")
 const GOLD := Color("b69c66")
 
 class Batch:
@@ -78,8 +79,8 @@ func configure(model: Battle) -> void:
 		counts[key] = int(counts.get(key,0))+1
 	for key: int in counts:
 		var kit := key % 10
-		var col := GOLD if key >= 20 else (FRIEND if key < 10 else FOE)
-		var mat := CompanyArt.material(col,kit)
+		var col := PLAYER_CLOTH if key >= 20 else (FRIEND if key < 10 else FOE)
+		var mat := CompanyArt.material(col,kit,key>=20)
 		var detailed: Mesh = CompanyArt.fighter(kit, "Player", true) if key>=20 else near_mesh[kit]
 		groups[key] = _batch(detailed,mat,counts[key])
 		if key<20:
@@ -107,7 +108,7 @@ func configure(model: Battle) -> void:
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
-			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(GOLD,kit),1)
+			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(PLAYER_CLOTH,kit,true),1)
 	var shadow_mesh := Builder.new()
 	var rim:=shadow_mesh.ring(Vector3.ZERO,Vector2(0.53,0.41),8)
 	for k in 8:

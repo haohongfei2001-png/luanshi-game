@@ -10,6 +10,44 @@ from figure_mesh import TAU
 def sculpt():
     return json.loads(Path(__file__).with_name("field_head.json").read_text())
 
+@lru_cache(maxsize=1)
+def marching_head():
+    # Eight levels slice the same CC0 sculpt used for the close camera. Denser
+    # angles at the forehead and nose keep a profile visible in a twelve-pixel face.
+    mesh=sculpt()["close"]
+    levels=(5.70,5.94,6.22,6.51,6.72,6.99,7.23,7.52,7.80,8.01)
+    angles=(0,.34,.78,1.45,2.21,pi,TAU-2.21,TAU-1.45,TAU-.78,TAU-.34)
+    points=[]
+    for height in levels:
+        edges=[]
+        for tri in mesh["f"]:
+            corners=[mesh["p"][i] for i in tri]
+            cuts=[]
+            for a,b in zip(corners,corners[1:]+corners[:1]):
+                if min(a[1],b[1])<=height<max(a[1],b[1]):
+                    t=(height-a[1])/(b[1]-a[1])
+                    cuts.append((a[0]+(b[0]-a[0])*t,a[2]+(b[2]-a[2])*t-.35))
+            if len(cuts)==2: edges.append(cuts)
+        for angle in angles:
+            dx,dz=sin(angle),cos(angle)
+            radius=.06
+            for (x,z),(bx,bz) in edges:
+                ex,ez=bx-x,bz-z
+                det=dx*ez-dz*ex
+                if abs(det)<1.e-8: continue
+                d=(x*ez-z*ex)/det
+                u=(x*dz-z*dx)/det
+                if 0<=u<=1: radius=max(radius,d)
+            points.append((dx*radius,height,.35+dz*radius))
+    faces=[]
+    n=len(angles)
+    for r in range(len(levels)-1):
+        for i in range(n):
+            a=r*n+i
+            b=r*n+(i+1)%n
+            faces.extend([(a,b,b+n),(a,b+n,a+n)])
+    return {"p":points,"f":faces}
+
 def head(s,look,bone):
     close=s.detail
     data=sculpt()
@@ -27,7 +65,7 @@ def head(s,look,bone):
             return a+(b-a)*(u-col)
         r=radius(row)+(radius(row+1)-radius(row))*(h-row)+extra
         return bind(sin(angle)*r,height,.35+cos(angle)*r)
-    source=data["close" if close else "line"]
+    source=data["close"] if close else marching_head()
     vertices={}
     for face in source["f"]:
         raw=[source["p"][i] for i in face]
@@ -55,7 +93,7 @@ def head(s,look,bone):
                 return bind(cx+.133*cos(latitude)*sin(angle),7.017+.124*sin(latitude),
                             1.212+.155*cos(latitude)*cos(angle)),bone
             s.grid(12,7,eye,"eye")
-    n=24 if close else 10
+    n=24 if close else 8
     def brow(a):
         return 7.00+.44*cos(a)+.07*sin(a+.4)
     def band(row0,row1,material,thickness):
