@@ -2,17 +2,17 @@
 
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
-## 河关 0.16.0-rc.4 试玩包
-
-[下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43280282660/artifacts/13972906898) · [34 秒正常速度实战](docs/evidence/river-gate-v1-rc4/battlefield-motion.mp4) · [完整战役](docs/evidence/river-gate-v1-rc4/playthrough.mp4) · [RC3 与 RC4 同镜头实拍](docs/evidence/river-gate-v1-rc4/before-after.mp4) · [画质、性能及校验值](docs/evidence/river-gate-v1-rc4/PLAYTEST.md)
-
-解开下载的 Actions 归档和其中的 `Luanshi-macOS.zip`，打开 `Luanshi - Border Skirmish.app`。此版本供试玩，美术等待实机目视验收。 [对应游戏源码](https://github.com/haohongfei2001-png/luanshi-game/commit/22d5c85abf18296c0d299075f68e287102b004e7) · [中文操作](docs/PLAYING_ZH.md)
-
-## 河关 0.16.0-rc.3 存档版本
+## Play the river gate candidate
 
 **河关 0.16.0-rc.3** · [下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43245656470/artifacts/13956928552) · [观看完整实战](docs/evidence/river-gate-v1-rc3/playthrough.mp4) · [美术升级前后对照](docs/evidence/river-gate-v1-rc3/before-after.mp4) · [画面、帧时间与校验值](docs/evidence/river-gate-v1-rc3/PLAYTEST.md)
 
 河关战役从军议进入。默认会战部署双方各 512 名普通兵，另有军官与玩家。也可选择「平陵巡防」按三城的现有兵力、军械出阵。请在 [Linux 与原生 macOS 构建记录](https://github.com/haohongfei2001-png/luanshi-game/actions/workflows/verify.yml?query=branch%3Amain) 下载对应的构建与实录。源码使用 Godot 4.6.3，首次检出后依次运行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import` 和 `godot --path .`。右上角「三城旧档」可进入已有战役。 [中文操作](docs/PLAYING_ZH.md) · [当前交付记录](docs/CODEX_CONTINUATION.md)
+
+## 河关 0.16.0-rc.4 美术复核版
+
+[下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43288570098/artifacts/13975154019) · [34 秒正常速度实战](docs/evidence/river-gate-v1-rc4/battlefield-motion.mp4) · [完整战役](docs/evidence/river-gate-v1-rc4/playthrough.mp4) · [RC3 与 RC4 同镜头实拍](docs/evidence/river-gate-v1-rc4/before-after.mp4) · [画质、性能及校验值](docs/evidence/river-gate-v1-rc4/PLAYTEST.md)
+
+此版本在开放的游戏 PR #34。解开下载的 Actions 归档和其中的 `Luanshi-macOS.zip`，打开 `Luanshi - Border Skirmish.app`。此版本供试玩，美术等待实机目视验收。 [对应游戏源码](https://github.com/haohongfei2001-png/luanshi-game/commit/2293008c2d76dcbd788aeaef0fb871de1bc8eee1) · [中文操作](docs/PLAYING_ZH.md)
 
 ## Vision
 
