@@ -21,8 +21,14 @@ void vertex() {
 	local_pos=VERTEX;
 	local_normal=NORMAL;
 	part=UV2.x;
-	// Keep the weathered material palette in linear light without darkening it again per pixel.
-	pigment=pow(max(COLOR.rgb,vec3(0.0)),vec3(1.30));
+	// The builder records the artist’s sRGB swatch in UV and UV2.y as well as COLOR.
+	// Keep the compatibility palette and decode it once for a linear colour target.
+	if (OUTPUT_IS_SRGB) {
+		pigment=pow(max(COLOR.rgb,vec3(0.0)),vec3(1.30));
+	} else {
+		vec3 swatch=pow(clamp(vec3(UV,UV2.y),vec3(0.0),vec3(1.0)),vec3(1.30));
+		pigment=mix(swatch/12.92,pow((swatch+.055)/1.055,vec3(2.4)),step(vec3(.04045),swatch));
+	}
 }
 
 vec3 painted_ground(vec2 p,float shore) {
