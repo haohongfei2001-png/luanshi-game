@@ -156,6 +156,9 @@ func _menu_to_camp(marched: Dictionary) -> void:
 		shell.free()
 		return
 	var state: Dictionary = w.snapshot()
+	var observation: Dictionary = w.player_view().known.get("hequ", {}).get("contents", {})
+	check(observation.get("outcome") == b.result and observation.get("owner") == "bei", "Survivors remember the withdrawal after leaving the gate")
+	check(not observation.has("soldiers") and not observation.has("food") and not observation.has("fort"), "Withdrawal does not reveal the hostile garrison inventory")
 	var returned: Dictionary = state.armies.relief
 	var rear: Dictionary = state.armies.get("hequ_rearguard", {})
 	var alive: int = marched.armies.relief.soldiers - receipt.dead_ids[0].size() - receipt.captured_officers[0].size()

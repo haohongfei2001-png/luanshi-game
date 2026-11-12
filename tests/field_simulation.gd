@@ -235,6 +235,24 @@ func _test_world_settlement() -> void:
 	check(siege.result=="夺取城内阵地" and siege_world.sync() and not siege_world.settle().is_empty(),"Court control produces a non-annihilation settlement")
 	var world:=siege_world.snapshot()
 	check(world.cities.hequ.owner=="sheng" and world.armies.hequ_remnant.soldiers==siege.side_size+siege.companies_per_side and siege_world.audit().is_empty() and siege_world.audit_quivers() and world.armies.hequ_remnant.field_ammo[0]>0,"Living garrison leaves on an actual road with its equipment")
+	var witness: Dictionary=siege_world.player_view().known.get("hequ",{})
+	if witness.is_empty():
+		check(false,"The commander who took the court knows its outcome before the courier arrives")
+		return
+	check(witness.observed_at_seconds==world.time_seconds and witness.reported_at_seconds==world.time_seconds and witness.contents.get("battle_id")==FieldWorld.ENCOUNTER and witness.contents.get("outcome")==siege.result,"The eyewitness report records the actual settlement time and encounter")
+	check(witness.contents.get("owner")==world.cities.hequ.owner and witness.contents.get("food")==world.cities.hequ.food and witness.contents.get("soldiers")==world.cities.hequ.soldiers,"Secured city stocks are available to the occupier")
+	var courier_pending:=false
+	for message: Dictionary in world.pending_reports:
+		if message.subject=="hequ" and message.arrives_at_seconds>witness.reported_at_seconds:
+			courier_pending=true
+	check(courier_pending,"The courier bearing the capture news still travels")
+	check(siege_world.enter_camp() and siege_world.camp_order("river"),"Leave the court after completing the mission")
+	var departed:=siege_world.player_view()
+	check(departed.local_city.is_empty() and departed.known.get("hequ")==witness,"The firsthand report remains available on the road")
+	const Store:=preload("res://scripts/field/save.gd")
+	var saved:=Store.restore(Store.snapshot(siege))
+	var restored:=FieldWorld.new()
+	check(saved!=null and restored.bind(saved) and restored.player_view()==departed,"Loading in transit reproduces the witnessed result exactly once")
 
 func _test_quivers_and_acknowledgments() -> void:
 	const Save := preload("res://scripts/field/save.gd")
