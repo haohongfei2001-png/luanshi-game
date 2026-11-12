@@ -111,6 +111,7 @@ var corps := OfficerCorps.new()
 var objectives := Objectives.new()
 var traffic_enabled := true
 var soft_crowd := true
+var keep_gate_file := true
 var density := CrowdGrid.new()
 var camp_actions: Array=[]
 var aftermath_hours := 0
@@ -183,6 +184,7 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 	side_size = n
 	traffic_enabled=ranked_officers
 	soft_crowd=ranked_officers
+	keep_gate_file=ranked_officers
 	objectives.enabled=ranked_officers
 	dry_muster=on_banks
 	rng.seed = seed_value
@@ -877,7 +879,7 @@ func _soldier(u: Unit) -> void:
 			return
 	var next := Ground.retreat_waypoint(u.pos, goal, gate_hp <= 0) if withdrawing else Ground.waypoint(u.pos, goal)
 	if traffic_enabled and not withdrawing and not at_post:
-		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0,ram_hp>0 and ram.x>Ground.WALL_X-6.0)
+		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0,ram_hp>0 and ram.x>Ground.WALL_X-6.0,keep_gate_file)
 	if traffic_enabled and ram_hp>0 and not at_post:
 		next=Traffic.around_ram(u.pos,next,ram,u.id,gate_hp<=0)
 	var dist := u.pos.distance_to(next)

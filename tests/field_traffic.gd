@@ -34,6 +34,13 @@ func _initialize() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func _check_passages() -> void:
+	for dir: float in [-1.0, 1.0]:
+		var inside_file := Ground.GATE + Vector2(-dir * 2.0, 2.60)
+		var far_side := Ground.GATE + Vector2(dir * 12.0, 0.0)
+		var next := Traffic.waypoint(inside_file, far_side, -3.0, 4, true)
+		var legacy := Traffic.waypoint(inside_file, far_side, -3.0, 4, true, false, false)
+		check((next.x-inside_file.x)*dir > 0.0, "A clear file leads through the open doorway")
+		check((legacy.x-inside_file.x)*dir < 0.0, "An RC1 replay retains its original approach")
 	var lanes := {}
 	for landmark: Vector2 in [Vector2(Ground.RIVER_X, 35), Ground.GATE]:
 		for dir: float in [-1.0, 1.0]:
@@ -147,6 +154,9 @@ func _siege(enabled: bool) -> Dictionary:
 	var sim_us := PackedInt64Array()
 	var bridge_users := {}
 	var gate_users := {}
+	var new_crossers := {}
+	var exit_files := {}
+	var rear_steps := 0
 	var bridge_files := {}
 	b.start()
 	for t in 3600:
@@ -180,6 +190,15 @@ func _siege(enabled: bool) -> Dictionary:
 					gate_users[u.id] = true
 		if row.breach > 0:
 			var elapsed: int = b.tick - row.breach
+			if elapsed > 0 and elapsed <= 120:
+				for u in b.roster:
+					if u.team != 0 or u.officer or u.hero or not b.active(u): continue
+					if u.before.x < Ground.WALL_X and u.pos.x >= Ground.WALL_X and absf(u.pos.y) < Ground.GATE_HALF:
+						new_crossers[u.id] = true
+						var lane_id := floori(u.pos.y)
+						exit_files[lane_id] = int(exit_files.get(lane_id, 0)) + 1
+					if u.state == Battle.State.MARCH and u.before.x > Ground.WALL_X - 3.6 and u.before.x < Ground.WALL_X and absf(u.before.y) < Ground.GATE_HALF and u.pos.x < u.before.x - 0.01:
+						rear_steps += 1
 			if elapsed > 0 and elapsed <= 120 and elapsed % PERIOD == 0:
 				_sample(b, post_breach, true)
 				if elapsed == 120: post_breach.gate_crossers = gate_users.size()
@@ -196,6 +215,9 @@ func _siege(enabled: bool) -> Dictionary:
 	row.soft_crowd = b.get(&"soft_crowd") if "soft_crowd" in b else false
 	row.escort_formation = escort_spread
 	row.service = service_log
+	post_breach.mouth_crossers = new_crossers.size()
+	post_breach.exit_files = exit_files
+	post_breach.rear_steps = rear_steps
 	row.after_breach_6s = post_breach
 	row.bridge_crossers = bridge_users.size()
 	row.gate_crossers = gate_users.size()
