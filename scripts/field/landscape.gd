@@ -33,6 +33,7 @@ func _ready() -> void:
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	add_child(sun)
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
+	surface_material.set_shader_parameter("trail_marks",preload("res://assets/environment/trail-marks.png"))
 	surface_material.set_shader_parameter("land_paint",preload("res://assets/environment/floodplain-paint.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
 	surface_material.set_shader_parameter("joinery",preload("res://assets/environment/joinery.png"))
@@ -139,8 +140,8 @@ func _shore(b: Builder) -> void:
 			var row: Array[Vector3]=[inner,shelf,lip]
 			if not last.is_empty():
 				var damp:=Color("82958a").lightened(0.040*sin(z*0.49))
-				b.quad(last[0],row[0],row[1],last[1],damp.darkened(0.09))
-				b.quad(last[1],row[1],row[2],last[2],damp)
+				_upward_quad(b,last[0],row[0],row[1],last[1],damp.darkened(0.09))
+				_upward_quad(b,last[1],row[1],row[2],last[2],damp)
 			last=row
 	b.joint=0
 
@@ -201,7 +202,7 @@ func _roof_point(base: Vector3,along: Vector3,across: Vector3,length: float,dept
 	var height:=rise*pow(1.0-t,1.60)+t*t*(0.11+0.20*corner*corner)
 	return base+along*x+across*(t*depth)+Vector3.UP*height
 
-func _roof_quad(b: Builder,a: Vector3,c: Vector3,d: Vector3,end: Vector3,paint: Color) -> void:
+func _upward_quad(b: Builder,a: Vector3,c: Vector3,d: Vector3,end: Vector3,paint: Color) -> void:
 	# Both roof slopes are exterior faces, including where one edge clips to the hip.
 	if (c-a).cross(end-a).y<0.0:
 		b.quad(a,end,d,c,paint)
@@ -236,12 +237,12 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,ret
 				var c:=_roof_point(base,along,normal,length,depth,rise,clampf(x0,-w1,w1),t1)
 				var right:=_roof_point(base,along,normal,length,depth,rise,clampf(x1,-w0,w0),t0)
 				var end:=_roof_point(base,along,normal,length,depth,rise,clampf(x1,-w1,w1),t1)
-				_roof_quad(b,a,c,end,right,shade)
+				_upward_quad(b,a,c,end,right,shade)
 				if t1>starts:
 					var top:=_roof_point(base,along,normal,length,depth,rise,x0,maxf(t0,starts))
 					var peak:=Vector3.UP*0.04
-					_roof_quad(b,top-along*0.045,c-along*0.045,c+peak,top+peak,col.lightened(0.12))
-					_roof_quad(b,top+peak,c+peak,c+along*0.045,top+along*0.045,col)
+					_upward_quad(b,top-along*0.045,c-along*0.045,c+peak,top+peak,col.lightened(0.12))
+					_upward_quad(b,top+peak,c+peak,c+along*0.045,top+along*0.045,col)
 				if row==rows-1:
 					b.rod(c+Vector3.UP*0.036,c+Vector3.UP*0.036+normal*0.075,0.053,0.056,col.lightened(0.11),5)
 					b.rod(c-Vector3.UP*0.041,end-Vector3.UP*0.041,0.060,0.060,WOOD,5)
@@ -369,6 +370,18 @@ func _tower(b: Builder,p: Vector3) -> void:
 		deck.block(p+Vector3(x,4.18,0),Vector3(0.20,0.24,5.52),WOOD)
 		for z: float in [-1.95,1.95]:
 			b.rod(p+Vector3(x*0.60,3.06,z),p+Vector3(x,4.23,z),0.13,0.12,WOOD,4)
+	# Install the gallery's wattle-and-daub knee walls on the same cutaway
+	# surface as its floor. The upper openings stay clear between the posts.
+	for side:float in [-1.0,1.0]:
+		for bay:float in [-1.07,1.07]:
+			deck.joint=8
+			deck.block(p+Vector3(side*1.87,4.79,bay),Vector3(0.14,0.54,1.78),Color("ab9b82"))
+			deck.joint=10
+			deck.block(p+Vector3(side*1.95,5.08,bay),Vector3(0.17,0.105,1.92),Color("70594a"))
+			deck.block(p+Vector3(side*1.95,5.91,bay),Vector3(0.16,0.11,1.92),Color("70594a"))
+			for bar:float in [-0.58,0.0,0.58]:
+				deck.joint=11
+				deck.block(p+Vector3(side*1.95,5.49,bay+bar),Vector3(0.10,0.76,0.077),WOOD)
 	_sight_deck(deck,p+Vector3.UP*4.32,2.74,2.75)
 	for x: float in [-1.95,1.95]:
 		for z: float in [-1.95,1.95]:
@@ -482,9 +495,23 @@ func _fort(b: Builder) -> void:
 			b.rod(foot+Vector3.UP*0.23,foot+Vector3.UP*4.12,0.25,0.217,WOOD,8)
 		b.joint=10
 		b.block(Vector3(Ground.WALL_X+x,4.01,0),Vector3(0.32,0.24,8.75),WOOD)
-	# The entrance has its own lintel, lacquered plaque and watch pennants.
+	# The plaque is mounted on the gatehouse in the world. It uses the same
+	# redistributable Chinese face as the existing HUD when it is installed.
 	b.block(Vector3(Ground.WALL_X-2.10,4.25,0),Vector3(0.16,0.85,3.5),Color("61483a"))
-	b.block(Vector3(Ground.WALL_X-2.20,4.25,0),Vector3(0.06,0.62,2.95),Color("405450"))
+	b.block(Vector3(Ground.WALL_X-2.20,4.25,0),Vector3(0.06,0.62,2.95),Color("344a46"))
+	var font_path:="res://assets/fonts/NotoSansSC-Regular.otf"
+	if ResourceLoader.exists(font_path):
+		var plaque:=Label3D.new()
+		plaque.font=load(font_path) as Font
+		plaque.text="河  關"
+		plaque.font_size=64
+		plaque.pixel_size=0.0083
+		plaque.outline_size=0
+		plaque.modulate=Color("d8bd83")
+		plaque.double_sided=false
+		plaque.position=Vector3(Ground.WALL_X-2.245,4.25,0)
+		plaque.rotation.y=-PI*0.5
+		add_child(plaque)
 	for side: float in [-1,1]:
 		var post:=Vector3(Ground.WALL_X-1.65,3.45,side*5.1)
 		b.rod(post,post+Vector3.UP*2.1,0.055,0.04,WOOD)
