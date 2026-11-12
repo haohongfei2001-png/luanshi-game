@@ -23,6 +23,19 @@ void vertex() {
 	pigment=pow(max(COLOR.rgb,vec3(0.0)),vec3(1.30));
 }
 
+vec3 painted_ground(vec2 p) {
+	vec3 underpaint=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
+	float dry=smoothstep(-0.015,0.023,underpaint.r-underpaint.g);
+	vec3 grass=texture(fieldbed,p*vec2(.155,.199)).rgb;
+	vec3 close_marks=texture(fieldbed,p*vec2(.48,.58)+vec2(.12,.32)).rgb;
+	vec3 grain=texture(fieldbed,p*vec2(0.213,0.261)+vec2(.57,.26)).rgb;
+	float turf_value=.86+.22*grass.g+.12*grass.r+.12*(close_marks.g-.44);
+	float path_value=.85+.17*grain.r+.105*close_marks.r+.070*smoothstep(.55,.80,close_marks.b);
+	vec3 floor_color=underpaint*mix(turf_value,path_value,dry);
+	vec4 track=texture(trail_marks,p*vec2(.42,.45));
+	return mix(floor_color,track.rgb,track.a*(.14+.69*dry));
+}
+
 void fragment() {
 	vec2 p=local_pos.xz;
 	vec3 color=pigment;
@@ -31,16 +44,7 @@ void fragment() {
 	if (part>0.5 && part<1.5) {
 		// This painting fixes the routes, old fields, headlands and canopy beds in
 		// world space. Fine surface marks disappear into mipmaps at army scale.
-		vec3 underpaint=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
-		float dry=smoothstep(-0.015,0.023,underpaint.r-underpaint.g);
-		vec3 grass=texture(fieldbed,p*vec2(.155,.199)).rgb;
-		vec3 close_marks=texture(fieldbed,p*vec2(.48,.58)+vec2(.12,.32)).rgb;
-		vec3 grain=texture(fieldbed,p*vec2(0.213,0.261)+vec2(.57,.26)).rgb;
-		float turf_value=.86+.22*grass.g+.12*grass.r+.12*(close_marks.g-.44);
-		float path_value=.85+.17*grain.r+.105*close_marks.r+.070*smoothstep(.55,.80,close_marks.b);
-		color=underpaint*mix(turf_value,path_value,dry);
-		vec4 track=texture(trail_marks,p*vec2(.42,.45));
-		color=mix(color,track.rgb,track.a*(.14+.69*dry));
+		color=painted_ground(p);
 	} else if (part>1.5 && part<2.5) {
 		float bank=abs(p.x+32.0);
 		float turn=sin(p.y*.42)*.42+sin(p.y*.15+1.1)*.30;
@@ -87,9 +91,21 @@ void fragment() {
 			color*=.76+.36*r.r+.09*r.b;
 		} else if (part>12.5 && part<13.5) {
 			vec3 flecks=texture(fieldbed,p*.37).rgb;
-			float dry_edge=smoothstep(4.55,6.02,abs(p.x+32.0));
-			vec3 shore=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
-			color=mix(shallows.rgb*.79+vec3(.022,.017,.008)*flecks.b,shore,dry_edge)*(.88+.23*flecks.r);
+			float bank=abs(p.x+32.0);
+			float edge=smoothstep(4.28,6.28,bank+.33*sin(p.y*.39)+.54*(flecks.g-.52));
+			vec3 silt=mix(shallows.rgb*.88,vec3(.206,.254,.185),.42+flecks.g*.21);
+			silt*=.85+.22*flecks.r+.11*smoothstep(.61,.84,flecks.b);
+			color=mix(silt,painted_ground(p),edge);
+		} else if(part>15.5 && part<16.5) {
+			float grain=texture(joinery,vec2(local_pos.z*.31,(local_pos.x+local_pos.y)*.94)).r;
+			float z=abs(p.y);
+			float cross_distance=min(z,abs(z-35.0));
+			float board=fract((p.x+32.0)/.482+.5);
+			float weather=texture(fieldbed,p*vec2(.28,.61)).r;
+			float worn=1.0-smoothstep(.12,.46,abs(cross_distance-1.20+.13*(weather-.5)));
+			float peg=(1.0-smoothstep(.10,.21,abs(board-.44)))*(1.0-smoothstep(.08,.14,abs(cross_distance-3.41)));
+			color*=.68+.50*grain+.12*worn*(.27+weather)-.19*peg;
+			roughness=.91-.14*worn;
 		}
 	}
 	ALBEDO=color;
