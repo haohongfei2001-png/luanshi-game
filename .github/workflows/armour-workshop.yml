@@ -21,13 +21,13 @@ jobs:
         working-directory: game
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = e2b2080ded1350f88950f5772c891bb3dd72f82b
+          test "$(git rev-parse HEAD)" = d0b084b7a3d01b6b2b39c7e8a6ac5dcfb9820aa0
           python3 -c 'import PIL' || python3 -m pip install Pillow
           python3 tools/art/bake_river_company.py
           python3 tools/art/check_company_motion.py
           git add assets/river_gate/figures/{river_company.glb,cloth_and_iron.png,surface_response.png}
           git diff --quiet -- assets/river_gate/figures/company_motion.png
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake sewn upper-arm armour and the recalibrated matte lamellar relief'
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the fitted baldric and divided coat into the active light infantry'
           git push origin HEAD:refs/heads/codex/river-gate-clear-armour
       - name: Install the verified game renderer
         run: |
