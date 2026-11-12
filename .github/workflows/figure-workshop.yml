@@ -1,35 +1,67 @@
-name: Display the actual RC4 window stills
+name: Measure a continuous foot plant in the live company
 on:
   push:
-    branches: [codex/river-gate-figure-workshop]
+    branches: ['codex/river-gate-figure-workshop']
 permissions:
-  actions: read
   contents: write
 jobs:
-  stills:
+  workshop:
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: codex/river-gate-rc4-evidence
-      - name: Copy the original resolved game-window frames from the finished visual job
-        env:
-          GH_TOKEN: ${{ github.token }}
+          ref: codex/river-gate-motion-sampling
+          fetch-depth: 0
+      - name: Bake the fitted mesh, materials and keyed motion into the playable branch
         run: |
           set -euo pipefail
-          gh run download 43268026943 -R "$GITHUB_REPOSITORY" -n river-art-b0f44c491fb47634539e73571cabf2c73519575b -D "$RUNNER_TEMP/plates"
-          frame=$(find "$RUNNER_TEMP/plates" -path "*/after/frames.json" -print -quit)
-          test -s "$frame"
-          plate=$(dirname "$(dirname "$frame")")
-          dest=docs/evidence/river-gate-v1-rc4
-          mkdir -p "$dest"
-          for shot in hero contact gate; do
-            cp "$plate/after/$shot.jpg" "$dest/$shot.jpg"
-            cp "$plate/$shot-pair.jpg" "$dest/$shot-pair.jpg"
+          test "$(git rev-parse HEAD)" = c341d42743fed173aa0adc3e336672da38365c7f
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow
+          test -f tools/art/company_motion.py
+          PYTHONPATH=tools/art python3 -c 'from pathlib import Path; from company_motion import bake_motion; bake_motion(Path("assets/river_gate/figures"))'
+          python3 tools/art/check_company_motion.py
+          git add assets/river_gate/figures/company_motion.png
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake continuous key strips for the motion sampler experiment'
+          git push origin HEAD:refs/heads/codex/river-gate-motion-sampling
+      - name: Prepare verified game renderer and video recorder
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow
+      - name: Measure shoe travel between keys and render the same four battlefield views
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/filter-review"
+          mkdir -p "$root"
+          base=6e36e8f69526f2caf25501da5a777f63484f3162
+          git fetch -q origin "$GITHUB_SHA"
+          git show "$GITHUB_SHA:tools/foot_phase_study.py" > "$root/foot_phase_study.py"
+          for label in nearest filtered; do
+            sampled=HEAD
+            if [[ $label == nearest ]]; then sampled="$base"; fi
+            mkdir -p "$root/$label"
+            git archive "$sampled" | tar -x -C "$root/$label"
+            (
+              cd "$root/$label"
+              python3 "$root/foot_phase_study.py" | tee "$root/$label-foot.log"
+              ./tools/prepare-font.sh
+              godot --headless --editor --path . --import > "$root/$label-import.log" 2>&1
+              if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$root/$label-import.log"; then exit 1; fi
+              timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --audio-driver Dummy --script tests/company_render_cost.gd -- --field-size=512 2>&1 | tee "$root/$label-render.log"
+              if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$root/$label-render.log"; then exit 1; fi
+              test "$(grep -c '^COMPANY_RENDER_COST' "$root/$label-render.log")" -eq 4
+            )
           done
-          cp "$plate/battlefield-motion.mp4" "$dest/battlefield-motion.mp4"
-          cp "$plate/footwork-pair.mp4" "$dest/footwork-pair.mp4"
-          git add -- "$dest"
-          git -c user.name="Luanshi acceptance archive" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Show the original RC4 window frames and the continuous take to the artist"
-          git push origin HEAD:refs/heads/codex/river-gate-rc4-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuous-foot-study
+          path: ${{ runner.temp }}/filter-review/*.log
