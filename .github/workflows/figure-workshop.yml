@@ -1,48 +1,32 @@
-name: Sew and view the field company
+name: Read real camera frames at their original size
 on:
   push:
-    branches: ['codex/river-gate-figure-workshop']
-permissions:
-  contents: write
+    branches: ['codex/river-gate-art-screen']
+permissions: { actions: read, contents: read }
 jobs:
-  workshop:
+  view:
     runs-on: ubuntu-24.04
-    timeout-minutes: 18
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: codex/river-gate-rc4
-          fetch-depth: 0
-      - name: Bake the fitted mesh, materials and keyed motion into the playable branch
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = c8f0adb271c06d666c69550f55211ea8a1161279
-          python3 -c 'from PIL import Image' || python3 -m pip install Pillow
-          python3 tools/art/reduce_field_head.py
-          python3 tools/art/bake_river_company.py
-          python3 tools/art/check_company_motion.py
-          git add tools/art/field_head.json assets/river_gate/figures/river_company.glb assets/river_gate/figures/cloth_and_iron.png assets/river_gate/figures/surface_response.png assets/river_gate/figures/company_motion.png
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the sculpted company and nine weight-transfer motion sets'
-          git push origin HEAD:refs/heads/codex/river-gate-rc4
-          git grep -n '0.16.0-rc.3' -- tools tests scripts .github || true
-      - name: Prepare verified game renderer and video recorder
-        run: |
-          set -euo pipefail
-          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
-          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
-          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
-          unzip -q /tmp/editor.zip -d /tmp/godot
-          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
-          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
-          python3 -c 'from PIL import Image' || python3 -m pip install Pillow
-      - name: Play RC3 and the rebuilt figures in the same game window
-        env:
-          LIBGL_ALWAYS_SOFTWARE: '1'
-        run: ./tools/compare-river-art.sh
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - uses: actions/download-artifact@v4
         with:
           name: figure-workshop
-          path: |
-            artifacts/river-art-comparison/
-            !artifacts/river-art-comparison/*/film/
+          run-id: 43260424575
+          github-token: ${{ github.token }}
+          path: frames
+      - name: Read actor surfaces in the actual 1280 by 800 frame
+        run: |
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow
+          python3 - <<'PY'
+          from PIL import Image
+          import pathlib, io, base64
+          for name in ['hero','officer','contact']:
+              p=next(pathlib.Path('frames').rglob('after/'+name+'.jpg'))
+              im=Image.open(p)
+              for label,box in [('full',(0,0,1280,800)),('centre',(350,140,895,651))]:
+                  pic=im.crop(box)
+                  if label=='full': pic.thumbnail((970,630))
+                  b=io.BytesIO()
+                  pic.save(b,'JPEG',quality=85)
+                  print('TAILOR_READ',name,label,base64.b64encode(b.getvalue()).decode())
+          PY
