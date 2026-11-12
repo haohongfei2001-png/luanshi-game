@@ -20,6 +20,18 @@
 
 - 全部数值、原始证据索引和逐项判定见 [measurements.json](measurements.json)。
 
+## 主线重建与独立冷启复核
+
+主线 `d6b03507c4ace8582ab9f821e604c499616b8dab` 重新导出同一游戏树。内层 macOS ZIP 的 SHA-256 为 `092e015b1776ba3b1ebf0d00907f133b70fdd7f340b9bba5e0a35a7714841d72`。 [主线 macOS 候选](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43327368519/artifacts/13992554882) · [整场录像](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43327368519/artifacts/13994326634) · [完整攻城](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43327368519/artifacts/13992754791)
+
+主线首次运行五项作业通过，原生 Mac 作业失败。这个包通过双架构、签名、存读档与无图形运行校验。九次空游戏数据图形启动中八次进入实战。首次默认 Metal 启动在 75 秒上限前仅输出引擎版本和 Apple Paravirtual 设备，没有 `scene_ready`、首帧、游戏步骤或报错栈。兼容后端的第一次启动成功。同包后续启动的结果单独记录。 [首次失败日志](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43327368519/job/131567490905) · [原生输出与截图](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43327368519/artifacts/13993638955)
+
+主线包默认清晰档 512v512、实际 1024×640、4× MSAA、阴影。在 3328 帧和 24.0 秒的接敌与移镜窗口，平均 138.66 FPS，P50 / P95 / P99 为 5.87 / 14.77 / 20.61 ms，峰值 RSS 575.0 MiB，取到 1159 次新命中。云端 Metal GPU 时间戳未提供有效样本。
+
+在另一台全新托管 Mac 上，对相同内层 ZIP 以相同的 75 秒时限独立运行九次，9 次进战。第一次默认 Metal 首帧 56.8 秒。在第 45 秒采集的线程栈中，Godot 正等待移动渲染器的阴影绘制任务，Metal 编译请求线程同时工作。第一次超时没有留下调用栈，确切原因仍未确认。 [同包完整复核及调用栈](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43330059050/job/131572221262)
+
+已在独立分支启动 macOS 原生着色器烘焙实验，先验证 PCK 内的实际数据，再由另一台托管机启动。 [独立实验](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43331468765)
+
 ## 实际游玩
 
 - 固定种子 `61112`，玩家可在军议屏开始战争或继续现有快存。通过普通输入瞄准、出招、下令，夺城后进入战报和营地，再行军、保存、读回。录像包含 888 帧，共 59.2 秒。图形流程实际触发 F5/F9 和战前的继续按钮。音轨为双声道 AAC。
