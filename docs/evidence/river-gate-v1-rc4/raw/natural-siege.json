@@ -1,0 +1,128 @@
+{
+  "attacks": 4225,
+  "blocked_hits": 52,
+  "breach_tick": 630,
+  "capture_fps": 10,
+  "capture_sec": 6.0,
+  "crew_replacements": 1,
+  "dead": [
+    270,
+    298
+  ],
+  "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+  "dropped_weapons": [
+    270,
+    298
+  ],
+  "escaped": [
+    7,
+    103
+  ],
+  "frames_captured": 501,
+  "gate_first_damage_tick": 518,
+  "gate_hp": 0.0,
+  "hero_hp": 100.0,
+  "hits": [
+    1357,
+    1087
+  ],
+  "mission": "夺取河关",
+  "officer_corps": {
+    "active_commands": [
+      10,
+      2
+    ],
+    "captives": [
+      [],
+      []
+    ],
+    "commanders": [
+      1024,
+      1040
+    ],
+    "evacuated": [
+      [],
+      []
+    ],
+    "fallen": [
+      [
+        1024,
+        1028,
+        1030,
+        1032,
+        1033,
+        1038
+      ],
+      [
+        1040,
+        1041,
+        1042,
+        1043,
+        1044,
+        1045,
+        1046,
+        1047,
+        1048,
+        1049,
+        1050,
+        1051,
+        1052,
+        1053,
+        1054,
+        1055
+      ]
+    ],
+    "kills": [
+      7,
+      6
+    ],
+    "ranked": true,
+    "rescued": [
+      [],
+      []
+    ],
+    "skills": [
+      51,
+      24
+    ],
+    "successions": [
+      6,
+      4
+    ],
+    "wounded": [
+      [
+        1025,
+        1027,
+        1035,
+        1037,
+        1039
+      ],
+      []
+    ]
+  },
+  "officers": 32,
+  "orders_delivered": 0,
+  "orders_lost": 0,
+  "orders_refused": 0,
+  "ordinary_rosters": [
+    512,
+    512
+  ],
+  "ordinary_survivors": [
+    242,
+    214
+  ],
+  "projectiles": 2371,
+  "quivers_balanced": true,
+  "ram_hp": 150.0,
+  "ram_strokes": 0,
+  "receipt": true,
+  "result": "夺取城内阵地",
+  "routing": [
+    18,
+    34
+  ],
+  "seed": 61112,
+  "soldiers_per_side": 512,
+  "tick": 1000
+}

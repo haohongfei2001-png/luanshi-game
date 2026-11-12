@@ -1,0 +1,32 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple Paravirtual device (Apple5)
+
+FIELD_PROFILE_FILE /Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish/frame-times/river-gate-1794504957-1884.jsonl
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":28321,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":1884,"renderer":"mobile","result":"","stage":"scene_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":44277,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":1884,"renderer":"mobile","result":"","stage":"first_post_draw","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":2,"engine_ms":45497,"focus":true,"hits":0,"paused":false,"physics_frames":16,"pid":1884,"renderer":"mobile","result":"","stage":"window_focus_in","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":3,"engine_ms":46433,"focus":true,"hits":0,"paused":false,"physics_frames":32,"pid":1884,"renderer":"mobile","result":"","stage":"foreground_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":3,"engine_ms":46459,"focus":true,"hits":0,"paused":false,"physics_frames":32,"pid":1884,"renderer":"mobile","result":"","stage":"deployed","started":true,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":4,"engine_ms":47005,"focus":true,"hits":0,"paused":false,"physics_frames":36,"pid":1884,"renderer":"mobile","result":"","stage":"first_tick","started":true,"tick":1}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":38,"engine_ms":47636,"focus":true,"hits":3,"paused":false,"physics_frames":78,"pid":1884,"renderer":"mobile","result":"","stage":"first_hit","started":true,"tick":15}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":387,"engine_ms":51875,"focus":true,"hits":607,"paused":false,"physics_frames":333,"pid":1884,"renderer":"mobile","result":"","stage":"contact_complete","started":true,"tick":100}
+FIELD_HOST_WINDOW {"adapter":"Apple Paravirtual device (Apple5)","canvas_scale":[0.75,0.75],"content_design_px":[1280,800],"display":"macOS","display_window_px":[1000,600],"estimated_internal_px":[960,600],"four_second_windows":[],"fps":87.3441470715591,"frames":306,"gpu_timer_status":"no_nonzero_device_timestamps","hits_in_window":398,"input_to_postdraw_ms":[5.65999984741211,9.31599998474121,5.34100008010864],"mean_ms":11.4489640522876,"p50_ms":7.572,"p95_ms":27.207,"p99_ms":31.695,"panned":true,"per_side":512,"platform":"macOS","preset":0,"processor":"Apple M1 (Virtual)","render_cpu_p95_ms":0.658999979496002,"render_cpu_samples":306,"render_gpu_p95_ms":null,"render_gpu_samples":0,"render_target_px":[960,600],"renderer":"mobile","reported_viewport_texture_px":[720.0,450.0],"scale":1.0,"screen_px":[1024,768],"seconds":3.503383,"shadows":true,"sim_cpu_ms_per_frame":4.09088562091503,"sim_cpu_total_ms":1251.811,"static_bytes":null,"tour":false,"view_script_ms_per_frame":5.16402614379085,"view_script_total_ms":1580.192,"viewport":[1000,600]}
+FIELD_PACKAGE_PASS {"attacks":1532,"blocked_hits":18,"capture_sec":0.0,"crew_replacements":0,"dead":[95,139],"decision":"","device":"Apple Paravirtual device (Apple5)","display":"macOS","dropped_weapons":[95,139],"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[606,399],"mission":"夺取河关","officer_corps":{"active_commands":[16,7],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[],[1040,1041,1042,1043,1044,1046,1048,1049]],"kills":[1,4],"ranked":true,"rescued":[[],[]],"skills":[9,12],"successions":[0,0],"wounded":[[],[1047]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":898,"ram_hp":150.0,"ram_strokes":0,"result":"","resume_equal":true,"routing":[3,37],"seed":61112,"soldiers_per_side":512,"tick":170,"visible":448}
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)
+       56.38 real        14.45 user         1.87 sys
+           517373952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               36215  page reclaims
+                 883  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   2  messages sent
+                   0  messages received
+                   0  signals received
+                  80  voluntary context switches
+               36665  involuntary context switches
+           459263040  peak memory footprint
