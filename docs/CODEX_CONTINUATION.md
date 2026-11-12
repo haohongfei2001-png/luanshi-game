@@ -5,15 +5,29 @@
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
 <!-- river-gate-current-review -->
-## 河关 RC4 美术复核中
+## 河关 0.16.0-rc.4 可玩候选
 
-Owner 以《英雄联盟》的常用游玩视角和可信承重为参考。RC3 美术方向已退回。新候选保持 ART_REVIEW_REQUIRED。
+美术状态为 **ART_REVIEW_REQUIRED**。常用俯斜游玩视角参考第二张美术方向稿，角色近景用于检查动作与材质。RC3 的美术判定仍为退回。 [实机连续片段](evidence/river-gate-v1-rc4/battlefield-motion.mp4) · [实际游玩流程](evidence/river-gate-v1-rc4/playthrough.mp4) · [配对实机画面](evidence/river-gate-v1-rc4/before-after.mp4) · [美术方向稿](art-direction/river-gate/battle-view.png)
 
-当前已完成五项 CI 的可回退源为 6e36e8f69526f2caf25501da5a777f63484f3162，实际打包树为 b0f44c491fb47634539e73571cabf2c73519575b。[游戏 PR #34](https://github.com/haohongfei2001-png/luanshi-game/pull/34) · [macOS ZIP](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43268026943/artifacts/13968240852) · [实战、时序与 SHA-256](evidence/river-gate-v1-rc4/PLAYTEST.md)
+游戏 PR #34 的源码为 `d2f0180c0865b3746bef11e43a2239659188fa6f`，CI 导出的合并树为 `f8129247cffe207f6fa0575e0cab3851662e5b96`。从 Actions 归档解出 `Luanshi-macOS.zip` 后，内层 ZIP 的 SHA-256 应为 `d91e3097ece6199b99c607457263d570ef49cb99a3be033f4bde6f688799052c`。 [源码](https://github.com/haohongfei2001-png/luanshi-game/commit/d2f0180c0865b3746bef11e43a2239659188fa6f) · [游戏 PR](https://github.com/haohongfei2001-png/luanshi-game/pull/34) · [macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13970062784) · [五项 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020)
 
-近身士兵双手持械、跨步和后退、近远马匹、军营和渡口已实装。12 对同镜头、34 秒连续交战、九种武器、战后驻营和旧破门档通过回归。此阶段托管 M1 虚拟机 512 对 512 清晰档 1024×640，24 秒平均 48.9 FPS，P95 为 49.90 毫秒。真实 M5 待测。
+角色按行进距离播放八向步态，双脚连续接地，转身时胸、肩与衣摆保留跟随。加入实机衣料、三种面部、持械行军姿势、战马鞍具、军营、柳岸和湿土。 十四组前后对照在同一时刻与机位采集，两军各 512 人，另计玩家和军官。隔离测试中 16 组方向步态最大承重鞋底漂移从 79.1 毫米降至 0.77 毫米。 [动作对照](evidence/river-gate-v1-rc4/footwork-pair.mp4) · [分项量测](evidence/river-gate-v1-rc4/raw/motion-sampling.json)
 
-下一步在云端运行 `git fetch origin codex/river-gate-garrison-studies`，从该分支经窗口对照检查靛衣、绛披、面部、连续贴地动作，再整合河岸的实测版本。不要将效果图计入游戏验收。
+军议、部署、实战、战报、驻营和读档继续均已在正式入口重放。九武器、骑马及战车、护送、军令、救援和继任都有实测。原始 RC3 破门档从第 629 步推进至第 746 步，逐字段差异 0。 [流程与原始日志](evidence/river-gate-v1-rc4/PLAYTEST.md)
+
+在 Apple M1 (Virtual) 托管宿主，默认清晰档、阴影开启且内部缩放 1，实绘 1024×640，24 秒千人实战平均 176.5 FPS，P50/P95/P99 分别为 4.62 / 13.24 / 15.94 毫秒，峰值 RSS 510 MiB。托管环境已记录八次空游戏数据进程启动，保留系统图形缓存。真实 MacBook Air M5 为 **NOT_RUN**。 [全兵力分档、逐帧记录和冷启动](evidence/river-gate-v1-rc4/measurements.json)
+
+在有图形显示器的 Linux 云端和 Godot 4.6.3 上，先取回精确版本，再复现相同的镜头和实测。
+
+```sh
+git fetch origin codex/river-gate-rc4
+git switch --detach d2f0180c0865b3746bef11e43a2239659188fa6f
+./tools/prepare-font.sh
+./tools/compare-river-art.sh
+./tools/test-field-render.sh
+```
+
+下一项先取回地表独立对照提交 0b782835a40e663f656b788b9d50374b1e9ae6e6，核对正式近战和宽景下的纹理频率、道路与湿砂界面，再合入同一个候选包重新打包。随后以正常战斗镜头查正面持械的手、兵刃接触和密集门洞中识别主角的速度，保留相同种子、兵力和画质做对照。继续拆分近景蒙皮与阴影的绘制成本，核对多个相同摄像位置的 P95、P99 和命中结果。
 <!-- /river-gate-current-review -->
 
 ## 当前可玩候选 0.16.0-rc.3

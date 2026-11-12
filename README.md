@@ -2,7 +2,13 @@
 
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
-## Play the river gate candidate
+## 河关 0.16.0-rc.4 试玩包
+
+[下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43275529020/artifacts/13970062784) · [34 秒正常速度实战](docs/evidence/river-gate-v1-rc4/battlefield-motion.mp4) · [完整战役](docs/evidence/river-gate-v1-rc4/playthrough.mp4) · [RC3 与 RC4 同镜头实拍](docs/evidence/river-gate-v1-rc4/before-after.mp4) · [画质、性能及校验值](docs/evidence/river-gate-v1-rc4/PLAYTEST.md)
+
+解开下载的 Actions 归档和其中的 `Luanshi-macOS.zip`，打开 `Luanshi - Border Skirmish.app`。此版本供试玩，美术等待实机目视验收。 [对应游戏源码](https://github.com/haohongfei2001-png/luanshi-game/commit/d2f0180c0865b3746bef11e43a2239659188fa6f) · [中文操作](docs/PLAYING_ZH.md)
+
+## 河关 0.16.0-rc.3 存档版本
 
 **河关 0.16.0-rc.3** · [下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43245656470/artifacts/13956928552) · [观看完整实战](docs/evidence/river-gate-v1-rc3/playthrough.mp4) · [美术升级前后对照](docs/evidence/river-gate-v1-rc3/before-after.mp4) · [画面、帧时间与校验值](docs/evidence/river-gate-v1-rc3/PLAYTEST.md)
 
