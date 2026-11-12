@@ -1,5 +1,9 @@
 # AI development instructions
 
+## Owner-approved art direction update (2026-11-13)
+
+**Read `docs/ART_DIRECTION_CEL_SHADED_BATTLEFIELD_20261113.md` before visual/asset/rendering work.** Owner's latest preference is a **clear stylized 3D ancient-Chinese cartoon/animation look** with connected flat color masses, restrained silhouettes, 2–3 cel-shaded value bands and uncluttered battlefield readability—not oil-paint/painterly or microtextured PBR realism, and not big-headed chibi. This **supersedes only conflicting earlier visual-style mandates**; retain credible historical clothing/equipment, realistic consequences, combat systems, LOD/MultiMesh, real Godot implementation and performance proof. The approved concept is not an in-game screenshot or acceptance of depicted UI/content. Do not continue polishing painterly realism as the only accepted aesthetic. Do not claim implementation or user approval of live graphics without evidence.
+
 This repository currently contains an early battle prototype, but the **long-term assignment is a complete single-player game** under docs/FINAL_VISION_ACCEPTANCE.md. Implement incrementally; do not mistake the first prototype for project completion.
 
 ## Owner final simplification: ordinary soldier casualties and equipment are cohort counts too
@@ -29,7 +33,7 @@ A dead commander does not automatically win or rout an army: high local regime p
 
 The owner says the current game still looks too rough; **visual foundations must be addressed before minor combat-readability and performance tuning**. Read `docs/VISUAL_QUALITY_TARGET_V1.md` and the latest `docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md`. Current characters/environment are largely procedural primitives in `scripts/field/figures.gd` and `scripts/field/landscape.gd`; this is a foundational asset-quality gap, not merely a lighting bug.
 
-Build a high-quality **integrated in-game vertical slice** first: player, common soldier, archer, elite/challenger, horse, several true weapon grips/actions and one coherent river-gate environment. Improve model proportions, faces/hands, clothing/armor, materials, weapons, rig/animation, terrain/building/vegetation and lighting at normal gameplay camera distances. Use legitimate original/redistributable assets and actual Godot integration; static concept/Blender renders do not count. Preserve small-scale restrained realism, MultiMesh, near/mid/far LOD, soft crowd density and performance. Once the visual slice is genuinely good, propagate its quality standard across troop types/scene. Do not ask the owner to approve every ordinary art decision.
+Build a high-quality **integrated in-game vertical slice** first: player, common soldier, archer, elite/challenger, horse, several true weapon grips/actions and one coherent river-gate environment. Improve model proportions, faces/hands, clothing/armor, materials, weapons, rig/animation, terrain/building/vegetation and lighting at normal gameplay camera distances. Use legitimate original/redistributable assets and actual Godot integration; static concept/Blender renders do not count. Preserve credible small-scale ancient-war aesthetics, the owner's 2026-11-13 stylized cel-shaded color-block direction, MultiMesh, near/mid/far LOD, soft crowd density and performance. Once the visual slice is genuinely good, propagate its quality standard across troop types/scene. Do not ask the owner to approve every ordinary art decision.
 
 ## 2026-11-12 MASTER EXECUTION MANDATE — read before development
 

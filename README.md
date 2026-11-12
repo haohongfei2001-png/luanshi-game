@@ -1,5 +1,7 @@
 # Luanshi (working title)
 
+**2026-11-13 美术方向更新：** 用户认可“3D 国风动画式卡通 + 干净色块 + 分级明暗 + 清晰军阵”的优先方向；保留可信的中国古代战争表现与 3D 战斗架构。详见 [正式视觉方向规范](docs/ART_DIRECTION_CEL_SHADED_BATTLEFIELD_20261113.md)。这是概念方向，游戏内实现与视觉品质尚待真实验收。
+
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
