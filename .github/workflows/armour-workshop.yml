@@ -21,7 +21,7 @@ jobs:
         working-directory: game
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = ebb54ab0141a76b67b47f126ec0802a483738f31
+          test "$(git rev-parse HEAD)" = e2b2080ded1350f88950f5772c891bb3dd72f82b
           python3 -c 'import PIL' || python3 -m pip install Pillow
           python3 tools/art/bake_river_company.py
           python3 tools/art/check_company_motion.py
