@@ -1,76 +1,55 @@
-name: Paired playable bank and willow review
+name: Inspect open scanned soil sources
 on:
   push:
     branches: [codex/river-gate-painted-landscape-review]
 permissions:
   contents: read
 jobs:
-  picture:
+  source:
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Compare 1024 combatants at the actual ford and field edge
+      - name: Inspect primary CC0 and capture candidate material samples
         run: |
           set -euo pipefail
-          curl -fsSL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
-          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
-          unzip -q /tmp/editor.zip -d /tmp/river-editor
-          editor=/tmp/river-editor/Godot_v4.6.3-stable_linux.x86_64
-          mkdir -p artifacts/{before,after}
-          touch artifacts/.gdignore
-          node tools/env_river_paint.mjs
-          git diff --exit-code --stat -- assets/environment
-          ./tools/prepare-font.sh
-          git worktree add --detach /tmp/bank-before 314b9dee2f16fa43851783132dc25e915d00f182
-          cp tests/env_valley_review.gd /tmp/bank-before/tests/
-          cp assets/fonts/NotoSansSC-Regular.otf /tmp/bank-before/assets/fonts/
-          mkdir -p /tmp/bank-before/artifacts
-          touch /tmp/bank-before/artifacts/.gdignore
-          for project in /tmp/bank-before .; do
-            sample=before
-            if [ "$project" = "." ]; then sample=after; fi
-            "$editor" --headless --editor --import --path "$project" >"artifacts/$sample/import.log" 2>&1
-            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "artifacts/$sample/import.log"; then exit 1; fi
-            LIBGL_ALWAYS_SOFTWARE=1 timeout 155s xvfb-run -a -s '-screen 0 1280x800x24' "$editor" --path "$project" --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script res://tests/env_valley_review.gd -- --field-size=512 2>&1 | tee "artifacts/$sample/window.log"
-            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "artifacts/$sample/window.log"; then exit 1; fi
-            grep -q 'RIVER_ART_PASS ticks=193' "artifacts/$sample/window.log"
-            cp "$project"/artifacts/river-art/{*.jpg,frames.json} "artifacts/$sample/"
-          done
+          curl -fsSL --max-time 20 https://polyhaven.com/license -o /tmp/terrain-license
           python3 - <<'PY'
-          import json,base64,pathlib,platform
-          root=pathlib.Path('artifacts')
-          def frames(stage):
-              return {row['label']:row for row in json.loads((root/stage/'frames.json').read_text())}
-          def costs(stage):
-              return {row['label']:row for row in [json.loads(l.partition(' ')[2]) for l in (root/stage/'window.log').read_text().splitlines() if l.startswith('WILLOW_COST ')]}
-          a,b=frames('before'),frames('after'); ca,cb=costs('before'),costs('after')
-          for label,post in b.items():
-              pre=a[label]
-              assert all(post[k]==pre[k] for k in ['tick','center','zoom','yaw','ordinary','contact','in_frame_ids_sha256','window','internal_scale','shadows'])
-              assert post['ordinary']==[512,512] and post['window']==[1280,800] and post['shadows'] and post['internal_scale']==1
-              print('RIVER_GEOMETRY',label,pre['draw_calls'],post['draw_calls'],pre['primitives'],post['primitives'])
-              print('GROUND_FLATNESS',label,round(pre['flat_pixel_neighborhood_fraction'],4),round(post['flat_pixel_neighborhood_fraction'],4))
-              if label in ('ford','bank','margin'):
-                  assert post['flat_pixel_neighborhood_fraction'] < pre['flat_pixel_neighborhood_fraction']+.065
-          for label,post in cb.items():
-              pre=ca[label]
-              assert pre['hits']==post['hits'] and pre['tick']==post['tick'] and post['ordinary']==[512,512]
-              print('WILLOW_TIMES',label,[round(pre[k],2) for k in ['p50_ms','p95_ms','p99_ms']],[round(post[k],2) for k in ['p50_ms','p95_ms','p99_ms']])
-          (root/'comparison.json').write_text(json.dumps({'before':a,'after':b,'before_wall':ca,'after_wall':cb,'cpu':platform.machine()},indent=2))
-          for stage,name in [('after','ford'),('after','bank'),('after','ranks'),('before','ford'),('before','bank'),('after','margin')]:
-              data=(root/stage/(name+'-view.jpg')).read_bytes()
-              name=stage+'_'+name
-              wire=base64.b64encode(data).decode()
-              for i in range(0,len(wire),24000): print('RIVER_PAINT_JPEG',name,i//24000,wire[i:i+24000])
+          import re
+          s=open('/tmp/terrain-license').read()
+          for pattern in ('Creative Commons','CC0','public domain'):
+              m=re.search(pattern,s,re.I)
+              if m: print('SOURCE_LICENSE',re.sub('<[^>]+>',' ',s[max(0,m.start()-125):m.end()+185]))
           PY
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: paired-living-river
-          path: |
-            artifacts/before
-            artifacts/after
-            artifacts/comparison.json
+          curl -fsSL --max-time 20 'https://api.polyhaven.com/assets?t=textures' -o /tmp/terrain-catalog.json
+          python3 - <<'PY'
+          import json,re,urllib.request,concurrent.futures,base64,io
+          from PIL import Image
+          catalog=json.load(open('/tmp/terrain-catalog.json'))
+          ids=[k for k in catalog if re.search('grass|forest_floor|muddy|rocky_trail|sandy|brown_mud|dirt_floor',k)]
+          for stem in ['grass','forest_floor','brown_mud','rocky_trail','sandy','muddy','dirt_floor']:
+              print('SOURCE_IDS',stem,[k for k in ids if stem in k][:36])
+          preferred=['grass_1','grass_2','grass_3','grass_4','aerial_grass_rock','forrest_ground_01','forest_floor','forest_floor_01','brown_mud','brown_mud_02','brown_mud_03','rocky_trail_02','brown_mud_leaves_01','sandy_gravel','brown_muddy_ground','brown_planks_03']
+          chosen=list(dict.fromkeys(k for k in preferred if k in catalog))
+          for stem,count in [('grass',3),('forest_floor',2),('rocky_trail',2),('sandy',2)]:
+              chosen+=list(k for k in ids if stem in k and k not in chosen)[:count]
+          def fetch(k):
+              try:
+                  f=json.load(urllib.request.urlopen('https://api.polyhaven.com/files/'+k,timeout=15))
+                  channel=f.get('Diffuse') or f.get('diff') or f.get('col') or f.get('albedo') or {}
+                  if not channel:return k,list(f),None
+                  variants=channel.get('1k') or channel.get('2k') or {}
+                  imagefile=variants.get('jpg') or variants.get('png')
+                  if not imagefile:return k,list(variants),None
+                  body=urllib.request.urlopen(imagefile['url'],timeout=15).read()
+                  pic=Image.open(io.BytesIO(body)).convert('RGB');pic.thumbnail((124,124))
+                  return k,[imagefile,catalog[k].get('authors'),catalog[k].get('tags')],pic
+              except Exception as e:return k,str(e),None
+          items=list(concurrent.futures.ThreadPoolExecutor(max_workers=8).map(fetch,chosen))
+          from PIL import ImageDraw
+          board=Image.new('RGB',(144*5,155*((len(items)+4)//5)),(33,37,34));d=ImageDraw.Draw(board)
+          for i,(k,row,pic) in enumerate(items):
+              print('SOURCE_FILE',k,json.dumps(row)[:570])
+              if pic:board.paste(pic,(i%5*144,i//5*155))
+              d.text((i%5*144,i//5*155+125),k,fill=(245,243,229))
+          dest=io.BytesIO();board.save(dest,'JPEG',quality=82);print('MATERIAL_BOARD',base64.b64encode(dest.getvalue()).decode())
+          PY
