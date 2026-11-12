@@ -1,3 +1,17 @@
+# CURRENT OWNER PRIORITY UPDATE — 2026-11-12 (RC2 merged)
+
+**Latest baseline:** playable `0.16.0-rc.2` is merged; see [RC2 evidence](evidence/river-gate-v1-rc2/PLAYTEST.md), [CODEX_CONTINUATION.md](CODEX_CONTINUATION.md), and [master execution mandate](CODEX_MASTER_EXECUTION_MANDATE_20261112.md).
+
+**Current next P0 is visual quality, not another feature batch.** The owner judges the actual game image still too rough. Source inspection confirms key characters and battlefield are still predominantly procedurally generated with basic mesh primitives:
+- `scripts/field/figures.gd` creates character geometry from `rod/block/loft/quad` primitives.
+- `scripts/field/figure.gdshader` deforms vertices for most movement/weapon actions.
+- `scripts/field/landscape.gd` generates the battlefield, vegetation, gate, camp and ram procedurally.
+- The production asset tree currently lacks a coherent reusable character/environment model, texture/material and skeletal animation library.
+
+Therefore the next development must create a **real integrated visual vertical slice** (player, ordinary infantry, archer, elite/challenger, horse, several actual weapon grips/actions, and a cohesive section of the river-gate environment), with believable small-scale human proportions, face/hands/clothing/armor/materials, weapons, animation, lighting and terrain. Build actual assets into the Godot game, not static Blender renders or concept art. Then extend to other troop kits and LOD while preserving MultiMesh, crowd soft-density and 512v512 capacity. See [VISUAL_QUALITY_TARGET_V1.md](VISUAL_QUALITY_TARGET_V1.md).
+
+**Priority after the vertical slice:** (1) melee readability without spreading the army apart; (2) dense-battle P95/P99 profiling; (3) macOS cold-start root cause; (4) complete remaining bilateral generals/objective outcomes; (5) real M5 20-minute/4K validation. M5 remains NOT_RUN until tested on actual M5.
+
 # Project status / resumable handoff
 
 ## 河关 0.16.0-rc.2
