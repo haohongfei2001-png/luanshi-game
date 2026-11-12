@@ -1,6 +1,7 @@
 extends Node3D
 const Battle := preload("res://scripts/field/battle.gd")
 const Ground := preload("res://scripts/field/ground.gd")
+const MeleeSight:=preload("res://scripts/field/melee_sight.gd")
 const Figures := preload("res://scripts/field/presentation.gd")
 const Landscape := preload("res://scripts/field/landscape.gd")
 const Hud := preload("res://scripts/field/hud.gd")
@@ -18,6 +19,7 @@ var hud := Hud.new()
 var audio := Sound.new()
 var camera := Camera3D.new()
 var camera_center := Vector2.ZERO
+var melee_sight:=MeleeSight.new()
 var camera_pitch:=deg_to_rad(51.0)
 var camera_yaw:=deg_to_rad(-33.0)
 var orbiting:=false
@@ -41,6 +43,7 @@ const QUALITY_FILE:="user://river-gate-graphics.cfg"
 
 func _ready() -> void:
 	Actions.install()
+	RenderingServer.frame_post_draw.connect(melee_sight.prepare,CONNECT_ONE_SHOT)
 	add_child(map)
 	add_child(camera)
 	camera.projection=Camera3D.PROJECTION_ORTHOGONAL
@@ -143,6 +146,7 @@ func _adopt(fresh: Battle) -> bool:
 		remove_child(view)
 		view.free()
 	battle=fresh
+	melee_sight.reset()
 	theater=candidate
 	selections=battle.side_size
 	opposing_selection=battle.ordinary_counts[1]
@@ -215,9 +219,10 @@ func _load() -> void:
 		battle.notice="存档与军籍不符，当前战场已保留" if saved else "未找到可用的战场存档"
 	hud.update_model(battle,paused)
 
-func _camera() -> void:
+func _camera(delta: float=0.0) -> void:
 	var p := Ground.unit_point(camera_center)
 	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
+	camera_pitch+=melee_sight.update(battle,camera_pitch,camera_yaw,camera.size,clampf(carry/Battle.DT,0,1),delta,follow and not orbiting and not pan and not paused)
 	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*77.5
 	camera.look_at(p)
 	camera.current=true
@@ -420,7 +425,7 @@ func _draw_field() -> void:
 func _process(delta: float) -> void:
 	if not battle: return
 	if follow: camera_center=camera_center.lerp(battle.hero.pos,1.0-exp(-delta*7.5))
-	_camera()
+	_camera(delta)
 	_draw_field()
 	if frame_log: frame_log.sample(self)
 	ui_clock+=delta

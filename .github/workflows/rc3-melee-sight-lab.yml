@@ -1,0 +1,58 @@
+name: Matched melee sightline game-window experiment
+on:
+  push:
+    branches: [codex/rc3-melee-read-lab]
+    paths:
+      - scripts/field/melee_sight.gd
+      - scripts/field/controller.gd
+      - tests/rc3_melee_sight_probe.gd
+      - .github/workflows/rc3-melee-sight-lab.yml
+permissions:
+  contents: read
+jobs:
+  readback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import original battle in Godot 4.6.3
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/rc3-editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/rc3-editor.zip' | sha512sum -c -
+          unzip -q /tmp/rc3-editor.zip -d /tmp/rc3-editor
+          sudo install /tmp/rc3-editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path .
+      - name: Measure depth-tested hand and weapon fragments at matching ticks
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          SIGHT_OUT: ${{ runner.temp }}/sight-frames
+        run: |
+          set -euo pipefail
+          mkdir -p "$SIGHT_OUT"
+          timeout 420s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1040x650 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 30 --script tests/rc3_melee_sight_probe.gd 2>&1 | tee "$SIGHT_OUT/probe.log"
+          if grep -Ei 'SHADER ERROR|SCRIPT ERROR|Error compiling|shader compilation failed' "$SIGHT_OUT/probe.log"; then exit 1; fi
+          python3 - <<'PY'
+          import json,os,base64
+          from pathlib import Path
+          d=Path(os.environ['SIGHT_OUT'])
+          sample=json.loads((d/'pairs.json').read_text())
+          for a in sample:
+              b,c=a['fragments']['original'],a['fragments']['assisted']
+              a['delta']=c[0]/max(1,c[1])-b[0]/max(1,b[1])
+          print('SIGHT_SUMMARY',json.dumps({s:[(a['tick'],round(a['delta'],3)) for a in sample if a['scenario']==s] for s in ('field','ram','gate')}))
+          if sample:
+              for rank,a in [('median',sorted(sample,key=lambda a:a['delta'])[len(sample)//2]),('worst',min(sample,key=lambda a:a['delta']))]:
+                  for mode in ['original','assisted']:
+                      n='%s-%04d-%s'%(a['scenario'],a['tick'],mode)
+                      data=base64.b64encode((d/(n+'.jpg')).read_bytes()).decode()
+                      for i in range(0,len(data),4096): print('SIGHT_JPEG',rank,mode,n,i,data[i:i+4096])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-melee-camera-pairs
+          path: ${{ runner.temp }}/sight-frames/
+          retention-days: 45
