@@ -18,12 +18,13 @@ void vertex() {
 	local_pos=VERTEX;
 	local_normal=NORMAL;
 	part=UV2.x;
-	pigment=COLOR.rgb;
+	// Keep the weathered material palette in linear light without darkening it again per pixel.
+	pigment=pow(max(COLOR.rgb,vec3(0.0)),vec3(1.30));
 }
 
 void fragment() {
 	vec2 p=local_pos.xz;
-	vec3 color=pow(max(pigment,vec3(0.0)),vec3(1.80));
+	vec3 color=pigment;
 	float roughness=0.92;
 	float specularity=0.13;
 	if (part>0.5 && part<1.5) {
@@ -47,6 +48,13 @@ void fragment() {
 		dirt=mix(dirt,silt.rgb*(0.88+0.24*soil.r),0.57*rut);
 		float crown=(1.0-smoothstep(0.12,0.91,lane))*smoothstep(0.48,0.70,soil.g);
 		color=mix(pasture,dirt,clamp(max(worn,court*0.83)-0.22*crown,0.0,1.0));
+		if (p.x < -59.0 && p.x > -94.0 && abs(p.y)<21.0) {
+			float tent_index=clamp(round((-64.0-p.x)/6.1),0.0,4.0);
+			vec2 entrance=vec2(-64.0-tent_index*6.1,8.2+mod(tent_index,2.0)*6.0);
+			vec2 distance_to_entrance=(vec2(p.x,abs(p.y))-entrance)/vec2(2.63,2.85);
+			float apron=1.0-smoothstep(0.48,1.37,length(distance_to_entrance)+(changes-0.5)*0.6);
+			color=mix(color,mix(silt.rgb,dirt,0.56),apron*0.75);
+		}
 		float shoal=1.0-smoothstep(4.4,6.5,bank+(changes-0.5)*1.4);
 		vec3 gravel=mix(silt.rgb,pebble.rgb,smoothstep(0.47,0.78,soil.b))*(0.87+0.21*soil.r);
 		color=mix(color,gravel,shoal);
