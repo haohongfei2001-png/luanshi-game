@@ -1,0 +1,44 @@
+name: River company render cost
+on:
+  push:
+    branches: [codex/rc3-render-cost]
+permissions:
+  contents: read
+jobs:
+  art-comparison:
+    name: Measure dense line geometry on identical simulated ticks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare verified game renderer and video recorder
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow
+      - name: Sample old and tailored line meshes on the same GPU
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          for side in before after; do
+            at=1f07f16b749ed0155b01b22cdb4a47f106b1c632
+            if [[ $side == after ]]; then at=HEAD; fi
+            mkdir -p "/tmp/live-$side"
+            git archive "$at" | tar xf - -C "/tmp/live-$side"
+            cp tests/company_render_cost.gd "/tmp/live-$side/tests/"
+            (cd "/tmp/live-$side" && ./tools/prepare-font.sh && godot --headless --editor --import > /tmp/import-$side.log 2>&1)
+            timeout 150s xvfb-run -a -s '-screen 0 1280x800x24' godot --path "/tmp/live-$side" --resolution 1280x800 --disable-vsync --fixed-fps 60 --audio-driver Dummy --script tests/company_render_cost.gd -- --field-size=512 | tee "/tmp/render-$side.log"
+            test "$(grep -c '^COMPANY_RENDER_COST ' "/tmp/render-$side.log")" -eq 4
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: company-render-cost
+          path: /tmp/render-*.log
