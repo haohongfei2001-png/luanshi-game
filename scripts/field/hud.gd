@@ -282,9 +282,21 @@ func update_model(b: Battle,paused: bool) -> void:
 		inset.set_muster(b,maxi(0,unit.selected))
 	if phase==0:
 		context.text=b.objectives.brief()+"\n"+("平陵部队已沿河道到场，按实有军械出阵。" if b.world_patrol else "点小地图勘察，选部队查看阵位。")
-	objective.text=("河关 · 护送冲车" if not b.started else "城门 %d%%" % ceili(b.gate_hp/260.0*100.0)) if b.gate_hp>0 else "内庭 %.1f / 6" % b.capture
-	if b.objectives.task==Battle.Objectives.Task.ESCORT:
-		objective.text="护送冲车 · 撞门 %d/%d" % [b.objectives.strokes,Battle.Objectives.ESCORT_STROKES]
+	if b.at_camp:
+		objective.text="战后随军"
+	elif b.result!="":
+		objective.text=b.result
+	elif not b.started:
+		objective.text=Battle.Objectives.TITLES[b.objectives.task]
+	elif b.objectives.task==Battle.Objectives.Task.ESCORT:
+		if b.gate_hp<=0:
+			objective.text="送车入门 · 距门 %d 米" % ceili(b.ram.distance_to(Battle.Ground.GATE))
+		else:
+			objective.text="护送冲车 · 撞门 %d/%d" % [b.objectives.strokes,Battle.Objectives.ESCORT_STROKES]
+	elif b.gate_hp>0:
+		objective.text="城门 %d%%" % ceili(b.gate_hp/260.0*100.0)
+	else:
+		objective.text="内庭 %.1f / 6 秒" % b.capture
 	own.text="我军 %d / %d　初编军官 %d　守军初编 %d" % [b.side_size-b.losses[0]-b.escaped[0],b.side_size,b.companies_per_side,b.ordinary_counts[1]]
 	condition.text="%s · 生命 %d/%d　" % [Arms.NAMES[b.hero.kit],ceili(b.hero.hp),int(b.hero.max_hp)]
 	if b.hero.kit in [Arms.Kit.BOW,Arms.Kit.CROSSBOW] and not b.legacy_missiles:
