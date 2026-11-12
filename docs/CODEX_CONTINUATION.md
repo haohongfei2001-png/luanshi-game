@@ -28,6 +28,13 @@
 4. 真实 Godot 战斗录像和相同镜头升级前后图通过自审后，再扩展至全部兵种/武器/环境。
 5. 不需要 Owner 对普通美术细节逐项审批；不要用概念图/Blender 静态渲染替代正式游戏实际资产。
 
+### 新增 Owner 计算架构决定（§1O）：批次/编队共享普通兵属性
+
+- 普通士兵无需逐人保存独立攻击/防御/士气/强迫性。同兵种、训练、装备批次共享静态模板；小队/连队/军队共享士气、强迫性、阵型、命令、目标等动态状态。
+- 个体仍有唯一 ID、位置、动作/目标和伤亡/俘虏/逃散/装备等确有差异的数据。个别伤病/缴获/特殊事件用稀疏覆盖值。
+- 近景士兵仍逐个真实行动和受击，不能合并成虚假人数。重要将领/玩家可独立属性。
+- 实施合同 `SIMULATION_CONTRACTS.md §9G`；验收 `ACCEPTANCE_MATRIX.md §7F-H`。视觉 P0 继续推进；士气/强迫性逻辑实现时优先采用聚合状态，避免每兵心理 AI。
+
 ### 新增 Owner 战斗胜负决定（§1N，2026-11-12）
 
 完整规则：[BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md](BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md)；验收：[ACCEPTANCE_MATRIX.md §7F-G](ACCEPTANCE_MATRIX.md)；Simulation contract §9F。
