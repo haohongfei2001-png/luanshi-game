@@ -6,11 +6,11 @@
 
 ## 当前主线已合入候选 0.16.0-rc.2（2026-11-12，最新）
 
-**当前 main HEAD：** `7107bc992adc88da72d4fdfe3521b42ca9851d71`（随后仅追加本总指令/续接文档更新；当前可玩代码与证据基线仍为 `7aa2934080e1618ad61e670ec00d40a94714b852`）。河关玩法 PR [#29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) 已于 04:55 UTC 合入，交付证据 PR [#30](https://github.com/haohongfei2001-png/luanshi-game/pull/30) 已于 05:21 UTC 合入。不要重复合并旧 PR #24/#25，也不要从 71889537 旧主线继续覆盖新证据。
+**当前可玩代码与证据基线：** `7aa2934080e1618ad61e670ec00d40a94714b852`。其后 main 有总指令/续接文档等纯文档提交；Codex 开始下一轮前必须重新 fetch 实际 `origin/main`，不要把此处的快照 SHA 当作最新分支头。河关玩法 PR [#29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) 已于 04:55 UTC 合入，交付证据 PR [#30](https://github.com/haohongfei2001-png/luanshi-game/pull/30) 已于 05:21 UTC 合入。不要重复合并旧 PR #24/#25，也不要从 71889537 旧主线继续覆盖新证据。
 
 | 项目 | 已核实结果 |
 | --- | --- |
-| VERSION / MAIN_SHA | `0.16.0-rc.2` / `7aa2934080e1618ad61e670ec00d40a94714b852` |
+| VERSION / GAMEPLAY_EVIDENCE_SHA | `0.16.0-rc.2` / `7aa2934080e1618ad61e670ec00d40a94714b852` |
 | GAME_CODE_SHA | `71889537db0d74b9cf6f372d50c830e9e5e32278`（#29 玩法合入） |
 | EVIDENCE_SHA | `7aa2934080e1618ad61e670ec00d40a94714b852`（#30 归档） |
 | CI | [Actions 43157917697](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697)，最终 attempt 2 三个 job 全部成功；attempt 1 的 macOS runtime 曾在第 0 步停住，原因尚未查明，重测成功。 |
@@ -22,7 +22,7 @@
 | M1 PERFORMANCE | 托管 Apple M1 Virtual，512v512，720×450 根渲染目标，清晰档巡场 24 秒：平均 121.9 FPS，P50 5.69 ms，P95 21.93 ms，P99 30.29 ms，峰值 RSS 342 MiB。短时虚拟机数据**不代表稳定 60 FPS**。性能档平均 62.3 FPS，但 P95 43.31 ms 且估算内部尺寸仅 504×315，不应作为最终画质档。 |
 | M5 / 4K | 真实 MacBook Air M5 内屏和外接 4K 的 ≥20 分钟持续接战：`DEVICE_NOT_TESTED`。不允许从 M1 推算通过。 |
 | KNOWN ISSUES | ① 门洞混战中前排遮住玩家起手/武器动作，近战可读性仍需提高；② 密集场景长尾帧，M1 P95/P99 未达到 60 FPS 帧时间标准；③ 首次 macOS 兼容后端启动停在第 0 步，虽同包重测通过但根因未定位；④ 音效辨识度待真人试听；⑤ 主角/敌将一战击败数十普通兵缺少完整连续实录。 |
-| NEXT PRIORITY | 从当前 main `7aa2934` 新建短分支，优先解决近战动作可读性（不把士兵隔开、不牺牲密集感），同步 profiling 长帧热点和首次启动停步问题。之后再做 M5 真机 20 分钟 512v512 验收。不要重做已经通过的九武器、骑乘、护送和旧档迁移。 |
+| NEXT PRIORITY | 从实时 fetch 后的最新 main（当前可玩基线 `7aa2934`）新建短分支，优先解决近战动作可读性（不把士兵隔开、不牺牲密集感），同步 profiling 长帧热点和首次启动停步问题。之后再做 M5 真机 20 分钟 512v512 验收。不要重做已经通过的九武器、骑乘、护送和旧档迁移。 |
 | OWNER / SCOPE | 遵守 `PRODUCT_DECISIONS.md §1K/§1L/§1M`：历史战役是可选灵感；战场面积和实际兵力可变；软密度允许少量贴靠/重叠但不能堆成一点。剧情仍由 Owner 写。 |
 
 **下一步可执行入口**：读取 `docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md` 与本表，从最新 main `7aa2934` 开始。先用 `./tools/test-field-render.sh` 固定同种子、同镜头、同画质，比较门洞近战的起手、盾挡、受击和武器可见性；然后结合 profiler 找出 512v512 密集接战 P95/P99 长帧来源。每个修复都保留真实游戏前后画面、帧时间和回归数据。**不要让 Owner 为下一阶段再传一条小指令。**
