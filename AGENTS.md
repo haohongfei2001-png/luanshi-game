@@ -2,6 +2,10 @@
 
 This repository currently contains an early battle prototype, but the **long-term assignment is a complete single-player game** under docs/FINAL_VISION_ACCEPTANCE.md. Implement incrementally; do not mistake the first prototype for project completion.
 
+## Owner final simplification: ordinary soldier casualties and equipment are cohort counts too
+
+Read PRODUCT_DECISIONS.md §1P, SIMULATION_CONTRACTS.md §9H, ACCEPTANCE_MATRIX.md §7F-I. Do not persist an ordinary soldier's individual morale, injury history, weapon ownership, capture identity or permanent unique ID. Keep **counts per cohort/formation**: ready, wounded, unarmed, exhausted, routed, captured, dead; weapon/armor inventory counts by type. Near-camera soldiers may be temporary visual/combat actors for movement, hits and death; after an event, update the cohort counts and recycle/recreate the actor. Offscreen forces use aggregate cohorts. Only the player, named story characters, commanders, vanguards and challenger champions need persistent personal records. Maintain exact count and inventory conservation, distinguish troop types/formations, and never collapse all armies into one generic count or fake a single shared health bar.
+
 ## Owner performance decision: share ordinary soldier stats by batch and formation
 
 Read `PRODUCT_DECISIONS.md §1O`, `SIMULATION_CONTRACTS.md §9G`, and `ACCEPTANCE_MATRIX.md §7F-H`. Ordinary soldiers do **not** each need unique attack, defense, morale or combat-compulsion values. Same troop/equipment/training batch shares static combat templates; squads/companies/armies share morale, compulsion, formation, orders and objectives. Keep unique soldier ID, position, movement/animation, actual wounds/death/capture/rout and genuinely different equipment/ammo. Use sparse overrides only for exceptional individuals. Important officers/heroes may be independent. Preserve individual visible movement and casualty causality; do not collapse the army into a fake aggregate count. Prefer template references, compact arrays and event-driven formation updates over per-soldier repeated dictionaries/psychology. Profile actual savings at 1k/3k/5k/10k.
