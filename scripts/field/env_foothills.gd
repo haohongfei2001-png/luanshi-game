@@ -143,14 +143,21 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 			var across:=Vector3(-radial.z,0,radial.x)*radius*(.43 if kind==0 else .46)
 			_spray(patch,start,end,across,tile,rng.randf_range(.46,.82))
 
+func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
+	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
+	var part:=SurfaceTool.new()
+	part.create_from(node.mesh,0)
+	# Static terrain already contains unindexed triangles. Appending glTF
+	# indices to that buffer would make only the newly indexed piece draw.
+	part.deindex()
+	return part.commit()
+
 func _bake_trees() -> void:
 	# The two swept-bole willow assets and the inland tree prototypes use the
 	# same static, spatially culled draw batches. Local +X points over water.
 	var willows:=preload("res://assets/environment/bank-willows.gltf").instantiate()
 	for prefix:String in ["Veteran","Coppice"]:
-		var wood:=willows.find_child(prefix+"Bark",true,false) as MeshInstance3D
-		var foliage:=willows.find_child(prefix+"Foliage",true,false) as MeshInstance3D
-		trees.append({"wood":wood.mesh,"leaves":foliage.mesh})
+		trees.append({"wood":_willow_part(willows,prefix+"Bark"),"leaves":_willow_part(willows,prefix+"Foliage")})
 	willows.free()
 	for kind in range(1,3):
 		for variant in 2:

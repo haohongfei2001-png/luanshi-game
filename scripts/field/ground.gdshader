@@ -10,6 +10,7 @@ varying vec3 local_pos;
 varying vec3 local_normal;
 varying float part;
 varying vec3 pigment;
+varying vec2 timber_uv;
 
 void vertex() {
 	if(UV2.x>14.5 && UV2.x<15.5) {
@@ -19,6 +20,7 @@ void vertex() {
 	local_pos=VERTEX;
 	local_normal=NORMAL;
 	part=UV2.x;
+	timber_uv=UV;
 	// Keep the weathered material palette in linear light without darkening it again per pixel.
 	pigment=pow(max(COLOR.rgb,vec3(0.0)),vec3(1.30));
 }
@@ -109,7 +111,8 @@ void fragment() {
 			roughness=.91-.14*worn;
 		} else if(part>16.5 && part<17.5) {
 			float furrow=texture(joinery,vec2(local_pos.y*.29,(local_pos.x+local_pos.z)*.78)).r;
-			color*=.72+.48*furrow;
+			float groove=texture(joinery,vec2(timber_uv.x*3.28+furrow*.11,timber_uv.y*.22)).r;
+			color*=vec3(.82,.88,.91)*(.58+.38*furrow+.22*groove);
 		} else if(part>=17.5 && part<18.5) {
 			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
 			float grit=texture(fieldbed,face_uv).r;

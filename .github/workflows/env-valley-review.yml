@@ -52,6 +52,9 @@ jobs:
               assert all(post[k]==pre[k] for k in ['tick','center','zoom','yaw','ordinary','contact','in_frame_ids_sha256','window','internal_scale','shadows'])
               assert post['ordinary']==[512,512] and post['window']==[1280,800] and post['shadows'] and post['internal_scale']==1
               print('RIVER_GEOMETRY',label,pre['draw_calls'],post['draw_calls'],pre['primitives'],post['primitives'])
+              print('GROUND_FLATNESS',label,round(pre['flat_pixel_neighborhood_fraction'],4),round(post['flat_pixel_neighborhood_fraction'],4))
+              if label in ('ford','bank','margin'):
+                  assert post['flat_pixel_neighborhood_fraction'] < pre['flat_pixel_neighborhood_fraction']+.065
           for label,post in cb.items():
               pre=ca[label]
               assert pre['hits']==post['hits'] and pre['tick']==post['tick'] and post['ordinary']==[512,512]

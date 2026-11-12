@@ -24,7 +24,7 @@ void fragment() {
 	if(crown>2.1) {
 		vec4 brush=texture(willow_ink,UV);
 		float light=clamp((crown-2.5)*2.50,0.0,1.0);
-		tone=brush.rgb*(.71+.62*light);
+		tone=pow(brush.rgb,vec3(1.13))*vec3(.62,.69,.75)*(.62+.47*light);
 		opacity=brush.a;
 	} else if(crown>.5) {
 		float marks=texture(leaf_marks,UV*0.85).g;

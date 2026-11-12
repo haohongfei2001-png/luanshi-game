@@ -99,18 +99,21 @@ function makeTree(old){
     const trunk=old?[[0,-.17,0],[-.08,.25,.07],[.13,.73,.13],[.24,1.24,.01],
         [.57,1.94,-.13],[.86,2.34,-.04],[1.17,2.7,-.2]]:
         [[0,-.16,0],[.04,.28,.02],[.04,.66,-.07],[.13,1.18,0],[.23,1.67,.07],[.39,2.08,.03]];
-    bole(wood,trunk,old?[.60,.56,.48,.395,.35,.29,.24]:[.36,.33,.245,.20,.155,.128],old?10:8,356);
+    bole(wood,trunk,old?[.60,.56,.48,.395,.35,.29,.24]:[.36,.33,.245,.20,.155,.128],old?13:9,356);
     const roots=old?7:5;
     for(let j=0;j<roots;j++){
         const a=j*TAU/roots+.4*rng(),dir=[Math.cos(a),0,Math.sin(a)],side=[-dir[2],0,dir[0]];
-        const reach=(old?1.6:1.01)*(.72+.68*rng());
-        const end=add(times(dir,reach),[0,dir[0]>.55?-.29:-.10,0]);
+        const reach=(old?1.6:1.01)*(.72+.68*rng())*(dir[0]>.68?1.32:1.0);
+        const end=add(times(dir,reach),[0,dir[0]>.55?-.40:-.10,0]);
         bole(wood,[add(times(dir,.12),[0,old?.61:.39,0]),add(times(dir,reach*.36),[0,.18,0]),
             add(add(times(dir,reach*.75),times(side,reach*.10)),[0,.055,0]),end],old?[.32,.22,.105,.022]:[.17,.115,.062,.014],6,90+j);
     }
     bones.forEach((b,index)=>{
         const size=(old?1:.71)*(.93+rng()*.14);
-        bole(wood,b,[.245,.181,.104,.035].map(r=>r*size),7,216+index);
+        const sections=old?7:6;
+        const path=Array.from({length:sections},(_,j)=>bezier(...b,j/(sections-1)));
+        const radii=path.map((_,j)=>size*(.035+.215*(1-j/(sections-1))**1.22));
+        bole(wood,path,radii,7,216+index);
         const forward=norm([b[3][0]-b[1][0],0,b[3][2]-b[1][2]]),across=[-forward[2],0,forward[0]];
         // A warm top plate and two darker banks on each bough. Twigs leave
         // unequal gaps and ends hang at different heights over the river.
@@ -126,12 +129,19 @@ function makeTree(old){
             const tail=(old?2.17:1.39)*(.76+.55*rng())*(1.16-.21*at);
             spray(leaves,tip,branchDir,reach*.91,tail,size*(.41+.20*rng()),(rng()-.5)*reach*.81,j%2,.32+.40*rng());
             const crownDir=norm(add(times(forward,.95),times(across,sign*.36)));
-            spray(leaves,add(tip,[0,.12,0]),crownDir,reach*1.27,tail*.34,size*(.55+.23*rng()),(rng()-.5)*.40,2,.60+.32*rng());
+            const crown=add(add(start,times(branchDir,.27*reach)),[0,.39+size*.10,0]);
+            spray(leaves,crown,crownDir,reach*1.51,tail*.51,size*(.68+.22*rng()),(rng()-.5)*.48,2,.56+.25*rng());
             if(j===1 || (old&&j===3)){
                 const fringeDir=norm(add(branchDir,times(across,sign*.51)));
                 spray(leaves,add(tip,times(branchDir,.24)),fringeDir,reach*.89,tail*1.19,size*.36,(rng()-.5)*.84,1,.33+.38*rng());
             }
         }
+        // New growth from the bough itself draws an upper canopy over the
+        // bare forks. Leave asymmetric windows between neighbouring boughs.
+        const inner=bezier(...b,.53+.095*rng());
+        const inward=norm(add(times(forward,.30),times(across,index%2?1:-1)));
+        spray(leaves,add(inner,[0,.39,0]),inward,size*(1.15+.32*rng()),size*(1.05+.61*rng()),
+            size*(.75+.19*rng()),(rng()-.5)*.37,2,.49+.17*rng());
         spray(leaves,b[3],forward,size*(1.14+.28*rng()),size*(2.35+rng()*.62),
             size*(.56+.11*rng()),(rng()-.5)*.66,index%2,.50+.21*rng());
     });

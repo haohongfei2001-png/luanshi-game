@@ -76,6 +76,20 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 		if u.mounted: foot.y+=.8
 		var projected:=field.camera.unproject_position(foot+Vector3.UP*.9)
 		if canvas.has_point(projected): on_screen.append(u.id)
+	# The orthographic playable ford never exposes the plain world background.
+	var flat:=0
+	var tested:=0
+	for yy in range(110,pic.get_height()-115,11):
+		for xx in range(20,pic.get_width()-25,11):
+			var reference:=pic.get_pixel(xx,yy)
+			var neighbors: Array[Color]=[pic.get_pixel(xx+8,yy),pic.get_pixel(xx,yy+8),pic.get_pixel(xx+8,yy+8)]
+			var identical:=true
+			for value:Color in neighbors:
+				if absf(value.r-reference.r)+absf(value.g-reference.g)+absf(value.b-reference.b)>.008:
+					identical=false
+			if identical: flat+=1
+			tested+=1
+	item["flat_pixel_neighborhood_fraction"]=float(flat)/float(tested)
 	item["draw_calls"]=int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 	item["primitives"]=int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
 	item["in_frame_count"]=on_screen.size()
