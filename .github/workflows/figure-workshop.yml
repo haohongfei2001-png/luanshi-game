@@ -16,12 +16,13 @@ jobs:
       - name: Bake the fitted mesh, materials and keyed motion into the playable branch
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 394beb1a5a9affc0ff15be638a476944de053cfe
+          test "$(git rev-parse HEAD)" = a5e1168bc2fb38b8d04f0a95800da5bc617a28ad
           python3 -c 'from PIL import Image' || python3 -m pip install Pillow
           python3 tools/art/bake_river_company.py
           python3 tools/art/check_company_motion.py
+          node tools/art/bake_mounts.mjs --check
           git add tools/art/field_head.json assets/river_gate/figures/river_company.glb assets/river_gate/figures/cloth_and_iron.png assets/river_gate/figures/surface_response.png assets/river_gate/figures/company_motion.png
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the painted garments, registered heads and moving mantle into the game library'
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the fitted neck, marching posture and lightweight sculpt into the live company'
           git push origin HEAD:refs/heads/codex/river-gate-garrison-studies
       - name: Prepare verified game renderer and video recorder
         run: |
