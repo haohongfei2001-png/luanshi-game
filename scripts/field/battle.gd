@@ -55,6 +55,11 @@ class Unit:
 	var fatigue := 0.0
 	var flash := 0.0
 	var stride := 0.0
+	# Transient presentation state. Checkpoints retain their original gait and
+	# authoritative movement values; the renderer reconstructs this cycle on load.
+	var visual_stride := -1.0
+	var visual_run := false
+	var facing_before := Vector2.ZERO
 	var used_second := false
 	var impacts := 0
 	var received := 0
@@ -1030,6 +1035,7 @@ func step() -> void:
 			c.aim = corps.guide_company(self,c,_objective(c))
 	for u in roster:
 		u.before = u.pos
+		u.facing_before = u.facing
 		if active(u) and not u.hero and u.state == State.MARCH:
 			var interval := 8 if u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 5
 			if (tick+u.id)%interval==0 or (u.target>=0 and not active(roster[u.target])):
@@ -1051,7 +1057,11 @@ func step() -> void:
 			# One short, terrain-checked adjustment at 5 Hz. This leaves attacks,
 			# formation slots and the player's ability to stand close intact.
 			if relief!=Vector2.ZERO: _move(u,relief*0.24)
-		u.stride = fposmod(u.stride + u.pos.distance_to(u.before) * 0.68, 1.0)
+		var travel:=u.pos.distance_to(u.before)
+		if u.visual_stride<0: u.visual_stride=u.stride
+		u.visual_run=travel>DT*(3.0 if u.visual_run else 3.55)
+		u.visual_stride=fposmod(u.visual_stride+travel*(.42 if u.visual_run else .68),1.)
+		u.stride = fposmod(u.stride + travel * 0.68, 1.0)
 	_projectiles()
 	_siege()
 	if objectives.enabled:

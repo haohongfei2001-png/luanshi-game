@@ -20,6 +20,8 @@ var camera := Camera3D.new()
 var camera_center := Vector2.ZERO
 var camera_pitch:=deg_to_rad(51.0)
 var camera_yaw:=deg_to_rad(-33.0)
+var shadow_zoom:=-1.0
+const CAMERA_DISTANCE:=77.5
 var orbiting:=false
 var follow := true
 var paused := false
@@ -34,7 +36,9 @@ var opposing_selection := -1
 var last_sound_tick := -20
 var last_shot_tick := -20
 var frame_log: RefCounted
-var detail_preset:=0
+enum Quality { NATIVE_MSAA, BALANCED, PERFORMANCE, NATIVE_SINGLE_SAMPLE }
+const QUALITY_SCALES := [1.0, 0.85, 0.70, 1.0]
+var detail_preset:=Quality.NATIVE_MSAA
 var last_hero_hit:=-100
 var step_distance:=0.0
 const QUALITY_FILE:="user://river-gate-graphics.cfg"
@@ -44,10 +48,13 @@ func _ready() -> void:
 	add_child(map)
 	add_child(camera)
 	camera.projection=Camera3D.PROJECTION_ORTHOGONAL
-	camera.size=26.0
+	camera.size=22.0
 	camera.far=360
 	camera.current=true
 	add_child(hud)
+	# Old saves and menu entries keep their original numerical indices.
+	hud.quality.set_item_text(Quality.NATIVE_MSAA,"清晰 100% · 4× 抗锯齿")
+	hud.quality.add_item("原生 100% · 无抗锯齿")
 	add_child(audio)
 	hud.deploy.connect(deploy)
 	hud.pause.connect(toggle_pause)
@@ -107,7 +114,7 @@ func _ready() -> void:
 			var count := arg.trim_prefix("--field-size=").to_int()
 			if count in Battle.SCALES: selections=count
 	var cfg:=ConfigFile.new()
-	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,2)
+	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,QUALITY_SCALES.size()-1)
 	new_muster(selections)
 	if "--field-profile" in OS.get_cmdline_user_args():
 		frame_log = preload("res://scripts/field/frame_log.gd").new()
@@ -162,14 +169,15 @@ func _adopt(fresh: Battle) -> bool:
 	return true
 
 func set_quality(which: int,remember: bool=false) -> void:
-	if which<0 or which>2: return
+	if which<0 or which>=QUALITY_SCALES.size(): return
 	if frame_log and which!=detail_preset: frame_log.interrupt("changed_graphics",self)
 	detail_preset=which
 	var vp:=get_viewport()
 	vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
-	vp.scaling_3d_scale=[1.0,0.85,0.70][which]
-	map.sun.shadow_enabled=which!=2
-	map.sun.directional_shadow_max_distance=75.0 if which==0 else 48.0
+	vp.scaling_3d_scale=QUALITY_SCALES[which]
+	vp.msaa_3d=Viewport.MSAA_4X if which==Quality.NATIVE_MSAA else Viewport.MSAA_DISABLED
+	map.sun.shadow_enabled=which!=Quality.PERFORMANCE
+	shadow_zoom=-1.0
 	view.contact_for_all=not map.sun.shadow_enabled
 	hud.quality.select(which)
 	if remember:
@@ -218,8 +226,16 @@ func _load() -> void:
 func _camera() -> void:
 	var p := Ground.unit_point(camera_center)
 	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
-	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*77.5
+	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*CAMERA_DISTANCE
 	camera.look_at(p)
+	if not is_equal_approx(shadow_zoom,camera.size):
+		# Orthographic projection keeps its composition as the clipping slab tightens.
+		# Include the ground below the camera target and the shadow of the gate roof.
+		var ground_depth:=camera.size*.5/tan(camera_pitch)
+		camera.near=maxf(.1,CAMERA_DISTANCE-ground_depth-17.0)
+		map.sun.directional_shadow_max_distance=CAMERA_DISTANCE+ground_depth*(1.0 if QUALITY_SCALES[detail_preset]==1.0 else .75)+11.0
+		map.sun.directional_shadow_fade_start=.93
+		shadow_zoom=camera.size
 	camera.current=true
 
 func pan_to(p: Vector2) -> void:

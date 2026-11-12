@@ -28,7 +28,7 @@ static func material() -> ShaderMaterial:
 	return _hide
 
 ## stride is accumulated from *real* distance. Interpolate the last fixed step for matching hooves and wheels.
-static func pose(state: int, progress: float, stride: float, travelled: float, alpha: float, flash: float=0.0) -> Color:
+static func pose(state: int, progress: float, stride: float, travelled: float, alpha: float, flash: float=0.0, lot: int=0) -> Color:
 	var phase:=fposmod(stride-(1.0-alpha)*travelled*0.68,1.0)
 	var gait:=clampf(travelled/(0.05*4.0),0.0,1.0)
-	return Color((state+0.5)/128.0,progress if state==7 else gait,phase,clampf(flash,0.0,1.0))
+	return Color((state+0.5)/128.0,progress if state==7 else gait,phase,(float(posmod(lot,4))+.03+.92*clampf(flash,0.0,1.0))*.25)

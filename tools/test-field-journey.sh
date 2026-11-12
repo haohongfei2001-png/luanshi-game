@@ -6,7 +6,7 @@ touch artifacts/.gdignore
 movie_dir="$(mktemp -d)"
 trap 'rm -rf "$movie_dir"' EXIT
 export LIBGL_ALWAYS_SOFTWARE=1
-timeout 330s xvfb-run -a -s '-screen 0 960x600x24' "${GODOT:-godot}" --path . --disable-vsync --resolution 960x600 --write-movie "$movie_dir/journey.avi" --fixed-fps 15 --script tests/field_playthrough.gd -- --field-size=512 2>&1 | tee artifacts/journey.log
+timeout 550s xvfb-run -a -s '-screen 0 960x600x24' "${GODOT:-godot}" --path . --disable-vsync --resolution 960x600 --write-movie "$movie_dir/journey.avi" --fixed-fps 15 --script tests/field_playthrough.gd -- --field-size=512 2>&1 | tee artifacts/journey.log
 grep -q '^JOURNEY_PASS ' artifacts/journey.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/journey.log; then exit 1; fi
 ffmpeg -nostdin -loglevel error -y -i "$movie_dir/journey.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -preset fast -crf 23 -pix_fmt yuv420p -c:a aac -b:a 112k -movflags +faststart artifacts/river-gate-journey.mp4

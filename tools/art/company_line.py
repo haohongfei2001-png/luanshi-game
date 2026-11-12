@@ -1,49 +1,68 @@
-"""Army-line meshes use the same tailoring, gripping sockets and 16 bones as close kits.
-
-At player zoom their body is usually 18–45 pixels high. Stitching, fingers and helmet
-lames then live in the mapped material, while the silhouette retains the jaw, bun,
-collar, wrist, waist, knee, shoe and distinct length of each weapon.
-"""
+"""Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
-from company_weapons import FRONT_GRIP
+from field_armour import field_helmet, skirts
 from figure_mesh import Surface, add, lerp
 
-def costume(look):
+def costume(look,rank=False):
     s=Surface(False)
-    heavy=look in ("guard","officer","player")
-    def tailor(p):
-        if p[1]<.84: return (LT if p[0]<0 else RT,HIPS,.5)
-        return (CHEST,HIPS,max(0,min(1,(p[1]-.85)*3.5)))
-    s.rings([(.507,.302,.206,0,-.006),(.788,.229,.164,0,.003),(.938,.187,.14,0,.004),
-             (1.14,.215,.163,0,0),(1.345,.245,.133,0,-.002),(1.429,.086,.077,0,.007)],"dyed",tailor,6)
-    s.rings([(.964,.201,.154,0,.002),(1.21,.248,.177,0,-.006),(1.372,.211,.114,0,-.005)],
-            "lamellar" if heavy else ("linen" if look=="archer" else "quilt"),CHEST,6)
-    s.rings([(.916,.198,.149,0,.006),(.979,.206,.158,0,.005)],"leather",HIPS,6)
-    s.ribbon([(-.085,1.43,.087),(-.128,1.35,.135),(.015,1.21,.187),(.112,1.094,.147)],.043,"lining",CHEST)
-    s.rings([(1.435,.062,.078,0,.031),(1.497,.111,.108,0,.034),(1.605,.133,.128,0,.014),
-             (1.677,.119,.12,0,-.005)],"skin",HEAD,7)
-    s.panel([(-.021,1.55,.153),(.02,1.55,.153),(.014,1.57,.179),(-.012,1.57,.179)],"skin",HEAD)
-    if heavy:
-        s.rings([(1.602,.147,.141,0,-.012),(1.641,.156,.151,0,-.012),(1.73,.087,.086,0,-.017),
-                 (1.758,.017,.019,0,-.02)],"iron",HEAD,6)
+    heavy=look in ("regular","guard","officer","player")
+    if rank:
+        def body(p):
+            if p[1]<.86: return (LT if p[0]<0 else RT,HIPS,.35)
+            return (CHEST,HIPS,clamp((p[1]-.86)*3))
+        hem=.67 if look=="archer" else .53 if heavy else .58
+        s.rings([(hem,.255,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
+                 (1.447,.083,.07,0,0)],"dyed",body,6)
+        if heavy:
+            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lames",CHEST,8)
+            skirts(s,look,HIPS,(LT,RT),rank=True)
+        if look=="levy":
+            for front in (True,False):
+                def sling(u,v):
+                    angle=((-1.03+1.64*v) if front else (pi+1.03-1.64*v))+(u-.5)*.31
+                    # Fit to the same six-sided coat, with a skin weight at the belt.
+                    width=.199+.058*sin(pi*v)
+                    depth=.148+.032*sin(pi*v)
+                    p=(width*sin(angle),.947+.432*v,-.012+depth*cos(angle))
+                    return p,body(p)
+                s.grid(1,3,sling,"leather")
+        if look in ("player","officer"):
+            s.ribbon([(-.13,1.412,-.092),(-.10,1.23,-.187),(-.109,.89,-.205),(-.112,.56,-.228)],.19,"mantle",CHEST)
     else:
-        s.rings([(1.616,.139,.14,0,-.012),(1.653,.142,.14,0,-.013)],"linen" if look!="archer" else "felt",HEAD,6)
-        s.rings([(1.649,.14,.139,0,-.012),(1.724,.055,.063,0,-.028)],"hair",HEAD,6)
-        s.rings([(1.72,.045,.041,0,-.045),(1.766,.034,.033,0,-.052)],"hair",HEAD,4)
+        coat(s,look)
+        equipment(s,look)
+    if rank:
+        ns=6
+        s.rings([(1.426,.050,.057,0,.026),(1.495,.060,.071,0,.044),(1.550,.081,.083,0,.051),
+                 (1.635,.085,.099,0,.034),(1.703,.065,.077,0,.018)],"skin",HEAD,ns)
+        if heavy:
+            field_helmet(s,look,HEAD,rank=True)
+        else:
+            s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"facing" if look=="archer" else "hair",HEAD,ns)
+            s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"headcloth",HEAD,ns)
+    else:
+        head(s,look,HEAD)
+    n=3 if rank else 5
     for side in (-1,1):
         upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
         a,b,c=arm_nodes(side)
-        s.tube([a,lerp(a,b,.33),b],[.075,.107,.075],"dyed",upper,4)
-        s.tube([b,lerp(b,c,.35),c],[.072,.067,.039],"leather" if heavy or look=="archer" else "linen",fore,4)
+        if rank:
+            if heavy:
+                hem=lerp(a,b,.59 if look=="regular" else .79)
+                s.tube([a,lerp(a,hem,.37),hem],[.081,.100,.082],"lames",upper,5)
+                s.tube([hem,b],[.070,.067],"dyed",upper,4)
+            else:
+                s.tube([a,b],[.084,.069],"dyed",upper,n)
+        s.tube([b,lerp(b,c,.57),c],[.063,.057,.035],"leather" if heavy or look=="archer" else "headcloth",fore,n)
         p=grip(side)
-        s.tube([add(p,(0,0,-.057)),p,add(p,(0,-.004,.063))],[.032,.046,.034],"skin",hand,4)
+        s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)
         a,b,c=leg_nodes(side)
-        s.tube([a,b],[.103,.085],"felt",thigh,4)
-        s.tube([b,lerp(b,c,.52),c],[.08,.071,.061],"binding",shin,4)
-        s.rings([(.029,.082,.137,c[0],.052),(.080,.076,.128,c[0],.062),(.117,.06,.076,c[0],.003)],"boots",boot,4)
-    if look=="archer":
-        s.tube([(-.16,.797,-.168),(.123,1.373,-.196),(.16,1.458,-.201)],[.049,.07,.027],"leather",CHEST,4)
+        s.tube([a,b],[.096,.079],"felt",thigh,n)
+        s.tube([b,c],[.074,.053],"binding",shin,n)
+        s.rings([(.007,.066,.136,c[0],.052),(.067,.065,.111,c[0],.043),(.141,.052,.061,c[0],0)],"boots",boot,n+1)
+    if rank and look=="archer":
+        s.tube([(-.16,.797,-.168),(.123,1.373,-.196),(.17,1.505,-.201)],[.048,.067,.022],"quiver",CHEST,4)
     return s
 
 def arms(kit):
