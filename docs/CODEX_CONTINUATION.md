@@ -4,17 +4,29 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 当前主线试玩候选 0.16.0-rc.2
+## 当前主线已合入候选 0.16.0-rc.2（2026-11-12，最新）
 
-| 项目 | 已核实的现场 |
+**当前 main HEAD：** `7aa2934080e1618ad61e670ec00d40a94714b852`。河关玩法 PR [#29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) 已于 04:55 UTC 合入，交付证据 PR [#30](https://github.com/haohongfei2001-png/luanshi-game/pull/30) 已于 05:21 UTC 合入。不要重复合并旧 PR #24/#25，也不要从 71889537 旧主线继续覆盖新证据。
+
+| 项目 | 已核实结果 |
 | --- | --- |
-| BASE_SHA / BRANCH / NEW_SHA | 从 RC1 `efcd91533e7cd50309375d1ab90138a041e7f674` 接续至 `main` `71889537db0d74b9cf6f372d50c830e9e5e32278`。[实现 #29](https://github.com/haohongfei2001-png/luanshi-game/pull/29) |
-| TEST_STATUS / CI_URL | Ubuntu 的完整真实窗口、旧 v3 及 RC1 破门中 v4、九兵器、双边军官、六次托管 Mac 开窗均已通过。首次兼容窗口停在第 0 步，保留了失败和同包重测记录。[主线完整运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697) |
-| BUILD_URL / GAMEPLAY_EVIDENCE | [macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697/artifacts/13917576349)，内层压缩包 SHA-256 `ce539ea4e08477838d24df6d3d437b6057a8fd00ab77361172a07d672ed9c930`。[连续实录](evidence/river-gate-v1-rc2/playthrough.mp4) · [截图与完整试玩记录](evidence/river-gate-v1-rc2/PLAYTEST.md) |
-| PERF_METRICS | Apple M1 (Virtual)，512v512 巡场 24.0 秒，P50 / P95 / P99 为 5.69 / 21.93 / 30.29 ms，峰值 342 MiB。[各规模、画质及原始数据](evidence/river-gate-v1-rc2/measurements.json) |
-| 阶段结果 | 避免门前无谓折返。三个种子进门实际跨线人数持平或增加，撞入车体样本均为零。护送成功时遗留的撞门文字已修复。默认、先锋先行两种走法分别复测。[初次失败记录](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43153519636) · [窗口复测](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43155329275) |
-| BLOCKERS | M5 Air ≥20 分钟实机接战未测。高密度近身出招可能被前排挡住，狭口吞吐还受到真实交锋影响。 |
-| NEXT_COMMAND | 在授权云端从 NEW_SHA 实施下一次视觉比较。从 `./tools/test-field-render.sh` 生成相同近景姿态，检查盾缘、武器交叉与受击轮廓，同时复核帧时间。 |
+| VERSION / MAIN_SHA | `0.16.0-rc.2` / `7aa2934080e1618ad61e670ec00d40a94714b852` |
+| GAME_CODE_SHA | `71889537db0d74b9cf6f372d50c830e9e5e32278`（#29 玩法合入） |
+| EVIDENCE_SHA | `7aa2934080e1618ad61e670ec00d40a94714b852`（#30 归档） |
+| CI | [Actions 43157917697](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697)，最终 attempt 2 三个 job 全部成功；attempt 1 的 macOS runtime 曾在第 0 步停住，原因尚未查明，重测成功。 |
+| macOS BUILD | [下载 70.2 MB Actions artifact](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43157917697/artifacts/13917576349)，内层 `Luanshi-macOS.zip` SHA-256：`ce539ea4e08477838d24df6d3d437b6057a8fd00ab77361172a07d672ed9c930`。临时签名、**未公证**；artifact 当前到期日 2027-02-10 UTC。 |
+| GAMEPLAY | [59.1 秒带声完整旅程](evidence/river-gate-v1-rc2/playthrough.mp4)：军议部署 → 512v512 接战 → 破门 → 内庭占领 → 结算 → 随军行军 → 读档。主角 7 次命中、1 次军令送达，双方普通兵阵亡 257/308，仍有 255/204 存活。 |
+| OTHER MODES | 护送冲车成功（守军保城）、成功撤离、主将阵亡后军队继续作战均有实际窗口回归。九种武器的普攻/Q/E/空格与防守/闪避入口均通过；骑马/战车上乘、转向、动作、下乘通过。 |
+| SAVE COMPAT | v3 与 RC1 中 v4 旧档由旧版原程序生成后再交新版续演，对照历史字段一致。 |
+| CROWD / TRAFFIC | 同种子 A/B 中 soft crowd + traffic lanes：3m 区域峰值 42→19，半米格峰值 7→3，最大同坐标单位 2→1，拥挤邻接对 1897→742，前后队形更展开。此处允许近距离视觉重叠，不追求严格刚体互斥。门前向后折返显著下降，跨门人数持平或增加。详见 `measurements.json` 的 `FIELD_CROWD`、`FIELD_TRAFFIC_AB`。 |
+| M1 PERFORMANCE | 托管 Apple M1 Virtual，512v512，720×450 根渲染目标，清晰档巡场 24 秒：平均 121.9 FPS，P50 5.69 ms，P95 21.93 ms，P99 30.29 ms，峰值 RSS 342 MiB。短时虚拟机数据**不代表稳定 60 FPS**。性能档平均 62.3 FPS，但 P95 43.31 ms 且估算内部尺寸仅 504×315，不应作为最终画质档。 |
+| M5 / 4K | 真实 MacBook Air M5 内屏和外接 4K 的 ≥20 分钟持续接战：`DEVICE_NOT_TESTED`。不允许从 M1 推算通过。 |
+| KNOWN ISSUES | ① 门洞混战中前排遮住玩家起手/武器动作，近战可读性仍需提高；② 密集场景长尾帧，M1 P95/P99 未达到 60 FPS 帧时间标准；③ 首次 macOS 兼容后端启动停在第 0 步，虽同包重测通过但根因未定位；④ 音效辨识度待真人试听；⑤ 主角/敌将一战击败数十普通兵缺少完整连续实录。 |
+| NEXT PRIORITY | 从当前 main `7aa2934` 新建短分支，优先解决近战动作可读性（不把士兵隔开、不牺牲密集感），同步 profiling 长帧热点和首次启动停步问题。之后再做 M5 真机 20 分钟 512v512 验收。不要重做已经通过的九武器、骑乘、护送和旧档迁移。 |
+| OWNER / SCOPE | 遵守 `PRODUCT_DECISIONS.md §1K/§1L/§1M`：历史战役是可选灵感；战场面积和实际兵力可变；软密度允许少量贴靠/重叠但不能堆成一点。剧情仍由 Owner 写。 |
+
+**下一步可执行入口**：读取 `docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md` 与本表，从最新 main `7aa2934` 开始。先用 `./tools/test-field-render.sh` 固定同种子、同镜头、同画质，比较门洞近战的起手、盾挡、受击和武器可见性；然后结合 profiler 找出 512v512 密集接战 P95/P99 长帧来源。每个修复都保留真实游戏前后画面、帧时间和回归数据。**不要让 Owner 为下一阶段再传一条小指令。**
+
 
 ## 回退候选 0.16.0-rc.1
 
