@@ -1,3 +1,7 @@
+## Owner data-model simplification — ordinary troops aggregate by cohort (2026-11-12)
+
+New authority: PRODUCT_DECISIONS.md §1P; implementation contract SIMULATION_CONTRACTS.md §9H; acceptance BF-COHORT-01..11 in ACCEPTANCE_MATRIX.md §7F-I. Ordinary soldiers do not need persistent individual morale, injury, weapon ownership, capture identity or permanent IDs. Track ready/wounded/unarmed/routed/captured/dead counts and equipment inventory by cohort/formation. Near-camera actors may be temporary representations for individual animation/hits/death, then write state transitions back to aggregate counts and be recycled. Offscreen forces are cohort/event simulated. Only player, named characters and important commanders/elite characters retain personal records. Maintain troop/equipment conservation and visible individual combat; this is a data-model simplification, not a reduction to a fake single army health bar. This supersedes the earlier sparse-per-soldier exception approach for ordinary troops.
+
 ## Owner decision update — shared combat data and group morale (2026-11-12)
 
 Authority: `PRODUCT_DECISIONS.md §1O`; full design: [BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md §3.3](BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md); simulation contract §9G; BF-DATA-01..10 in `ACCEPTANCE_MATRIX.md §7F-H`.
