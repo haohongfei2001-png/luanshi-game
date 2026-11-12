@@ -1,31 +1,31 @@
 {
   "hosted_macos": {
-    "frames": 2527,
-    "over_16_67_ms": 322,
-    "over_33_33_ms": 33,
-    "maximum_ms": 88.112,
+    "frames": 2388,
+    "over_16_67_ms": 358,
+    "over_33_33_ms": 38,
+    "maximum_ms": 185.12,
     "camera_tour": {
       "command_after_frame_counts": [
-        107,
-        339,
-        751,
-        1168,
-        1543,
-        2022
+        137,
+        407,
+        816,
+        1145,
+        1651,
+        1997
       ],
       "post_command_500ms": {
-        "samples": 295,
-        "p50_ms": 6.925,
-        "p95_ms": 24.837,
-        "p99_ms": 49.465,
-        "maximum_ms": 88.112
+        "samples": 298,
+        "p50_ms": 6.983,
+        "p95_ms": 25.917,
+        "p99_ms": 36.46,
+        "maximum_ms": 69.431
       },
       "other": {
-        "samples": 2232,
-        "p50_ms": 6.671,
-        "p95_ms": 21.816,
-        "p99_ms": 33.924,
-        "maximum_ms": 84.851
+        "samples": 2090,
+        "p50_ms": 6.836,
+        "p95_ms": 24.005,
+        "p99_ms": 39.399,
+        "maximum_ms": 185.12
       }
     }
   },
@@ -34,25 +34,25 @@
       "frames": 20,
       "over_16_67_ms": 20,
       "over_33_33_ms": 20,
-      "maximum_ms": 156.119
+      "maximum_ms": 155.198
     },
     "100": {
       "frames": 20,
       "over_16_67_ms": 20,
       "over_33_33_ms": 20,
-      "maximum_ms": 203.714
+      "maximum_ms": 205.957
     },
     "250": {
       "frames": 20,
       "over_16_67_ms": 20,
       "over_33_33_ms": 20,
-      "maximum_ms": 225.324
+      "maximum_ms": 228.697
     },
     "512": {
       "frames": 20,
       "over_16_67_ms": 20,
       "over_33_33_ms": 20,
-      "maximum_ms": 292.372
+      "maximum_ms": 312.239
     }
   }
 }

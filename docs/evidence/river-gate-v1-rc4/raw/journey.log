@@ -20,9 +20,9 @@ JOURNEY_IMAGE journey-07-camp /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBw
 JOURNEY_STAGE 07-camp tick=1030
 JOURNEY_PASS {"attacks":4381,"blocked_hits":52,"camp_hours":1,"camp_resumed":true,"capture_sec":6.0,"crew_replacements":1,"dead":[257,308],"decision":"城门已开，内庭由我军持续占据；守军余部沿粮道撤出。","dropped_weapons":[257,308],"errors":[],"escaped":[13,122],"gate_hp":0.0,"hero_ammo":13,"hero_hp":100.0,"hero_impacts":7,"hits":[1431,1084],"mission":"夺取河关","officer_corps":{"active_commands":[5,1],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[1025,1027,1028,1029,1031,1032,1033,1034,1035,1037,1038],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055]],"kills":[7,3],"ranked":true,"rescued":[[],[]],"skills":[56,24],"successions":[9,6],"wounded":[[1030,1036,1039],[]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"popup_semantic_fallbacks":0,"projectiles":2480,"ram_hp":150.0,"ram_strokes":0,"result":"夺取城内阵地","routing":[20,30],"screens":["01-muster","02-deploy","03-gate","04-contact","05-breach","06-report","07-camp"],"seed":61112,"soldiers_per_side":512,"tick":1030}
 --------------------------------------------------------------------------------
-Done recording movie at path: /tmp/tmp.s0VLsm3EwU/journey.avi
+Done recording movie at path: /tmp/tmp.S6AorUQFXI/journey.avi
 886 frames at 15 FPS (movie length: 00:00:59:01), recorded in 00:03:52 (25% of real-time speed).
-CPU render time: 162.11 seconds (average: 182.97 ms/frame)
-GPU render time: 162.43 seconds (average: 183.33 ms/frame)
-Encoding time: 16.16 seconds (average: 18.24 ms/frame)
+CPU render time: 158.93 seconds (average: 179.37 ms/frame)
+GPU render time: 159.52 seconds (average: 180.05 ms/frame)
+Encoding time: 16.18 seconds (average: 18.26 ms/frame)
 --------------------------------------------------------------------------------

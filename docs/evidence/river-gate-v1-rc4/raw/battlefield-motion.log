@@ -6,9 +6,9 @@ OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Usi
 Movie Maker mode enabled, recording movie in 1280×800 @ 30 FPS...
 FIELD_LINE_FILM {"attacks_pressed":8,"end_tick":681,"errors":[],"fps":30,"frames":1020,"gate":0.0,"hero_hits":7,"hero_hp":100.0,"hits":[1035,797],"losses":[200,233],"ordinary":[512,512],"start_tick":1}
 --------------------------------------------------------------------------------
-Done recording movie at path: /tmp/tmp.XIKmeSJNuL/line.avi
-1027 frames at 30 FPS (movie length: 00:00:34:07), recorded in 00:02:30 (22% of real-time speed).
-CPU render time: 118.57 seconds (average: 115.46 ms/frame)
-GPU render time: 120.10 seconds (average: 116.94 ms/frame)
-Encoding time: 13.38 seconds (average: 13.03 ms/frame)
+Done recording movie at path: /tmp/tmp.P0PY1Tb2UL/line.avi
+1027 frames at 30 FPS (movie length: 00:00:34:07), recorded in 00:03:04 (18% of real-time speed).
+CPU render time: 146.45 seconds (average: 142.60 ms/frame)
+GPU render time: 149.14 seconds (average: 145.22 ms/frame)
+Encoding time: 15.83 seconds (average: 15.41 ms/frame)
 --------------------------------------------------------------------------------
