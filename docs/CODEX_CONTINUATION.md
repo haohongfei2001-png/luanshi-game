@@ -5,7 +5,16 @@
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
 <!-- river-gate-current-review -->
-## 河关 0.16.0-rc.4 可玩候选
+## 河关 0.16.0-rc.5 衣甲与原生清晰度
+
+Owner 退回 RC4 的清晰度、人物质感与装备可辨性。本轮已将短甲枪刀兵、重装裙甲、头盔护耳、软巾弓手和轻兵袍裙接入正式战争；美术为 **ART_REVIEW_REQUIRED**。衣甲采用随动作的连续袖面，重拍了相同种子和同一机位的七组 1600×1000 PNG。当前版本为原生 4× MSAA，并提供全尺寸单采样档。 [原始军容](evidence/river-gate-v1-rc5/fitting/officer.png) · [同像素并排](evidence/river-gate-v1-rc5/fitting/officer-native-pair.png) · [正常指挥距离](evidence/river-gate-v1-rc5/fitting/formation.png)
+
+代码已推到 [PR #34](https://github.com/haohongfei2001-png/luanshi-game/pull/34)，源码 `d16244aa1a7b360516d1a7819174a4ab741a007a`，本轮全包验证 [run 43300526960](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43300526960)。首次全量任务在工程导入阶段误把旧版证据目录的动图当作游戏纹理，已用 Godot 的目录排除标记修好，原录像保留。美术复核与 M5 真机均待验证。
+
+继续命令为 `gh run view 43300526960 -R haohongfei2001-png/luanshi-game`。通过后归档 macOS 安装包摘要、1920×1200 PNG、实战录像、四规模战斗、九次空数据 macOS 启动与单采样对照。
+<!-- /river-gate-current-review -->
+
+## 上一份可回退候选 0.16.0-rc.4
 
 主线的游戏代码仍为 RC3。RC4 的完整游戏来自开放的 PR #34。美术状态为 **ART_REVIEW_REQUIRED**。常用俯斜游玩视角参考第二张美术方向稿，角色近景用于检查动作与材质。当前优先继续提升正常战斗视角的人物与环境，RC3 的阶段排程留作历史记录。 [实机连续片段](evidence/river-gate-v1-rc4/battlefield-motion.mp4) · [实际游玩流程](evidence/river-gate-v1-rc4/playthrough.mp4) · [配对实机画面](evidence/river-gate-v1-rc4/before-after.mp4) · [美术方向稿](art-direction/river-gate/battle-view.png)
 
@@ -32,7 +41,7 @@ git switch --detach 2293008c2d76dcbd788aeaef0fb871de1bc8eee1
 托管 Mac 本次 2,388 个渲染帧中，358 帧超过 16.67 毫秒，最长 185.12 毫秒。首次 Metal 首帧耗时 47.67 秒，八次新进程均进入交战。 [分段时序](evidence/river-gate-v1-rc4/raw/renderer-comparison.json)
 
 下一项以正常战斗镜头查正面持械的手、兵刃接触和密集门洞中识别主角的速度，保留相同种子、兵力和画质做对照。继续拆分近景蒙皮与阴影的绘制成本，核对多个相同摄像位置的 P95、P99 和命中结果。
-<!-- /river-gate-current-review -->
+
 
 ## 上一版可回退候选 0.16.0-rc.3
 
