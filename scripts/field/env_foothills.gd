@@ -109,7 +109,7 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,5)
 	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,7)
 	var tile:=1 if kind==0 else 0 if kind==1 else 3
-	for index in CROWNS[kind].size():
+	for index:int in CROWNS[kind].size():
 		var knot:Vector4=CROWNS[kind][index]
 		var center:=foot+turn*Vector3(knot.x,knot.y,knot.z)*h+bend*0.37
 		var elbow:=fork.lerp(center,0.63)+turn*Vector3(.028,.005,-.031)*h
@@ -123,7 +123,7 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		# carry the silhouette, including on distant trees and after rotation.
 		var sprays:=8 if kind==0 else 5
 		for j in sprays:
-			var a:=spin+index*.93+j*TAU/sprays+rng.randf_range(-.27,.27)
+			var a:float=spin+index*.93+j*TAU/sprays+rng.randf_range(-.27,.27)
 			var radial:=Vector3(cos(a),0,sin(a))
 			var start:=center+radial*radius*.68+Vector3.UP*tall*rng.randf_range(-.14,.45)
 			var end:=start+radial*radius*(.51 if kind==0 else .59)
