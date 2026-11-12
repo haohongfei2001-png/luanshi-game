@@ -1,0 +1,28 @@
+name: Bake river-gate actor assets
+on:
+  push:
+    branches: [codex/rc3-figure-atelier]
+    paths: ['tools/art/**', '.github/workflows/river-figure-bake.yml']
+permissions:
+  contents: write
+jobs:
+  bake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/rc3-figure-atelier
+      - name: Build artist sources into distributable Godot assets
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -c 'from PIL import Image' || (sudo apt-get update -qq && sudo apt-get install -y -qq python3-pil)
+          /usr/bin/python3 tools/art/bake_river_company.py
+          sha256sum assets/river_gate/figures/*.glb assets/river_gate/figures/*.png
+          git config user.name 'Luanshi asset baker'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/river_gate/figures
+          if ! git diff --cached --quiet; then
+            git commit -m 'Bake original river-company glTF models, material atlas and motion library'
+            git push origin HEAD:refs/heads/codex/rc3-figure-atelier
+          fi
