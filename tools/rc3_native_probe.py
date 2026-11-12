@@ -12,6 +12,7 @@ import re
 import select
 import shutil
 import signal
+import struct
 import subprocess
 import tempfile
 import time
@@ -26,6 +27,7 @@ PLANS = (
     ("compat-2", "gl_compatibility", 0),
 )
 CONTROL = ("focus-control", "gl_compatibility", 0)
+SHIPPING = ("shipping-metal", "mobile", 0)
 
 
 @contextlib.contextmanager
@@ -125,10 +127,12 @@ def trial(executable, output, data_dir, helper, plan):
     args = ["/usr/bin/time", "-l", str(executable)]
     if method == "gl_compatibility":
         args += ["--rendering-method", method]
-    args += ["--resolution", "1000x600", "--audio-driver", "Dummy", "--disable-vsync", "--",
+    if plan != SHIPPING:
+        args += ["--resolution", "1000x600"]
+    args += ["--audio-driver", "Dummy", "--disable-vsync", "--",
              "--field-check", "--field-profile", "--field-proof=" + str(image),
              "--field-quality=" + str(quality)]
-    if label == "default-metal-2":
+    if label == "default-metal-2" or plan == SHIPPING:
         args.append("--field-window-tour")
     if label == CONTROL[0]:
         args.append("--field-focus-control")
@@ -146,6 +150,12 @@ def trial(executable, output, data_dir, helper, plan):
     row = next((json.loads(line.partition(" ")[2]) for line in log.splitlines()
                 if line.startswith("FIELD_HOST_WINDOW ")), {})
     rss = re.search(r"^\s*(\d+)\s+maximum resident set size", log, re.M)
+    png_size = []
+    if image.is_file():
+        with image.open("rb") as stream:
+            header = stream.read(24)
+        if header[:8] == b"\x89PNG\r\n\x1a\n" and header[12:16] == b"IHDR":
+            png_size = list(struct.unpack(">II", header[16:24]))
     stages = {event["stage"]: event for event in events}
     expected = ["scene_ready", "first_post_draw", "foreground_ready", "deployed", "first_tick",
                 "first_hit", "contact_complete"]
@@ -155,10 +165,15 @@ def trial(executable, output, data_dir, helper, plan):
              and all(Path(event["data_dir"]) == data_dir for event in events)
              and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method
              and image.is_file() and image.stat().st_size > 4096 and row.get("hits_in_window", 0) > 0
+             and bool(png_size) and row.get("render_target_px") == png_size
              and row.get("preset") == quality and row.get("shadows") == (quality != 2)
              and abs(row.get("scale", 0) - [1.0, 0.85, 0.70][quality]) < 0.001
              and not any(marker in log for marker in ("SCRIPT ERROR", "SHADER ERROR", "ERROR:")))
+    requested = [1280, 800] if plan == SHIPPING else [1000, 600]
+    if plan == SHIPPING:
+        valid = valid and png_size[0] >= 1000 and png_size[1] >= 600
     row.update(label=label, returncode=code, requested_method=method, validated=valid,
+               requested_window_px=requested, png_ihdr_px=png_size, uses_default_window=(plan == SHIPPING),
                max_rss_bytes=int(rss.group(1)) if rss else None, app_data_absent_at_spawn=empty_at_launch,
                activation_requested=promoted, last_boot_stage=events[-1]["stage"] if events else None,
                launch_milestones_ms={key: stages[key]["launch_wall_ms"] for key in expected if key in stages})
@@ -186,15 +201,20 @@ def main():
         helper = Path(temporary) / "focus"
         subprocess.run(["clang", "-fobjc-arc", "-framework", "AppKit", "-o", helper,
                         Path(__file__).with_name("macos_probe_focus.m")], check=True)
-        for plan in (*PLANS, CONTROL):
+        for plan in (*PLANS, CONTROL, SHIPPING):
             row = trial(game, output, data_dir, helper, plan)
             if plan == CONTROL:
+                tag = "FOCUS_CONTROL"
                 report["focus_control"] = row
+            elif plan == SHIPPING:
+                tag = "NATIVE_SHIPPING_WINDOW"
+                report["shipping_window"] = row
             else:
+                tag = "RENDERER_TRIAL"
                 report["samples"].append(row)
-            print("FOCUS_CONTROL" if plan == CONTROL else "RENDERER_TRIAL", json.dumps(row), flush=True)
+            print(tag, json.dumps(row), flush=True)
             (output / "renderer-comparison.json").write_text(json.dumps(report, indent=2))
-    if not all(row["validated"] for row in [*report["samples"], report["focus_control"]]):
+    if not all(row["validated"] for row in [*report["samples"], report["focus_control"], report["shipping_window"]]):
         raise SystemExit("Native startup or an exported window trial failed; individual logs retained.")
 
 

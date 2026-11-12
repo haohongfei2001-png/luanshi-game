@@ -2,6 +2,21 @@
 
 This repository currently contains an early battle prototype, but the **long-term assignment is a complete single-player game** under docs/FINAL_VISION_ACCEPTANCE.md. Implement incrementally; do not mistake the first prototype for project completion.
 
+## Owner performance decision: share ordinary soldier stats by batch and formation
+
+Read `PRODUCT_DECISIONS.md §1O`, `SIMULATION_CONTRACTS.md §9G`, and `ACCEPTANCE_MATRIX.md §7F-H`. Ordinary soldiers do **not** each need unique attack, defense, morale or combat-compulsion values. Same troop/equipment/training batch shares static combat templates; squads/companies/armies share morale, compulsion, formation, orders and objectives. Keep unique soldier ID, position, movement/animation, actual wounds/death/capture/rout and genuinely different equipment/ammo. Use sparse overrides only for exceptional individuals. Important officers/heroes may be independent. Preserve individual visible movement and casualty causality; do not collapse the army into a fake aggregate count. Prefer template references, compact arrays and event-driven formation updates over per-soldier repeated dictionaries/psychology. Profile actual savings at 1k/3k/5k/10k.
+
+## 2026-11-12 Owner decision: morale, combat compulsion and distinct battle endings
+
+Read `docs/PRODUCT_DECISIONS.md §1N`, `docs/BATTLE_MORALE_COMBAT_COMMITMENT_AND_OUTCOMES_V1.md`, `docs/SIMULATION_CONTRACTS.md §9F`, and `docs/ACCEPTANCE_MATRIX.md §7F-G`.
+
+Battles can end through **annihilation, disorganized rout (with player pursuit/stop choice), organized strategic withdrawal, or surrender**, while existing objective wins (capture/hold/escort/rescue/breakout) remain possible with surviving enemies. Keep casualties, captives, surrendered, routed, withdrawn and surviving forces separate.
+
+Two separate force/formation metrics:
+- **Morale** changes combat effectiveness, formation cohesion, order obedience and gradually loyalty/desertion; losses, officer deaths, surprise, outnumbering, encirclement, lost objectives/retreat routes reduce it; rally, reinforcements, successful succession and secured goals can restore it. Zero morale triggers flight/disorganization attempts, not a magical all-army one-frame rout.
+- **Combat compulsion** reflects authority/legitimacy (including local capital/regime prestige), discipline, mission necessity, command continuity/succession, and real retreat/surrender choices. It determines whether low-morale units hold, obey, resist or withdraw; it is not damage or a morale synonym.
+A dead commander does not automatically win or rout an army: high local regime prestige and recognized deputy succession may preserve command; no successor + weak authority + low morale + encirclement may cause rout/surrender. After rout offer one simple pursue/halt choice. Ordinary soldiers remain cheap FSM; no player micro-management. Extend existing morale, objectives and officer-corps systems incrementally, never claim implemented without replayable tests and persistent settlement.
+
 ## 2026-11-12 Owner priority correction: VISUAL QUALITY P0
 
 The owner says the current game still looks too rough; **visual foundations must be addressed before minor combat-readability and performance tuning**. Read `docs/VISUAL_QUALITY_TARGET_V1.md` and the latest `docs/CODEX_MASTER_EXECUTION_MANDATE_20261112.md`. Current characters/environment are largely procedural primitives in `scripts/field/figures.gd` and `scripts/field/landscape.gd`; this is a foundational asset-quality gap, not merely a lighting bug.

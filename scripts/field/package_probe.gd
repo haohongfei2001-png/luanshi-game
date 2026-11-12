@@ -115,13 +115,6 @@ static func run(tree: SceneTree,scene: Field) -> void:
 		if DisplayServer.get_name()!="headless":
 			var timing: bool=await _window_sample(tree,scene,image_path)
 			ok=ok and timing
-			await RenderingServer.frame_post_draw
-			var img:=tree.root.get_texture().get_image()
-			var colors:={}
-			for x in range(16,img.get_width(),16):
-				for y in range(12,img.get_height(),16):
-					colors[img.get_pixel(x,y).to_rgba32()]=true
-			ok=ok and colors.size()>50 and img.save_png(image_path)==OK
 	var row:=b.report()
 	row.merge({"display":DisplayServer.get_name(),"device":RenderingServer.get_video_adapter_name(),"visible":scene.view.visible_soldiers,"resume_equal":loaded!=null and Save.snapshot(loaded)==saved})
 	print("FIELD_PACKAGE_"+("PASS" if ok else "FAIL")+" "+JSON.stringify(row))
@@ -138,6 +131,8 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	await RenderingServer.frame_post_draw
 	var start:=Time.get_ticks_usec()
 	var previous:=start
+	var first_sim_us:=scene.sim_us
+	var first_view_us:=scene.view_us
 	var panned:=false
 	var tour: bool="--field-window-tour" in OS.get_cmdline_user_args()
 	var minimum_us:=24000000 if tour else 3500000
@@ -183,10 +178,33 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	if sorted.is_empty(): return false
 	var duration: float=(previous-start)/1000000.0
 	var bytes:=OS.get_static_memory_usage()
-	var target:=tree.root.get_texture().get_size()
+	var sim_ms:float=(scene.sim_us-first_sim_us)/1000.0
+	var view_ms:float=(scene.view_us-first_view_us)/1000.0
+	# For a root window ViewportTexture.get_size() also applies the canvas
+	# stretch transform. Read the real color attachment after wall timings end.
+	var texture:=tree.root.get_texture()
+	var logical:=texture.get_size()
+	var img:=texture.get_image()
+	if img==null or img.is_empty(): return false
+	var target:=img.get_size()
+	var image_saved:=img.save_png(path)==OK
+	var colors:={}
+	for x in range(16,target.x,16):
+		for y in range(12,target.y,16):
+			colors[img.get_pixel(x,y).to_rgba32()]=true
+	var native_window:=DisplayServer.window_get_size()
+	var screen_index:=DisplayServer.window_get_current_screen()
+	var screen:=DisplayServer.screen_get_size(screen_index)
+	var canvas_scale:=tree.root.get_final_transform().get_scale()
 	var scale:=tree.root.scaling_3d_scale
 	var record:={"platform":OS.get_name(),"processor":OS.get_processor_name(),"adapter":RenderingServer.get_video_adapter_name(),
 		"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"viewport":[tree.root.size.x,tree.root.size.y],
+		"display_window_px":[native_window.x,native_window.y],"screen_px":[screen.x,screen.y],
+		"content_design_px":[tree.root.content_scale_size.x,tree.root.content_scale_size.y],"canvas_scale":[canvas_scale.x,canvas_scale.y],
+		"reported_viewport_texture_px":[logical.x,logical.y],"sim_cpu_total_ms":sim_ms,"view_script_total_ms":view_ms,
+		"sim_cpu_ms_per_frame":sim_ms/frames.size(),"view_script_ms_per_frame":view_ms/frames.size(),
+		"render_cpu_samples":rcpu.size(),"render_gpu_samples":rgpu.size(),
+		"gpu_timer_status":"measured" if not rgpu.is_empty() else "no_nonzero_device_timestamps",
 		"scale":scale,"preset":scene.detail_preset,"render_target_px":[target.x,target.y],"estimated_internal_px":[roundi(target.x*scale),roundi(target.y*scale)],"shadows":scene.map.sun.shadow_enabled,"per_side":b.side_size,"frames":frames.size(),"seconds":duration,"fps":frames.size()/duration,
 		"tour":tour,"four_second_windows":bins,"mean_ms":duration*1000.0/frames.size(),"input_to_postdraw_ms":Array(scene.frame_log.input_ms) if scene.frame_log else [],"p50_ms":sorted[ceili(sorted.size()*0.5)-1],"p95_ms":sorted[ceili(sorted.size()*0.95)-1],"p99_ms":sorted[ceili(sorted.size()*0.99)-1],
 		"render_cpu_p95_ms":rcpu[ceili(rcpu.size()*0.95)-1] if not rcpu.is_empty() else null,
@@ -197,4 +215,4 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	var file:=FileAccess.open(path.get_basename()+"-frames.json",FileAccess.WRITE)
 	if not file: return false
 	file.store_string(JSON.stringify(record))
-	return frames.size()>=10 and record.hits_in_window>0 and panned and (not tour or (duration>=16.0 and bins.size()>=4))
+	return image_saved and colors.size()>50 and frames.size()>=10 and record.hits_in_window>0 and panned and (not tour or (duration>=16.0 and bins.size()>=4))

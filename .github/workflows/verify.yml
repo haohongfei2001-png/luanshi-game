@@ -35,11 +35,6 @@ jobs:
         env:
           XDG_DATA_HOME: /home/runner/.local/share
         run: timeout 5m ./tools/test.sh
-      - name: Measure contact at four army sizes and record a separate 512v512 run
-        run: |
-          if ! command -v ffmpeg >/dev/null || ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
-          ./tools/test-field-journey.sh
-          ./tools/test-field-render.sh
       - name: Verify youth narrative interface and real input path
         env:
           XDG_DATA_HOME: /home/runner/.local/share
@@ -109,17 +104,6 @@ jobs:
           name: Luanshi-Linux-${{ github.sha }}
           path: builds/Luanshi-linux.tar.gz
           if-no-files-found: error
-      - name: Upload gameplay footage
-        uses: actions/upload-artifact@v4
-        with:
-          name: gameplay-${{ github.sha }}
-          path: |
-            artifacts/river-gate-512.mp4
-            artifacts/player-nine-weapons.mp4
-            artifacts/river-gate-full-siege.mp4
-            artifacts/river-gate-journey.mp4
-            artifacts/river-gate-review.mp4
-          if-no-files-found: error
       - name: Upload evidence and hashes
         if: always()
         uses: actions/upload-artifact@v4
@@ -133,6 +117,53 @@ jobs:
             !artifacts/siege-film/**
             !artifacts/*.mp4
           if-no-files-found: warn
+  field-playthrough:
+    name: Verify field inputs, real battle films and frame times
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import the shipping game for graphical regressions
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > artifacts/field-import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/field-import.log; then exit 1; fi
+      - name: Measure contact at four army sizes and record a separate 512v512 run
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
+          ./tools/test-field-journey.sh
+          ./tools/test-field-render.sh
+      - name: Upload gameplay footage
+        uses: actions/upload-artifact@v4
+        with:
+          name: gameplay-${{ github.sha }}
+          path: |
+            artifacts/river-gate-512.mp4
+            artifacts/player-nine-weapons.mp4
+            artifacts/river-gate-full-siege.mp4
+            artifacts/river-gate-journey.mp4
+            artifacts/river-gate-review.mp4
+          if-no-files-found: error
+      - name: Preserve field records, stills and raw frame samples
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: field-verification-${{ github.sha }}
+          path: |
+            artifacts/
+            !artifacts/field-film/**
+            !artifacts/kit-film/**
+            !artifacts/siege-film/**
+            !artifacts/*.mp4
+
   macos-runtime:
     needs: verify-and-export
     runs-on: macos-latest
@@ -186,7 +217,7 @@ jobs:
 
   review-footage:
     name: Preserve review video bytes
-    needs: verify-and-export
+    needs: field-playthrough
     runs-on: ubuntu-24.04
     timeout-minutes: 3
     steps:

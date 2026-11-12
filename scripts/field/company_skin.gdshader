@@ -15,10 +15,13 @@ vec3 rotated(vec4 q, vec3 v) {
 }
 void skin(int bone, ivec2 tile, vec3 bind_vertex, vec3 bind_normal, out vec3 pos, out vec3 nrm) {
     ivec2 address=tile+ivec2(bone*3,0);
-    vec4 q=normalize(texelFetch(motion_bank,address,0)*2.0-1.0);
-    vec3 hi=texelFetch(motion_bank,address+ivec2(1,0),0).rgb;
-    vec3 lo=texelFetch(motion_bank,address+ivec2(2,0),0).rgb;
-    vec3 translation=((hi*256.0+lo)/257.0-.5)*6.0;
+    vec4 q8=texelFetch(motion_bank,address,0);
+    vec4 hi=texelFetch(motion_bank,address+ivec2(1,0),0);
+    vec4 lo=texelFetch(motion_bank,address+ivec2(2,0),0);
+    int xy=int(hi.a*255.0+.5), zw=int(lo.a*255.0+.5);
+    vec4 tail=vec4(float(xy>>4),float(xy%16),float(zw>>4),float(zw%16));
+    vec4 q=normalize((q8*4080.0+tail)*(2.0/4095.0)-1.0);
+    vec3 translation=((hi.rgb*256.0+lo.rgb)/257.0-.5)*6.0;
     pos=rotated(q,bind_vertex)+translation;
     nrm=rotated(q,bind_normal);
 }

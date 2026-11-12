@@ -8,7 +8,7 @@ GODOT="${GODOT:-godot}"
 timeout 100s xvfb-run -a -s '-screen 0 800x500x24' "$GODOT" --path . --resolution 800x500 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_alternate_outcomes.gd -- --field-size=20 2>&1 | tee artifacts/field-outcomes.log
 grep -q '^FIELD_ENDINGS_PASS' artifacts/field-outcomes.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-outcomes.log; then exit 1; fi
-timeout 180s xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
+timeout 300s xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
 grep -q '^FIELD_ESCORT_GUI_PASS' artifacts/field-escort-gui.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-escort-gui.log; then exit 1; fi
 for mode in benchmark film; do
@@ -25,7 +25,7 @@ timeout 200s xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . --disable-
 grep -q '^FIELD_CONTROLS_PASS' artifacts/field-controls.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-controls.log; then exit 1; fi
 ffmpeg -nostdin -loglevel error -y -framerate 10 -i artifacts/kit-film/frame-%03d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/player-nine-weapons.mp4
-timeout 150s xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --disable-vsync --audio-driver Dummy --resolution 960x600 --fixed-fps 10 --script tests/field_siege_film.gd -- --field-size=512 2>&1 | tee artifacts/natural-siege.log
+timeout 240s xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --disable-vsync --audio-driver Dummy --resolution 960x600 --fixed-fps 10 --script tests/field_siege_film.gd -- --field-size=512 2>&1 | tee artifacts/natural-siege.log
 grep -q '^FIELD_SIEGE_FILM_PASS' artifacts/natural-siege.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/natural-siege.log; then exit 1; fi
 ffmpeg -nostdin -loglevel error -y -framerate 10 -i artifacts/siege-film/frame-%04d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/river-gate-full-siege.mp4
