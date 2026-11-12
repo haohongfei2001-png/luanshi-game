@@ -85,7 +85,7 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 		var projected:=field.camera.unproject_position(foot+Vector3.UP*.9)
 		if canvas.has_point(projected): on_screen.append(u.id)
 	item["in_frame_count"]=on_screen.size()
-	item["in_frame_ids_sha256"]=Marshalls.raw_to_base64(on_screen.to_byte_array()).sha256_text()
+	item["in_frame_ids_sha256"]="".sha256_text() if on_screen.is_empty() else Marshalls.raw_to_base64(on_screen.to_byte_array()).sha256_text()
 	success=success and field.view.visible_soldiers>=on_screen.size()
 	shots.append(item)
 	print("RIVER_ART_FRAME "+JSON.stringify(item))
