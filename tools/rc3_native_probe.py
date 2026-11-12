@@ -52,11 +52,41 @@ def empty_game_data(data_dir):
                 prior.rename(data_dir)
 
 
+
+def sample_game(wrapper_pid, output, label):
+    """Record the exported game's threads, never a process outside this timed launch."""
+    try:
+        children = subprocess.run(
+            ["/usr/bin/pgrep", "-P", str(wrapper_pid)], capture_output=True, text=True, timeout=3,
+        ).stdout.split()
+        for raw in children:
+            pid = int(raw)
+            if os.getpgid(pid) != wrapper_pid:
+                continue
+            dest = output / (label + "-startup.sample.txt")
+            result = subprocess.run(
+                ["/usr/bin/sample", str(pid), "1", "10", "-file", str(dest)],
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=9,
+            )
+            if result.returncode or not dest.is_file():
+                print("FIELD_BOOT_STACK_UNAVAILABLE", label, result.stdout[-240:], flush=True)
+                return
+            lines = dest.read_text(errors="replace").splitlines()
+            # Retain loaded images and full stacks in the artifact. A small call graph
+            # in the runner log can be inspected even after the artifact expires.
+            start = next((i for i, line in enumerate(lines) if "Call graph:" in line), 0)
+            print("FIELD_BOOT_STACK", label, "\n".join(lines[start:start+90])[:10500], flush=True)
+            return
+        print("FIELD_BOOT_STACK_UNAVAILABLE", label, "no child in the game's process group", flush=True)
+    except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+        print("FIELD_BOOT_STACK_UNAVAILABLE", label, str(error), flush=True)
+
 def observe(args, focus_helper, output, label):
     """A PTY keeps even a release executable's diagnostic prints line buffered."""
     master, slave = pty.openpty()
     started = time.monotonic()
     events, actors = [], []
+    sampled = False
     pending, promoted = b"", False
     log_file = output / (label + ".log")
     with log_file.open("w") as log, (output / (label + "-focus.log")).open("w") as actor_log:
@@ -86,6 +116,11 @@ def observe(args, focus_helper, output, label):
         timeout = False
         try:
             while time.monotonic() - started < 75:
+                if not sampled and time.monotonic() - started >= 45 and not any(
+                    event["stage"] == "first_post_draw" for event in events
+                ):
+                    sampled = True
+                    sample_game(process.pid, output, label)
                 ready, _, _ = select.select([master], [], [], 0.3)
                 if not ready:
                     continue
