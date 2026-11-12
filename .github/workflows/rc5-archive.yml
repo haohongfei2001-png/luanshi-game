@@ -1,0 +1,34 @@
+name: Preserve lossless river-gate review material
+on:
+  push:
+    branches: [codex/archive-river-gate-rc5]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  preserve:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/river-gate-rc5-evidence
+      - name: Preserve the fitted figures in the unscaled, normal game camera
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = a45da29768b70081b1d99a80efc820c7f3d81f9a
+          state=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/43299113337" --jq '[.head_sha,.conclusion]|join(" ")')
+          test "$state" = "199f34c33d8f6b75b39afa01287dc9c6d6474222 success"
+          gh run download 43299113337 -R "$GITHUB_REPOSITORY" -n native-size-armour-camera -D "$RUNNER_TEMP/fitted"
+          dest=docs/evidence/river-gate-v1-rc5/fitting
+          mkdir -p "$dest"
+          cp "$RUNNER_TEMP/fitted/field/officer.png" "$dest/officer.png"
+          cp "$RUNNER_TEMP/fitted/field/follow.png" "$dest/formation.png"
+          cp "$RUNNER_TEMP/fitted/officer-crop.png" "$dest/officer-native-pair.png"
+          cp "$RUNNER_TEMP/fitted/field/frames.json" "$dest/after.json"
+          cp "$RUNNER_TEMP/fitted/rc4/frames.json" "$dest/before.json"
+          git add "$dest"
+          git -c user.name='Luanshi acceptance archive' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Keep the fitted field company at native 1600 pixels beside its RC4 camera receipt'
+          git push origin HEAD:refs/heads/codex/river-gate-rc5-evidence
