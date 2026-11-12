@@ -12,6 +12,8 @@ jobs:
       - name: Inspect primary CC0 and capture candidate material samples
         run: |
           set -euo pipefail
+          python3 -m pip -q install --target /tmp/river-image-tools Pillow==11.3.0
+          export PYTHONPATH=/tmp/river-image-tools
           curl -fsSL --max-time 20 https://polyhaven.com/license -o /tmp/terrain-license
           python3 - <<'PY'
           import re
