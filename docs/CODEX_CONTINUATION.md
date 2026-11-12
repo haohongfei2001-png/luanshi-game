@@ -30,6 +30,7 @@ git switch --detach 22d5c85abf18296c0d299075f68e287102b004e7
 ```
 
 下一项以正常战斗镜头查正面持械的手、兵刃接触和密集门洞中识别主角的速度，保留相同种子、兵力和画质做对照。继续拆分近景蒙皮与阴影的绘制成本，核对多个相同摄像位置的 P95、P99 和命中结果。
+当前整合验证的游戏提交为 `2293008c2d76dcbd788aeaef0fb871de1bc8eee1`。正式包曾发现原生后端的关楼发白，校准后，同机固定正面机位的木、石、瓦色差分别从 38.88、21.58、39.74 降至 3.79、8.49、3.13。六个固定时刻逐像素核对了人群渲染提交的优化。可以在云端运行 `git fetch origin codex/river-gate-rc4`，签出该提交重放。 [最新完整 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43288570098) · [双后端实拍](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43287903198) · [显示 CPU 的交叉对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43286228399)
 <!-- /river-gate-current-review -->
 
 ## 上一版可回退候选 0.16.0-rc.3
