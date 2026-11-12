@@ -118,6 +118,7 @@ void fragment() {
 	await _snap("camp","camp",30.0,-.54)
 	_advance(490)
 	await _snap("gate","gate",30.0,-.89)
+	await _snap("outer_gate","gate",21.0,.82)
 	var f:=FileAccess.open(directory+"/frames.json",FileAccess.WRITE)
 	f.store_string(JSON.stringify(shots))
 	print("MATERIAL_FIELD_WINDOW ",RenderingServer.get_current_rendering_method()," ",RenderingServer.get_video_adapter_name()," ",success)

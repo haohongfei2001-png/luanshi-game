@@ -31,11 +31,11 @@ jobs:
           set -euo pipefail
           ls /usr/share/vulkan/icd.d/lvp*.json
           export VK_ICD_FILENAMES="$(ls /usr/share/vulkan/icd.d/lvp*.json | head -n1)"
-          git fetch --no-tags --depth=1 origin 22d5c85abf18296c0d299075f68e287102b004e7 455a58f233e276a5bbdc473387bfad09b4535bd2
+          git fetch --no-tags --depth=1 origin 22d5c85abf18296c0d299075f68e287102b004e7 7748bc1dd74fe6c873be7bff2e5156f03795dc97
           mkdir receipts
           for side in before after; do
             rev=22d5c85abf18296c0d299075f68e287102b004e7
-            if [[ "$side" == after ]]; then rev=455a58f233e276a5bbdc473387bfad09b4535bd2; fi
+            if [[ "$side" == after ]]; then rev=7748bc1dd74fe6c873be7bff2e5156f03795dc97; fi
             game="$RUNNER_TEMP/$side"
             mkdir "$game"
             git archive "$rev" | tar -x -C "$game"

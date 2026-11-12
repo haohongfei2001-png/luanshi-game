@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 root=pathlib.Path("receipts")
 methods=["gl_compatibility","mobile"]
-views=["gate","bridge","camp"]
+views=["gate","bridge","camp","outer_gate"]
 def load(side,renderer,name):
     return np.asarray(Image.open(root/side/renderer/(name+".png")).convert("RGB"),dtype=np.int16)
 report={}
