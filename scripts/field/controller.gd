@@ -276,24 +276,28 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 	if not target_figures: return floor_point
 	var best:=floor_point
 	var best_score:=INF
+	# In the orthographic player camera a shoulder spans the same number of pixels
+	# everywhere. Measure across the screen so orbiting preserves that width.
+	var base:=Ground.unit_point(floor_point)
+	var shoulder:=camera.global_transform.basis.x.normalized()*0.32
+	var radius:=maxf(2.0,camera.unproject_position(base+shoulder).distance_to(camera.unproject_position(base)))
 	# A cursor resting on a visible torso selects that ground direction at the
 	# start of the strike. Melee reach, flight and obstruction remain in Battle.
 	for id in battle._near(floor_point,4.8,1):
 		var u:=battle.roster[id]
 		if battle.hero.pos.distance_squared_to(u.pos)>34.0*34.0: continue
-		var elevated:=Ground.parapet(u.pos)>2.75 or Ground.parapet(battle.hero.pos)>2.75
-		if not Ground.clear_shot(battle.hero.pos,u.pos,battle.gate_hp<=0,elevated): continue
 		var foot:=Ground.unit_point(u.pos)
 		var head:=foot+Vector3.UP*(2.45 if u.mounted else 1.70)
 		var low:=camera.unproject_position(foot)
 		var high:=camera.unproject_position(head)
-		var radius:=maxf(2.0,high.distance_to(camera.unproject_position(head+Vector3.RIGHT*0.32)))
 		var d:=screen.distance_to(Geometry2D.get_closest_point_to_segment(screen,low,high))
-		if d<=radius:
-			var score:=d/radius+0.001*screen.distance_to(low)
-			if score<best_score:
-				best_score=score
-				best=u.pos
+		if d>radius: continue
+		var score:=d/radius+0.001*screen.distance_to(low)
+		if score>=best_score: continue
+		var elevated:=Ground.parapet(u.pos)>2.75 or Ground.parapet(battle.hero.pos)>2.75
+		if not Ground.clear_shot(battle.hero.pos,u.pos,battle.gate_hp<=0,elevated): continue
+		best_score=score
+		best=u.pos
 	return best
 
 func _input(e: InputEvent) -> void:
