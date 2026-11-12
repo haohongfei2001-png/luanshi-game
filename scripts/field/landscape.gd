@@ -33,8 +33,10 @@ func _ready() -> void:
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	add_child(sun)
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
-	surface_material.set_shader_parameter("trail_marks",preload("res://assets/environment/trail-marks.png"))
-	surface_material.set_shader_parameter("land_paint",preload("res://assets/environment/floodplain-paint.png"))
+	surface_material.set_shader_parameter("soil_cover",preload("res://assets/environment/soil-cover.png"))
+	surface_material.set_shader_parameter("root_turf",preload("res://assets/environment/root-turf.png"))
+	surface_material.set_shader_parameter("compacted_loam",preload("res://assets/environment/compacted-loam.png"))
+	surface_material.set_shader_parameter("bank_silt",preload("res://assets/environment/bank-silt.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
 	surface_material.set_shader_parameter("joinery",preload("res://assets/environment/joinery.png"))
 	var terrain:={}

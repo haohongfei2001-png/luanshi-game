@@ -1,0 +1,24 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://bincdmksbftfy"
+path="res://.godot/imported/bank-silt.png-d04f106e3852f3f33393d2eae1383653.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/bank-silt.png"
+dest_files=["res://.godot/imported/bank-silt.png-d04f106e3852f3f33393d2eae1383653.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0
