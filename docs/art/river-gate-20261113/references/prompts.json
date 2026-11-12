@@ -1,0 +1,13 @@
+{
+  "schema": "luanshi.concept-references.v1",
+  "created_date_shanghai": "2026-11-13",
+  "method": "built-in image_gen",
+  "scope": "AI concept references; not in-game captures or archaeological reconstruction",
+  "images": [
+    {
+      "file": "01_bilateral_character_direction.png",
+      "prompt": "Use case: historical-scene. Asset type: original visual-development reference for the game LUANSHI / River Gate, a restrained realistic isometric 3D action-command game inspired by late Tang provincial warfare. Create a beautiful professional landscape 3:2 art-direction sheet of SIX adult Chinese soldiers and battlefield officers on a pale warm-grey studio background, full bodies and feet visible, natural 7.4-head proportions, detailed credible faces and hands, elegant human silhouettes, NOT chibi, NOT toy soldiers, NOT fantasy heroes. Left trio is western attacking army: muted indigo linen #394D66, worn iron lamellar and dark leather; one lightly equipped spear infantryman, one practical archer, one senior general with modest helmet, command pennon and a long single-edged pole blade. Right trio is river-gate defenders: muted ochre red #8E4B3D cloth with iron grey armour; one sword-and-wooden-shield soldier, one crossbowman with historically plausible wooden crossbow, one elite officer with short sword and shield. All same adult height range and human scale. Equipment scarcity visible: ordinary troop has simple cloth cap or restrained iron helmet, sewn coat with crossing collar, trousers and wrapped lower legs, mixed linen and quilted protection; officer has finer lamellar coat with clear overlapping plates and cloth underlayers but NO oversized pauldrons, spikes, horns, glowing eyes, fantasy capes, firearms or European plate armour. Readable practical weapon grips, blades correctly connected to handles, two hands support long weapon. Fine realistic clothing construction, seams, buckles, straps and wear at correct scale, muted painterly 3D material study, sophisticated production-quality concept art, soft directional daylight, subtle ground shadows, beautifully composed even spacing. Add small tasteful top typography exactly 'RIVER GATE / CHARACTER DIRECTION' and bottom footer exactly 'AI CONCEPT REFERENCE - NOT IN-GAME CAPTURE'. No fictional nation names, no literary character names, no game logos.",
+      "sha256": "fed35243b2f5db94942eb116b304198b5d46845af8c9fb5232417e86a0250eeb"
+    }
+  ]
+}
