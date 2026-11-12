@@ -13,7 +13,10 @@ function concat(items){let n=items.reduce((t,a)=>t+a.length,0),a=new Uint8Array(
 function atlasUV(tile,u,v){return [((tile%4)*T+2+clamp(u)*(T-4))/N,((tile>>2)*T+2+clamp(v)*(T-4))/N]}
 class Sculpt{
  constructor(){this.p=[];this.n=[];this.t=[];this.j=[];this.i=[];}
- pt(p,mat,u,v,j=0,w=1){const k=this.p.length;this.p.push(p);this.n.push([0,0,0]);this.t.push(atlasUV(mat,u,v));this.j.push([(j+.5)/32,w]);return k}
+ pt(p,mat,u,v,j=0,w=1){
+  // Both LODs place the painted flank, shoulder and muzzle in the same bind-space UV.
+  if(mat===COAT||mat===LIGHT){u=(p[2]+.95)/2.25;v=(1.95-p[1])/1.92;}
+  const k=this.p.length;this.p.push(p);this.n.push([0,0,0]);this.t.push(atlasUV(mat,u,v));this.j.push([(j+.5)/32,w]);return k}
  tri(a,b,c){const nn=cross(sub(this.p[b],this.p[a]),sub(this.p[c],this.p[a]));if(dot(nn,nn)<1e-14)return;this.i.push(a,b,c);for(const k of [a,b,c])this.n[k]=add(this.n[k],nn)}
  quad(a,b,c,d){this.tri(a,b,c);this.tri(a,c,d)}
  // Path section: [x,height,forward, half-width, perpendicular-depth, joint, weight]. Transverse sections share vertices.
@@ -252,6 +255,20 @@ function smallWheel(high){return high?7:4}
 // worn edges, hammered metal and growth rings. Avoid specular "plastic" on the cloth.
 const palette=[[124,77,53],[142,90,61],[69,47,36],[72,67,56],[47,38,33],[90,72,64],[111,71,46],[71,51,39],[126,68,54],[54,68,75],[177,139,81],[140,110,67],[128,94,57],[73,76,73],[37,32,26],[197,177,138]];
 function noise(x,y,seed){let v=Math.imul(x+seed*631,0x1e35a7bd)^Math.imul(y+seed*97,0x48d2a33d);v=Math.imul(v^(v>>>16),0x45d9f3b);return ((v^(v>>>13))>>>0)/4294967296}
+// Broad anatomical colour planes read in the real cavalry view. The ribs turn
+// under the saddle, the flank tucks up behind them and the cheek meets a dark muzzle.
+function coatPlanes(u,v){
+ const z=(u-.03125)/.9375*2.25-.95, y=1.95-(v-.03125)/.9375*1.92;
+ function wash(cz,cy,rz,ry,slope=0){
+  const x=(z-cz)/rz,h=(y-cy-slope*(z-cz))/ry;
+  return Math.exp(-x*x-h*h);
+ }
+ return 25*wash(-.55,1.17,.23,.19,-.25)-23*wash(-.33,.99,.095,.12,-.58)
+       +19*wash(.31,1.16,.105,.30,-.55)-21*wash(.18,1.03,.105,.19,-.45)
+       -20*wash(-.02,.78,.51,.115)+15*wash(.58,1.47,.19,.088,1.14)
+       -22*wash(.68,1.50,.18,.077,.98)+16*wash(.91,1.669,.11,.09,-.39)
+       -25*wash(1.17,1.573,.135,.075,-.32)+8*wash(-.04,1.30,.32,.092);
+}
 function atlas(){
  const px=new Uint8Array(N*N*3);
  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
@@ -265,6 +282,7 @@ function atlas(){
   else if(tile>=8&&tile<=10){const warp=((u+Math.floor(v/9))%3===0)?4:-2,weft=(v%4===0)?4:-1;a=warp+weft+6*grit+4*low;if(tile===10)a+=Math.sin(TAU*(u/12+v/30))*4;}
   else if(tile===12){a=7*Math.sin((X+0.035*Math.sin(Y*8)+.02*Math.sin(Y*13+X*3))*TAU*6)+5*Math.sin((X+.015*Math.sin(Y*12))*TAU*18)+4*grit+3*low;}
   else {a=12*grit+8*low+4*Math.sin(5*ang+Y);b=tile===11?3*low:0;}
+  if(tile===COAT||tile===LIGHT)a+=coatPlanes(X,Y);
   for(let c=0;c<3;c++)px[i+c]=clamp(Math.round(palette[tile][c]+a*(1.0-c*.1)+b*(1-c)),0,255)
  }
  return px;
