@@ -1,0 +1,36 @@
+name: Inspect the unchanged River Gate macOS candidate
+on:
+  push:
+    branches: [codex/rc6-cold-start-investigation]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native-startup:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-d6b03507c4ace8582ab9f821e604c499616b8dab
+          run-id: 43327368519
+          github-token: ${{ github.token }}
+          path: package
+      - name: Verify the original main binary and observe both graphics backends
+        run: |
+          set -euo pipefail
+          cd package
+          echo '092e015b1776ba3b1ebf0d00907f133b70fdd7f340b9bba5e0a35a7714841d72  Luanshi-macOS.zip' | shasum -a 256 -c -
+          ditto -x -k Luanshi-macOS.zip unpacked
+          cd ..
+          python3 tools/rc3_native_probe.py package/Luanshi-macOS.zip package/unpacked mac-startup-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rc6-unchanged-macos-startup
+          path: mac-startup-evidence/
+          if-no-files-found: error
+          retention-days: 14
