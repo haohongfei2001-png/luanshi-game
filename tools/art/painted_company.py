@@ -1,6 +1,6 @@
 """Register the original river-company paint sheets to outfit and face UVs."""
 from pathlib import Path
-from PIL import Image, ImageOps
+from PIL import Image, ImageDraw, ImageOps
 
 SOURCE=Path(__file__).with_name("source")
 
@@ -29,6 +29,21 @@ def _face(sheet,index,size):
             paint[x,y]=tuple(round(a*(1-weight)+b*weight) for a,b in zip((168,120,92),colour))
     return patch
 
+def _crossed_front(cloth):
+    # Torso U wraps at the middle of the chest. Paint both ends of each crossing
+    # seam into the same cylinder, leaving sleeves and armour free of a second lapel.
+    size=cloth.width*3
+    image=cloth.resize((size,size),Image.Resampling.BICUBIC)
+    pen=ImageDraw.Draw(image)
+    outer=[(-.215,.025),(-.152,.105),(-.087,.190),(-.024,.261),(.054,.346),(.116,.448),(.162,.567)]
+    inner=[(.217,.022),(.142,.099),(.083,.172),(.023,.240),(-.007,.268)]
+    for shift in (0.,1.):
+        for points in (inner,outer):
+            line=[((x+shift)*size,y*size) for x,y in points]
+            pen.line(line,fill=(87,88,86),width=round(size*.027),joint="curve")
+            pen.line([((x+shift)*size,(y+.012)*size) for x,y in points],fill=(147,142,127),width=max(1,round(size*.005)),joint="curve")
+    return image.resize(cloth.size,Image.Resampling.LANCZOS)
+
 def materials(size):
     with Image.open(SOURCE/"river_cloth_study.png") as image:
         sheet=image.convert("RGB")
@@ -47,5 +62,5 @@ def materials(size):
     armor=armor.point([min(255,round(i*1.19+7)) for i in range(256)]*3)
     with Image.open(SOURCE/"river_face_study.png") as image:
         faces=image.convert("RGB")
-    return {"dyed":cloth,"quilt":padded,"lamellar":armor,"hero_mantle":red,
+    return {"dyed":cloth,"coat":_crossed_front(cloth),"quilt":padded,"lamellar":armor,"hero_mantle":red,
             "visage":_face(faces,0,size),"visage_second":_face(faces,1,size),"visage_third":_face(faces,2,size)}

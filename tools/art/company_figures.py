@@ -58,7 +58,7 @@ def coat(s,look):
     for r in range(len(hem)-1):
         for c in range(n):
             if lo<=r<hi and any(center-span<=c<center+span for center in slots): continue
-            material="dyed"
+            material="coat"
             if heavy and 3<=r<=7:
                 material="lamellar"
             elif look=="archer" and 3<=r<=7:
@@ -110,29 +110,15 @@ def coat(s,look):
         rx=hem[j][1]*(1-t)+hem[j+1][1]*t+offset
         rz=hem[j][2]*(1-t)+hem[j+1][2]*t+offset
         return (rx*sin(a),y,rz*cos(a)-.009*(1-cos(a))-.006)
-    # Cut two folded facings on the robe itself. Tangent in unwrapped garment
-    # space gives the lapel a width even when it crosses the chest diagonally.
-    def facing(path,width,offset):
-        samples=[]
-        for first,last in zip(path,path[1:]):
-            samples.extend([first,tuple((a+b)*.5 for a,b in zip(first,last))])
-        samples.append(path[-1])
-        def patch(u,v):
-            row=round(v*(len(samples)-1))
-            a,y=samples[row]
-            before=samples[max(0,row-1)]
-            after=samples[min(len(samples)-1,row+1)]
-            dx=(after[0]-before[0])*.19
-            dy=after[1]-before[1]
-            length=max(.001,hypot(dx,dy))
-            a-=dy/length*(u-.5)*width/.19
-            y+=dx/length*(u-.5)*width
-            p=body_at(a,y,offset)
-            return p,cloth(p)
-        s.grid(2,len(samples)-1,patch,"facing")
-    facing([(1.40,1.415),(.93,1.387),(.37,1.308),(-.14,1.234)],.051,.007)
-    facing([(-1.46,1.419),(-.94,1.393),(-.60,1.347),(-.18,1.274),
-            (.28,1.184),(.74,1.076),(1.03,.971)],.052 if heavy else .061,.011)
+    def collar(u,v):
+        # The neckband starts exactly at the last tunic row; it stands up at the
+        # nape and falls under the crossed front. No detached strip can clip an arm.
+        a=TAU*u
+        base=point(round(u*n),len(hem)-1)
+        rise=.012+.027*(1-cos(a))*.5
+        p=(base[0]+.0025*v*sin(a),base[1]+rise*v,base[2]+.0025*v*cos(a))
+        return p,cloth(base)
+    s.grid(n,1,collar,"facing")
     def belt(u,v):
         a=TAU*u
         p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))

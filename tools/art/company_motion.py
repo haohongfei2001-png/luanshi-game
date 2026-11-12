@@ -55,7 +55,6 @@ def two_link(binds,root,end,pole):
 # Grip and blade orientation at chamber, impact (on release), and guard.
 # Values are measured around the torso, in metres and degrees, not percentage
 # damage/reach. A sweep, short thrust, shield shove and bow draw use different arcs.
-READY=(.205,1.102,.212,-16,-14,0)
 CHAMBER=[(.31,1.34,.054,-48,72,-22),(.31,1.40,.025,-76,41,-20),(.255,1.208,-.147,-11,65,-9),
          (.202,1.10,-.168,-4,-19,5),(.27,1.385,-.149,-58,40,-22),(.15,1.401,.39,0,-10,-9),
          (.093,1.29,.151,0,-3,0),(.251,1.17,-.067,-12,-20,-15),(.30,1.29,.055,-40,67,-16)]
@@ -91,10 +90,14 @@ def pose(kit,clip,t):
     walk=swing if move else 0.
     ride=clip==15
     crouch=0.; lean=0.; turn=0.; shift=0.; pull=.03
-    rest=READY
-    if kit in TWO_HAND: rest=(.16,1.075,-.04,-10,-17,0)
-    if kit==5: rest=(.177,1.19,.264,-8,-14,-18)
-    if kit==6: rest=(.143,1.155,.093,-3,-8,0)
+    # At rest a long arm rides diagonally with its point above its neighbours.
+    # Its authored chamber and impact still level the shaft at the original hit time.
+    rests=((.198,1.07,.17,-33,-22,-8),(.238,1.09,.12,-44,21,-13),
+           (.120,1.02,-.048,-33,18,-9),(.142,1.015,-.078,-48,-14,4),
+           (.167,1.059,-.072,-55,17,-8),(.164,1.075,.219,-5,-18,-32),
+           (.126,1.118,.084,16,-7,-5),(.216,1.125,.159,-34,-19,-2),
+           (.212,1.098,.142,-32,23,-12))
+    rest=rests[kit]
     hand=rest
     if clip==1 or move or ride:
         hand=tuple(rest[i]+(walk*.064 if i==2 and kit not in TWO_HAND else 0) for i in range(6))
@@ -148,7 +151,8 @@ def pose(kit,clip,t):
         chest_roll=-3.3*walk
         crouch=(.088+.050*cos(t*4*pi-.22)) if running else (.089+.026*cos(t*4*pi))
         lean=12*cos(heading) if running else (9 if clip==12 else 5.8*cos(heading))
-        hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else 0) for i,v in enumerate(hand))
+        hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else
+                      (5.2 if running else 3.7)*walk if i==3 else 2.4*hips if i==4 else 0) for i,v in enumerate(hand))
     elif clip==1:
         crouch=.026+.007*breath
         lean=3.8+1.1*breath

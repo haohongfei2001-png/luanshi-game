@@ -4,7 +4,7 @@ from functools import lru_cache
 from math import atan2, cos, floor, pi, sin
 from pathlib import Path
 from figure_atlas import uv
-from figure_mesh import TAU
+from figure_mesh import TAU, lerp
 
 @lru_cache(maxsize=1)
 def sculpt():
@@ -15,8 +15,8 @@ def marching_head():
     # Eight levels slice the same CC0 sculpt used for the close camera. Denser
     # angles at the forehead and nose keep a profile visible in a twelve-pixel face.
     mesh=sculpt()["close"]
-    levels=(5.70,5.94,6.22,6.51,6.72,6.99,7.23,7.52,7.80,8.01)
-    angles=(0,.34,.78,1.45,2.21,pi,TAU-2.21,TAU-1.45,TAU-.78,TAU-.34)
+    levels=(5.72,6.04,6.50,6.72,7.02,7.39,7.74,8.01)
+    angles=(0,.42,1.13,2.09,pi,TAU-2.09,TAU-1.13,TAU-.42)
     points=[]
     for height in levels:
         edges=[]
@@ -65,10 +65,14 @@ def head(s,look,bone):
             return a+(b-a)*(u-col)
         r=radius(row)+(radius(row+1)-radius(row))*(h-row)+extra
         return bind(sin(angle)*r,height,.35+cos(angle)*r)
+    def brow(a):
+        return 7.00+.44*cos(a)+.07*sin(a+.4)
     source=data["close"] if close else marching_head()
     vertices={}
     for face in source["f"]:
         raw=[source["p"][i] for i in face]
+        if heavy and all(y>brow(atan2(x,z-.35))+.12 for x,y,z in raw):
+            continue
         x,y,z=[sum(p[k] for p in raw)/3 for k in range(3)]
         # One continuous sculpt carries both the hairline and the brow. Eye/mouth
         # recesses keep their modelled depth; painted lids never protrude as sticks.
@@ -94,8 +98,6 @@ def head(s,look,bone):
                             1.212+.155*cos(latitude)*cos(angle)),bone
             s.grid(12,7,eye,"eye")
     n=24 if close else 8
-    def brow(a):
-        return 7.00+.44*cos(a)+.07*sin(a+.4)
     def band(row0,row1,material,thickness):
         def at(u,v):
             a=TAU*u
@@ -107,7 +109,11 @@ def head(s,look,bone):
             a=TAU*u
             y=brow(a)+(8.12-brow(a))*v
             return scalp(a,min(8.03,y),.052+.079*(1-v)),bone
-        s.grid(n,6 if close else 3,helmet,"iron")
+        s.grid(n,6 if close else 2,helmet,"iron")
+        def crown(u,v):
+            edge=helmet(u,1)[0]
+            return lerp(edge,bind(0,8.135,.35),v),bone
+        s.grid(n,1,crown,"iron")
         band(-.025,.075,"leather",.155)
         band(.055,.092,"brass" if look in ("player","officer") else "edge",.163)
         # A short guard at the nape leaves the silhouette of the nose and chin free.
