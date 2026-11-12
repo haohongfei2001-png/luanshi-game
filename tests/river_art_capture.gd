@@ -1,5 +1,5 @@
 extends SceneTree
-## Run this same recorder on the untouched RC2 checkout and the new shipping scene.
+## Run this same recorder on the untouched RC3 checkout and the new shipping scene.
 ## It moves the player's camera only. All units, deliveries, blows and casualties
 ## advance through the 20 Hz controller; exported frames replay at normal speed.
 const Field := preload("res://scripts/field/controller.gd")

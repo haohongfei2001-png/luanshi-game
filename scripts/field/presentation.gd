@@ -7,8 +7,8 @@ const CompanyArt := preload("res://scripts/field/company_art.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
-const FRIEND := Color("496765")
-const FOE := Color("965c49")
+const FRIEND := Color("355f6d")
+const FOE := Color("9f503d")
 const CLOTH_COLOR:=Color("dbcba4")
 const GOLD := Color("b69c66")
 
@@ -71,7 +71,7 @@ func configure(model: Battle) -> void:
 	for kit in Arms.NAMES.size():
 		near_mesh.append(CompanyArt.fighter(kit, CompanyArt.costume(kit), true))
 		far_mesh.append(CompanyArt.fighter(kit, CompanyArt.costume(kit), false))
-		ranks_mesh.append(Figures.ranks(kit))
+		ranks_mesh.append(CompanyArt.fighter(kit, CompanyArt.costume(kit), false, true))
 	var counts := {}
 	for u in battle.roster:
 		var key := _key(u)
@@ -90,7 +90,7 @@ func configure(model: Battle) -> void:
 			groups[200+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
 			groups[30+key]=_batch(far_mesh[kit],mat,counts[key])
 			groups[30+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			groups[60+key]=_batch(ranks_mesh[kit],_material(col,kit),counts[key])
+			groups[60+key]=_batch(ranks_mesh[kit],mat,counts[key])
 			groups[60+key].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	for u in battle.roster:
 		if not u.officer: continue
@@ -101,7 +101,7 @@ func configure(model: Battle) -> void:
 			var capacity:int=battle.command_counts[u.team]
 			groups[officer_key]=_batch(CompanyArt.fighter(u.kit,"Officer",true),mat,capacity)
 			groups[officer_key+30]=_batch(CompanyArt.fighter(u.kit,"Officer",false),mat,capacity)
-			groups[officer_key+60]=_batch(Figures.ranks(u.kit,true),_material(side_colour,u.kit),capacity)
+			groups[officer_key+60]=_batch(CompanyArt.fighter(u.kit,"Officer",false,true),mat,capacity)
 			groups[officer_key+30].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			groups[officer_key+60].node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
@@ -109,14 +109,11 @@ func configure(model: Battle) -> void:
 		if not groups.has(20+kit):
 			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(GOLD,kit),1)
 	var shadow_mesh := Builder.new()
-	var rim:=shadow_mesh.ring(Vector3.ZERO,Vector2(0.39,0.27),8)
+	var rim:=shadow_mesh.ring(Vector3.ZERO,Vector2(0.53,0.41),8)
 	for k in 8:
 		shadow_mesh.tri(Vector3.ZERO,rim[k],rim[(k+1)%8],Color.WHITE)
-	var shade := StandardMaterial3D.new()
-	shade.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
-	shade.albedo_color=Color("504c39a8")
-	shade.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA
-	shade.cull_mode=BaseMaterial3D.CULL_DISABLED
+	var shade:=ShaderMaterial.new()
+	shade.shader=preload("res://scripts/field/foot_contact.gdshader")
 	var sm:=shadow_mesh.finish()
 	contact=_batch(sm,shade,battle.roster.size())
 	contact.node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -220,7 +217,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var distance_sq:=p.distance_squared_to(center)
 		var travelled:=u.pos.distance_to(u.before)
 		var angle := atan2(u.facing.x,u.facing.y)
-		var progress := clampf(1.0-u.timer/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
+		var progress := clampf(1.0-(u.timer+(1.0-alpha)*Battle.DT)/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
 		if u.officer and battle.corps.is_wounded(u.id):
 			code=Battle.State.ESCAPED # Wounded pose; departed units are culled above.
@@ -255,12 +252,13 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			high_detail_soldiers+=1
 		lod_by_id[u.id]=tier
 		var key:=_key(u)+30*tier+(90 if u.officer else 0)
-		if tier!=2:
-			# Cloth lots follow the individual through camera, load and detail changes.
-			data.a=(float((u.id*5+u.squad*3)%8)+0.055+0.88*data.a)/8.0
-			if u.state==Battle.State.MARCH: data.g=clampf(travelled*15.0,0.0,1.0)
-		if not full or contact_for_all:
-			_put(contact,ground+Vector3.UP*0.035,angle,Color(0,0,0,0))
+		# Idle breathing uses simulation time; footsteps keep the travelled phase.
+		data.a=(float((u.id*5+u.squad*3)%8)+0.055+0.88*data.a)/8.0
+		if u.state==Battle.State.MARCH:
+			data.g=clampf(travelled*15.0,0.0,1.0)
+			if travelled<.001 and not u.mounted:
+				data.b=fposmod(u.stride+(float(battle.tick)+alpha)*Battle.DT*(.37+.023*(u.id%7)),1.)
+		_put(contact,ground+Vector3.UP*.026,angle,Color(0,0,0,0))
 		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0,caster)
 		if not u.hero and not u.officer:

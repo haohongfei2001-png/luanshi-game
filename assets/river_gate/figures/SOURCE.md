@@ -1,5 +1,7 @@
 # 河关军容资产
 
-河关正式战役在 Godot 导入 `river_company.glb`，用同一套手部握点、衣甲材质和骨骼姿势装配近景与中景士兵。主角、队正、重装兵、弓弩手和普通步兵共用尺度与绑定。衣片、札甲孔绳、头巾、面部与装备由本仓库的模型和绘制源文件生成。这些模型与纹理专为《乱世》制作，随游戏候选包交付，无第三方模型、扫描或贴图。仓库许可由所有者管理。
+河关的五种衣装、甲片、披风、头巾、马尾盔缨、九种兵器、调色和动作由本项目制作。游戏从 `river_company.glb` 合批绘制近、中、远三档，并从同一个动作库读取步伐、发力和失衡。躯干和袖子共用缝边顶点。持械手和武器共用握点。角色进入新的显示距离后沿用同一套姿势与相位。
 
-在安装 Pillow 的 Python 3 环境中执行 `python3 tools/art/bake_river_company.py` 可重建模型与三个 PNG。材质册以四乘四方格保存十六种表面。姿势册逐帧存储骨骼旋转与位移。手掌、兵器、支撑手、弓弦共用握点，动作阶段由正式战斗状态驱动。每套武器用 16 根骨骼与每段 32 帧保存姿势。`python3 tools/art/check_company_motion.py` 逐帧量取前臂与手腕的实际接缝，包括 PNG 中量化后的旋转与位移。普通兵中景衣装使用 354–370 面，近景保留手指、甲片边缘、衣褶和建模五官。
+脸和耳朵的形体使用 MakeHuman 团队的 HM08 头部网格及青年男性形态，已按 CC0 1.0 公开。取材文件为 `data/3dobjs/base.obj` 和 `data/targets/macrodetails/asian-male-young.target`。来源的版本、Git blob 校验、裁取范围和简化方法见 `tools/art/reduce_field_head.py`。额头、帽檐、眼睑、布料、铁甲和双色披风在游戏内重新贴图与装配。 [上游资产原文](https://github.com/makehumancommunity/makehuman/tree/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data) · [上游 CC0 授权](https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md)
+
+Python 3 与 Pillow 可用时，运行 `python3 tools/art/bake_river_company.py` 重建游戏模型、材质和动作。减面后的头部源数据 `tools/art/field_head.json` 随仓库提交，正常构建可离线运行。若重建该文件，运行 `python3 tools/art/reduce_field_head.py`。执行 `python3 tools/art/check_company_motion.py` 可量取量化后前臂与手腕的连接。动作的实际观感请用 `./tools/compare-river-art.sh` 在游戏窗口复核。

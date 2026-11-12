@@ -9,6 +9,7 @@ uniform int kit = 0;
 varying flat float flash;
 varying flat float cloth_lot;
 varying flat float fallen;
+varying float sewn_shadow;
 
 vec3 rotated(vec4 q, vec3 v) {
     return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
@@ -58,6 +59,10 @@ void vertex() {
         pos=mix(other_pos,pos,blend);
         nrm=mix(other_nrm,nrm,blend);
     }
+    // Broad painted occlusion stays on the garment as the shoulder or hem turns.
+    float armhole=smoothstep(.12,.23,abs(VERTEX.x))*(1.0-smoothstep(.035,.105,abs(VERTEX.y-1.285)));
+    float hem=1.0-smoothstep(.52,1.38,VERTEX.y);
+    sewn_shadow=.12*armhole+.125*hem+.055*max(-NORMAL.y,0.0);
     VERTEX=pos;
     NORMAL=normalize(nrm);
     float wear=INSTANCE_CUSTOM.a*8.0;
@@ -70,8 +75,9 @@ void fragment(){
     vec3 response=texture(response_atlas,UV).rgb;
     float fibre=dot(colour,vec3(.27,.54,.19));
     // A bolt of faded indigo or madder shows exposed natural fibre in the worn lots.
-    vec3 dyed=mix(livery.rgb,colour,.07+cloth_lot*.24)*(.65+fibre*.66)*mix(.86,1.08,cloth_lot);
+    vec3 dyed=mix(livery.rgb,colour,.055+cloth_lot*.15)*(.52+fibre*.89)*mix(.88,1.10,cloth_lot);
     colour=mix(colour,dyed,response.b);
+    colour*=mix(vec3(1.),vec3(.53,.67,.79),sewn_shadow);
     colour*=mix(1.0,.73,fallen);
     ALBEDO=mix(colour,vec3(.57,.29,.15),flash*.23);
     ROUGHNESS=clamp(response.r,.24,1.);

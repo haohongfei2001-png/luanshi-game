@@ -20,6 +20,9 @@ def main():
         for kit in range(9):
             surface=weapon(kit,True) if detailed else company_line.arms(kit)
             library.insert("Arms"+str(kit)+suffix,surface)
+    for look in ("levy","archer","guard","officer","player"):
+        surface=company_line.costume(look,rank=True)
+        library.insert(look.capitalize()+"Rank",surface)
     library.save(dest/"river_company.glb")
     make_atlas(dest)
     bake_motion(dest)

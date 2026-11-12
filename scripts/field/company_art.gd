@@ -21,13 +21,14 @@ static func costume(kit: int) -> String:
 	if kit in [4,7]: return "Guard"
 	return "Levy"
 
-static func fighter(kit: int, look: String, detailed: bool) -> ArrayMesh:
-	var lod := "Close" if detailed else "Line"
+static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -> ArrayMesh:
+	var lod := "Rank" if ranks else ("Close" if detailed else "Line")
 	var key := "%s-%d-%s" % [look,kit,lod]
 	if assembled.has(key): return assembled[key]
 	_load_pieces()
 	var body: ArrayMesh=pieces[look+lod]
-	var arms: ArrayMesh=pieces["Arms"+str(kit)+lod]
+	var arm_lod := "Close" if detailed else "Line"
+	var arms: ArrayMesh=pieces["Arms"+str(kit)+arm_lod]
 	# Copy packed indexed arrays only. SurfaceTool would expand every triangle,
 	# and importer-generated tangents/lightmap data have no role in these materials.
 	var arrays:=body.surface_get_arrays(0)

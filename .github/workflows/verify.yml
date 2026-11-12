@@ -236,7 +236,7 @@ jobs:
           PY
 
   art-comparison:
-    name: Compare RC2 and candidate in the game window
+    name: Compare RC3 and candidate in the game window
     runs-on: ubuntu-24.04
     timeout-minutes: 14
     steps:
