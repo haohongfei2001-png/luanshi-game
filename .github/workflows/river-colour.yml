@@ -1,0 +1,57 @@
+name: Compare material pigment in the two actual game renderers
+on:
+  push:
+    branches: [codex/river-gate-colour-review]
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+      - name: Install the verified Godot 4.6.3 binary and Mesa
+        run: |
+          set -euo pipefail
+          root_url=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$root_url/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/colour-engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/colour-engine.zip' | sha512sum -c -
+          unzip -q /tmp/colour-engine.zip -d /tmp/colour-engine
+          sudo install /tmp/colour-engine/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! /usr/bin/python3 -c 'import PIL,numpy' || ! ls /usr/share/vulkan/icd.d/lvp*.json >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq python3-pil python3-numpy mesa-vulkan-drivers
+          fi
+      - name: Replay equal combat states and measure the drawn wood, wall and tile pixels
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -euo pipefail
+          ls /usr/share/vulkan/icd.d/lvp*.json
+          export VK_ICD_FILENAMES="$(ls /usr/share/vulkan/icd.d/lvp*.json | head -n1)"
+          mkdir receipts
+          for side in before after; do
+            rev=22d5c85abf18296c0d299075f68e287102b004e7
+            if [[ "$side" == after ]]; then rev=455a58f233e276a5bbdc473387bfad09b4535bd2; fi
+            game="$RUNNER_TEMP/$side"
+            mkdir "$game"
+            git archive "$rev" | tar -x -C "$game"
+            cp tests/river_pigment_probe.gd "$game/tests/"
+            (cd "$game" && ./tools/prepare-font.sh && godot --headless --editor --import --path . >/dev/null)
+            for method in gl_compatibility mobile; do
+              log="$PWD/receipts/$side-$method.log"
+              timeout 110s xvfb-run -a -s '-screen 0 1280x800x24' godot --path "$game" --rendering-method "$method" --resolution 1280x800 --disable-vsync --fixed-fps 20 --audio-driver Dummy --script res://tests/river_pigment_probe.gd -- --field-size=512 2>&1 | tee "$log"
+              grep -q "MATERIAL_FIELD_WINDOW $method .* true" "$log"
+              if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$log"; then exit 1; fi
+              mkdir -p "receipts/$side/$method"
+              cp -a "$game/artifacts/river-art/." "receipts/$side/$method/"
+            done
+          done
+          /usr/bin/python3 tools/read_pigment_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: actual-renderer-pigment
+          path: receipts
