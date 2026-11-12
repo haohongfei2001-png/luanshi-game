@@ -10,6 +10,7 @@ const TIP_Y:=[0.012,0.142,0.0,0.0,0.143,0.0,0.0,0.012,0.012]
 const CELLS:=[Vector2i.ZERO,Vector2i(-1,0),Vector2i(1,0),Vector2i(0,-1),Vector2i(0,1),Vector2i(-1,-1),Vector2i(1,-1),Vector2i(-1,1),Vector2i(1,1)]
 const PITCH_STEP:=PI/30.0 # six degrees
 static var _bank: Image
+static var _quat12:=false
 var sampled:=-100
 var target:=0.0
 var offset:=0.0
@@ -25,6 +26,11 @@ var last_output_score:=0.0
 func prepare() -> void:
 	if _bank==null and DisplayServer.get_name()!="headless":
 		_bank=Art.MOTION.get_image()
+		if _bank!=null:
+			# Earlier compatible palettes left translation alpha opaque; fitted V2 stores
+			# the four low quaternion nibbles in those two spare alpha channels.
+			for at in [Vector2i(1,0),Vector2i(2,0),Vector2i(25,42),Vector2i(26,42)]:
+				if _bank.get_pixelv(at).a8!=255:_quat12=true;break
 
 func reset() -> void:
 	sampled=-100
@@ -45,6 +51,10 @@ func _weapon(b: Battle,alpha: float) -> bool:
 	var q:=Quaternion(rgba.r*2.0-1.0,rgba.g*2.0-1.0,rgba.b*2.0-1.0,rgba.a*2.0-1.0).normalized()
 	var high:=_bank.get_pixel(x+1,y)
 	var low:=_bank.get_pixel(x+2,y)
+	if _quat12:
+		var h:=high.a8
+		var l:=low.a8
+		q=Quaternion(((rgba.r8<<4)+(h>>4))/2047.5-1.0,((rgba.g8<<4)+(h&15))/2047.5-1.0,((rgba.b8<<4)+(l>>4))/2047.5-1.0,((rgba.a8<<4)+(l&15))/2047.5-1.0).normalized()
 	var tr:=(Vector3(high.r,high.g,high.b)*256.0+Vector3(low.r,low.g,low.b))/257.0*6.0-Vector3.ONE*3.0
 	var feet:=Ground.unit_point(u.before.lerp(u.pos,alpha))
 	var yaw:=Basis(Vector3.UP,atan2(u.facing.x,u.facing.y))

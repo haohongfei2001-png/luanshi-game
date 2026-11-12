@@ -4,7 +4,7 @@ extends SceneTree
 const Field:=preload("res://scripts/field/controller.gd")
 const Battle:=preload("res://scripts/field/battle.gd")
 const Ground:=preload("res://scripts/field/ground.gd")
-const Skin:=preload("res://scripts/field/company_skin.gdshader")
+const ActorShader:=preload("res://scripts/field/company_skin.gdshader")
 var f: Field
 var evidence: String
 var marker: Shader
@@ -88,7 +88,7 @@ func go() -> void:
 	evidence=OS.get_environment("SIGHT_OUT")
 	DirAccess.make_dir_recursive_absolute(evidence)
 	marker=Shader.new()
-	marker.code=Skin.code.replace("void vertex() {","varying flat float testhand;\nvoid vertex() {").replace("int first=bones/32;","int first=bones/32; testhand=first==8 || first==5 ? 1.0:0.0;").replace("SPECULAR=mix(.25,.56,response.g);","SPECULAR=mix(.25,.56,response.g); if(testhand>0.5){ALBEDO=vec3(1.0,0.0,1.0);EMISSION=vec3(3.0,0.0,3.0);}")
+	marker.code=ActorShader.code.replace("void vertex() {","varying flat float testhand;\nvoid vertex() {").replace("int first=bones/32;","int first=bones/32; testhand=first==8 || first==5 ? 1.0:0.0;").replace("SPECULAR=mix(.25,.56,response.g);","SPECULAR=mix(.25,.56,response.g); if(testhand>0.5){ALBEDO=vec3(1.0,0.0,1.0);EMISSION=vec3(3.0,0.0,3.0);}")
 	var shell=load("res://scenes/game.tscn").instantiate()
 	root.add_child(shell)
 	f=shell.field
