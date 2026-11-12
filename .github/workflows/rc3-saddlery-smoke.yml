@@ -62,13 +62,11 @@ jobs:
           grep -q MOUNT_ART_PASS "$TAIL_ART_OUT/render.log"
           if grep -Ei 'SHADER ERROR|SCRIPT ERROR|Error compiling|shader compilation failed' "$TAIL_ART_OUT/render.log"; then exit 1; fi
           python3 - <<'PY'
-          from PIL import Image
-          import os,io,base64
+          from pathlib import Path
+          import os,base64
           directory=os.environ['TAIL_ART_OUT']
           for name in ['saddle-near','cart-near']:
-              im=Image.open(os.path.join(directory,name+'.png'))
-              im.thumbnail((840,525));f=io.BytesIO();im.convert('RGB').save(f,'JPEG',quality=79)
-              data=base64.b64encode(f.getvalue()).decode()
+              data=base64.b64encode((Path(directory)/(name+'.jpg')).read_bytes()).decode()
               for i in range(0,len(data),4096): print('MOUNT_JPEG',name,i,data[i:i+4096])
           PY
           test ! -f "$TAIL_ART_OUT/bake-failed"

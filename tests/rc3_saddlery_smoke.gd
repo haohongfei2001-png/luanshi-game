@@ -23,6 +23,10 @@ func sample(label: String) -> void:
 	var file:=OS.get_environment("TAIL_ART_OUT")+"/"+label+".png"
 	var img:=root.get_texture().get_image()
 	check(img!=null and img.save_png(file)==OK,label+" render readback")
+	if label.ends_with("-near"):
+		var copy: Image=img.duplicate()
+		copy.resize(840,525,Image.INTERPOLATE_LANCZOS)
+		check(copy.save_jpg(OS.get_environment("TAIL_ART_OUT")+"/"+label+".jpg",0.79)==OK,"Readable viewport preview")
 	var used:=field.view.horse.used+field.view.horse_rank.used
 	print("MOUNT_SCREEN ",JSON.stringify({"label":label,"ordinary":[field.battle.ordinary_counts[0],field.battle.ordinary_counts[1]],"tick":field.battle.tick,"vehicle":field.battle.vehicle,"hits":field.battle.hits,"mounted_and_parked":used,"close":field.view.horse.used,"rank":field.view.horse_rank.used,"cart":field.view.cart.used,"px":[img.get_width(),img.get_height()],"scale":root.scaling_3d_scale,"shadows":field.map.sun.shadow_enabled,"zoom":field.camera.size,"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name()}))
 func run() -> void:
