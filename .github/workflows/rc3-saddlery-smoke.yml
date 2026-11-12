@@ -1,0 +1,63 @@
+name: RC3 saddlery in-window smoke
+on:
+  push:
+    branches: [codex/rc3-tail-lab]
+    paths:
+      - .github/workflows/rc3-saddlery-smoke.yml
+      - tests/rc3_saddlery_smoke.gd
+      - tools/rc3-saddlery-stage.py
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: lab
+      - uses: actions/checkout@v4
+        with:
+          ref: 8e780c0c5fcd9fd59d343133381fe34b6a430d7a
+          path: game
+      - name: Reproduce baked art and import with Godot 4.6.3
+        working-directory: game
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/art/bake_mounts.mjs --check
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/mount-editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/mount-editor.zip' | sha512sum -c -
+          unzip -q /tmp/mount-editor.zip -d /tmp/mount-editor
+          sudo install /tmp/mount-editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          python3 ../lab/tools/rc3-saddlery-stage.py
+          cp ../lab/tests/rc3_saddlery_smoke.gd tests/rc3_saddlery_smoke.gd
+          godot --headless --editor --import --path .
+      - name: Deploy and ride both vehicles in a real X11 viewport
+        working-directory: game
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          TAIL_ART_OUT: ${{ runner.temp }}/saddlery
+        run: |
+          set -euo pipefail
+          mkdir -p "$TAIL_ART_OUT"
+          timeout 150s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1040x650 --audio-driver Dummy --rendering-method gl_compatibility --fixed-fps 30 --script tests/rc3_saddlery_smoke.gd 2>&1 | tee "$TAIL_ART_OUT/render.log"
+          grep -q MOUNT_ART_PASS "$TAIL_ART_OUT/render.log"
+          if grep -Ei 'SHADER ERROR|SCRIPT ERROR|Error compiling|shader compilation failed' "$TAIL_ART_OUT/render.log"; then exit 1; fi
+          python3 - <<'PY'
+          from PIL import Image
+          import os,io,base64
+          directory=os.environ['TAIL_ART_OUT']
+          for name in ['saddle-near','cart-near']:
+              im=Image.open(os.path.join(directory,name+'.png'))
+              im.thumbnail((840,525));f=io.BytesIO();im.convert('RGB').save(f,'JPEG',quality=79)
+              data=base64.b64encode(f.getvalue()).decode()
+              for i in range(0,len(data),4096): print('MOUNT_JPEG',name,i,data[i:i+4096])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: saddlery-game-window
+          path: ${{ runner.temp }}/saddlery/
+          retention-days: 45

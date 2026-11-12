@@ -2,6 +2,11 @@ name: RC3 fixed-step tail laboratory
 on:
   push:
     branches: [codex/rc3-tail-lab]
+    paths:
+      - scripts/field/battle.gd
+      - scripts/field/crowd_grid.gd
+      - tests/field_tail_lab.gd
+      - tools/rc3-tail-*.py
 permissions:
   contents: read
 jobs:
