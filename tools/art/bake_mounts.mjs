@@ -216,7 +216,8 @@ function bake(){
  for(let [name,high,tow] of models){
   const m=new Sculpt();if(high)horse(m,true,tow);else rankHorse(m,tow);if(tow)cart(m,high);
   if(m.p.some(p=>p.some(v=>!Number.isFinite(v)))||m.i.some(i=>i>=m.p.length))throw Error('invalid geometry');
-  const p=new Float32Array(m.p.flat()),nn=new Float32Array(m.n.map(unit).flat()),t=new Uint16Array(m.t.flat().map(normUV)),j=new Uint16Array(m.j.flat().map(normUV));let mn=[0,1,2].map(axis=>Math.fround(Math.min(...m.p.map(v=>v[axis])))),mx=[0,1,2].map(axis=>Math.fround(Math.max(...m.p.map(v=>v[axis]))));let v=m.p.length;
+  const canonical=x=>{const q=Math.round(Math.abs(x)*1e5+1e-7)/1e5;return q===0?0:Math.sign(x)*q};
+  const p=new Float32Array(m.p.flat().map(canonical)),nn=new Float32Array(m.n.map(unit).flat().map(canonical)),t=new Uint16Array(m.t.flat().map(normUV)),j=new Uint16Array(m.j.flat().map(normUV));let mn=[0,1,2].map(axis=>Math.fround(Math.min(...m.p.map(v=>canonical(v[axis]))))),mx=[0,1,2].map(axis=>Math.fround(Math.max(...m.p.map(v=>canonical(v[axis])))));let v=m.p.length;
   let prim={attributes:{POSITION:view(p,5126,v,'VEC3',false,mn,mx),NORMAL:view(nn,5126,v,'VEC3'),TEXCOORD_0:view(t,5123,v,'VEC2',true),TEXCOORD_1:view(j,5123,v,'VEC2',true)},indices:view(new Uint16Array(m.i),5123,m.i.length,'SCALAR',false,null,null,34963),material:0,mode:4};
   gltf.nodes.push({name,mesh:gltf.meshes.length});gltf.meshes.push({name,primitives:[prim]});stats.push([name,v,m.i.length/3]);
  }

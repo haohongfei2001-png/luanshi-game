@@ -7,6 +7,7 @@ uniform sampler2D motion_bank : filter_nearest, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform int kit = 0;
 varying flat float flash;
+varying flat float cloth_lot;
 varying flat float fallen;
 
 vec3 rotated(vec4 q, vec3 v) {
@@ -56,18 +57,21 @@ void vertex() {
     }
     VERTEX=pos;
     NORMAL=normalize(nrm);
-    flash=INSTANCE_CUSTOM.a;
+    float wear=INSTANCE_CUSTOM.a*8.0;
+    cloth_lot=floor(wear)/7.0;
+    flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
 void fragment(){
     vec3 colour=texture(cloth_atlas,UV).rgb;
     vec3 response=texture(response_atlas,UV).rgb;
     float fibre=dot(colour,vec3(.27,.54,.19));
-    vec3 dyed=livery.rgb*(.53+fibre*.88);
+    // A bolt of faded indigo or madder shows exposed natural fibre in the worn lots.
+    vec3 dyed=mix(livery.rgb,colour,.07+cloth_lot*.24)*(.65+fibre*.66)*mix(.86,1.08,cloth_lot);
     colour=mix(colour,dyed,response.b);
     colour*=mix(1.0,.73,fallen);
     ALBEDO=mix(colour,vec3(.57,.29,.15),flash*.23);
     ROUGHNESS=clamp(response.r,.24,1.);
-    METALLIC=response.g*.88;
+    METALLIC=response.g*.66;
     SPECULAR=mix(.25,.56,response.g);
 }

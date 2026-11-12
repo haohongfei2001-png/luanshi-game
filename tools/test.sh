@@ -10,9 +10,10 @@ mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" artifacts
 touch artifacts/.gdignore
 ./tools/prepare-font.sh
 "$GODOT" --version | tee artifacts/engine-version.log
-"$GODOT" --headless --path . --check-only --script scripts/field/landscape.gd
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; fi
+# The shipping landscape references imported glTF equipment and texture atlases.
+"$GODOT" --headless --path . --check-only --script scripts/field/landscape.gd
 "$GODOT" --headless --path . --check-only --script scripts/youth_ui.gd
 bash tools/test-field-history.sh 2>&1 | tee artifacts/field-history.log
 grep -q '^FIELD_HISTORY_PASS ' artifacts/field-history.log

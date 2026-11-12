@@ -4,6 +4,10 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 0.16.0-rc.3 美术候选验证中
+
+主线基准 `882f38c6`。原创 glTF 角色、九种实装武器、骨骼动作、马车和河关地景已接入正式游戏。首轮在 Godot 窗口以相同种子、镜头、交战时刻重放 12 个镜头。完整环境、冷启动、导出包与画质帧时跟随本 PR 的 CI 记录，真实 M5 待测。可执行 `./tools/compare-river-art.sh` 复查角色与战场；`./tools/test.sh`、`./tools/test-field-journey.sh`、`./tools/test-field-render.sh` 和 `./tools/export.sh` 复查完整交付。
+
 ## 当前主线已合入候选 0.16.0-rc.2（2026-11-12，当前可玩基线）
 
 **可玩代码/证据基线**：`7aa2934080e1618ad61e670ec00d40a94714b852`；其后 main 可能有文档更新，Codex 每次启动都必须 fetch 实时 `origin/main`。PR #29 玩法、PR #30 证据已合并，不得重复开发/合并。

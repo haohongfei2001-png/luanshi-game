@@ -7,10 +7,10 @@ const CompanyArt := preload("res://scripts/field/company_art.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
-const FRIEND := Color("3e7271")
-const FOE := Color("a35340")
+const FRIEND := Color("496765")
+const FOE := Color("965c49")
 const CLOTH_COLOR:=Color("dbcba4")
-const GOLD := Color("c3a45e")
+const GOLD := Color("b69c66")
 
 class Batch:
 	var node: MultiMeshInstance3D
@@ -213,8 +213,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			key+=90
 		elif not u.hero:
 			high_detail_soldiers+=1
-		if (key<60 or key>=90) and u.state==Battle.State.MARCH:
-			data.g=clampf(travelled*15.0,0.0,1.0)
+		if key<60 or key>=90:
+			# Persistent cloth lots are tied to roster identity across camera/LOD changes.
+			data.a=(float((u.id*5+u.squad*3)%8)+0.055+0.88*data.a)/8.0
+			if u.state==Battle.State.MARCH: data.g=clampf(travelled*15.0,0.0,1.0)
 		if not full or contact_for_all:
 			_put(contact,ground+Vector3.UP*0.035,angle,Color(0,0,0,0))
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0)
