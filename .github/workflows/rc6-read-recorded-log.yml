@@ -1,0 +1,34 @@
+name: Inspect recorded Metal shader diagnostics
+on:
+  push:
+    branches: [codex/rc6-baked-log-review]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  recorded-logs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: baked-cold-starts-and-frames
+          run-id: 43331468765
+          github-token: ${{ github.token }}
+          path: checked
+      - name: Read the captured logs without restarting the app
+        run: |
+          python3 - <<'PY'
+          from collections import Counter
+          import json, pathlib, re
+          root=pathlib.Path('checked')
+          report=json.loads((root/'renderer-comparison.json').read_text())
+          for row in [*report['samples'],report['focus_control'],report['shipping_window']]:
+              lines=(root/(row['label']+'.log')).read_text(errors='replace').splitlines()
+              counts=Counter(line.strip() for line in lines if 'ERROR:' in line or 'SHADER ERROR' in line or 'SCRIPT ERROR' in line)
+              details=[]
+              for i,line in enumerate(lines):
+                  if 'ERROR:' in line and len(details)<3:
+                      details.append(lines[i:i+3])
+              print('BAKED_LOG_AUDIT',json.dumps(dict(label=row['label'],validated=row['validated'],errors=sum(counts.values()),first_distinct=list(counts)[:8],context=details,package_marker=any(line.startswith('FIELD_PACKAGE_PASS ') for line in lines))))
+          PY
