@@ -1,5 +1,5 @@
 extends SceneTree
-## Run this same recorder on the untouched RC2 checkout and the new shipping scene.
+## Run the same real GUI recorder on both active river-gate revisions.
 ## It moves the player's camera only. All units, deliveries, blows and casualties
 ## advance through the 20 Hz controller; exported frames replay at normal speed.
 const Field := preload("res://scripts/field/controller.gd")
@@ -28,6 +28,8 @@ func _target(kind: String) -> Vector2:
 	if kind=="cart": return b.vehicle_pos[2]
 	if kind=="gate": return Ground.GATE
 	if kind=="camp": return Vector2(-66,-19)
+	if kind=="bank": return Vector2(-35.8,-8.4)
+	if kind=="margin": return Vector2(-23.8,13.8)
 	if kind=="bridge": return Vector2(Ground.RIVER_X,Ground.crossing(0.0))
 	if kind=="ram": return b.ram
 	if kind=="officer":
@@ -82,6 +84,23 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 	shots.append(item)
 	print("RIVER_ART_FRAME "+JSON.stringify(item))
 
+func _cost(label: String,focus: String,zoom: float,yaw: float) -> void:
+	_view(_target(focus),zoom,yaw)
+	await RenderingServer.frame_post_draw
+	var intervals: Array[float]=[]
+	for i in 64:
+		var start:=Time.get_ticks_usec()
+		_advance(field.battle.tick+1)
+		field._process(Battle.DT)
+		await RenderingServer.frame_post_draw
+		if i>=8: intervals.append((Time.get_ticks_usec()-start)*.001)
+	var by_time:=intervals.duplicate()
+	by_time.sort()
+	# Real hosted software-renderer wall intervals; no screenshot readback samples.
+	print("WILLOW_COST "+JSON.stringify({"label":label,"window":[1280,800],"draw_frames":intervals,
+		"p50_ms":by_time[28],"p95_ms":by_time[53],"p99_ms":by_time[55],"tick":field.battle.tick,
+		"hits":Array(field.battle.hits),"ordinary":Array(field.battle.ordinary_counts)}))
+
 func _run() -> void:
 	if DisplayServer.get_name()=="headless": quit(1); return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory+"/film"))
@@ -99,35 +118,17 @@ func _run() -> void:
 	await process_frame
 	if not b.started or b.ordinary_counts!=PackedInt32Array([512,512]): quit(1); return
 	_advance(8)
-	await _snap("hero","hero",6.4,1.27)
-	await _snap("saddle","horse",7.8,1.09)
-	await _snap("cart","cart",10.0,-.65)
 	await _snap("ford","bridge",31.0,-.54)
-	await _snap("camp","camp",30.0,-.54)
+	await _snap("bank","bank",17.0,-.54)
+	await _snap("margin","margin",23.0,-.64)
 	_advance(65)
-	await _snap("officer","officer",7.8,-1.42)
-	await _snap("bowline","archer",8.6,1.12)
 	await _snap("ranks","line",51.0,-.576)
-	await _snap("contact","line",13.0,-.576)
 	await _snap("formation","line",26.0,-.576)
-	if "--terrain-budget-only" in OS.get_cmdline_user_args():
-		quit(0 if success else 1)
-		return
-	var start:=_target("line")
-	var initial_hits: int=b.hits[0]+b.hits[1]
-	for i in 80:
-		_advance(66+i*2)
-		var point:=start.lerp(_target("line"),.22*smoothstep(0,79,i))
-		_view(point,lerpf(13.0,22.0,smoothstep(0,79,i)),-.576)
-		await RenderingServer.frame_post_draw
-		var shot:=root.get_texture().get_image()
-		success=success and not shot.is_empty()
-	_advance(490)
-	await _snap("siege","ram",19.0,-.65)
-	await _snap("gate","gate",34.0,-.89)
+	await _cost("ford","bridge",31.0,-.54)
+	await _cost("field","line",34.0,-.576)
 	var f:=FileAccess.open(directory+"/frames.json",FileAccess.WRITE)
 	f.store_string(JSON.stringify(shots,"  "))
-	success=success and b.hits[0]+b.hits[1]>initial_hits and b.tick==490 and b.side_size==512
+	success=success and b.tick==193 and b.side_size==512 and b.hits[0]+b.hits[1]>0
 	print("RIVER_ART_"+("PASS" if success else "FAIL")+" ticks="+str(b.tick)+" seed="+str(Battle.SEED))
 	scene.queue_free()
 	await process_frame

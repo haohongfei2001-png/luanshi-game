@@ -9,3 +9,5 @@
 `floodplain-paint.png` 为原创 512 × 336 河关地表彩绘。主路、两条渡口支路、坡地熟田、石脊和树荫的位置来自 `foothills.json`。地图内的城门保留土筑墙体、错缝石基、木构额枋和可分离的远檐。`leaf-sprays.png` 是原创 256 × 256 带透明通道的叶簇图集，包括阔叶、垂柳、草穗和发黄的林冠。两张纹理均启用 mipmap，树枝和叶片分区合批。运行 `node tools/env_river_paint.mjs` 可重制两张纹理。此组资产未使用摄影、图库或其他游戏画面。
 
 `stand-placements.json` 由同一制作命令生成，树木的实际树位同时参与林下地表着色。`trail-marks.png` 是原创 256 × 256 循环地面叠绘，包含泥缝、断草和碎石；坡道、田地和主路按地表材质混合。门额的“河關”沿用现有 Noto Sans SC 字体及其 OFL 授权。
+
+`bank-willows.gltf` 的老柳与幼柳各有独立木质网格、弯折垂枝和叶帘，缩放后并入战场既有地形和树叶批次。`willow-sprays.png` 是原创 512 × 256 河岸图集，包含两种垂柳叶幕、一种树梢和一簇莎草。`foothills.json` 固定大树的位置与朝水的方向。运行 `node tools/env_river_paint.mjs` 会调用 `tools/env_willow.mjs`，重建柳树网格、图集、树位与相应地表着色。
