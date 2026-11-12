@@ -29,7 +29,10 @@ def coat(s,look):
     def cloth(p):
         x,y,z=p
         if y<.86:
-            return (LT if x<0 else RT,HIPS,clamp((.88-y)*1.37))
+            # The middle of a hanging coat hangs from the belt. Only the side
+            # beside a moving thigh is carried forward by that leg.
+            side_weight=.25+.75*smoothstep_cloth(abs(x)/.20)
+            return (LT if x<0 else RT,HIPS,clamp((.88-y)*1.37)*side_weight)
         if y>1.245 and abs(x)>.147:
             return ((LU if x<0 else RU),CHEST,.46*clamp((abs(x)-.147)/.078))
         return (CHEST,HIPS,clamp((y-.88)*3.8))
@@ -47,10 +50,16 @@ def coat(s,look):
         return ((rx+radius)*sin(a),y,(rz+radius)*cos(a)-.009*(1-cos(a))-.006)
     heavy=look in ("regular","guard","officer","player")
     vertices={}
-    def body_vertex(c,r,material):
-        key=(c,r,material)
+    def body_vertex(c,r,material,panel):
+        split=r<2 and c%n in (n//4,3*n//4)
+        key=(c,r,material,panel if split else 0)
         if key not in vertices:
             p=point(c,r)
+            if split:
+                # Front and back skirts meet at the hip and open at the side seam
+                # during a stride. Their converging edges do not bridge the thighs.
+                freedom=clamp((.86-p[1])/(.86-start))
+                p=(p[0]*(1.-.024*freedom),p[1]+.035*freedom,p[2]+panel*.050*freedom)
             v=1-clamp((p[1]-.966)/.43) if material=="lames" else clamp((1.46-p[1])/(1.46-start))
             vertices[key]=s.vertex(p,uv(material,c/n,v),cloth(p))
         return vertices[key]
@@ -64,10 +73,13 @@ def coat(s,look):
                 material="lames"
             elif look=="archer" and 3<=r<=7:
                 material="quilt"
+            elif look=="levy" and r==8:
+                material="facing"
             elif r<=1 and (c>=3*n//4 or c<n//8):
                 material="overskirt"
-            s.quad(body_vertex(c,r,material),body_vertex(c+1,r,material),
-                   body_vertex(c+1,r+1,material),body_vertex(c,r+1,material))
+            panel=1 if cos(TAU*(c+.5)/n)>0 else -1
+            s.quad(body_vertex(c,r,material,panel),body_vertex(c+1,r,material,panel),
+                   body_vertex(c+1,r+1,material,panel),body_vertex(c,r+1,material,panel))
     for side,center in ((1,slots[0]),(-1,slots[1])):
         left,right=center-span,center+span
         rim=([(c,lo) for c in range(left,right)]+[(right,r) for r in range(lo,hi)]
@@ -132,19 +144,23 @@ def coat(s,look):
         p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))
         return p,cloth(p)
     s.grid(20 if close else 10,2,belt,"girdle" if heavy else "leather")
-    if look in ("archer","player","officer"):
+    if look in ("levy","archer","player","officer"):
         for front in (True,False):
             def baldric(u,v):
                 # Back strap is visible from the normal follow camera.
                 a=((-.74+1.58*(1-v)) if front else (3.89-1.59*(1-v)))+(u-.5)*.32
+                if look=="levy": a=-a
                 p=body_at(a,.94+.465*v,.017)
                 return p,cloth(p)
-            s.grid(2,7 if close else 3,baldric,"quiver" if look=="archer" else "sash")
+            s.grid(2,7 if close else 3,baldric,"leather" if look=="levy" else ("quiver" if look=="archer" else "sash"))
     if close or look in ("player","officer"):
         p=body_at(.68,.958,.026)
         s.oval(p,(.030,.023,.016),"brass",HIPS,8 if close else 6,4)
     if look in ("levy","archer"):
-        s.oval((-.181,.884,.058),(.057,.068,.072),"leather",HIPS,8 if close else 5,4)
+        # A soft bag gives the visible diagonal strap a real attachment at the belt.
+        s.rings([(.792,.032,.040,-.184,.057),(.812,.055,.063,-.191,.057),
+                 (.874,.060,.068,-.196,.055),(.920,.053,.052,-.188,.060),
+                 (.937,.034,.034,-.180,.059)],"quiver",HIPS,10 if close else 6)
 
 def equipment(s,look):
     close=s.detail

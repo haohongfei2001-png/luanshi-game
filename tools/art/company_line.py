@@ -16,6 +16,16 @@ def costume(look,rank=False):
         if heavy:
             s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lames",CHEST,8)
             skirts(s,look,HIPS,(LT,RT),rank=True)
+        if look=="levy":
+            for front in (True,False):
+                def sling(u,v):
+                    angle=((-1.03+1.64*v) if front else (pi+1.03-1.64*v))+(u-.5)*.31
+                    # Fit to the same six-sided coat, with a skin weight at the belt.
+                    width=.199+.058*sin(pi*v)
+                    depth=.148+.032*sin(pi*v)
+                    p=(width*sin(angle),.947+.432*v,-.012+depth*cos(angle))
+                    return p,body(p)
+                s.grid(1,3,sling,"leather")
         if look in ("player","officer"):
             s.ribbon([(-.13,1.412,-.092),(-.10,1.23,-.187),(-.109,.89,-.205),(-.112,.56,-.228)],.19,"mantle",CHEST)
     else:
