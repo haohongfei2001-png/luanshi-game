@@ -175,6 +175,9 @@ var riding_speed := 0.0
 var riding_heading := Vector2.RIGHT
 var grid := PackedInt32Array()
 var links := PackedInt32Array()
+# Same IDs and order as grid, restricted to one side for target and weapon queries.
+var team_grid := PackedInt32Array()
+var team_links := PackedInt32Array()
 
 func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true,ranked_officers: bool=true,defenders: int=-1) -> void:
 	if defenders==-1: defenders=n
@@ -260,6 +263,8 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 	vehicle_pos[2] = hero.pos + Vector2(-2.8, 2.2)
 	grid.resize(COLS * ROWS)
 	links.resize(roster.size())
+	team_grid.resize(2*COLS*ROWS)
+	team_links.resize(roster.size())
 	corps.setup(self,ranked_officers)
 	_rebuild_grid()
 
@@ -372,6 +377,7 @@ func _cell(p: Vector2) -> Vector2i:
 
 func _rebuild_grid() -> void:
 	grid.fill(-1)
+	team_grid.fill(-1)
 	if soft_crowd: density.clear()
 	for i in range(roster.size()-1, -1, -1):
 		var u := roster[i]
@@ -380,6 +386,9 @@ func _rebuild_grid() -> void:
 			var ix := cell.y * COLS + cell.x
 			links[i] = grid[ix]
 			grid[ix] = i
+			var side_ix:=ix+u.team*COLS*ROWS
+			team_links[i]=team_grid[side_ix]
+			team_grid[side_ix]=i
 			if soft_crowd:
 				var weight:=2.6 if u.hero and vehicle==2 else (1.65 if u.mounted or (u.hero and vehicle==1) else 1.0)
 				u.density_cell=density.register(u.pos,weight,u.pos.x>Ground.WALL_X and Ground.parapet(u.pos)>1.2)
@@ -389,24 +398,32 @@ func _assessment(u: Unit) -> void:
 	var reach := 29.0 if (u.ammo>0 or legacy_missiles) and u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 6.8
 	var best_sq := reach*reach
 	var correction := Vector2.ZERO
-	var cell := _cell(u.pos)
+	var pos:=u.pos
+	# Only immediate neighbours can contribute to contact pressure. Other cells
+	# can skip allies entirely; the remaining enemy order and ID ties are unchanged.
+	var cell := _cell(pos)
+	var close_lo:=_cell(pos-Vector2.ONE)
+	var close_hi:=_cell(pos+Vector2.ONE)
+	var enemy_offset:=(1-u.team)*COLS*ROWS
 	var open := gate_hp <= 0
 	var elevated := u.wall_post and Ground.parapet(u.pos)>2.75
 	for ring in range(ceili(reach/CELL)+1):
 		for y in range(maxi(0,cell.y-ring),mini(ROWS-1,cell.y+ring)+1):
 			for x in range(maxi(0,cell.x-ring),mini(COLS-1,cell.x+ring)+1):
 				if ring>0 and absi(x-cell.x)!=ring and absi(y-cell.y)!=ring: continue
-				var i := grid[y*COLS+x]
+				var id_cell:=y*COLS+x
+				var close_cell:=x>=close_lo.x and x<=close_hi.x and y>=close_lo.y and y<=close_hi.y
+				var i:=grid[id_cell] if close_cell else team_grid[id_cell+enemy_offset]
 				while i!=-1:
 					var other := roster[i]
-					var d := other.pos-u.pos
+					var d := other.pos-pos
 					var sq := d.length_squared()
-					if i!=u.id and sq<0.96 and sq>0.00001:
+					if close_cell and i!=u.id and sq<0.96 and sq>0.00001:
 						correction-=d*(0.98/sqrt(sq)-1.0)
-					if other.team!=u.team and (sq<best_sq or (sq==best_sq and i<best)) and Ground.clear_shot(u.pos,other.pos,open,elevated or (reach>10 and other.wall_post and Ground.parapet(other.pos)>2.75)):
+					if other.team!=u.team and (sq<best_sq or (sq==best_sq and i<best)) and Ground.clear_shot(pos,other.pos,open,elevated or (reach>10 and other.wall_post and Ground.parapet(other.pos)>2.75)):
 						best=i
 						best_sq=sq
-					i=links[i]
+					i=links[i] if close_cell else team_links[i]
 		# Lower bound from the unit to any cell not visited yet.
 		var dx := minf(u.pos.x+124-(cell.x-ring)*CELL,(cell.x+ring+1)*CELL-124-u.pos.x)
 		var dz := minf(u.pos.y+70-(cell.y-ring)*CELL,(cell.y+ring+1)*CELL-70-u.pos.y)
@@ -615,14 +632,16 @@ func _near(at: Vector2, radius: float, team: int) -> Array[int]:
 	var found: Array[int] = []
 	var lo := _cell(at - Vector2.ONE * radius)
 	var hi := _cell(at + Vector2.ONE * radius)
+	var offset:=team*COLS*ROWS
+	var radius_sq:=radius*radius
 	for y in range(lo.y, hi.y+1):
 		for x in range(lo.x, hi.x+1):
-			var i := grid[y*COLS+x]
+			var i := team_grid[y*COLS+x+offset]
 			while i != -1:
 				var u := roster[i]
-				if u.team == team and active(u) and at.distance_squared_to(u.pos) <= radius * radius:
+				if active(u) and at.distance_squared_to(u.pos) <= radius_sq:
 					found.append(i)
-				i = links[i]
+				i = team_links[i]
 	return found
 
 func _release(u: Unit, move: Arms.Move,apply_stride: bool=true) -> void:
@@ -877,9 +896,13 @@ func _soldier(u: Unit) -> void:
 			_begin(u, 0, u.pos.direction_to(gate_face))
 			u.fatigue = 0.6
 			return
-	var next := Ground.retreat_waypoint(u.pos, goal, gate_hp <= 0) if withdrawing else Ground.waypoint(u.pos, goal)
-	if traffic_enabled and not withdrawing and not at_post:
+	var next: Vector2
+	if withdrawing:
+		next=Ground.retreat_waypoint(u.pos,goal,gate_hp<=0)
+	elif traffic_enabled and not at_post:
 		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0,ram_hp>0 and ram.x>Ground.WALL_X-6.0,keep_gate_file)
+	else:
+		next=Ground.waypoint(u.pos,goal)
 	if traffic_enabled and ram_hp>0 and not at_post:
 		next=Traffic.around_ram(u.pos,next,ram,u.id,gate_hp<=0)
 	var dist := u.pos.distance_to(next)
