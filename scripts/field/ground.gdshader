@@ -4,8 +4,8 @@ uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D trail_marks : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D land_paint : source_color, filter_linear_mipmap, repeat_disable;
-uniform vec4 deep_water : source_color = vec4(0.22,0.37,0.36,1.0);
-uniform vec4 shallows : source_color = vec4(0.42,0.56,0.49,1.0);
+uniform vec4 deep_water : source_color = vec4(.115,.253,.260,1.0);
+uniform vec4 shallows : source_color = vec4(.305,.437,.372,1.0);
 varying vec3 local_pos;
 varying vec3 local_normal;
 varying float part;
@@ -52,9 +52,10 @@ void fragment() {
 		float ripple=texture(fieldbed,flow).r;
 		float web=texture(fieldbed,flow*vec2(.57,2.5)+vec2(.19,.28)).g;
 		float edge=smoothstep(2.6,5.28,bank+turn*.44);
-		color=mix(deep_water.rgb,shallows.rgb,.83*edge+.11*web)*(.87+.18*ripple);
+		float current=texture(fieldbed,vec2(p.x*.058+turn*.09,p.y*.036-TIME*.0033)).g;
+		color=mix(deep_water.rgb,shallows.rgb,.84*edge+.09*web)*(.80+.13*ripple+.12*current);
 		float thread=1.0-smoothstep(.04,.28,abs(sin((p.x+turn)*2.7+web*1.9-TIME*.49)));
-		color+=vec3(.061,.092,.081)*thread*smoothstep(.45,.74,ripple)*(.36+edge);
+		color+=vec3(.037,.061,.054)*thread*smoothstep(.48,.75,ripple)*(.26+edge);
 		roughness=.49; specularity=.29;
 	} else if (part>2.5) {
 		float side=abs(local_normal.x)>abs(local_normal.z)?local_pos.z:local_pos.x;
@@ -93,7 +94,7 @@ void fragment() {
 			vec3 flecks=texture(fieldbed,p*.37).rgb;
 			float bank=abs(p.x+32.0);
 			float edge=smoothstep(4.28,6.28,bank+.33*sin(p.y*.39)+.54*(flecks.g-.52));
-			vec3 silt=mix(shallows.rgb*.88,vec3(.206,.254,.185),.42+flecks.g*.21);
+			vec3 silt=mix(shallows.rgb*.88,vec3(.110,.148,.095),.42+flecks.g*.21);
 			silt*=.85+.22*flecks.r+.11*smoothstep(.61,.84,flecks.b);
 			color=mix(silt,painted_ground(p),edge);
 		} else if(part>15.5 && part<16.5) {
@@ -106,6 +107,11 @@ void fragment() {
 			float peg=(1.0-smoothstep(.10,.21,abs(board-.44)))*(1.0-smoothstep(.08,.14,abs(cross_distance-3.41)));
 			color*=.68+.50*grain+.12*worn*(.27+weather)-.19*peg;
 			roughness=.91-.14*worn;
+		} else if(part>=17.5 && part<18.5) {
+			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
+			float grit=texture(fieldbed,face_uv).r;
+			float roots=texture(joinery,vec2(local_pos.z*.48,local_pos.y*2.10)).r;
+			color=mix(vec3(.055,.068,.045),vec3(.130,.113,.072),.32+.37*grit+.23*roots);
 		}
 	}
 	ALBEDO=color;
