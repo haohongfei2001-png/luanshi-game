@@ -189,6 +189,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	for g in standards:
 		g.used = 0
 	# Orthographic zoom determines how much of the army actually occupies face-scale pixels.
+	MountArt.material().set_shader_parameter("stable_clock",(float(battle.tick)+alpha)*Battle.DT)
 	var cam:=get_viewport().get_camera_3d()
 	var right:=Vector2.RIGHT
 	var vertical_xz:=Vector2.ZERO
@@ -232,9 +233,11 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
 			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
 			var mounts:=horse if zoom<36 and distance_sq<185.0 else horse_rank
-			_put(mounts,base,angle,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a))
+			_put(mounts,base,angle,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a,u.id))
 			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
-			base.y+=0.73*(1.0-fall)
+			var gait:=clampf(travelled/(Battle.DT*4.0),0,1)
+			var hoof_phase:=fposmod(u.stride-(1.0-alpha)*travelled*.68,1.)
+			base.y+=(.73+.021*gait*sin(hoof_phase*TAU*2.0))*(1.0-fall)
 			var side:=u.facing.orthogonal()*fall*(0.91 if u.id%2==0 else -0.91)
 			base+=Vector3(side.x,0,side.y)
 		if u.hero and battle.vehicle != 0:
@@ -298,7 +301,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var vehicle_batch:=horse if close else horse_rank
 		if id==2: vehicle_batch=cart if close else cart_rank
 		var moved:=battle.hero.pos.distance_to(battle.hero.before) if battle.vehicle==id else 0.0
-		_put(vehicle_batch,Ground.unit_point(pos),atan2(heading.x,heading.y),MountArt.pose(state,1.0,stride,moved,alpha))
+		_put(vehicle_batch,Ground.unit_point(pos),atan2(heading.x,heading.y),MountArt.pose(state,1.0,stride,moved,alpha,0.0,id))
 	for s in battle.shots:
 		var p := s.previous.lerp(s.pos,alpha)
 		var fraction := s.distance / maxf(1,s.distance+s.remaining)

@@ -2,19 +2,20 @@ shader_type spatial;
 render_mode diffuse_lambert, cull_disabled;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
-uniform vec4 meadow : source_color = vec4(0.39,0.44,0.32,1.0);
-uniform vec4 straw : source_color = vec4(0.57,0.55,0.40,1.0);
-uniform vec4 loam : source_color = vec4(0.57,0.48,0.37,1.0);
-uniform vec4 silt : source_color = vec4(0.43,0.40,0.33,1.0);
-uniform vec4 pebble : source_color = vec4(0.61,0.61,0.53,1.0);
-uniform vec4 deep_water : source_color = vec4(0.28,0.41,0.40,1.0);
-uniform vec4 shallows : source_color = vec4(0.44,0.52,0.46,1.0);
+uniform sampler2D trail_marks : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D land_paint : source_color, filter_linear_mipmap, repeat_disable;
+uniform vec4 deep_water : source_color = vec4(0.22,0.37,0.36,1.0);
+uniform vec4 shallows : source_color = vec4(0.42,0.56,0.49,1.0);
 varying vec3 local_pos;
 varying vec3 local_normal;
 varying float part;
 varying vec3 pigment;
 
 void vertex() {
+	if(UV2.x>14.5 && UV2.x<15.5) {
+		float loose=clamp((6.18-VERTEX.y)/1.7,0.0,1.0);
+		VERTEX.x+=loose*.10*sin(TIME*2.2+VERTEX.z*1.9);
+	}
 	local_pos=VERTEX;
 	local_normal=NORMAL;
 	part=UV2.x;
@@ -28,50 +29,29 @@ void fragment() {
 	float roughness=0.92;
 	float specularity=0.13;
 	if (part>0.5 && part<1.5) {
-		vec3 soil=texture(fieldbed,p*0.183).rgb;
-		float landform=texture(fieldbed,p*0.0019+vec2(0.38,0.62)).g;
-		float changes=texture(fieldbed,p*0.041+vec2(0.14,0.44)).r;
-		float bank=abs(p.x+32.0);
-		float center=0.63*sin(p.x*0.058)+0.15*sin(p.x*0.37);
-		float main_lane=abs(p.y-center);
-		float spur_lane=abs(abs(p.y)-35.0);
-		float lane=mix(min(main_lane,spur_lane),main_lane,smoothstep(-19.0,2.0,p.x));
-		float half_width=mix(3.44,2.15,step(spur_lane,main_lane)*(1.0-smoothstep(-19.0,2.0,p.x)));
-		float worn=1.0-smoothstep(half_width-0.73,half_width+0.76,lane+(changes-0.5)*1.55);
-		float court=(1.0-smoothstep(19.7,22.0,abs(p.y)))*smoothstep(46.0,50.0,p.x)*(1.0-smoothstep(87.0,91.0,p.x));
-		float rut_distance=abs(lane-1.20-0.11*sin(p.x*0.58)-0.16*(landform-0.5));
-		float rut=(1.0-smoothstep(0.085,0.31+fwidth(lane),rut_distance))
-				*smoothstep(0.27,0.57,changes)*worn*(1.0-0.6*court);
-		float turf=clamp((landform-0.25)*0.65+(soil.g-0.26)*0.85+0.11*smoothstep(0.4,2.5,local_pos.y),0.0,1.0);
-		vec3 pasture=mix(meadow.rgb,straw.rgb,turf)*(0.85+0.28*soil.r);
-		vec3 dirt=loam.rgb*(0.75+0.43*soil.r+0.12*changes);
-		dirt=mix(dirt,silt.rgb*(0.88+0.24*soil.r),0.57*rut);
-		float crown=(1.0-smoothstep(0.12,0.91,lane))*smoothstep(0.48,0.70,soil.g);
-		color=mix(pasture,dirt,clamp(max(worn,court*0.83)-0.22*crown,0.0,1.0));
-		if (p.x < -59.0 && p.x > -94.0 && abs(p.y)<21.0) {
-			float tent_index=clamp(round((-64.0-p.x)/6.1),0.0,4.0);
-			vec2 entrance=vec2(-64.0-tent_index*6.1,8.2+mod(tent_index,2.0)*6.0);
-			vec2 distance_to_entrance=(vec2(p.x,abs(p.y))-entrance)/vec2(2.63,2.85);
-			float apron=1.0-smoothstep(0.48,1.37,length(distance_to_entrance)+(changes-0.5)*0.6);
-			color=mix(color,mix(silt.rgb,dirt,0.56),apron*0.75);
-		}
-		float shoal=1.0-smoothstep(4.4,6.5,bank+(changes-0.5)*1.4);
-		vec3 gravel=mix(silt.rgb,pebble.rgb,smoothstep(0.47,0.78,soil.b))*(0.87+0.21*soil.r);
-		color=mix(color,gravel,shoal);
-		if (p.x < -49.0 && p.y>18.0 && p.y<43.0) {
-			float furrow=smoothstep(-0.57,0.57,sin(p.x*5.8+p.y*0.30+0.65*changes));
-			color*=0.80+0.13*furrow;
-		}
+		// This painting fixes the routes, old fields, headlands and canopy beds in
+		// world space. Fine surface marks disappear into mipmaps at army scale.
+		vec3 underpaint=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
+		float dry=smoothstep(-0.015,0.023,underpaint.r-underpaint.g);
+		vec3 grass=texture(fieldbed,p*vec2(.155,.199)).rgb;
+		vec3 close_marks=texture(fieldbed,p*vec2(.48,.58)+vec2(.12,.32)).rgb;
+		vec3 grain=texture(fieldbed,p*vec2(0.213,0.261)+vec2(.57,.26)).rgb;
+		float turf_value=.86+.22*grass.g+.12*grass.r+.12*(close_marks.g-.44);
+		float path_value=.85+.17*grain.r+.105*close_marks.r+.070*smoothstep(.55,.80,close_marks.b);
+		color=underpaint*mix(turf_value,path_value,dry);
+		vec4 track=texture(trail_marks,p*vec2(.42,.45));
+		color=mix(color,track.rgb,track.a*(.14+.69*dry));
 	} else if (part>1.5 && part<2.5) {
 		float bank=abs(p.x+32.0);
-		vec2 flow=vec2(p.x*.29,p.y*.047-TIME*.017);
+		float turn=sin(p.y*.42)*.42+sin(p.y*.15+1.1)*.30;
+		vec2 flow=vec2(p.x*.27+turn*.33,p.y*.052-TIME*.017);
 		float ripple=texture(fieldbed,flow).r;
-		float wave=texture(fieldbed,vec2(p.x*.41+p.y*.07,p.y*.068-TIME*.024)).g;
-		float edge=smoothstep(2.45,4.78,bank);
-		color=mix(deep_water.rgb,shallows.rgb,0.79*edge+0.12*wave)*(0.84+0.23*ripple+0.09*wave);
-		float crest=smoothstep(0.55,0.78,ripple)*smoothstep(0.43,0.80,wave);
-		color+=vec3(0.048,0.061,0.055)*crest*(0.33+edge);
-		roughness=0.48; specularity=0.33;
+		float web=texture(fieldbed,flow*vec2(.57,2.5)+vec2(.19,.28)).g;
+		float edge=smoothstep(2.6,5.28,bank+turn*.44);
+		color=mix(deep_water.rgb,shallows.rgb,.83*edge+.11*web)*(.87+.18*ripple);
+		float thread=1.0-smoothstep(.04,.28,abs(sin((p.x+turn)*2.7+web*1.9-TIME*.49)));
+		color+=vec3(.061,.092,.081)*thread*smoothstep(.45,.74,ripple)*(.36+edge);
+		roughness=.49; specularity=.29;
 	} else if (part>2.5) {
 		float side=abs(local_normal.x)>abs(local_normal.z)?local_pos.z:local_pos.x;
 		float across=abs(local_normal.y)>0.6?local_pos.z:local_pos.y;
@@ -98,7 +78,18 @@ void fragment() {
 			vec2 bank_uv=vec2(side*0.31,across*0.87);
 			float compact=texture(joinery,bank_uv).r;
 			float lift=texture(fieldbed,vec2(side*0.068,across*0.73)).r;
-			color*=0.73+0.30*compact+0.22*lift;
+			float drip=texture(fieldbed,vec2(side*.12,across*.035)).g;
+			float footing=1.0-smoothstep(.55,1.56,local_pos.y+drip*.23);
+			float rain=smoothstep(.43,.71,drip)*smoothstep(.18,2.4,local_pos.y);
+			color*=.74+.29*compact+.16*lift-.105*footing-.065*rain;
+		} else if (part>11.5 && part<12.5) {
+			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
+			color*=.76+.36*r.r+.09*r.b;
+		} else if (part>12.5 && part<13.5) {
+			vec3 flecks=texture(fieldbed,p*.37).rgb;
+			float dry_edge=smoothstep(4.55,6.02,abs(p.x+32.0));
+			vec3 shore=texture(land_paint,(p+vec2(168.0,108.0))/vec2(336.0,216.0)).rgb;
+			color=mix(shallows.rgb*.79+vec3(.022,.017,.008)*flecks.b,shore,dry_edge)*(.88+.23*flecks.r);
 		}
 	}
 	ALBEDO=color;

@@ -30,6 +30,12 @@ for side in before after; do
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-motion.log"; then exit 1; fi
     grep -q '^FIELD_MOTION_RECEIPT ' "$out/$side-motion.log"
     ffmpeg -nostdin -loglevel error -y -i "$work/$side-motion.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -movflags +faststart "$out/$side-motion.mp4"
+    if [[ $side == after ]]; then
+      timeout 430s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/line.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 --field-line-film 2>&1 | tee "$out/battlefield-motion.log"
+      grep -q '^FIELD_LINE_FILM ' "$out/battlefield-motion.log"
+      if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/battlefield-motion.log"; then exit 1; fi
+      ffmpeg -nostdin -loglevel error -y -i "$work/line.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -b:a 112k -movflags +faststart "$out/battlefield-motion.mp4"
+    fi
     ffmpeg -nostdin -loglevel error -y -framerate 10 -i "$out/$side/film/frame-%03d.jpg" -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart "$out/$side.mp4"
   )
 done

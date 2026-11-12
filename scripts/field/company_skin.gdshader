@@ -96,7 +96,8 @@ void fragment(){
     vec3 response=texture(response_atlas,UV).rgb;
     float fibre=dot(colour,vec3(.27,.54,.19));
     // A bolt of faded indigo or madder shows exposed natural fibre in the worn lots.
-    vec3 dyed=mix(livery.rgb,colour,.055+cloth_lot*.15)*(.52+fibre*.89)*mix(.88,1.10,cloth_lot);
+    float fibre_exposed=.10+.45*smoothstep(.10,.89,cloth_lot);
+    vec3 dyed=mix(livery.rgb,colour*vec3(.80,.80,.79),fibre_exposed)*(.58+fibre*.83)*mix(.86,1.02,cloth_lot);
     colour=mix(colour,dyed,response.b);
     colour*=mix(vec3(1.),vec3(.53,.67,.79),sewn_shadow);
     colour*=mix(1.0,.73,fallen);

@@ -78,6 +78,9 @@ func _run() -> void:
 	root.add_child(shell)
 	field=shell.field
 	await _frames(4)
+	if "--field-line-film" in OS.get_cmdline_user_args():
+		await _line_film(shell)
+		return
 	await _click(field.hud.go)
 	var b:=field.battle
 	_check(b.started and b.ordinary_counts==PackedInt32Array([512,512]),"Expected a deployed full river battle")
@@ -131,6 +134,74 @@ func _run() -> void:
 	_check(actions_seen.has(Battle.State.WINDUP) and actions_seen.has(Battle.State.RECOVER) and b.hero.impacts>0,"A real close-range strike reached an opponent")
 	_check(field.camera.size<14 and field.follow,"Normal player zoom and following")
 	print("FIELD_MOTION_RECEIPT "+JSON.stringify({"start_tick":started_at,"end_tick":b.tick,"distance_m":distance,"move_directions":directions.keys(),"hero_hits":b.hero.impacts,"hero_received":b.hero.received,"hero_hp":b.hero.hp,"actions_seen":actions_seen.keys(),"view_size":field.camera.size,"ordinary":Array(b.ordinary_counts),"seed":Battle.SEED,"errors":errors}))
+	shell.queue_free()
+	await process_frame
+	quit(0 if errors.is_empty() else 1)
+
+func _line_film(shell: Node) -> void:
+	# Keep one normal-speed take. Equip through the live muster, then follow the
+	# fighting line using the shipping pan and zoom controls after the hero's volley.
+	field.hud.plan.select(1)
+	field.hud.plan.item_selected.emit(1)
+	field.hud.weapon.select(5)
+	field.hud.weapon.item_selected.emit(5)
+	await _click(field.hud.go)
+	var b:=field.battle
+	var center:=root.get_visible_rect().size*.5
+	for n in 3:
+		_mouse(MOUSE_BUTTON_WHEEL_UP,center,true)
+		_mouse(MOUSE_BUTTON_WHEEL_UP,center,false)
+	var start:=b.tick
+	var previous:=-20
+	var volleys:=0
+	var followed:=b.hero.pos
+	var rendered:=0
+	for frame in 1020:
+		if b.result!="": break
+		if frame==0:
+			_hold(KEY_D,true)
+			_hold(KEY_SHIFT,true)
+		elif frame==12:
+			_hold(KEY_D,false)
+			_hold(KEY_SHIFT,false)
+		if frame<239:
+			var target: Battle.Unit=null
+			var closest:=INF
+			for id in b._near(b.hero.pos,22,1):
+				var u:=b.roster[id]
+				var sq:=b.hero.pos.distance_squared_to(u.pos)
+				if sq<closest and Ground.clear_shot(b.hero.pos,u.pos,b.gate_hp<=0):
+					closest=sq
+					target=u
+			if target:
+				var pixel:=field.camera.unproject_position(Ground.unit_point(target.pos)+Vector3.UP*.88)
+				var position:=pixel.clamp(Vector2(13,58),root.get_visible_rect().size-Vector2(18,96))
+				_point(position)
+				if b.hero.state==Battle.State.MARCH and b.tick-previous>=4:
+					if volleys%4==1: _tap(KEY_Q)
+					else: _at(position)
+					volleys+=1
+					previous=b.tick
+		else:
+			if frame%24==0 and frame<755:
+				var best:=INF
+				for u in b.roster:
+					if u.team!=0 or u.state!=Battle.State.WINDUP or u.target<0: continue
+					var midpoint:=u.pos.lerp(b.roster[u.target].pos,.5)
+					var distance:=field.camera_center.distance_squared_to(midpoint)
+					if distance<best:
+						best=distance
+						followed=midpoint
+			if frame>=755: followed=b.ram
+			field.pan_to(field.camera_center.lerp(followed,.041))
+			if frame in [630,835]:
+				_mouse(MOUSE_BUTTON_WHEEL_DOWN,center,true)
+				_mouse(MOUSE_BUTTON_WHEEL_DOWN,center,false)
+		rendered+=1
+		await process_frame
+	_check(rendered==1020 and b.tick-start>=670,"34 continuous seconds of live battle")
+	_check(b.hero.impacts>0 and b.hits[0]+b.hits[1]>100,"Visible fighting followed real input and casualties")
+	print("FIELD_LINE_FILM "+JSON.stringify({"frames":rendered,"fps":30,"start_tick":start,"end_tick":b.tick,"hero_hits":b.hero.impacts,"hero_hp":b.hero.hp,"attacks_pressed":volleys,"hits":b.hits,"losses":b.losses,"gate":b.gate_hp,"ordinary":Array(b.ordinary_counts),"errors":errors}))
 	shell.queue_free()
 	await process_frame
 	quit(0 if errors.is_empty() else 1)

@@ -238,7 +238,7 @@ jobs:
   art-comparison:
     name: Compare RC3 and candidate in the game window
     runs-on: ubuntu-24.04
-    timeout-minutes: 14
+    timeout-minutes: 22
     steps:
       - uses: actions/checkout@v4
         with:
@@ -253,6 +253,10 @@ jobs:
           sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
           python3 -c 'from PIL import Image' || python3 -m pip install Pillow
+      - name: Check planted steps, fitted grips and the reproducible horse mesh
+        run: |
+          python3 tools/art/check_company_motion.py
+          node tools/art/bake_mounts.mjs --check
       - name: Replay two game revisions on the same display
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

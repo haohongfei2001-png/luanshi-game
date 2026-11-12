@@ -37,14 +37,87 @@ class Sculpt{
  beam(a,b,wide,deep,mat,j=0){this.skin([[...a,wide,deep,j],[...b,wide,deep,j]],4,mat,Math.abs(unit(sub(b,a))[0])>.8?[0,1,0]:[1,0,0],PI/4)}
 }
 
+// Join the croup, ribcage, shoulder, jaw and four legs into a single hide. Each
+// station contributes an elliptical muscle section. Surface Nets gives each
+// boundary cell one shared vertex, including where the shoulder meets the barrel.
+class HorseHide {
+ constructor(){ this.paths=[]; }
+ skin(rows){
+  const joints=[];
+  for(let i=1;i<rows.length;i++){
+   const a=rows[i-1],b=rows[i], d=sub(b.slice(0,3),a.slice(0,3)),len=Math.hypot(...d);
+   const vy=d[1]/len,vz=d[2]/len;
+   joints.push({a,b,d,len,vy,vz});
+  }
+  const bounds=[0,1,2].map(k=>[Math.min(...rows.map(r=>r[k]-Math.max(r[3],r[4])))-.12,
+                                Math.max(...rows.map(r=>r[k]+Math.max(r[3],r[4])))+.12]);
+  this.paths.push({joints,bounds});
+ }
+ distance(x,y,z){
+  let result=1.0;
+  for(const {joints,bounds} of this.paths){
+   if(x<bounds[0][0]||x>bounds[0][1]||y<bounds[1][0]||y>bounds[1][1]||z<bounds[2][0]||z>bounds[2][1])continue;
+   let local=1.;
+   for(const {a,b,d,len,vy,vz} of joints){
+    const px=x-a[0],py=y-a[1],pz=z-a[2];
+    const along=(px*d[0]+py*d[1]+pz*d[2])/len;
+    const t=clamp(along/len),rx=a[3]+(b[3]-a[3])*t,rd=a[4]+(b[4]-a[4])*t;
+    const across=(px-d[0]*t)/rx,deep=(py*vz-pz*vy)/rd;
+    const cap=(along-len*t)/Math.max(.035,(rd+rx)*.35);
+    local=Math.min(local,(Math.sqrt(across*across+deep*deep+cap*cap)-1)*Math.min(rx,rd));
+   }
+   const join=.096,h=clamp(.5+.5*(local-result)/join);
+   result=local+(result-local)*h-join*h*(1-h);
+  }
+  return result;
+ }
+ build(mesh){
+  const pitch=.055, origin=[-.48,-.042,-1.04],size=[19,38,45],jump=[1,size[0],size[0]*size[1]];
+  const count=size[0]*size[1]*size[2];
+  const values=new Float32Array(count),cells=new Int32Array(count).fill(-1);
+  const corners=[0,1,2,3,4,5,6,7].map(i=>[i&1,(i>>1)&1,(i>>2)&1]);
+  const offsets=corners.map(c=>dot(c,jump));
+  for(let z=0;z<size[2];z++)for(let y=0;y<size[1];y++)for(let x=0;x<size[0];x++)
+   values[x+y*jump[1]+z*jump[2]]=this.distance(origin[0]+x*pitch,origin[1]+y*pitch,origin[2]+z*pitch);
+  for(let z=0;z<size[2]-1;z++)for(let y=0;y<size[1]-1;y++)for(let x=0;x<size[0]-1;x++){
+   const at=x+y*jump[1]+z*jump[2], v=offsets.map(off=>values[at+off]);
+   if(v.every(q=>q<0)||v.every(q=>q>=0))continue;
+   const p=[0,0,0];let crossings=0;
+   for(let i=0;i<8;i++)for(let a=0;a<3;a++){
+    let j=i^(1<<a);
+    if(j<i || (v[i]<0)===(v[j]<0))continue;
+    const t=v[i]/(v[i]-v[j]);
+    for(let k=0;k<3;k++)p[k]+=corners[i][k]+(corners[j][k]-corners[i][k])*t;
+    crossings++;
+   }
+   for(const [a,coord] of [x,y,z].entries())p[a]=origin[a]+(coord+p[a]/crossings)*pitch;
+   const [l,h,f]=p;
+   let joint=0,weight=1;
+   if(h<1.18 && Math.abs(l)>.065 && (f>.18||f<-.28))joint=(f<0?3:1)+(l>0?1:0);
+   if(f>.28 && h>1.12){joint=11;weight=clamp((f-.32)*1.15+(h-1.19)*.89)}
+   cells[at]=mesh.pt(p,COAT,clamp((f+.95)/2.25),clamp((1.95-h)/1.92),joint,weight);
+  }
+  for(let z=1;z<size[2]-1;z++)for(let y=1;y<size[1]-1;y++)for(let x=1;x<size[0]-1;x++){
+   const at=x+y*jump[1]+z*jump[2];
+   for(let a=0;a<3;a++){
+    if((values[at]<0)===(values[at+jump[a]]<0))continue;
+    const j=jump[(a+1)%3],k=jump[(a+2)%3];
+    const q=[cells[at],cells[at-j],cells[at-j-k],cells[at-k]];
+    if(q.every(id=>id>=0))mesh.quad(...(values[at]<0?q:q.reverse()));
+   }
+  }
+ }
+}
+
 function horse(m, high, draught){
+ const hide=new HorseHide();
  const body=high?14:8, neck=high?12:8, limb=high?8:5, small=high?7:5;
  // Barrel: croup, tucked flank, deep rib cage and prominent withers. Ventral line rises aft.
- m.skin([[0,1.035,-.85,.085,.09],[0,1.085,-.77,.245,.223],[0,1.085,-.60,.319,.302],[0,1.065,-.43,.335,.306],[0,1.045,-.20,.295,.28],[0,1.047,.04,.315,.316],[0,1.06,.26,.333,.342],[0,1.087,.44,.295,.342],[0,1.083,.58,.198,.255],[0,1.077,.65,.087,.153]],body,COAT)
+ hide.skin([[0,1.035,-.85,.085,.09],[0,1.085,-.77,.245,.223],[0,1.085,-.60,.319,.302],[0,1.065,-.43,.335,.306],[0,1.045,-.20,.295,.28],[0,1.047,.04,.315,.316],[0,1.06,.26,.333,.342],[0,1.087,.44,.295,.342],[0,1.083,.58,.198,.255],[0,1.077,.65,.087,.153]],body,COAT)
  // Neck incl. crest, throat and jaw: the taper follows a rising diagonal rather than a cone.
- m.skin([[0,1.115,.28,.238,.26,11,0],[0,1.24,.37,.238,.30,11,.08],[0,1.365,.49,.202,.268,11,.23],[0,1.52,.60,.155,.21,11,.53],[0,1.66,.694,.137,.172,11,.77],[0,1.76,.758,.111,.119,11,.96]],neck,COAT)
- m.skin([[0,1.722,.695,.064,.095,11],[0,1.753,.763,.139,.149,11],[0,1.732,.862,.15,.18,11],[0,1.694,.958,.122,.147,11],[0,1.624,1.067,.096,.108,11],[0,1.58,1.151,.096,.088,11],[0,1.56,1.187,.082,.068,11]],neck,COAT)
- m.skin([[0,1.592,1.119,.090,.074,11],[0,1.56,1.183,.099,.075,11],[0,1.543,1.231,.086,.053,11],[0,1.544,1.244,.066,.035,11]],small,MUZZLE)
+ hide.skin([[0,1.115,.28,.238,.26,11,0],[0,1.24,.37,.238,.30,11,.08],[0,1.365,.49,.202,.268,11,.23],[0,1.52,.60,.155,.21,11,.53],[0,1.66,.694,.137,.172,11,.77],[0,1.76,.758,.111,.119,11,.96]],neck,COAT)
+ hide.skin([[0,1.722,.695,.064,.095,11],[0,1.753,.763,.139,.149,11],[0,1.732,.862,.15,.18,11],[0,1.694,.958,.122,.147,11],[0,1.624,1.067,.096,.108,11],[0,1.58,1.151,.096,.088,11],[0,1.56,1.187,.082,.068,11]],neck,COAT)
+ hide.skin([[0,1.592,1.119,.090,.074,11],[0,1.56,1.183,.099,.075,11],[0,1.543,1.231,.086,.053,11],[0,1.544,1.244,.066,.035,11]],small,MUZZLE)
  // Two ears, dark inner pinnae, black eyes under an orbital ridge and fleshy nostrils.
  for(const s of [-1,1]){
   m.skin([[s*.079,1.831,.765,.047,.059,11],[s*.094,1.895,.765,.045,.052,11],[s*.116,1.960,.758,.030,.035,11],[s*.13,2.005,.75,.007,.011,11]],high?7:4,POINT,[1,0,0]);
@@ -77,11 +150,11 @@ function horse(m, high, draught){
    const profile=hind?[[.190,1.215,-.56,.145,.196],[.215,1.029,-.6,.132,.167],[.215,.833,-.488,.096,.117],[.212,.744,-.511,.094,.094],[.217,.553,-.679,.055,.073],[.219,.50,-.706,.049,.065],[.217,.447,-.677,.041,.049],[.216,.238,-.637,.036,.045],[.216,.167,-.636,.052,.052],[.216,.110,-.608,.045,.043]]:
     [[.191,1.20,.356,.125,.158],[.212,1.012,.40,.134,.152],[.218,.850,.34,.091,.117],[.218,.775,.335,.081,.094],[.219,.588,.396,.058,.064],[.219,.505,.426,.055,.066],[.219,.447,.419,.041,.048],[.219,.236,.408,.033,.040],[.219,.166,.414,.049,.051],[.219,.109,.446,.042,.041]];
    let pp=profile.map(q=>[s*q[0],q[1],q[2],q[3],q[4],g]);
-   m.skin(high?pp:pp.filter((v,i)=>[0,2,4,5,8,9].includes(i)),limb,COAT);
-   let bot=pp.slice(5).map(r=>[r[0],r[1],r[2],r[3]+.0025,r[4]+.0025,g]);m.skin(high?bot:[bot[0],bot[2],bot[4]],limb,POINT);
+   hide.skin(pp);
    let z=hind?-.607:.447,x=s*.218; m.skin([[x,.128,z,.044,.051,g],[x,.095,z+.008,.051,.06,g],[x,.041,z+.031,.064,.08,g],[x,.013,z+.035,.062,.080,g]],limb,HOOF)
   }
  }
+ hide.build(m);
  // Noseband and browband roll around the skull with cheekpieces joining a tangible bit ring.
  for(const [y,z,w,h] of [[1.639,1.097,.104,.108],[1.780,.837,.145,.112]]){
   let cp=[];for(let k=0;k<=10;k++){let a=TAU*k/10;cp.push([w*Math.cos(a),y+.78*h*Math.sin(a),z+.56*h*Math.sin(a)])}

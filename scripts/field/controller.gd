@@ -46,7 +46,7 @@ func _ready() -> void:
 	add_child(map)
 	add_child(camera)
 	camera.projection=Camera3D.PROJECTION_ORTHOGONAL
-	camera.size=26.0
+	camera.size=22.0
 	camera.far=360
 	camera.current=true
 	add_child(hud)
