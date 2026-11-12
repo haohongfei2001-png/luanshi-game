@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 3
+          fetch-depth: 0
       - name: Install the repository-pinned Godot 4.6.3 editor
         run: |
           set -euo pipefail
@@ -27,10 +27,12 @@ jobs:
           set -euo pipefail
           src=scripts/field/formation_traffic.gd
           cp "$src" /tmp/candidate-traffic.gd
-          git show HEAD^:"$src" > "$src"
+          git show efcd91533e7cd50309375d1ab90138a041e7f674:"$src" > "$src"
           for trial in baseline candidate; do
             if [ "$trial" = candidate ]; then cp /tmp/candidate-traffic.gd "$src"; fi
-            godot --headless --path . --script tests/doorway_comparison.gd 2>&1 | tee "/tmp/doorway-$trial.log"
+            for seed in 61113 61203; do
+              godot --headless --path . --script tests/doorway_comparison.gd -- --seed="$seed" 2>&1 | tee "/tmp/doorway-$trial.log"
             grep -q "^GATE_FILE_TRIAL " "/tmp/doorway-$trial.log"
             if grep -Eq "SCRIPT ERROR|Parse Error|ERROR:" "/tmp/doorway-$trial.log"; then exit 1; fi
+            done
           done

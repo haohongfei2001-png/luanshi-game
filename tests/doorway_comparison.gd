@@ -8,6 +8,7 @@ const LAST_SAMPLE := 620
 const PERIOD := 10
 const OVERLAP := 0.52
 var failures: Array[String] = []
+var trial_seed := Battle.SEED
 
 func check(ok: bool, message: String) -> void:
 	if not ok:
@@ -15,6 +16,8 @@ func check(ok: bool, message: String) -> void:
 		push_error(message)
 
 func _initialize() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--seed="): trial_seed = arg.trim_prefix("--seed=").to_int()
 	_check_passages()
 	var result := _siege(true)
 	print("GATE_FILE_TRIAL " + JSON.stringify(result))
@@ -111,7 +114,7 @@ func _check_gate_leaves() -> void:
 
 func _siege(enabled: bool) -> Dictionary:
 	var b := Battle.new()
-	b.setup(512)
+	b.setup(512,trial_seed)
 	b.traffic_enabled = enabled
 	if "soft_crowd" in b: b.set(&"soft_crowd", enabled)
 	for i in b.companies_per_side:
@@ -191,6 +194,7 @@ func _siege(enabled: bool) -> Dictionary:
 			timings["p%d" % p] = sim_us[index] / 1000.0
 		timings.samples = sim_us.size()
 		row.sim_tick_ms = timings
+	row.seed = trial_seed
 	row.traffic_lanes = enabled
 	row.soft_crowd = b.get(&"soft_crowd") if "soft_crowd" in b else false
 	row.escort_formation = escort_spread
