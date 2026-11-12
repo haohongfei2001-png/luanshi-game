@@ -1,0 +1,32 @@
+name: RC3 fixed-step tail laboratory
+on:
+  push:
+    branches: [codex/rc3-tail-lab]
+permissions:
+  contents: read
+jobs:
+  profile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned Godot editor
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/rc3-godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/rc3-godot.zip' | sha512sum -c -
+          unzip -q /tmp/rc3-godot.zip -d /tmp/rc3-editor
+          sudo install /tmp/rc3-editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path .
+      - name: Record phases and uninstrumented deterministic timings
+        run: python3 tools/rc3-tail-run.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rc3-simulation-tail-${{ github.sha }}
+          path: ${{ runner.temp }}/rc3-tail
+          retention-days: 45
