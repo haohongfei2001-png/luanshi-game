@@ -46,7 +46,7 @@ jobs:
           if sample:
               for rank,a in [('median',sorted(sample,key=lambda a:a['delta'])[len(sample)//2]),('worst',min(sample,key=lambda a:a['delta']))]:
                   for mode in ['original','assisted']:
-                      n='%s-%04d-%s'%(a['scenario'],a['tick'],mode)
+                      n=a['label']+'-'+mode
                       data=base64.b64encode((d/(n+'.jpg')).read_bytes()).decode()
                       for i in range(0,len(data),4096): print('SIGHT_JPEG',rank,mode,n,i,data[i:i+4096])
           PY

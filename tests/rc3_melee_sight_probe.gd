@@ -78,10 +78,18 @@ func driver(b: Battle,scenario: String) -> void:
 	var staging:=b.ram+Vector2(-0.25,-2.75) if scenario=="ram" else Ground.GATE+Vector2(-4.1,-1.9)
 	var to:=origin if not foe else foe.pos
 	var walk:=Vector2.ZERO
+	# A second battle reaches the gate with an actual horse from muster. Wait
+	# behind the advance; no health/coords/AI or enemy personnel are altered.
+	if scenario=="gate" and b.tick<465:
+		b.input_state(Vector2.ZERO,Vector2.RIGHT);b.step();return
+	if scenario=="gate" and b.tick==465:b.mount(1)
+	if scenario=="gate" and b.vehicle!=0 and origin.distance_squared_to(staging)<8.0:b.mount(0)
+	if scenario=="field" and b.tick<38:
+		b.input_state(Vector2.ZERO,Vector2.RIGHT);b.step();return
 	if scenario!="field" and origin.distance_squared_to(staging)>4.0:walk=origin.direction_to(staging)
-	elif foe and ds>1.50:walk=origin.direction_to(foe.pos)
+	elif foe and ds>2.2:walk=origin.direction_to(foe.pos)
 	b.input_state(walk,(to-origin).normalized() if foe else Vector2.RIGHT)
-	if foe and ds<8.1 and b.hero.state==Battle.State.MARCH:b.action(0)
+	if foe and ds<8.1 and b.vehicle==0 and b.hero.state==Battle.State.MARCH:b.action(0)
 	b.step()
 func go() -> void:
 	if DisplayServer.get_name()=="headless":quit(1);return
@@ -101,30 +109,35 @@ func go() -> void:
 		f.hud.go.pressed.emit()
 		f.camera.size=13.0
 		var b:=f.battle
-		var next_tick:=0
 		var n:=0
+		var cameras: Array=[]
+		for a: float in [-33.0,27.0,87.0,-93.0]:cameras.append({"angle":deg_to_rad(a),"control":preload("res://scripts/field/melee_sight.gd").new(),"next":0})
 		for k in 1150:
 			if b.result!="":break
 			driver(b,scenario)
 			f.carry=0.049999
 			f.camera_center=b.hero.pos
-			var before:=Time.get_ticks_usec()
-			f._camera(Battle.DT)
-			timings.append(Time.get_ticks_usec()-before)
-			var ang:=f.melee_sight.offset
-			if b.tick<next_tick or ang<deg_to_rad(2.0) or b.hero.state not in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD]:continue
-			var site: String="field"
-			if b.hero.pos.distance_to(Ground.GATE)<12:site="gate"
-			elif b.hero.pos.distance_to(b.ram)<6:site="ram"
-			if scenario=="gate" and site!="gate":continue
-			if scenario=="ram" and site!="ram":continue
-			var label:="%s-%04d"%[scenario,b.tick]
-			var m:=await sample(label,ang,true)
-			var row:={"scenario":scenario,"site":site,"tick":b.tick,"seed":Battle.SEED,"ordinary":[512,512],"angle":rad_to_deg(ang),"zoom":f.camera.size,"yaw":f.camera_yaw,"state":b.hero.state,"kit":b.hero.kit,"hits":b.hits.duplicate(),"hero_impacts":b.hero.impacts,"center":str(f.camera_center),"fragments":m}
-			rows.append(row)
-			print("SIGHT_PAIR ",JSON.stringify(row))
-			n+=1;next_tick=b.tick+20
-			if n>=6:break
+			for lens: Dictionary in cameras:
+				f.melee_sight=lens.control
+				f.camera_yaw=lens.angle
+				var before:=Time.get_ticks_usec()
+				f._camera(Battle.DT)
+				timings.append(Time.get_ticks_usec()-before)
+				var ang:=f.melee_sight.offset
+				if b.tick<lens.next or ang<deg_to_rad(2.0) or b.hero.state not in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD]:continue
+				var site: String="field"
+				if b.hero.pos.distance_to(Ground.GATE)<12:site="gate"
+				elif b.hero.pos.distance_to(b.ram)<6:site="ram"
+				if scenario=="gate" and site!="gate":continue
+				if scenario=="ram" and site!="ram":continue
+				var label:="%s-%04d-%d"%[scenario,b.tick,roundi(rad_to_deg(f.camera_yaw))]
+				var m:=await sample(label,ang,true)
+				var row:={"label":label,"scenario":scenario,"site":site,"tick":b.tick,"seed":Battle.SEED,"ordinary":[512,512],"angle":rad_to_deg(ang),"zoom":f.camera.size,"yaw":f.camera_yaw,"state":b.hero.state,"kit":b.hero.kit,"hits":b.hits.duplicate(),"hero_impacts":b.hero.impacts,"center":str(f.camera_center),"fragments":m}
+				rows.append(row)
+				print("SIGHT_PAIR ",JSON.stringify(row))
+				n+=1;lens.next=b.tick+16
+				if n>=8:break
+			if n>=8:break
 		print("SIGHT_SITE ",scenario," samples=",n," ended_tick=",b.tick," result=",b.result)
 		# Returning to the player's own tactical pan must restore their requested angle.
 		f.pan_to(Vector2(10,10))
