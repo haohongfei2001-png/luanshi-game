@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
-      VERIFIED_SHA: '6e36e8f69526f2caf25501da5a777f63484f3162'
-      BUILD_SHA: 'b0f44c491fb47634539e73571cabf2c73519575b'
-      VERIFIED_RUN: '43268026943'
+      VERIFIED_SHA: 'd2f0180c0865b3746bef11e43a2239659188fa6f'
+      BUILD_SHA: 'f8129247cffe207f6fa0575e0cab3851662e5b96'
+      VERIFIED_RUN: '43275529020'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +23,7 @@ jobs:
           path: game
       - uses: actions/checkout@v4
         with:
-          ref: b0f44c491fb47634539e73571cabf2c73519575b
+          ref: f8129247cffe207f6fa0575e0cab3851662e5b96
           path: tested
       - name: Download the package, films and raw logs of the exact PR build
         working-directory: game
