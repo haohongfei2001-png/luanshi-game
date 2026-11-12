@@ -1,4 +1,4 @@
-name: Measure a continuous foot plant in the live company
+name: Fit the painted garrison and review the actual battlefield
 on:
   push:
     branches: ['codex/river-gate-figure-workshop']
@@ -11,19 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: codex/river-gate-motion-sampling
+          ref: codex/river-gate-garrison-studies
           fetch-depth: 0
       - name: Bake the fitted mesh, materials and keyed motion into the playable branch
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = c341d42743fed173aa0adc3e336672da38365c7f
+          test "$(git rev-parse HEAD)" = 394beb1a5a9affc0ff15be638a476944de053cfe
           python3 -c 'from PIL import Image' || python3 -m pip install Pillow
-          test -f tools/art/company_motion.py
-          PYTHONPATH=tools/art python3 -c 'from pathlib import Path; from company_motion import bake_motion; bake_motion(Path("assets/river_gate/figures"))'
+          python3 tools/art/bake_river_company.py
           python3 tools/art/check_company_motion.py
-          git add assets/river_gate/figures/company_motion.png
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake continuous key strips for the motion sampler experiment'
-          git push origin HEAD:refs/heads/codex/river-gate-motion-sampling
+          git add tools/art/field_head.json assets/river_gate/figures/river_company.glb assets/river_gate/figures/cloth_and_iron.png assets/river_gate/figures/surface_response.png assets/river_gate/figures/company_motion.png
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the painted garments, registered heads and moving mantle into the game library'
+          git push origin HEAD:refs/heads/codex/river-gate-garrison-studies
       - name: Prepare verified game renderer and video recorder
         run: |
           set -euo pipefail
@@ -34,34 +33,63 @@ jobs:
           sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
           python3 -c 'from PIL import Image' || python3 -m pip install Pillow
-      - name: Measure shoe travel between keys and render the same four battlefield views
+      - name: Play the regular river gate camera on both revisions
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
-          root="$RUNNER_TEMP/filter-review"
+          root="$RUNNER_TEMP/garrison"
           mkdir -p "$root"
-          base=6e36e8f69526f2caf25501da5a777f63484f3162
-          git fetch -q origin "$GITHUB_SHA"
-          git show "$GITHUB_SHA:tools/foot_phase_study.py" > "$root/foot_phase_study.py"
-          for label in nearest filtered; do
-            sampled=HEAD
-            if [[ $label == nearest ]]; then sampled="$base"; fi
+          for label in before after; do
+            rev=6e36e8f69526f2caf25501da5a777f63484f3162
+            if [[ $label == after ]]; then rev=HEAD; fi
             mkdir -p "$root/$label"
-            git archive "$sampled" | tar -x -C "$root/$label"
+            git archive "$rev" | tar -x -C "$root/$label"
             (
               cd "$root/$label"
-              python3 "$root/foot_phase_study.py" | tee "$root/$label-foot.log"
               ./tools/prepare-font.sh
+              mkdir -p artifacts
+              touch artifacts/.gdignore
               godot --headless --editor --path . --import > "$root/$label-import.log" 2>&1
               if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$root/$label-import.log"; then exit 1; fi
+              timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/river_art_capture.gd -- --field-size=512 2>&1 | tee "$root/$label-window.log"
+              grep -q '^RIVER_ART_PASS' "$root/$label-window.log"
+              if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$root/$label-window.log"; then exit 1; fi
               timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --audio-driver Dummy --script tests/company_render_cost.gd -- --field-size=512 2>&1 | tee "$root/$label-render.log"
               if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$root/$label-render.log"; then exit 1; fi
               test "$(grep -c '^COMPANY_RENDER_COST' "$root/$label-render.log")" -eq 4
             )
           done
+          python3 - "$root" <<'PY'
+          import base64,io,json,pathlib,sys
+          from PIL import Image
+          root=pathlib.Path(sys.argv[1])
+          before,after=[root/n/'artifacts/river-art' for n in ('before','after')]
+          l,r=[json.loads((d/'frames.json').read_text()) for d in (before,after)]
+          assert len(l)==len(r)==12
+          for left,right in zip(l,r):
+              for key in ('label','tick','ordinary','in_frame_ids_sha256','contact','losses','gate_hp','center','yaw','zoom','internal_scale','shadows'):
+                  assert left[key]==right[key],(key,left,right)
+          for angle in ('hero','officer','contact','saddle'):
+              pair=Image.new('RGB',(1536,480))
+              for i,path in enumerate((before,after)):
+                  original=Image.open(path/(angle+'.jpg')).convert('RGB')
+                  pair.paste(original.resize((768,480),Image.Resampling.LANCZOS),(i*768,0))
+                  if i==1 and angle in ('hero','contact'):
+                      memory=io.BytesIO()
+                      original.save(memory,'JPEG',quality=84)
+                      print('GARRISON_STILL',angle,base64.b64encode(memory.getvalue()).decode())
+              pair.save(root/(angle+'-pair.jpg'),quality=90)
+              smaller=io.BytesIO()
+              pair.resize((1024,320),Image.Resampling.LANCZOS).save(smaller,'JPEG',quality=80)
+              print('GARRISON_PAIR',angle,base64.b64encode(smaller.getvalue()).decode())
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: continuous-foot-study
-          path: ${{ runner.temp }}/filter-review/*.log
+          name: painted-garrison-in-game
+          path: |
+            ${{ runner.temp }}/garrison/*-pair.jpg
+            ${{ runner.temp }}/garrison/*.log
+            ${{ runner.temp }}/garrison/after/artifacts/river-art/*.jpg
+            ${{ runner.temp }}/garrison/after/artifacts/river-art/frames.json
