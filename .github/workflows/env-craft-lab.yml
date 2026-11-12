@@ -6,33 +6,54 @@ permissions:
   contents: read
   actions: read
 jobs:
-  inspect:
+  compare:
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 6
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: river-gate-craft-gameplay
-          path: proof
+          path: prior
           run-id: 43225534315
           github-token: ${{ github.token }}
-      - name: Inspect the verified same-tick captures from the rendering run
+      - name: Inspect the gate, river, camp and field at the same live ticks
         run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/river-editor
+          editor=/tmp/river-editor/Godot_v4.6.3-stable_linux.x86_64
+          mkdir -p /tmp/river-outputs/after
+          cp -R prior/before /tmp/river-outputs/before
+          touch prior/.gdignore
+          node tools/env_assets.mjs
+          git diff --exit-code -- assets/environment
+          ./tools/prepare-font.sh
+          "$editor" --headless --editor --path . --import 2>&1 | tee /tmp/river-outputs/after/import.log
+          ENV_PROOF=/tmp/river-outputs/after LIBGL_ALWAYS_SOFTWARE=1 timeout 100s xvfb-run -a -s '-screen 0 960x600x24' "$editor" --path . --resolution 960x600 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script res://tests/env_capture.gd -- --field-size=512 2>&1 | tee /tmp/river-outputs/after/game.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' /tmp/river-outputs/after/*.log; then exit 1; fi
           python3 - <<'PY'
           import base64, json, pathlib
-          root=pathlib.Path('proof')
-          samples=[]
-          for phase in ('before','after'):
-              text=(root/phase/'game.log').read_text()
-              record=json.loads(next(line.partition(" ")[2] for line in text.splitlines() if line.startswith("RIVER_CRAFT ")))
-              samples.append(record)
-              for name in ('gate','river','battle','camp'):
-                  p=root/phase/(name+'.jpg')
-                  data=p.read_bytes()
+          root=pathlib.Path("/tmp/river-outputs")
+          def record(phase):
+              return json.loads(next(l.partition(" ")[2] for l in (root/phase/"game.log").read_text().splitlines() if l.startswith("RIVER_CRAFT ")))
+          old, new = record("before"), record("after")
+          assert old.keys() == new.keys()
+          for name in new:
+              assert all(new[name][k] == old[name][k] for k in ("tick", "visible", "center", "size"))
+              for phase in ("before","after"):
+                  data=(root/phase/(name+".jpg")).read_bytes()
                   assert data[:2]==b'\xff\xd8' and data[-2:]==b'\xff\xd9' and len(data)>8000
-                  wire=base64.b64encode(data).decode()
-                  for pos in range(0,len(wire),16000):
-                      print('ENV_JPEG',phase,name,pos//16000,wire[pos:pos+16000])
-          assert samples[0]==samples[1]
-          print('MATCHED_GAME_VIEWS',json.dumps(samples[1],ensure_ascii=False))
+                  if phase=="after":
+                      wire=base64.b64encode(data).decode()
+                      for pos in range(0,len(wire),16000):
+                          print("ENV_JPEG",phase,name,pos//16000,wire[pos:pos+16000])
+          assert new["battle"]["hits"]==old["battle"]["hits"]
+          print("MATCHED_GAME_VIEWS", json.dumps(new))
           PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-gate-craft-final-gameplay
+          path: /tmp/river-outputs/

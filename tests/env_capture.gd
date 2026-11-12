@@ -22,6 +22,6 @@ func capture() -> void:
 			quit(1)
 			return
 		tick_log[shot[0]]={"tick":field.battle.tick,"center":[field.camera_center.x,field.camera_center.y],
-			"size":field.camera.size,"hits":field.battle.hits,"visible":field.view.visible_soldiers}
+			"size":field.camera.size,"hits":field.battle.hits.duplicate(),"visible":field.view.visible_soldiers}
 	print("RIVER_CRAFT "+JSON.stringify(tick_log))
 	quit(0)
