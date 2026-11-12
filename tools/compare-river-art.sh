@@ -13,7 +13,7 @@ for side in before after; do
   if [[ $side == after ]]; then revision=HEAD; fi
   mkdir -p "$work/$side"
   git archive "$revision" | tar -x -C "$work/$side"
-  cp tests/river_art_capture.gd "$work/$side/tests/"
+  cp tests/river_art_capture.gd tests/field_motion_review.gd "$work/$side/tests/"
   (
     cd "$work/$side"
     export XDG_DATA_HOME="$work/$side-data" XDG_CACHE_HOME="$work/$side-cache" XDG_CONFIG_HOME="$work/$side-config"
@@ -26,6 +26,10 @@ for side in before after; do
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-window.log"; then exit 1; fi
     grep -q '^RIVER_ART_PASS' "$out/$side-window.log"
     cp -a artifacts/river-art "$out/$side"
+    timeout 260s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/$side-motion.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 2>&1 | tee "$out/$side-motion.log"
+    if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-motion.log"; then exit 1; fi
+    grep -q '^FIELD_MOTION_RECEIPT ' "$out/$side-motion.log"
+    ffmpeg -nostdin -loglevel error -y -i "$work/$side-motion.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -movflags +faststart "$out/$side-motion.mp4"
     ffmpeg -nostdin -loglevel error -y -framerate 10 -i "$out/$side/film/frame-%03d.jpg" -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart "$out/$side.mp4"
   )
 done
@@ -55,3 +59,4 @@ for old,new in zip(left,right):
 print("RIVER_PAIR_PASS",len(left))
 PY
 ffmpeg -nostdin -loglevel error -y -i "$out/before.mp4" -i "$out/after.mp4" -filter_complex '[0:v]scale=768:480[l];[1:v]scale=768:480[r];[l][r]hstack=inputs=2' -c:v libx264 -crf 22 -pix_fmt yuv420p -movflags +faststart "$out/river-contact-pair.mp4"
+ffmpeg -nostdin -loglevel error -y -i "$out/before-motion.mp4" -i "$out/after-motion.mp4" -filter_complex '[0:v]scale=768:480[l];[1:v]scale=768:480[r];[l][r]hstack=inputs=2[v]' -map '[v]' -map 1:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a copy -movflags +faststart "$out/footwork-pair.mp4"

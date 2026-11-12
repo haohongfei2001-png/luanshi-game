@@ -84,7 +84,7 @@ def main():
             p=vertices[int(index)]
             for a,d in enumerate(offset): p[a]+=float(d)
     head=[f for f in faces if all(vertices[i][1]>5.56 and abs(vertices[i][0])<.99 for i in f)]
-    result={name:remesh(vertices,head,step) for name,step in (("close",.114),("line",.34))}
+    result={name:remesh(vertices,head,step) for name,step in (("close",.167),("line",.34))}
     result["scalp"]=scalp_sections(vertices,head)
     out=Path(__file__).with_name("field_head.json")
     out.write_text(json.dumps(result,separators=(",",":"))+"\n")

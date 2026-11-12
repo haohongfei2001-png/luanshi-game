@@ -39,21 +39,36 @@ def coat(s,look):
         pleat=cos(7*a+.52*cos(2*a)-.48*hanging)
         radius=hanging*(.012*pleat-.005*cos(3*a+.2))
         return ((rx+radius)*sin(a),y,(rz+radius)*cos(a)-.009*(1-cos(a))-.006)
-    def body_vertex(c,r):
-        p=point(c,r)
-        return s.vertex(p,uv("dyed",c/n,clamp((1.46-p[1])/(1.46-start))),cloth(p))
-    rows=[[body_vertex(c,r) for c in range(n+1)] for r in range(len(hem))]
+    heavy=look in ("guard","officer","player")
+    vertices={}
+    def body_vertex(c,r,material):
+        key=(c,r,material)
+        if key not in vertices:
+            p=point(c,r)
+            v=1-clamp((p[1]-.966)/.43) if material=="lamellar" else clamp((1.46-p[1])/(1.46-start))
+            vertices[key]=s.vertex(p,uv(material,c/n,v),cloth(p))
+        return vertices[key]
     span=3 if close else 2
     slots=(n//4,3*n//4)
     for r in range(len(hem)-1):
         for c in range(n):
             if lo<=r<hi and any(center-span<=c<center+span for center in slots): continue
-            s.quad(rows[r][c],rows[r][c+1],rows[r+1][c+1],rows[r+1][c])
+            material="dyed"
+            if heavy and 3<=r<=7:
+                material="lamellar"
+            elif look=="archer" and 3<=r<=7:
+                material="quilt"
+            elif look=="levy" and r>=7:
+                material="headcloth"
+            elif r<=1 and (c>=3*n//4 or c<n//8):
+                material="overskirt"
+            s.quad(body_vertex(c,r,material),body_vertex(c+1,r,material),
+                   body_vertex(c+1,r+1,material),body_vertex(c,r+1,material))
     for side,center in ((1,slots[0]),(-1,slots[1])):
         left,right=center-span,center+span
         rim=([(c,lo) for c in range(left,right)]+[(right,r) for r in range(lo,hi)]
              +[(c,hi) for c in range(right,left,-1)]+[(left,r) for r in range(hi,lo,-1)])
-        previous=[rows[r][c] for c,r in rim]
+        previous=[body_vertex(c,r,"lamellar" if heavy else "dyed") for c,r in rim]
         # Rotate each edge's section from the body side to the drooping sleeve.
         circle=[]
         for c,r in rim:
@@ -73,7 +88,7 @@ def coat(s,look):
                 bulge=.004*cos(atan2(front,out)*3+j*.74)
                 p=(side*(cx+(rx+bulge)*out),y-.009*front,(rz+bulge)*front+cz)
                 weight=(upper,CHEST,.76) if j==0 else (upper,fore,clamp((y-1.105)/.109))
-                mat="headcloth" if j==len(sleeve)-1 else "dyed"
+                mat="headcloth" if j==len(sleeve)-1 else ("lamellar" if heavy and j<=1 else "dyed")
                 ring.append(s.vertex(p,uv(mat,i/len(circle),j/(len(sleeve)-1)),weight))
             for i in range(len(rim)):
                 k=(i+1)%len(rim)
@@ -85,19 +100,36 @@ def coat(s,look):
               (side*.041,1.302,.151),(-side*.025,1.241,.156)]
         if side==-1: path.extend([(.110,1.168,.128),(.155,1.104,.086)])
         s.ribbon(path,.042 if close else .048,"headcloth",CHEST)
-    n_belt=18 if close else 8
-    s.rings([(.923,.187,.148,0,-.005),(.966,.189,.150,0,-.006),
-             (.992,.187,.145,0,-.006)],"sash" if look in ("player","officer") else "leather",HIPS,n_belt)
-    if close:
-        s.oval((.107,.953,.118),(.031,.026,.012),"brass",HIPS,9,4)
+    def body_at(a,y,offset=.010):
+        # Sample the garment itself so a strap cannot cross through a rotating back.
+        j=next((i for i in range(len(hem)-1) if hem[i][0]<=y<hem[i+1][0]),len(hem)-2)
+        t=clamp((y-hem[j][0])/(hem[j+1][0]-hem[j][0]))
+        rx=hem[j][1]*(1-t)+hem[j+1][1]*t+offset
+        rz=hem[j][2]*(1-t)+hem[j+1][2]*t+offset
+        return (rx*sin(a),y,rz*cos(a)-.009*(1-cos(a))-.006)
+    def belt(u,v):
+        a=TAU*u
+        p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))
+        return p,cloth(p)
+    s.grid(20 if close else 10,2,belt,"sash" if heavy else "leather")
+    if look in ("archer","player","officer"):
+        for front in (True,False):
+            def baldric(u,v):
+                # Back strap is visible from the normal follow camera.
+                a=((-.74+1.58*(1-v)) if front else (3.89-1.59*(1-v)))+(u-.5)*.32
+                p=body_at(a,.94+.465*v,.017)
+                return p,cloth(p)
+            s.grid(2,7 if close else 3,baldric,"quiver" if look=="archer" else "sash")
+    if close or look in ("player","officer"):
+        p=body_at(.68,.958,.026)
+        s.oval(p,(.030,.023,.016),"brass",HIPS,8 if close else 6,4)
+    if look in ("levy","archer"):
+        s.oval((-.181,.884,.058),(.057,.068,.072),"leather",HIPS,8 if close else 5,4)
 
 def equipment(s,look):
     close=s.detail
     heavy=look in ("guard","officer","player")
     if heavy:
-        s.rings([(1.014,.199,.156,0,-.006),(1.065,.208,.161,0,-.007),
-                 (1.208,.245,.168,0,-.006),(1.314,.253,.162,0,-.007),
-                 (1.376,.209,.123,0,-.009)],"lamellar",CHEST,18 if close else 8)
         for side in (-1,1):
             bone=LT if side<0 else RT
             def tassets(u,v):
@@ -121,15 +153,16 @@ def equipment(s,look):
             p=((rx+fold)*sin(a)-.011*(1-v),y,(rz+fold)*cos(a)-.028-.028*(1-v))
             return p,(CHEST,HIPS,clamp(.18+v*.98))
         cols=18 if close else 7
-        s.grid(cols,6 if close else 3,mantle,"mantle")
-        def facing(u,v): return mantle(u,.018+.035*v)
-        s.grid(cols,1,facing,"headcloth")
+        def crown(u,v): return mantle(u,.065+.935*v)
+        def edge(u,v): return mantle(u,v*.065)
+        s.grid(cols,6 if close else 3,crown,"mantle")
+        s.grid(cols,1,edge,"headcloth")
         s.ribbon([(-.107,1.421,.087),(-.017,1.391,.123),(.089,1.343,.134),(.161,1.303,.136)],
                  .032,"sash",CHEST)
         s.oval((-.105,1.419,.099),(.033,.028,.018),"brass",CHEST,10 if close else 6,4)
     if look=="archer":
-        a,b=(-.154,.815,-.194),(.141,1.379,-.206)
-        s.tube([a,lerp(a,b,.10),lerp(a,b,.88),b],[.045,.068,.067,.075],"quiver",CHEST,10 if close else 5)
+        a,b=(-.161,.790,-.226),(.146,1.379,-.267)
+        s.tube([a,lerp(a,b,.10),lerp(a,b,.88),b],[.048,.072,.074,.079],"quiver",CHEST,10 if close else 5)
         s.ribbon([(-.17,1.403,.066),(-.104,1.313,.141),(.017,1.19,.161),(.126,1.044,.115)],.049,"leather",CHEST)
         for i in range(4 if close else 2):
             end=add(b,((i%2-.5)*.038,.157+(i%3)*.025,(i//2)*.027))

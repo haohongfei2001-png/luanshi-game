@@ -3,8 +3,10 @@ extends SceneTree
 
 func _initialize() -> void:
 	var text := "LUANSHI PROTOTYPE - THIRD-PARTY NOTICES\n\n"
-	text += "Game code, text and procedural placeholder meshes: project authors.\n"
+	text += "Game code, text, clothing, props and environment art: project authors.\n"
 	text += "No open-source license has been selected for the game itself.\n\n"
+	text += "Human head topology and morph derived from the MakeHuman Team HM08 base and asian-male-young target. Published under CC0 1.0 Universal.\n"
+	text += "https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md\n\n"
 	text += "Noto Sans SC Regular. Copyright 2014-2021 Adobe and the upstream font authors.\n"
 	text += FileAccess.get_file_as_string("res://assets/fonts/OFL.txt") + "\n\n"
 	text += "GODOT ENGINE\n" + Engine.get_license_text() + "\n\n"

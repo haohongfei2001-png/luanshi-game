@@ -11,19 +11,19 @@ TILE = 128
 PAD = 4
 NAMES = ["linen", "dyed", "leather", "lamellar", "iron", "edge", "brass", "timber",
          "skin", "hair", "lining", "quilt", "boots", "shield", "binding", "felt",
-         "visage", "eye", "headcloth", "mantle", "sash", "quiver"]
+         "visage", "eye", "headcloth", "mantle", "sash", "quiver", "overskirt"]
 SURFACES = [
     ((174,153,124), (230,0,0)), ((178,173,151), (230,0,244)),
     ((92,60,43), (158,0,0)), ((95,110,114),(143,155,0)),
     ((97,119,127),(130,184,0)), ((180,186,175),(81,219,0)),
     ((159,127,77),(114,180,0)), ((132,92,58),(171,0,0)),
     ((175,124,96),(209,0,0)), ((46,37,36),(209,0,0)),
-    ((213,194,154),(215,0,0)), ((147,129,102),(230,0,195)),
+    ((213,194,154),(215,0,0)), ((111,103,89),(230,0,72)),
     ((67,51,42),(168,0,0)), ((124,77,49),(165,17,66)),
     ((111,81,66),(206,0,0)), ((72,78,84),(235,0,22)),
     ((183,133,104),(210,0,0)), ((169,151,133),(191,0,0)),
     ((188,167,129),(242,0,0)), ((61,87,103),(237,0,159)),
-    ((139,56,42),(218,0,0)), ((94,60,39),(186,0,0)),
+    ((139,56,42),(218,0,0)), ((94,60,39),(186,0,0)), ((87,94,101),(239,0,139)),
 ]
 
 def adjusted(rgb, variation):
@@ -54,7 +54,7 @@ def painted(name, base, x, y):
     if name=="eye":
         pupil=((u-.5)/.092)**2+((v-.5)/.215)**2
         return blend((161,145,129),(52,40,34),max(0,min(1,(1.27-pupil)*3)))
-    if name in ("dyed","mantle","headcloth","sash","felt","quiver","binding"):
+    if name in ("dyed","mantle","headcloth","sash","felt","quiver","binding","overskirt"):
         # Broad shadows can still be read when the whole sleeve measures six pixels.
         folds=cos(2*pi*(3*u+.26*v+.19*sin(2*pi*(u+v))))*.5+.5
         cavity=(folds**3)*(.68 if name in ("mantle","dyed","felt") else .30)

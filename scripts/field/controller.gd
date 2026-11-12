@@ -20,6 +20,8 @@ var camera := Camera3D.new()
 var camera_center := Vector2.ZERO
 var camera_pitch:=deg_to_rad(51.0)
 var camera_yaw:=deg_to_rad(-33.0)
+var shadow_zoom:=-1.0
+const CAMERA_DISTANCE:=77.5
 var orbiting:=false
 var follow := true
 var paused := false
@@ -169,7 +171,7 @@ func set_quality(which: int,remember: bool=false) -> void:
 	vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
 	vp.scaling_3d_scale=[1.0,0.85,0.70][which]
 	map.sun.shadow_enabled=which!=2
-	map.sun.directional_shadow_max_distance=75.0 if which==0 else 48.0
+	shadow_zoom=-1.0
 	view.contact_for_all=not map.sun.shadow_enabled
 	hud.quality.select(which)
 	if remember:
@@ -218,8 +220,16 @@ func _load() -> void:
 func _camera() -> void:
 	var p := Ground.unit_point(camera_center)
 	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
-	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*77.5
+	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*CAMERA_DISTANCE
 	camera.look_at(p)
+	if not is_equal_approx(shadow_zoom,camera.size):
+		# Orthographic projection keeps its composition as the clipping slab tightens.
+		# Include the ground below the camera target and the shadow of the gate roof.
+		var ground_depth:=camera.size*.5/tan(camera_pitch)
+		camera.near=maxf(.1,CAMERA_DISTANCE-ground_depth-17.0)
+		map.sun.directional_shadow_max_distance=CAMERA_DISTANCE+ground_depth*(1.0 if detail_preset==0 else .75)+11.0
+		map.sun.directional_shadow_fade_start=.93
+		shadow_zoom=camera.size
 	camera.current=true
 
 func pan_to(p: Vector2) -> void:

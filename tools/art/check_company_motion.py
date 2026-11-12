@@ -9,7 +9,7 @@ from company_motion import CLIPS, FRAMES, LF, LH, RF, RH, NOCK, arm_nodes, grip,
 from figure_mesh import add
 
 def decoded(bank,b,kit,clip,frame):
-    x=frame%8*48+b*3;y=(kit*16+clip)*4+frame//8
+    x=frame%8*48+b*3;y=(kit*CLIPS+clip)*4+frame//8
     hi=bank.getpixel((x+1,y));lo=bank.getpixel((x+2,y))
     tails=(hi[3]>>4,hi[3]%16,lo[3]>>4,lo[3]%16)
     q=[((v*16+tail)/4095)*2-1 for v,tail in zip(bank.getpixel((x,y)),tails)]
@@ -24,7 +24,7 @@ def measure():
         gaps=[]; nocks=[]; baked=[]
         for clip in range(CLIPS):
             for frame in range(FRAMES):
-                phase=frame/(FRAMES if clip in (0,1,12,15) else FRAMES-1)
+                phase=frame/(FRAMES if clip in (0,1,12,15) or clip>=16 else FRAMES-1)
                 bones=pose(kit,clip,phase)
                 for side,fore,hand in ((-1,LF,LH),(1,RF,RH)):
                     wrist=arm_nodes(side)[2]

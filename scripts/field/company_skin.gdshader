@@ -6,6 +6,8 @@ uniform sampler2D response_atlas : filter_linear_mipmap, repeat_disable;
 uniform sampler2D motion_bank : filter_nearest, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform int kit = 0;
+uniform int travelling_attack_legs = -1;
+uniform float travelling_leg_phase = 0.0;
 varying flat float flash;
 varying flat float cloth_lot;
 varying flat float fallen;
@@ -26,6 +28,10 @@ void skin(int bone, ivec2 tile, vec3 bind_vertex, vec3 bind_normal, out vec3 pos
     pos=rotated(q,bind_vertex)+translation;
     nrm=rotated(q,bind_normal);
 }
+ivec2 tile_for(int weapon, int clip, float progress) {
+    int frame=clamp(int(progress*31.0+.5),0,31);
+    return ivec2((frame%8)*48,(weapon*31+clip)*4+frame/8);
+}
 void vertex() {
     int code=int(floor(INSTANCE_CUSTOM.r*128.0));
     int state=code%8;
@@ -37,7 +43,7 @@ void vertex() {
     float phase=INSTANCE_CUSTOM.g;
     int clip=1;
     if(state==0) {
-        clip=phase>.001 ? 0:1;
+        clip=phase>.001 ? int(floor(phase*32.0)):1;
         phase=INSTANCE_CUSTOM.b;
     } else if(state==1 || state==2) {
         clip=(state==1 ? 2:6)+slot;
@@ -49,8 +55,7 @@ void vertex() {
     // Mounted legs use the saddle pose while the upper body keeps its live attack clip.
     if(code>=64 && (state==0 || (first>=9 && first<=14))) {clip=15;phase=INSTANCE_CUSTOM.b;}
     int sample_kit=(code/32)%2==1 && (state==1 || state==2) ? 2:kit;
-    int frame=clamp(int(phase*31.0+.5),0,31);
-    ivec2 tile=ivec2((frame%8)*48,(sample_kit*16+clip)*4+frame/8);
+    ivec2 tile=tile_for(sample_kit,clip,phase);
     vec3 pos,nrm;
     skin(first,tile,VERTEX,NORMAL,pos,nrm);
     if(first!=second && blend<.999) {
@@ -58,6 +63,22 @@ void vertex() {
         skin(second,tile,VERTEX,NORMAL,other_pos,other_nrm);
         pos=mix(other_pos,pos,blend);
         nrm=mix(other_nrm,nrm,blend);
+    }
+    // Only the on-foot player may keep travelling through a weapon action. The
+    // pelvis and coat keep the strike; weight passes to the running pose at the knee.
+    if (travelling_attack_legs>=0 && (state==1 || state==2 || state==3) && VERTEX.y<.87) {
+        ivec2 foot_tile=tile_for(kit,travelling_attack_legs,travelling_leg_phase);
+        vec3 step_pos,step_nrm;
+        skin(first,foot_tile,VERTEX,NORMAL,step_pos,step_nrm);
+        if(first!=second && blend<.999) {
+            vec3 next_pos,next_nrm;
+            skin(second,foot_tile,VERTEX,NORMAL,next_pos,next_nrm);
+            step_pos=mix(next_pos,step_pos,blend);
+            step_nrm=mix(next_nrm,step_nrm,blend);
+        }
+        float leg_weight=1.0-smoothstep(.43,.86,VERTEX.y);
+        pos=mix(pos,step_pos,leg_weight);
+        nrm=mix(nrm,step_nrm,leg_weight);
     }
     // Broad painted occlusion stays on the garment as the shoulder or hem turns.
     float armhole=smoothstep(.12,.23,abs(VERTEX.x))*(1.0-smoothstep(.035,.105,abs(VERTEX.y-1.285)));

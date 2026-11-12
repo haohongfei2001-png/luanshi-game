@@ -11,7 +11,7 @@ from company_weapons import TWO_HAND, FRONT_GRIP
 
 BONES=16
 FRAMES=32
-CLIPS=16
+CLIPS=31
 IDENT=(0.,0.,0.,1.)
 def qm(q,r):
     a,b=q[:3],r[:3]
@@ -63,11 +63,11 @@ CONTACT=[(-.105,1.106,.385,14,-49,12),(-.029,1.012,.424,30,-32,17),(-.117,1.097,
          (.066,1.23,.26,-3,-6,1),(-.093,1.068,.194,24,-40,13),(.143,1.402,.442,0,0,-9),
          (.111,1.298,.205,-3,0,0),(.115,1.167,.435,-1,-8,0),(-.084,1.078,.402,11,-51,-3)]
 def mix(a,b,t): return tuple(x+(y-x)*t for x,y in zip(a,b))
-def walking_foot(phase):
+def walking_foot(phase,running=False):
     # A complete cycle advances 1 / .68 metres in Battle._step. While a foot
     # bears weight its local Z recedes at exactly that rate, keeping it on the soil.
-    stance=.51
-    travel=1/.68
+    stance=.355 if running else .51
+    travel=1/(.42 if running else .68)
     half=stance*travel*.5
     if phase<stance:
         u=phase/stance
@@ -76,11 +76,14 @@ def walking_foot(phase):
     u=(phase-stance)/(1-stance)
     arc=sin(pi*u)
     z=-half+2*half*smooth(u)-(1-stance)*travel*u*(1-u)*(1-2*u)
-    return z,.13*arc**1.5,20*(1-smooth(u))-9*smooth(u)-10*arc
+    return z,(.225 if running else .13)*arc**1.5,20*(1-smooth(u))-9*smooth(u)-10*arc
 
 def pose(kit,clip,t):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
+    running=clip>=23
+    heading=((clip-23 if running else clip-15)*pi/4) if clip>=16 else 0.
+    if clip>=16: clip=0
     swing=sin(t*2*pi)
     move=clip in (0,12)
     slot=(clip-2)%4
@@ -138,13 +141,13 @@ def pose(kit,clip,t):
     sway=0.
     if move:
         hips=cos(t*2*pi)
-        sway=.044*sin(t*2*pi)
+        sway=(.022 if running else .044)*sin(t*2*pi)
         hip_yaw=7*hips
         shoulder_yaw=-8.5*hips
         hip_roll=4.0*walk
         chest_roll=-3.3*walk
-        crouch=.089+.026*cos(t*4*pi)
-        lean=9 if clip==12 else 5.8
+        crouch=(.088+.050*cos(t*4*pi-.22)) if running else (.089+.026*cos(t*4*pi))
+        lean=12*cos(heading) if running else (9 if clip==12 else 5.8*cos(heading))
         hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else 0) for i,v in enumerate(hand))
     elif clip==1:
         crouch=.026+.007*breath
@@ -248,15 +251,16 @@ def pose(kit,clip,t):
         pitch=0.
         lift=0.
         if move:
-            z,lift,pitch=walking_foot((t+(.5 if side>0 else 0))%1.)
+            z,lift,pitch=walking_foot((t+(.5 if side>0 else 0))%1.,running)
         if clip==14:
             z+=side*.17*smooth(t)
             lift=.12*smooth(t) if side==1 else 0.
             pitch=side*19*smooth(t)
-        foot_q=euler(pitch,side*(5.5 if not crouched else 9.))
+        foot_q=euler(pitch*cos(heading),side*(5.5 if not crouched else 9.)+8*sin(heading),-pitch*sin(heading))
         # Roll about the heel or toe. Preserve the sole's actual contact height.
-        lowest=min(rot(foot_q,(0,-.117,dz))[1] for dz in (-.072,.187))
-        foot=(side*(.179 if crouched else .143),.006+lift-lowest,z-.014)
+        lowest=min(rot(foot_q,(dx,-.117,dz))[1] for dx in (-.05,.05) for dz in (-.072,.187))
+        foot=(side*(.179 if crouched else .143)+z*sin(heading),.006+lift-lowest,
+              z*cos(heading)-.014-side*.129*sin(heading))
         if ride:
             foot=(side*.287,.276,.058)
             foot_q=euler(-8,side*5)
@@ -274,7 +278,7 @@ def bake_motion(out):
     for kit in range(9):
         for clip in range(CLIPS):
             for frame in range(FRAMES):
-                t=frame/(FRAMES if clip in (0,1,12,15) else FRAMES-1)
+                t=frame/(FRAMES if clip in (0,1,12,15) or clip>=16 else FRAMES-1)
                 for b,(q,offset) in enumerate(pose(kit,clip,t)):
                     x=frame%8*BONES*3+b*3; y=(kit*CLIPS+clip)*4+frame//8
                     quat=[max(0,min(4095,round((n*.5+.5)*4095))) for n in q]

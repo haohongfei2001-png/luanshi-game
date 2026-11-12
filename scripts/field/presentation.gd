@@ -217,13 +217,16 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var distance_sq:=p.distance_squared_to(center)
 		var travelled:=u.pos.distance_to(u.before)
 		var angle := atan2(u.facing.x,u.facing.y)
+		if u.facing_before!=Vector2.ZERO and u.facing_before!=u.facing:
+			angle=lerp_angle(atan2(u.facing_before.x,u.facing_before.y),angle,alpha)
 		var progress := clampf(1.0-(u.timer+(1.0-alpha)*Battle.DT)/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
 		if u.officer and battle.corps.is_wounded(u.id):
 			code=Battle.State.ESCAPED # Wounded pose; departed units are culled above.
 			progress=0.75 if battle.corps.support_partner(battle,u)>=0 else 0.0
 		if (u.mounted and u.hp>0) or (u.hero and battle.vehicle==1): code+=64
-		var step_phase:=fposmod(u.stride-(1.0-alpha)*travelled*0.68,1.0)
+		var stride:=u.visual_stride if u.visual_stride>=0 else u.stride
+		var step_phase:=fposmod(stride-(1.0-alpha)*travelled*(.42 if u.visual_run else .68),1.0)
 		var data := Color((code+0.5)/128.0,progress,step_phase,clampf(u.flash/0.22,0,1))
 		if u.mounted:
 			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
@@ -254,10 +257,20 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var key:=_key(u)+30*tier+(90 if u.officer else 0)
 		# Idle breathing uses simulation time; footsteps keep the travelled phase.
 		data.a=(float((u.id*5+u.squad*3)%8)+0.055+0.88*data.a)/8.0
+		var gait:=-1
+		if travelled>.001:
+			var delta:=u.pos-u.before
+			var relative:=atan2(delta.x,delta.y)-angle
+			var direction:=posmod(roundi(relative/(PI*.25)),8)
+			gait=(23+direction) if u.visual_run else (0 if direction==0 else 15+direction)
 		if u.state==Battle.State.MARCH:
-			data.g=clampf(travelled*15.0,0.0,1.0)
-			if travelled<.001 and not u.mounted:
+			data.g=(float(gait)+.5)/32.0 if gait>=0 else 0.0
+			if gait<0 and not u.mounted:
 				data.b=fposmod(u.stride+(float(battle.tick)+alpha)*Battle.DT*(.37+.023*(u.id%7)),1.)
+		if u.hero:
+			var material: ShaderMaterial=groups[key].node.material_override
+			material.set_shader_parameter("travelling_attack_legs",gait if battle.vehicle==0 else -1)
+			material.set_shader_parameter("travelling_leg_phase",step_phase)
 		_put(contact,ground+Vector3.UP*.026,angle,Color(0,0,0,0))
 		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
 		_put(groups[key],base,angle,data,1.07 if u.hero or u.officer else 1.0,caster)
