@@ -1,0 +1,79 @@
+name: Bake river company on an isolated runner
+on:
+  push:
+    branches: [codex/river-rc7-figure-bake]
+permissions:
+  contents: write
+jobs:
+  bake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      FIGURE_BRANCH: codex/river-rc7-figure-art
+      AUTHOR_SHA: 86f6a631423373548cef663cb8badb758f407036
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 86f6a631423373548cef663cb8badb758f407036
+      - name: Compile and check the original character library
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet Pillow
+          PYTHONPATH=tools/art python3 - <<'PY'
+          from unittest.mock import patch
+          from bake_river_company import main
+          # The runtime uses the edited SVG atlas. Preserve the earlier PNG research assets.
+          with patch('bake_river_company.make_atlas'):
+              main()
+          PY
+          node tools/art/bake_field_garments.mjs
+          node tools/art/bake_field_garments.mjs --check
+          python3 tools/art/check_company_motion.py
+      - name: Save generated meshes and poses to the figure branch
+        run: |
+          set -euo pipefail
+          git add -- assets/river_gate/figures/river_company.glb assets/river_gate/figures/company_motion.png assets/river_gate/figures/field_garments.gltf
+          git diff --cached --stat
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the RC7 uniforms and independent weapon poses'
+          test "$(git ls-remote origin "refs/heads/$FIGURE_BRANCH" | cut -f1)" = "$AUTHOR_SHA"
+          git push origin "HEAD:refs/heads/$FIGURE_BRANCH"
+          git rev-parse HEAD
+      - name: Inspect the role cut at actual battlefield distance
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/runner-godot
+          godot=/tmp/runner-godot/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          "$godot" --headless --editor --path . --import > artifacts/figure-import.log 2>&1
+          if grep -E 'SHADER ERROR|Parse Error|SCRIPT ERROR|ERROR:' artifacts/figure-import.log; then exit 1; fi
+          timeout 280s xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/river_art_capture.gd -- --field-size=512 > artifacts/figure-view.log 2>&1
+          grep '^RIVER_ART_PASS' artifacts/figure-view.log
+          if grep -E 'SHADER ERROR|Parse Error|SCRIPT ERROR|ERROR:' artifacts/figure-view.log; then exit 1; fi
+          python3 - <<'PY'
+          import base64, io, pathlib
+          from PIL import Image
+          root=pathlib.Path('artifacts/river-art')
+          for name in ['hero','formation','officer','player-action','contact','bowline']:
+              pic=Image.open(root/(name+'.png')).convert('RGB')
+              if name in ('hero','officer','player-action','contact','bowline'):
+                  w,h=pic.size
+                  pic=pic.crop(((w-700)//2,(h-580)//2,(w+700)//2,(h+460)//2))
+              else: pic.thumbnail((1080,675))
+              jpg=io.BytesIO()
+              pic.save(jpg,'JPEG',quality=85)
+              print('RC7_TAILOR_FRAME',name,base64.b64encode(jpg.getvalue()).decode())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rc7-company-play-camera
+          path: |
+            artifacts/figure-*.log
+            artifacts/river-art/*.png
+            artifacts/river-art/frames.json
