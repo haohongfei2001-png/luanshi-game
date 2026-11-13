@@ -86,8 +86,6 @@ def costume(look,rank=False):
             else:
                 s.tube([a,lerp(a,b,.68),b],[.078,.082,.060],"dyed",upper,5)
         forearm(s,look,side,n,rank)
-        p=grip(side)
-        s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)
         a,b,c=leg_nodes(side)
         # Shape the calf and cloth at the knee; a straight triangle tube at the
         # everyday distance made boots read like pegs beside an otherwise curved tunic.

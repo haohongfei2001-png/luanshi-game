@@ -1,5 +1,5 @@
 extends RefCounted
-## Imported original meshes share a costume atlas, the metre-scale hand bind and a baked
+## Imported field meshes share a costume atlas, the metre-scale hand bind and a baked
 ## motion bank. Merge shared body/weapon geometry once, retaining one draw per crowd batch.
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
 const GARMENTS := preload("res://assets/river_gate/figures/field_garments.gltf")
@@ -29,8 +29,7 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	if assembled.has(key): return assembled[key]
 	_load_pieces()
 	var body: ArrayMesh=pieces[look+lod]
-	var arm_lod := "Close" if detailed else "Line"
-	var arms: ArrayMesh=pieces["Arms"+str(kit)+arm_lod]
+	var arms: ArrayMesh=pieces["Arms"+str(kit)+lod]
 	# Copy packed indexed arrays only. SurfaceTool would expand every triangle,
 	# and importer-generated tangents/lightmap data have no role in these materials.
 	var arrays:=body.surface_get_arrays(0)
