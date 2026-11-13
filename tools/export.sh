@@ -33,6 +33,12 @@ if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/exported-linux-youth-*.lo
 timeout 60s builds/Luanshi-linux.x86_64 --headless --quit-after 1100 --fixed-fps 60 -- --field-check 2>&1 | tee artifacts/exported-field.log
 grep -q '^FIELD_PACKAGE_PASS' artifacts/exported-field.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/exported-field.log; then exit 1; fi
+grep -Fq 'Creative Commons Attribution-ShareAlike 3.0' builds/THIRD_PARTY_NOTICES.txt
+grep -Fq 'Wildfire Games' builds/THIRD_PARTY_NOTICES.txt
+grep -Fq 'River Gate remount' builds/THIRD_PARTY_NOTICES.txt
+grep -Fq 'River Gate watchhall' builds/THIRD_PARTY_NOTICES.txt
+grep -Fq 'River Gate ford willow' builds/THIRD_PARTY_NOTICES.txt
+grep -Fq 'River Gate field headwear' builds/THIRD_PARTY_NOTICES.txt
 python3 tools/verify_macos.py builds/Luanshi-macOS.zip
 python3 - <<'PY'
 import zipfile

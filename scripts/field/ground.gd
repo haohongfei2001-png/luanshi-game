@@ -13,11 +13,14 @@ const COURT := Vector2(66, 0)
 const CAMP := Vector2(-83, 0)
 const GROVE := Vector2(-2, 37)
 const RIDGE := Vector2(9, -36)
+const RIDGE_RADII := Vector2(34, 16)
+const EAST_HILL := Vector2(77, 43)
+const EAST_RADII := Vector2(30, 13)
 
 static func height(p: Vector2) -> float:
-	var slope := (p - RIDGE) / Vector2(34, 16)
+	var slope := (p - RIDGE) / RIDGE_RADII
 	var hill := maxf(0.0, 1.0 - slope.length_squared())
-	var east := (p - Vector2(77, 43)) / Vector2(30, 13)
+	var east := (p - EAST_HILL) / EAST_RADII
 	var bank := clampf((absf(p.x - RIVER_X) - 3.9) / 2.4, 0.0, 1.0)
 	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) - (1.0 - bank) * 0.92
 
@@ -48,6 +51,9 @@ static func pace(p: Vector2, mounted: bool) -> float:
 		return 0.54 if mounted else 0.82
 	if absf(p.x - RIVER_X) < 6.6:
 		return 0.72
+	# The central approach lies between the extents of both hills. All land here is level.
+	if p.y >= RIDGE.y + RIDGE_RADII.y and p.y <= EAST_HILL.y - EAST_RADII.y:
+		return 1.0
 	return 0.87 if height(p) > 1.2 else 1.0
 
 static func blocked(p: Vector2, open: bool) -> bool:

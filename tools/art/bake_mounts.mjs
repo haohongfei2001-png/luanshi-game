@@ -273,6 +273,29 @@ function buildBarrel(hide,rank=false){
  }
 }
 
+// A felt pad rests over both ribs. The deep rear corners hang behind the
+// stirrup; exposed withers, tack and all rider/contact sockets stay clear.
+function saddleFelt(m,side,close) {
+ const fall=[
+   [-.564,1.150,.245],[-.541,1.025,.282],[-.463,.946,.310],[-.279,.961,.323],
+   [-.070,.985,.335],[.110,1.018,.340],[.247,1.071,.304],[.289,1.160,.270]];
+ const stations=close?fall:fall.filter((_,i)=>[0,2,3,5,7].includes(i));
+ const rows=stations.map(([z,h,x])=>[
+   [0,1.391,z],[side*.160,1.361,z],[side*.252,1.292,z],
+   [side*(x-.016),h+.091,z],[side*x,h,z]]);
+ m.panel(rows,WOOL);
+ const edge=rows.map(row=>row.at(-1));
+ m.strip(edge.map(p=>add(p,[side*.002,.006,0])),edge.map(p=>add(p,[side*.002,.038,0])),PIPING);
+ m.strip(edge.map(p=>add(p,[side*.003,.042,0])),edge.map(p=>add(p,[side*.004,.089,0])),BLUE);
+ if(close) {
+   for(const i of [0,rows.length-1]){
+     const rim=rows[i];
+     const inward=i===0?.024:-.024;
+     m.strip(rim.map(p=>add(p,[side*.002,.005,0])),rim.map(p=>add(p,[side*.004,.006,inward])),BLUE);
+   }
+ }
+}
+
 function horse(m, high, draught){
  const hide=new HorseHide();
  const limb=high?8:5, small=high?7:5;
@@ -333,10 +356,7 @@ function horse(m, high, draught){
  if(!draught){
   // Sculpted saddle blanket draped over both ribs, with a shaped front and a bound cloth hem.
   for(const s of [-1,1]){
-   let zs=[-.5,-.40,-.17,.05,.226,.282],ns=[1.078,1.02,.995,1.015,1.045,1.115];let rows=[];
-   for(let k=0;k<zs.length;k++){let z=zs[k],y=ns[k];rows.push([[0,1.392,z],[s*.180,1.354,z],[s*.274,1.256,z],[s*.298,y+.06,z],[s*.309,y,z]])}
-   m.panel(rows,WOOL);m.strip(rows.map(r=>add(r[4],[s*.002,.012,0])),rows.map(r=>add(r[4],[s*.003,.045,0])),PIPING);
-   if(high){m.strip(rows.map(r=>add(r[4],[s*.004,.054,0])),rows.map(r=>add(r[4],[s*.004,.080,0])),BLUE)}
+   saddleFelt(m,s,true);
    m.line([[s*.234,1.355,-.043],[s*.314,1.184,-.053],[s*.324,.958,-.071],[s*.321,.851,-.056]],.015,HIDE,high?5:4);
    let iron=[[s*.32,.873,-.064],[s*.324,.835,-.121],[s*.323,.753,-.124],[s*.324,.746,.007],[s*.323,.831,.006],[s*.32,.873,-.064]];m.line(iron,.014,IRON,high?5:3);
    m.strip([[s*.269,1.28,.171],[s*.316,1.13,.127],[s*.30,.897,.093],[s*.212,.775,.070]],[[s*.271,1.279,.225],[s*.319,1.131,.184],[s*.302,.898,.155],[s*.215,.773,.134]],STRAP)
@@ -387,8 +407,7 @@ function rankHorse(m,tow){
   // Weight the bit but hold the rider/driver end, as on the close mesh.
   m.skin(r.map((p,k)=>[...p,.009,.011,11,1-k/(r.length-1)]),3,STRAP);
   if(!tow){
-   let left=[[0,1.387,-.46],[s*.24,1.286,-.455],[s*.304,1.022,-.426]],right=[[0,1.387,.255],[s*.24,1.285,.254],[s*.307,1.067,.231]];
-   m.panel([left,right],WOOL);m.strip([left[2],right[2]],[add(left[2],[s*.002,.042,0]),add(right[2],[s*.002,.04,0])],PIPING)
+   saddleFelt(m,s,false);
   }else{m.line([[s*.30,1.17,.365],[s*.316,.992,.491],[0,.913,.59]],.042,HIDE,4);m.line([[s*.31,1.013,.452],[s*.44,.89,-.68],[s*.54,.836,-1.237]],.016,STRAP,3);}
  }
  if(!tow)m.skin([[0,1.379,-.343,.085,.023],[0,1.406,-.270,.173,.051],
@@ -464,6 +483,11 @@ function atlas(){
   else {a=12*grit+8*low+4*Math.sin(5*ang+Y);b=tile===11?3*low:0;}
   if(tile===COAT||tile===LIGHT) a=coatPlanes(X,Y)+2.8*grit+2.0*low;
   if(tile===HAIR) a=.36*a+3*Math.sin((X+.09*Y)*PI*3);
+  if(tile===WOOL) {
+   // Two quiet dyes alternate along the exposed lower border of the felt.
+   const edge=Math.abs(Math.abs((Y*3+.5)%1-.5)-(.15+.42*(1.-X)));
+   a=3*low+1.4*grit+(X>.72 && edge<.064 ? 11 : 0);
+  }
   for(let c=0;c<3;c++)px[i+c]=clamp(Math.round(palette[tile][c]+a*(1.0-c*.1)+b*(1-c)),0,255)
  }
  return px;

@@ -1,5 +1,68 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC20 · 过河军阵实机
+
+RC19 建筑、衣甲、倒地动作与存档在此基础上保留。过桥时可辨老柳向水探出的枝干和桥面留白；四个 1920 × 1200 实机机位与 RC19 同种子、同一批士兵，进度、伤亡相同。前几版整株过亮、露枝和方向遮挡的缺点已保留。[桥上军阵的完整对照](https://github.com/haohongfei2001-png/luanshi-game/tree/aeb09e7a3f9f7ecc12c7997ba238e4fc11cb0232/docs/evidence/river-gate-v1-rc20/ford-willows)
+
+普通弓弩手戴软帻，枪刀手用有翻边的浅铁盔，重装有护颊和护颈，军官用低束缨。底下的头脸、既有握点、士兵编队和发号逻辑沿用原件。第一轮发现一顶盔的三角面前后重叠产生黑块；下一轮又发现头盔上沿缺片，第三次才选取完整帽胎并检查两军同一击。[四类兵员正反面实拍](https://github.com/haohongfei2001-png/luanshi-game/tree/3a43d35148eb3c026faeca8c2262ca7d2a8a6fa7/docs/evidence/river-gate-v1-rc20/headwear)
+
+军服染料单独用同一输入对照；靛与茜现在集中在接近手臂和肩的布面，甲片、手与主角披肩保留自己的明暗。[同击、两军及衣袖的原窗](https://github.com/haohongfei2001-png/luanshi-game/tree/c65a580a95ebf32ea933de1c4c6081ea485c779d/docs/evidence/river-gate-v1-rc20/dyed-company)
+
+两个托管 Mac 的 RC19 第一次 Metal 启动都在第一帧前超过期限。场景几何已齐，88 个进程栈样本全在 Godot 等待正向移动渲染材质的着色器编译。新分支在创建地形与兵员之前设置已保存的抗锯齿和分辨率；首次绘制前后记录各类管线编译，并可直接采样等待中的原生进程。保持正常游玩画质、原来的启动时限及显式恢复按钮。是否改善以正式导出包上连续冷启动的记录为准。[同包复现与原始调用栈](https://github.com/haohongfei2001-png/luanshi-game/tree/2db3813aaf94f27cb28dc67af96d76b8a49640d8/docs/evidence/river-gate-v1-rc19/startup/same-package-fresh-host)
+
+完整复拍用 `./tools/compare-river-art.sh`。单独复查桥头用 `xvfb-run -a -s '-screen 0 1920x1200x24' godot --resolution 1920x1200 --disable-vsync --fixed-fps 20 --script tests/ford_willow_view.gd -- --field-size=512`，随后检查 `artifacts/river-art/views.json`。
+
+## 河关 RC19 · 可回退的实机基线
+
+RC19 源码 `8ba9daec9b1dbed8717ecef5cfd15ac2e35e0566`、Git 树 `a34d6e66c2caf2da27109d99b1724bf4328ffca7`、macOS 导出 `9357483bc54c28e0c5d3c04b42dbe5c7e41b4bfd`。完整军议、进军、攻城、结算、回营、旧存档和九种武器通过。59.2 秒全流程片和 40 秒导出包键鼠实录均附原声。[可直接下载的 Mac 应用](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/2db3813aaf94f27cb28dc67af96d76b8a49640d8/candidate/River-Gate-RC19-macOS.zip) · [原始图、逐帧样本、复测和校验](https://github.com/haohongfei2001-png/luanshi-game/blob/3735816ace0a861b8e23619f0a320e76f7ec79b3/docs/evidence/river-gate-v1-rc19/PLAYTEST.md)
+
+托管 M1 的默认窗口实测 1024 × 640、100% 内部比例与 4× MSAA，P50/P95/P99 为 8.804/25.616/35.72 毫秒。首次 Metal 启动在场景就绪后到首帧之间超时，两个独立宿主复现，初次全套 8/9，第二台同包 2/3。第二台采到全部 88 个主线程样本等待 Godot 的材质编译；物理 M5 性能尚未验证。[首帧前原始栈](https://github.com/haohongfei2001-png/luanshi-game/blob/2db3813aaf94f27cb28dc67af96d76b8a49640d8/docs/evidence/river-gate-v1-rc19/startup/same-package-fresh-host/default-metal-1-before-frame.sample.txt) · [RC19 全部 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43510132831)
+
+## 河关 RC19 · 军士衣身、守关望楼和行军地面
+
+两军共用经过裁剪及重新蒙皮的衣甲。腰、股、肩、肘各带动不同衣片，骑行和持弓用原有手部握点。第一个版本的裙摆在迈步时被单侧腿硬拉，第二次在 22 米整窗、反打与等速行进中对照了两名普通士兵。[军士原窗与等速录像](https://github.com/haohongfei2001-png/luanshi-game/tree/910aa1eb35eed00c17b585df3eec1cb96949b23a/docs/evidence/river-gate-v1-rc19/fitted-infantry)
+
+攻门录像中死亡动作结束后，有士兵一只靴尖还高出地面 61 厘米。九类装备重做倒地收势，脚踝高度回到 8.0 / 8.7 厘米，战斗判定相同。弓手、普通兵原速交战保留，地面接触阴影按身体落点收长。[同一名弩手与九类动作实测](https://github.com/haohongfei2001-png/luanshi-game/tree/2e909df4d715db8c47913565f44c21e0942cc61d/docs/evidence/river-gate-v1-rc19/fitted-infantry/ground-rest)
+
+河关门楼由 Wildfire Games 的建筑母版按现有八米门洞适配。近镜沿实际屋脊切开挡住玩家的半片，远镜保留两座望楼。第一版瓦面发黑、路面泛黄；第二版校正了几何绕序和土色，第三版修掉屋面斜刺，重新铺设门前驿道残石并处理树冠明暗。六处机位以种子 61112、双方各 512 名普通兵在同一步比较，入镜士兵清单和命中数均一致。[六处前后原窗](https://github.com/haohongfei2001-png/luanshi-game/tree/82ee4e3752d705f9a2aa52a4c36f57bde1c115d8/docs/evidence/river-gate-v1-rc19/watchhall) · [第三次门厅与树冠实机运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43508615220)
+
+回退到 RC18 可直接取托管设备实际运行的通用包。[RC18 应用 ZIP](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/43557e3cf888a347e171a4715e4ce0fb741ebb90/candidate/River-Gate-RC18-macOS.zip) · [RC18 原始数据与首次录像超时的复测](https://github.com/haohongfei2001-png/luanshi-game/blob/233927d31835bddc96cb42e1fddea3dc50af77d9/docs/evidence/river-gate-v1-rc18/PLAYTEST.md) · [RC17 全部实测](https://github.com/haohongfei2001-png/luanshi-game/blob/d19653cf6bb9099aa6cee0b7b22e0c8de6383810/docs/evidence/river-gate-v1-rc17/PLAYTEST.md)
+
+在保有完整 Git 历史的 Linux 图形工作环境依次执行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import`、`./tools/compare-river-art.sh`。单跑攻门机位用 `xvfb-run -a -s '-screen 0 1920x1200x24' godot --resolution 1920x1200 --disable-vsync --fixed-fps 20 --script tests/watchhall_view.gd -- --field-size=512`。实际 M5 长测和最终画面验收仍在等待。
+
+
+## 河关 RC18 · 正常战场距离的衣甲、中央路面行进
+
+保留 RC17 游戏 `280ee8d92e04c5b9394093143f36ea273a611935`。新军服按跨肩衣片和实际缝线染色，近处的肤色、皮革和铁甲独立。固定种子 61112 在 22 米逐对比较同一次命中、两军正面阵线、反方向 180° 阵线。实录第 43 步起枪、第 48 步命中，#584 生命 62→39.76；正光和反向都复核过，两次退回过橙衣肩。采用第三次的绛色外衣，保留弓手暗色交领。[正常镜头的三个原窗](https://github.com/haohongfei2001-png/luanshi-game/tree/fe30b4c5e18cbebda7bee9f0885dc25730196da7/docs/evidence/river-gate-v1-rc17/field-livery) · [染布改动](https://github.com/haohongfei2001-png/luanshi-game/commit/5cab87bc4595e42ae82bbb308b0cf57f06a76902)。
+
+普通兵在中央平坦地带行进时可跳过两个坡高的计算；原高度、兵力、跑速与伤亡相同。Linux 同机交替运行每方 512 和 2500 人，逐点 243122 次速度相等，实战第 140 步存档摘要逐字节一致。在 512v512 每组 400 个完整模拟步，P95 由 16.121 降到 15.748 毫秒；GPU 和实机帧时间另测。[保留全部原始耗时](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43494790061/artifacts/14072086144)
+
+上一候选 [RC17 的程序、原生包、四规模、完整录像和首启](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43493877091)；前版 [RC16 的首次停步与可回退包](https://github.com/haohongfei2001-png/luanshi-game/blob/be32d2d765a3bb05b2b2d918c9602d9bd29ffc29/docs/evidence/river-gate-v1-rc16/PLAYTEST.md)。统一版本从仓库运行 `./tools/prepare-font.sh`、`godot --headless --editor --import`、`./tools/compare-river-art.sh` 和 `./tools/export.sh`。下一项是验证默认跟随下两军染布、整战役回营与该包的原生 Metal 记录。美术和 M5 实机性能均仍待验收。
+
+## 河关 RC17 · 实战人物、坐骑与首次启动
+
+承接 RC16 源 `7c9ac667ded0a8e80a05cd47593a4af70c28486c`。该版首次 Metal 启动有一次在进入场景前停住，保留原始包和失败采样。原包中 82 个主线程采样都在销毁临时绘制节点时等待着色器编译。新游戏从打包场景直接读取军士、马、柳树与阔叶树的网格资源。对每个目录逐资源与 Godot 原实例核对；相同源文件必须得到同一资源。[RC16 失败现场](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491339985) · [独立托管 Mac 冷启动](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491973680)
+
+弓手、双方军士、玩家和军官共用重取的 HM08 脸部外皮，保留头型、耳部与眉眼。第一版去掉了斑点但眼窝也变平；第二版已在 #94、#1044、#1056 的原窗校准。战马来自可再分发的原骑兵表面和四种毛色，马鞍、缰手、衔铁、战车与脚下接触沿用河关尺寸。第一版马鬃有毛刺、灰马过亮；换成连续的鬃束轮廓后，实骑 #150 在 100 帧再走 9.94 米。[脸部两侧与普通机位](https://github.com/haohongfei2001-png/luanshi-game/blob/d2b308ff6512cf8fde85c03cd2e54e99e5e8b8b5/docs/evidence/river-gate-v1-rc16/face-shell/REVIEW.md) · [骑手/骑阵六机位](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491137393)
+
+从正式入口运行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import`、`godot --headless --script tests/model_library_parity.gd` 和 `./tools/compare-river-art.sh`。统一候选的真实包、连续录像、九武器/统军、两路护送、四规模和九次原生启动以 [PR #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53) 的同一版完整验证为准。美术保留待审，真实 M5 尚未测。前版默认托管 M1 的 P95/P99 为 14.829/19.789 ms，有 97 帧超过 16.67 ms。
+
+## 河关 RC16 · 可恢复的制作现场
+
+本次集成取自上一候选 `05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09`，合入的军服母版 `219e14b1662990735eeda60cc2bdeaf3b54a19a4`，持械行军母版 `4b4f96f7a6a1760a09d1a17057298370fa865a10`，共享树林几何 `299eec62a60a4b0b88f9015d080b1b26bb85a61e`。三套服装、三段实物动作曲线已绑定正常军阵，枪盾弓、原有伤亡和兵籍沿用正式输入。树林在 Linux 的六次新进程、四个同机位对照已复核，场景建造中位由 1615 降至 740 ms；全程 512 对 512，热稳态帧率仍需实测。
+
+统一候选在 [PR #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53) 的当前源码运行全套验证。先看 22 米战场，再看枪、盾、弓五米多的实机细节。云端复现用 `./tools/compare-river-art.sh` 和 `./tools/test-field-render.sh footage`。托管 Apple Silicon 的峰值时间另按七个战斗步骤记录。正式包、窗口影片、验收数据以完成后的归档为准。美术质量仍在复核，真实 M5 未测。
+
+[RC15 原始截图、完整录像与回退包](https://github.com/haohongfei2001-png/luanshi-game/blob/3477c960b68505d27b641a5bf214a391806d98c4/docs/evidence/river-gate-v1-rc15/PLAYTEST.md) · [持械行进的等速对照](https://github.com/haohongfei2001-png/luanshi-game/blob/4b4f96f7a6a1760a09d1a17057298370fa865a10/docs/evidence/river-gate-gait/march-pair.mp4) · [衣甲实机窗口](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43486113614) · [原始树林帧对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43486379773)
+
+## 河关 RC15 的实机基线
+
+工程源码 `05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09`，录制原件 `4e83b2c287ea54fba97cb2e9b51e36970ab4e2b2`。两条护送均回营，旧档和九种武器已复跑。导出包 40 秒原速录制已按同一 SHA-256 复核。原生托管 M1 的 P95 为 30.040 ms，M5 待测。22 米画面仍有军服雷同和肩胯僵硬问题。
+
+[完整战役原片](https://github.com/haohongfei2001-png/luanshi-game/blob/4e83b2c287ea54fba97cb2e9b51e36970ab4e2b2/docs/evidence/river-gate-v1-rc15/playthrough-full.mp4) · [原速操作](https://github.com/haohongfei2001-png/luanshi-game/blob/4e83b2c287ea54fba97cb2e9b51e36970ab4e2b2/docs/evidence/river-gate-v1-rc15/combat-normal-speed.mp4) · [本次报告](https://github.com/haohongfei2001-png/luanshi-game/blob/3477c960b68505d27b641a5bf214a391806d98c4/docs/evidence/river-gate-v1-rc15/PLAYTEST.md)
+
+云端复现用 `./tools/compare-river-art.sh`、`./tools/test-field-journey.sh`、`./tools/test-field-render.sh journey`。下一轮在同一批角色与 22 米机位比较军服资产及持械步态，保留这套候选作回退。
+
 ## OWNER-ARTREF-20261114｜最新 Owner 强制视觉任务与可恢复入口
 
 **优先级 P0：**立即沿用 [八作真实视觉对标与 ARTREF-01..12 可玩游戏验收](ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md)；不要将此前 RC3/RC13 的“技术视觉纵切片”和局部修补当作 Owner 认可的画面基础。Codex 应完成实际模型/骨架/甲衣/动画/河关环境的商业质量重建，在正式 Godot 512v512 战役中验证远中近景、军阵、正常速度交战和操作，并将证据按新文档归档。主任务仍 [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)，既有生效工程与存档/战场逻辑必须保留。**当前状态：规范已写入；新美术效果未通过 Owner 验收，M5 真实 20 分钟压力测试未通过/未完成，不能标 DONE。** 继续开发时以 RC13 真实代码/实拍为问题基线而非已经合格的美术目标。
@@ -8,6 +71,14 @@
 **此文件是实际编码代理的交接日志，不是对未执行任务的完成声明。**
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
+
+## 河关 RC15 · 美术工作基线与恢复
+
+RC15 使用 Quaternius 免费 Standard 版的两个可编辑阔叶树母版，把原先折成大片的树冠换成具有连续分枝、叶片 UV 和专用树皮的原模型。第一遍树影成了深色剪影，第二遍改用整冠法线，保留了第一次失败。树身与叶簇按原场地格合批，两种母版合计源三角形 9,770 个。主角改成偏肩披衣，同一敌兵在 22 米镜头中仍是第 43 步起手、第 48 步受伤。造型、树林和群体腿部姿态离美术目标仍有距离。[两版树林原片](https://github.com/haohongfei2001-png/luanshi-game/tree/75d94996e37c3292ca497bd5d1f9d7f4cacd8210/docs/evidence/river-gate-v1-rc15/grove) · [单肩披挂实拍](https://github.com/haohongfei2001-png/luanshi-game/tree/084a820a65b4f39a13d6627f3b0369a5115596d0/docs/evidence/river-gate-v1-rc14/hero)
+
+使用 `blender -b --factory-startup --python-exit-code 7 --python tools/art/import_valley_grove.py -- /tmp/Stylized_Nature_MegaKitStandard.zip assets/environment/quaternius` 重建，源归档 SHA-256、再分发许可与转换结果均在 `assets/environment/quaternius/`。游戏启动和完整战役用同一个入口。双手使用经 CC0 核验的 HM08 掌指网格与原指骨，重做弓把、枪杆、扣弦和空手微屈。近档每手 785、远档 55–56 个三角形，实时合批内没有增加每指骨骼。操作者和敌我双方普通兵使用相同手部库。[真实窗及正常输入](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43474240506/artifacts/14061349563)。候选合并环境源 `89410bad7ed36018229f63388da5993f1e45aa36` 及手部源 `25558957154c4fb9a878edf17179986acb33cf48`，从 [PR #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53) 查看正在验证的统一检出。图形回归的下一条可执行命令为 `./tools/test-field-render.sh footage`。
+
+[RC14 可回退游戏包与原始录像](https://github.com/haohongfei2001-png/luanshi-game/blob/c5962a730038168ac0079f46650a6be1a0fc6765/docs/evidence/river-gate-v1-rc14/PLAYTEST.md)。RC14 托管 M1 的 24 秒样本 P95 13.199 ms、P99 16.640 ms，独立战役从部署到还营成功。第二条护送的最终营地点击遇到 900 秒托管超时，失败日志保留。真实 M5 与最终美术质量均待验。
 
 ## 河关 RC13 · 已合入的可玩候选
 
