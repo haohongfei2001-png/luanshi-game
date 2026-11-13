@@ -1,0 +1,103 @@
+name: Compare RC19 native shader export to its captured first-frame stall
+on:
+  push:
+    branches: [codex/river-rc19-native-shader-study]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download the verified official native editor
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_macos.universal.zip" -o "$RUNNER_TEMP/Godot.zip"
+          echo "30630f3e9b11e10b35c1f90ba8814185dcec43fae1a48345159be7552c64bfe8  $RUNNER_TEMP/Godot.zip" | shasum -a 256 -c -
+          ditto -x -k "$RUNNER_TEMP/Godot.zip" "$RUNNER_TEMP/editor"
+          ln -s "$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/godot"
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_export_templates.tpz" -o "$RUNNER_TEMP/export.tpz"
+          echo "3fbe2c0e2dec9d537ab9ec97bcf8da91dcf23357fc51f67092dd068d839290a8  $RUNNER_TEMP/export.tpz" | shasum -a 256 -c -
+          templates="$HOME/Library/Application Support/Godot/export_templates/4.6.3.stable"
+          mkdir -p "$templates"
+          unzip -jq "$RUNNER_TEMP/export.tpz" templates/macos.zip templates/version.txt -d "$templates"
+      - name: Prepare the exact game resources and bake the Metal intermediate shaders
+        run: |
+          set -euo pipefail
+          ./tools/prepare-font.sh
+          mkdir -p builds
+          touch builds/.gdignore
+          # The only packaging difference is the native shader baker; retain the same runtime source revision.
+          echo 9357483bc54c28e0c5d3c04b42dbe5c7e41b4bfd > assets/build-revision.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          target=Path("export_presets.cfg")
+          text=target.read_text()
+          assert text.count("[preset.0.options]")==1 and "shader_baker/enabled=true" not in text
+          target.write_text(text.replace("[preset.0.options]","[preset.0.options]\nshader_baker/enabled=true"))
+          PY
+          export GODOT="$RUNNER_TEMP/godot"
+          "$GODOT" --headless --editor --path . --import
+          "$GODOT" --headless --path . --script tools/write_notices.gd
+          "$GODOT" --rendering-method mobile --rendering-driver metal --audio-driver Dummy --path . --export-release macOS builds/Luanshi-macOS.zip > "$RUNNER_TEMP/native-export.log" 2>&1 || { tail -c 7000 "$RUNNER_TEMP/native-export.log"; exit 1; }
+          python3 - <<'PY'
+          import json, os, pathlib, re, zipfile
+          files=list(pathlib.Path(".godot").rglob("shader_baker/macOS/metal/file_cache"))
+          if len(files)!=1: raise RuntimeError("Native Metal export did not produce a shader-cache manifest")
+          entries=files[0].read_text().splitlines()
+          n=sum((files[0].parent / name).stat().st_size for name in entries)
+          if len(entries)<4 or n<65536: raise RuntimeError("Native shader cache lacks compiled shader groups")
+          with zipfile.ZipFile("builds/Luanshi-macOS.zip","a",zipfile.ZIP_DEFLATED) as app:
+              pck,=[name for name in app.namelist() if name.endswith(".pck")]
+              packed=app.read(pck)
+              hits=sum(name.split("/")[-1].encode() in packed for name in entries)
+              if hits < len(entries)//2: raise RuntimeError("Compiled shader entries absent from installed PCK")
+              app.write("builds/THIRD_PARTY_NOTICES.txt","THIRD_PARTY_NOTICES.txt")
+              app.write("docs/PLAYING_ZH.md","README-zh.md")
+          pathlib.Path("builds/native-export.log").write_bytes(pathlib.Path(os.environ["RUNNER_TEMP"], "native-export.log").read_bytes())
+          print("METAL_BAKE",json.dumps(dict(groups=len(entries),cache_bytes=n,paths_in_pck=hits,pck_bytes=len(packed))))
+          PY
+          python3 tools/verify_macos.py builds/Luanshi-macOS.zip
+          shasum -a 256 builds/Luanshi-macOS.zip | tee builds/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: River-Gate-RC19-native-shaders
+          path: |
+            builds/Luanshi-macOS.zip
+            builds/SHA256SUMS
+      - name: Retain the compiler log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-metal-export-log
+          path: ${{ runner.temp }}/native-export.log
+          if-no-files-found: ignore
+  cold:
+    needs: package
+    runs-on: macos-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: River-Gate-RC19-native-shaders
+          path: builds
+      - name: Open the recorded universal app on a fresh hosted machine
+        run: |
+          set -euo pipefail
+          shasum -a 256 -c builds/SHA256SUMS
+          ditto -x -k builds/Luanshi-macOS.zip unpacked
+          codesign --verify --deep --strict --verbose=2 unpacked/*.app
+          python3 tools/rc3_native_probe.py builds/Luanshi-macOS.zip unpacked baked-evidence --startup-regression
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: baked-cold-starts-and-frames
+          path: baked-evidence/
+          if-no-files-found: error
