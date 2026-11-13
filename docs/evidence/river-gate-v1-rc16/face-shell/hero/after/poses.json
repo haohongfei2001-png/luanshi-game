@@ -1,0 +1,136 @@
+{
+  "gap": 2.96619629859924,
+  "hp": 100.0,
+  "shots": [
+    {
+      "ammo": 0,
+      "camera": [
+        5.0,
+        0.788777555490337,
+        -25.6156311035156,
+        -13.1418190002441
+      ],
+      "hero": true,
+      "hits": [
+        150,
+        78
+      ],
+      "id": 1056,
+      "kit": 3,
+      "lod": 0,
+      "mounted": false,
+      "name": "hero-front",
+      "officer": false,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999084472656,
+        255.511291503906
+      ],
+      "scale": 1.0,
+      "seed": 61112,
+      "shadows": true,
+      "state": 0,
+      "target": -1,
+      "tick": 57,
+      "visible_ids": "d71c42fd3f245246fe605a10ee39e5379e704213f9abd26002388f732a321572"
+    },
+    {
+      "ammo": 0,
+      "camera": [
+        5.0,
+        0.0787775554903369,
+        -25.6156311035156,
+        -13.1418190002441
+      ],
+      "hero": true,
+      "hits": [
+        150,
+        78
+      ],
+      "id": 1056,
+      "kit": 3,
+      "lod": 0,
+      "mounted": false,
+      "name": "hero-quarter",
+      "officer": false,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        960.0,
+        255.510833740234
+      ],
+      "scale": 1.0,
+      "seed": 61112,
+      "shadows": true,
+      "state": 0,
+      "target": -1,
+      "tick": 57,
+      "visible_ids": "cd4a95d7164cc8fd6a1415e95946ce665a9f7c1c1a23414118220f84f1c35164"
+    },
+    {
+      "ammo": 0,
+      "camera": [
+        22.0,
+        0.788777555490337,
+        -25.6156311035156,
+        -13.1418190002441
+      ],
+      "hero": true,
+      "hits": [
+        150,
+        78
+      ],
+      "id": 1056,
+      "kit": 3,
+      "lod": 0,
+      "mounted": false,
+      "name": "hero-normal",
+      "officer": false,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999877929688,
+        542.24072265625
+      ],
+      "scale": 1.0,
+      "seed": 61112,
+      "shadows": true,
+      "state": 0,
+      "target": -1,
+      "tick": 57,
+      "visible_ids": "47dc2bbbf262d9362e86b93a851238b983e4c448d09d092a3375eb03510e99c7"
+    }
+  ],
+  "travel": 18.6200008392334
+}
