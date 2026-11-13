@@ -1,0 +1,81 @@
+name: Check the fitted face outline in a standing army on the normal screen
+on:
+  push:
+    branches: ['codex/river-rc21-formation-faces']
+    paths: ['tools/art/field_visage.py','tools/art/company_line.py','tests/field_formation_faces.gd','.github/workflows/field-formation-faces.yml']
+permissions:
+  contents: read
+jobs:
+  views:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 11
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fit the far faces from the same measured cranium and game atlas as the near camera
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -yq python3-numpy python3-pil
+          proof=docs/evidence/river-gate-v1-rc21/formation-faces
+          mkdir -p "$proof"
+          /usr/bin/python3 tools/art/bake_river_company.py --geometry-only > "$proof/geometry.log"
+          /usr/bin/python3 tools/art/import_garrison_issues.py "$RUNNER_TEMP/heads"
+          git diff --exit-code -- assets/third_party/wildfire_garments assets/third_party/wildfire_headwear assets/river_gate/figures/company_motion.png
+          git add -- assets/river_gate/figures/{river_company,garrison_bodies}.glb
+          git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bind the formation face to the same measured jaw, nose and brow as the close model'
+      - name: Replay both ordinary armies lining up, facing in opposite directions
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc21/formation-faces
+          godot=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+          for side in before after; do
+            root="$RUNNER_TEMP/faces-$side"
+            rev=HEAD
+            if test "$side" = before; then rev=126091196db530aa7ec13de61f839c9c41cac24b; fi
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/field_formation_faces.gd "$root/tests/"
+            "$godot" --headless --editor --path "$root" --import > "$proof/$side/import.log" 2>&1
+            if grep -E 'SCRIPT ERROR|ERROR:|Parse Error' "$proof/$side/import.log"; then exit 1; fi
+            xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/field_formation_faces.gd -- --field-size=512 > "$proof/$side/window.log" 2>&1
+            grep -q 'FITTED_FORM true' "$proof/$side/window.log"
+            cp "$root"/artifacts/field-headwear/{line.png,reverse.png,spearman.png,archer.png,guard.png,officer.png,line.json} "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          import json,pathlib,hashlib
+          from PIL import Image
+          root=pathlib.Path('docs/evidence/river-gate-v1-rc21/formation-faces')
+          def rows(side): return json.loads((root/side/'line.json').read_bytes())
+          a,b=rows("before"),rows("after")
+          assert a==b and len(a)==6
+          for row in a:
+              assert row['ordinary']==[512,512] and row['pixels']==[1920,1200]
+              k=row['name']
+              whole=Image.new('RGB',(1600,500))
+              sample=Image.new('RGB',(1040,300))
+              locs=row['locators']
+              if not locs: raise RuntimeError(k+' has no standing subjects')
+              who=min(locs,key=lambda x:(x[3]-960)**2+(x[4]-600)**2)
+              x=max(260,min(1660,who[3])); y=max(170,min(1030,who[4]-12))
+              for idx,side in enumerate(('before','after')):
+                  with Image.open(root/side/(k+'.png')) as im:
+                      whole.paste(im.resize((800,500),Image.Resampling.LANCZOS),(idx*800,0))
+                      sample.paste(im.crop((x-260,y-150,x+260,y+150)),(idx*520,0))
+              whole.save(root/(k+'-pair.jpg'),quality=92,subsampling=0)
+              sample.save(root/(k+'-native-crop.jpg'),quality=96,subsampling=0)
+          PY
+          git add -- docs/evidence/river-gate-v1-rc21/formation-faces
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Compare both formations from six matched native windows'
+          git push origin HEAD:refs/heads/codex/river-rc21-formation-faces

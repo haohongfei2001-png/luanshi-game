@@ -10,8 +10,8 @@ from figure_mesh import TAU, lerp
 def sculpt():
     return json.loads(Path(__file__).with_name("field_head.json").read_text())
 
-@lru_cache(maxsize=2)
-def field_skin(close):
+@lru_cache(maxsize=3)
+def field_skin(close, rank=False):
     """Fit a single outward surface to sections of the HM08 master.
 
     The source has real eyelid apertures and an inner mouth. Voxel reduction
@@ -20,7 +20,12 @@ def field_skin(close):
     Preserve the brow, nose tip, jaw and ear profile on the outside only.
     """
     mesh = sculpt()["close"]
-    if close:
+    if rank:
+        # At formation distance the nose, cheekbone and chin still turn as a
+        # single outward skin. Share the measured cuts with the closer LODs.
+        levels = (5.69,5.96,6.27,6.54,6.69,6.88,7.04,7.22,7.54,7.82,8.03)
+        half = (0,.31,.73,1.34,2.17,pi)
+    elif close:
         levels = (5.60,5.74,5.85,5.93,6.02,6.13,6.23,6.31,6.41,6.51,6.61,
                   6.69,6.79,6.89,7.00,7.13,7.24,7.38,7.55,7.73,7.90,8.02,8.077)
         half = (0,.105,.218,.322,.444,.604,.805,1.04,1.29,1.55,1.83,2.18,2.63,pi)
@@ -94,7 +99,7 @@ def archer_brow(a):
     return 1.612 + .037*cos(a) + .006*sin(a+.4)
 
 
-def head(s,look,bone):
+def head(s,look,bone,rank=False):
     close=s.detail
     data=sculpt()
     heavy=look in ("regular","guard","officer")
@@ -130,7 +135,7 @@ def head(s,look,bone):
         return bind(sin(angle)*r,height,.35+cos(angle)*r)
     def brow(a):
         return 7.00+.44*cos(a)+.07*sin(a+.4)
-    source=field_skin(close)
+    source=field_skin(close,rank)
     vertices={}
     for face in source["f"]:
         raw=[source["p"][i] for i in face]
