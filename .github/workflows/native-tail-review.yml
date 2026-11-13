@@ -1,0 +1,32 @@
+name: Locate long frames in already captured river-gate application samples
+on:
+  push:
+    branches: ['codex/river-native-tail-review']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  read:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read three immutable exported-app traces
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for item in before:14022345136 candidate:14023563149 main:14025647446; do
+            name=${item%:*}
+            id=${item#*:}
+            gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/$id/zip" > "$name.zip"
+            unzip -q "$name.zip" -d "$name"
+          done
+          python3 tools/native_tail_review.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-native-long-frame-context
+          path: tail-context.json
+          retention-days: 14
