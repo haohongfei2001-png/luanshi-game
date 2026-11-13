@@ -357,26 +357,6 @@ def limbs(s,look):
                  (.053,.066,.131,ankle[0],.056),(.092,.060,.087,ankle[0],.029),
                  (.139,.054,.063,ankle[0],-.003)],"boots",boot,n,footwear)
         forearm(s,look,side,n)
-        g=grip(side)
-        if look=="guard":
-            # Dorsal knuckles and the heel of the thumb span the grip of a
-            # weighted sword or shield. Fingers wrap from this continuous palm.
-            s.rings([(g[1]-.032,.022,.039,g[0]+side*.014,g[2]-.007),
-                     (g[1]-.011,.033,.054,g[0]+side*.020,g[2]-.004),
-                     (g[1]+.013,.035,.058,g[0]+side*.019,g[2]-.002),
-                     (g[1]+.032,.026,.051,g[0]+side*.017,g[2]-.006),
-                     (g[1]+.044,.013,.038,g[0]+side*.011,g[2]-.008)],
-                     "skin",hand,n)
-        else:
-            s.oval((g[0]+side*.018,g[1]+.005,g[2]-.004),(.034,.046,.058),"skin",hand,n,5)
-        if close:
-            for i in range(4):
-                z=g[2]-.037+i*.020
-                s.tube([(g[0]+side*.029,g[1]+.004,z),(g[0]+side*.028,g[1]-.026,z),
-                        (g[0],g[1]-.035,z+.002),(g[0]-side*.021,g[1]-.018,z+.003)],
-                       [.011,.013,.013,.008],"skin",hand,5)
-        s.tube([(g[0]+side*.025,g[1]+.030,g[2]+.012),(g[0]-.006*side,g[1]+.035,g[2]+.040),
-                (g[0]-side*.023,g[1]+.005,g[2]+.034)],[.015,.016,.010],"skin",hand,6 if close else 4)
 
 def costume(look,detail):
     s=Surface(detail)
