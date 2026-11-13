@@ -497,7 +497,9 @@ func _fort(b: Builder) -> void:
 		b.quad(post+Vector3(0,2,0),post+Vector3(-0.08,1.96,side*0.92),post+Vector3(-0.21,1.30,side*0.97),post+Vector3(0,1.32,0),Color("a3543c"))
 		b.tri(post+Vector3(-0.21,1.30,side*0.97),post+Vector3(-0.22,1.04,side*0.74),post+Vector3(-0.08,1.38,side*0.55),Color("b59659"))
 	for x: float in [65,78]:
-		for z: float in [-14,14]:
+		# Reserve the front of the court for its independent holding companies.
+		# The eaves finish before the inner foot of the side wall.
+		for z: float in [-19.2,19.2]:
 			TownGate.mount_quarters(self,Vector3(x,0,z),x>70.,roofs)
 
 func _tent(b: Builder,p: Vector3,shade: Color,reverse: float) -> void:
