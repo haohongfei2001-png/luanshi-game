@@ -1,4 +1,9 @@
 # 《乱世》功能、质量与公平性验收矩阵 v1.0
+
+## OWNER-ARTREF-20261114｜商业美术质量与参考作品专项硬门槛
+
+**新增最高视觉验收规范：[ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md](ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md)**：包含八款真实游戏分项目标、实际截图入口、ARTREF-01…12 全部条件与 Codex S0–S4 真实交付顺序。它与下文 QUALITY-01…09 **同时适用**，不以其中任一项绿灯替代另一项。正常游戏中主角、敌我普通兵、将领、场景、近中远战场、美术统一、战斗动作全部须达到成熟商业游戏完成度，具体品质标杆为《王者荣耀》，但不得复制其 IP。必须提交实际 Godot 构建、原始截图、正常速度交战视频、参考差距修复、资源来源，以及真实 512v512 和 M5 帧时间。当前 RC13 的艺术状态为 **ART_REVIEW_REQUIRED**，M5 完整实机为 **DEVICE_NOT_RUN**。未经 Owner 明确认可绝不能标记 OWNER_ART_APPROVED；旧版“视觉纵切片完成”仅可指技术资产接入。
+
 2026-11-12 更新｜Owner 最新首版战斗权威见 PRODUCT_DECISIONS.md §1F｜Codex 为首要工程实施者，负责提交真实代码、测试、构建和 M5 性能验证状态；此前与叙事相关的长线验收继续保留，但首版剧情创作暂停。
 
 ## OWNER-QUALITY-20261113｜高精度画面与高刷新率新增验收
