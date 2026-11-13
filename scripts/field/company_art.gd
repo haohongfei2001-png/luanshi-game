@@ -57,13 +57,14 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	assembled[key]=result
 	return result
 
-static func material(colour: Color, kit: int, player: bool=false) -> ShaderMaterial:
+static func material(colour: Color, kit: int, player: bool=false, shoulder: Color=Color.TRANSPARENT) -> ShaderMaterial:
 	var result:=ShaderMaterial.new()
 	result.shader=SKIN
 	result.set_shader_parameter("cloth_atlas", FABRIC)
 	result.set_shader_parameter("issue_atlas", ISSUE_COLOURS)
 	result.set_shader_parameter("motion_bank", MOTION)
 	result.set_shader_parameter("livery", colour)
+	result.set_shader_parameter("shoulder_dye", shoulder)
 	result.set_shader_parameter("kit", kit)
 	result.set_shader_parameter("player_costume",player)
 	return result

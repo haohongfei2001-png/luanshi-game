@@ -5,6 +5,7 @@ uniform sampler2D cloth_atlas : source_color, filter_linear_mipmap_anisotropic, 
 uniform sampler2D issue_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D motion_bank : filter_linear, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
+uniform vec4 shoulder_dye : source_color = vec4(0.0);
 uniform int kit = 0;
 uniform int travelling_attack_legs = -1;
 uniform bool player_costume = false;
@@ -220,6 +221,34 @@ void fragment() {
         } else if (kit==3 || kit==7 || kit==4) {
             bolt*=.85;
         }
+    }
+    // The upper part of an issued garment is sewn from a deeper bolt of
+    // indigo or madder. The officer's iron and an archer's leather belt stay
+    // in their original material; only woven cloth has coverage in this mask.
+    if (shoulder_dye.a>.5) {
+        float yoke=0.;
+        if (cloth_panel==32) {
+            if (kit==5 || kit==6) {
+                // One crossed panel of a short robe continues over the back.
+                // Below the girdle the working shirt keeps the lighter flax.
+                float overlap=mix(-.16,.44,smoothstep(-.08,.09,bind_point.z));
+                float shoulder_line=bind_point.y+overlap*bind_point.x;
+                float outer_sleeve=smoothstep(.15,.22,abs(bind_point.x))*smoothstep(1.026,1.105,bind_point.y);
+                yoke=max(smoothstep(1.104,1.142,shoulder_line),outer_sleeve);
+            } else {
+                // The iron courses have zero paint coverage. Only the tunic
+                // between the shoulder straps and the edge below the armhole
+                // picks up colour, including the turn towards the shield arm.
+                yoke=smoothstep(1.015,1.113,bind_point.y);
+            }
+            dye=mix(dye,max(dye,smoothstep(.18,.68,dye)),yoke);
+        } else if (cloth_panel==1 || cloth_panel==19 || cloth_panel==27 || cloth_panel==11) {
+            yoke=smoothstep(1.035,1.173,bind_point.y);
+            if (cloth_panel==19) yoke=1.;
+            dye=mix(dye,.97,yoke);
+        }
+        if (player_costume && cloth_panel!=19) yoke=0.;
+        bolt=mix(bolt,shoulder_dye.rgb*mix(.91,1.03,cloth_lot),yoke);
     }
     float fold = dot(ink, vec3(.28, .56, .16));
     float mid = OUTPUT_IS_SRGB ? .73 : .52;

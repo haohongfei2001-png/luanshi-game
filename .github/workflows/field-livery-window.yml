@@ -1,0 +1,74 @@
+name: Review River Gate livery from the normal play distance
+on:
+  push:
+    branches: ['codex/river-field-liveries']
+    paths-ignore: ['docs/**']
+permissions:
+  contents: read
+jobs:
+  window:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Actual input hit and opposed 22 metre views of the contested ranks
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/python3 -c 'import PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-pil; fi
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc17/field-livery
+          mkdir -p "$proof"
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev=280ee8d92e04c5b9394093143f36ea273a611935; fi
+            root="$RUNNER_TEMP/field-$side"
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/field_dye_at_distance.gd "$root/tests"
+            godot=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+            "$godot" --headless --editor --path "$root" --import > "$proof/$side/import.log" 2>&1
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/import.log"; then exit 1; fi
+            for tool in field_dye_at_distance rc7_personal_contact; do
+              xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --disable-vsync --audio-driver Dummy --fixed-fps 30 --script "tests/$tool.gd" -- --field-size=512 > "$proof/$side/$tool.log" 2>&1
+              if grep -E 'ERROR:|Parse Error' "$proof/$side/$tool.log"; then exit 1; fi
+            done
+            grep -F 'LIVERY_LINE true' "$proof/$side/field_dye_at_distance.log"
+            grep -F 'RC7_PERSONAL_PASS' "$proof/$side/rc7_personal_contact.log"
+            cp "$root"/artifacts/field-dye/{line.png,reverse.png,line.json} "$proof/$side/"
+            cp "$root"/artifacts/personal-contact/{personal-contact.png,input.json} "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import json
+          root=Path('docs/evidence/river-gate-v1-rc17/field-livery')
+          for file in ('input.json','line.json'):
+              assert json.loads((root/'before'/file).read_bytes())==json.loads((root/'after'/file).read_bytes())
+          for shot in ('personal-contact','line','reverse'):
+              pair=Image.new('RGB',(1600,500))
+              for i,side in enumerate(('before','after')):
+                  im=Image.open(root/side/(shot+'.png')).convert('RGB')
+                  assert im.size==(1920,1200)
+                  im.resize((1152,720),Image.Resampling.LANCZOS).save(root/side/(shot+'-window.jpg'),quality=90,subsampling=0)
+                  pair.paste(im.resize((800,500),Image.Resampling.LANCZOS),(i*800,0))
+              pair.save(root/(shot+'-pair.jpg'),quality=93,subsampling=0)
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive the same landed strike and opposed views of both living companies'
+          git push origin HEAD:refs/heads/codex/river-field-liveries
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-livery-22m
+          path: docs/evidence/river-gate-v1-rc17/field-livery
