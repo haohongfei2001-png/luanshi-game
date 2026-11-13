@@ -7,6 +7,10 @@ RC20 代码 `126091196db530aa7ec13de61f839c9c41cac24b`。新版本从相同战�
 复现 `godot --headless --path . --script tests/model_library_parity.gd`，随后在 1920 × 1200 的图形窗口运行 `godot --path . --resolution 1920x1200 --fixed-fps 20 --script tests/fort_corner_window.gd -- --field-size=512`。原片与步时保留在上述固定提交。美术和真实 M5 20 分钟验收仍待完成。
 
 
+### 已归档的 RC20 默认原生包
+
+托管 M1 的默认 Metal 千人战斗实测 109.40 FPS，P50 / P95 / P99 6.979 / 20.806 / 30.303 毫秒，峰值 RSS 493 MiB。9 项原生启动及焦点测试有 8 项通过；刻意切窗的兼容后端未收到失焦，正式 CI 6/7。托管 M1 默认 Metal 两次进入战斗；冷启动首帧分别用了 54.82 和 10.19 秒。旧档、军令、九兵器、坐骑、攻城、回营和后续行军均可回看。[下载经过校验的 RC20](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/66c8172d8f5a616e525ecaa090c71b2e54a96869/candidate/River-Gate-RC20-macOS.zip) · [完整原片、数据和失败现场](https://github.com/haohongfei2001-png/luanshi-game/blob/decff89e6c255832318c3981584159f33d0b86b3/docs/evidence/river-gate-v1-rc20/PLAYTEST.md)
+
 ## 河关 RC20 · 过河军阵实机
 
 RC19 建筑、衣甲、倒地动作与存档在此基础上保留。过桥时可辨老柳向水探出的枝干和桥面留白；四个 1920 × 1200 实机机位与 RC19 同种子、同一批士兵，进度、伤亡相同。前几版整株过亮、露枝和方向遮挡的缺点已保留。[桥上军阵的完整对照](https://github.com/haohongfei2001-png/luanshi-game/tree/aeb09e7a3f9f7ecc12c7997ba238e4fc11cb0232/docs/evidence/river-gate-v1-rc20/ford-willows)
