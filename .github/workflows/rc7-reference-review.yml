@@ -1,0 +1,26 @@
+name: Review the repository's river-gate art reference
+on:
+  push:
+    branches: [codex/river-gate-rc7-window-review]
+    paths: [.github/workflows/rc7-reference-review.yml]
+permissions:
+  contents: read
+jobs:
+  reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Show both owner references and the RC6 field at an equal viewing width
+        run: |
+          python3 - <<'PY'
+          import base64, io
+          from pathlib import Path
+          from PIL import Image
+          for name,path in [('overview','docs/art-direction/river-gate/battle-view.png'),('figure','docs/art-direction/river-gate/pose-detail.png'),('original','docs/evidence/river-gate-v1-rc6/formation.jpg')]:
+              img=Image.open(path).convert('RGB'); img.thumbnail((1344,900))
+              stream=io.BytesIO(); img.save(stream,'JPEG',quality=90)
+              print('ART_REFERENCE',name,base64.b64encode(stream.getvalue()).decode())
+          PY
