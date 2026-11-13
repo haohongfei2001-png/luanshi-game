@@ -1,0 +1,22 @@
+name: Fit the redistributable timberwork to the gate crossing
+on:
+  push:
+    branches: ['codex/river-bridge-timber']
+permissions:
+  contents: read
+jobs:
+  timber:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bake the signed truss and diffuse sources
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/python3 -c 'import numpy,PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy python3-pil; fi
+          /usr/bin/python3 tools/art/import_bridge_timber.py "$RUNNER_TEMP/bridge-sources"
+          git add -- assets/third_party/wildfire_bridge
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the Wildfire timber truss and its fitted diffuse atlas'
+          git push origin HEAD:refs/heads/codex/river-bridge-timber
