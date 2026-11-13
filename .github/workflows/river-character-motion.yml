@@ -1,0 +1,36 @@
+name: Inspect the published humanoid motions for the walking ranks
+on:
+  push:
+    branches: ['codex/river-march-source']
+permissions:
+  contents: read
+jobs:
+  catalogue:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Inventory actual redistributable meshes and materials
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 1 'https://store.godotengine.org/asset/quaternius/universal-animation-library/download/44/?source=river-march-v1' -o "$RUNNER_TEMP/motion.zip"
+          python3 - "$RUNNER_TEMP/motion.zip" <<'PY'
+          import hashlib, json, sys, zipfile
+          from pathlib import Path
+          p=Path(sys.argv[1])
+          print("ANIMATION_ARCHIVE",p.stat().st_size,hashlib.sha256(p.read_bytes()).hexdigest())
+          with zipfile.ZipFile(p) as archive:
+              for i in archive.infolist():
+                  if i.filename.lower().endswith((".zip",".png",".glb",".gltf",".fbx",".txt",".md",".blend")):
+                      print("AUTHOR_MEMBER",i.filename, i.file_size)
+                      if i.filename.lower().endswith(".gltf"):
+                          g=json.loads(archive.read(i)); print("AUTHOR_RIG",i.filename,[n.get("name") for n in g.get("nodes",[])][:70],[a.get("name") for a in g.get("animations",[])])
+              for i in archive.infolist():
+                  if i.filename.lower().endswith(".zip"):
+                      import io
+                      with zipfile.ZipFile(io.BytesIO(archive.read(i))) as sub:
+                          for n in sub.infolist():
+                              if n.filename.lower().endswith((".png",".glb",".gltf",".fbx",".txt",".md")):
+                                  print("NEST_MEMBER",i.filename,n.filename,n.file_size)
+                                  if n.filename.lower().endswith(".gltf"):
+                                      g=json.loads(sub.read(n)); print("AUTHOR_RIG",n.filename,[p.get("name") for p in g.get("nodes",[])][:70],[a.get("name") for a in g.get("animations",[])])
+          PY
