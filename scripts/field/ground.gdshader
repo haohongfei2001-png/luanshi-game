@@ -3,15 +3,11 @@ render_mode diffuse_lambert, cull_disabled;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
+uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
 uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D shale_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D lane_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
-uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
-uniform vec4 pasture : source_color = vec4(.421,.479,.318,1.);
-uniform vec4 straw : source_color = vec4(.575,.550,.362,1.);
-uniform vec4 cool_sod : source_color = vec4(.274,.364,.287,1.);
-uniform vec4 worn_loess : source_color = vec4(.603,.513,.398,1.);
 uniform sampler2D verge_track : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform vec4 river_silt : source_color = vec4(.39,.40,.31,1.);
 uniform vec4 deep_water : source_color = vec4(.13,.31,.34,1.0);
@@ -53,38 +49,34 @@ vec3 painted_ground(vec2 p, float shore) {
     vec2 warp=.10*vec2(sin(p.y*.22+p.x*.06),cos(p.x*.19-p.y*.087));
     vec3 turf=texture(meadow_paint,uv+warp).rgb;
     vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66).rgb;
-    // The mill road, its eroded lip, and the cut fields have separate large
-    // shapes in world metres. A little dry earth or a grass leaf supplies the
-    // close edge. The middle of each field remains quiet during a camera pan.
-    vec3 margins=texture(field_margins,mapped).rgb;
     float clay_value=dot(clay,vec3(.30,.57,.13));
     float turf_value=dot(turf,vec3(.30,.57,.13));
-    float turf_detail=clamp(turf_value/(OUTPUT_IS_SRGB?.44:.17)-1.0,-.72,.78);
-    float grit=clamp(clay_value/(OUTPUT_IS_SRGB?.55:.25)-1.0,-.65,.77);
-    float pasture_light=smoothstep(.34,.73,cover.b);
-    vec3 turf_base=mix(pasture.rgb,cool_sod.rgb,.20+margins.g*.64);
-    turf_base=mix(turf_base,straw.rgb,.35*margins.r+.12*pasture_light);
-    vec3 verge=turf_base*(.85+.15*pasture_light+.26*turf_detail);
+    // Suppress orange and lime in sunlight, keeping the sampled shape and value.
+    clay=mix(vec3(clay_value),clay,.32)*(OUTPUT_IS_SRGB?vec3(.76,.78,.88):vec3(.60,.63,.79));
+    turf=mix(vec3(turf_value),turf,.52)*(OUTPUT_IS_SRGB?vec3(.78,.79,.82):vec3(.64,.65,.70));
     float near_track=1.0-smoothstep(.55,.96,cover.a);
     float tilled=smoothstep(.25,.60,cover.r)*(1.0-smoothstep(.72,.89,cover.r))*(1.0-near_track);
-    float edge=cover.r*(1.0-.35*tilled)+(.48-marks.r)*.13+(.50-marks.b)*.072;
-    float lane=smoothstep(.36,.82,edge);
+    float broken=smoothstep(.23,.91,marks.g+.24*marks.b);
+    float edge=cover.r*(1.0-tilled*(.26+.39*broken))+(.47-marks.r)*.22+(.54-marks.b)*.083;
+    float lane=smoothstep(.32,.79,edge);
     float wet=max(cover.g,shore);
-    vec3 soil=worn_loess.rgb*(.95+.21*grit+.07*pasture_light);
+    vec3 verge=turf*vec3(.84,.99,.95);
+    // Mown and uncropped banks differ in broad value, not just their highlights.
+    verge*=.83+.17*smoothstep(.22,.62,cover.b)+.16*clamp(landscape.g*1.55,0.0,1.0);
+    // Small changes of hue identify the fallow field and the cool turf under
+    // the elms while retaining the close grass, wheel wear and tonal breaks.
+    vec3 margins=texture(field_margins,mapped).rgb;
+    verge*=mix(vec3(1.0),vec3(.79,.88,.98),margins.g*.81);
+    verge*=mix(vec3(1.0),vec3(1.16,1.018,.825),margins.r*.76);
+    vec3 colour=mix(verge,clay*vec3(1.075,1.056,1.012),lane);
+    colour=mix(colour,landscape,.159+.06*(1.0-lane));
     float lip=4.0*lane*(1.0-lane);
-    float shoulder=max(lip*.56,margins.b*.86);
-    vec3 packed_edge=mix(worn_loess.rgb,straw.rgb,.34)*(.79+.15*turf_detail);
-    vec3 colour=mix(mix(verge,soil,lane),packed_edge,shoulder);
-    // Soil varies across a crown as well as along it. Leave stretches of
-    // interrupted wheel wear, including the shallow roll of their inner lip.
-    float rut_center=.385+(.5-marks.g)*.040;
-    float rut=1.0-smoothstep(.022,.089,abs(cover.a-rut_center));
-    float roll=1.0-smoothstep(.035,.088,abs(cover.a-rut_center+.092));
-    float tread_weight=lane*(.20+.54*marks.g+.22*pasture_light)*(1.0-wet);
-    colour*=1.0+(.045*roll-.23*rut)*tread_weight;
-    colour=mix(colour,landscape,.12+.03*(1.0-lane));
-    vec3 alluvium=mix(soil,river_silt.rgb,.71)*vec3(.84,.98,.96);
-    colour=mix(colour,alluvium,.74*smoothstep(.20,.98,wet));
+    colour*=1.0-lip*(.075+.085*marks.r);
+    colour=mix(colour,clay*.94,.20*margins.b*(1.0-lane)*(.53+.47*marks.g));
+    float rut=1.0-smoothstep(.028,.101,abs(cover.a-.385+(.5-marks.g)*.04));
+    colour*=1.0-.23*rut*lane*(.38+.62*marks.g)*(1.0-wet);
+    vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
+    colour=mix(colour,alluvium, .73*smoothstep(.20,.98,wet));
     return colour;
 }
 
@@ -184,9 +176,7 @@ void fragment() {
 				vec2((n.x>n.z?p.y:p.x)*.51+local_pos.y*.21,local_pos.y*.74+p.x*.12);
 			vec3 shale=texture(shale_paint,rock_uv).rgb;
 			float facet=.88+.17*clamp(local_normal.y,0.0,1.0);
-			// A continuous bed of shale has a light cap and a darker snapped face.
-			// The photographed flecks sit inside those planes at normal play distance.
-			vec3 stone=mix(color*facet,shale,.28);
+			vec3 stone=mix(shale*facet,color,.28);
 			// Pieces on walkable ground are shallow by design. Let their buried
 			// toes inherit the exact same turf, instead of drawing a polygon rim.
 			bool on_land=abs(p.x+32.0)>5.1;
@@ -199,12 +189,18 @@ void fragment() {
 				float exposed=smoothstep(.024,.153,lift);
 				color=mix(painted_ground(p,0.0),stone*.90,exposed*.90);
 			} else color=stone;
-		} else if (part>19.5 && part<20.5) {
-			// Worn turf folds back to the old field; its bank stays close in
-			// value to the ground so nearby soldiers still read at normal zoom.
-			vec3 turf=painted_ground(p,0.0);
-			float exposed=1.0-smoothstep(.37,.87,local_normal.y);
-			color=mix(turf,color,.19+.32*exposed);
+		} else if(part>19.5 && part<20.5) {
+			// The low bedding seam lies within the sod, where cart wheels
+			// clear soil around the first exposed stones of the pasture.
+			color=mix(painted_ground(p,0.0),color,.08+.22*(1.0-smoothstep(.35,.78,local_normal.y)));
+		} else if(part>20.5 && part<21.5) {
+			// Broken grey sandstone forms broad, thin beds. Its wet toe is
+			// dark, with lighter horizontal surfaces emerging from the water.
+			vec3 n=abs(local_normal);
+			vec2 stone_uv=local_normal.y>.55?p*.34:vec2((n.x>n.z?p.y:p.x)*.45,local_pos.y*.53);
+			vec3 shale=texture(shale_paint,stone_uv).rgb;
+			float above=smoothstep(-.31,-.04,local_pos.y);
+			color=mix(color,shale,.24)*mix(vec3(.58,.69,.71),vec3(.96),above);
 		} else if(part>=17.5 && part<18.5) {
 			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
 			float grit=texture(fieldbed,face_uv).r;
