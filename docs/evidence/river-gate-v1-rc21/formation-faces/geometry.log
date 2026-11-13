@@ -1,0 +1,20 @@
+levy Close 3832 triangles
+archer Close 3184 triangles
+regular Close 3557 triangles
+guard Close 3761 triangles
+officer Close 4183 triangles
+player Close 4738 triangles
+levy Line 1424 triangles
+archer Line 1280 triangles
+regular Line 1485 triangles
+guard Line 1617 triangles
+officer Line 1791 triangles
+player Line 2014 triangles
+SOURCE.md 8419
+campaign_colours.svg 16009
+cloth_and_iron.png 461242
+company_motion.png 1445160
+field_garments.gltf 204828
+garrison_bodies.glb 332544
+river_company.glb 2071056
+surface_response.png 349501
