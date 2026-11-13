@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b4au5n7h2ngrx"
+path="res://.godot/imported/elm-spray.svg-45092e1c3527620971749b2458045f63.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/elm-spray.svg"
+dest_files=["res://.godot/imported/elm-spray.svg-45092e1c3527620971749b2458045f63.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

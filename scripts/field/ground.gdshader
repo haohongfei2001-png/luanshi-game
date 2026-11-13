@@ -3,6 +3,7 @@ render_mode diffuse_lambert, cull_disabled;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
+uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
 uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D shale_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
@@ -62,10 +63,16 @@ vec3 painted_ground(vec2 p, float shore) {
     vec3 verge=turf*vec3(.84,.99,.95);
     // Mown and uncropped banks differ in broad value, not just their highlights.
     verge*=.83+.17*smoothstep(.22,.62,cover.b)+.16*clamp(landscape.g*1.55,0.0,1.0);
+    // Small changes of hue identify the fallow field and the cool turf under
+    // the elms while retaining the close grass, wheel wear and tonal breaks.
+    vec3 margins=texture(field_margins,mapped).rgb;
+    verge*=mix(vec3(1.0),vec3(.79,.88,.98),margins.g*.81);
+    verge*=mix(vec3(1.0),vec3(1.16,1.018,.825),margins.r*.76);
     vec3 colour=mix(verge,clay*vec3(1.075,1.056,1.012),lane);
     colour=mix(colour,landscape,.159+.06*(1.0-lane));
     float lip=4.0*lane*(1.0-lane);
     colour*=1.0-lip*(.075+.085*marks.r);
+    colour=mix(colour,clay*.94,.20*margins.b*(1.0-lane)*(.53+.47*marks.g));
     float rut=1.0-smoothstep(.028,.101,abs(cover.a-.385+(.5-marks.g)*.04));
     colour*=1.0-.23*rut*lane*(.38+.62*marks.g)*(1.0-wet);
     vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
@@ -182,6 +189,18 @@ void fragment() {
 				float exposed=smoothstep(.024,.153,lift);
 				color=mix(painted_ground(p,0.0),stone*.90,exposed*.90);
 			} else color=stone;
+		} else if(part>19.5 && part<20.5) {
+			// The low bedding seam lies within the sod, where cart wheels
+			// clear soil around the first exposed stones of the pasture.
+			color=mix(painted_ground(p,0.0),color,.08+.22*(1.0-smoothstep(.35,.78,local_normal.y)));
+		} else if(part>20.5 && part<21.5) {
+			// Broken grey sandstone forms broad, thin beds. Its wet toe is
+			// dark, with lighter horizontal surfaces emerging from the water.
+			vec3 n=abs(local_normal);
+			vec2 stone_uv=local_normal.y>.55?p*.34:vec2((n.x>n.z?p.y:p.x)*.45,local_pos.y*.53);
+			vec3 shale=texture(shale_paint,stone_uv).rgb;
+			float above=smoothstep(-.31,-.04,local_pos.y);
+			color=mix(color,shale,.24)*mix(vec3(.58,.69,.71),vec3(.96),above);
 		} else if(part>=17.5 && part<18.5) {
 			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
 			float grit=texture(fieldbed,face_uv).r;
