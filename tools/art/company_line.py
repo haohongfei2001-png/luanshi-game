@@ -1,6 +1,7 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
 from field_armour import field_helmet, skirts
+from company_weapons import field_shield
 from figure_mesh import Surface, add, lerp
 
 def costume(look,rank=False):
@@ -10,11 +11,21 @@ def costume(look,rank=False):
         def body(p):
             if p[1]<.86: return (LT if p[0]<0 else RT,HIPS,.35)
             return (CHEST,HIPS,clamp((p[1]-.86)*3))
-        hem=.58 if look=="archer" else .53 if heavy else .58
-        s.rings([(hem,.255,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
-                 (1.447,.083,.07,0,0)],"dyed",body,6)
+        if look=="levy":
+            def tucked(p,a,row):
+                take=max(0.,sin(a+.15))
+                return (p[0],p[1]+(.22*take-.04*max(0.,-sin(a))) if row==0 else p[1],p[2])
+            s.rings([(.48,.229,.153,0,-.019),(.76,.201,.142,0,-.012),(.958,.154,.115,0,-.012),
+                     (1.27,.207,.134,0,-.012),(1.43,.078,.069,0,0)],"linen",body,8,tucked)
+        else:
+            hem=.58 if look=="archer" else .53
+            width=.293 if look=="guard" else .255
+            s.rings([(hem,width,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
+                     (1.447,.083,.07,0,0)],"dyed",body,6)
         if heavy:
-            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lamellar",CHEST,8)
+            rib=.286 if look=="guard" else .251
+            s.rings([(1.01,rib*.79,.154,0,-.014),(1.28,rib,.177,0,-.009),
+                     (1.385,rib*.83,.128,0,-.01)],"lamellar",CHEST,8)
             skirts(s,look,HIPS,(LT,RT),rank=True)
         if look=="levy":
             for front in (True,False):
@@ -53,6 +64,8 @@ def costume(look,rank=False):
                 s.oval((-.016,1.750,-.054),(.057,.058,.067),"hair",HEAD,7,4)
     else:
         head(s,look,HEAD)
+    if look=="levy" and rank:
+        s.oval((-.012,1.718,-.075),(.039,.035,.051),"hair",HEAD,6,3)
     n=3 if rank else 5
     for side in (-1,1):
         upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
@@ -64,14 +77,20 @@ def costume(look,rank=False):
                 s.tube([a,lerp(a,hem,.37),hem],[.081,.100,.082],"lames",upper,5)
                 s.tube([hem,b],[.070,.067],"dyed",upper,4)
             else:
-                s.tube([a,b],[.084,.069],"dyed",upper,n)
+                s.tube([a,lerp(a,b,.68),b],[.078,.082,.060],"linen" if look=="levy" else "dyed",upper,5)
         forearm(s,look,side,n,rank)
         p=grip(side)
         s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)
         a,b,c=leg_nodes(side)
-        s.tube([a,b],[.096,.079],"felt",thigh,n)
-        s.tube([b,c],[.074,.053],"binding",shin,n)
-        s.rings([(.007,.066,.136,c[0],.052),(.067,.065,.111,c[0],.043),(.141,.052,.061,c[0],0)],"boots",boot,n+1)
+        # Shape the calf and cloth at the knee; a straight triangle tube at the
+        # everyday distance made boots read like pegs beside an otherwise curved tunic.
+        width=.91 if look=="levy" else 1.07 if look=="guard" else 1.
+        leg_sides=5 if rank else 8
+        s.tube([a,lerp(a,b,.35),lerp(a,b,.78),b],[(rx*width,rz*width) for rx,rz in
+               ((.103,.118),(.109,.126),(.088,.103),(.079,.093))],"felt",thigh,leg_sides)
+        s.tube([b,lerp(b,c,.19),lerp(b,c,.59),c],[(.079,.093),(.078,.085),(.053,.068),(.047,.056)],"binding",shin,leg_sides)
+        s.rings([(.007,.065,.136,c[0],.052),(.062,.064,.120,c[0],.054),
+                 (.101,.058,.090,c[0],.032),(.145,.050,.061,c[0],0)],"boots",boot,leg_sides)
     if rank and look=="archer":
         s.tube([(-.16,.797,-.168),(.123,1.373,-.196),(.17,1.505,-.201)],[.048,.067,.022],"quiver",CHEST,4)
     return s
@@ -98,13 +117,7 @@ def arms(kit):
             s.tube([add(c,(-.078,0,.15)),add(c,(.078,0,.15))],[.02,.02],"brass",bone,3)
             blade(c,.71 if kit==8 else .91,.048 if kit==1 else .036,.141 if kit==1 else .015,bone)
         if kit==7:
-            c=add(grip(-1),(0,.02,.112))
-            rim=[add(c,(x,y,-.06)) for x,y in ((-.1,-.4),(-.23,-.25),(-.24,.22),(-.13,.36),(.13,.36),(.24,.22),(.23,-.25),(.1,-.4))]
-            for i,p in enumerate(rim):
-                q=rim[(i+1)%len(rim)]
-                s.panel([p,q,lerp(q,c,.98),lerp(p,c,.98)],"shield",LH)
-            s.tube([add(c,(0,-.355,-.035)),c,add(c,(0,.338,-.034))],[.018,.027,.017],"iron",LH,3)
-            s.oval(add(c,(0,.008,.027)),(.087,.103,.039),"iron",LH,6,3)
+            field_shield(s,False)
     elif kit in (2,3,4):
         stick((0,0,-.697),(0,0,1.69),.031,.026,"timber")
         if kit!=2: blade(add(g,(0,0,1.56)),.343 if kit==3 else .614,.06 if kit==3 else .089,0 if kit==3 else .143,RH)

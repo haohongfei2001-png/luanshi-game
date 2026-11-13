@@ -55,7 +55,15 @@ def head(s,look,bone):
     heavy=look in ("regular","guard","officer")
     width={"levy":.105,"archer":.099,"regular":.105,"guard":.110,"officer":.109,"player":.105}[look]
     def bind(x,y,z):
-        return (x*width, 1.725+(y-8.10)*.110, (z-.28)*.112+.015)
+        # The armour issue and haircut carry at distance. Underneath, keep
+        # distinct jaw taper, cheek breadth and chin without changing head pivot.
+        jaw=max(0.,min(1.,(7.1-y)/1.37))
+        if look=="levy":
+            x*=1.-.17*jaw
+            z+=.12*jaw*max(0.,min(1.,z))
+        elif look in ("guard","officer"):
+            x*=1.+.16*jaw
+        return (x*width,1.725+(y-8.10)*.110,(z-.28)*.112+.015)
     def scalp(angle,height,extra=0):
         h=max(0,min(20.999,(height-6.33)/.081))
         u=(angle/TAU*32)%32
