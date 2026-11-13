@@ -2,7 +2,7 @@ name: Compare the fitted shoulders and a full-speed infantry march
 on:
   push:
     branches: ['codex/river-fitted-shoulders']
-    paths-ignore: ['docs/**','assets/river_gate/figures/company_motion.png','assets/river_gate/figures/river_company.glb','assets/river_gate/figures/field_garments.gltf','assets/third_party/wildfire_garments/field_issues.glb']
+    paths-ignore: ['docs/**','.github/workflows/fitted-infantry-window.yml','.github/workflows/field-fall-finish.yml','tests/field_fall_finish.gd','tools/art/check_grounded_finish.py','tools/art/company_motion.py','assets/river_gate/figures/company_motion.png','assets/river_gate/figures/river_company.glb','assets/river_gate/figures/field_garments.gltf','assets/third_party/wildfire_garments/field_issues.glb']
 permissions:
   contents: read
 jobs:

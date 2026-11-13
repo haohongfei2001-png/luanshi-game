@@ -1,0 +1,89 @@
+name: Inspect the completed fall in the real river siege
+on:
+  push:
+    branches: ['codex/river-fitted-shoulders']
+    paths: ['.github/workflows/field-fall-finish.yml','tests/field_fall_finish.gd','tools/art/check_grounded_finish.py','tools/art/company_motion.py']
+permissions:
+  contents: read
+jobs:
+  fall:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 13
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Measure the skull, breast and both boots of all nine baked kits
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get -yq install python3-pil ffmpeg
+          proof=docs/evidence/river-gate-v1-rc19/fitted-infantry/ground-rest
+          mkdir -p "$proof"
+          cp assets/river_gate/figures/company_motion.png "$RUNNER_TEMP/previous.png"
+          /usr/bin/python3 -c "import sys;sys.path.insert(0,'tools/art');from company_motion import bake_motion;from pathlib import Path;bake_motion(Path('assets/river_gate/figures'))"
+          /usr/bin/python3 tools/art/check_grounded_finish.py "$RUNNER_TEMP/previous.png" "$proof/kits.json"
+          /usr/bin/python3 tools/art/check_company_motion.py | tee "$proof/grips.log"
+          /usr/bin/python3 tools/art/check_field_carries.py | tee "$proof/contact.log"
+          git add -- assets/river_gate/figures/company_motion.png
+          git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the nine grounded finishes while retaining the remaining movement and contacts'
+          git rev-parse HEAD
+      - name: Compare the gate approach, corpse at rest and actual real-time casualty
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc19/fitted-infantry/ground-rest
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev=2d75e884a4e4e4bdec692875ecbda40d60e453a8; fi
+            root="$RUNNER_TEMP/rest-$side"
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/field_fall_finish.gd "$root/tests"
+            godot=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+            "$godot" --headless --editor --path "$root" --import > "$proof/$side/import.log" 2>&1
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/import.log"; then exit 1; fi
+            xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_fall_finish.gd -- --field-size=512 > "$proof/$side/engine.log" 2>&1
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/engine.log"; then exit 1; fi
+            grep -F 'GROUND_FALL true' "$proof/$side/engine.log"
+            cp "$root"/artifacts/field-fall/{rest.png,approach.png,case.json} "$proof/$side"
+            xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$root" --resolution 1280x800 --disable-vsync --fixed-fps 20 --write-movie "$RUNNER_TEMP/$side.avi" --script tests/field_fall_finish.gd -- --field-size=512 --fall-film > "$proof/$side/movie.log" 2>&1
+            grep -F 'GROUND_FALL true' "$proof/$side/movie.log"
+            cp "$root"/artifacts/field-fall/{fall-*.png,fall.json} "$proof/$side"
+            ffmpeg -loglevel error -y -i "$RUNNER_TEMP/$side.avi" -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac "$proof/$side/fall.mp4"
+          done
+          ffmpeg -loglevel error -y -i "$proof/before/fall.mp4" -i "$proof/after/fall.mp4" -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -map 1:a:0 -c:v libx264 -crf 19 -pix_fmt yuv420p -c:a copy "$proof/equal-speed.mp4"
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+          root=Path('docs/evidence/river-gate-v1-rc19/fitted-infantry/ground-rest')
+          for name in ('case','fall'):
+              assert json.loads((root/'before'/(name+'.json')).read_text())==json.loads((root/'after'/(name+'.json')).read_text())
+          for name in ('rest','approach','fall-00','fall-07','fall-15','fall-22'):
+              pair=Image.new('RGB',(1000,340) if name!='approach' else (1500,469))
+              for i,s in enumerate(('before','after')):
+                  im=Image.open(root/s/(name+'.png')).convert('RGB')
+                  if name=='rest': im=im.crop((712,404,1212,744))
+                  elif name.startswith('fall-'): im=im.crop((490,274,830,505))
+                  sz=(pair.width//2,pair.height)
+                  pair.paste(im.resize(sz,Image.Resampling.LANCZOS),(i*sz[0],0))
+              pair.save(root/(name+'-pair.jpg'),quality=94,subsampling=0)
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record the same casualty and both boot heights in the fixed river assault'
+          git push origin HEAD:refs/heads/codex/river-fitted-shoulders
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-grounded-fall
+          path: docs/evidence/river-gate-v1-rc19/fitted-infantry/ground-rest

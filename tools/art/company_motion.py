@@ -93,6 +93,57 @@ REACTIONS=((10,-1),(10,1),(11,-1),(11,1))
 def ramp(t,start,end):
     return smooth(max(0.,min(1.,(t-start)/(end-start))))
 
+def blend_rigid(origin, target, amount):
+    q,p=origin
+    n,end=target
+    if dot(q,n)<0.:
+        n=tuple(-v for v in n)
+    return unit(lerp(q,n,amount)),lerp(p,end,amount)
+
+
+def grounded_rest(kit):
+    """Rest on the back or rear shoulder with the heavy parts on the earth.
+
+    Locations are body-joint pivots, never scaled. Forward +Z runs towards
+    the boots once prone. The unchanged 2-bone solver maintains bone lengths.
+    """
+    side=-1 if kit in (1,3,6,8) else 1
+    curl=kit in (2,4,7)
+    root=(side*.033,.201,-.018)
+    pelvis=placed((0,.86,0),root,euler(-82.,side*(6. if curl else 3.),side*4.))
+    chest_root=trans(pelvis,(0,1.008,0))
+    chest=placed((0,1.008,0),chest_root,euler(-89.,side*(14. if curl else 8.),side*5.))
+    neck=trans(chest,(0,1.427,.015))
+    head=placed((0,1.427,.015),neck,euler(-94.,side*23.,side*6.))
+    ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
+    ms[HIPS],ms[CHEST],ms[HEAD]=pelvis,chest,head
+    for direction in (-1,1):
+        thigh,shin,boot=(LT,LS,LB) if direction<0 else (RT,RS,RB)
+        binds=leg_nodes(direction)
+        hip=trans(pelvis,binds[0])
+        bent=direction==side
+        ankle=(direction*(.254 if bent else .168),.087 if bent else .080,
+               .655 if bent and curl else .675 if bent else .710)
+        # The bent knee falls out towards the soil. It does not hinge up in
+        # the air as in the standing IK pose.
+        ms[thigh],ms[shin]=two_link(binds,hip,ankle,(direction*.98,.12,-.10))
+        ms[boot]=placed(binds[2],ankle,euler(-70. if bent else -78.,
+                              direction*(31. if bent else 15.),direction*17.))
+        upper,fore,hand=(LU,LF,LH) if direction<0 else (RU,RF,RH)
+        arms=arm_nodes(direction)
+        shoulder=trans(chest,arms[0])
+        across = direction==-side and curl
+        elbow=(direction*(.248 if across else .402),.121,
+               -.267 if across else -.277)
+        wrist=(direction*(.123 if across else .461),.130 if across else .091,
+               -.095 if across else -.068)
+        pole=unit(sub(elbow,shoulder))
+        ms[upper],ms[fore]=two_link(arms,shoulder,wrist,pole)
+        ms[hand]=placed(arms[2],wrist,euler(-80.,direction*20.,direction*9.))
+    ms[NOCK]=ms[LH]
+    return ms
+
+
 def pose(kit,clip,t,loadout=0,side_hit=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
@@ -522,9 +573,17 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         ms[thigh],ms[shin]=two_link(binds,trans(pelvic,binds[0]),foot,(side*(1.1 if ride else .16),-.08,1))
         ms[boot]=placed(binds[2],foot,foot_q)
     if clip==14:
-        k=smooth(max(0.,min(1.,(t-.14)/.80)))
+        k=ramp(t,.14,.75)
         fall=placed((0,.10,0),(0,.10,0),euler(-76*k,18*k,29*k))
         ms=[chain(fall,m) for m in ms]
+        if t>.28:
+            # When the pelvis reaches the floor, the inert body uncoils off
+            # the kneeling pose. Give the final ankles, torso and head their
+            # own support heights; turning a crouched upright rig around its
+            # feet left both boot shafts pointing into the air indefinitely.
+            weight=ramp(t,.28,.97)
+            rest=grounded_rest(kit)
+            ms=[blend_rigid(from_pose,to_pose,weight) for from_pose,to_pose in zip(ms,rest)]
     return ms
 
 def cycling(clip):
