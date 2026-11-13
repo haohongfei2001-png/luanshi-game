@@ -1,0 +1,5 @@
+foreground 5347
+game_activation_requested=1 game_active=1
+interrupt 5347
+control_active=1 game_active=0
+game_activation_requested=1 game_active=1
