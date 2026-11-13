@@ -9,3 +9,6 @@ Luanshi contributors fitted the gate span and passage height to the playable Riv
 
 The four corner galleries and battered bases in corner_tower.glb use Wildfire Games' han_wall_tower.dae from the same fixed revision and the same shared atlas. Luanshi contributors refitted it to the existing wall walk, separated the gallery at walk height for the normal camera, and retained its original roof and timber UVs. The derivative is distributed under the same CC BY-SA 3.0 Unported terms.
 https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/actors/structures/han/wall_tower.xml
+
+The side and rear wall walks are derived from the same artist's han_wall_medium.dae, under the same CC BY-SA 3.0 Unported. They use the existing diffuse atlas and are fitted to the local ramp heights and postern opening.
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/actors/structures/han/wall_medium.xml

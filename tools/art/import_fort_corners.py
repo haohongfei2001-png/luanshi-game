@@ -19,6 +19,27 @@ def frame(point):
     ease=t*t*(3.-2.*t)
     return np.array([-y*(.325+.305*ease),height,x*(.447+.180*ease)])
 
+def add_mesh(lib,label,triangles,positions,normals,transforms,uv):
+    out=[];directions=[];tex=[];ids=[];used={}
+    for face in triangles:
+        for pi,ni,ui in face[[0,2,1]]:
+            key=(int(pi),int(ni),int(ui))
+            if key not in used:
+                used[key]=len(out)
+                normal=transforms[pi]@normals[ni]
+                directions.append(normal/max(np.linalg.norm(normal),1e-12))
+                out.append(positions[pi])
+                tex.append((uv[ui,0],1.-uv[ui,1]))
+            ids.append((used[key],))
+    assert out
+    attr={"POSITION":lib.accessor(out,"f",3,True),"NORMAL":lib.accessor(directions,"f",3),"TEXCOORD_0":lib.accessor(tex,"f",2)}
+    ix=lib.accessor(ids,"H",1)
+    index=len(lib.doc["meshes"])
+    lib.doc["meshes"].append({"name":label,"primitives":[{"attributes":attr,"indices":ix}]})
+    lib.doc["nodes"].append({"mesh":index,"name":label})
+    lib.doc["scenes"][0]["nodes"].append(index)
+    print("FORT_CORNER",label,len(ids)//3,np.min(out,axis=0).round(3),np.max(out,axis=0).round(3))
+
 def main(cache):
     p,n,uv,tri=read_frame(source_file(cache,*SOURCE))
     assert len(tri)==1702
@@ -31,25 +52,20 @@ def main(cache):
         h=p[t[:,0],2]
         faces["CornerBatter" if h.max()<10.4 or (h.min()<9.2 and h.mean()<10.0) else "CornerGallery"].append(t)
     for label,triangles in faces.items():
-        out=[];directions=[];tex=[];ids=[];used={}
-        for face in triangles:
-            for pi,ni,ui in face[[0,2,1]]:
-                key=(int(pi),int(ni),int(ui))
-                if key not in used:
-                    used[key]=len(out)
-                    normal=inverse[pi]@n[ni]
-                    directions.append(normal/max(np.linalg.norm(normal),1e-12))
-                    out.append(fitted[pi])
-                    tex.append((uv[ui,0],1.-uv[ui,1]))
-                ids.append((used[key],))
-        assert out
-        attr={"POSITION":lib.accessor(out,"f",3,True),"NORMAL":lib.accessor(directions,"f",3),"TEXCOORD_0":lib.accessor(tex,"f",2)}
-        ix=lib.accessor(ids,"H",1)
-        index=len(lib.doc["meshes"])
-        lib.doc["meshes"].append({"name":label,"primitives":[{"attributes":attr,"indices":ix}]})
-        lib.doc["nodes"].append({"mesh":index,"name":label})
-        lib.doc["scenes"][0]["nodes"].append(index)
-        print("FORT_CORNER",label,len(ids)//3,np.min(out,axis=0).round(3),np.max(out,axis=0).round(3))
+        add_mesh(lib,label,triangles,fitted,n,inverse,uv)
+    p,n,uv,tri=read_frame(source_file(cache,"meshes/structural/han_wall_medium.dae",
+                                     "2fae82ec78965c6978a2b6db91c041b2d4f14ef9"))
+    assert len(tri)==967
+    width=np.ptp(p[:,0])
+    centre=(p[:,0].min()+p[:,0].max())*.5
+    # A single module between the corner footings is twenty metres long.
+    # Its upper walk matches the existing playable surface at 3.25 metres.
+    z_breaks=[-5.,0.,8.1,9.5,13.]
+    heights=[-1.40,.0,3.25,3.49,4.32]
+    fit_wall=lambda v: np.array([-v[1]*.331,np.interp(v[2],z_breaks,heights),(v[0]-centre)*20./width])
+    fitted=np.array([fit_wall(q) for q in p])
+    inverse=[np.linalg.inv(np.column_stack([(fit_wall(q+s)-fit_wall(q-s))/.002 for s in basis])).T for q in p]
+    add_mesh(lib,"CurtainWalk",tri,fitted,n,inverse,uv)
     lib.save(OUT/"corner_tower.glb")
 
 if __name__=="__main__":

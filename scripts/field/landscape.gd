@@ -532,9 +532,8 @@ func _fort(b: Builder) -> void:
 			b.quad(start,lift_end,lift_end+Vector3.UP*0.035,start+Vector3.UP*0.035,Color("7d735f"))
 		for i in range(6,23,2):
 			b.block(Vector3(Ground.WALL_X-1.07,3.59,side*i),Vector3(0.47,0.66,1.33),Color("9b9079"))
-		b.block(Vector3((Ground.WALL_X+Ground.BACK_X)*0.5,1.68,side*Ground.WALL_Z),Vector3(Ground.BACK_X-Ground.WALL_X,3.35,2.1),LIME)
-		for x in range(49,90,2):
-			b.block(Vector3(x,3.58,side*(Ground.WALL_Z+0.79)),Vector3(1.19,0.64,0.49),LIME)
+		TownGate.mount_curtain(self,Vector3(Ground.WALL_X,0,side*Ground.WALL_Z),
+				Vector3(Ground.BACK_X,0,side*Ground.WALL_Z))
 		for x: float in [Ground.WALL_X,Ground.BACK_X]:
 			TownGate.mount_corner(self,Vector3(x,0,side*Ground.WALL_Z),roofs)
 		var sentry_z:=side*(Ground.GATE_HALF+4.90)
@@ -552,10 +551,8 @@ func _fort(b: Builder) -> void:
 			b.quad(toe-width,toe+width,head+head_width,head-head_width,Color("898979"))
 			b.quad(toe+width,back+width,back+Vector3.UP*3.12+head_width,head+head_width,Color("7c8074"))
 			b.quad(toe-width,head-head_width,back+Vector3.UP*3.12-head_width,back-width,Color("7c8074"))
-		var rear_length := Ground.WALL_Z - Ground.POSTERN_HALF
-		var rear_center := side * (Ground.WALL_Z + Ground.POSTERN_HALF) * 0.5
-		b.joint=8
-		b.block(Vector3(Ground.BACK_X,1.65,rear_center),Vector3(2.3,3.3,rear_length),LIME)
+		TownGate.mount_curtain(self,Vector3(Ground.BACK_X,0,side*Ground.POSTERN_HALF),
+				Vector3(Ground.BACK_X,0,side*Ground.WALL_Z))
 	b.block(Vector3(Ground.BACK_X,3.05,0),Vector3(2.3,0.50,Ground.POSTERN_HALF*2.0),LIME)
 	b.block(Vector3(Ground.BACK_X+1.20,2.73,0),Vector3(0.25,0.23,Ground.POSTERN_HALF*2.0+0.45),WOOD)
 	TownGate.mount(self,Ground.WALL_X,roofs)

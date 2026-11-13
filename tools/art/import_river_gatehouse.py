@@ -21,6 +21,10 @@ def read_frame(path):
         node.tag = node.tag.split("}")[-1]
     mesh = doc.find(".//geometry/mesh")
     tri = mesh.find("triangles")
+    if tri is None:
+        tri=mesh.find("polylist")
+        if tri is None or set(tri.findtext("vcount").split())!={"3"}:
+            raise ValueError("The architectural master must consist of triangles")
     slots = {s.attrib["semantic"]+s.get("set",""):s for s in tri.findall("input")}
     def source(label):
         data = slots[label]
