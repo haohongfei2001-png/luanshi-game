@@ -1,0 +1,346 @@
+[
+  {
+    "ammo": 19,
+    "camera": [
+      4.0,
+      0.834778005958433,
+      -10.1911373138428,
+      3.89092087745667
+    ],
+    "hero": false,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 94,
+    "kit": 5,
+    "lod": 0,
+    "mounted": false,
+    "name": "bow-draw",
+    "officer": false,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      960.0,
+      204.400360107422
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 1,
+    "target": 582,
+    "tick": 32,
+    "visible_ids": "e0bcdb167def5acdb170525449c9d0766ea4aa990ae1ae88fbd5405de7c828cb"
+  },
+  {
+    "ammo": 19,
+    "camera": [
+      5.0,
+      1.09477800595843,
+      -10.1911373138428,
+      3.89092087745667
+    ],
+    "hero": false,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 94,
+    "kit": 5,
+    "lod": 0,
+    "mounted": false,
+    "name": "bow",
+    "officer": false,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      960.00048828125,
+      283.520141601562
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 1,
+    "target": 582,
+    "tick": 32,
+    "visible_ids": "16a157908b9bb1545d7ef27b72434bdfee6436396356cf3e938a1fedba26eb42"
+  },
+  {
+    "ammo": 19,
+    "camera": [
+      22.0,
+      1.09477800595843,
+      -10.1911373138428,
+      3.89092087745667
+    ],
+    "hero": false,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 94,
+    "kit": 5,
+    "lod": 0,
+    "mounted": false,
+    "name": "bow-normal",
+    "officer": false,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      960.0,
+      546.936889648438
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 1,
+    "target": 582,
+    "tick": 32,
+    "visible_ids": "afc4f9b3b82c9a92606f29ade73f95f74e8740182727302bb93027b610de20ab"
+  },
+  {
+    "ammo": 0,
+    "camera": [
+      5.0,
+      1.0839370843657,
+      -10.0,
+      -3.0
+    ],
+    "hero": true,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 1056,
+    "kit": 3,
+    "lod": 0,
+    "mounted": false,
+    "name": "player",
+    "officer": false,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      959.99951171875,
+      255.511291503906
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 0,
+    "target": -1,
+    "tick": 32,
+    "visible_ids": "805cdf1dae1b9153a243049c9bee2fc99fa9c90e39e8a2ca1cd8dc69fd1cda54"
+  },
+  {
+    "ammo": 0,
+    "camera": [
+      22.0,
+      1.0839370843657,
+      -10.0,
+      -3.0
+    ],
+    "hero": true,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 1056,
+    "kit": 3,
+    "lod": 0,
+    "mounted": false,
+    "name": "player-normal",
+    "officer": false,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      959.999816894531,
+      542.240783691406
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 0,
+    "target": -1,
+    "tick": 32,
+    "visible_ids": "5d98c2bfb2ef528ce6e44a6685995eac2c045a8168b07b8dab39a5301c860483"
+  },
+  {
+    "ammo": 0,
+    "camera": [
+      5.0,
+      -2.25606024917192,
+      8.54953765869141,
+      27.163064956665
+    ],
+    "hero": false,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 1044,
+    "kit": 0,
+    "lod": 0,
+    "mounted": false,
+    "name": "officer",
+    "officer": true,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      959.999084472656,
+      255.510635375977
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 0,
+    "target": 129,
+    "tick": 32,
+    "visible_ids": "74bfa785474b7e171271290a350d4ea29c5a57abab3ef030d30c3cde71196fa7"
+  },
+  {
+    "ammo": 0,
+    "camera": [
+      22.0,
+      -2.25606024917192,
+      8.54953765869141,
+      27.163064956665
+    ],
+    "hero": false,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 1044,
+    "kit": 0,
+    "lod": 0,
+    "mounted": false,
+    "name": "officer-normal",
+    "officer": true,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      960.000244140625,
+      542.240905761719
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 0,
+    "target": 129,
+    "tick": 32,
+    "visible_ids": "5fc42e7912c0d612cb629eadc20f4cffe7e7494a0baea4206730d4017787fee1"
+  },
+  {
+    "ammo": 18,
+    "camera": [
+      5.0,
+      1.11477800595843,
+      -10.1830387115479,
+      3.89238929748535
+    ],
+    "hero": false,
+    "hits": [
+      74,
+      33
+    ],
+    "id": 94,
+    "kit": 5,
+    "lod": 0,
+    "mounted": false,
+    "name": "loose",
+    "officer": false,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      1920,
+      1200
+    ],
+    "post": [
+      960.0,
+      283.5205078125
+    ],
+    "scale": 1.0,
+    "seed": 61112,
+    "shadows": true,
+    "state": 2,
+    "target": 582,
+    "tick": 36,
+    "visible_ids": "865a9365f869daca2626035d11928305085bc75473dd33e6c2f81cc0b8941e26"
+  }
+]
