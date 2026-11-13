@@ -1,0 +1,228 @@
+{
+  "FIELD_OFFICER_CONTACT": [
+    {
+      "dead": [
+        1,
+        1
+      ],
+      "kills": [
+        1,
+        1
+      ],
+      "skills": [
+        2,
+        2
+      ],
+      "ticks": 230
+    }
+  ],
+  "FIELD_OFFICER_DUEL": [
+    {
+      "blocked": 7.88665494918823,
+      "exposed": 35.8484315872192,
+      "out_of_reach": 0
+    }
+  ],
+  "FIELD_OFFICER_CHALLENGE": [
+    {
+      "challenger": 206,
+      "player_distance": 15.9600105285645,
+      "seen_tick": 10
+    }
+  ],
+  "FIELD_OFFICER_SUCCESSION": [
+    {
+      "active_commands": [
+        1,
+        1
+      ],
+      "captives": [
+        [],
+        []
+      ],
+      "commanders": [
+        40,
+        41
+      ],
+      "evacuated": [
+        [],
+        []
+      ],
+      "fallen": [
+        [
+          40
+        ],
+        [
+          41
+        ]
+      ],
+      "kills": [
+        0,
+        0
+      ],
+      "ranked": true,
+      "rescued": [
+        [],
+        []
+      ],
+      "skills": [
+        0,
+        0
+      ],
+      "successions": [
+        1,
+        1
+      ],
+      "wounded": [
+        [],
+        []
+      ]
+    }
+  ],
+  "FIELD_OFFICER_RESCUE": [
+    {
+      "guard": 0,
+      "largest_step": 0.158789128065109,
+      "rescued": [
+        [
+          40
+        ],
+        []
+      ],
+      "ticks": 57
+    }
+  ],
+  "FIELD_OFFICER_WORLD": [
+    {
+      "ordinary_dead": [
+        0,
+        0
+      ],
+      "outcome": "主将阵亡",
+      "prisoners": [
+        [
+          40
+        ],
+        []
+      ],
+      "ticks": 89
+    }
+  ],
+  "FIELD_COHORT_SAMPLE": [
+    {
+      "companies": 32,
+      "engine_static_bytes_delta_setup": 4624056,
+      "individual_principals": 33,
+      "legacy_roster_variant_bytes": 106512,
+      "live_actor_objects": 1057,
+      "muster_variant_bytes": 5832,
+      "ordinary": 1024,
+      "ordinary_weapon_cohorts": 256,
+      "per_side": 512,
+      "reserve_us": 2255,
+      "sample_hits": 47,
+      "settle_us": 5825,
+      "setup_us": 9502,
+      "tick_p50_us": 20736,
+      "tick_p95_us": 22126,
+      "tick_p99_us": 22231,
+      "timed_simulation_ticks": 24
+    },
+    {
+      "companies": 94,
+      "engine_static_bytes_delta_setup": 13203856,
+      "individual_principals": 95,
+      "legacy_roster_variant_bytes": 311800,
+      "live_actor_objects": 3095,
+      "muster_variant_bytes": 16496,
+      "ordinary": 3000,
+      "ordinary_weapon_cohorts": 752,
+      "per_side": 1500,
+      "reserve_us": 6065,
+      "sample_hits": 47,
+      "settle_us": 16213,
+      "setup_us": 27586,
+      "tick_p50_us": 61429,
+      "tick_p95_us": 64439,
+      "tick_p99_us": 66230,
+      "timed_simulation_ticks": 24
+    },
+    {
+      "companies": 158,
+      "engine_static_bytes_delta_setup": 21779068,
+      "individual_principals": 159,
+      "legacy_roster_variant_bytes": 519704,
+      "live_actor_objects": 5159,
+      "muster_variant_bytes": 27504,
+      "ordinary": 5000,
+      "ordinary_weapon_cohorts": 1252,
+      "per_side": 2500,
+      "reserve_us": 10171,
+      "sample_hits": 47,
+      "settle_us": 26237,
+      "setup_us": 49034,
+      "tick_p50_us": 107044,
+      "tick_p95_us": 111483,
+      "tick_p99_us": 118640,
+      "timed_simulation_ticks": 24
+    },
+    {
+      "companies": 314,
+      "engine_static_bytes_delta_setup": 43528456,
+      "individual_principals": 315,
+      "legacy_roster_variant_bytes": 1039056,
+      "live_actor_objects": 10315,
+      "muster_variant_bytes": 54336,
+      "ordinary": 10000,
+      "ordinary_weapon_cohorts": 2500,
+      "per_side": 5000,
+      "reserve_us": 20260,
+      "sample_hits": 47,
+      "settle_us": 58673,
+      "setup_us": 105403,
+      "tick_p50_us": 328641,
+      "tick_p95_us": 343706,
+      "tick_p99_us": 344811,
+      "timed_simulation_ticks": 24
+    }
+  ],
+  "FIELD_HISTORY_PASS": [
+    {
+      "different_keys": [],
+      "expected_tick": 235,
+      "hits": [
+        273,
+        266
+      ],
+      "resumed_tick": 235,
+      "source_version": 3,
+      "start_tick": 161
+    },
+    {
+      "different_keys": [],
+      "expected_tick": 746,
+      "hits": [
+        1121,
+        870
+      ],
+      "resumed_tick": 746,
+      "source_version": 4,
+      "start_tick": 629
+    }
+  ],
+  "PERSISTENCE_SMOKE_RESUME_PASS": [
+    {
+      "campaign": "runtime_smoke_export_1794537858_23534_26976",
+      "errors": [],
+      "events": 42,
+      "hero_profile": {
+        "id": "early_v1",
+        "revision": 1
+      },
+      "ok": true,
+      "phase": "resume",
+      "schema_version": 1,
+      "world_time": 10825.825
+    }
+  ]
+}

@@ -1,0 +1,438 @@
+{
+  "candidate": {
+    "platform": "Apple M1 (Virtual)",
+    "renderer": "mobile",
+    "target": [
+      1024,
+      640
+    ],
+    "full": {
+      "n": 2333,
+      "average_ms": 10.291,
+      "p95_ms": 24.342,
+      "p99_ms": 36.095,
+      "over_16_67": 355,
+      "over_33_33": 37,
+      "over_50": 10,
+      "max_ms": 78.962
+    },
+    "first_250ms_after_pan": {
+      "n": 137,
+      "average_ms": 10.812,
+      "p95_ms": 24.248,
+      "p99_ms": 49.936,
+      "over_16_67": 24,
+      "over_33_33": 2,
+      "over_50": 1,
+      "max_ms": 52.568
+    },
+    "other_frames": {
+      "n": 2196,
+      "average_ms": 10.258,
+      "p95_ms": 24.403,
+      "p99_ms": 36.095,
+      "over_16_67": 331,
+      "over_33_33": 35,
+      "over_50": 9,
+      "max_ms": 78.962
+    },
+    "windows": [
+      {
+        "first_frame": 0,
+        "after_frame": 278,
+        "tick_at_end": 181,
+        "visible_at_end": 452,
+        "new_hits": 478,
+        "n": 278,
+        "average_ms": 14.438,
+        "p95_ms": 33.382,
+        "p99_ms": 42.342,
+        "over_16_67": 90,
+        "over_33_33": 15,
+        "over_50": 1,
+        "max_ms": 69.682
+      },
+      {
+        "first_frame": 278,
+        "after_frame": 640,
+        "tick_at_end": 261,
+        "visible_at_end": 371,
+        "new_hits": 432,
+        "n": 362,
+        "average_ms": 11.058,
+        "p95_ms": 24.924,
+        "p99_ms": 33.77,
+        "over_16_67": 68,
+        "over_33_33": 4,
+        "over_50": 1,
+        "max_ms": 60.508
+      },
+      {
+        "first_frame": 640,
+        "after_frame": 972,
+        "tick_at_end": 341,
+        "visible_at_end": 432,
+        "new_hits": 108,
+        "n": 332,
+        "average_ms": 12.067,
+        "p95_ms": 25.629,
+        "p99_ms": 36.548,
+        "over_16_67": 75,
+        "over_33_33": 10,
+        "over_50": 1,
+        "max_ms": 50.979
+      },
+      {
+        "first_frame": 972,
+        "after_frame": 1484,
+        "tick_at_end": 421,
+        "visible_at_end": 343,
+        "new_hits": 40,
+        "n": 512,
+        "average_ms": 7.818,
+        "p95_ms": 16.082,
+        "p99_ms": 21.728,
+        "over_16_67": 22,
+        "over_33_33": 0,
+        "over_50": 0,
+        "max_ms": 32.979
+      },
+      {
+        "first_frame": 1484,
+        "after_frame": 1904,
+        "tick_at_end": 501,
+        "visible_at_end": 260,
+        "new_hits": 27,
+        "n": 420,
+        "average_ms": 9.527,
+        "p95_ms": 21.735,
+        "p99_ms": 53.155,
+        "over_16_67": 54,
+        "over_33_33": 7,
+        "over_50": 7,
+        "max_ms": 78.962
+      },
+      {
+        "first_frame": 1904,
+        "after_frame": 2333,
+        "tick_at_end": null,
+        "visible_at_end": null,
+        "new_hits": null,
+        "n": 429,
+        "average_ms": 9.28,
+        "p95_ms": 21.383,
+        "p99_ms": 30.567,
+        "over_16_67": 46,
+        "over_33_33": 1,
+        "over_50": 0,
+        "max_ms": 34.002
+      }
+    ],
+    "render_cpu_p95_ms": 0.709999978542328,
+    "render_gpu_p95_ms": null,
+    "simulation_cpu_mean_ms": 3.13531118731247,
+    "presentation_cpu_mean_ms": 4.09499614230604,
+    "max_examples": [
+      {
+        "frame": 1546,
+        "elapsed_ms": 16785.1,
+        "wall_ms": 78.962,
+        "after_pan": false
+      },
+      {
+        "frame": 253,
+        "elapsed_ms": 3485.4,
+        "wall_ms": 69.682,
+        "after_pan": false
+      },
+      {
+        "frame": 292,
+        "elapsed_ms": 4274.9,
+        "wall_ms": 60.508,
+        "after_pan": false
+      },
+      {
+        "frame": 1544,
+        "elapsed_ms": 16649,
+        "wall_ms": 59.611,
+        "after_pan": false
+      },
+      {
+        "frame": 1545,
+        "elapsed_ms": 16706.1,
+        "wall_ms": 57.053,
+        "after_pan": false
+      },
+      {
+        "frame": 1543,
+        "elapsed_ms": 16589.4,
+        "wall_ms": 53.23,
+        "after_pan": false
+      },
+      {
+        "frame": 1579,
+        "elapsed_ms": 17176.2,
+        "wall_ms": 53.155,
+        "after_pan": false
+      },
+      {
+        "frame": 1485,
+        "elapsed_ms": 16085.9,
+        "wall_ms": 52.568,
+        "after_pan": true
+      }
+    ],
+    "session_groups": 15,
+    "session_group_fields": [
+      "camera_size",
+      "camera_travel",
+      "end_tick",
+      "engaged_wall_seconds",
+      "estimated_internal_px",
+      "gate_hp",
+      "hits_in_window",
+      "internal_scale",
+      "kind",
+      "losses",
+      "memory_bytes",
+      "ordinary_rosters",
+      "outcome",
+      "per_side",
+      "preset",
+      "raw_wall_ms",
+      "render_cpu",
+      "render_gpu",
+      "render_target_px",
+      "reported_viewport_texture_px",
+      "seed",
+      "shadow_max_m",
+      "shadows",
+      "sim_cpu_ms",
+      "start_tick",
+      "view_script_ms",
+      "viewport",
+      "visible_combat_poses",
+      "visible_soldiers",
+      "wall",
+      "window_px"
+    ]
+  },
+  "rebuild": {
+    "platform": "Apple M1 (Virtual)",
+    "renderer": "mobile",
+    "target": [
+      1024,
+      640
+    ],
+    "full": {
+      "n": 2338,
+      "average_ms": 10.267,
+      "p95_ms": 22.62,
+      "p99_ms": 32.188,
+      "over_16_67": 338,
+      "over_33_33": 20,
+      "over_50": 2,
+      "max_ms": 64.693
+    },
+    "first_250ms_after_pan": {
+      "n": 141,
+      "average_ms": 10.659,
+      "p95_ms": 23.667,
+      "p99_ms": 34.079,
+      "over_16_67": 21,
+      "over_33_33": 2,
+      "over_50": 1,
+      "max_ms": 64.693
+    },
+    "other_frames": {
+      "n": 2197,
+      "average_ms": 10.242,
+      "p95_ms": 22.616,
+      "p99_ms": 32.188,
+      "over_16_67": 317,
+      "over_33_33": 18,
+      "over_50": 1,
+      "max_ms": 51.293
+    },
+    "windows": [
+      {
+        "first_frame": 0,
+        "after_frame": 432,
+        "tick_at_end": 181,
+        "visible_at_end": 452,
+        "new_hits": 472,
+        "n": 432,
+        "average_ms": 9.267,
+        "p95_ms": 22.681,
+        "p99_ms": 29.694,
+        "over_16_67": 54,
+        "over_33_33": 2,
+        "over_50": 1,
+        "max_ms": 51.293
+      },
+      {
+        "first_frame": 432,
+        "after_frame": 777,
+        "tick_at_end": 261,
+        "visible_at_end": 375,
+        "new_hits": 475,
+        "n": 345,
+        "average_ms": 11.609,
+        "p95_ms": 24.889,
+        "p99_ms": 32.78,
+        "over_16_67": 74,
+        "over_33_33": 3,
+        "over_50": 0,
+        "max_ms": 34.026
+      },
+      {
+        "first_frame": 777,
+        "after_frame": 1095,
+        "tick_at_end": 341,
+        "visible_at_end": 443,
+        "new_hits": 86,
+        "n": 318,
+        "average_ms": 12.582,
+        "p95_ms": 29.183,
+        "p99_ms": 39.392,
+        "over_16_67": 66,
+        "over_33_33": 9,
+        "over_50": 0,
+        "max_ms": 45.085
+      },
+      {
+        "first_frame": 1095,
+        "after_frame": 1479,
+        "tick_at_end": 421,
+        "visible_at_end": 370,
+        "new_hits": 48,
+        "n": 384,
+        "average_ms": 10.431,
+        "p95_ms": 24.33,
+        "p99_ms": 32.188,
+        "over_16_67": 62,
+        "over_33_33": 3,
+        "over_50": 0,
+        "max_ms": 36.518
+      },
+      {
+        "first_frame": 1479,
+        "after_frame": 1911,
+        "tick_at_end": 501,
+        "visible_at_end": 264,
+        "new_hits": 26,
+        "n": 432,
+        "average_ms": 9.26,
+        "p95_ms": 19.747,
+        "p99_ms": 23.876,
+        "over_16_67": 50,
+        "over_33_33": 2,
+        "over_50": 1,
+        "max_ms": 64.693
+      },
+      {
+        "first_frame": 1911,
+        "after_frame": 2338,
+        "tick_at_end": null,
+        "visible_at_end": null,
+        "new_hits": null,
+        "n": 427,
+        "average_ms": 9.345,
+        "p95_ms": 17.857,
+        "p99_ms": 23.033,
+        "over_16_67": 32,
+        "over_33_33": 1,
+        "over_50": 0,
+        "max_ms": 35.216
+      }
+    ],
+    "render_cpu_p95_ms": 0.741999983787537,
+    "render_gpu_p95_ms": null,
+    "simulation_cpu_mean_ms": 3.01070145423439,
+    "presentation_cpu_mean_ms": 4.19078272027374,
+    "max_examples": [
+      {
+        "frame": 1480,
+        "elapsed_ms": 16092.1,
+        "wall_ms": 64.693,
+        "after_pan": true
+      },
+      {
+        "frame": 338,
+        "elapsed_ms": 3090.4,
+        "wall_ms": 51.293,
+        "after_pan": false
+      },
+      {
+        "frame": 978,
+        "elapsed_ms": 10438.5,
+        "wall_ms": 45.085,
+        "after_pan": false
+      },
+      {
+        "frame": 1012,
+        "elapsed_ms": 10975.1,
+        "wall_ms": 43.713,
+        "after_pan": false
+      },
+      {
+        "frame": 1657,
+        "elapsed_ms": 17680.9,
+        "wall_ms": 43.087,
+        "after_pan": false
+      },
+      {
+        "frame": 973,
+        "elapsed_ms": 10332.4,
+        "wall_ms": 40.688,
+        "after_pan": false
+      },
+      {
+        "frame": 1010,
+        "elapsed_ms": 10922.8,
+        "wall_ms": 39.392,
+        "after_pan": false
+      },
+      {
+        "frame": 251,
+        "elapsed_ms": 2119.3,
+        "wall_ms": 36.743,
+        "after_pan": false
+      }
+    ],
+    "session_groups": 16,
+    "session_group_fields": [
+      "camera_size",
+      "camera_travel",
+      "end_tick",
+      "engaged_wall_seconds",
+      "estimated_internal_px",
+      "gate_hp",
+      "hits_in_window",
+      "internal_scale",
+      "kind",
+      "losses",
+      "memory_bytes",
+      "ordinary_rosters",
+      "outcome",
+      "per_side",
+      "preset",
+      "raw_wall_ms",
+      "render_cpu",
+      "render_gpu",
+      "render_target_px",
+      "reported_viewport_texture_px",
+      "seed",
+      "shadow_max_m",
+      "shadows",
+      "sim_cpu_ms",
+      "start_tick",
+      "view_script_ms",
+      "viewport",
+      "visible_combat_poses",
+      "visible_soldiers",
+      "wall",
+      "window_px"
+    ]
+  }
+}
