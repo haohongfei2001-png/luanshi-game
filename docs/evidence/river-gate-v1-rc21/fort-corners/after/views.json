@@ -139,21 +139,21 @@
   },
   {
     "center": [
-      82.0,
-      18.0
+      71.5,
+      11.8000001907349
     ],
-    "close": 0,
+    "close": 2,
     "contact": [
       975,
       739
     ],
-    "fighting": 0,
+    "fighting": 8,
     "gate_hp": 260.0,
     "hero_kit": 3,
     "hero_slot": 0,
     "hero_state": 0,
-    "in_frame_count": 69,
-    "in_frame_ids_sha256": "4387524c7b1b26bff9261e462097bf8625ac60245d1e7c3370b0b81599c12b8c",
+    "in_frame_count": 166,
+    "in_frame_ids_sha256": "ecfcf881f3002ad6d21fd6eeeac38f0b1267aebdf0f671b6d221f1d0be23c5a9",
     "internal_scale": 1.0,
     "kind": "court",
     "label": "court",
@@ -170,12 +170,12 @@
       512,
       512
     ],
-    "ranks": 107,
+    "ranks": 167,
     "screen_space_aa": 0,
     "seed": 61112,
     "shadows": true,
     "tick": 490,
-    "visible": 123,
+    "visible": 210,
     "window": [
       1920,
       1200
