@@ -295,14 +295,6 @@ def equipment(s,look):
         s.ribbon([(-.107,1.421,.087),(-.017,1.391,.123),(.089,1.343,.134),(.161,1.303,.136)],
                  .032,"sash",CHEST)
         s.oval((-.105,1.419,.099),(.033,.028,.018),"brass",CHEST,10 if close else 6,4)
-    if look=="archer":
-        a,b=(-.161,.790,-.226),(.146,1.379,-.267)
-        s.tube([a,lerp(a,b,.10),lerp(a,b,.88),b],[.048,.072,.074,.079],"quiver",CHEST,10 if close else 5)
-        s.ribbon([(-.17,1.403,.066),(-.104,1.313,.141),(.017,1.19,.161),(.126,1.044,.115)],.049,"leather",CHEST)
-        for i in range(4 if close else 2):
-            end=add(b,((i%2-.5)*.038,.157+(i%3)*.025,(i//2)*.027))
-            s.tube([add(end,(-.088,-.18,0)),end],[.006,.005],"timber",CHEST,4)
-            s.ribbon([add(end,(-.051,-.090,0)),add(end,(-.015,-.038,-.003)),end],.031,"headcloth",CHEST)
 
 def forearm(s,look,side,sides,rank=False):
     fore=LF if side<0 else RF

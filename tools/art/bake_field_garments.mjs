@@ -101,28 +101,49 @@ function surface(look,segments,rows) {
     const PI=Math.PI,TAU=2*PI;
     const far=segments<=4, sides=far?5:segments+2;
     if(look==="Archer") {
-        // A suspended leather quiver follows the diagonal from left hip to right
-        // shoulder. The mouth, lip and two long feather vanes read together.
-        function tube(u,t,pad=0) {
-            const a=TAU*u,bulge=Math.sin(PI*t),r=.053+.024*t+.012*bulge+pad;
-            const x=-.185+.350*t,z=-.228-.058*t;
-            return [x+r*.86*Math.cos(a),.804+.605*t-.50*r*Math.cos(a),
-                    z+r*.88*Math.sin(a),CHEST,HIPS,.83+.16*t];
+        // One flat, slung case from the left hip to the right shoulder. The
+        // stitched leather edge rises at the back and leaves an open, dark mouth.
+        // The same cross-section and attachment points are used at each distance.
+        function casePoint(angle,t,rim=0) {
+            const cosine=Math.cos(angle), sine=Math.sin(angle);
+            const bulge=Math.sin(PI*t);
+            const halfWidth=.059+.043*t+.011*bulge+rim;
+            const halfDepth=.028+.026*t+.006*bulge+rim;
+            const across=halfWidth*Math.sign(cosine)*Math.pow(Math.abs(cosine),.71);
+            const back=halfDepth*Math.sign(sine)*Math.pow(Math.abs(sine),.83);
+            return [-.164+.340*t+.874*across,.838+.559*t-.48*across+
+                    (.029*Math.max(0,-sine)+.011*cosine)*t*t,
+                    -.195-.064*t-.012*bulge+back,CHEST,CHEST,1];
         }
-        panel(sides,far?2:3,21,(u,v)=>tube(u,v));
-        panel(sides,1,2,(u,v)=>tube(u,.87+.09*v,.004));
-        panel(sides,1,10,(u,v)=>tube(u,.966+.034*v,.003));
-        panel(sides,1,2,(u,v)=>{
-            const p=tube(u,1),q=tube(0,1);
-            return [.165+(p[0]-.165)*(1-.96*v),1.409+(p[1]-1.409)*(1-.96*v),
-                    -.286+(p[2]+.286)*(1-.96*v),q[3],q[4],q[5]];
+        panel(sides,far?3:6,21,(u,v)=>casePoint(TAU*u,v));
+        panel(sides,1,2,(u,v)=>casePoint(TAU*u,.915+.052*v,.004));
+        panel(sides,1,14,(u,v)=>casePoint(TAU*u,.978+.022*v,.004));
+        panel(sides,2,2,(u,v)=>casePoint(TAU*u,1.-.213*v,-.005),true);
+        panel(sides,1,15,(u,v)=>{
+            const rim=casePoint(TAU*u,.78,-.005);
+            const middle=[-.164+.340*.78,.838+.559*.78,-.195-.064*.78];
+            return rim.map((value,i)=>i<3?value+(middle[i]-value)*.990*v:value);
         });
-        for(const wing of [-1,1]) {
-            panel(far?1:2,far?2:3,18,(u,v)=>{
-                const s=wing*(.032+.037*v),span=Math.sin(PI*(.12+.86*v))*.027;
-                return [.168+s+.059*v+(u-.5)*span,1.41+.181*v+(wing<0?0:.041),
-                        -.290-.044*v+(u-.5)*span*.72,CHEST,HIPS,.99];
-            },wing<0);
+        // Hem folded across the flat side, following the silhouette when the
+        // bow arm rises. A single seam replaces the coincident older tube.
+        panel(1,far?3:5,2,(u,v)=>casePoint(.27+.14*u+.32*v,.08+.85*v,.002));
+        const featherCount=far?3:4;
+        for(let shaft=0;shaft<featherCount;shaft++) {
+            const where=[-.056,-.019,.021,.066][shaft];
+            const height=[.140,.232,.171,.207][shaft];
+            const back=[.014,-.021,.011,-.012][shaft];
+            const step=[-.021,.015,.006,.030][shaft];
+            function fletch(t,x=0,z=0) {
+                return [.174+where+(.074+step)*t+x,1.359-.39*where+height*t,
+                        -.263+back-.048*t+z,CHEST,CHEST,1];
+            }
+            panel(far?3:5,1,7,(u,v)=>fletch(v,.007*Math.cos(TAU*u),.007*Math.sin(TAU*u)));
+            for(const yaw of (far?[.33]:[.33,2.09])) {
+                panel(1,3,18,(u,v)=>{
+                    const t=.44+.55*v, vane=.026*(.18+Math.sin(PI*(v*.82))*1.05)*(1-.91*v*v);
+                    return fletch(t,u*vane*Math.cos(yaw),u*vane*Math.sin(yaw));
+                });
+            }
         }
         // A single soft, cross-body wrap. Its taper exposes the opposite shoulder
         // and elbow on the draw, instead of another symmetrical shoulder plate.
