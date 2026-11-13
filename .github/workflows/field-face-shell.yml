@@ -2,7 +2,7 @@ name: Field faces at five and twenty-two metres
 on:
   push:
     branches: ['codex/river-fitted-faces']
-    paths-ignore: ['docs/**', 'assets/river_gate/figures/garrison_bodies.glb', 'assets/river_gate/figures/river_company.glb']
+    paths-ignore: ['docs/**', '.github/workflows/field-face-shell.yml', '.github/workflows/field-preview-hero.yml', 'tests/field_face_clear_hero.gd', 'assets/river_gate/figures/garrison_bodies.glb', 'assets/river_gate/figures/river_company.glb']
 permissions:
   contents: read
 jobs:

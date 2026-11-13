@@ -1,0 +1,73 @@
+name: Inspect the fitted hero face after moving clear of the ranks
+on:
+  push:
+    branches: ['codex/river-fitted-faces']
+    paths: ['.github/workflows/field-preview-hero.yml','tests/field_face_clear_hero.gd']
+permissions:
+  contents: read
+jobs:
+  hero:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: March with the shipping input and record the same positions both times
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/python3 -c 'import PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-pil; fi
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc16/face-shell/hero
+          mkdir -p "$proof"
+          for side in before after; do
+            rev=bad15cd2bc323526c5a8e471a58ddcc21b10e791
+            if test "$side" = before; then rev=7c9ac667ded0a8e80a05cd47593a4af70c28486c; fi
+            root="$RUNNER_TEMP/hero-$side"
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/field_face_clear_hero.gd "$root/tests"
+            godot=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+            "$godot" --headless --editor --path "$root" --import > "$proof/$side/import.log" 2>&1
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/import.log"; then exit 1; fi
+            xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --disable-vsync --audio-driver Dummy --fixed-fps 20 --script tests/field_face_clear_hero.gd -- --field-size=512 2>&1 | tee "$proof/$side/run.log"
+            grep -F 'FACE_LANE true' "$proof/$side/run.log"
+            cp "$root/artifacts/face-lane/"* "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+          root=Path('docs/evidence/river-gate-v1-rc16/face-shell/hero')
+          a,b=[json.loads((root/s/'poses.json').read_text()) for s in ('before','after')]
+          assert a==b and a['gap']>2.8 and a['travel']>4
+          for p in b['shots']:
+              name=p['name']
+              big=name!='hero-normal'
+              pair=Image.new('RGB',(720,250) if big else (900,281))
+              for i,side in enumerate(('before','after')):
+                  im=Image.open(root/side/(name+'.png')).convert('RGB')
+                  if big:
+                      x,y=p['post']
+                      im=im.crop((round(x-144),round(y-85),round(x+144),round(y+115)))
+                  size=pair.width//2,pair.height
+                  pair.paste(im.resize(size,Image.Resampling.LANCZOS),(i*size[0],0))
+              pair.save(root/(name+'.jpg'),quality=96,subsampling=0)
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record clear game-window faces after the player moves out of the ranks'
+          git push origin HEAD:refs/heads/codex/river-fitted-faces
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-faces-in-the-river-game
+          path: docs/evidence/river-gate-v1-rc16/face-shell/hero
