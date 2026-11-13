@@ -49,48 +49,40 @@ def fitted(p,weights,role):
     if factor<=0.: return p,weights
     side=1 if x>=0. else -1
     upper,fore=(RIGHT_UPPER,RIGHT_FORE) if side>0 else (LEFT_UPPER,LEFT_FORE)
-    # A sloped armhole passes from the collar across the deltoid then down
-    # into the armpit. At the elbow the sleeve narrows over the bracer.
-    yroot=1.405
-    t=clamp((yroot-y)/.260)
+    t=clamp((1.405-y)/.260)
     cx=.225+.033*t
     cz=-.012+.026*t
-    rear=1.-transition(-.055,.065,z-cz)
-    dx=abs(x)-cx
-    dz=z-cz
-    ang=atan2(dz,dx)
-    radius=hypot(dx,dz)
-    relax={"Regular":1.,"Archer":1.18,"Guard":.76}[role]
-    bend=exp(-((y-1.203)/.098)**2)
-    folded=exp(-((y-1.193-.031*sin(ang-.49))/.032)**2)
-    outside=.5+.5*cos(ang)
-    # The underside is fuller on the trailing/back quarter of the arm. A
-    # rolled convex fold crosses the sleeve obliquely. It never closes around
-    # the whole elbow like a tube or armour hoop.
-    relief=relax*(.017*folded*(.20+.80*rear)-.009*exp(-((y-1.152+.026*cos(ang))/.032)**2))
-    tight=transition(1.176,1.065,y)
-    # Pull the old flared top of the sleeve toward the humerus. Give the
-    # hanging elbow a fuller back, then take it into a narrower wrist opening.
-    rx=dx*(1.-.25*tight-.22*outside*exp(-((y-1.286)/.11)**2))
-    rz=dz*(1.-.30*tight+.052*rear*bend)
-    if radius>.012:
-        rx+=relief*dx/radius
-        rz+=relief*dz/radius
-    px=side*(cx+rx)
-    py=y-.010*outside*exp(-((y-1.322)/.065)**2)-.022*rear*bend+.008*(1.-rear)*folded
-    pz=cz+rz-.012*rear*bend
+    dx,dz=abs(x)-cx,z-cz
+    radius=max(.021,hypot(dx,dz))
+    a=atan2(dz,dx)
+    rear=clamp((1.-sin(a))*.5)
+    # The dress has a high shoulder head and a low underarm seam. The
+    # outside and behind the elbow receive the spare cloth. A shorter
+    # inside edge keeps the bent arm and bracer clear. The two sleeves
+    # use different ease on the weapon and support sides.
+    cloth={"Regular":1.,"Guard":.83,"Archer":1.19}[role]
+    cloth*=1.06 if side<0 and role!="Guard" else .98
+    belly=exp(-((y-1.224)/.082)**2)
+    cap=exp(-((y-1.335)/.090)**2)
+    cuff=transition(1.164,1.077,y)
+    fold=exp(-((y-1.187-.046*sin(a-.65))/.025)**2)
+    trough=exp(-((y-1.144-.022*sin(a-.65))/.025)**2)
+    dr=cloth*(.040*belly*(.16+.84*rear)+.016*fold-.010*trough)
+    scale_x=1.-.245*cap-.185*cuff
+    scale_z=1.-.235*cuff+.081*rear*belly
+    px=side*(cx+dx*scale_x+dr*dx/radius)
+    pz=cz+dz*scale_z+dr*dz/radius-.029*cloth*rear*belly
+    py=y-.038*cloth*belly*rear-.017*cap*max(0.,cos(a))+.010*fold*(1.-rear)
     result=tuple(orig+(v-orig)*factor for orig,v in zip(p,(px,py,pz)))
-    # The rounded top of the sleeve shares the shoulder pivot with the yoke.
-    # At the elbow, swatches must agree on one continuous two-bone weight;
-    # the earlier six-sided cuff had 16% to 89% forearm across one short turn.
     if y>1.228:
-        sleeve=.96-.44*transition(1.285,1.447,y)
-        sleeve*=.71+.29*transition(-.056,.025,dx)
+        sleeve=(.98-.38*transition(1.286,1.442,y))*(.67+.33*transition(-.058,.033,dx))
         target={upper:sleeve,CHEST:1.-sleeve}
     else:
-        hinge=transition(1.220,1.078,y-.011*rear+.004*outside)
+        # Inner cloth shortens while the outside rests on the elbow. The
+        # weights turn through a full strip, not across a broken diagonal.
+        hinge=transition(1.221,1.075,y-.016*rear+.007*(1.-rear))
         target={upper:1.-hinge,fore:hinge}
-    return result,mix_bones(weights,target,.83*factor)
+    return result,mix_bones(weights,target,.89*factor)
 
 def refit_sleeves(source,role):
     points=source.positions
@@ -112,7 +104,7 @@ def refit_sleeves(source,role):
             if max(section(points[i],weights[i]),section(points[j],weights[j]))<.24: continue
             # A split is shared across neighbouring triangles and UV islands.
             # Long old spans were up to 17 cm across a bent shoulder.
-            if length(points[i],points[j])>.061:
+            if length(points[i],points[j])>.095:
                 sewn.add(k)
     result=Surface()
     lookup={}
@@ -188,24 +180,55 @@ def refit_sleeves(source,role):
                 ring.append((q,w))
         center=tuple(sum(p[j] for p,w in ring)/len(ring) for j in range(3))
         faces=[]
-        for depth in (0.,.34,1.):
+        bottom=[p for p,_ in ring]
+        root_skin=[w for _,w in ring]
+        # The older shirt ended at the top of the bracer in a straight cut. Hang the
+        # sewn outlines well below the elbow, translating with the forearm,
+        # then roll the bottom seam back into the wrist. This new fabric
+        # occupies real space and has a deliberately open inside face.
+        reach={"Regular":.152,"Archer":.177,"Guard":.128}[role]
+        stages=((0.,1.,0.),(.34,1.08,.75),(.63,1.0,1.),
+                (.79,.81,.59),(1.,.58,.10))
+        for k,(t,spread,pouch) in enumerate(stages):
             row=[]
-            for j,(p,w) in enumerate(ring):
-                cuff=.006*sin(pi*depth)-.011*depth
-                x=(p[0]-center[0])
-                z=(p[2]-center[2])
-                r=max(.02,hypot(x,z))
-                below=.031+.015*clamp((-z+.038)/.082)
-                pt=(p[0]+x*cuff/r,p[1]-depth*below,p[2]+z*cuff/r)
-                colour=uv("binding" if role=="Guard" else "facing",(j+.45)/len(ring),.26+.48*depth)
-                row.append(result.vertex(pt,colour,compact(w)))
+            for j,(px,py,pz) in enumerate(bottom):
+                dx,dz=px-center[0],pz-center[2]
+                radius=max(.02,hypot(dx,dz))
+                angle=atan2(dz,side*dx)
+                rear=.5-.5*sin(angle)
+                hang=reach*(.84+.25*rear+.079*cos(angle))
+                sweep=reach*.36*t
+                x=center[0]+side*sweep*.43+dx*spread
+                z=center[2]+sweep+dz*spread
+                # The narrowing sleeve retains two large, diagonal folds as
+                # it turns under the arm. No geometry lies on the palm.
+                fullness=(.014+.024*rear)*pouch
+                x+=dx/radius*fullness
+                z+=dz/radius*fullness-.013*pouch*rear
+                yy=py-hang*t-pouch*(.010+.017*rear)+.007*sin(2*angle+.41)*pouch
+                if k==len(stages)-1:
+                    yy+=.007*cos(angle)
+                at=(x,yy,z)
+                weights=mix_bones(root_skin[j],{RIGHT_FORE if side>0 else LEFT_FORE:1.},transition(0.,.53,t))
+                # The upper three stations are a single darkened length of
+                # the team-dyed bolt. No painted highlights cross its seam.
+                row.append((at,compact(weights)))
             faces.append(row)
-        for first,second in zip(faces,faces[1:]):
+        for k,(upper,lower) in enumerate(zip(faces,faces[1:])):
+            material="coat" if k<2 else "facing" if k==2 else "binding"
+            if role=="Guard" and k==2: material="quilt"
+            two=[]
+            for level,section_row in enumerate((upper,lower)):
+                row=[]
+                for j,(at,skin) in enumerate(section_row):
+                    colour=uv(material,.20+.55*(j+.3)/len(section_row),.29+.40*level)
+                    row.append(result.vertex(at,colour,skin))
+                two.append(row)
             for j in range(len(ring)):
-                k=(j+1)%len(ring)
-                ids=(first[j],first[k],second[k],second[j])
-                if side<0: ids=ids[::-1]
-                result.quad(*ids)
+                z=(j+1)%len(ring)
+                corners=(two[0][j],two[0][z],two[1][z],two[1][j])
+                if side>0: corners=corners[::-1]
+                result.quad(*corners)
     print("FITTED_SLEEVE",role,"faces",len(source.faces),len(result.faces),"new edge mids",len(sewn))
     return result
 

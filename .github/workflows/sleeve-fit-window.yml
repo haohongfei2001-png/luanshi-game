@@ -57,12 +57,13 @@ jobs:
             done
             cp "$root"/artifacts/sleeve-fit/{line.png,reverse.png,spearman.png,archer.png,guard.png,crossbow.png,line.json} "$proof/$side"
             cp "$root"/artifacts/personal-contact/{personal-contact.png,input.json} "$proof/$side"
-            xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$root" --resolution 1280x800 --disable-vsync --fixed-fps 20 --write-movie "$RUNNER_TEMP/$side.avi" --script tests/sleeve_fit_window.gd -- --field-size=512 --march-film > "$proof/$side/movie.log" 2>&1
+            xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$root" --resolution 1280x800 --disable-vsync --fixed-fps 20 --audio-driver Dummy --script tests/sleeve_fit_window.gd -- --field-size=512 --march-film > "$proof/$side/movie.log" 2>&1
             grep -F 'FITTED_MARCH true' "$proof/$side/movie.log"
             cp "$root/artifacts/sleeve-fit/film.json" "$proof/$side"
-            ffmpeg -loglevel error -y -i "$RUNNER_TEMP/$side.avi" -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac "$proof/$side/march.mp4"
+            ffmpeg -loglevel error -y -framerate 20 -i "$root/artifacts/sleeve-fit/source-%03d.png" -c:v libx264 -crf 17 -pix_fmt yuv420p "$proof/$side/march.mp4"
+            for j in 004 021 039 066; do cp "$root/artifacts/sleeve-fit/source-$j.png" "$proof/$side/"; done
           done
-          ffmpeg -loglevel error -y -i "$proof/before/march.mp4" -i "$proof/after/march.mp4" -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -map 1:a:0 -c:v libx264 -crf 19 -pix_fmt yuv420p -c:a copy "$proof/equal-speed.mp4"
+          ffmpeg -loglevel error -y -i "$proof/before/march.mp4" -i "$proof/after/march.mp4" -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -c:v libx264 -crf 17 -pix_fmt yuv420p "$proof/equal-speed.mp4"
           /usr/bin/python3 - <<'PY'
           from pathlib import Path
           import json
@@ -96,7 +97,7 @@ jobs:
           strips=Image.new("RGB",(1050,434))
           for row,side in enumerate(("before","after")):
               files=sorted((Path(os.environ["RUNNER_TEMP"])/("view-"+side)).glob("f*.jpg"))
-              assert len(files)>=22
+              assert len(files)>=20
               for col,j in enumerate((4,10,18)):
                   im=Image.open(files[j]).convert("RGB").crop((255,139,547,320))
                   strips.paste(im.resize((350,217),Image.Resampling.LANCZOS),(col*350,row*217))

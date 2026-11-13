@@ -53,18 +53,18 @@ function surface(look,segments,rows) {
         const n=segments<=4?4:segments;
         function textile(a,down) {
             const front=Math.cos(a),side=Math.sin(a),left=Math.max(0,-side);
-            const fall=.50+.31*(1-front)+.66*left;
+            const fall=look==="Regular"?.43+.28*(1-front)+.48*left:.50+.31*(1-front)+.66*left;
             const y=1.456-depth*fall*down-.025*side*side;
             const rx=.086+(.166+.031*left)*Math.sin(down*1.49);
             const rz=.083+(.092+.044*Math.max(0,-front))*Math.sin(down*1.45);
             const fold=.009*Math.sin(2*a+.47)*Math.sin(Math.PI*down);
             const shoulder=Math.abs(side);
             return [(rx+fold)*side,y,-.008+(rz+fold)*front,
-                    side<0?LEFT_ARM:RIGHT_ARM,CHEST,.33*shoulder*down];
+                    side<0?LEFT_ARM:RIGHT_ARM,CHEST,(look==="Regular"?.21:.33)*shoulder*down];
         }
         // The spearman's left mantle fastens under a bare right shoulder. A
         // shieldman wears the much shorter padded cover beneath a dark corslet.
-        const low=-3.60,high=guard?2.47:.30;
+        const low=look==="Regular"?-3.35:-3.60,high=guard?2.47:(look==="Regular"?-.16:.30);
         const mat=guard?11:(look==="Regular"?1:19);
         panel(n,rows,mat,(u,v)=>textile(low+(high-low)*u,1-v));
         if(look==="Regular"||guard){
@@ -212,9 +212,13 @@ function surface(look,segments,rows) {
         // A single soft, cross-body wrap. Its taper exposes the opposite shoulder
         // and elbow on the draw, instead of another symmetrical shoulder plate.
         panel(segments,3,1,(u,v)=>{
-            const a=-2.80+u*2.48, spread=Math.sin(Math.PI*u);
-            return [(.169+.099*v)*Math.sin(a),1.432-.168*v*(.55+.51*spread)-.027*Math.sin(a)**2,
-                    -.012+(.108+.064*v)*Math.cos(a),LEFT_ARM,CHEST,.44*v*spread];
+            // A folded sling over the support shoulder ends at the natural
+            // armhole. The tunic continues under it without a straight slab.
+            const a=-2.95+u*2.39, spread=Math.sin(Math.PI*u);
+            const r=.149+.092*v-.018*Math.sin(Math.PI*v);
+            const nape=Math.max(0,-Math.cos(a));
+            return [r*Math.sin(a),1.435-v*(.078+.053*spread+.041*nape)-.021*Math.sin(a)**2,
+                    -.011+(.102+.065*v)*Math.cos(a),LEFT_ARM,CHEST,.28*v*spread];
         });
     } else if(look==="Levy") {
         // A small, soft ration satchel sits against the right hip, below the existing sling.
