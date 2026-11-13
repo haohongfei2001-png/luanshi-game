@@ -22,7 +22,7 @@ def coat(s,look):
     close=s.detail
     n=24 if close else 12
     start={"levy":.575,"archer":.667,"regular":.565,"guard":.601,"officer":.494,"player":.528}[look]
-    hem=[(start,.254,.183),(.75,.241,.170),(.86,.211,.15),(.96,.177,.135),
+    hem=[(start,.254,.183),(.75,.239,.170),(.86,.214,.15),(.96,.169,.135),
          (1.075,.19,.141),(1.185,.219,.151),(1.255,.233,.153),(1.327,.245,.142),
          (1.408,.199,.100),(1.456,.077,.074)]
     lo,hi=6,8
@@ -41,10 +41,17 @@ def coat(s,look):
         y,rx,rz=hem[r]
         hanging=clamp((.93-y)/(.93-start))
         biased=cos(a+.63)**8 if cos(a+.63)>0 else 0
-        y+=hanging*(.088*biased+.018*sin(3*a+.9)-.018*cos(a))
+        # Cloth clears the inside knee and drops at the outside thigh. A skirt
+        # that ends at a single latitude hides stride direction from above.
+        cut=abs(sin(a))**1.65
+        if look in ("archer","levy"):
+            y+=hanging*(.154*(1-cut)-.066*cut+.024*sin(2*a+.6))
+        else:
+            y+=hanging*(.092*(1-cut)-.036*cut+.026*sin(2*a+.4))
+        y+=hanging*(.049*biased+.009*sin(3*a+.9))
         # A handful of long folds open from the girdle and continue to the hem.
-        pleat=cos(7*a+.52*cos(2*a)-.48*hanging)
-        radius=hanging*(.018*pleat-.006*cos(3*a+.2))
+        pleat=cos(5*a+.45*cos(2*a)-.82*hanging)
+        radius=hanging*(.029*pleat-.009*cos(3*a+.2))
         # Cloth bunches above the cinch and opens back out across the shoulder blades.
         radius+=.009*exp(-((y-1.045)/.092)**2)*cos(5*a+.8)+.006*exp(-((y-1.25)/.11)**2)*cos(3*a-.65)
         return ((rx+radius)*sin(a),y,(rz+radius)*cos(a)-.009*(1-cos(a))-.006)
@@ -102,7 +109,12 @@ def coat(s,look):
             ring=[]
             for out,front in circle:
                 bulge=.004*cos(atan2(front,out)*3+j*.74)
-                p=(side*(cx+(rx+bulge)*out),y-.009*front,(rz+bulge)*front+cz)
+                # The wrapped cuff cinches a loose sleeve above the forearm. The
+                # shoulder of the sword hand remains free under the half-mantle.
+                fullness=1.0 if heavy else 1.0+.19*sin((j+1)*pi/len(sleeve))
+                if look=="player" and side>0: fullness=.94
+                p=(side*(cx+fullness*(rx+bulge)*out),y-.016*front,
+                   fullness*(rz+bulge)*front+cz)
                 weight=(upper,CHEST,.76) if j==0 else (upper,fore,clamp((y-1.105)/.109))
                 ring.append((p,weight))
             rows.append(ring)
@@ -139,6 +151,18 @@ def coat(s,look):
         p=(base[0]+.0025*v*sin(a),base[1]+rise*v,base[2]+.0025*v*cos(a))
         return p,cloth(base)
     s.grid(n,1,collar,"facing")
+    if not heavy:
+        # Crossing collars follow the front of the coat; the outer lapel reaches
+        # the belt. Each is a dark edge and a visible fold, not a drawn X.
+        for angle0,angle1,y0,y1,width in ((.81,-.17,1.432,1.265,.30),
+                                           (-.83,.85,1.443,.999,.36)):
+            for left,right,material in ((0.,.20,"leather"),(.20,1.,"facing")):
+                def lapel(u,v):
+                    a=angle0+(angle1-angle0)*v+(left+(right-left)*u-.5)*width
+                    y=y0+(y1-y0)*v
+                    p=body_at(a,y,.013+.006*sin(pi*u))
+                    return p,cloth(p)
+                s.grid(1,6 if close else 3,lapel,material)
     def belt(u,v):
         a=TAU*u
         p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))
@@ -177,16 +201,21 @@ def equipment(s,look):
         # Asymmetric half-mantle with a split over the left hip; a readable back
         # silhouette even with a spear lifted or the front arm hidden by the shield.
         def mantle(u,v):
-            a=.77+u*4.51
+            a=(2.38+u*2.94) if look=="player" else (1.05+u*4.08)
             # The cape rides over a shoulder, expands across the blades, and hangs
             # free of the narrow waist. The open side clears the weapon arm.
             rx=.107+.213*sin((1-v)*pi*.62)**.70
             rz=.096+.118*sin((1-v)*pi*.62)**.74
-            split=.135*max(0,1-abs(u-.62)*7.5)
-            bottom=.478+.27*u+split
+            split=.105*max(0,1-abs(u-.62)*7.5)
+            # The commander's shoulder cloth falls diagonally away from the free
+            # arm. Its low left edge streams behind the hip at a run or lunge.
+            bottom=(.59+.63*u-.115*sin(pi*u)) if look=="player" else (.56+.26*u)
+            bottom+=split
             y=bottom+(1.453-bottom)*v+.031*sin(3*a+.25)*(1-v)
             fold=(.009+.020*(1-v))*sin(5*a+.63*v)
-            p=((rx+fold)*sin(a)-.021*(1-v),y,(rz+fold)*cos(a)-.053-.028*(1-v))
+            free=(1.-v)**1.35
+            p=((rx+fold)*sin(a)-(.134 if look=="player" else .049)*free,
+               y,(rz+fold)*cos(a)-.053-(.248 if look=="player" else .061)*free)
             return p,(CHEST,HIPS,clamp(.18+v*.98))
         cloth_mat="hero_mantle" if look=="player" else "mantle"
         # Split lower panels leave a real notch between the two short tails.

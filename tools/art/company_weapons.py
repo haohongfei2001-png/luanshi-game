@@ -54,6 +54,12 @@ def weapon(kit,detail):
             s.tube([add(c,(0,-.34,-.004)),add(c,(0,0,.069)),add(c,(0,.34,-.002))],
                    [.018,.025,.018],"iron",LH,6)
             s.tube([add(c,(-.077,0,-.02)),grip(-1),add(c,(.082,0,-.02))],[.019,.025,.02],"binding",LH,6)
+            # The bound board domes over its working grip. Broad faces stay
+            # wooden; the shallow forged boss takes the central blow.
+            s.oval(add(c,(0,.008,.053)),(.089,.108,.043),"iron",LH,12,5)
+            for x in [-.131,.131]:
+                for y in [-.231,.220]:
+                    s.oval(add(c,(x,y,.012)),(.012,.014,.010),"brass",LH,6,3)
     elif kit in (2,3,4):
         stick([(0,0,-.69),(0,0,-.54),(0,0,1.52),(0,.004,1.69)],
               [.031,.032,.027,.024],"timber")
