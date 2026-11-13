@@ -1,0 +1,30 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+[1;33mWARNING:[0;93m Virtual Machine detected, switching to ANGLE.
+[0;90m     at: DisplayServerMacOS (platform/macos/display_server_macos.mm:3854)[0m
+OpenGL API OpenGL ES 3.0 (ANGLE 2.1.1 git hash: aaebda1c5a40) - Compatibility - Using Device: Google Inc. (Apple) - ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))
+
+FIELD_PROFILE_FILE /Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish/frame-times/river-gate-1794610309-5922.jsonl
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":3970,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"scene_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":8102,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"first_post_draw","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":3,"engine_ms":8434,"focus":true,"hits":0,"paused":false,"physics_frames":23,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"window_focus_in","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":9,"engine_ms":8761,"focus":true,"hits":0,"paused":false,"physics_frames":51,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"foreground_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":9,"engine_ms":8767,"focus":true,"hits":0,"paused":false,"physics_frames":51,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"deployed","started":true,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":11,"engine_ms":8880,"focus":true,"hits":0,"paused":false,"physics_frames":55,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"first_tick","started":true,"tick":1}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":11,"engine_ms":8880,"focus":true,"hits":0,"paused":false,"physics_frames":55,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"control_armed","started":true,"tick":1}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":169,"engine_ms":18914,"focus":true,"hits":1031,"paused":false,"physics_frames":571,"pid":5922,"pipelines":{"canvas":0,"draw":0,"mesh":0,"specialization":0,"surface":0},"renderer":"gl_compatibility","result":"","stage":"pause_timeout","started":true,"tick":173}
+       19.66 real         8.65 user         1.73 sys
+           511836160  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               43860  page reclaims
+                  39  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   2  messages sent
+                   0  messages received
+                   0  signals received
+                  98  voluntary context switches
+               23006  involuntary context switches
+           541134144  peak memory footprint

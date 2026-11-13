@@ -1,0 +1,35 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple Paravirtual device (Apple5)
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mexport[22m | Started Exporting for macOS (3 steps)[39m[0m
+[   0% ] [90m[1mexport[22m | Creating app bundle[39m[0m
+[  25% ] [90m[1mexport[22m | Making PKG[39m[0m
+[   0% ] [90m[1msavepack[22m | Started Packing (102 steps)[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/field_tack.glb-ceadadb47d9866f30e01c978068d4081.scn[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://assets/art/mounts/field_tack.glb.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/mount-atlas.png-ca42a4355853e04f04e3c5d226f82afd.ctex[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://assets/art/mounts/mount-atlas.png.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/mounts.gltf-adddca32afedf479789acaf57b16db2c.scn[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://assets/art/mounts/mounts.gltf.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark.png-8bae1c4e662f23e91d685f173687bf0d.ctex[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://assets/environment/quaternius/bark.png.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/grove.glb-7f3390c95ccc1e479c78882769856b3f.scn[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://assets/environment/quaternius/grove.glb.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/leaves.png-66d5a87148dddb44b39d3475fe97426e.ctex[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://assets/environment/quaternius/leaves.png.import[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://assets/environment/quaternius/sources.json[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bank-silt.png-d04f106e3852f3f33393d2eae1383653.ctex[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://assets/environment/bank-silt.png.import[39m[0m
+warning: '/var/folders/h5/t85nd63d71x27_8gl5gw3l_w0000gn/T/CanvasSdfShaderRD_2952269567-2026111322024042268554.metallib' architecture air64_v23 does not support a companion MetalLib; copying verbatim
+
+warning: '/var/folders/h5/t85nd63d71x27_8gl5gw3l_w0000gn/T/CanvasSdfShaderRD_3685270535-2026111322024042459832.metallib' architecture air64_v23 does not support a companion MetalLib; copying verbatim
+

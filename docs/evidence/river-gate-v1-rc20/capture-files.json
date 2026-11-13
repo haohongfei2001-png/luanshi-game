@@ -1,0 +1,254 @@
+{
+  "normal-camera-before-after/before.png": {
+    "bytes": 3401163,
+    "sha256": "464c1a5f28f27afef0ef2ed599d9bc52c7e4c8c0dd72ce883ff143280998dc5c"
+  },
+  "normal-camera-before-after/after.png": {
+    "bytes": 3393585,
+    "sha256": "24bf828b5c99e352f8120a0efbfd1107a1d002bef9e1c4cb495cb44dbee583ed"
+  },
+  "normal-camera-before-after/windup-before.png": {
+    "bytes": 3409484,
+    "sha256": "034a7d5ec4d2b15d6744abee185bed9572dcc86ec6d9f65cfa336cb4c2715055"
+  },
+  "metal-renderer-comparison.json": {
+    "bytes": 32273,
+    "sha256": "737834a0427a43b432ac954f0833fbadaf96928a58fbd4b2b55acd90cde111e4"
+  },
+  "metal-window-frames.json": {
+    "bytes": 18385,
+    "sha256": "c2bcf5bee5d3b5b63a7fdc9e6b9b3efc4defd8dc74d8e43216e83fefb364b2ec"
+  },
+  "normal-camera-before-after/windup.png": {
+    "bytes": 3403728,
+    "sha256": "6b3fe4096a995530894362ba6b5ac27c63342521fe295e22c189a9df0cf7b86f"
+  },
+  "close.png": {
+    "bytes": 2901530,
+    "sha256": "ccd2dfc66ae098455725a9c8431ddbee1a25685f628964747c52a1342eb459be"
+  },
+  "mid.png": {
+    "bytes": 2940488,
+    "sha256": "c22686a98252152e316664a9b73a3d7540cd7d9c9e303d60eda14fe0147363e8"
+  },
+  "wide.png": {
+    "bytes": 2821708,
+    "sha256": "b07b517c2719279ff335450efa19b908456b12e61839a321ba64ba9ddb3201d6"
+  },
+  "player-nine-weapons.mp4": {
+    "bytes": 1066039,
+    "sha256": "3a7078db8f8e5dbf70f9798f1115f3f1d5360f98656dc7c83a47bca451948441"
+  },
+  "full-siege.mp4": {
+    "bytes": 10236737,
+    "sha256": "1067a42627f6232aa3da921296bb60e97c58408b046bafca719ca68d0a9a3295"
+  },
+  "metal-window.png": {
+    "bytes": 837772,
+    "sha256": "3b5081df6f765be4fc3dd90c586f551ddb5ebc9267a6da57e3e5695ed0354390"
+  },
+  "playthrough-review.mp4": {
+    "bytes": 878825,
+    "sha256": "cd4d35a826253458abf9b2843b4862a25e3cb052d6636959200ed454d43aa768"
+  },
+  "playthrough-full.mp4": {
+    "bytes": 18831816,
+    "sha256": "3a4644f43eba2799e03f7a6e5371426213d515496d7c30a5b444267645177376"
+  },
+  "journey-frames.jpg": {
+    "bytes": 269965,
+    "sha256": "97452f551cdcae8fd6e34e445bf98a4187a7cc940f79c14b7be736dad6093fa4"
+  },
+  "normal-review.jpg": {
+    "bytes": 338922,
+    "sha256": "5b712e1354edb96794353c572321ec070de27aaf31f6be428cbb32f4072c256d"
+  },
+  "normal-native.jpg": {
+    "bytes": 800859,
+    "sha256": "98ae18c9cccff62a681e8d80411ddc9a93f357e5721a5e60ec7593cad41e1c8d"
+  },
+  "normal-pair.jpg": {
+    "bytes": 497631,
+    "sha256": "53302f0cadcf9a1afb4c31b48b079dcbb66cb571d4a83a094a7decead478a7b3"
+  },
+  "combat-normal-speed.mp4": {
+    "bytes": 21673042,
+    "sha256": "4c4b2b51c4c64d30d55178bd3881797517006b663997b532932512ed44bc3d33"
+  },
+  "macos-codesign.log": {
+    "bytes": 147,
+    "sha256": "11f00a8075ec9095176a0561a3d72845cd8e8e128789f145c6601336fc5c9983"
+  },
+  "macos-host.log": {
+    "bytes": 268,
+    "sha256": "b245f85a34bac65ffc14e5a36eee88f585015a31b72bedcc07cc2f920f9cb508"
+  },
+  "export-sequence.jpg": {
+    "bytes": 116771,
+    "sha256": "b030a7605b24991cff03ae1373e76c796598bd37ad5e98020b5be2d029c08ffd"
+  },
+  "export-recording.json": {
+    "bytes": 5038,
+    "sha256": "a0e712a973022f6934121d8f3e6d9e4a5e86049ddfc872270407686f964a97c2"
+  },
+  "startup/clustered-metal/renderer-comparison.json": {
+    "bytes": 12809,
+    "sha256": "520fe347f012f927e4a874d72bd13d16de26ee7bbf7973253a082e7c28930874"
+  },
+  "startup/clustered-metal/host.log": {
+    "bytes": 267,
+    "sha256": "a7919df043fe6fe3ae56795fe4d117b9745e4de886394c3f5855253426a4256a"
+  },
+  "startup/clustered-metal/clustered-metal-1.log": {
+    "bytes": 6727,
+    "sha256": "c8d8de77df3189af1d199390f888faf942e92ca682c99aac4c56209a858ef52f"
+  },
+  "startup/clustered-metal/clustered-metal-1-boot.json": {
+    "bytes": 4281,
+    "sha256": "a38aaae4b1cb6c24e97b066969995f260ca3a4ca80bc3746d21dbc4f13af9e0d"
+  },
+  "startup/clustered-metal/clustered-metal-2-boot.json": {
+    "bytes": 4280,
+    "sha256": "7137e86b3a1ed212e239132827be68c8fb29df9bd4f1cb6dce353cee9665c000"
+  },
+  "startup/clustered-metal/clustered-shipping-boot.json": {
+    "bytes": 4278,
+    "sha256": "2de6e3b92f6caab075912e1e3d88ce24b245fc05dc3fba046382abeaf3c77033"
+  },
+  "startup/clustered-metal/clustered-shipping-frames.json": {
+    "bytes": 14211,
+    "sha256": "cd465d1ac570a191164f4176b4b018d02945724af30e89913a73b1a9496c8134"
+  },
+  "startup/clustered-metal/clustered-shipping.png": {
+    "bytes": 824123,
+    "sha256": "3726f3e22a391025c2c4eca667dfb4f5a9501d33a8ac01333788d5aee343d5ee"
+  },
+  "startup/clustered-metal/clustered-metal-1-before-frame.sample.txt": {
+    "bytes": 227867,
+    "sha256": "a5e8c6b67eab35abe0d3781442582cee03f9bae3178f349a39278fea7de59d8f"
+  },
+  "startup/rc19-native-export-study.log": {
+    "bytes": 3221,
+    "sha256": "68c4f09c02f2ad37c76033e89ce1308251908689f0a93e6c66b760ac338d9a0b"
+  },
+  "startup/compat-1.log": {
+    "bytes": 7606,
+    "sha256": "3df9f4411f3b117dc66e2d1ae01a9d6f2ae53da3719cf94869bae15ff2706a0f"
+  },
+  "startup/compat-1-boot.json": {
+    "bytes": 4832,
+    "sha256": "e02e023de6e00685dc043f5406c8efb86d30ec213fd1742196e7c04c05adfaea"
+  },
+  "startup/compat-1-focus.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "startup/compat-1-before-frame.sample.txt": {
+    "bytes": 230534,
+    "sha256": "16b09fa8f28c6ca2d149f492143a7f767efb2db8deef57e259f6719076730a3b"
+  },
+  "startup/default-metal-1.log": {
+    "bytes": 6797,
+    "sha256": "0ca7a22d3831b8c09beed97f6d2bb909dce2e5c840129381de63842615792f2a"
+  },
+  "startup/default-metal-1-boot.json": {
+    "bytes": 4233,
+    "sha256": "d1b8b1332e24463ee035b5aa436f749452249c74f403ad564b9a8161f0c84531"
+  },
+  "startup/default-metal-1-focus.log": {
+    "bytes": 58,
+    "sha256": "b0285243fdfde09cbeef05c7e6ba8eaecb9f54c530906e54130aaba3674e6fa9"
+  },
+  "startup/default-metal-1-before-scene.sample.txt": {
+    "bytes": 264717,
+    "sha256": "9fa71561bb229beaec0462ae914dd3a1e7b1374e44ded296e6e57576a60def50"
+  },
+  "startup/default-metal-1-before-frame.sample.txt": {
+    "bytes": 228251,
+    "sha256": "6202d256acba9a900ee9a2b1873a1507da60ddfe1acc451569605cac65a12249"
+  },
+  "startup/default-metal-2.log": {
+    "bytes": 7063,
+    "sha256": "a6530ec3ef809b170c459c697ef2cbf336420e8a39868fcb9bea1f4f794bb1a0"
+  },
+  "startup/default-metal-2-boot.json": {
+    "bytes": 4233,
+    "sha256": "058196bd167ca153c4934843e62034f25ec540bd142ba124645ac91864aa2707"
+  },
+  "startup/default-metal-2-focus.log": {
+    "bytes": 58,
+    "sha256": "01f1743be13d8aeba7aab6b1e094b33398598265bedd0e90695f5a3ad7e84c39"
+  },
+  "startup/balanced-metal.log": {
+    "bytes": 6687,
+    "sha256": "ce8748c182924540bdfdc715a9dfb8998a49ae40b983da3bb1b44e6d38f50a0a"
+  },
+  "startup/balanced-metal-boot.json": {
+    "bytes": 4229,
+    "sha256": "437ddfebb16bc7076a43d8d4095b32265ed29099218bbeb54c6838e9904de5f4"
+  },
+  "startup/balanced-metal-focus.log": {
+    "bytes": 58,
+    "sha256": "9b9d81728488464dddcea3adf3702d001f7822bd64e755d52d249cec826d70d0"
+  },
+  "startup/performance-metal.log": {
+    "bytes": 6693,
+    "sha256": "588c752107421511c1eae7618c064415098077d879852f63db0043e76f338fb9"
+  },
+  "startup/performance-metal-boot.json": {
+    "bytes": 4228,
+    "sha256": "f8f128580b0bb3f0a2fb27fb6a0fd430e2ca380e883b8f2ac9944676a59d73d2"
+  },
+  "startup/performance-metal-focus.log": {
+    "bytes": 58,
+    "sha256": "7ce8ac0161ba01786da7685696e08443c6919f2309cdb4e717c1993e5c04fa71"
+  },
+  "startup/compat-2.log": {
+    "bytes": 7136,
+    "sha256": "8928e8804153747dc5cea59bce1400762e8d987a302559b2e4e7248ab46e3a33"
+  },
+  "startup/compat-2-boot.json": {
+    "bytes": 4277,
+    "sha256": "f18d59d1bf8c0ce7249f292519bfdc743ed23b97aa1f911f09e33439daf95c70"
+  },
+  "startup/compat-2-focus.log": {
+    "bytes": 58,
+    "sha256": "a3acf2ffd825cd7cda17a72fd17d5fc1fa1d256b3466127a97938d705441859b"
+  },
+  "startup/native-single-sample.log": {
+    "bytes": 7221,
+    "sha256": "aba7f9d3907dc3b509598094909092429e2ae53c843d0e61eb5030ee51f65f58"
+  },
+  "startup/native-single-sample-boot.json": {
+    "bytes": 4228,
+    "sha256": "35a2721806548927e972025b8fcbfc3103c601855406d6d9dc84b9eec81b637c"
+  },
+  "startup/native-single-sample-focus.log": {
+    "bytes": 58,
+    "sha256": "afa61bebe43fb1ba375b59f4350b58007a7f7a504a35c174726dd88e0d1ada41"
+  },
+  "startup/focus-control.log": {
+    "bytes": 4328,
+    "sha256": "8161c7df8e0fcd7b6d52eeaf4b396b77403c96eab8dec7dc47fca2c609256a6a"
+  },
+  "startup/focus-control-boot.json": {
+    "bytes": 4279,
+    "sha256": "dea47b0b7e130d5207644c822d2559f2be957dd5f77c7760a0fd0b0412743a72"
+  },
+  "startup/focus-control-focus.log": {
+    "bytes": 146,
+    "sha256": "04fbcdad42fd93b8cb24789ceaf0afb340ac31e018eb6165c568952532f9a9a3"
+  },
+  "startup/shipping-metal.log": {
+    "bytes": 7098,
+    "sha256": "f299b35377f786f4f49ec0c266828833b840f3b8f3b36f85d7dcfeac497f4a27"
+  },
+  "startup/shipping-metal-boot.json": {
+    "bytes": 4224,
+    "sha256": "fbf1d548d74c9243e805d0f2ed40c53eef46e7eaa1ca45acb394663263a3b427"
+  },
+  "startup/shipping-metal-focus.log": {
+    "bytes": 58,
+    "sha256": "f3056ef8d8d3c72f5f5269596c71ada9a869c8ef012cf43c458f3fc6b0ea0eb3"
+  }
+}
