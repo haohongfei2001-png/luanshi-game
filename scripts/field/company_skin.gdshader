@@ -222,6 +222,7 @@ void fragment() {
             bolt*=.85;
         }
     }
+    float dyed_shoulder=0.;
     // The upper part of an issued garment is sewn from a deeper bolt of
     // indigo or madder. The officer's iron and an archer's leather belt stay
     // in their original material; only woven cloth has coverage in this mask.
@@ -241,18 +242,22 @@ void fragment() {
                 // picks up colour, including the turn towards the shield arm.
                 yoke=smoothstep(1.015,1.113,bind_point.y);
             }
-            dye=mix(dye,max(dye,smoothstep(.18,.68,dye)),yoke);
+            dye=mix(dye,max(dye,smoothstep(.24,.76,dye)),.82*yoke);
         } else if (cloth_panel==1 || cloth_panel==19 || cloth_panel==27 || cloth_panel==11) {
             yoke=smoothstep(1.035,1.173,bind_point.y);
             if (cloth_panel==19) yoke=1.;
             dye=mix(dye,.97,yoke);
         }
         if (player_costume && cloth_panel!=19) yoke=0.;
-        bolt=mix(bolt,shoulder_dye.rgb*mix(.91,1.03,cloth_lot),yoke);
+        dyed_shoulder=yoke;
+        bolt=mix(bolt,shoulder_dye.rgb*mix(.87,1.015,cloth_lot),yoke);
     }
     float fold = dot(ink, vec3(.28, .56, .16));
     float mid = OUTPUT_IS_SRGB ? .73 : .52;
-    vec3 colour = mix(ink, bolt * clamp(fold / mid, .64, 1.24), dye);
+    // White yarn highlights on dyed wool turn softly. Keep iron, skin and the
+    // lacquer rim on the existing albedo response.
+    float cloth_value=clamp(fold/mid,.64,mix(1.24,1.09,dyed_shoulder));
+    vec3 colour=mix(ink,bolt*cloth_value,dye);
     if (!player_costume && cloth_panel==0) {
         // The undyed coat is slightly warmer than its sleeves. Light from above
         // falls off under the folded shoulder, leaving the waist legible from above.
