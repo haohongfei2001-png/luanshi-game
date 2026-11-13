@@ -361,7 +361,7 @@ func _gate_gallery(base: Vector3, parent: Node3D) -> void:
 
 # These roofs can lift away independently while the posts, eaves, and the
 # people inside remain. No soldier or combat state changes with the camera.
-func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
+func _cover(_frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 	var cover:=Builder.new()
 	_roof(cover,base,w,d,rise,SLATE)
 	# The perimeter beams belong to the roof. When the near pitch lifts in
@@ -370,7 +370,7 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 	for side:float in [-1.0,1.0]:
 		cover.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
 		cover.block(base+Vector3(side*w*0.84,-0.09,0),Vector3(0.19,0.18,d*1.70),WOOD)
-	_brackets(frame,base,w,d)
+	_brackets(cover,base,w,d)
 	var node:=_mesh(cover,self)
 	if absf(base.x-Ground.WALL_X)<.01 and absf(base.z)<.01:
 		_gate_gallery(base,node)
@@ -410,6 +410,13 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 			strip.joint=10 if along==Vector3.BACK else 3
 			var plate:=base+axis*side*minf(w,d)*.84-Vector3.UP*.09
 			strip.rod(plate-along*reach*1.12,plate+along*reach*1.12,.11,.11,WOOD,6)
+			# Each bracket belongs to a surviving post. The two unsupported
+			# brackets on the open, cut-away pitch go with the front roof.
+			strip.joint=3
+			for station:float in [-1.0,-.34,.34,1.0]:
+				var seat:=gallery+along*reach*station-Vector3.UP*.31
+				strip.block(seat,Vector3(.25,.17,.25),WOOD.darkened(.12))
+				strip.rod(seat+Vector3.UP*.16-axis*side*.18,seat+Vector3.UP*.16+axis*side*.33,.106,.106,WOOD,4)
 			var lip:=_mesh(strip,self)
 			lip.visible=false
 			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.625+Vector3.UP*(rise*0.38),
