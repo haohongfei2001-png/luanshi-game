@@ -2,7 +2,8 @@ shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
-uniform sampler2D elm_spray : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D grove_leaf : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D grove_bark : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D elm_bough : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D leaf_marks : filter_linear_mipmap, repeat_enable;
@@ -11,29 +12,52 @@ uniform vec4 deep_leaf : source_color = vec4(.15,.238,.216,1.0);
 uniform vec4 elm : source_color = vec4(.31,.401,.284,1.0);
 uniform vec4 sun_elm : source_color = vec4(.495,.565,.355,1.0);
 uniform vec4 sun_ash : source_color = vec4(.54,.52,.32,1.0);
+uniform vec4 elm_under : source_color = vec4(.113,.178,.154,1.);
+uniform vec4 elm_body : source_color = vec4(.218,.334,.231,1.);
+uniform vec4 elm_light : source_color = vec4(.353,.426,.281,1.);
+varying float facing_sky;
 varying vec3 paint;
 varying float crown;
 varying vec2 bark_uv;
 
 void vertex() {
-	float breeze=sin(TIME*1.22+VERTEX.x*.83+VERTEX.z*.44)*.025;
-	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+VERTEX.x*.58- VERTEX.z*.44);
-	VERTEX.x+=breeze*UV2.x;
-	VERTEX.z+=breeze*.53*UV2.x;
+	// Instanced inland trees retain world-space wind frequency and amplitude.
+	bool inland=UV2.y>=11.9;
+	vec3 at=inland ? (MODEL_MATRIX*vec4(VERTEX,1.)).xyz : VERTEX;
+	float breeze=sin(TIME*1.22+at.x*.83+at.z*.44)*.025;
+	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+at.x*.58-at.z*.44);
+	vec3 drift=vec3(breeze,0.,breeze*.53)*UV2.x;
+	if(inland) {
+		mat3 basis=mat3(MODEL_MATRIX);
+		// All grove placements have uniform scale. Undo their basis for a
+		// metre of wind while letting the renderer rotate the actual normals.
+		drift=transpose(basis)*drift/dot(basis[0],basis[0]);
+	}
+	VERTEX+=drift;
 	crown=UV2.y;
+	facing_sky=NORMAL.y;
 	bark_uv=UV;
 	paint=crown>.5?vec3(UV2.x,(UV2.y-1.0)*2.0,0.0):COLOR.rgb;
 }
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>=8.0) {
-		// The edge and gaps of a tuft are authored on the same folded branch
-		// surface as its veins. Sky is visible between actual branch tips.
-		vec4 brush=texture(elm_spray,UV);
-		float sun=clamp((crown-8.1)/.7,0.0,1.0);
-		tone=brush.rgb*mix(vec3(.50,.63,.69),vec3(.84,.86,.77),sun);
-		opacity=brush.a;
+	if(crown>=13.5) {
+		vec3 bark=texture(grove_bark,UV).rgb;
+		float lum=dot(bark,vec3(.27,.57,.16));
+		float band=smoothstep(.14,.55,OUTPUT_IS_SRGB?lum:sqrt(max(lum,0.)));
+		tone=mix(vec3(.100,.085,.054),vec3(.29,.233,.157),band);
+	} else if(crown>=11.9) {
+		vec4 leaf=texture(grove_leaf,UV);
+		float height=clamp((crown-12.1)/.85,0.,1.);
+		float color_value=dot(leaf.rgb,vec3(.25,.58,.17));
+		float value=OUTPUT_IS_SRGB?color_value:sqrt(max(color_value,0.));
+		float light=.23*value+.49*height+.22*clamp(facing_sky,0.,1.);
+		vec3 shade=mix(elm_body.rgb,elm_light.rgb,.18);
+		vec3 sun=OUTPUT_IS_SRGB?vec3(.50,.57,.35):vec3(.214,.285,.100);
+		tone=mix(shade,elm_light.rgb,smoothstep(.28,.56,light));
+		tone=mix(tone,sun,smoothstep(.50,.85,light)*.77);
+		opacity=leaf.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
 		float sun=clamp((crown-6.1)*1.42,0.0,1.0);

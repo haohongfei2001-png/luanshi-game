@@ -1,0 +1,8 @@
+River Gate remount studies · Wildfire Games
+Copyright (C) 2009 Wildfire Games. https://www.wildfiregames.com/
+Source horse_persian, hair_mane_01, hair_tail_01 and four coat textures with the black hair texture were published in the 0 A.D. art repository. Source and derivative hide.glb, horse_coats.png and horse_hair.png are distributed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+
+Luanshi contributors fitted the original body to the river-gate saddle, bit, hoof and cart coordinates, transferred authored skin groups into the shared low-cost pose, filtered the four pigments and retained the hair coverage mask. The project saddle, tack, cart and wheel geometry are separate. Individual source hashes and the converter are in tools/art/import_remount.py.

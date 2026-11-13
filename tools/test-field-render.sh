@@ -12,10 +12,10 @@ if [[ "$suite" != footage ]]; then
   timeout 100s xvfb-run -a -s '-screen 0 800x500x24' "$GODOT" --path . --resolution 800x500 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_alternate_outcomes.gd -- --field-size=20 2>&1 | tee artifacts/field-outcomes.log
   grep -q '^FIELD_ENDINGS_PASS' artifacts/field-outcomes.log
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-outcomes.log; then exit 1; fi
-  # This driver plays two complete orders of battle without quitting the shipping shell.
-  # With 4x MSAA on llvmpipe, the first 724-tick route alone took 295 s. The driver
-  # reports progress and rejects a stalled simulation independently of this process guard.
-  timeout 15m xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
+  # Both real escort routes share the same game process. Under hosted software
+  # rendering they can take 900 seconds to reach the second report. The driver
+  # aborts a stuck battle after 30 unchanged frames; leave time for camp input.
+  timeout 23m xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
   grep -q '^FIELD_ESCORT_GUI_PASS' artifacts/field-escort-gui.log
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-escort-gui.log; then exit 1; fi
 fi

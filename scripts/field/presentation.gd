@@ -6,12 +6,11 @@ const Figures := preload("res://scripts/field/figures.gd")
 const CompanyArt := preload("res://scripts/field/company_art.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
+const FieldStandard := preload("res://scripts/field/field_standard.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
 const FRIEND := Color("34496a")
 const FOE := Color("783f34")
-const CLOTH_COLOR:=Color("dbcba4")
 const PLAYER_CLOTH:=Color("364967")
-const GOLD := Color("b69c66")
 
 class Batch:
 	var node: MultiMeshInstance3D
@@ -138,27 +137,11 @@ func configure(model: Battle) -> void:
 	b.rod(Vector3(0,0,0.34),Vector3(0,0,0.48),0.055,0.001,Color("a8aaa2"),4)
 	var am := b.finish()
 	arrows = _batch(am,_material(FRIEND,0),64)
-	var flag := Builder.new()
-	flag.rod(Vector3(0,0,0),Vector3(0,3.65,0),0.045,0.036,Color("796343"))
-	flag.dye = 1
-	flag.quad(Vector3(0,3.50,0),Vector3(0.90,3.43,0.09),Vector3(0.91,2.70,0.18),Vector3(0,2.67,0),Color.WHITE)
-	flag.tri(Vector3(0.89,3.41,0.09),Vector3(1.32,3.34,0.16),Vector3(0.90,3.06,0.15),Color.WHITE)
-	flag.dye = 0
-	flag.block(Vector3(0.38,3.11,0.02),Vector3(0.13,0.42,0.09),GOLD)
-	# A notched tail and two light hems remain legible beyond clothing detail.
-	flag.quad(Vector3(0,3.49,0.012),Vector3(0.9,3.42,0.101),Vector3(0.9,3.36,0.105),Vector3(0,3.43,0.012),CLOTH_COLOR)
-	flag.tri(Vector3(0.91,2.96,0.15),Vector3(1.36,2.77,0.19),Vector3(0.91,2.72,0.18),GOLD)
-	var fm := flag.finish()
-	var garrison:=Builder.new()
-	garrison.rod(Vector3.ZERO,Vector3(0,3.62,0),0.046,0.034,Color("745636"),4)
-	garrison.dye=1
-	garrison.quad(Vector3(0,3.48,0),Vector3(0.89,3.39,0.09),Vector3(0.91,2.89,0.16),Vector3(0,2.82,0),Color.WHITE)
-	garrison.tri(Vector3(0.07,2.84,0),Vector3(0.42,2.49,0.10),Vector3(0.52,2.87,0.09),Color.WHITE)
-	garrison.tri(Vector3(0.49,2.88,0.09),Vector3(0.83,2.56,0.18),Vector3(0.90,2.91,0.16),Color.WHITE)
-	garrison.dye=0
-	garrison.quad(Vector3(0.12,3.14,0.045),Vector3(0.43,3.32,0.075),Vector3(0.72,3.10,0.13),Vector3(0.42,2.96,0.082),CLOTH_COLOR)
-	standards.append(_batch(fm,_material(FRIEND,0),battle.companies_per_side))
-	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.command_counts[1]))
+	# Company signals use their own woven marks, cut and attachment on both faces.
+	for side in 2:
+		var garrison:=side==1
+		var capacity:=battle.command_counts[1] if garrison else battle.companies_per_side
+		standards.append(_batch(FieldStandard.mesh(garrison),FieldStandard.material(garrison),capacity))
 	runners = _batch(far_mesh[Arms.Kit.SWORD],CompanyArt.material(Color("ab8962"),0),8)
 
 func _key(u: Battle.Unit) -> int:
@@ -343,8 +326,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if absf(at.x-center.x)>half_extent.x or absf(at.y-center.y)>half_extent.y: continue
 		var role: String=battle.corps.title_of(battle,bearer)
 		var height:=1.25 if role=="战场主将" else (1.10 if role=="先锋" else 1.0)
-		var base:=Ground.unit_point(at)+Vector3(-0.32,0.81 if bearer.mounted else 0.0,0)
-		_put(standards[bearer.team],base,Basis(Vector3.UP,atan2(bearer.facing.x,bearer.facing.y)),Color(0,0,0,0),height)
+		var turn:=Basis(Vector3.UP,atan2(bearer.facing.x,bearer.facing.y))
+		var base:=Ground.unit_point(at)+turn*Vector3(-.26,.81 if bearer.mounted else 0.,-.08)
+		var breeze:=fposmod((float(battle.tick)+alpha)*Battle.DT*.64+.071*(bearer.id%19),1.)
+		_put(standards[bearer.team],base,turn,Color(breeze,0,0,0),height)
 	for id in [1,2]:
 		var pos: Vector2 = battle.vehicle_pos[id]
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH

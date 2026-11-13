@@ -212,6 +212,14 @@ def trial(executable, output, data_dir, helper, plan):
     matched_peak = (isinstance(peak_index, int) and 0 <= peak_index < len(frames)
                     and abs(frames[peak_index] - max(frames)) < 0.001
                     and abs(frames[peak_index] - longest.get("wall_ms", -1)) < 0.001)
+    phase_names = {"grid_and_input", "officers_and_orders", "target_selection", "unit_actions_and_density",
+                   "projectiles", "siege", "objectives"}
+    totals = row.get("step_phase_totals_ms", {})
+    phases = longest.get("step_phases_ms", {})
+    phase_match = (set(totals) == phase_names and set(phases) == phase_names
+                   and all(value >= 0 for value in [*totals.values(), *phases.values()])
+                   and sum(totals.values()) <= row.get("sim_cpu_total_ms", 0) + .2
+                   and sum(phases.values()) <= longest.get("sim_cpu_ms", 0) + .1)
     stages = {event["stage"]: event for event in events}
     expected = ["scene_ready", "first_post_draw", "foreground_ready", "deployed", "first_tick",
                 "first_hit", "contact_complete"]
@@ -219,7 +227,7 @@ def trial(executable, output, data_dir, helper, plan):
         expected += ["control_armed", "focus_paused", "still_paused_after_foreground", "resume_pressed"]
     if label == STARTUP_CONTROL[0]:
         expected += ["startup_interruption_armed", "startup_paused_zero", "focus_restored_at_zero", "startup_resume_pressed"]
-    valid = (code == 0 and empty_at_launch and matched_peak and all(stage in stages for stage in expected)
+    valid = (code == 0 and empty_at_launch and matched_peak and phase_match and all(stage in stages for stage in expected)
              and all(Path(event["data_dir"]) == data_dir for event in events)
              and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method
              and image.is_file() and image.stat().st_size > 4096 and row.get("hits_in_window", 0) > 0

@@ -7,6 +7,7 @@ const LIME := Color("946d58")
 const SLATE := Color("525b61")
 const STONE := Color("838274")
 const DIRT := Color("a28c67")
+const SKIFF_WATERLINE := Vector3(Ground.RIVER_X+2.04,-.33,-7.91)
 var surface_material:=ShaderMaterial.new()
 var sun:=DirectionalLight3D.new()
 var gate: MeshInstance3D
@@ -38,13 +39,16 @@ func _ready() -> void:
 	add_child(sun)
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
 	surface_material.set_shader_parameter("cartway",preload("res://assets/environment/river-cartway.svg"))
+	surface_material.set_shader_parameter("valley_wash",preload("res://assets/environment/floodplain-paint.png"))
 	surface_material.set_shader_parameter("soil_cover",preload("res://assets/environment/soil-cover.png"))
-	surface_material.set_shader_parameter("floodplain",preload("res://assets/environment/floodplain-paint.png"))
+
 	surface_material.set_shader_parameter("field_margins",preload("res://assets/environment/field-margins.svg"))
 	surface_material.set_shader_parameter("verge_track",preload("res://assets/environment/verge-and-track.svg"))
 	surface_material.set_shader_parameter("shale_paint",preload("res://assets/environment/river-shale.png"))
-	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/grazed-meadow.png"))
-	surface_material.set_shader_parameter("lane_paint",preload("res://assets/environment/loess-wagonway.png"))
+	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/valley-turf.png"))
+	surface_material.set_shader_parameter("grazing_detail",preload("res://assets/environment/grazed-meadow.png"))
+	surface_material.set_shader_parameter("track_detail",preload("res://assets/environment/loess-wagonway.png"))
+	surface_material.set_shader_parameter("lane_paint",preload("res://assets/environment/valley-loess.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
 	surface_material.set_shader_parameter("joinery",preload("res://assets/environment/joinery.png"))
 	var terrain:={}
@@ -52,6 +56,7 @@ func _ready() -> void:
 	var river:=Builder.new()
 	_crossings(river)
 	_shore(river)
+	_moored_skiff(river)
 	_mesh(river,self)
 	var city:=Builder.new()
 	_fort(city)
@@ -168,11 +173,70 @@ func _shore(b: Builder) -> void:
 			last=row
 	b.joint=0
 
-func _crossings(b: Builder) -> void:
+func _moored_skiff(bank: Builder) -> void:
+	# The working bank lies upstream of the middle bridge, in the unwalkable channel.
+	var origin:=SKIFF_WATERLINE
+	var skiff:=preload("res://assets/environment/river_skiff.gltf").instantiate() as Node3D
+	skiff.position=origin
+	add_child(skiff)
+	var bow:=origin+Vector3(.09,.55,-2.49)
+	var post:=Vector3(Ground.RIVER_X+4.88,.30,-10.96)
+	bank.joint=11
+	bank.rod(post-Vector3(.035,.77,0),post+Vector3(.025,.16,0),.103,.083,WOOD,7)
+	var sag:=bow.lerp(post,.54)-Vector3.UP*.19
+	bank.joint=6
+	var flax:=Color("a89572")
+	bank.rod(bow,sag,.031,.029,flax,6)
+	bank.rod(sag,post,.029,.033,flax,6)
+	for ring in 2:
+		var tie:=post-Vector3.UP*(ring*.061)
+		bank.rod(tie-Vector3.UP*.029,tie+Vector3.UP*.029,.112,.111,flax,7)
+	bank.joint=0
+
+# Multi-course landings grow out of the existing blocked riverbank. The cap
+# returns end below the deck; the playable width and foot heights are unchanged.
+func _bridge_landing(b: Builder,center: Vector3,bank: float,side: float) -> void:
+	var courses: Array[Color]=[Color("686d68"),Color("7b8076"),Color("888c80")]
+	for row in 3:
+		var elevation:float=-.52+.209*row
+		var inset:=.055*row
+		for i in 3:
+			var u:=float(i)/2.
+			var start:=4.67+u*2.50+.13*(row%2)
+			var cheek:=side*(3.95+u*.58)
+			var p:=center+Vector3(bank*start,elevation,cheek)
+			var reach:=1.38-.16*u
+			b.joint=4
+			b.block(p,Vector3(reach,.212,.51-inset),courses[row].darkened(.032*((i+row)%3)))
+			if row==2:
+				var cap:=p+Vector3(bank*.03,.119,0)
+				b.block(cap,Vector3(reach+.073,.092,.60-inset),Color("9a9a86"))
+
+func _river_surface(b: Builder) -> void:
 	b.joint=2
 	var water:=Color("577d78")
-	b.quad(Vector3(Ground.RIVER_X-6.8,-0.33,-108),Vector3(Ground.RIVER_X-6.8,-0.33,108),
-		Vector3(Ground.RIVER_X+6.8,-0.33,108),Vector3(Ground.RIVER_X+6.8,-0.33,-108),water)
+	var west:=Ground.RIVER_X-6.8
+	var east:=Ground.RIVER_X+6.8
+	var level:=SKIFF_WATERLINE.y
+	# Cut the water between the inside and the outside of the hull at its
+	# waterline. A single water quad used to fill the seats and bottom boards.
+	var stations: Array[Vector2]=[Vector2(-2.30,0.),Vector2(-2.19,.25),Vector2(-1.45,.54),
+		Vector2(-.55,.65),Vector2(.60,.64),Vector2(1.52,.49),Vector2(2.13,.20),Vector2(2.19,0.)]
+	var previous:=SKIFF_WATERLINE.z+stations[0].x
+	b.quad(Vector3(west,level,-108),Vector3(west,level,previous),Vector3(east,level,previous),Vector3(east,level,-108),water)
+	var previous_width:=0.
+	for i in range(1,stations.size()):
+		var next:=SKIFF_WATERLINE.z+stations[i].x
+		var w:=stations[i].y
+		var mid:=SKIFF_WATERLINE.x
+		b.quad(Vector3(west,level,previous),Vector3(west,level,next),Vector3(mid-w,level,next),Vector3(mid-previous_width,level,previous),water)
+		b.quad(Vector3(mid+previous_width,level,previous),Vector3(mid+w,level,next),Vector3(east,level,next),Vector3(east,level,previous),water)
+		previous=next
+		previous_width=w
+	b.quad(Vector3(west,level,previous),Vector3(west,level,108),Vector3(east,level,108),Vector3(east,level,previous),water)
+
+func _crossings(b: Builder) -> void:
+	_river_surface(b)
 	for z:float in Ground.CROSSINGS:
 		var center:=Vector3(Ground.RIVER_X,0,z)
 		b.joint=3
@@ -181,13 +245,16 @@ func _crossings(b: Builder) -> void:
 		for i in range(-13,14):
 			var length:=7.80+0.085*sin(i*13.0+z)
 			var seam:=1.02*sin(i*1.14+z*0.13)
-			var worn:=Color("756657").lerp(Color("988774"),(.53+.42*sin(i*1.41+z*.71))*.73)
+			var worn:=Color("716657").lerp(Color("897c68"),.42+.23*sin(i*.64+z*.32)+.12*cos(i*1.41+z))
 			var board_top:=.085+.006*sin(i*4.32+z)
 			for edge_sign:float in [-1.0,1.0]:
 				var end:=edge_sign*length*0.5
 				b.block(center+Vector3(i*0.482,board_top,(end+seam)*0.5),Vector3(0.47,0.09,absf(end-seam)-0.021),worn.lightened(0.025*edge_sign))
 		for side:float in [-1.0,1.0]:
 			var edge:=center+Vector3(0,0,side*4)
+			b.joint=3
+			for bank:float in [-1.,1.]:
+				_bridge_landing(b,center,bank,side)
 			b.joint=3
 			for start_x:float in [-5.97,-2.04,2.05]:
 				b.rod(edge+Vector3(start_x+0.13,0.35,0),edge+Vector3(start_x+1.99,0.80,0),0.056,0.055,WOOD,5)
@@ -208,6 +275,12 @@ func _crossings(b: Builder) -> void:
 				var post:=edge+Vector3(x,0,0)
 				b.rod(post-Vector3.UP*0.70,post+Vector3.UP*1.03,0.13,0.109,WOOD,7)
 				b.rod(post+Vector3.UP*0.99,post+Vector3.UP*1.12,0.14,0.104,WOOD.lightened(0.11),7)
+				if absf(x)>4.0:
+					b.joint=4
+					var kerb:=post+Vector3(signf(x)*.43,0.,side*.19)
+					b.loft([kerb-Vector3.UP*.09,kerb+Vector3.UP*.17,kerb+Vector3.UP*.27],
+						[Vector2(.30,.37),Vector2(.29,.35),Vector2(.23,.30)],8,Color("8c8d7e"))
+					b.joint=11
 				if absf(x)>4.0 and signf(x)==side:
 					# Rag strips on two corner posts show wind and mark the landing.
 					# Both tails stay outboard of the playable bridge deck.

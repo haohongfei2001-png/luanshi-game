@@ -43,6 +43,20 @@ def field_shield(surface, detailed):
                 surface.oval(add(center,(side*.188,y,.015)),(.010,.012,.009),"iron_binding",LH,5,3)
 
 
+def nocked_arrow(s, close):
+    """Use the existing animated string joint for the shaft in the drawing hand."""
+    socket=add(grip(1),(.009,0.,-.159))
+    def point(x,y,z): return add(socket,(x,y,z))
+    n=6 if close else 4
+    s.tube([point(0,0,.0),point(0,0,.66),point(0,0,.743)],
+           [.010,.009,.008],"timber",NOCK,n)
+    for x,y in ((.6,.8),(-.8,.6)):
+        s.panel([point(0,0,.038),point(.025*x,.025*y,.057),
+                 point(.024*x,.024*y,.109),point(0,0,.17)],"lining",NOCK)
+    # The narrow dark metal shoulder carries an edge at the apex.
+    s.tube([point(0,0,.722),point(0,0,.745),point(0,0,.799)],
+           [(.010,.009),(.014,.021),(.001,.001)],"iron",NOCK,n)
+
 def weapon(kit,detail):
     s=Surface(detail)
     n=9 if detail else 5
@@ -97,6 +111,7 @@ def weapon(kit,detail):
                     s.tube([at((0,0,1.56)),at((sin(a)*.036,-.05,1.49)),at((sin(a)*.074,-.091+i*.011,1.40))],
                            [.019,.016,.004],"dyed",RH,4)
     elif kit==5:
+        nocked_arrow(s,detail)
         for side in (-1,1):
             limb=[(0,side*y,z) for y,z in ((0,0),(.13,.029),(.32,.096),(.49,.081),(.59,.011),(.63,-.095),(.694,-.123))]
             stick(limb,[.03,.029,.026,.023,.019,.014,.009],"timber",RH,n)
