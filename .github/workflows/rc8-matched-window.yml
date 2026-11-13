@@ -1,0 +1,50 @@
+name: Match the exported source play camera to the earlier real PNGs
+on:
+  push:
+    branches: ['codex/river-rc8-matched-window']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  read:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 13999972017
+          run-id: 43341820740
+          github-token: ${{ github.token }}
+          path: earlier
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14005802330
+          run-id: 43353033045
+          github-token: ${{ github.token }}
+          path: current
+      - name: Compare the same real input, then cut identical source coordinates
+        run: |
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow==11.3.0
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,io,hashlib,base64
+          from PIL import Image
+          def unique(side,filename):
+              files=list(Path(side).rglob(filename))
+              assert len(files)==1,(side,filename,len(files))
+              return files[0]
+          states=[json.loads(unique(s,"input.json").read_text()) for s in ("earlier","current")]
+          assert states[0]==states[1] and states[1][-1]["lens"]==22 and states[1][-1]["screen"]==[1920,1200]
+          print("MATCHED_INPUT",json.dumps(states[1],separators=(",",":")))
+          for label in ("personal-contact","personal-windup"):
+              sources=[unique(s,label+".png") for s in ("earlier","current")]
+              imgs=[Image.open(s).convert("RGB") for s in sources]
+              assert imgs[0].size==imgs[1].size==(1920,1200)
+              box=(525,278,1395,912);w,h=box[2]-box[0],box[3]-box[1]
+              sheet=Image.new("RGB",(w*2,h))
+              for i,image in enumerate(imgs):sheet.paste(image.crop(box),(i*w,0))
+              buf=io.BytesIO();sheet.save(buf,format="JPEG",quality=91,subsampling=0)
+              data=buf.getvalue();encoded=base64.b64encode(data).decode()
+              print("MATCHED_FILE",json.dumps({"label":label,"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest(),"source_png_sha256":[hashlib.sha256(s.read_bytes()).hexdigest() for s in sources],"box":box}))
+              for n in range(0,len(encoded),13000):print("MATCHED_PART",label,n,encoded[n:n+13000])
+          PY
