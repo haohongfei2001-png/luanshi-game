@@ -1,7 +1,7 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
 from field_armour import field_helmet
-from company_weapons import field_shield
+from company_weapons import field_shield, nocked_arrow
 from figure_mesh import Surface, add, lerp
 
 def costume(look,rank=False):
@@ -96,8 +96,6 @@ def costume(look,rank=False):
         s.tube([b,lerp(b,c,.19),lerp(b,c,.59),c],[(.079,.093),(.078,.085),(.053,.068),(.047,.056)],"binding",shin,leg_sides)
         s.rings([(.007,.065,.136,c[0],.052),(.062,.064,.120,c[0],.054),
                  (.101,.058,.090,c[0],.032),(.145,.050,.061,c[0],0)],"boots",boot,leg_sides)
-    if rank and look=="archer":
-        s.tube([(-.16,.797,-.168),(.123,1.373,-.196),(.17,1.505,-.201)],[.048,.067,.022],"quiver",CHEST,4)
     return s
 
 def arms(kit):
@@ -129,6 +127,7 @@ def arms(kit):
         if kit==3:
             s.ribbon([add(g,(0,.008,1.56)),add(g,(.052,-.08,1.405))],.049,"dyed",RH)
     elif kit==5:
+        nocked_arrow(s,False)
         for side in (-1,1):
             p=[add(g,(0,y*side,z)) for y,z in ((0,0),(.35,.095),(.53,.053),(.69,-.122))]
             s.tube(p,[.031,.025,.018,.01],"timber",RH,3)
