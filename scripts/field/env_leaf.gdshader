@@ -48,9 +48,19 @@ void fragment() {
 	if(crown>=15.5) {
 		vec4 painted=texture(ford_ink,UV);
 		float height=clamp(crown-16.,0.,1.);
-		float y=dot(painted.rgb,vec3(.27,.57,.16));
-		vec3 sun=mix(vec3(.71,.77,.76),vec3(.91,.95,.84),smoothstep(.21,.86,height));
-		tone=mix(vec3(y),painted.rgb,.81)*sun;
+		float y=dot(painted.rgb,vec3(.26,.59,.15));
+		float pigment=OUTPUT_IS_SRGB ? y : sqrt(max(y,0.));
+		if(UV.x<.62) {
+			NORMAL=normalize(mat3(VIEW_MATRIX)*crown_normal_world);
+			float grade=.42*height+.28*clamp(facing_sky,0.,1.)+.30*smoothstep(.20,.53,pigment);
+			vec3 mid=mix(elm_body.rgb,elm_light.rgb,.42);
+			tone=mix(elm_under.rgb,mid,smoothstep(.26,.53,grade));
+			tone=mix(tone,mix(mid,sun_elm.rgb,.43),smoothstep(.55,.82,grade));
+			tone*=.91+.13*smoothstep(.21,.53,pigment);
+		} else {
+			vec3 bark=OUTPUT_IS_SRGB?vec3(.139,.121,.089):vec3(.021,.016,.010);
+			tone=mix(bark,painted.rgb,.48);
+		}
 		opacity=painted.a;
 	} else if(crown>=13.5) {
 		vec3 bark=texture(grove_bark,UV).rgb;

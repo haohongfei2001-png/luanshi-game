@@ -41,12 +41,37 @@ def geometry(cache):
     corners=np.fromstring(faces.find("p").text,sep=" ",dtype=int).reshape(-1,3,3)
     assert len(corners)==783
     data=[]; normals=[]; tex=[]; bindings=[]; indices=[]; found={}
+    # Open four low veils that hid the veteran trunk and both landings.
+    # The model is pinned above; retain the complete woody crown and high twigs.
+    roots=np.arange(len(p))
+    def root(i):
+        while roots[i]!=i: i=roots[i]
+        return i
     for face in corners:
+        a,b,c=face[:,0]
+        roots[root(a)]=root(b)
+        roots[root(a)]=root(c)
+    veils={434,481,490,550}
+    assert veils.issubset({root(i) for i in range(len(p))})
+    for face in corners:
+        if root(face[0,0]) in veils: continue
+        leafy=uv[face[:,2],0].mean()<.62
         for pi,ni,ti in face:
             key=(int(pi),int(ni),int(ti))
             if key not in found:
                 found[key]=len(data)
-                vert=p[pi]; direction=n[ni]
+                vert=p[pi].copy()
+                h=float(np.clip(vert[1],0.,1.))
+                # The bole leans over the stream. The inland edge remains open
+                # at foot height. This bend applies to wood and attached leaf veils alike.
+                weight=h*h*(3.-2.*h)
+                vert[0]+=.18*weight
+                vert[2]*=.82
+                if leafy:
+                    cloud=np.array([vert[0]-.12, .44+(h-.56)*1.20,vert[2]])
+                    direction=cloud/max(np.linalg.norm(cloud),1e-8)*.91+n[ni]*.09
+                else:
+                    direction=n[ni]
                 data.append(vert); normals.append(direction/max(np.linalg.norm(direction),1e-8))
                 tex.append((uv[ti,0],1.-uv[ti,1]))
                 h=np.clip(vert[1],0.,1.)
@@ -70,9 +95,9 @@ def colour(cache):
     assert .10<(alpha>.45).mean()<.95
     # Flatten the glare into joined midtones while retaining the author's
     # actual drooping sprays, bark grain, leaf holes and cutout silhouette.
-    smooth=np.asarray(raw.convert("RGB").filter(ImageFilter.SMOOTH),dtype=float)/255.
+    smooth=np.asarray(raw.convert("RGB").filter(ImageFilter.MedianFilter(3)).filter(ImageFilter.GaussianBlur(1.5)),dtype=float)/255.
     y=smooth@np.array([.24,.60,.16])
-    value=np.interp(y,[0.,.13,.26,.44,.65,.83,1.],[.07,.18,.29,.44,.61,.73,.81])
+    value=np.interp(y,[0.,.17,.34,.52,.72,1.],[.13,.21,.32,.415,.51,.60])
     rgb=np.clip(value[:,:,None]+(smooth-y[:,:,None])*.78,0.,1.)
     rgba=np.dstack((rgb,alpha))
     target=OUT/"ford_willow.png"
