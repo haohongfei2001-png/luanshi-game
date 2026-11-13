@@ -1,0 +1,28 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+ERROR: Soldier musters in the water 56
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] expect (res://tests/field_bridgehead.gd:12)
+       [1] _initialize (res://tests/field_bridgehead.gd:24)
+ERROR: Soldier musters in the water 57
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] expect (res://tests/field_bridgehead.gd:12)
+       [1] _initialize (res://tests/field_bridgehead.gd:24)
+ERROR: Soldier musters in the water 58
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] expect (res://tests/field_bridgehead.gd:12)
+       [1] _initialize (res://tests/field_bridgehead.gd:24)
+ERROR: Soldier musters in the water 59
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] expect (res://tests/field_bridgehead.gd:12)
+       [1] _initialize (res://tests/field_bridgehead.gd:24)
+ERROR: Soldier musters in the water 1026
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] expect (res://tests/field_bridgehead.gd:12)
+       [1] _initialize (res://tests/field_bridgehead.gd:24)
+BRIDGEHEAD_SIM {"blocks":15,"crossed":295,"deaths":[122,135],"hero":[28.2393531799316,-1.25],"hits":[489,508],"pass":false,"result":"","tick":400}
