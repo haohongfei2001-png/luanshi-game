@@ -255,6 +255,17 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 		"render_cpu_p95_ms":rcpu[ceili(rcpu.size()*0.95)-1] if not rcpu.is_empty() else null,
 		"render_gpu_p95_ms":rgpu[ceili(rgpu.size()*0.95)-1] if not rgpu.is_empty() else null,
 		"hits_in_window":b.hits[0]+b.hits[1]-before_hits,"static_bytes":bytes if bytes>0 else null,"panned":panned}
+	# Count real wall intervals after timing. The three budgets apply to the
+	# same presented frames, including hitches during a camera change.
+	var over: Dictionary={}
+	for rate: int in [60,90,120]:
+		var count:=0
+		var budget:=1000.0/rate
+		for interval: float in sorted:
+			if interval>budget: count+=1
+		over[str(rate)]=count
+	record["frames_over_budget"]=over
+	record["max_ms"]=sorted[-1]
 	print("FIELD_HOST_WINDOW "+JSON.stringify(record))
 	record.raw_wall_ms=frames
 	var file:=FileAccess.open(path.get_basename()+"-frames.json",FileAccess.WRITE)

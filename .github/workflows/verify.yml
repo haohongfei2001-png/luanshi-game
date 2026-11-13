@@ -255,7 +255,7 @@ jobs:
           PY
 
   art-comparison:
-    name: Compare RC8 and candidate in the game window
+    name: Compare RC9 and candidate in the game window
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -276,6 +276,7 @@ jobs:
         run: |
           python3 tools/art/check_company_motion.py
           python3 tools/art/check_field_carries.py
+          python3 tools/art/check_contact_motion.py
           node tools/art/bake_mounts.mjs --check
           node tools/art/bake_field_garments.mjs --check
           node tools/env_assets.mjs --check-ram

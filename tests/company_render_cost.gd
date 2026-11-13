@@ -29,6 +29,8 @@ func _run() -> void:
 		var gpu: Array[float]=[]
 		var tris:=0
 		var draws:=0
+		var begin_view:=field.view_us
+		var view_ms:Array[float]=[]
 		for frame in 40:
 			if frame%3==0: field._physics_process(Battle.DT)
 			var at: Vector2=sample[1]
@@ -37,8 +39,11 @@ func _run() -> void:
 			field.camera.size=sample[2]
 			field.pan_to(at)
 			field._process(1.0/60.0)
+			var spent:float=(field.view_us-begin_view)/1000.
+			begin_view=field.view_us
 			await RenderingServer.frame_post_draw
 			if frame<8: continue
+			view_ms.append(spent)
 			wall.append((Time.get_ticks_usec()-begin)/1000.0)
 			var c:=RenderingServer.viewport_get_measured_render_time_cpu(rid)
 			var g:=RenderingServer.viewport_get_measured_render_time_gpu(rid)
@@ -48,7 +53,7 @@ func _run() -> void:
 			draws=RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 		print("COMPANY_RENDER_COST "+JSON.stringify({"case":sample[3],"tick":b.tick,"seed":Battle.SEED,"per_side":b.side_size,"hits":b.hits,"dead":b.losses,
 			"camera_size":field.camera.size,"visible":field.view.visible_soldiers,"triangles":tris,"draws":draws,"samples":wall.size(),"p50_ms":_pct(wall,.5),"p95_ms":_pct(wall,.95),"p99_ms":_pct(wall,.99),
-			"render_cpu95_ms":_pct(cpu,.95),"render_gpu95_ms":_pct(gpu,.95),"renderer":RenderingServer.get_video_adapter_name(),"memory_bytes":OS.get_static_memory_usage()}))
+			"view_p50":_pct(view_ms,.50),"view_p95":_pct(view_ms,.95),"render_cpu95_ms":_pct(cpu,.95),"render_gpu95_ms":_pct(gpu,.95),"renderer":RenderingServer.get_video_adapter_name(),"memory_bytes":OS.get_static_memory_usage()}))
 	scene.queue_free()
 	await process_frame
 	quit()

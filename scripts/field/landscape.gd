@@ -12,6 +12,10 @@ var sun:=DirectionalLight3D.new()
 var gate: MeshInstance3D
 var ram: Node3D
 var ram_beam: Node3D
+var ram_wheels: Array[Node3D]=[]
+var ram_model_id:=0
+var last_ram_position:=Vector2.ZERO
+var ram_roll:=0.0
 var roofs: Array[Dictionary]=[]
 var has_open_roof:=false
 
@@ -78,6 +82,8 @@ func _ready() -> void:
 	ram=preload("res://assets/environment/river_ram.gltf").instantiate() as Node3D
 	add_child(ram)
 	ram_beam=ram.find_child("SuspendedBeam",true,false) as Node3D
+	for wheel in ram.find_children("RamWheel*","Node3D",true,false):
+		ram_wheels.append(wheel as Node3D)
 
 func _mesh(builder: Builder,parent: Node3D) -> MeshInstance3D:
 	var mesh := MeshInstance3D.new()
@@ -754,6 +760,16 @@ func _camp(b: Builder) -> void:
 func update_battle(battle) -> void:
 	gate.visible = battle.gate_hp > 0
 	gate.position.y = -(1.0-battle.gate_hp/260.0)*0.45
-	ram.position = Ground.unit_point(battle.ram)
+	if ram_model_id!=battle.get_instance_id():
+		ram_model_id=battle.get_instance_id()
+		last_ram_position=battle.ram
+		ram_roll=0.
+		for wheel in ram_wheels: wheel.rotation.z=0.
+	if last_ram_position!=battle.ram:
+		var distance:float=last_ram_position.distance_to(battle.ram)
+		ram_roll=fposmod(ram_roll-distance/.48,TAU)
+		last_ram_position=battle.ram
+		for wheel in ram_wheels: wheel.rotation.z=ram_roll
+	ram.position=Ground.unit_point(battle.ram)
 	ram.rotation.z = 0.24 if battle.ram_hp <= 0 else 0.0
 	ram_beam.position.x = 0.38*sin((1.7-battle.ram_timer)*TAU/1.7) if battle.ram_timer > 0 else 0.0

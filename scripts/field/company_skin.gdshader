@@ -75,6 +75,12 @@ void vertex() {
             tile.y=float(4*(279+carrier*34+(variant-1)*17+strip))+.5;
         }
     }
+    // After the 279 standard and 102 carry strips: four finite reaction clips
+    // per kit. The two spare guard/stagger slot codes carry the confirmed side.
+    if ((clip==10 || clip==11) && (slot==1 || slot==2)) {
+        int reaction=(clip==10 ? 0 : 2)+slot-1;
+        tile.y=float(4*(381+kit*4+reaction))+.5;
+    }
     vec3 pos,nrm;
     skin(first,tile,VERTEX,NORMAL,pos,nrm);
     if(first!=second && blend<.999) {

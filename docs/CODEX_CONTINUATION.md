@@ -4,6 +4,12 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 河关 RC10｜实机复拍已完成，候选包在独立分支验证
+
+开发基线 `51587871bdcca259cf75777e8fdfa02d28e59a6a`，回退版本见下方 RC9。复现种子 61112 的 512v512 战场中，102 号兵在第 43 步被 612 号击伤，70 号盾兵在第 79 步挡下 576 号的进攻。[第一遍同机前后实拍](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43385505747)和[复修后的实拍](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43387834233)保留原图、逐步兵籍与 HP、22 米等速录像和 9.5 米细读。盾面移位、带方向的受击、枪兵蓄力、肩布与裙甲开衩已接入游戏。第一遍的大块“砖形”铁甲与埋住裙衩的重复护片已重做。坐骑的眼眶、鼻翼、鬃毛和步态已在另一路重做，冲车四只轮按实车移动距离过地。游戏独立分支 `codex/river-gate-rc10`。真实 M5 内外屏 20 分钟热稳态及最终美术仍待验证。
+
+云端复现可执行 `./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`，随后用同一源码运行导出和原生 macOS 窗口验证。源码、校验和和性能以本轮实测归档为准。
+
 ## 河关 RC9 试玩候选已合入，美术自审未达标
 
 [下载 macOS、正常视角、连续实录、测试和校验值](evidence/river-gate-v1-rc9/PLAYTEST.md)。游戏源码 `be80dc767dc5dcaa3f6e217fbcce93f3dc1347b7`，main 合并 `4a3ebc4d3c8e687337b27829c6bc13be20810f09`，与真实导出 `1ec3a54c97b8fc87ad476c9e97918d26a1813e0f` 的树相同。[游戏 PR #43 六项检查](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43374886624)全部通过。曾失败的盾兵近景已按相同相机重做盾面和携行位置，原断言补回 106 个持械手肤色像素。过亮麻衣、光滑树冠与偏黄道路的退回版本有记录。主角实际出枪、九武器、战役目标、将领继任、骑乘、护送及战后行军/存读档有回归。最终画面和完整游戏仍未通过。以[新质量要求](OWNER_QUALITY_FIDELITY_PERFORMANCE_TARGET_20261113.md)为准。

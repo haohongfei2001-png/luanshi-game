@@ -195,9 +195,16 @@ class Joinery {
 
 function carriage() {
     const frame=new Joinery("Carriage"), beam=new Joinery("SuspendedBeam");
+    const wheels=[];
     for(const x of [-1.25,1.22]){
         frame.rod([x,0.48,-0.86],[x,0.48,0.86],0.084,0.084,bark,8);
-        for(const z of [-0.82,0.82]) frame.wheel(x,0.49,z,0.48);
+        for(const z of [-0.82,0.82]){
+            const name="RamWheel"+(x<0?"Rear":"Fore")+(z<0?"Left":"Right");
+            const wheel=new Joinery(name);
+            wheel.wheel(0,0,0,.48);
+            wheel.origin=[x,.49,z];
+            wheels.push(wheel);
+        }
     }
     for (let side of [-1,1]) {
         const z=0.58*side;
@@ -259,7 +266,7 @@ function carriage() {
     for(let x of [-1.78,-0.93,0.86,1.66]) beam.rod([x,1.18,0],[x+0.085,1.18,0],0.204,0.204,bark,10);
     beam.rod([1.88,1.18,0],[2.16,1.18,0],0.211,0.226,iron,10,1);
     beam.rod([2.16,1.18,0],[2.54,1.18,0],0.226,0.143,iron,10,1);
-    return [frame,beam];
+    return [frame,beam,...wheels];
 }
 
 function baggage() {
@@ -363,7 +370,9 @@ function gltf(shapes) {
             primitives.push({attributes:{POSITION,NORMAL,COLOR_0},indices,material});
         });
         const idx=doc.meshes.length; doc.meshes.push({name:shape.name,primitives});
-        doc.nodes.push({name:shape.name,mesh:idx}); doc.scenes[0].nodes.push(idx);
+        const node={name:shape.name,mesh:idx};
+        if(shape.origin) node.translation=shape.origin;
+        doc.nodes.push(node); doc.scenes[0].nodes.push(idx);
     }
     const packed=join(parts);
     doc.buffers=[{byteLength:packed.length,uri:"data:application/octet-stream;base64,"+base64(packed)}];
