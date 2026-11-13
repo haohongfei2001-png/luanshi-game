@@ -59,14 +59,6 @@ func _spray(patch: Patch,base: Vector3,tip: Vector3,side: Vector3,tile: int,ligh
 		patch.leaves.add_vertex(points[i])
 	patch.sprays+=1
 
-# Each profile describes a branching crown in local tree heights. The crown
-# forks intentionally differ in height, reach and width within the same tree.
-const CROWNS := [
-	[Vector4(-.20,.63,.03,.25),Vector4(.16,.70,-.12,.24),Vector4(.05,.79,.18,.22),Vector4(-.06,.85,-.02,.207),Vector4(.25,.63,.12,.16)],
-	[Vector4(-.22,.58,.11,.203),Vector4(.20,.65,-.14,.223),Vector4(.02,.70,.23,.207),Vector4(-.09,.79,-.16,.223),Vector4(.09,.90,.03,.182),Vector4(.28,.74,.09,.14)],
-	[Vector4(-.06,.48,.02,.17),Vector4(.10,.61,-.05,.163),Vector4(-.08,.72,.10,.156),Vector4(.04,.82,-.03,.148),Vector4(-.02,.93,.01,.112)]
-]
-
 # A crown is assembled from bowed leaf-bearing limbs. The open spaces between
 # forks expose the structure from rotating play cameras; the foliage is not a
 # cutout facing the player. Each limb has a pitched spine and folded sides.
@@ -79,9 +71,12 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 		var t:=float(row)/3.0
 		var spine:=root+ray*length*t+across*length*sweep*t*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
 		var width:=breadth*(.70+.30*sin(t*PI))*(1.-absf(sweep)*.44*t)
+		if canopy:
+			width=breadth*(.39+.55*sin(t*PI)+.19*t)
+			spine.y+=length*.118*sin(t*PI)
 		for col in 3:
 			var v:=float(col-1)
-			verts.append(spine+across*v*width+Vector3.DOWN*absf(v)*breadth*(.12+.18*t))
+			verts.append(spine+across*v*width+Vector3.DOWN*absf(v)*breadth*((.22+.34*t) if canopy else (.12+.18*t)))
 			normals.append((Vector3.UP+across*.39*v+ray*(.30*t-.20)).normalized())
 			uv.append(Vector2(.5+.5*v,1.0-t))
 	for r in 3:
@@ -93,6 +88,45 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 				patch.leaves.set_uv(uv[k])
 				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,(8.1 if canopy else 6.1)+grade*.70))
 				patch.leaves.add_vertex(verts[k])
+	patch.sprays+=1
+
+# The outer lobes have an undercut, a low edge, a rounded shoulder and an
+# uneven top. Smooth normals preserve the continuous foliage volume at army zoom.
+func _crown_mass(patch: Patch,at: Vector3,ray: Vector3,reach: float,width: float,depth: float,grade: float,seed: float) -> void:
+	var side:=Vector3(-ray.z,0.0,ray.x)
+	var points:=PackedVector3Array()
+	var normals:=PackedVector3Array()
+	var colours:=PackedVector2Array()
+	var rings: Array[Vector2]=[Vector2(.025,-.52),Vector2(.68,-.40),Vector2(1.,-.03),
+		Vector2(.86,.30),Vector2(.48,.61),Vector2(.022,.76)]
+	var slopes:=PackedFloat32Array([-1.85,-.68,.18,.80,1.95,5.0])
+	var sides:=28
+	for j in rings.size():
+		var r:=rings[j]
+		for i in sides:
+			var a:=TAU*i/sides
+			var turns:=seed+r.y*.76
+			var lobes:=1.+.14*sin(3.*a+turns)+.096*cos(5.*a-turns*.60)+.10*sin(8.*a+turns*1.36)
+			var x:=cos(a)*r.x*lobes
+			var z:=sin(a)*r.x*lobes
+			var rise:=r.y+r.x*(.21*sin(3.*a+seed)+.11*cos(5.*a-seed))-.21*x+.14*z
+			var p:=at+ray*(reach*(x+.10*r.y))+side*(width*(z-.16*r.y))+Vector3.UP*depth*rise
+			points.append(p)
+			var slope:=slopes[j]
+			var n:=(ray*cos(a)+side*sin(a)+Vector3.UP*slope).normalized()
+			normals.append(n)
+			colours.append(Vector2(.53+.48*x+.12*seed,.49+.44*z+.073*seed))
+	for j in rings.size()-1:
+		for i in sides:
+			var next:=(i+1)%sides
+			var a:=j*sides+i
+			var b:=j*sides+next
+			for n:int in [a,b,a+sides,b,b+sides,a+sides]:
+				patch.leaves.set_color(Color.WHITE)
+				patch.leaves.set_normal(normals[n])
+				patch.leaves.set_uv(colours[n])
+				patch.leaves.set_uv2(Vector2(.27,10.1+.70*grade))
+				patch.leaves.add_vertex(points[n])
 	patch.sprays+=1
 
 func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
@@ -107,34 +141,40 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		var toe:=foot+Vector3(cos(a),0,sin(a))*h*rng.randf_range(.07,.113)
 		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,4)
 	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,6)
-	for index:int in CROWNS[kind].size():
-		var knot:Vector4=CROWNS[kind][index]
-		var center:=foot+turn*Vector3(knot.x,knot.y,knot.z)*h+bend*0.37
-		var elbow:=fork.lerp(center,0.63)+turn*Vector3(.028,.005,-.031)*h
-		var radius:=knot.w*h*rng.randf_range(.95,1.12)
-		var base:=fork.lerp(foot,0.13 if index<2 else 0.0)
-		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,5)
-		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),4)
-		var heading:=spin+index*2.29
-		var radial:=Vector3(cos(heading),0.0,sin(heading))
-		var joint:=center-radial*radius*.43
-		# Hanging lower twigs reveal the elbow. One sheltered bough crosses
-		# the fork; the higher fork leans into a separate, sunlit crown tier.
-		var sprays:=4 if kind==1 else 3
-		for leaf in sprays:
-			var a:=heading+(leaf-1.25)*1.46+rng.randf_range(-.18,.15)
-			var ray:=Vector3(cos(a),0.0,sin(a))
-			var hanging:bool=leaf%2==0
-			var root:=joint+radial*radius*(.14 if hanging else -.19)
-			root+=Vector3.UP*radius*(.035 if hanging else .23)
-			var reach:=radius*rng.randf_range(1.33,1.76)
-			var width:=radius*rng.randf_range(.64,.83)
-			var tilt:=rng.randf_range(-.29,-.04) if hanging else rng.randf_range(.04,.33)
-			var mid:=root+ray*reach*.67+Vector3.UP*reach*(.15+.67*tilt)
-			patch.stone.rod(elbow.lerp(root,.40),mid,h*.0064,h*.0022,BARK,4)
-			var grade:=clampf(.16+.084*index+(.23 if not hanging else 0.0)+rng.randf_range(-.09,.08),.14,.92)
-			var sweep:=.27*sin(1.4+2.1*leaf+.64*index)
-			_bough(patch,root,ray,reach,width,tilt,grade,true,sweep)
+	var narrow:=kind==2
+	var forks: Array[Vector4]=[
+		Vector4(-.27,.63,.11,.30),Vector4(.22,.72,-.18,.31),
+		Vector4(.19,.77,.20,.235),Vector4(-.09,.90,-.09,.32)]
+	if narrow:
+		forks=[Vector4(-.12,.57,.07,.22),Vector4(.12,.76,-.08,.24),Vector4(-.04,.90,.05,.23)]
+	for index in forks.size():
+		var arm:=forks[index]
+		var radial:=turn*Vector3(arm.x,0.0,arm.z).normalized()
+		var tip:=foot+turn*Vector3(arm.x,arm.y,arm.z)*h+bend*.51
+		var root:=fork+Vector3.UP*(.023*index*h)
+		var elbow:=root.lerp(tip,.53)+radial*h*.046
+		var radius:=h*arm.w
+		patch.stone.rod(root,elbow,h*(.029-.002*index),h*.016,BARK,6)
+		patch.stone.rod(elbow,tip,h*.016,h*.005,BARK.lightened(.045),5)
+		# Each crook supports a broad continuous spray. A shorter side branch
+		# turns back into the crown; open air separates neighbouring forks.
+		var hand:=1. if index%2==0 else -1.
+		var lean:=rng.randf_range(-.17,.12)
+		for side in 2:
+			var angle:float=lean+hand*(-.37 if side==0 else 1.56)
+			var ray:=radial.rotated(Vector3.UP,angle)
+			var socket:=elbow.lerp(tip,.60 if side==0 else .44)
+			var length:=radius*(1.53 if side==0 else 1.12)
+			var width:=radius*(1.09 if side==0 else .82)
+			var lift:=.36 if index==forks.size()-1 else .08
+			var pitch:=lift+(.12 if side==1 else -.11)
+			var grade:=clampf(.24+.135*index+(.14 if side==0 else -.08),.12,.93)
+			var rib:=socket+ray*length*.59+Vector3.UP*length*(.23+.58*pitch)
+			patch.stone.rod(socket,rib,h*.0075,h*.0027,BARK,4)
+			var center:=socket+ray*length*.57+Vector3.UP*width*(.24+.16*pitch)
+			_crown_mass(patch,center,ray,length*.64,width*.65,width*.65,grade,index*2.17+.91*side+spin)
+			var edge:=center+ray*(.17*length)+Vector3.DOWN*(.043*width)
+			_bough(patch,edge,ray,length*.63,width*.66,-.23,grade,true,hand*.18)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
@@ -468,7 +508,8 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
-	leaf_material.set_shader_parameter("elm_spray",preload("res://assets/environment/elm-spray.svg"))
+	leaf_material.set_shader_parameter("elm_crown_paint",preload("res://assets/environment/elm-crown-paint.png"))
+	leaf_material.set_shader_parameter("elm_spray",preload("res://assets/environment/painted-elm.png"))
 	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))
 	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))

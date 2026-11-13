@@ -4,6 +4,12 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 河关 RC14 的实机美术返工
+
+RC13 已被美术验收明确退回。此次可运行样板在正常战斗窗口中复核枪盾服装、骑兵鞍具、地形、林冠和军旗。工程、画面审查和真实 M5 分别记录。原稿与失败试作保留在 [环境分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-painted-valley) 和 [人物分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-tailoring-study)。
+
+在干净的云端工作树执行 `node tools/env_survey.mjs --check && node tools/art/bake_mounts.mjs --check && ./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。素材、代码与原始状态可回退到 `12bdc945b7bb4ce2db655555a567244984496e45`。仓库最新的[质量判退条件](VISUAL_RESET_AND_REJECTION_GATES_20261113.md)继续生效。
+
 ## 河关 RC13 · 已合入的可玩候选
 
 [下载、本版实战窗口、武器与军令实录、原始帧时间及 SHA](evidence/river-gate-v1-rc13/PLAYTEST.md)。游戏源 `03acb69b1621130f92bd940caa2cfb3b4e8653a5`，主线游戏合并 `12bdc945b7bb4ce2db655555a567244984496e45`，导出 `c96563beff02a8ad4f24458a228dcd426b4e2a72`，三者使用同一游戏目录树。前排枪盾兵根据真实迎敌距离分开收肩、压枪或继续行进。第一轮夸张的待步枪尖已由 0.869 米收成 0.156 米；原足底、手握点与真实命中核验通过。桥关道路经过三轮同镜头实拍，悬空的土片被退回，留下地面真实磨损、剥土和碎石。界面已明确区分城门耐久和夺取内庭。

@@ -2,6 +2,7 @@ shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D elm_crown_paint : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D elm_spray : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D elm_bough : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
@@ -11,6 +12,10 @@ uniform vec4 deep_leaf : source_color = vec4(.15,.238,.216,1.0);
 uniform vec4 elm : source_color = vec4(.31,.401,.284,1.0);
 uniform vec4 sun_elm : source_color = vec4(.495,.565,.355,1.0);
 uniform vec4 sun_ash : source_color = vec4(.54,.52,.32,1.0);
+uniform vec4 elm_under : source_color = vec4(.113,.178,.154,1.);
+uniform vec4 elm_body : source_color = vec4(.218,.334,.231,1.);
+uniform vec4 elm_light : source_color = vec4(.353,.426,.281,1.);
+varying float facing_sky;
 varying vec3 paint;
 varying float crown;
 varying vec2 bark_uv;
@@ -21,6 +26,7 @@ void vertex() {
 	VERTEX.x+=breeze*UV2.x;
 	VERTEX.z+=breeze*.53*UV2.x;
 	crown=UV2.y;
+	facing_sky=NORMAL.y;
 	bark_uv=UV;
 	paint=crown>.5?vec3(UV2.x,(UV2.y-1.0)*2.0,0.0):COLOR.rgb;
 }
@@ -28,12 +34,21 @@ void fragment() {
 	float opacity=1.0;
 	vec3 tone;
 	if(crown>=8.0) {
-		// The edge and gaps of a tuft are authored on the same folded branch
-		// surface as its veins. Sky is visible between actual branch tips.
-		vec4 brush=texture(elm_spray,UV);
-		float sun=clamp((crown-8.1)/.7,0.0,1.0);
-		tone=brush.rgb*mix(vec3(.50,.63,.69),vec3(.84,.86,.77),sun);
-		opacity=brush.a;
+		bool filled=crown>=10.;
+		float tier=clamp((crown-(filled?10.1:8.1))/.70,0.,1.);
+		vec4 brush;
+		if (filled) {
+			brush=texture(elm_crown_paint,UV*.69+vec2(tier*.64,.19*tier));
+		} else {
+			brush=texture(elm_spray,UV);
+		}
+		float value=dot(brush.rgb,vec3(.26,.60,.14));
+		if (!OUTPUT_IS_SRGB) value=sqrt(max(value,0.));
+		float wash=smoothstep(.20,.66,value);
+		float exposed=clamp(.12+.24*max(facing_sky,0.)+.17*tier+.46*wash,0.,1.);
+		tone=mix(elm_under.rgb,elm_body.rgb,smoothstep(.10,.49,exposed));
+		tone=mix(tone,elm_light.rgb,.83*smoothstep(.41,.79,exposed));
+		opacity=filled?1.:brush.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
 		float sun=clamp((crown-6.1)*1.42,0.0,1.0);
