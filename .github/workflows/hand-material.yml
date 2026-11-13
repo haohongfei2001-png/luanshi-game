@@ -1,0 +1,69 @@
+name: Locate the shieldman's real hand behind the fixed sample
+on:
+  push:
+    branches: [codex/river-hand-material-study]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read the swatch indices in both original hand windows
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/hand-material
+          dst="$PWD/artifacts/hand-material"
+          src=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$src/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/hand-godot
+          godot=/tmp/hand-godot/Godot_v4.6.3-stable_linux.x86_64
+          for side in earlier recent; do
+            rev=HEAD
+            if test "$side" = earlier; then rev=46e6abbc7fb5f6839805e07e7dcaae2ed98c384f; fi
+            dir="$RUNNER_TEMP/hand-$side"
+            git worktree add --quiet --detach "$dir" "$rev"
+            cp tests/hand_material.gd "$dir/tests/hand_material.gd"
+            (
+              cd "$dir"
+              mkdir -p artifacts; touch artifacts/.gdignore
+              ./tools/prepare-font.sh
+              python3 - <<'PY'
+          from pathlib import Path
+          s=Path('scripts/field/company_skin.gdshader')
+          t=s.read_text().replace('uniform int kit = 0;', 'uniform int anatomy_tile=-1;\nuniform int kit = 0;')
+          t=t.replace('    SPECULAR = 0.0;','    SPECULAR = 0.0;\n    if (anatomy_tile>=0) { ALBEDO=vec3(0.); EMISSION=cloth_panel==anatomy_tile ? vec3(1.,0.,1.) : vec3(0.); }')
+          s.write_text(t)
+          PY
+              "$godot" --headless --editor --path . --import >"$dst/$side-import.log" 2>&1
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side-import.log"; then exit 1; fi
+              timeout 150s xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/hand_material.gd -- --field-size=20 >"$dst/$side.log" 2>&1
+              echo "HAND_SIDE $side"
+              grep -E '^FIELD_PORTRAIT |^HAND_' "$dst/$side.log"
+              cp artifacts/natural.png "$dst/$side-natural.png"
+              cp artifacts/skin.png "$dst/$side-skin.png"
+            )
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,io
+          from PIL import Image,ImageDraw
+          dst=Path('artifacts/hand-material')
+          r=Image.new('RGB',(312,412))
+          for x,s in enumerate(('earlier','recent')):
+              for y,k in enumerate(('natural','skin')):
+                  im=Image.open(dst/(s+'-'+k+'.png'));r.paste(im,(x*156,y*206))
+          r.save(dst/'material.png')
+          print('HAND_IMAGE',base64.b64encode((dst/'material.png').read_bytes()).decode())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shield-hand-pixels-and-swatches
+          path: artifacts/hand-material/
