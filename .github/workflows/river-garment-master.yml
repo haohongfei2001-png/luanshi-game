@@ -96,7 +96,17 @@ jobs:
       - name: Preserve these binaries only on the tested work branch
         run: |
           set -euo pipefail
-          git push origin HEAD:refs/heads/codex/river-garment-master
+          # A documentation commit may land while both Godot windows are being recorded.
+          git fetch --no-tags origin refs/heads/codex/river-garment-master
+          if git diff --quiet FETCH_HEAD HEAD -- \
+            assets/river_gate/figures/garrison_bodies.glb \
+            assets/third_party/wildfire_garments/field_issues.glb \
+            assets/third_party/wildfire_garments/field_colours.png \
+            assets/third_party/wildfire_garments/field_colours.png.import; then
+            echo "The branch already contains all four tested binary inputs."
+          else
+            git push origin HEAD:refs/heads/codex/river-garment-master
+          fi
           git rev-parse HEAD
       - uses: actions/upload-artifact@v4
         if: always()
