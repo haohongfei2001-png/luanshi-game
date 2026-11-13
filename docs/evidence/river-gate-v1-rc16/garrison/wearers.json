@@ -1,0 +1,62 @@
+{
+  "final/spear": {
+    "id": 37,
+    "pixel": [
+      960,
+      439
+    ],
+    "observed_tick": 41,
+    "native": [
+      1920,
+      1200
+    ]
+  },
+  "final/shield": {
+    "id": 550,
+    "pixel": [
+      960,
+      439
+    ],
+    "observed_tick": 41,
+    "native": [
+      1920,
+      1200
+    ]
+  },
+  "final/bow": {
+    "id": 122,
+    "pixel": [
+      960,
+      439
+    ],
+    "observed_tick": 41,
+    "native": [
+      1920,
+      1200
+    ]
+  },
+  "first/shield": {
+    "id": 550,
+    "pixel": [
+      960,
+      439
+    ],
+    "observed_tick": 41,
+    "native": [
+      1920,
+      1200
+    ]
+  },
+  "first/bow": {
+    "id": 60,
+    "pixel": [
+      960,
+      439
+    ],
+    "observed_tick": 41,
+    "native": [
+      1920,
+      1200
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "actions_seen": [
+    0,
+    1,
+    2
+  ],
+  "distance_m": 19.4658599495888,
+  "end_tick": 80,
+  "errors": [],
+  "hero_hits": 1,
+  "hero_hp": 0.0,
+  "hero_received": 5,
+  "move_directions": [
+    -2,
+    2,
+    0,
+    4
+  ],
+  "ordinary": [
+    512,
+    512
+  ],
+  "seed": 61112,
+  "start_tick": 2,
+  "view_size": 10.2415046691895
+}
