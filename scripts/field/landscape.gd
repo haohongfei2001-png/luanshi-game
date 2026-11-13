@@ -35,6 +35,7 @@ func _ready() -> void:
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
 	surface_material.set_shader_parameter("soil_cover",preload("res://assets/environment/soil-cover.png"))
 	surface_material.set_shader_parameter("floodplain",preload("res://assets/environment/floodplain-paint.png"))
+	surface_material.set_shader_parameter("field_margins",preload("res://assets/environment/field-margins.svg"))
 	surface_material.set_shader_parameter("verge_track",preload("res://assets/environment/verge-and-track.svg"))
 	surface_material.set_shader_parameter("shale_paint",preload("res://assets/environment/river-shale.png"))
 	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/grazed-meadow.png"))
@@ -270,7 +271,7 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,ret
 			# terminate at the diagonal hips instead of converging like fan blades.
 			var starts:=clampf((absf(x0)-ridge)/(length-ridge),0.0,1.0)
 			var shade:=col.lightened(0.018*((column*7)%5))
-			for row in range(2 if retained_side!=0.0 else 0,rows):
+			for row in range(1 if retained_side!=0.0 else 0,rows):
 				var t0:=float(row)/rows
 				var t1:=float(row+1)/rows
 				var w0:=lerpf(ridge,length,t0)
@@ -346,8 +347,8 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 				strip.rod(basepoint,basepoint+Vector3.UP*0.45,0.033,0.033,WOOD.darkened(0.08),4)
 			var lip:=_mesh(strip,self)
 			lip.visible=false
-			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.75+Vector3.UP*0.29,
-				"w":w if w>=d else w*0.30,"d":d if d>w else d*0.30})
+			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.625+Vector3.UP*(rise*0.38),
+				"w":w if w>=d else w*0.39,"d":d if d>w else d*0.39})
 	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d,"pieces":pieces})
 	for side: float in [-1,1]:
 		frame.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
@@ -370,19 +371,22 @@ func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live
 	var door:=Ground.unit_point(Ground.GATE)+Vector3.UP*1.2
 	# In an orthographic camera the rays through every subject are parallel.
 	var direction:=eye-Ground.unit_point(focus)
-	var gate_inspection:=live and assault_near and focus.distance_squared_to(Ground.GATE)<245 and zoom< 42.0
+	# A survey over the gate should show the complete building. At fighting
+	# distance reveal a sightline through the actual roof to the hero or lane.
+	var close_lens:=zoom<=25.0
+	var gate_inspection:=live and close_lens and assault_near and focus.distance_squared_to(Ground.GATE)<150.0
 	for roof in roofs:
-		var occluding: bool=zoom<43 and (_between(p,p+direction,roof) or (live and _between(h,h+direction,roof)) or (focus.distance_squared_to(Ground.GATE)<150 and _between(door,door+direction,roof)))
-		var middle: Vector3=roof.center
-		if gate_inspection and absf(middle.x-Ground.WALL_X)<3 and absf(middle.z)<11:
-			if absf(middle.z)<1.0:
-				occluding=true
-			else:
-				for exit_x: float in [-2.6,1.5,5.0]:
-					var lane:=door+Vector3(exit_x,0,signf(middle.z)*2.7)
-					if _between(lane,lane+direction,roof):
-						occluding=true
-						break
+		var middle:Vector3=roof.center
+		var gatehouse:=absf(middle.x-Ground.WALL_X)<3.0 and absf(middle.z)<11.0
+		var hero_ray:=live and _between(h,h+direction,roof)
+		var focus_ray:=(_between(p,p+direction,roof) and (not gatehouse or close_lens))
+		var occluding:=zoom<43.0 and (hero_ray or focus_ray)
+		if gate_inspection and gatehouse and not occluding:
+			for exit_x:float in [-2.6,1.5,5.0]:
+				var lane:=door+Vector3(exit_x,0,signf(middle.z)*2.7)
+				if _between(lane,lane+direction,roof):
+					occluding=true
+					break
 		var node: MeshInstance3D=roof.node
 		if occluding: has_open_roof=true
 		if node.visible==occluding: node.visible=not occluding

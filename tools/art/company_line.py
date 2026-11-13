@@ -16,7 +16,9 @@ def costume(look,rank=False):
                 take=max(0.,sin(a+.15))
                 return (p[0],p[1]+(.22*take-.04*max(0.,-sin(a))) if row==0 else p[1],p[2])
             s.rings([(.48,.229,.153,0,-.019),(.76,.201,.142,0,-.012),(.958,.154,.115,0,-.012),
-                     (1.27,.207,.134,0,-.012),(1.43,.078,.069,0,0)],"linen",body,8,tucked)
+                     (1.27,.207,.134,0,-.012)],"linen",body,8,tucked)
+            s.rings([(1.27,.207,.134,0,-.012),(1.346,.169,.108,0,-.009),
+                     (1.43,.078,.069,0,0)],"dyed",body,8)
         else:
             hem=.58 if look=="archer" else .53
             width=.293 if look=="guard" else .255
@@ -64,8 +66,6 @@ def costume(look,rank=False):
                 s.oval((-.016,1.750,-.054),(.057,.058,.067),"hair",HEAD,7,4)
     else:
         head(s,look,HEAD)
-    if look=="levy" and rank:
-        s.oval((-.012,1.718,-.075),(.039,.035,.051),"hair",HEAD,6,3)
     n=3 if rank else 5
     for side in (-1,1):
         upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
@@ -76,8 +76,12 @@ def costume(look,rank=False):
                 hem=lerp(a,b,.59 if look=="regular" else .79)
                 s.tube([a,lerp(a,hem,.37),hem],[.081,.100,.082],"lames",upper,5)
                 s.tube([hem,b],[.070,.067],"dyed",upper,4)
+            elif look=="levy":
+                shoulder=lerp(a,b,.40)
+                s.tube([a,shoulder],[.078,.083],"dyed",upper,5)
+                s.tube([shoulder,lerp(a,b,.74),b],[.083,.079,.060],"linen",upper,5)
             else:
-                s.tube([a,lerp(a,b,.68),b],[.078,.082,.060],"linen" if look=="levy" else "dyed",upper,5)
+                s.tube([a,lerp(a,b,.68),b],[.078,.082,.060],"dyed",upper,5)
         forearm(s,look,side,n,rank)
         p=grip(side)
         s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)

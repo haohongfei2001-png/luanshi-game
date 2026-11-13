@@ -2,7 +2,7 @@
 <title>River company garment, skin and equipment colours</title>
 <defs><clipPath id="swatch"><path d="M0 0H64V64H0Z"/></clipPath></defs>
   <!-- unbleached hemp -->
-  <g transform="translate(0 0)"><g clip-path="url(#swatch)"><path fill="#c6b38b" d="M0 0H64V64H0Z"/><path fill="#b4a17d" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#d3c199" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
+  <g transform="translate(0 0)"><g clip-path="url(#swatch)"><path fill="#a49780" d="M0 0H64V64H0Z"/><path fill="#807866" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#baac90" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
   <!-- dyed sleeve -->
   <g transform="translate(64 0)"><g clip-path="url(#swatch)"><path fill="#c8c1af" d="M0 0H64V64H0Z"/><path fill="#afa899" d="M0 8 Q12 18 14 48 L17 62 Q12 56 8 41 Z M37 0 Q36 23 29 51 L24 64 Q28 39 31 18 Z M56 14 Q49 32 49 58 L46 64 Q43 36 56 14 Z"/><path fill="#d6cfbb" d="M19 0 Q22 15 21 28 L25 7 Z M61 32 Q56 47 57 61 L59 57 Z"/></g></g>
   <!-- rawhide -->

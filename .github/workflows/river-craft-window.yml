@@ -1,7 +1,7 @@
 name: Photograph river gate character and landscape changes
 on:
   push:
-    branches: ['codex/river-craft-window']
+    branches: ['codex/river-craft-integration-window']
 permissions:
   contents: read
   actions: read
@@ -16,12 +16,25 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - name: Reuse the identical lossless baseline and match every input and visible ID
+        uses: actions/download-artifact@v4
+        with:
+          repository: ${{ github.repository }}
+          run-id: '43366685292'
+          artifact-ids: '14011430610'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: prior
       - name: Bake and audit the actual game assets
         run: |
           set -euo pipefail
           python3 -m pip -q install Pillow==11.3.0 imageio-ffmpeg==0.6.0
           mkdir -p proof/bakes
           python3 tools/art/bake_river_company.py --geometry-only >proof/bakes/figures.log
+          cp -a prior/before proof/before
+          cp prior/before.mp4 proof/before.mp4
+          node tools/art/bake_field_garments.mjs
+          node tools/art/bake_field_garments.mjs --check
           node tools/art/bake_mounts.mjs | tee proof/bakes/mount-geometry.json
           node tools/art/bake_mounts.mjs --check
           python3 tools/art/check_field_carries.py | tee proof/bakes/hand-sockets.log
@@ -30,7 +43,7 @@ jobs:
           from pathlib import Path
           import json,base64,hashlib,shutil
           p=Path("proof/bakes"); marks={}
-          for name in ("assets/river_gate/figures/river_company.glb","assets/art/mounts/mounts.bin","assets/art/mounts/mounts.gltf","assets/art/mounts/mount-atlas.png"):
+          for name in ("assets/river_gate/figures/river_company.glb","assets/river_gate/figures/field_garments.gltf","assets/art/mounts/mounts.bin","assets/art/mounts/mounts.gltf","assets/art/mounts/mount-atlas.png"):
               path=Path(name); raw=path.read_bytes()
               shutil.copyfile(path,p/path.name)
               enc=base64.b64encode(raw).decode()
@@ -50,7 +63,7 @@ jobs:
           g=/tmp/godot/Godot_v4.6.3-stable_linux.x86_64
           ./tools/prepare-font.sh
           ffmpeg_bin=$(python3 -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')
-          for side in before after; do
+          for side in after; do
             rev=d104143d48d6bf14405b540b3fec923c16f0edf7
             if [[ "$side" == after ]]; then rev=HEAD; fi
             root=/tmp/river-frame-$side
@@ -59,12 +72,12 @@ jobs:
             cp tests/river_craft_camera.gd "$root/tests/"
             cp -a assets/fonts/. "$root/assets/fonts/"
             if [[ "$side" == after ]]; then
-              cp proof/bakes/river_company.glb "$root/assets/river_gate/figures/"
+              cp proof/bakes/river_company.glb proof/bakes/field_garments.gltf "$root/assets/river_gate/figures/"
               cp proof/bakes/mounts.bin proof/bakes/mounts.gltf proof/bakes/mount-atlas.png "$root/assets/art/mounts/"
             fi
             "$g" --headless --editor --path "$root" --import >"proof/$side-import.log" 2>&1
             if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-import.log"; then exit 1; fi
-            for script in river_craft_camera rc7_personal_contact; do
+            for script in gatehouse_sightline river_craft_camera rc7_personal_contact; do
               timeout 245s xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script "tests/$script.gd" -- --field-size=512 2>&1 | tee "proof/$side-$script.log"
               if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-$script.log"; then exit 1; fi
             done

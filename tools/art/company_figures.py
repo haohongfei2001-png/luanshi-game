@@ -107,7 +107,10 @@ def coat(s,look):
             elif look=="archer" and 3<=r<=7:
                 material="quilt" if cos(TAU*(c+.5)/n)<-.25 else "coat"
             elif look=="levy" and 2<=r<8:
-                material="linen"
+                # A dyed shoulder facing runs diagonally over the outer tunic.
+                # The chest and rolled elbow still expose the natural hemp.
+                outer=cos(TAU*(c+.5)/n-.53)
+                material="dyed" if r>=6 or (r==5 and outer>.28) else "linen"
             elif look=="levy" and r==8:
                 material="facing"
             elif r<=1 and (c>=3*n//4 or c<n//8):
@@ -166,8 +169,11 @@ def coat(s,look):
             cap_end=(3 if look=="regular" else 4) if close else (2 if look=="regular" else 3)
             panels=[(0,cap_end,"lames")]
             if cap_end<edge-1: panels.append((cap_end,edge-1,"dyed"))
+        elif look=="levy":
+            shoulder=2 if close else 1
+            panels=[(0,shoulder,"dyed"),(shoulder,edge-1,"linen")]
         else:
-            panels=[(0,edge-1,"linen" if look=="levy" else "dyed")]
+            panels=[(0,edge-1,"dyed")]
         panels.append((edge-1,edge,"headcloth"))
         for first,last,material in panels:
             def sleeve_point(u,v):
