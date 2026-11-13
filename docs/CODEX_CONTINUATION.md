@@ -1,5 +1,13 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC18 · 正常战场距离的衣甲、中央路面行进
+
+保留 RC17 游戏 `280ee8d92e04c5b9394093143f36ea273a611935`。新军服按跨肩衣片和实际缝线染色，近处的肤色、皮革和铁甲独立。固定种子 61112 在 22 米逐对比较同一次命中、两军正面阵线、反方向 180° 阵线。实录第 43 步起枪、第 48 步命中，#584 生命 62→39.76；正光和反向都复核过，两次退回过橙衣肩。采用第三次的绛色外衣，保留弓手暗色交领。[正常镜头的三个原窗](https://github.com/haohongfei2001-png/luanshi-game/tree/fe30b4c5e18cbebda7bee9f0885dc25730196da7/docs/evidence/river-gate-v1-rc17/field-livery) · [染布改动](https://github.com/haohongfei2001-png/luanshi-game/commit/5cab87bc4595e42ae82bbb308b0cf57f06a76902)。
+
+普通兵在中央平坦地带行进时可跳过两个坡高的计算；原高度、兵力、跑速与伤亡相同。Linux 同机交替运行每方 512 和 2500 人，逐点 243122 次速度相等，实战第 140 步存档摘要逐字节一致。在 512v512 每组 400 个完整模拟步，P95 由 16.121 降到 15.748 毫秒；GPU 和实机帧时间另测。[保留全部原始耗时](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43494790061/artifacts/14072086144)
+
+上一候选 [RC17 的程序、原生包、四规模、完整录像和首启](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43493877091)；前版 [RC16 的首次停步与可回退包](https://github.com/haohongfei2001-png/luanshi-game/blob/be32d2d765a3bb05b2b2d918c9602d9bd29ffc29/docs/evidence/river-gate-v1-rc16/PLAYTEST.md)。统一版本从仓库运行 `./tools/prepare-font.sh`、`godot --headless --editor --import`、`./tools/compare-river-art.sh` 和 `./tools/export.sh`。下一项是验证默认跟随下两军染布、整战役回营与该包的原生 Metal 记录。美术和 M5 实机性能均仍待验收。
+
 ## 河关 RC17 · 实战人物、坐骑与首次启动
 
 承接 RC16 源 `7c9ac667ded0a8e80a05cd47593a4af70c28486c`。该版首次 Metal 启动有一次在进入场景前停住，保留原始包和失败采样。原包中 82 个主线程采样都在销毁临时绘制节点时等待着色器编译。新游戏从打包场景直接读取军士、马、柳树与阔叶树的网格资源。对每个目录逐资源与 Godot 原实例核对；相同源文件必须得到同一资源。[RC16 失败现场](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491339985) · [独立托管 Mac 冷启动](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491973680)

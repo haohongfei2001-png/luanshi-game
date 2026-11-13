@@ -11,6 +11,10 @@ const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
 const FRIEND := Color("34496a")
 const FOE := Color("783f34")
 const PLAYER_CLOTH:=Color("364967")
+# The concentrated dye is confined to cut shoulder and upper sleeve panels.
+const INDIGO_BOLT:=Color("46637a")
+const MADDER_BOLT:=Color("76414a")
+const PLAYER_MANTLE:=Color("859ba2")
 
 class Batch:
 	var node: MultiMeshInstance3D
@@ -87,7 +91,8 @@ func configure(model: Battle) -> void:
 	for key: int in counts:
 		var kit := key % 10
 		var col := PLAYER_CLOTH if key >= 20 else (FRIEND if key < 10 else FOE)
-		var mat := CompanyArt.material(col,kit,key>=20)
+		var shoulder:=PLAYER_MANTLE if key>=20 else (INDIGO_BOLT if key<10 else MADDER_BOLT)
+		var mat := CompanyArt.material(col,kit,key>=20,shoulder)
 		mat.set_shader_parameter("field_carries",key<20 and kit in [3,4,7])
 		var detailed: Mesh = CompanyArt.fighter(kit, "Player", true) if key>=20 else near_mesh[kit]
 		groups[key] = _batch(detailed,mat,counts[key])
@@ -106,7 +111,7 @@ func configure(model: Battle) -> void:
 		var officer_key := 90 + _key(u)
 		if not groups.has(officer_key):
 			var side_colour:=FRIEND if u.team==0 else FOE
-			var mat:=CompanyArt.material(side_colour,u.kit)
+			var mat:=CompanyArt.material(side_colour,u.kit,false,INDIGO_BOLT if u.team==0 else MADDER_BOLT)
 			var capacity:int=battle.command_counts[u.team]
 			groups[officer_key]=_batch(CompanyArt.fighter(u.kit,"Officer",true),mat,capacity)
 			groups[officer_key+30]=_batch(CompanyArt.fighter(u.kit,"Officer",false),mat,capacity)
@@ -116,7 +121,7 @@ func configure(model: Battle) -> void:
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
-			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(PLAYER_CLOTH,kit,true),1)
+			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(PLAYER_CLOTH,kit,true,PLAYER_MANTLE),1)
 	var shadow_mesh := Builder.new()
 	var rim:=shadow_mesh.ring(Vector3.ZERO,Vector2(0.53,0.41),8)
 	for k in 8:
