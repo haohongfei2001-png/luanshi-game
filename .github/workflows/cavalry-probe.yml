@@ -1,0 +1,86 @@
+name: Compare fixed cavalry movement on one hosted display
+on:
+  push:
+    branches: [codex/river-cavalry-picture-probe]
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      OLD_REV: 51587871bdcca259cf75777e8fdfa02d28e59a6a
+      NEW_REV: 6b9897703f32d5c47f1f84696869869985015fb6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install hash-verified Godot editor
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/river-mount-editor
+      - name: Replay same mounted company on both trees
+        run: |
+          set -euo pipefail
+          dst="$PWD/artifacts/horse"
+          mkdir -p "$dst"
+          godot=/tmp/river-mount-editor/Godot_v4.6.3-stable_linux.x86_64
+          for side in before after; do
+            rev="$OLD_REV"
+            if test "$side" = after; then rev="$NEW_REV"; fi
+            dir="$RUNNER_TEMP/source-$side"
+            git worktree add --quiet --detach "$dir" "$rev"
+            cp tests/river_mounted_camera.gd "$dir/tests/"
+            (
+              cd "$dir"
+              ./tools/prepare-font.sh
+              node tools/art/bake_mounts.mjs --check
+              mkdir -p artifacts
+              touch artifacts/.gdignore
+              "$godot" --headless --editor --path . --import >"$dst/$side-import.log" 2>&1
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side-import.log"; then exit 1; fi
+              timeout 215s xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/river_mounted_camera.gd -- --field-size=512 2>&1 | tee "$dst/$side.log"
+              grep -q '^MOUNT_LIVE_PASS' "$dst/$side.log"
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side.log"; then exit 1; fi
+              cp -r artifacts/river-mounted "$dst/$side"
+              ffmpeg -v error -y -framerate 20 -i "$dst/$side/film/%03d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "$dst/$side.mp4"
+            )
+          done
+      - name: Compare evidence and expose raw-size windows
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from PIL import Image,ImageChops,ImageStat
+          from pathlib import Path
+          import base64,json,io
+          root=Path('artifacts/horse')
+          a,b=[json.loads((root/c/'frames.json').read_text()) for c in ('before','after')]
+          assert a==b and len(b)==6
+          for entry in b:
+              name=entry['label']
+              imgs=[Image.open(root/c/(name+'.png')).convert('RGB') for c in ('before','after')]
+              assert all(im.size==(1920,1200) for im in imgs)
+              x,y=(round(n) for n in entry['center_pixel'])
+              crop=[im.crop((x-220,y-170,x+220,y+170)) for im in imgs]
+              pair=Image.new('RGB',(880,340))
+              for i,im in enumerate(crop):pair.paste(im,(440*i,0))
+              pair.save(root/(name+'-pair.png'))
+              central=ImageStat.Stat(ImageChops.difference(*crop)).mean
+              assert sum(central)>1., (name,central)
+              buf=io.BytesIO()
+              pair.save(buf,'JPEG',quality=91)
+              print('HORSE_FIXED',name,base64.b64encode(buf.getvalue()).decode())
+          print('MOUNT_PAIR_PASS',len(b),b[-1]['seed'])
+          PY
+          ffmpeg -v error -y -i artifacts/horse/before.mp4 -i artifacts/horse/after.mp4 -filter_complex '[0:v]scale=640:400[x]; [1:v]scale=640:400[y];[x][y]hstack=inputs=2' -c:v libx264 -pix_fmt yuv420p -crf 19 -movflags +faststart artifacts/horse/motion-pair.mp4
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-cavalry-512-before-after
+          path: |
+            artifacts/horse/
+            !artifacts/horse/*/film/
