@@ -1,0 +1,48 @@
+name: Recover author meshes and hashes from the reviewed field windows
+on:
+  push:
+    branches: ['codex/river-artist-mesh-record']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5174644f92908a887f4e2ba8d92077af26d5d263
+      - uses: actions/download-artifact@v4
+        with:
+          name: imported-valley-game-windows
+          path: /tmp/quaternius-review
+          run-id: 43473412580
+          github-token: ${{ github.token }}
+      - name: Preserve the reviewed files without changing shipping refs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, shutil, hashlib, struct
+          from pathlib import Path
+          root=Path('/tmp/quaternius-review')
+          author=next(root.rglob('author-meshes'))
+          out=Path('assets/environment/quaternius')
+          out.mkdir(parents=True,exist_ok=True)
+          sources=json.loads((author/'sources.json').read_text())
+          assert sources['archive_sha256']=='298f6732b872e4cf7b30e6e7abf9641c7f6dc6b326df37ac089533ed7e3d58c9'
+          for name in ('grove.glb','bark.png','leaves.png','License_Standard.txt','sources.json'):
+              shutil.copyfile(author/name,out/name)
+              print("ARCHIVE_ASSET",name,hashlib.sha256((out/name).read_bytes()).hexdigest())
+          base=Path('docs/evidence/river-gate-v1-rc15/grove')
+          base.mkdir(parents=True,exist_ok=True)
+          for name in ('grove-pair.jpg','grove-window.jpg','personal-contact-pair.jpg','personal-contact-window.jpg','troops-pair.jpg','ford-pair.jpg','gate-pair.jpg'):
+              shutil.copyfile(next(root.rglob(name)),base/name)
+          for file in ('input.json','valley/frames.json'):
+              sets=[json.loads((root/side/file).read_text()) for side in ('before','after')]
+              assert sets[0]==sets[1]
+              (base/('contact.json' if file=='input.json' else 'views.json')).write_text(json.dumps(sets[0],indent=2)+'\n')
+          PY
+          git add -- assets/environment/quaternius docs/evidence/river-gate-v1-rc15/grove
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Preserve the reviewed CC0 broadleaf meshes and their matched river windows"
+          git push origin HEAD:refs/heads/codex/river-broadleaf-archive
