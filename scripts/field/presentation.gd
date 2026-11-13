@@ -84,6 +84,7 @@ func configure(model: Battle) -> void:
 		var kit := key % 10
 		var col := PLAYER_CLOTH if key >= 20 else (FRIEND if key < 10 else FOE)
 		var mat := CompanyArt.material(col,kit,key>=20)
+		mat.set_shader_parameter("field_carries",key<20 and kit in [3,4,7])
 		var detailed: Mesh = CompanyArt.fighter(kit, "Player", true) if key>=20 else near_mesh[kit]
 		groups[key] = _batch(detailed,mat,counts[key])
 		if key<20:

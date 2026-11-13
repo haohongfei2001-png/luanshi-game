@@ -4,6 +4,10 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## RC8 之后的步兵动作试作｜独立分支，未装进 RC8
+
+[三档实机、原生 22 米亲战与复现命令](evidence/river-gate-v1-rc8/carry-study/README.md)。目前枪、长刀、盾兵各有两种替代负重姿势，命中关键帧一致；正常距离轮廓有所改善，整套人物与场景仍未通过。可运行工作点分支 `codex/river-carry-reviewed`；可回退的安装包见下方 RC8。没有用这个动作试作宣称新运行包或 M5 通过。
+
 ## 河关 RC8｜已合入并可试玩；美术与 M5 未最终验收
 
 游戏 [PR #40](https://github.com/haohongfei2001-png/luanshi-game/pull/40) 的[六项 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045)通过；main 合并 `2c92c7eace980d76d538a646ca64ce9817d191b4` 与实际导出树相同。源 `5cf51e2f7ad9e4fe2768e2088b11bdfd0ab4979e`，[安装包、完整实录和同输入对照](evidence/river-gate-v1-rc8/PLAYTEST.md)。每方 512 普通兵、32 位军官另计。正常 22 m 跟随镜头出枪第 43→48 步，584 号敌兵由 62 降至 39.76；九武器、坐骑/战车、自然攻城、战报后行军/读档与 V3/V4 回归通过。托管虚拟 M1 九次原生图形试验 9/9，实际 1024×640、全分辨率 4× MSAA、24 s、P95/P99 13.59/17.10 ms，RSS 545.1 MiB；**不是 M5 或持续稳定 60 的验收**。

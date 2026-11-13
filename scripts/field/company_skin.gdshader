@@ -7,6 +7,7 @@ uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform int kit = 0;
 uniform int travelling_attack_legs = -1;
 uniform bool player_costume = false;
+uniform bool field_carries = false;
 uniform float travelling_leg_phase = 0.0;
 varying flat float flash;
 varying flat float cloth_lot;
@@ -61,6 +62,17 @@ void vertex() {
     if(code>=64 && (state==0 || (first>=9 && first<=14))) {clip=15;phase=INSTANCE_CUSTOM.b;}
     int sample_kit=(code/32)%2==1 && (state==1 || state==2) ? 2:kit;
     vec2 tile=clip_address(sample_kit,clip,phase);
+    // Same four samples per joint. Only a foot-soldier's carried posture
+    // changes; alternate windup/recovery strips meet the identical impact pose.
+    if (field_carries && code<64 && sample_kit==kit) {
+        int lot=int(floor(INSTANCE_CUSTOM.a*8.0));
+        int variant=(lot==1 || lot==4) ? 1 : ((lot==2 || lot==5 || lot==7) ? 2 : 0);
+        int carrier=kit==3 ? 0 : (kit==4 ? 1 : (kit==7 ? 2 : -1));
+        int strip=clip==1 ? 0 : (clip==0 ? 1 : ((clip>=16 && clip<=22) ? clip-14 : ((clip>=2 && clip<=9) ? clip+7 : -1)));
+        if (variant>0 && carrier>=0 && strip>=0) {
+            tile.y=float(4*(279+carrier*34+(variant-1)*17+strip))+.5;
+        }
+    }
     vec3 pos,nrm;
     skin(first,tile,VERTEX,NORMAL,pos,nrm);
     if(first!=second && blend<.999) {
