@@ -5,6 +5,7 @@ uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
+uniform sampler2D valley_wash : source_color, filter_linear_mipmap, repeat_disable;
 uniform vec4 turf_sheltered : source_color = vec4(.166,.227,.188,1.0);
 uniform vec4 turf_open : source_color = vec4(.329,.402,.299,1.0);
 uniform vec4 clay_bed : source_color = vec4(.275,.258,.226,1.0);
@@ -94,6 +95,13 @@ vec3 painted_ground(vec2 p, float shore) {
 		colour=mix(colour,clay_dry.rgb,wear.g*.53);
 		colour=mix(colour,mix(turf,clay_bed.rgb,.58),wear.b*.68);
 	}
+	// The old non-repeating survey painting carries the cuts of the real
+	// field banks, woodlots and river gravels beneath the sparser surface art.
+	vec3 survey=texture(valley_wash,mapped).rgb;
+	float survey_value=paint_value(survey);
+	float bank_wash=smoothstep(.24,.54,survey_value);
+	colour*=.92+.11*bank_wash;
+	colour=mix(colour,survey,.105*(1.-road)+.035);
 	float wet=smoothstep(.19,.98,max(cover.g,shore));
 	return mix(colour,mix(clay_bed.rgb,river_silt.rgb,.73),.79*wet);
 }

@@ -26,6 +26,7 @@ jobs:
           mkdir -p proof
           node tools/env_cartway.mjs --check
           node tools/art/bake_mounts.mjs --check
+          node tools/env_survey.mjs --check
           ./tools/prepare-font.sh
           for side in before after; do
             rev=HEAD

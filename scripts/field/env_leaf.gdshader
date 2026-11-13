@@ -38,16 +38,16 @@ void fragment() {
 		float tier=clamp((crown-(filled?10.1:8.1))/.70,0.,1.);
 		vec4 brush;
 		if (filled) {
-			brush=texture(elm_crown_paint,UV*.87+vec2(tier*.64,.19*tier));
+			brush=texture(elm_crown_paint,UV*.69+vec2(tier*.64,.19*tier));
 		} else {
 			brush=texture(elm_spray,UV);
 		}
 		float value=dot(brush.rgb,vec3(.26,.60,.14));
 		if (!OUTPUT_IS_SRGB) value=sqrt(max(value,0.));
-		float wash=smoothstep(.22,.60,value);
-		float exposed=clamp(.07+.28*max(facing_sky,0.)+.18*tier+.56*wash,0.,1.);
+		float wash=smoothstep(.20,.66,value);
+		float exposed=clamp(.12+.24*max(facing_sky,0.)+.17*tier+.46*wash,0.,1.);
 		tone=mix(elm_under.rgb,elm_body.rgb,smoothstep(.10,.49,exposed));
-		tone=mix(tone,elm_light.rgb,.93*smoothstep(.46,.84,exposed));
+		tone=mix(tone,elm_light.rgb,.83*smoothstep(.41,.79,exposed));
 		opacity=filled?1.:brush.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);

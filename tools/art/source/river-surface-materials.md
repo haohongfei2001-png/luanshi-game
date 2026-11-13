@@ -1,6 +1,6 @@
 # River-gate ground and inland canopy
 
-These five original game textures were generated for this repository with OpenAI ImageGen. They contain no external game art, character, logo or photograph. No image of the battle was used as scenery. The Godot field shader projects the first two over the existing road and soil map; the third is sampled by curved, world-oriented branch meshes. The fifth is projected on the eroded facets, including buried edges and talus. The willow keeps its original curved geometry and uses the fourth material for the hanging leaves. Mipmaps are generated on import. The battle renderer and the gameplay camera produce all acceptance images.
+These five original game textures were generated for this repository with OpenAI ImageGen. They contain no external game art, character, logo or photograph. No image of the battle was used as scenery. The earlier field material projected the first two over the road and soil map. The third is sampled by curved, world-oriented shrub branches. The current inland tree and ground materials are documented below. The fifth is projected on the eroded facets, including buried edges and talus. The willow keeps its original curved geometry and uses the fourth material for the hanging leaves. Mipmaps are generated on import. The battle renderer and the gameplay camera produce all acceptance images.
 
 ### Grazed meadow
 

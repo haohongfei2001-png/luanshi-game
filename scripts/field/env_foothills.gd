@@ -97,24 +97,25 @@ func _crown_mass(patch: Patch,at: Vector3,ray: Vector3,reach: float,width: float
 	var points:=PackedVector3Array()
 	var normals:=PackedVector3Array()
 	var colours:=PackedVector2Array()
-	var rings: Array[Vector2]=[Vector2(.025,-.53),Vector2(.74,-.44),Vector2(1.,-.05),
-		Vector2(.85,.34),Vector2(.49,.69),Vector2(.022,.77)]
+	var rings: Array[Vector2]=[Vector2(.025,-.52),Vector2(.68,-.40),Vector2(1.,-.03),
+		Vector2(.86,.30),Vector2(.48,.61),Vector2(.022,.76)]
 	var slopes:=PackedFloat32Array([-1.85,-.68,.18,.80,1.95,5.0])
-	var sides:=22
+	var sides:=28
 	for j in rings.size():
 		var r:=rings[j]
 		for i in sides:
 			var a:=TAU*i/sides
-			var lobes:=1.+.102*sin(3.*a+seed)+.089*cos(5.*a-seed*.60)+.084*sin(8.*a+seed*1.36)
+			var turns:=seed+r.y*.76
+			var lobes:=1.+.14*sin(3.*a+turns)+.096*cos(5.*a-turns*.60)+.10*sin(8.*a+turns*1.36)
 			var x:=cos(a)*r.x*lobes
 			var z:=sin(a)*r.x*lobes
-			var rise:=r.y+.076*r.x*sin(3.*a+seed)-.16*x+.13*z
+			var rise:=r.y+r.x*(.21*sin(3.*a+seed)+.11*cos(5.*a-seed))-.21*x+.14*z
 			var p:=at+ray*(reach*(x+.10*r.y))+side*(width*(z-.16*r.y))+Vector3.UP*depth*rise
 			points.append(p)
 			var slope:=slopes[j]
 			var n:=(ray*cos(a)+side*sin(a)+Vector3.UP*slope).normalized()
 			normals.append(n)
-			colours.append(Vector2(.52+.43*x,.53+.42*z))
+			colours.append(Vector2(.53+.48*x+.12*seed,.49+.44*z+.073*seed))
 	for j in rings.size()-1:
 		for i in sides:
 			var next:=(i+1)%sides
@@ -172,8 +173,8 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 			patch.stone.rod(socket,rib,h*.0075,h*.0027,BARK,4)
 			var center:=socket+ray*length*.57+Vector3.UP*width*(.24+.16*pitch)
 			_crown_mass(patch,center,ray,length*.64,width*.65,width*.65,grade,index*2.17+.91*side+spin)
-			var edge:=center+ray*(.27*length)+Vector3.DOWN*(.011*width)
-			_bough(patch,edge,ray,length*.64,width*.75,-.14,grade,true,hand*.18)
+			var edge:=center+ray*(.17*length)+Vector3.DOWN*(.043*width)
+			_bough(patch,edge,ray,length*.63,width*.66,-.23,grade,true,hand*.18)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
