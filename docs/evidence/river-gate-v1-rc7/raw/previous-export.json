@@ -1,0 +1,164 @@
+{
+  "source": "cb85d58318b1379127a2465816a3917f79298090",
+  "export_source": "14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+  "tree": "f532d7326d0fb75d140dceb29e52ee50acd5dd46",
+  "run": 43341234060,
+  "conclusion": "failure: full campaign recording was still advancing but reached its old 550 second deadline after the report; subsequent jobs conditional on it skipped",
+  "macos_inner_zip_sha256": "50d52811595a6416e3e26fe900513279e1c5cd5500b5c197d963b3ccddd128ff",
+  "mac_window": {
+    "fps": 154.234705058415,
+    "frames": 3702,
+    "p50_ms": 4.454,
+    "p95_ms": 14.473,
+    "p99_ms": 35.941,
+    "max_rss_bytes": 566345728,
+    "render_target_px": [
+      1024,
+      640
+    ]
+  },
+  "cold_trials": [
+    {
+      "label": "compat-1",
+      "validated": true,
+      "first_post_draw_ms": 14781.6,
+      "renderer": "gl_compatibility"
+    },
+    {
+      "label": "default-metal-1",
+      "validated": true,
+      "first_post_draw_ms": 31066.2,
+      "renderer": "mobile"
+    },
+    {
+      "label": "default-metal-2",
+      "validated": true,
+      "first_post_draw_ms": 4954.8,
+      "renderer": "mobile"
+    },
+    {
+      "label": "balanced-metal",
+      "validated": true,
+      "first_post_draw_ms": 4820.6,
+      "renderer": "mobile"
+    },
+    {
+      "label": "performance-metal",
+      "validated": true,
+      "first_post_draw_ms": 4534.6,
+      "renderer": "mobile"
+    },
+    {
+      "label": "compat-2",
+      "validated": true,
+      "first_post_draw_ms": 2938.9,
+      "renderer": "gl_compatibility"
+    },
+    {
+      "label": "native-single-sample",
+      "validated": true,
+      "first_post_draw_ms": 4515.8,
+      "renderer": "mobile"
+    },
+    {
+      "label": "focus-control",
+      "validated": true,
+      "first_post_draw_ms": 2959,
+      "renderer": "gl_compatibility"
+    },
+    {
+      "label": "shipping-metal",
+      "validated": true,
+      "first_post_draw_ms": 4671.2,
+      "renderer": "mobile"
+    }
+  ],
+  "linux": [
+    {
+      "per_side": 20,
+      "p95_ms": 264.169,
+      "p99_ms": 264.903
+    },
+    {
+      "per_side": 100,
+      "p95_ms": 318.042,
+      "p99_ms": 319.868
+    },
+    {
+      "per_side": 250,
+      "p95_ms": 387.699,
+      "p99_ms": 388.822
+    },
+    {
+      "per_side": 512,
+      "p95_ms": 450.445,
+      "p99_ms": 467.474
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14000910119,
+      "name": "macos-verification-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 8269086,
+      "zip_sha256": "sha256:78ce9a2546f3af61f275bff0542c6d15059d490e280c9448dcd7d67e62dea10f",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/14000910119"
+    },
+    {
+      "id": 14000780863,
+      "name": "gameplay-footage-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 16479685,
+      "zip_sha256": "sha256:d6effe36b9b925d29aa0d972f5f25093ee36c183f26d51027350eb0c848cb9ce",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/14000780863"
+    },
+    {
+      "id": 14000466949,
+      "name": "Luanshi-macOS-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 87540125,
+      "zip_sha256": "sha256:19e0b514343d0630919a6d9261be139fc2ed3ced24dccd44d7f199a54797ae8d",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/14000466949"
+    },
+    {
+      "id": 13999987665,
+      "name": "field-verification-journey-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 1337232,
+      "zip_sha256": "sha256:701d8af48c0308d9d5cccd6c3df7e59e0b7412b904018d46ce7d32ed25e11bca",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/13999987665"
+    },
+    {
+      "id": 13999897275,
+      "name": "river-art-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 205880415,
+      "zip_sha256": "sha256:031993f948ac94444d2c871c72c52cba6681bfd48e01a8420081d116dc1fc7f3",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/13999897275"
+    },
+    {
+      "id": 13999852645,
+      "name": "Luanshi-Linux-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 52520978,
+      "zip_sha256": "sha256:c306a1505ec64366ef624e12a138257056b44f4972761f1c498f92f1f9ffc1fc",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/13999852645"
+    },
+    {
+      "id": 13999583567,
+      "name": "verification-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 2288725,
+      "zip_sha256": "sha256:2e6adc035b7b05cb5e3c35e25e8564334f601ff33133c30620f3bf69ddace63d",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/13999583567"
+    },
+    {
+      "id": 13999019768,
+      "name": "field-verification-footage-14d2d73af3a0bf0a599c9f7743b5c4bdbab1bac6",
+      "archive_bytes": 7773576,
+      "zip_sha256": "sha256:c69ae5130c62c526770a4fbc8f779322850a92d42058844d8cf69c2c40a11ce6",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/13999019768"
+    }
+  ]
+}
