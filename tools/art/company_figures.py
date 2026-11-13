@@ -44,6 +44,10 @@ def coat(s,look):
     def point(c,r):
         a=TAU*(c%n)/n
         y,rx,rz=hem[r]
+        # The trapezius falls from the nape to the outside of the shoulder.
+        if r>=6:
+            slope=(.010,.023,.036,.004)[r-6]
+            y-=slope*sin(a)**2
         hanging=clamp((.93-y)/(.93-start))
         biased=cos(a+.63)**8 if cos(a+.63)>0 else 0
         # Cloth clears the inside knee and drops at the outside thigh. A skirt
@@ -106,21 +110,24 @@ def coat(s,look):
             length=max(.001,hypot(lateral,front))
             circle.append((lateral/length,front/length))
         upper,fore=(LU,LF) if side<0 else (RU,RF)
-        sleeve=[(.231,1.357,.069,.089,-.003),(.246,1.299,.083,.086,0),
-                (.251,1.227,.074,.078,.007),(.257,1.155,.065,.071,.017),
-                (.260,1.110,.067,.069,.023),(.264,1.075,.058,.054,.032)]
-        if not close: sleeve=[sleeve[i] for i in (0,2,3,5)]
+        # These sections crown at the upper arm before tapering through the
+        # elbow. Each opening still meets the exact armhole of the coat.
+        sleeve=[(.224,1.361,.058,.074,-.004),(.237,1.319,.070,.081,-.001),
+                (.248,1.251,.074,.078,.005),(.255,1.181,.064,.070,.012),
+                (.258,1.144,.062,.067,.015),(.260,1.113,.064,.065,.021),
+                (.262,1.082,.052,.053,.029)]
+        if not close: sleeve=[sleeve[i] for i in (0,2,3,5,6)]
         for j,(cx,y,rx,rz,cz) in enumerate(sleeve):
             ring=[]
             for out,front in circle:
-                bulge=.004*cos(atan2(front,out)*3+j*.74)
-                # The wrapped cuff cinches a loose sleeve above the forearm. The
-                # shoulder of the sword hand remains free under the half-mantle.
-                fullness=1.0 if heavy else 1.0+.19*sin((j+1)*pi/len(sleeve))
-                if look=="player" and side>0: fullness=.94
-                p=(side*(cx+fullness*(rx+bulge)*out),y-.016*front,
+                bulge=.003*cos(atan2(front,out)*3+j*.74)
+                fullness=1. if heavy else 1.+.095*sin((j+1)*pi/len(sleeve))
+                # The deltoid has a continuous downhill edge, particularly when
+                # the elbow lifts for a bow draw. The cuff tilts at the elbow.
+                slope=.029*(1-j/(len(sleeve)-1))
+                p=(side*(cx+fullness*(rx+bulge)*out),y-slope*max(out,0)-.009*front,
                    fullness*(rz+bulge)*front+cz)
-                weight=(upper,CHEST,.76) if j==0 else (upper,fore,clamp((y-1.105)/.109))
+                weight=(upper,CHEST,.60) if j==0 else (upper,fore,smoothstep_cloth((y-1.108)/.098))
                 ring.append((p,weight))
             rows.append(ring)
         # A trim boundary duplicates UVs only. A triangle joining two atlas tiles
@@ -159,8 +166,8 @@ def coat(s,look):
     if not heavy:
         # Crossing collars follow the front of the coat; the outer lapel reaches
         # the belt. Each is a dark edge and a visible fold, not a drawn X.
-        for angle0,angle1,y0,y1,width in ((.81,-.17,1.432,1.265,.30),
-                                           (-.83,.85,1.443,.999,.36)):
+        for angle0,angle1,y0,y1,width in ((.81,-.17,1.431,1.265,.27),
+                                           (-.83,.85,1.435,1.035,.32)):
             for left,right,material in ((0.,.20,"leather"),(.20,1.,"facing")):
                 def lapel(u,v):
                     a=angle0+(angle1-angle0)*v+(left+(right-left)*u-.5)*width
@@ -273,6 +280,29 @@ def equipment(s,look):
             s.tube([add(end,(-.088,-.18,0)),end],[.006,.005],"timber",CHEST,4)
             s.ribbon([add(end,(-.051,-.090,0)),add(end,(-.015,-.038,-.003)),end],.031,"headcloth",CHEST)
 
+def forearm(s,look,side,sides,rank=False):
+    fore=LF if side<0 else RF
+    elbow,wrist=arm_nodes(side)[1:]
+    # The sleeve overlaps a continuous wrist-to-elbow core. Clothing and arm
+    # guard take their widths from it, including where the elbows bend sharply.
+    rows=((-0.025,.055,.061),(.20,.058,.062),(.34,.059,.061),
+          (.58,.052,.056),(.82,.042,.046),(.90,.038,.042),(1.,.035,.038))
+    if rank:
+        rows=tuple(rows[i] for i in (0,2,4,6))
+    sections=[lerp(elbow,wrist,t) for t,_,_ in rows]
+    radii=[(rx,rz) for _,rx,rz in rows]
+    if look=="archer":
+        # Bow arm has a leather bracer on the shooting forearm; the drawing
+        # arm keeps the bind of a rolled sleeve above a longer exposed wrist.
+        groups=([(0,1,"binding"),(1,2,"leather"),(2,3,"skin")] if rank else
+                ([(0,2,"binding"),(2,4,"leather"),(4,5,"binding"),(5,6,"skin")] if side>0 else
+                 [(0,2,"binding"),(2,3,"headcloth"),(3,6,"skin")]))
+    else:
+        last=len(rows)-1
+        groups=[(0,last-1,"binding" if look=="levy" else "leather"),(last-1,last,"skin")]
+    for first,last,material in groups:
+        s.tube(sections[first:last+1],radii[first:last+1],material,fore,sides)
+
 def limbs(s,look):
     close=s.detail
     n=11 if close else 6
@@ -295,9 +325,7 @@ def limbs(s,look):
         s.rings([(.006,.059,.129,ankle[0],.057),(.024,.065,.139,ankle[0],.058),
                  (.053,.066,.131,ankle[0],.056),(.092,.060,.087,ankle[0],.029),
                  (.139,.054,.063,ankle[0],-.003)],"boots",boot,n,footwear)
-        el,wr=arm_nodes(side)[1:]
-        s.tube([lerp(el,wr,.20),lerp(el,wr,.34),lerp(el,wr,.64),wr],
-               [.064,.067,.054,.042],"leather" if look!="levy" else "headcloth",fore,n)
+        forearm(s,look,side,n)
         g=grip(side)
         s.oval((g[0]+side*.018,g[1]+.005,g[2]-.004),(.034,.046,.058),"skin",hand,n,5)
         if close:

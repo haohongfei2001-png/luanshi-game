@@ -10,12 +10,20 @@ jobs:
     timeout-minutes: 12
     env:
       FIGURE_BRANCH: codex/river-rc7-figure-art
-      AUTHOR_SHA: be77241b64514804c76a29ceda022a1fa1c18d04
+      AUTHOR_SHA: d96dd01a46897fb1979d3f40a6ce87e0b9e059e1
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: be77241b64514804c76a29ceda022a1fa1c18d04
+          ref: d96dd01a46897fb1979d3f40a6ce87e0b9e059e1
+      - uses: actions/checkout@v4
+        with:
+          path: temporary-capture
+          ref: codex/river-rc7-figure-bake
+      - name: Install the isolated capture driver
+        run: |
+          cp temporary-capture/tests/river_art_capture.gd /tmp/archer-live.gd
+          mv temporary-capture "$RUNNER_TEMP/rc7-isolated-probe"
       - name: Compile and check the original character library
         run: |
           set -euo pipefail
@@ -47,6 +55,7 @@ jobs:
           echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
           unzip -q /tmp/godot.zip -d /tmp/runner-godot
           godot=/tmp/runner-godot/Godot_v4.6.3-stable_linux.x86_64
+          cp /tmp/archer-live.gd tests/river_art_capture.gd
           ./tools/prepare-font.sh
           mkdir -p artifacts
           touch artifacts/.gdignore
@@ -59,9 +68,9 @@ jobs:
           import base64, io, pathlib
           from PIL import Image
           root=pathlib.Path('artifacts/river-art')
-          for name in ['hero','formation','officer','player-action','contact','bowline']:
+          for name in ['hero','player-action','bowline','carry','carry-side','draw','draw-side','loose','loose-side']:
               pic=Image.open(root/(name+'.png')).convert('RGB')
-              if name in ('hero','officer','player-action','contact','bowline'):
+              if name!='formation':
                   w,h=pic.size
                   pic=pic.crop(((w-700)//2,(h-580)//2,(w+700)//2,(h+460)//2))
               else: pic.thumbnail((1080,675))

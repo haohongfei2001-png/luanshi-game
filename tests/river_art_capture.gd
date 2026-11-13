@@ -22,6 +22,14 @@ func _advance(tick: int) -> void:
 
 func _target(kind: String) -> Vector2:
 	var b:=field.battle
+	if kind.begins_with("archer-"):
+		for u in b.roster:
+			if u.kit!=5 or u.team!=0 or u.mounted: continue
+			if kind=="archer-carry" and u.state==Battle.State.MARCH: return u.pos
+			var p:=1.-u.timer/maxf(u.duration,.001)
+			if kind=="archer-draw" and u.state==Battle.State.WINDUP and p>.48 and p<.90: return u.pos
+			if kind=="archer-loose" and u.state==Battle.State.RECOVER and p<.35: return u.pos
+		return Vector2.INF
 	if kind=="hero": return b.hero.pos
 	if kind=="horse": return b.vehicle_pos[1]
 	if kind=="cart": return b.vehicle_pos[2]
@@ -97,6 +105,8 @@ func _run() -> void:
 	await process_frame
 	if not b.started or b.ordinary_counts!=PackedInt32Array([512,512]): quit(1); return
 	_advance(8)
+	await _snap("carry","archer-carry",6.7,1.35)
+	await _snap("carry-side","archer-carry",6.7,-1.12)
 	await _snap("hero","hero",6.4,1.27)
 	await _snap("saddle","horse",7.8,1.09)
 	await _snap("cart","cart",10.0,-.65)
@@ -110,7 +120,20 @@ func _run() -> void:
 	_advance(11)
 	success=success and b.hero.state in [Battle.State.WINDUP,Battle.State.RECOVER]
 	await _snap("player-action","hero",22.0,-.576)
+	var found={}
+	for sample_tick in range(12,66):
+		_advance(sample_tick)
+		for action: String in ["draw","loose"]:
+			if found.has(action): continue
+			var point:=_target("archer-"+action)
+			if not point.is_finite(): continue
+			await _snap(action,"archer-"+action,6.8,1.35)
+			await _snap(action+"-side","archer-"+action,6.8,-1.12)
+			found[action]=true
 	_advance(65)
+	if found.size()!=2:
+		push_error("No actual bow draw/release found in battle")
+		success=false
 	await _snap("officer","officer",7.8,-1.42)
 	await _snap("bowline","archer",8.6,1.12)
 	await _snap("ranks","line",51.0,-.576)

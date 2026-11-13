@@ -65,7 +65,7 @@ def costume(look,rank=False):
                 s.tube([hem,b],[.070,.067],"dyed",upper,4)
             else:
                 s.tube([a,b],[.084,.069],"dyed",upper,n)
-        s.tube([b,lerp(b,c,.57),c],[.063,.057,.035],"leather" if heavy or look=="archer" else "headcloth",fore,n)
+        forearm(s,look,side,n,rank)
         p=grip(side)
         s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)
         a,b,c=leg_nodes(side)
