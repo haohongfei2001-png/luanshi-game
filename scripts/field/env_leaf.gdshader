@@ -37,15 +37,17 @@ void fragment() {
 		vec3 bark=texture(grove_bark,UV).rgb;
 		float lum=dot(bark,vec3(.27,.57,.16));
 		float band=smoothstep(.14,.55,OUTPUT_IS_SRGB?lum:sqrt(max(lum,0.)));
-		tone=mix(vec3(.061,.060,.049),vec3(.24,.199,.135),band);
+		tone=mix(vec3(.100,.085,.054),vec3(.29,.233,.157),band);
 	} else if(crown>=11.9) {
 		vec4 leaf=texture(grove_leaf,UV);
 		float height=clamp((crown-12.1)/.85,0.,1.);
 		float color_value=dot(leaf.rgb,vec3(.25,.58,.17));
 		float value=OUTPUT_IS_SRGB?color_value:sqrt(max(color_value,0.));
-		float light=.20*value+.58*height+.11*clamp(facing_sky,0.,1.);
-		tone=mix(elm_under.rgb,elm_body.rgb,smoothstep(.28,.55,light));
-		tone=mix(tone,elm_light.rgb,smoothstep(.57,.82,light)*.95);
+		float light=.23*value+.49*height+.22*clamp(facing_sky,0.,1.);
+		vec3 shade=mix(elm_body.rgb,elm_light.rgb,.18);
+		vec3 sun=OUTPUT_IS_SRGB?vec3(.50,.57,.35):vec3(.214,.285,.100);
+		tone=mix(shade,elm_light.rgb,smoothstep(.28,.56,light));
+		tone=mix(tone,sun,smoothstep(.50,.85,light)*.77);
 		opacity=leaf.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);

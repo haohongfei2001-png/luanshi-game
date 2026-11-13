@@ -12,6 +12,7 @@ import zipfile
 from pathlib import Path
 
 import bpy
+from mathutils import Vector
 
 ARCHIVE_SHA256 = "298f6732b872e4cf7b30e6e7abf9641c7f6dc6b326df37ac089533ed7e3d58c9"
 SOURCE = "https://store.godotengine.org/asset/quaternius/stylized-nature-megakit/download/31/"
@@ -42,6 +43,8 @@ def convert(archive, folder, output):
             raise ValueError("No artist mesh in "+source)
         all_points=[o.matrix_world @ v.co for o in imported for v in o.data.vertices]
         low=min(p.z for p in all_points)
+        center_x=.5*(min(p.x for p in all_points)+max(p.x for p in all_points))
+        center_y=.5*(min(p.y for p in all_points)+max(p.y for p in all_points))
         height=max(p.z for p in all_points)-low
         for part in ("Bark","Foliage"):
             coords, faces, loop_uv, loop_normals, wind = [], [], [], [], []
@@ -69,6 +72,12 @@ def convert(archive, folder, output):
                         face.append(mapping[j])
                         loop_uv.append(tuple(uv.data[i].uv))
                         norm=normal_transform @ mesh.loops[i].normal
+                        if leaves:
+                            # A card's orientation describes a spray. At tree scale the
+                            # crown envelope carries the continuous light across sprays.
+                            spread=Vector((v.x-center_x,v.y-center_y,(v.z-low-.63*height)*1.4))
+                            if spread.length_squared>1e-8:
+                                norm=spread.normalized()*.72+Vector((0.,0.,.61))+norm.normalized()*.12
                         loop_normals.append(tuple(norm.normalized()))
                         h=max(0.,min(1.,(v.z-low)/height))
                         # Godot's glTF importer preserves the exported second UV values.
