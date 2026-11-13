@@ -1,0 +1,55 @@
+name: Inspect the originals from the river grove comparison
+on:
+  push:
+    branches: ['codex/river-grove-pixel-review']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 43484754098
+          name: same-grove-same-engagement-boot-and-gpu
+          path: proof
+      - name: Inspect the game windows from the six finished processes
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-pil
+          /usr/bin/python3 - <<'PY'
+          import base64, hashlib, json
+          from pathlib import Path
+          from PIL import Image, ImageChops, ImageStat
+          proof=Path("proof")
+          def values(p, name):
+              return [json.loads(l[len(name)+1:]) for l in p.read_text().splitlines() if l.startswith(name+" ")]
+          cases=[]
+          a,b=[values(proof/(side+"-1.log"),"GROVE_VIEW") for side in ("before","after")]
+          assert len(a)==len(b)==4
+          for left,right in zip(a,b):
+              for key in ("view","tick","hits","losses","ordinary","visible","resolution","scale"):
+                  assert left[key]==right[key],(key,left,right)
+              name=left["view"]
+              frames=[Image.open(proof/side/(name+".png")).convert("RGB") for side in ("before","after")]
+              delta=ImageStat.Stat(ImageChops.difference(*frames)).mean
+              pair=Image.new("RGB",(1280,400))
+              for i,f in enumerate(frames): pair.paste(f.resize((640,400),Image.Resampling.LANCZOS),(i*640,0))
+              pair.save(proof/(name+"-pair.jpg"),quality=91,subsampling=0)
+              m={"view":name,"difference_rgb":delta,"before":left,"after":right}
+              print("GROVE_COMPARE",json.dumps(m))
+              cases.append(m)
+              if name=="trees":
+                  print("GROVE_PAIR_BYTES",base64.b64encode((proof/(name+"-pair.jpg")).read_bytes()).decode())
+          (proof/"compare.json").write_text(json.dumps(cases,indent=2)+"\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: checked-grove-game-windows
+          path: |
+            proof/*.jpg
+            proof/compare.json
