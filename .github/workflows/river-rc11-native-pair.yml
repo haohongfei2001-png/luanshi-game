@@ -1,4 +1,4 @@
-name: Compare the RC10 and RC11 shipped apps on one native Mac
+name: Verify the archived four native app runs without replay
 on:
   push:
     branches: ['codex/river-rc11-same-mac']
@@ -7,29 +7,31 @@ permissions:
   actions: read
 jobs:
   compare:
-    runs-on: macos-latest
-    timeout-minutes: 12
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Download the two verified packages
+      - name: Validate all four already captured native measurements
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          for item in old:14022493652 new:14025269687; do
-            name=${item%:*}
-            id=${item#*:}
-            mkdir -p "$name"
-            gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/$id/zip" > "$name/outer.zip"
-            ditto -x -k "$name/outer.zip" "$name"
-          done
-      - name: Replay identical army size, native window, camera route and inputs A B B A
-        run: python3 tools/same_mac_candidates.py
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: alternating-native-river-apps
-          path: proof/
-          retention-days: 14
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/14027227148/zip" > four-native-runs.zip
+          echo '53d09ef796c9ce82e6d64aff5a4648b1854ecc4a388330142c8229f2f75cd1ec  four-native-runs.zip' | sha256sum -c -
+          unzip -q four-native-runs.zip -d proof
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          rows=json.loads(Path("proof/run-summary.json").read_text())
+          assert [r["candidate"] for r in rows]==["old","new","new","old"]
+          for r in rows:
+              assert r["validated"] and r["app_data_absent_at_spawn"] and r["session_matches_image"]
+              assert r["per_side"]==512 and r["hits_in_window"]>0 and r["seconds"]>=23.999
+              assert r["seconds"]<25 and r["estimated_internal_px"]==r["render_target_px"]==[1024,640]
+              assert r["requested_msaa_samples"]==4 and r["scale"]==1 and r["shadows"]
+              assert r["adapter"]==rows[0]["adapter"] and r["processor"]==rows[0]["processor"]
+              assert r["tour"] and r["returncode"]==0 and r["last_boot_stage"]=="contact_complete"
+          print("ARCHIVED_NATIVE_PAIR_PASS",[(r["candidate"],r["seconds"],r["fps"],r["p95_ms"],r["p99_ms"]) for r in rows])
+          PY

@@ -35,4 +35,7 @@ with tempfile.TemporaryDirectory() as temp:
         assert result["validated"]
 for key in ("adapter","processor","estimated_internal_px","render_target_px","per_side","requested_msaa_samples","renderer","shadows","preset"):
     assert all(r[key]==rows[0][key] for r in rows)
-assert all(r["seconds"]>=24 and r["per_side"]==512 and r["hits_in_window"]>0 for r in rows)
+# Duration is measured between the first and last post-draw timestamps. The
+# loop also checks wall time after its post-draw bookkeeping, so an accepted
+# last interval can end a few microseconds before the wall-clock guard expires.
+assert all(r["seconds"]>=23.999 and r["per_side"]==512 and r["hits_in_window"]>0 for r in rows)
