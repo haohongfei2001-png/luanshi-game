@@ -14,6 +14,8 @@ var initial_west:={}
 var last_tick:=-1
 var first_game_frame:=0
 var clicked:=false
+var noted_contacts:={}
+var troop_contacts:Array=[]
 var screenshot_ok:=true
 
 func _initialize() -> void:
@@ -50,9 +52,30 @@ func _select_bridge() -> bool:
 	await process_frame
 	var popup:=menu.get_popup()
 	if not popup.visible: return false
-	# The operating system owns this OptionButton's popup.
-	if OS.execute("xdotool",PackedStringArray(["key","End","Return"]))!=0: return false
-	for i in 5: await process_frame
+	# The operating system owns this OptionButton's popup. Address its native
+	# window so a virtual desktop without a window manager accepts the same click.
+	await RenderingServer.frame_post_draw
+	root.get_texture().get_image().save_jpg(OUT+"/muster.jpg",.92)
+	var xid:=DisplayServer.window_get_native_handle(DisplayServer.WINDOW_HANDLE,popup.get_window_id())
+	print("BRIDGE_MENU ",popup.visible," items=",menu.item_count," native=",xid," rect=",popup.position," size=",popup.size," focus=",popup.get_focused_item())
+	if xid!=0: OS.execute("xdotool",PackedStringArray(["windowfocus","--sync",str(xid)]))
+	for turn in 3:
+		if popup.get_focused_item()==5: break
+		var focus:=popup.get_focused_item()
+		var amount:=1 if focus<0 else (5-focus+menu.item_count)%menu.item_count
+		var buttons:=PackedStringArray(["key","--delay","70"])
+		for step in amount: buttons.append("Down")
+		if OS.execute("xdotool",buttons)!=0: return false
+		for i in 3: await process_frame
+	if popup.get_focused_item()==5:
+		OS.execute("xdotool",PackedStringArray(["key","Return"]))
+		for i in 4: await process_frame
+	if popup.visible and menu.selected!=5:
+		var row:=roundi(popup.size.y*.89)
+		var at:=popup.position+Vector2i(popup.size.x/2,row)
+		OS.execute("xdotool",PackedStringArray(["mousemove",str(at.x),str(at.y),"click","1"]))
+		for i in 5: await process_frame
+	print("BRIDGE_MENU_SELECTED ",menu.selected," encounter=",field.battle.bridgehead," popup=",popup.visible)
 	return menu.selected==5 and field.battle.bridgehead and not field.battle.started
 
 func _drive() -> void:
@@ -99,6 +122,11 @@ func _facts() -> Dictionary:
 		if not canvas.has_point(field.camera.unproject_position(Ground.unit_point(u.pos,true)+Vector3.UP*.95)): continue
 		in_frame+=1
 		if Ground.moat_blocks(u.pos): feet_inside+=1
+		if u.contact_tick==b.tick and u.contact_source>=0 and troop_contacts.size()<12:
+			var source:=b.roster[u.contact_source]
+			if source.kit==Battle.Arms.Kit.SPEAR and not source.hero and not source.officer and not noted_contacts.has(u.id):
+				noted_contacts[u.id]=true
+				troop_contacts.append({"tick":b.tick,"target":u.id,"spearman":source.id,"blocked":u.contact_blocked})
 		if u.kit==7 and b.active(u):
 			shields+=1
 			if u.state==Battle.State.GUARD: guards+=1
@@ -163,7 +191,7 @@ func _run() -> void:
 	var terminal:={"ordinary":Array(b.ordinary_counts),"officers":Array(b.command_counts),"seed":Battle.SEED,
 		"frames_of_play":frames,"sampled_ticks":snapshots.size(),"first_player_strike":first_blow,
 		"held_both":clear_count,"feet_in_deep_water":entered_water,"different_lens":off_lens,
-		"shield_contacts":contacts.values(),"resolution":[root.size.x,root.size.y],"internal":root.scaling_3d_scale,
+		"shield_contacts":contacts.values(),"rank_spear_contacts":troop_contacts,"resolution":[root.size.x,root.size.y],"internal":root.scaling_3d_scale,
 		"camera_start":[Ground.BRIDGE_VIEW.x,Ground.BRIDGE_VIEW.y],"software":RenderingServer.get_video_adapter_name(),
 		"last":fact,"frames":snapshots,"first_game_frame":first_game_frame,"physics_fps":Engine.physics_ticks_per_second,"world_audit":field.theater.audit().is_empty()}
 	var file:=FileAccess.open(OUT+"/input-and-camera.json",FileAccess.WRITE)
