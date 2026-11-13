@@ -27,6 +27,7 @@ jobs:
           set -euo pipefail
           editor="$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot"
           mkdir -p "$GITHUB_WORKSPACE/native-pair"
+          flagged=0
           for side in before after; do
             revision=cb85d58318b1379127a2465816a3917f79298090
             if [[ "$side" == after ]]; then revision=HEAD; fi
@@ -41,7 +42,7 @@ jobs:
               sed 's/for i in 80:/for i in 0:/' tests/river_art_capture.gd > tests/rc7_quick.gd
               "$editor" --path . --resolution 1280x800 --audio-driver Dummy --disable-vsync --rendering-method mobile --rendering-driver metal --fixed-fps 20 --script tests/rc7_quick.gd -- --field-size=512 2>&1 | tee "$GITHUB_WORKSPACE/native-pair/$side.log"
               grep -q '^RIVER_ART_PASS' "$GITHUB_WORKSPACE/native-pair/$side.log"
-              if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$GITHUB_WORKSPACE/native-pair/$side.log"; then exit 1; fi
+              if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$GITHUB_WORKSPACE/native-pair/$side.log"; then touch "$GITHUB_WORKSPACE/native-pair/$side-runtime-error"; fi
               cp artifacts/river-art/formation.png "$GITHUB_WORKSPACE/native-pair/$side-formation.png"
               cp artifacts/river-art/hero.png "$GITHUB_WORKSPACE/native-pair/$side-hero.png"
               cp artifacts/river-art/gate.png "$GITHUB_WORKSPACE/native-pair/$side-gate.png"
@@ -65,6 +66,10 @@ jobs:
                   print('RC7_METAL_GRADE',s,label,im.size,[round(i,2) for i in ImageStat.Stat(mid).mean])
                   print('RC7_METAL_IMAGE',s,label,base64.b64encode(buf.getvalue()).decode())
           PY
+          for side in before after; do
+            if [[ -f "native-pair/$side-runtime-error" ]]; then flagged=1; fi
+          done
+          exit "$flagged"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
