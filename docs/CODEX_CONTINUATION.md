@@ -4,13 +4,13 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 RC13 · 普通跟随镜头的步兵接敌和战场路面进入验证
+## 河关 RC13 · 已合入的可玩候选
 
-两次同种子实录发现，步相本来已经按兵员错开，但同排枪手和盾手的肩胯与武器负重形态仍几乎一样。第一轮枪尖静立时摆动 0.869 米，实机退回。第二轮收至 0.156 米，以眼前已锁定的敌兵决定前排收盾、压枪和侧身的先后，保留原握点、落脚、起手与命中。正常 22 米跟随和阵线分别复拍 73 与 68 帧。[两次回放和同窗对照](https://github.com/haohongfei2001-png/luanshi-game/tree/2a4e20c8b0599ff3c23be048cf5426600c0591ac/docs/evidence/river-foot-load)。
+[下载、本版实战窗口、武器与军令实录、原始帧时间及 SHA](evidence/river-gate-v1-rc13/PLAYTEST.md)。游戏源 `03acb69b1621130f92bd940caa2cfb3b4e8653a5`，主线游戏合并 `12bdc945b7bb4ce2db655555a567244984496e45`，导出 `c96563beff02a8ad4f24458a228dcd426b4e2a72`，三者使用同一游戏目录树。前排枪盾兵根据真实迎敌距离分开收肩、压枪或继续行进。第一轮夸张的待步枪尖已由 0.869 米收成 0.156 米；原足底、手握点与真实命中核验通过。桥关道路经过三轮同镜头实拍，悬空的土片被退回，留下地面真实磨损、剥土和碎石。界面已明确区分城门耐久和夺取内庭。
 
-由桥到关门 72 米的官道增添断续的车轮压痕、路肩剥土和堆积碎石。真实跟随镜头退回曾悬在草上的三角形土片，也压低了第二轮太均匀的黑轮痕。状态栏把“破门 100%”明确写成城门耐久，破门后提示占领内庭。相同普通输入仍在第 43 步起手、第 48 步命中 584 号。[最终地表对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43422041385/artifacts/14034976176)。
+正式包在托管 Apple M1 (Virtual) 进行 512 对 512 实战，实际 1024×640、100% 内部比例、4× MSAA；采样 24.02 秒，P95/P99 26.08 / 35.20 毫秒，最长 151.79 毫秒；应用数据从空目录启动 9/9。同树主线 P95/P99 18.79 / 26.66 毫秒，最长 61.02 毫秒。[主线验证](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43430982094)。九武器、骑乘与战车、独立将领/继任、两种护送、战后驻营/行军和 V3/V4 旧档均已回归。真实 M5、4K 内外屏热稳态以及最终美术目标仍待验证。
 
-可回退版本为下方 RC12。等待正式包、全流程与同树主线验证时，云端检出 `codex/river-gate-rc13`，运行 `node tools/env_cartway.mjs --check && ./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。真实 M5 与最终画面质量仍待验收。
+下一项优先看实际摄像机里多杆武器切过主角身体和交战树冠的情况。保持现有前排密度，同种子对齐输入与战果，再决定局部的动作/材质取舍。云端检出 `12bdc945b7bb4ce2db655555a567244984496e45`，运行 `node tools/env_cartway.mjs --check && ./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。托管 Linux 第 365 步四轮重放为 7.13–7.35 ms，最大的阶段是兵员状态与密度；原生 151.79 ms 长帧仍待同设备细分。为定位长尾，使用已导出包运行 `python3 tools/rc3_native_probe.py package/Luanshi-macOS.zip package/unpacked mac-evidence` 并按真实峰值步复盘。
 
 ## 河关 RC12 · 已合入的可玩候选
 
