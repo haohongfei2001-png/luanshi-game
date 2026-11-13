@@ -1,5 +1,21 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC16 · 可恢复的制作现场
+
+本次集成取自上一候选 `05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09`，合入的军服母版 `219e14b1662990735eeda60cc2bdeaf3b54a19a4`，持械行军母版 `4b4f96f7a6a1760a09d1a17057298370fa865a10`，共享树林几何 `299eec62a60a4b0b88f9015d080b1b26bb85a61e`。三套服装、三段实物动作曲线已绑定正常军阵，枪盾弓、原有伤亡和兵籍沿用正式输入。树林在 Linux 的六次新进程、四个同机位对照已复核，场景建造中位由 1615 降至 740 ms；全程 512 对 512，热稳态帧率仍需实测。
+
+统一候选在 [PR #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53) 的当前源码运行全套验证。先看 22 米战场，再看枪、盾、弓五米多的实机细节。云端复现用 `./tools/compare-river-art.sh` 和 `./tools/test-field-render.sh footage`。托管 Apple Silicon 的峰值时间另按七个战斗步骤记录。正式包、窗口影片、验收数据以完成后的归档为准。美术质量仍在复核，真实 M5 未测。
+
+[RC15 原始截图、完整录像与回退包](https://github.com/haohongfei2001-png/luanshi-game/blob/3477c960b68505d27b641a5bf214a391806d98c4/docs/evidence/river-gate-v1-rc15/PLAYTEST.md) · [持械行进的等速对照](https://github.com/haohongfei2001-png/luanshi-game/blob/4b4f96f7a6a1760a09d1a17057298370fa865a10/docs/evidence/river-gate-gait/march-pair.mp4) · [衣甲实机窗口](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43486113614) · [原始树林帧对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43486379773)
+
+## 河关 RC15 的实机基线
+
+工程源码 `05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09`，录制原件 `4e83b2c287ea54fba97cb2e9b51e36970ab4e2b2`。两条护送均回营，旧档和九种武器已复跑。导出包 40 秒原速录制已按同一 SHA-256 复核。原生托管 M1 的 P95 为 30.040 ms，M5 待测。22 米画面仍有军服雷同和肩胯僵硬问题。
+
+[完整战役原片](https://github.com/haohongfei2001-png/luanshi-game/blob/4e83b2c287ea54fba97cb2e9b51e36970ab4e2b2/docs/evidence/river-gate-v1-rc15/playthrough-full.mp4) · [原速操作](https://github.com/haohongfei2001-png/luanshi-game/blob/4e83b2c287ea54fba97cb2e9b51e36970ab4e2b2/docs/evidence/river-gate-v1-rc15/combat-normal-speed.mp4) · [本次报告](https://github.com/haohongfei2001-png/luanshi-game/blob/3477c960b68505d27b641a5bf214a391806d98c4/docs/evidence/river-gate-v1-rc15/PLAYTEST.md)
+
+云端复现用 `./tools/compare-river-art.sh`、`./tools/test-field-journey.sh`、`./tools/test-field-render.sh journey`。下一轮在同一批角色与 22 米机位比较军服资产及持械步态，保留这套候选作回退。
+
 ## OWNER-ARTREF-20261114｜最新 Owner 强制视觉任务与可恢复入口
 
 **优先级 P0：**立即沿用 [八作真实视觉对标与 ARTREF-01..12 可玩游戏验收](ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md)；不要将此前 RC3/RC13 的“技术视觉纵切片”和局部修补当作 Owner 认可的画面基础。Codex 应完成实际模型/骨架/甲衣/动画/河关环境的商业质量重建，在正式 Godot 512v512 战役中验证远中近景、军阵、正常速度交战和操作，并将证据按新文档归档。主任务仍 [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)，既有生效工程与存档/战场逻辑必须保留。**当前状态：规范已写入；新美术效果未通过 Owner 验收，M5 真实 20 分钟压力测试未通过/未完成，不能标 DONE。** 继续开发时以 RC13 真实代码/实拍为问题基线而非已经合格的美术目标。

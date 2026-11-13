@@ -3,6 +3,9 @@ extends RefCounted
 ## motion bank. Merge shared body/weapon geometry once, retaining one draw per crowd batch.
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
 const GARMENTS := preload("res://assets/river_gate/figures/field_garments.gltf")
+const GARRISON := preload("res://assets/third_party/wildfire_garments/field_issues.glb")
+const ISSUE_COLOURS := preload("res://assets/third_party/wildfire_garments/field_colours.png")
+const FIELD_BODY := preload("res://assets/river_gate/figures/garrison_bodies.glb")
 const SKIN := preload("res://scripts/field/company_skin.gdshader")
 const FABRIC := preload("res://assets/river_gate/figures/campaign_colours.svg")
 const MOTION := preload("res://assets/river_gate/figures/company_motion.png")
@@ -11,7 +14,7 @@ static var assembled: Dictionary = {}
 
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
-	for asset: PackedScene in [LIBRARY, GARMENTS]:
+	for asset: PackedScene in [LIBRARY, GARMENTS, GARRISON, FIELD_BODY]:
 		var library := asset.instantiate()
 		for part in library.find_children("*", "MeshInstance3D", true, false):
 			pieces[String(part.name)]=part.mesh
@@ -28,13 +31,16 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	var key := "%s-%d-%s" % [look,kit,lod]
 	if assembled.has(key): return assembled[key]
 	_load_pieces()
-	var body: ArrayMesh=pieces[look+lod]
+	var fitted:=pieces.has(look+"Issue")
+	var body: ArrayMesh=pieces[(look+lod+"Body") if fitted else (look+lod)]
 	var arms: ArrayMesh=pieces["Arms"+str(kit)+lod]
 	# Copy packed indexed arrays only. SurfaceTool would expand every triangle,
 	# and importer-generated tangents/lightmap data have no role in these materials.
 	var arrays:=body.surface_get_arrays(0)
 	var garment: ArrayMesh=pieces[look+lod+"Trim"]
-	for attachment: ArrayMesh in [arms, garment]:
+	var attachments: Array[ArrayMesh]=[arms,garment]
+	if fitted: attachments.append(pieces[look+"Issue"])
+	for attachment: ArrayMesh in attachments:
 		var gear:=attachment.surface_get_arrays(0)
 		var vertex_offset: int=arrays[Mesh.ARRAY_VERTEX].size()
 		for attr: int in [Mesh.ARRAY_VERTEX,Mesh.ARRAY_NORMAL,Mesh.ARRAY_TEX_UV,Mesh.ARRAY_TEX_UV2]:
@@ -57,6 +63,7 @@ static func material(colour: Color, kit: int, player: bool=false) -> ShaderMater
 	var result:=ShaderMaterial.new()
 	result.shader=SKIN
 	result.set_shader_parameter("cloth_atlas", FABRIC)
+	result.set_shader_parameter("issue_atlas", ISSUE_COLOURS)
 	result.set_shader_parameter("motion_bank", MOTION)
 	result.set_shader_parameter("livery", colour)
 	result.set_shader_parameter("kit", kit)

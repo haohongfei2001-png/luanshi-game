@@ -1,6 +1,6 @@
 # 河关军容资产
 
-河关的六种衣装、甲片、披风、头巾、马尾盔缨、九种兵器、调色和动作由本项目制作。游戏从 `river_company.glb` 合批绘制近、中、远三档，并从同一个动作库读取步伐、发力和失衡。躯干和袖子共用缝边顶点。持械手和武器共用握点。角色进入新的显示距离后沿用同一套姿势与相位。
+河关角色的来源包括本项目制作的服装、甲片、披风、头巾、马尾盔缨、兵器和动作，以及下述单独署名的成衣、人体与步态。游戏从 `river_company.glb` 合批绘制近、中、远三档，并从同一个动作库读取步伐、发力和失衡。躯干和袖子共用缝边顶点。持械手和武器共用握点。角色进入新的显示距离后沿用同一套姿势与相位。
 
 脸和耳朵的形体使用 MakeHuman 团队的 HM08 头部网格及青年男性形态，已按 CC0 1.0 公开。取材文件为 `data/3dobjs/base.obj` 和 `data/targets/macrodetails/asian-male-young.target`。来源的版本、Git blob 校验、裁取范围和简化方法见 `tools/art/reduce_field_head.py`。额头、帽檐、眼睑、布料、铁甲和双色披风在游戏内重新贴图与装配。 [上游资产原文](https://github.com/makehumancommunity/makehuman/tree/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data) · [上游 CC0 授权](https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md)
 
@@ -35,3 +35,9 @@ The divided thigh guards and fitted sleeve yokes share their colour cuts across 
 弓手的束发被收在有顶的软头巾内，近、中、远档共同保留眉线、后折和结尾。原有布色与头骨随同一动作，回放使用实战中的第 94 号弓手。
 
 双手的连续掌面、虎口、指节与指尖同样取自 MakeHuman Community 的 CC0 HM08 底模。Blender 按原始手指权重塑出持杆、持弓、扣弦、托盾与空手垂放的姿势，三档几何与现有左右腕关节共用。随仓库提交的手部 GLB 支持离线烘焙。上游版本、文件校验及重新取材命令见[手部来源](../../../tools/art/source/MAKEHUMAN.md)。
+
+## 河关野战军服与持械行进
+
+普通枪兵、重装盾兵和弓弩手使用 Wildfire Games 为《0 A.D.》创作的三件成衣。转制保留了作者制作的衣片、袖筒、UV 和蒙皮，将它们适配河关兵种的握点、甲片和三档显示距离。原版来自汉军美术集，河关取其衣服结构，按本项目的军服配色和装备重新搭配。成衣与底色图的衍生资产延续 CC BY-SA 3.0 授权。头部、手、兵器、下身和原创人物资产可分别维护。[成衣来源及署名](../../third_party/wildfire_garments/NOTICE.txt) · [可复建的转制脚本](../../../tools/art/import_garrison_issues.py)
+
+持械步行、整队行进和短跑采用 Quaternius 的三段 CC0 动作。肩带与胯的转动从源动画按相位取样，抑制双手持长兵器时空手跑姿的大幅摆肩。脚掌仍使用河关的接地位置，手掌、兵器与受击动作共用原握点。[可编辑动作数据与来源](../../../tools/art/source/COMPANY_MARCH.md)

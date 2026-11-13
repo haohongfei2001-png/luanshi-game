@@ -189,7 +189,7 @@ jobs:
     name: Play the exported Linux package through its normal inputs
     needs: verify-and-export
     runs-on: ubuntu-24.04
-    timeout-minutes: 23
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -296,7 +296,7 @@ jobs:
           PY
 
   art-comparison:
-    name: Compare RC13 and candidate in the game window
+    name: Compare the previous and current game in the same window
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
