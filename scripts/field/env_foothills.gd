@@ -12,6 +12,8 @@ var leaf_material:=ShaderMaterial.new()
 var terrain_tiles: Dictionary
 var rng:=RandomNumberGenerator.new()
 var trees: Array[Dictionary]=[]
+var inland_meshes: Array[ArrayMesh]=[]
+var inland_stands: Dictionary = {}
 
 class Patch:
 	var stone:Builder
@@ -101,19 +103,52 @@ func _bake_trees() -> void:
 		trees.append({"wood":_grove_part(willows,prefix+"Bark"),"leaves":_grove_part(willows,prefix+"Foliage")})
 	willows.free()
 	var broadleaves:=preload("res://assets/environment/quaternius/grove.glb").instantiate()
-	for prefix:String in ["Broad","Upright"]:
-		trees.append({"wood":_grove_part(broadleaves,prefix+"Bark"),"leaves":_grove_part(broadleaves,prefix+"Foliage")})
+	for prefix: String in ["Broad","Upright"]:
+		# Bark and leaves use the same cutout material. Preserve the author's
+		# indices and render both surfaces together in each grove instance.
+		var combined := SurfaceTool.new()
+		combined.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for part: String in ["Bark","Foliage"]:
+			var node := broadleaves.find_child(prefix+part,true,false) as MeshInstance3D
+			combined.append_from(node.mesh,0,Transform3D.IDENTITY)
+		inland_meshes.append(combined.commit())
 	broadleaves.free()
+
+func _place_inland_stands(parent: Node3D) -> void:
+	for key: Vector3i in inland_stands:
+		var placements: Array = inland_stands[key]
+		var batch := MultiMesh.new()
+		batch.transform_format = MultiMesh.TRANSFORM_3D
+		batch.mesh = inland_meshes[key.z]
+		batch.instance_count = placements.size()
+		var bounds: AABB = placements[0] * batch.mesh.get_aabb()
+		for i in placements.size():
+			var placement: Transform3D = placements[i]
+			batch.set_instance_transform(i,placement)
+			bounds = bounds.merge(placement * batch.mesh.get_aabb())
+		# The shader sways the tips slightly beyond the authored static surface.
+		batch.custom_aabb = bounds.grow(.10)
+		var stand := MultiMeshInstance3D.new()
+		stand.multimesh = batch
+		stand.material_override = leaf_material
+		parent.add_child(stand)
 
 func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: float) -> void:
 	var shape:=1 if kind==0 and height<5.48 else variant
-	var index:=shape if kind==0 else 2+(shape if kind==1 else 1-shape)
-	var source:=trees[index]
 	var source_height:=5.63 if shape==0 else 4.91
 	var scale_factor:=height/source_height if kind==0 else height
 	var basis:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*scale_factor)
 	var placement:=Transform3D(basis,ground_point(p))
-	# Timber and leaves use separate material tags within the same culled grove.
+	if kind!=0:
+		# Keep the former 21 x 18 metre culling boundaries. The 158 inland
+		# placements share two artist meshes instead of copying all triangles.
+		var archetype:=shape if kind==1 else 1-shape
+		var key:=Vector3i(floori(p.x/21.),floori(p.y/18.),archetype)
+		if not inland_stands.has(key): inland_stands[key]=[]
+		inland_stands[key].append(placement)
+		return
+	var source:=trees[shape]
+	# Riverbank willows still share the small shoreline spray batches.
 	patch.leaves.append_from(source.wood,0,placement)
 	patch.leaves.append_from(source.leaves,0,placement)
 	patch.sprays+=1
@@ -460,6 +495,7 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	_bake_trees()
 	var plan:Dictionary=PLAN.data
 	_stands(plan)
+	_place_inland_stands(parent)
 	_bank_sedge()
 	_pavers(plan)
 	_field_banks()

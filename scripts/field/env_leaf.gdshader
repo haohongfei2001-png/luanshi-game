@@ -21,10 +21,19 @@ varying float crown;
 varying vec2 bark_uv;
 
 void vertex() {
-	float breeze=sin(TIME*1.22+VERTEX.x*.83+VERTEX.z*.44)*.025;
-	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+VERTEX.x*.58- VERTEX.z*.44);
-	VERTEX.x+=breeze*UV2.x;
-	VERTEX.z+=breeze*.53*UV2.x;
+	// Instanced inland trees retain world-space wind frequency and amplitude.
+	bool inland=UV2.y>=11.9;
+	vec3 at=inland ? (MODEL_MATRIX*vec4(VERTEX,1.)).xyz : VERTEX;
+	float breeze=sin(TIME*1.22+at.x*.83+at.z*.44)*.025;
+	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+at.x*.58-at.z*.44);
+	vec3 drift=vec3(breeze,0.,breeze*.53)*UV2.x;
+	if(inland) {
+		mat3 basis=mat3(MODEL_MATRIX);
+		// All grove placements have uniform scale. Undo their basis for a
+		// metre of wind while letting the renderer rotate the actual normals.
+		drift=transpose(basis)*drift/dot(basis[0],basis[0]);
+	}
+	VERTEX+=drift;
 	crown=UV2.y;
 	facing_sky=NORMAL.y;
 	bark_uv=UV;

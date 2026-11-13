@@ -1,0 +1,79 @@
+name: Profile shared tree meshes in the live river battle
+on:
+  push:
+    branches: ['codex/river-tree-instancing']
+permissions:
+  contents: read
+jobs:
+  window:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Replay equal deployments and measure fresh processes on the same host
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/engine.zip' | sha512sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/grove-engine
+          godot=/tmp/grove-engine/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          for side in before after; do
+            root="$RUNNER_TEMP/$side"
+            mkdir -p "$root" "proof/$side"
+            rev=HEAD
+            if test "$side" = before; then rev=05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09; fi
+            git archive "$rev" | tar -x -C "$root"
+            cp tests/grove_instance_review.gd "$root/tests/"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            "$godot" --headless --editor --path "$root" --import >"proof/$side/import.log" 2>&1
+            if grep -E 'SHADER ERROR|Parse Error|SCRIPT ERROR|ERROR:' "proof/$side/import.log"; then exit 1; fi
+          done
+          for test in before-1 after-1 after-2 before-2 before-3 after-3; do
+            side="${test%-*}"
+            number="${test#*-}"
+            extra=()
+            if test "$number" != 1; then extra+=(--setup-only); fi
+            export CAPTURE_DIR="$PWD/proof/$side"
+            export XDG_DATA_HOME="$RUNNER_TEMP/$test-data"
+            xvfb-run -a -s '-screen 0 1280x800x24' /usr/bin/time -f 'GROVE_RSS_KIB %M' "$godot" --path "$RUNNER_TEMP/$side" --resolution 1280x800 --fixed-fps 20 --audio-driver Dummy --disable-vsync --script tests/grove_instance_review.gd -- --field-size=512 "${extra[@]}" >"proof/$test.log" 2>&1
+            if grep -E 'SHADER ERROR|Parse Error|SCRIPT ERROR|ERROR:' "proof/$test.log"; then exit 1; fi
+            grep -E '^GROVE_(BOOT|RSS_KIB|VIEW)' "proof/$test.log"
+          done
+          python3 - <<'PY'
+          import base64, hashlib, json
+          from pathlib import Path
+          from PIL import Image, ImageChops, ImageStat
+          proof=Path("proof")
+          def values(p, name):
+              return [json.loads(l[len(name)+1:]) for l in p.read_text().splitlines() if l.startswith(name+" ")]
+          cases=[]
+          a,b=[values(proof/(side+"-1.log"),"GROVE_VIEW") for side in ("before","after")]
+          assert len(a)==len(b)==4
+          for left,right in zip(a,b):
+              for key in ("view","tick","hits","losses","ordinary","visible","resolution","scale"):
+                  assert left[key]==right[key],(key,left,right)
+              name=left["view"]
+              frames=[Image.open(proof/side/(name+".png")).convert("RGB") for side in ("before","after")]
+              delta=ImageStat.Stat(ImageChops.difference(*frames)).mean
+              pair=Image.new("RGB",(1280,400))
+              for i,f in enumerate(frames): pair.paste(f.resize((640,400),Image.Resampling.LANCZOS),(i*640,0))
+              pair.save(proof/(name+"-pair.jpg"),quality=91,subsampling=0)
+              m={"view":name,"difference_rgb":delta,"before":left,"after":right}
+              print("GROVE_COMPARE",json.dumps(m))
+              cases.append(m)
+              if name=="trees":
+                  print("GROVE_PAIR_BYTES",base64.b64encode((proof/(name+"-pair.jpg")).read_bytes()).decode())
+          (proof/"compare.json").write_text(json.dumps(cases,indent=2)+"\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: same-grove-same-engagement-boot-and-gpu
+          path: proof/
