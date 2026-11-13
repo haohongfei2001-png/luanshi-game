@@ -4173,7 +4173,7 @@
     "host_24s_p95_below_16_67": true,
     "stable_60_fps": "NOT_MET",
     "visual": "ART_REVIEW_REQUIRED",
-    "exported_movie": "40s clip, early player defeat; 30s of sustained combat not shown"
+    "exported_movie": "40 s / 960 frames, package playing the unmodified scene with physical controls through tick 774 and a real breach"
   },
   "export_tree": "015a15fbc8d3408b22830b489c2a9b01c6c92fc5",
   "code_difference": [
@@ -4189,13 +4189,154 @@
   ],
   "played_export": {
     "name": "exported-game-window-8a911eb",
-    "id": 14060758187,
-    "digest": "sha256:8b1350ec8c9c0c992bd076163a3cfdf17eda9bb1ceaf07c50d062fc385d82e39",
-    "bytes": 9164253,
-    "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43469213308/artifacts/14060758187"
+    "id": 14062841710,
+    "digest": "sha256:9547bc105c6c465ab85bf2d8c0df320869495c0c614b5bcd2bb6d4077b07c1ba",
+    "bytes": 21173971,
+    "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43472948747/artifacts/14062841710"
   },
   "prior_failures": [
     "Second escort camp input had no pass before 900-second process guard (exit 124)",
     "First exported physical controls sent the hero into the front rank too early."
-  ]
+  ],
+  "played_export_summary": {
+    "movie_sha256": "71b76f225fba670dc295a51cda3ca131a4980b3c92db52526fa2d647c28ad2f1",
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 800,
+        "avg_frame_rate": "24/1",
+        "duration": "40.000000",
+        "nb_frames": "960"
+      },
+      {
+        "codec_name": "aac",
+        "channels": 2,
+        "avg_frame_rate": "0/0",
+        "duration": "40.000000",
+        "nb_frames": "1876"
+      }
+    ],
+    "mix": {
+      "mean_db": -35.1,
+      "peak_db": -11.1
+    },
+    "samples": [
+      {
+        "start_tick": 15,
+        "end_tick": 165,
+        "per_side": 512,
+        "visible_combat_poses": 110,
+        "hits_in_window": 971,
+        "losses": [
+          92,
+          136
+        ],
+        "gate_hp": 260,
+        "estimated_internal_px": [
+          1280,
+          800
+        ],
+        "camera_size": 22,
+        "camera_travel": 2.49107074737549
+      },
+      {
+        "start_tick": 165,
+        "end_tick": 315,
+        "per_side": 512,
+        "visible_combat_poses": 15,
+        "hits_in_window": 664,
+        "losses": [
+          173,
+          214
+        ],
+        "gate_hp": 260,
+        "estimated_internal_px": [
+          1280,
+          800
+        ],
+        "camera_size": 21.7370548248291,
+        "camera_travel": 0.0485953539609909
+      },
+      {
+        "start_tick": 315,
+        "end_tick": 465,
+        "per_side": 512,
+        "visible_combat_poses": 14,
+        "hits_in_window": 70,
+        "losses": [
+          188,
+          217
+        ],
+        "gate_hp": 260,
+        "estimated_internal_px": [
+          1280,
+          800
+        ],
+        "camera_size": 31.3013572692871,
+        "camera_travel": 54.7308540344238
+      },
+      {
+        "start_tick": 465,
+        "end_tick": 615,
+        "per_side": 512,
+        "visible_combat_poses": 0,
+        "hits_in_window": 104,
+        "losses": [
+          207,
+          226
+        ],
+        "gate_hp": 0,
+        "estimated_internal_px": [
+          1280,
+          800
+        ],
+        "camera_size": 21.5635051727295,
+        "camera_travel": 53.5011520385742
+      },
+      {
+        "start_tick": 615,
+        "end_tick": 765,
+        "per_side": 512,
+        "visible_combat_poses": 68,
+        "hits_in_window": 253,
+        "losses": [
+          226,
+          253
+        ],
+        "gate_hp": 0,
+        "estimated_internal_px": [
+          1280,
+          800
+        ],
+        "camera_size": 21.5635051727295,
+        "camera_travel": 53.5011520385742
+      },
+      {
+        "start_tick": 765,
+        "end_tick": 774,
+        "per_side": 512,
+        "visible_combat_poses": 68,
+        "hits_in_window": 19,
+        "losses": [
+          226,
+          254
+        ],
+        "gate_hp": 0,
+        "estimated_internal_px": [
+          1280,
+          800
+        ],
+        "camera_size": 21.5635051727295,
+        "camera_travel": 0
+      }
+    ]
+  },
+  "previous_exported_film": {
+    "name": "exported-game-window-8a911eb",
+    "id": 14060758187,
+    "digest": "sha256:8b1350ec8c9c0c992bd076163a3cfdf17eda9bb1ceaf07c50d062fc385d82e39",
+    "bytes": 9164253,
+    "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43469213308/artifacts/14060758187"
+  }
 }
