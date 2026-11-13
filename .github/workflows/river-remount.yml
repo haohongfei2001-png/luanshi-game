@@ -1,0 +1,77 @@
+name: Inspect editable remount in the played river battle
+on:
+  push:
+    branches: ['codex/river-remount-art']
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fit the cavalry source to the project's existing driving and riding contacts
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-numpy python3-pil
+          /usr/bin/python3 tools/art/import_remount.py "$RUNNER_TEMP/remount-source"
+          ./tools/prepare-font.sh
+          git add assets/third_party/wildfire_remounts assets/art/mounts/field_tack.glb
+          git -c user.name='River Gate art study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the licensed field remount separately from the original tack'
+      - name: Follow the same living horse in six native camera views
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 1 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/engine-remount.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/engine-remount.zip' | sha512sum -c -
+          unzip -q /tmp/engine-remount.zip -d "$RUNNER_TEMP/horse-engine"
+          godot="$RUNNER_TEMP/horse-engine/Godot_v4.6.3-stable_linux.x86_64"
+          for side in before after; do
+            dir="$RUNNER_TEMP/$side"
+            mkdir -p "$dir" "receipt/$side"
+            rev=HEAD
+            if test "$side" = before; then rev=7c9ac667ded0a8e80a05cd47593a4af70c28486c; fi
+            git archive "$rev" | tar -x -C "$dir"
+            cp -a assets/fonts/. "$dir/assets/fonts/"
+            "$godot" --headless --editor --path "$dir" --import >"receipt/$side/import.log" 2>&1
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "receipt/$side/import.log"; then exit 1; fi
+            XDG_DATA_HOME="$RUNNER_TEMP/app-$side" timeout 280s xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$dir" --resolution 1280x800 --audio-driver Dummy --fixed-fps 20 --disable-vsync --script tests/river_mounted_camera.gd -- --field-size=512 >"receipt/$side/game.log" 2>&1
+            grep '^MOUNT_LIVE_PASS' "receipt/$side/game.log"
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "receipt/$side/game.log"; then exit 1; fi
+            cp "$dir/artifacts/river-mounted/"*.png "$dir/artifacts/river-mounted/frames.json" "receipt/$side/"
+            ffmpeg -loglevel error -y -framerate 20 -i "$dir/artifacts/river-mounted/film/%03d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "receipt/$side/mounted.mp4"
+          done
+          ffmpeg -loglevel error -y -i receipt/before/mounted.mp4 -i receipt/after/mounted.mp4 -filter_complex '[0:v]scale=640:400[b];[1:v]scale=640:400[a];[b][a]hstack[v]' -map '[v]' -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart receipt/mounted-pair.mp4
+          /usr/bin/python3 - <<'PY'
+          import json,base64
+          from PIL import Image
+          from pathlib import Path
+          d=Path("receipt")
+          old,new=[json.loads((d/side/"frames.json").read_bytes()) for side in ("before","after")]
+          assert old==new and len(new)==6 and new[0]["ordinary"]==[512,512]
+          for row in new:
+              label=row["label"]
+              pair=Image.new("RGB",(1080,404))
+              for i,side in enumerate(("before","after")):
+                  im=Image.open(d/side/(label+".png")).convert("RGB")
+                  x,y=map(round,row["center_pixel"])
+                  if row["zoom"]<10:
+                      frame=im.crop((x-238,y-205,x+238,y+152))
+                  else:
+                      frame=im
+                  pair.paste(frame.resize((540,404),Image.Resampling.LANCZOS),(540*i,0))
+              pair.save(d/(label+".jpg"),quality=90,subsampling=0)
+              print("REMOUNT_PAIR",label,base64.b64encode((d/(label+".jpg")).read_bytes()).decode())
+          PY
+          git push origin HEAD:refs/heads/codex/river-remount-art
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: authentic-remount-and-rider-comparison
+          path: receipt

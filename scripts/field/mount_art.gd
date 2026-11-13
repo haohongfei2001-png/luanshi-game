@@ -1,6 +1,9 @@
 extends RefCounted
 ## Shared baked, single-surface horse and carriage meshes. +Z is the muzzle.
-const COLLECTION := preload("res://assets/art/mounts/mounts.gltf")
+const TACK := preload("res://assets/art/mounts/field_tack.glb")
+const REMOUNT := preload("res://assets/third_party/wildfire_remounts/hide.glb")
+const PIGMENTS := preload("res://assets/third_party/wildfire_remounts/horse_coats.png")
+const MANE := preload("res://assets/third_party/wildfire_remounts/horse_hair.png")
 const SURFACE := preload("res://scripts/field/mount_hide.gdshader")
 const ATLAS := preload("res://assets/art/mounts/mount-atlas.png")
 const SADDLE := Vector3(0.0,1.44,-0.04)
@@ -13,9 +16,28 @@ static var _hide: ShaderMaterial
 
 static func mesh(draught: bool=false, close: bool=true) -> Mesh:
 	if _meshes.is_empty():
-		var library:=COLLECTION.instantiate()
-		for node: MeshInstance3D in library.find_children("*","MeshInstance3D",true,false):
-			_meshes[String(node.name)]=node.mesh
+		var library:=REMOUNT.instantiate()
+		var animal: ArrayMesh=library.find_children("*","MeshInstance3D",true,false)[0].mesh
+		var tack:=TACK.instantiate()
+		for node: MeshInstance3D in tack.find_children("*","MeshInstance3D",true,false):
+			var body:=animal.surface_get_arrays(0)
+			var gear:=node.mesh.surface_get_arrays(0)
+			var offset: int=body[Mesh.ARRAY_VERTEX].size()
+			for attr: int in [Mesh.ARRAY_VERTEX,Mesh.ARRAY_NORMAL,Mesh.ARRAY_TEX_UV,Mesh.ARRAY_TEX_UV2]:
+				var data=body[attr]
+				data.append_array(gear[attr])
+				body[attr]=data
+			var index: PackedInt32Array=gear[Mesh.ARRAY_INDEX]
+			for i in index.size(): index[i]+=offset
+			var combined: PackedInt32Array=body[Mesh.ARRAY_INDEX]
+			combined.append_array(index)
+			body[Mesh.ARRAY_INDEX]=combined
+			for attr: int in [Mesh.ARRAY_TANGENT,Mesh.ARRAY_COLOR,Mesh.ARRAY_CUSTOM0,Mesh.ARRAY_CUSTOM1,Mesh.ARRAY_CUSTOM2,Mesh.ARRAY_CUSTOM3,Mesh.ARRAY_BONES,Mesh.ARRAY_WEIGHTS]:
+				body[attr]=null
+			var result:=ArrayMesh.new()
+			result.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,body)
+			_meshes[String(node.name)]=result
+		tack.free()
 		library.free()
 	var key:=("Draught" if draught else "Saddle")+("Close" if close else "Rank")
 	return _meshes[key]
@@ -25,6 +47,8 @@ static func material() -> ShaderMaterial:
 		_hide=ShaderMaterial.new()
 		_hide.shader=SURFACE
 		_hide.set_shader_parameter("surface_atlas",ATLAS)
+		_hide.set_shader_parameter("coat_pigments",PIGMENTS)
+		_hide.set_shader_parameter("mane_ink",MANE)
 	return _hide
 
 ## stride is accumulated from *real* distance. Interpolate the last fixed step for matching hooves and wheels.

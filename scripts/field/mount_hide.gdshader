@@ -1,6 +1,8 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D surface_atlas : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D coat_pigments : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D mane_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 varying flat float atlas_patch;
 varying flat float fallen;
 varying flat float hit;
@@ -117,7 +119,7 @@ void vertex(){
 	}
 	VERTEX=p; NORMAL=normalize(n);
 	vec2 tile=floor(UV*4.0);
-	atlas_patch=tile.x+tile.y*4.0;
+	atlas_patch=UV.x>=3.0?33.0:(UV.x>=2.0?32.0:tile.x+tile.y*4.0);
 	// Socks and muzzle markings are anchored to that horse's bind-space
 	// legs and nose. They stay put as joints move or the LOD changes.
 	float pigment=INSTANCE_CUSTOM.a*4.0;
@@ -131,7 +133,17 @@ void vertex(){
 }
 void fragment(){
 	vec3 color=texture(surface_atlas,UV,1.1).rgb;
-	if(atlas_patch<1.5) {
+	if(atlas_patch>32.5) {
+		vec4 tuft=texture(mane_ink,UV-vec2(3.,0.));
+		if(tuft.a<.50) discard;
+		color=tuft.rgb*.70;
+	} else if(atlas_patch>31.5) {
+		vec2 cell=vec2(mod(coat_lot,2.0),floor(coat_lot*.5));
+		vec2 ink_uv=(cell+clamp(UV-vec2(2.,0.),vec2(.001),vec2(.999)))*.5;
+		vec3 hide=texture(coat_pigments,ink_uv).rgb;
+		float value=dot(hide,vec3(.30,.55,.15));
+		color=mix(vec3(value),hide,.83)*.95;
+	} else if(atlas_patch<1.5) {
 		float ink=dot(color,vec3(.30,.56,.14));
 		if (!OUTPUT_IS_SRGB) ink=sqrt(max(ink,0.));
 		float wash=smoothstep(.22,.58,ink);
@@ -163,6 +175,6 @@ void light(){
 	// eyes, skull, leather and carriage keep their original cel thresholds.
 	float broad=.35*smoothstep(-.25,.25,facing)+.41*smoothstep(.13,.77,facing)
 	           +.20*smoothstep(.59,.94,facing);
-	float is_coat=atlas_patch<1.5?animal_barrel:0.;
+	float is_coat=(atlas_patch<1.5 || atlas_patch==32.)?animal_barrel:0.;
 	DIFFUSE_LIGHT+=LIGHT_COLOR*(mix(bands,broad,is_coat)*ATTENUATION/PI);
 }
