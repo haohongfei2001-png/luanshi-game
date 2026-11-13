@@ -71,6 +71,15 @@ def field_skin(close):
             floor_radius = at(lo)+(at(hi)-at(lo))*t-.037*sin(pi*t)
             radius = max(at(row),floor_radius)
             points[row*len(angles)+k] = (radius*dx,levels[row],.35+radius*dz)
+    # The broad forehead turns back above the lid. Keep the profile single
+    # sided and trade the eye socket hole for one deliberate orbital plane.
+    for index,(x,y,z) in enumerate(points):
+        if z<.89 or not 6.85<=y<=7.34:
+            continue
+        eye=max(0.,1.-abs(abs(x)-.313)/.218)
+        lid=max(0.,1.-abs(y-7.006)/.145)
+        brow=max(0.,1.-abs(y-7.205)/.175)
+        points[index]=(x,y,z+eye*(.041*brow-.064*lid))
     count = len(angles)
     faces = []
     for row in range(len(levels)-1):
@@ -187,7 +196,14 @@ def head(s,look,bone):
             key=(i,mat)
             if key not in vertices:
                 x,y,z=source["p"][i]
-                st=uv(mat,max(.01,min(.99,.5+x/1.90)),max(.01,min(.99,(8.13-y)/2.63)))
+                if mat=="visage":
+                    # The artist's chart sets the brow, upper lid and lip on rows
+                    # 23, 27 and 45, spanning the full 64-unit atlas cell.
+                    # UV padding is already present in the painted outer margin.
+                    st=(max(.012,min(.988,.5+x/1.90))/8.,
+                        (2.+max(.012,min(.988,(8.13-y)/2.63)))/4.)
+                else:
+                    st=uv(mat,max(.01,min(.99,.5+x/1.90)),max(.01,min(.99,(8.13-y)/2.63)))
                 vertices[key]=s.vertex(bind(x,y,z),st,bone)
             ids.append(vertices[key])
         s.faces.append(tuple(ids))

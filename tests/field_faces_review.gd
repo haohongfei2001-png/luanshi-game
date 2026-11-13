@@ -47,8 +47,10 @@ func _run() -> void:
 	if b.tick!=32 or archer.kit!=5 or archer.target!=582: quit(3);return
 	await _picture("bow-draw",archer,4.,-.81)
 	await _picture("bow",archer,5.,-.55)
+	await _picture("bow-side",archer,5.,.69)
 	await _picture("bow-normal",archer,22.,-.55)
 	await _picture("player",b.hero,5.,.21)
+	await _picture("player-side",b.hero,5.,-.65)
 	await _picture("player-normal",b.hero,22.,.21)
 	var officer: Battle.Unit
 	var best:=-1.
@@ -62,6 +64,7 @@ func _run() -> void:
 			officer=u
 	if officer==null: quit(4);return
 	await _picture("officer",officer,5.,-.32)
+	await _picture("officer-side",officer,5.,.68)
 	await _picture("officer-normal",officer,22.,-.32)
 	for t in range(4): _step_neutral()
 	await _picture("loose",archer,5.,-.53)
