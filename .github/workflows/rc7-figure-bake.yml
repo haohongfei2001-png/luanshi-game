@@ -10,12 +10,12 @@ jobs:
     timeout-minutes: 12
     env:
       FIGURE_BRANCH: codex/river-rc7-figure-art
-      AUTHOR_SHA: 86f6a631423373548cef663cb8badb758f407036
+      AUTHOR_SHA: be77241b64514804c76a29ceda022a1fa1c18d04
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 86f6a631423373548cef663cb8badb758f407036
+          ref: be77241b64514804c76a29ceda022a1fa1c18d04
       - name: Compile and check the original character library
         run: |
           set -euo pipefail

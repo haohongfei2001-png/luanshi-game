@@ -10,11 +10,11 @@ def costume(look,rank=False):
         def body(p):
             if p[1]<.86: return (LT if p[0]<0 else RT,HIPS,.35)
             return (CHEST,HIPS,clamp((p[1]-.86)*3))
-        hem=.67 if look=="archer" else .53 if heavy else .58
+        hem=.58 if look=="archer" else .53 if heavy else .58
         s.rings([(hem,.255,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
                  (1.447,.083,.07,0,0)],"dyed",body,6)
         if heavy:
-            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lames",CHEST,8)
+            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lamellar",CHEST,8)
             skirts(s,look,HIPS,(LT,RT),rank=True)
         if look=="levy":
             for front in (True,False):

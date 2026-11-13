@@ -26,6 +26,11 @@ def coat(s,look):
          (1.075,.19,.141),(1.185,.219,.151),(1.255,.233,.153),(1.327,.245,.142),
          (1.408,.199,.100),(1.456,.077,.074)]
     lo,hi=6,8
+    # A foot archer wears his robe untucked to the thigh; picking the
+    # hem up two inches on the draw side keeps the off knee free.
+    if look=="archer":
+        hem[0]=(.557,.268,.191)
+        hem[1]=(.72,.248,.182)
     def cloth(p):
         x,y,z=p
         if y<.86:
@@ -79,7 +84,7 @@ def coat(s,look):
             if heavy and 3<=r<=7:
                 material="lames"
             elif look=="archer" and 3<=r<=7:
-                material="quilt"
+                material="quilt" if cos(TAU*(c+.5)/n)<-.25 else "coat"
             elif look=="levy" and r==8:
                 material="facing"
             elif r<=1 and (c>=3*n//4 or c<n//8):
@@ -162,7 +167,20 @@ def coat(s,look):
                     y=y0+(y1-y0)*v
                     p=body_at(a,y,.013+.006*sin(pi*u))
                     return p,cloth(p)
-                s.grid(1,6 if close else 3,lapel,material)
+                s.grid(1,6 if close else 4,lapel,material)
+    if not heavy:
+        # A separate cut of the folded-over skirt hangs from the sash. Its
+        # textile is visible between the thighs while stepping or drawing.
+        for start_angle,end_angle in ((-.96,.49),(.51,1.42)):
+            def flap(u,v):
+                down=1.-v
+                a=start_angle+(end_angle-start_angle)*u+.175*down
+                outside=abs(sin(a))
+                hem_y=(.634 if look=="levy" else .595)-.093*outside+.025*sin(3*a)
+                y=.913+(hem_y-.913)*down
+                p=body_at(a,y,.010+down*(.018+.012*sin(3.1*u+.29)))
+                return p,cloth(p)
+            s.grid(5 if close else 3,3,flap,"overskirt")
     def belt(u,v):
         a=TAU*u
         p=body_at(a,.921+.065*v+.009*cos(a+.3),.014+.003*sin(pi*v))
@@ -191,6 +209,23 @@ def equipment(s,look):
     heavy=look in ("regular","guard","officer","player")
     if heavy:
         skirts(s,look,HIPS,(LT,RT))
+        # Four long rawhide-tied plate fields curve over the ribs; the
+        # leather suspension and side gaps give the torso a construction.
+        for start,end in ((-1.27,-.05),(.05,1.27),(1.81,3.10),(3.18,4.48)):
+            def brigand(u,v):
+                a=start+(end-start)*u
+                rx=.207+.062*sin(v*pi*.68)
+                rz=.155+.024*sin(pi*v)
+                if v>.76:
+                    t=(v-.76)/.24
+                    rx-=.039*t
+                    rz-=.025*t
+                edge=abs(2*u-1.)
+                y=1.004+v*(.338-.046*(edge**1.8))+.012*(1-v)*(1.-edge)
+                roll=.009*sin(pi*u)*sin(pi*v)
+                p=((rx+roll)*sin(a),y,-.013+(rz+roll)*cos(a))
+                return p,(CHEST,HIPS,clamp((y-.87)*3.8))
+            s.grid(7 if close else 4,4 if close else 3,brigand,"lamellar")
         # Two shoulder fastenings suspend the front and back without filling the neckline.
         for side in (-1,1):
             path=[(side*.130,1.318,.129),(side*.143,1.382,.103),
