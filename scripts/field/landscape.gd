@@ -587,12 +587,12 @@ func _fort(b: Builder) -> void:
 			var toe:=Vector3(face-.53,.025,joist)
 			var head:=Vector3(face-.055,3.12,joist)
 			var width:=Vector3(0,0,.42)
-			var crest:=width*.68
+			var head_width:=width*.68
 			var back:=Vector3(face+.19,0,joist)
 			b.joint=12
-			b.quad(toe-width,toe+width,head+crest,head-crest,Color("898979"))
-			b.quad(toe+width,back+width,back+Vector3.UP*3.12+crest,head+crest,Color("7c8074"))
-			b.quad(toe-width,head-crest,back+Vector3.UP*3.12-crest,back-width,Color("7c8074"))
+			b.quad(toe-width,toe+width,head+head_width,head-head_width,Color("898979"))
+			b.quad(toe+width,back+width,back+Vector3.UP*3.12+head_width,head+head_width,Color("7c8074"))
+			b.quad(toe-width,head-head_width,back+Vector3.UP*3.12-head_width,back-width,Color("7c8074"))
 		var rear_length := Ground.WALL_Z - Ground.POSTERN_HALF
 		var rear_center := side * (Ground.WALL_Z + Ground.POSTERN_HALF) * 0.5
 		b.joint=8

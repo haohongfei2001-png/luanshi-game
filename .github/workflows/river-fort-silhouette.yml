@@ -34,7 +34,7 @@ jobs:
             cp tests/river_portal_study.gd "$root/tests/"
             cp -a assets/fonts/. "$root/assets/fonts/"
             "$g" --headless --editor --path "$root" --import >"proof/$side-import.log" 2>&1
-            if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side-import.log"; then exit 1; fi
+            if grep -E -A3 'SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side-import.log"; then "$g" --headless --path "$root" --check-only --script scripts/field/landscape.gd; exit 1; fi
             "$g" --headless --path "$root" --script tests/gatehouse_sightline.gd >"proof/$side-sight.log" 2>&1
             xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/river_portal_study.gd -- --field-size=512 2>&1 | tee "proof/$side.log"
             if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side.log"; then exit 1; fi
