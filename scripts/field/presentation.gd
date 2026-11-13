@@ -292,6 +292,30 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			data.g=(float(gait)+.5)/32.0 if gait>=0 else 0.0
 			if gait<0 and not u.mounted:
 				data.b=fposmod(u.stride+(float(battle.tick)+alpha)*Battle.DT*(.37+.023*(u.id%7)),1.)
+		# Only field infantry anticipate an opponent they have actually acquired.
+		# The row behind a gap keeps travelling as the nearer file settles on guard.
+		if not u.hero and not u.officer and not u.mounted and u.kit in [Arms.Kit.SPEAR,Arms.Kit.SHIELD]:
+			var advancing:=code==Battle.State.MARCH
+			var attacking:=u.state in [Battle.State.WINDUP,Battle.State.RECOVER]
+			if advancing or attacking:
+				var readiness:=0.
+				if u.target>=0:
+					var enemy:=battle.roster[u.target]
+					if battle.active(enemy):
+						var delta:=enemy.pos-p
+						var reach:=7.3+.24*float((u.id+u.squad)%5)
+						var distance_sq_to_enemy:=delta.length_squared()
+						if distance_sq_to_enemy<reach*reach and delta.dot(u.facing)>0.:
+							readiness=1.-smoothstep(2.45,reach,sqrt(distance_sq_to_enemy))
+				if advancing and readiness>.017:
+					var march_clip:=gait if gait>=0 else 1
+					data.r=24.5/128. # March slot three carries a real approach.
+					data.g=(float(march_clip*32+roundi(readiness*31.))+.5)/1024.
+				elif attacking:
+					# A grounded infantry strike samples G for its actual progress.
+					# B is spare on these kits. Arrive at the original release
+					# and recover back to the current opponent, with one pose.
+					data.b=readiness
 		if u.hero:
 			var material: ShaderMaterial=groups[key].node.material_override
 			# Only movement input crosses the feet into a travelling action.
