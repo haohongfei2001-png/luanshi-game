@@ -1,0 +1,50 @@
+name: Compare the approach, parapet and breach in two actual game windows
+on:
+  push:
+    branches: ['codex/river-fort-silhouette']
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Replay the same troops and siege at five player camera positions
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/engine.zip' | sha512sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/engine
+          g=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
+          mkdir -p proof
+          ./tools/prepare-font.sh
+          for side in before after; do
+            rev=HEAD
+            if [[ $side == before ]]; then rev=c3e39a78a6028aa2d396f1cc37757f02c56a9679; fi
+            root=/tmp/river-facade-$side
+            mkdir -p "$root"
+            git archive "$rev" | tar -x -C "$root"
+            cp tests/river_portal_study.gd "$root/tests/"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            "$g" --headless --editor --path "$root" --import >"proof/$side-import.log" 2>&1
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side-import.log"; then exit 1; fi
+            "$g" --headless --path "$root" --script tests/gatehouse_sightline.gd >"proof/$side-sight.log" 2>&1
+            xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/river_portal_study.gd -- --field-size=512 2>&1 | tee "proof/$side.log"
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side.log"; then exit 1; fi
+            mv "$root/artifacts/river-art" "proof/$side"
+          done
+          python3 -c 'from PIL import Image' || python3 -m pip install --user Pillow
+          python3 tools/portal_picture_study.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-gatehouse-before-and-after
+          path: proof/
+          retention-days: 14

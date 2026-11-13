@@ -445,7 +445,7 @@ func _sight_deck(timber: Builder,at: Vector3,w: float,d: float) -> void:
 	var node:=_mesh(timber,self)
 	roofs.append({"node":node,"center":at,"w":w,"d":d})
 
-func _tower(b: Builder,p: Vector3) -> void:
+func _tower(b: Builder,p: Vector3, gate_flank: bool = false) -> void:
 	# Keep masonry inside the actual wall footprint. Posts remain when a
 	# projecting watch floor cuts away along the player's line of sight.
 	b.joint=8
@@ -482,7 +482,12 @@ func _tower(b: Builder,p: Vector3) -> void:
 		b.block(p+Vector3(0,4.72,side*2.20),Vector3(4.6,0.075,0.10),WOOD)
 		for x: float in [-1.1,0,1.1]:
 			b.block(p+Vector3(x,4.72,side*2.2),Vector3(0.085,0.65,0.095),WOOD)
-	_cover(b,p+Vector3(0,6.55,0),3.62,3.37,1.45)
+	if gate_flank:
+		# The flanking watch galleries face the approach. The main arch stays
+		# visible between their shorter eaves when viewed from the open field.
+		_cover(b,p+Vector3(0,6.55,0),3.15,2.85,1.21)
+	else:
+		_cover(b,p+Vector3(0,6.55,0),3.62,3.37,1.45)
 
 # The front curtain is rammed earth above a battered stone plinth. Its
 # quoins and copings follow the existing collision and parapet footprint.
@@ -514,17 +519,26 @@ func _dress_gate(b: Builder) -> void:
 			var h:=0.25+row*0.56
 			b.joint=12
 			b.block(Vector3(Ground.WALL_X-1.31,h,side*4.19),Vector3(0.64,0.51,0.45+(row%2)*0.16),Color("949487").lightened((row%3)*0.026))
-		var flag:=Vector3(Ground.WALL_X-1.38,3.29,side*9.45)
+		var flag:=Vector3(Ground.WALL_X-1.12,3.29,side*5.74)
 		b.joint=11
-		b.rod(flag,flag+Vector3.UP*3.20,0.075,0.046,WOOD,7)
-		var tip:=flag+Vector3.UP*2.93
+		b.rod(flag,flag+Vector3.UP*4.67,0.079,0.047,WOOD,7)
+		var tip:=flag+Vector3.UP*4.46
 		b.joint=15
 		var cloth:=Color("8e493e")
-		var mid:=tip+Vector3(-0.17,-0.16,side*0.66)
-		var tail:=tip+Vector3(-0.36,-0.07,side*1.34)
+		var mid:=tip+Vector3(-0.19,-0.12,side*0.72)
+		var tail:=tip+Vector3(-0.31,-0.10,side*1.42)
 		b.quad(tip,mid,mid-Vector3.UP*1.63,tip-Vector3.UP*1.73,cloth)
 		b.quad(mid,tail,tail-Vector3.UP*1.55,mid-Vector3.UP*1.63,cloth.lightened(0.065))
 		b.tri(mid-Vector3.UP*1.63,tail-Vector3.UP*1.55,tail-Vector3.UP*1.96,cloth.darkened(0.07))
+		# Stitched, matte linen signal, cut to the folds on the two-sided cloth.
+		var seam:=Vector3(-.012,0,0)
+		var badge:=Color("bcaa7e")
+		var middle:=mid+seam-Vector3.UP*.85
+		b.quad(tip+seam-Vector3.UP*.47,mid+seam-Vector3.UP*.68,middle,tip+seam-Vector3.UP*.64,badge)
+		b.quad(mid+seam-Vector3.UP*.68,tail+seam-Vector3.UP*.41,tail+seam-Vector3.UP*.57,middle,badge)
+		b.joint=10
+		b.rod(tip-Vector3(0,0,side*.09),tail+Vector3(0,0,side*.045),.044,.037,WOOD,5)
+		b.joint=15
 		var edge:=Vector3(-0.015,-0.18,0)
 		b.quad(tip+edge,mid+edge,mid+edge-Vector3.UP*0.089,tip+edge-Vector3.UP*0.089,Color("b8a47d"))
 	b.joint=10
@@ -547,7 +561,7 @@ func _fort(b: Builder) -> void:
 		var z := side*(Ground.WALL_Z+Ground.GATE_HALF)*0.5
 		var length := Ground.WALL_Z-Ground.GATE_HALF
 		b.joint=8
-		b.block(Vector3(Ground.WALL_X,1.65,z),Vector3(2.6,3.3,length),LIME)
+		b.block(Vector3(Ground.WALL_X,1.65,z),Vector3(2.6,3.3,length),Color("8d8068"))
 		b.joint=4
 		b.block(Vector3(Ground.WALL_X,0.37,z),Vector3(2.9,0.75,length),STONE)
 		b.joint=8
@@ -555,15 +569,30 @@ func _fort(b: Builder) -> void:
 			var h:=0.94+layer*0.51
 			var start:=Vector3(Ground.WALL_X-1.306,h,side*(Ground.GATE_HALF+0.3))
 			var lift_end:=Vector3(start.x,h+0.035,side*(Ground.WALL_Z-0.4))
-			b.quad(start,lift_end,lift_end+Vector3.UP*0.035,start+Vector3.UP*0.035,LIME.darkened(0.15))
+			b.quad(start,lift_end,lift_end+Vector3.UP*0.035,start+Vector3.UP*0.035,Color("7d735f"))
 		for i in range(6,23,2):
-			b.block(Vector3(Ground.WALL_X-1.07,3.59,side*i),Vector3(0.47,0.66,1.33),LIME)
+			b.block(Vector3(Ground.WALL_X-1.07,3.59,side*i),Vector3(0.47,0.66,1.33),Color("9b9079"))
 		b.block(Vector3((Ground.WALL_X+Ground.BACK_X)*0.5,1.68,side*Ground.WALL_Z),Vector3(Ground.BACK_X-Ground.WALL_X,3.35,2.1),LIME)
 		for x in range(49,90,2):
 			b.block(Vector3(x,3.58,side*(Ground.WALL_Z+0.79)),Vector3(1.19,0.64,0.49),LIME)
 		for x: float in [Ground.WALL_X,Ground.BACK_X]:
 			_tower(b,Vector3(x,0,side*Ground.WALL_Z))
-		_tower(b,Vector3(Ground.WALL_X,0,side*(Ground.GATE_HALF+2.6)))
+		var sentry_z:=side*(Ground.GATE_HALF+4.90)
+		_tower(b,Vector3(Ground.WALL_X,0,sentry_z),true)
+		# A battered stone footing marks the two flanks of the earthen gate.
+		# All masonry remains over the existing wall, clear of the ram's lane.
+		var face:=Ground.WALL_X-1.29
+		for sign_z:float in [-1.0,1.0]:
+			var joist:=sentry_z+sign_z*1.87
+			var toe:=Vector3(face-.53,.025,joist)
+			var head:=Vector3(face-.055,3.12,joist)
+			var width:=Vector3(0,0,.42)
+			var crest:=width*.68
+			var back:=Vector3(face+.19,0,joist)
+			b.joint=12
+			b.quad(toe-width,toe+width,head+crest,head-crest,Color("898979"))
+			b.quad(toe+width,back+width,back+Vector3.UP*3.12+crest,head+crest,Color("7c8074"))
+			b.quad(toe-width,head-crest,back+Vector3.UP*3.12-crest,back-width,Color("7c8074"))
 		var rear_length := Ground.WALL_Z - Ground.POSTERN_HALF
 		var rear_center := side * (Ground.WALL_Z + Ground.POSTERN_HALF) * 0.5
 		b.joint=8
@@ -575,7 +604,7 @@ func _fort(b: Builder) -> void:
 	for plank in 9:
 		gallery.block(Vector3(Ground.WALL_X,4.16,(plank-4)*1.04),Vector3(4.1,0.21,1.02),WOOD.lightened(0.045*(plank%2)))
 	_sight_deck(gallery,Vector3(Ground.WALL_X,4.16,0),2.05,4.74)
-	_cover(b,Vector3(Ground.WALL_X,6.97,0),3.19,4.91,1.70)
+	_cover(b,Vector3(Ground.WALL_X,7.62,0),3.43,4.71,1.94)
 	# Tapered gateposts support the passage even when its roof is out of sight.
 	for x:float in [-1.32,1.32]:
 		for z:float in [-4.18,4.18]:
