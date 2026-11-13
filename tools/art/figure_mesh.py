@@ -109,13 +109,14 @@ class Library:
             desc.update(min=list(map(min,zip(*values))),max=list(map(max,zip(*values))))
         gl["accessors"].append(desc)
         return idx
-    def insert(self,name,s):
+    def insert(self,name,s,check_tiles=True):
         assert 0<len(s.positions)<65536, name
         # Every face samples a single padded atlas tile, even across a sewn seam.
-        tiles=[(int(u*8),int(v*4)) for u,v in s.tex]
-        for a,b,c in s.faces:
-            if tiles[a]!=tiles[b] or tiles[a]!=tiles[c]:
-                raise ValueError(f"{name}: face {a,b,c} bridges atlas tiles {tiles[a],tiles[b],tiles[c]}")
+        if check_tiles:
+            tiles=[(int(u*8),int(v*4)) for u,v in s.tex]
+            for a,b,c in s.faces:
+                if tiles[a]!=tiles[b] or tiles[a]!=tiles[c]:
+                    raise ValueError(f"{name}: face {a,b,c} bridges atlas tiles {tiles[a],tiles[b],tiles[c]}")
         acc=self.accessor
         attr={"POSITION":acc(s.positions,"f",3,True),"NORMAL":acc(s.normals(),"f",3),
               "TEXCOORD_0":acc(s.tex,"f",2),"TEXCOORD_1":acc(s.joints,"f",2)}

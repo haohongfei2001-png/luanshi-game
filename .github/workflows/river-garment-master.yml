@@ -1,0 +1,100 @@
+name: Compare the fitted historical clothing in a live river battle
+on:
+  push:
+    branches: ['codex/river-garment-master']
+    paths-ignore: ['docs/**', 'assets/third_party/wildfire_garments/field_issues.glb', 'assets/third_party/wildfire_garments/field_colours.png', 'assets/river_gate/figures/garrison_bodies.glb', '**/field_colours.png.import']
+permissions:
+  contents: read
+jobs:
+  real-window:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fit the original tunics, sleeves and aprons to the game bind
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-pil python3-numpy ffmpeg
+          mkdir -p proof
+          /usr/bin/python3 tools/art/import_garrison_issues.py "$RUNNER_TEMP/wardrobe-sources" | tee proof/fit.log
+          dir=assets/third_party/wildfire_garments
+          /usr/bin/python3 - <<'PY'
+          from hashlib import md5
+          from pathlib import Path
+          name="res://assets/third_party/wildfire_garments/field_colours.png"
+          s=Path("assets/river_gate/figures/cloth_and_iron.png.import").read_text()
+          s=s.replace('uid="uid://djmj74tf53rba"\n','')
+          s=s.replace('res://assets/river_gate/figures/cloth_and_iron.png',name)
+          s=s.replace("cloth_and_iron.png-24d28e10d3e3efb9e4041fb9817b91a3","field_colours.png-"+md5(name.encode()).hexdigest())
+          Path("assets/third_party/wildfire_garments/field_colours.png.import").write_text(s)
+          PY
+          cp "$dir/NOTICE.txt" proof/NOTICE.txt
+          git add -- "$dir/field_issues.glb" "$dir/field_colours.png" "$dir/field_colours.png.import" assets/river_gate/figures/garrison_bodies.glb
+          git -c user.name='River Gate garment build' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Bake the attributed clothing and independent river-company body meshes"
+      - name: Exercise both revisions with the same full army, controls and cameras
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/engine.zip' | sha512sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/engine
+          godot=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          for side in before after; do
+            code=HEAD
+            if test "$side" = before; then code=05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09; fi
+            root="$RUNNER_TEMP/garment-$side"
+            mkdir -p "$root" "proof/$side"
+            git archive "$code" | tar -x -C "$root"
+            cp tests/field_garrison_review.gd "$root/tests/"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            "$godot" --headless --editor --path "$root" --import > "proof/$side/import.log" 2>&1
+            if grep -E 'Parse Error|SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side/import.log"; then exit 1; fi
+            for drive in field_garrison_review rc7_personal_contact; do
+              xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script "tests/$drive.gd" -- --field-size=512 > "proof/$side/$drive.log" 2>&1
+              if grep -E 'Parse Error|SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side/$drive.log"; then exit 1; fi
+            done
+            cp "$root"/artifacts/wardrobe/{bow,shield,spear,line,wide}.png "$root"/artifacts/wardrobe/subjects.json "proof/$side/"
+            cp "$root"/artifacts/personal-contact/{personal-contact.png,personal-windup.png,input.json} "proof/$side/"
+            xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$root" --resolution 1280x800 --disable-vsync --fixed-fps 30 --write-movie "$RUNNER_TEMP/$side.avi" --script tests/field_motion_review.gd -- --field-size=512 > "proof/$side/motion.log" 2>&1
+            grep FIELD_MOTION_RECEIPT "proof/$side/motion.log"
+            ffmpeg -loglevel error -y -i "$RUNNER_TEMP/$side.avi" -c:v libx264 -crf 19 -pix_fmt yuv420p -c:a aac "proof/$side.mp4"
+          done
+          ffmpeg -loglevel error -y -i proof/before.mp4 -i proof/after.mp4 -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -map 1:a:0 -c:v libx264 -crf 20 -pix_fmt yuv420p -c:a copy proof/equal-speed.mp4
+          /usr/bin/python3 - <<'PY'
+          import base64,json
+          from PIL import Image
+          from pathlib import Path
+          root=Path("proof")
+          for name in ("input","subjects"):
+              assert json.loads((root/"before"/(name+".json")).read_text())==json.loads((root/"after"/(name+".json")).read_text()), name
+          for key in ("spear","shield","bow","personal-contact","line","wide"):
+              pair=Image.new("RGB",(1000,420 if key in ("spear","shield","bow") else 313))
+              for index,phase in enumerate(("before","after")):
+                  d=root/phase
+                  im=Image.open(d/(key+".png")).convert("RGB")
+                  if key in ("spear","shield","bow"):
+                      who=next(p for p in json.loads((d/"subjects.json").read_text()) if p["label"]==key)
+                      x,y=map(round,who["subject_pixel"])
+                      im=im.crop((x-270,y-227,x+270,y+227))
+                  pair.paste(im.resize((500,pair.height),Image.Resampling.LANCZOS),(index*500,0))
+              path=root/(key+"-pair.jpg");pair.save(path,quality=91,subsampling=0)
+              print("GARRISON_IMAGE",key,base64.b64encode(path.read_bytes()).decode(),flush=True)
+          PY
+      - name: Preserve these binaries only on the tested work branch
+        run: |
+          set -euo pipefail
+          git push origin HEAD:refs/heads/codex/river-garment-master
+          git rev-parse HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historically-fitted-infantry-game-window
+          path: proof
