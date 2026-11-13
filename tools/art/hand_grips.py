@@ -30,12 +30,19 @@ def library():
         flat=[k for k, in read(part["indices"])]
         assert len(flat)%3==0 and len(flat)>60
         meshes[mesh["name"]]=(verts,list(zip(flat[::3],flat[1::3],flat[2::3])))
-    assert len(meshes)==9
+    assert len(meshes)==15
     return meshes
 
 def field_hands(surface,kit,lod):
     for side,bone in ((-1,5),(1,8)):
-        style=("BowPalm" if side>0 else "Nock") if kit==5 else "Haft"
+        if kit==5:
+            style="BowPalm" if side>0 else "Nock"
+        elif kit in (0,1) and side<0:
+            style="Rest"
+        elif kit==7 and side<0:
+            style="Shield"
+        else:
+            style="Haft"
         vertices,triangles=library()[style+lod]
         offset=len(surface.positions)
         for x,y,z in vertices:

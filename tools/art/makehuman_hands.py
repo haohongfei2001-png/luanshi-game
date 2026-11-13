@@ -16,7 +16,7 @@ from mathutils import Vector
 ASSETS = {"base.obj": "d26635e9326e3cca30778fd7b9c00062b03cce09",
           "default.mhskel": "b02cbecae00143856410d7561adf006d83bf9b3e",
           "default_weights.mhw": "66185806afacf87749be8e5cf6dbf66496b2a6b0"}
-STYLES = ("Haft", "BowPalm", "Nock")
+STYLES = ("Haft", "BowPalm", "Nock", "Rest", "Shield")
 TIERS = (("Close", .235), ("Line", .064), ("Rank", .017))
 
 
@@ -118,6 +118,17 @@ def grip_mesh(verts, faces, rig, weight_table, style):
                 # seated in the thumb web without closing a fist on the limb.
                 aim[2].x+=.007*t
                 aim[3].x+=.015*t
+        if style=="Rest" and digit==1:
+            aim=[start,Vector((.028,.032,.041)),Vector((.015,.008,.061)),Vector((.008,-.011,.066))]
+        elif style=="Rest":
+            # The free hand of the swordsman hangs at the existing wrist pose;
+            # source digits curl a little more from index to little finger.
+            length=sum((chain[i+1]-chain[i]).length*.10 for i in range(3))
+            z=start.z
+            fold=.019+.013*(digit-2)/3
+            aim=[start,Vector((start.x-.013,start.y-.38*length,z)),
+                 Vector((start.x-.026,start.y-.68*length,z-.002)),
+                 Vector((start.x-.026-fold,start.y-.88*length,z-.004))]
         for part in range(3):
             bone=f"finger{digit}-{part+1}.L"
             at,there=chain[part],aim[part]
@@ -139,7 +150,19 @@ def grip_mesh(verts, faces, rig, weight_table, style):
                 value=base_point(p)
             out+=value*w
             total+=w
-        return placed(out/total,coords(p).y)
+        t=coords(p).y
+        point=out/total
+        if style in ("Haft","Shield","BowPalm") and t>.31:
+            # The actual haft has 27–34 mm radius. Finger pads may compress but
+            # must not continue through its centre and emerge on the far side.
+            # Preserve the dorsal outline and the unwarped wrist seated in its cuff.
+            radial=math.hypot(point.x,point.y)
+            if radial<.030:
+                scale=.030/max(radial,.0004)
+                angle=max(0.,min(1.,(t-.31)/.18))
+                point.x*=1.+(scale-1.)*angle
+                point.y*=1.+(scale-1.)*angle
+        return placed(point,t)
 
     skin=[f for f in faces if all(i in keep for i in f)]
     used=sorted(set(i for face in skin for i in face))
