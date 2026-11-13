@@ -2,7 +2,7 @@ name: Compare the fitted historical clothing in a live river battle
 on:
   push:
     branches: ['codex/river-garment-master']
-    paths-ignore: ['docs/**', 'assets/third_party/wildfire_garments/field_issues.glb', 'assets/third_party/wildfire_garments/field_colours.png', 'assets/river_gate/figures/garrison_bodies.glb', '**/field_colours.png.import']
+    paths-ignore: ['.github/workflows/garrison-frame-library.yml','docs/**', 'assets/third_party/wildfire_garments/field_issues.glb', 'assets/third_party/wildfire_garments/field_colours.png', 'assets/river_gate/figures/garrison_bodies.glb', '**/field_colours.png.import']
 permissions:
   contents: read
 jobs:
@@ -84,7 +84,9 @@ jobs:
                   im=Image.open(d/(key+".png")).convert("RGB")
                   if key in ("spear","shield","bow"):
                       who=next(p for p in json.loads((d/"subjects.json").read_text()) if p["label"]==key)
-                      x,y=map(round,who["subject_pixel"])
+                      scale=im.width/1280
+                      assert scale==im.height/800
+                      x,y=[round(value*scale) for value in who["subject_pixel"]]
                       im=im.crop((x-270,y-227,x+270,y+227))
                   pair.paste(im.resize((500,pair.height),Image.Resampling.LANCZOS),(index*500,0))
               path=root/(key+"-pair.jpg");pair.save(path,quality=91,subsampling=0)

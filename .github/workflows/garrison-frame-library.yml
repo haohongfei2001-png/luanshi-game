@@ -1,0 +1,82 @@
+name: Read actual garment wearer coordinates from the rendered game images
+on:
+  push:
+    branches: ['codex/river-garment-master']
+    paths: ['.github/workflows/garrison-frame-library.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/river-garment-master
+          fetch-depth: 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: historically-fitted-infantry-game-window
+          run-id: 43486113614
+          github-token: ${{ github.token }}
+          path: /tmp/garment-final
+      - uses: actions/download-artifact@v4
+        with:
+          name: historically-fitted-infantry-game-window
+          run-id: 43484587571
+          github-token: ${{ github.token }}
+          path: /tmp/garment-initial
+      - name: Crop in drawable pixels and preserve original frames, inputs, motions and notices
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64,json,hashlib,shutil
+          from pathlib import Path
+          from PIL import Image
+          d=Path("docs/evidence/river-gate-v1-rc16/garrison")
+          d.mkdir(parents=True,exist_ok=True)
+          def copy(p,name):
+              dest=d/name;dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copy(p,dest)
+          index={}
+          for stage,src in (("final",Path("/tmp/garment-final")),("first",Path("/tmp/garment-initial"))):
+              for key in ("spear","shield","bow","line","personal-contact","wide"):
+                  before,after=[(src/side/(key+".png")) for side in ("before","after")]
+                  if stage=="first" and key not in ("bow","shield"): continue
+                  near=key in ("spear","shield","bow")
+                  pair=Image.new("RGB",(1000,440 if near else 313))
+                  for idx,(side,p) in enumerate(zip(("before","after"),(before,after))):
+                      with Image.open(p) as image:
+                          im=image.convert("RGB")
+                      assert im.size==(1920,1200)
+                      if near:
+                          who=next(e for e in json.loads((src/side/"subjects.json").read_text()) if e["label"]==key)
+                          # Camera.unproject_position is expressed in the 1280x800
+                          # design viewport. The native drawable is 1920x1200.
+                          scale=im.width/1280
+                          assert scale==im.height/800
+                          x,y=[round(q*scale) for q in who["subject_pixel"]]
+                          im=im.crop((x-250,y-200,x+250,y+240))
+                          index[f"{stage}/{key}"]={"id":who["subject_id"],"pixel":[x,y],"observed_tick":who["tick"],"native":[1920,1200]}
+                      pair.paste(im.resize((500,pair.height),Image.Resampling.LANCZOS),(idx*500,0))
+                      if stage=="final": copy(p,f"{side}/{key}.png")
+                  out=d/(stage+"-"+key+".jpg");pair.save(out,quality=92,subsampling=0)
+                  print("GARMENT_WEARER",stage,key,base64.b64encode(out.read_bytes()).decode(),flush=True)
+              if stage=="final":
+                  for side in ("before","after"):
+                      for name in ("subjects.json","input.json"):
+                          copy(src/side/name,side+"/"+name)
+                      copy(src/(side+".mp4"),side+"/motion.mp4")
+                  copy(src/"equal-speed.mp4","equal-speed.mp4")
+                  copy(src/"NOTICE.txt","NOTICE.txt")
+          (d/"wearers.json").write_text(json.dumps(index,indent=2)+"\n")
+          sums={str(p.relative_to(d)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(d.rglob("*")) if p.is_file()}
+          (d/"SHA256SUMS.json").write_text(json.dumps(sums,indent=2)+"\n")
+          PY
+          git add -- docs/evidence/river-gate-v1-rc16/garrison
+          git -c user.name='River Gate evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Preserve the source pixels, correct subject crops and garment motion"
+          git push origin HEAD:refs/heads/codex/river-garment-master
