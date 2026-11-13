@@ -45,7 +45,7 @@ class Sculpt{
 // boundary cell one shared vertex, including where the shoulder meets the barrel.
 class HorseHide {
  constructor(){ this.paths=[]; }
- skin(rows){
+ skin(rows,blend=.096){
   const joints=[];
   for(let i=1;i<rows.length;i++){
    const a=rows[i-1],b=rows[i], d=sub(b.slice(0,3),a.slice(0,3)),len=Math.hypot(...d);
@@ -54,11 +54,11 @@ class HorseHide {
   }
   const bounds=[0,1,2].map(k=>[Math.min(...rows.map(r=>r[k]-Math.max(r[3],r[4])))-.12,
                                 Math.max(...rows.map(r=>r[k]+Math.max(r[3],r[4])))+.12]);
-  this.paths.push({joints,bounds});
+  this.paths.push({joints,bounds,blend});
  }
  distance(x,y,z){
   let result=1.0;
-  for(const {joints,bounds} of this.paths){
+  for(const {joints,bounds,blend} of this.paths){
    if(x<bounds[0][0]||x>bounds[0][1]||y<bounds[1][0]||y>bounds[1][1]||z<bounds[2][0]||z>bounds[2][1])continue;
    let local=1.;
    for(const {a,b,d,len,vy,vz} of joints){
@@ -69,13 +69,15 @@ class HorseHide {
     const cap=(along-len*t)/Math.max(.035,(rd+rx)*.35);
     local=Math.min(local,(Math.sqrt(across*across+deep*deep+cap*cap)-1)*Math.min(rx,rd));
    }
-   const join=.096,h=clamp(.5+.5*(local-result)/join);
+   const join=blend,h=clamp(.5+.5*(local-result)/join);
    result=local+(result-local)*h-join*h*(1-h);
   }
   return result;
  }
- build(mesh){
-  const pitch=.055, origin=[-.48,-.042,-1.04],size=[19,38,45],jump=[1,size[0],size[0]*size[1]];
+ build(mesh,partial=false){
+  const pitch=partial?.125:.055;
+  const origin=partial?[-.54,-.046,-1.09]:[-.48,-.042,-1.040];
+  const size=partial?[11,16,18]:[19,38,45],jump=[1,size[0],size[0]*size[1]];
   const count=size[0]*size[1]*size[2];
   const values=new Float32Array(count),cells=new Int32Array(count).fill(-1);
   const corners=[0,1,2,3,4,5,6,7].map(i=>[i&1,(i>>1)&1,(i>>2)&1]);
@@ -96,10 +98,16 @@ class HorseHide {
    for(const [a,coord] of [x,y,z].entries())p[a]=origin[a]+(coord+p[a]/crossings)*pitch;
    const [l,h,f]=p;
    let joint=0,weight=1;
-   if(h<1.18 && Math.abs(l)>.065 && (f>.18||f<-.28))joint=(f<0?3:1)+(l>0?1:0);
+   if(h<1.34 && Math.abs(l)>.058 && (f>.12||f<-.22)){
+    const hind=f<0, centre=hind?(-.64+.10*clamp((h-.57)/.57)):(.42-.08*clamp((h-.58)/.57));
+    const width=hind?.32:.27;
+    const influence=clamp((1.34-h)/.48)*clamp((width-Math.abs(f-centre))/.105);
+    if(influence>0){joint=(hind?3:1)+(l>0?1:0);weight=influence*influence*(3.-2.*influence);}
+   }
    if(f>.28 && h>1.12){joint=11;weight=clamp((f-.32)*1.15+(h-1.19)*.89)}
    cells[at]=mesh.pt(p,COAT,clamp((f+.95)/2.25),clamp((1.95-h)/1.92),joint,weight);
   }
+  const firstCell=cells.find(id=>id>=0);
   for(let z=1;z<size[2]-1;z++)for(let y=1;y<size[1]-1;y++)for(let x=1;x<size[0]-1;x++){
    const at=x+y*jump[1]+z*jump[2];
    for(let a=0;a<3;a++){
@@ -108,6 +116,23 @@ class HorseHide {
     const q=[cells[at],cells[at-j],cells[at-j-k],cells[at-k]];
     if(q.every(id=>id>=0))mesh.quad(...(values[at]<0?q:q.reverse()));
    }
+  }
+  // Sample a short spatial average of the continuous muscle field.  Surface
+  // net cell positions determine silhouette; contours can cross the voxels
+  // without snapping to a ring of equal lighting values.
+  for(let i=firstCell;i<mesh.p.length;i++){
+   const [x,y,z]=mesh.p[i];
+   if(y<.56 || z>.69)continue;
+   const h=partial?.066:.047;
+   const gradient=(h)=>{
+    return [this.distance(x+h,y,z)-this.distance(x-h,y,z),
+            this.distance(x,y+h,z)-this.distance(x,y-h,z),
+            this.distance(x,y,z+h)-this.distance(x,y,z-h)];
+   }
+   const near=unit(gradient(h)),wide=unit(gradient(h*1.85));
+   const smooth=unit(add(mul(near,.58),mul(wide,.42)));
+   const area=unit(mesh.n[i]),weight=clamp((y-.57)/.30)*clamp((.72-z)/.16);
+   mesh.n[i]=unit(add(mul(area,1.-weight),mul(smooth,weight)));
   }
  }
 }
@@ -201,11 +226,58 @@ function riverMane(m,close){
          [-.038,1.859,.861,.048,.024,11],[-.056,1.823,.908,.029,.014,11],
          [-.050,1.800,.920,.006,.006,11]],close?7:4,HAIR);
 }
+// Ordered by Z. The croup descends to the tailhead, the loin dips under
+// the back of the saddle, and a deep heart-girth sits behind the elbow.
+// Smooth centre/width/depth values before constructing the distance field.
+const barrelStations=[
+ [0,1.025,-.868,.067,.083],[0,1.031,-.812,.183,.161],
+ [0,1.059,-.703,.268,.255],[0,1.086,-.552,.296,.291],
+ [0,1.085,-.417,.297,.289],[0,1.068,-.252,.292,.265],
+ [0,1.052,-.086,.300,.271],[0,1.046,.070,.309,.300],
+ [0,1.058,.212,.310,.335],[0,1.087,.348,.290,.339],
+ [0,1.111,.462,.252,.296],[0,1.102,.568,.184,.235],[0,1.077,.650,.080,.142]];
+function smoothBarrel() {
+ const rows=[];
+ for(let i=0;i<barrelStations.length-1;i++){
+  const a=barrelStations[i],b=barrelStations[i+1],prev=barrelStations[Math.max(0,i-1)],next=barrelStations[Math.min(barrelStations.length-1,i+2)];
+  rows.push(a);
+  const middle=a.map((v,k)=>(a[k]+b[k])*.5+((b[k]-prev[k])-(next[k]-a[k]))*.0625);
+  rows.push(middle);
+ }
+ rows.push(barrelStations.at(-1));return rows;
+}
+function legStations(hind){
+ // The oblique shoulder blade runs from the withers toward the point of the
+ // shoulder; the gaskin rises toward the hip before the upper thigh turns back.
+ return hind?[
+  [.137,1.257,-.465,.114,.156],[.173,1.177,-.536,.146,.178],
+  [.205,1.078,-.590,.143,.168],[.219,.977,-.583,.127,.153],
+  [.218,.863,-.498,.099,.121],[.216,.782,-.482,.091,.097],
+  [.216,.689,-.567,.077,.094],[.217,.554,-.679,.057,.077],
+  [.219,.50,-.706,.050,.064],[.217,.447,-.677,.041,.050],
+  [.216,.238,-.637,.036,.045],[.216,.167,-.636,.052,.052],[.216,.110,-.608,.045,.043]]:
+  [[.141,1.289,.245,.108,.158],[.173,1.206,.319,.132,.155],
+   [.206,1.106,.394,.131,.153],[.215,.996,.394,.117,.135],
+   [.218,.898,.356,.095,.115],[.218,.795,.332,.081,.094],
+   [.219,.698,.357,.068,.079],[.219,.588,.396,.058,.066],
+   [.219,.505,.426,.055,.066],[.219,.447,.419,.041,.048],
+   [.219,.236,.408,.033,.040],[.219,.166,.414,.049,.051],[.219,.109,.446,.042,.041]];
+}
+function buildBarrel(hide,rank=false){
+ hide.skin(smoothBarrel(),.113);
+ for(const side of [-1,1]){
+  for(const hind of [false,true]){
+   const sections=legStations(hind).filter(row=>!rank || row[1]>=.50).map(([x,y,z,rx,rz])=>[side*x,y,z,rx,rz]);
+   hide.skin(sections,hind?.139:.130);
+  }
+ }
+}
+
 function horse(m, high, draught){
  const hide=new HorseHide();
- const body=high?14:8, neck=high?12:8, limb=high?8:5, small=high?7:5;
+ const limb=high?8:5, small=high?7:5;
  // Barrel: croup, tucked flank, deep rib cage and prominent withers. Ventral line rises aft.
- hide.skin([[0,1.035,-.85,.085,.09],[0,1.085,-.77,.245,.223],[0,1.085,-.60,.319,.302],[0,1.065,-.43,.335,.306],[0,1.045,-.20,.295,.28],[0,1.047,.04,.315,.316],[0,1.06,.26,.333,.342],[0,1.087,.44,.295,.342],[0,1.083,.58,.198,.255],[0,1.077,.65,.087,.153]],body,COAT)
+ buildBarrel(hide);
  // Neck incl. crest, throat and jaw: the taper follows a rising diagonal rather than a cone.
  hide.skin(neckStations);
  hide.skin(skullStations);
@@ -242,10 +314,6 @@ function horse(m, high, draught){
   // Back: gluteal → stifle (forward) → projecting hock → cannon/pastern.
   for(const hind of [false,true]){
    const g=(hind?3:1)+(s>0?1:0);
-   const profile=hind?[[.190,1.215,-.56,.145,.196],[.215,1.029,-.6,.132,.167],[.215,.833,-.488,.096,.117],[.212,.744,-.511,.094,.094],[.217,.553,-.679,.055,.073],[.219,.50,-.706,.049,.065],[.217,.447,-.677,.041,.049],[.216,.238,-.637,.036,.045],[.216,.167,-.636,.052,.052],[.216,.110,-.608,.045,.043]]:
-    [[.191,1.20,.356,.125,.158],[.212,1.012,.40,.134,.152],[.218,.850,.34,.091,.117],[.218,.775,.335,.081,.094],[.219,.588,.396,.058,.064],[.219,.505,.426,.055,.066],[.219,.447,.419,.041,.048],[.219,.236,.408,.033,.040],[.219,.166,.414,.049,.051],[.219,.109,.446,.042,.041]];
-   let pp=profile.map(q=>[s*q[0],q[1],q[2],q[3],q[4],g]);
-   hide.skin(pp);
    let z=hind?-.607:.447,x=s*.218; m.skin([[x,.128,z,.044,.051,g],[x,.095,z+.008,.051,.06,g],[x,.041,z+.031,.064,.08,g],[x,.013,z+.035,.062,.080,g]],limb,HOOF)
   }
  }
@@ -286,11 +354,10 @@ function horse(m, high, draught){
 function rankHorse(m,tow){
  // The croup, dipped loin and withers each have an independent station in the
  // small screen silhouette. Keep the original saddle, poll and draught sockets.
- m.skin([[0,1.055,-.847,.075,.094],[0,1.090,-.755,.245,.220],
-         [0,1.105,-.586,.318,.298],[0,1.080,-.412,.324,.309],
-         [0,1.045,-.161,.295,.278],[0,1.050,.051,.320,.310],
-         [0,1.080,.282,.340,.342],[0,1.102,.437,.291,.319],
-         [0,1.078,.616,.156,.208]],10,COAT);
+ // Only the torso and leg roots need the shared hide in this LOD. The thin
+ // lower cannon stays accurately spaced on the original foot joints.
+ const barrel=new HorseHide();buildBarrel(barrel,true);
+ barrel.build(m,true);
  m.skin(neckStations.filter((_,i)=>i!==1),8,COAT);
  m.skin(skullStations.filter((_,i)=>i!==3 && i!==6),8,COAT);
  const cheek=new HorseHide();cheek.skin(skullStations);
@@ -307,7 +374,8 @@ function rankHorse(m,tow){
    let leg=h?[[1.14,-.56,.119,.147],[.826,-.479,.099,.115],[.502,-.705,.054,.068],[.171,-.637,.043,.049],[.113,z,.039,.041]]:[[1.145,.368,.123,.152],[.816,.329,.087,.105],[.509,.425,.051,.064],[.177,.413,.045,.052],[.113,z,.039,.041]];
    // The narrow cannon and the thicker fetlock break up the straight shank.
    leg.splice(3,0,[.414,h?-.682:.417,.041,.053]);
-   m.skin(leg.map(r=>[x,r[0],r[1],r[2],r[3],j]),6,COAT);
+   const distal=[[.57,h?-.69:.404,.057,.066],...leg.filter(q=>q[0]<.56)];
+   m.skin(distal.map(r=>[x,r[0],r[1],r[2],r[3],j]),6,COAT);
    m.skin([[x,.124,z,.045,.044,j],[x,.035,z+.034,.062,.078,j],[x,.012,z+.035,.06,.073,j]],4,HOOF);
   }
   let r=tow?[[s*.105,1.563,1.14],[s*.32,1.34,.04],[s*.36,1.41,-1.10],[s*.18,1.66,-1.60]]:[[s*.105,1.563,1.14],[s*.244,1.445,.70],[s*.17,1.594,.24]];
@@ -368,9 +436,9 @@ function coatPlanes(u,v){
   const x=(z-cz)/rz,h=(y-cy-slope*(z-cz))/ry;
   return Math.exp(-x*x-h*h);
  }
- return 25*wash(-.55,1.17,.23,.19,-.25)-23*wash(-.33,.99,.095,.12,-.58)
-       +19*wash(.31,1.16,.105,.30,-.55)-21*wash(.18,1.03,.105,.19,-.45)
-       -20*wash(-.02,.78,.51,.115)+15*wash(.58,1.47,.19,.088,1.14)
+ return 12*wash(-.56,1.12,.22,.157,.42)-11*wash(-.31,.984,.123,.173,-.63)
+       +13*wash(.34,1.12,.151,.194,-.58)-10*wash(.17,1.018,.122,.167,-.51)
+       -16*wash(-.02,.78,.51,.115)+15*wash(.58,1.47,.19,.088,1.14)
        -22*wash(.68,1.50,.18,.077,.98)+16*wash(.91,1.669,.11,.09,-.39)
        -25*wash(1.17,1.573,.135,.075,-.32)+8*wash(-.04,1.30,.32,.092);
 }
