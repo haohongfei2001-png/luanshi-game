@@ -19,7 +19,7 @@ HEAD = 2
 # the HM08 skull. Furthest straps are allowed to drape behind the ear.
 FITS = {
     "Archer": ("han_cap", "75a7918c2a4bf09350e58768ea5bb8d270900440", (.463,.347,.443), 1.514, .005),
-    "Regular": ("han_advanced_melee_helmet", "63317077bf5a080f1459e4691bb0b84a5903e9b8", (.566,.312,.483), 1.539, -.020),
+    "Regular": ("han_cavalry_swordsman_helmet", "d892cdd028a1c0662d5c6d74d59ff25503ac8cfe", (.553,.329,.462), 1.528, -.005),
     "Guard": ("han_officer_helmet_01", "4cff639c3aa31c468c9f6fc4adac7593ca68d0cf", (.495,.378,.460), 1.529, -.008),
     "Officer": ("han_heavy_helmet_b", "cc4c7d741eeca408d7a6e7d3fd6a44386be69f7d", (.549,.376,.501), 1.509, -.007),
 }
@@ -69,7 +69,6 @@ def exterior(points,triangles,role):
     clean=[f for _,f in faces.values()]
     removed=len(triangles)-len(clean)
     print("COINCIDENT_HEAD_FACES_REMOVED",role,removed)
-    if role=="Regular": assert removed==84
     if role=="Officer": assert removed>=32
     return clean
 
@@ -77,10 +76,14 @@ def bound(role,x,h,z,scale,bind_y,bind_z):
     # Work with the original brow/hem rings and cheek/nape silhouettes. The
     # annular binding sits away from the forehead and extends across the brow.
     if role=="Regular":
-        edge=np.exp(-((h-.373)/.064)**2)
-        x*=1.+.13*edge
-        z+=edge*(.090*max(0.,(z+.12)/.482)-.022)
-        h-=.125*max(0.,h-.39)
+        edge=np.exp(-((h-.408)/.063)**2)
+        rear=float(np.clip((-z+.015)/.24,0.,1.))
+        skirt=float(np.clip((.374-h)/.35,0.,1.))
+        x*=1.+.18*edge
+        z+=edge*(.110*max(0.,(z+.12)/.423)-.018)
+        z-=.036*skirt*rear
+        h+=.10*skirt*(1.-rear)
+        h-=.09*max(0.,h-.43)
     elif role=="Guard":
         skirt=float(np.clip((.39-h)/.50,0.,1.))
         front=max(0.,z/.38)
@@ -115,18 +118,36 @@ def garment_material(role,p):
         if h<.50: return "facing"
         return "coat"
     if role=="Regular":
-        if h<.306: return "felt"
-        if h<.421: return "iron_binding"
+        if h<.35: return "binding"
         return "iron"
     if role=="Guard":
-        if h<.040: return "binding"
-        if h<.272: return "lames"
-        if h<.395: return "iron_binding"
         return "black_iron"
     if h>.75: return "sash"
     if h<.305: return "lames"
     if h<.401: return "iron_binding"
     return "black_iron"
+
+def turned_brow(surface,role):
+    from math import cos, pi, sin
+    # A fitted rolled edge around the open brow follows the local horizontal
+    # section of the source. It stops at the real temple hinges. Below them
+    # the artist's open cheek and neck pieces stay visible.
+    if role=="Regular":
+        radius,back,height,depth,drop=(.121,.119,1.664,.013,.025)
+    else:
+        radius,back,height,depth,drop=(.133,.122,1.670,.015,.039)
+    def ribbon(u,v):
+        a=-1.98+3.96*u
+        forward=cos(a)
+        brow=height+drop*max(-.30,forward)-.004*sin(a)**2
+        # The turned lip tapers into the protection beside each ear.
+        middle=sin(pi*u)**.47
+        thick=depth*(.3+.7*middle)
+        dx=(.005+.009*(1.-v))*middle
+        x=(radius+dx)*sin(a)
+        z=.005+(back+dx)*forward+.018*max(0.,forward)**3*middle
+        return (x,brow+(v-.50)*thick,z),HEAD
+    surface.grid(14,1,ribbon,"iron_binding" if role=="Regular" else "binding")
 
 def bake(role,item,cache):
     original,signature,scale,bind_y,bind_z=item
@@ -134,6 +155,10 @@ def bake(role,item,cache):
     triangles=exterior(points,triangles,role)
     surface=Surface()
     vertices={}
+    # The stock weapon helmet has a separate narrow reinforcing ridge.
+    # Across the rest of the shell, thresholds by triangle centre used to
+    # leave saw-tooth colour boundaries across the cheek. These components
+    # now share forged iron. The actual rolled brow below sets the border.
     for face in triangles:
         section=garment_material(role,np.mean(points[list(face)],axis=0))
         ids=[]
@@ -148,10 +173,11 @@ def bake(role,item,cache):
                 vertices[key]=surface.vertex(fitted,coord,HEAD)
             ids.append(vertices[key])
         surface.faces.append(tuple(ids))
+    if role in ("Regular","Guard"): turned_brow(surface,role)
     bounds=np.asarray(surface.positions)
     assert .084<max(abs(bounds[:,0]))<.16
     assert 1.45<min(bounds[:,1])<1.63 and 1.71<max(bounds[:,1])<1.865
-    print("HEADWEAR",role,len(triangles),bounds.min(axis=0),bounds.max(axis=0))
+    print("HEADWEAR",role,len(surface.faces),bounds.min(axis=0),bounds.max(axis=0))
     return surface
 
 def main():

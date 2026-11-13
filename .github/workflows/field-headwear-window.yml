@@ -77,7 +77,7 @@ jobs:
                   im=Image.open(r/side/(shot+".png")).convert("RGB")
                   assert im.size==(1920,1200)
                   if close:
-                      im=im.crop((710,275,1210,615))
+                      im=im.crop((710,215,1210,555))
                   else:
                       im.save(r/side/(shot+"-native.jpg"),quality=86,subsampling=0)
                   sz=(pair.width//2,pair.height)

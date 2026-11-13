@@ -8,9 +8,10 @@ https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binarie
 Editable upstream directory:
 https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/meshes/props/helmet
 
-Luanshi contributors refitted han_cap, han_advanced_melee_helmet,
+Luanshi contributors refitted han_cap, han_cavalry_swordsman_helmet,
 han_officer_helmet_01 and han_heavy_helmet_b to the company's head bind,
-shortened the heavy helmet's top brush and reassigned matte colour fields.
+shortened the heavy helmet's top brush, fitted the rolled brow edges, removed
+coincident inward faces, and reassigned matte colour fields.
 The four derived meshes remain separate from the underlying faces, uniforms and
 weapons. No upstream texture is redistributed. The original editable vertices,
 per-file Git blob hashes and repeatable fit are in tools/art/fit_field_headwear.py.
