@@ -10,10 +10,15 @@ def field_helmet(surface, look, bone, rank=False):
     senior = look in ("officer", "player")
     # Forehead, sides and nape sit at different heights over the actual head sculpt.
     def brow(angle):
-        return 1.626 + .029 * cos(angle) - .008 * sin(angle) ** 2
+        front=.038 if look=="guard" else .029
+        return 1.619 + front*cos(angle) - .008*sin(angle)**2
 
     sections = ((0., .112, .127), (.17, .114, .125), (.49, .101, .117),
                 (.77, .079, .092), (.93, .040, .062), (1., .003, .012))
+    if look=="guard":
+        # A low, broader iron bowl and a deeper nape distinguish the shield man.
+        sections=((0.,.124,.139),(.19,.124,.139),(.52,.111,.126),
+                  (.79,.076,.090),(.95,.039,.049),(1.,.008,.013))
     if rank:
         sections = tuple(sections[i] for i in (0, 2, 3, 5))
 
@@ -21,14 +26,16 @@ def field_helmet(surface, look, bone, rank=False):
         angle = TAU * u
         t, rx, rz = sections[round(v * (len(sections) - 1))]
         y0 = brow(angle)
-        y = y0 + (1.757 - y0) * t
+        crown_height=1.746 if look=="guard" else 1.766
+        y = y0 + (crown_height - y0) * t
         return (rx * sin(angle), y, .020 + rz * cos(angle) - .018 * t), bone
     surface.grid(sides, len(sections) - 1, crown, "black_iron")
 
     def rim(u, v):
         angle = TAU * u
         y = brow(angle) - .006 + .019 * v
-        return (.115 * sin(angle), y, .019 + .130 * cos(angle)), bone
+        radius,depth=(.126,.141) if look=="guard" else (.115,.130)
+        return (radius*sin(angle), y, .019+depth*cos(angle)), bone
     surface.grid(sides, 1, rim, "iron_binding")
 
     # The overlapping cheek flaps are separate from the crown. Their swept front
@@ -37,7 +44,8 @@ def field_helmet(surface, look, bone, rank=False):
         def flap(u, v):
             angle = side * (.84 + 2.315 * u + .19 * (1. - v))
             drop = (.057 + .073 * sin(pi * u) ** .65 + .029 * u) * (1. - v)
-            radius = .110 + .011 * sin((1. - v) * pi) - .013 * (1. - v)
+            if look=="guard": drop+=(1.-v)*(.024+.034*u)
+            radius = (.119 if look=="guard" else .110)+.011*sin((1.-v)*pi)-.013*(1.-v)
             depth = .122 + .018 * (1. - v) * u
             return (radius * sin(angle), brow(angle) - .001 - drop,
                     .018 + depth * cos(angle)), bone
@@ -72,8 +80,8 @@ def skirts(surface, look, hips, thighs, rank=False):
             along=(u if side>0 else 1.-u)
             y=.955-length*down+down*(.099*abs(2*along-1)**2-.018*sin(pi*along))
             flare=.053*down+.018*sin(pi*down)
-            width=.204+flare
-            depth=.155+.91*flare
+            width=(.237 if look=="guard" else .204)+flare
+            depth=(.177 if look=="guard" else .155)+.91*flare
             return ((width*sin(angle),y,-.014+depth*cos(angle)),
                     (thigh,hips,.64*down))
         def iron(u,v): return point(u,1.-v)

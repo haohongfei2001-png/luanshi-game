@@ -25,6 +25,19 @@ def coat(s,look):
     hem=[(start,.254,.183),(.75,.239,.170),(.86,.214,.15),(.96,.169,.135),
          (1.075,.19,.141),(1.185,.219,.151),(1.255,.233,.153),(1.327,.245,.142),
          (1.408,.199,.100),(1.456,.077,.074)]
+    # Tailored outer dimensions. The armholes stay at the same sockets across all kits.
+    if look=="levy":
+        start=.455
+        hem=[(start,.237,.151),(.693,.211,.143),(.852,.180,.132),(.972,.151,.112),
+             (1.076,.163,.120),(1.188,.185,.132),(1.261,.213,.132),
+             (1.328,.234,.125),(1.406,.172,.084),(1.451,.066,.065)]
+    elif look=="guard":
+        start=.563
+        hem=[(start,.298,.204),(.759,.262,.188),(.875,.235,.164),(.964,.205,.154),
+             (1.077,.225,.177),(1.186,.254,.182),(1.260,.258,.172),
+             (1.331,.262,.152),(1.409,.206,.114),(1.456,.088,.085)]
+    elif look=="regular":
+        hem[3:7]=[(.965,.167,.132),(1.075,.187,.145),(1.187,.212,.154),(1.256,.228,.156)]
     lo,hi=6,8
     # A foot archer wears his robe untucked to the thigh; picking the
     # hem up two inches on the draw side keeps the off knee free.
@@ -53,7 +66,11 @@ def coat(s,look):
         # Cloth clears the inside knee and drops at the outside thigh. A skirt
         # that ends at a single latitude hides stride direction from above.
         cut=abs(sin(a))**1.65
-        if look in ("archer","levy"):
+        if look=="levy":
+            # The weapon side of the working coat is tucked into the sash.
+            # The other skirt panel swings from the hip clear of the bent knee.
+            y+=hanging*(.214*max(0.,sin(a+.15))-.040*max(0.,-sin(a))+.092*(1-cut))
+        elif look=="archer":
             y+=hanging*(.154*(1-cut)-.066*cut+.024*sin(2*a+.6))
         else:
             y+=hanging*(.092*(1-cut)-.036*cut+.026*sin(2*a+.4))
@@ -89,6 +106,11 @@ def coat(s,look):
                 material="lames"
             elif look=="archer" and 3<=r<=7:
                 material="quilt" if cos(TAU*(c+.5)/n)<-.25 else "coat"
+            elif look=="levy" and 2<=r<8:
+                # A dyed shoulder facing runs diagonally over the outer tunic.
+                # The chest and rolled elbow still expose the natural hemp.
+                outer=cos(TAU*(c+.5)/n-.53)
+                material="dyed" if r>=6 or (r==5 and outer>.28) else "linen"
             elif look=="levy" and r==8:
                 material="facing"
             elif r<=1 and (c>=3*n//4 or c<n//8):
@@ -116,6 +138,14 @@ def coat(s,look):
                 (.248,1.251,.074,.078,.005),(.255,1.181,.064,.070,.012),
                 (.258,1.144,.062,.067,.015),(.260,1.113,.064,.065,.021),
                 (.262,1.082,.052,.053,.029)]
+        if look=="levy":
+            # A rolled outer sleeve follows the cloth tube under it at the elbow.
+            sleeve=[(.220,1.358,.052,.068,-.008),(.232,1.310,.063,.073,-.004),
+                    (.246,1.252,.066,.074,.004),(.253,1.173,.072,.075,.010),
+                    (.257,1.144,.077,.077,.015),(.261,1.117,.068,.065,.020),
+                    (.262,1.098,.055,.055,.024)]
+        elif look=="guard":
+            sleeve=[(cx,y,rx*1.16,rz*1.12,cz) for cx,y,rx,rz,cz in sleeve]
         if not close: sleeve=[sleeve[i] for i in (0,2,3,5,6)]
         for j,(cx,y,rx,rz,cz) in enumerate(sleeve):
             ring=[]
@@ -139,6 +169,9 @@ def coat(s,look):
             cap_end=(3 if look=="regular" else 4) if close else (2 if look=="regular" else 3)
             panels=[(0,cap_end,"lames")]
             if cap_end<edge-1: panels.append((cap_end,edge-1,"dyed"))
+        elif look=="levy":
+            shoulder=2 if close else 1
+            panels=[(0,shoulder,"dyed"),(shoulder,edge-1,"linen")]
         else:
             panels=[(0,edge-1,"dyed")]
         panels.append((edge-1,edge,"headcloth"))
@@ -178,12 +211,13 @@ def coat(s,look):
     if not heavy:
         # A separate cut of the folded-over skirt hangs from the sash. Its
         # textile is visible between the thighs while stepping or drawing.
-        for start_angle,end_angle in ((-.96,.49),(.51,1.42)):
+        front_panels=((-1.62,-.18),(-.16,1.22)) if look=="levy" else ((-.96,.49),(.51,1.42))
+        for start_angle,end_angle in front_panels:
             def flap(u,v):
                 down=1.-v
                 a=start_angle+(end_angle-start_angle)*u+.175*down
                 outside=abs(sin(a))
-                hem_y=(.634 if look=="levy" else .595)-.093*outside+.025*sin(3*a)
+                hem_y=(.682+.139*sin(a)-.078*outside if look=="levy" else .595-.093*outside)+.025*sin(3*a)
                 y=.913+(hem_y-.913)*down
                 p=body_at(a,y,.010+down*(.018+.012*sin(3.1*u+.29)))
                 return p,cloth(p)
@@ -221,8 +255,9 @@ def equipment(s,look):
         for start,end in ((-1.27,-.05),(.05,1.27),(1.81,3.10),(3.18,4.48)):
             def brigand(u,v):
                 a=start+(end-start)*u
-                rx=.207+.062*sin(v*pi*.68)
-                rz=.155+.024*sin(pi*v)
+                width=.235 if look=="guard" else .196 if look=="regular" else .212
+                rx=width+.060*sin(v*pi*.68)
+                rz=(.175 if look=="guard" else .155)+.031*sin(pi*v)
                 if v>.76:
                     t=(v-.76)/.24
                     rx-=.039*t
@@ -256,8 +291,8 @@ def equipment(s,look):
             y=bottom+(1.453-bottom)*v+.031*sin(3*a+.25)*(1-v)
             fold=(.009+.020*(1-v))*sin(5*a+.63*v)
             free=(1.-v)**1.35
-            p=((rx+fold)*sin(a)-(.134 if look=="player" else .049)*free,
-               y,(rz+fold)*cos(a)-.053-(.248 if look=="player" else .061)*free)
+            p=((rx+fold)*sin(a)-(.207 if look=="player" else .068)*free,
+               y,(rz+fold)*cos(a)-.053-(.303 if look=="player" else .073)*free)
             return p,(CHEST,HIPS,clamp(.18+v*.98))
         cloth_mat="hero_mantle" if look=="player" else "mantle"
         # Split lower panels leave a real notch between the two short tails.
@@ -297,9 +332,13 @@ def forearm(s,look,side,sides,rank=False):
         groups=([(0,1,"binding"),(1,2,"leather"),(2,3,"skin")] if rank else
                 ([(0,2,"binding"),(2,4,"leather"),(4,5,"binding"),(5,6,"skin")] if side>0 else
                  [(0,2,"binding"),(2,3,"headcloth"),(3,6,"skin")]))
+    elif look=="levy":
+        # A turned cuff, a short winding, then a bare forearm centred on the real wrist.
+        groups=([(0,1,"binding"),(1,3,"skin")] if rank else
+                [(0,1,"binding"),(1,2,"headcloth"),(2,6,"skin")])
     else:
         last=len(rows)-1
-        groups=[(0,last-1,"binding" if look=="levy" else "leather"),(last-1,last,"skin")]
+        groups=[(0,last-1,"leather"),(last-1,last,"skin")]
     for first,last,material in groups:
         s.tube(sections[first:last+1],radii[first:last+1],material,fore,sides)
 
@@ -312,9 +351,13 @@ def limbs(s,look):
         hip,knee,ankle=leg_nodes(side)
         x=side*.134
         def leg(p): return (thigh,shin,clamp((p[1]-.424)/.125))
-        s.rings([(.274,.053,.059,x,.013),(.363,.057,.071,x,.008),
-                 (.426,.076,.085,x,.017),(.454,.087,.095,x,.025),(.497,.083,.089,x,.018),
-                 (.591,.095,.110,x,-.008),(.748,.113,.117,side*.127,-.017),(.866,.11,.118,side*.12,-.013)],"felt",leg,n)
+        sections=[(.274,.054,.063,x,.013),(.353,.055,.067,x,.008),
+                  (.413,.079,.088,x,.020),(.448,.093,.103,x,.031),(.505,.084,.092,x,.019),
+                  (.587,.097,.113,x,-.009),(.715,.108,.124,side*.129,-.023),
+                  (.803,.107,.122,side*.123,-.027),(.866,.103,.111,side*.12,-.015)]
+        if look=="levy":
+            sections=[(h,rx*.90,rz*.92,cx,cz) for h,rx,rz,cx,cz in sections]
+        s.rings(sections,"felt",leg,n)
         def ankle_blend(p): return (shin,boot,clamp((p[1]-.103)/.082))
         s.rings([(.078,.057,.065,ankle[0],-.010),(.118,.061,.066,ankle[0],-.006),
                  (.217,.057,.066,x,.006),(.332,.067,.076,x,.012),(.368,.064,.073,x,.009)],
