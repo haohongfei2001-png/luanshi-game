@@ -52,7 +52,7 @@ def marching_head():
 def head(s,look,bone):
     close=s.detail
     data=sculpt()
-    heavy=look in ("regular","guard","officer","player")
+    heavy=look in ("regular","guard","officer")
     width={"levy":.105,"archer":.099,"regular":.105,"guard":.110,"officer":.109,"player":.105}[look]
     def bind(x,y,z):
         return (x*width, 1.725+(y-8.10)*.110, (z-.28)*.112+.015)
@@ -121,10 +121,16 @@ def head(s,look,bone):
         s.ribbon([p,(p[0]-.021,p[1]-.059,p[2]-.012),
                   (p[0]-.040,p[1]-.112,p[2]+.006)],.036,"headcloth",bone)
     else:
-        band(-.015,.16,"dyed" if look=="archer" else "headcloth",.053)
+        band(-.015,.16,"leather" if look=="player" else "headcloth",.053)
         if close: band(.06,.095,"headcloth",.082)
         p=scalp(pi,7.89,.08)
-        s.oval((p[0],p[1]+.025,p[2]),(.036,.037,.057),"hair",bone,10 if close else 6,5)
+        if look=="player":
+            # The protagonist's folded topknot changes his outline at army scale.
+            # A narrow cloth binding is visible between hairline and gathered hair.
+            s.oval((-.010,1.714,-.047),(.049,.037,.052),"leather",bone,10 if close else 7,4)
+            s.oval((-.016,1.755,-.054),(.059,.056,.068),"hair",bone,12 if close else 8,5)
+        else:
+            s.oval((p[0],p[1]+.025,p[2]),(.036,.037,.057),"hair",bone,10 if close else 6,5)
         # Cloth knot tied at the rear rather than a perfectly round bun on every crown.
         a=scalp(pi+.3,6.96,.09)
         s.ribbon([a,(a[0]-.022,a[1]-.042,a[2]-.026),(a[0]-.037,a[1]-.118,a[2]-.012)],.026,"headcloth",bone)

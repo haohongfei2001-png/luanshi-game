@@ -4,6 +4,12 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 河关 RC7｜美术返工，未验收
+
+玩家明确拒绝 RC6 的视觉品质。保留 RC6 可回退；玩法/构建通过不等于美术过关。第一轮真实 512v512 摄像机对照发现路面过橙，柳叶看成大块垂布，近景的胸甲看成横箍；第二轮据此降低道路和草甸饱和度、制作独立柳条，重做分襟、绛披、轻重甲、枪的承重脚和用色。使用现有的九套武器、骨架、蒙皮及模拟。地表和树叶是实际用在战场里的材质，参考图不在游戏里作背景。
+
+环境返工点 `2e049582dd2c5457b1207e4fc358df63965ba9bd`；[首轮窗口与原始 PNG](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43337847031)；[人物二次实机复核](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43338758045)。在集成版本执行 `./tools/prepare-font.sh && ./tools/compare-river-art.sh`，参考基线 `d6b03507c4ace8582ab9f821e604c499616b8dab`，比较时刻、朝向、实际屏内 ID、伤亡与输入相同。视觉需审正常 1920×1200 城门/接敌与近景，不用特写代替。全任务未完成；M5 真机 NOT_RUN。下方为已归档、未改写的 RC6 验证结果。
+
 ## 河关 0.16.0-rc.6
 
 游戏源码 `89416f926e725d93d0ef86138dcbf333b9211576`，合入 main 的源码 `d6b03507c4ace8582ab9f821e604c499616b8dab`。PR 验证导出 `b067e79cce519a9cdf1abf3b3ff5acb080b38698`。角色和地图的三轮真实游戏窗口复查、操作回归、资源和性能数字均已归档。 [实机记录、包与运行命令](evidence/river-gate-v1-rc6/PLAYTEST.md) · [千人交战原片](evidence/river-gate-v1-rc6/playthrough-review.mp4) · [当前 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43327368519) · [可回退阶段](https://github.com/haohongfei2001-png/luanshi-game/commit/4621944adf8e30dda2516b4291e7a0ceebc011d7)

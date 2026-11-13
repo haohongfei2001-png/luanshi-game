@@ -47,13 +47,21 @@ vec3 painted_ground(vec2 p, float shore) {
     vec2 warp=.10*vec2(sin(p.y*.22+p.x*.06),cos(p.x*.19-p.y*.087));
     vec3 turf=texture(meadow_paint,uv+warp).rgb;
     vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66).rgb;
-    float edge=cover.r+(.47-marks.r)*.22+(.54-marks.b)*.083;
+    float clay_value=dot(clay,vec3(.30,.57,.13));
+    float turf_value=dot(turf,vec3(.30,.57,.13));
+    // Suppress orange and lime in sunlight, keeping the sampled shape and value.
+    clay=mix(vec3(clay_value),clay,.32)*(OUTPUT_IS_SRGB?vec3(.76,.78,.88):vec3(.60,.63,.79));
+    turf=mix(vec3(turf_value),turf,.52)*(OUTPUT_IS_SRGB?vec3(.78,.79,.82):vec3(.64,.65,.70));
+    float near_track=1.0-smoothstep(.55,.96,cover.a);
+    float tilled=smoothstep(.25,.60,cover.r)*(1.0-smoothstep(.72,.89,cover.r))*(1.0-near_track);
+    float broken=smoothstep(.23,.91,marks.g+.24*marks.b);
+    float edge=cover.r*(1.0-tilled*(.26+.39*broken))+(.47-marks.r)*.22+(.54-marks.b)*.083;
     float lane=smoothstep(.32,.79,edge);
     float wet=max(cover.g,shore);
     vec3 verge=turf*vec3(.84,.99,.95);
     // Mown and uncropped banks differ in broad value, not just their highlights.
     verge*=.83+.17*smoothstep(.22,.62,cover.b)+.16*clamp(landscape.g*1.55,0.0,1.0);
-    vec3 colour=mix(verge,clay*vec3(1.09,1.04,.96),lane);
+    vec3 colour=mix(verge,clay*vec3(1.02,1.01,.98),lane);
     colour=mix(colour,landscape,.159+.06*(1.0-lane));
     float lip=4.0*lane*(1.0-lane);
     colour*=1.0-lip*(.075+.085*marks.r);
@@ -82,8 +90,18 @@ void fragment() {
 		float edge=smoothstep(2.6,5.28,bank+turn*.44);
 		float current=texture(fieldbed,vec2(p.x*.058+turn*.09,p.y*.036-TIME*.0033)).g;
 		color=mix(deep_water.rgb,shallows.rgb,.84*edge+.09*web)*(.80+.13*ripple+.12*current);
-		float thread=1.0-smoothstep(.04,.28,abs(sin((p.x+turn)*2.7+web*1.9-TIME*.49)));
-		color+=vec3(.037,.061,.054)*thread*smoothstep(.48,.75,ripple)*(.26+edge);
+		// Broken highlights follow water along the channel and round the gravel bars.
+		float stream=(p.x+.27*sin(p.y*.64-TIME*.40)+1.18*web+.51*current)*3.51;
+		float hair=abs(fract(stream)-.5);
+		float thread=1.0-smoothstep(.034,.086+min(.13,fwidth(stream)*.62),hair);
+		float broken=smoothstep(.46,.65,.59*ripple+.41*web);
+		float glass=dot(color,vec3(.24,.60,.16));
+		color=mix(vec3(glass),color,.67)*vec3(.77,.83,.91);
+		vec3 glint=OUTPUT_IS_SRGB?vec3(.40,.49,.46):vec3(.21,.30,.29);
+		color=mix(color,glint,thread*broken*(.25+.45*edge));
+		float wake=abs(fract((bank+turn*.34+.65*web)*1.48)-.50);
+		float foam=(1.0-smoothstep(.028,.12,wake))*smoothstep(3.40,4.60,bank)*smoothstep(.46,.67,ripple);
+		color=mix(color,glint,foam*.41);
 		roughness=.49; specularity=.29;
 	} else if (part>2.5) {
 		float side=abs(local_normal.x)>abs(local_normal.z)?local_pos.z:local_pos.x;
