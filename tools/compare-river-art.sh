@@ -133,10 +133,11 @@ for old,new in zip(left,right):
         sample=io.BytesIO()
         pair.resize((1024,320),Image.Resampling.LANCZOS).save(sample,"JPEG",quality=81)
         print("RIVER_PAIR_JPEG",name,base64.b64encode(sample.getvalue()).decode())
-    if name in ("player-action","formation","gate","ford","bank","bowline","officer","ranks"):
-        # One normal-view frame at the captured dimensions, easy to inspect outside the ZIP.
+    if name in ("bank","formation","gate","bowline","ranks"):
+        # Link-size previews accompany the full, unchanged PNGs in the artifact.
+        # Dumping multiple native JPEGs here exceeds the GitHub log transport.
         sample=io.BytesIO()
-        r.save(sample,"JPEG",quality=89,subsampling=0)
+        r.resize((1024,640),Image.Resampling.LANCZOS).save(sample,"JPEG",quality=84)
         print("RIVER_WINDOW_JPEG",name,base64.b64encode(sample.getvalue()).decode())
 print("RIVER_PAIR_PASS",len(left))
 PY

@@ -7,6 +7,7 @@ const LIME := Color("946d58")
 const SLATE := Color("525b61")
 const STONE := Color("838274")
 const DIRT := Color("a28c67")
+const SKIFF_WATERLINE := Vector3(Ground.RIVER_X+2.04,-.33,-7.91)
 var surface_material:=ShaderMaterial.new()
 var sun:=DirectionalLight3D.new()
 var gate: MeshInstance3D
@@ -45,6 +46,8 @@ func _ready() -> void:
 	surface_material.set_shader_parameter("verge_track",preload("res://assets/environment/verge-and-track.svg"))
 	surface_material.set_shader_parameter("shale_paint",preload("res://assets/environment/river-shale.png"))
 	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/valley-turf.png"))
+	surface_material.set_shader_parameter("grazing_detail",preload("res://assets/environment/grazed-meadow.png"))
+	surface_material.set_shader_parameter("track_detail",preload("res://assets/environment/loess-wagonway.png"))
 	surface_material.set_shader_parameter("lane_paint",preload("res://assets/environment/valley-loess.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
 	surface_material.set_shader_parameter("joinery",preload("res://assets/environment/joinery.png"))
@@ -172,7 +175,7 @@ func _shore(b: Builder) -> void:
 
 func _moored_skiff(bank: Builder) -> void:
 	# The working bank lies upstream of the middle bridge, in the unwalkable channel.
-	var origin:=Vector3(Ground.RIVER_X+2.04,-.33,-7.91)
+	var origin:=SKIFF_WATERLINE
 	var skiff:=preload("res://assets/environment/river_skiff.gltf").instantiate() as Node3D
 	skiff.position=origin
 	add_child(skiff)
@@ -209,11 +212,31 @@ func _bridge_landing(b: Builder,center: Vector3,bank: float,side: float) -> void
 				var cap:=p+Vector3(bank*.03,.119,0)
 				b.block(cap,Vector3(reach+.073,.092,.60-inset),Color("9a9a86"))
 
-func _crossings(b: Builder) -> void:
+func _river_surface(b: Builder) -> void:
 	b.joint=2
 	var water:=Color("577d78")
-	b.quad(Vector3(Ground.RIVER_X-6.8,-0.33,-108),Vector3(Ground.RIVER_X-6.8,-0.33,108),
-		Vector3(Ground.RIVER_X+6.8,-0.33,108),Vector3(Ground.RIVER_X+6.8,-0.33,-108),water)
+	var west:=Ground.RIVER_X-6.8
+	var east:=Ground.RIVER_X+6.8
+	var level:=SKIFF_WATERLINE.y
+	# Cut the water between the inside and the outside of the hull at its
+	# waterline. A single water quad used to fill the seats and bottom boards.
+	var stations: Array[Vector2]=[Vector2(-2.30,0.),Vector2(-2.19,.25),Vector2(-1.45,.54),
+		Vector2(-.55,.65),Vector2(.60,.64),Vector2(1.52,.49),Vector2(2.13,.20),Vector2(2.19,0.)]
+	var previous:=SKIFF_WATERLINE.z+stations[0].x
+	b.quad(Vector3(west,level,-108),Vector3(west,level,previous),Vector3(east,level,previous),Vector3(east,level,-108),water)
+	var previous_width:=0.
+	for i in range(1,stations.size()):
+		var next:=SKIFF_WATERLINE.z+stations[i].x
+		var w:=stations[i].y
+		var mid:=SKIFF_WATERLINE.x
+		b.quad(Vector3(west,level,previous),Vector3(west,level,next),Vector3(mid-w,level,next),Vector3(mid-previous_width,level,previous),water)
+		b.quad(Vector3(mid+previous_width,level,previous),Vector3(mid+w,level,next),Vector3(east,level,next),Vector3(east,level,previous),water)
+		previous=next
+		previous_width=w
+	b.quad(Vector3(west,level,previous),Vector3(west,level,108),Vector3(east,level,108),Vector3(east,level,previous),water)
+
+func _crossings(b: Builder) -> void:
+	_river_surface(b)
 	for z:float in Ground.CROSSINGS:
 		var center:=Vector3(Ground.RIVER_X,0,z)
 		b.joint=3

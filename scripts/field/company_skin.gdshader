@@ -90,6 +90,13 @@ void vertex() {
         pos=mix(other_pos,pos,blend);
         nrm=mix(other_nrm,nrm,blend);
     }
+    // The nocked arrow alone is rigidly attached to joint 15 (the bowstring
+    // endpoints blend this joint with the stave). Keep it on the string through
+    // the release tick. The live projectile becomes visible in RECOVER.
+    if (kit==5 && first==15 && second==15 &&
+            (state!=1 || slot==3 || sample_kit!=kit)) {
+        pos=vec3(0.);
+    }
     // Lean into the actual opponent. Hands, both ends of a shaft, the blade
     // and the shield all undergo one rigid change about the waist. Flexible
     // cloth carries the transition to the original leg and planted-foot pose.

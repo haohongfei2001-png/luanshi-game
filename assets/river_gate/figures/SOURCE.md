@@ -29,3 +29,7 @@ RC7 的绛色半披、发髻、交领、下摆裁片、札甲裙与木盾凸脐�
 RC9 的征卒采用单侧束起的袍摆、卷袖和肩部辨军的染布，盾兵的低盔、分片裙甲和弧木盾沿同一持盾握点制作。近镜、中镜、远阵共用衣料色谱。马匹的远景资产轮廓保留肩峰、收腹和系部，近景沿用原有独立带缰具的模型。人物、盾板与披挂可用 `python3 tools/art/bake_river_company.py --geometry-only`、`node tools/art/bake_field_garments.mjs` 与 `node tools/art/bake_mounts.mjs` 重新烘焙。
 
 The divided thigh guards and fitted sleeve yokes share their colour cuts across close, line and rank meshes. The armour atlas uses overlapping iron courses with rawhide ties. Thirty-six finite catch and stagger strips follow the standard and field-carry libraries. The simulation records a blow's side at contact and the renderer selects the corresponding planted pose from the shared bank; checkpoints keep their existing authority. Rebuild with `python3 tools/art/bake_river_company.py` and `node tools/art/bake_field_garments.mjs`; verify with `python3 tools/art/check_contact_motion.py`.
+
+这套河关野战衣甲的内甲、肩腋开口、短枪衣及盾兵分片裙由 `tools/art/field_dress.py` 和 `tools/art/field_armour.py` 制作。普通弓手的斜背箭囊与腰带只保留实际使用的一套。蓄力箭从手指弦点随前臂瞄准，放弦步由战斗系统创建有弹道的飞箭。衣服与装具共用既有三档批次及动作图集。本段所述衣甲、箭袋与箭都是本项目原创。
+
+弓手的束发被收在有顶的软头巾内，近、中、远档共同保留眉线、后折和结尾。原有布色与头骨随同一动作，回放使用实战中的第 94 号弓手。
