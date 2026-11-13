@@ -1,0 +1,93 @@
+name: Compare the complete river company uniforms in the ordinary field window
+on:
+  push:
+    branches: [codex/river-tailoring-study]
+permissions:
+  contents: write
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      BASE: 416e413e0472cf3101da10ba52fe974e1312c7e2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bake the garments and verify the original weapon meshes and motion
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          mkdir -p artifacts/tailoring
+          art=assets/river_gate/figures
+          git show "$BASE:$art/river_company.glb" > "$RUNNER_TEMP/before.glb"
+          python3 tools/art/bake_river_company.py --geometry-only > artifacts/tailoring/bake.log
+          node tools/art/bake_field_garments.mjs
+          node tools/art/bake_field_garments.mjs --check
+          python3 tests/tail_blobs.py mesh "$RUNNER_TEMP/before.glb" "$art/river_company.glb"
+          git diff --exit-code "$BASE" -- "$art/company_motion.png" tools/art/company_weapons.py
+          python3 tools/art/check_company_motion.py | tee artifacts/tailoring/grips.log
+          python3 tools/art/check_contact_motion.py | tee artifacts/tailoring/contact.log
+          cp "$art/river_company.glb" "$art/field_garments.gltf" artifacts/tailoring/
+          python3 tests/tail_blobs.py blobs "$art/river_company.glb" "$art/field_garments.gltf"
+      - name: Play the same follow window, shield portrait and two line formations
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          src=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$src/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/tailoring-godot
+          godot=/tmp/tailoring-godot/Godot_v4.6.3-stable_linux.x86_64
+          dst="$PWD/artifacts/tailoring"
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev="$BASE"; fi
+            dir="$RUNNER_TEMP/dress-$side"
+            git worktree add --quiet --detach "$dir" "$rev"
+            cp tests/tail_{follow,actors,face}.gd "$dir/tests/"
+            mkdir -p "$dst/$side"
+            if test "$side" = after; then cp "$dst/river_company.glb" "$dst/field_garments.gltf" "$dir/assets/river_gate/figures/"; fi
+            (
+              cd "$dir"
+              ./tools/prepare-font.sh
+              mkdir -p artifacts
+              touch artifacts/.gdignore
+              "$godot" --headless --editor --path . --import >"$dst/$side-import.log" 2>&1
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side-import.log"; then exit 1; fi
+              for view in follow actors face; do
+                size=512; screen=1920x1200; fps=20
+                if test "$view" = follow; then fps=30; fi
+                if test "$view" = face; then size=20; screen=1280x800; fps=30; fi
+                status=0
+                timeout 240s xvfb-run -a -s "-screen 0 ${screen}x24" "$godot" --path . --disable-vsync --audio-driver Dummy --resolution "$screen" --fixed-fps "$fps" --script "tests/tail_$view.gd" -- "--field-size=$size" >"$dst/$side-$view.log" 2>&1 || status=$?
+                echo "$status" > "$dst/$side-$view.exit"
+                grep -E '^RC7_PERSONAL_PASS|^HELMET_TEST_PASS|^FIELD_PORTRAIT ' "$dst/$side-$view.log" || cat "$dst/$side-$view.log"
+                if test "$view" != face && test "$status" != 0; then exit "$status"; fi
+              done
+              cp -r artifacts/foot-load/follow "$dst/$side/follow"
+              cp -r artifacts/helmets "$dst/$side/actors"
+              cp -r artifacts/personal-contact "$dst/$side/contact"
+              cp artifacts/guard-aperture.png "$dst/$side/"
+              ffmpeg -v error -y -framerate 30 -i artifacts/foot-load/follow/%03d.jpg -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart "$dst/$side-follow.mp4"
+            )
+          done
+      - name: Compare matched simulation receipts and native silhouettes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 -u tests/tail_compare.py
+          root=artifacts/tailoring
+          ffmpeg -v error -y -i "$root/before-follow.mp4" -i "$root/after-follow.mp4" -filter_complex '[0:v]scale=880:550[x];[1:v]scale=880:550[y];[x][y]hstack=inputs=2' -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart "$root/equal-time-follow.mp4"
+          python3 tests/tail_blobs.py blobs "$root"/*.jpg "$root/equal-time-follow.mp4"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tailored-company-real-512
+          path: |
+            artifacts/tailoring/
+            !artifacts/tailoring/*/follow/[0-9]*.jpg
