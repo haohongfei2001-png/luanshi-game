@@ -1,0 +1,354 @@
+{
+  "archive_sha256": "16ee9ef10b0b2ce62fcf49451567b08d2cefe5ab787e26a865e5c1e210bd4491",
+  "source_run": "43513432464",
+  "samples": [
+    {
+      "label": "default-metal-1",
+      "session_matches_image": false,
+      "returncode": 124,
+      "requested_method": "mobile",
+      "validated": false,
+      "requested_window_px": [
+        1000,
+        600
+      ],
+      "png_ihdr_px": [],
+      "uses_default_window": false,
+      "max_rss_bytes": null,
+      "app_data_absent_at_spawn": true,
+      "pre_scene_sample": false,
+      "pre_frame_sample": true,
+      "startup_resume_count": 0,
+      "activation_requested": false,
+      "last_boot_stage": "scene_ready",
+      "launch_milestones_ms": {
+        "scene_ready": 14270.8
+      }
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "canvas_scale": [
+        0.75,
+        0.75
+      ],
+      "content_design_px": [
+        1280,
+        800
+      ],
+      "display": "macOS",
+      "display_window_px": [
+        1000,
+        600
+      ],
+      "estimated_internal_px": [
+        960,
+        600
+      ],
+      "four_second_windows": [
+        {
+          "frames": 1028,
+          "hits": 474,
+          "tick": 181,
+          "visible": 452,
+          "wall_seconds": 4.010722
+        },
+        {
+          "frames": 1037,
+          "hits": 437,
+          "tick": 261,
+          "visible": 372,
+          "wall_seconds": 4.001392
+        },
+        {
+          "frames": 963,
+          "hits": 73,
+          "tick": 341,
+          "visible": 436,
+          "wall_seconds": 4.002445
+        },
+        {
+          "frames": 1124,
+          "hits": 26,
+          "tick": 421,
+          "visible": 354,
+          "wall_seconds": 4.002462
+        },
+        {
+          "frames": 1181,
+          "hits": 40,
+          "tick": 501,
+          "visible": 289,
+          "wall_seconds": 4.002752
+        }
+      ],
+      "fps": 271.498354348422,
+      "frames": 6518,
+      "frames_over_budget": {
+        "120": 466,
+        "60": 11,
+        "90": 109
+      },
+      "gpu_timer_status": "no_nonzero_device_timestamps",
+      "hits_in_window": 1106,
+      "input_to_postdraw_ms": [
+        3.34999990463257,
+        3.80999994277954,
+        3.49399995803833
+      ],
+      "longest_frame_context": {
+        "camera": [
+          23.0,
+          -8.0
+        ],
+        "end_tick": 341,
+        "frame_zero_based": 3029,
+        "frames_since_camera_request": 2,
+        "render_cpu_timestamp_ms": 0.163000002503395,
+        "render_gpu_timestamp_ms": null,
+        "sim_cpu_ms": 0.0,
+        "start_tick": 341,
+        "step_phases_ms": {
+          "grid_and_input": 0.0,
+          "objectives": 0.0,
+          "officers_and_orders": 0.0,
+          "projectiles": 0.0,
+          "siege": 0.0,
+          "target_selection": 0.0,
+          "unit_actions_and_density": 0.0
+        },
+        "view_script_ms": 1.713,
+        "visible": 347,
+        "wall_end_ms": 12135.757,
+        "wall_ms": 116.676
+      },
+      "max_ms": 116.676,
+      "mean_ms": 3.6832635777846,
+      "p50_ms": 3.089,
+      "p95_ms": 9.52,
+      "p99_ms": 11.77,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 0,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 0.221000000834465,
+      "render_cpu_samples": 6518,
+      "render_gpu_p95_ms": null,
+      "render_gpu_samples": 0,
+      "render_target_px": [
+        960,
+        600
+      ],
+      "renderer": "mobile",
+      "reported_viewport_texture_px": [
+        720.0,
+        450.0
+      ],
+      "requested_msaa_samples": 4,
+      "scale": 1.0,
+      "screen_px": [
+        1024,
+        768
+      ],
+      "screen_space_aa": 0,
+      "seconds": 24.007512,
+      "shadows": true,
+      "sim_cpu_ms_per_frame": 0.542714943234121,
+      "sim_cpu_total_ms": 3537.416,
+      "static_bytes": null,
+      "step_phase_totals_ms": {
+        "grid_and_input": 528.435,
+        "objectives": 17.543,
+        "officers_and_orders": 45.705,
+        "projectiles": 44.835,
+        "siege": 7.755,
+        "target_selection": 922.923,
+        "unit_actions_and_density": 1966.969
+      },
+      "tour": true,
+      "view_script_ms_per_frame": 2.02275176434489,
+      "view_script_total_ms": 13184.296,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "default-metal-2",
+      "session_matches_image": true,
+      "returncode": 0,
+      "requested_method": "mobile",
+      "validated": true,
+      "requested_window_px": [
+        1000,
+        600
+      ],
+      "png_ihdr_px": [
+        960,
+        600
+      ],
+      "uses_default_window": false,
+      "max_rss_bytes": 521289728,
+      "app_data_absent_at_spawn": true,
+      "pre_scene_sample": false,
+      "pre_frame_sample": true,
+      "startup_resume_count": 0,
+      "activation_requested": true,
+      "last_boot_stage": "contact_complete",
+      "launch_milestones_ms": {
+        "scene_ready": 3452.1,
+        "first_post_draw": 17843.3,
+        "foreground_ready": 18397.8,
+        "deployed": 18400.8,
+        "first_tick": 18457.9,
+        "first_hit": 19168.7,
+        "contact_complete": 23419.5
+      }
+    },
+    {
+      "adapter": "Apple Paravirtual device (Apple5)",
+      "canvas_scale": [
+        0.75,
+        0.75
+      ],
+      "content_design_px": [
+        1280,
+        800
+      ],
+      "display": "macOS",
+      "display_window_px": [
+        1000,
+        600
+      ],
+      "estimated_internal_px": [
+        960,
+        600
+      ],
+      "four_second_windows": [],
+      "fps": 250.036522988694,
+      "frames": 878,
+      "frames_over_budget": {
+        "120": 71,
+        "60": 0,
+        "90": 44
+      },
+      "gpu_timer_status": "no_nonzero_device_timestamps",
+      "hits_in_window": 401,
+      "input_to_postdraw_ms": [
+        3.00600004196167,
+        3.13800001144409,
+        3.73300004005432
+      ],
+      "longest_frame_context": {
+        "camera": [
+          2.0,
+          -18.0
+        ],
+        "end_tick": 140,
+        "frame_zero_based": 514,
+        "frames_since_camera_request": 182,
+        "render_cpu_timestamp_ms": 0.206000000238419,
+        "render_gpu_timestamp_ms": null,
+        "sim_cpu_ms": 11.806,
+        "start_tick": 139,
+        "step_phases_ms": {
+          "grid_and_input": 1.676,
+          "objectives": 0.967,
+          "officers_and_orders": 0.266,
+          "projectiles": 0.203,
+          "siege": 0.09,
+          "target_selection": 3.131,
+          "unit_actions_and_density": 5.43
+        },
+        "view_script_ms": 2.641,
+        "visible": 442,
+        "wall_end_ms": 1973.568,
+        "wall_ms": 15.734
+      },
+      "max_ms": 15.734,
+      "mean_ms": 3.99941571753986,
+      "p50_ms": 3.23,
+      "p95_ms": 11.252,
+      "p99_ms": 13.164,
+      "panned": true,
+      "per_side": 512,
+      "platform": "macOS",
+      "preset": 0,
+      "processor": "Apple M2 Pro (Virtual)",
+      "render_cpu_p95_ms": 0.230000004172325,
+      "render_cpu_samples": 878,
+      "render_gpu_p95_ms": null,
+      "render_gpu_samples": 0,
+      "render_target_px": [
+        960,
+        600
+      ],
+      "renderer": "mobile",
+      "reported_viewport_texture_px": [
+        720.0,
+        450.0
+      ],
+      "requested_msaa_samples": 4,
+      "scale": 1.0,
+      "screen_px": [
+        1024,
+        768
+      ],
+      "screen_space_aa": 0,
+      "seconds": 3.511487,
+      "shadows": true,
+      "sim_cpu_ms_per_frame": 0.687410022779043,
+      "sim_cpu_total_ms": 603.546,
+      "static_bytes": null,
+      "step_phase_totals_ms": {
+        "grid_and_input": 85.899,
+        "objectives": 2.686,
+        "officers_and_orders": 8.722,
+        "projectiles": 14.609,
+        "siege": 1.162,
+        "target_selection": 162.285,
+        "unit_actions_and_density": 327.827
+      },
+      "tour": false,
+      "view_script_ms_per_frame": 2.28537813211845,
+      "view_script_total_ms": 2006.562,
+      "viewport": [
+        1000,
+        600
+      ],
+      "label": "startup-focus-control",
+      "session_matches_image": true,
+      "returncode": 0,
+      "requested_method": "mobile",
+      "validated": true,
+      "requested_window_px": [
+        1000,
+        600
+      ],
+      "png_ihdr_px": [
+        960,
+        600
+      ],
+      "uses_default_window": false,
+      "max_rss_bytes": 511606784,
+      "app_data_absent_at_spawn": true,
+      "pre_scene_sample": false,
+      "pre_frame_sample": false,
+      "startup_resume_count": 1,
+      "activation_requested": true,
+      "last_boot_stage": "contact_complete",
+      "launch_milestones_ms": {
+        "scene_ready": 3315.1,
+        "first_post_draw": 4608.2,
+        "foreground_ready": 5106.9,
+        "deployed": 5110.0,
+        "first_tick": 6771.7,
+        "first_hit": 7485.2,
+        "contact_complete": 11732.6,
+        "startup_interruption_armed": 5110.0,
+        "startup_paused_zero": 5351.9,
+        "focus_restored_at_zero": 6705.9,
+        "startup_resume_pressed": 6705.9
+      }
+    }
+  ],
+  "cold_scope": "New process and empty Godot game data each time; OS driver caches retained"
+}

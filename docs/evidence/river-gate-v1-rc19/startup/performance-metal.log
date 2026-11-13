@@ -1,0 +1,32 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple Paravirtual device (Apple5)
+
+FIELD_PROFILE_FILE /Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish/frame-times/river-gate-1794605898-6084.jsonl
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":6846,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":6084,"renderer":"mobile","result":"","stage":"scene_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":9497,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":6084,"renderer":"mobile","result":"","stage":"first_post_draw","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":2,"engine_ms":9561,"focus":true,"hits":0,"paused":false,"physics_frames":16,"pid":6084,"renderer":"mobile","result":"","stage":"window_focus_in","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":3,"engine_ms":10871,"focus":true,"hits":0,"paused":false,"physics_frames":29,"pid":6084,"renderer":"mobile","result":"","stage":"foreground_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":3,"engine_ms":10882,"focus":true,"hits":0,"paused":false,"physics_frames":29,"pid":6084,"renderer":"mobile","result":"","stage":"deployed","started":true,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":4,"engine_ms":11086,"focus":true,"hits":0,"paused":false,"physics_frames":33,"pid":6084,"renderer":"mobile","result":"","stage":"first_tick","started":true,"tick":1}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":10,"engine_ms":13779,"focus":true,"hits":3,"paused":false,"physics_frames":75,"pid":6084,"renderer":"mobile","result":"","stage":"first_hit","started":true,"tick":15}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":382,"engine_ms":18005,"focus":true,"hits":607,"paused":false,"physics_frames":330,"pid":6084,"renderer":"mobile","result":"","stage":"contact_complete","started":true,"tick":100}
+FIELD_HOST_WINDOW {"adapter":"Apple Paravirtual device (Apple5)","canvas_scale":[0.75,0.75],"content_design_px":[1280,800],"display":"macOS","display_window_px":[1000,600],"estimated_internal_px":[672,420],"four_second_windows":[],"fps":95.03766402559,"frames":333,"frames_over_budget":{"120":108,"60":65,"90":84},"gpu_timer_status":"no_nonzero_device_timestamps","hits_in_window":401,"input_to_postdraw_ms":[5.39900016784668,6.0479998588562,6.12799978256226],"longest_frame_context":{"camera":[2.0,-18.0],"end_tick":130,"frame_zero_based":142,"frames_since_camera_request":23,"render_cpu_timestamp_ms":0.418000012636185,"render_gpu_timestamp_ms":null,"sim_cpu_ms":0.0,"start_tick":130,"step_phases_ms":{"grid_and_input":0.0,"objectives":0.0,"officers_and_orders":0.0,"projectiles":0.0,"siege":0.0,"target_selection":0.0,"unit_actions_and_density":0.0},"view_script_ms":2.997,"visible":435,"wall_end_ms":1528.254,"wall_ms":66.904},"max_ms":66.904,"mean_ms":10.5221441441441,"p50_ms":7.091,"p95_ms":26.939,"p99_ms":35.109,"panned":true,"per_side":512,"platform":"macOS","preset":2,"processor":"Apple M1 (Virtual)","render_cpu_p95_ms":0.591000020503998,"render_cpu_samples":333,"render_gpu_p95_ms":null,"render_gpu_samples":0,"render_target_px":[960,600],"renderer":"mobile","reported_viewport_texture_px":[720.0,450.0],"requested_msaa_samples":1,"scale":0.699999988079071,"screen_px":[1024,768],"screen_space_aa":0,"seconds":3.503874,"shadows":false,"sim_cpu_ms_per_frame":3.50475075075075,"sim_cpu_total_ms":1167.082,"static_bytes":null,"step_phase_totals_ms":{"grid_and_input":170.918,"objectives":6.239,"officers_and_orders":18.293,"projectiles":23.215,"siege":2.13,"target_selection":334.286,"unit_actions_and_density":611.231},"tour":false,"view_script_ms_per_frame":4.4691021021021,"view_script_total_ms":1488.211,"viewport":[1000,600]}
+FIELD_PACKAGE_PASS {"attacks":1540,"blocked_hits":18,"capture_sec":0.0,"crew_replacements":0,"dead":[96,139],"decision":"","device":"Apple Paravirtual device (Apple5)","display":"macOS","dropped_weapons":[96,139],"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[607,401],"mission":"夺取河关","officer_corps":{"active_commands":[16,7],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[],[1040,1041,1042,1043,1044,1046,1048,1049]],"kills":[1,4],"ranked":true,"rescued":[[],[]],"skills":[9,12],"successions":[0,0],"wounded":[[],[1047]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":901,"ram_hp":150.0,"ram_strokes":0,"result":"","resume_equal":true,"routing":[3,37],"seed":61112,"soldiers_per_side":512,"tick":171,"visible":448}
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)
+       22.41 real        16.09 user         1.80 sys
+           514506752  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37930  page reclaims
+                  43  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   2  messages sent
+                   0  messages received
+                   0  signals received
+                  78  voluntary context switches
+               35647  involuntary context switches
+           576228480  peak memory footprint

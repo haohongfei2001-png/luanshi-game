@@ -1,0 +1,11 @@
+{
+  "bundle_version": "16019",
+  "identifier": "com.luanshi.prototype",
+  "archive_sha256": "16ee9ef10b0b2ce62fcf49451567b08d2cefe5ab787e26a865e5c1e210bd4491",
+  "linux_archive_sha256": "6ed2c548cf3db300005385f4e9d3741661b2d4a29893b3daa36c4665bdbc8fdf",
+  "archive_bytes": 99706007,
+  "initial_macos_validated": 8,
+  "equal_notices": true,
+  "notices_sha256": "290e6b1cc9dedbb6319b87defb46d8ee7c740beeebaa017fa5ef0b87ae334652",
+  "export_commit": "9357483bc54c28e0c5d3c04b42dbe5c7e41b4bfd"
+}

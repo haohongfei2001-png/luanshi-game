@@ -1,0 +1,230 @@
+{
+  "normal-camera-before-after/before.png": {
+    "bytes": 3811120,
+    "sha256": "8c11cfbc96bbc534b55070ab2d77824e094fb6add231c8ec3f93a2a07c5481cd"
+  },
+  "normal-camera-before-after/after.png": {
+    "bytes": 3401163,
+    "sha256": "464c1a5f28f27afef0ef2ed599d9bc52c7e4c8c0dd72ce883ff143280998dc5c"
+  },
+  "normal-camera-before-after/windup-before.png": {
+    "bytes": 3813195,
+    "sha256": "5afe9be49f6114ba4d2d6695f1e5dca522f259b4f5a9e18882d8daeb0bed83fb"
+  },
+  "metal-renderer-comparison.json": {
+    "bytes": 31849,
+    "sha256": "e190f58416af5ffdad3ec9dbadaa411ef3e2cfe370752b107a47880682a1befd"
+  },
+  "metal-window-frames.json": {
+    "bytes": 15421,
+    "sha256": "750fa070b460f5e0152c7e080b02db2cd770ff7d2b9107adade75d30ba60f200"
+  },
+  "normal-camera-before-after/windup.png": {
+    "bytes": 3409484,
+    "sha256": "034a7d5ec4d2b15d6744abee185bed9572dcc86ec6d9f65cfa336cb4c2715055"
+  },
+  "close.png": {
+    "bytes": 2924374,
+    "sha256": "e0a98308f44eec9e891066483934de16dfdc28e5427ec6f5e16accb072c51d01"
+  },
+  "mid.png": {
+    "bytes": 2941534,
+    "sha256": "aff63b53662bc7174690405f91aaf4d932aca3155fc92fd8bffc0b13c2476451"
+  },
+  "wide.png": {
+    "bytes": 2820523,
+    "sha256": "51890b0886ea01c76f42a146eaeecf525fc1b3b610d9df5f39e247ec4b7ee24d"
+  },
+  "player-nine-weapons.mp4": {
+    "bytes": 1065914,
+    "sha256": "27e035d070a72f7f7bbbc70544b0b0105e9dfb85aafdf6b4901e562919240ec3"
+  },
+  "full-siege.mp4": {
+    "bytes": 10168646,
+    "sha256": "679d0f4a1f26a290c59722969fea58c9ddb49b0a27eb6f68cb8d98ae1729c61e"
+  },
+  "metal-window.png": {
+    "bytes": 836807,
+    "sha256": "06aba20a61c032efba44621da2a519deda546cd9fcc395f1726879db4c0ee98b"
+  },
+  "playthrough-review.mp4": {
+    "bytes": 878369,
+    "sha256": "86110e15d46cc1a81d6985e2da0888a7142454038d27440fd26c6c150adfce0a"
+  },
+  "playthrough-full.mp4": {
+    "bytes": 18758041,
+    "sha256": "d93dc9974a60d255453143dd3c1383431ce2b13b19546c57c20b3216df948c4b"
+  },
+  "journey-frames.jpg": {
+    "bytes": 268131,
+    "sha256": "62543450bfec43602b0ee7999bacabc802b49b034ad3aaab36728c7b107bd6ab"
+  },
+  "normal-review.jpg": {
+    "bytes": 336623,
+    "sha256": "d54e9d36cabbeeac86116eb81bfc18a20a6e4366e4558b2fe465b48a977c54a6"
+  },
+  "normal-native.jpg": {
+    "bytes": 797412,
+    "sha256": "634827320eb1e04803510e7f708ad99aef865046485a282fef58c8898fa015c2"
+  },
+  "normal-pair.jpg": {
+    "bytes": 502558,
+    "sha256": "290772adb88db42db9236a3c5bcc30448fd7a9c69e51509c0a1c86d1b743de54"
+  },
+  "combat-normal-speed.mp4": {
+    "bytes": 21693017,
+    "sha256": "49386ef1de5b905c99a22b60a1f37035217cd8e5e60dfb963de0066fa38ab6b8"
+  },
+  "macos-codesign.log": {
+    "bytes": 147,
+    "sha256": "11f00a8075ec9095176a0561a3d72845cd8e8e128789f145c6601336fc5c9983"
+  },
+  "macos-host.log": {
+    "bytes": 267,
+    "sha256": "fe315dcce8de0f50fbb7c4cde098fd0a57c470d6beb824d0cb19cb4d59b1942c"
+  },
+  "export-sequence.jpg": {
+    "bytes": 115005,
+    "sha256": "0c75b8c6c9c085748e98ae8ea16ccfe4e2041b42ed63a91a7873282752cb2aa2"
+  },
+  "export-recording.json": {
+    "bytes": 5038,
+    "sha256": "eeb0d5ddba61174d62e46eeaad3710776081b4a8297ca5abc12bd1537457c18b"
+  },
+  "startup/compat-1.log": {
+    "bytes": 6865,
+    "sha256": "e35f2422ca67d341bb0e2cc93e618c1db41a2dae0d5366bcc6dba20977edcffa"
+  },
+  "startup/compat-1-boot.json": {
+    "bytes": 3705,
+    "sha256": "4b018ba3f8d12cde343d58d9b81aaa6cb45d4019957f680f1635e92648f4b684"
+  },
+  "startup/compat-1-focus.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "startup/default-metal-1.log": {
+    "bytes": 607,
+    "sha256": "8d56216c344b997bff3f19d7f956c3f4e120f23d84bfb33b83c0f64ac67b38a1"
+  },
+  "startup/default-metal-1-boot.json": {
+    "bytes": 401,
+    "sha256": "33bbade0ba28aba844f8d6da91d22e269c13f658b6531df9f689e5103bc0d7b5"
+  },
+  "startup/default-metal-1-focus.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "startup/default-metal-2.log": {
+    "bytes": 6466,
+    "sha256": "5fc7b2ac9906a09709585fbfffbbe23d32871443f7c99224d7d2e0e4a827397a"
+  },
+  "startup/default-metal-2-boot.json": {
+    "bytes": 3211,
+    "sha256": "75c991d420174b47216e1d477031fb6a91ba9263b2c6db1b52c516479adfce66"
+  },
+  "startup/default-metal-2-focus.log": {
+    "bytes": 58,
+    "sha256": "7a2d1e68ee7b7a2a1c7243e7ea01ef574963a605158074ef87d56e7595e68bef"
+  },
+  "startup/balanced-metal.log": {
+    "bytes": 6199,
+    "sha256": "be71dcbd453d368db8fdced0c1032f844c0aa8d4de03316c7d3fba7e76ac3fab"
+  },
+  "startup/balanced-metal-boot.json": {
+    "bytes": 3209,
+    "sha256": "0d0311d6e4beac1cb35f9a8f288adc5b682c6852d2a5af0263e0d46c67d66413"
+  },
+  "startup/balanced-metal-focus.log": {
+    "bytes": 58,
+    "sha256": "6a2f25b082439a57ba5aa7a3ac68530ee217afef81a7a88e5123fd614eab1476"
+  },
+  "startup/performance-metal.log": {
+    "bytes": 6177,
+    "sha256": "7b324e999c86990e35da09708a36c06accc7aeefda774fef05fd53dc281221d8"
+  },
+  "startup/performance-metal-boot.json": {
+    "bytes": 3205,
+    "sha256": "ffea6873bb7f6cc495048a28189a0bee039719e7131a92f10b51b307003e8825"
+  },
+  "startup/performance-metal-focus.log": {
+    "bytes": 58,
+    "sha256": "edce5777c5339e6029041097bea4743bcaee4148dead916e78c9d08a6e05cb7c"
+  },
+  "startup/compat-2.log": {
+    "bytes": 6661,
+    "sha256": "92b1cc11ea2adadc986100e375932c2640922616bbe5a4273b81803884e4c83e"
+  },
+  "startup/compat-2-boot.json": {
+    "bytes": 3278,
+    "sha256": "95807ab229cd4d9cb7b98d21b65653b3e776075ff5de5d0a7c848688d4c9bfdf"
+  },
+  "startup/compat-2-focus.log": {
+    "bytes": 58,
+    "sha256": "0b6e0fda7a769a9e99b5086e8f3cd29b01b375213c244e71ea87b156fd885024"
+  },
+  "startup/native-single-sample.log": {
+    "bytes": 6604,
+    "sha256": "481130d15491639490dbd8a9f3bfd311a9d780e61369fa76cc96f9747991caf0"
+  },
+  "startup/native-single-sample-boot.json": {
+    "bytes": 3204,
+    "sha256": "bb21e39f9b032de1e4818d62064cd17091deac5e7d04d3e3902c419d56acce08"
+  },
+  "startup/native-single-sample-focus.log": {
+    "bytes": 58,
+    "sha256": "4a528d8ab3a860739ca65110f6f62725824b71defbe49a0edfbf916afd74ea02"
+  },
+  "startup/focus-control.log": {
+    "bytes": 8522,
+    "sha256": "e338ae07a8f52ee78901e2cbae34aca16c101b8c68c2625b1e646c4f836cf352"
+  },
+  "startup/focus-control-boot.json": {
+    "bytes": 5762,
+    "sha256": "4da3b7046f3754bac878eba98e22d1e20495bb14989bffda8551089851d80874"
+  },
+  "startup/focus-control-focus.log": {
+    "bytes": 146,
+    "sha256": "acb36faf54e70397fa982c62aac428e12f9a30aa68265d6ce3c38415be96159b"
+  },
+  "startup/shipping-metal.log": {
+    "bytes": 6485,
+    "sha256": "39d315e2800d5d7d4ed282e8a463ad5208df5ea1fb59bc1bf7ac57f0bcfa092e"
+  },
+  "startup/shipping-metal-boot.json": {
+    "bytes": 3209,
+    "sha256": "ce7dc62a2d390503636be4fb937a5df29e7cda07358ccb1c5912d8eaaa183da8"
+  },
+  "startup/shipping-metal-focus.log": {
+    "bytes": 58,
+    "sha256": "0c39f5fb8e744aeef21df7a9bb550168d24104d33e9337ded3974cd18d3c4552"
+  },
+  "startup/same-package-fresh-host/renderer-comparison.json": {
+    "bytes": 9079,
+    "sha256": "14143a022012b40cf07c6570656c238532394573be2d3004941c23b8fff8cd9c"
+  },
+  "startup/same-package-fresh-host/default-metal-1.log": {
+    "bytes": 607,
+    "sha256": "8d45b273cedf9f626fde710625839d9266ba596f1d35521a7f703713bb55ad5d"
+  },
+  "startup/same-package-fresh-host/default-metal-1-boot.json": {
+    "bytes": 401,
+    "sha256": "1f4bd0dd830e6cbeb0b5a8b84e4c336e0e9202801fec2467c3a1d3680800e830"
+  },
+  "startup/same-package-fresh-host/default-metal-1-before-frame.sample.txt": {
+    "bytes": 222432,
+    "sha256": "a65d5c4db9281c9777e3e2f5de440043feb1d5da2c8f6c9d67e9a9baf5c795c8"
+  },
+  "startup/same-package-fresh-host/default-metal-2-boot.json": {
+    "bytes": 3210,
+    "sha256": "5a69fcdc77fe3206ca66196717cb06dabdbe6acfa768b58c7bc5f990ed6a2861"
+  },
+  "startup/same-package-fresh-host/default-metal-2-before-frame.sample.txt": {
+    "bytes": 312317,
+    "sha256": "ae4c70c5bd0a588df61f9cb18e443996241a02a870549a1e74fe1232c28b9577"
+  },
+  "startup/same-package-fresh-host/startup-focus-control-boot.json": {
+    "bytes": 5643,
+    "sha256": "9a4b3e2a2c289afe595bd542bb3dbd2147e357a9c84ffb51cc4203da74e08460"
+  }
+}

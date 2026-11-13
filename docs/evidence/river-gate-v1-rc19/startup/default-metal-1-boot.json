@@ -1,0 +1,18 @@
+[
+  {
+    "data_dir": "/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish",
+    "drawn_frames": 0,
+    "engine_ms": 32958,
+    "focus": false,
+    "hits": 0,
+    "paused": false,
+    "physics_frames": 8,
+    "pid": 2418,
+    "renderer": "mobile",
+    "result": "",
+    "stage": "scene_ready",
+    "started": false,
+    "tick": 0,
+    "launch_wall_ms": 33451.1
+  }
+]
