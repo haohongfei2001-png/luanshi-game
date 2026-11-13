@@ -136,7 +136,7 @@ void fragment(){
 	if(atlas_patch>32.5) {
 		vec4 tuft=texture(mane_ink,UV-vec2(3.,0.));
 		if(tuft.a<.50) discard;
-		color=tuft.rgb*.70;
+		color=tuft.rgb;
 	} else if(atlas_patch>31.5) {
 		vec2 cell=vec2(mod(coat_lot,2.0),floor(coat_lot*.5));
 		vec2 ink_uv=(cell+clamp(UV-vec2(2.,0.),vec2(.001),vec2(.999)))*.5;

@@ -55,7 +55,17 @@ def make_hide(cache):
                 u,v=uv[st]
                 key=(int(vertex),round(float(u),6),round(float(v),6))
                 if key not in used:
-                    p=fit(pts[vertex])
+                    px,py,pz=fit(pts[vertex])
+                    if slot==1:
+                        # Tuck the side fall of the mane to the neck. Keep
+                        # the poll and forelock, while raising the loose locks.
+                        py += .17*max(0.,min(1.,(1.81-py)/.55))
+                        px *= .82
+                    if slot==0 and -.45<pz<.25 and py>1.08:
+                        across=max(0.,1.-(px/.315)**2)
+                        along=max(0.,1.-((pz+.10)/.36)**2)
+                        py+=.036*across*along*max(0.,min(1.,(py-1.08)/.25))
+                    p=(px,py,pz)
                     influences=defaultdict(float)
                     for name,w in weights[vertex]:
                         influences[leg_group(name)]+=w
@@ -85,11 +95,29 @@ def pigments(cache):
         value=Image.open(path).convert("RGB").resize((size,size),Image.Resampling.LANCZOS)
         filtered=value.filter(ImageFilter.SMOOTH)
         value=Image.blend(value,filtered,.45)
+        rgb=np.asarray(value,dtype=float)/255.
+        lum=rgb @ np.asarray([.28,.56,.16])
+        shade=np.interp(lum,np.asarray([0.,.12,.30,.52,.78,1.]),
+                      np.asarray([.08,.13,.25,.41,.66,.82]) if i!=1 else np.asarray([.28,.32,.40,.49,.61,.70]))
+        if i==1:
+            rgb=np.stack((shade*1.01,shade,shade*.967),axis=2)
+        else:
+            palette=np.asarray([[1.08,.91,.77],[1.,1.,1.],[1.19,.90,.73],[.98,.95,.93]])[i]
+            chroma=np.clip(rgb/(lum[:,:,None]+.012),.66,1.54)
+            rgb=shade[:,:,None]*(.51*palette+.49*chroma)
+        value=Image.fromarray(np.rint(np.clip(rgb,0.,1.)*255).astype(np.uint8),"RGB")
         atlas.paste(value,((i%2)*size,(i//2)*size))
     atlas.save(OUT/"horse_coats.png",optimize=True)
     hair=source_file(cache,"textures/skins/props/horse/hair_black.png","8953d4300305148b46a419b62836722ee8bf87e3")
     plume=Image.open(hair).convert("RGBA")
     if plume.getextrema()[3][0]==255: raise ValueError("Missing hair coverage")
+    # Resolve authored hair into broad overlapping locks at game scale.
+    # Closing only the alpha removes needle-like holes while preserving the outer contour.
+    plume=plume.resize((128,128),Image.Resampling.LANCZOS)
+    coverage=plume.getchannel("A").filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MedianFilter(3))
+    light=np.asarray(plume.convert("L"),dtype=float)/255.
+    shade=np.asarray([30.,25.,24.])+light[:,:,None]*np.asarray([57.,48.,42.])
+    plume=Image.fromarray(np.dstack((np.rint(shade).astype(np.uint8),np.asarray(coverage))),"RGBA")
     plume.save(OUT/"horse_hair.png",optimize=True)
 
 def isolate_tack():
