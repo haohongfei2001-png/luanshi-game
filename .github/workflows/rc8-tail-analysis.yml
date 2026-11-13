@@ -1,0 +1,26 @@
+name: Read measured long frames from two packaged battles
+on:
+  push:
+    branches: ['codex/river-rc8-tail-study']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  paired:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14001257614
+          run-id: 43343382291
+          github-token: ${{ github.token }}
+          path: candidate
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14002039551
+          run-id: 43346502411
+          github-token: ${{ github.token }}
+          path: rebuild
+      - run: python3 docs/evidence/river-gate-v1-rc8/measure_tail.py candidate rebuild
