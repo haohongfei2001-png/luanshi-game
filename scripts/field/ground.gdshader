@@ -85,8 +85,16 @@ vec3 painted_ground(vec2 p, float shore) {
     float lip=4.0*lane*(1.0-lane);
     colour*=1.0-lip*(.075+.085*marks.r);
     colour=mix(colour,clay*.94,.20*margins.b*(1.0-lane)*(.53+.47*marks.g));
-    float rut=1.0-smoothstep(.028,.101,abs(cover.a-.385+(.5-marks.g)*.04));
-    colour*=1.0-.23*rut*lane*(.38+.62*marks.g)*(1.0-wet);
+    // A cart compresses a strip wider than its iron edge. Moist depressions
+    // collect darker earth; the centre strip stays comparatively dry. Sections
+    // peter out independently instead of tracing two unbroken rails.
+    float wheel=abs(cover.a-.385+(.5-marks.g)*.070);
+    float width=max(.014,fwidth(cover.a));
+    float bed=1.0-smoothstep(.050,.145+width,wheel);
+    float rim=1.0-smoothstep(.014,.047+width,wheel);
+    float wear=lane*(1.0-wet)*smoothstep(.14,.83,.60*marks.g+.40*cover.b);
+    float crown=(1.0-smoothstep(.08,.32,cover.a))*lane;
+    colour*=1.0+.055*crown-.17*bed*wear-.27*rim*wear;
     vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
     colour=mix(colour,alluvium, .73*smoothstep(.20,.98,wet));
     return colour;
@@ -213,6 +221,13 @@ void fragment() {
 			vec3 shale=texture(shale_paint,stone_uv).rgb;
 			float above=smoothstep(-.31,-.04,local_pos.y);
 			color=mix(color,shale,.24)*mix(vec3(.58,.69,.71),vec3(.96),above);
+		} else if(part>21.5 && part<22.5) {
+			// These low turf lips inherit the road painting. Fade their nearly
+			// horizontal buried edges into it so that feet can cross naturally.
+			float slope=clamp(1.0-abs(local_normal.y),0.0,1.0);
+			float torn=smoothstep(.006,.048,slope);
+			vec3 soil=painted_ground(p,0.0);
+			color=mix(soil,color,torn*.44)*mix(1.0,.88,torn);
 		} else if(part>=17.5 && part<18.5) {
 			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
 			float grit=texture(fieldbed,face_uv).r;
