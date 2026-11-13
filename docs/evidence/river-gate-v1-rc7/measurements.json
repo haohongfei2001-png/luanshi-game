@@ -1,0 +1,1025 @@
+{
+  "release": "0.16.0-rc.7",
+  "source": "dbae207abe51a305d2b9f392383dc00d016531cd",
+  "export_source": "4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+  "tree": "24a9bec3ce2e4475abf1497b2e3c17c9cfa24b31",
+  "ci": 43343382291,
+  "macos_inner_zip_sha256": "2758b370eb60d848eaa6b4c026337d5eb29fe54838d8302ab03c8aa115cc2a44",
+  "quality_verdict": "NOT_ACCEPTED: working candidate, character variety, silhouettes and prop quality incomplete",
+  "m5": "NOT_RUN",
+  "sustained_60": "NOT_VERIFIED; hosted M1 virtual default 24 s P95 exceeds 16.67 ms; no valid device timestamp",
+  "macos_shipping": {
+    "adapter": "Apple Paravirtual device (Apple5)",
+    "canvas_scale": [
+      0.800000011920929,
+      0.800000011920929
+    ],
+    "content_design_px": [
+      1280,
+      800
+    ],
+    "display": "macOS",
+    "display_window_px": [
+      1024,
+      645
+    ],
+    "estimated_internal_px": [
+      1024,
+      640
+    ],
+    "four_second_windows": [
+      {
+        "frames": 278,
+        "hits": 478,
+        "tick": 181,
+        "visible": 452,
+        "wall_seconds": 4.013894
+      },
+      {
+        "frames": 362,
+        "hits": 432,
+        "tick": 261,
+        "visible": 371,
+        "wall_seconds": 4.002893
+      },
+      {
+        "frames": 332,
+        "hits": 108,
+        "tick": 341,
+        "visible": 432,
+        "wall_seconds": 4.006286
+      },
+      {
+        "frames": 512,
+        "hits": 40,
+        "tick": 421,
+        "visible": 343,
+        "wall_seconds": 4.002599
+      },
+      {
+        "frames": 420,
+        "hits": 27,
+        "tick": 501,
+        "visible": 260,
+        "wall_seconds": 4.001438
+      }
+    ],
+    "fps": 97.1750873065886,
+    "frames": 2333,
+    "gpu_timer_status": "no_nonzero_device_timestamps",
+    "hits_in_window": 1124,
+    "input_to_postdraw_ms": [
+      24.761999130249,
+      7.25600004196167,
+      7.82299995422363
+    ],
+    "mean_ms": 10.290703386198,
+    "p50_ms": 7.294,
+    "p95_ms": 24.342,
+    "p99_ms": 36.095,
+    "panned": true,
+    "per_side": 512,
+    "platform": "macOS",
+    "preset": 0,
+    "processor": "Apple M1 (Virtual)",
+    "render_cpu_p95_ms": 0.709999978542328,
+    "render_cpu_samples": 2333,
+    "render_gpu_p95_ms": null,
+    "render_gpu_samples": 0,
+    "render_target_px": [
+      1024,
+      640
+    ],
+    "renderer": "mobile",
+    "reported_viewport_texture_px": [
+      820,
+      512
+    ],
+    "requested_msaa_samples": 4,
+    "scale": 1,
+    "screen_px": [
+      1024,
+      768
+    ],
+    "screen_space_aa": 0,
+    "seconds": 24.008211,
+    "shadows": true,
+    "sim_cpu_ms_per_frame": 3.13531118731247,
+    "sim_cpu_total_ms": 7314.681,
+    "static_bytes": null,
+    "tour": true,
+    "view_script_ms_per_frame": 4.09499614230604,
+    "view_script_total_ms": 9553.626,
+    "viewport": [
+      1024,
+      645
+    ],
+    "label": "shipping-metal",
+    "session_matches_image": true,
+    "returncode": 0,
+    "requested_method": "mobile",
+    "validated": true,
+    "requested_window_px": [
+      1280,
+      800
+    ],
+    "png_ihdr_px": [
+      1024,
+      640
+    ],
+    "uses_default_window": true,
+    "max_rss_bytes": 565755904,
+    "app_data_absent_at_spawn": true,
+    "activation_requested": true,
+    "last_boot_stage": "contact_complete",
+    "launch_milestones_ms": {
+      "scene_ready": 11458.2,
+      "first_post_draw": 13868.7,
+      "foreground_ready": 15561.4,
+      "deployed": 15575.9,
+      "first_tick": 15655,
+      "first_hit": 16327.6,
+      "contact_complete": 20555.2
+    }
+  },
+  "linux_four_scales": [
+    {
+      "per_side": 20,
+      "fps": 4.52422666828031,
+      "p50_ms": 221.287,
+      "p95_ms": 236.902,
+      "p99_ms": 238.51,
+      "max_rss_kib": 753616,
+      "draw_calls_p95": 105,
+      "render_cpu_p95_ms": 226.268997192383,
+      "triage_gpu_p95_ms": 228.309997558594,
+      "hits_in_window": 33,
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "viewport": [
+        1280,
+        800
+      ]
+    },
+    {
+      "per_side": 100,
+      "fps": 2.87450858479175,
+      "p50_ms": 347.056,
+      "p95_ms": 361.917,
+      "p99_ms": 362.632,
+      "max_rss_kib": 877776,
+      "draw_calls_p95": 127,
+      "render_cpu_p95_ms": 343.841003417969,
+      "triage_gpu_p95_ms": 346.549011230469,
+      "hits_in_window": 172,
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "viewport": [
+        1280,
+        800
+      ]
+    },
+    {
+      "per_side": 250,
+      "fps": 2.4527321719483,
+      "p50_ms": 407.531,
+      "p95_ms": 431.274,
+      "p99_ms": 431.828,
+      "max_rss_kib": 901320,
+      "draw_calls_p95": 124,
+      "render_cpu_p95_ms": 400.993988037109,
+      "triage_gpu_p95_ms": 403.622985839844,
+      "hits_in_window": 262,
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "viewport": [
+        1280,
+        800
+      ]
+    },
+    {
+      "per_side": 512,
+      "fps": 1.99428835814228,
+      "p50_ms": 494.25,
+      "p95_ms": 538.67,
+      "p99_ms": 543.724,
+      "max_rss_kib": 953620,
+      "draw_calls_p95": 127,
+      "render_cpu_p95_ms": 471.296997070312,
+      "triage_gpu_p95_ms": 474.093994140625,
+      "hits_in_window": 288,
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "viewport": [
+        1280,
+        800
+      ]
+    }
+  ],
+  "real_play_hits": [
+    {
+      "distance": 2.41827321052551,
+      "drawn_tick": 43,
+      "foe_hp": 62,
+      "foe_id": 584,
+      "foe_position": [
+        5.10730171203613,
+        -3.83165073394775
+      ],
+      "follow": true,
+      "hero_hits": 0,
+      "hero_id": 1056,
+      "hero_position": [
+        2.68970727920532,
+        -3.77435398101807
+      ],
+      "hero_slot": 0,
+      "hero_state": 1,
+      "internal_scale": 1,
+      "label": "personal-windup",
+      "lens": 22,
+      "marked_tick": 43,
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    },
+    {
+      "distance": 1.8135017156601,
+      "drawn_tick": 48,
+      "foe_hp": 39.7627115547657,
+      "foe_id": 584,
+      "foe_position": [
+        4.96484184265137,
+        -3.8282744884491
+      ],
+      "follow": true,
+      "hero_hits": 1,
+      "hero_id": 1056,
+      "hero_position": [
+        3.1518816947937,
+        -3.87259197235107
+      ],
+      "hero_slot": 0,
+      "hero_state": 2,
+      "internal_scale": 1,
+      "label": "personal-contact",
+      "lens": 22,
+      "marked_tick": 48,
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    }
+  ],
+  "paired_lod": [
+    {
+      "full_detail_median_render_ms": 1456.576,
+      "full_detail_primitives": 3983378,
+      "optimized_median_render_ms": 559.419,
+      "optimized_primitives": 1054683,
+      "per_side": 512,
+      "poses": 10,
+      "previous_officer_detail_ms": 577.71,
+      "previous_officer_detail_primitives": 1115687,
+      "previous_two_lods_median_ms": 701.047,
+      "previous_two_lods_primitives": 1388750,
+      "visible_soldiers_last": 488
+    }
+  ],
+  "recorded_failure": {
+    "run": 43341234060,
+    "job": 131609950084,
+    "stages": [
+      [
+        "01-muster",
+        0
+      ],
+      [
+        "02-deploy",
+        0
+      ],
+      [
+        "03-gate",
+        0
+      ],
+      [
+        "04-contact",
+        57
+      ],
+      [
+        "05-breach",
+        642
+      ],
+      [
+        "06-report",
+        1030
+      ]
+    ],
+    "exit_status": 124,
+    "last_stage_utc": "01:08:23",
+    "completed_postbattle": false
+  },
+  "guard_recovery": {
+    "run": 43342950441,
+    "job": 131615408372,
+    "status": "PASS",
+    "archives": [
+      {
+        "id": 14000703565,
+        "name": "journey-recovery",
+        "archive_bytes": 20604421,
+        "zip_sha256": "sha256:51a2fbed352f6e8ffeb4345e4873f31b77201e41f5ea2289390d3ccb01aa9676",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43342950441/artifacts/14000703565"
+      }
+    ],
+    "journey": [
+      "JOURNEY_PASS {\"attacks\":4381,\"blocked_hits\":52,\"camp_hours\":1,\"camp_resumed\":true,\"capture_sec\":6.0,\"crew_replacements\":1,\"dead\":[257,308],\"decision\":\"城门已开，内庭由我军持续占据；守军余部沿粮道撤出。\",\"dropped_weapons\":[257,308],\"errors\":[],\"escaped\":[13,122],\"gate_hp\":0.0,\"hero_ammo\":13,\"hero_hp\":100.0,\"hero_impacts\":7,\"hits\":[1431,1084],\"mission\":\"夺取河关\",\"officer_corps\":{\"active_commands\":[5,1],\"captives\":[[],[]],\"commanders\":[1024,1040],\"evacuated\":[[],[]],\"fallen\":[[1025,1027,1028,1029,1031,1032,1033,1034,1035,1037,1038],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055]],\"kills\":[7,3],\"ranked\":true,\"rescued\":[[],[]],\"skills\":[56,24],\"successions\":[9,6],\"wounded\":[[1030,1036,1039],[]]},\"officers\":32,\"orders_delivered\":1,\"orders_lost\":0,\"orders_refused\":0,\"ordinary_rosters\":[512,512],\"popup_semantic_fallbacks\":0,\"projectiles\":2480,\"ram_hp\":150.0,\"ram_strokes\":0,\"result\":\"夺取城内阵地\",\"routing\":[20,30],\"screens\":[\"01-muster\",\"02-deploy\",\"03-gate\",\"04-contact\",\"05-breach\",\"06-report\",\"07-camp\"],\"seed\":61112,\"soldiers_per_side\":512,\"tick\":1030}"
+    ],
+    "video": [
+      {
+        "bytes": 858635,
+        "sha256": "da0f30fc345cf8c239160e313199bcbceaa58a4c70c16ee96500acb58fd41102",
+        "original_sha256": "41aab33fc456196f788dc1cafd2d14fedf87be4b47f21029a0f0b4749caf1bef",
+        "streams": [
+          {
+            "codec_name": "h264",
+            "duration": "59.200000",
+            "nb_frames": "888"
+          },
+          {
+            "codec_name": "aac",
+            "channels": 2,
+            "duration": "59.200000",
+            "nb_frames": "2776"
+          }
+        ]
+      }
+    ],
+    "sound": [
+      {
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 800,
+            "duration": "59.200000",
+            "nb_frames": "888"
+          },
+          {
+            "codec_name": "aac",
+            "channels": 2,
+            "duration": "59.200000",
+            "nb_frames": "2776"
+          }
+        ],
+        "peak_db": -10.6,
+        "mean_db": -32.7
+      }
+    ],
+    "escort": [
+      "FIELD_ESCORT_GUI_PASS {\"attacks\":3207,\"blocked_hits\":17,\"capture_sec\":0.0,\"crew_replacements\":0,\"dead\":[174,232],\"decision\":\"城门先由先锋攻开，役兵护送冲车抵达门洞。\",\"delivery_prompt\":\"\",\"delivery_tick\":-1,\"dropped_weapons\":[174,232],\"elapsed_ms\":228025,\"errors\":[],\"escaped\":[4,93],\"gate_hp\":0.0,\"hero_hp\":100.0,\"hits\":[1008,715],\"mission\":\"护送冲车\",\"officer_corps\":{\"active_commands\":[13,6],\"captives\":[[],[]],\"commanders\":[1024,1040],\"evacuated\":[[],[]],\"fallen\":[[1024,1028],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049]],\"kills\":[4,4],\"ranked\":true,\"rescued\":[[],[]],\"skills\":[23,15],\"successions\":[1,2],\"wounded\":[[1025],[]]},\"officers\":32,\"opened_tick\":724,\"orders_delivered\":0,\"orders_lost\":0,\"orders_refused\":0,\"ordinary_rosters\":[512,512],\"patrol\":[27,14],\"popup_semantic_fallbacks\":0,\"projectiles\":2074,\"ram_distance_at_open\":3.00881338119507,\"ram_hp\":150.0,\"ram_strokes\":1,\"report_title\":\"护送冲车成功\",\"result\":\"护送冲车成功\",\"routing\":[12,9],\"screens\":[\"patrol-muster\",\"escort-approach\",\"escort-report\",\"escort-vanguard-approach\",\"escort-open-gate\",\"escort-vanguard-report\"],\"seed\":61112,\"soldiers_per_side\":512,\"tick\":724,\"vanguard_delivery\":{\"attacks\":3194,\"blocked_hits\":41,\"capture_sec\":0.0,\"crew_replacements\":1,\"dead\":[199,241],\"decision\":\"城门先由先锋攻开，役兵护送冲车抵达门洞。\",\"delivery_prompt\":\"送车入门 · 距门 10 米\",\"delivery_t"
+    ],
+    "alternate": [
+      "FIELD_ENDINGS_PASS []"
+    ],
+    "recorder": {
+      "idle_s": 135,
+      "overall_s": 840,
+      "previous_s": 550,
+      "progress_event": "strictly increasing simulation tick or new UI stage",
+      "preserved_quality": true
+    }
+  },
+  "reference_only_grade": {
+    "included_in_package": false,
+    "source": "07700c37a08a54252e82b9073cbf223fa428ad1f",
+    "run": 43344852040,
+    "prior_run": 43344247881,
+    "verdict": "FAIL; six Metal fence timeouts on hosted macOS editor and first baseline image black. Subsequent nonblank formation and gate stills improve slightly with brighter midtones but do not cure silhouette or high contrast thin equipment. Not adopted in the package.",
+    "observed_means": [
+      "2026-11-13T01:29:25.3881270Z RC7_METAL_GRADE before formation (1024, 640) [91.26, 87.47, 66.51]",
+      "2026-11-13T01:29:25.6981930Z RC7_METAL_GRADE after formation (1024, 640) [100.81, 96.67, 73.7]",
+      "2026-11-13T01:29:25.9747680Z RC7_METAL_GRADE before hero (1024, 640) [0.0, 0.0, 0.0]",
+      "2026-11-13T01:29:27.1575370Z RC7_METAL_GRADE after hero (1024, 640) [96.32, 88.53, 72.07]",
+      "2026-11-13T01:29:27.9714130Z RC7_METAL_GRADE before gate (1024, 640) [101.09, 91.3, 71.36]",
+      "2026-11-13T01:29:28.2976150Z RC7_METAL_GRADE after gate (1024, 640) [107.98, 97.76, 76.51]"
+    ],
+    "errors": [
+      "2026-11-13T01:28:14.2984610Z ERROR: timeout waiting for fence",
+      "2026-11-13T01:28:15.2987450Z ERROR: timeout waiting for fence",
+      "2026-11-13T01:28:35.2819180Z ERROR: timeout waiting for fence",
+      "2026-11-13T01:28:35.2929340Z ERROR: timeout waiting for fence",
+      "2026-11-13T01:29:10.6489010Z ERROR: timeout waiting for fence",
+      "2026-11-13T01:29:24.3363830Z ERROR: timeout waiting for fence",
+      "2026-11-13T01:29:28.6691520Z ##[error]Process completed with exit code 1."
+    ]
+  },
+  "old_pr_inventory": [
+    {
+      "pr": 33,
+      "head": "938c1e14d65c35c2d818c6145d545e21ee8f7807",
+      "ahead": 1,
+      "behind": 59,
+      "diff": 1,
+      "paths": [
+        "docs/CHARACTER_MODELING_DESIGN_V0_1.md"
+      ]
+    },
+    {
+      "pr": 25,
+      "head": "6a061ba29f7cf2ba488dedc2f01e09992e75dd27",
+      "ahead": 0,
+      "behind": 176,
+      "diff": 0,
+      "paths": []
+    },
+    {
+      "pr": 24,
+      "head": "77ad69619972975a015fa2890a75d5993e87e68c",
+      "ahead": 0,
+      "behind": 179,
+      "diff": 0,
+      "paths": []
+    },
+    {
+      "pr": 23,
+      "head": "b6fa8188627807f65e2238c066dce49e7e3bf5a0",
+      "ahead": 0,
+      "behind": 224,
+      "diff": 0,
+      "paths": []
+    },
+    {
+      "pr": 22,
+      "head": "d5f8c6db4619743e367b4a8163ba3803fc1ccdb1",
+      "ahead": 0,
+      "behind": 222,
+      "diff": 0,
+      "paths": []
+    },
+    {
+      "pr": 18,
+      "head": "eae4f9d3f23f119fdd210390a9c7f7c7533eae6d",
+      "ahead": 0,
+      "behind": 225,
+      "diff": 0,
+      "paths": []
+    }
+  ],
+  "source_runs": [
+    43337847031,
+    43339356063,
+    43340127706,
+    43340367719,
+    43340843876,
+    43341820740,
+    43340490104
+  ],
+  "files": {
+    "native": "raw/native.json",
+    "battle": "raw/battle.json",
+    "cameras": "raw/cameras.json",
+    "earlier_build": "raw/previous-export.json"
+  },
+  "media": {
+    "docs/evidence/river-gate-v1-rc7/formation.jpg": {
+      "blob_sha": "f25d4362d00295381b4eb7b47054e66242789117",
+      "size": 630145,
+      "sha256": "5d252e3ca7293e2a4495177e6650dcae4754feea6ca11d2f1652de76fcb5cfcf"
+    },
+    "docs/evidence/river-gate-v1-rc7/player-action.jpg": {
+      "blob_sha": "b5689b61d472cdf4811fb5a93ec2963c8316f55d",
+      "size": 785093,
+      "sha256": "f0c044915e28363a46016a6a9bc6f5b6b341e9cac31797b9dc5a8bb027fa327e"
+    },
+    "docs/evidence/river-gate-v1-rc7/gate.jpg": {
+      "blob_sha": "f1d88c5452f9124bdc63de7b5f2cf2aaa7c49be6",
+      "size": 697345,
+      "sha256": "9505cc2d80e77e2354512b3091712f6f47093f49ef30f7403705d48ca157ac8f"
+    },
+    "docs/evidence/river-gate-v1-rc7/formation-rc6-rc7.jpg": {
+      "blob_sha": "8ae5028720d2ace62323c3cae3d9091ccbbb8d1f",
+      "size": 58880,
+      "sha256": "fa7000f5675a88b7de269f92527f762afa51f6c0440015c20ef3bcc324f1a1bb"
+    },
+    "docs/evidence/river-gate-v1-rc7/officer-rc6-rc7.jpg": {
+      "blob_sha": "b4bcaab70773accfe3fba33d0aa4acd9667c2ceb",
+      "size": 80395,
+      "sha256": "5b860952f2f7292d7a85d314c2fe7cf481dd71ec7a0b615dce00fc776c9392e1"
+    },
+    "docs/evidence/river-gate-v1-rc7/hero-rc6-rc7.jpg": {
+      "blob_sha": "f47aba906ac76c224e920e0451ec8e434249a5c6",
+      "size": 79437,
+      "sha256": "09aad6644e0f20b1eb7208e103150ab2f13e00fb78ba384351d2a1f480517a66"
+    },
+    "docs/evidence/river-gate-v1-rc7/gate-rc6-rc7.jpg": {
+      "blob_sha": "1fa166dd810650ec0fe1232ac57145e2215bc300",
+      "size": 68076,
+      "sha256": "b946df7846f6c141411407d39dad5805b28873179e75f1c61ca0b144bc6cae67"
+    },
+    "docs/evidence/river-gate-v1-rc7/playthrough-review.mp4": {
+      "blob_sha": "9becc12c188f920f93f38c2ceb2294b501d25e33",
+      "size": 861027,
+      "sha256": "5a1d3b8147bac7f419b086a79dad93389ef05f1e5ae36113e81f49253853fc8b"
+    }
+  },
+  "main_game": "b8e830f6d5f71620531ac76961decc31ef0b1581",
+  "main_tree_matches_tested": true,
+  "main_rebuild": 43346502411,
+  "verification": {
+    "run": 43343382291,
+    "status": "success",
+    "checks": [
+      {
+        "name": "verify-and-export",
+        "status": "success",
+        "job": 131616818153,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818153"
+      },
+      {
+        "name": "Compare RC6 and candidate in the game window",
+        "status": "success",
+        "job": 131616818339,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818339"
+      },
+      {
+        "name": "Verify field footage",
+        "status": "success",
+        "job": 131616818554,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818554"
+      },
+      {
+        "name": "Verify field journey",
+        "status": "success",
+        "job": 131616818723,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818723"
+      },
+      {
+        "name": "macos-runtime",
+        "status": "success",
+        "job": 131621653958,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131621653958"
+      },
+      {
+        "name": "Preserve review video bytes",
+        "status": "success",
+        "job": 131626363527,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131626363527"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14002235781,
+        "name": "field-verification-journey-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 3052917,
+        "zip_sha256": "sha256:4869158ddc2a32622e13abbc1842de99c633634438249ad775e4f98fe9346fa1",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14002235781"
+      },
+      {
+        "id": 14002015521,
+        "name": "river-art-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 205880419,
+        "zip_sha256": "sha256:c4ba432d631a5890ff23479873e961d5c37f07599ab92412ca82218b3f68365a",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14002015521"
+      },
+      {
+        "id": 14001586116,
+        "name": "gameplay-footage-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 16479685,
+        "zip_sha256": "sha256:492e044d7c77cece9d93c23eda3d4e78af3616c02250da8214d03ca67cbdc813",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001586116"
+      },
+      {
+        "id": 14001545329,
+        "name": "Luanshi-Linux-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 52521129,
+        "zip_sha256": "sha256:b49c362e456aef97eec6d8d126f300dd2aeb20ad5f8fba6cae20bb3c00f4b001",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001545329"
+      },
+      {
+        "id": 14001461458,
+        "name": "field-verification-footage-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 7774502,
+        "zip_sha256": "sha256:bcc333accc1da6ad2281c0b544fcab958cc3f177cb8b2237bb32efb578fc4a0b",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001461458"
+      },
+      {
+        "id": 14001272623,
+        "name": "gameplay-journey-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 19937238,
+        "zip_sha256": "sha256:02fab4dff23d867eb80a6497fc0b10235bc7792dae0b96069e77f3f86b39da11",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001272623"
+      },
+      {
+        "id": 14001257614,
+        "name": "macos-verification-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 8195264,
+        "zip_sha256": "sha256:5e39ac962ca8d36bfcd267822100f21746e348d35ab5972be9cb4810ab8c61a8",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001257614"
+      },
+      {
+        "id": 14001017125,
+        "name": "Luanshi-macOS-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 87540160,
+        "zip_sha256": "sha256:c77a15ee8256ef453ee1bc43d25dd985b23b6a98a41462e9d8736cb855c06404",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001017125"
+      },
+      {
+        "id": 14000947346,
+        "name": "verification-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 2288636,
+        "zip_sha256": "sha256:b2d9ffaad99bb4a9034bfe1eddb463a049b9ddff2d6581a928997ffbe3a4a01b",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14000947346"
+      }
+    ]
+  },
+  "journey": {
+    "journey": {
+      "attacks": 4381,
+      "blocked_hits": 52,
+      "camp_hours": 1,
+      "camp_resumed": true,
+      "capture_sec": 6,
+      "crew_replacements": 1,
+      "dead": [
+        257,
+        308
+      ],
+      "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+      "dropped_weapons": [
+        257,
+        308
+      ],
+      "errors": [],
+      "escaped": [
+        13,
+        122
+      ],
+      "gate_hp": 0,
+      "hero_ammo": 13,
+      "hero_hp": 100,
+      "hero_impacts": 7,
+      "hits": [
+        1431,
+        1084
+      ],
+      "mission": "夺取河关",
+      "officer_corps": {
+        "active_commands": [
+          5,
+          1
+        ],
+        "captives": [
+          [],
+          []
+        ],
+        "commanders": [
+          1024,
+          1040
+        ],
+        "evacuated": [
+          [],
+          []
+        ],
+        "fallen": [
+          [
+            1025,
+            1027,
+            1028,
+            1029,
+            1031,
+            1032,
+            1033,
+            1034,
+            1035,
+            1037,
+            1038
+          ],
+          [
+            1040,
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048,
+            1049,
+            1050,
+            1051,
+            1052,
+            1053,
+            1054,
+            1055
+          ]
+        ],
+        "kills": [
+          7,
+          3
+        ],
+        "ranked": true,
+        "rescued": [
+          [],
+          []
+        ],
+        "skills": [
+          56,
+          24
+        ],
+        "successions": [
+          9,
+          6
+        ],
+        "wounded": [
+          [
+            1030,
+            1036,
+            1039
+          ],
+          []
+        ]
+      },
+      "officers": 32,
+      "orders_delivered": 1,
+      "orders_lost": 0,
+      "orders_refused": 0,
+      "ordinary_rosters": [
+        512,
+        512
+      ],
+      "popup_semantic_fallbacks": 0,
+      "projectiles": 2480,
+      "ram_hp": 150,
+      "ram_strokes": 0,
+      "result": "夺取城内阵地",
+      "routing": [
+        20,
+        30
+      ],
+      "screens": [
+        "01-muster",
+        "02-deploy",
+        "03-gate",
+        "04-contact",
+        "05-breach",
+        "06-report",
+        "07-camp"
+      ],
+      "seed": 61112,
+      "soldiers_per_side": 512,
+      "tick": 1030
+    },
+    "audio": {
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 800,
+          "duration": "59.200000",
+          "nb_frames": "888"
+        },
+        {
+          "codec_name": "aac",
+          "channels": 2,
+          "duration": "59.200000",
+          "nb_frames": "2776"
+        }
+      ],
+      "peak_db": -10.6,
+      "mean_db": -32.7
+    },
+    "video": {
+      "bytes": 861027,
+      "sha256": "5a1d3b8147bac7f419b086a79dad93389ef05f1e5ae36113e81f49253853fc8b",
+      "original_sha256": "41aab33fc456196f788dc1cafd2d14fedf87be4b47f21029a0f0b4749caf1bef",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "duration": "59.200000",
+          "nb_frames": "888"
+        },
+        {
+          "codec_name": "aac",
+          "channels": 2,
+          "duration": "59.200000",
+          "nb_frames": "2776"
+        }
+      ]
+    },
+    "alternate": [
+      [
+        {
+          "attacks": 0,
+          "blocked_hits": 0,
+          "capture_sec": 0,
+          "case": "withdrawal",
+          "crew_replacements": 0,
+          "dead": [
+            0,
+            0
+          ],
+          "decision": "主将与撤出人员到达西营，仍在关前的部队留作后卫。",
+          "dropped_weapons": [
+            0,
+            0
+          ],
+          "escaped": [
+            1,
+            0
+          ],
+          "gate_hp": 260,
+          "hero_hp": 100,
+          "hero_x": -90.6128158569336,
+          "hits": [
+            0,
+            0
+          ],
+          "mission": "夺取河关",
+          "officer_corps": {
+            "active_commands": [
+              0,
+              1
+            ],
+            "captives": [
+              [],
+              []
+            ],
+            "commanders": [
+              40,
+              41
+            ],
+            "evacuated": [
+              [],
+              []
+            ],
+            "fallen": [
+              [],
+              []
+            ],
+            "kills": [
+              0,
+              0
+            ],
+            "ranked": true,
+            "rescued": [
+              [],
+              []
+            ],
+            "skills": [
+              0,
+              0
+            ],
+            "successions": [
+              0,
+              0
+            ],
+            "wounded": [
+              [],
+              []
+            ]
+          },
+          "officers": 2,
+          "orders_delivered": 0,
+          "orders_lost": 0,
+          "orders_refused": 0,
+          "ordinary_rosters": [
+            20,
+            20
+          ],
+          "projectiles": 0,
+          "ram_hp": 150,
+          "ram_strokes": 0,
+          "receipt": true,
+          "result": "成功撤离",
+          "routing": [
+            0,
+            0
+          ],
+          "seed": 61112,
+          "soldiers_per_side": 20,
+          "survivors_can_continue": true,
+          "tick": 684
+        },
+        {
+          "attacks": 11,
+          "blocked_hits": 0,
+          "capture_sec": 0,
+          "case": "defeat",
+          "crew_replacements": 0,
+          "dead": [
+            0,
+            0
+          ],
+          "decision": "主将阵亡，余军按在场军籍结算，河关仍由原守军控制。",
+          "dropped_weapons": [
+            0,
+            0
+          ],
+          "escaped": [
+            0,
+            0
+          ],
+          "gate_hp": 260,
+          "hero_hp": 0,
+          "hero_x": 3.47492909431458,
+          "hits": [
+            0,
+            5
+          ],
+          "mission": "夺取河关",
+          "officer_corps": {
+            "active_commands": [
+              1,
+              1
+            ],
+            "captives": [
+              [],
+              []
+            ],
+            "commanders": [
+              40,
+              41
+            ],
+            "evacuated": [
+              [],
+              []
+            ],
+            "fallen": [
+              [],
+              []
+            ],
+            "kills": [
+              0,
+              0
+            ],
+            "ranked": true,
+            "rescued": [
+              [],
+              []
+            ],
+            "skills": [
+              0,
+              0
+            ],
+            "successions": [
+              0,
+              0
+            ],
+            "wounded": [
+              [],
+              []
+            ]
+          },
+          "officers": 2,
+          "orders_delivered": 0,
+          "orders_lost": 0,
+          "orders_refused": 0,
+          "ordinary_rosters": [
+            20,
+            20
+          ],
+          "projectiles": 4,
+          "ram_hp": 150,
+          "ram_strokes": 0,
+          "receipt": true,
+          "result": "主将阵亡",
+          "routing": [
+            0,
+            0
+          ],
+          "seed": 61112,
+          "soldiers_per_side": 20,
+          "survivors_can_continue": false,
+          "tick": 43
+        }
+      ]
+    ],
+    "escort_from_log": [
+      "FIELD_ESCORT_GUI_PASS {\"attacks\":3207,\"blocked_hits\":17,\"capture_sec\":0.0,\"crew_replacements\":0,\"dead\":[174,232],\"decision\":\"城门先由先锋攻开，役兵护送冲车抵达门洞。\",\"delivery_prompt\":\"\",\"delivery_tick\":-1,\"dropped_weapons\":[174,232],\"elapsed_ms\":315718,\"errors\":[],\"escaped\":[4,93],\"gate_hp\":0.0,\"hero_hp\":100.0,\"hits\":[1008,715],\"mission\":\"护送冲车\",\"officer_corps\":{\"active_commands\":[13,6],\"captives\":[[],[]],\"commanders\":[1024,1040],\"evacuated\":[[],[]],\"fallen\":[[1024,1028],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049]],\"kills\":[4,4],\"ranked\":true,\"rescued\":[[],[]],\"skills\":[23,15],\"successions\":[1,2],\"wounded\":[[1025],[]]},\"officers\":32,\"opened_tick\":724,\"orders_delivered\":0,\"orders_lost\":0,\"orders_refused\":0,\"ordinary_rosters\":[512,512],\"patrol\":[27,14],\"popup_semantic_fallbacks\":0,\"projectiles\":2074,\"ram_distance_at_open\":3.00881338119507,\"ram_hp\":150.0,\"ram_strokes\":1,\"report_title\":\"护送冲车成功\",\"result\":\"护送冲车成功\",\"routing\":[12,9],\"screens\":[\"patrol-muster\",\"escort-approach\",\"escort-report\",\"escort-vanguard-approach\",\"escort-open-gate\",\"escort-vanguard-report\"],\"seed\":61112,\"soldiers_per_side\":512,\"tick\":724,\"vanguard_delivery\":{\"attacks\":3194,\"blocked_hits\":41,\"capture_sec\":0.0,\"crew_replacements\":1,\"dead\":[199,241],\"decision\":\"城门先由先锋攻开，役兵护送冲车抵达门洞。\",\"delivery_prompt\":\"送车入门 · 距门 10 米\",\"delivery_t"
+    ]
+  }
+}
