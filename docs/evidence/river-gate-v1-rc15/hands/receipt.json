@@ -1,0 +1,521 @@
+{
+  "source": "25558957154c4fb9a878edf17179986acb33cf48",
+  "previous": "5174644f92908a887f4e2ba8d92077af26d5d263",
+  "upstream": "a8bc2d54ff0ac92e78ff71431b1023eda42bf482",
+  "runner": "Ubuntu 24.04 x64, Xvfb, Mesa llvmpipe, Godot 4.6.3, compatibility renderer, 1920x1200 native 1.0 scale",
+  "artwork": "CC0 MakeHuman HM08 body hand and wrist cut: 1,685 indexed source vertices, 1,673 quads; Blender weighted refit, decimation, uncompressed GLB export. Five grip shapes across three distances.",
+  "checks": [
+    {
+      "scope": "original model and weights, first bind, both old and changed real windows, 4 m close to 42 m survey",
+      "run": 43472261061,
+      "artifact": 14062290811
+    },
+    {
+      "scope": "refit relaxed free hand and wooden grips; native states identical to original recording",
+      "run": 43474240506,
+      "artifact": 14061349563
+    }
+  ],
+  "spears": [
+    {
+      "distance": 2.41827321052551,
+      "drawn_tick": 43,
+      "foe_hp": 62,
+      "foe_id": 584,
+      "foe_position": [
+        5.10730171203613,
+        -3.83165073394775
+      ],
+      "follow": true,
+      "hero_hits": 0,
+      "hero_id": 1056,
+      "hero_position": [
+        2.68970727920532,
+        -3.77435398101807
+      ],
+      "hero_slot": 0,
+      "hero_state": 1,
+      "internal_scale": 1,
+      "label": "personal-windup",
+      "lens": 22,
+      "marked_tick": 43,
+      "on_screen": [
+        654.798278808594,
+        390.849517822266,
+        654.798278808594,
+        352.217864990234
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    },
+    {
+      "distance": 1.8135017156601,
+      "drawn_tick": 48,
+      "foe_hp": 39.7627115547657,
+      "foe_id": 584,
+      "foe_position": [
+        4.96484184265137,
+        -3.8282744884491
+      ],
+      "follow": true,
+      "hero_hits": 1,
+      "hero_id": 1056,
+      "hero_position": [
+        3.1518816947937,
+        -3.87259197235107
+      ],
+      "hero_slot": 0,
+      "hero_state": 2,
+      "internal_scale": 1,
+      "label": "personal-contact",
+      "lens": 22,
+      "marked_tick": 48,
+      "on_screen": [
+        647.950134277344,
+        394.243194580078,
+        647.950134277344,
+        355.611541748047
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    },
+    {
+      "distance": 2.41827321052551,
+      "drawn_tick": 43,
+      "foe_hp": 62,
+      "foe_id": 584,
+      "foe_position": [
+        5.10730171203613,
+        -3.83165073394775
+      ],
+      "follow": true,
+      "hero_hits": 0,
+      "hero_id": 1056,
+      "hero_position": [
+        2.68970727920532,
+        -3.77435398101807
+      ],
+      "hero_slot": 0,
+      "hero_state": 1,
+      "internal_scale": 1,
+      "label": "personal-windup",
+      "lens": 8,
+      "marked_tick": 43,
+      "on_screen": [
+        680.69482421875,
+        383.161163330078,
+        680.69482421875,
+        239.497375488281
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    },
+    {
+      "distance": 1.8135017156601,
+      "drawn_tick": 48,
+      "foe_hp": 39.7627115547657,
+      "foe_id": 584,
+      "foe_position": [
+        4.96484184265137,
+        -3.8282744884491
+      ],
+      "follow": true,
+      "hero_hits": 1,
+      "hero_id": 1056,
+      "hero_position": [
+        3.1518816947937,
+        -3.87259197235107
+      ],
+      "hero_slot": 0,
+      "hero_state": 2,
+      "internal_scale": 1,
+      "label": "personal-contact",
+      "lens": 8,
+      "marked_tick": 48,
+      "on_screen": [
+        661.862243652344,
+        389.406585693359,
+        661.862243652344,
+        245.742797851562
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    }
+  ],
+  "bows": [
+    {
+      "ammo": 19,
+      "camera": [
+        7.8,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "set",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "9df5445b348d4fb7ccb25256b5e0bbbcac2a91b234eb6947bc1a1057904f8fd1",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999084472656,
+        389.326904296875,
+        959.999084472656,
+        600.000244140625
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 129,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 25,
+      "timer": 0.5
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        4,
+        0.834778005958433,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "fingers",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "e0bcdb167def5acdb170525449c9d0766ea4aa990ae1ae88fbd5405de7c828cb",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        960,
+        188.559432983398,
+        960,
+        599.998596191406
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        4,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "fingers-side",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "9a8fdd54698e57b5458cf446a8ab9bc3584a2c5f4aa7ec6eaa5f2257c4036aef",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        960.002807617188,
+        188.560302734375,
+        960.002807617188,
+        599.999450683594
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        7.8,
+        0.834778005958433,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "draw-front",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "e2b428af0534686cbd04554b0f67c89ab577a2dd75be87669109917e2c156020",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999450683594,
+        389.326171875,
+        959.999450683594,
+        599.99951171875
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        22,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "draw-normal",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "dae321071e2242a91f8d11f0ea1516836e1422b09cad490b9d29af831b26d9d9",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999755859375,
+        544.812316894531,
+        959.999755859375,
+        600.000305175781
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 18,
+      "camera": [
+        7.8,
+        3.55477800595843,
+        -10.1830387115479,
+        3.89238929748535
+      ],
+      "duration": 0.54,
+      "frame": "loose",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "077253f59d78020303c50e7371e5f505f6ffa5b727c90b170944924e741f4504",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999084472656,
+        389.326904296875,
+        959.999084472656,
+        600.000244140625
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 138,
+      "slot": 0,
+      "state": 2,
+      "target": 582,
+      "tick": 36,
+      "timer": 0.54
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        42,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "ranks",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "a611bec8b828549e567c43ce3c71e9f01989117b588fb66ab929be561f26c25b",
+      "kit": 5,
+      "lod": 2,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999877929688,
+        571.231079101562,
+        959.999877929688,
+        600
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 0,
+      "camera": [
+        6.2,
+        -1.96373288010422,
+        4.56437635421753,
+        -26.4527072906494
+      ],
+      "duration": 0,
+      "frame": "enemy-haft",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 516,
+      "in_view": "d754df6fe1e18435fd4c6a9ae131bd419b7c2bb0fca9fe3406b1c1db43e91677",
+      "kit": 3,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        960.001098632812,
+        334.555297851562,
+        960.001098632812,
+        599.999877929688
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 0,
+      "target": 22,
+      "tick": 32,
+      "timer": 0
+    }
+  ],
+  "limits": [
+    "Near views resolve fingers; the normal 22 m lens shows hand contact silhouettes rather than individual joints. The finger shape is attached to the animated wrist; no per-frame finger animation or deformable contact solver is present.",
+    "The crowded side angle can hide the drawing hand behind a neighbouring soldier. The enemy spearman's handle crosses his face from the sampled angle during a carry.",
+    "The source metrics are descriptive distances; the shared wrist and cuff geometry can extend inside a handle. Contact is visually tested, not certified collision-free.",
+    "The reviewed images and clip are from the real Godot game rendered on hosted Linux. MacBook Air M5 validation and owner art acceptance are separate."
+  ]
+}
