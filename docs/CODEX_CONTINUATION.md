@@ -8,7 +8,7 @@
 
 玩家明确拒绝 RC6 的视觉品质。保留 RC6 可回退；玩法/构建通过不等于美术过关。第一轮真实 512v512 摄像机对照发现路面过橙，柳叶看成大块垂布，近景的胸甲看成横箍；第二轮据此降低道路和草甸饱和度、制作独立柳条，重做分襟、绛披、轻重甲、枪的承重脚和用色。使用现有的九套武器、骨架、蒙皮及模拟。地表和树叶是实际用在战场里的材质，参考图不在游戏里作背景。
 
-环境返工点 `2e049582dd2c5457b1207e4fc358df63965ba9bd`；[首轮窗口与原始 PNG](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43337847031)；[人物二次实机复核](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43338758045)。在集成版本执行 `./tools/prepare-font.sh && ./tools/compare-river-art.sh`，参考基线 `d6b03507c4ace8582ab9f821e604c499616b8dab`，比较时刻、朝向、实际屏内 ID、伤亡与输入相同。视觉需审正常 1920×1200 城门/接敌与近景，不用特写代替。全任务未完成；M5 真机 NOT_RUN。下方为已归档、未改写的 RC6 验证结果。
+环境返工点 `2e049582dd2c5457b1207e4fc358df63965ba9bd`；[首轮窗口与原始 PNG](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43337847031)；[人物二次实机复核](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43338758045)。在集成版本执行 `./tools/prepare-font.sh && ./tools/compare-river-art.sh`，参考基线 `d6b03507c4ace8582ab9f821e604c499616b8dab`，比较时刻、朝向、实际屏内 ID、伤亡与输入相同。视觉需审正常 1920×1200 城门/接敌与近景，不用特写代替。第三轮复查保留了开冠柳的上部叶影，并将能走过的浅岩边缘埋入草皮，避免石片像平放在场地上的道具。人物补修袖口到手腕、行军时的斜持弓与放弦，保留真实出手时刻与九套武器。全任务未完成；M5 真机 NOT_RUN。下方为已归档、未改写的 RC6 验证结果。
 
 ## 河关 0.16.0-rc.6
 

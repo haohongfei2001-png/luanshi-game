@@ -169,7 +169,19 @@ void fragment() {
 				vec2((n.x>n.z?p.y:p.x)*.51+local_pos.y*.21,local_pos.y*.74+p.x*.12);
 			vec3 shale=texture(shale_paint,rock_uv).rgb;
 			float facet=.88+.17*clamp(local_normal.y,0.0,1.0);
-			color=mix(shale*facet,color,.22);
+			vec3 stone=mix(shale*facet,color,.28);
+			// Pieces on walkable ground are shallow by design. Let their buried
+			// toes inherit the exact same turf, instead of drawing a polygon rim.
+			bool on_land=abs(p.x+32.0)>5.1;
+			if(on_land) {
+				vec2 ridge=(p-vec2(9.0,-36.0))/vec2(34.0,16.0);
+				vec2 east=(p-vec2(77.0,43.0))/vec2(30.0,13.0);
+				float relief=pow(max(0.,1.-dot(ridge,ridge)),2.)*3.9+pow(max(0.,1.-dot(east,east)),2.)*1.8;
+				relief-=(1.-clamp((abs(p.x+32.)-3.9)/2.4,0.,1.))*.92;
+				float lift=local_pos.y-relief;
+				float exposed=smoothstep(.024,.153,lift);
+				color=mix(painted_ground(p,0.0),stone*.90,exposed*.90);
+			} else color=stone;
 		} else if(part>=17.5 && part<18.5) {
 			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
 			float grit=texture(fieldbed,face_uv).r;

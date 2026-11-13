@@ -60,8 +60,10 @@ void fragment() {
 				vec4 crown_leaf=texture(elm_bough,u);
 				float moss=dot(crown_leaf.rgb,vec3(.29,.59,.12));
 				vec3 upper=mix(vec3(.076,.120,.085),vec3(.332,.383,.208),clamp(.18+light*.60+moss*.32,0.0,1.0));
-				tone=mix(tone,upper,crown_leaf.a);
-				opacity=max(opacity,crown_leaf.a*.86);
+				float upper_leaf=crown_leaf.a*smoothstep(.09,.52,1.0-UV.y);
+				vec3 painted=mix(crown_leaf.rgb*vec3(.71,.80,.70),upper,.30)*(.71+.28*light);
+				tone=mix(tone,painted,upper_leaf);
+				opacity=max(opacity,upper_leaf*.85);
 			}
 		}
 	} else if(crown>.5) {
