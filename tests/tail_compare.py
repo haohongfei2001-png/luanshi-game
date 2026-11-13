@@ -46,7 +46,7 @@ for target in ('spear-front','spear-back','spear-22m','spear-42m','shield-front'
     halves=[]
     for i,side in enumerate(sides):
         record=next(r for r in states[i] if r['label']==target)
-        im=Image.open(root/side/'actors'/(target+'.png'))
+        im=Image.open(root/side/'actors'/(target+'.png')).convert('RGB')
         assert im.size==(1920,1200)
         x,y=map(round,record['head'])
         width,height=(320,344) if record['camera'][0]<10 else (480,390)
@@ -54,7 +54,9 @@ for target in ('spear-front','spear-back','spear-22m','spear-42m','shield-front'
         halves.append(im.crop(xy+(xy[0]+width,xy[1]+height)))
     out=side_by_side(halves)
     emit(target,out)
-    print('TAIL_DELTA',target,ImageChops.difference(*halves).getbbox())
+    bound=ImageChops.difference(*halves).getbbox()
+    print('TAIL_DELTA',target,bound)
+    if target in ('spear-front','spear-22m','shield-front'): assert bound
 for side in sides:
     im=Image.open(root/side/'actors'/'spear-line.png')
     emit('full-line-'+side,im)

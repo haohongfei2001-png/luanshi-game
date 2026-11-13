@@ -87,7 +87,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tailored-company-real-512
+          name: tailored-company-second-cut-512
           path: |
             artifacts/tailoring/
             !artifacts/tailoring/*/follow/[0-9]*.jpg

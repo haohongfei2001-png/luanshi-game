@@ -22,7 +22,7 @@ def cut_radii(look):
 
 def issue_vest(s, look, rank=False):
     waist, ribs, bottom, sweep = cut_radii(look)
-    cols = 6 if rank else (16 if s.detail else 9)
+    cols = 4 if rank else (14 if s.detail else 8)
     heavy = look != "regular"
 
     def surface(a, h):
@@ -39,9 +39,8 @@ def issue_vest(s, look, rank=False):
         ridge = .010 + .007*max(0.,cos(a))*(1.-abs(sin(2*a)))
         return ((rx+ridge)*sin(a), y, -.017+(rz+ridge)*cos(a)), (CHEST,HIPS,min(1.,max(0.,(y-.858)*3.9)))
 
-    # Sixteenth-century plate silhouettes would be out of place. These are
-    # long rows of dark laced iron over a fitted body of leather and cloth.
-    # Their overhangs have one dominant light across the body in the game view.
+    # Several apron-width strips of iron cross the ribs. A row shares its
+    # highlight across several laced plates; the round back remains visible.
     count = 3 if heavy else 2
     for i in range(count):
         lo, hi = i/count, (i+1)/count
@@ -49,9 +48,13 @@ def issue_vest(s, look, rank=False):
             def panel(u,v):
                 a=start+(end-start)*u
                 pt,skin=surface(a,lo+(hi-lo)*v)
-                lip=(.0035 if heavy else .0025)*(1.-v)
-                return (pt[0]+lip*sin(a),pt[1],pt[2]+lip*cos(a)),skin
-            s.grid(cols,2 if rank else 3,panel,"lamellar" if heavy else "lames")
+                # A slight rise over the flank and the crossing of each lacing
+                # row keep the body round even at the lowest mesh distance.
+                flank=abs(sin(a))
+                rise=.019*flank*(1.-(2*v-1.)**2)
+                lip=(.0040 if heavy else .0030)*(1.-v)
+                return (pt[0]+lip*sin(a),pt[1]+rise,pt[2]+lip*cos(a)),skin
+            s.grid(cols,1 if rank else 3,panel,"lamellar" if heavy else "lames")
     # Supporting leather straps swept along the actual shoulder slope. They
     # stay above the body at the front and back then disappear under the plates.
     for side in (-1,1):
@@ -68,8 +71,7 @@ def issue_vest(s, look, rank=False):
         def apron(u,v):
             down=1.-v
             breadth=sweep+.16*down
-            a=side*(pi*.5+(u-.5)*breadth+.13*down)
-            if side<0: a=side*(pi*.5+(.5-u)*breadth+.13*down)
+            a=side*(pi*.5+.13*down)+(u-.5)*breadth
             length=.212 if not heavy else (.390 if look=="guard" else .324)
             edge=abs(2*u-1)
             y=.972-down*(length-.110*edge**1.6)+.015*sin(a)*down
@@ -77,7 +79,7 @@ def issue_vest(s, look, rank=False):
             depth=(.159 if heavy else .141)+.050*down
             fold=.012*sin(pi*u)*sin(pi*down)
             return ((width+fold)*sin(a),y,-.020+(depth+fold)*cos(a)),(bone,HIPS,.64*down)
-        s.grid(max(3,cols//2),2 if rank else 4,apron,"lamellar" if heavy else "leather")
+        s.grid(max(3,cols//2),1 if rank else 3,apron,"lamellar" if heavy else "leather")
 
     # A soft split tab under the shieldman's defensive coat lies on the thigh.
     # The lower left corner peeks out during a step rather than joining both legs.
@@ -116,13 +118,13 @@ def wrapping(s, look, rank=False):
             y=.939+(low-.939)*d
             radius=(.205 if guard else .174)+(.088 if guard else .092)*d
             depth=(.163 if guard else .145)+.079*d
-            turn=.020*sin(2*pi*u-.80*d)*d
+            turn=.029*sin(2*pi*u-.80*d)*d
             x=(radius+turn)*sin(a)
             z=-.022+(depth+turn)*cos(a)+(.011 if front else -.012)
             side=min(1.,abs(x)/.21)
             return (x,y,z),(THIGHS[0] if x<0 else THIGHS[1],HIPS,d*(.16+.38*side))
-        # The broad outer panel is one fabric. A subdued turned facing at its
-        # working edge catches light only as the crossed skirts open.
+        # The broad outer panel is one fabric. A turned facing catches the
+        # light under a diagonal fold as the crossed skirts open.
         for lo,hi,material in ((0.,.14,"felt"),(.14,1.,"overskirt" if front else "coat")):
-            s.grid(max(1,round(cols*(hi-lo))),3 if rank else 5,
+            s.grid(max(1,round(cols*(hi-lo))),2 if rank else 4,
                    lambda u,v:fold(lo+(hi-lo)*u,v),material)

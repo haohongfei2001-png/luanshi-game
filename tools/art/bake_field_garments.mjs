@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const HIPS=0, CHEST=1, HEAD=2, LEFT_ARM=3;
-const SWATCH={ cloth:1, hide:2, lining:10, headcloth:18, edge:29, iron:30, waist:31 };
+const SWATCH={ cloth:1, hide:2, lining:10, headcloth:18 };
 const pack=[];
 const views=[], accessors=[], nodes=[], meshes=[];
 const lods=[["Close",10,5],["Line",6,3],["Rank",4,2]];
@@ -47,9 +47,9 @@ function surface(look,segments,rows) {
     if(armoured) {
         // Both halves of the wool shoulder piece are cut from one polygonal
         // pattern. The two open corners stop on the ribcage, several centimetres
-        // inside the arm socket. No floating bell-shaped metal spaulders.
+        // inside the arm socket, with the sewn sleeve visible below the edge.
         const guard=look==="Guard";
-        const depth=guard?.117:(look==="Regular"?.209:.166);
+        const depth=guard?.106:(look==="Regular"?.153:.166);
         const n=segments<=4?4:segments;
         function textile(a,down) {
             const front=Math.cos(a),side=Math.sin(a),left=Math.max(0,-side);
@@ -58,15 +58,17 @@ function surface(look,segments,rows) {
             const rx=.086+(.146+.018*left)*Math.sin(down*1.49);
             const rz=.083+(.084+.020*Math.max(0,-front))*Math.sin(down*1.45);
             const fold=.009*Math.sin(2*a+.47)*Math.sin(Math.PI*down);
-            return [(rx+fold)*side,y,-.008+(rz+fold)*front,CHEST,HIPS,1.];
+            const shoulder=Math.abs(side);
+            return [(rx+fold)*side,y,-.008+(rz+fold)*front,
+                    side<0?LEFT_ARM:6,CHEST,.33*shoulder*down];
         }
         // The spearman's left mantle fastens under a bare right shoulder. A
         // shieldman wears the much shorter padded cover beneath a dark corslet.
-        const low=-3.85,high=guard?2.47:.79;
+        const low=-3.60,high=guard?2.47:.30;
         const mat=guard?11:(look==="Regular"?1:19);
         panel(n,rows,mat,(u,v)=>textile(low+(high-low)*u,1-v));
         if(look==="Regular"||guard){
-            panel(n,1,guard?2:10,(u,v)=>textile(low+(high-low)*u,1.055-.055*v));
+            panel(n,1,guard?2:26,(u,v)=>textile(low+(high-low)*u,1.055-.055*v));
         }
     }
     if(look==="Levy" || look==="Archer") {
@@ -124,10 +126,10 @@ function surface(look,segments,rows) {
         }
         // A single soft, cross-body wrap. Its taper exposes the opposite shoulder
         // and elbow on the draw, instead of another symmetrical shoulder plate.
-        panel(segments,3,26,(u,v)=>{
+        panel(segments,3,1,(u,v)=>{
             const a=-2.80+u*2.48, spread=Math.sin(Math.PI*u);
             return [(.169+.099*v)*Math.sin(a),1.432-.168*v*(.55+.51*spread)-.027*Math.sin(a)**2,
-                    -.012+(.108+.064*v)*Math.cos(a),LEFT_ARM,CHEST,.32*v*spread];
+                    -.012+(.108+.064*v)*Math.cos(a),LEFT_ARM,CHEST,.44*v*spread];
         });
     } else if(look==="Levy") {
         // A small, soft ration satchel sits against the right hip, below the existing sling.

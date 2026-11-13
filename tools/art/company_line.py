@@ -20,8 +20,8 @@ def costume(look,rank=False):
             s.rings([(1.27,.207,.134,0,-.012),(1.346,.169,.108,0,-.009),
                      (1.43,.078,.069,0,0)],"dyed",body,8)
         else:
-            hem=.555 if look=="archer" else .516
-            width=.228 if look=="guard" else .207
+            hem=.475 if look=="archer" else .516
+            width=.228 if look in ("guard","archer") else .207
             s.rings([(hem,width,.150,0,-.017),(.744,width*.92,.141,0,-.015),
                      (.953,.161,.119,0,-.013),(1.31,.216,.143,0,-.014),
                      (1.447,.070,.069,0,0)],"coat",body,8)
@@ -74,8 +74,9 @@ def costume(look,rank=False):
             if heavy:
                 shoulder=lerp(a,b,.28)
                 hem=lerp(a,b,.74)
-                s.tube([a,shoulder,hem,b],[.052,.063,.080,.064],
-                       "quilt" if look=="guard" else "linen",upper,5)
+                s.tube([a,shoulder,hem],[.051,.064,.079],
+                       "quilt" if look=="guard" else "dyed",upper,5)
+                s.tube([hem,b],[.079,.059],"quilt" if look=="guard" else "linen",upper,5)
             elif look=="levy":
                 shoulder=lerp(a,b,.40)
                 s.tube([a,shoulder],[.078,.083],"dyed",upper,5)

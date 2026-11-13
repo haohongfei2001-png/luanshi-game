@@ -21,38 +21,27 @@ def smoothstep_cloth(x):
 def coat(s,look):
     close=s.detail
     n=24 if close else 12
-    start={"levy":.575,"archer":.667,"regular":.565,"guard":.601,"officer":.494,"player":.528}[look]
-    hem=[(start,.254,.183),(.75,.239,.170),(.86,.214,.15),(.96,.169,.135),
-         (1.075,.19,.141),(1.185,.219,.151),(1.255,.233,.153),(1.327,.245,.142),
-         (1.408,.199,.100),(1.456,.077,.074)]
-    # Tailored outer dimensions. The armholes stay at the same sockets across all kits.
+    # Station one is the lowest edge, station nine the real neck. The final
+    # four stations meet the sewn armholes; the heavy cuts share their sockets.
     if look=="levy":
-        start=.455
-        hem=[(start,.237,.151),(.693,.211,.143),(.852,.180,.132),(.972,.151,.112),
+        hem=[(.455,.237,.151),(.693,.211,.143),(.852,.180,.132),(.972,.151,.112),
              (1.076,.163,.120),(1.188,.185,.132),(1.261,.213,.132),
              (1.328,.234,.125),(1.406,.172,.084),(1.451,.066,.065)]
-    elif look=="guard":
-        start=.563
-        hem=[(start,.298,.204),(.759,.262,.188),(.875,.235,.164),(.964,.205,.154),
-             (1.077,.225,.177),(1.186,.254,.182),(1.260,.258,.172),
-             (1.331,.262,.152),(1.409,.206,.114),(1.456,.088,.085)]
-    elif look=="regular":
-        hem[3:7]=[(.965,.167,.132),(1.075,.187,.145),(1.187,.212,.154),(1.256,.228,.156)]
-    # The blouse sits under the short corslet. Its back hem is longer than the 
-    # front on a guard; a spearman gathers the working side under his girdle.
-    if look in ("regular","guard","player","officer"):
-        broad = look=="guard"
-        start=.539 if broad else .481
-        hem=[(start,.234 if broad else .204,.155),(.711,.219 if broad else .194,.148),
-             (.851,.196 if broad else .170,.133),(.965,.167 if broad else .150,.117),
-             (1.077,.182,.127),(1.185,.194,.140),(1.258,.216,.139),
-             (1.328,.228,.129),(1.405,.171,.092),(1.449,.068,.067)]
+    elif look=="archer":
+        # An archer's waist is tight under the quiver; the right overlap is
+        # slit to the thigh, and the long, loose left skirt falls over the knee.
+        hem=[(.438,.247,.177),(.684,.226,.163),(.86,.188,.141),(.96,.157,.123),
+             (1.075,.183,.138),(1.185,.208,.151),(1.255,.220,.150),
+             (1.327,.237,.139),(1.408,.184,.095),(1.456,.070,.071)]
+    else:
+        guard=look=="guard"
+        hem=[(.539 if guard else .481,.234 if guard else .204,.155),
+             (.711,.219 if guard else .194,.148),(.851,.196 if guard else .170,.133),
+             (.965,.167 if guard else .150,.117),(1.077,.182,.127),
+             (1.185,.194,.140),(1.258,.216,.139),(1.328,.228,.129),
+             (1.405,.171,.092),(1.449,.068,.067)]
+    start=hem[0][0]
     lo,hi=6,8
-    # A foot archer wears his robe untucked to the thigh; picking the
-    # hem up two inches on the draw side keeps the off knee free.
-    if look=="archer":
-        hem[0]=(.557,.268,.191)
-        hem[1]=(.72,.248,.182)
     def cloth(p):
         x,y,z=p
         if y<.86:
@@ -80,7 +69,7 @@ def coat(s,look):
             # The other skirt panel swings from the hip clear of the bent knee.
             y+=hanging*(.214*max(0.,sin(a+.15))-.040*max(0.,-sin(a))+.092*(1-cut))
         elif look=="archer":
-            y+=hanging*(.154*(1-cut)-.066*cut+.024*sin(2*a+.6))
+            y+=hanging*(.195*max(0.,sin(a+.32))+.074*(1.-cut)-.067*max(0.,-sin(a)))
         else:
             y+=hanging*(.124*(1.-cut)+.094*max(0.,sin(a+.15))-.049*max(0.,-sin(a)))
         y+=hanging*(.049*biased+.009*sin(3*a+.9))
@@ -166,12 +155,16 @@ def coat(s,look):
         for j,(cx,y,rx,rz,cz) in enumerate(sleeve):
             ring=[]
             for out,front in circle:
-                bulge=.003*cos(atan2(front,out)*3+j*.74)
+                angle=atan2(front,out)
+                # Three full-length folds meet under the elbow. Tangential
+                # twists keep the cuff from looking like a cylindrical socket.
+                folds=sin(pi*j/(len(sleeve)-1))
+                bulge=.009*(cos(3*angle-.68*j)+.33*cos(2*angle+.21*j))*folds
                 fullness=1. if heavy else 1.+.095*sin((j+1)*pi/len(sleeve))
                 # The deltoid has a continuous downhill edge, particularly when
                 # the elbow lifts for a bow draw. The cuff tilts at the elbow.
                 slope=.029*(1-j/(len(sleeve)-1))
-                p=(side*(cx+fullness*(rx+bulge)*out),y-slope*max(out,0)-.009*front,
+                p=(side*(cx+fullness*(rx+bulge)*out),y-slope*max(out,0)-.017*front+.011*cos(2*angle+.35*j)*folds,
                    fullness*(rz+bulge)*front+cz)
                 weight=(upper,CHEST,.60) if j==0 else (upper,fore,smoothstep_cloth((y-1.108)/.098))
                 ring.append((p,weight))
@@ -183,13 +176,16 @@ def coat(s,look):
             roller=3 if close else 2
             # The narrow sleeveless corselet leaves a large, readable fold of
             # wool. The shieldman's covered upper arm is quieter than his shield.
-            panels=[(0,roller,"quilt" if look=="guard" else "linen"),
-                    (roller,edge-1,"coat" if look=="guard" else "linen")]
+            panels=[(0,roller,"quilt" if look=="guard" else "dyed"),
+                    (roller,edge-1,"linen" if look=="regular" else "quilt")]
         elif look=="levy":
             shoulder=2 if close else 1
             panels=[(0,shoulder,"dyed"),(shoulder,edge-1,"linen")]
         else:
-            panels=[(0,edge-1,"dyed")]
+            # The bow sleeve has a substantial blue-grey cuff inside a diagonal
+            # fold; the string passes a narrow forearm when the archer draws.
+            roller=4 if close else 3
+            panels=[(0,roller,"coat"),(roller,edge-1,"linen")]
         panels.append((edge-1,edge,"binding" if heavy else "headcloth"))
         for first,last,material in panels:
             def sleeve_point(u,v):
@@ -353,8 +349,10 @@ def limbs(s,look):
         # A tapered recess behind the kneecap opens when the lower leg folds.
         def knee_cut(p,a,row):
             rear=max(0.,-cos(a))
-            take=(.015*rear*exp(-((p[1]-.464)/.063)**2))
-            return (p[0],p[1]-.012*rear*exp(-((p[1]-.485)/.08)**2),p[2]+take)
+            knee=exp(-((p[1]-.464)/.069)**2)
+            take=.022*rear*knee
+            gathered=.0085*cos(3*a-.66*row)*exp(-((p[1]-.52)/.15)**2)
+            return (p[0]+gathered*sin(a),p[1]-.022*rear*knee,p[2]+take+gathered*cos(a))
         s.rings(sections,"felt",leg,n,knee_cut)
         def ankle_blend(p): return (shin,boot,clamp((p[1]-.103)/.082))
         s.rings([(.078,.057,.065,ankle[0],-.010),(.118,.061,.066,ankle[0],-.006),
