@@ -4,13 +4,13 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 RC9 工作点｜正常游玩镜头，美术仍在返工
+## 河关 RC9 试玩候选已合入，美术自审未达标
 
-保留已交付的 RC8 作为回退包。第一轮在真实 1920×1200 游戏窗口看见两军的麻布上衣太亮，第二轮压低布色并从肩部区分队伍，修复远看城门时误切整片屋顶。摄影回归保留 512+512 名普通兵、正常输入、受击者、命中时刻及三种观察距离。新衣甲、马匹造型、武器握点和门楼只改变呈现。[首轮窗口](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43366685292) · [第二轮同输入窗口和切顶测试](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43368606849)。
+[下载 macOS、正常视角、连续实录、测试和校验值](evidence/river-gate-v1-rc9/PLAYTEST.md)。游戏源码 `be80dc767dc5dcaa3f6e217fbcce93f3dc1347b7`，main 合并 `4a3ebc4d3c8e687337b27829c6bc13be20810f09`，与真实导出 `1ec3a54c97b8fc87ad476c9e97918d26a1813e0f` 的树相同。[游戏 PR #43 六项检查](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43374886624)全部通过。曾失败的盾兵近景已按相同相机重做盾面和携行位置，原断言补回 106 个持械手肤色像素。过亮麻衣、光滑树冠与偏黄道路的退回版本有记录。主角实际出枪、九武器、战役目标、将领继任、骑乘、护送及战后行军/存读档有回归。最终画面和完整游戏仍未通过。以[新质量要求](OWNER_QUALITY_FIDELITY_PERFORMANCE_TARGET_20261113.md)为准。
 
-第二轮生长成圆壳的榆冠、偏黄的地面不符合参考。以正常亲战、河岸、城门复核树簇和路缘，同时看主角出枪与冲车悬梁。实机标准是中国古代动画式小人物的轮廓和动作在玩家视距可读。构建与功能测试不能代替美术验收。真实 MacBook Air M5 未运行。
+托管虚拟 M2 Pro，默认 1024×640、100% / 4× MSAA，24.002 s，P95/P99 10.288/12.594 ms，最长 48.986 ms；九次空游戏目录启动通过。真实 M5、内外屏 20 分钟及热稳态仍为 NOT_RUN。同树 main 第二次六项通过，托管虚拟 M1 的同档 P95/P99 为 20.939/29.974 ms，9/9 启动；未达到稳定 60 FPS 的 P95 目标。
 
-可复现入口为 `./tools/prepare-font.sh && godot --headless --editor --path . --import`，随后在云端显示环境运行 `godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/river_craft_camera.gd -- --field-size=512` 与 `tests/rc7_personal_contact.gd`。候选包和成功、失败的原始数据须钉在同一源码或经比较的同树提交。
+**下条可执行动作**：云端检出 `4a3ebc4d3c8e687337b27829c6bc13be20810f09`，执行 `./tools/prepare-font.sh && godot --headless --editor --path . --import`，再在有图形服务的环境运行 `godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512`。取 43/48 步和 `tests/river_craft_camera.gd` 第 65 步三档原图，继续改人物肩髋受力、重甲侧影和马头轮廓。保留眼下包作可回退版本，M5 另验。
 
 ## RC8 之后的步兵动作试作｜独立分支，未装进 RC8
 

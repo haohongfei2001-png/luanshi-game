@@ -1,0 +1,140 @@
+{
+  "failed_full_run": 43371530553,
+  "failed_game": "c90057f4a180810191c2e4ac08fd2b2b6776ef7f",
+  "failed_portrait": {
+    "face_skin_pixels": 28,
+    "hand_skin_pixels": 0
+  },
+  "fixed_targeted_run": 43374092581,
+  "verified_shape": "ec1bd57dadb88f12dbdd9588599973239236c0b8",
+  "shipping_source": "be80dc767dc5dcaa3f6e217fbcce93f3dc1347b7",
+  "unchanged_orbit": "tests/field_controls.gd::_portrait",
+  "accepted": [
+    {
+      "name": "RIVER_GRIP_AUDIT",
+      "data": [
+        {
+          "kit": 0,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000156,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        },
+        {
+          "kit": 1,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000154,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        },
+        {
+          "kit": 2,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000168,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        },
+        {
+          "kit": 3,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000162,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        },
+        {
+          "kit": 4,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000147,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        },
+        {
+          "kit": 5,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000155,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0.193068
+        },
+        {
+          "kit": 6,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000148,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        },
+        {
+          "kit": 7,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000158,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        },
+        {
+          "kit": 8,
+          "measurements": 1984,
+          "p95_m": 0,
+          "worst_wrist_m": 0,
+          "baked_wrist_m": 0.000165,
+          "worst_nock_m": 0,
+          "released_brace_m": 0,
+          "gripping_span_m": 0
+        }
+      ]
+    },
+    {
+      "name": "FIELD_CARRIES_AUDIT",
+      "data": {
+        "alternate_strips": 102,
+        "max_baked_wrist_m": 0.0001672809649303058,
+        "impact_error_m": 0,
+        "planted_original_m": 0.0007653275824480561,
+        "distance_from_regular_carry_m": {
+          "(3, 1)": 0.918,
+          "(3, 2)": 0.922,
+          "(4, 1)": 0.845,
+          "(4, 2)": 0.739,
+          "(7, 1)": 0.103,
+          "(7, 2)": 0.089
+        }
+      }
+    },
+    {
+      "name": "FIELD_PORTRAIT",
+      "data": {
+        "crop_px": [
+          156,
+          206
+        ],
+        "face_skin_pixels": 19,
+        "hand_skin_pixels": 106,
+        "zoom": 5.80000019073486
+      }
+    }
+  ],
+  "mesh_sha256": "44c9a150bcf0035c185514c8f31f39daa96a7574117fd20153ee5ab4c467886e",
+  "bank_sha256": "6addb3ca0d94a5d8305144c1b6f5ec96c456f03e0db79ff22e24028a6792de11"
+}
