@@ -46,8 +46,12 @@ vec3 painted_ground(vec2 p, float shore) {
     vec2 uv=vec2(p.x*.134+p.y*.025,p.y*.141-p.x*.022);
     vec3 marks=texture(verge_track,uv*.78).rgb;
     vec2 warp=.10*vec2(sin(p.y*.22+p.x*.06),cos(p.x*.19-p.y*.087));
-    vec3 turf=texture(meadow_paint,uv+warp).rgb;
-    vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66).rgb;
+    // Low grass lays in broad masses in the open field. Only its verge needs
+    // a high-contrast tuft pattern. A mip bias preserves painted landforms and
+    // does not change the resolution of the character, weapon, ground or HUD.
+    float verge_detail=smoothstep(.20,.77,cover.r);
+    vec3 turf=texture(meadow_paint,uv+warp,mix(2.35,.65,verge_detail)).rgb;
+    vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66,1.12).rgb;
     float clay_value=dot(clay,vec3(.30,.57,.13));
     float turf_value=dot(turf,vec3(.30,.57,.13));
     // Suppress orange and lime in sunlight, keeping the sampled shape and value.

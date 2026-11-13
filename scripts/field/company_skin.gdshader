@@ -138,7 +138,17 @@ void fragment() {
     else if (cloth_panel == 22) dye = .82;
     else if (cloth_panel == 26) dye = .66;
     else if (cloth_panel == 11) dye = .35;
-    vec3 bolt = livery.rgb * mix(.85, 1.15, cloth_lot);
+    vec3 bolt = livery.rgb * mix(.84, 1.10, cloth_lot);
+    // Common coats were cut from several dye lots. Keep a coloured collar or
+    // overskirt even on the pale archer's body; hands/iron never inherit dye.
+    if (!player_costume && (cloth_panel==27 || cloth_panel==1)) {
+        if (kit==5 || kit==6) {
+            vec3 flax=OUTPUT_IS_SRGB ? vec3(.47,.43,.34) : vec3(.18,.15,.095);
+            bolt=mix(bolt,flax,.47+.17*cloth_lot);
+        } else if (kit==3 || kit==7 || kit==4) {
+            bolt*=.85;
+        }
+    }
     float fold = dot(ink, vec3(.28, .56, .16));
     float mid = OUTPUT_IS_SRGB ? .73 : .52;
     vec3 colour = mix(ink, bolt * clamp(fold / mid, .64, 1.24), dye);
