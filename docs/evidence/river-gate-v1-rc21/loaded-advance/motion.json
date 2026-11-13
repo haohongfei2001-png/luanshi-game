@@ -1,0 +1,299 @@
+{
+  "banks": [
+    [
+      528,
+      1668
+    ],
+    [
+      528,
+      1668
+    ]
+  ],
+  "fields": {
+    "0": {
+      "walk": {
+        "before": {
+          "pelvis_yaw_deg": 4.1784,
+          "shoulder_yaw_deg": 20.7566,
+          "shoulder_roll_deg": 4.7755,
+          "chest_hip_twist_deg": 16.7226,
+          "trunk_lean_deg": 0.3858,
+          "pelvis_side_m": 0.0736
+        },
+        "after": {
+          "pelvis_yaw_deg": 14.9865,
+          "shoulder_yaw_deg": 43.1252,
+          "shoulder_roll_deg": 13.7159,
+          "chest_hip_twist_deg": 58.097,
+          "trunk_lean_deg": 8.23,
+          "pelvis_side_m": 0.1323
+        }
+      },
+      "run": {
+        "before": {
+          "pelvis_yaw_deg": 1.921,
+          "shoulder_yaw_deg": 30.432,
+          "shoulder_roll_deg": 29.8886,
+          "chest_hip_twist_deg": 32.3531,
+          "trunk_lean_deg": 2.9806,
+          "pelvis_side_m": 0.0376
+        },
+        "after": {
+          "pelvis_yaw_deg": 20.1924,
+          "shoulder_yaw_deg": 51.0384,
+          "shoulder_roll_deg": 40.9166,
+          "chest_hip_twist_deg": 69.8871,
+          "trunk_lean_deg": 12.6747,
+          "pelvis_side_m": 0.0771
+        }
+      },
+      "halt": {
+        "before": {
+          "pelvis_yaw_deg": 0.0033,
+          "shoulder_yaw_deg": 5.1846,
+          "shoulder_roll_deg": 1.3911,
+          "chest_hip_twist_deg": 5.1818,
+          "trunk_lean_deg": 1.8055,
+          "pelvis_side_m": 0.01
+        },
+        "after": {
+          "pelvis_yaw_deg": 0.0001,
+          "shoulder_yaw_deg": 5.1821,
+          "shoulder_roll_deg": 1.3949,
+          "chest_hip_twist_deg": 5.1821,
+          "trunk_lean_deg": 1.7318,
+          "pelvis_side_m": 0.01
+        }
+      }
+    },
+    "3": {
+      "walk": {
+        "before": {
+          "pelvis_yaw_deg": 4.3047,
+          "shoulder_yaw_deg": 12.5102,
+          "shoulder_roll_deg": 0.4045,
+          "chest_hip_twist_deg": 8.3143,
+          "trunk_lean_deg": 0.3981,
+          "pelvis_side_m": 0.043
+        },
+        "after": {
+          "pelvis_yaw_deg": 14.9106,
+          "shoulder_yaw_deg": 34.6467,
+          "shoulder_roll_deg": 14.8194,
+          "chest_hip_twist_deg": 49.3284,
+          "trunk_lean_deg": 10.3147,
+          "pelvis_side_m": 0.1003
+        }
+      },
+      "run": {
+        "before": {
+          "pelvis_yaw_deg": 2.1371,
+          "shoulder_yaw_deg": 18.0245,
+          "shoulder_roll_deg": 22.0648,
+          "chest_hip_twist_deg": 20.1616,
+          "trunk_lean_deg": 3.0025,
+          "pelvis_side_m": 0.0378
+        },
+        "after": {
+          "pelvis_yaw_deg": 20.4524,
+          "shoulder_yaw_deg": 36.6546,
+          "shoulder_roll_deg": 32.8039,
+          "chest_hip_twist_deg": 56.3383,
+          "trunk_lean_deg": 14.6366,
+          "pelvis_side_m": 0.0772
+        }
+      },
+      "halt": {
+        "before": {
+          "pelvis_yaw_deg": 0.0004,
+          "shoulder_yaw_deg": 5.168,
+          "shoulder_roll_deg": 1.4248,
+          "chest_hip_twist_deg": 5.1685,
+          "trunk_lean_deg": 1.4911,
+          "pelvis_side_m": 0.01
+        },
+        "after": {
+          "pelvis_yaw_deg": 0.0034,
+          "shoulder_yaw_deg": 5.2121,
+          "shoulder_roll_deg": 1.605,
+          "chest_hip_twist_deg": 5.2134,
+          "trunk_lean_deg": 1.1422,
+          "pelvis_side_m": 0.01
+        }
+      }
+    },
+    "5": {
+      "walk": {
+        "before": {
+          "pelvis_yaw_deg": 4.0505,
+          "shoulder_yaw_deg": 20.4628,
+          "shoulder_roll_deg": 4.6898,
+          "chest_hip_twist_deg": 16.5504,
+          "trunk_lean_deg": 0.4917,
+          "pelvis_side_m": 0.0737
+        },
+        "after": {
+          "pelvis_yaw_deg": 15.0916,
+          "shoulder_yaw_deg": 38.2432,
+          "shoulder_roll_deg": 14.1331,
+          "chest_hip_twist_deg": 53.2901,
+          "trunk_lean_deg": 9.9723,
+          "pelvis_side_m": 0.1323
+        }
+      },
+      "run": {
+        "before": {
+          "pelvis_yaw_deg": 1.6311,
+          "shoulder_yaw_deg": 32.4911,
+          "shoulder_roll_deg": 31.7967,
+          "chest_hip_twist_deg": 34.1222,
+          "trunk_lean_deg": 6.4332,
+          "pelvis_side_m": 0.0378
+        },
+        "after": {
+          "pelvis_yaw_deg": 19.8451,
+          "shoulder_yaw_deg": 48.7585,
+          "shoulder_roll_deg": 43.1116,
+          "chest_hip_twist_deg": 66.9481,
+          "trunk_lean_deg": 17.942,
+          "pelvis_side_m": 0.0771
+        }
+      },
+      "halt": {
+        "before": {
+          "pelvis_yaw_deg": 0.0,
+          "shoulder_yaw_deg": 5.1658,
+          "shoulder_roll_deg": 1.5506,
+          "chest_hip_twist_deg": 5.1658,
+          "trunk_lean_deg": 2.2016,
+          "pelvis_side_m": 0.01
+        },
+        "after": {
+          "pelvis_yaw_deg": 0.0,
+          "shoulder_yaw_deg": 5.0518,
+          "shoulder_roll_deg": 1.879,
+          "chest_hip_twist_deg": 5.0518,
+          "trunk_lean_deg": 2.405,
+          "pelvis_side_m": 0.01
+        }
+      }
+    },
+    "6": {
+      "walk": {
+        "before": {
+          "pelvis_yaw_deg": 4.1784,
+          "shoulder_yaw_deg": 17.3023,
+          "shoulder_roll_deg": 4.7547,
+          "chest_hip_twist_deg": 13.2683,
+          "trunk_lean_deg": 0.324,
+          "pelvis_side_m": 0.0736
+        },
+        "after": {
+          "pelvis_yaw_deg": 14.9865,
+          "shoulder_yaw_deg": 35.063,
+          "shoulder_roll_deg": 13.9075,
+          "chest_hip_twist_deg": 50.0348,
+          "trunk_lean_deg": 10.1795,
+          "pelvis_side_m": 0.1323
+        }
+      },
+      "run": {
+        "before": {
+          "pelvis_yaw_deg": 1.921,
+          "shoulder_yaw_deg": 19.1799,
+          "shoulder_roll_deg": 21.9694,
+          "chest_hip_twist_deg": 21.1009,
+          "trunk_lean_deg": 1.4808,
+          "pelvis_side_m": 0.0376
+        },
+        "after": {
+          "pelvis_yaw_deg": 20.1924,
+          "shoulder_yaw_deg": 35.3679,
+          "shoulder_roll_deg": 32.6449,
+          "chest_hip_twist_deg": 54.4456,
+          "trunk_lean_deg": 13.1777,
+          "pelvis_side_m": 0.0771
+        }
+      },
+      "halt": {
+        "before": {
+          "pelvis_yaw_deg": 0.0033,
+          "shoulder_yaw_deg": 5.1846,
+          "shoulder_roll_deg": 1.3911,
+          "chest_hip_twist_deg": 5.1818,
+          "trunk_lean_deg": 1.8055,
+          "pelvis_side_m": 0.01
+        },
+        "after": {
+          "pelvis_yaw_deg": 0.0035,
+          "shoulder_yaw_deg": 5.2381,
+          "shoulder_roll_deg": 1.4303,
+          "chest_hip_twist_deg": 5.2373,
+          "trunk_lean_deg": 1.3719,
+          "pelvis_side_m": 0.0099
+        }
+      }
+    },
+    "7": {
+      "walk": {
+        "before": {
+          "pelvis_yaw_deg": 4.4079,
+          "shoulder_yaw_deg": 15.07,
+          "shoulder_roll_deg": 0.1979,
+          "chest_hip_twist_deg": 10.7722,
+          "trunk_lean_deg": 1.3658,
+          "pelvis_side_m": 0.043
+        },
+        "after": {
+          "pelvis_yaw_deg": 14.8575,
+          "shoulder_yaw_deg": 27.7683,
+          "shoulder_roll_deg": 10.8016,
+          "chest_hip_twist_deg": 42.6257,
+          "trunk_lean_deg": 11.9451,
+          "pelvis_side_m": 0.1139
+        }
+      },
+      "run": {
+        "before": {
+          "pelvis_yaw_deg": 2.3557,
+          "shoulder_yaw_deg": 21.7713,
+          "shoulder_roll_deg": 22.1682,
+          "chest_hip_twist_deg": 24.1269,
+          "trunk_lean_deg": 2.6728,
+          "pelvis_side_m": 0.0377
+        },
+        "after": {
+          "pelvis_yaw_deg": 20.7112,
+          "shoulder_yaw_deg": 31.4448,
+          "shoulder_roll_deg": 29.0527,
+          "chest_hip_twist_deg": 51.2784,
+          "trunk_lean_deg": 13.9819,
+          "pelvis_side_m": 0.0887
+        }
+      },
+      "halt": {
+        "before": {
+          "pelvis_yaw_deg": 0.0002,
+          "shoulder_yaw_deg": 5.1306,
+          "shoulder_roll_deg": 1.2922,
+          "chest_hip_twist_deg": 5.1308,
+          "trunk_lean_deg": 1.4859,
+          "pelvis_side_m": 0.0101
+        },
+        "after": {
+          "pelvis_yaw_deg": 0.0033,
+          "shoulder_yaw_deg": 5.1686,
+          "shoulder_roll_deg": 0.956,
+          "chest_hip_twist_deg": 5.1687,
+          "trunk_lean_deg": 1.0253,
+          "pelvis_side_m": 0.01
+        }
+      }
+    }
+  },
+  "changed_travel_idle_lanes": 207,
+  "matched_nontravel_lanes": 210,
+  "boot_pairs_byte_equal": 834,
+  "worst_changed_wrist_gap_m": 0.00016333927621295033,
+  "planted_stance_m": 0.0007653275824480561
+}
