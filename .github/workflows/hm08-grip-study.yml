@@ -1,0 +1,85 @@
+name: Compare the HM08 hands on actual field weapons
+on:
+  push:
+    branches: [codex/river-hm08-grips-study]
+permissions:
+  contents: read
+jobs:
+  draw:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 23
+    permissions:
+      contents: write
+      actions: read
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      BASE: 5174644f92908a887f4e2ba8d92077af26d5d263
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bake the CC0 master with Blender and replay the configured game inputs
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          src=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$src/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/engine.zip' | sha512sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/engine
+          g=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
+          dst="$PWD/artifacts/hands"
+          mkdir -p "$dst"
+          if ! command -v blender >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends blender; fi
+          python3 tools/art/fetch_hand_source.py /tmp/river-hm08
+          blender -b -t 1 --python-exit-code 1 --python tools/art/makehuman_hands.py -- /tmp/river-hm08 tools/art/source/hand_grips.glb | tee "$dst/blender.log"
+          python3 tools/art/bake_river_company.py --geometry-only | tee "$dst/bake.log"
+          python3 tests/hand_socket.py | tee "$dst/sockets.log"
+          python3 tools/art/check_company_motion.py | tee "$dst/binds.log"
+          ./tools/prepare-font.sh
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev="$BASE"; fi
+            dir="$RUNNER_TEMP/coat-$side"
+            git worktree add --quiet --detach "$dir" "$rev"
+            cp tests/{coat_follow.gd,hm08_bow.gd} "$dir/tests/"
+            mkdir -p "$dst/$side"
+            cp -a assets/fonts/. "$dir/assets/fonts/"
+            if test "$side" = after; then cp assets/river_gate/figures/river_company.glb "$dir/assets/river_gate/figures/"; cp tools/art/source/hand_grips.glb "$dir/tools/art/source/"; fi
+            (
+              cd "$dir"
+              mkdir -p artifacts
+              touch artifacts/.gdignore
+              "$g" --headless --editor --path . --import >"$dst/$side-import.log" 2>&1
+              if grep -E -A3 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$dst/$side-import.log"; then exit 1; fi
+              for lens in 22 8; do
+                logfile="$dst/$side-$lens.log"
+                timeout 230s xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path . --resolution 1920x1200 --disable-vsync --audio-driver Dummy --fixed-fps 30 --script tests/coat_follow.gd -- --field-size=512 --coat-lens="$lens" 2>&1 | tee "$logfile"
+                grep -q '^RC7_PERSONAL_PASS' "$logfile"
+                if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$logfile"; then exit 1; fi
+                cp -r "artifacts/coat-$lens" "$dst/$side/$lens"
+              done
+              timeout 230s xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path . --resolution 1920x1200 --disable-vsync --audio-driver Dummy --fixed-fps 20 --script tests/hm08_bow.gd -- --field-size=512 2>&1 | tee "$dst/$side-bow.log"
+              grep -q '^ARCHER_WINDOW true' "$dst/$side-bow.log"
+              if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$dst/$side-bow.log"; then exit 1; fi
+              cp -r artifacts/grips-bow "$dst/$side/bow"
+              ffmpeg -loglevel error -y -framerate 20 -i "$dst/$side/bow/film/%03d.jpg" -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart "$dst/$side-bow.mp4"
+              ffmpeg -loglevel error -y -framerate 30 -i "$dst/$side/22/film/%03d.jpg" -c:v libx264 -crf 17 -pix_fmt yuv420p -movflags +faststart "$dst/$side.mp4"
+            )
+          done
+          python3 -u tests/hm08_plates.py
+          ffmpeg -loglevel error -y -i "$dst/before.mp4" -i "$dst/after.mp4" -filter_complex '[0:v][1:v]hstack=inputs=2' -c:v libx264 -crf 17 -pix_fmt yuv420p -movflags +faststart "$dst/approach-equal-speed.mp4"
+          ffmpeg -loglevel error -y -i "$dst/before-bow.mp4" -i "$dst/after-bow.mp4" -filter_complex '[0:v]scale=768:480[l];[1:v]scale=768:480[r];[l][r]hstack=inputs=2' -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart "$dst/bow-equal-speed.mp4"
+      - name: Preserve the baked assets and comparison
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tests/hand_blob.py blobs tools/art/source/hand_grips.glb assets/river_gate/figures/river_company.glb artifacts/hands/{approach,bow}-equal-speed.mp4 artifacts/hands/*.jpg
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-hm08-anatomy-window
+          path: |
+            artifacts/hands/
+            !artifacts/hands/*/*/film/
