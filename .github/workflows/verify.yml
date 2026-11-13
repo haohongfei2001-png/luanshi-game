@@ -153,14 +153,15 @@ jobs:
         run: |
           if ! command -v ffmpeg >/dev/null || ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
           ./tools/test-field-journey.sh
-          ./tools/test-field-render.sh journey
           ffmpeg -nostdin -loglevel error -y -i artifacts/river-gate-review.mp4 -vf "select=not(mod(n\\,75)),scale=440:-2,tile=3x4:padding=2:margin=2:color=black" -frames:v 1 -q:v 3 artifacts/journey-frames.jpg
+          ./tools/test-field-render.sh journey
       - name: Measure four army sizes and film weapons and the full siege
         if: matrix.suite == 'footage'
         run: |
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
           ./tools/test-field-render.sh footage
       - name: Upload gameplay footage
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: gameplay-${{ matrix.suite }}-${{ github.sha }}
@@ -183,6 +184,42 @@ jobs:
             !artifacts/kit-film/**
             !artifacts/siege-film/**
             !artifacts/*.mp4
+
+  play-export:
+    name: Play the exported Linux package through its normal inputs
+    needs: verify-and-export
+    runs-on: ubuntu-24.04
+    timeout-minutes: 23
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-Linux-${{ github.sha }}
+          path: package
+      - uses: actions/download-artifact@v4
+        with:
+          name: verification-${{ github.sha }}
+          path: package-report
+      - name: Record the shipped binary with real keyboard, pointer and engine audio
+        env:
+          EXPECTED_EXPORT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          sums=$(find package-report -name SHA256SUMS -print -quit)
+          export PACKAGE_HASH=$(awk '/Luanshi-linux.tar.gz$/ {print $1}' "$sums")
+          test -n "$PACKAGE_HASH"
+          echo "$PACKAGE_HASH  package/Luanshi-linux.tar.gz" | sha256sum --check
+          tar -C package -xf package/Luanshi-linux.tar.gz Luanshi-linux.x86_64
+          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool ffmpeg; fi
+          xvfb-run -a -s '-screen 0 1280x800x24' python3 tools/record_export_window.py records "$RUNNER_TEMP/river-frames" package/Luanshi-linux.x86_64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exported-game-window-${{ github.sha }}
+          path: records/
+          if-no-files-found: warn
 
   macos-runtime:
     needs: verify-and-export
