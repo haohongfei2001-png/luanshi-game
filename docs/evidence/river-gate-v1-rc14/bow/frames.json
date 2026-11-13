@@ -1,0 +1,350 @@
+{
+  "git_implementation": "d1ef98a1c7556eab1e80062ef80fb6c163c048c9",
+  "sample_commit": "cadfdb8e86857d56ca310a25771b5ebf525e9897",
+  "base": "0dfd1c075652c5b603e99d3abdbb9df93311311c",
+  "run": 43462682084,
+  "artifacts": [
+    "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43462682084/artifacts/14057162048"
+  ],
+  "samples": [
+    {
+      "ammo": 19,
+      "camera": [
+        7.8,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "set",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "9df5445b348d4fb7ccb25256b5e0bbbcac2a91b234eb6947bc1a1057904f8fd1",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999084472656,
+        389.326904296875,
+        959.999084472656,
+        600.000244140625
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 129,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 25,
+      "timer": 0.5
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        7.8,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "draw",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "c39d70a12c7d96559c0da62c3325900d30f80a6f8041cabb15f3170ca59c028d",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999084472656,
+        389.326904296875,
+        959.999084472656,
+        600.000244140625
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        7.8,
+        0.834778005958433,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "draw-front",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "e2b428af0534686cbd04554b0f67c89ab577a2dd75be87669109917e2c156020",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999450683594,
+        389.326171875,
+        959.999450683594,
+        599.99951171875
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        9.1,
+        4.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "draw-back",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "666cdd482c217cbae16aa0b3b4cb4e007c1d604268c687e6344a502f599a333e",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        960.000366210938,
+        420.960113525391,
+        960.000366210938,
+        599.99951171875
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        22,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "draw-normal",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "dae321071e2242a91f8d11f0ea1516836e1422b09cad490b9d29af831b26d9d9",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999755859375,
+        544.812316894531,
+        959.999755859375,
+        600.000305175781
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 19,
+      "camera": [
+        42,
+        3.55477800595843,
+        -10.1911373138428,
+        3.89092087745667
+      ],
+      "duration": 0.5,
+      "frame": "ranks",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "a611bec8b828549e567c43ce3c71e9f01989117b588fb66ab929be561f26c25b",
+      "kit": 5,
+      "lod": 2,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999877929688,
+        571.231079101562,
+        959.999877929688,
+        600
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 134,
+      "slot": 0,
+      "state": 1,
+      "target": 582,
+      "tick": 32,
+      "timer": 0.15
+    },
+    {
+      "ammo": 18,
+      "camera": [
+        7.8,
+        3.55477800595843,
+        -10.1830387115479,
+        3.89238929748535
+      ],
+      "duration": 0.54,
+      "frame": "loose",
+      "hits": [
+        82,
+        42
+      ],
+      "id": 94,
+      "in_view": "077253f59d78020303c50e7371e5f505f6ffa5b727c90b170944924e741f4504",
+      "kit": 5,
+      "lod": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        1920,
+        1200
+      ],
+      "post": [
+        959.999084472656,
+        389.326904296875,
+        959.999084472656,
+        600.000244140625
+      ],
+      "scale": 1,
+      "seed": 61112,
+      "shots": 138,
+      "slot": 0,
+      "state": 2,
+      "target": 582,
+      "tick": 36,
+      "timer": 0.54
+    }
+  ],
+  "asset_hashes": {
+    "river_company.glb": {
+      "sha": "08d7d3b60e379f424b650569cb4172cb2b1bd096",
+      "size": 1873372,
+      "sha256": "9fb9d4d7401aad64c84fad69c381c75813a1a898ee726f9993f7a8170e7feb59"
+    },
+    "field_garments.gltf": {
+      "sha": "7fe8915a5e73a86ed20ae58566ef517c81ebc945",
+      "size": 137494,
+      "sha256": "a68c32208dcd34039edb9764351ff25339d29046a68308c17bd4daa6ace30b6d"
+    },
+    "equal-speed.mp4": {
+      "sha": "9031c4b8fc8f8752814a3fa0c74d56edd960d848",
+      "size": 1670717,
+      "sha256": "ac89e6bb6a94ffbe9562858487135e86dc0deca96cd354914a2587fb7446d4c9"
+    },
+    "draw-back-native-pair.jpg": {
+      "sha": "09f8ea925f89f606a2dba890de64bd8565541262",
+      "size": 181231,
+      "sha256": "10e2aba621ecaeb25cebb08f82a57d91f0a8503c5ccc949509a77a10645d1af9"
+    },
+    "draw-front-native-pair.jpg": {
+      "sha": "09ed6e34495d1ce2aaf90151afd738aeec320cd8",
+      "size": 187868,
+      "sha256": "8b0c1ab813032bae49a482e8f435e62524bc494f3d302ea38bbae992c7c8e600"
+    },
+    "draw-native-pair.jpg": {
+      "sha": "099d6afb0f373074dce938c75db381ed15ba25dc",
+      "size": 184244,
+      "sha256": "f7fe833d0029e1e66065f880aba73476661ff7d0c76fff9c28bcb19255a0938b"
+    },
+    "draw-normal-native-pair.jpg": {
+      "sha": "fdbcbbbdbe5ef98c020128907647d99ba7332011",
+      "size": 314789,
+      "sha256": "c7e98f074ec4605bbd41002c9eec889d1b2f4aca4b3207202f55d761ccf54630"
+    },
+    "loose-native-pair.jpg": {
+      "sha": "53d2f4c6f945321d435aa95bf4c62a4e0ba9dbda",
+      "size": 185259,
+      "sha256": "82948bcf1f104fe94c2cb122e530249521a8d59ca68d5d33bb465a822afe09a2"
+    },
+    "ranks-native-pair.jpg": {
+      "sha": "81a70a2e22e89571c414709b3ef29086099e9de2",
+      "size": 328527,
+      "sha256": "abb9a1cb88510082b696013feeed0eccb810a902645b43088d92fec68130b6dc"
+    },
+    "set-native-pair.jpg": {
+      "sha": "3e4443098555269827f27486d1210c646c332f8b",
+      "size": 180897,
+      "sha256": "65de50f4fddf9a417139da27c24ad551d542d57fa14e49131c847381be58b2eb"
+    }
+  }
+}
