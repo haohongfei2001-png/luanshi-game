@@ -1,0 +1,431 @@
+{
+  "linux": [
+    {
+      "soldiers_per_side": 20,
+      "ordinary_rosters": [
+        20,
+        20
+      ],
+      "viewport_px": [
+        1280,
+        800
+      ],
+      "render_scale": 1,
+      "shadows": true,
+      "renderer": "gl_compatibility",
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "fps": 3.50853433434157,
+      "frame_samples": 20,
+      "wall_seconds": 5.700386,
+      "median_ms": 310.468,
+      "p95_ms": 334.607,
+      "p99_ms": 335.138,
+      "resident_kib": 812184,
+      "draw_calls_p95": 105,
+      "peak_visible_combat_poses": 23,
+      "hits_during_sample": 33,
+      "render_cpu_p95_ms": 323.901000976562,
+      "render_gpu_p95_ms": 327.132995605469,
+      "sim_ms_per_tick": 0.664058823529412,
+      "view_script_ms_per_frame": 0.4407
+    },
+    {
+      "soldiers_per_side": 100,
+      "ordinary_rosters": [
+        100,
+        100
+      ],
+      "viewport_px": [
+        1280,
+        800
+      ],
+      "render_scale": 1,
+      "shadows": true,
+      "renderer": "gl_compatibility",
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "fps": 2.5399728222908,
+      "frame_samples": 20,
+      "wall_seconds": 7.8741,
+      "median_ms": 395.074,
+      "p95_ms": 411.273,
+      "p99_ms": 411.776,
+      "resident_kib": 879960,
+      "draw_calls_p95": 127,
+      "peak_visible_combat_poses": 91,
+      "hits_during_sample": 172,
+      "render_cpu_p95_ms": 390.726013183594,
+      "render_gpu_p95_ms": 393.174011230469,
+      "sim_ms_per_tick": 2.53450980392157,
+      "view_script_ms_per_frame": 1.29315
+    },
+    {
+      "soldiers_per_side": 250,
+      "ordinary_rosters": [
+        250,
+        250
+      ],
+      "viewport_px": [
+        1280,
+        800
+      ],
+      "render_scale": 1,
+      "shadows": true,
+      "renderer": "gl_compatibility",
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "fps": 2.17178728863759,
+      "frame_samples": 20,
+      "wall_seconds": 9.209005,
+      "median_ms": 455.828,
+      "p95_ms": 486.625,
+      "p99_ms": 493.135,
+      "resident_kib": 912656,
+      "draw_calls_p95": 124,
+      "peak_visible_combat_poses": 112,
+      "hits_during_sample": 262,
+      "render_cpu_p95_ms": 453.760986328125,
+      "render_gpu_p95_ms": 456.510009765625,
+      "sim_ms_per_tick": 6.26372,
+      "view_script_ms_per_frame": 1.97665
+    },
+    {
+      "soldiers_per_side": 512,
+      "ordinary_rosters": [
+        512,
+        512
+      ],
+      "viewport_px": [
+        1280,
+        800
+      ],
+      "render_scale": 1,
+      "shadows": true,
+      "renderer": "gl_compatibility",
+      "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "fps": 1.75685727748261,
+      "frame_samples": 20,
+      "wall_seconds": 11.383964,
+      "median_ms": 559.279,
+      "p95_ms": 610.194,
+      "p99_ms": 621.324,
+      "resident_kib": 959332,
+      "draw_calls_p95": 127,
+      "peak_visible_combat_poses": 131,
+      "hits_during_sample": 288,
+      "render_cpu_p95_ms": 548.487976074219,
+      "render_gpu_p95_ms": 549,
+      "sim_ms_per_tick": 13.28726,
+      "view_script_ms_per_frame": 3.20775
+    }
+  ],
+  "arsenal": [
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 0,
+      "hits": 3,
+      "max_body_pick_error": 0,
+      "max_ground_error": 0.000281979737337679,
+      "max_live_body_pick_error": 0,
+      "quiver": 0,
+      "skill_input": true,
+      "target_hp": 3.95274472236633,
+      "weapon": "剑"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 0,
+      "hits": 2,
+      "max_body_pick_error": 0,
+      "max_ground_error": 0.000440184492617846,
+      "max_live_body_pick_error": 0,
+      "quiver": 0,
+      "skill_input": true,
+      "target_hp": 16.5621914410591,
+      "weapon": "刀"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 12.62993527174,
+      "hits": 3,
+      "max_body_pick_error": 0,
+      "max_ground_error": 0.000390447821700945,
+      "max_live_body_pick_error": 0,
+      "quiver": 0,
+      "skill_input": true,
+      "target_hp": 13.3510813426971,
+      "weapon": "棍"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 0,
+      "hits": 3,
+      "max_body_pick_error": 0,
+      "max_ground_error": 0.000281979737337679,
+      "max_live_body_pick_error": 0,
+      "quiver": 0,
+      "skill_input": true,
+      "target_hp": 16.2401385760307,
+      "weapon": "枪"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 0,
+      "hits": 3,
+      "max_body_pick_error": 0,
+      "max_ground_error": 0.000390447821700945,
+      "max_live_body_pick_error": 0,
+      "quiver": 0,
+      "skill_input": true,
+      "target_hp": 5.60456982469558,
+      "weapon": "长刀"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 62.7239122390747,
+      "hits": 5,
+      "max_body_pick_error": 2.95519471168518,
+      "max_ground_error": 0.000402048113755882,
+      "max_live_body_pick_error": 0,
+      "quiver": 15,
+      "skill_input": true,
+      "target_hp": 0,
+      "weapon": "弓"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 25.6582952737808,
+      "hits": 3,
+      "max_body_pick_error": 2.95519471168518,
+      "max_ground_error": 0.000402048113755882,
+      "max_live_body_pick_error": 0,
+      "quiver": 9,
+      "skill_input": true,
+      "target_hp": 0,
+      "weapon": "弩"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 21.3334900856018,
+      "hits": 3,
+      "max_body_pick_error": 0,
+      "max_ground_error": 0.000390447821700945,
+      "max_live_body_pick_error": 0,
+      "quiver": 0,
+      "skill_input": true,
+      "target_hp": 15.3985342001915,
+      "weapon": "剑盾"
+    },
+    {
+      "defense_seen": true,
+      "e_and_space": [
+        2,
+        3
+      ],
+      "hero_hp": 63.7457748651505,
+      "hits": 5,
+      "max_body_pick_error": 3.01192021369934,
+      "max_ground_error": 0.000281979737337679,
+      "max_live_body_pick_error": 0,
+      "quiver": 0,
+      "skill_input": true,
+      "target_hp": 0,
+      "weapon": "双剑"
+    }
+  ],
+  "rides": [
+    [
+      {
+        "dismounted": true,
+        "distance": 6.79648733139038,
+        "skill": true,
+        "speed": 6.875,
+        "turn_z": 0.838670551776886,
+        "vehicle": "horse"
+      },
+      {
+        "dismounted": true,
+        "distance": 4.30946683883667,
+        "skill": true,
+        "speed": 4.375,
+        "turn_z": 0.998597502708435,
+        "vehicle": "cart"
+      }
+    ]
+  ],
+  "siege": [
+    {
+      "attacks": 4225,
+      "blocked_hits": 52,
+      "breach_tick": 630,
+      "capture_fps": 10,
+      "capture_sec": 6,
+      "crew_replacements": 1,
+      "dead": [
+        270,
+        298
+      ],
+      "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+      "dropped_weapons": [
+        270,
+        298
+      ],
+      "escaped": [
+        7,
+        103
+      ],
+      "frames_captured": 501,
+      "gate_first_damage_tick": 518,
+      "gate_hp": 0,
+      "hero_hp": 100,
+      "hits": [
+        1357,
+        1087
+      ],
+      "mission": "夺取河关",
+      "officer_corps": {
+        "active_commands": [
+          10,
+          2
+        ],
+        "captives": [
+          [],
+          []
+        ],
+        "commanders": [
+          1024,
+          1040
+        ],
+        "evacuated": [
+          [],
+          []
+        ],
+        "fallen": [
+          [
+            1024,
+            1028,
+            1030,
+            1032,
+            1033,
+            1038
+          ],
+          [
+            1040,
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048,
+            1049,
+            1050,
+            1051,
+            1052,
+            1053,
+            1054,
+            1055
+          ]
+        ],
+        "kills": [
+          7,
+          6
+        ],
+        "ranked": true,
+        "rescued": [
+          [],
+          []
+        ],
+        "skills": [
+          51,
+          24
+        ],
+        "successions": [
+          6,
+          4
+        ],
+        "wounded": [
+          [
+            1025,
+            1027,
+            1035,
+            1037,
+            1039
+          ],
+          []
+        ]
+      },
+      "officers": 32,
+      "orders_delivered": 0,
+      "orders_lost": 0,
+      "orders_refused": 0,
+      "ordinary_rosters": [
+        512,
+        512
+      ],
+      "ordinary_survivors": [
+        242,
+        214
+      ],
+      "projectiles": 2371,
+      "quivers_balanced": true,
+      "ram_hp": 150,
+      "ram_strokes": 0,
+      "receipt": true,
+      "result": "夺取城内阵地",
+      "routing": [
+        18,
+        34
+      ],
+      "seed": 61112,
+      "soldiers_per_side": 512,
+      "tick": 1000
+    }
+  ],
+  "lod": [
+    {
+      "full_detail_median_render_ms": 1664.665,
+      "full_detail_primitives": 4119090,
+      "optimized_median_render_ms": 641.992,
+      "optimized_primitives": 1091477,
+      "per_side": 512,
+      "poses": 10,
+      "previous_officer_detail_ms": 660.45,
+      "previous_officer_detail_primitives": 1152481,
+      "previous_two_lods_median_ms": 801.677,
+      "previous_two_lods_primitives": 1441962,
+      "visible_soldiers_last": 488
+    }
+  ]
+}

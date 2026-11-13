@@ -1,0 +1,101 @@
+{
+  "source": "3f12f54ff0dbe4bd4b777513fb09a65eed8c91a7",
+  "run": 43355066423,
+  "status": "UNMERGED_INSUFFICIENT_VISUAL_GAIN",
+  "frames": [
+    {
+      "center": [
+        48,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 17,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 349,
+      "in_frame_ids_sha256": "31a81dd8142fe98ae30634535d7545e5af86675fab7f53812045971f5642e78e",
+      "internal_scale": 1,
+      "kind": "gate",
+      "label": "gate",
+      "losses": [
+        180,
+        219
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 385,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 445,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.89,
+      "zoom": 34
+    },
+    {
+      "center": [
+        27.5943470001221,
+        0.357993453741074
+      ],
+      "close": 20,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 1,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 182,
+      "in_frame_ids_sha256": "b65f25e974c678846c4a053e8fc9ead3e38cf154e005f648e488c20d510ca5db",
+      "internal_scale": 1,
+      "kind": "ram",
+      "label": "fight",
+      "losses": [
+        180,
+        219
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 284,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.65,
+      "zoom": 19
+    }
+  ],
+  "before_after_jpeg_sha256": "71d62a94fd8f0e423570ca33f7145cf13dc8132f7ed14f5cb36321889609fdbc",
+  "conclusion": "Rear infill clarifies a narrow strip only; the roof cut and crossbeams still read as an open box. The ram still needs an authored silhouette."
+}

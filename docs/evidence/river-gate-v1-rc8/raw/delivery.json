@@ -1,0 +1,126 @@
+{
+  "version": "0.16.0-rc.8",
+  "source": "5cf51e2f7ad9e4fe2768e2088b11bdfd0ab4979e",
+  "merge": "2c92c7eace980d76d538a646ca64ce9817d191b4",
+  "actual_export": "cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+  "same_source_tree": "ba73a5f0ea4d674e4b5ddd23517a5bd7a89f80ff",
+  "pull_request": 40,
+  "ci_run": 43353033045,
+  "ci_jobs": [
+    {
+      "name": "Compare RC6 and candidate in the game window",
+      "id": 131648397701,
+      "conclusion": "success"
+    },
+    {
+      "name": "Verify field footage",
+      "id": 131648397908,
+      "conclusion": "success"
+    },
+    {
+      "name": "Verify field journey",
+      "id": 131648397949,
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-and-export",
+      "id": 131648397978,
+      "conclusion": "success"
+    },
+    {
+      "name": "macos-runtime",
+      "id": 131652448031,
+      "conclusion": "success"
+    },
+    {
+      "name": "Preserve review video bytes",
+      "id": 131657066327,
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14006215827,
+      "name": "gameplay-journey-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 19965548,
+      "zip_sha256": "sha256:ff678b3bedeb05f384fede3315a73e7c9ac3e52a7e2ac83418324994beae2bf2",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14006215827"
+    },
+    {
+      "id": 14005925103,
+      "name": "Luanshi-macOS-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 87593137,
+      "zip_sha256": "sha256:9ed2d107416c5fd5055971194a866026cc71ec4483024defbe163fdc38ff5d21",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005925103"
+    },
+    {
+      "id": 14005802330,
+      "name": "river-art-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 214959833,
+      "zip_sha256": "sha256:7fb7e7169a18995e8bca1a67e0b3a03128e8901b613fe9a859da218bef991d3f",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005802330"
+    },
+    {
+      "id": 14005441845,
+      "name": "Luanshi-Linux-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 52575034,
+      "zip_sha256": "sha256:23f9fb1b6d218bf8cdf624d8e60899d1ff79b161cc0bdd445e9dcff6fbac993c",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005441845"
+    },
+    {
+      "id": 14005378996,
+      "name": "field-verification-journey-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 3060302,
+      "zip_sha256": "sha256:9973354e411893026d32b83245aaf50280ca9f80ada4e9cbe1e3708bcb5ee124",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005378996"
+    },
+    {
+      "id": 14005242901,
+      "name": "macos-verification-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 8241384,
+      "zip_sha256": "sha256:4af3d158a46752e6881d94b5c5295b163e4ff76919cc876cfe5a4d78a7f543e2",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005242901"
+    },
+    {
+      "id": 14004829322,
+      "name": "field-verification-footage-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 7775765,
+      "zip_sha256": "sha256:0977a1a8f4cc612770605c97e2dafc66f9ee1a895f45c46a0e4fc7906e1f3418",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14004829322"
+    },
+    {
+      "id": 14004559713,
+      "name": "gameplay-footage-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 16583033,
+      "zip_sha256": "sha256:70a4cbdeb7620332e414dc50d54745fe718a9b1c979f55a516552b8f2f3b418b",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14004559713"
+    },
+    {
+      "id": 14004489911,
+      "name": "verification-cc9058135598057e9b6477a77fa5b4b8cf0be3c0",
+      "archive_bytes": 2288817,
+      "zip_sha256": "sha256:959304413669fc9b3dd5525d49961928b50a813c717f119e52f8e69668bb59c9",
+      "expired": false,
+      "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14004489911"
+    }
+  ],
+  "inner_sha256": {
+    "macos": "5828c4a9f13349c7a8a30c1a9fcdeab86a82a5485b2544aa3900b296b3a4c878",
+    "linux": "8ec501fa11a57ee5af934ad0ff71dd82deec283a12215f0563c997d8864429d7"
+  },
+  "viewing_files_sha256": {
+    "normal_1280": "61a98255e783c02e760c8f5defecbef48da71888223a5fd328a7b9c6b464febd",
+    "normal_native_1920": "2eb223312207353b6c1770e09f896b46a55084f6bf051cd0fdaa789a674613ca",
+    "video_review": "a91644457b38eca94a496d7d031e9a7e5d3c92519df97da1e877b593578f263f",
+    "video_full": "896d256c79ebf38539ba9f5d9625b1df84b0f6a208e5bc0a8520c1824b52774e"
+  },
+  "m5": "NOT_RUN"
+}
