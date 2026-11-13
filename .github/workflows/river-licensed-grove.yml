@@ -20,8 +20,8 @@ jobs:
           set -euo pipefail
           curl -fsSL --retry 1 'https://store.godotengine.org/asset/quaternius/stylized-nature-megakit/download/31/?source=luanshi-asset-review' -o "$RUNNER_TEMP/nature.zip"
           sudo apt-get update -qq
-          sudo apt-get install -qq -y blender
-          blender -b --factory-startup --python-exit-code 7 --python tools/art/import_valley_grove.py -- "$RUNNER_TEMP/nature.zip" assets/environment/quaternius
+          sudo apt-get install -qq -y blender python3-numpy
+          PYTHONPATH=/usr/lib/python3/dist-packages blender --python-use-system-env -b --factory-startup --python-exit-code 7 --python tools/art/import_valley_grove.py -- "$RUNNER_TEMP/nature.zip" assets/environment/quaternius
           mkdir -p proof/author-meshes
           cp assets/environment/quaternius/{grove.glb,bark.png,leaves.png,License_Standard.txt,sources.json} proof/author-meshes/
       - name: Replay the same input on the package source and the imported grove
