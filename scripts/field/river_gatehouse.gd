@@ -13,7 +13,7 @@ static var corner_material: StandardMaterial3D
 static func _postern_masonry() -> StandardMaterial3D:
 	if corner_material: return corner_material
 	corner_material=_stone_and_tiles().duplicate() as StandardMaterial3D
-	corner_material.albedo_color=Color("d4cbbd")
+	corner_material.albedo_color=Color("adb0a5")
 	corner_material.vertex_color_use_as_albedo=false
 	return corner_material
 
@@ -67,3 +67,16 @@ static func mount_curtain(parent: Node3D, start: Vector3, finish: Vector3) -> vo
 		stone.rotation.y=atan2(delta.x,delta.z)
 		stone.scale.z=distance/(20.0*count)
 		stone.position=start+step*(section+.5)
+
+static func mount_quarters(parent: Node3D, footing: Vector3, stores: bool, roofs: Array[Dictionary]) -> void:
+	var parts:=FieldMeshes.meshes(TOWER)
+	var style:="Stores" if stores else "Quarters"
+	var surface:=_postern_masonry()
+	var room:=_place(parent,parts[style+"Room"],surface,footing.x)
+	var roof:=_place(parent,parts[style+"Roof"],surface,footing.x)
+	var facing:=PI if footing.z>0 else 0.0
+	room.position=footing
+	room.rotation.y=facing
+	roof.position=footing
+	roof.rotation.y=facing
+	roofs.append({"node":roof,"center":footing+Vector3.UP*(3.77 if stores else 3.44),"w":4.32,"d":3.03})

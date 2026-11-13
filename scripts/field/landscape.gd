@@ -320,95 +320,6 @@ func _crossings(b: Builder) -> void:
 
 	b.joint=0
 
-func _roof_point(base: Vector3,along: Vector3,across: Vector3,length: float,depth: float,rise: float,x: float,t: float) -> Vector3:
-	var ridge:=maxf(0.55,length-depth*0.65)
-	var corner:=clampf((absf(x)-ridge)/(length-ridge),0.0,1.0)
-	var height:=rise*pow(1.0-t,1.60)+t*t*(0.11+0.20*corner*corner)
-	return base+along*x+across*(t*depth)+Vector3.UP*height
-
-func _upward_quad(b: Builder,a: Vector3,c: Vector3,d: Vector3,end: Vector3,paint: Color) -> void:
-	# Both roof slopes are exterior faces, including where one edge clips to the hip.
-	if (c-a).cross(end-a).y<0.0:
-		b.quad(a,end,d,c,paint)
-	else:
-		b.quad(a,c,d,end,paint)
-
-func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) -> void:
-	var along:=Vector3.RIGHT if w>=d else Vector3.BACK
-	var across:=Vector3.BACK if w>=d else Vector3.RIGHT
-	var length:=maxf(w,d)
-	var depth:=minf(w,d)
-	var columns:=ceili(length*3.4)
-	var rows:=4
-	var ridge:=maxf(0.55,length-depth*0.65)
-	b.joint=5
-	for sign_side: float in [-1.0,1.0]:
-		var normal:=across*sign_side
-		for column in columns:
-			var x0:float=length*(2.0*column/columns-1.0)
-			var x1:float=length*(2.0*(column+1)/columns-1.0)
-			# Pan tiles drain straight down the slope. Courses outside the short ridge
-			# terminate at the diagonal hips instead of converging like fan blades.
-			var starts:=clampf((absf(x0)-ridge)/(length-ridge),0.0,1.0)
-			var shade:=col.lightened(0.018*((column*7)%5))
-			for row in rows:
-				var t0:=float(row)/rows
-				var t1:=float(row+1)/rows
-				var w0:=lerpf(ridge,length,t0)
-				var w1:=lerpf(ridge,length,t1)
-				var a:=_roof_point(base,along,normal,length,depth,rise,clampf(x0,-w0,w0),t0)
-				var c:=_roof_point(base,along,normal,length,depth,rise,clampf(x0,-w1,w1),t1)
-				var right:=_roof_point(base,along,normal,length,depth,rise,clampf(x1,-w0,w0),t0)
-				var end:=_roof_point(base,along,normal,length,depth,rise,clampf(x1,-w1,w1),t1)
-				_upward_quad(b,a,c,end,right,shade)
-				if t1>starts:
-					var top:=_roof_point(base,along,normal,length,depth,rise,x0,maxf(t0,starts))
-					var peak:=Vector3.UP*0.04
-					_upward_quad(b,top-along*0.045,c-along*0.045,c+peak,top+peak,col.lightened(0.12))
-					_upward_quad(b,top+peak,c+peak,c+along*0.045,top+along*0.045,col)
-				if row==rows-1:
-					b.rod(c+Vector3.UP*0.036,c+Vector3.UP*0.036+normal*0.075,0.053,0.056,col.lightened(0.11),5)
-					b.rod(c-Vector3.UP*0.041,end-Vector3.UP*0.041,0.060,0.060,WOOD,5)
-		for end_sign: float in [-1.0,1.0]:
-			var top:=base+along*ridge*end_sign+Vector3.UP*rise
-			var edge:=_roof_point(base,along,normal,length,depth,rise,end_sign*length,1.0)
-			var half_end:=base+along*(length*end_sign)+Vector3.UP*0.18
-			if (edge-top).cross(half_end-top).y<0:
-				b.tri(top,half_end,edge,col)
-			else:
-				b.tri(top,edge,half_end,col)
-			b.rod(top,edge,0.065,0.077,col.lightened(0.11),5)
-	b.rod(base-along*ridge+Vector3.UP*rise,base+along*ridge+Vector3.UP*rise,0.12,0.12,col.lightened(0.15),7)
-	for end_sign: float in [-1.0,1.0]:
-		var cap:=base+along*(end_sign*ridge)+Vector3.UP*rise
-		b.rod(cap,cap+along*(end_sign*0.31)+Vector3.UP*0.17,0.126,0.072,col.lightened(0.12),6)
-
-# Brackets transfer a projecting eave into its posts. These stay visible under a cutaway.
-func _brackets(frame: Builder,base: Vector3,w: float,d: float) -> void:
-	frame.joint=3
-	for sx: float in [-1.0,1.0]:
-		for sz: float in [-1.0,1.0]:
-			var foot:=base+Vector3(sx*w*0.62,-0.48,sz*d*0.58)
-			frame.block(foot,Vector3(0.34,0.17,0.34),WOOD.darkened(0.13))
-			frame.block(foot+Vector3(sx*0.12,0.14,0),Vector3(0.66,0.15,0.24),WOOD)
-			frame.block(foot+Vector3(0,0.25,sz*0.15),Vector3(0.25,0.15,0.73),WOOD.lightened(0.06))
-			frame.block(foot+Vector3(sx*0.12,0.36,sz*0.16),Vector3(0.68,0.13,0.63),WOOD)
-
-# These roofs can lift away independently while the posts, eaves, and the
-# people inside remain. No soldier or combat state changes with the camera.
-func _cover(base: Vector3,w: float,d: float,rise: float) -> void:
-	var cover:=Builder.new()
-	_roof(cover,base,w,d,rise,SLATE)
-	# The perimeter beams belong to the roof. When the near pitch lifts in
-	# combat, its two loose front corners should lift with it.
-	cover.joint=3
-	for side:float in [-1.0,1.0]:
-		cover.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
-		cover.block(base+Vector3(side*w*0.84,-0.09,0),Vector3(0.19,0.18,d*1.70),WOOD)
-	_brackets(cover,base,w,d)
-	var node:=_mesh(cover,self)
-	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d})
-
 func _between(target: Vector3,eye: Vector3,roof: Dictionary) -> bool:
 	var center: Vector3=roof.center
 	var ray:=eye-target
@@ -580,9 +491,7 @@ func _fort(b: Builder) -> void:
 		b.tri(post+Vector3(-0.21,1.30,side*0.97),post+Vector3(-0.22,1.04,side*0.74),post+Vector3(-0.08,1.38,side*0.55),Color("b59659"))
 	for x: float in [65,78]:
 		for z: float in [-14,14]:
-			b.joint=8
-			b.block(Vector3(x,1.4,z),Vector3(7,2.8,4.4),LIME)
-			_cover(Vector3(x,2.74,z),4.45,3.02,1.12)
+			TownGate.mount_quarters(self,Vector3(x,0,z),x>70.,roofs)
 
 func _tent(b: Builder,p: Vector3,shade: Color,reverse: float) -> void:
 	var along:=Vector3.BACK*reverse

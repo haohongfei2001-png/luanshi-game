@@ -27,7 +27,7 @@ func _target(kind: String) -> Vector2:
 	if kind=="cart": return b.vehicle_pos[2]
 	if kind=="gate": return Ground.GATE
 	if kind=="corner": return Vector2(Ground.WALL_X,-Ground.WALL_Z)
-	if kind=="court": return Vector2(Ground.BACK_X-7.,Ground.WALL_Z-5.)
+	if kind=="court": return Vector2(71.5,11.8)
 	if kind=="wall": return Vector2(Ground.WALL_X+2.,-8.)
 	if kind=="camp": return Vector2(-66,-19)
 	if kind=="bridge": return Vector2(Ground.RIVER_X,Ground.crossing(0.0))
