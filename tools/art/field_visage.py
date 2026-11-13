@@ -11,43 +11,75 @@ from figure_mesh import TAU, lerp
 def sculpt():
     return json.loads(Path(__file__).with_name("field_head.json").read_text())
 
-@lru_cache(maxsize=1)
-def marching_head():
-    # Eight levels slice the same CC0 sculpt used for the close camera. Denser
-    # angles at the forehead and nose keep a profile visible in a twelve-pixel face.
-    mesh=sculpt()["close"]
-    levels=(5.72,6.04,6.50,6.72,7.02,7.39,7.74,8.01)
-    angles=(0,.42,1.13,2.09,pi,TAU-2.09,TAU-1.13,TAU-.42)
-    points=[]
+@lru_cache(maxsize=2)
+def field_skin(close):
+    """Fit a single outward surface to sections of the HM08 master.
+
+    The source has real eyelid apertures and an inner mouth. Voxel reduction
+    can merge their opposite sides. With a two-sided costume shader those
+    little return faces and the old eyeballs blink through at combat scale.
+    Preserve the brow, nose tip, jaw and ear profile on the outside only.
+    """
+    mesh = sculpt()["close"]
+    if close:
+        levels = (5.60,5.74,5.85,5.93,6.02,6.13,6.23,6.31,6.41,6.51,6.61,
+                  6.69,6.79,6.89,7.00,7.13,7.24,7.38,7.55,7.73,7.90,8.02,8.077)
+        half = (0,.105,.218,.322,.444,.604,.805,1.04,1.29,1.55,1.83,2.18,2.63,pi)
+    else:
+        levels = (5.69,5.91,6.12,6.33,6.53,6.68,6.88,7.04,7.22,7.54,7.83,8.03)
+        half = (0,.235,.49,.83,1.29,1.75,2.31,pi)
+    angles = (*half, *(TAU-a for a in reversed(half[1:-1])))
+    points = []
     for height in levels:
-        edges=[]
-        for tri in mesh["f"]:
-            corners=[mesh["p"][i] for i in tri]
-            cuts=[]
-            for a,b in zip(corners,corners[1:]+corners[:1]):
-                if min(a[1],b[1])<=height<max(a[1],b[1]):
-                    t=(height-a[1])/(b[1]-a[1])
-                    cuts.append((a[0]+(b[0]-a[0])*t,a[2]+(b[2]-a[2])*t-.35))
-            if len(cuts)==2: edges.append(cuts)
+        edges = []
+        for face in mesh["f"]:
+            corners = [mesh["p"][i] for i in face]
+            cuts = []
+            for p,q in zip(corners,corners[1:]+corners[:1]):
+                if min(p[1],q[1]) <= height < max(p[1],q[1]):
+                    t = (height-p[1])/(q[1]-p[1])
+                    cuts.append((p[0]+(q[0]-p[0])*t,p[2]+(q[2]-p[2])*t-.35))
+            if len(cuts)==2:
+                edges.append(cuts)
         for angle in angles:
-            dx,dz=sin(angle),cos(angle)
-            radius=.06
+            dx,dz = sin(angle),cos(angle)
+            radius = .045
             for (x,z),(bx,bz) in edges:
-                ex,ez=bx-x,bz-z
-                det=dx*ez-dz*ex
-                if abs(det)<1.e-8: continue
-                d=(x*ez-z*ex)/det
-                u=(x*dz-z*dx)/det
-                if 0<=u<=1: radius=max(radius,d)
+                ex,ez = bx-x,bz-z
+                det = dx*ez-dz*ex
+                if abs(det)<1.e-8:
+                    continue
+                d = (x*ez-z*ex)/det
+                u = (x*dz-z*dx)/det
+                if 0<=u<=1:
+                    radius = max(radius,d)
             points.append((dx*radius,height,.35+dz*radius))
-    faces=[]
-    n=len(angles)
-    for r in range(len(levels)-1):
-        for i in range(n):
-            a=r*n+i
-            b=r*n+(i+1)%n
-            faces.extend([(a,b,b+n),(a,b+n,a+n)])
+    # Bridge the sockets between the measured top of the cheek and the brow.
+    # Bound the recess relative to those two real profiles, at each own angle.
+    base,top = ((6.89,7.13) if close else (6.88,7.22))
+    lo,hi = levels.index(base),levels.index(top)
+    for k,a in enumerate(angles):
+        angle = min(a,TAU-a)
+        if not .10 < angle < .64:
+            continue
+        dx,dz = sin(a),cos(a)
+        def at(i):
+            x,_,z = points[i*len(angles)+k]
+            return x*dx+(z-.35)*dz
+        for row in range(lo+1,hi):
+            t = (levels[row]-base)/(top-base)
+            floor_radius = at(lo)+(at(hi)-at(lo))*t-.037*sin(pi*t)
+            radius = max(at(row),floor_radius)
+            points[row*len(angles)+k] = (radius*dx,levels[row],.35+radius*dz)
+    count = len(angles)
+    faces = []
+    for row in range(len(levels)-1):
+        for col in range(count):
+            i = row*count+col
+            j = row*count+(col+1)%count
+            faces.extend(((i,j,j+count),(i,j+count,i+count)))
     return {"p":points,"f":faces}
+
 
 def archer_brow(a):
     # Farther above the eyes than the nape and tied just behind the left ear.
@@ -115,6 +147,15 @@ def head(s,look,bone):
             z+=.12*jaw*max(0.,min(1.,z))
         elif look in ("guard","officer"):
             x*=1.+.16*jaw
+        # The protagonist has a longer chin. The officer keeps a fuller,
+        # blunter jaw below his helmet; both keep their original headgear bind.
+        if look=="player":
+            y-=.071*jaw
+            x*=1.-.065*jaw
+            z+=.075*jaw*max(0.,min(1.,z))
+        elif look=="officer":
+            y+=.045*jaw
+            z-=.045*jaw*max(0.,min(1.,z))
         return (x*width,1.725+(y-8.10)*.110,(z-.28)*.112+.015)
     def scalp(angle,height,extra=0):
         h=max(0,min(20.999,(height-6.33)/.081))
@@ -128,7 +169,7 @@ def head(s,look,bone):
         return bind(sin(angle)*r,height,.35+cos(angle)*r)
     def brow(a):
         return 7.00+.44*cos(a)+.07*sin(a+.4)
-    source=data["close"] if close else marching_head()
+    source=field_skin(close)
     vertices={}
     for face in source["f"]:
         raw=[source["p"][i] for i in face]
@@ -137,10 +178,10 @@ def head(s,look,bone):
         if look=="archer" and all(bind(x,y,z)[1]>archer_brow(atan2(x*width,(z-.35)*.112))+.014 for x,y,z in raw):
             continue
         x,y,z=[sum(p[k] for p in raw)/3 for k in range(3)]
-        # One continuous sculpt carries both the hairline and the brow. Eye/mouth
-        # recesses keep their modelled depth; painted lids never protrude as sticks.
+        # The single surface carries the hairline and registered features.
+        # Restrict the painted strip to the front; the rest of the cheek is skin.
         hairline=6.62+.86*max(0,min(1,(z+.32)/1.66))-.12*abs(x)
-        mat="hair" if y>hairline else ("visage" if z>.61 else "skin")
+        mat="hair" if y>hairline else ("visage" if z>.60 and abs(x)<.745 else "skin")
         ids=[]
         for i in face:
             key=(i,mat)
@@ -150,16 +191,6 @@ def head(s,look,bone):
                 vertices[key]=s.vertex(bind(x,y,z),st,bone)
             ids.append(vertices[key])
         s.faces.append(tuple(ids))
-    if close:
-        for sign in (-1,1):
-            # Inset eyeballs sit behind the eyelid aperture of the head sculpt.
-            def eye(u,v):
-                angle=TAU*(u-.5)
-                latitude=(v-.5)*pi
-                cx=sign*.294
-                return bind(cx+.133*cos(latitude)*sin(angle),7.017+.124*sin(latitude),
-                            1.212+.155*cos(latitude)*cos(angle)),bone
-            s.grid(12,7,eye,"eye")
     n=24 if close else 8
     def band(row0,row1,material,thickness):
         def at(u,v):

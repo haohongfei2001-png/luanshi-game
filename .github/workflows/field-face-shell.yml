@@ -1,0 +1,96 @@
+name: Field faces at five and twenty-two metres
+on:
+  push:
+    branches: ['codex/river-fitted-faces']
+    paths-ignore: ['docs/**', 'assets/river_gate/figures/garrison_bodies.glb', 'assets/river_gate/figures/river_company.glb']
+permissions:
+  contents: read
+jobs:
+  field:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bake both game body libraries against the same HM08 master
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get -yq install python3-numpy python3-pil
+          /usr/bin/python3 tools/art/bake_river_company.py --geometry-only
+          /usr/bin/python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,'tools/art')
+          from figure_mesh import Library
+          from import_garrison_issues import body_under_issue,ISSUES
+          lib=Library()
+          for look,*_ in ISSUES:
+              for lod in ('Close','Line','Rank'):
+                  lib.insert(look+lod+'Body',body_under_issue(look,lod))
+          lib.save(Path('assets/river_gate/figures/garrison_bodies.glb'))
+          PY
+          git add -- assets/river_gate/figures/river_company.glb assets/river_gate/figures/garrison_bodies.glb
+          if ! git diff --cached --quiet; then
+            git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the registered field faces for the actual costume library'
+          fi
+      - name: Play the same river battle and compare native-resolution faces
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc16/face-shell
+          mkdir -p "$proof"
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev=7c9ac667ded0a8e80a05cd47593a4af70c28486c; fi
+            root="$RUNNER_TEMP/face-$side"
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/field_faces_review.gd "$root/tests"
+            godot=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+            "$godot" --headless --editor --path "$root" --import > "$proof/$side/import.log" 2>&1
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/import.log"; then exit 1; fi
+            xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --disable-vsync --audio-driver Dummy --fixed-fps 20 --script tests/field_faces_review.gd -- --field-size=512 2>&1 | tee "$proof/$side/run.log"
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/run.log"; then exit 1; fi
+            grep -F 'FACE_SHELL true bow=94' "$proof/$side/run.log"
+            cp "$root/artifacts/face-review/"* "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json,base64
+          root=Path('docs/evidence/river-gate-v1-rc16/face-shell')
+          old,new=[json.loads((root/side/'poses.json').read_text()) for side in ('before','after')]
+          assert old==new
+          for row in new:
+              name=row['name']
+              pair=Image.new('RGB',(720,250) if 'normal' not in name else (900,281))
+              for i,side in enumerate(('before','after')):
+                  im=Image.open(root/side/(name+'.png')).convert('RGB')
+                  if 'normal' not in name:
+                      x,y=row['post']
+                      im=im.crop((round(x-144),round(y-85),round(x+144),round(y+115)))
+                  tw,th=pair.width//2,pair.height
+                  pair.paste(im.resize((tw,th),Image.Resampling.LANCZOS),(i*tw,0))
+              out=root/(name+'.jpg')
+              pair.save(out,quality=96,subsampling=0)
+              print('FACE_PLATE',name,base64.b64encode(out.read_bytes()).decode(),flush=True)
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record the original and modified heads in the running river battle'
+          git push origin HEAD:refs/heads/codex/river-fitted-faces
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-field-faces
+          path: docs/evidence/river-gate-v1-rc16/face-shell
