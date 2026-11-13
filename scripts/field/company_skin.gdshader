@@ -142,6 +142,14 @@ void fragment() {
     float fold = dot(ink, vec3(.28, .56, .16));
     float mid = OUTPUT_IS_SRGB ? .73 : .52;
     vec3 colour = mix(ink, bolt * clamp(fold / mid, .64, 1.24), dye);
+    // A coarse underfold survives mipmapping; irregular fine weave does not.
+    // At the edge of a dark sleeve it stays subordinate to the hand and weapon.
+    if (cloth_panel==1 || cloth_panel==22 || cloth_panel==27) {
+        vec2 cloth_uv=fract(UV*vec2(8.,4.));
+        float tuck=abs(cloth_uv.x-.20-.44*cloth_uv.y);
+        float crease=(1.-smoothstep(.018,.12,tuck))*smoothstep(.12,.56,cloth_uv.y);
+        colour*=1.-crease*.15;
+    }
     if (cloth_panel == 13) {
         // Scuffed paint crosses several planks but leaves most wood visible.
         float stripe = abs(shield_face.y - .27 * shield_face.x + .115);
