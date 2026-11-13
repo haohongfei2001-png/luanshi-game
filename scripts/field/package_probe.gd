@@ -175,6 +175,12 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	await RenderingServer.frame_post_draw
 	var start:=Time.get_ticks_usec()
 	var previous:=start
+	var longest_frame_ms:=0.0
+	var longest_context: Dictionary={}
+	var previous_tick:=b.tick
+	var previous_sim_us:=scene.sim_us
+	var previous_view_us:=scene.view_us
+	var last_camera_request:=-1
 	var first_sim_us:=scene.sim_us
 	var first_view_us:=scene.view_us
 	var panned:=false
@@ -189,8 +195,22 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	while b.result=="" and Time.get_ticks_usec()-start<minimum_us+8500000 and (frames.size()<120 or Time.get_ticks_usec()-start<minimum_us):
 		await RenderingServer.frame_post_draw
 		var now:=Time.get_ticks_usec()
-		frames.append((now-previous)/1000.0)
+		var interval_ms:float=(now-previous)/1000.0
+		frames.append(interval_ms)
+		if interval_ms>longest_frame_ms:
+			longest_frame_ms=interval_ms
+			var renderer_cpu:=RenderingServer.viewport_get_measured_render_time_cpu(rid)
+			var renderer_gpu:=RenderingServer.viewport_get_measured_render_time_gpu(rid)
+			longest_context={"frame_zero_based":frames.size()-1,"wall_ms":interval_ms,"wall_end_ms":(now-start)/1000.0,
+				"start_tick":previous_tick,"end_tick":b.tick,"visible":scene.view.visible_soldiers,
+				"view_script_ms":(scene.view_us-previous_view_us)/1000.0,"sim_cpu_ms":(scene.sim_us-previous_sim_us)/1000.0,
+				"render_cpu_timestamp_ms":renderer_cpu if renderer_cpu>0 else null,
+				"render_gpu_timestamp_ms":renderer_gpu if renderer_gpu>0 else null,
+				"camera":[scene.camera_center.x,scene.camera_center.y],"frames_since_camera_request":frames.size()-1-last_camera_request if last_camera_request>=0 else null}
 		previous=now
+		previous_tick=b.tick
+		previous_sim_us=scene.sim_us
+		previous_view_us=scene.view_us
 		if scene.frame_log and keyboard_samples<3 and now-start>250000+keyboard_samples*950000 and b.hero.state==Battle.State.MARCH:
 			var key: Key=[KEY_J,KEY_Q,KEY_E][keyboard_samples]
 			for down: bool in [true,false]:
@@ -204,6 +224,7 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 		if not panned and now-start>=1250000:
 			panned=true
 			scene.pan_to(Vector2(2,-18))
+			last_camera_request=frames.size()-1
 		if tour and now-bin_start>=4000000:
 			var current_hits: int=b.hits[0]+b.hits[1]
 			bins.append({"wall_seconds":(now-bin_start)/1000000.0,"frames":frames.size()-bin_frame,"hits":current_hits-bin_hits,"tick":b.tick,"visible":scene.view.visible_soldiers})
@@ -212,6 +233,7 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 			bin_frame=frames.size()
 			var stops_at: Array[Vector2]=[Vector2(1,18),Vector2(11,2),Vector2(23,-8),Vector2(42,0),Vector2(48,6)]
 			scene.pan_to(stops_at[stops%stops_at.size()])
+			last_camera_request=frames.size()-1
 			stops+=1
 		var cpu:=RenderingServer.viewport_get_measured_render_time_cpu(rid)
 		var gpu:=RenderingServer.viewport_get_measured_render_time_gpu(rid)
@@ -266,6 +288,7 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 		over[str(rate)]=count
 	record["frames_over_budget"]=over
 	record["max_ms"]=sorted[-1]
+	record["longest_frame_context"]=longest_context
 	print("FIELD_HOST_WINDOW "+JSON.stringify(record))
 	record.raw_wall_ms=frames
 	var file:=FileAccess.open(path.get_basename()+"-frames.json",FileAccess.WRITE)

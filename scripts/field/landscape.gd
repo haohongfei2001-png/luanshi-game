@@ -361,10 +361,16 @@ func _gate_gallery(base: Vector3, parent: Node3D) -> void:
 
 # These roofs can lift away independently while the posts, eaves, and the
 # people inside remain. No soldier or combat state changes with the camera.
-func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
+func _cover(base: Vector3,w: float,d: float,rise: float) -> void:
 	var cover:=Builder.new()
 	_roof(cover,base,w,d,rise,SLATE)
-	_brackets(frame,base,w,d)
+	# The perimeter beams belong to the roof. When the near pitch lifts in
+	# combat, its two loose front corners should lift with it.
+	cover.joint=3
+	for side:float in [-1.0,1.0]:
+		cover.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
+		cover.block(base+Vector3(side*w*0.84,-0.09,0),Vector3(0.19,0.18,d*1.70),WOOD)
+	_brackets(cover,base,w,d)
 	var node:=_mesh(cover,self)
 	if absf(base.x-Ground.WALL_X)<.01 and absf(base.z)<.01:
 		_gate_gallery(base,node)
@@ -387,17 +393,35 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 			for drop:float in [0.19,1.06,1.53]:
 				var start:=gallery-along*reach-Vector3.UP*drop
 				strip.rod(start,start+along*reach*2,0.069,0.069,WOOD,4)
-			for slit in 12:
-				var basepoint:=gallery+along*reach*(-0.92+slit*0.168)-Vector3.UP*1.51
-				strip.rod(basepoint,basepoint+Vector3.UP*0.45,0.033,0.033,WOOD.darkened(0.08),4)
+			# Frame a low, solid sill on the retained pitch. Soldiers in the
+			# doorway remain visible over it through three upright window bays.
+			for bay in 3:
+				var mid:=gallery+along*reach*((bay-1)*.6667)
+				var half:=along*reach*.294
+				var inset:=axis*side*.05
+				var foot:=mid-Vector3.UP*1.80+inset
+				var top:=mid-Vector3.UP*1.16+inset
+				strip.joint=8
+				strip.quad(foot-half,foot+half,top+half,top-half,Color("a2977e"))
+				strip.joint=11
+				for offset:float in [-.37,.37]:
+					var mullion:=top+half*offset
+					strip.rod(mullion,mullion+Vector3.UP*.92,.041,.039,WOOD.darkened(.07),4)
+			strip.joint=10 if along==Vector3.BACK else 3
+			var plate:=base+axis*side*minf(w,d)*.84-Vector3.UP*.09
+			strip.rod(plate-along*reach*1.12,plate+along*reach*1.12,.11,.11,WOOD,6)
+			# Each bracket belongs to a surviving post. The two unsupported
+			# brackets on the open, cut-away pitch go with the front roof.
+			strip.joint=3
+			for station:float in [-1.0,-.34,.34,1.0]:
+				var seat:=gallery+along*reach*station-Vector3.UP*.31
+				strip.block(seat,Vector3(.25,.17,.25),WOOD.darkened(.12))
+				strip.rod(seat+Vector3.UP*.16-axis*side*.18,seat+Vector3.UP*.16+axis*side*.33,.106,.106,WOOD,4)
 			var lip:=_mesh(strip,self)
 			lip.visible=false
 			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.625+Vector3.UP*(rise*0.38),
 				"w":w if w>=d else w*0.39,"d":d if d>w else d*0.39})
 	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d,"pieces":pieces})
-	for side: float in [-1,1]:
-		frame.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
-		frame.block(base+Vector3(side*w*0.84,-0.09,0),Vector3(0.19,0.18,d*1.70),WOOD)
 
 func _between(target: Vector3,eye: Vector3,roof: Dictionary) -> bool:
 	var center: Vector3=roof.center
@@ -485,9 +509,9 @@ func _tower(b: Builder,p: Vector3, gate_flank: bool = false) -> void:
 	if gate_flank:
 		# The flanking watch galleries face the approach. The main arch stays
 		# visible between their shorter eaves when viewed from the open field.
-		_cover(b,p+Vector3(0,6.55,0),3.15,2.85,1.21)
+		_cover(p+Vector3(0,6.55,0),3.15,2.85,1.21)
 	else:
-		_cover(b,p+Vector3(0,6.55,0),3.62,3.37,1.45)
+		_cover(p+Vector3(0,6.55,0),3.62,3.37,1.45)
 
 # The front curtain is rammed earth above a battered stone plinth. Its
 # quoins and copings follow the existing collision and parapet footprint.
@@ -604,7 +628,7 @@ func _fort(b: Builder) -> void:
 	for plank in 9:
 		gallery.block(Vector3(Ground.WALL_X,4.16,(plank-4)*1.04),Vector3(4.1,0.21,1.02),WOOD.lightened(0.045*(plank%2)))
 	_sight_deck(gallery,Vector3(Ground.WALL_X,4.16,0),2.05,4.74)
-	_cover(b,Vector3(Ground.WALL_X,7.62,0),3.43,4.71,1.94)
+	_cover(Vector3(Ground.WALL_X,7.62,0),3.43,4.71,1.94)
 	# Tapered gateposts support the passage even when its roof is out of sight.
 	for x:float in [-1.32,1.32]:
 		for z:float in [-4.18,4.18]:
@@ -641,7 +665,7 @@ func _fort(b: Builder) -> void:
 		for z: float in [-14,14]:
 			b.joint=8
 			b.block(Vector3(x,1.4,z),Vector3(7,2.8,4.4),LIME)
-			_cover(b,Vector3(x,2.74,z),4.45,3.02,1.12)
+			_cover(Vector3(x,2.74,z),4.45,3.02,1.12)
 
 func _tent(b: Builder,p: Vector3,shade: Color,reverse: float) -> void:
 	var along:=Vector3.BACK*reverse
