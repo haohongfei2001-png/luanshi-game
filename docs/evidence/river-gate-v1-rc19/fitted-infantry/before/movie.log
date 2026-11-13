@@ -7,8 +7,8 @@ Movie Maker mode enabled, recording movie in 1280×800 @ 20 FPS...
 FITTED_MARCH true actor=37 distance=7.706711769104
 --------------------------------------------------------------------------------
 Done recording movie at path: /home/runner/work/_temp/before.avi
-103 frames at 20 FPS (movie length: 00:00:05:03), recorded in 00:01:32 (5% of real-time speed).
-CPU render time: 81.82 seconds (average: 794.37 ms/frame)
-GPU render time: 82.07 seconds (average: 796.76 ms/frame)
-Encoding time: 1.55 seconds (average: 15.00 ms/frame)
+103 frames at 20 FPS (movie length: 00:00:05:03), recorded in 00:01:13 (6% of real-time speed).
+CPU render time: 64.30 seconds (average: 624.26 ms/frame)
+GPU render time: 64.52 seconds (average: 626.41 ms/frame)
+Encoding time: 1.29 seconds (average: 12.56 ms/frame)
 --------------------------------------------------------------------------------
