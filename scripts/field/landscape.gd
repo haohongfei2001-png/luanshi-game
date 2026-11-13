@@ -344,6 +344,20 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 			for slit in 12:
 				var basepoint:=gallery+along*reach*(-0.92+slit*0.168)-Vector3.UP*1.51
 				strip.rod(basepoint,basepoint+Vector3.UP*0.45,0.033,0.033,WOOD.darkened(0.08),4)
+			# When the observer's side lifts, the gallery still has a real back
+			# wall and framed bays. Keep the upper half open and attach everything
+			# to the already occlusion-tested far eave; never cover the assault lane.
+			for bay:float in [-0.64,0.0,0.64]:
+				var bay_mid:=gallery+along*reach*bay
+				var panel_width:=reach*.53
+				strip.joint=8
+				var panel_size:=Vector3(panel_width,.48,.105) if along==Vector3.RIGHT else Vector3(.105,.48,panel_width)
+				strip.block(bay_mid-Vector3.UP*1.32,panel_size,Color("9c927c"))
+				strip.joint=10 if along==Vector3.BACK else 3
+				strip.rod(bay_mid-along*panel_width*.52-Vector3.UP*1.06,bay_mid+along*panel_width*.52-Vector3.UP*1.06,.074,.074,Color("655245"),4)
+				for upright:float in [-.32,.32]:
+					var foot:=bay_mid+along*panel_width*upright-Vector3.UP*1.045
+					strip.rod(foot,foot+Vector3.UP*.76,.048,.044,Color("655245"),4)
 			var lip:=_mesh(strip,self)
 			lip.visible=false
 			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.75+Vector3.UP*0.29,
@@ -460,6 +474,18 @@ func _dress_gate(b: Builder) -> void:
 		for i in range(6,23,2):
 			b.joint=12
 			b.block(Vector3(Ground.WALL_X-1.07,3.948,side*i),Vector3(0.59,0.084,1.43),Color("969689"))
+		# Pairs of buttressed repairs interrupt the long blank curtain rather than
+		# tattooing uniformly distributed noise over the whole wall. Existing blocks
+		# remain solid; these small surfaces do not affect collision or gate passage.
+		for place:float in [11.8,19.3]:
+			var toes:=Vector3(Ground.WALL_X-1.47,.72,side*place)
+			var gather:=Vector3(Ground.WALL_X-1.34,2.82,side*place)
+			var band:=Vector3(0,0,.64)
+			b.joint=8
+			b.quad(toes-band,gather-band*.70,gather+band*.70,toes+band,Color("81705b"))
+			b.quad(toes+band,gather+band*.70,gather+band*.70+Vector3(.14,0,0),toes+band+Vector3(.19,0,0),Color("776650"))
+			b.joint=12
+			b.block(toes+Vector3(-.014,0,0),Vector3(.29,.25,1.54),Color("8d8e81"))
 		# Gate jambs turn into the throat. Battles can still pass below the lintel.
 		for row in 6:
 			var h:=0.25+row*0.56

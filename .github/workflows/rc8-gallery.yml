@@ -1,0 +1,69 @@
+name: Inspect the far gallery at the live gate
+on:
+  push:
+    branches: ['codex/river-gate-gallery-study']
+permissions:
+  contents: read
+jobs:
+  normal-camera:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 5
+      - name: Check the baked model, then run both real game windows
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          g=/tmp/godot/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          mkdir -p proof
+          for side in before after; do
+            if [[ "$side" == before ]]; then rev=5cf51e2f7ad9e4fe2768e2088b11bdfd0ab4979e; else rev=HEAD; fi
+            root=/tmp/dress-$side
+            mkdir -p "$root"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/rc8_gate_sample.gd "$root/tests/"
+            "$g" --headless --editor --path "$root" --import > "proof/$side-import.log" 2>&1
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-import.log"; then exit 1; fi
+            timeout 150s xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc8_gate_sample.gd -- --field-size=512 2>&1 | tee "proof/$side.log"
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side.log"; then exit 1; fi
+            grep -q '^RIVER_ART_FRAME' "proof/$side.log"
+            cp -a "$root/artifacts/river-art" "proof/$side"
+          done
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow==11.3.0
+          python3 - <<'PY'
+          import json,io,hashlib,base64
+          from pathlib import Path
+          from PIL import Image
+          p=Path("proof")
+          rows=[json.loads((p/s/"frames.json").read_text()) for s in ("before","after")]
+          assert rows[0]==rows[1] and rows[0][0]["in_frame_count"]>0
+          print("GALLERY_RECEIPT",json.dumps(rows[0],separators=(",",":")))
+          for label in ("gate","fight"):
+              ims=[Image.open(p/s/(label+".png")).convert("RGB") for s in ("before","after")]
+              for im in ims: assert im.size==(1920,1200)
+              a,b=ims
+              if label=="gate": assert a.tobytes()!=b.tobytes()
+              pair=Image.new("RGB",(1200,540))
+              for i,im in enumerate(ims): pair.paste(im.crop((615,320,1215,860)),(600*i,0))
+              buf=io.BytesIO();pair.save(buf,format="JPEG",quality=89);x=buf.getvalue()
+              (p/(label+"-pair.jpg")).write_bytes(x)
+              enc=base64.b64encode(x).decode()
+              print("GALLERY_INFO",label,len(x),hashlib.sha256(x).hexdigest(),len(enc))
+              for k in range(0,len(enc),8000): print("GALLERY_PART",label,k,enc[k:k+8000])
+          PY
+      - name: Preserve full unmodified game frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-gallery-originals
+          path: proof/
