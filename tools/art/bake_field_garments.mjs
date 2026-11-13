@@ -71,6 +71,44 @@ function surface(look,segments,rows) {
             panel(n,1,guard?2:26,(u,v)=>textile(low+(high-low)*u,1.055-.055*v));
         }
     }
+    // Segmented upper-arm defences wrap the sewn sleeve. Two laced courses
+    // share the same soft root over the socket; the lower edge turns under
+    // the arm, below the outside shoulder. No plate extends beyond the cuff.
+    if (look==="Guard" || look==="Regular" || look==="Officer" || look==="Player") {
+        const heavy=look==="Guard", both=heavy || look==="Officer";
+        const sides=both ? [-1,1] : [1];
+        for (const side of sides) {
+            const upper=side<0?LEFT_ARM:RIGHT_ARM;
+            const rootY=1.407, shoulderBone=.225;
+            const length=heavy?.171:.143;
+            const material=heavy?3:30;
+            const sweep=heavy?1.74:1.54;
+            const clothAt=(u,v,lip=0)=>{
+                const angle=(2*u-1)*sweep-.09;
+                const flank=Math.cos(angle),toward=Math.sin(angle);
+                // Sloped crown and recessed ends wrap around the front and
+                // back of the sleeve. The largest radius follows the actual
+                // padding above the elbow, then hangs in a shallow curve.
+                const breadth=.049+.062*Math.sin(1.64*v)-.006*v*v+lip;
+                const depth=.057+.053*Math.sin(1.62*v)+lip;
+                const cx=shoulderBone+.021*v,cz=-.013+.014*v;
+                const y=rootY+.015*flank-length*v+.047*v*Math.abs(toward)**1.60;
+                const arm=.14+.78*v+.045*Math.max(0,flank);
+                return [side*(cx+breadth*flank),y,cz+depth*toward,upper,CHEST,arm];
+            };
+            const n=segments<=4?4:(segments<=6?6:9);
+            panel(n,2,material,(u,v)=>clothAt(u,v*.52,.003));
+            panel(n,2,material,(u,v)=>clothAt(u,.48+.52*v));
+            panel(n,1,2,(u,v)=>clothAt(u,.962+.038*v,.0015));
+            // A paired broad cord ties the outboard ends of the two courses.
+            // Only the upper two detail meshes spend triangles on the lacing.
+            if(segments>4) {
+                for(const at of [.25,.73]) {
+                    panel(1,2,2,(u,v)=>clothAt(at+.034*(u-.5)+.044*v,.36+.27*v,.0042));
+                }
+            }
+        }
+    }
     if(look==="Levy" || look==="Archer") {
         // Two ends of the tied wrap have different lengths. Only the knot rotates
         // completely with the skull; the ends hang against the back of the coat.

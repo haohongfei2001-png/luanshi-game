@@ -7,7 +7,7 @@ from math import cos, pi, sin
 
 from figure_mesh import TAU
 
-HIPS, CHEST = 0, 1
+HIPS, CHEST, LEFT_UPPER_ARM = 0, 1, 3
 THIGHS = (9, 12)
 
 
@@ -134,25 +134,31 @@ def player_half_mantle(s, rank=False):
     """A shoulder cloth cut to fall on the left of the sword hand and girdle."""
     # Each horizontal station follows the shoulder, then settles against the ribs.
     # The free left-back corner is longest; the front hem finishes above the elbow.
-    stations = ((1.467,.103,.096), (1.442,.177,.134), (1.395,.235,.176),
-                (1.326,.272,.214), (1.253,.267,.235), (1.159,.243,.234))
+    # The short point passes over the upper arm. Back cloth then opens away
+    # from the shoulder blade and comes to rest beside the rear girdle.
+    stations = ((1.467,.098,.093), (1.443,.166,.135), (1.404,.228,.173),
+                (1.341,.270,.213), (1.255,.270,.236), (1.163,.250,.229))
 
     def cut(u, v):
         f = v * (len(stations)-1)
         row = min(int(f), len(stations)-2)
         blend = f-row
         y, width, depth = (a+(b-a)*blend for a,b in zip(stations[row],stations[row+1]))
-        angle = -.46-2.53*u-v*(.86-.95*u)
-        grain = sin(pi*u)
-        y += v*v*(.076*(1-u)-.096*grain**1.45+.016*u)
-        # One folded ridge carries the cloth from the knot over the shoulder.
-        # The narrow outer facing turns at the edge, revealing a little madder.
-        turning = max(0.,(u-.80)/.20)
-        fold = .016*sin(2.25*pi*u-.35*v)*sin(.80*pi*v) + .014*turning*v
-        x = (width+fold)*sin(angle)
-        z = -.012+(depth+fold)*cos(angle)
-        chest = 1.-.21*v*v
-        return (x,y,z),(CHEST,HIPS,chest)
+        angle = -.36-2.76*u-v*(.63-.79*u)
+        shoulder=max(0.,-sin(angle))
+        back=max(0.,-cos(angle))
+        # Weigh a long back corner against a shorter front point. The hem is
+        # a continuously cut curve rather than separate hanging strips.
+        y+=v*v*(.092*(1.-u)-.215*back**.82-.035*shoulder)
+        fold=.014*sin(2.40*pi*u-.52*v)*sin(.91*pi*v)
+        breath=sin(pi*v)*shoulder
+        x=(width+fold+.010*breath)*sin(angle)
+        z=-.012+(depth+fold)*cos(angle)-.084*back*v*v
+        # Shoulder motion near the seam rolls into the thorax. The lower
+        # back of the mantle is held by its own weight against the girdle.
+        arm=.235*shoulder*sin(pi*min(1.,v/.80))*(1.-.69*back) if v<.80 else 0.
+        skin=(LEFT_UPPER_ARM,CHEST,arm) if arm>.005 else (CHEST,HIPS,1.-.27*v*v)
+        return (x,y,z),skin
 
     divisions = 4 if rank else (11 if s.detail else 7)
     height = 4 if rank else 7
