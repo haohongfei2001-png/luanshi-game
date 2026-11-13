@@ -1,6 +1,6 @@
 extends SceneTree
 ## Run headless. Every directly read mesh must be the same resource used by the imported scene.
-const MeshLibrary := preload("res://scripts/field/model_library.gd")
+const FieldMeshes := preload("res://scripts/field/model_library.gd")
 func _initialize() -> void:
 	var total:=0
 	for library: PackedScene in [preload("res://assets/river_gate/figures/river_company.glb"),
@@ -10,7 +10,7 @@ func _initialize() -> void:
 			preload("res://assets/environment/bank-willows.gltf"),
 			preload("res://assets/environment/quaternius/grove.glb"),
 			preload("res://assets/art/mounts/mounts.gltf")]:
-		var actual:=MeshLibrary.meshes(library)
+		var actual:=FieldMeshes.meshes(library)
 		var root_node:=library.instantiate()
 		var expected:=root_node.find_children("*","MeshInstance3D",true,false)
 		if actual.is_empty() or actual.size()!=expected.size():

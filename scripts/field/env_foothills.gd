@@ -1,6 +1,6 @@
 extends RefCounted
 ## Imported river trees, original branch sprays, paving and rock share terrain cells.
-const MeshLibrary := preload("res://scripts/field/model_library.gd")
+const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const PLAN := preload("res://assets/environment/foothills.json")
@@ -98,10 +98,10 @@ func _grove_part(mesh: ArrayMesh) -> ArrayMesh:
 func _bake_trees() -> void:
 	# The two swept-bole willow assets and the inland tree prototypes use the
 	# same static, spatially culled draw batches. Local +X points over water.
-	var willows:=MeshLibrary.meshes(preload("res://assets/environment/bank-willows.gltf"))
+	var willows:=FieldMeshes.meshes(preload("res://assets/environment/bank-willows.gltf"))
 	for prefix:String in ["Veteran","Coppice"]:
 		trees.append({"wood":_grove_part(willows[prefix+"Bark"]),"leaves":_grove_part(willows[prefix+"Foliage"])})
-	var broadleaves:=MeshLibrary.meshes(preload("res://assets/environment/quaternius/grove.glb"))
+	var broadleaves:=FieldMeshes.meshes(preload("res://assets/environment/quaternius/grove.glb"))
 	for prefix: String in ["Broad","Upright"]:
 		# Bark and leaves use the same cutout material. Preserve the author's
 		# indices and render both surfaces together in each grove instance.

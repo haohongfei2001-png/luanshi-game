@@ -1,6 +1,6 @@
 extends RefCounted
 ## Shared baked, single-surface horse and carriage meshes. +Z is the muzzle.
-const MeshLibrary := preload("res://scripts/field/model_library.gd")
+const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const COLLECTION := preload("res://assets/art/mounts/mounts.gltf")
 const SURFACE := preload("res://scripts/field/mount_hide.gdshader")
 const ATLAS := preload("res://assets/art/mounts/mount-atlas.png")
@@ -14,7 +14,7 @@ static var _hide: ShaderMaterial
 
 static func mesh(draught: bool=false, close: bool=true) -> Mesh:
 	if _meshes.is_empty():
-		_meshes=MeshLibrary.meshes(COLLECTION)
+		_meshes=FieldMeshes.meshes(COLLECTION)
 	var key:=("Draught" if draught else "Saddle")+("Close" if close else "Rank")
 	return _meshes[key]
 
