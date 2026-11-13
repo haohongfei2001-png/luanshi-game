@@ -1,4 +1,4 @@
-name: Review cut turf, paired wheel ruts and the objective in normal play
+name: Review painted cart wear and the objective in normal play
 on:
   push:
     branches: ['codex/river-road-shoulders']

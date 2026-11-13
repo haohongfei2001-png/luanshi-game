@@ -93,8 +93,9 @@ vec3 painted_ground(vec2 p, float shore) {
     if (p.x > -25. && p.x < 47. && p.y > -8. && p.y < 8.) {
         vec3 wear=texture(cartway,(p+vec2(25.,8.))/vec2(72.,16.)).rgb;
         float dry=1.0-wet;
-        colour*=1.0-dry*.33*wear.r;
-        colour+=clay*vec3(.28,.27,.25)*wear.g*dry;
+        float packed=wear.r*(.59+.41*smoothstep(.19,.67,marks.g+.22*cover.b));
+        colour*=1.0-dry*.25*packed;
+        colour+=clay*vec3(.23,.22,.20)*wear.g*dry;
         vec3 edge_earth=mix(verge,clay*vec3(.84,.85,.80),.74);
         colour=mix(colour,edge_earth,wear.b*.79*dry);
     }
