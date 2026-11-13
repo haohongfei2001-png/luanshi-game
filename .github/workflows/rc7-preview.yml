@@ -1,0 +1,59 @@
+name: Review the current River Gate game window
+on:
+  push:
+    branches: [codex/river-rc7-art-preview]
+permissions:
+  contents: read
+jobs:
+  window:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot and import the project
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path . >/tmp/rg-import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' /tmp/rg-import.log; then exit 1; fi
+      - name: Photograph the shipping scene at its recorded inputs and camera
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          cp tests/river_art_capture.gd tests/rc7_quick.gd
+          sed -i 's/for i in 80:/for i in 0:/' tests/rc7_quick.gd
+          mkdir -p artifacts && touch artifacts/.gdignore
+          xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/rc7_quick.gd -- --field-size=512 2>&1 | tee /tmp/rg-window.log
+          grep -q '^RIVER_ART_PASS' /tmp/rg-window.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' /tmp/rg-window.log; then exit 1; fi
+      - name: Print review stills
+        run: |
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+          python3 - <<'PY'
+          import base64,io,pathlib
+          from PIL import Image
+          for k in ['formation','player-action','bank','gate','hero']:
+              im=Image.open('artifacts/river-art/'+k+'.png').convert('RGB')
+              im.thumbnail((1232,770),Image.Resampling.LANCZOS)
+              buf=io.BytesIO();im.save(buf,'JPEG',quality=85,subsampling=0)
+              print('RC7_WINDOW',k,base64.b64encode(buf.getvalue()).decode())
+          for k in ['grazed-meadow','loess-wagonway','elm-bough']:
+              im=Image.open('assets/environment/'+k+'.png').convert('RGBA')
+              alpha=im.getchannel('A')
+              print('RC7_MATERIAL',k,im.size,alpha.getextrema(),sum(alpha.histogram()[:10])/im.width/im.height)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-art-window-originals
+          path: |
+            /tmp/rg-import.log
+            /tmp/rg-window.log
+            artifacts/river-art/*.png
+            artifacts/river-art/frames.json
+          retention-days: 7
