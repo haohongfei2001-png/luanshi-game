@@ -39,17 +39,16 @@ def costume(look,rank=False):
                     p=(width*sin(angle),.947+.432*v,-.012+depth*cos(angle))
                     return p,body(p)
                 s.grid(1,3,sling,"leather")
-        if look in ("player","officer"):
-            # The same oblique drape and split tail as the close uniform.
-            hero=look=="player"
-            pairs=([(-.11,1.428,-.075),(-.283,1.309,-.144),(-.341,1.017,-.233),(-.431,.600,-.360)],
-                   [(.072,1.451,-.097),(.042,1.302,-.206),(-.091,1.074,-.312),(-.298,.739,-.440)]) if hero else (
+        if look=="player":
+            player_half_mantle(s,rank=True)
+        elif look=="officer":
+            pairs=(
                   [(-.14,1.421,-.084),(-.247,1.297,-.13),(-.262,.943,-.209),(-.241,.572,-.221)],
                   [(.131,1.428,-.082),(.12,1.236,-.197),(.134,1.024,-.236),(.104,.792,-.245)])
             def mantle(u,v):
                 row=round(v*3)
                 return lerp(pairs[0][row],pairs[1][row],u),(CHEST,HIPS,.99-.56*v)
-            s.grid(2,3,mantle,"hero_mantle" if hero else "mantle")
+            s.grid(2,3,mantle,"mantle")
     else:
         coat(s,look)
         equipment(s,look)

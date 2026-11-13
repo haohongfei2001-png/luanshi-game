@@ -2,7 +2,7 @@
 The yoke has real armholes: the first sleeve row is the edge of the torso mesh.
 """
 from math import atan2, cos, exp, hypot, pi, sin
-from field_dress import issue_vest, wrapping
+from field_dress import issue_vest, player_half_mantle, wrapping
 from field_visage import head
 from figure_atlas import uv
 from figure_mesh import Surface, TAU, add, lerp
@@ -263,11 +263,12 @@ def equipment(s,look):
     if heavy:
         issue_vest(s,look)
         wrapping(s,look)
-    if look in ("player","officer"):
-        # Asymmetric half-mantle with a split over the left hip; a readable back
-        # silhouette even with a spear lifted or the front arm hidden by the shield.
+    if look=="player":
+        player_half_mantle(s)
+    elif look=="officer":
+        # Split officer mantle, falling behind the left hip.
         def mantle(u,v):
-            a=(2.38+u*2.94) if look=="player" else (1.05+u*4.08)
+            a=1.05+u*4.08
             # The cape rides over a shoulder, expands across the blades, and hangs
             # free of the narrow waist. The open side clears the weapon arm.
             rx=.107+.213*sin((1-v)*pi*.62)**.70
@@ -275,15 +276,14 @@ def equipment(s,look):
             split=.105*max(0,1-abs(u-.62)*7.5)
             # The commander's shoulder cloth falls diagonally away from the free
             # arm. Its low left edge streams behind the hip at a run or lunge.
-            bottom=(.59+.63*u-.115*sin(pi*u)) if look=="player" else (.56+.26*u)
+            bottom=.56+.26*u
             bottom+=split
             y=bottom+(1.453-bottom)*v+.031*sin(3*a+.25)*(1-v)
             fold=(.009+.020*(1-v))*sin(5*a+.63*v)
             free=(1.-v)**1.35
-            p=((rx+fold)*sin(a)-(.207 if look=="player" else .068)*free,
-               y,(rz+fold)*cos(a)-.053-(.303 if look=="player" else .073)*free)
+            p=((rx+fold)*sin(a)-.068*free,
+               y,(rz+fold)*cos(a)-.053-.073*free)
             return p,(CHEST,HIPS,clamp(.18+v*.98))
-        cloth_mat="hero_mantle" if look=="player" else "mantle"
         # Split lower panels leave a real notch between the two short tails.
         for left,right in ((0.,.62),(.62,1.)):
             def tail(u,v):
@@ -291,7 +291,7 @@ def equipment(s,look):
                 lo=left+(gap if left>0 else 0.)
                 hi=right-(gap if right<1 else 0.)
                 return mantle(lo+u*(hi-lo),v)
-            s.grid((12 if close else 5) if left==0 else (8 if close else 3),7 if close else 3,tail,cloth_mat)
+            s.grid((12 if close else 5) if left==0 else (8 if close else 3),7 if close else 3,tail,"mantle")
         s.ribbon([(-.107,1.421,.087),(-.017,1.391,.123),(.089,1.343,.134),(.161,1.303,.136)],
                  .032,"sash",CHEST)
         s.oval((-.105,1.419,.099),(.033,.028,.018),"brass",CHEST,10 if close else 6,4)

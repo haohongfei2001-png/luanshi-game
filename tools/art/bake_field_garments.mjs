@@ -43,7 +43,7 @@ function surface(look,segments,rows) {
             if(reverse) indices.push(a,d,c,a,c,b);else indices.push(a,b,c,a,c,d);
         }
     }
-    const armoured=["Regular","Guard","Officer","Player"].includes(look);
+    const armoured=["Regular","Guard","Officer"].includes(look);
     if(armoured) {
         // Both halves of the wool shoulder piece are cut from one polygonal
         // pattern. The two open corners stop on the ribcage, several centimetres
@@ -85,16 +85,31 @@ function surface(look,segments,rows) {
             });
         }
     }
-    if(look==="Officer" || look==="Player") {
+    if(look==="Officer") {
         // A diagonal folded collar rests on the upper back above the mantle. It gives
         // the normal follow camera a direction cue when the weapon arm is hidden.
-        panel(segments,2,look==="Player"?23:19,(u,v)=>{
+        panel(segments,2,19,(u,v)=>{
             const angle=1.55+3.18*u;
             const x=(.119+.109*v)*Math.sin(angle);
             const y=1.457-.066*v-.032*v*Math.sin(Math.PI*u)-.030*u;
             const z=-.045+(.094+.072*v)*Math.cos(angle);
             return [x,y,z,CHEST,HIPS,.98];
         },true);
+    }
+    if(look==="Player") {
+        // Narrow leather keeper between the left collar and the chest strap.
+        // The shoulder cloth is cut and skinned with the player's fitted vest.
+        const keeper=[[-.121,1.438,.086],[-.115,1.418,.116],[-.080,1.391,.146],
+                      [-.029,1.370,.158],[.030,1.343,.166],[.087,1.314,.178]];
+        panel(1,keeper.length-1,2,(u,v)=>{
+            const [x,y,z]=keeper[Math.round(v*(keeper.length-1))];
+            return [x+.016*(u-.5),y+.018*(u-.5),z+.008,CHEST,HIPS,1];
+        });
+        const rim=[[0,1],[-.88,.48],[-.88,-.48],[0,-1],[.88,-.48],[.88,.48],[0,1]];
+        panel(rim.length-1,1,6,(u,v)=>{
+            const [rx,ry]=rim[Math.round(u*(rim.length-1))], r=.013+.006*v;
+            return [-.112+rx*r,1.415+ry*r,.141-.30*ry*r,CHEST,HIPS,1];
+        });
     }
     // Costume masses for a 22 m orthographic camera. They are fitted to the
     // existing bind, not camera-facing badges. Hardware still uses the same surface.
