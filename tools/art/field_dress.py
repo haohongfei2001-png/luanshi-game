@@ -128,3 +128,35 @@ def wrapping(s, look, rank=False):
         for lo,hi,material in ((0.,.14,"felt"),(.14,1.,"overskirt" if front else "coat")):
             s.grid(max(1,round(cols*(hi-lo))),2 if rank else 4,
                    lambda u,v:fold(lo+(hi-lo)*u,v),material)
+
+
+def player_half_mantle(s, rank=False):
+    """A shoulder cloth cut to fall on the left of the sword hand and girdle."""
+    # Each horizontal station follows the shoulder, then settles against the ribs.
+    # The free left-back corner is longest; the front hem finishes above the elbow.
+    stations = ((1.467,.103,.096), (1.442,.177,.134), (1.395,.235,.176),
+                (1.326,.272,.214), (1.253,.267,.235), (1.159,.243,.234))
+
+    def cut(u, v):
+        f = v * (len(stations)-1)
+        row = min(int(f), len(stations)-2)
+        blend = f-row
+        y, width, depth = (a+(b-a)*blend for a,b in zip(stations[row],stations[row+1]))
+        angle = -.46-2.53*u-v*(.86-.95*u)
+        grain = sin(pi*u)
+        y += v*v*(.076*(1-u)-.096*grain**1.45+.016*u)
+        # One folded ridge carries the cloth from the knot over the shoulder.
+        # The narrow outer facing turns at the edge, revealing a little madder.
+        turning = max(0.,(u-.80)/.20)
+        fold = .016*sin(2.25*pi*u-.35*v)*sin(.80*pi*v) + .014*turning*v
+        x = (width+fold)*sin(angle)
+        z = -.012+(depth+fold)*cos(angle)
+        chest = 1.-.21*v*v
+        return (x,y,z),(CHEST,HIPS,chest)
+
+    divisions = 4 if rank else (11 if s.detail else 7)
+    height = 4 if rank else 7
+    for start,end,cloth in ((0.,.85,"mantle"),(.85,1.,"hero_mantle")):
+        def panel(u,v):
+            return cut(start+(end-start)*u,v)
+        s.grid(max(1,round(divisions*(end-start))),height,panel,cloth)
