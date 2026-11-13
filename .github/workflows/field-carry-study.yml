@@ -3,6 +3,7 @@ on:
   push:
     branches: ['codex/river-field-carry-study']
 permissions:
+  actions: read
   contents: read
 jobs:
   live-picture:
@@ -15,16 +16,14 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 2
-      - name: Bake the carried animation; keep the 279 shipping strips and real impact unchanged
-        run: |
-          set -euo pipefail
-          python3 -c 'from PIL import Image' || python3 -m pip install Pillow==11.3.0
-          mkdir -p proof
-          git show HEAD^:assets/river_gate/figures/company_motion.png > /tmp/rc8-bank.png
-          python3 -c 'from pathlib import Path; import sys; sys.path.insert(0,"tools/art"); from company_motion import bake_motion; bake_motion(Path("assets/river_gate/figures"))'
-          python3 tools/art/check_field_carries.py /tmp/rc8-bank.png | tee proof/animation.log
-          cp assets/river_gate/figures/company_motion.png proof/baked-company-motion.png
-          sha256sum proof/baked-company-motion.png
+      - name: Reuse the actual RC8 recordings and the already audited motion texture
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43361092561
+          artifact-ids: '14007613590'
+          github-token: ${{ github.token }}
+          path: proof
+          merge-multiple: true
       - name: Film the same real soldiers at close, player and formation distances
         run: |
           set -euo pipefail
@@ -34,8 +33,13 @@ jobs:
           unzip -q /tmp/editor.zip -d /tmp/godot
           g=/tmp/godot/Godot_v4.6.3-stable_linux.x86_64
           ./tools/prepare-font.sh
-          for side in before after; do
-            if [[ "$side" == before ]]; then revision=HEAD^; else revision=HEAD; fi
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow==11.3.0
+          python3 -m pip install imageio-ffmpeg==0.6.0
+          ffmpeg_bin=$(python3 -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')
+          echo '83c4fcda863bf0912cd418e47feddff28d54dbfd68454fa056732058ae4cc5e2  proof/baked-company-motion.png' | sha256sum -c -
+          test -f proof/before/normal/input.json
+          for side in after; do
+            revision=HEAD
             root=/tmp/carry-$side
             mkdir -p "$root"
             git archive "$revision" | tar -x -C "$root"
@@ -50,7 +54,9 @@ jobs:
             done
             cp -a "$root/artifacts/river-art" "proof/$side"
             cp -a "$root/artifacts/personal-contact" "proof/$side/normal"
-            ffmpeg -nostdin -loglevel error -y -framerate 30 -i "proof/$side/play-%03d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "proof/$side.mp4"
+          done
+          for side in before after; do
+            "$ffmpeg_bin" -nostdin -loglevel error -y -framerate 30 -i "proof/$side/play-%03d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "proof/$side.mp4"
           done
           python3 - <<'PY'
           import json, io, hashlib, base64
@@ -74,6 +80,10 @@ jobs:
               enc=base64.b64encode(data).decode()
               print("CARRY_INFO",name,len(data),hashlib.sha256(data).hexdigest(),len(enc))
               for at in range(0,len(enc),10000): print("CARRY_PART",name,at,enc[at:at+10000])
+          data=(p/"baked-company-motion.png").read_bytes();enc=base64.b64encode(data).decode()
+          blob=hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+          print("CARRY_BANK_INFO",len(data),hashlib.sha256(data).hexdigest(),blob,len(enc))
+          for at in range(0,len(enc),12000): print("CARRY_BANK_PART",at,enc[at:at+12000])
           PY
       - uses: actions/upload-artifact@v4
         if: always()
