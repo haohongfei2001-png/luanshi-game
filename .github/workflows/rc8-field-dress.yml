@@ -1,0 +1,75 @@
+name: Review ordinary silhouettes at the play camera
+on:
+  push:
+    branches: ['codex/river-rc8-field-dress-lab']
+permissions:
+  contents: read
+jobs:
+  normal-camera:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 3
+      - name: Check the baked model, then run both real game windows
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          node tools/art/bake_field_garments.mjs --check
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          g=/tmp/godot/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          mkdir -p proof
+          for side in before after; do
+            if [[ "$side" == before ]]; then rev=131b47055ba03f29ac4d6b392f12e1e8115b4d4b; else rev=HEAD; fi
+            root=/tmp/dress-$side
+            mkdir -p "$root"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/rc7_personal_contact.gd "$root/tests/"
+            "$g" --headless --editor --path "$root" --import > "proof/$side-import.log" 2>&1
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-import.log"; then exit 1; fi
+            timeout 150s xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512 2>&1 | tee "proof/$side.log"
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side.log"; then exit 1; fi
+            grep -q '^RC7_PERSONAL_PASS' "proof/$side.log"
+            cp -a "$root/artifacts/personal-contact" "proof/$side"
+          done
+          python3 - <<'PY'
+          import base64, json, io, hashlib
+          from PIL import Image, ImageOps
+          from pathlib import Path
+          p=Path("proof")
+          old,new=[json.loads((p/side/"input.json").read_text()) for side in ("before","after")]
+          assert old==new and len(new)==2, (old,new)
+          assert new[1]["foe_hp"]<new[1]["previous_foe_hp"] and new[1]["hero_hits"]>0
+          print("SILHOUETTE_REPLAY", json.dumps(new, separators=(",",":")))
+          for label in ("personal-contact","personal-windup"):
+              pair=[Image.open(p/s/(label+".png")).convert("RGB") for s in ("before","after")]
+              assert pair[0].size==pair[1].size==(1920,1200)
+              assert pair[0].tobytes()!=pair[1].tobytes()
+              # Exact crops in the same world pose. No sharpening or re-lighting.
+              sheet=Image.new("RGB",(1200,570))
+              for i,im in enumerate(pair):
+                  sheet.paste(im.crop((670,300,1270,870)),(600*i,0))
+              sheet.save(p/(label+"-pair.jpg"),quality=93)
+          for name,q in (("personal-contact-pair.jpg",84),("after/personal-contact.png",79)):
+              im=Image.open(p/name).convert("RGB")
+              if name.endswith("png"):im.thumbnail((1152,720))
+              mem=io.BytesIO();im.save(mem,format="JPEG",quality=q)
+              blob=mem.getvalue(); enc=base64.b64encode(blob).decode()
+              pref="DRESS_CROP" if "pair" in name else "DRESS_PLAY"
+              print(pref+"_INFO",len(blob),hashlib.sha256(blob).hexdigest(),len(enc))
+              for i in range(0,len(enc),5500):print(pref+"_PART",i,enc[i:i+5500])
+          PY
+      - name: Preserve full unmodified game frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: normal-camera-before-after
+          path: proof/
