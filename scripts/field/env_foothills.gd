@@ -143,6 +143,12 @@ func _leaf_crown(patch: Patch,root: Vector3,ray: Vector3,radius: float,sun: floa
 			var start:=level*ring_size
 			faces.append_array(PackedInt32Array([start+r,start+ring_size+r,start+n,start+n,start+ring_size+r,start+ring_size+n]))
 		faces.append_array(PackedInt32Array([2*ring_size+r,peak,2*ring_size+n,r,n,belly]))
+	# Godot front faces wind clockwise; the manually supplied crown normals
+	# above point outwards. Reverse the face winding once at authoring time.
+	for index in range(0,faces.size(),3):
+		var swap:=faces[index+1]
+		faces[index+1]=faces[index+2]
+		faces[index+2]=swap
 	for i in faces:
 		patch.leaves.set_normal(normals[i])
 		patch.leaves.set_color(Color.WHITE)
@@ -436,8 +442,8 @@ func _field_banks() -> void:
 			if not previous.is_empty():
 				var face:=Color("8c8169").lerp(Color("958a72"),.5+.45*sin(i*1.74))
 				var top:=Color("969571").lerp(Color("8c906d"),.5+.4*sin(i*.78+.6))
-				bed.quad(previous[0],row[0],row[1],previous[1],face)
-				bed.quad(previous[1],row[1],row[2],previous[2],top)
+				bed.quad(previous[0],previous[1],row[1],row[0],face)
+				bed.quad(previous[1],previous[2],row[2],row[1],top)
 			previous=row
 		for i in pieces.size():
 			var stone:=pieces[i]
