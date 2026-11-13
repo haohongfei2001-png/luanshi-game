@@ -21,6 +21,17 @@ jobs:
           set -euo pipefail
           if ! /usr/bin/python3 -c 'import PIL, numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy python3-pil; fi
           /usr/bin/python3 tools/art/import_river_gatehouse.py "$RUNNER_TEMP/han-gate-cache"
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p=Path('assets/environment/quaternius/leaves.png')
+          origin=Path("assets/environment/valley-turf.png.import")
+          a="res://"+origin.as_posix().removesuffix(".import")
+          b="res://"+p.as_posix()
+          cfg=origin.read_text().replace(a,b).replace("uid://c6v3valleymdw","uid://c4heguanelm21")
+          cfg=cfg.replace("valley-turf.png-"+hashlib.md5(a.encode()).hexdigest(),p.name+"-"+hashlib.md5(b.encode()).hexdigest())
+          p.with_suffix(".png.import").write_text(cfg)
+          PY
       - name: Import the shipping game for graphical regressions
         run: |
           set -euo pipefail
@@ -76,7 +87,7 @@ jobs:
                       pair.paste(source.resize((800,500),Image.Resampling.LANCZOS),(800*i,0))
               pair.save(p/(label+'-pair.jpg'),quality=92,subsampling=0)
           PY
-          git add -- assets/third_party/wildfire_gate/river_gate.glb assets/third_party/wildfire_gate/gate_clay_and_timber.png assets/third_party/wildfire_gate/gate_clay_and_timber.png.import docs/evidence/river-gate-v1-rc19/watchhall
+          git add -- assets/third_party/wildfire_gate/river_gate.glb assets/third_party/wildfire_gate/gate_clay_and_timber.png assets/third_party/wildfire_gate/gate_clay_and_timber.png.import assets/environment/quaternius/leaves.png.import docs/evidence/river-gate-v1-rc19/watchhall
           git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Retain fitted watchhall and original gates, grass and contact windows'
           git push origin HEAD:refs/heads/codex/river-watchhall-study
       - uses: actions/upload-artifact@v4

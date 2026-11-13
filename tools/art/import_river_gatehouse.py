@@ -49,36 +49,73 @@ def fit(pos):
     y=np.interp(height,[-3.82,0.,8.1,12.,20.,26.0],[-1.53,0.,3.88,5.03,8.0,9.82])
     return (float(-depth*.55),float(y),float(np.copysign(span_out,span)))
 
+def clip_pitch(face, sign):
+    # Clip a roof, beam or floor triangle on the ridge. Keeping the entire
+    # triangle on the centroid side leaves diagonal splinters above the doorway.
+    polygon=[]
+    prev=face[-1]
+    for curr in face:
+        prev_in=sign*prev[0]>=0.
+        curr_in=sign*curr[0]>=0.
+        if prev_in!=curr_in:
+            edge=prev+(curr-prev)*(prev[0]/(prev[0]-curr[0]))
+            edge[0]=0.
+            polygon.append(edge)
+        if curr_in:
+            polygon.append(curr)
+        prev=curr
+    return [np.array((polygon[0],polygon[i],polygon[i+1])) for i in range(1,len(polygon)-1)]
+
 def mesh_library(cache):
     pos,normals,uv,tris=read_frame(source_file(cache,*FRAME))
     fitted=np.asarray([fit(p) for p in pos])
+    delta=.003
+    axes=np.eye(3)*delta
+    inverse=[]
+    for point in pos:
+        jac=np.column_stack([(np.asarray(fit(point+a))-np.asarray(fit(point-a)))/(2*delta) for a in axes])
+        inverse.append(np.linalg.inv(jac).T)
     shells=defaultdict(list)
     for tri in tris:
-        p=fitted[tri[:,0]]
-        if p[:,1].max()<3.91 or (p[:,1].min()<3.77 and p[:,1].mean()<3.82):
-            shells["Piers"].append(tri)
+        # The river-axis conversion changes handedness. A roof's exterior
+        # is the lit face, as are the neighbouring curtain-wall roofs.
+        rows=[]
+        for pi,ni,ui in tri[[0,2,1]]:
+            n=inverse[pi]@normals[ni]
+            rows.append(np.r_[fitted[pi],n/max(np.linalg.norm(n),1e-9),uv[ui][0],1.-uv[ui][1]])
+        face=np.asarray(rows)
+        y=face[:,1]
+        if y.max()<3.91 or (y.min()<3.77 and y.mean()<3.82):
+            shells["Piers"].append(face)
+            continue
+        shells["WatchHall"].append(face)
+        x=face[:,0]
+        if x.max()<=0.:
+            shells["WestPitch"].append(face)
+        elif x.min()>=0.:
+            shells["EastPitch"].append(face)
         else:
-            shells["WatchHall"].append(tri)
-            shells["WestPitch" if np.mean(p[:,0])<0 else "EastPitch"].append(tri)
+            shells["WestPitch"].extend(clip_pitch(face,-1))
+            shells["EastPitch"].extend(clip_pitch(face,1))
     assert len(shells["WatchHall"])+len(shells["Piers"])==7258
-    assert len(shells["WatchHall"])==len(shells["WestPitch"])+len(shells["EastPitch"])
+    def area(name):
+        face=np.array(shells[name])[:,:,:3]
+        return np.linalg.norm(np.cross(face[:,1]-face[:,0],face[:,2]-face[:,0]),axis=1).sum()*.5
+    assert abs(area("WatchHall")-area("WestPitch")-area("EastPitch"))<.00001
+    assert all(f[:,0].max()<1e-9 for f in shells["WestPitch"])
+    assert all(f[:,0].min()>-1e-9 for f in shells["EastPitch"])
     library=Library()
     for name in ("Piers","WatchHall","WestPitch","EastPitch"):
         vertices=[]; directions=[]; tex=[]; indices=[]; used={}
         for face in shells[name]:
-            # Z-up to Y-up with the river-axis rotation changes handedness.
-            # Keep the outer roofing facing the sky after Godot imports glTF.
-            for pi,ni,ui in face[[0,2,1]]:
-                key=(int(pi),int(ni),int(ui))
+            for corner in face:
+                key=tuple(np.round(corner,7))
                 if key not in used:
                     used[key]=len(vertices)
-                    point=pos[pi]
-                    vertices.append(fitted[pi])
-                    delta=.003
-                    jac=np.column_stack([(np.asarray(fit(point+np.eye(3)[i]*delta))-np.asarray(fit(point-np.eye(3)[i]*delta)))/(2*delta) for i in range(3)])
-                    normal=np.linalg.solve(jac.T,normals[ni])
-                    directions.append(normal/max(np.linalg.norm(normal),1e-9))
-                    tex.append((uv[ui][0],1.-uv[ui][1]))
+                    vertices.append(corner[:3])
+                    n=corner[3:6]
+                    directions.append(n/max(np.linalg.norm(n),1e-9))
+                    tex.append(corner[6:])
                 indices.append((used[key],))
         attr={"POSITION":library.accessor(vertices,"f",3,True),"NORMAL":library.accessor(directions,"f",3),"TEXCOORD_0":library.accessor(tex,"f",2)}
         idx=library.accessor(indices,"H",1)

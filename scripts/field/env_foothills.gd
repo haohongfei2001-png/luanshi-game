@@ -465,17 +465,24 @@ func _bridge_ledges() -> void:
 			var turf:=center+Vector2(side*(1.62+.25*i),-1.23+i*1.13)*scale_factor
 			_field_margin(_cell(turf),turf,.53+.081*i,bank.y+i*2.1)
 
+# Four staggered courses run along the road. Close slabs support wagons at
+# the gate; isolated plates and grass show through where traffic has broken
+# the surface further west. All stones stay below the sole of a passing boot.
 func _pavers(plan: Dictionary) -> void:
 	for bed:Array in plan.masonry:
 		var p:=Vector2(float(bed[0]),float(bed[1]))
 		var extent:=float(bed[2])
-		# Remnants of the surfaced cart road become more continuous at the gatehouse.
-		for row in 5:
-			for column in 6:
-				if rng.randf()<(0.09 if p.x>30.0 else 0.64): continue
-				var q:=p+Vector2((column-2.5+(row%2)*0.32)*extent/3.30,(row-2)*0.51)
-				q+=Vector2(rng.randf_range(-0.075,0.075),rng.randf_range(-0.055,0.055))
-				_shelf(_cell(q),q,rng.randf_range(0.29,0.62),rng.randf_range(0.19,0.40),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
+		var approach:=p.x>30.0
+		for row in 4:
+			var edge:=-extent*.84-.30*(row%2)
+			var z:=(float(row)-1.5)*.47+rng.randf_range(-.085,.085)
+			while edge<extent*.84:
+				var span:=rng.randf_range(.53,.99)
+				var center:=p+Vector2(edge+span*.5,z+rng.randf_range(-.035,.035))
+				edge+=span+rng.randf_range(.07,.20)
+				var intact:=rng.randf()>(.19 if approach else .62)
+				if not intact: continue
+				_shelf(_cell(center),center,span*.53,rng.randf_range(.29,.39),rng.randf_range(.018,.037),rng.randf_range(-.096,.096),true)
 
 func build(parent: Node3D,tiles: Dictionary) -> void:
 	terrain_tiles=tiles

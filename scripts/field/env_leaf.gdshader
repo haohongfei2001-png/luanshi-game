@@ -16,6 +16,7 @@ uniform vec4 elm_under : source_color = vec4(.113,.178,.154,1.);
 uniform vec4 elm_body : source_color = vec4(.218,.334,.231,1.);
 uniform vec4 elm_light : source_color = vec4(.353,.426,.281,1.);
 varying float facing_sky;
+varying vec3 crown_normal_world;
 varying vec3 paint;
 varying float crown;
 varying vec2 bark_uv;
@@ -36,6 +37,7 @@ void vertex() {
 	VERTEX+=drift;
 	crown=UV2.y;
 	facing_sky=NORMAL.y;
+	crown_normal_world=MODEL_NORMAL_MATRIX*NORMAL;
 	bark_uv=UV;
 	paint=crown>.5?vec3(UV2.x,(UV2.y-1.0)*2.0,0.0):COLOR.rgb;
 }
@@ -52,11 +54,14 @@ void fragment() {
 		float height=clamp((crown-12.1)/.85,0.,1.);
 		float color_value=dot(leaf.rgb,vec3(.25,.58,.17));
 		float value=OUTPUT_IS_SRGB?color_value:sqrt(max(color_value,0.));
-		float light=.23*value+.49*height+.22*clamp(facing_sky,0.,1.);
-		vec3 shade=mix(elm_body.rgb,elm_light.rgb,.18);
-		vec3 sun=OUTPUT_IS_SRGB?vec3(.50,.57,.35):vec3(.214,.285,.100);
-		tone=mix(shade,elm_light.rgb,smoothstep(.28,.56,light));
-		tone=mix(tone,sun,smoothstep(.50,.85,light)*.77);
+		// The folded cards carry crown-envelope normals from the artist's master.
+		// Both sides of the same leaf surface share that outward sun direction.
+		NORMAL=normalize(mat3(VIEW_MATRIX)*crown_normal_world);
+		float light=.16*value+.55*height+.23*clamp(facing_sky,0.,1.);
+		vec3 shade=mix(elm_under.rgb,elm_body.rgb,.69);
+		vec3 sun=mix(elm_light.rgb,sun_elm.rgb,.58);
+		tone=mix(shade,elm_body.rgb,smoothstep(.31,.53,light));
+		tone=mix(tone,sun,smoothstep(.50,.80,light)*.90);
 		opacity=leaf.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
@@ -120,5 +125,5 @@ void fragment() {
 	ALBEDO=tone;
 	ROUGHNESS=.97;
 	ALPHA=opacity;
-	ALPHA_SCISSOR_THRESHOLD=.44;
+	ALPHA_SCISSOR_THRESHOLD=crown>=11.9 && crown<13.5 ? .35 : .44;
 }
