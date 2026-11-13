@@ -121,7 +121,14 @@ func _measure(count: int) -> void:
 	clips.sort(); cpu.sort(); gpu.sort(); draws.sort()
 	var record:=b.report()
 	var rss:=_resident_kib()
-	record.merge({"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"device":RenderingServer.get_video_adapter_name(),
+	var missed: Dictionary={}
+	for rate: int in [60,90,120]:
+		var budget:=1000.0/rate
+		var over:=0
+		for interval: float in clips:
+			if interval>budget: over+=1
+		missed[str(rate)]=over
+	record.merge({"frames_over_budget":missed,"max_ms":clips[-1],"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"device":RenderingServer.get_video_adapter_name(),
 		"viewport_px":[root.size.x,root.size.y],"render_scale":root.scaling_3d_scale,"shadows":true,"seed":Battle.SEED,"frame_samples":clips.size(),
 		"wall_seconds":span/1000.0,"fps":clips.size()*1000.0/maxf(span,0.01),"mean_ms":span/maxi(1,clips.size()),"p95_ms":_pct(clips,0.95),"p99_ms":_pct(clips,0.99),
 		"sim_ms_per_tick":float(field.sim_us-sim_begin)/maxi(1,b.tick-first_tick)/1000.0,"view_script_ms_per_frame":float(field.view_us-view_begin)/maxi(1,clips.size())/1000.0,

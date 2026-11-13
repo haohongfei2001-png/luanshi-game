@@ -220,6 +220,20 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var orientation:=Basis(Vector3.UP,angle)
 		var progress := clampf(1.0-(u.timer+(1.0-alpha)*Battle.DT)/maxf(u.duration,0.001),0,1) if u.state!=Battle.State.MARCH else 0.0
 		var code := u.state + 8*u.move_slot + (32 if u.stock_strike else 0)
+		if u.state in [Battle.State.GUARD,Battle.State.STAGGER]: code = u.state
+		# Catch the blow from its actual side. A raised, untouched guard keeps the
+		# waiting pose. Moving legs, dedicated attacks, wounds and falls take priority.
+		var since_contact := battle.tick - u.contact_tick
+		if since_contact < 6 and u.contact_side != 0:
+			var contact_age := (float(since_contact)+alpha)*Battle.DT
+			var catch_duration := .23 if u.contact_blocked else .26
+			var recoil := u.state == Battle.State.STAGGER
+			var catching := u.contact_blocked and u.state == Battle.State.GUARD
+			var settling := u.state == Battle.State.MARCH and travelled < .001
+			if contact_age < catch_duration and (recoil or catching or settling):
+				var contact_state := Battle.State.GUARD if u.contact_blocked else Battle.State.STAGGER
+				code = contact_state + (8 if u.contact_side < 0 else 16)
+				progress = clampf(contact_age/catch_duration,0.0,1.0)
 		if u.officer and battle.corps.is_wounded(u.id):
 			code=Battle.State.ESCAPED # Wounded pose; departed units are culled above.
 			progress=0.75 if battle.corps.support_partner(battle,u)>=0 else 0.0
@@ -264,13 +278,16 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			var relative:=atan2(delta.x,delta.y)-angle
 			var direction:=posmod(roundi(relative/(PI*.25)),8)
 			gait=(23+direction) if u.visual_run else (0 if direction==0 else 15+direction)
-		if u.state==Battle.State.MARCH:
+		if code%8==Battle.State.MARCH:
 			data.g=(float(gait)+.5)/32.0 if gait>=0 else 0.0
 			if gait<0 and not u.mounted:
 				data.b=fposmod(u.stride+(float(battle.tick)+alpha)*Battle.DT*(.37+.023*(u.id%7)),1.)
 		if u.hero:
 			var material: ShaderMaterial=groups[key].node.material_override
-			material.set_shader_parameter("travelling_attack_legs",gait if battle.vehicle==0 else -1)
+			# Only movement input crosses the feet into a travelling action.
+			# Without it, skill advance is already in the weapon's own footwork.
+			var walk_legs:=gait if battle.vehicle==0 and battle.hero_move.length_squared()>.001 else -1
+			material.set_shader_parameter("travelling_attack_legs",walk_legs)
 			material.set_shader_parameter("travelling_leg_phase",step_phase)
 		# The sole shader reads only mesh coordinates, so this batch contains transforms alone.
 		contact.mesh.set_instance_transform(contact.used,Transform3D(orientation,ground+Vector3.UP*.026))

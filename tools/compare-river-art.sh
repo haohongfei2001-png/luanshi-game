@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Replay RC8 and this shipping revision on one GPU, with the same seed, camera and live orders.
+# Replay RC9 and this shipping revision on one GPU, with the same seed, camera and live orders.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 repo_dir=$PWD
-baseline=2c92c7eace980d76d538a646ca64ce9817d191b4
+baseline=4a3ebc4d3c8e687337b27829c6bc13be20810f09
 out=$PWD/artifacts/river-art-comparison
 work=$(mktemp -d)
 mkdir -p "$out"
@@ -13,7 +13,7 @@ for side in before after; do
   if [[ $side == after ]]; then revision=HEAD; fi
   mkdir -p "$work/$side"
   git archive "$revision" | tar -x -C "$work/$side"
-  cp tests/river_art_capture.gd tests/field_motion_review.gd "$work/$side/tests/"
+  cp tests/river_art_capture.gd tests/field_motion_review.gd tests/field_contact_window.gd "$work/$side/tests/"
   (
     cd "$work/$side"
     export XDG_DATA_HOME="$work/$side-data" XDG_CACHE_HOME="$work/$side-cache" XDG_CONFIG_HOME="$work/$side-config"
@@ -26,6 +26,14 @@ for side in before after; do
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-window.log"; then exit 1; fi
     grep -q '^RIVER_ART_PASS' "$out/$side-window.log"
     cp -a artifacts/river-art "$out/$side"
+    cp "$repo_dir/tests/river_contact_seed61112.json" artifacts/contact-plan.json
+    timeout 190s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_contact_window.gd -- --field-size=512 2>&1 | tee "$out/$side-contact.log"
+    grep -q '^FIELD_CONTACT_WINDOW true' "$out/$side-contact.log"
+    if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-contact.log"; then exit 1; fi
+    cp -a artifacts/contact-window "$out/$side/melee"
+    for action in shield stagger; do
+      ffmpeg -nostdin -loglevel error -y -framerate 20 -i "$out/$side/melee/$action-%02d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "$out/$side/melee/$action.mp4"
+    done
     timeout 340s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/$side-motion.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 2>&1 | tee "$out/$side-motion.log"
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-motion.log"; then exit 1; fi
     grep -q '^FIELD_MOTION_RECEIPT ' "$out/$side-motion.log"
@@ -61,11 +69,30 @@ PY
 done
 cd "$repo_dir"
 python3 - "$out" <<'PY'
-import base64, io, json, pathlib, sys
+import base64, hashlib, io, json, pathlib, sys
 from PIL import Image, ImageChops, ImageStat
 root=pathlib.Path(sys.argv[1])
 left,right=[json.loads((root/s/"frames.json").read_text()) for s in ("before","after")]
 assert len(left)==len(right)>=10
+before,after=[json.loads((root/s/"melee/states.json").read_text()) for s in ("before","after")]
+assert before==after and len(after)==36
+events=json.loads(pathlib.Path("tests/river_contact_seed61112.json").read_text())
+for e in events:
+    subject=[r for r in after if r["kind"]==e["kind"]]
+    prior,impact=[next(r for r in subject if r["tick"]==t) for t in (e["tick"]-1,e["tick"])]
+    assert impact["hp"]<prior["hp"] and impact["received"]>prior["received"]
+    if e["kind"]=="shield": assert impact["blocked"]>prior["blocked"]
+    print("MELEE_CONTACT",json.dumps({"event":e,"prior":prior,"impact":impact},separators=(",",":")))
+    sheet=Image.new("RGB",(1440,636))
+    for row,side in enumerate(("before","after")):
+        for col,key in enumerate((4,7,9)):
+            pic=Image.open(root/side/"melee"/("%s-native-%02d.png"%(e["kind"],key))).convert("RGB")
+            assert pic.size==(1920,1200)
+            sheet.paste(pic.crop((720,400,1200,718)),(col*480,row*318))
+    target=root/(e["kind"]+"-response.jpg"); sheet.save(target,quality=91,subsampling=0)
+    raw=target.read_bytes(); wire=base64.b64encode(raw).decode()
+    print("RC8_WINDOW_INFO",e["kind"]+"-response",len(raw),hashlib.sha256(raw).hexdigest(),len(wire))
+    for i in range(0,len(wire),16000): print("RC8_WINDOW_PART",e["kind"]+"-response",i,wire[i:i+16000])
 for old,new in zip(left,right):
     for key in ("label","tick","hero_state","hero_kit","hero_slot","center","yaw","zoom","seed","ordinary","officers","contact","losses","gate_hp","in_frame_count","in_frame_ids_sha256","window","internal_scale","msaa_3d","screen_space_aa","shadows"):
         assert old[key]==new[key], (key,old,new)

@@ -83,7 +83,14 @@ CARRY_KITS=(3,4,7)
 # address precisely the same rows as before.
 CARRY_CLIPS=(1,0,16,17,18,19,20,21,22,2,3,4,5,6,7,8,9)
 
-def pose(kit,clip,t,loadout=0):
+# Four finite reaction strips per kit follow the original and carry banks.
+# Negative/positive side is mesh-local X, measured at the actual contact.
+REACTIONS=((10,-1),(10,1),(11,-1),(11,1))
+
+def ramp(t,start,end):
+    return smooth(max(0.,min(1.,(t-start)/(end-start))))
+
+def pose(kit,clip,t,loadout=0,side_hit=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
     running=clip>=23
@@ -138,7 +145,7 @@ def pose(kit,clip,t,loadout=0):
         hand=(.122,1.326,.245,-60,-32,8) if kit not in TWO_HAND else (.104,1.232,.013,-31,-23,6)
         lean=9;crouch=.092 if clip==10 else .212
     if ride: lean=17;crouch=.103;shift=.034
-    if clip==11: lean=-18*(1-t);turn=-14*(1-t);crouch=.07*(1-t)
+    if clip==11 and not side_hit: lean=-18*(1-t);turn=-14*(1-t);crouch=.07*(1-t)
     if clip==14: crouch=.13*smooth(t)
     # The supporting hip rises while the opposite shoulder advances. A stationary
     # soldier keeps both feet loaded and breathes on their own phase.
@@ -148,6 +155,9 @@ def pose(kit,clip,t,loadout=0):
     hip_roll=0.
     chest_roll=0.
     sway=0.
+    recoil=0.
+    settle=0.
+    thrust=kit==3 and attack and slot<3
     if move:
         hips=cos(t*2*pi)
         sway=(.022 if running else .044)*sin(t*2*pi)
@@ -186,6 +196,18 @@ def pose(kit,clip,t,loadout=0):
             shift+=.078*drive-.012
             lean+=7.2*drive
             shoulder_yaw-=5.0*drive
+            # The rear knee gathers ahead of the wrists. It extends through
+            # release, then catches the belt after the shaft stops. The exact
+            # hit and the first recovery key use the same pose and sockets.
+            coil=sin(pi*min(t/.72,1.))**2 if clip<=5 else 0.
+            follow=sin(pi*min(t/.68,1.))**2 if clip>=6 else 0.
+            shift-=.094*coil
+            sway+=.040*coil-.046*follow
+            crouch+=.042*coil+.028*follow
+            hip_yaw+=11.*coil-8.*follow
+            shoulder_yaw-=13.*coil+8.*follow
+            hand=tuple(v+(d*coil+e*follow) for v,d,e in zip(hand,
+                       (.048,.050,-.060,-8.,5.,-8.),(-.030,-.041,.028,6.,-6.,2.)))
         elif kit==7:
             crouch+=.035
             lean+=3.2
@@ -210,6 +232,30 @@ def pose(kit,clip,t,loadout=0):
         hip_roll=12*give
         chest_roll=24*give
         shoulder_yaw=-25*give
+    if side_hit:
+        # The board and shoulder compress first. Hips and the replant follow
+        # later, while the eyes stay aimed over the guard.
+        recoil=ramp(t,0.,.23)*(1.-ramp(t,.30,.90))
+        settle=ramp(t,.13,.49)*(1.-ramp(t,.56,1.))
+        if clip==10:
+            lean=9.-15.*recoil+5.*settle
+            sway=-.034-side_hit*(.052*recoil+.031*settle)
+            hip_yaw=-12.+side_hit*12.*settle
+            shoulder_yaw=14.+side_hit*24.*recoil
+            chest_roll=-5.+side_hit*11.*recoil
+            crouch=.092+.098*settle
+            shift=-.097*settle
+            hand=tuple(v+d*recoil for v,d in zip(hand,(-side_hit*.057,-.041,-.076,12.,side_hit*14.,4.)))
+        else:
+            sway=-side_hit*(.109*recoil+.046*settle)
+            shift=-.135*settle
+            lean=2.-24.*recoil+6.*settle
+            hip_yaw=side_hit*14.*settle
+            shoulder_yaw=side_hit*32.*recoil
+            hip_roll=side_hit*9.*settle
+            chest_roll=-side_hit*17.*recoil
+            crouch=.040+.107*settle
+            hand=tuple(v+d*recoil for v,d in zip(hand,(side_hit*.074,.102,-.095,-20.,side_hit*18.,9.)))
     # Opening the torso places the drawing elbow to the side of the face.
     # Keep the head on its target while the bow shoulder reaches forward.
     bow_draw=0.
@@ -318,6 +364,9 @@ def pose(kit,clip,t,loadout=0):
             off=add(off,mul((.020,.091,.032) if loadout==2 else (-.033,-.058,-.018),carry))
         offq=euler(-8-shield*7+carried*7+carry*(-13. if loadout==2 else 9.),
                    -9.-carried*22.+carry*(24. if loadout==2 else -10.),-shield*14+carried*8.)
+        if side_hit and clip==10:
+            off=add(off,(-side_hit*.074*recoil,.028*recoil-.022*settle,-.128*recoil))
+            offq=euler(-15.-20.*recoil,-9.+side_hit*25.*recoil,-14.+side_hit*14.*settle)
         if carried:
             anchor=limit_grip(add(anchor,mul((.066,.043,.029),carried)),right,radius)
     elif kit==8:
@@ -371,6 +420,20 @@ def pose(kit,clip,t,loadout=0):
         lift=0.
         if move:
             z,lift,pitch=walking_foot((t+(.5 if side>0 else 0))%1.,running)
+        lateral=0.
+        if thrust and side!=lead:
+            push=ramp(t,.73,1.) if clip<=5 else 1.-ramp(t,0.,.55)
+            pitch+=23.*push
+        if side_hit and side==-side_hit:
+            # One sole stays down while the catching boot shifts support.
+            # Two small swing arcs let the moving foot replant and recover.
+            landing=ramp(t,.14,.56)*(1.-ramp(t,.71,1.))
+            swing_out=sin(pi*max(0.,min(1.,(t-.14)/.42)))**2
+            swing_home=sin(pi*max(0.,min(1.,(t-.71)/.29)))**2
+            lateral=side*(.052 if clip==10 else .101)*landing
+            z-=(.115 if clip==10 else .204)*landing
+            lift=(.049 if clip==10 else .076)*swing_out+.034*swing_home
+            pitch+=11.*swing_out-7.*swing_home
         if clip==14:
             z+=side*.17*smooth(t)
             lift=.12*smooth(t) if side==1 else 0.
@@ -378,7 +441,7 @@ def pose(kit,clip,t,loadout=0):
         foot_q=euler(pitch*cos(heading),side*(5.5 if not crouched else 9.)+8*sin(heading),-pitch*sin(heading))
         # Roll about the heel or toe. Preserve the sole's actual contact height.
         lowest=min(rot(foot_q,(dx,-.117,dz))[1] for dx in (-.05,.05) for dz in (-.072,.187))
-        foot=(side*(.179 if crouched else .143)+z*sin(heading),.006+lift-lowest,
+        foot=(side*(.179 if crouched else .143)+lateral+z*sin(heading),.006+lift-lowest,
               z*cos(heading)-.014-side*.129*sin(heading))
         if ride:
             foot=(side*.287,.276,.058)
@@ -398,16 +461,17 @@ def bake_motion(out):
     # Each bone gets a strip of adjacent keys. The four RGBA8 rows are affine
     # encodings, so GPU filtering can mix high/low bytes without a carry error.
     # The extra endpoint joins the first key of loops or holds the last action key.
-    lanes=[(kit,clip,0) for kit in range(9) for clip in range(CLIPS)]
-    lanes.extend((kit,clip,loadout) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
+    lanes=[(kit,clip,0,0) for kit in range(9) for clip in range(CLIPS)]
+    lanes.extend((kit,clip,loadout,0) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
+    lanes.extend((kit,clip,0,side) for kit in range(9) for clip,side in REACTIONS)
     tex=Image.new("RGBA",((FRAMES+1)*BONES,len(lanes)*4))
     px=tex.load()
-    for lane,(kit,clip,loadout) in enumerate(lanes):
+    for lane,(kit,clip,loadout,side) in enumerate(lanes):
         previous=[None]*BONES
         y=lane*4
         for frame in range(FRAMES+1):
             t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
-            for b,(q,offset) in enumerate(pose(kit,clip,t,loadout)):
+            for b,(q,offset) in enumerate(pose(kit,clip,t,loadout,side)):
                 # q and -q describe the same rotation. Choose neighbours on
                 # the same hemisphere before interpolation, including the wrap.
                 if previous[b] and sum(a*c for a,c in zip(q,previous[b]))<0:

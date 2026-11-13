@@ -27,3 +27,5 @@ RC7 的绛色半披、发髻、交领、下摆裁片、札甲裙与木盾凸脐�
 步弓手行进时横向斜持弓身，举弓、引弦和放弦各有独立姿势。放箭瞬间弓弦回到自然弦距，手指在面旁收势。贴身袖口与前臂共用肘腕段，持弓侧有护臂，拉弦侧露出手腕。步弓手可分别从持弓侧和拉弦侧复核腕缝、承重脚与弓弦位置。
 
 RC9 的征卒采用单侧束起的袍摆、卷袖和肩部辨军的染布，盾兵的低盔、分片裙甲和弧木盾沿同一持盾握点制作。近镜、中镜、远阵共用衣料色谱。马匹的远景资产轮廓保留肩峰、收腹和系部，近景沿用原有独立带缰具的模型。人物、盾板与披挂可用 `python3 tools/art/bake_river_company.py --geometry-only`、`node tools/art/bake_field_garments.mjs` 与 `node tools/art/bake_mounts.mjs` 重新烘焙。
+
+The divided thigh guards and fitted sleeve yokes share their colour cuts across close, line and rank meshes. The armour atlas uses overlapping iron courses with rawhide ties. Thirty-six finite catch and stagger strips follow the standard and field-carry libraries. The simulation records a blow's side at contact and the renderer selects the corresponding planted pose from the shared bank; checkpoints keep their existing authority. Rebuild with `python3 tools/art/bake_river_company.py` and `node tools/art/bake_field_garments.mjs`; verify with `python3 tools/art/check_contact_motion.py`.

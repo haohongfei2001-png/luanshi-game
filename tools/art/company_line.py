@@ -74,7 +74,9 @@ def costume(look,rank=False):
         if rank:
             if heavy:
                 hem=lerp(a,b,.59 if look=="regular" else .79)
-                s.tube([a,lerp(a,hem,.37),hem],[.081,.100,.082],"lames",upper,5)
+                shoulder=lerp(a,hem,.37)
+                s.tube([a,shoulder],[.081,.100],"dyed" if look in ("regular","guard") else "lames",upper,5)
+                s.tube([shoulder,hem],[.100,.082],"lames",upper,5)
                 s.tube([hem,b],[.070,.067],"dyed",upper,4)
             elif look=="levy":
                 shoulder=lerp(a,b,.40)

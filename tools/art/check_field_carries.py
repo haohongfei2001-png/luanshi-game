@@ -4,11 +4,11 @@ from math import dist
 from PIL import Image
 from figure_mesh import add
 from check_company_motion import decoded, planted_drift
-from company_motion import CARRY_KITS,CARRY_CLIPS,CLIPS,FRAMES,LF,LH,RF,RH,arm_nodes,grip,trans,cycling
+from company_motion import CARRY_KITS,CARRY_CLIPS,REACTIONS,CLIPS,FRAMES,LF,LH,RF,RH,arm_nodes,grip,trans,cycling
 import json, sys
 dest=Path(__file__).resolve().parents[2]/"assets/river_gate/figures/company_motion.png"
 bank=Image.open(dest).convert("RGBA")
-assert bank.size==((FRAMES+1)*16,(9*CLIPS+len(CARRY_KITS)*2*len(CARRY_CLIPS))*4)
+assert bank.size==((FRAMES+1)*16,(9*CLIPS+len(CARRY_KITS)*2*len(CARRY_CLIPS)+9*len(REACTIONS))*4)
 if len(sys.argv)>1:
     old=Image.open(sys.argv[1]).convert("RGBA")
     assert old.tobytes()==bank.crop((0,0,*old.size)).tobytes(), "existing animation pixels changed"

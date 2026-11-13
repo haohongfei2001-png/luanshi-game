@@ -70,15 +70,15 @@ const CROWNS := [
 # A crown is assembled from bowed leaf-bearing limbs. The open spaces between
 # forks expose the structure from rotating play cameras; the foliage is not a
 # cutout facing the player. Each limb has a pitched spine and folded sides.
-func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float,canopy: bool=false) -> void:
+func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float,canopy: bool=false,sweep: float=0.) -> void:
 	var across:=Vector3(-ray.z,0.0,ray.x)
 	var verts:=PackedVector3Array()
 	var normals:=PackedVector3Array()
 	var uv:=PackedVector2Array()
 	for row in 4:
 		var t:=float(row)/3.0
-		var spine:=root+ray*length*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
-		var width:=breadth*(.78+.22*sin(t*PI))
+		var spine:=root+ray*length*t+across*length*sweep*t*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
+		var width:=breadth*(.70+.30*sin(t*PI))*(1.-absf(sweep)*.44*t)
 		for col in 3:
 			var v:=float(col-1)
 			verts.append(spine+across*v*width+Vector3.DOWN*absf(v)*breadth*(.12+.18*t))
@@ -133,7 +133,8 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 			var mid:=root+ray*reach*.67+Vector3.UP*reach*(.15+.67*tilt)
 			patch.stone.rod(elbow.lerp(root,.40),mid,h*.0064,h*.0022,BARK,4)
 			var grade:=clampf(.16+.084*index+(.23 if not hanging else 0.0)+rng.randf_range(-.09,.08),.14,.92)
-			_bough(patch,root,ray,reach,width,tilt,grade,true)
+			var sweep:=.27*sin(1.4+2.1*leaf+.64*index)
+			_bough(patch,root,ray,reach,width,tilt,grade,true,sweep)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D

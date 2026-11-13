@@ -1,0 +1,24 @@
+[
+  {
+    "attacker": 612,
+    "center": [
+      2.06103610992432,
+      15.5760049819946
+    ],
+    "defender": 102,
+    "kind": "stagger",
+    "side": 1,
+    "tick": 43
+  },
+  {
+    "attacker": 576,
+    "center": [
+      2.02435159683228,
+      -0.714642882347107
+    ],
+    "defender": 70,
+    "kind": "shield",
+    "side": 1,
+    "tick": 79
+  }
+]

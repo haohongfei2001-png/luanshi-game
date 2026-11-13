@@ -370,7 +370,6 @@ func _physics_process(delta: float) -> void:
 		var gate_before := battle.gate_hp
 		var personal:=battle.hero.impacts
 		var bruises:=battle.hero.received
-		var blocked:=battle.blocked_hits
 		var motion_before:=battle.hero.pos
 		var pose_before:=battle.hero.state
 		var start := Time.get_ticks_usec()
@@ -388,7 +387,7 @@ func _physics_process(delta: float) -> void:
 			last_hero_hit=battle.tick
 			if near_hero: _cue_at("impact",-8,battle.hero.pos)
 		if near_hero and battle.hero.received>bruises:
-			_cue_at("shield" if battle.hero.state==Battle.State.GUARD and battle.blocked_hits>blocked else "wood",-9,battle.hero.pos)
+			_cue_at("shield" if battle.hero.contact_blocked else "wood",-9,battle.hero.pos)
 		if near_hero and pose_before==Battle.State.WINDUP and battle.hero.state==Battle.State.RECOVER and battle.hero.kit not in [5,6]:
 			_cue_at("swing",-19,battle.hero.pos)
 		step_distance+=motion_before.distance_to(battle.hero.pos)
@@ -408,8 +407,8 @@ func _physics_process(delta: float) -> void:
 					break
 		if battle.tick-last_sound_tick>=5:
 			for id in battle._near(camera_center,minf(camera.size*0.40,12),1):
-				if battle.roster[id].flash>=0.20:
-					_cue_at("shield" if battle.blocked_hits>blocked and battle.roster[id].state==Battle.State.GUARD else "clash",-17,battle.roster[id].pos)
+				if battle.roster[id].contact_tick==battle.tick:
+					_cue_at("shield" if battle.roster[id].contact_blocked else "clash",-17,battle.roster[id].pos)
 					last_sound_tick=battle.tick
 					break
 
