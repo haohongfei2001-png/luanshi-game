@@ -18,6 +18,8 @@ def master(lib,cache,label,name,signature):
     p,n,uv,tri=read_frame(source_file(cache,"meshes/gaia/"+name,signature))
     top=p[:,2].max()
     root=p[np.abs(p[:,2])<top*.08,:2]
+    if top<=0.0 or not len(root):
+        raise ValueError(f"{name}: invalid upright elm footing after scene transform")
     root_pos=(root.min(axis=0)+root.max(axis=0))*.5
     p[:,:2]-=root_pos
     p=p[:,[0,2,1]]/top
