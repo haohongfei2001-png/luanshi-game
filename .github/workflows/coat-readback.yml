@@ -1,0 +1,51 @@
+name: Read back the six native field coat replays
+on:
+  push:
+    branches: [codex/river-player-shoulder-readback]
+permissions:
+  contents: read
+jobs:
+  receipts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: real-player-shoulder-window
+          path: artifacts/coat
+          run-id: 43467806038
+          github-token: ${{ github.token }}
+      - name: Read back the same rendered pixels at native resolution
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          python3 -u tests/coat_picture.py
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          dst="$PWD/artifacts/coat"
+          ffmpeg -loglevel error -y -i "$dst/before.mp4" -i "$dst/after.mp4" -filter_complex '[0:v][1:v]hstack=inputs=2' -c:v libx264 -crf 17 -pix_fmt yuv420p -movflags +faststart "$dst/approach-equal-speed.mp4"
+          for side in before after; do
+            mkdir -p "$dst/$side/motion"
+            ffmpeg -loglevel error -y -i "$dst/$side.mp4" -vf "select='not(mod(n,12))'" -fps_mode passthrough -q:v 2 "$dst/$side/motion/%03d.jpg"
+          done
+          python3 tests/coat_filmstrip.py
+          python3 tools/art/bake_river_company.py --geometry-only
+          node tools/art/bake_field_garments.mjs
+          node tools/art/bake_field_garments.mjs --check
+      - name: Keep the exact game geometry and photographed comparisons
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tests/coat_blob.py blobs assets/river_gate/figures/{river_company.glb,field_garments.gltf} artifacts/coat/approach-equal-speed.mp4 artifacts/coat/*-native.jpg artifacts/coat/motion.jpg
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-real-player-shoulder
+          path: |
+            artifacts/coat/
+            !artifacts/coat/*/motion/
