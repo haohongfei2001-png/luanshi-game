@@ -1,0 +1,27 @@
+{
+  "before": "8a911eb8d77a4a5d0d2179b5304697dd9fa3db4d",
+  "after": "5174644f92908a887f4e2ba8d92077af26d5d263",
+  "evidence": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43469530977/artifacts/14059663649",
+  "seed": 61112,
+  "ordinary": [
+    512,
+    512
+  ],
+  "native_pixels": [
+    1920,
+    1200
+  ],
+  "lenses": [
+    22,
+    12,
+    8
+  ],
+  "follow": true,
+  "windup_tick": 43,
+  "contact_tick": 48,
+  "target": 584,
+  "previous_hp": 62,
+  "hp": 39.7627115547657,
+  "input": "tests/rc7_personal_contact.gd",
+  "method": "Three independent normal-control runs per side. Left before and right after. Same hero, target, positions, health, and simulation step. Native centre crops have no resampling. The movie is a 30 Hz fixed-time capture of the 22 m follow playthrough."
+}
