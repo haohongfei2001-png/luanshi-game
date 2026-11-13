@@ -2,8 +2,8 @@ shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
-uniform sampler2D elm_crown_paint : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
-uniform sampler2D elm_spray : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D grove_leaf : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D grove_bark : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D elm_bough : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D leaf_marks : filter_linear_mipmap, repeat_enable;
@@ -33,26 +33,20 @@ void vertex() {
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>=8.0) {
-		bool filled=crown>=10.;
-		float tier=clamp((crown-(filled?10.1:8.1))/.70,0.,1.);
-		vec4 brush;
-		if (filled) {
-			brush=texture(elm_crown_paint,UV*.69+vec2(tier*.64,.19*tier));
-		} else {
-			brush=texture(elm_spray,UV);
-		}
-		float value=dot(brush.rgb,vec3(.26,.60,.14));
-		if (!OUTPUT_IS_SRGB) value=sqrt(max(value,0.));
-		float wash=smoothstep(.20,.66,value);
-		float exposed=clamp(.12+.24*max(facing_sky,0.)+.17*tier+.46*wash,0.,1.);
-		tone=mix(elm_under.rgb,elm_body.rgb,smoothstep(.10,.49,exposed));
-		tone=mix(tone,elm_light.rgb,.83*smoothstep(.41,.79,exposed));
-		if (filled) {
-			float canopy_top=smoothstep(-.31,.66,facing_sky);
-			tone=mix(mix(elm_under.rgb,elm_body.rgb,.37+.17*tier),tone,canopy_top);
-		}
-		opacity=filled?1.:brush.a;
+	if(crown>=13.5) {
+		vec3 bark=texture(grove_bark,UV).rgb;
+		float lum=dot(bark,vec3(.27,.57,.16));
+		float band=smoothstep(.14,.55,OUTPUT_IS_SRGB?lum:sqrt(max(lum,0.)));
+		tone=mix(vec3(.061,.060,.049),vec3(.24,.199,.135),band);
+	} else if(crown>=11.9) {
+		vec4 leaf=texture(grove_leaf,UV);
+		float height=clamp((crown-12.1)/.85,0.,1.);
+		float color_value=dot(leaf.rgb,vec3(.25,.58,.17));
+		float value=OUTPUT_IS_SRGB?color_value:sqrt(max(color_value,0.));
+		float light=.20*value+.58*height+.11*clamp(facing_sky,0.,1.);
+		tone=mix(elm_under.rgb,elm_body.rgb,smoothstep(.28,.55,light));
+		tone=mix(tone,elm_light.rgb,smoothstep(.57,.82,light)*.95);
+		opacity=leaf.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
 		float sun=clamp((crown-6.1)*1.42,0.0,1.0);

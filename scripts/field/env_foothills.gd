@@ -59,24 +59,18 @@ func _spray(patch: Patch,base: Vector3,tip: Vector3,side: Vector3,tile: int,ligh
 		patch.leaves.add_vertex(points[i])
 	patch.sprays+=1
 
-# A crown is assembled from bowed leaf-bearing limbs. The open spaces between
-# forks expose the structure from rotating play cameras; the foliage is not a
-# cutout facing the player. Each limb has a pitched spine and folded sides.
-func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float,canopy: bool=false,sweep: float=0.) -> void:
+func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float) -> void:
 	var across:=Vector3(-ray.z,0.0,ray.x)
 	var verts:=PackedVector3Array()
 	var normals:=PackedVector3Array()
 	var uv:=PackedVector2Array()
 	for row in 4:
 		var t:=float(row)/3.0
-		var spine:=root+ray*length*t+across*length*sweep*t*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
-		var width:=breadth*(.70+.30*sin(t*PI))*(1.-absf(sweep)*.44*t)
-		if canopy:
-			width=breadth*(.39+.55*sin(t*PI)+.19*t)
-			spine.y+=length*.118*sin(t*PI)
+		var spine:=root+ray*length*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
+		var width:=breadth*(.70+.30*sin(t*PI))
 		for col in 3:
 			var v:=float(col-1)
-			verts.append(spine+across*v*width+Vector3.DOWN*absf(v)*breadth*((.22+.34*t) if canopy else (.12+.18*t)))
+			verts.append(spine+across*v*width+Vector3.DOWN*absf(v)*breadth*(.12+.18*t))
 			normals.append((Vector3.UP+across*.39*v+ray*(.30*t-.20)).normalized())
 			uv.append(Vector2(.5+.5*v,1.0-t))
 	for r in 3:
@@ -86,125 +80,11 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 				patch.leaves.set_color(Color.WHITE)
 				patch.leaves.set_normal(normals[k])
 				patch.leaves.set_uv(uv[k])
-				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,(8.1 if canopy else 6.1)+grade*.70))
+				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,6.1+grade*.70))
 				patch.leaves.add_vertex(verts[k])
 	patch.sprays+=1
 
-# One silhouette follows each supporting fork, opening into flattened sprays
-# near the tip. Both sides belong to a continuous volume at rotating cameras.
-func _leaf_platform(patch: Patch,root: Vector3,ray: Vector3,reach: float,width: float,depth: float,grade: float,seed: float,climb: float) -> void:
-	var side:=Vector3(-ray.z,0.,ray.x)
-	var points:=PackedVector3Array()
-	var normals:=PackedVector3Array()
-	var coords:=PackedVector2Array()
-	var weights:=PackedFloat32Array()
-	var sections:=11
-	var across:=11
-	for surface in 2:
-		for row in sections:
-			var t:=float(row)/(sections-1)
-			var arch:=sin(t*PI)
-			var bend:=.14*sin(seed+.9)*t*t-.067*arch
-			var fall:=depth*(climb*t+.56*arch-.23*t*t)
-			for col in across:
-				var v:=2.*col/(across-1)-1.
-				var ribs:=.5+.5*cos(9.3*v+seed*.73)
-				var tip:=smoothstep(.49,1.,t)
-				var finger:=.12*sin(9.3*v+seed*.73)+.046*sin(14.*v-seed*.31)
-				var along:=t+finger*tip-.39*absf(v)*pow(t,2.2)
-				var fan:=(.045+.96*pow(maxf(0.,sin(PI*(.024+.95*t))),.68))*(.95+.18*cos(t*12.+seed+signf(v)))
-				var x:=v*fan+bend
-				var shell:=-.25*(1.-v*v)-.075*arch
-				if surface==0: shell=(1.-v*v)*(.58+.40*arch)+.29*ribs*arch+.12*sin(t*9.4+seed)*(1.-absf(v))
-				points.append(root+ray*reach*along+side*width*x+Vector3.UP*(fall+depth*(shell-.29*v*v)))
-				var n:=(Vector3.UP+side*(.72*v)+ray*(.54*t-.24)).normalized()
-				normals.append(n if surface==0 else (Vector3.DOWN+side*v*.73).normalized())
-				coords.append(Vector2(t*.72+seed*.083,.5+.5*v))
-				weights.append(.18+.38*t)
-	var span:=sections*across
-	var ids:=PackedInt32Array()
-	for surface in 2:
-		var base:=surface*span
-		for r in range(sections-1):
-			for c in range(across-1):
-				var i:=base+r*across+c
-				if surface==0: ids.append_array([i,i+across,i+1,i+1,i+across,i+across+1])
-				else: ids.append_array([i,i+1,i+across,i+1,i+across+1,i+across])
-	var rim:=PackedInt32Array()
-	for c in across: rim.append(c)
-	for r in range(1,sections): rim.append(r*across+across-1)
-	for c in range(across-2,-1,-1): rim.append((sections-1)*across+c)
-	for r in range(sections-2,0,-1): rim.append(r*across)
-	for j in rim.size():
-		var i:=rim[j]
-		var k:=rim[(j+1)%rim.size()]
-		ids.append_array([i,k,i+span,k,k+span,i+span])
-	for i in ids:
-		patch.leaves.set_color(Color.WHITE)
-		patch.leaves.set_normal(normals[i])
-		patch.leaves.set_uv(coords[i])
-		patch.leaves.set_uv2(Vector2(weights[i],10.1+.70*grade))
-		patch.leaves.add_vertex(points[i])
-	patch.sprays+=1
-
-func _tree(patch: Patch,p: Vector2,h: float,kind: int,variant: int) -> void:
-	var foot:=ground_point(p)
-	var spin:=rng.randf_range(0.,TAU)
-	var turn:=Basis(Vector3.UP,spin)
-	var narrow:=kind==2
-	var heel:=foot+turn*Vector3(-.012,.0,.012)*h
-	var bole:=foot+turn*Vector3(.035,.20,-.027)*h
-	var fork:=foot+turn*Vector3(.030 if variant==0 else -.059,.435,.017)*h
-	patch.stone.joint=11
-	for i in 4:
-		var angle:=spin+i*1.64+.15*sin(i+spin)
-		var toe:=foot+Vector3(cos(angle),-.035,sin(angle))*h*(.094+.023*(i%2))
-		patch.stone.rod(toe,bole.lerp(foot,.43),h*.014,h*.042,BARK,5)
-	patch.stone.rod(heel,bole,h*.057,h*.043,BARK,8)
-	patch.stone.rod(bole,fork,h*.043,h*.029,BARK,7)
-	# The spreading elm has a low arm and a high leader. The young uprights
-	# retain a narrower, asymmetrical crown on the same metre-scale bind.
-	var arms: Array[Vector4]=[Vector4(-.41,.595,.13,.289),Vector4(.27,.685,-.20,.270),
-		Vector4(.10,.790,.255,.259),Vector4(-.09,.934,-.103,.265)]
-	if variant==1: arms=[Vector4(.08,.58,-.28,.244),Vector4(-.22,.712,.21,.278),
-		Vector4(.30,.795,.066,.255),Vector4(.01,.953,-.108,.24)]
-	if narrow: arms=[Vector4(-.14,.615,.10,.22),Vector4(.13,.755,-.091,.238),Vector4(-.04,.925,.076,.211)]
-	for i in arms.size():
-		var arm:=arms[i]
-		var radial:=turn*Vector3(arm.x,0.,arm.z).normalized()
-		var tip:=foot+turn*Vector3(arm.x,arm.y,arm.z)*h
-		var stem:=fork+Vector3.UP*(.031*i*h)
-		var elbow:=stem.lerp(tip,.44)+radial*h*.043
-		var wrist:=elbow.lerp(tip,.64)+Vector3.UP*.029*h
-		var fac:=h*(.029-.002*i)
-		patch.stone.rod(stem,elbow,fac,fac*.61,BARK,7)
-		patch.stone.rod(elbow,wrist,fac*.63,fac*.39,BARK,6)
-		patch.stone.rod(wrist,tip,fac*.40,h*.004,BARK.lightened(.07),5)
-		var reach:=h*arm.w*(1.47 if narrow else 1.68)
-		var width:=h*arm.w*(.80 if narrow else .99)
-		var grade:=.22+.15*i
-		var lift:=.70 if i==arms.size()-1 else .20
-		var root:=elbow.lerp(wrist,.22)
-		var turn_side:=1. if (i+variant)%2==0 else -1.
-		var leaf_dir:=radial.rotated(Vector3.UP,.20*turn_side)
-		_leaf_platform(patch,root,leaf_dir,reach*.75,width*.68,width*.68,grade,spin+2.07*i,lift)
-		var cross_ray:=radial.rotated(Vector3.UP,turn_side*(1.42+.11*i))
-		var crouch:=wrist-leaf_dir*reach*.09+Vector3.DOWN*width*.11
-		patch.stone.rod(wrist,crouch+cross_ray*reach*.41+Vector3.UP*width*.10,fac*.32,h*.0029,BARK,5)
-		_leaf_platform(patch,crouch,cross_ray,reach*.58,width*.54,width*.46,grade-.11,spin-.73+1.91*i,lift+.08)
-		# Branch-bearing sprays cross the boundary of the solid core along the
-		# long axis and both flanks. The visible hem follows the leaf silhouette.
-		for fringe in 5:
-			var fringe_angles: Array[float]=[-.97,-.44,.08,.60,1.10]
-			var off:=fringe_angles[fringe]
-			var lateral:=Vector3(-leaf_dir.z,0.,leaf_dir.x)
-			var tail:=leaf_dir.rotated(Vector3.UP,off)
-			var edge:=root+leaf_dir*reach*(.34+.14*cos(off))+lateral*width*.44*off+Vector3.UP*width*(.41+.23*lift+.085*sin(spin+fringe))
-			_bough(patch,edge,tail,reach*(.57+.11*sin(fringe*2.+i)),width*(.40+.12*cos(fringe*1.4)),-.30-.06*(fringe%3),grade,true,turn_side*.13)
-		var inland:=cross_ray.rotated(Vector3.UP,turn_side*.25)
-		_bough(patch,crouch+cross_ray*reach*.33+Vector3.UP*width*.26,inland,reach*.40,width*.34,-.38,grade-.07,true,turn_side*.17)
-
-func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
+func _grove_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
 	var part:=SurfaceTool.new()
 	part.create_from(node.mesh,0)
@@ -218,13 +98,12 @@ func _bake_trees() -> void:
 	# same static, spatially culled draw batches. Local +X points over water.
 	var willows:=preload("res://assets/environment/bank-willows.gltf").instantiate()
 	for prefix:String in ["Veteran","Coppice"]:
-		trees.append({"wood":_willow_part(willows,prefix+"Bark"),"leaves":_willow_part(willows,prefix+"Foliage")})
+		trees.append({"wood":_grove_part(willows,prefix+"Bark"),"leaves":_grove_part(willows,prefix+"Foliage")})
 	willows.free()
-	for kind in range(1,3):
-		for variant in 2:
-			var prototype:=Patch.new()
-			_tree(prototype,Vector2.ZERO,1.0,kind,variant)
-			trees.append({"wood":prototype.stone.surface.commit(),"leaves":prototype.leaves.commit()})
+	var broadleaves:=preload("res://assets/environment/quaternius/grove.glb").instantiate()
+	for prefix:String in ["Broad","Upright","Upright","Broad"]:
+		trees.append({"wood":_grove_part(broadleaves,prefix+"Bark"),"leaves":_grove_part(broadleaves,prefix+"Foliage")})
+	broadleaves.free()
 
 func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: float) -> void:
 	var shape:=1 if kind==0 and height<5.48 else variant
@@ -233,12 +112,8 @@ func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: fl
 	var scale_factor:=height/source_height if kind==0 else height
 	var basis:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*scale_factor)
 	var placement:=Transform3D(basis,ground_point(p))
-	if kind==0:
-		# Both imported parts retain their own bark or foliage tags. Cull the
-		# whole willow in a single grove draw, independently of the terrain tile.
-		patch.leaves.append_from(source.wood,0,placement)
-	else:
-		patch.stone.surface.append_from(source.wood,0,placement)
+	# Timber and leaves use separate material tags within the same culled grove.
+	patch.leaves.append_from(source.wood,0,placement)
 	patch.leaves.append_from(source.leaves,0,placement)
 	patch.sprays+=1
 
@@ -575,8 +450,8 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
-	leaf_material.set_shader_parameter("elm_crown_paint",preload("res://assets/environment/elm-crown-paint.png"))
-	leaf_material.set_shader_parameter("elm_spray",preload("res://assets/environment/painted-elm.png"))
+	leaf_material.set_shader_parameter("grove_leaf",preload("res://assets/environment/quaternius/leaves.png"))
+	leaf_material.set_shader_parameter("grove_bark",preload("res://assets/environment/quaternius/bark.png"))
 	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))
 	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
