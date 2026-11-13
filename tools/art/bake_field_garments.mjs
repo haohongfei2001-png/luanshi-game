@@ -47,18 +47,22 @@ function surface(look,segments,rows) {
     if(armoured) {
         for(const side of [-1,1]) {
             const arm=side===-1?LEFT_ARM:RIGHT_ARM;
-            const span=look==="Regular"?.142:(look==="Player"&&side===-1?.214:.184);
+            const span=look==="Regular"?.130:(look==="Player"&&side===1?.108:.194);
             // A curved shoulder defence laps over the fitted sleeve. The bound rim and
             // textile lining share the same edge vertices and joint weights as the iron.
             function at(u,t) {
                 const a=(u-.5)*2.95,round=Math.cos(a),rise=Math.sin(t*Math.PI);
-                const x=.222+.026*t+(.050+.043*t+.028*rise)*round;
-                const y=1.417-.022*round-t*(span-.043*(1-round));
+                // The pauldron is cupped high on the deltoid with a cut-away front.
+                // Its lowest point faces back toward the elbow, clearing the wrist.
+                const x=.218+.020*t+(.056+.044*t+.030*rise)*round;
+                const y=1.423-.010*round-t*(span-.051*(1-round)-.022*Math.sin(a));
                 const z=-.010+(.092+.017*rise+.015*t)*Math.sin(a);
                 return [side*x,y,z,arm,CHEST,.46+.54*t];
             }
-            const parts=[[0,.71,SWATCH.iron],[.71,.84,SWATCH.edge],[.84,1,SWATCH.cloth]];
-            for(const [top,bottom,colour] of parts) panel(segments,top===0?rows:1,colour,(u,v)=>at(u,top+(bottom-top)*v),side===1);
+            const parts=look==="Regular"
+                ? [[0,.72,SWATCH.iron],[.72,.83,SWATCH.hide],[.83,1,SWATCH.cloth]]
+                : [[0,.64,SWATCH.iron],[.64,.73,SWATCH.edge],[.73,.88,SWATCH.iron],[.88,1,SWATCH.hide]];
+            for(const [top,bottom,colour] of parts) panel(segments,top===0?rows:1,colour,(u,v)=>at(u,top+(bottom-top)*v),side===-1);
         }
     }
     if(look==="Levy" || look==="Archer") {
@@ -78,7 +82,7 @@ function surface(look,segments,rows) {
     if(look==="Officer" || look==="Player") {
         // A diagonal folded collar rests on the upper back above the mantle. It gives
         // the normal follow camera a direction cue when the weapon arm is hidden.
-        panel(segments,2,SWATCH.lining,(u,v)=>{
+        panel(segments,2,look==="Player"?20:SWATCH.edge,(u,v)=>{
             const angle=1.55+3.18*u;
             const x=(.119+.109*v)*Math.sin(angle);
             const y=1.457-.066*v-.032*v*Math.sin(Math.PI*u)-.030*u;

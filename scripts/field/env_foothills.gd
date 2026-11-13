@@ -67,50 +67,32 @@ const CROWNS := [
 	[Vector4(-.06,.48,.02,.17),Vector4(.10,.61,-.05,.163),Vector4(-.08,.72,.10,.156),Vector4(.04,.82,-.03,.148),Vector4(-.02,.93,.01,.112)]
 ]
 
-func _canopy_vertex(surface: SurfaceTool,point: Vector3,normal: Vector3,grade: float,kind: int) -> void:
-	surface.set_normal(normal)
-	surface.set_color(Color(clampf(grade,0.03,0.98),float(kind)*0.5,0.0))
-	surface.set_uv(Vector2(point.x*1.4+point.z*.51,point.y*1.63+point.z*.57))
-	surface.set_uv2(Vector2(clampf(grade,0.03,0.98),1.0+float(kind)*0.25))
-	surface.add_vertex(point)
-
-# A fork carries two or three overlapping clusters of leaves. Scalloped edges and
-# an offset high point show their direction even when a canopy frames a close fight.
-func _lobe(patch: Patch,p: Vector3,radius: float,tall: float,kind: int,rotation: float) -> void:
-	var widths: Array[float]=[.52,1.0,.82,.33]
-	var levels: Array[float]=[-.46,-.04,.54,.85]
-	var points: Array[Vector3]=[]
-	var normals: Array[Vector3]=[]
-	var grades: Array[float]=[]
-	var sides:=12 if kind==1 else 10
-	var sweep:=Vector3(cos(rotation),0,sin(rotation))
-	var side:=Vector3(-sweep.z,0,sweep.x)
-	for ring in levels.size():
-		for i in sides:
-			var a:=TAU*i/sides+.045*sin(i*1.7+ring)
-			var across:=sin(a)
-			var along:=cos(a)
-			var notch:=.14 if i%3==1 else -.025
-			var taper:=1.0+.115*sin(a*3.0+rotation)-notch+.064*cos(a*5.0+.7)
-			var reach:=radius*widths[ring]*taper
-			var branch:=sweep*(reach*along*1.19+radius*.115*ring/3.0)+side*reach*across*.82
-			var lift:=tall*(levels[ring]-.18*along+.072*cos(a*2.0+rotation)-notch)
-			points.append(p+branch+Vector3.UP*lift)
-			normals.append(((sweep*along+side*across)*(.59+widths[ring]*.27)+Vector3.UP*(levels[ring]+.20)*1.23).normalized())
-			grades.append(.13+ring*.235+.054*sin(a*3.0+rotation))
-	for ring in range(levels.size()-1):
-		for i in sides:
-			var j:=(i+1)%sides
-			var low:=ring*sides
-			var up:=low+sides
-			for index:int in [low+i,low+j,up+i,low+j,up+j,up+i]:
-				_canopy_vertex(patch.leaves,points[index],normals[index],grades[index],kind)
-	var centre:=p+sweep*radius*.16+Vector3.UP*tall*.91
-	var last:=(levels.size()-1)*sides
-	for i in sides:
-		_canopy_vertex(patch.leaves,points[last+i],normals[last+i],grades[last+i],kind)
-		_canopy_vertex(patch.leaves,points[last+(i+1)%sides],normals[last+(i+1)%sides],.81,kind)
-		_canopy_vertex(patch.leaves,centre,Vector3.UP,.86,kind)
+# A crown is assembled from bowed leaf-bearing limbs. The open spaces between
+# forks expose the structure from rotating play cameras; the foliage is not a
+# cutout facing the player. Each limb has a pitched spine and folded sides.
+func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float) -> void:
+	var across:=Vector3(-ray.z,0.0,ray.x)
+	var verts:=PackedVector3Array()
+	var normals:=PackedVector3Array()
+	var uv:=PackedVector2Array()
+	for row in 4:
+		var t:=float(row)/3.0
+		var spine:=root+ray*length*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
+		var width:=breadth*(.78+.22*sin(t*PI))
+		for col in 3:
+			var v:=float(col-1)
+			verts.append(spine+across*v*width+Vector3.DOWN*absf(v)*breadth*(.12+.18*t))
+			normals.append((Vector3.UP+across*.39*v+ray*(.30*t-.20)).normalized())
+			uv.append(Vector2(.5+.5*v,1.0-t))
+	for r in 3:
+		for c in 2:
+			var a:=r*3+c
+			for k:int in [a,a+3,a+1,a+1,a+3,a+4]:
+				patch.leaves.set_color(Color.WHITE)
+				patch.leaves.set_normal(normals[k])
+				patch.leaves.set_uv(uv[k])
+				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,6.1+grade*.70))
+				patch.leaves.add_vertex(verts[k])
 	patch.sprays+=1
 
 func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
@@ -125,7 +107,6 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		var toe:=foot+Vector3(cos(a),0,sin(a))*h*rng.randf_range(.07,.113)
 		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,4)
 	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,6)
-	var tile:=1 if kind==0 else 0 if kind==1 else 3
 	for index:int in CROWNS[kind].size():
 		var knot:Vector4=CROWNS[kind][index]
 		var center:=foot+turn*Vector3(knot.x,knot.y,knot.z)*h+bend*0.37
@@ -134,25 +115,21 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		var base:=fork.lerp(foot,0.13 if index<2 else 0.0)
 		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,5)
 		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),4)
-		var tall:=radius*(1.18 if kind==2 else 0.87 if kind==1 else 0.76)
-		var heading:=spin+index*1.94
-		var limb:=Vector3(cos(heading),0,sin(heading))
-		var fork_side:=Vector3(-limb.z,0,limb.x)
-		_lobe(patch,center-limb*radius*.13,radius*.86,tall*.72,kind,heading+.18)
-		_lobe(patch,center+limb*radius*.43+Vector3.UP*tall*.27,radius*.63,tall*.61,kind,heading-.65)
-		if kind==1 and index%2==0:
-			_lobe(patch,center-fork_side*radius*.41-Vector3.UP*tall*.17,radius*.52,tall*.53,kind,heading+1.13)
-		# Sparse real sprays soften the outline. The light and dark crown volumes
-		# carry the silhouette, including on distant trees and after rotation.
-		var sprays:=8 if kind==0 else 5
-		for j in sprays:
-			var a:float=spin+index*.93+j*TAU/sprays+rng.randf_range(-.27,.27)
-			var radial:=Vector3(cos(a),0,sin(a))
-			var start:=center+radial*radius*.82+Vector3.UP*tall*rng.randf_range(-.14,.45)
-			var end:=start+radial*radius*(.51 if kind==0 else .59)
-			end.y+=radius*(rng.randf_range(-1.24,-.65) if kind==0 else rng.randf_range(-.28,.41))
-			var across:=Vector3(-radial.z,0,radial.x)*radius*(.43 if kind==0 else .46)
-			_spray(patch,start,end,across,tile,rng.randf_range(.46,.82))
+		var heading:=spin+index*2.29
+		var radial:=Vector3(cos(heading),0.0,sin(heading))
+		var joint:=center-radial*radius*.43
+		var sprays:=5 if kind==1 else 4
+		for leaf in sprays:
+			var a:=heading+(leaf-1.9)*1.19+rng.randf_range(-.14,.19)
+			var ray:=Vector3(cos(a),0.0,sin(a))
+			var outer:=(leaf%2)==0
+			var root:=joint+radial*radius*(.25 if outer else -.12)+Vector3.UP*radius*(.16 if outer else -.04)
+			var reach:=radius*rng.randf_range(1.14,1.52)
+			var tip:=root+ray*reach*.64+Vector3.UP*radius*(.27 if outer else .14)
+			patch.stone.rod(elbow.lerp(root,.56),tip,h*.0056,h*.0026,BARK,4)
+			var width:=radius*rng.randf_range(.64,.86)
+			var tilt:=rng.randf_range(-.32,.03) if outer else rng.randf_range(.12,.50)
+			_bough(patch,root-ray*radius*.17,ray,reach,width,tilt,clampf(.27+.079*index+(.23 if not outer else -.08)+rng.randf_range(-.09,.09),.12,.97))
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
@@ -244,8 +221,8 @@ func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: 
 	patch.stone.joint=12
 	var palette:=rng.randf_range(-0.08,0.04)
 	var paving:=height<0.08
-	var cap_tone:=Color("a3947c") if paving else TOP
-	var face_tone:=Color("887b68") if paving else LIMESTONE
+	var cap_tone:=Color("887a66") if paving else TOP
+	var face_tone:=Color("70695d") if paving else LIMESTONE
 	for i in ring.size():
 		var j:=(i+1)%ring.size()
 		var face:=face_tone.lightened(palette+0.035*((i+1)%4))
@@ -257,10 +234,69 @@ func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: 
 			patch.stone.quad(ledge[i],capstone[i],capstone[j],ledge[j],face)
 		patch.stone.tri(capstone[j],capstone[i],middle,cap_tone.lightened(palette+0.025*(i%3)))
 
+# Weathered outcrops are broken along one bedding direction. Tops sink into
+# paths people can cross; only the non-traversable river cut exposes deep faces.
+func _split_stone(patch: Patch,p: Vector2,extent: float,depth: float,rise: float,yaw: float,bank: bool) -> void:
+	var along:=Vector2(cos(yaw),sin(yaw))
+	var crossway:=Vector2(-along.y,along.x)
+	var cross_section: Array[Vector2]=[Vector2(-.94,-.19),Vector2(-.42,-.62),Vector2(.29,-.53),Vector2(.91,-.25),Vector2(.79,.28),Vector2(.20,.61),Vector2(-.61,.43)]
+	var foot:=PackedVector3Array()
+	var seam:=PackedVector3Array()
+	var brow:=PackedVector3Array()
+	var top:=PackedVector3Array()
+	for v in cross_section:
+		var off:=along*(v.x+rng.randf_range(-.13,.11))*extent+crossway*(v.y+rng.randf_range(-.09,.09))*depth
+		var shoulder:=ground_point(p+off)
+		var relief:=rise*(.69+.29*v.y+.19*v.x+rng.randf_range(-.09,.11))
+		if bank:
+			# Border rock continues down into the non-walkable channel, rather
+			# than wrapping over the terrain as a flat biscuit.
+			relief+=clampf(ground_point(p).y-shoulder.y,-.35,.40)*.66
+		if not bank: relief=rise*(.27+.56*v.y+.45*v.x+rng.randf_range(-.10,.08))
+		foot.append(shoulder-Vector3.UP*.11)
+		seam.append(ground_point(p+off*1.04)+Vector3.UP*relief*.34)
+		brow.append(ground_point(p+off*.90+crossway*(-rise*.13))+Vector3.UP*relief*.71)
+		top.append(ground_point(p+off*.68+along*.095*extent)+Vector3.UP*relief)
+	var apex:=ground_point(p-along*.31*extent+crossway*.14*depth)+Vector3.UP*rise*(1.17 if bank else 1.0)
+	var split:=ground_point(p+along*.28*extent-crossway*.15*depth)+Vector3.UP*rise*(.85 if bank else .58)
+	var cold:=Color("5c605c").lerp(Color("898575"),rng.randf_range(.04,.68)) if bank else Color("716d60").lerp(Color("847f6c"),rng.randf_range(.03,.72))
+	var pale:=cold.lightened(rng.randf_range(.08,.22))
+	patch.stone.joint=19
+	for n in top.size():
+		var m:=(n+1)%top.size()
+		var f:=float((2*n+1)%5)*.026
+		patch.stone.quad(foot[m],foot[n],seam[n],seam[m],cold.darkened(.20+f))
+		patch.stone.quad(seam[m],seam[n],brow[n],brow[m],cold.lightened(f*.62))
+		patch.stone.quad(brow[m],brow[n],top[n],top[m],cold.darkened(.020+f*.19))
+		if n in [1,2,3]:
+			patch.stone.tri(top[m],top[n],split,pale.darkened(.04+f))
+		else:
+			patch.stone.tri(top[m],top[n],apex,pale.darkened(f))
+		if n==0: patch.stone.tri(top[m],split,apex,pale.darkened(.15))
+		if n==3: patch.stone.tri(top[m],apex,split,pale.darkened(.04))
+
+# Edge habitat: small arching brush sprays and drooping seed heads at the
+# root, sharing the site's two existing batches. No props in the fighting lane.
+func _field_margin(patch: Patch,p: Vector2,reach: float,turn: float) -> void:
+	var foot:=ground_point(p)
+	patch.stone.joint=11
+	for i in 4:
+		var a:=turn+i*2.40+.23*sin(p.x+float(i))
+		var dir:=Vector3(cos(a),0,sin(a))
+		var root:=foot+dir*reach*.12
+		var fork:=root+dir*reach*.30+Vector3.UP*reach*(.42+.10*(i%2))
+		patch.stone.rod(root-Vector3.UP*.018,fork,.022*reach,.009*reach,BARK,4)
+		_bough(patch,fork-dir*.14*reach,dir,reach*.77,reach*.33,.11 if i%2 else -.24,.22+.10*i)
+
 func _stands(plan: Dictionary) -> void:
 	for place:Array in STANDS.data:
 		var p:=Vector2(float(place[0]),float(place[1]))
-		_plant(_cell(p),p,float(place[2]),int(place[3]),int(place[4]),float(place[5]))
+		var kind:=int(place[3])
+		var height:=float(place[2])
+		# Low, multi-stem growth alternates with full standards in these stands.
+		if kind!=0 and height<5.20 and int(place[4])==1:
+			height*=.70 if kind==1 else .81
+		_plant(_cell(p),p,height,kind,int(place[4]),float(place[5]))
 	for group:Array in plan.groves:
 		var center:=Vector2(float(group[0]),float(group[1]))
 		var radius:=float(group[2])
@@ -268,24 +304,44 @@ func _stands(plan: Dictionary) -> void:
 			var a:=rng.randf_range(0.0,TAU)
 			var p:=center+Vector2(cos(a),sin(a))*rng.randf_range(radius*0.55,radius*1.35)
 			if absf(p.x-Ground.RIVER_X)>4.9: _tuft(_cell(p),p,rng.randf_range(0.30,0.75))
+	for group:Array in plan.groves:
+		var margin:=Vector2(float(group[0]),float(group[1]))
+		var radius:=float(group[2])
+		var count:=3 if radius>4.5 else 2
+		for k in count:
+			var heading:=margin.x*.82+k*2.53
+			var p:=margin+Vector2(cos(heading),sin(heading))*radius*(.62+.20*(k%2))
+			if absf(p.x-Ground.RIVER_X)>5.0:
+				_field_margin(_cell(p),p,.73+.19*(k%3),heading)
 	for group:Array in plan.outcrops:
 		var center:=Vector2(float(group[0]),float(group[1]))
 		var a:=float(group[4])
 		var along:=Vector2(cos(a),sin(a))
 		var across:=Vector2(-along.y,along.x)
 		var span:=float(group[2])
-		for i in 7:
-			var p:=center+along*span*(i/6.0-0.5)+across*rng.randf_range(-0.9,0.9)
-			var radius:=rng.randf_range(0.48,1.5)
-			_shelf(_cell(p),p,radius,radius*rng.randf_range(0.58,1.06),float(group[3])*rng.randf_range(0.43,0.85),a+rng.randf_range(-0.32,0.32),true)
-			if i%2==0: _tuft(_cell(p),p+across*0.59,rng.randf_range(0.37,0.74))
+		for i in 4:
+			# Each bedding plane breaks into a small fan. One end is buried in
+			# the slope so it reads as in-situ rock rather than discs lying on grass.
+			var bank_side:float=-1.0 if i%3==0 else 1.0
+			var p:=center+along*span*(i/3.0-.5)+across*rng.randf_range(-.83,.72)
+			var radius:=rng.randf_range(.64,1.46)
+			_split_stone(_cell(p),p,radius,radius*rng.randf_range(.74,1.38),rng.randf_range(.095,.20),a+rng.randf_range(-.48,.38),false)
+			for chip in 2:
+				var q:=p+across*bank_side*rng.randf_range(.14,.56)*radius+along*rng.randf_range(-.63,.79)
+				var small:=rng.randf_range(.13,.34)
+				_split_stone(_cell(q),q,small,small*.93,small*.37,a+rng.randf_range(-.6,.8),false)
+			for fringe in 3:
+				var grass:=p+across*bank_side*rng.randf_range(.12,.69)+along*rng.randf_range(-.46,.62)
+				_tuft(_cell(grass),grass,rng.randf_range(.27,.46))
 	# These ledges emerge from the non-walkable water on both sides of the river.
 	for i in 38:
 		var z:float=-65.0+i*3.48+rng.randf_range(-0.96,0.96)
 		if absf(z-Ground.crossing(z))<5.1: continue
 		var side:float=1.0 if i%2 else -1.0
 		var p:=Vector2(Ground.RIVER_X+side*rng.randf_range(3.65,4.27),z)
-		_shelf(_cell(p),p,rng.randf_range(0.86,1.9),0.84,rng.randf_range(0.53,0.92),1.35+rng.randf_range(-0.22,0.22),false)
+		_split_stone(_cell(p),p,rng.randf_range(1.0,2.11),rng.randf_range(.87,1.64),rng.randf_range(.84,1.37),1.35+rng.randf_range(-.34,.30),true)
+		var q:=p+Vector2(-.49*side,rng.randf_range(.65,1.62))
+		_split_stone(_cell(q),q,.65,.83,rng.randf_range(.49,.80),rng.randf_range(.82,1.98),true)
 
 func _pavers(plan: Dictionary) -> void:
 	for bed:Array in plan.masonry:
@@ -297,13 +353,15 @@ func _pavers(plan: Dictionary) -> void:
 				if rng.randf()<(0.09 if p.x>30.0 else 0.64): continue
 				var q:=p+Vector2((column-2.5+(row%2)*0.32)*extent/3.30,(row-2)*0.51)
 				q+=Vector2(rng.randf_range(-0.075,0.075),rng.randf_range(-0.055,0.055))
-				_shelf(_cell(q),q,rng.randf_range(0.35,0.61),rng.randf_range(0.32,0.53),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
+				_shelf(_cell(q),q,rng.randf_range(0.29,0.62),rng.randf_range(0.19,0.40),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
 
 func build(parent: Node3D,tiles: Dictionary) -> void:
 	terrain_tiles=tiles
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
+	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
+	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))
 	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
 	rng.seed=64127

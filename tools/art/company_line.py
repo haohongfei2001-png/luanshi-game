@@ -10,11 +10,11 @@ def costume(look,rank=False):
         def body(p):
             if p[1]<.86: return (LT if p[0]<0 else RT,HIPS,.35)
             return (CHEST,HIPS,clamp((p[1]-.86)*3))
-        hem=.67 if look=="archer" else .53 if heavy else .58
+        hem=.58 if look=="archer" else .53 if heavy else .58
         s.rings([(hem,.255,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
                  (1.447,.083,.07,0,0)],"dyed",body,6)
         if heavy:
-            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lames",CHEST,8)
+            s.rings([(1.03,.199,.154,0,-.014),(1.29,.251,.16,0,-.009),(1.38,.208,.119,0,-.01)],"lamellar",CHEST,8)
             skirts(s,look,HIPS,(LT,RT),rank=True)
         if look=="levy":
             for front in (True,False):
@@ -27,7 +27,16 @@ def costume(look,rank=False):
                     return p,body(p)
                 s.grid(1,3,sling,"leather")
         if look in ("player","officer"):
-            s.ribbon([(-.13,1.412,-.092),(-.10,1.23,-.187),(-.109,.89,-.205),(-.112,.56,-.228)],.19,"mantle",CHEST)
+            # The same oblique drape and split tail as the close uniform.
+            hero=look=="player"
+            pairs=([(-.11,1.428,-.075),(-.283,1.309,-.144),(-.341,1.017,-.233),(-.431,.600,-.360)],
+                   [(.072,1.451,-.097),(.042,1.302,-.206),(-.091,1.074,-.312),(-.298,.739,-.440)]) if hero else (
+                  [(-.14,1.421,-.084),(-.247,1.297,-.13),(-.262,.943,-.209),(-.241,.572,-.221)],
+                  [(.131,1.428,-.082),(.12,1.236,-.197),(.134,1.024,-.236),(.104,.792,-.245)])
+            def mantle(u,v):
+                row=round(v*3)
+                return lerp(pairs[0][row],pairs[1][row],u),(CHEST,HIPS,.99-.56*v)
+            s.grid(2,3,mantle,"hero_mantle" if hero else "mantle")
     else:
         coat(s,look)
         equipment(s,look)
@@ -35,11 +44,13 @@ def costume(look,rank=False):
         ns=6
         s.rings([(1.426,.050,.057,0,.026),(1.495,.060,.071,0,.044),(1.550,.081,.083,0,.051),
                  (1.635,.085,.099,0,.034),(1.703,.065,.077,0,.018)],"skin",HEAD,ns)
-        if heavy:
+        if heavy and look!="player":
             field_helmet(s,look,HEAD,rank=True)
         else:
             s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"facing" if look=="archer" else "hair",HEAD,ns)
-            s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"headcloth",HEAD,ns)
+            s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"leather" if look=="player" else "headcloth",HEAD,ns)
+            if look=="player":
+                s.oval((-.016,1.750,-.054),(.057,.058,.067),"hair",HEAD,7,4)
     else:
         head(s,look,HEAD)
     n=3 if rank else 5
@@ -54,7 +65,7 @@ def costume(look,rank=False):
                 s.tube([hem,b],[.070,.067],"dyed",upper,4)
             else:
                 s.tube([a,b],[.084,.069],"dyed",upper,n)
-        s.tube([b,lerp(b,c,.57),c],[.063,.057,.035],"leather" if heavy or look=="archer" else "headcloth",fore,n)
+        forearm(s,look,side,n,rank)
         p=grip(side)
         s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)
         a,b,c=leg_nodes(side)
@@ -93,6 +104,7 @@ def arms(kit):
                 q=rim[(i+1)%len(rim)]
                 s.panel([p,q,lerp(q,c,.98),lerp(p,c,.98)],"shield",LH)
             s.tube([add(c,(0,-.355,-.035)),c,add(c,(0,.338,-.034))],[.018,.027,.017],"iron",LH,3)
+            s.oval(add(c,(0,.008,.027)),(.087,.103,.039),"iron",LH,6,3)
     elif kit in (2,3,4):
         stick((0,0,-.697),(0,0,1.69),.031,.026,"timber")
         if kit!=2: blade(add(g,(0,0,1.56)),.343 if kit==3 else .614,.06 if kit==3 else .089,0 if kit==3 else .143,RH)

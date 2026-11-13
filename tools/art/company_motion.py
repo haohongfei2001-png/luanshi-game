@@ -93,7 +93,7 @@ def pose(kit,clip,t):
     # At rest a long arm rides diagonally with its point above its neighbours.
     # Its authored chamber and impact still level the shaft at the original hit time.
     rests=((.198,1.07,.17,-33,-22,-8),(.238,1.09,.12,-44,21,-13),
-           (.120,1.02,-.048,-33,18,-9),(.142,1.015,-.078,-48,-14,4),
+           (.120,1.02,-.048,-30,18,-9),(.136,1.062,-.110,-31,-18,4),
            (.167,1.059,-.072,-55,17,-8),(.164,1.075,.219,-5,-18,-32),
            (.126,1.118,.084,16,-7,-5),(.216,1.125,.159,-34,-19,-2),
            (.212,1.098,.142,-32,23,-12))
@@ -154,8 +154,8 @@ def pose(kit,clip,t):
         hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else
                       (5.2 if running else 3.7)*walk if i==3 else 2.4*hips if i==4 else 0) for i,v in enumerate(hand))
     elif clip==1:
-        crouch=.026+.007*breath
-        lean=3.8+1.1*breath
+        crouch=(.059 if kit in (2,3,4,7) else .034)+.007*breath
+        lean=(6.1 if kit in (2,3,4,7) else 3.8)+1.1*breath
         hip_yaw=-5.5
         shoulder_yaw=8.0+2.6*breath
         sway=.012+.005*breath
@@ -172,6 +172,20 @@ def pose(kit,clip,t):
         hip_roll=3.8*load
         chest_roll=-6.2*load
         lean+=3.8*(1-load)
+        # In a polearm thrust the pelvis travels forward between two planted
+        # feet. The spear and both wrists keep their shared reach solution.
+        if kit==3 and slot<3:
+            drive=(1.-load)/1.74
+            crouch+=.026+.045*drive
+            shift+=.078*drive-.012
+            lean+=7.2*drive
+            shoulder_yaw-=5.0*drive
+        elif kit==7:
+            crouch+=.035
+            lean+=3.2
+        elif kit==5:
+            hip_yaw-=8.5
+            shoulder_yaw-=11.5
     elif clip==10:
         sway=-.034
         hip_yaw=-12
@@ -190,6 +204,14 @@ def pose(kit,clip,t):
         hip_roll=12*give
         chest_roll=24*give
         shoulder_yaw=-25*give
+    # Opening the torso places the drawing elbow to the side of the face.
+    # Keep the head on its target while the bow shoulder reaches forward.
+    bow_draw=0.
+    if kit==5 and attack:
+        released=smooth(max(0.,min(1.,(t-.92)/.08))) if clip<=5 else 1.
+        bow_draw=smooth(min(1.,t/.72)) if clip<=5 else 1.-smooth(t)
+        shoulder_yaw+=26.*bow_draw
+        hip_yaw+=9.*bow_draw
     waist=(0,.86,0)
     pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
     chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
@@ -216,7 +238,29 @@ def pose(kit,clip,t):
                 anchor=limit_grip(limit_grip(anchor,support_center,left_radius),right,radius)
         off=add(anchor,support)
     elif kit==5:
-        off=add(anchor,rot(aim,(0,0,-pull)))
+        # The bow stave is held in the right palm. In the moving/nocked carry
+        # its canted upper limb passes outside the shoulder. The drawing hand
+        # reaches the cheek, then clears the recoiling string after release.
+        carry=add((.128,1.060,.240),(sway*.72,-crouch,shift))
+        off=add(anchor,rot(aim,(0,0,-max(.18,pull))))
+        if clip==1 or move or attack:
+            elbow_height=(.015*walk if move else 0.)
+            carry=add(carry,(.019*walk,elbow_height,.025*walk))
+            anchor=lerp(carry,add((.136,1.420,.430),(sway*.72,-crouch,shift)),bow_draw)
+            aim=euler(-10.+8.*bow_draw,-24.+16.*bow_draw,-41.+29.*bow_draw)
+            offq=aim
+            right,radius=reachable(chest,1,aim)
+            anchor=limit_grip(anchor,right,radius)
+            nocked=add(anchor,rot(aim,(0.,0.,-.258-.373*bow_draw)))
+            if attack:
+                # At release the left fingers travel back and out past the jaw.
+                loose=add((-.190,1.425,-.128),(sway*.72,-crouch,shift))
+                nocked=lerp(nocked,loose,released*bow_draw)
+            if not attack:
+                off=nocked
+            else:
+                carried_grip=add(anchor,rot(aim,(0.,0.,-.258)))
+                off=lerp(carried_grip,nocked,bow_draw)
     elif kit==7:
         shield=1 if clip==10 else (.85 if attack and slot in (1,3) else .32)
         off=(-.215,1.105+.18*shield-crouch,.256+shield*.113+shift)
@@ -242,16 +286,31 @@ def pose(kit,clip,t):
         binds=arm_nodes(side)
         hand_m=placed(grip(side),end,q)
         wrist=trans(hand_m,binds[2])
-        ms[upper],ms[fore]=two_link(binds,trans(chest,binds[0]),wrist,(side*.65,-.52,-.83))
+        pole=(side*.65,-.52,-.83)
+        if kit==5 and not ride:
+            # The working elbow points outward as the fingers draw, while the
+            # bow elbow remains outside the line of the string.
+            pole=(side*.94,-.72+(.96*bow_draw if side<0 else .22*bow_draw),-.45)
+        ms[upper],ms[fore]=two_link(binds,trans(chest,binds[0]),wrist,pole)
         ms[hn]=hand_m
     nock=add(anchor,rot(aim,(0,0,-.159))) if ride else off
+    if kit==5 and attack:
+        # The string returns to brace at release. A fresh nock is picked up as
+        # the fingers come back to the carried bow at the end of recovery.
+        freedom=released*(1.-smooth(max(0.,min(1.,(t-.56)/.44))) if clip>=6 else 1.)
+        nock=lerp(off,add(anchor,rot(aim,(0,0,-.159))),freedom)
     ms[NOCK]=placed(add(grip(1),(0,0,-.159)),nock,aim)
     for side in (-1,1):
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
         binds=leg_nodes(side)
         lead=-1 if kit in (2,3,4,5,6,7) else 1
         crouched=attack or clip in (10,11,13,14)
-        z=side*lead*(.160 if crouched else .075)
+        # Long-weapon users stand across the line of attack. The shield
+        # bearer stays shorter and heavier; an archer can open his shoulders.
+        stance=(.290 if kit==3 else .226) if crouched and kit in (2,3,4,5,7) else (.167 if crouched else .092)
+        if clip in (11,13,14): stance=.161
+        if clip==1 and kit in (2,3,4,7): stance=.145
+        z=side*lead*stance
         pitch=0.
         lift=0.
         if move:

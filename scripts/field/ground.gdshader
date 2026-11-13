@@ -4,6 +4,9 @@ uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D shale_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D lane_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D verge_track : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform vec4 river_silt : source_color = vec4(.39,.40,.31,1.);
 uniform vec4 deep_water : source_color = vec4(.13,.31,.34,1.0);
@@ -35,28 +38,38 @@ void vertex() {
 }
 
 vec3 painted_ground(vec2 p, float shore) {
-    // The map painting locates pasture, cultivated strips, camp lanes and shaded
-    // ground under each tree. These landmarks stay in world space at every zoom.
-    vec2 mapped = (p + vec2(168.0,108.0)) / vec2(336.0,216.0);
-    vec4 cover = texture(soil_cover,mapped);
-    vec3 colour = texture(floodplain,mapped).rgb;
-    float wet = max(cover.g,shore);
-    colour = mix(colour,river_silt.rgb, .46 * smoothstep(.16,.95,wet));
-    float rut = 1.0-smoothstep(.033,.112,abs(cover.a-.385));
-    colour *= 1.0-.095*rut*smoothstep(.68,.94,cover.r)*(1.0-wet);
-    // Discrete marks supply the middle scale between a whole meadow and a boot.
-    // The road mask continues through the junctions and independently clips the grass.
-    vec2 ground_uv=vec2(p.x*.131+p.y*.026,p.y*.146-p.x*.019);
-    vec3 marks=texture(verge_track,ground_uv).rgb;
-    float turf=(1.0-smoothstep(.32,.86,cover.r))*(1.0-.68*wet);
-    float worn=smoothstep(.35,.85,cover.r)*(1.0-.55*wet);
-    float grass_shelf=smoothstep(.28,.68,cover.b);
-    float cropped_edge=4.0*cover.r*(1.0-cover.r);
-    colour*=mix(.86,.96,grass_shelf);
-    colour*=1.0-.14*marks.b*turf-.13*marks.r*turf;
-    colour+=vec3(.028,.034,.012)*marks.r*turf*grass_shelf;
-    colour*=1.0-.15*cropped_edge*(.36+.64*marks.r);
-    colour+=vec3(.037,.030,.018)*marks.g*(.18+.82*worn);
+    // Soil cover is a measured distance field for the three cart routes. At play
+    // scale, keep their pale open centres distinct from the cooler cropped verges.
+    vec2 mapped=(p+vec2(168.0,108.0))/vec2(336.0,216.0);
+    vec4 cover=texture(soil_cover,mapped);
+    vec3 landscape=texture(floodplain,mapped).rgb;
+    vec2 uv=vec2(p.x*.134+p.y*.025,p.y*.141-p.x*.022);
+    vec3 marks=texture(verge_track,uv*.78).rgb;
+    vec2 warp=.10*vec2(sin(p.y*.22+p.x*.06),cos(p.x*.19-p.y*.087));
+    vec3 turf=texture(meadow_paint,uv+warp).rgb;
+    vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66).rgb;
+    float clay_value=dot(clay,vec3(.30,.57,.13));
+    float turf_value=dot(turf,vec3(.30,.57,.13));
+    // Suppress orange and lime in sunlight, keeping the sampled shape and value.
+    clay=mix(vec3(clay_value),clay,.32)*(OUTPUT_IS_SRGB?vec3(.76,.78,.88):vec3(.60,.63,.79));
+    turf=mix(vec3(turf_value),turf,.52)*(OUTPUT_IS_SRGB?vec3(.78,.79,.82):vec3(.64,.65,.70));
+    float near_track=1.0-smoothstep(.55,.96,cover.a);
+    float tilled=smoothstep(.25,.60,cover.r)*(1.0-smoothstep(.72,.89,cover.r))*(1.0-near_track);
+    float broken=smoothstep(.23,.91,marks.g+.24*marks.b);
+    float edge=cover.r*(1.0-tilled*(.26+.39*broken))+(.47-marks.r)*.22+(.54-marks.b)*.083;
+    float lane=smoothstep(.32,.79,edge);
+    float wet=max(cover.g,shore);
+    vec3 verge=turf*vec3(.84,.99,.95);
+    // Mown and uncropped banks differ in broad value, not just their highlights.
+    verge*=.83+.17*smoothstep(.22,.62,cover.b)+.16*clamp(landscape.g*1.55,0.0,1.0);
+    vec3 colour=mix(verge,clay*vec3(1.075,1.056,1.012),lane);
+    colour=mix(colour,landscape,.159+.06*(1.0-lane));
+    float lip=4.0*lane*(1.0-lane);
+    colour*=1.0-lip*(.075+.085*marks.r);
+    float rut=1.0-smoothstep(.028,.101,abs(cover.a-.385+(.5-marks.g)*.04));
+    colour*=1.0-.23*rut*lane*(.38+.62*marks.g)*(1.0-wet);
+    vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
+    colour=mix(colour,alluvium, .73*smoothstep(.20,.98,wet));
     return colour;
 }
 
@@ -78,8 +91,18 @@ void fragment() {
 		float edge=smoothstep(2.6,5.28,bank+turn*.44);
 		float current=texture(fieldbed,vec2(p.x*.058+turn*.09,p.y*.036-TIME*.0033)).g;
 		color=mix(deep_water.rgb,shallows.rgb,.84*edge+.09*web)*(.80+.13*ripple+.12*current);
-		float thread=1.0-smoothstep(.04,.28,abs(sin((p.x+turn)*2.7+web*1.9-TIME*.49)));
-		color+=vec3(.037,.061,.054)*thread*smoothstep(.48,.75,ripple)*(.26+edge);
+		// Broken highlights follow water along the channel and round the gravel bars.
+		float stream=(p.x+.27*sin(p.y*.64-TIME*.40)+1.18*web+.51*current)*3.51;
+		float hair=abs(fract(stream)-.5);
+		float thread=1.0-smoothstep(.034,.086+min(.13,fwidth(stream)*.62),hair);
+		float broken=smoothstep(.46,.65,.59*ripple+.41*web);
+		float glass=dot(color,vec3(.24,.60,.16));
+		color=mix(vec3(glass),color,.67)*vec3(.77,.83,.91);
+		vec3 glint=OUTPUT_IS_SRGB?vec3(.40,.49,.46):vec3(.21,.30,.29);
+		color=mix(color,glint,thread*broken*(.25+.45*edge));
+		float wake=abs(fract((bank+turn*.34+.65*web)*1.48)-.50);
+		float foam=(1.0-smoothstep(.028,.12,wake))*smoothstep(3.40,4.60,bank)*smoothstep(.46,.67,ripple);
+		color=mix(color,glint,foam*.41);
 		roughness=.49; specularity=.29;
 	} else if (part>2.5) {
 		float side=abs(local_normal.x)>abs(local_normal.z)?local_pos.z:local_pos.x;
@@ -95,7 +118,14 @@ void fragment() {
 			color*=0.77+0.39*block;
 		} else if (part<5.5) {
 			float course=texture(joinery,p*0.48).b;
-			color*=0.88+0.22*course;
+			// Tile butt overlaps run across both pitches. The existing raised ribs
+			// run with the water. World-space derivatives soften a row under one pixel.
+			float across_pitch=abs(local_normal.x)>abs(local_normal.z)?p.x:p.y;
+			float run=across_pitch*2.52+local_pos.y*.68;
+			float seam=abs(fract(run+.5)-.5);
+			float mortar=1.0-smoothstep(.035,.088+min(.18,fwidth(run)*.6),seam);
+			float wear=smoothstep(.46,.71,texture(fieldbed,p*.28).r);
+			color*=(.84+.23*course+.08*wear)*(1.0-.19*mortar);
 			roughness=0.75; specularity=0.24;
 		} else if (part<6.5) {
 			float weave=texture(joinery,vec2(side*0.85,across*1.3)).b;
@@ -110,7 +140,10 @@ void fragment() {
 			float drip=texture(fieldbed,vec2(side*.12,across*.035)).g;
 			float footing=1.0-smoothstep(.55,1.56,local_pos.y+drip*.23);
 			float rain=smoothstep(.43,.71,drip)*smoothstep(.18,2.4,local_pos.y);
+			float strata=across*2.13+.12*(compact-.5);
+			float joint=1.0-smoothstep(.025,.085+min(.14,fwidth(strata)*.55),abs(fract(strata+.5)-.5));
 			color*=.74+.29*compact+.16*lift-.105*footing-.065*rain;
+			color*=1.0-joint*(.050+.07*rain);
 		} else if (part>11.5 && part<12.5) {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;
@@ -128,6 +161,27 @@ void fragment() {
 			float peg=(1.0-smoothstep(.10,.21,abs(board-.44)))*(1.0-smoothstep(.08,.14,abs(cross_distance-3.41)));
 			color*=.68+.50*grain+.12*worn*(.27+weather)-.19*peg;
 			roughness=.91-.14*worn;
+		} else if(part>18.5 && part<19.5) {
+			// One projection per face; even short, walkable fragments show bedding
+			// that continues across the tilted ridgeline, buried edge and talus.
+			vec3 n=abs(local_normal);
+			vec2 rock_uv=n.y>max(n.x,n.z)*.72?vec2(p.x*.42+p.y*.12,p.y*.46-p.x*.15):
+				vec2((n.x>n.z?p.y:p.x)*.51+local_pos.y*.21,local_pos.y*.74+p.x*.12);
+			vec3 shale=texture(shale_paint,rock_uv).rgb;
+			float facet=.88+.17*clamp(local_normal.y,0.0,1.0);
+			vec3 stone=mix(shale*facet,color,.28);
+			// Pieces on walkable ground are shallow by design. Let their buried
+			// toes inherit the exact same turf, instead of drawing a polygon rim.
+			bool on_land=abs(p.x+32.0)>5.1;
+			if(on_land) {
+				vec2 ridge=(p-vec2(9.0,-36.0))/vec2(34.0,16.0);
+				vec2 east=(p-vec2(77.0,43.0))/vec2(30.0,13.0);
+				float relief=pow(max(0.,1.-dot(ridge,ridge)),2.)*3.9+pow(max(0.,1.-dot(east,east)),2.)*1.8;
+				relief-=(1.-clamp((abs(p.x+32.)-3.9)/2.4,0.,1.))*.92;
+				float lift=local_pos.y-relief;
+				float exposed=smoothstep(.024,.153,lift);
+				color=mix(painted_ground(p,0.0),stone*.90,exposed*.90);
+			} else color=stone;
 		} else if(part>=17.5 && part<18.5) {
 			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
 			float grit=texture(fieldbed,face_uv).r;

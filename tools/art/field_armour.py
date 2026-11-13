@@ -60,15 +60,34 @@ def field_helmet(surface, look, bone, rank=False):
 def skirts(surface, look, hips, thighs, rank=False):
     """Left and right panels are suspended at the waist and can follow a stride independently."""
     light = look == "regular"
-    length = .271 if light else .352
-    n = 4 if rank else (12 if surface.detail else 6)
+    length = .275 if light else (.377 if look=="guard" else .346)
+    columns = 3 if rank else (9 if surface.detail else 5)
+    # The two side tassets open at the centre. The leading knee is still visible
+    # under the edge when a spearman plants his forward foot.
     for side, thigh in zip((-1,1), thighs):
-        def panel(u,v):
-            edge = .064 + .116 * (1. - v) ** 1.7
-            angle = side * (edge + (pi - 2. * edge) * u)
-            front = (.5 + .5 * cos(angle))
-            y = .951 - length * (1. - v) + .036 * (1.-v) * (front ** 3 + (1.-front) ** 3)
-            width = .204 + .065 * (1. - v)
-            depth = .157 + .053 * (1. - v)
-            return (width * sin(angle), y, -.014 + depth * cos(angle)), (thigh, hips, .58 * (1.-v))
-        surface.grid(n, 1 if rank else 3, panel, "lames")
+        def point(u, down):
+            front=(.61 if light else .30)+(.24 if light else .17)*down
+            back=pi-(.56 if light else .23)-.13*down
+            angle=(front+(back-front)*u) if side>0 else (-back+(back-front)*u)
+            along=(u if side>0 else 1.-u)
+            y=.955-length*down+down*(.099*abs(2*along-1)**2-.018*sin(pi*along))
+            flare=.053*down+.018*sin(pi*down)
+            width=.204+flare
+            depth=.155+.91*flare
+            return ((width*sin(angle),y,-.014+depth*cos(angle)),
+                    (thigh,hips,.64*down))
+        def iron(u,v): return point(u,1.-v)
+        def binding(u,v): return point(u,1.06-.06*v)
+        surface.grid(columns,1 if rank else 3,iron,"lames")
+        surface.grid(columns,1,binding,"leather")
+
+    if look in ("guard","officer","player"):
+        # A shorter front apron hangs from the belt between the two thigh panels.
+        # The broad roll at its centre splits the front from the side under light.
+        def apron(u,v):
+            down=1.-v
+            x=(u-.5)*(.245-.04*down)
+            y=.947-.309*down+.032*down*abs(2*u-1)**1.5
+            z=.157+.061*down+.014*(1.-abs(2*u-1))-.020*(2*u-1)**2
+            return (x,y,z),(hips,thighs[0] if x<0 else thighs[1],1.-.22*down)
+        surface.grid(2 if rank else 4,1 if rank else 3,apron,"lamellar")

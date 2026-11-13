@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b7lswillowspr"
+path="res://.godot/imported/willow-pendant.png-a357688d816910923d2c437bb4eff403.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/willow-pendant.png"
+dest_files=["res://.godot/imported/willow-pendant.png-a357688d816910923d2c437bb4eff403.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

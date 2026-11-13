@@ -1,6 +1,8 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D elm_bough : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D leaf_marks : filter_linear_mipmap, repeat_enable;
 uniform sampler2D canopy_paint : filter_linear_mipmap, repeat_enable;
@@ -24,7 +26,13 @@ void vertex() {
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>4.0) {
+	if(crown>6.0) {
+		vec4 brush=texture(elm_bough,UV);
+		float sun=clamp((crown-6.1)*1.42,0.0,1.0);
+		vec3 mids=mix(vec3(dot(brush.rgb,vec3(.30,.55,.15))),brush.rgb,.66);
+		tone=mids*mix(vec3(.54,.62,.72),vec3(.90,.94,.83),sun);
+		opacity=brush.a;
+	} else if(crown>4.0) {
 		float ridge=clamp((crown-4.33)/.22,0.0,1.5);
 		float vein=texture(leaf_marks,vec2(bark_uv.x*3.7,bark_uv.y*.108)).g;
 		float groove=.5+.5*sin(bark_uv.x*71.3+bark_uv.y*.92+vein*1.51);
@@ -37,6 +45,27 @@ void fragment() {
 		tone=pow(brush.rgb,vec3(1.07))*vec3(.66,.76,.80)*(.63+.66*light);
 		tone+=vec3(.010,.016,.011)*crest;
 		opacity=brush.a;
+		// Three willow branch UV islands precede the reeds in the last quarter.
+		if(UV.x<.749) {
+			vec4 twig=texture(willow_pendant,vec2(.26+fract(UV.x*4.0)*.49,UV.y));
+			float value=dot(twig.rgb,vec3(.30,.57,.13));
+			float chroma=max(twig.g,twig.r)-twig.b;
+			float key=1.0-smoothstep(.035,.145,value-max(.0,chroma)*3.6-.58);
+			tone=mix(vec3(.068,.104,.075),vec3(.315,.35,.188),.21+.68*light)*(.72+.43*value);
+			opacity=twig.a*key*smoothstep(.016,.07,chroma);
+			if(UV.x>.5) {
+				// Young upper boughs carry short green growth underneath the long
+				// free whips. Only this island fills the open top of the crown.
+				vec2 u=vec2(.04+.92*fract(UV.x*4.0),.98-.96*UV.y);
+				vec4 crown_leaf=texture(elm_bough,u);
+				float moss=dot(crown_leaf.rgb,vec3(.29,.59,.12));
+				vec3 upper=mix(vec3(.076,.120,.085),vec3(.332,.383,.208),clamp(.18+light*.60+moss*.32,0.0,1.0));
+				float upper_leaf=crown_leaf.a*smoothstep(.09,.52,1.0-UV.y);
+				vec3 painted=mix(crown_leaf.rgb*vec3(.71,.80,.70),upper,.30)*(.71+.28*light);
+				tone=mix(tone,painted,upper_leaf);
+				opacity=max(opacity,upper_leaf*.85);
+			}
+		}
 	} else if(crown>.5) {
 		vec3 leaf=texture(canopy_paint,UV*1.73).rgb;
 		vec3 sun=mix(sun_elm.rgb,sun_ash.rgb,smoothstep(.65,.95,paint.g));
