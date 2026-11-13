@@ -209,10 +209,10 @@ def refit_sleeves(source,role):
                 if k==len(stages)-1:
                     yy+=.007*cos(angle)
                 at=(x,yy,z)
-                weights=mix_bones(root_skin[j],{RIGHT_FORE if side>0 else LEFT_FORE:1.},transition(0.,.53,t))
+                cuff_weights=mix_bones(root_skin[j],{RIGHT_FORE if side>0 else LEFT_FORE:1.},transition(0.,.53,t))
                 # The upper three stations are a single darkened length of
                 # the team-dyed bolt. No painted highlights cross its seam.
-                row.append((at,compact(weights)))
+                row.append((at,compact(cuff_weights)))
             faces.append(row)
         for k,(upper,lower) in enumerate(zip(faces,faces[1:])):
             material="coat" if k<2 else "facing" if k==2 else "binding"
@@ -227,7 +227,7 @@ def refit_sleeves(source,role):
             for j in range(len(ring)):
                 z=(j+1)%len(ring)
                 corners=(two[0][j],two[0][z],two[1][z],two[1][j])
-                if side>0: corners=corners[::-1]
+                if side<0: corners=corners[::-1]
                 result.quad(*corners)
     print("FITTED_SLEEVE",role,"faces",len(source.faces),len(result.faces),"new edge mids",len(sewn))
     return result
