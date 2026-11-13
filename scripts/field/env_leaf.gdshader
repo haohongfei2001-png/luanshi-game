@@ -48,6 +48,10 @@ void fragment() {
 		float exposed=clamp(.12+.24*max(facing_sky,0.)+.17*tier+.46*wash,0.,1.);
 		tone=mix(elm_under.rgb,elm_body.rgb,smoothstep(.10,.49,exposed));
 		tone=mix(tone,elm_light.rgb,.83*smoothstep(.41,.79,exposed));
+		if (filled) {
+			float canopy_top=smoothstep(-.31,.66,facing_sky);
+			tone=mix(mix(elm_under.rgb,elm_body.rgb,.37+.17*tier),tone,canopy_top);
+		}
 		opacity=filled?1.:brush.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);

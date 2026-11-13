@@ -90,91 +90,113 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 				patch.leaves.add_vertex(verts[k])
 	patch.sprays+=1
 
-# The outer lobes have an undercut, a low edge, a rounded shoulder and an
-# uneven top. Smooth normals preserve the continuous foliage volume at army zoom.
-func _crown_mass(patch: Patch,at: Vector3,ray: Vector3,reach: float,width: float,depth: float,grade: float,seed: float) -> void:
-	var side:=Vector3(-ray.z,0.0,ray.x)
+# One silhouette follows each supporting fork, opening into flattened sprays
+# near the tip. Both sides belong to a continuous volume at rotating cameras.
+func _leaf_platform(patch: Patch,root: Vector3,ray: Vector3,reach: float,width: float,depth: float,grade: float,seed: float,climb: float) -> void:
+	var side:=Vector3(-ray.z,0.,ray.x)
 	var points:=PackedVector3Array()
 	var normals:=PackedVector3Array()
-	var colours:=PackedVector2Array()
-	var rings: Array[Vector2]=[Vector2(.025,-.52),Vector2(.68,-.40),Vector2(1.,-.03),
-		Vector2(.86,.30),Vector2(.48,.61),Vector2(.022,.76)]
-	var slopes:=PackedFloat32Array([-1.85,-.68,.18,.80,1.95,5.0])
-	var sides:=28
-	for j in rings.size():
-		var r:=rings[j]
-		for i in sides:
-			var a:=TAU*i/sides
-			var turns:=seed+r.y*.76
-			var lobes:=1.+.14*sin(3.*a+turns)+.096*cos(5.*a-turns*.60)+.10*sin(8.*a+turns*1.36)
-			var x:=cos(a)*r.x*lobes
-			var z:=sin(a)*r.x*lobes
-			var rise:=r.y+r.x*(.21*sin(3.*a+seed)+.11*cos(5.*a-seed))-.21*x+.14*z
-			var p:=at+ray*(reach*(x+.10*r.y))+side*(width*(z-.16*r.y))+Vector3.UP*depth*rise
-			points.append(p)
-			var slope:=slopes[j]
-			var n:=(ray*cos(a)+side*sin(a)+Vector3.UP*slope).normalized()
-			normals.append(n)
-			colours.append(Vector2(.53+.48*x+.12*seed,.49+.44*z+.073*seed))
-	for j in rings.size()-1:
-		for i in sides:
-			var next:=(i+1)%sides
-			var a:=j*sides+i
-			var b:=j*sides+next
-			for n:int in [a,b,a+sides,b,b+sides,a+sides]:
-				patch.leaves.set_color(Color.WHITE)
-				patch.leaves.set_normal(normals[n])
-				patch.leaves.set_uv(colours[n])
-				patch.leaves.set_uv2(Vector2(.27,10.1+.70*grade))
-				patch.leaves.add_vertex(points[n])
+	var coords:=PackedVector2Array()
+	var weights:=PackedFloat32Array()
+	var sections:=9
+	var across:=8
+	for surface in 2:
+		for row in sections:
+			var t:=float(row)/(sections-1)
+			var arch:=sin(t*PI)
+			var bend:=.14*sin(seed+.9)*t*t-.067*arch
+			var fall:=depth*(climb*t+.56*arch-.23*t*t)
+			for col in across:
+				var v:=2.*col/(across-1)-1.
+				var ribs:=.5+.5*cos(8.5*v+seed*.46)
+				var finger:=.085*sin(v*8.4+seed)+.049*sin(v*16.3-seed*.28)
+				var along:=t+finger*smoothstep(.36,1.,t)-.29*absf(v)*pow(t,2.4)
+				var fan:=(.16+.91*sin(PI*(.035+.80*t)))*(.93+.15*cos(t*11.7+seed+signf(v)))
+				var x:=v*fan+bend
+				var shell:=-.25*(1.-v*v)-.075*arch
+				if surface==0: shell=(1.-v*v)*(.63+.26*arch)+.21*ribs*arch+.060*sin(t*8.4+seed)*(1.-absf(v))
+				points.append(root+ray*reach*along+side*width*x+Vector3.UP*(fall+depth*(shell-.29*v*v)))
+				var n:=(Vector3.UP+side*(.72*v)+ray*(.54*t-.24)).normalized()
+				normals.append(n if surface==0 else (Vector3.DOWN+side*v*.73).normalized())
+				coords.append(Vector2(t*.72+seed*.083,.5+.5*v))
+				weights.append(.18+.38*t)
+	var span:=sections*across
+	var ids:=PackedInt32Array()
+	for surface in 2:
+		var base:=surface*span
+		for r in range(sections-1):
+			for c in range(across-1):
+				var i:=base+r*across+c
+				if surface==0: ids.append_array([i,i+across,i+1,i+1,i+across,i+across+1])
+				else: ids.append_array([i,i+1,i+across,i+1,i+across+1,i+across])
+	var rim:=PackedInt32Array()
+	for c in across: rim.append(c)
+	for r in range(1,sections): rim.append(r*across+across-1)
+	for c in range(across-2,-1,-1): rim.append((sections-1)*across+c)
+	for r in range(sections-2,0,-1): rim.append(r*across)
+	for j in rim.size():
+		var i:=rim[j]
+		var k:=rim[(j+1)%rim.size()]
+		ids.append_array([i,k,i+span,k,k+span,i+span])
+	for i in ids:
+		patch.leaves.set_color(Color.WHITE)
+		patch.leaves.set_normal(normals[i])
+		patch.leaves.set_uv(coords[i])
+		patch.leaves.set_uv2(Vector2(weights[i],10.1+.70*grade))
+		patch.leaves.add_vertex(points[i])
 	patch.sprays+=1
 
-func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
+func _tree(patch: Patch,p: Vector2,h: float,kind: int,variant: int) -> void:
 	var foot:=ground_point(p)
-	var spin:=rng.randf_range(0.0,TAU)
+	var spin:=rng.randf_range(0.,TAU)
 	var turn:=Basis(Vector3.UP,spin)
-	var bend:=turn*Vector3(0.08,0.0,-0.045)*h
-	var fork:=foot+Vector3.UP*h*0.37+bend
+	var narrow:=kind==2
+	var heel:=foot+turn*Vector3(-.012,.0,.012)*h
+	var bole:=foot+turn*Vector3(.035,.20,-.027)*h
+	var fork:=foot+turn*Vector3(.030 if variant==0 else -.059,.435,.017)*h
 	patch.stone.joint=11
 	for i in 4:
-		var a:=spin+i*TAU/4.0+rng.randf_range(-0.3,0.32)
-		var toe:=foot+Vector3(cos(a),0,sin(a))*h*rng.randf_range(.07,.113)
-		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,4)
-	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,6)
-	var narrow:=kind==2
-	var forks: Array[Vector4]=[
-		Vector4(-.27,.63,.11,.30),Vector4(.22,.72,-.18,.31),
-		Vector4(.19,.77,.20,.235),Vector4(-.09,.90,-.09,.32)]
-	if narrow:
-		forks=[Vector4(-.12,.57,.07,.22),Vector4(.12,.76,-.08,.24),Vector4(-.04,.90,.05,.23)]
-	for index in forks.size():
-		var arm:=forks[index]
-		var radial:=turn*Vector3(arm.x,0.0,arm.z).normalized()
-		var tip:=foot+turn*Vector3(arm.x,arm.y,arm.z)*h+bend*.51
-		var root:=fork+Vector3.UP*(.023*index*h)
-		var elbow:=root.lerp(tip,.53)+radial*h*.046
-		var radius:=h*arm.w
-		patch.stone.rod(root,elbow,h*(.029-.002*index),h*.016,BARK,6)
-		patch.stone.rod(elbow,tip,h*.016,h*.005,BARK.lightened(.045),5)
-		# Each crook supports a broad continuous spray. A shorter side branch
-		# turns back into the crown; open air separates neighbouring forks.
-		var hand:=1. if index%2==0 else -1.
-		var lean:=rng.randf_range(-.17,.12)
-		for side in 2:
-			var angle:float=lean+hand*(-.37 if side==0 else 1.56)
-			var ray:=radial.rotated(Vector3.UP,angle)
-			var socket:=elbow.lerp(tip,.60 if side==0 else .44)
-			var length:=radius*(1.53 if side==0 else 1.12)
-			var width:=radius*(1.09 if side==0 else .82)
-			var lift:=.36 if index==forks.size()-1 else .08
-			var pitch:=lift+(.12 if side==1 else -.11)
-			var grade:=clampf(.24+.135*index+(.14 if side==0 else -.08),.12,.93)
-			var rib:=socket+ray*length*.59+Vector3.UP*length*(.23+.58*pitch)
-			patch.stone.rod(socket,rib,h*.0075,h*.0027,BARK,4)
-			var center:=socket+ray*length*.57+Vector3.UP*width*(.24+.16*pitch)
-			_crown_mass(patch,center,ray,length*.64,width*.65,width*.65,grade,index*2.17+.91*side+spin)
-			var edge:=center+ray*(.17*length)+Vector3.DOWN*(.043*width)
-			_bough(patch,edge,ray,length*.63,width*.66,-.23,grade,true,hand*.18)
+		var angle:=spin+i*1.64+.15*sin(i+spin)
+		var toe:=foot+Vector3(cos(angle),-.035,sin(angle))*h*(.094+.023*(i%2))
+		patch.stone.rod(toe,bole.lerp(foot,.43),h*.014,h*.042,BARK,5)
+	patch.stone.rod(heel,bole,h*.057,h*.043,BARK,8)
+	patch.stone.rod(bole,fork,h*.043,h*.029,BARK,7)
+	# The spreading elm has a low arm and a high leader. The young uprights
+	# retain a narrower, asymmetrical crown on the same metre-scale bind.
+	var arms: Array[Vector4]=[Vector4(-.41,.595,.13,.289),Vector4(.27,.685,-.20,.270),
+		Vector4(.10,.790,.255,.259),Vector4(-.09,.934,-.103,.265)]
+	if variant==1: arms=[Vector4(.08,.58,-.28,.244),Vector4(-.22,.712,.21,.278),
+		Vector4(.30,.795,.066,.255),Vector4(.01,.953,-.108,.24)]
+	if narrow: arms=[Vector4(-.14,.615,.10,.22),Vector4(.13,.755,-.091,.238),Vector4(-.04,.925,.076,.211)]
+	for i in arms.size():
+		var arm:=arms[i]
+		var radial:=turn*Vector3(arm.x,0.,arm.z).normalized()
+		var tip:=foot+turn*Vector3(arm.x,arm.y,arm.z)*h
+		var stem:=fork+Vector3.UP*(.031*i*h)
+		var elbow:=stem.lerp(tip,.44)+radial*h*.043
+		var wrist:=elbow.lerp(tip,.64)+Vector3.UP*.029*h
+		var fac:=h*(.029-.002*i)
+		patch.stone.rod(stem,elbow,fac,fac*.61,BARK,7)
+		patch.stone.rod(elbow,wrist,fac*.63,fac*.39,BARK,6)
+		patch.stone.rod(wrist,tip,fac*.40,h*.004,BARK.lightened(.07),5)
+		var reach:=h*arm.w*(1.47 if narrow else 1.68)
+		var width:=h*arm.w*(.80 if narrow else .99)
+		var grade:=.22+.15*i
+		var lift:=.70 if i==arms.size()-1 else .20
+		var root:=elbow.lerp(wrist,.22)
+		var turn_side:=1. if (i+variant)%2==0 else -1.
+		var leaf_dir:=radial.rotated(Vector3.UP,.20*turn_side)
+		_leaf_platform(patch,root,leaf_dir,reach,width,width*.65,grade,spin+2.07*i,lift)
+		var cross_ray:=radial.rotated(Vector3.UP,turn_side*(1.42+.11*i))
+		var crouch:=wrist-leaf_dir*reach*.09+Vector3.DOWN*width*.11
+		patch.stone.rod(wrist,crouch+cross_ray*reach*.41+Vector3.UP*width*.10,fac*.32,h*.0029,BARK,5)
+		_leaf_platform(patch,crouch,cross_ray,reach*.73,width*.69,width*.45,grade-.11,spin-.73+1.91*i,lift+.08)
+		for fringe in 2:
+			var side:=Vector3(-leaf_dir.z,0.,leaf_dir.x)
+			var offset:=-.56 if fringe==0 else .49
+			var edge:=root+leaf_dir*reach*(.72 if fringe==0 else .80)+side*width*offset+Vector3.UP*width*(.22+.19*lift)
+			var tail:=leaf_dir.rotated(Vector3.UP,offset*.48)
+			_bough(patch,edge,tail,reach*(.38+.07*(i%2)),width*(.34+.05*fringe),-.47,grade,true,turn_side*.14)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
@@ -195,7 +217,7 @@ func _bake_trees() -> void:
 	for kind in range(1,3):
 		for variant in 2:
 			var prototype:=Patch.new()
-			_tree(prototype,Vector2.ZERO,1.0,kind)
+			_tree(prototype,Vector2.ZERO,1.0,kind,variant)
 			trees.append({"wood":prototype.stone.surface.commit(),"leaves":prototype.leaves.commit()})
 
 func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: float) -> void:
