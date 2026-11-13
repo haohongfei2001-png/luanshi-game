@@ -1,0 +1,18 @@
+River Gate field headwear • Wildfire Games, 0 A.D.
+Original art copyright (C) 2009 Wildfire Games. https://www.wildfiregames.com/
+The editable original COLLADA meshes and the fitted collection headwear.glb are
+licensed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+Wildfire Games attribution and terms:
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+Editable upstream directory:
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/meshes/props/helmet
+
+Luanshi contributors refitted han_cap, han_advanced_melee_helmet,
+han_officer_helmet_01 and han_heavy_helmet_b to the company's head bind,
+shortened the heavy helmet's top brush and reassigned matte colour fields.
+The four derived meshes remain separate from the underlying faces, uniforms and
+weapons. No upstream texture is redistributed. The original editable vertices,
+per-file Git blob hashes and repeatable fit are in tools/art/fit_field_headwear.py.
+The Han-era source art serves as a visual starting point for fictional field issues.
+This adaptation does not imply endorsement by Wildfire Games.

@@ -5,6 +5,7 @@ const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
 const GARMENTS := preload("res://assets/river_gate/figures/field_garments.gltf")
 const GARRISON := preload("res://assets/third_party/wildfire_garments/field_issues.glb")
+const HEADWEAR := preload("res://assets/third_party/wildfire_headwear/headwear.glb")
 const ISSUE_COLOURS := preload("res://assets/third_party/wildfire_garments/field_colours.png")
 const FIELD_BODY := preload("res://assets/river_gate/figures/garrison_bodies.glb")
 const SKIN := preload("res://scripts/field/company_skin.gdshader")
@@ -15,7 +16,7 @@ static var assembled: Dictionary = {}
 
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
-	for asset: PackedScene in [LIBRARY, GARMENTS, GARRISON, FIELD_BODY]:
+	for asset: PackedScene in [LIBRARY, GARMENTS, GARRISON, FIELD_BODY, HEADWEAR]:
 		pieces.merge(FieldMeshes.meshes(asset),true)
 
 static func costume(kit: int) -> String:
@@ -38,6 +39,7 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	var garment: ArrayMesh=pieces[look+lod+"Trim"]
 	var attachments: Array[ArrayMesh]=[arms,garment]
 	if fitted: attachments.append(pieces[look+"Issue"])
+	if pieces.has(look+"Headwear"): attachments.append(pieces[look+"Headwear"])
 	for attachment: ArrayMesh in attachments:
 		var gear:=attachment.surface_get_arrays(0)
 		var vertex_offset: int=arrays[Mesh.ARRAY_VERTEX].size()
