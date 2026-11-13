@@ -4,11 +4,13 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 RC12 · 复核后的轻重头甲及破门廊架进入候选
+## 河关 RC12 · 已合入的可玩候选
 
-可回退的已发放候选见下方 RC11。真实 512v512 的 12 个机位：103 号枪兵轻盔的下颌和耳后布边与 70 号盾兵重盔的覆颊和护颈已有区别，第一轮过亮的盔缘已退回。枪、盾近中远六个身体网格更新，其他 30 个网格逐属性相同。正常 22 米主要看头肩，42 米依靠武器和军阵判读。[实机与对照源码](https://github.com/haohongfei2001-png/luanshi-game/tree/e7ffdbc43ef553794ffb0a6877e66c79faf8779c/docs/evidence/river-issue-helmets)。夺门时会遮住人群的近侧檐枋及斗拱跟随屋面移开；保留的三个后廊窗间、矮墙和托木有实际支撑。[五个真实攻城机位](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43408237669/artifacts/14028436977)。
+[安装包、原生画面、连续实录、原生窗口与校验](evidence/river-gate-v1-rc12/PLAYTEST.md)。游戏源 `5e12030486991d259c344b038605a13a70308ec7`，游戏合并 `e627086d985f0e458f187f4d691e816471574912`，导出 `92900dc79e381509e878ac0008e62fa9c3e95ba4` 的目录树相同。轻枪与重盾的头甲在 12 对实际画面中明确分开；过亮盔边和切顶后的悬空斗拱均已复修。正式固定镜头抓到盾盔遮眉，脸框从先前 19 个肤色像素降到 0。两次重烘后正式包读出 13，手框保持 106。第 635 步近侧檐枋让出攻城人群，其余四个机位保持逐像素一致。RC10/RC11 的左右受创、甲衣、马、四轮冲车与夺门结算均已保留。
 
-`codex/river-gate-rc12` 从 `d2a832f53a2baabeb6751d9a36d8ef26b5befc61` 接续。探测导出包时照常记录每个帧间隔，并将最长一帧配对到真实游戏步、可见士兵、模拟和画面脚本耗时、请求移镜后帧数；主流程无需开启探测。云端执行 `./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh` 可复现。真实 M5 与全军商业美术完成度仍待验证。
+九类武器经游戏输入，双方各 512 名普通兵、将领交手/继任、两条护送、战后驻营、行军与 V3/V4 存档均有完整回归。每方 512、100% 内部比例、4× MSAA，托管 Apple M1 (Virtual) 的 24.00 秒实战 P95/P99 14.29 / 18.41 毫秒。候选的空游戏目录启动 9/9。最长帧已和真实游戏步、可见兵、CPU 阶段及镜头移动关联。真实 M5 内外屏 ≥20 分钟与最终画面风格仍待验收。
+
+下一项实作优先改常用 22 米镜头里重复的步态/肩线及兵器遮挡，用自然推进时的截图和录像检验。云端检出 `e627086d985f0e458f187f4d691e816471574912` 并执行 `./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。另运行 `python3 tools/rc3_native_probe.py package/Luanshi-macOS.zip package/unpacked mac-evidence` 在已授权托管 Mac 查看实际最长帧上下文。还需压低默认画质长尾和在真机上验证。
 
 ## 河关 RC11 · 已合入并打包
 
