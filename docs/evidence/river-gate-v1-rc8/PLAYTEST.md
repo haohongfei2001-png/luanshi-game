@@ -4,6 +4,8 @@
 
 **自审裁决**：弓手的斜肩箭囊、重盾的裙甲与低重心、枪兵的负枪角度和主角的披肩改善了正常镜头的识别度。之前实验把草地做糊、腰袋做得过亮，最终恢复 RC7 的清晰地面、减弱腰袋及披肩边缘。[未采用的第二轮](iteration-2-side-by-side.jpg)。仍未达到约定的国风动画战场观感：成排普通兵的颈肩、体态与脸过于相似，群马背线和冲车轮架转折太硬；门楼切顶后像架子。[门楼背廊实机对照](gallery-rejected.jpg)对整屏改善不足，并未合入。
 
+另一个[冲车弧篷实机对照](ram-study.jpg)在同种子、第 490 步和相同屏内单位下完成。侧前方轮廓更连贯，但护篷遮住了活动悬梁，读起来像普通篷车；试作保留在[独立提交](https://github.com/haohongfei2001-png/luanshi-game/commit/d4075c4141484986ec40dc741fd46f4f50dc09b5)，未装入本包。
+
 ## 这一包是谁构建的
 
 游戏 [PR #40](https://github.com/haohongfei2001-png/luanshi-game/pull/40) 的[全部六项检查](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045)成功。游戏提交 `5cf51e2f7ad9e4fe2768e2088b11bdfd0ab4979e`，实际导出提交 `cc9058135598057e9b6477a77fa5b4b8cf0be3c0`，main 合并 `2c92c7eace980d76d538a646ca64ce9817d191b4`。三者的源码树均为 `ba73a5f0ea4d674e4b5ddd23517a5bd7a89f80ff`。[CI 记录和附件索引](raw/delivery.json)。Actions 下载的外层归档解开后，内层 `Luanshi-macOS.zip` SHA-256：`5828c4a9f13349c7a8a30c1a9fcdeab86a82a5485b2544aa3900b296b3a4c878`。解开后打开其中的 `.app`。Linux 内层归档 SHA-256：`8ec501fa11a57ee5af934ad0ff71dd82deec283a12215f0563c997d8864429d7`。
@@ -20,6 +22,8 @@
 交付归档签名和启动验证在 **Apple M1 (Virtual)，Apple Paravirtual device (Apple5)** 上进行，未使用用户电脑。以新的游戏进程、空游戏数据目录逐次启动，保留系统/驱动缓存；兼容、默认 Metal 与显式焦点控制等共 **9/9**。9 张 PNG 均做实际中央像素检查。首次兼容和默认 Metal 的首次 `post_draw` 分别为 22.97、47.73 秒；不可声称首帧很快。之前 RC7 主线的 7/9 与两种失败[均保留](../river-gate-v1-rc7/NATIVE.md)，[第零步刻意中断与恢复](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43350173727)单列。
 
 默认 Metal 512v512，实际 1024×640、100% 内部分辨率、4× MSAA、阴影开，随战线移镜。24.003 秒、3,640 帧、1,159 次新命中；**151.65 FPS，P50/P95/P99 为 5.44/13.59/17.10 ms，峰值 RSS 545.1 MiB**。GPU 时间戳未返回，模拟脚本、显示更新累积均值分别 1.35 / 3.13 ms/帧。[原生日志、PNG、逐帧时长](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005242901) · [九次指标和实测像素](raw/native.json)。这只是单台虚拟宿主的一段；不同 M1 宿主负载差异很大。**真实 M5 热稳态 60 FPS：NOT_RUN**。
+
+**同一源码树第二次完整重建：[4/6 项通过](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43355984399)。** 导出、战场录像、连续军旅和视频归档均通过。托管虚拟 M1 的九次原生窗口测试为 **8/9**：首次默认 Metal 只报告引擎和虚拟显卡，75 秒内没有场景就绪、首帧或 PNG，退出 124；第二次默认启动成功。另一次失焦的原生试验通过普通“继续”恢复。第二台宿主的默认千人样本在相同实际 1024×640、100%、4× MSAA 和阴影下，24.015 秒、1,119 帧、1,160 次新命中，**46.60 FPS，P50/P95/P99 14.15/46.67/64.73 ms，RSS 540.4 MiB**。GPU 没有非零时间戳，不能判定是 GPU、引擎、资源还是宿主导致首次超时。另一项失败为 Linux 软件光栅器的长战线录像 660 秒超时；两次第 490 步截图与两个短动作录像已先成功。[全部原始证据索引](raw/main-rebuild.json) · [第二台 Mac 的日志与逐帧记录](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43355984399/artifacts/14006857234) · [未完成的长战线录像日志](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43355984399/artifacts/14007425668)。**两次结果并列，不能从较快的机器推断稳定 60 FPS 或冷启动问题已解决。**
 
 Linux llvmpipe 软件光栅器：1280×800、原生比例、4× MSAA、阴影开，每档 20 个图形帧。它检验规模与渲染负载，不代表硬件 GPU 或可玩的帧率。
 
