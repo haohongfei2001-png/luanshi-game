@@ -19,3 +19,7 @@
 从[最终包的同一次九次启动](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001257614)读取原始 PNG，不重启游戏、不重新截图。[独立复核日志](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43347842763) · [每张的 SHA-256、尺寸和实测值](raw/window-pixels.json)。九张导出包画面的中央都有图像；默认 Metal 移镜样本为 1024×640，704 个中央采样点的亮度 P10/P90 为 77/120，70 组量化色。编辑器 A/B 的六张图里，旧版首次近景有 704 个零亮度点、0 组可辨色，其余五张有内容。旧检查曾接受过这张黑帧；保留该失败。
 
 复核现有文件：`python3 docs/evidence/river-gate-v1-rc7/check_window.py /path/to/shipping-metal.png`。该脚本只使用 Python 标准库，适用于这里的日间战场，跳过 HUD 周边；均匀/过暗的中央区域会返回非零状态。它不能判断画面好不好、动作是否真实或是否达到目标帧率。
+
+## 合并后的另一台托管 Mac · 两次失败
+
+[主线重建](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43346502411) 5/6 项 CI 成功；[九次原生启动原始日志](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43346502411/artifacts/14002039551) · [逐项状态与时间](raw/main-rebuild.json)。7/9 成功。首次默认 Metal 进入场景用时 48.47 秒，第 71.67 秒已推进第 100 步、发生 607 次命中；原 75 秒硬截止未给后续采样留够时间，没有最终 PNG。第二次默认 Metal 出战后的首次焦点切换使第零步按游戏规则暂停，重新激活后测试没有按继续。这里不能把后端初始化、焦点暂停和画面回读一概归为一次卡死，也不能删除这些失败。该重建的默认 Metal 24 秒移镜样本另行通过，97.40 FPS，P95/P99 22.62/32.19 ms。以上不替代已交付的不同运行，也不能证明真实 M5。
