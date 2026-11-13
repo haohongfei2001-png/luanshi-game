@@ -1,0 +1,71 @@
+name: Inspect the full draw of the registered garrison archer
+on:
+  push:
+    branches: ['codex/river-garment-master']
+    paths: ['docs/evidence/river-gate-v1-rc16/garrison/run-archer.yml', '.github/workflows/garrison-archer-review.yml']
+permissions:
+  contents: read
+jobs:
+  archer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/river-garment-master
+          fetch-depth: 0
+      - name: Run the identical live draw on original and newly fitted garrison
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/python3 -c 'import PIL' 2>/dev/null; then sudo apt-get update -qq && sudo apt-get -y -qq install python3-pil; fi
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc16/garrison/archer
+          mkdir -p "$proof"
+          for side in before after; do
+            rev=219e14b1662990735eeda60cc2bdeaf3b54a19a4
+            if test "$side" = before; then rev=05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09; fi
+            root="$RUNNER_TEMP/garrison-$side"
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            git show ae7b248050a84bbaf1deac8c18fe65b1c38ad784:tests/hm08_bow.gd > "$root/tests/hm08_bow.gd"
+            /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --path "$root" --import > "$RUNNER_TEMP/$side-import.log" 2>&1
+            if grep -E 'Parse Error|SCRIPT ERROR|SHADER ERROR|ERROR:' "$RUNNER_TEMP/$side-import.log"; then exit 1; fi
+            xvfb-run -a -s '-screen 0 1920x1200x24' /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path "$root" --resolution 1920x1200 --disable-vsync --audio-driver Dummy --fixed-fps 20 --script tests/hm08_bow.gd -- --field-size=512 | tee "$proof/$side/engine.log"
+            grep -q '^ARCHER_WINDOW true actor 94 draw 25 release 36' "$proof/$side/engine.log"
+            output="$root/artifacts/grips-bow"
+            cp "$output"/{fingers.png,fingers-side.png,draw-normal.png,loose.png,states.json} "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import base64,json
+          root=Path('docs/evidence/river-gate-v1-rc16/garrison/archer')
+          a,b=[json.loads((root/g/'states.json').read_bytes()) for g in ('before','after')]
+          assert a==b
+          for label in ('fingers','fingers-side','loose','draw-normal'):
+              row=next(r for r in b if r['frame']==label)
+              width=460 if label.startswith('fingers') else 340
+              size=(500,500) if label!='draw-normal' else (500,313)
+              pair=Image.new('RGB',(size[0]*2,size[1]))
+              for i,side in enumerate(('before','after')):
+                  im=Image.open(root/side/(label+'.png')).convert('RGB')
+                  if label!='draw-normal':
+                      hx,hy,fx,fy=row['post']
+                      mid=(hy+fy)*.5
+                      im=im.crop((round(hx-width/2),round(mid-width/2),round(hx+width/2),round(mid+width/2)))
+                  pair.paste(im.resize(size,Image.Resampling.LANCZOS),(i*size[0],0))
+              file=root/(label+'-pair.jpg');pair.save(file,quality=93,subsampling=0)
+              print('ARCHER_GARMENT_PAIR',label,base64.b64encode(file.read_bytes()).decode())
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate field evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Record garment and bow in a clear front and side draw"
+          git push origin HEAD:refs/heads/codex/river-garment-master
