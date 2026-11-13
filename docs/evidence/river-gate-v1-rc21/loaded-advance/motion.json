@@ -21,12 +21,12 @@
           "pelvis_side_m": 0.0736
         },
         "after": {
-          "pelvis_yaw_deg": 14.9865,
-          "shoulder_yaw_deg": 43.1252,
-          "shoulder_roll_deg": 13.7159,
-          "chest_hip_twist_deg": 58.097,
-          "trunk_lean_deg": 8.23,
-          "pelvis_side_m": 0.1323
+          "pelvis_yaw_deg": 10.1918,
+          "shoulder_yaw_deg": 33.0764,
+          "shoulder_roll_deg": 11.5306,
+          "chest_hip_twist_deg": 43.2392,
+          "trunk_lean_deg": 8.8366,
+          "pelvis_side_m": 0.1325
         }
       },
       "run": {
@@ -39,12 +39,12 @@
           "pelvis_side_m": 0.0376
         },
         "after": {
-          "pelvis_yaw_deg": 20.1924,
-          "shoulder_yaw_deg": 51.0384,
-          "shoulder_roll_deg": 40.9166,
-          "chest_hip_twist_deg": 69.8871,
-          "trunk_lean_deg": 12.6747,
-          "pelvis_side_m": 0.0771
+          "pelvis_yaw_deg": 15.9417,
+          "shoulder_yaw_deg": 35.5775,
+          "shoulder_roll_deg": 30.6913,
+          "chest_hip_twist_deg": 49.708,
+          "trunk_lean_deg": 13.2391,
+          "pelvis_side_m": 0.0763
         }
       },
       "halt": {
@@ -77,12 +77,12 @@
           "pelvis_side_m": 0.043
         },
         "after": {
-          "pelvis_yaw_deg": 14.9106,
-          "shoulder_yaw_deg": 34.6467,
-          "shoulder_roll_deg": 14.8194,
-          "chest_hip_twist_deg": 49.3284,
-          "trunk_lean_deg": 10.3147,
-          "pelvis_side_m": 0.1003
+          "pelvis_yaw_deg": 10.0962,
+          "shoulder_yaw_deg": 24.0285,
+          "shoulder_roll_deg": 12.5742,
+          "chest_hip_twist_deg": 34.1247,
+          "trunk_lean_deg": 11.2629,
+          "pelvis_side_m": 0.1004
         }
       },
       "run": {
@@ -95,12 +95,12 @@
           "pelvis_side_m": 0.0378
         },
         "after": {
-          "pelvis_yaw_deg": 20.4524,
-          "shoulder_yaw_deg": 36.6546,
-          "shoulder_roll_deg": 32.8039,
-          "chest_hip_twist_deg": 56.3383,
-          "trunk_lean_deg": 14.6366,
-          "pelvis_side_m": 0.0772
+          "pelvis_yaw_deg": 16.1906,
+          "shoulder_yaw_deg": 22.6426,
+          "shoulder_roll_deg": 23.3677,
+          "chest_hip_twist_deg": 37.469,
+          "trunk_lean_deg": 14.3527,
+          "pelvis_side_m": 0.0764
         }
       },
       "halt": {
@@ -133,12 +133,12 @@
           "pelvis_side_m": 0.0737
         },
         "after": {
-          "pelvis_yaw_deg": 15.0916,
-          "shoulder_yaw_deg": 38.2432,
-          "shoulder_roll_deg": 14.1331,
-          "chest_hip_twist_deg": 53.2901,
-          "trunk_lean_deg": 9.9723,
-          "pelvis_side_m": 0.1323
+          "pelvis_yaw_deg": 10.3033,
+          "shoulder_yaw_deg": 28.3012,
+          "shoulder_roll_deg": 12.1021,
+          "chest_hip_twist_deg": 38.5433,
+          "trunk_lean_deg": 10.4583,
+          "pelvis_side_m": 0.1325
         }
       },
       "run": {
@@ -151,12 +151,12 @@
           "pelvis_side_m": 0.0378
         },
         "after": {
-          "pelvis_yaw_deg": 19.8451,
-          "shoulder_yaw_deg": 48.7585,
-          "shoulder_roll_deg": 43.1116,
-          "chest_hip_twist_deg": 66.9481,
-          "trunk_lean_deg": 17.942,
-          "pelvis_side_m": 0.0771
+          "pelvis_yaw_deg": 15.6033,
+          "shoulder_yaw_deg": 38.2997,
+          "shoulder_roll_deg": 34.3521,
+          "chest_hip_twist_deg": 51.965,
+          "trunk_lean_deg": 18.6207,
+          "pelvis_side_m": 0.0763
         }
       },
       "halt": {
@@ -189,12 +189,12 @@
           "pelvis_side_m": 0.0736
         },
         "after": {
-          "pelvis_yaw_deg": 14.9865,
-          "shoulder_yaw_deg": 35.063,
-          "shoulder_roll_deg": 13.9075,
-          "chest_hip_twist_deg": 50.0348,
-          "trunk_lean_deg": 10.1795,
-          "pelvis_side_m": 0.1323
+          "pelvis_yaw_deg": 10.1918,
+          "shoulder_yaw_deg": 25.5732,
+          "shoulder_roll_deg": 12.1189,
+          "chest_hip_twist_deg": 35.7361,
+          "trunk_lean_deg": 11.3287,
+          "pelvis_side_m": 0.1325
         }
       },
       "run": {
@@ -207,12 +207,12 @@
           "pelvis_side_m": 0.0376
         },
         "after": {
-          "pelvis_yaw_deg": 20.1924,
-          "shoulder_yaw_deg": 35.3679,
-          "shoulder_roll_deg": 32.6449,
-          "chest_hip_twist_deg": 54.4456,
-          "trunk_lean_deg": 13.1777,
-          "pelvis_side_m": 0.0771
+          "pelvis_yaw_deg": 15.9417,
+          "shoulder_yaw_deg": 22.3355,
+          "shoulder_roll_deg": 23.5228,
+          "chest_hip_twist_deg": 36.6089,
+          "trunk_lean_deg": 13.7951,
+          "pelvis_side_m": 0.0763
         }
       },
       "halt": {
@@ -245,12 +245,12 @@
           "pelvis_side_m": 0.043
         },
         "after": {
-          "pelvis_yaw_deg": 14.8575,
-          "shoulder_yaw_deg": 27.7683,
-          "shoulder_roll_deg": 10.8016,
-          "chest_hip_twist_deg": 42.6257,
-          "trunk_lean_deg": 11.9451,
-          "pelvis_side_m": 0.1139
+          "pelvis_yaw_deg": 10.0491,
+          "shoulder_yaw_deg": 22.1065,
+          "shoulder_roll_deg": 11.2552,
+          "chest_hip_twist_deg": 32.1416,
+          "trunk_lean_deg": 13.0577,
+          "pelvis_side_m": 0.1138
         }
       },
       "run": {
@@ -263,12 +263,12 @@
           "pelvis_side_m": 0.0377
         },
         "after": {
-          "pelvis_yaw_deg": 20.7112,
-          "shoulder_yaw_deg": 31.4448,
-          "shoulder_roll_deg": 29.0527,
-          "chest_hip_twist_deg": 51.2784,
-          "trunk_lean_deg": 13.9819,
-          "pelvis_side_m": 0.0887
+          "pelvis_yaw_deg": 16.4423,
+          "shoulder_yaw_deg": 22.9377,
+          "shoulder_roll_deg": 21.5165,
+          "chest_hip_twist_deg": 37.414,
+          "trunk_lean_deg": 13.4254,
+          "pelvis_side_m": 0.088
         }
       },
       "halt": {
@@ -294,6 +294,6 @@
   "changed_travel_idle_lanes": 207,
   "matched_nontravel_lanes": 210,
   "boot_pairs_byte_equal": 834,
-  "worst_changed_wrist_gap_m": 0.00016333927621295033,
+  "worst_changed_wrist_gap_m": 0.0001657593916921573,
   "planted_stance_m": 0.0007653275824480561
 }
