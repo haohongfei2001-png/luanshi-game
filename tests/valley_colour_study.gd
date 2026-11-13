@@ -14,8 +14,11 @@ func _run() -> void:
 	field.hud.go.pressed.emit()
 	root.warp_mouse(Vector2(810,416))
 	await process_frame
+	_advance(8)
+	await _snap("saddle","horse",8.0,1.09)
 	_advance(65)
 	await _snap("troops","line",22.0,-.576)
+	await _snap("rider","cavalry",9.5,-.93)
 	await _snap("ford","bridge",29.0,-.54)
 	await _snap("grove","margin",23.0,-.64)
 	_advance(490)
@@ -27,3 +30,10 @@ func _run() -> void:
 	scene.queue_free()
 	await process_frame
 	quit(0 if success else 1)
+
+func _target(kind: String) -> Vector2:
+	if kind=="cavalry":
+		for u in field.battle.roster:
+			if u.mounted and not u.officer and field.battle.active(u):
+				return u.pos
+	return super._target(kind)

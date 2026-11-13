@@ -168,6 +168,25 @@ func _shore(b: Builder) -> void:
 			last=row
 	b.joint=0
 
+# Multi-course landings grow out of the existing blocked riverbank. The cap
+# returns end below the deck; the playable width and foot heights are unchanged.
+func _bridge_landing(b: Builder,center: Vector3,bank: float,side: float) -> void:
+	var courses: Array[Color]=[Color("686d68"),Color("7b8076"),Color("888c80")]
+	for row in 3:
+		var elevation:float=-.52+.209*row
+		var inset:=.055*row
+		for i in 3:
+			var u:=float(i)/2.
+			var start:=4.67+u*2.50+.13*(row%2)
+			var cheek:=side*(3.95+u*.58)
+			var p:=center+Vector3(bank*start,elevation,cheek)
+			var reach:=1.38-.16*u
+			b.joint=4
+			b.block(p,Vector3(reach,.212,.51-inset),courses[row].darkened(.032*((i+row)%3)))
+			if row==2:
+				var cap:=p+Vector3(bank*.03,.119,0)
+				b.block(cap,Vector3(reach+.073,.092,.60-inset),Color("9a9a86"))
+
 func _crossings(b: Builder) -> void:
 	b.joint=2
 	var water:=Color("577d78")
@@ -181,13 +200,16 @@ func _crossings(b: Builder) -> void:
 		for i in range(-13,14):
 			var length:=7.80+0.085*sin(i*13.0+z)
 			var seam:=1.02*sin(i*1.14+z*0.13)
-			var worn:=Color("756657").lerp(Color("988774"),(.53+.42*sin(i*1.41+z*.71))*.73)
+			var worn:=Color("716657").lerp(Color("897c68"),.42+.23*sin(i*.64+z*.32)+.12*cos(i*1.41+z))
 			var board_top:=.085+.006*sin(i*4.32+z)
 			for edge_sign:float in [-1.0,1.0]:
 				var end:=edge_sign*length*0.5
 				b.block(center+Vector3(i*0.482,board_top,(end+seam)*0.5),Vector3(0.47,0.09,absf(end-seam)-0.021),worn.lightened(0.025*edge_sign))
 		for side:float in [-1.0,1.0]:
 			var edge:=center+Vector3(0,0,side*4)
+			b.joint=3
+			for bank:float in [-1.,1.]:
+				_bridge_landing(b,center,bank,side)
 			b.joint=3
 			for start_x:float in [-5.97,-2.04,2.05]:
 				b.rod(edge+Vector3(start_x+0.13,0.35,0),edge+Vector3(start_x+1.99,0.80,0),0.056,0.055,WOOD,5)
@@ -208,6 +230,12 @@ func _crossings(b: Builder) -> void:
 				var post:=edge+Vector3(x,0,0)
 				b.rod(post-Vector3.UP*0.70,post+Vector3.UP*1.03,0.13,0.109,WOOD,7)
 				b.rod(post+Vector3.UP*0.99,post+Vector3.UP*1.12,0.14,0.104,WOOD.lightened(0.11),7)
+				if absf(x)>4.0:
+					b.joint=4
+					var kerb:=post+Vector3(signf(x)*.43,0.,side*.19)
+					b.loft([kerb-Vector3.UP*.09,kerb+Vector3.UP*.17,kerb+Vector3.UP*.27],
+						[Vector2(.30,.37),Vector2(.29,.35),Vector2(.23,.30)],8,Color("8c8d7e"))
+					b.joint=11
 				if absf(x)>4.0 and signf(x)==side:
 					# Rag strips on two corner posts show wind and mark the landing.
 					# Both tails stay outboard of the playable bridge deck.

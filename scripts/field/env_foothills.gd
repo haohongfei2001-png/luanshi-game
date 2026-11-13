@@ -100,12 +100,12 @@ func _crown_mass(patch: Patch,at: Vector3,ray: Vector3,reach: float,width: float
 	var rings: Array[Vector2]=[Vector2(.025,-.53),Vector2(.74,-.44),Vector2(1.,-.05),
 		Vector2(.85,.34),Vector2(.49,.69),Vector2(.022,.77)]
 	var slopes:=PackedFloat32Array([-1.85,-.68,.18,.80,1.95,5.0])
-	var sides:=16
+	var sides:=22
 	for j in rings.size():
 		var r:=rings[j]
 		for i in sides:
 			var a:=TAU*i/sides
-			var lobes:=1.+.102*sin(3.*a+seed)+.077*cos(5.*a-seed*.60)+.056*sin(7.*a+seed*1.36)
+			var lobes:=1.+.102*sin(3.*a+seed)+.089*cos(5.*a-seed*.60)+.084*sin(8.*a+seed*1.36)
 			var x:=cos(a)*r.x*lobes
 			var z:=sin(a)*r.x*lobes
 			var rise:=r.y+.076*r.x*sin(3.*a+seed)-.16*x+.13*z
@@ -120,7 +120,7 @@ func _crown_mass(patch: Patch,at: Vector3,ray: Vector3,reach: float,width: float
 			var next:=(i+1)%sides
 			var a:=j*sides+i
 			var b:=j*sides+next
-			for n:int in [a,a+sides,b,b,a+sides,b+sides]:
+			for n:int in [a,b,a+sides,b,b+sides,a+sides]:
 				patch.leaves.set_color(Color.WHITE)
 				patch.leaves.set_normal(normals[n])
 				patch.leaves.set_uv(colours[n])
@@ -171,9 +171,9 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 			var rib:=socket+ray*length*.59+Vector3.UP*length*(.23+.58*pitch)
 			patch.stone.rod(socket,rib,h*.0075,h*.0027,BARK,4)
 			var center:=socket+ray*length*.57+Vector3.UP*width*(.24+.16*pitch)
-			_crown_mass(patch,center,ray,length*.74,width*.86,width*.78,grade,index*2.17+.91*side+spin)
-			var edge:=center+ray*(.29*length)+Vector3.DOWN*(.10*width)
-			_bough(patch,edge,ray,length*.55,width*.68,-.19,grade,true,hand*.18)
+			_crown_mass(patch,center,ray,length*.64,width*.65,width*.65,grade,index*2.17+.91*side+spin)
+			var edge:=center+ray*(.27*length)+Vector3.DOWN*(.011*width)
+			_bough(patch,edge,ray,length*.64,width*.75,-.14,grade,true,hand*.18)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
@@ -507,6 +507,7 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
+	leaf_material.set_shader_parameter("elm_crown_paint",preload("res://assets/environment/elm-crown-paint.png"))
 	leaf_material.set_shader_parameter("elm_spray",preload("res://assets/environment/painted-elm.png"))
 	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))
 	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))

@@ -25,6 +25,7 @@ jobs:
           g=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
           mkdir -p proof
           node tools/env_cartway.mjs --check
+          node tools/art/bake_mounts.mjs --check
           ./tools/prepare-font.sh
           for side in before after; do
             rev=HEAD

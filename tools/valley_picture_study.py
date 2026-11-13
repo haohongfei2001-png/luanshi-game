@@ -7,7 +7,7 @@ from PIL import Image, ImageChops, ImageStat
 root = Path("proof")
 for record in ("input.json", "valley/frames.json"):
     before, after = [json.loads((root / side / record).read_text()) for side in ("before", "after")]
-    assert before == after and len(before) in (2, 4), (record, before, after)
+    assert before == after and len(before) in (2, 6), (record, before, after)
     for item in after:
         key = item["label"]
         subdir = Path(record).parent

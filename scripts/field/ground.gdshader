@@ -69,10 +69,14 @@ vec3 painted_ground(vec2 p, float shore) {
 	float dry_shape=smoothstep(.42,.78,soil);
 	// A single large wash describes open grass and sheltered banks. Painted
 	// lobes carry the hue changes and retain their shape when the view pulls back.
+	float stems=smoothstep(.45,.76,verge_marks.r)*.58+.42*smoothstep(.35,.70,verge_marks.b);
+	float pasture=smoothstep(.28,.61,grass);
 	float sun=clamp(.07+.55*grass_shape+.32*smoothstep(.19,.68,cover.b)-.30*margin.g+.09*margin.r,0.,1.);
 	vec3 turf=mix(turf_sheltered.rgb,turf_open.rgb,sun);
+	turf*=.91+.15*stems+.045*pasture;
 	turf=mix(turf,clay_dry.rgb,margin.r*(.08+.17*grass_shape));
 	vec3 clay=mix(clay_bed.rgb,clay_dry.rgb,.14+.76*dry_shape);
+	clay*=.95+.071*smoothstep(.24,.70,verge_marks.g);
 	float centre=1.-smoothstep(.57,.99,cover.a);
 	float fallow=smoothstep(.24,.58,cover.r)*(1.-smoothstep(.73,.9,cover.r))*(1.-centre);
 	float edge=cover.r-.21*fallow+(.53-grass_shape)*.20+(.50-verge_marks.r)*.09;
@@ -180,7 +184,9 @@ void fragment() {
 			float weather=texture(fieldbed,p*vec2(.28,.61)).r;
 			float worn=1.0-smoothstep(.12,.46,abs(cross_distance-1.20+.13*(weather-.5)));
 			float peg=(1.0-smoothstep(.10,.21,abs(board-.44)))*(1.0-smoothstep(.08,.14,abs(cross_distance-3.41)));
-			color*=.68+.50*grain+.12*worn*(.27+weather)-.19*peg;
+			// The wheel paths bleach the same boards; occasional repairs remain visible at the landings.
+			float traffic=.66+.34*smoothstep(.30,.72,texture(fieldbed,p*vec2(.10,.22)).g);
+			color*=.78+.31*grain+.19*worn*traffic*(.48+.52*weather)-.16*peg;
 			roughness=.91-.14*worn;
 		} else if(part>18.5 && part<19.5) {
 			// One projection per face; even short, walkable fragments show bedding
