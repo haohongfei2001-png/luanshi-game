@@ -1,0 +1,43 @@
+name: Read native startup stack from the exported candidate
+on:
+  push:
+    branches: ['codex/river-native-stack-rc16']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  stack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-verification-d0d665d6c61a7676ff8f4785c3f5be4bccb74b08
+          github-token: ${{ github.token }}
+          run-id: 43488066137
+          path: /tmp/mac-observation
+      - name: Inspect the package process sampling and keep the failure with its eight siblings
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re,shutil
+          root=Path("/tmp/mac-observation")
+          sample=next(root.rglob("default-metal-1-before-scene.sample.txt"))
+          data=sample.read_text()
+          out=Path("startup")
+          out.mkdir()
+          for name in ("default-metal-1-before-scene.sample.txt","default-metal-1.log","default-metal-1-focus.log","renderer-comparison.json","shipping-metal-frames.json"):
+              shutil.copyfile(next(root.rglob(name)),out/name)
+          rows=data.splitlines()
+          print("STATUS",json.dumps({"bytes":len(data),"lines":len(rows),"source":str(sample.name)}))
+          first=next(i for i,r in enumerate(rows) if "Call graph:" in r)
+          for line in rows[first:first+125]:
+              print("STACK_ROW",line[:740])
+          interesting=[r for r in rows if any(k in r.lower() for k in ("pipeline","shader","compiler","raster","framebuffer","bufferdata","metalperform","psocache","windowserver")) and not r.startswith("       0x")]
+          for row in interesting[:65]: print("ALSO",row[:540])
+          print("END_STACK")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rc16-first-metal-failure-and-native-window
+          path: startup
