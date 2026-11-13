@@ -320,6 +320,13 @@ func _crossings(b: Builder) -> void:
 
 	b.joint=0
 
+func _upward_quad(b: Builder,a: Vector3,c: Vector3,d: Vector3,end: Vector3,paint: Color) -> void:
+	# Orient each outward quad towards the sky, including cut and tapered panels.
+	if (c-a).cross(end-a).y<0.0:
+		b.quad(a,end,d,c,paint)
+	else:
+		b.quad(a,c,d,end,paint)
+
 func _between(target: Vector3,eye: Vector3,roof: Dictionary) -> bool:
 	var center: Vector3=roof.center
 	var ray:=eye-target
