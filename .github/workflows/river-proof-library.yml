@@ -1,0 +1,94 @@
+name: Archive genuine river-gate captures and the exported battle movie
+on:
+  push:
+    branches: ['codex/river-rc14-library-worker']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3c8b455389411c3550a872a09c0b02a48615caca
+          fetch-depth: 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: river-art-584870655703f3b7f7cfd927500880ce4d966818
+          path: /tmp/river-art
+          run-id: 43466044060
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-verification-584870655703f3b7f7cfd927500880ce4d966818
+          path: /tmp/river-mac
+          run-id: 43466044060
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: exported-game-window-8a911eb
+          path: /tmp/river-film
+          run-id: 43469213308
+          github-token: ${{ github.token }}
+      - name: Copy the original captures, match the app hash and publish only this evidence
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, shutil, struct
+          from pathlib import Path
+          d=Path("docs/evidence/river-gate-v1-rc14")
+          ri=Path("/tmp/river-art")
+          root=next(ri.rglob("before-22m")).parent
+          mac=Path("/tmp/river-mac")
+          mov=Path("/tmp/river-film")
+          rec=json.loads(next(mov.rglob("export-recording.json")).read_bytes())
+          include={
+              "normal-camera-before-after/before.png":root/"before-22m/personal-contact.png",
+              "normal-camera-before-after/after.png":root/"normal-22m/personal-contact.png",
+              "normal-camera-before-after/windup.png":root/"normal-22m/personal-windup.png",
+              "close.png":root/"after/hero.png","mid.png":root/"after/formation.png",
+              "wide.png":root/"after/ranks.png",
+              "metal-window.png":next(mac.rglob("shipping-metal.png")),
+              "normal-review.jpg":root/"normal-22m/normal-review.jpg",
+              "normal-native.jpg":root/"normal-22m/normal-full.jpg",
+              "normal-pair.jpg":root/"normal-22m/normal-pair.jpg",
+              "combat-normal-speed.mp4":next(mov.rglob("combat-normal-speed.mp4")),
+              "export-sequence.jpg":next(mov.rglob("export-sequence.jpg")),
+              "export-recording.json":next(mov.rglob("export-recording.json")),
+          }
+          assert rec["export"]=="584870655703f3b7f7cfd927500880ce4d966818" and rec["package_sha256"]=="61c3d327428328f95debab7660f76f106b17241063d768f21723b18876d7d142"
+          native=json.loads(next(mac.rglob("renderer-comparison.json")).read_bytes())
+          assert native["archive_sha256"]=="14ca7fdbdabd4a36e581a0fab73b9e04f2f73c3da6a0023ca374b5ea8f4cc6c8" and native["shipping_window"]["validated"]
+          timings=json.loads(next(mac.rglob("shipping-metal-frames.json")).read_bytes())["raw_wall_ms"]
+          assert len(timings)==native["shipping_window"]["frames"]
+          assert abs(max(timings)-native["shipping_window"]["max_ms"])<.001
+          (d/"native-frame-times.json").write_text(json.dumps(timings,separators=(",",":"))+"\n")
+          before,after=[json.loads((root/k/"input.json").read_text()) for k in ("before-22m","normal-22m")]
+          assert before==after and len(after)==2
+          (d/"normal-camera-before-after").mkdir(exist_ok=True)
+          (d/"normal-camera-before-after/input.json").write_text(json.dumps(after,ensure_ascii=False,indent=2)+"\n")
+          sums={}
+          for name,path in include.items():
+              raw=path.read_bytes()
+              if name.endswith(".png"):
+                  assert raw[:8]==b"\x89PNG\r\n\x1a\n"
+                  w,h=struct.unpack(">II",raw[16:24])
+                  if name!="metal-window.png": assert (w,h)==(1920,1200),(name,w,h)
+              dest=d/name
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(path,dest)
+              sums[name]={"bytes":len(raw),"sha256":hashlib.sha256(raw).hexdigest()}
+          assert sums["combat-normal-speed.mp4"]["sha256"]==rec["movie_sha256"]
+          (d/"capture-files.json").write_text(json.dumps(sums,indent=2)+"\n")
+          print("ARCHIVED_ORIGINALS",json.dumps(sums))
+          import base64
+          print("EXPORT_CONTACT_SHEET",base64.b64encode((d/"export-sequence.jpg").read_bytes()).decode())
+          PY
+          git add -- docs/evidence/river-gate-v1-rc14/
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Archive native camera PNGs, Metal timings and the played export"
+          git push origin HEAD:refs/heads/codex/river-rc14-original-windows
