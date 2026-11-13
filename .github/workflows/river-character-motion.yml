@@ -24,6 +24,17 @@ jobs:
                       print("AUTHOR_MEMBER",i.filename, i.file_size)
                       if i.filename.lower().endswith(".gltf"):
                           g=json.loads(archive.read(i)); print("AUTHOR_RIG",i.filename,[n.get("name") for n in g.get("nodes",[])][:70],[a.get("name") for a in g.get("animations",[])])
+              import struct
+              for member in archive.infolist():
+                  if member.filename.lower().endswith(".glb"):
+                      raw=archive.read(member)
+                      size=struct.unpack_from("<I",raw,12)[0]
+                      model=json.loads(raw[20:20+size])
+                      print("CLIP_LIBRARY",json.dumps([a.get('name') for a in model.get('animations',[])]))
+                      print("ANATOMICAL_BONES",json.dumps([n.get('name') for n in model['nodes']]))
+                      for a in model['animations']:
+                          if any(k in a['name'].lower() for k in ('walk','run','jog')):
+                              print('MASTER_CLIP',a['name'],len(a['channels']),json.dumps(sorted(set(ch['target']['path'] for ch in a['channels']))))
               for i in archive.infolist():
                   if i.filename.lower().endswith(".zip"):
                       import io
