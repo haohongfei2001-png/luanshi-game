@@ -117,12 +117,23 @@ def fit_garment(path, role, slot):
         arm_binds["forearm_"+label]=(old["forearm_"+label],old["hand_"+label],elbow,wrist)
     s=Surface()
     source_indices={}
+    if role=="Guard":
+        # Keep the made breast, divided waist and shoulder seam recognisable
+        # at 22 m. The long shield coat has more padding below its lames than
+        # the light thrusting soldier's; broaden the body, not the skeleton.
+        chest_scale,hem_scale=1.045,1.085
+    elif role=="Archer":
+        chest_scale,hem_scale=.990,1.025
+    else:
+        chest_scale,hem_scale=1.012,1.025
     def fitted(i):
         p=change_axis(points[i])
         central=np.array([p[0]*(.49 if role=="Guard" else .466),
                           np.interp(p[1],[1.28,2.194,2.81,3.4,3.75,3.90],
                                     [.492,.942,1.205,1.405,1.490,1.521]),
                           p[2]*.456-.014])
+        t=float(np.clip((central[1]-.83)/.30,0,1))
+        central[[0,2]]*=hem_scale*(1.-t)+chest_scale*t
         pos=np.zeros(3)
         bones={}
         for name,w in weights[i]:
@@ -144,6 +155,10 @@ def fit_garment(path, role, slot):
         # Upper quarter of the artist's map holds exposed hands and feet as
         # well as sleeves. Preserve the sleeve down below its elbow joint.
         if v<.249 and (u<.5 or u>.738):
+            continue
+        # The source maps a pale breech panel below the hem to a separate UV
+        # island (upper-left). Keep the project's actual fitted trouser legs.
+        if max(st[:,0])<=.501 and max(st[:,1])<=.251:
             continue
         # Remove neck skin. The existing rig supplies the head, throat, arms,
         # breeches and boots. Do not render the coarse source hands over it.
@@ -195,6 +210,13 @@ def cloth(source,role):
         # the collar / sleeves. The quiver stays a dark readable diagonal.
         sleeve=(tex_y<64)&(pixel>=128)&(pixel<218)
         dye*=np.where(sleeve,1.0,.68)
+    # The lower hem of the long coats has a narrow underfold. It is coarse
+    # unbleached wool in the source sheet; a pure undyed stripe cut across an
+    # entire formation at 22 m. Carry a deeper piece of the same issued dye
+    # around the bound hem as in the facing at the neck and cuff.
+    hem=(tex_y>=210)&(np.mean(rgb,axis=2)>86)
+    brown=(rgb[:,:,0]>=rgb[:,:,1])&(rgb[:,:,1]>=rgb[:,:,2])
+    dye=np.where(hem & brown,np.maximum(dye,.91),dye)
     luminance=.25*rgb[:,:,0]+.56*rgb[:,:,1]+.19*rgb[:,:,2]
     # Translate photographic black iron into three broad, blue-grey values;
     # keep the lighter edge of each lacing row and warm leather distinct.

@@ -26,7 +26,8 @@ func _run() -> void:
 		for u in b.roster:
 			if u.kit!=kit or u.officer or u.hero or u.mounted or not b.active(u): continue
 			if u.team != (1 if kit==7 else 0): continue
-			var score:float=-u.pos.distance_to(Vector2(0,-12))*.035
+			if kit==5 and u.pos.x< -27.0: continue
+			var score:float=-u.pos.distance_to(Vector2(2,13) if kit==5 else Vector2(1,-14))*.33
 			if u.state in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD]: score+=22
 			if score>best_score: best_score=score; subject=u.id
 		if subject<0: quit(2);return
@@ -39,6 +40,8 @@ func _run() -> void:
 		row["subject_id"]=int(subject)
 		row["subject_pixel"]=[screen.x,screen.y]
 		row["state"]=int(foe.state)
+		row["kit"]=int(foe.kit)
+		row["subject_position"]=[foe.pos.x,foe.pos.y]
 	await _snap("line","line",13.0,-.576)
 	await _snap("wide","line",49.0,-.576)
 	var f:=FileAccess.open(directory+"/subjects.json",FileAccess.WRITE)

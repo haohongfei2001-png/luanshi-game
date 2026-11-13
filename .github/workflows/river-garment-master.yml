@@ -37,7 +37,9 @@ jobs:
           PY
           cp "$dir/NOTICE.txt" proof/NOTICE.txt
           git add -- "$dir/field_issues.glb" "$dir/field_colours.png" "$dir/field_colours.png.import" assets/river_gate/figures/garrison_bodies.glb
-          git -c user.name='River Gate garment build' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Bake the attributed clothing and independent river-company body meshes"
+          if ! git diff --cached --quiet; then
+            git -c user.name='River Gate garment build' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Bake the fitted field garments after their in-game review"
+          fi
       - name: Exercise both revisions with the same full army, controls and cameras
         run: |
           set -euo pipefail
@@ -87,6 +89,7 @@ jobs:
                   pair.paste(im.resize((500,pair.height),Image.Resampling.LANCZOS),(index*500,0))
               path=root/(key+"-pair.jpg");pair.save(path,quality=91,subsampling=0)
               print("GARRISON_IMAGE",key,base64.b64encode(path.read_bytes()).decode(),flush=True)
+              if key=="bow": print("GARRISON_SUBJECTS",(root/"after/subjects.json").read_text().replace("\\n"," "),flush=True)
           PY
       - name: Preserve these binaries only on the tested work branch
         run: |
