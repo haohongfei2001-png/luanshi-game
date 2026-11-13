@@ -133,98 +133,98 @@
     {
       "buffer": 0,
       "byteOffset": 166356,
-      "byteLength": 4212,
+      "byteLength": 6300,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 170568,
-      "byteLength": 4212,
+      "byteOffset": 172656,
+      "byteLength": 6300,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 174780,
-      "byteLength": 1404,
+      "byteOffset": 178956,
+      "byteLength": 2100,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 176184,
-      "byteLength": 1404,
+      "byteOffset": 181056,
+      "byteLength": 2100,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 177588,
-      "byteLength": 3540,
+      "byteOffset": 183156,
+      "byteLength": 5628,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteOffset": 181128,
+      "byteOffset": 188784,
       "byteLength": 62964,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 244092,
+      "byteOffset": 251748,
       "byteLength": 62964,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 307056,
+      "byteOffset": 314712,
       "byteLength": 20988,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 328044,
+      "byteOffset": 335700,
       "byteLength": 20988,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 349032,
+      "byteOffset": 356688,
       "byteLength": 58872,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteOffset": 407904,
-      "byteLength": 13092,
+      "byteOffset": 415560,
+      "byteLength": 15180,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 420996,
-      "byteLength": 13092,
+      "byteOffset": 430740,
+      "byteLength": 15180,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 434088,
-      "byteLength": 4364,
+      "byteOffset": 445920,
+      "byteLength": 5060,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 438452,
-      "byteLength": 4364,
+      "byteOffset": 450980,
+      "byteLength": 5060,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 442816,
-      "byteLength": 10884,
+      "byteOffset": 456040,
+      "byteLength": 12972,
       "target": 34963
     }
   ],
   "buffers": [
     {
       "uri": "mounts.bin",
-      "byteLength": 453700
+      "byteLength": 469012
     }
   ],
   "accessors": [
@@ -273,7 +273,7 @@
     {
       "bufferView": 5,
       "componentType": 5126,
-      "count": 351,
+      "count": 525,
       "type": "VEC3",
       "min": [
         -0.3400000035762787,
@@ -289,27 +289,27 @@
     {
       "bufferView": 6,
       "componentType": 5126,
-      "count": 351,
+      "count": 525,
       "type": "VEC3"
     },
     {
       "bufferView": 7,
       "componentType": 5123,
-      "count": 351,
+      "count": 525,
       "type": "VEC2",
       "normalized": true
     },
     {
       "bufferView": 8,
       "componentType": 5123,
-      "count": 351,
+      "count": 525,
       "type": "VEC2",
       "normalized": true
     },
     {
       "bufferView": 9,
       "componentType": 5123,
-      "count": 1770,
+      "count": 2814,
       "type": "SCALAR"
     },
     {
@@ -357,7 +357,7 @@
     {
       "bufferView": 15,
       "componentType": 5126,
-      "count": 1091,
+      "count": 1265,
       "type": "VEC3",
       "min": [
         -0.9440000057220459,
@@ -373,27 +373,27 @@
     {
       "bufferView": 16,
       "componentType": 5126,
-      "count": 1091,
+      "count": 1265,
       "type": "VEC3"
     },
     {
       "bufferView": 17,
       "componentType": 5123,
-      "count": 1091,
+      "count": 1265,
       "type": "VEC2",
       "normalized": true
     },
     {
       "bufferView": 18,
       "componentType": 5123,
-      "count": 1091,
+      "count": 1265,
       "type": "VEC2",
       "normalized": true
     },
     {
       "bufferView": 19,
       "componentType": 5123,
-      "count": 5442,
+      "count": 6486,
       "type": "SCALAR"
     }
   ],

@@ -7,8 +7,8 @@ const CompanyArt := preload("res://scripts/field/company_art.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
-const FRIEND := Color("3c5063")
-const FOE := Color("733e36")
+const FRIEND := Color("34496a")
+const FOE := Color("783f34")
 const CLOTH_COLOR:=Color("dbcba4")
 const PLAYER_CLOTH:=Color("364967")
 const GOLD := Color("b69c66")
@@ -84,6 +84,7 @@ func configure(model: Battle) -> void:
 		var kit := key % 10
 		var col := PLAYER_CLOTH if key >= 20 else (FRIEND if key < 10 else FOE)
 		var mat := CompanyArt.material(col,kit,key>=20)
+		mat.set_shader_parameter("field_carries",key<20 and kit in [3,4,7])
 		var detailed: Mesh = CompanyArt.fighter(kit, "Player", true) if key>=20 else near_mesh[kit]
 		groups[key] = _batch(detailed,mat,counts[key])
 		if key<20:

@@ -70,7 +70,7 @@ const CROWNS := [
 # A crown is assembled from bowed leaf-bearing limbs. The open spaces between
 # forks expose the structure from rotating play cameras; the foliage is not a
 # cutout facing the player. Each limb has a pitched spine and folded sides.
-func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float) -> void:
+func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float,canopy: bool=false) -> void:
 	var across:=Vector3(-ray.z,0.0,ray.x)
 	var verts:=PackedVector3Array()
 	var normals:=PackedVector3Array()
@@ -91,7 +91,7 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 				patch.leaves.set_color(Color.WHITE)
 				patch.leaves.set_normal(normals[k])
 				patch.leaves.set_uv(uv[k])
-				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,6.1+grade*.70))
+				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,(8.1 if canopy else 6.1)+grade*.70))
 				patch.leaves.add_vertex(verts[k])
 	patch.sprays+=1
 
@@ -111,25 +111,29 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 		var knot:Vector4=CROWNS[kind][index]
 		var center:=foot+turn*Vector3(knot.x,knot.y,knot.z)*h+bend*0.37
 		var elbow:=fork.lerp(center,0.63)+turn*Vector3(.028,.005,-.031)*h
-		var radius:=knot.w*h*rng.randf_range(.91,1.07)
+		var radius:=knot.w*h*rng.randf_range(.95,1.12)
 		var base:=fork.lerp(foot,0.13 if index<2 else 0.0)
 		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,5)
 		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),4)
 		var heading:=spin+index*2.29
 		var radial:=Vector3(cos(heading),0.0,sin(heading))
 		var joint:=center-radial*radius*.43
-		var sprays:=5 if kind==1 else 4
+		# Hanging lower twigs reveal the elbow. One sheltered bough crosses
+		# the fork; the higher fork leans into a separate, sunlit crown tier.
+		var sprays:=4 if kind==1 else 3
 		for leaf in sprays:
-			var a:=heading+(leaf-1.9)*1.19+rng.randf_range(-.14,.19)
+			var a:=heading+(leaf-1.25)*1.46+rng.randf_range(-.18,.15)
 			var ray:=Vector3(cos(a),0.0,sin(a))
-			var outer:=(leaf%2)==0
-			var root:=joint+radial*radius*(.25 if outer else -.12)+Vector3.UP*radius*(.16 if outer else -.04)
-			var reach:=radius*rng.randf_range(1.14,1.52)
-			var tip:=root+ray*reach*.64+Vector3.UP*radius*(.27 if outer else .14)
-			patch.stone.rod(elbow.lerp(root,.56),tip,h*.0056,h*.0026,BARK,4)
-			var width:=radius*rng.randf_range(.64,.86)
-			var tilt:=rng.randf_range(-.32,.03) if outer else rng.randf_range(.12,.50)
-			_bough(patch,root-ray*radius*.17,ray,reach,width,tilt,clampf(.27+.079*index+(.23 if not outer else -.08)+rng.randf_range(-.09,.09),.12,.97))
+			var hanging:bool=leaf%2==0
+			var root:=joint+radial*radius*(.14 if hanging else -.19)
+			root+=Vector3.UP*radius*(.035 if hanging else .23)
+			var reach:=radius*rng.randf_range(1.33,1.76)
+			var width:=radius*rng.randf_range(.64,.83)
+			var tilt:=rng.randf_range(-.29,-.04) if hanging else rng.randf_range(.04,.33)
+			var mid:=root+ray*reach*.67+Vector3.UP*reach*(.15+.67*tilt)
+			patch.stone.rod(elbow.lerp(root,.40),mid,h*.0064,h*.0022,BARK,4)
+			var grade:=clampf(.16+.084*index+(.23 if not hanging else 0.0)+rng.randf_range(-.09,.08),.14,.92)
+			_bough(patch,root,ray,reach,width,tilt,grade,true)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
@@ -294,7 +298,11 @@ func _stands(plan: Dictionary) -> void:
 		var kind:=int(place[3])
 		var height:=float(place[2])
 		# Low, multi-stem growth alternates with full standards in these stands.
-		if kind!=0 and height<5.20 and int(place[4])==1:
+		if kind==1 and p.distance_squared_to(Vector2(-5.46,-10.70))<.20:
+			# The established roadside elm and its young neighbour mark the
+			# bank of the grazing ground. Keep the verge towards the fight open.
+			height=5.68
+		elif kind!=0 and height<5.20 and int(place[4])==1:
 			height*=.70 if kind==1 else .81
 		_plant(_cell(p),p,height,kind,int(place[4]),float(place[5]))
 	for group:Array in plan.groves:
@@ -343,6 +351,104 @@ func _stands(plan: Dictionary) -> void:
 		var q:=p+Vector2(-.49*side,rng.randf_range(.65,1.62))
 		_split_stone(_cell(q),q,.65,.83,rng.randf_range(.49,.80),rng.randf_range(.82,1.98),true)
 
+# Banks at the edges of the old fields collect earth and slate where carts
+# cut through the sod. The three central remnants top out below ankle height;
+# the stone buttress at the gate lies inside the existing blocked wall strip.
+func _field_banks() -> void:
+	# Local coordinates run along the bank, then across it, in metres.
+	var shoulders: Array[Vector4]=[Vector4(-7.4,-8.45,.14,1.05),Vector4(8.9,-7.55,-.32,.76),
+		Vector4(12.7,-32.9,-.17,1.08),Vector4(-21.3,12.5,-.27,.92),
+		Vector4(25.6,8.8,-.40,.91),Vector4(38.0,-5.1,.17,.86)]
+	var pieces: Array[Vector4]=[Vector4(-1.39,.09,.96,.74),Vector4(.38,-.12,.73,.57),Vector4(1.30,.53,.44,.41)]
+	for shoulder in shoulders:
+		var origin:=Vector2(shoulder.x,shoulder.y)
+		var heading:=Vector2(cos(shoulder.z),sin(shoulder.z))
+		var lateral:=Vector2(-heading.y,heading.x)
+		var bed:Builder=_cell(origin).stone
+		bed.joint=20
+		var previous:=PackedVector3Array()
+		for i in 10:
+			var u:=-3.50+i*.78
+			var swell:=sin(float(i)*PI/9.0)
+			var track:=origin+heading*u*shoulder.w+lateral*(.16*sin(i*.90)+.12*cos(i*.67))
+			var outer:=ground_point(track-lateral*(.15+.38*swell))
+			var brink:=ground_point(track)+Vector3.UP*(.024+.109*swell)
+			var crown:=ground_point(track+lateral*(.09+.72*swell))+Vector3.UP*.012
+			var row:=PackedVector3Array([outer+Vector3.DOWN*.014,brink,crown])
+			if not previous.is_empty():
+				var face:=Color("8c8169").lerp(Color("958a72"),.5+.45*sin(i*1.74))
+				var top:=Color("969571").lerp(Color("8c906d"),.5+.4*sin(i*.78+.6))
+				bed.quad(previous[0],previous[1],row[1],row[0],face)
+				bed.quad(previous[1],previous[2],row[2],row[1],top)
+			previous=row
+		for i in pieces.size():
+			var stone:=pieces[i]
+			var at:=origin+(heading*stone.x+lateral*stone.y)*shoulder.w
+			var rise:=(.105+.037*(i%2))*shoulder.w
+			_shelf(_cell(at),at,stone.z*shoulder.w,stone.w*shoulder.w,rise,shoulder.z+.22*sin(i*2.7),true)
+		for q:Vector2 in [Vector2(-1.48,.77),Vector2(.69,.56),Vector2(2.11,.62)]:
+			var root:Vector2=origin+(heading*q.x+lateral*q.y)*shoulder.w
+			_tuft(_cell(root),root,.36*shoulder.w)
+	# The lower gate is supported by a battered stone toe under its inner
+	# parapet. Keep the entire top inside the non-traversable west curtain.
+	for sign_z:float in [-1.0,1.0]:
+		for i in 4:
+			var heel:=Vector2(Ground.WALL_X-.85,sign_z*(8.30+i*2.72))
+			_split_stone(_cell(heel),heel,1.20,.66,.86-.11*float(i%3),PI*.5+.17*sin(i*1.29),true)
+
+# A river bed fractures along bedding shelves. Each roughly squared platform
+# has a submerged dark toe, two jagged horizontal strata and a gently tilted cap.
+# y is measured from the actual water plane instead of following the steep bank.
+func _river_bed(tile: Builder,p: Vector2,length: float,width: float,rise: float,yaw: float,shift: float) -> void:
+	var along:=Vector2(cos(yaw),sin(yaw))
+	var across:=Vector2(-along.y,along.x)
+	var corners: Array[Vector2]=[Vector2(-.94,-.29),Vector2(-.76,-.57),Vector2(-.22,-.59),
+		Vector2(.12,-.46),Vector2(.80,-.49),Vector2(.96,-.16),Vector2(.82,.39),
+		Vector2(.40,.49),Vector2(.26,.38),Vector2(-.32,.52),Vector2(-.82,.40)]
+	var rows: Array[PackedVector3Array]=[]
+	var spreads: Array[float]=[.98,1.04,.92,.94,.75]
+	var levels: Array[float]=[-.25,.21,.29,.70,.94]
+	for ring in levels.size():
+		var row:=PackedVector3Array()
+		for i in corners.size():
+			var at:=corners[i]
+			var v:=along*length*(at.x+.037*sin(i*2.96+shift))+across*width*(at.y+.034*cos(i*2.60+shift))
+			var q:=p+v*spreads[ring]+across*rise*(.05*ring-.11)
+			var tilt:=(at.x*.085-at.y*.114+.035*sin(i*1.23+shift))*rise
+			row.append(Vector3(q.x,-.34+rise*levels[ring]+tilt,q.y))
+		rows.append(row)
+	var cap:PackedVector3Array=rows[4]
+	var top:=Vector3(p.x,-.34+rise*.99,p.y)
+	var swatches: Array[Color]=[Color("555950"),Color("77786a"),Color("696c60"),Color("8b8a76")]
+	tile.joint=21
+	for i in corners.size():
+		var j:=(i+1)%corners.size()
+		for level in 4:
+			var tone:=swatches[level].lightened(.022*((i+level)%3))
+			tile.quad(rows[level][j],rows[level][i],rows[level+1][i],rows[level+1][j],tone)
+		tile.tri(cap[j],cap[i],top,Color("92917e").lightened(.017*float(i%3)))
+
+func _bridge_ledges() -> void:
+	# Both heels stay clear of the deck apron. The larger stones live below
+	# the navigable turf, in the same water the movement model already blocks.
+	var beds: Array[Vector4]=[Vector4(1,-10.4,.81,.84),Vector4(-1,-15.2,.71,.95),Vector4(-1,-5.75,.61,.76)]
+	for bank in beds:
+		var side:=bank.x
+		var center:=Vector2(Ground.RIVER_X+side*4.35,bank.y)
+		var yaw:=PI*.5+side*.18
+		var scale_factor:=bank.w
+		var parts: Array[Vector4]=[Vector4(-1.43,.23,1.30,.96),Vector4(.38,.0,1.53,1.17),
+			Vector4(1.52,-.37,.92,.87),Vector4(-.44,-1.11,.90,.86),Vector4(.63,-1.58,.60,.69)]
+		for i in parts.size():
+			var part:=parts[i]
+			var position:=center+Vector2(side*part.y,part.x)*scale_factor
+			var h:=bank.z*(.77+.13*float(i%3)) if i<3 else bank.z*(.60 if i==3 else .37)
+			_river_bed(_cell(position).stone,position,part.z*scale_factor,part.w*scale_factor,h,
+				yaw+.12*sin(float(i)*1.62+bank.y),float(i)+bank.y)
+		for i in 3:
+			var turf:=center+Vector2(side*(1.62+.25*i),-1.23+i*1.13)*scale_factor
+			_field_margin(_cell(turf),turf,.53+.081*i,bank.y+i*2.1)
+
 func _pavers(plan: Dictionary) -> void:
 	for bed:Array in plan.masonry:
 		var p:=Vector2(float(bed[0]),float(bed[1]))
@@ -361,6 +467,7 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
+	leaf_material.set_shader_parameter("elm_spray",preload("res://assets/environment/elm-spray.svg"))
 	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))
 	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
@@ -370,6 +477,8 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	_stands(plan)
 	_bank_sedge()
 	_pavers(plan)
+	_field_banks()
+	_bridge_ledges()
 	for patch:Patch in cells.values():
 		if patch.sprays>0:
 			patch.leaves.index()

@@ -1,0 +1,246 @@
+{
+  "game_base": "2c92c7eace980d76d538a646ca64ce9817d191b4",
+  "source_tested": "3d3da3144f187a1394c669da99fbb15705158a64",
+  "bank_sha256": "83c4fcda863bf0912cd418e47feddff28d54dbfd68454fa056732058ae4cc5e2",
+  "bank_git_id": "1872b40efc2e832d3e0a4c36f184020829e975ba",
+  "animation_check": {
+    "alternate_strips": 102,
+    "max_baked_wrist_m": 0.0001672809649303058,
+    "impact_error_m": 0,
+    "planted_original_m": 0.0007653275824480561,
+    "distance_from_regular_carry_m": {
+      "(3, 1)": 0.918,
+      "(3, 2)": 0.922,
+      "(4, 1)": 0.845,
+      "(4, 2)": 0.739,
+      "(7, 1)": 0.158,
+      "(7, 2)": 0.054
+    }
+  },
+  "comparison": {
+    "frames.json": [
+      {
+        "center": [
+          2.47159600257874,
+          -31.0614109039307
+        ],
+        "close": 41,
+        "contact": [
+          179,
+          88
+        ],
+        "fighting": 31,
+        "gate_hp": 260,
+        "hero_kit": 3,
+        "hero_slot": 0,
+        "hero_state": 0,
+        "in_frame_count": 72,
+        "in_frame_ids_sha256": "bcfdddfe3b5a8cfc37cf9bea8606132baf06b485dc419841d1613fa9dc150c9c",
+        "internal_scale": 1,
+        "kind": "line",
+        "label": "close",
+        "losses": [
+          13,
+          42
+        ],
+        "msaa_3d": 2,
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ],
+        "ranks": 0,
+        "screen_space_aa": 0,
+        "seed": 61112,
+        "shadows": true,
+        "tick": 65,
+        "visible": 153,
+        "window": [
+          1920,
+          1200
+        ],
+        "yaw": -0.576,
+        "zoom": 12.5
+      },
+      {
+        "center": [
+          2.47159600257874,
+          -31.0614109039307
+        ],
+        "close": 20,
+        "contact": [
+          179,
+          88
+        ],
+        "fighting": 55,
+        "gate_hp": 260,
+        "hero_kit": 3,
+        "hero_slot": 0,
+        "hero_state": 0,
+        "in_frame_count": 148,
+        "in_frame_ids_sha256": "cc490481703000248c249c741ceb29743f4816d5f9c9a7300d4bd3b047d2ec58",
+        "internal_scale": 1,
+        "kind": "line",
+        "label": "field",
+        "losses": [
+          13,
+          42
+        ],
+        "msaa_3d": 2,
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ],
+        "ranks": 0,
+        "screen_space_aa": 0,
+        "seed": 61112,
+        "shadows": true,
+        "tick": 65,
+        "visible": 242,
+        "window": [
+          1920,
+          1200
+        ],
+        "yaw": -0.576,
+        "zoom": 22
+      },
+      {
+        "center": [
+          2.47159600257874,
+          -31.0614109039307
+        ],
+        "close": 0,
+        "contact": [
+          179,
+          88
+        ],
+        "fighting": 97,
+        "gate_hp": 260,
+        "hero_kit": 3,
+        "hero_slot": 0,
+        "hero_state": 0,
+        "in_frame_count": 362,
+        "in_frame_ids_sha256": "52660548360f6f44af6e4ca582663534bfe95eccb5d071c500cedb0f5f134e84",
+        "internal_scale": 1,
+        "kind": "line",
+        "label": "ranks",
+        "losses": [
+          13,
+          42
+        ],
+        "msaa_3d": 2,
+        "officers": [
+          16,
+          16
+        ],
+        "ordinary": [
+          512,
+          512
+        ],
+        "ranks": 469,
+        "screen_space_aa": 0,
+        "seed": 61112,
+        "shadows": true,
+        "tick": 65,
+        "visible": 456,
+        "window": [
+          1920,
+          1200
+        ],
+        "yaw": -0.576,
+        "zoom": 42
+      }
+    ],
+    "normal/input.json": [
+      {
+        "distance": 2.41827321052551,
+        "drawn_tick": 43,
+        "foe_hp": 62,
+        "foe_id": 584,
+        "foe_position": [
+          5.10730171203613,
+          -3.83165073394775
+        ],
+        "follow": true,
+        "hero_hits": 0,
+        "hero_id": 1056,
+        "hero_position": [
+          2.68970727920532,
+          -3.77435398101807
+        ],
+        "hero_slot": 0,
+        "hero_state": 1,
+        "internal_scale": 1,
+        "label": "personal-windup",
+        "lens": 22,
+        "marked_tick": 43,
+        "ordinary": [
+          512,
+          512
+        ],
+        "previous_foe_hp": 62,
+        "received": 1,
+        "screen": [
+          1920,
+          1200
+        ],
+        "seed": 61112,
+        "yaw": -0.575958653158129
+      },
+      {
+        "distance": 1.8135017156601,
+        "drawn_tick": 48,
+        "foe_hp": 39.7627115547657,
+        "foe_id": 584,
+        "foe_position": [
+          4.96484184265137,
+          -3.8282744884491
+        ],
+        "follow": true,
+        "hero_hits": 1,
+        "hero_id": 1056,
+        "hero_position": [
+          3.1518816947937,
+          -3.87259197235107
+        ],
+        "hero_slot": 0,
+        "hero_state": 2,
+        "internal_scale": 1,
+        "label": "personal-contact",
+        "lens": 22,
+        "marked_tick": 48,
+        "ordinary": [
+          512,
+          512
+        ],
+        "previous_foe_hp": 62,
+        "received": 1,
+        "screen": [
+          1920,
+          1200
+        ],
+        "seed": 61112,
+        "yaw": -0.575958653158129
+      }
+    ]
+  },
+  "photos": {
+    "close": "057369199e98122f9c03ae8e2e2ba7c5e4879d51928aa76f7f4cea17f6fab8dc",
+    "field": "9d0449d05d331ab856662145ff1bdb19bf5013d7694c9faa6e17251384d58198",
+    "ranks": "07eac1e50c39dd39b863294d3fba5589ab1fabca1df5423a024611125cd3070c",
+    "personal-contact": "bb518035819c18894170ccdbc61e8b7f85d382edbf1bc0a4d4a9310eeba30b1e"
+  },
+  "original_env_failure": 43361092561,
+  "resumed": 43361600180,
+  "artifact": 14008596647,
+  "macos_export": "NOT_RUN_FOR_STUDY",
+  "M5": "NOT_RUN",
+  "decision": "preserve study; not a substitute for a final art pass"
+}

@@ -14,6 +14,9 @@ touch artifacts/.gdignore
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; fi
 # The shipping landscape references imported glTF equipment and texture atlases.
 "$GODOT" --headless --path . --check-only --script scripts/field/landscape.gd
+"$GODOT" --headless --path . --script tests/gatehouse_sightline.gd 2>&1 | tee artifacts/gatehouse-sightline.log
+grep -q '^GATEHOUSE_SIGHTLINE ' artifacts/gatehouse-sightline.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/gatehouse-sightline.log; then exit 1; fi
 "$GODOT" --headless --path . --check-only --script scripts/youth_ui.gd
 bash tools/test-field-history.sh 2>&1 | tee artifacts/field-history.log
 grep -q '^FIELD_HISTORY_PASS ' artifacts/field-history.log

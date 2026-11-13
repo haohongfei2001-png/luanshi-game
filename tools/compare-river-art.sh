@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Replay RC6 and this shipping revision on one GPU, with the same seed, camera and live orders.
+# Replay RC8 and this shipping revision on one GPU, with the same seed, camera and live orders.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 repo_dir=$PWD
-baseline=d6b03507c4ace8582ab9f821e604c499616b8dab
+baseline=2c92c7eace980d76d538a646ca64ce9817d191b4
 out=$PWD/artifacts/river-art-comparison
 work=$(mktemp -d)
 mkdir -p "$out"
@@ -31,9 +31,6 @@ for side in before after; do
     grep -q '^FIELD_MOTION_RECEIPT ' "$out/$side-motion.log"
     ffmpeg -nostdin -loglevel error -y -i "$work/$side-motion.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -movflags +faststart "$out/$side-motion.mp4"
     if [[ $side == after ]]; then
-      timeout 660s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/line.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 --field-line-film 2>&1 | tee "$out/battlefield-motion.log"
-      grep -q '^FIELD_LINE_FILM ' "$out/battlefield-motion.log"
-      if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/battlefield-motion.log"; then exit 1; fi
       # The full scene above is a theatre tour. Also archive a real landed hit
       # on the ordinary follow camera, without changing troop positions or HP.
       timeout 240s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512 2>&1 | tee "$out/after-personal.log"
@@ -54,6 +51,9 @@ for name,width,quality in (("normal-review",1280,88),("normal-full",1920,91)):
     print("RC8_WINDOW_INFO",name,len(data),hashlib.sha256(data).hexdigest(),len(encoded),flush=True)
     for at in range(0,len(encoded),16000): print("RC8_WINDOW_PART",name,at,encoded[at:at+16000],flush=True)
 PY
+      python3 tools/watch_field_film.py xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/line.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 --field-line-film 2>&1 | tee "$out/battlefield-motion.log"
+      grep -q '^FIELD_LINE_FILM ' "$out/battlefield-motion.log"
+      if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/battlefield-motion.log"; then exit 1; fi
       ffmpeg -nostdin -loglevel error -y -i "$work/line.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -b:a 112k -movflags +faststart "$out/battlefield-motion.mp4"
     fi
     ffmpeg -nostdin -loglevel error -y -framerate 10 -i "$out/$side/film/frame-%03d.jpg" -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart "$out/$side.mp4"

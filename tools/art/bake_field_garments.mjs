@@ -138,15 +138,18 @@ function surface(look,segments,rows) {
                     -.094+(.093+.010*v)*Math.sin(a),HIPS,12,.98];
         });
     } else if(look==="Regular" || look==="Guard") {
-        // A single suspension yoke over the back of the cuirass: dark iron below
-        // the neck, visibly wider at the scapula than at the waist. The thinner
-        // spear kit ends above the girdle; the shield man's left tasset falls lower.
-        panel(segments,rows,28,(u,v)=>{
-            const a=1.83+2.64*u;
-            const arch=Math.sin(PI*u);
-            return [(.215+.044*v)*Math.sin(a),1.268+.134*v-.090*arch*(1-v),
-                    -.030+(.145+.028*v)*Math.cos(a),CHEST,HIPS,.97];
-        });
+        // The two leather straps pass over the shoulders and disappear into the
+        // iron corslet. Keep the cloth at the nape and the upper arms visible.
+        for(const side of [-1,1]) {
+            const width=look==="Guard"?.047:.035;
+            panel(far?1:2,far?3:5,SWATCH.hide,(u,v)=>{
+                const angle=PI*(.09+.85*v);
+                const x=side*(.111+.037*v)+width*(u-.5);
+                const z=-.018+.155*Math.cos(angle);
+                const y=1.266+.173*Math.sin(angle)-.014*v;
+                return [x,y,z,CHEST,HIPS,.98];
+            });
+        }
         if(look==="Guard") {
             for(const side of [-1,1]) {
                 const joint=side<0?9:12, span=side<0?.407:.297;

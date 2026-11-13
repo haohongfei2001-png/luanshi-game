@@ -5,6 +5,44 @@ from company_figures import grip,RH,LH,NOCK
 TWO_HAND={2,3,4,6}
 FRONT_GRIP={2:.48,3:.55,4:.54,6:.31}
 
+def field_shield(surface, detailed):
+    """Slightly crowned timber board with a leather edge and a working inner grip."""
+    # Position and angle are relative to the existing left-hand socket. The
+    # board widens near the forearm and tapers towards the ground.
+    center=add(grip(-1),(-.089,-.064,.102))
+    levels=[(-.510,.096),(-.454,.198),(-.278,.250),(.205,.284),(.391,.258),(.482,.164),(.495,.122)]
+    columns=8 if detailed else 4
+    def face(u,v,back=False):
+        row=round(v*(len(levels)-1))
+        y,half_width=levels[row]
+        side=2*u-1
+        # The hand is inside the sword-side rail. Sweep the upper, inner
+        # corner away from the face without narrowing the central plank field.
+        high=max(0.,min(1.,(y-.20)/.27))
+        inner=max(0.,side)
+        x=side*half_width-.048*high-.046*inner*high
+        z=.077*(1-side*side)-.055*side*side+.085*x-.055*y
+        if back: z-=.036
+        return add(center,(x,y-.056*inner*high,z)),LH
+    surface.grid(columns,len(levels)-1,face,"shield")
+    surface.grid(columns,len(levels)-1,lambda u,v:face(1-u,v,True),"shield")
+    for side in (0,1):
+        edge=[face(side,i/(len(levels)-1))[0] for i in range(len(levels))]
+        surface.tube(edge,[.018]*len(edge),"leather",LH,7 if detailed else 4)
+    for v in (0.,1.):
+        surface.tube([face(u/columns,v)[0] for u in range(columns+1)], [.018]*(columns+1),
+                     "leather",LH,6 if detailed else 4)
+    # The grip, dome and timber share the same animated hand, even edge-on.
+    surface.oval(add(center,(0,.023,.086)),(.070,.091,.026),"iron",LH,10 if detailed else 7,4)
+    socket=grip(-1)
+    surface.tube([add(socket,(-.102,.016,.123)),socket,add(socket,(.074,-.015,.103))],
+                 [.018,.029,.018],"binding",LH,6 if detailed else 4)
+    if detailed:
+        for side in (-1,1):
+            for y in (-.29,.29):
+                surface.oval(add(center,(side*.188,y,.015)),(.010,.012,.009),"iron_binding",LH,5,3)
+
+
 def weapon(kit,detail):
     s=Surface(detail)
     n=9 if detail else 5
@@ -42,24 +80,7 @@ def weapon(kit,detail):
             blade(add(grip(side),(0,0,.145)),.71 if kit==8 else .91,.047 if kit==1 else .033,
                   .142 if kit==1 else .012,bone)
         if kit==7:
-            c=add(grip(-1),(0,.025,.105))
-            profile=[(-.10,-.4),(-.217,-.298),(-.244,.214),(-.16,.35),(0,.402),(.16,.35),(.244,.214),(.217,-.298),(.10,-.4)]
-            rim=[add(c,(x,y,-abs(x)*.24-.023)) for x,y in profile]
-            for i,p in enumerate(rim):
-                q=rim[(i+1)%len(rim)]
-                # A shallow convex layered face, raised spine, hide rim and working grip.
-                mid=add(c,(0,0,.056))
-                s.panel([p,q,lerp(q,mid,.98),lerp(p,mid,.98)],"shield",LH)
-                s.tube([p,q],[.016,.016],"leather",LH,5)
-            s.tube([add(c,(0,-.34,-.004)),add(c,(0,0,.069)),add(c,(0,.34,-.002))],
-                   [.018,.025,.018],"iron",LH,6)
-            s.tube([add(c,(-.077,0,-.02)),grip(-1),add(c,(.082,0,-.02))],[.019,.025,.02],"binding",LH,6)
-            # The bound board domes over its working grip. Broad faces stay
-            # wooden; the shallow forged boss takes the central blow.
-            s.oval(add(c,(0,.008,.053)),(.089,.108,.043),"iron",LH,12,5)
-            for x in [-.131,.131]:
-                for y in [-.231,.220]:
-                    s.oval(add(c,(x,y,.012)),(.012,.014,.010),"brass",LH,6,3)
+            field_shield(s,True)
     elif kit in (2,3,4):
         stick([(0,0,-.69),(0,0,-.54),(0,0,1.52),(0,.004,1.69)],
               [.031,.032,.027,.024],"timber")

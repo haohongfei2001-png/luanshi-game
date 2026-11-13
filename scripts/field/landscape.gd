@@ -35,6 +35,7 @@ func _ready() -> void:
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
 	surface_material.set_shader_parameter("soil_cover",preload("res://assets/environment/soil-cover.png"))
 	surface_material.set_shader_parameter("floodplain",preload("res://assets/environment/floodplain-paint.png"))
+	surface_material.set_shader_parameter("field_margins",preload("res://assets/environment/field-margins.svg"))
 	surface_material.set_shader_parameter("verge_track",preload("res://assets/environment/verge-and-track.svg"))
 	surface_material.set_shader_parameter("shale_paint",preload("res://assets/environment/river-shale.png"))
 	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/grazed-meadow.png"))
@@ -270,7 +271,7 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,ret
 			# terminate at the diagonal hips instead of converging like fan blades.
 			var starts:=clampf((absf(x0)-ridge)/(length-ridge),0.0,1.0)
 			var shade:=col.lightened(0.018*((column*7)%5))
-			for row in range(2 if retained_side!=0.0 else 0,rows):
+			for row in range(1 if retained_side!=0.0 else 0,rows):
 				var t0:=float(row)/rows
 				var t1:=float(row+1)/rows
 				var w0:=lerpf(ridge,length,t0)
@@ -315,6 +316,43 @@ func _brackets(frame: Builder,base: Vector3,w: float,d: float) -> void:
 			frame.block(foot+Vector3(0,0.25,sz*0.15),Vector3(0.25,0.15,0.73),WOOD.lightened(0.06))
 			frame.block(foot+Vector3(sx*0.12,0.36,sz*0.16),Vector3(0.68,0.13,0.63),WOOD)
 
+# The central gallery is a built upper storey. It leaves the passage below the
+# floor open; its full facade follows the roof when sight to a fighter is cut.
+func _gate_gallery(base: Vector3, parent: Node3D) -> void:
+	var hall:=Builder.new()
+	var sill:=4.32
+	var slab:=Vector3(base.x,sill,base.z)
+	hall.joint=3
+	hall.block(slab,Vector3(4.73,0.26,8.68),Color("624a3d"))
+	for xside:float in [-1.0,1.0]:
+		var x:=base.x+xside*2.10
+		for bay in 4:
+			var z:=base.z+(bay-1.5)*1.97
+			hall.joint=15
+			hall.block(Vector3(x,sill+.52,z),Vector3(.15,.79,1.79),Color("a99a79"))
+			hall.joint=3
+			hall.block(Vector3(x+xside*.023,sill+1.47,z),Vector3(.19,.97,1.70),Color("494138"))
+			var plane:=x+xside*.15
+			for picket in 3:
+				hall.block(Vector3(plane,sill+1.47,z+(picket-1)*.40),Vector3(.065,.94,.061),WOOD)
+			hall.block(Vector3(plane,sill+1.15,z),Vector3(.071,.075,1.67),WOOD)
+		for station in 5:
+			var foot:=Vector3(x,sill+.08,base.z+(station-2)*1.97)
+			hall.joint=11
+			hall.rod(foot,Vector3(foot.x,base.y+.08,foot.z),.143,.112,Color("78523f"),8)
+		hall.joint=3
+		hall.block(Vector3(x,base.y-.14,base.z),Vector3(.23,.31,8.35),Color("705240"))
+		hall.block(Vector3(x,sill+.96,base.z),Vector3(.24,.12,8.31),WOOD)
+	for zside:float in [-1.0,1.0]:
+		var z:=base.z+zside*3.95
+		hall.joint=15
+		hall.block(Vector3(base.x,sill+1.14,z),Vector3(4.01,2.02,.17),Color("9e9176"))
+		hall.joint=3
+		hall.block(Vector3(base.x,sill+.98,z),Vector3(4.24,.14,.25),WOOD)
+		for post:float in [-.98,.98]:
+			hall.block(Vector3(base.x+post,sill+1.22,z),Vector3(.16,2.25,.23),WOOD)
+	_mesh(hall,parent)
+
 # These roofs can lift away independently while the posts, eaves, and the
 # people inside remain. No soldier or combat state changes with the camera.
 func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
@@ -322,6 +360,8 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 	_roof(cover,base,w,d,rise,SLATE)
 	_brackets(frame,base,w,d)
 	var node:=_mesh(cover,self)
+	if absf(base.x-Ground.WALL_X)<.01 and absf(base.z)<.01:
+		_gate_gallery(base,node)
 	var pieces: Array[Dictionary]=[]
 	if absf(base.x-Ground.WALL_X)<3.0 and absf(base.z)<11.0:
 		var axis:=Vector3.BACK if w>=d else Vector3.RIGHT
@@ -346,8 +386,8 @@ func _cover(frame: Builder,base: Vector3,w: float,d: float,rise: float) -> void:
 				strip.rod(basepoint,basepoint+Vector3.UP*0.45,0.033,0.033,WOOD.darkened(0.08),4)
 			var lip:=_mesh(strip,self)
 			lip.visible=false
-			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.75+Vector3.UP*0.29,
-				"w":w if w>=d else w*0.30,"d":d if d>w else d*0.30})
+			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.625+Vector3.UP*(rise*0.38),
+				"w":w if w>=d else w*0.39,"d":d if d>w else d*0.39})
 	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d,"pieces":pieces})
 	for side: float in [-1,1]:
 		frame.block(base+Vector3(0,-0.09,side*d*0.83),Vector3(w*1.86,0.18,0.20),WOOD)
@@ -370,19 +410,22 @@ func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live
 	var door:=Ground.unit_point(Ground.GATE)+Vector3.UP*1.2
 	# In an orthographic camera the rays through every subject are parallel.
 	var direction:=eye-Ground.unit_point(focus)
-	var gate_inspection:=live and assault_near and focus.distance_squared_to(Ground.GATE)<245 and zoom< 42.0
+	# A survey over the gate should show the complete building. At fighting
+	# distance reveal a sightline through the actual roof to the hero or lane.
+	var close_lens:=zoom<=25.0
+	var gate_inspection:=live and close_lens and assault_near and focus.distance_squared_to(Ground.GATE)<150.0
 	for roof in roofs:
-		var occluding: bool=zoom<43 and (_between(p,p+direction,roof) or (live and _between(h,h+direction,roof)) or (focus.distance_squared_to(Ground.GATE)<150 and _between(door,door+direction,roof)))
-		var middle: Vector3=roof.center
-		if gate_inspection and absf(middle.x-Ground.WALL_X)<3 and absf(middle.z)<11:
-			if absf(middle.z)<1.0:
-				occluding=true
-			else:
-				for exit_x: float in [-2.6,1.5,5.0]:
-					var lane:=door+Vector3(exit_x,0,signf(middle.z)*2.7)
-					if _between(lane,lane+direction,roof):
-						occluding=true
-						break
+		var middle:Vector3=roof.center
+		var gatehouse:=absf(middle.x-Ground.WALL_X)<3.0 and absf(middle.z)<11.0
+		var hero_ray:=live and _between(h,h+direction,roof)
+		var focus_ray:=(_between(p,p+direction,roof) and (not gatehouse or close_lens))
+		var occluding:=zoom<43.0 and (hero_ray or focus_ray)
+		if gate_inspection and gatehouse and not occluding:
+			for exit_x:float in [-2.6,1.5,5.0]:
+				var lane:=door+Vector3(exit_x,0,signf(middle.z)*2.7)
+				if _between(lane,lane+direction,roof):
+					occluding=true
+					break
 		var node: MeshInstance3D=roof.node
 		if occluding: has_open_roof=true
 		if node.visible==occluding: node.visible=not occluding
@@ -526,7 +569,7 @@ func _fort(b: Builder) -> void:
 	for plank in 9:
 		gallery.block(Vector3(Ground.WALL_X,4.16,(plank-4)*1.04),Vector3(4.1,0.21,1.02),WOOD.lightened(0.045*(plank%2)))
 	_sight_deck(gallery,Vector3(Ground.WALL_X,4.16,0),2.05,4.74)
-	_cover(b,Vector3(Ground.WALL_X,6.1,0),3.4,5.0,1.45)
+	_cover(b,Vector3(Ground.WALL_X,6.97,0),3.19,4.91,1.70)
 	# Tapered gateposts support the passage even when its roof is out of sight.
 	for x:float in [-1.32,1.32]:
 		for z:float in [-4.18,4.18]:

@@ -77,7 +77,13 @@ def walking_foot(phase,running=False):
     z=-half+2*half*smooth(u)-(1-stance)*travel*u*(1-u)*(1-2*u)
     return z,(.225 if running else .13)*arc**1.5,20*(1-smooth(u))-9*smooth(u)-10*arc
 
-def pose(kit,clip,t):
+CARRY_KITS=(3,4,7)
+# Idle, eight walking headings, four windups and four recoveries. These
+# additional strips follow the original bank: original hits, player and saves
+# address precisely the same rows as before.
+CARRY_CLIPS=(1,0,16,17,18,19,20,21,22,2,3,4,5,6,7,8,9)
+
+def pose(kit,clip,t,loadout=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
     running=clip>=23
@@ -223,6 +229,32 @@ def pose(kit,clip,t):
             shoulder_yaw+=14.; hip_yaw-=3.; chest_roll+=3.; lean-=4.
         elif kit==4:
             shoulder_yaw-=7.; lean+=2.; chest_roll+=4.
+    # Two ways of carrying the same field equipment: a shaft seated high
+    # beside the collar and a low forward carry; a shield carried across the
+    # ribs or hanging at the outer hip. At release all converge on the existing
+    # strike. Socket, elbow and planted foot are solved AFTER changing the load.
+    carry=0.
+    if loadout and kit in CARRY_KITS and not ride:
+        if move or clip==1:
+            carry=1.
+        elif 2<=clip<=5:
+            carry=1.-smooth(min(1.,t/.48))
+        elif 6<=clip<=9:
+            carry=smooth(max(0.,min(1.,(t-.55)/.45)))
+    if carry:
+        braced=loadout==2
+        if kit in (3,4):
+            offsets=(.027,-.078,.092,25.,14.,-9.) if braced else (.049,.105,-.054,-28.,-10.,9.)
+            hand=tuple(v+carry*d for v,d in zip(hand,offsets))
+        else:
+            offsets=(.019,.041,.070,19.,-8.,7.) if braced else (.042,-.057,-.034,-16.,12.,-7.)
+            hand=tuple(v+carry*d for v,d in zip(hand,offsets))
+        shoulder_yaw+=carry*(11. if braced else -13.)
+        hip_yaw+=carry*(5. if braced else -4.)
+        chest_roll+=carry*(-4.0 if braced else 5.0)
+        lean+=carry*(5.5 if braced else -3.)
+        crouch+=carry*(.047 if braced else -.013)
+        sway+=carry*(-.030 if braced else .036)
     waist=(0,.86,0)
     pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
     chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
@@ -275,7 +307,19 @@ def pose(kit,clip,t):
     elif kit==7:
         shield=1 if clip==10 else (.85 if attack and slot in (1,3) else .32)
         off=(-.215,1.105+.18*shield-crouch,.256+shield*.113+shift)
-        offq=euler(-8-shield*7,-9,-shield*14)
+        # Let the soldier see over the upper rim during muster and the march.
+        # He carries the board against the outside of the left forearm, then
+        # brings it squarely forward for an actual block or the committed hit.
+        carried=1.0 if move or clip==1 else 0.0
+        if 2<=clip<=5: carried=1.-smooth(min(1.,t/.47))
+        if 6<=clip<=9: carried=smooth(max(0.,(t-.53)/.47))
+        off=add(off,mul((-.093,-.091,-.042),carried))
+        if carry:
+            off=add(off,mul((.020,.091,.032) if loadout==2 else (-.033,-.058,-.018),carry))
+        offq=euler(-8-shield*7+carried*7+carry*(-13. if loadout==2 else 9.),
+                   -9.-carried*22.+carry*(24. if loadout==2 else -10.),-shield*14+carried*8.)
+        if carried:
+            anchor=limit_grip(add(anchor,mul((.066,.043,.029),carried)),right,radius)
     elif kit==8:
         off=(-hand[0],1.14+(1.24-hand[1])*.7-crouch,.225-(hand[2]-.21)*.52+shift)
         offq=euler(-11-hand[3]*.49,-hand[4]*.81,8)
@@ -354,25 +398,26 @@ def bake_motion(out):
     # Each bone gets a strip of adjacent keys. The four RGBA8 rows are affine
     # encodings, so GPU filtering can mix high/low bytes without a carry error.
     # The extra endpoint joins the first key of loops or holds the last action key.
-    tex=Image.new("RGBA",((FRAMES+1)*BONES,9*CLIPS*4))
+    lanes=[(kit,clip,0) for kit in range(9) for clip in range(CLIPS)]
+    lanes.extend((kit,clip,loadout) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
+    tex=Image.new("RGBA",((FRAMES+1)*BONES,len(lanes)*4))
     px=tex.load()
-    for kit in range(9):
-        for clip in range(CLIPS):
-            previous=[None]*BONES
-            y=(kit*CLIPS+clip)*4
-            for frame in range(FRAMES+1):
-                t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
-                for b,(q,offset) in enumerate(pose(kit,clip,t)):
-                    # q and -q describe the same rotation. Choose neighbours on
-                    # the same hemisphere before interpolation, including the wrap.
-                    if previous[b] and sum(a*c for a,c in zip(q,previous[b]))<0:
-                        q=tuple(-v for v in q)
-                    previous[b]=q
-                    quat=[max(0,min(65535,round((n*.5+.5)*65535))) for n in q]
-                    xyz=[max(0,min(65535,round((n/6+.5)*65535))) for n in offset]
-                    x=b*(FRAMES+1)+frame
-                    px[x,y]=tuple(n//256 for n in quat)
-                    px[x,y+1]=tuple(n%256 for n in quat)
-                    px[x,y+2]=(*(n//256 for n in xyz),255)
-                    px[x,y+3]=(*(n%256 for n in xyz),255)
+    for lane,(kit,clip,loadout) in enumerate(lanes):
+        previous=[None]*BONES
+        y=lane*4
+        for frame in range(FRAMES+1):
+            t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
+            for b,(q,offset) in enumerate(pose(kit,clip,t,loadout)):
+                # q and -q describe the same rotation. Choose neighbours on
+                # the same hemisphere before interpolation, including the wrap.
+                if previous[b] and sum(a*c for a,c in zip(q,previous[b]))<0:
+                    q=tuple(-v for v in q)
+                previous[b]=q
+                quat=[max(0,min(65535,round((n*.5+.5)*65535))) for n in q]
+                xyz=[max(0,min(65535,round((n/6+.5)*65535))) for n in offset]
+                x=b*(FRAMES+1)+frame
+                px[x,y]=tuple(n//256 for n in quat)
+                px[x,y+1]=tuple(n%256 for n in quat)
+                px[x,y+2]=(*(n//256 for n in xyz),255)
+                px[x,y+3]=(*(n%256 for n in xyz),255)
     tex.save(out/"company_motion.png",optimize=True)
