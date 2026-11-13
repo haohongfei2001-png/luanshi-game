@@ -4,6 +4,12 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 河关 RC11 · 候选整包验证
+
+从已合入的 RC10 游戏 `74a79d1a6199eb82e965d3ba49c0400b0f1f086f` 与证据提交 `d47db84cd95dcc7105a6dce764c7cf8a7ee552cf` 接续。候选分支 `codex/river-gate-rc11`。五个前后机位的实际窗景显示主门楼与两侧望楼之间有了空隙，过门时仍为兵群留出视线。[全部原图](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43399255144/artifacts/14024466696)。坐骑肩、胸、后躯和腿根补成连续皮毛曲面，修改鞍后桥。演算中同一骑手 150 号走过 9.94 米，同种子 12 组机位与两段百帧影片已核对。[原生像素和录像](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43400591082/artifacts/14025271558)。成立的变化仍需在整包内回归。真实 M5 和最终美术继续待验。
+
+云端可运行 `./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。对照以 RC10 为基线，第 490/635 步另有集中检验，军令、损失、兵籍和实际镜头相同。
+
 ## 河关 RC10 已合入 main
 
 [macOS 下载、22 米正常镜头、连续战役、完整原始数据与复现方式](evidence/river-gate-v1-rc10/PLAYTEST.md)。游戏源 `c3e39a78a6028aa2d396f1cc37757f02c56a9679`；游戏合并 `74a79d1a6199eb82e965d3ba49c0400b0f1f086f`；三者同树的实际导出和[六项 PR CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43395721594)已核验。九次空游戏目录原生启动均进入战斗。512v512 托管虚拟 M1（1024×640、4× MSAA、100%）的 24 秒 P95/P99 为 17.85/27.35 毫秒，最长 763.73 毫秒，未达稳定 60。真实 M5 无授权或样机证据。
