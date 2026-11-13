@@ -204,6 +204,14 @@ def pose(kit,clip,t):
         hip_roll=12*give
         chest_roll=24*give
         shoulder_yaw=-25*give
+    # Opening the torso places the drawing elbow to the side of the face.
+    # Keep the head on its target while the bow shoulder reaches forward.
+    bow_draw=0.
+    if kit==5 and attack:
+        released=smooth(max(0.,min(1.,(t-.92)/.08))) if clip<=5 else 1.
+        bow_draw=smooth(min(1.,t/.72)) if clip<=5 else 1.-smooth(t)
+        shoulder_yaw+=26.*bow_draw
+        hip_yaw+=9.*bow_draw
     waist=(0,.86,0)
     pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
     chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
@@ -230,7 +238,29 @@ def pose(kit,clip,t):
                 anchor=limit_grip(limit_grip(anchor,support_center,left_radius),right,radius)
         off=add(anchor,support)
     elif kit==5:
-        off=add(anchor,rot(aim,(0,0,-pull)))
+        # The bow stave is held in the right palm. In the moving/nocked carry
+        # its canted upper limb passes outside the shoulder. The drawing hand
+        # reaches the cheek, then clears the recoiling string after release.
+        carry=add((.128,1.060,.240),(sway*.72,-crouch,shift))
+        off=add(anchor,rot(aim,(0,0,-max(.18,pull))))
+        if clip==1 or move or attack:
+            elbow_height=(.015*walk if move else 0.)
+            carry=add(carry,(.019*walk,elbow_height,.025*walk))
+            anchor=lerp(carry,add((.136,1.420,.430),(sway*.72,-crouch,shift)),bow_draw)
+            aim=euler(-10.+8.*bow_draw,-24.+16.*bow_draw,-41.+29.*bow_draw)
+            offq=aim
+            right,radius=reachable(chest,1,aim)
+            anchor=limit_grip(anchor,right,radius)
+            nocked=add(anchor,rot(aim,(0.,0.,-.258-.373*bow_draw)))
+            if attack:
+                # At release the left fingers travel back and out past the jaw.
+                loose=add((-.190,1.425,-.128),(sway*.72,-crouch,shift))
+                nocked=lerp(nocked,loose,released*bow_draw)
+            if not attack:
+                off=nocked
+            else:
+                carried_grip=add(anchor,rot(aim,(0.,0.,-.258)))
+                off=lerp(carried_grip,nocked,bow_draw)
     elif kit==7:
         shield=1 if clip==10 else (.85 if attack and slot in (1,3) else .32)
         off=(-.215,1.105+.18*shield-crouch,.256+shield*.113+shift)
@@ -256,9 +286,19 @@ def pose(kit,clip,t):
         binds=arm_nodes(side)
         hand_m=placed(grip(side),end,q)
         wrist=trans(hand_m,binds[2])
-        ms[upper],ms[fore]=two_link(binds,trans(chest,binds[0]),wrist,(side*.65,-.52,-.83))
+        pole=(side*.65,-.52,-.83)
+        if kit==5 and not ride:
+            # The working elbow points outward as the fingers draw, while the
+            # bow elbow remains outside the line of the string.
+            pole=(side*.94,-.72+(.96*bow_draw if side<0 else .22*bow_draw),-.45)
+        ms[upper],ms[fore]=two_link(binds,trans(chest,binds[0]),wrist,pole)
         ms[hn]=hand_m
     nock=add(anchor,rot(aim,(0,0,-.159))) if ride else off
+    if kit==5 and attack:
+        # The string returns to brace at release. A fresh nock is picked up as
+        # the fingers come back to the carried bow at the end of recovery.
+        freedom=released*(1.-smooth(max(0.,min(1.,(t-.56)/.44))) if clip>=6 else 1.)
+        nock=lerp(off,add(anchor,rot(aim,(0,0,-.159))),freedom)
     ms[NOCK]=placed(add(grip(1),(0,0,-.159)),nock,aim)
     for side in (-1,1):
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
