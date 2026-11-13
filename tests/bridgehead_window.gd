@@ -169,7 +169,7 @@ func _run() -> void:
 	var file:=FileAccess.open(OUT+"/input-and-camera.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(terminal,"  "))
 	file.close()
-	var ok:=screenshot_ok and b.ordinary_counts==PackedInt32Array([512,512]) and not entered_water and not off_lens and clear_count>=snapshots.size()*.98 and crossed.size()>0 and fact.hits[0]+fact.hits[1]>0
+	var ok:bool=screenshot_ok and b.ordinary_counts==PackedInt32Array([512,512]) and not entered_water and not off_lens and clear_count>=snapshots.size()*.98 and crossed.size()>0 and fact.hits[0]+fact.hits[1]>0
 	if not preview: ok=ok and frames>=240 and first_blow>0 and contacts.size()>0
 	print("BRIDGE_WINDOW ",ok," ",JSON.stringify(fact)," first_player_strike=",first_blow," contacts=",contacts.size()," frames=",frames)
 	scene.queue_free()

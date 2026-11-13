@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_lambert, cull_disabled;
+uniform bool gate_crossing = false;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
@@ -196,7 +197,7 @@ void fragment() {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;
 		} else if (part>12.5 && part<13.5) {
-			float bank=abs(p.x+32.0);
+			float bank=min(abs(p.x+32.0),abs(p.x-24.0));
 			float lip=bank+.28*sin(p.y*.39)+.14*sin(p.y*.87+.44);
 			color=painted_ground(p,1.0-smoothstep(4.38,6.58,lip));
 		} else if(part>15.5 && part<16.5) {
