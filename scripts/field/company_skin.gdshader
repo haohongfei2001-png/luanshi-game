@@ -184,7 +184,10 @@ void fragment() {
     else if (cloth_panel == 22) dye = .82;
     else if (cloth_panel == 26) dye = .66;
     else if (cloth_panel == 11) dye = .35;
-    vec3 bolt = livery.rgb * mix(.84, 1.10, cloth_lot);
+    // Diluting indigo or madder in a common grey-brown ground keeps the
+    // troop colours legible without painting armour and entire bodies bright.
+    vec3 wool_ground=OUTPUT_IS_SRGB ? vec3(.245,.250,.230) : vec3(.049,.051,.043);
+    vec3 bolt=mix(livery.rgb,wool_ground,.25+.15*cloth_lot)*mix(.84,1.04,cloth_lot);
     // Common coats were cut from several dye lots. Keep a coloured collar or
     // overskirt even on the pale archer's body; hands/iron never inherit dye.
     if (!player_costume && (cloth_panel==27 || cloth_panel==1)) {
@@ -203,14 +206,12 @@ void fragment() {
         // falls off under the folded shoulder, leaving the waist legible from above.
         colour*=mix(vec3(.74,.81,.82),vec3(.92,.91,.85),cloth_lot);
     }
-    if (cloth_panel==3 || cloth_panel==30) {
-        // A troop's dyed sleeve remains visible between the iron straps. Two broad
-        // facing panels keep the side identifiable at marching distance, even
-        // when the shield is edge-on or the wearer turns their back.
-        float shoulder=smoothstep(.15,.225,abs(bind_point.x))*smoothstep(1.18,1.32,bind_point.y);
-        float skirt=(1.-smoothstep(.77,.89,bind_point.y))*
-                    smoothstep(.075,.18,abs(bind_point.z))*(1.-smoothstep(.07,.17,abs(bind_point.x)));
-        colour=mix(colour,bolt*.86,min(.80,shoulder*.68+skirt*.51));
+    if (cloth_panel==3 || cloth_panel==30 || cloth_panel==28) {
+        // The visible hauberk follows the ribs in one warm, dark iron mass.
+        // A broad value turn over the back survives mip levels at 22 metres.
+        float ridge=1.-smoothstep(.035,.225,abs(bind_point.x));
+        float reflected=smoothstep(.11,.22,abs(bind_point.x));
+        colour*=.91+.095*ridge+.045*reflected;
     }
     if (cloth_panel==15 || cloth_panel==12) colour*=.78;
     // A coarse underfold survives mipmapping; irregular fine weave does not.

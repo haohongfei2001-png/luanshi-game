@@ -1,0 +1,128 @@
+"""Fitted issue coats and two distinct constructions of lamellar body defence.
+
+Positions are in metres on the field bind. A vest hangs from the shoulders and
+skirts from the girdle; neither is rigidly attached to a moving forearm.
+"""
+from math import cos, pi, sin
+
+from figure_mesh import TAU
+
+HIPS, CHEST = 0, 1
+THIGHS = (9, 12)
+
+
+def cut_radii(look):
+    # Waist, ribs, bottom of the suspended body and breadth of the side panels.
+    if look == "regular":
+        return .171, .229, .997, .88
+    if look == "guard":
+        return .194, .254, .884, 1.40
+    return .184, .246, .931, 1.16
+
+
+def issue_vest(s, look, rank=False):
+    waist, ribs, bottom, sweep = cut_radii(look)
+    cols = 6 if rank else (16 if s.detail else 9)
+    heavy = look != "regular"
+
+    def surface(a, h):
+        # True armholes with a concave low edge at each armpit. Two straps
+        # leave the neck, blouse and both shoulders free of the cuirass.
+        side = abs(sin(a))
+        crown = 1.335 - .109 * side**2 + .021 * max(0., -cos(a))
+        top = crown + .026 * max(0., cos(4*a + .18))
+        y = bottom + (top-bottom)*h
+        belly = sin(h*pi*.79)
+        rx = waist + (ribs-waist)*belly + (.014 if heavy else .007)
+        rz = (.158 if heavy else .146) + .046*belly
+        # Distinct left and right pectorals merge into a quiet central seam.
+        ridge = .010 + .007*max(0.,cos(a))*(1.-abs(sin(2*a)))
+        return ((rx+ridge)*sin(a), y, -.017+(rz+ridge)*cos(a)), (CHEST,HIPS,min(1.,max(0.,(y-.858)*3.9)))
+
+    # Sixteenth-century plate silhouettes would be out of place. These are
+    # long rows of dark laced iron over a fitted body of leather and cloth.
+    # Their overhangs have one dominant light across the body in the game view.
+    count = 3 if heavy else 2
+    for i in range(count):
+        lo, hi = i/count, (i+1)/count
+        for start, end in ((-1.50,1.50),(1.57,4.72)):
+            def panel(u,v):
+                a=start+(end-start)*u
+                pt,skin=surface(a,lo+(hi-lo)*v)
+                lip=(.0035 if heavy else .0025)*(1.-v)
+                return (pt[0]+lip*sin(a),pt[1],pt[2]+lip*cos(a)),skin
+            s.grid(cols,2 if rank else 3,panel,"lamellar" if heavy else "lames")
+    # Supporting leather straps swept along the actual shoulder slope. They
+    # stay above the body at the front and back then disappear under the plates.
+    for side in (-1,1):
+        def strap(u,v):
+            a=pi*v
+            width=.024 if heavy else .019
+            x=side*(.126+.021*sin(a)+width*(u-.5)*2)
+            return (x,1.283+.155*sin(a)-.013*v,-.017+.147*cos(a)),(CHEST,HIPS,1.)
+        s.grid(2 if s.detail else 1,7 if s.detail else 4,strap,"leather")
+
+    # The spear carrier's light corselet ends above a visible crossing skirt.
+    # The shieldman's deeper defence has distinct open hanger panels at each hip.
+    for side,bone in zip((-1,1),THIGHS):
+        def apron(u,v):
+            down=1.-v
+            breadth=sweep+.16*down
+            a=side*(pi*.5+(u-.5)*breadth+.13*down)
+            if side<0: a=side*(pi*.5+(.5-u)*breadth+.13*down)
+            length=.212 if not heavy else (.390 if look=="guard" else .324)
+            edge=abs(2*u-1)
+            y=.972-down*(length-.110*edge**1.6)+.015*sin(a)*down
+            width=waist+.030+(.061 if heavy else .047)*down
+            depth=(.159 if heavy else .141)+.050*down
+            fold=.012*sin(pi*u)*sin(pi*down)
+            return ((width+fold)*sin(a),y,-.020+(depth+fold)*cos(a)),(bone,HIPS,.64*down)
+        s.grid(max(3,cols//2),2 if rank else 4,apron,"lamellar" if heavy else "leather")
+
+    # A soft split tab under the shieldman's defensive coat lies on the thigh.
+    # The lower left corner peeks out during a step rather than joining both legs.
+    if heavy:
+        def falling(u,v):
+            down=1.-v
+            x=-.099+.206*u+.024*down
+            y=.926-down*(.292+.092*(1.-u))+.035*down*(2*u-1)**2
+            z=.162+.084*down+.011*sin(1.6*pi*u)-.024*(2*u-1)**2
+            bone=THIGHS[0] if x<0 else THIGHS[1]
+            return (x,y,z),(HIPS,bone,1.-.18*down)
+        s.grid(3 if rank else 6,2 if rank else 3,falling,"overskirt")
+
+
+def wrapping(s, look, rank=False):
+    """A front overlap and its reverse are hung from the actual cloth waist."""
+    if look not in ("regular", "guard", "player", "officer"):
+        return
+    guard = look == "guard"
+    cols = 4 if rank else (10 if s.detail else 6)
+    # On an infantryman the lower tunic swings clear along the working thigh.
+    # The shorter, opposite skirt shows a different step even from the rear.
+    for front in (True,False):
+        center=.12 if front else pi-.34
+        span=2.13 if front else 2.54
+        def fold(u,v):
+            d=1.-v
+            a=center+(u-.5)*span+.24*d
+            # Measured curvature of the cut piece, from a low left corner to
+            # the opposite outer hip. Its lower edge is neither a cone nor a point.
+            if front:
+                low=.462+.218*u+.085*abs(2*u-1.)**2
+            else:
+                low=.465+.137*(1.-u)+.082*abs(2*u-1.)**2
+            if guard: low+=.052
+            y=.939+(low-.939)*d
+            radius=(.205 if guard else .174)+(.088 if guard else .092)*d
+            depth=(.163 if guard else .145)+.079*d
+            turn=.020*sin(2*pi*u-.80*d)*d
+            x=(radius+turn)*sin(a)
+            z=-.022+(depth+turn)*cos(a)+(.011 if front else -.012)
+            side=min(1.,abs(x)/.21)
+            return (x,y,z),(THIGHS[0] if x<0 else THIGHS[1],HIPS,d*(.16+.38*side))
+        # The broad outer panel is one fabric. A subdued turned facing at its
+        # working edge catches light only as the crossed skirts open.
+        for lo,hi,material in ((0.,.14,"felt"),(.14,1.,"overskirt" if front else "coat")):
+            s.grid(max(1,round(cols*(hi-lo))),3 if rank else 5,
+                   lambda u,v:fold(lo+(hi-lo)*u,v),material)

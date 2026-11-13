@@ -2,7 +2,7 @@
 The yoke has real armholes: the first sleeve row is the edge of the torso mesh.
 """
 from math import atan2, cos, exp, hypot, pi, sin
-from field_armour import skirts
+from field_dress import issue_vest, wrapping
 from field_visage import head
 from figure_atlas import uv
 from figure_mesh import Surface, TAU, add, lerp
@@ -38,6 +38,15 @@ def coat(s,look):
              (1.331,.262,.152),(1.409,.206,.114),(1.456,.088,.085)]
     elif look=="regular":
         hem[3:7]=[(.965,.167,.132),(1.075,.187,.145),(1.187,.212,.154),(1.256,.228,.156)]
+    # The blouse sits under the short corslet. Its back hem is longer than the 
+    # front on a guard; a spearman gathers the working side under his girdle.
+    if look in ("regular","guard","player","officer"):
+        broad = look=="guard"
+        start=.539 if broad else .481
+        hem=[(start,.234 if broad else .204,.155),(.711,.219 if broad else .194,.148),
+             (.851,.196 if broad else .170,.133),(.965,.167 if broad else .150,.117),
+             (1.077,.182,.127),(1.185,.194,.140),(1.258,.216,.139),
+             (1.328,.228,.129),(1.405,.171,.092),(1.449,.068,.067)]
     lo,hi=6,8
     # A foot archer wears his robe untucked to the thigh; picking the
     # hem up two inches on the draw side keeps the off knee free.
@@ -73,7 +82,7 @@ def coat(s,look):
         elif look=="archer":
             y+=hanging*(.154*(1-cut)-.066*cut+.024*sin(2*a+.6))
         else:
-            y+=hanging*(.092*(1-cut)-.036*cut+.026*sin(2*a+.4))
+            y+=hanging*(.124*(1.-cut)+.094*max(0.,sin(a+.15))-.049*max(0.,-sin(a)))
         y+=hanging*(.049*biased+.009*sin(3*a+.9))
         # A handful of long folds open from the girdle and continue to the hem.
         pleat=cos(5*a+.45*cos(2*a)-.82*hanging)
@@ -103,7 +112,7 @@ def coat(s,look):
             if lo<=r<hi and any(center-span<=c<center+span for center in slots): continue
             material="coat"
             if heavy and 3<=r<=7:
-                material="lames"
+                material="coat" if r<7 else "linen"
             elif look=="archer" and 3<=r<=7:
                 material="quilt" if cos(TAU*(c+.5)/n)<-.25 else "coat"
             elif look=="levy" and 2<=r<8:
@@ -144,8 +153,15 @@ def coat(s,look):
                     (.246,1.252,.066,.074,.004),(.253,1.173,.072,.075,.010),
                     (.257,1.144,.077,.077,.015),(.261,1.117,.068,.065,.020),
                     (.262,1.098,.055,.055,.024)]
-        elif look=="guard":
-            sleeve=[(cx,y,rx*1.16,rz*1.12,cz) for cx,y,rx,rz,cz in sleeve]
+        elif heavy:
+            # Wool gathers at the inside of the bent arm. With no circular
+            # shoulder plate the upper edge runs directly into the blouse.
+            sleeve=[(.218,1.350,.046,.060,-.006),(.231,1.311,.059,.071,-.005),
+                    (.244,1.256,.067,.078,.002),(.252,1.183,.075,.077,.008),
+                    (.258,1.146,.081,.075,.015),(.262,1.109,.071,.066,.022),
+                    (.264,1.081,.049,.051,.030)]
+            if look=="guard":
+                sleeve=[(cx,y,rx*1.06,rz*1.08,cz) for cx,y,rx,rz,cz in sleeve]
         if not close: sleeve=[sleeve[i] for i in (0,2,3,5,6)]
         for j,(cx,y,rx,rz,cz) in enumerate(sleeve):
             ring=[]
@@ -164,22 +180,17 @@ def coat(s,look):
         # would pick up iron or skin halfway across the sleeve when the arm turns.
         edge=len(rows)-1
         if heavy:
-            # Use the fitted sleeve itself under the shoulder suspension. A second
-            # shell following a different arm weight can open holes during a thrust.
-            cap_end=(3 if look=="regular" else 4) if close else (2 if look=="regular" else 3)
-            if look in ("regular","guard") and cap_end>=2:
-                # The dyed cloth yoke suspends the overlapping upper-arm lames.
-                # Give it real area above the plates in both close and line meshes.
-                panels=[(0,1,"dyed"),(1,cap_end,"lames")]
-            else:
-                panels=[(0,cap_end,"lames")]
-            if cap_end<edge-1: panels.append((cap_end,edge-1,"dyed"))
+            roller=3 if close else 2
+            # The narrow sleeveless corselet leaves a large, readable fold of
+            # wool. The shieldman's covered upper arm is quieter than his shield.
+            panels=[(0,roller,"quilt" if look=="guard" else "linen"),
+                    (roller,edge-1,"coat" if look=="guard" else "linen")]
         elif look=="levy":
             shoulder=2 if close else 1
             panels=[(0,shoulder,"dyed"),(shoulder,edge-1,"linen")]
         else:
             panels=[(0,edge-1,"dyed")]
-        panels.append((edge-1,edge,"headcloth"))
+        panels.append((edge-1,edge,"binding" if heavy else "headcloth"))
         for first,last,material in panels:
             def sleeve_point(u,v):
                 row=first+round(v*(last-first))
@@ -200,7 +211,7 @@ def coat(s,look):
         rise=.012+.027*(1-cos(a))*.5
         p=(base[0]+.0025*v*sin(a),base[1]+rise*v,base[2]+.0025*v*cos(a))
         return p,cloth(base)
-    s.grid(n,1,collar,"facing")
+    s.grid(n,1,collar,"lining" if heavy else "facing")
     if not heavy:
         # Crossing collars follow the front of the coat; the outer lapel reaches
         # the belt. Each is a dark edge and a visible fold, not a drawn X.
@@ -254,31 +265,8 @@ def equipment(s,look):
     close=s.detail
     heavy=look in ("regular","guard","officer","player")
     if heavy:
-        skirts(s,look,HIPS,(LT,RT))
-        # Four long rawhide-tied plate fields curve over the ribs; the
-        # leather suspension and side gaps give the torso a construction.
-        for start,end in ((-1.27,-.05),(.05,1.27),(1.81,3.10),(3.18,4.48)):
-            def brigand(u,v):
-                a=start+(end-start)*u
-                width=.235 if look=="guard" else .196 if look=="regular" else .212
-                rx=width+.060*sin(v*pi*.68)
-                rz=(.175 if look=="guard" else .155)+.031*sin(pi*v)
-                if v>.76:
-                    t=(v-.76)/.24
-                    rx-=.039*t
-                    rz-=.025*t
-                edge=abs(2*u-1.)
-                y=1.004+v*(.338-.046*(edge**1.8))+.012*(1-v)*(1.-edge)
-                roll=.009*sin(pi*u)*sin(pi*v)
-                p=((rx+roll)*sin(a),y,-.013+(rz+roll)*cos(a))
-                return p,(CHEST,HIPS,clamp((y-.87)*3.8))
-            s.grid(7 if close else 4,4 if close else 3,brigand,"lamellar")
-        # Two shoulder fastenings suspend the front and back without filling the neckline.
-        for side in (-1,1):
-            path=[(side*.130,1.318,.129),(side*.143,1.382,.103),
-                  (side*.138,1.431,.049),(side*.134,1.442,-.026),
-                  (side*.144,1.398,-.107),(side*.150,1.314,-.150)]
-            s.ribbon(path,.031,"leather",CHEST)
+        issue_vest(s,look)
+        wrapping(s,look)
     if look in ("player","officer"):
         # Asymmetric half-mantle with a split over the left hip; a readable back
         # silhouette even with a spear lifted or the front arm hidden by the shield.
@@ -360,9 +348,14 @@ def limbs(s,look):
                   (.413,.079,.088,x,.020),(.448,.093,.103,x,.031),(.505,.084,.092,x,.019),
                   (.587,.097,.113,x,-.009),(.715,.108,.124,side*.129,-.023),
                   (.803,.107,.122,side*.123,-.027),(.866,.103,.111,side*.12,-.015)]
-        if look=="levy":
-            sections=[(h,rx*.90,rz*.92,cx,cz) for h,rx,rz,cx,cz in sections]
-        s.rings(sections,"felt",leg,n)
+        scale=.90 if look=="levy" else (.97 if look=="guard" else .94)
+        sections=[(h,rx*scale,rz*scale,cx,cz) for h,rx,rz,cx,cz in sections]
+        # A tapered recess behind the kneecap opens when the lower leg folds.
+        def knee_cut(p,a,row):
+            rear=max(0.,-cos(a))
+            take=(.015*rear*exp(-((p[1]-.464)/.063)**2))
+            return (p[0],p[1]-.012*rear*exp(-((p[1]-.485)/.08)**2),p[2]+take)
+        s.rings(sections,"felt",leg,n,knee_cut)
         def ankle_blend(p): return (shin,boot,clamp((p[1]-.103)/.082))
         s.rings([(.078,.057,.065,ankle[0],-.010),(.118,.061,.066,ankle[0],-.006),
                  (.217,.057,.066,x,.006),(.332,.067,.076,x,.012),(.368,.064,.073,x,.009)],

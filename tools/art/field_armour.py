@@ -28,8 +28,8 @@ def issue_headpiece(surface, guard, bone, rank):
         t,rx,rz,cz=sections[round(v*(len(sections)-1))]
         # The shield shell is raised along the front-to-back fold. The light
         # shell is shallow above the temples. Both retain a continuous surface.
-        ridge=(.015 if guard else .010)*abs(cos(a))**5*sin(pi*t)
-        height=1.761 if guard else 1.741
+        ridge=(.026 if guard else .020)*abs(cos(a))**3*sin(pi*t)
+        height=1.777 if guard else 1.758
         y=brow(a)+(height-brow(a))*t+ridge
         front=max(0.,cos(a))
         pull=.024*front**2*(1.-t) if guard else 0.

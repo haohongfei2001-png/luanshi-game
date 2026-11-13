@@ -2,7 +2,7 @@
 // The swatches and two-joint weights use the same bind and UV grid as river_company.glb.
 import { readFileSync, writeFileSync } from "node:fs";
 
-const HIPS=0, CHEST=1, HEAD=2, LEFT_ARM=3, RIGHT_ARM=6;
+const HIPS=0, CHEST=1, HEAD=2, LEFT_ARM=3;
 const SWATCH={ cloth:1, hide:2, lining:10, headcloth:18, edge:29, iron:30, waist:31 };
 const pack=[];
 const views=[], accessors=[], nodes=[], meshes=[];
@@ -45,26 +45,28 @@ function surface(look,segments,rows) {
     }
     const armoured=["Regular","Guard","Officer","Player"].includes(look);
     if(armoured) {
-        for(const side of [-1,1]) {
-            const arm=side===-1?LEFT_ARM:RIGHT_ARM;
-            const span=look==="Regular"?.130:(look==="Player"&&side===1?.108:.194);
-            // A curved shoulder defence laps over the fitted sleeve. The bound rim and
-            // textile lining share the same edge vertices and joint weights as the iron.
-            function at(u,t) {
-                const a=(u-.5)*2.95,round=Math.cos(a),rise=Math.sin(t*Math.PI);
-                // The pauldron is cupped high on the deltoid with a cut-away front.
-                // Its lowest point faces back toward the elbow, clearing the wrist.
-                const x=.218+.020*t+(.056+.044*t+.030*rise)*round;
-                const y=1.423-.010*round-t*(span-.051*(1-round)-.022*Math.sin(a));
-                const z=-.010+(.092+.017*rise+.015*t)*Math.sin(a);
-                return [side*x,y,z,arm,CHEST,.46+.54*t];
-            }
-            const parts=look==="Regular"
-                ? [[0,.33,SWATCH.cloth],[.33,.76,SWATCH.iron],[.76,.83,SWATCH.hide],[.83,1,SWATCH.cloth]]
-                : (look==="Guard"
-                  ? [[0,.24,SWATCH.cloth],[.24,.70,SWATCH.iron],[.70,.81,SWATCH.hide],[.81,1,SWATCH.iron]]
-                  : [[0,.64,SWATCH.iron],[.64,.73,SWATCH.edge],[.73,.88,SWATCH.iron],[.88,1,SWATCH.hide]]);
-            for(const [top,bottom,colour] of parts) panel(segments,top===0?rows:1,colour,(u,v)=>at(u,top+(bottom-top)*v),side===-1);
+        // Both halves of the wool shoulder piece are cut from one polygonal
+        // pattern. The two open corners stop on the ribcage, several centimetres
+        // inside the arm socket. No floating bell-shaped metal spaulders.
+        const guard=look==="Guard";
+        const depth=guard?.117:(look==="Regular"?.209:.166);
+        const n=segments<=4?4:segments;
+        function textile(a,down) {
+            const front=Math.cos(a),side=Math.sin(a),left=Math.max(0,-side);
+            const fall=.47+.29*(1-front)+.53*left;
+            const y=1.445-depth*fall*down-.020*side*side;
+            const rx=.086+(.146+.018*left)*Math.sin(down*1.49);
+            const rz=.083+(.084+.020*Math.max(0,-front))*Math.sin(down*1.45);
+            const fold=.009*Math.sin(2*a+.47)*Math.sin(Math.PI*down);
+            return [(rx+fold)*side,y,-.008+(rz+fold)*front,CHEST,HIPS,1.];
+        }
+        // The spearman's left mantle fastens under a bare right shoulder. A
+        // shieldman wears the much shorter padded cover beneath a dark corslet.
+        const low=-3.85,high=guard?2.47:.79;
+        const mat=guard?11:(look==="Regular"?1:19);
+        panel(n,rows,mat,(u,v)=>textile(low+(high-low)*u,1-v));
+        if(look==="Regular"||guard){
+            panel(n,1,guard?2:10,(u,v)=>textile(low+(high-low)*u,1.055-.055*v));
         }
     }
     if(look==="Levy" || look==="Archer") {
@@ -84,7 +86,7 @@ function surface(look,segments,rows) {
     if(look==="Officer" || look==="Player") {
         // A diagonal folded collar rests on the upper back above the mantle. It gives
         // the normal follow camera a direction cue when the weapon arm is hidden.
-        panel(segments,2,look==="Player"?20:SWATCH.edge,(u,v)=>{
+        panel(segments,2,look==="Player"?23:19,(u,v)=>{
             const angle=1.55+3.18*u;
             const x=(.119+.109*v)*Math.sin(angle);
             const y=1.457-.066*v-.032*v*Math.sin(Math.PI*u)-.030*u;
@@ -139,21 +141,6 @@ function surface(look,segments,rows) {
             return [.187+(.064+.009*v)*Math.cos(a),.966+.032*v-.017*Math.cos(a),
                     -.094+(.093+.010*v)*Math.sin(a),HIPS,12,.98];
         });
-    } else if(look==="Regular" || look==="Guard") {
-        // The two leather straps pass over the shoulders and disappear into the
-        // iron corslet. Keep the cloth at the nape and the upper arms visible.
-        for(const side of [-1,1]) {
-            const width=look==="Guard"?.047:.035;
-            panel(far?1:2,far?3:5,SWATCH.hide,(u,v)=>{
-                const angle=PI*(.09+.85*v);
-                const x=side*(.111+.037*v)+width*(u-.5);
-                const z=-.018+.155*Math.cos(angle);
-                const y=1.266+.173*Math.sin(angle)-.014*v;
-                return [x,y,z,CHEST,HIPS,.98];
-            });
-        }
-        // The iron leaves, exposed cloth and their bindings now share one
-        // fitted, thigh-weighted surface in field_armour.skirts at all distances.
     }
     for(let i=0;i<indices.length;i+=3) {
         const a=indices[i]*3,b=indices[i+1]*3,c=indices[i+2]*3;
