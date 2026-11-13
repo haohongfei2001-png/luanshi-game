@@ -315,6 +315,10 @@ jobs:
           python3 -c 'from PIL import Image' || python3 -m pip install Pillow
       - name: Check planted steps, fitted grips and the reproducible horse mesh
         run: |
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > /tmp/field-import.log 2>&1
+          if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' /tmp/field-import.log; then exit 1; fi
+          godot --headless --path . --script tests/model_library_parity.gd
           python3 tools/art/check_company_motion.py
           python3 tools/art/check_field_carries.py
           python3 tools/art/check_contact_motion.py

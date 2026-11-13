@@ -49,7 +49,7 @@ def source_file(cache, name, signature):
         raise ValueError(f"Upstream blob mismatch at {name}")
     return path
 
-def read_dae(path):
+def read_dae(path, *, need_bind_positions=True):
     root = ET.parse(path).getroot()
     for node in root.iter():
         node.tag = node.tag.split("}")[-1]
@@ -87,7 +87,8 @@ def read_dae(path):
         world[node.get("name")] = transform[:3,3]
         for child in node.findall("node"):
             walk(child,transform)
-    walk(root.find(".//visual_scene/node"),np.identity(4))
+    if need_bind_positions:
+        walk(root.find(".//visual_scene/node"),np.identity(4))
     return points, uvs, faces[:,:,int(inp["VERTEX"].get("offset"))], faces[:,:,int(inp["TEXCOORD"].get("offset"))], weights, world
 
 def change_axis(p):

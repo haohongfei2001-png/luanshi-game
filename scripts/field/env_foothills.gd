@@ -1,5 +1,6 @@
 extends RefCounted
 ## Imported river trees, original branch sprays, paving and rock share terrain cells.
+const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const PLAN := preload("res://assets/environment/foothills.json")
@@ -86,10 +87,9 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 				patch.leaves.add_vertex(verts[k])
 	patch.sprays+=1
 
-func _grove_part(library: Node,name_in_asset: String) -> ArrayMesh:
-	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
+func _grove_part(mesh: ArrayMesh) -> ArrayMesh:
 	var part:=SurfaceTool.new()
-	part.create_from(node.mesh,0)
+	part.create_from(mesh,0)
 	# Static terrain already contains unindexed triangles. Appending glTF
 	# indices to that buffer would make only the newly indexed piece draw.
 	part.deindex()
@@ -98,21 +98,18 @@ func _grove_part(library: Node,name_in_asset: String) -> ArrayMesh:
 func _bake_trees() -> void:
 	# The two swept-bole willow assets and the inland tree prototypes use the
 	# same static, spatially culled draw batches. Local +X points over water.
-	var willows:=preload("res://assets/environment/bank-willows.gltf").instantiate()
+	var willows:=FieldMeshes.meshes(preload("res://assets/environment/bank-willows.gltf"))
 	for prefix:String in ["Veteran","Coppice"]:
-		trees.append({"wood":_grove_part(willows,prefix+"Bark"),"leaves":_grove_part(willows,prefix+"Foliage")})
-	willows.free()
-	var broadleaves:=preload("res://assets/environment/quaternius/grove.glb").instantiate()
+		trees.append({"wood":_grove_part(willows[prefix+"Bark"]),"leaves":_grove_part(willows[prefix+"Foliage"])})
+	var broadleaves:=FieldMeshes.meshes(preload("res://assets/environment/quaternius/grove.glb"))
 	for prefix: String in ["Broad","Upright"]:
 		# Bark and leaves use the same cutout material. Preserve the author's
 		# indices and render both surfaces together in each grove instance.
 		var combined := SurfaceTool.new()
 		combined.begin(Mesh.PRIMITIVE_TRIANGLES)
 		for part: String in ["Bark","Foliage"]:
-			var node := broadleaves.find_child(prefix+part,true,false) as MeshInstance3D
-			combined.append_from(node.mesh,0,Transform3D.IDENTITY)
+			combined.append_from(broadleaves[prefix+part],0,Transform3D.IDENTITY)
 		inland_meshes.append(combined.commit())
-	broadleaves.free()
 
 func _place_inland_stands(parent: Node3D) -> void:
 	for key: Vector3i in inland_stands:

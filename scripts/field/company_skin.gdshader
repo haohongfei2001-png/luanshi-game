@@ -83,6 +83,19 @@ void vertex() {
         int reaction=(clip==10 ? 0 : 2)+slot-1;
         tile.y=float(4*(381+kit*4+reaction))+.5;
     }
+    // Preserve ordinary soldiers' identities across LODs without extra mesh
+    // instances. Only first-joint head skin changes below the skull/helmet seam.
+    ivec2 swatch=ivec2(UV*vec2(8.,4.));
+    if (first==2 && !player_costume &&
+            (swatch==ivec2(0,2) || swatch==ivec2(0,1)) && VERTEX.y>1.447) {
+        float lot=floor(INSTANCE_CUSTOM.a*8.0);
+        float shape=lot<2.5 ? 0.0 : (lot<5.5 ? -1.0 : 1.0);
+        float cheek=1.-smoothstep(1.547,1.646,VERTEX.y);
+        float jaw=smoothstep(1.447,1.475,VERTEX.y)*(1.-smoothstep(1.492,1.584,VERTEX.y));
+        VERTEX.x*=1.0+.115*shape*cheek;
+        VERTEX.y+=.005*shape*jaw;
+        VERTEX.z+=.0065*shape*jaw*smoothstep(.025,.091,VERTEX.z);
+    }
     vec3 pos,nrm;
     skin(first,tile,VERTEX,NORMAL,pos,nrm);
     if(first!=second && blend<.999) {
@@ -139,7 +152,7 @@ void vertex() {
         pos=mix(pos,step_pos,leg_weight);
         nrm=mix(nrm,step_nrm,leg_weight);
     }
-    ivec2 swatch=ivec2(UV*vec2(8.,4.));
+
     // Shield panels have separate UV islands. A single bind-space band crosses their seams
     // and follows the left hand through a block or bash.
     shield_face=(VERTEX.xy-vec2(-.273,.976))/vec2(.568,1.005);

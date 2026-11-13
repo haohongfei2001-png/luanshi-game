@@ -41,3 +41,5 @@ The divided thigh guards and fitted sleeve yokes share their colour cuts across 
 普通枪兵、重装盾兵和弓弩手使用 Wildfire Games 为《0 A.D.》创作的三件成衣。转制保留了作者制作的衣片、袖筒、UV 和蒙皮，将它们适配河关兵种的握点、甲片和三档显示距离。原版来自汉军美术集，河关取其衣服结构，按本项目的军服配色和装备重新搭配。成衣与底色图的衍生资产延续 CC BY-SA 3.0 授权。头部、手、兵器、下身和原创人物资产可分别维护。[成衣来源及署名](../../third_party/wildfire_garments/NOTICE.txt) · [可复建的转制脚本](../../../tools/art/import_garrison_issues.py)
 
 持械步行、整队行进和短跑采用 Quaternius 的三段 CC0 动作。肩带与胯的转动从源动画按相位取样，抑制双手持长兵器时空手跑姿的大幅摆肩。脚掌仍使用河关的接地位置，手掌、兵器与受击动作共用原握点。[可编辑动作数据与来源](../../../tools/art/source/COMPANY_MARCH.md)
+
+RC17 对 HM08 的脸重新取最外侧的皮面，保留头盖与耳形。旧简化网格在口鼻和眼周有相交的背面，导致一部分角色在近镜出现游动的深斑。眉线、眼窝与上眼睑按照新表面位置重新对齐；敌我士兵、玩家和将领继续共享可复建的部件。[真人体底模与许可](../../../tools/art/source/MAKEHUMAN.md) · [固定持弓者的近景与军官对照](https://github.com/haohongfei2001-png/luanshi-game/tree/e5a10da83dc5f41f6f8399793f5ed7322f926ddd/docs/evidence/river-gate-v1-rc16/face-shell)

@@ -35,6 +35,7 @@ grep -q '^FIELD_PACKAGE_PASS' artifacts/exported-field.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/exported-field.log; then exit 1; fi
 grep -Fq 'Creative Commons Attribution-ShareAlike 3.0' builds/THIRD_PARTY_NOTICES.txt
 grep -Fq 'Wildfire Games' builds/THIRD_PARTY_NOTICES.txt
+grep -Fq 'River Gate remount' builds/THIRD_PARTY_NOTICES.txt
 python3 tools/verify_macos.py builds/Luanshi-macOS.zip
 python3 - <<'PY'
 import zipfile

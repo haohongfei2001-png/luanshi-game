@@ -1,5 +1,13 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC17 · 实战人物、坐骑与首次启动
+
+承接 RC16 源 `7c9ac667ded0a8e80a05cd47593a4af70c28486c`。该版首次 Metal 启动有一次在进入场景前停住，保留原始包和失败采样。原包中 82 个主线程采样都在销毁临时绘制节点时等待着色器编译。新游戏从打包场景直接读取军士、马、柳树与阔叶树的网格资源。对每个目录逐资源与 Godot 原实例核对；相同源文件必须得到同一资源。[RC16 失败现场](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491339985) · [独立托管 Mac 冷启动](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491973680)
+
+弓手、双方军士、玩家和军官共用重取的 HM08 脸部外皮，保留头型、耳部与眉眼。第一版去掉了斑点但眼窝也变平；第二版已在 #94、#1044、#1056 的原窗校准。战马来自可再分发的原骑兵表面和四种毛色，马鞍、缰手、衔铁、战车与脚下接触沿用河关尺寸。第一版马鬃有毛刺、灰马过亮；换成连续的鬃束轮廓后，实骑 #150 在 100 帧再走 9.94 米。[脸部两侧与普通机位](https://github.com/haohongfei2001-png/luanshi-game/blob/d2b308ff6512cf8fde85c03cd2e54e99e5e8b8b5/docs/evidence/river-gate-v1-rc16/face-shell/REVIEW.md) · [骑手/骑阵六机位](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491137393)
+
+从正式入口运行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import`、`godot --headless --script tests/model_library_parity.gd` 和 `./tools/compare-river-art.sh`。统一候选的真实包、连续录像、九武器/统军、两路护送、四规模和九次原生启动以 [PR #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53) 的同一版完整验证为准。美术保留待审，真实 M5 尚未测。前版默认托管 M1 的 P95/P99 为 14.829/19.789 ms，有 97 帧超过 16.67 ms。
+
 ## 河关 RC16 · 可恢复的制作现场
 
 本次集成取自上一候选 `05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09`，合入的军服母版 `219e14b1662990735eeda60cc2bdeaf3b54a19a4`，持械行军母版 `4b4f96f7a6a1760a09d1a17057298370fa865a10`，共享树林几何 `299eec62a60a4b0b88f9015d080b1b26bb85a61e`。三套服装、三段实物动作曲线已绑定正常军阵，枪盾弓、原有伤亡和兵籍沿用正式输入。树林在 Linux 的六次新进程、四个同机位对照已复核，场景建造中位由 1615 降至 740 ms；全程 512 对 512，热稳态帧率仍需实测。
