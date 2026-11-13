@@ -1,0 +1,66 @@
+{
+  "normal-camera-before-after/before.png": {
+    "bytes": 3676516,
+    "sha256": "ce85dfd48b1e3be4c321bb26e0e39b6c86833dc20471f797ca5351afc7490ddd"
+  },
+  "normal-camera-before-after/after.png": {
+    "bytes": 3769087,
+    "sha256": "0cb7ec1716028190b05360b12e2a215ddf5167bb26c8f1a75ba215ea2cde8b86"
+  },
+  "normal-camera-before-after/windup.png": {
+    "bytes": 3770933,
+    "sha256": "14cda7f92cf0c6fb77ec2b24f321671de7d1aff61f5cb841854e5f3a3d2d56e7"
+  },
+  "close.png": {
+    "bytes": 3081996,
+    "sha256": "cfd5c38cc88be7622fd675d8efa01f9b65da4b143e45f9e6ea8aefa8b5d810c8"
+  },
+  "mid.png": {
+    "bytes": 3522488,
+    "sha256": "6dd4f6d11e12180ba9179f3a55ed6cb453a1ed11a4de28e3e40bcca700f3b2e9"
+  },
+  "wide.png": {
+    "bytes": 3558029,
+    "sha256": "106bf4e1f954aa9517839b8e96764ba53ef5a8d99e6478b775a9f9197f9c38af"
+  },
+  "metal-window.png": {
+    "bytes": 889675,
+    "sha256": "9f27be128bba35fb2a0d5e058b65545727647f8dea08b3aba5fd51f3fae599c4"
+  },
+  "playthrough-review.mp4": {
+    "bytes": 864102,
+    "sha256": "f16633bb17838315e3fc2693c625efbc491658434cd8139cf584d180126bb88a"
+  },
+  "playthrough-full.mp4": {
+    "bytes": 18777879,
+    "sha256": "b0a3f43715fc68f101c6796856a47d8c9e5961aab9f2012ea31ebef89aaec236"
+  },
+  "journey-frames.jpg": {
+    "bytes": 236159,
+    "sha256": "232e2fc8128270433c5e1c65502c56f83472a3d960cc9f4568eefd479029bf7c"
+  },
+  "normal-review.jpg": {
+    "bytes": 341229,
+    "sha256": "45a50c7bd157adcf99062a77e327e801c4fe633f106804d673852f137f88aae2"
+  },
+  "normal-native.jpg": {
+    "bytes": 834752,
+    "sha256": "b9ecff9ae1abea78a2c954ec4fc76894edf51cdb1b86c9986ba05859344b0242"
+  },
+  "normal-pair.jpg": {
+    "bytes": 499578,
+    "sha256": "70ed51ab1ade9704290bb5cf707ff64d277006dbe863b2ea755e12b5792e4560"
+  },
+  "combat-normal-speed.mp4": {
+    "bytes": 21880224,
+    "sha256": "e12fa26f0352f0dbf6293eed6a50cff6912c86d783ae0ed65df53a23b6f941d7"
+  },
+  "export-sequence.jpg": {
+    "bytes": 115998,
+    "sha256": "ab43b65b7c86503c104420be681c32453bc3253087c524b9a4215f559e79e03f"
+  },
+  "export-recording.json": {
+    "bytes": 5038,
+    "sha256": "56705d1b52c026498a336fe7fdcea3b7a07a040104abb9be60ea368385f6650f"
+  }
+}
