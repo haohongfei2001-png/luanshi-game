@@ -15,6 +15,7 @@ jobs:
           persist-credentials: false
       - name: Show both owner references and the RC6 field at an equal viewing width
         run: |
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
           python3 - <<'PY'
           import base64, io
           from pathlib import Path
