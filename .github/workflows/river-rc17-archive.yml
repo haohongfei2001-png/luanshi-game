@@ -1,0 +1,154 @@
+name: Archive genuine river-gate captures and the exported battle movie
+on:
+  push:
+    branches: ['codex/river-rc17-library-worker']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2bcdc23f51806fa11ca925856df9d1f292aa1861
+          fetch-depth: 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: river-art-2e69fb1e6289c91c04e4d5421e46c0a75b30d3b4
+          path: /tmp/river-art
+          run-id: 43493877091
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-verification-2e69fb1e6289c91c04e4d5421e46c0a75b30d3b4
+          path: /tmp/river-mac
+          run-id: 43493877091
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: exported-game-window-2e69fb1e6289c91c04e4d5421e46c0a75b30d3b4
+          path: /tmp/river-film
+          run-id: 43493877091
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: gameplay-journey-2e69fb1e6289c91c04e4d5421e46c0a75b30d3b4
+          path: /tmp/field-journey
+          run-id: 43493877091
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-2e69fb1e6289c91c04e4d5421e46c0a75b30d3b4
+          path: /tmp/apple-app
+          run-id: 43493877091
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-Linux-2e69fb1e6289c91c04e4d5421e46c0a75b30d3b4
+          path: /tmp/linux-game
+          run-id: 43493877091
+          github-token: ${{ github.token }}
+      - name: Copy the original captures, match the app hash and publish only this evidence
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, plistlib, shutil, struct, tarfile, zipfile
+          from pathlib import Path
+          d=Path("docs/evidence/river-gate-v1-rc17")
+          d.mkdir(parents=True,exist_ok=True)
+          ri=Path("/tmp/river-art")
+          root=next(ri.rglob("before-22m")).parent
+          mac=Path("/tmp/river-mac")
+          mov=Path("/tmp/river-film")
+          rec=json.loads(next(mov.rglob("export-recording.json")).read_bytes())
+          include={
+              "normal-camera-before-after/before.png":root/"before-22m/personal-contact.png",
+              "normal-camera-before-after/after.png":root/"normal-22m/personal-contact.png",
+              "normal-camera-before-after/windup-before.png":root/"before-22m/personal-windup.png",
+              "metal-renderer-comparison.json":next(mac.rglob("renderer-comparison.json")),
+              "metal-window-frames.json":next(mac.rglob("shipping-metal-frames.json")),
+              "normal-camera-before-after/windup.png":root/"normal-22m/personal-windup.png",
+              "close.png":root/"after/hero.png","mid.png":root/"after/formation.png",
+              "wide.png":root/"after/ranks.png",
+              "metal-window.png":next(mac.rglob("shipping-metal.png")),
+              "playthrough-review.mp4":next(Path("/tmp/field-journey").rglob("river-gate-review.mp4")),
+              "playthrough-full.mp4":next(Path("/tmp/field-journey").rglob("river-gate-journey.mp4")),
+              "journey-frames.jpg":next(Path("/tmp/field-journey").rglob("journey-frames.jpg")),
+              "normal-review.jpg":root/"normal-22m/normal-review.jpg",
+              "normal-native.jpg":root/"normal-22m/normal-full.jpg",
+              "normal-pair.jpg":root/"normal-22m/normal-pair.jpg",
+              "combat-normal-speed.mp4":next(mov.rglob("combat-normal-speed.mp4")),
+              "macos-codesign.log":next(mac.rglob("codesign.log")),
+              "macos-host.log":next(mac.rglob("host.log")),
+              "export-sequence.jpg":next(mov.rglob("export-sequence.jpg")),
+              "export-recording.json":next(mov.rglob("export-recording.json")),
+          }
+          assert rec["export"]=="2e69fb1e6289c91c04e4d5421e46c0a75b30d3b4" and rec["package_sha256"]=="33409fa94ee9ec3bc0cef8fd3b96879e79d6231f556893842f0f6125b9ad12b7"
+          assert max(r["end_tick"] for r in rec["samples"])>=570
+          native=json.loads(next(mac.rglob("renderer-comparison.json")).read_bytes())
+          assert native["archive_sha256"]=="197da1c40fbe176bef27fa8d598fb6ad1388c3f480ba4f167df521169bbfacb0" and native["shipping_window"]["validated"]
+          apple=next(Path("/tmp/apple-app").rglob("Luanshi-macOS.zip"))
+          linux=next(Path("/tmp/linux-game").rglob("Luanshi-linux.tar.gz"))
+          assert hashlib.sha256(apple.read_bytes()).hexdigest()==native["archive_sha256"]
+          assert hashlib.sha256(linux.read_bytes()).hexdigest()==rec["package_sha256"]
+          with zipfile.ZipFile(apple) as app:
+              names=app.namelist()
+              notes=app.read("THIRD_PARTY_NOTICES.txt")
+              info=plistlib.loads(app.read(next(k for k in names if k.endswith(".app/Contents/Info.plist"))))
+              assert str(info["CFBundleVersion"])=="16017" and info["CFBundleIdentifier"]=="com.luanshi.prototype"
+              loader=next(k for k in names if k.endswith(".app/Contents/MacOS/"+info["CFBundleExecutable"]))
+              assert len(app.read(loader))>1000000
+          with tarfile.open(linux) as package:
+              linux_notes=package.extractfile(next(k for k in package if k.name.endswith("THIRD_PARTY_NOTICES.txt"))).read()
+          assert notes==linux_notes and all(k in notes for k in (b"Wildfire Games", b"Attribution-ShareAlike 3.0",b"creativecommons.org/licenses/by-sa/3.0/",b"Quaternius",b"MakeHuman",b"River Gate remount studies"))
+          # Distribute the exact unsigned-for-Developer-ID test candidate, without repackaging or a public Release.
+          assert apple.stat().st_size < 100*1024**2, "Git artifact exceeds the per-file storage limit"
+          destination = Path("candidate/River-Gate-RC17-macOS.zip")
+          destination.parent.mkdir(exist_ok=True)
+          shutil.copyfile(apple, destination)
+          (destination.parent/"SHA256SUMS").write_text(native["archive_sha256"]+"  "+destination.name+"\n")
+          launch_labels = [entry["label"] for entry in native["samples"]] + [native["focus_control"]["label"], native["shipping_window"]["label"]]
+          assert len(set(launch_labels))==9
+          for label in launch_labels:
+              for suffix in (".log","-boot.json","-focus.log","-before-scene.sample.txt"):
+                  path=next(mac.rglob(label+suffix),None)
+                  if path is not None:
+                      include["startup/"+label+suffix]=path
+          provenance={"bundle_version":info["CFBundleVersion"],"identifier":info["CFBundleIdentifier"],"archive_sha256":native["archive_sha256"],"linux_archive_sha256":rec["package_sha256"],"equal_notices":True,"notices_sha256":hashlib.sha256(notes).hexdigest(),"export_commit":rec["export"]}
+          (d/"shipping-packages.json").write_text(json.dumps(provenance,indent=2)+"\n")
+          timings=json.loads(next(mac.rglob("shipping-metal-frames.json")).read_bytes())["raw_wall_ms"]
+          assert len(timings)==native["shipping_window"]["frames"]
+          assert abs(max(timings)-native["shipping_window"]["max_ms"])<.001
+          (d/"native-frame-times.json").write_text(json.dumps(timings,separators=(",",":"))+"\n")
+          before,after=[json.loads((root/k/"input.json").read_text()) for k in ("before-22m","normal-22m")]
+          assert before==after and len(after)==2
+          (d/"normal-camera-before-after").mkdir(exist_ok=True)
+          (d/"normal-camera-before-after/input.json").write_text(json.dumps(after,ensure_ascii=False,indent=2)+"\n")
+          sums={}
+          for name,path in include.items():
+              raw=path.read_bytes()
+              if name.endswith(".png"):
+                  assert raw[:8]==b"\x89PNG\r\n\x1a\n"
+                  w,h=struct.unpack(">II",raw[16:24])
+                  if name!="metal-window.png": assert (w,h)==(1920,1200),(name,w,h)
+              dest=d/name
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(path,dest)
+              sums[name]={"bytes":len(raw),"sha256":hashlib.sha256(raw).hexdigest()}
+          assert sums["combat-normal-speed.mp4"]["sha256"]==rec["movie_sha256"]
+          assert sums["playthrough-full.mp4"]["sha256"]=="feceadbca54d050d7b6063bdc9333b9780c1805a003f81a192471b51eed57ed0"
+          assert sums["playthrough-review.mp4"]["sha256"]=="a28e096ec6fc7620ca55ecd9e5bf864a33878329625c7620b271ce3c03dd4311"
+          (d/"capture-files.json").write_text(json.dumps(sums,indent=2)+"\n")
+          print("ARCHIVED_ORIGINALS",json.dumps(sums))
+          import base64
+          print("EXPORT_CONTACT_SHEET",base64.b64encode((d/"export-sequence.jpg").read_bytes()).decode())
+          PY
+          git add -- docs/evidence/river-gate-v1-rc17/
+          git add -f -- candidate/River-Gate-RC17-macOS.zip candidate/SHA256SUMS
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Archive native camera PNGs, Metal timings and the played export"
+          git push origin HEAD:refs/heads/codex/river-rc17-original-windows
