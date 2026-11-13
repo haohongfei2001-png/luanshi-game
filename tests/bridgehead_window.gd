@@ -12,6 +12,7 @@ var crossed:={}
 var contacts:={}
 var initial_west:={}
 var last_tick:=-1
+var first_game_frame:=0
 var clicked:=false
 var screenshot_ok:=true
 
@@ -59,7 +60,7 @@ func _drive() -> void:
 	var t:=b.tick
 	# Alternate two physical movement chords to travel along the surveyed
 	# road despite the diagonal camera rotation.
-	var forward:=b.hero.pos.x<35.2 and b.hero.hp>35. and b.result==""
+	var forward:=t>28 and b.hero.pos.x<34.1 and b.hero.hp>44. and b.result==""
 	var steer:=b.hero.pos.y>-.90
 	_key(KEY_D,forward)
 	_key(KEY_W,forward and steer)
@@ -129,6 +130,7 @@ func _run() -> void:
 	if not b.started:
 		push_error("Deploy button failed")
 		quit(1);return
+	first_game_frame=Engine.get_frames_drawn()
 	var preview:="--bridge-stills" in OS.get_cmdline_user_args()
 	var frames:=0
 	while frames<601 and b.result=="" and not field.paused:
@@ -163,7 +165,7 @@ func _run() -> void:
 		"held_both":clear_count,"feet_in_deep_water":entered_water,"different_lens":off_lens,
 		"shield_contacts":contacts.values(),"resolution":[root.size.x,root.size.y],"internal":root.scaling_3d_scale,
 		"camera_start":[Ground.BRIDGE_VIEW.x,Ground.BRIDGE_VIEW.y],"software":RenderingServer.get_video_adapter_name(),
-		"last":fact,"frames":snapshots,"fixed_fps":Engine.get_frames_per_second(),"world_audit":field.theater.audit().is_empty()}
+		"last":fact,"frames":snapshots,"first_game_frame":first_game_frame,"physics_fps":Engine.physics_ticks_per_second,"world_audit":field.theater.audit().is_empty()}
 	var file:=FileAccess.open(OUT+"/input-and-camera.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(terminal,"  "))
 	file.close()

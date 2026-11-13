@@ -32,7 +32,7 @@ func _initialize() -> void:
 	for i in 400:
 		if not b.result.is_empty(): break
 		# A directed walk uses the same authoritative simulation as the controller.
-		b.input_state(Vector2.RIGHT if b.tick<76 else Vector2.ZERO,Vector2.RIGHT)
+		b.input_state(Vector2.RIGHT if b.hero.pos.x<Ground.MOAT_X+4.1 else Vector2.ZERO,Vector2.RIGHT)
 		if b.tick in [70,84,99,116,139,151]: b.press_action(0)
 		b.step()
 		for u in b.roster:
