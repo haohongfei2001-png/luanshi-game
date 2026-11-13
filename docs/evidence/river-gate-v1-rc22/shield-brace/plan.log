@@ -1,0 +1,9 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+SHIELD_BRACE_EVENTS [{"at":[1.95689725875854,-0.731642186641693],"attacker":576,"defender":70,"facing":[0.969681739807129,0.244371399283409],"map":"河关","side":"right","sign":1,"tick":79},{"at":[8.02999305725098,-24.3079319000244],"attacker":162,"defender":678,"facing":[-0.96981018781662,0.243861198425293],"map":"河关","side":"left","sign":-1,"tick":188}]
+SHIELD_BRACE_WINDOW true
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)
