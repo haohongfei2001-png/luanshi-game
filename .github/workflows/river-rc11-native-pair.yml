@@ -1,0 +1,35 @@
+name: Compare the RC10 and RC11 shipped apps on one native Mac
+on:
+  push:
+    branches: ['codex/river-rc11-same-mac']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compare:
+    runs-on: macos-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download the two verified packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for item in old:14022493652 new:14025269687; do
+            name=${item%:*}
+            id=${item#*:}
+            mkdir -p "$name"
+            gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/$id/zip" > "$name/outer.zip"
+            ditto -x -k "$name/outer.zip" "$name"
+          done
+      - name: Replay identical army size, native window, camera route and inputs A B B A
+        run: python3 tools/same_mac_candidates.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: alternating-native-river-apps
+          path: proof/
+          retention-days: 14
