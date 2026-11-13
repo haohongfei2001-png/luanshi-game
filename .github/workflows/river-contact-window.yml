@@ -1,0 +1,108 @@
+name: Review grounded field contact in the shipping window
+on:
+  push:
+    branches: ['codex/river-contact-window']
+permissions:
+  contents: read
+jobs:
+  bake-and-photograph:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bake shared animation and armour into the actual game
+        run: |
+          set -euo pipefail
+          python3 -m pip -q install Pillow==11.3.0 imageio-ffmpeg==0.6.0
+          mkdir -p proof/bakes
+          python3 tools/art/bake_river_company.py --geometry-only >proof/bakes/triangles.log
+          PYTHONPATH=tools/art python3 -c 'from pathlib import Path; from company_motion import bake_motion; bake_motion(Path("assets/river_gate/figures"))'
+          python3 tools/art/check_company_motion.py | tee proof/bakes/nine-kits.log
+          python3 tools/art/check_field_carries.py | tee proof/bakes/carries.log
+          python3 tools/art/check_contact_motion.py | tee proof/bakes/reactions.log
+          python3 - <<'PY'
+          import base64,hashlib,shutil
+          from pathlib import Path
+          for name in ("assets/river_gate/figures/river_company.glb","assets/river_gate/figures/company_motion.png"):
+              raw=Path(name).read_bytes(); shutil.copyfile(name,Path("proof/bakes")/Path(name).name)
+              wire=base64.b64encode(raw).decode()
+              print("CRAFT_ASSET_INFO",name,len(raw),hashlib.sha256(raw).hexdigest(),hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest(),len(wire))
+              for i in range(0,len(wire),14000): print("CRAFT_ASSET_PART",name,i,wire[i:i+14000])
+          PY
+      - name: Record the same real blocks and wounds in RC9 and the candidate
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/engine.zip' | sha512sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/engine
+          g=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
+          ff=$(python3 -c 'import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())')
+          ./tools/prepare-font.sh
+          for side in after before; do
+            rev=HEAD
+            if [[ $side == before ]]; then rev=4a3ebc4d3c8e687337b27829c6bc13be20810f09; fi
+            wrk=/tmp/melee-$side
+            mkdir -p "$wrk"
+            git archive "$rev" | tar -x -C "$wrk"
+            mkdir -p "$wrk/artifacts"
+            touch "$wrk/artifacts/.gdignore"
+            cp tests/field_contact_window.gd "$wrk/tests/"
+            cp -a assets/fonts/. "$wrk/assets/fonts/"
+            if [[ $side == after ]]; then cp proof/bakes/river_company.glb proof/bakes/company_motion.png "$wrk/assets/river_gate/figures/"; fi
+            export XDG_DATA_HOME=/tmp/data-$side XDG_CONFIG_HOME=/tmp/settings-$side XDG_CACHE_HOME=/tmp/cache-$side
+            "$g" --headless --editor --path "$wrk" --import >"proof/$side-import.log" 2>&1
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-import.log"; then exit 1; fi
+            play=(xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path "$wrk" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_contact_window.gd -- --field-size=512)
+            if [[ $side == after ]]; then
+              timeout 140s "${play[@]}" --find-contact-plan 2>&1 | tee proof/choose.log
+              cp "$wrk/artifacts/contact-plan.json" proof/
+            else cp proof/contact-plan.json "$wrk/artifacts/"; fi
+            timeout 190s "${play[@]}" 2>&1 | tee "proof/$side-window.log"
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-window.log"; then exit 1; fi
+            cp -a "$wrk/artifacts/contact-window" "proof/$side"
+            for act in shield stagger; do
+              "$ff" -nostdin -loglevel error -y -framerate 20 -i "proof/$side/$act-%02d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "proof/$side/$act.mp4"
+            done
+          done
+          python3 - <<'PY'
+          from PIL import Image,ImageChops,ImageStat
+          from pathlib import Path
+          import json,base64,hashlib
+          p=Path("proof")
+          events=json.loads((p/"contact-plan.json").read_text())
+          old,new=[json.loads((p/s/"states.json").read_text()) for s in ("before","after")]
+          assert old==new and len(old)==36
+          for e in events:
+              rows=[r for r in new if r["kind"]==e["kind"]]
+              prev,hit=[next(r for r in rows if r["tick"]==t) for t in (e["tick"]-1,e["tick"])]
+              assert hit["received"]>prev["received"] and hit["hp"]<prev["hp"] and hit["ordinary"]==[512,512]
+              if e["kind"]=="shield": assert hit["blocked"]>prev["blocked"]
+              print("CRAFT_RECEIPT",e["kind"],json.dumps({"event":e,"before":prev,"hit":hit},separators=(",",":")))
+          def save(im,key):
+              dest=p/(key+".jpg");im.save(dest,quality=90,subsampling=0)
+              data=dest.read_bytes(); wire=base64.b64encode(data).decode()
+              print("CRAFT_INFO",key,len(data),hashlib.sha256(data).hexdigest(),len(wire))
+              for i in range(0,len(wire),12000): print("CRAFT_PART",key,i,wire[i:i+12000])
+          for act in ("shield","stagger"):
+              sheet=Image.new("RGB",(1440,636))
+              for j,s in enumerate(("before","after")):
+                  for i,key in enumerate((4,7,9)):
+                      im=Image.open(p/s/("%s-native-%02d.png"%(act,key))).convert("RGB")
+                      assert im.size==(1920,1200)
+                      sheet.paste(im.crop((720,400,1200,718)),(i*480,j*318))
+              save(sheet,act+"-pose")
+              live=Image.open(p/"after"/(act+"-07.jpg")).convert("RGB")
+              save(live.resize((1280,800),Image.Resampling.LANCZOS),act+"-window")
+              print("CRAFT_DELTA",act,ImageStat.Stat(ImageChops.difference(sheet.crop((0,0,1440,318)),sheet.crop((0,318,1440,636)))).mean)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-contact-matched-frames
+          path: proof/

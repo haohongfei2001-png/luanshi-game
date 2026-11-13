@@ -86,8 +86,32 @@ def skirts(surface, look, hips, thighs, rank=False):
                     (thigh,hips,.64*down))
         def iron(u,v): return point(u,1.-v)
         def binding(u,v): return point(u,1.06-.06*v)
-        surface.grid(columns,1 if rank else 3,iron,"lames")
-        surface.grid(columns,1,binding,"leather")
+        if look in ("regular","guard"):
+            # Two suspended iron leaves part over a folded dyed coat at the hip.
+            # The visible wedge widens at the knee and folds back between the
+            # bound edges. Build all panels on one cut to avoid coplanar paint.
+            def cut(u,v):
+                breadth=(.103 if light else .085)+(.115 if light else .146)*(1.-v)
+                middle=.51+.045*(1.-v)
+                return middle+(u*2.-1.)*breadth
+            def leaf(u,v):
+                edge=cut(0.,v) if left else cut(1.,v)
+                x=u*edge if left else edge+u*(1.-edge)
+                return iron(x,v)
+            def gore(u,v):
+                p,weights=iron(cut(u,v),v)
+                fold=sin(pi*u)
+                return ((p[0]-side*.025*fold,p[1]-.059*(1.-v)*fold,
+                         p[2]+.013*fold*(1.-v)),weights)
+            for left in (True,False):
+                surface.grid(max(2,columns//2),1 if rank else 3,leaf,"lames")
+            surface.grid(2 if rank else 4,2,gore,"dyed")
+            for lo,hi in ((0.,cut(0.,0.)),(cut(1.,0.),1.)):
+                surface.grid(max(1,columns//2),1,
+                             lambda u,v: binding(lo+(hi-lo)*u,v),"leather")
+        else:
+            surface.grid(columns,1 if rank else 3,iron,"lames")
+            surface.grid(columns,1,binding,"leather")
 
     if look in ("guard","officer","player"):
         # A shorter front apron hangs from the belt between the two thigh panels.

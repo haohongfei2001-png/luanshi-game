@@ -57,6 +57,12 @@ class Unit:
 	var stride := 0.0
 	# Transient presentation state. Checkpoints retain their original gait and
 	# authoritative movement values; the renderer reconstructs this cycle on load.
+	# Presentation-only. Half a second of combat history is enough for the rig;
+	# neither integer participates in AI, damage, checkpointing or RNG.
+	var contact_tick := -100
+	var contact_side := 0
+	var contact_source := -1
+	var contact_blocked := false
 	var visual_stride := -1.0
 	var visual_run := false
 	var facing_before := Vector2.ZERO
@@ -756,11 +762,21 @@ func _hurt(source: Unit, target: Unit, power: float, from: Vector2) -> void:
 	if not active(target):
 		return
 	var damage := power * rng.randf_range(0.89,1.09) * (1.0-target.armor)
-	var frontal := target.facing.dot(target.pos.direction_to(from)) > 0.18
-	if target.state == State.GUARD and frontal:
+	var incoming := from - target.pos
+	var frontal := target.facing.dot(incoming.normalized()) > 0.18
+	# Local right for the mesh (+Z forward) is (facing.y,-facing.x) on the map.
+	target.contact_side = 1 if incoming.dot(Vector2(target.facing.y,-target.facing.x)) >= 0.0 else -1
+	target.contact_tick = tick
+	target.contact_source = source.id
+	target.contact_blocked = target.state == State.GUARD and frontal
+	if target.contact_blocked:
 		damage *= 0.22 if target.kit == Arms.Kit.SHIELD else 0.46
 		blocked_hits += 1
 		if target.move_slot == 3 and moves[target.kit][3].shape == Arms.Shape.PARRY and active(source) and source.pos.distance_to(target.pos) < 3.4 and target.timer > target.duration * 0.5:
+			source.contact_tick = tick
+			source.contact_source = target.id
+			source.contact_side = 1 if source.facing.cross(incoming) >= 0.0 else -1
+			source.contact_blocked = false
 			_set_state(source, State.STAGGER, 0.27)
 	if target.hero and vehicle != 0:
 		vehicle_hp[vehicle] = maxf(0.0, vehicle_hp[vehicle] - damage * 0.45)

@@ -167,7 +167,12 @@ def coat(s,look):
             # Use the fitted sleeve itself under the shoulder suspension. A second
             # shell following a different arm weight can open holes during a thrust.
             cap_end=(3 if look=="regular" else 4) if close else (2 if look=="regular" else 3)
-            panels=[(0,cap_end,"lames")]
+            if look in ("regular","guard") and cap_end>=2:
+                # The dyed cloth yoke suspends the overlapping upper-arm lames.
+                # Give it real area above the plates in both close and line meshes.
+                panels=[(0,1,"dyed"),(1,cap_end,"lames")]
+            else:
+                panels=[(0,cap_end,"lames")]
             if cap_end<edge-1: panels.append((cap_end,edge-1,"dyed"))
         elif look=="levy":
             shoulder=2 if close else 1
