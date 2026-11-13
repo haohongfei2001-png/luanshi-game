@@ -6,6 +6,8 @@
 - [完整 512v512 攻城与九武器录像](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43341234060/artifacts/14000780863)；[弓手正侧、背侧的 21 个原始镜头](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43340490104/artifacts/13999975015)。不靠摆拍，普通兵分别独立受击、倒地、溃逃；动作演示夹具与正常部署录像分别保存。
 ## 最终交付包 · 录制修复后的重建
 
+游戏 [PR #38](https://github.com/haohongfei2001-png/luanshi-game/pull/38) 完成[全部六项 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291)后合入 main，游戏合并提交 `b8e830f6d5f71620531ac76961decc31ef0b1581` 的 Git 树与实际导出源码完全相同。 [59.2 秒连续实机视频](playthrough-review.mp4)（888 帧、双声道，小体积观看副本） · [1280×800 原声原片](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001272623) · [合并后的自动重建](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43346502411)。主线重建使用新宿主，其运行结果不冒用本包的六项验收。
+
 [macOS 下载](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001017125) · [Linux 下载](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001545329) · [完整录像：千人攻城／九种武器](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001586116) · [原始 PNG／同步动态对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14002015521) · [Mac 包直接输出](NATIVE.md)。
 
 游戏分支提交 `dbae207abe51a305d2b9f392383dc00d016531cd`；导出源码 `4b9557b6d811880dffb9e6dc28d4531b27fd3456`；共同 Git 树 `24a9bec3ce2e4475abf1497b2e3c17c9cfa24b31`。Actions 下载的外层归档解压后，校验 **内层** `Luanshi-macOS.zip`：`2758b370eb60d848eaa6b4c026337d5eb29fe54838d8302ab03c8aa115cc2a44`。Mac 上可用 `shasum -a 256 Luanshi-macOS.zip`。托管 macOS 26.7.2 检查了 .app 的签名、可执行文件、持久化与实际图形启动。这是内部游戏候选，没有对外正式发布。

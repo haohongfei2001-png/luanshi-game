@@ -530,6 +530,496 @@
       "blob_sha": "1fa166dd810650ec0fe1232ac57145e2215bc300",
       "size": 68076,
       "sha256": "b946df7846f6c141411407d39dad5805b28873179e75f1c61ca0b144bc6cae67"
+    },
+    "docs/evidence/river-gate-v1-rc7/playthrough-review.mp4": {
+      "blob_sha": "9becc12c188f920f93f38c2ceb2294b501d25e33",
+      "size": 861027,
+      "sha256": "5a1d3b8147bac7f419b086a79dad93389ef05f1e5ae36113e81f49253853fc8b"
     }
+  },
+  "main_game": "b8e830f6d5f71620531ac76961decc31ef0b1581",
+  "main_tree_matches_tested": true,
+  "main_rebuild": 43346502411,
+  "verification": {
+    "run": 43343382291,
+    "status": "success",
+    "checks": [
+      {
+        "name": "verify-and-export",
+        "status": "success",
+        "job": 131616818153,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818153"
+      },
+      {
+        "name": "Compare RC6 and candidate in the game window",
+        "status": "success",
+        "job": 131616818339,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818339"
+      },
+      {
+        "name": "Verify field footage",
+        "status": "success",
+        "job": 131616818554,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818554"
+      },
+      {
+        "name": "Verify field journey",
+        "status": "success",
+        "job": 131616818723,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131616818723"
+      },
+      {
+        "name": "macos-runtime",
+        "status": "success",
+        "job": 131621653958,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131621653958"
+      },
+      {
+        "name": "Preserve review video bytes",
+        "status": "success",
+        "job": 131626363527,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/job/131626363527"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14002235781,
+        "name": "field-verification-journey-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 3052917,
+        "zip_sha256": "sha256:4869158ddc2a32622e13abbc1842de99c633634438249ad775e4f98fe9346fa1",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14002235781"
+      },
+      {
+        "id": 14002015521,
+        "name": "river-art-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 205880419,
+        "zip_sha256": "sha256:c4ba432d631a5890ff23479873e961d5c37f07599ab92412ca82218b3f68365a",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14002015521"
+      },
+      {
+        "id": 14001586116,
+        "name": "gameplay-footage-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 16479685,
+        "zip_sha256": "sha256:492e044d7c77cece9d93c23eda3d4e78af3616c02250da8214d03ca67cbdc813",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001586116"
+      },
+      {
+        "id": 14001545329,
+        "name": "Luanshi-Linux-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 52521129,
+        "zip_sha256": "sha256:b49c362e456aef97eec6d8d126f300dd2aeb20ad5f8fba6cae20bb3c00f4b001",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001545329"
+      },
+      {
+        "id": 14001461458,
+        "name": "field-verification-footage-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 7774502,
+        "zip_sha256": "sha256:bcc333accc1da6ad2281c0b544fcab958cc3f177cb8b2237bb32efb578fc4a0b",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001461458"
+      },
+      {
+        "id": 14001272623,
+        "name": "gameplay-journey-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 19937238,
+        "zip_sha256": "sha256:02fab4dff23d867eb80a6497fc0b10235bc7792dae0b96069e77f3f86b39da11",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001272623"
+      },
+      {
+        "id": 14001257614,
+        "name": "macos-verification-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 8195264,
+        "zip_sha256": "sha256:5e39ac962ca8d36bfcd267822100f21746e348d35ab5972be9cb4810ab8c61a8",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001257614"
+      },
+      {
+        "id": 14001017125,
+        "name": "Luanshi-macOS-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 87540160,
+        "zip_sha256": "sha256:c77a15ee8256ef453ee1bc43d25dd985b23b6a98a41462e9d8736cb855c06404",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001017125"
+      },
+      {
+        "id": 14000947346,
+        "name": "verification-4b9557b6d811880dffb9e6dc28d4531b27fd3456",
+        "archive_bytes": 2288636,
+        "zip_sha256": "sha256:b2d9ffaad99bb4a9034bfe1eddb463a049b9ddff2d6581a928997ffbe3a4a01b",
+        "expired": false,
+        "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14000947346"
+      }
+    ]
+  },
+  "journey": {
+    "journey": {
+      "attacks": 4381,
+      "blocked_hits": 52,
+      "camp_hours": 1,
+      "camp_resumed": true,
+      "capture_sec": 6,
+      "crew_replacements": 1,
+      "dead": [
+        257,
+        308
+      ],
+      "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+      "dropped_weapons": [
+        257,
+        308
+      ],
+      "errors": [],
+      "escaped": [
+        13,
+        122
+      ],
+      "gate_hp": 0,
+      "hero_ammo": 13,
+      "hero_hp": 100,
+      "hero_impacts": 7,
+      "hits": [
+        1431,
+        1084
+      ],
+      "mission": "夺取河关",
+      "officer_corps": {
+        "active_commands": [
+          5,
+          1
+        ],
+        "captives": [
+          [],
+          []
+        ],
+        "commanders": [
+          1024,
+          1040
+        ],
+        "evacuated": [
+          [],
+          []
+        ],
+        "fallen": [
+          [
+            1025,
+            1027,
+            1028,
+            1029,
+            1031,
+            1032,
+            1033,
+            1034,
+            1035,
+            1037,
+            1038
+          ],
+          [
+            1040,
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048,
+            1049,
+            1050,
+            1051,
+            1052,
+            1053,
+            1054,
+            1055
+          ]
+        ],
+        "kills": [
+          7,
+          3
+        ],
+        "ranked": true,
+        "rescued": [
+          [],
+          []
+        ],
+        "skills": [
+          56,
+          24
+        ],
+        "successions": [
+          9,
+          6
+        ],
+        "wounded": [
+          [
+            1030,
+            1036,
+            1039
+          ],
+          []
+        ]
+      },
+      "officers": 32,
+      "orders_delivered": 1,
+      "orders_lost": 0,
+      "orders_refused": 0,
+      "ordinary_rosters": [
+        512,
+        512
+      ],
+      "popup_semantic_fallbacks": 0,
+      "projectiles": 2480,
+      "ram_hp": 150,
+      "ram_strokes": 0,
+      "result": "夺取城内阵地",
+      "routing": [
+        20,
+        30
+      ],
+      "screens": [
+        "01-muster",
+        "02-deploy",
+        "03-gate",
+        "04-contact",
+        "05-breach",
+        "06-report",
+        "07-camp"
+      ],
+      "seed": 61112,
+      "soldiers_per_side": 512,
+      "tick": 1030
+    },
+    "audio": {
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 800,
+          "duration": "59.200000",
+          "nb_frames": "888"
+        },
+        {
+          "codec_name": "aac",
+          "channels": 2,
+          "duration": "59.200000",
+          "nb_frames": "2776"
+        }
+      ],
+      "peak_db": -10.6,
+      "mean_db": -32.7
+    },
+    "video": {
+      "bytes": 861027,
+      "sha256": "5a1d3b8147bac7f419b086a79dad93389ef05f1e5ae36113e81f49253853fc8b",
+      "original_sha256": "41aab33fc456196f788dc1cafd2d14fedf87be4b47f21029a0f0b4749caf1bef",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "duration": "59.200000",
+          "nb_frames": "888"
+        },
+        {
+          "codec_name": "aac",
+          "channels": 2,
+          "duration": "59.200000",
+          "nb_frames": "2776"
+        }
+      ]
+    },
+    "alternate": [
+      [
+        {
+          "attacks": 0,
+          "blocked_hits": 0,
+          "capture_sec": 0,
+          "case": "withdrawal",
+          "crew_replacements": 0,
+          "dead": [
+            0,
+            0
+          ],
+          "decision": "主将与撤出人员到达西营，仍在关前的部队留作后卫。",
+          "dropped_weapons": [
+            0,
+            0
+          ],
+          "escaped": [
+            1,
+            0
+          ],
+          "gate_hp": 260,
+          "hero_hp": 100,
+          "hero_x": -90.6128158569336,
+          "hits": [
+            0,
+            0
+          ],
+          "mission": "夺取河关",
+          "officer_corps": {
+            "active_commands": [
+              0,
+              1
+            ],
+            "captives": [
+              [],
+              []
+            ],
+            "commanders": [
+              40,
+              41
+            ],
+            "evacuated": [
+              [],
+              []
+            ],
+            "fallen": [
+              [],
+              []
+            ],
+            "kills": [
+              0,
+              0
+            ],
+            "ranked": true,
+            "rescued": [
+              [],
+              []
+            ],
+            "skills": [
+              0,
+              0
+            ],
+            "successions": [
+              0,
+              0
+            ],
+            "wounded": [
+              [],
+              []
+            ]
+          },
+          "officers": 2,
+          "orders_delivered": 0,
+          "orders_lost": 0,
+          "orders_refused": 0,
+          "ordinary_rosters": [
+            20,
+            20
+          ],
+          "projectiles": 0,
+          "ram_hp": 150,
+          "ram_strokes": 0,
+          "receipt": true,
+          "result": "成功撤离",
+          "routing": [
+            0,
+            0
+          ],
+          "seed": 61112,
+          "soldiers_per_side": 20,
+          "survivors_can_continue": true,
+          "tick": 684
+        },
+        {
+          "attacks": 11,
+          "blocked_hits": 0,
+          "capture_sec": 0,
+          "case": "defeat",
+          "crew_replacements": 0,
+          "dead": [
+            0,
+            0
+          ],
+          "decision": "主将阵亡，余军按在场军籍结算，河关仍由原守军控制。",
+          "dropped_weapons": [
+            0,
+            0
+          ],
+          "escaped": [
+            0,
+            0
+          ],
+          "gate_hp": 260,
+          "hero_hp": 0,
+          "hero_x": 3.47492909431458,
+          "hits": [
+            0,
+            5
+          ],
+          "mission": "夺取河关",
+          "officer_corps": {
+            "active_commands": [
+              1,
+              1
+            ],
+            "captives": [
+              [],
+              []
+            ],
+            "commanders": [
+              40,
+              41
+            ],
+            "evacuated": [
+              [],
+              []
+            ],
+            "fallen": [
+              [],
+              []
+            ],
+            "kills": [
+              0,
+              0
+            ],
+            "ranked": true,
+            "rescued": [
+              [],
+              []
+            ],
+            "skills": [
+              0,
+              0
+            ],
+            "successions": [
+              0,
+              0
+            ],
+            "wounded": [
+              [],
+              []
+            ]
+          },
+          "officers": 2,
+          "orders_delivered": 0,
+          "orders_lost": 0,
+          "orders_refused": 0,
+          "ordinary_rosters": [
+            20,
+            20
+          ],
+          "projectiles": 4,
+          "ram_hp": 150,
+          "ram_strokes": 0,
+          "receipt": true,
+          "result": "主将阵亡",
+          "routing": [
+            0,
+            0
+          ],
+          "seed": 61112,
+          "soldiers_per_side": 20,
+          "survivors_can_continue": false,
+          "tick": 43
+        }
+      ]
+    ],
+    "escort_from_log": [
+      "FIELD_ESCORT_GUI_PASS {\"attacks\":3207,\"blocked_hits\":17,\"capture_sec\":0.0,\"crew_replacements\":0,\"dead\":[174,232],\"decision\":\"城门先由先锋攻开，役兵护送冲车抵达门洞。\",\"delivery_prompt\":\"\",\"delivery_tick\":-1,\"dropped_weapons\":[174,232],\"elapsed_ms\":315718,\"errors\":[],\"escaped\":[4,93],\"gate_hp\":0.0,\"hero_hp\":100.0,\"hits\":[1008,715],\"mission\":\"护送冲车\",\"officer_corps\":{\"active_commands\":[13,6],\"captives\":[[],[]],\"commanders\":[1024,1040],\"evacuated\":[[],[]],\"fallen\":[[1024,1028],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049]],\"kills\":[4,4],\"ranked\":true,\"rescued\":[[],[]],\"skills\":[23,15],\"successions\":[1,2],\"wounded\":[[1025],[]]},\"officers\":32,\"opened_tick\":724,\"orders_delivered\":0,\"orders_lost\":0,\"orders_refused\":0,\"ordinary_rosters\":[512,512],\"patrol\":[27,14],\"popup_semantic_fallbacks\":0,\"projectiles\":2074,\"ram_distance_at_open\":3.00881338119507,\"ram_hp\":150.0,\"ram_strokes\":1,\"report_title\":\"护送冲车成功\",\"result\":\"护送冲车成功\",\"routing\":[12,9],\"screens\":[\"patrol-muster\",\"escort-approach\",\"escort-report\",\"escort-vanguard-approach\",\"escort-open-gate\",\"escort-vanguard-report\"],\"seed\":61112,\"soldiers_per_side\":512,\"tick\":724,\"vanguard_delivery\":{\"attacks\":3194,\"blocked_hits\":41,\"capture_sec\":0.0,\"crew_replacements\":1,\"dead\":[199,241],\"decision\":\"城门先由先锋攻开，役兵护送冲车抵达门洞。\",\"delivery_prompt\":\"送车入门 · 距门 10 米\",\"delivery_t"
+    ]
   }
 }
