@@ -52,29 +52,17 @@ func _select_bridge() -> bool:
 	await process_frame
 	var popup:=menu.get_popup()
 	if not popup.visible: return false
-	# The operating system owns this OptionButton's popup. Address its native
-	# window so a virtual desktop without a window manager accepts the same click.
+	# The popup is embedded in the game's viewport; its coordinates use the
+	# canvas design size. Project the row to real X11 window pixels before
+	# moving the OS pointer, also on a 1600 x 1000 or Retina-sized window.
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_jpg(OUT+"/muster.jpg",.92)
-	var xid:=DisplayServer.window_get_native_handle(DisplayServer.WINDOW_HANDLE,popup.get_window_id())
-	print("BRIDGE_MENU ",popup.visible," items=",menu.item_count," native=",xid," rect=",popup.position," size=",popup.size," focus=",popup.get_focused_item())
-	if xid!=0: OS.execute("xdotool",PackedStringArray(["windowfocus","--sync",str(xid)]))
-	for turn in 3:
-		if popup.get_focused_item()==5: break
-		var focus:=popup.get_focused_item()
-		var amount:=1 if focus<0 else (5-focus+menu.item_count)%menu.item_count
-		var buttons:=PackedStringArray(["key","--delay","70"])
-		for step in amount: buttons.append("Down")
-		if OS.execute("xdotool",buttons)!=0: return false
-		for i in 3: await process_frame
-	if popup.get_focused_item()==5:
-		OS.execute("xdotool",PackedStringArray(["key","Return"]))
-		for i in 4: await process_frame
-	if popup.visible and menu.selected!=5:
-		var row:=roundi(popup.size.y*.89)
-		var at:=popup.position+Vector2i(popup.size.x/2,row)
-		OS.execute("xdotool",PackedStringArray(["mousemove",str(at.x),str(at.y),"click","1"]))
-		for i in 5: await process_frame
+	var target:=Vector2(popup.position)+Vector2(popup.size.x*.45,popup.size.y*.90)
+	var pixel:=root.get_final_transform()*target
+	var top_id:=DisplayServer.window_get_native_handle(DisplayServer.WINDOW_HANDLE,0)
+	print("BRIDGE_MENU ",popup.position," ",popup.size," logical=",target," pixel=",pixel)
+	if OS.execute("xdotool",PackedStringArray(["mousemove","--window",str(top_id),str(roundi(pixel.x)),str(roundi(pixel.y)),"click","1"]))!=0: return false
+	for i in 6: await process_frame
 	print("BRIDGE_MENU_SELECTED ",menu.selected," encounter=",field.battle.bridgehead," popup=",popup.visible)
 	return menu.selected==5 and field.battle.bridgehead and not field.battle.started
 
