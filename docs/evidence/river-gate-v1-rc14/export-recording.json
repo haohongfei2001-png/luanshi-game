@@ -1,0 +1,127 @@
+{
+  "export": "584870655703f3b7f7cfd927500880ce4d966818",
+  "host": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "build": "0.16.0-rc.14",
+    "cpu": "Intel(R) Xeon(R) 6975P-C",
+    "driver": "X11",
+    "file": "river-gate-1794589576-3632.jsonl",
+    "godot": "4.6.3-stable (official)",
+    "kind": "host",
+    "platform": "Linux",
+    "renderer": "gl_compatibility",
+    "revision": "584870655703f3b7f7cfd927500880ce4d966818",
+    "vsync": 0
+  },
+  "movie_sha256": "0330a5fa0fb12594a9fa008fd0d6d0fd8b29ed75db18811202f8b79152488440",
+  "binary_sha256": "88f9e2d6074293d199a00ca51778409948b83fcf82617a86af68fcb2f9f4a284",
+  "package_sha256": "61c3d327428328f95debab7660f76f106b17241063d768f21723b18876d7d142",
+  "streams": [
+    {
+      "codec_name": "h264",
+      "width": 1280,
+      "height": 800,
+      "avg_frame_rate": "24/1",
+      "duration": "40.000000",
+      "nb_frames": "960"
+    },
+    {
+      "codec_name": "aac",
+      "channels": 2,
+      "avg_frame_rate": "0/0",
+      "duration": "40.000000",
+      "nb_frames": "1876"
+    }
+  ],
+  "mix": {
+    "mean_db": -36.0,
+    "peak_db": -8.8
+  },
+  "inputs": [
+    {
+      "movie_frame": 30,
+      "input": "发起河关战役"
+    },
+    {
+      "movie_frame": 48,
+      "input": "向敌阵骑行"
+    },
+    {
+      "movie_frame": 94,
+      "input": "向前压与点枪"
+    },
+    {
+      "movie_frame": 138,
+      "input": "停止前行，衔接连点"
+    },
+    {
+      "movie_frame": 184,
+      "input": "收枪，举枪防守"
+    },
+    {
+      "movie_frame": 212,
+      "input": "下马与近身进枪"
+    },
+    {
+      "movie_frame": 255,
+      "input": "观察两翼队列"
+    },
+    {
+      "movie_frame": 347,
+      "input": "切回主角"
+    },
+    {
+      "movie_frame": 385,
+      "input": "前锋集结"
+    },
+    {
+      "movie_frame": 462,
+      "input": "在小地图观察城门"
+    },
+    {
+      "movie_frame": 558,
+      "input": "拉远看城门"
+    },
+    {
+      "movie_frame": 665,
+      "input": "回到操作者"
+    },
+    {
+      "movie_frame": 735,
+      "input": "向交战方向突刺"
+    },
+    {
+      "movie_frame": 805,
+      "input": "观察城内目标"
+    }
+  ],
+  "samples": [
+    {
+      "start_tick": 15,
+      "end_tick": 107,
+      "per_side": 512,
+      "visible_combat_poses": 80,
+      "hits_in_window": 642,
+      "losses": [
+        49,
+        97
+      ],
+      "gate_hp": 260.0,
+      "estimated_internal_px": [
+        1280,
+        800
+      ],
+      "camera_size": 22.0,
+      "camera_travel": 22.9482364654541
+    }
+  ],
+  "accepted_actions": [
+    {
+      "kind": "accepted_action_to_frame_post_draw",
+      "ms": 863.839,
+      "slot": 0,
+      "tick": 54
+    }
+  ],
+  "performance_use": false
+}

@@ -1,0 +1,54 @@
+{
+  "normal-camera-before-after/before.png": {
+    "bytes": 3676516,
+    "sha256": "ce85dfd48b1e3be4c321bb26e0e39b6c86833dc20471f797ca5351afc7490ddd"
+  },
+  "normal-camera-before-after/after.png": {
+    "bytes": 3761829,
+    "sha256": "87e6deeb737a549439a8071d8bcb8a5e78a32acb1238d7098e4ce6508b26714f"
+  },
+  "normal-camera-before-after/windup.png": {
+    "bytes": 3762165,
+    "sha256": "3a33e358053e06eba8cb507ad23e0a90168e4a81ea3c175e974c8f4bc0f0bdc1"
+  },
+  "close.png": {
+    "bytes": 3079807,
+    "sha256": "dd4e3430905463568d1e5c07ee9400aae4cfd6aff449435fb13f014de1e43b22"
+  },
+  "mid.png": {
+    "bytes": 3524682,
+    "sha256": "7d0d3f5fbdd9deeaf5f380e1747db827d05ba0aa57a127201ff2686be344bb77"
+  },
+  "wide.png": {
+    "bytes": 3563748,
+    "sha256": "c2c544c93779c0507dc44ca3c7ee215947e7548dda1ccc1585423434839dda0e"
+  },
+  "metal-window.png": {
+    "bytes": 890285,
+    "sha256": "cf16d5ec8377a0b694f7f8230ea83d90dee75b921f8dd9bd38350617c191ed0a"
+  },
+  "normal-review.jpg": {
+    "bytes": 340127,
+    "sha256": "300e94b67e15107cce85d1a440ba70b06a109f6535bc43e2b7b3bb676c2e29fb"
+  },
+  "normal-native.jpg": {
+    "bytes": 829066,
+    "sha256": "34f23828315cb04a21d1d6c9397d87f1d35b7dcc6645fe6b5f88c626f13b293c"
+  },
+  "normal-pair.jpg": {
+    "bytes": 499023,
+    "sha256": "a67f875835160d00f5a39d291310032cbec78127abfc157fc5f74ad447931463"
+  },
+  "combat-normal-speed.mp4": {
+    "bytes": 9090353,
+    "sha256": "0330a5fa0fb12594a9fa008fd0d6d0fd8b29ed75db18811202f8b79152488440"
+  },
+  "export-sequence.jpg": {
+    "bytes": 109994,
+    "sha256": "ee5753c16213887ca5c70fac3eb010650edaf525df658040bc9b16dbbbb34f0f"
+  },
+  "export-recording.json": {
+    "bytes": 2736,
+    "sha256": "925eec6cc9ca36247ac5caef15169abc1ab0a025f98b3e19913e57ffe322b9d2"
+  }
+}
