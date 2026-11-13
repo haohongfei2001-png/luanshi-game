@@ -1,0 +1,51 @@
+name: Audit real RC7 game-window pixels
+on:
+  push:
+    branches: ['codex/river-rc7-readback-check']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14001327074
+          run-id: 43344852040
+          github-token: ${{ github.token }}
+          path: experimental
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14001257614
+          run-id: 43343382291
+          github-token: ${{ github.token }}
+          path: native
+      - name: Read actual pixels in six editor and nine exported app frames
+        run: |
+          python3 - <<'PY'
+          import json, hashlib, runpy
+          from pathlib import Path
+          read = runpy.run_path("docs/evidence/river-gate-v1-rc7/check_window.py")["playfield"]
+          def unique(root, name):
+              rows = list(Path(root).rglob(name))
+              assert len(rows) == 1, (root, name, len(rows))
+              return rows[0]
+          def row(root, label):
+              p = unique(root, label + ".png")
+              return {"png_sha256": hashlib.sha256(p.read_bytes()).hexdigest(), **read(p)}
+          diagnostic = {k: row("experimental", k) for k in ("before-hero","before-formation","before-gate","after-hero","after-formation","after-gate")}
+          report = json.loads(unique("native", "renderer-comparison.json").read_text())
+          keys = [r["label"] for r in [*report["samples"],report["focus_control"],report["shipping_window"]]]
+          exported = {k: row("native", k) for k in keys}
+          data = {"editor_run":43344852040,"editor_artifact":14001327074,"editor":diagnostic,"package_run":43343382291,"package_artifact":14001257614,"package":exported}
+          print("RIVER_PROOF_PIXELS " + json.dumps(data, separators=(",", ":")), flush=True)
+          assert not diagnostic["before-hero"]["valid"], "previous all-black first draw was accepted"
+          assert len(exported)==9
+          assert all(r["valid"] for r in exported.values()), "exported app produced one or more empty playfield frames"
+          assert all(r["valid"] for k,r in diagnostic.items() if k!="before-hero"), "another editor frame was blank"
+          PY
