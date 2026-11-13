@@ -63,11 +63,12 @@ vec3 painted_ground(vec2 p, float shore) {
 	vec2 bend=vec2(sin(.17*p.y+.071*p.x),sin(.16*p.x-.057*p.y))*.067;
 	vec2 turf_tile=1.-abs(2.*fract((meadow_uv+bend)*.5)-1.);
 	vec2 dirt_tile=1.-abs(2.*fract((loess_uv-bend)*.5)-1.);
-	float grass=paint_value(texture(meadow_paint,turf_tile).rgb);
+	vec3 meadow=texture(meadow_paint,turf_tile).rgb;
+	float grass=paint_value(meadow);
 	float soil=paint_value(texture(lane_paint,dirt_tile).rgb);
 	vec3 verge_marks=texture(verge_track,meadow_uv*1.41).rgb;
 	float grass_shape=smoothstep(.28,.70,grass)*.78+.22*smoothstep(.25,.69,verge_marks.r);
-	float dry_shape=smoothstep(.42,.78,soil);
+	float dry_shape=smoothstep(.31,.73,soil);
 	// A single large wash describes open grass and sheltered banks. Painted
 	// lobes carry the hue changes and retain their shape when the view pulls back.
 	float stems=smoothstep(.45,.76,verge_marks.r)*.58+.42*smoothstep(.35,.70,verge_marks.b);
@@ -75,9 +76,15 @@ vec3 painted_ground(vec2 p, float shore) {
 	float sun=clamp(.07+.55*grass_shape+.32*smoothstep(.19,.68,cover.b)-.30*margin.g+.09*margin.r,0.,1.);
 	vec3 turf=mix(turf_sheltered.rgb,turf_open.rgb,sun);
 	turf*=.91+.15*stems+.045*pasture;
+	// Retain the contrast and hue of broad grass shapes at a playing distance.
+	float cut=smoothstep(.27,.58,grass);
+	vec3 painted=OUTPUT_IS_SRGB?meadow:pow(max(meadow,vec3(.0001)),vec3(.48));
+	vec3 cast=clamp(painted/max(.075,grass),vec3(.70),vec3(1.27));
+	vec3 meadow_ink=mix(turf_sheltered.rgb,turf_open.rgb,.11+.78*cut);
+	turf=mix(turf,meadow_ink*mix(vec3(1.),cast,.44),.65)*(.82+.31*cut);
 	turf=mix(turf,clay_dry.rgb,margin.r*(.08+.17*grass_shape));
 	vec3 clay=mix(clay_bed.rgb,clay_dry.rgb,.14+.76*dry_shape);
-	clay*=.95+.071*smoothstep(.24,.70,verge_marks.g);
+	clay*=.85+.19*smoothstep(.30,.68,soil)+.063*smoothstep(.24,.70,verge_marks.g);
 	float centre=1.-smoothstep(.57,.99,cover.a);
 	float fallow=smoothstep(.24,.58,cover.r)*(1.-smoothstep(.73,.9,cover.r))*(1.-centre);
 	float edge=cover.r-.21*fallow+(.53-grass_shape)*.20+(.50-verge_marks.r)*.09;

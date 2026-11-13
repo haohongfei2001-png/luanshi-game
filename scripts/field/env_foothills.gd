@@ -108,13 +108,14 @@ func _leaf_platform(patch: Patch,root: Vector3,ray: Vector3,reach: float,width: 
 			var fall:=depth*(climb*t+.56*arch-.23*t*t)
 			for col in across:
 				var v:=2.*col/(across-1)-1.
-				var ribs:=.5+.5*cos(8.5*v+seed*.46)
-				var finger:=.085*sin(v*8.4+seed)+.049*sin(v*16.3-seed*.28)
-				var along:=t+finger*smoothstep(.36,1.,t)-.29*absf(v)*pow(t,2.4)
-				var fan:=(.16+.91*sin(PI*(.035+.80*t)))*(.93+.15*cos(t*11.7+seed+signf(v)))
+				var ribs:=.5+.5*cos(9.3*v+seed*.73)
+				var tip:=smoothstep(.49,1.,t)
+				var finger:=.12*sin(9.3*v+seed*.73)+.046*sin(14.*v-seed*.31)
+				var along:=t+finger*tip-.39*absf(v)*pow(t,2.2)
+				var fan:=(.11+.98*pow(maxf(0.,sin(PI*(.035+.88*t))),.77))*(.95+.18*cos(t*12.+seed+signf(v)))
 				var x:=v*fan+bend
 				var shell:=-.25*(1.-v*v)-.075*arch
-				if surface==0: shell=(1.-v*v)*(.63+.26*arch)+.21*ribs*arch+.060*sin(t*8.4+seed)*(1.-absf(v))
+				if surface==0: shell=(1.-v*v)*(.58+.40*arch)+.29*ribs*arch+.12*sin(t*9.4+seed)*(1.-absf(v))
 				points.append(root+ray*reach*along+side*width*x+Vector3.UP*(fall+depth*(shell-.29*v*v)))
 				var n:=(Vector3.UP+side*(.72*v)+ray*(.54*t-.24)).normalized()
 				normals.append(n if surface==0 else (Vector3.DOWN+side*v*.73).normalized())
@@ -186,17 +187,22 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int,variant: int) -> void:
 		var root:=elbow.lerp(wrist,.22)
 		var turn_side:=1. if (i+variant)%2==0 else -1.
 		var leaf_dir:=radial.rotated(Vector3.UP,.20*turn_side)
-		_leaf_platform(patch,root,leaf_dir,reach,width,width*.65,grade,spin+2.07*i,lift)
+		_leaf_platform(patch,root,leaf_dir,reach*.89,width*.81,width*.68,grade,spin+2.07*i,lift)
 		var cross_ray:=radial.rotated(Vector3.UP,turn_side*(1.42+.11*i))
 		var crouch:=wrist-leaf_dir*reach*.09+Vector3.DOWN*width*.11
 		patch.stone.rod(wrist,crouch+cross_ray*reach*.41+Vector3.UP*width*.10,fac*.32,h*.0029,BARK,5)
-		_leaf_platform(patch,crouch,cross_ray,reach*.73,width*.69,width*.45,grade-.11,spin-.73+1.91*i,lift+.08)
-		for fringe in 2:
-			var side:=Vector3(-leaf_dir.z,0.,leaf_dir.x)
-			var offset:=-.56 if fringe==0 else .49
-			var edge:=root+leaf_dir*reach*(.72 if fringe==0 else .80)+side*width*offset+Vector3.UP*width*(.22+.19*lift)
-			var tail:=leaf_dir.rotated(Vector3.UP,offset*.48)
-			_bough(patch,edge,tail,reach*(.38+.07*(i%2)),width*(.34+.05*fringe),-.47,grade,true,turn_side*.14)
+		_leaf_platform(patch,crouch,cross_ray,reach*.65,width*.58,width*.48,grade-.11,spin-.73+1.91*i,lift+.08)
+		# Branch-bearing sprays cross the boundary of the solid core along the
+		# long axis and both flanks. The visible hem follows the leaf silhouette.
+		for fringe in 5:
+			var fringe_angles: Array[float]=[-.97,-.44,.08,.60,1.10]
+			var off:=fringe_angles[fringe]
+			var lateral:=Vector3(-leaf_dir.z,0.,leaf_dir.x)
+			var tail:=leaf_dir.rotated(Vector3.UP,off)
+			var edge:=root+leaf_dir*reach*(.41+.16*cos(off))+lateral*width*.52*off+Vector3.UP*width*(.36+.23*lift+.08*sin(spin+fringe))
+			_bough(patch,edge,tail,reach*(.54+.07*sin(fringe*2.+i)),width*(.38+.06*cos(fringe*1.4)),-.28-.05*(fringe%3),grade,true,turn_side*.13)
+		var inland:=cross_ray.rotated(Vector3.UP,turn_side*.25)
+		_bough(patch,crouch+cross_ray*reach*.33+Vector3.UP*width*.26,inland,reach*.40,width*.34,-.38,grade-.07,true,turn_side*.17)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
@@ -417,6 +423,45 @@ func _stands(plan: Dictionary) -> void:
 # Banks at the edges of the old fields collect earth and slate where carts
 # cut through the sod. The three central remnants top out below ankle height;
 # the stone buttress at the gate lies inside the existing blocked wall strip.
+# The old pasture is still grazed into short fans along its raised banks.
+# Low broad blades have a real root and a curved back when a soldier walks across them.
+func _verge_grass(bed: Builder,p: Vector2,h: float,phase: float) -> void:
+	var foot:=ground_point(p)
+	var dark:=Color("536f52")
+	var ripe:=Color("9da66c")
+	bed.joint=0
+	for blade in 6:
+		var a:=phase+2.40*blade
+		var axis:=Vector3(cos(a),0.,sin(a))
+		var across:=Vector3(-axis.z,0.,axis.x)
+		var size:=h*(.79+.23*sin(a*.64+1.6))
+		var base:=foot+axis*.046-Vector3.UP*.010
+		var knee:=base+axis*size*.43+Vector3.UP*size*.63
+		var tip:=base+axis*size*(.91+.29*sin(a))+Vector3.UP*size*.93
+		var w:=size*(.115+.034*(blade%2))
+		var ink:=dark.lerp(ripe,.31+.091*(blade%4))
+		bed.quad(base-across*w*.36,knee-across*w,knee+across*w,base+across*w*.36,ink)
+		bed.tri(knee-across*w,tip,knee+across*w,ink.lightened(.12))
+
+func _grazed_banks() -> void:
+	var roots: Array[Vector4]=[Vector4(-8.1,-8.4,.16,1.12),Vector4(-3.4,-9.2,-.34,1.04),
+		Vector4(7.8,-7.3,-.25,.87),Vector4(10.6,-8.6,.11,.71),Vector4(19.2,9.4,-.32,1.17),
+		Vector4(-19.2,11.5,-.23,.94),Vector4(-11.9,7.6,-.48,.80),Vector4(34.7,-5.8,.08,.78)]
+	for i in roots.size():
+		var r:=roots[i]
+		var path:=Vector2(cos(r.z),sin(r.z))
+		var across:=Vector2(-path.y,path.x)
+		for tuft in 14:
+			var t:=float(tuft)/13.
+			var sweep:=sin(t*PI)
+			var off:=sin(tuft*2.97+i)*(.15+.43*sweep)
+			var p:=Vector2(r.x,r.y)+path*((t-.5)*r.w*5.6)+across*(off+.17*sin(t*4.1+i))
+			var h:=r.w*(.17+.12*sweep+.035*sin(tuft*2.18))
+			_verge_grass(_cell(p).stone,p,h,tuft*1.27+i*.8)
+			if tuft%3==1:
+				var other:=p+across*.39+path*.17
+				_verge_grass(_cell(other).stone,other,h*.77,2.72+tuft)
+
 func _field_banks() -> void:
 	# Local coordinates run along the bank, then across it, in metres.
 	var shoulders: Array[Vector4]=[Vector4(-7.4,-8.45,.14,1.05),Vector4(8.9,-7.55,-.32,.76),
@@ -542,6 +587,7 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	_bank_sedge()
 	_pavers(plan)
 	_field_banks()
+	_grazed_banks()
 	_bridge_ledges()
 	for patch:Patch in cells.values():
 		if patch.sprays>0:
