@@ -60,9 +60,9 @@ jobs:
             grep -F 'LOADED_ADVANCE true' "$proof/$side/film.log"
             cp "$game/film.json" "$proof/$side"
             for n in 004 012 021 039 055 066; do cp "$game/frame-$n.jpg" "$proof/$side/"; done
-            ffmpeg -loglevel error -framerate 20 -start_number 1 -i "$game/frame-%03d.jpg" -frames:v 76 -c:v libx264 -preset veryfast -crf 15 -pix_fmt yuv420p "$proof/$side/advance.mp4"
+            ffmpeg -y -loglevel error -framerate 20 -start_number 1 -i "$game/frame-%03d.jpg" -frames:v 76 -c:v libx264 -preset veryfast -crf 15 -pix_fmt yuv420p "$proof/$side/advance.mp4"
           done
-          ffmpeg -loglevel error -i "$proof/before/advance.mp4" -i "$proof/after/advance.mp4" -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -c:v libx264 -crf 16 -pix_fmt yuv420p "$proof/equal-speed.mp4"
+          ffmpeg -y -loglevel error -i "$proof/before/advance.mp4" -i "$proof/after/advance.mp4" -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -c:v libx264 -crf 16 -pix_fmt yuv420p "$proof/equal-speed.mp4"
           /usr/bin/python3 - <<'PY'
           from pathlib import Path
           import json
@@ -84,7 +84,8 @@ jobs:
               montage=Image.new("RGB",(960,420))
               for j,s in enumerate(("before","after")):
                   for i,k in enumerate(tri):
-                      p=tracks[j][k-1]["tracked"][0]["projection"]
+                      state=tracks[j][k-1]
+                      p=next(person["projection"] for person in state["tracked"] if person["id"]==state["focus_id"])
                       x,y=[round(n) for n in p]
                       im=Image.open(r/s/("frame-%03d.jpg"%k)).convert("RGB").crop((x-160,y-97,x+160,y+113))
                       montage.paste(im,(i*320,j*210))

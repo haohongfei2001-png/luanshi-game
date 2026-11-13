@@ -19,16 +19,17 @@ func _run() -> void:
 	var success_here:=true
 	var states:=[]
 	var film:="--advance-film" in OS.get_cmdline_user_args()
-	var ids:=[37,38,94,569]
+	var ids:=[37,38,94,167,166,165,193,194,544,569]
 	var distance:=0.
 	for t in range(TICKS):
 		_step_neutral()
 		var tick:=b.tick
 		var troop:=b.roster[37]
+		var focus:=b.roster[167] if tick<=38 else troop
 		distance+=troop.pos.distance_to(troop.before)
 		if not film and tick not in [12,41,64]: continue
 		field.carry=.82*Battle.DT
-		var centre:=troop.before.lerp(troop.pos,.82)
+		var centre:=focus.before.lerp(focus.pos,.82)
 		for yaw_index in (1 if film else 2):
 			var reverse:bool=(tick>38 if film else yaw_index==1)
 			var side:String="reverse" if reverse else "front"
@@ -63,7 +64,7 @@ func _run() -> void:
 				elif u.state==Battle.State.MARCH: stopped+=1
 				if u.state in [Battle.State.WINDUP,Battle.State.RECOVER,Battle.State.GUARD,Battle.State.STAGGER]: engaged+=1
 			states.append({"tick":tick,"camera":[field.camera.size,field.camera_yaw,centre.x,centre.y],
-				"ordinary":Array(b.ordinary_counts),"ids":ids,"tracked":troops,"hits":Array(b.hits),
+				"ordinary":Array(b.ordinary_counts),"ids":ids,"tracked":troops,"focus_id":focus.id,"hits":Array(b.hits),
 				"losses":Array(b.losses),"marching":moving,"running":running,"stopped":stopped,
 				"engaged":engaged,"commands":Array(b.command_counts),"pixels":[pixels.get_width(),pixels.get_height()],
 				"resolution_scale":root.scaling_3d_scale})
