@@ -1,12 +1,14 @@
 # Luanshi (working title)
 
+**OWNER-QUALITY-20261113 正式提高质量目标：**《乱世》须追赶《王者荣耀》级或更高的**画面精度、制作完成度与流畅度**，同时坚持独立的精致国风 3D 卡通色块/Cel Shading 方向；不再接受粗糙人物与地图。作品内容和资源体量可同级甚至更大（文件 GB 数字不是质量指标）。MacBook Air M5 千人高画质交战**稳定 60 FPS 是基线，进一步向 90/120 FPS 及 120Hz 体验优化**；M5 真机未经证实不能宣称达标。明清专属内容延期。**[最新 Owner 质量权威](docs/OWNER_QUALITY_FIDELITY_PERFORMANCE_TARGET_20261113.md) · [QUALITY 验收条款](docs/ACCEPTANCE_MATRIX.md)**。
+
 **2026-11-13 美术方向更新：** 用户认可“3D 国风动画式卡通 + 干净色块 + 分级明暗 + 清晰军阵”的优先方向；保留可信的中国古代战争表现与 3D 战斗架构。详见 [正式视觉方向规范](docs/ART_DIRECTION_CEL_SHADED_BATTLEFIELD_20261113.md)。这是概念方向，游戏内实现与视觉品质尚待真实验收。
 
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
-**河关 0.16.0-rc.8** · [下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005925103) · [59 秒实机录像](docs/evidence/river-gate-v1-rc8/playthrough-review.mp4) · [默认镜头的实战截图](docs/evidence/river-gate-v1-rc8/normal-full.jpg) · [本次实测、校验值和未完成项](docs/evidence/river-gate-v1-rc8/PLAYTEST.md)。下载 Actions 附件后，解开内层 `Luanshi-macOS.zip`，打开其中的 `.app`。历史构建和[RC7 回退记录](docs/evidence/river-gate-v1-rc7/PLAYTEST.md)保留。
+**河关 0.16.0-rc.9 试玩候选** · [下载 macOS 包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43374886624/artifacts/14014222258) · [正常镜头实机](docs/evidence/river-gate-v1-rc9/normal-full.jpg) · [实际游玩录像](docs/evidence/river-gate-v1-rc9/playthrough-review.mp4) · [测试、帧时间与安装包校验](docs/evidence/river-gate-v1-rc9/PLAYTEST.md)。解开 Actions 附件和内层 `Luanshi-macOS.zip`，打开其中的 `.app`。美术仍在返工，M5 真机尚待测试。[RC8 回退包及记录](docs/evidence/river-gate-v1-rc8/PLAYTEST.md)。
 
 河关战役从军议进入。默认会战部署双方各 512 名普通兵，另有军官与玩家。也可选择「平陵巡防」按三城的现有兵力、军械出阵。请在 [Linux 与原生 macOS 构建记录](https://github.com/haohongfei2001-png/luanshi-game/actions/workflows/verify.yml?query=branch%3Amain) 下载对应的构建与实录。源码使用 Godot 4.6.3，首次检出后依次运行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import` 和 `godot --path .`。右上角「三城旧档」可进入已有战役。 [中文操作](docs/PLAYING_ZH.md) · [当前交付记录](docs/CODEX_CONTINUATION.md)
 

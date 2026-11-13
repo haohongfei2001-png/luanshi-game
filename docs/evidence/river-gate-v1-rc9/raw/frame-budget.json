@@ -1,0 +1,334 @@
+{
+  "budgets": {
+    "native": {
+      "frames": 5889,
+      "fps": 245.35058761653215,
+      "p50_ms": 3.432,
+      "p95_ms": 10.288,
+      "p99_ms": 12.594,
+      "max_ms": 48.986,
+      "frames_over_budget": {
+        "60": 3,
+        "90": 162,
+        "120": 491
+      },
+      "host": "Apple M2 Pro (Virtual)",
+      "gpu": "Apple Paravirtual device (Apple5)",
+      "pixels": [
+        1024,
+        640
+      ],
+      "scale": 1,
+      "seconds": 24.002388,
+      "new_hits": 1124,
+      "msaa": 4,
+      "gpu_timestamps": "no_nonzero_device_timestamps"
+    },
+    "linux_software": {
+      "20": {
+        "frames": 20,
+        "fps": 4.2679131249211775,
+        "p50_ms": 232.2,
+        "p95_ms": 255.805,
+        "p99_ms": 256.549,
+        "max_ms": 256.549,
+        "frames_over_budget": {
+          "60": 20,
+          "90": 20,
+          "120": 20
+        },
+        "gpu": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "pixels": [
+          1280,
+          800
+        ],
+        "scale": 1,
+        "rss_kib": 835544,
+        "new_hits": 33
+      },
+      "100": {
+        "frames": 20,
+        "fps": 2.5160236108687695,
+        "p50_ms": 399.357,
+        "p95_ms": 439.872,
+        "p99_ms": 446.349,
+        "max_ms": 446.349,
+        "frames_over_budget": {
+          "60": 20,
+          "90": 20,
+          "120": 20
+        },
+        "gpu": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "pixels": [
+          1280,
+          800
+        ],
+        "scale": 1,
+        "rss_kib": 911496,
+        "new_hits": 172
+      },
+      "250": {
+        "frames": 20,
+        "fps": 2.152386603933207,
+        "p50_ms": 461.167,
+        "p95_ms": 486.605,
+        "p99_ms": 491.983,
+        "max_ms": 491.983,
+        "frames_over_budget": {
+          "60": 20,
+          "90": 20,
+          "120": 20
+        },
+        "gpu": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "pixels": [
+          1280,
+          800
+        ],
+        "scale": 1,
+        "rss_kib": 970052,
+        "new_hits": 262
+      },
+      "512": {
+        "frames": 20,
+        "fps": 1.7071189849129094,
+        "p50_ms": 582.417,
+        "p95_ms": 626.823,
+        "p99_ms": 629.996,
+        "max_ms": 629.996,
+        "frames_over_budget": {
+          "60": 20,
+          "90": 20,
+          "120": 20
+        },
+        "gpu": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "pixels": [
+          1280,
+          800
+        ],
+        "scale": 1,
+        "rss_kib": 1010824,
+        "new_hits": 288
+      }
+    }
+  },
+  "tail": {
+    "native": {
+      "platform": "Apple M2 Pro (Virtual)",
+      "renderer": "mobile",
+      "target": [
+        1024,
+        640
+      ],
+      "full": {
+        "n": 5889,
+        "average_ms": 4.076,
+        "p95_ms": 10.288,
+        "p99_ms": 12.594,
+        "over_16_67": 3,
+        "over_33_33": 1,
+        "over_50": 0,
+        "max_ms": 48.986
+      },
+      "first_250ms_after_pan": {
+        "n": 359,
+        "average_ms": 4.228,
+        "p95_ms": 10.418,
+        "p99_ms": 13.322,
+        "over_16_67": 2,
+        "over_33_33": 1,
+        "over_50": 0,
+        "max_ms": 48.986
+      },
+      "other_frames": {
+        "n": 5530,
+        "average_ms": 4.066,
+        "p95_ms": 10.285,
+        "p99_ms": 12.574,
+        "over_16_67": 1,
+        "over_33_33": 0,
+        "over_50": 0,
+        "max_ms": 17.861
+      },
+      "windows": [
+        {
+          "first_frame": 0,
+          "after_frame": 886,
+          "tick_at_end": 181,
+          "visible_at_end": 452,
+          "new_hits": 478,
+          "n": 886,
+          "average_ms": 4.523,
+          "p95_ms": 12.304,
+          "p99_ms": 13.382,
+          "over_16_67": 0,
+          "over_33_33": 0,
+          "over_50": 0,
+          "max_ms": 14.533
+        },
+        {
+          "first_frame": 886,
+          "after_frame": 1873,
+          "tick_at_end": 261,
+          "visible_at_end": 371,
+          "new_hits": 432,
+          "n": 987,
+          "average_ms": 4.062,
+          "p95_ms": 10.537,
+          "p99_ms": 11.861,
+          "over_16_67": 0,
+          "over_33_33": 0,
+          "over_50": 0,
+          "max_ms": 13.538
+        },
+        {
+          "first_frame": 1873,
+          "after_frame": 2625,
+          "tick_at_end": 341,
+          "visible_at_end": 432,
+          "new_hits": 108,
+          "n": 752,
+          "average_ms": 5.321,
+          "p95_ms": 11.638,
+          "p99_ms": 14.922,
+          "over_16_67": 1,
+          "over_33_33": 0,
+          "over_50": 0,
+          "max_ms": 17.861
+        },
+        {
+          "first_frame": 2625,
+          "after_frame": 3662,
+          "tick_at_end": 421,
+          "visible_at_end": 343,
+          "new_hits": 40,
+          "n": 1037,
+          "average_ms": 3.859,
+          "p95_ms": 10.037,
+          "p99_ms": 11.007,
+          "over_16_67": 0,
+          "over_33_33": 0,
+          "over_50": 0,
+          "max_ms": 15.228
+        },
+        {
+          "first_frame": 3662,
+          "after_frame": 4796,
+          "tick_at_end": 501,
+          "visible_at_end": 260,
+          "new_hits": 27,
+          "n": 1134,
+          "average_ms": 3.529,
+          "p95_ms": 9.196,
+          "p99_ms": 10.589,
+          "over_16_67": 2,
+          "over_33_33": 1,
+          "over_50": 0,
+          "max_ms": 48.986
+        },
+        {
+          "first_frame": 4796,
+          "after_frame": 5889,
+          "tick_at_end": null,
+          "visible_at_end": null,
+          "new_hits": null,
+          "n": 1093,
+          "average_ms": 3.643,
+          "p95_ms": 9.278,
+          "p99_ms": 11.059,
+          "over_16_67": 0,
+          "over_33_33": 0,
+          "over_50": 0,
+          "max_ms": 12.64
+        }
+      ],
+      "render_cpu_p95_ms": 0.241999998688698,
+      "render_gpu_p95_ms": null,
+      "simulation_cpu_mean_ms": 0.639605535744609,
+      "presentation_cpu_mean_ms": 2.11833282390898,
+      "max_examples": [
+        {
+          "frame": 3663,
+          "elapsed_ms": 16073,
+          "wall_ms": 48.986,
+          "after_pan": true
+        },
+        {
+          "frame": 3664,
+          "elapsed_ms": 16091.4,
+          "wall_ms": 18.433,
+          "after_pan": true
+        },
+        {
+          "frame": 2196,
+          "elapsed_ms": 9821.7,
+          "wall_ms": 17.861,
+          "after_pan": false
+        },
+        {
+          "frame": 2202,
+          "elapsed_ms": 9873.1,
+          "wall_ms": 16.599,
+          "after_pan": false
+        },
+        {
+          "frame": 2405,
+          "elapsed_ms": 10979.6,
+          "wall_ms": 16.445,
+          "after_pan": false
+        },
+        {
+          "frame": 2190,
+          "elapsed_ms": 9769.3,
+          "wall_ms": 16.402,
+          "after_pan": false
+        },
+        {
+          "frame": 2179,
+          "elapsed_ms": 9680,
+          "wall_ms": 15.579,
+          "after_pan": false
+        },
+        {
+          "frame": 2106,
+          "elapsed_ms": 9163.4,
+          "wall_ms": 15.543,
+          "after_pan": false
+        }
+      ],
+      "session_groups": 38,
+      "session_group_fields": [
+        "camera_size",
+        "camera_travel",
+        "end_tick",
+        "engaged_wall_seconds",
+        "estimated_internal_px",
+        "gate_hp",
+        "hits_in_window",
+        "internal_scale",
+        "kind",
+        "losses",
+        "memory_bytes",
+        "ordinary_rosters",
+        "outcome",
+        "per_side",
+        "preset",
+        "raw_wall_ms",
+        "render_cpu",
+        "render_gpu",
+        "render_target_px",
+        "reported_viewport_texture_px",
+        "seed",
+        "shadow_max_m",
+        "shadows",
+        "sim_cpu_ms",
+        "start_tick",
+        "view_script_ms",
+        "viewport",
+        "visible_combat_poses",
+        "visible_soldiers",
+        "wall",
+        "window_px"
+      ]
+    }
+  }
+}

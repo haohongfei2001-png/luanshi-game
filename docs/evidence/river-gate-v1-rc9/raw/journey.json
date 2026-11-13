@@ -1,0 +1,607 @@
+{
+  "journey": [
+    {
+      "attacks": 4381,
+      "blocked_hits": 52,
+      "camp_hours": 1,
+      "camp_resumed": true,
+      "capture_sec": 6,
+      "crew_replacements": 1,
+      "dead": [
+        257,
+        308
+      ],
+      "decision": "城门已开，内庭由我军持续占据；守军余部沿粮道撤出。",
+      "dropped_weapons": [
+        257,
+        308
+      ],
+      "errors": [],
+      "escaped": [
+        13,
+        122
+      ],
+      "gate_hp": 0,
+      "hero_ammo": 13,
+      "hero_hp": 100,
+      "hero_impacts": 7,
+      "hits": [
+        1431,
+        1084
+      ],
+      "mission": "夺取河关",
+      "officer_corps": {
+        "active_commands": [
+          5,
+          1
+        ],
+        "captives": [
+          [],
+          []
+        ],
+        "commanders": [
+          1024,
+          1040
+        ],
+        "evacuated": [
+          [],
+          []
+        ],
+        "fallen": [
+          [
+            1025,
+            1027,
+            1028,
+            1029,
+            1031,
+            1032,
+            1033,
+            1034,
+            1035,
+            1037,
+            1038
+          ],
+          [
+            1040,
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048,
+            1049,
+            1050,
+            1051,
+            1052,
+            1053,
+            1054,
+            1055
+          ]
+        ],
+        "kills": [
+          7,
+          3
+        ],
+        "ranked": true,
+        "rescued": [
+          [],
+          []
+        ],
+        "skills": [
+          56,
+          24
+        ],
+        "successions": [
+          9,
+          6
+        ],
+        "wounded": [
+          [
+            1030,
+            1036,
+            1039
+          ],
+          []
+        ]
+      },
+      "officers": 32,
+      "orders_delivered": 1,
+      "orders_lost": 0,
+      "orders_refused": 0,
+      "ordinary_rosters": [
+        512,
+        512
+      ],
+      "popup_semantic_fallbacks": 0,
+      "projectiles": 2480,
+      "ram_hp": 150,
+      "ram_strokes": 0,
+      "result": "夺取城内阵地",
+      "routing": [
+        20,
+        30
+      ],
+      "screens": [
+        "01-muster",
+        "02-deploy",
+        "03-gate",
+        "04-contact",
+        "05-breach",
+        "06-report",
+        "07-camp"
+      ],
+      "seed": 61112,
+      "soldiers_per_side": 512,
+      "tick": 1030
+    }
+  ],
+  "ending": [
+    [
+      {
+        "attacks": 0,
+        "blocked_hits": 0,
+        "capture_sec": 0,
+        "case": "withdrawal",
+        "crew_replacements": 0,
+        "dead": [
+          0,
+          0
+        ],
+        "decision": "主将与撤出人员到达西营，仍在关前的部队留作后卫。",
+        "dropped_weapons": [
+          0,
+          0
+        ],
+        "escaped": [
+          1,
+          0
+        ],
+        "gate_hp": 260,
+        "hero_hp": 100,
+        "hero_x": -90.6128158569336,
+        "hits": [
+          0,
+          0
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            0,
+            1
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            40,
+            41
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            []
+          ],
+          "kills": [
+            0,
+            0
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            0,
+            0
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            []
+          ]
+        },
+        "officers": 2,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          20,
+          20
+        ],
+        "projectiles": 0,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "receipt": true,
+        "result": "成功撤离",
+        "routing": [
+          0,
+          0
+        ],
+        "seed": 61112,
+        "soldiers_per_side": 20,
+        "survivors_can_continue": true,
+        "tick": 684
+      },
+      {
+        "attacks": 11,
+        "blocked_hits": 0,
+        "capture_sec": 0,
+        "case": "defeat",
+        "crew_replacements": 0,
+        "dead": [
+          0,
+          0
+        ],
+        "decision": "主将阵亡，余军按在场军籍结算，河关仍由原守军控制。",
+        "dropped_weapons": [
+          0,
+          0
+        ],
+        "escaped": [
+          0,
+          0
+        ],
+        "gate_hp": 260,
+        "hero_hp": 0,
+        "hero_x": 3.47492909431458,
+        "hits": [
+          0,
+          5
+        ],
+        "mission": "夺取河关",
+        "officer_corps": {
+          "active_commands": [
+            1,
+            1
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            40,
+            41
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [],
+            []
+          ],
+          "kills": [
+            0,
+            0
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            0,
+            0
+          ],
+          "successions": [
+            0,
+            0
+          ],
+          "wounded": [
+            [],
+            []
+          ]
+        },
+        "officers": 2,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          20,
+          20
+        ],
+        "projectiles": 4,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "receipt": true,
+        "result": "主将阵亡",
+        "routing": [
+          0,
+          0
+        ],
+        "seed": 61112,
+        "soldiers_per_side": 20,
+        "survivors_can_continue": false,
+        "tick": 43
+      }
+    ]
+  ],
+  "escort": [
+    {
+      "attacks": 3207,
+      "blocked_hits": 17,
+      "capture_sec": 0,
+      "crew_replacements": 0,
+      "dead": [
+        174,
+        232
+      ],
+      "decision": "城门先由先锋攻开，役兵护送冲车抵达门洞。",
+      "delivery_prompt": "",
+      "delivery_tick": -1,
+      "dropped_weapons": [
+        174,
+        232
+      ],
+      "elapsed_ms": 362704,
+      "errors": [],
+      "escaped": [
+        4,
+        93
+      ],
+      "gate_hp": 0,
+      "hero_hp": 100,
+      "hits": [
+        1008,
+        715
+      ],
+      "mission": "护送冲车",
+      "officer_corps": {
+        "active_commands": [
+          13,
+          6
+        ],
+        "captives": [
+          [],
+          []
+        ],
+        "commanders": [
+          1024,
+          1040
+        ],
+        "evacuated": [
+          [],
+          []
+        ],
+        "fallen": [
+          [
+            1024,
+            1028
+          ],
+          [
+            1040,
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048,
+            1049
+          ]
+        ],
+        "kills": [
+          4,
+          4
+        ],
+        "ranked": true,
+        "rescued": [
+          [],
+          []
+        ],
+        "skills": [
+          23,
+          15
+        ],
+        "successions": [
+          1,
+          2
+        ],
+        "wounded": [
+          [
+            1025
+          ],
+          []
+        ]
+      },
+      "officers": 32,
+      "opened_tick": 724,
+      "orders_delivered": 0,
+      "orders_lost": 0,
+      "orders_refused": 0,
+      "ordinary_rosters": [
+        512,
+        512
+      ],
+      "patrol": [
+        27,
+        14
+      ],
+      "popup_semantic_fallbacks": 0,
+      "projectiles": 2074,
+      "ram_distance_at_open": 3.00881338119507,
+      "ram_hp": 150,
+      "ram_strokes": 1,
+      "report_title": "护送冲车成功",
+      "result": "护送冲车成功",
+      "routing": [
+        12,
+        9
+      ],
+      "screens": [
+        "patrol-muster",
+        "escort-approach",
+        "escort-report",
+        "escort-vanguard-approach",
+        "escort-open-gate",
+        "escort-vanguard-report"
+      ],
+      "seed": 61112,
+      "soldiers_per_side": 512,
+      "tick": 724,
+      "vanguard_delivery": {
+        "attacks": 3194,
+        "blocked_hits": 41,
+        "capture_sec": 0,
+        "crew_replacements": 1,
+        "dead": [
+          199,
+          241
+        ],
+        "decision": "城门先由先锋攻开，役兵护送冲车抵达门洞。",
+        "delivery_prompt": "送车入门 · 距门 10 米",
+        "delivery_tick": 632,
+        "dropped_weapons": [
+          199,
+          241
+        ],
+        "elapsed_ms": 420080,
+        "escaped": [
+          3,
+          95
+        ],
+        "gate_hp": 0,
+        "hero_hp": 100,
+        "hits": [
+          1077,
+          828
+        ],
+        "mission": "护送冲车",
+        "officer_corps": {
+          "active_commands": [
+            13,
+            5
+          ],
+          "captives": [
+            [],
+            []
+          ],
+          "commanders": [
+            1024,
+            1040
+          ],
+          "evacuated": [
+            [],
+            []
+          ],
+          "fallen": [
+            [
+              1024,
+              1028
+            ],
+            [
+              1040,
+              1041,
+              1042,
+              1043,
+              1044,
+              1045,
+              1046,
+              1047,
+              1048,
+              1049,
+              1051
+            ]
+          ],
+          "kills": [
+            7,
+            5
+          ],
+          "ranked": true,
+          "rescued": [
+            [],
+            []
+          ],
+          "skills": [
+            37,
+            15
+          ],
+          "successions": [
+            1,
+            1
+          ],
+          "wounded": [
+            [
+              1025,
+              1027
+            ],
+            []
+          ]
+        },
+        "officers": 32,
+        "opened_tick": 630,
+        "orders_delivered": 0,
+        "orders_lost": 0,
+        "orders_refused": 0,
+        "ordinary_rosters": [
+          512,
+          512
+        ],
+        "projectiles": 1817,
+        "ram_distance_at_open": 9.90880489349365,
+        "ram_hp": 150,
+        "ram_strokes": 0,
+        "report_title": "护送冲车成功",
+        "result": "护送冲车成功",
+        "routing": [
+          10,
+          12
+        ],
+        "seed": 61112,
+        "soldiers_per_side": 512,
+        "tick": 700
+      }
+    }
+  ],
+  "sound": [
+    {
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 800,
+          "duration": "59.200000",
+          "nb_frames": "888"
+        },
+        {
+          "codec_name": "aac",
+          "channels": 2,
+          "duration": "59.200000",
+          "nb_frames": "2776"
+        }
+      ],
+      "peak_db": -10.6,
+      "mean_db": -32.7
+    }
+  ],
+  "movie": [
+    {
+      "bytes": 873299,
+      "sha256": "fb0183b43e93e6480863ce0675a0289906b1687b5ae319142ce5d6e14878712d",
+      "original_sha256": "34291dd89c4d228ddaf8cb4d736f1aba498be9c2ece46b736bfe1dce8cb4a9f9",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "duration": "59.200000",
+          "nb_frames": "888"
+        },
+        {
+          "codec_name": "aac",
+          "channels": 2,
+          "duration": "59.200000",
+          "nb_frames": "2776"
+        }
+      ]
+    }
+  ]
+}
