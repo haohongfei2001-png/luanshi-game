@@ -100,7 +100,7 @@ jobs:
           import base64,io,json
           root=Path('artifacts/helmet-pass')
           a,b=[json.loads((root/s/'receipts.json').read_text()) for s in ('before','after')]
-          assert a==b and len(b)==9 and all(v['ordinary']==[512,512] and v['size']==[1920,1200] for v in b)
+          assert a==b and len(b)==12 and all(v['ordinary']==[512,512] and v['size']==[1920,1200] for v in b)
           for e in b:
               name=e['label'];x,y=map(round,e['head'])
               imgs=[Image.open(root/s/(name+'.png')).convert('RGB') for s in ('before','after')]

@@ -25,8 +25,9 @@ def issue_headpiece(surface, guard, bone, rank):
         t,rx,rz,cz=sections[round(v*(len(sections)-1))]
         # The shield shell is raised along the front-to-back fold. The light
         # shell is shallow above the temples. Both retain a continuous surface.
-        ridge=(.030 if guard else .009)*abs(cos(a))**5*sin(pi*t)
-        y=brow(a)+(1.780-brow(a) if guard else 1.740-brow(a))*t+ridge
+        ridge=(.022 if guard else .010)*abs(cos(a))**5*sin(pi*t)
+        height=1.774 if guard else 1.741
+        y=brow(a)+(height-brow(a))*t+ridge
         return (rx*sin(a),y,cz+rz*cos(a)),bone
     surface.grid(sides,len(sections)-1,dome,"black_iron")
 
@@ -35,11 +36,15 @@ def issue_headpiece(surface, guard, bone, rank):
     def brim(u,v):
         a=TAU*u
         radius,depth=(.124,.140) if guard else (.112,.123)
-        flare=(.023 if guard else .009)*(.60+.40*sin(a)**2)
+        # Only the forward lip shades the eyes. At the rear, the rim tucks
+        # against the nape leaves instead of circling the head like a hatband.
+        front=max(0.,cos(a))
+        flare=(.004+.033*front**1.5+.012*sin(a)**2 if guard
+               else .004+.004*front+.003*sin(a)**2)
         if v<.5:
             return ((radius+flare)*sin(a),brow(a)-.008,.015+(depth+flare)*cos(a)),bone
-        return (radius*sin(a),brow(a)+(.016 if guard else .010),.015+depth*cos(a)),bone
-    surface.grid(sides,1,brim,"iron_binding" if guard else "leather")
+        return (radius*sin(a),brow(a)+(.012 if guard else .006),.015+depth*cos(a)),bone
+    surface.grid(sides,1,brim,"black_iron")
 
     def panel(points,side,mat,n,lo=0.,hi=1.,trim=.0):
         # Stations run from the temple to the nape. Both sides wind outwards.
@@ -65,18 +70,32 @@ def issue_headpiece(surface, guard, bone, rank):
             cheek=((.81,.051,.14),(1.24,.127,.16),(1.68,.158,.10),
                    (1.98,.116,.045),(2.14,.071,0.))
             panel(cheek,side,"lames",4 if rank else 8)
-            nape=((2.12,.075,.075),(2.36,.111,.04),(2.72,.128,0.),(pi,.122,0.))
-            panel(nape,side,"black_iron",3 if rank else 6)
-            panel(nape,side,"binding",3 if rank else 6,.90,1.045,.0014)
+            panel(cheek,side,"black_iron",4 if rank else 8,.90,1.018,.0014)
+            nape=((2.12,.065,.075),(2.38,.119,.035),(2.70,.146,.0),
+                  (2.98,.127,-.012),(pi,.105,.0))
+            panel(nape,side,"black_iron",4 if rank else 8)
+            panel(nape,side,"binding",4 if rank else 8,.93,1.025,.0014)
         else:
             # Short ear lappets end behind the cheekbone; the darker, inset
             # textile at the nape reveals the neck as the spearman turns.
             ear=((1.01,.025,.02),(1.36,.068,.08),(1.70,.092,.09),
                  (1.97,.066,.045),(2.06,.032,0.))
             panel(ear,side,"black_iron",4 if rank else 8)
-            cloth=((1.96,.030,.08),(2.36,.084,.07),(2.74,.097,.03),(pi,.088,0.))
+            cloth=((1.96,.027,.08),(2.36,.077,.065),(2.74,.112,.025),(pi,.085,0.))
             panel(cloth,side,"felt",3 if rank else 6)
-            panel(cloth,side,"headcloth",3 if rank else 6,.84,1.02,.0014)
+            panel(cloth,side,"binding",3 if rank else 6,.85,1.025,.0014)
+
+    if not guard:
+        # The folded corner of the soft nape guard rests on one side of
+        # the neck. Even the rank mesh keeps the triangular cloth silhouette.
+        left=((-.015,1.574,-.111),(-.034,1.544,-.133),(-.060,1.500,-.139))
+        right=((.027,1.572,-.109),(.014,1.540,-.139),(-.020,1.497,-.146))
+        def facing(u,v):
+            row=round((1.-v)*2)
+            p=[x+(y-x)*u for x,y in zip(left[row],right[row])]
+            p[2]-=.006*sin(pi*u)
+            return tuple(p),bone
+        surface.grid(2 if rank else 4,2,facing,"binding")
 
 
 def field_helmet(surface, look, bone, rank=False):

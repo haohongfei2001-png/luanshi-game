@@ -4,12 +4,12 @@ var samples: Array=[]
 var spear_id: int=-1
 const TAKE := "res://artifacts/helmets"
 
-func _actor_view(label: String, u: Battle.Unit, zoom: float, bearing: float) -> void:
+func _actor_view(label: String, u: Battle.Unit, zoom: float, bearing: float, offset:=Vector2.ZERO) -> void:
 	var b:=field.battle
 	field.carry=.65*Battle.DT
 	var pos:=u.before.lerp(u.pos,.65)
 	var yaw:=atan2(u.facing.x,u.facing.y)+bearing
-	_view(pos,zoom,yaw)
+	_view(pos+offset,zoom,yaw)
 	await RenderingServer.frame_post_draw
 	var shot:=root.get_texture().get_image()
 	success=(shot.save_png(TAKE+"/"+label+".png")==OK and success)
@@ -48,7 +48,7 @@ func _run() -> void:
 	await process_frame
 	if not b.started or b.ordinary_counts!=PackedInt32Array([512,512]):
 		quit(1); return
-	for tick in range(1,83):
+	for tick in range(1,100):
 		_step_neutral()
 		if b.tick!=tick: success=false; break
 		if tick==8:
@@ -69,6 +69,10 @@ func _run() -> void:
 			await _actor_view("spear-back",pike,7.8,2.40)
 			await _actor_view("spear-22m",pike,22.,1.12)
 			await _actor_view("spear-42m",pike,42.,1.12)
+		if tick==51:
+			var march:=b.roster[spear_id]
+			await _actor_view("spear-return",march,7.8,-2.14)
+			await _actor_view("spear-line",march,22.,.75,Vector2(6.,.8))
 		if tick==79:
 			var shield:=b.roster[70]
 			success=success and shield.kit==7 and shield.contact_tick==79 and shield.contact_blocked
@@ -78,9 +82,12 @@ func _run() -> void:
 			await _actor_view("shield-42m",shield,42.,1.28)
 		if tick==82:
 			await _actor_view("shield-after",b.roster[70],7.8,1.51)
+		if tick==98:
+			var march:=b.roster[spear_id]
+			await _actor_view("spear-after",march,7.8,2.12)
 	var f:=FileAccess.open(TAKE+"/receipts.json",FileAccess.WRITE)
 	f.store_string(JSON.stringify(samples,"  "))
-	success=success and samples.size()==9
+	success=success and samples.size()==12
 	print("HELMET_TEST_"+("PASS" if success else "FAIL")+" spear="+str(spear_id)+" guard=70")
 	shell.queue_free()
 	await process_frame
