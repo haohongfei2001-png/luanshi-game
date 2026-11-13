@@ -1,5 +1,12 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC21 · 守军院落和城墙
+
+RC20 代码 `126091196db530aa7ec13de61f839c9c41cac24b`。新版本从相同战斗的四个机位检查城池。两侧城墙从地基、墙身接到城墙上的木质通道，四座角楼使用同一套屋脊和角柱。原先四个同款房屋分为临门的营舍、靠粮道的库房。战役视线遮挡时可独立打开各自屋面。第一轮原地摆放使列队的守军站进屋内，最终版将建筑移至城墙内缘。行动逻辑、驻军位置、路线和旧存档格式继承 RC20。完整验收以本版导出包为准。[正反四个真实镜头与退回记录](https://github.com/haohongfei2001-png/luanshi-game/blob/0437ebc6891399d34fd23423bcb509de64046540/docs/evidence/river-gate-v1-rc21/fort-corners/REVIEW.md)
+
+复现 `godot --headless --path . --script tests/model_library_parity.gd`，随后在 1920 × 1200 的图形窗口运行 `godot --path . --resolution 1920x1200 --fixed-fps 20 --script tests/fort_corner_window.gd -- --field-size=512`。原片与步时保留在上述固定提交。美术和真实 M5 20 分钟验收仍待完成。
+
+
 ## 河关 RC20 · 过河军阵实机
 
 RC19 建筑、衣甲、倒地动作与存档在此基础上保留。过桥时可辨老柳向水探出的枝干和桥面留白；四个 1920 × 1200 实机机位与 RC19 同种子、同一批士兵，进度、伤亡相同。前几版整株过亮、露枝和方向遮挡的缺点已保留。[桥上军阵的完整对照](https://github.com/haohongfei2001-png/luanshi-game/tree/aeb09e7a3f9f7ecc12c7997ba238e4fc11cb0232/docs/evidence/river-gate-v1-rc20/ford-willows)

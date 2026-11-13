@@ -18,6 +18,8 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
+河关 RC21 将城角、墙上通道及守军生活区接入既有战役。四个相同机位实测将领和军士在内庭列队、城门保持通行、屋顶按视线退开。[城内守军和兵舍的前后原窗](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/9ec11778ad9f8902d2c7dbe3ebd3407937d4f5b1/docs/evidence/river-gate-v1-rc21/fort-corners/court-pair.jpg)
+
 河关 **0.16.0-rc.20** 正在实机验证不同兵种、桥头树冠和首帧初始化。已归档的 RC19 含 59.2 秒军议到回营实录以及九种武器、攻城、原速键鼠录像。[RC19 下载与实测](docs/evidence/river-gate-v1-rc19/PLAYTEST.md)
 
 河关 **0.16.0-rc.19** 在原战役中更新军士衣甲、行进动作、关楼、树冠与驿道。进入军议后可直接部署、带队攻门，或从旧档接着行军。[候选包与 CI 记录 #54](https://github.com/haohongfei2001-png/luanshi-game/pull/54) · [同一座关门的六处实机对照](https://github.com/haohongfei2001-png/luanshi-game/tree/82ee4e3752d705f9a2aa52a4c36f57bde1c115d8/docs/evidence/river-gate-v1-rc19/watchhall) · [近景及游玩距离的普通兵实录](https://github.com/haohongfei2001-png/luanshi-game/tree/910aa1eb35eed00c17b585df3eec1cb96949b23a/docs/evidence/river-gate-v1-rc19/fitted-infantry)

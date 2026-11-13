@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 repo_dir=$PWD
-baseline=8ba9daec9b1dbed8717ecef5cfd15ac2e35e0566
+baseline=126091196db530aa7ec13de61f839c9c41cac24b
 out=$PWD/artifacts/river-art-comparison
 work=$(mktemp -d)
 mkdir -p "$out"
