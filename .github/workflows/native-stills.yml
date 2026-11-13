@@ -1,0 +1,35 @@
+name: Review previously recorded Metal and compatibility frames
+on:
+  push:
+    branches: [codex/river-rc7-native-stills]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  recorded-windows:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43341234060
+          artifact-ids: 14000910119
+          github-token: ${{ github.token }}
+          path: native
+      - name: Read existing images without rendering or changing them
+        run: |
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+          python3 - <<'PY'
+          import base64, hashlib, io, json, pathlib
+          from PIL import Image
+          root=pathlib.Path('native')
+          report=json.loads(next(root.rglob('renderer-comparison.json')).read_text())
+          for name in ('compat-1','default-metal-1','shipping-metal'):
+              filename=next(root.rglob(name+'.png'))
+              im=Image.open(filename).convert('RGB')
+              trial=next(x for x in [*report['samples'],report['shipping_window']] if x['label']==name)
+              assert trial['validated'] and list(im.size)==trial['png_ihdr_px']
+              print('RC7_NATIVE_ORIGINAL',name,im.size,hashlib.sha256(filename.read_bytes()).hexdigest(),trial['hits_in_window'],trial['tour'])
+              buf=io.BytesIO();im.save(buf,'JPEG',quality=92,subsampling=0)
+              print('RC7_NATIVE_JPEG',name,base64.b64encode(buf.getvalue()).decode())
+          PY
