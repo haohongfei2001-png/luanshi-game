@@ -51,57 +51,54 @@ def geometry(cache):
         a,b,c=face[:,0]
         roots[root(a)]=root(b)
         roots[root(a)]=root(c)
-    # Fork centre, outer reach, width, pendant length, source island.
+    # Fork centre, outer reach, crown breadth and pendant length.
     sprays=[
-        ((3.18,4.18,-1.55),(1.,-.29),2.59,2.18,469),
-        ((-.25,4.51,2.30),(-.32,1.),2.34,1.82,435),
-        ((-1.78,4.22,-2.18),(-.72,-.76),2.26,1.65,504),
-        ((3.82,4.38,1.58),(.86,.48),2.54,2.27,560),
-        ((2.48,5.28,-.60),(.93,.12),2.37,1.70,434),
-        ((-.54,5.07,1.34),(-.72,.79),2.08,1.55,490),
-        ((1.07,4.85,-2.39),(.03,-1.),2.36,1.88,481),
+        ((3.18,4.18,-1.55),(1.,-.29),2.59,2.18),
+        ((-.25,4.51,2.30),(-.32,1.),2.34,1.82),
+        ((-1.78,4.22,-2.18),(-.72,-.76),2.26,1.65),
+        ((3.82,4.38,1.58),(.86,.48),2.54,2.27),
+        ((2.48,5.28,-.60),(.93,.12),2.37,1.70),
+        ((-.54,5.07,1.34),(-.72,.79),2.08,1.55),
+        ((1.07,4.85,-2.39),(.03,-1.),2.36,1.88),
         # Short leaf fans over the inner forks link the crown while leaving
         # passages of daylight beside the trunk and underneath the leaders.
-        ((.77,5.03,.05),(-.87,-.30),1.94,1.14,463),
-        ((1.90,4.61,.54),(.68,.80),1.89,1.23,522),
-        ((.35,4.53,-.58),(-.52,-.85),1.76,1.21,547),
+        ((.77,5.03,.05),(-.87,-.30),1.94,1.14),
+        ((1.90,4.61,.54),(.68,.80),1.89,1.23),
+        ((.35,4.53,-.58),(-.52,-.85),1.76,1.21),
     ]
     data=[]; normals=[]; tex=[]; bindings=[]; indices=[]
-    for location,ray,breadth,fall,part in sprays:
-        faces=[face for face in corners if root(face[0,0])==part]
-        assert faces and all(uv[face[:,2],0].mean()<.62 for face in faces)
-        used=sorted({i for face in faces for i in face[:,0]})
-        shape=p[used]
-        horizontal=shape[:,[0,2]]
-        center=horizontal.mean(axis=0)
-        _,_,axes=np.linalg.svd(horizontal-center,full_matrices=False)
-        along=(horizontal-center)@axes[0]
-        thick=(horizontal-center)@axes[1]
-        width=max(np.ptp(along),.01)
-        fold=max(np.ptp(thick),.01)
-        top,bottom=shape[:,1].max(),shape[:,1].min()
+    # Complete folded canopies have upper, lateral and pendant planes. A single
+    # hanging card per fork vanishes edge-on when the player orbits the bridge.
+    leafy_faces=[f for f in corners if uv[f[:,2],0].mean()<.62]
+    assert 100<len(leafy_faces)<240
+    used=sorted({i for f in leafy_faces for i in f[:,0]})
+    lo,hi=p[used].min(axis=0),p[used].max(axis=0)
+    middle=(lo+hi)*.5
+    for index,(location,ray,breadth,fall) in enumerate(sprays):
         forward=np.array(ray)/np.linalg.norm(ray)
         across=np.array([-forward[1],forward[0]])
         found={}
-        for face in faces:
+        for face in leafy_faces:
+            # Alternate one inland curtain per fork so light enters under each
+            # canopy at a different point and the whole tree is never mirrored.
+            if root(face[0,0]) in ((434,550),(504,510),(497,481))[index%3]:
+                continue
             for pi,ni,ti in face:
                 key=(int(pi),int(ni),int(ti))
                 if key not in found:
                     found[key]=len(data)
-                    xy=p[pi,[0,2]]-center
-                    span=float((xy@axes[0]-.5*(along.min()+along.max()))/width)
-                    depth=float((xy@axes[1]-.5*(thick.min()+thick.max()))/fold)
-                    drop=(top-p[pi,1])/max(.01,top-bottom)
-                    # Crown starts over the fork, grows towards river and turns
-                    # down under its own weight. Each outside edge stays folded.
-                    bow=.22+.67*np.sin(drop*np.pi*.68)+.27*depth-.32*span*span
-                    xz=np.array([location[0],location[2]])+forward*bow+across*span*breadth
-                    vert=np.array([xz[0],location[1]-fall*drop-.22*abs(span),xz[1]])/5.63
-                    outward=forward*(.38+.65*drop)+across*span*.93
-                    normal=np.array([outward[0],1.21-.82*drop,outward[1]])
+                    span=(p[pi,0]-middle[0])/(hi[0]-lo[0])
+                    depth=(p[pi,2]-middle[2])/(hi[2]-lo[2])
+                    drop=(hi[1]-p[pi,1])/(hi[1]-lo[1])
+                    bow=.09+.29*drop+depth*breadth*.76
+                    xz=np.array([location[0],location[2]])+forward*bow+across*span*breadth*1.24
+                    y=location[1]+.46-(.48+fall)*drop
+                    vert=np.array([xz[0],y,xz[1]])/5.63
+                    outward=forward*(depth*1.4+.09)+across*span*1.44
+                    normal=np.array([outward[0],.73-.63*drop,outward[1]])
                     data.append(vert); normals.append(normal/np.linalg.norm(normal))
                     tex.append((uv[ti,0],1.-uv[ti,1]))
-                    bindings.append((.12+.45*drop,16.+float(vert[1])))
+                    bindings.append((.09+.51*drop,16.+float(vert[1])))
                 indices.append((found[key],))
     lib=Library()
     attr={"POSITION":lib.accessor(data,"f",3,True),"NORMAL":lib.accessor(normals,"f",3),
