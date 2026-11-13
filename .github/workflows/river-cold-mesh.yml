@@ -1,0 +1,66 @@
+name: Check native startup without transient render instances
+on:
+  push:
+    branches: ['codex/river-cold-mesh-read']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  pack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify official engine, check every imported mesh and build a real universal app
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_export_templates.tpz" -o /tmp/templates.tpz
+          echo 'da606b61c10157844f8300172df374472665f95015495cb1a7cd132c40ede404faa96cc1016a4b9662db9909ddea69632c4948b2cd11163438dad4808881fb68  /tmp/templates.tpz' | sha512sum -c -
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+          unzip -j -q /tmp/templates.tpz 'templates/macos.zip' 'templates/linux_release.x86_64' 'templates/linux_debug.x86_64' 'templates/version.txt' -d "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+          ./tools/prepare-font.sh
+          godot --headless --editor --import > /tmp/import.txt 2>&1
+          if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' /tmp/import.txt; then exit 1; fi
+          godot --headless --script tests/model_library_parity.gd | tee /tmp/mesh-proof.log
+          grep -q '^MESH_LIBRARY_PARITY' /tmp/mesh-proof.log
+          ./tools/export.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: render-library-mac
+          path: |
+            builds/Luanshi-macOS.zip
+            builds/SHA256SUMS
+  native:
+    needs: pack
+    runs-on: macos-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: render-library-mac
+          path: candidate
+      - name: Exercise the corrected package, two normal Metal launches and the intentional zero-tick interruption
+        run: |
+          set -euo pipefail
+          cd candidate
+          grep 'Luanshi-macOS.zip' SHA256SUMS | sed 's#builds/##' | shasum -a 256 -c -
+          ditto -x -k Luanshi-macOS.zip unpacked
+          codesign --verify --deep --strict --verbose=2 unpacked/*.app
+          cd ..
+          python3 tools/rc3_native_probe.py candidate/Luanshi-macOS.zip candidate/unpacked cold-data --startup-regression
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: asset-lookup-native-cold-launches
+          path: cold-data/

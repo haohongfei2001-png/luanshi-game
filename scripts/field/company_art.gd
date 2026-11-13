@@ -1,6 +1,7 @@
 extends RefCounted
 ## Imported field meshes share a costume atlas, the metre-scale hand bind and a baked
 ## motion bank. Merge shared body/weapon geometry once, retaining one draw per crowd batch.
+const MeshLibrary := preload("res://scripts/field/model_library.gd")
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
 const GARMENTS := preload("res://assets/river_gate/figures/field_garments.gltf")
 const GARRISON := preload("res://assets/third_party/wildfire_garments/field_issues.glb")
@@ -15,10 +16,7 @@ static var assembled: Dictionary = {}
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
 	for asset: PackedScene in [LIBRARY, GARMENTS, GARRISON, FIELD_BODY]:
-		var library := asset.instantiate()
-		for part in library.find_children("*", "MeshInstance3D", true, false):
-			pieces[String(part.name)]=part.mesh
-		library.free()
+		pieces.merge(MeshLibrary.meshes(asset),true)
 
 static func costume(kit: int) -> String:
 	if kit in [5,6]: return "Archer"
