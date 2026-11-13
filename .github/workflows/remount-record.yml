@@ -1,0 +1,53 @@
+name: Preserve played remount contact windows
+on:
+  push:
+    branches: ['codex/river-remount-film-record']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  save:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 7c9ac667ded0a8e80a05cd47593a4af70c28486c
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43491137393
+          name: authentic-remount-and-rider-comparison
+          path: /tmp/riding
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43490064381
+          name: authentic-remount-and-rider-comparison
+          path: /tmp/trial
+          github-token: ${{ github.token }}
+      - name: Preserve unchanged originals of both rides, the rejected mane and the equal-speed passage
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,hashlib,shutil
+          from pathlib import Path
+          root=Path("/tmp/riding")
+          out=Path("docs/evidence/river-gate-v1-rc17/remount")
+          out.mkdir(parents=True)
+          a,b=[json.loads((root/s/"frames.json").read_text()) for s in ("before","after")]
+          assert a==b and len(b)==6 and all(r["ordinary"]==[512,512] for r in b)
+          shutil.copytree(root/"before",out/"before")
+          shutil.copytree(root/"after",out/"after")
+          for f in root.glob("*.jpg"): shutil.copyfile(f,out/f.name)
+          shutil.copyfile(root/"mounted-pair.mp4",out/"mounted-pair.mp4")
+          shutil.copyfile("/tmp/trial/moving-profile.jpg",out/"first-mane.jpg")
+          sums={str(f.relative_to(out)):hashlib.sha256(f.read_bytes()).hexdigest() for f in out.rglob("*") if f.is_file()}
+          (out/"sha256.json").write_text(json.dumps(sums,indent=2)+"\n")
+          print("RIDING_EVIDENCE",len(sums),b[-1]["actor"],b[-1]["tick"])
+          PY
+          git add -- docs/evidence/river-gate-v1-rc17/remount
+          git -c user.name='River Gate art study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive the same live cavalry actor at six camera distances and full walking speed'
+          git push origin HEAD:refs/heads/codex/river-remount-film
