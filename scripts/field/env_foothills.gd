@@ -13,6 +13,7 @@ var leaf_material:=ShaderMaterial.new()
 var terrain_tiles: Dictionary
 var rng:=RandomNumberGenerator.new()
 var trees: Array[Dictionary]=[]
+var ford_willow: ArrayMesh
 var inland_meshes: Array[ArrayMesh]=[]
 var inland_stands: Dictionary = {}
 
@@ -101,6 +102,7 @@ func _bake_trees() -> void:
 	var willows:=FieldMeshes.meshes(preload("res://assets/environment/bank-willows.gltf"))
 	for prefix:String in ["Veteran","Coppice"]:
 		trees.append({"wood":_grove_part(willows[prefix+"Bark"]),"leaves":_grove_part(willows[prefix+"Foliage"])})
+	ford_willow=_grove_part(FieldMeshes.meshes(preload("res://assets/third_party/wildfire_willow/ford_willow.glb"))["Willow"])
 	var broadleaves:=FieldMeshes.meshes(preload("res://assets/environment/quaternius/grove.glb"))
 	for prefix: String in ["Broad","Upright"]:
 		# Bark and leaves use the same cutout material. Preserve the author's
@@ -143,6 +145,15 @@ func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: fl
 		var key:=Vector3i(floori(p.x/21.),floori(p.y/18.),archetype)
 		if not inland_stands.has(key): inland_stands[key]=[]
 		inland_stands[key].append(placement)
+		return
+	if height>=5.45 and variant==0:
+		# Fit the hanging sprays to the old river-marking trunk and root flares.
+		# Every existing branch, bank and troop landing keeps its position.
+		patch.leaves.append_from(trees[0].wood,0,Transform3D(Basis(Vector3.UP,yaw).scaled(Vector3.ONE*(height/5.63)),ground_point(p)))
+		var footing:=ground_point(p)
+		var planted:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*height)
+		patch.leaves.append_from(ford_willow,0,Transform3D(planted,footing))
+		patch.sprays+=1
 		return
 	var source:=trees[shape]
 	# Riverbank willows still share the small shoreline spray batches.
@@ -490,6 +501,7 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
+	leaf_material.set_shader_parameter("ford_ink",preload("res://assets/third_party/wildfire_willow/ford_willow.png"))
 	leaf_material.set_shader_parameter("grove_leaf",preload("res://assets/environment/quaternius/leaves.png"))
 	leaf_material.set_shader_parameter("grove_bark",preload("res://assets/environment/quaternius/bark.png"))
 	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))

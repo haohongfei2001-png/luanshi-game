@@ -15,7 +15,12 @@ static func _boot(tree: SceneTree, scene: Field, stage: String) -> void:
 		"physics_frames":Engine.get_physics_frames(), "drawn_frames":Engine.get_frames_drawn(),
 		"focus":tree.root.has_focus(), "paused":scene.paused, "started":b.started,
 		"tick":b.tick, "hits":b.hits[0]+b.hits[1], "result":b.result,
-		"renderer":RenderingServer.get_current_rendering_method(), "data_dir":OS.get_user_data_dir()
+		"renderer":RenderingServer.get_current_rendering_method(), "data_dir":OS.get_user_data_dir(),
+		"pipelines":{"canvas":int(Performance.get_monitor(Performance.PIPELINE_COMPILATIONS_CANVAS)),
+			"mesh":int(Performance.get_monitor(Performance.PIPELINE_COMPILATIONS_MESH)),
+			"surface":int(Performance.get_monitor(Performance.PIPELINE_COMPILATIONS_SURFACE)),
+			"draw":int(Performance.get_monitor(Performance.PIPELINE_COMPILATIONS_DRAW)),
+			"specialization":int(Performance.get_monitor(Performance.PIPELINE_COMPILATIONS_SPECIALIZATION))}
 	}))
 
 static func _foreground_ready(tree: SceneTree, scene: Field) -> bool:

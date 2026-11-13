@@ -37,6 +37,7 @@ grep -Fq 'Creative Commons Attribution-ShareAlike 3.0' builds/THIRD_PARTY_NOTICE
 grep -Fq 'Wildfire Games' builds/THIRD_PARTY_NOTICES.txt
 grep -Fq 'River Gate remount' builds/THIRD_PARTY_NOTICES.txt
 grep -Fq 'River Gate watchhall' builds/THIRD_PARTY_NOTICES.txt
+grep -Fq 'River Gate ford willow' builds/THIRD_PARTY_NOTICES.txt
 python3 tools/verify_macos.py builds/Luanshi-macOS.zip
 python3 - <<'PY'
 import zipfile

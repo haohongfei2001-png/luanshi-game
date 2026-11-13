@@ -1,5 +1,19 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC20 · 过河军阵实机
+
+RC19 建筑、衣甲、倒地动作与存档在此基础上保留。过桥时可辨老柳向水探出的枝干和桥面留白；四个 1920 × 1200 实机机位与 RC19 同种子、同一批士兵，进度、伤亡相同。前几版整株过亮、露枝和方向遮挡的缺点已保留。[桥上军阵的完整对照](https://github.com/haohongfei2001-png/luanshi-game/tree/aeb09e7a3f9f7ecc12c7997ba238e4fc11cb0232/docs/evidence/river-gate-v1-rc20/ford-willows)
+
+两个托管 Mac 的 RC19 第一次 Metal 启动都在第一帧前超过期限。场景几何已齐，88 个进程栈样本全在 Godot 等待正向移动渲染材质的着色器编译。新分支在创建地形与兵员之前设置已保存的抗锯齿和分辨率；首次绘制前后记录各类管线编译，并可直接采样等待中的原生进程。保持正常游玩画质、原来的启动时限及显式恢复按钮。是否改善以正式导出包上连续冷启动的记录为准。[同包复现与原始调用栈](https://github.com/haohongfei2001-png/luanshi-game/tree/2db3813aaf94f27cb28dc67af96d76b8a49640d8/docs/evidence/river-gate-v1-rc19/startup/same-package-fresh-host)
+
+完整复拍用 `./tools/compare-river-art.sh`。单独复查桥头用 `xvfb-run -a -s '-screen 0 1920x1200x24' godot --resolution 1920x1200 --disable-vsync --fixed-fps 20 --script tests/ford_willow_view.gd -- --field-size=512`，随后检查 `artifacts/river-art/views.json`。
+
+## 河关 RC19 · 可回退的实机基线
+
+RC19 源码 `8ba9daec9b1dbed8717ecef5cfd15ac2e35e0566`、Git 树 `a34d6e66c2caf2da27109d99b1724bf4328ffca7`、macOS 导出 `9357483bc54c28e0c5d3c04b42dbe5c7e41b4bfd`。完整军议、进军、攻城、结算、回营、旧存档和九种武器通过。59.2 秒全流程片和 40 秒导出包键鼠实录均附原声。[可直接下载的 Mac 应用](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/2db3813aaf94f27cb28dc67af96d76b8a49640d8/candidate/River-Gate-RC19-macOS.zip) · [原始图、逐帧样本、复测和校验](https://github.com/haohongfei2001-png/luanshi-game/blob/3735816ace0a861b8e23619f0a320e76f7ec79b3/docs/evidence/river-gate-v1-rc19/PLAYTEST.md)
+
+托管 M1 的默认窗口实测 1024 × 640、100% 内部比例与 4× MSAA，P50/P95/P99 为 8.804/25.616/35.72 毫秒。首次 Metal 启动在场景就绪后到首帧之间超时，两个独立宿主复现，初次全套 8/9，第二台同包 2/3。第二台采到全部 88 个主线程样本等待 Godot 的材质编译；物理 M5 性能尚未验证。[首帧前原始栈](https://github.com/haohongfei2001-png/luanshi-game/blob/2db3813aaf94f27cb28dc67af96d76b8a49640d8/docs/evidence/river-gate-v1-rc19/startup/same-package-fresh-host/default-metal-1-before-frame.sample.txt) · [RC19 全部 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43510132831)
+
 ## 河关 RC19 · 军士衣身、守关望楼和行军地面
 
 两军共用经过裁剪及重新蒙皮的衣甲。腰、股、肩、肘各带动不同衣片，骑行和持弓用原有手部握点。第一个版本的裙摆在迈步时被单侧腿硬拉，第二次在 22 米整窗、反打与等速行进中对照了两名普通士兵。[军士原窗与等速录像](https://github.com/haohongfei2001-png/luanshi-game/tree/910aa1eb35eed00c17b585df3eec1cb96949b23a/docs/evidence/river-gate-v1-rc19/fitted-infantry)

@@ -45,6 +45,11 @@ const QUALITY_FILE:="user://river-gate-graphics.cfg"
 
 func _ready() -> void:
 	Actions.install()
+	var cfg:=ConfigFile.new()
+	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,QUALITY_SCALES.size()-1)
+	# Register the saved viewport format before the first terrain meshes and
+	# soldier batches enter the renderer. Their first pipelines then use it.
+	_apply_viewport_quality(detail_preset)
 	add_child(map)
 	add_child(camera)
 	camera.projection=Camera3D.PROJECTION_ORTHOGONAL
@@ -113,8 +118,6 @@ func _ready() -> void:
 		if arg.begins_with("--field-size="):
 			var count := arg.trim_prefix("--field-size=").to_int()
 			if count in Battle.SCALES: selections=count
-	var cfg:=ConfigFile.new()
-	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,QUALITY_SCALES.size()-1)
 	new_muster(selections)
 	if "--field-profile" in OS.get_cmdline_user_args():
 		frame_log = preload("res://scripts/field/frame_log.gd").new()
@@ -169,14 +172,20 @@ func _adopt(fresh: Battle) -> bool:
 	_draw_field()
 	return true
 
+func _apply_viewport_quality(which: int) -> void:
+	var vp:=get_viewport()
+	var samples:=Viewport.MSAA_4X if which==Quality.NATIVE_MSAA else Viewport.MSAA_DISABLED
+	if vp.msaa_3d!=samples: vp.msaa_3d=samples
+	if vp.scaling_3d_mode!=Viewport.SCALING_3D_MODE_BILINEAR:
+		vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
+	if not is_equal_approx(vp.scaling_3d_scale,QUALITY_SCALES[which]):
+		vp.scaling_3d_scale=QUALITY_SCALES[which]
+
 func set_quality(which: int,remember: bool=false) -> void:
 	if which<0 or which>=QUALITY_SCALES.size(): return
 	if frame_log and which!=detail_preset: frame_log.interrupt("changed_graphics",self)
 	detail_preset=which
-	var vp:=get_viewport()
-	vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
-	vp.scaling_3d_scale=QUALITY_SCALES[which]
-	vp.msaa_3d=Viewport.MSAA_4X if which==Quality.NATIVE_MSAA else Viewport.MSAA_DISABLED
+	_apply_viewport_quality(which)
 	map.sun.shadow_enabled=which!=Quality.PERFORMANCE
 	shadow_zoom=-1.0
 	view.contact_for_all=not map.sun.shadow_enabled

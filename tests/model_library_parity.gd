@@ -8,6 +8,7 @@ func _initialize() -> void:
 			preload("res://assets/third_party/wildfire_garments/field_issues.glb"),
 			preload("res://assets/river_gate/figures/garrison_bodies.glb"),
 			preload("res://assets/environment/bank-willows.gltf"),
+			preload("res://assets/third_party/wildfire_willow/ford_willow.glb"),
 			preload("res://assets/third_party/wildfire_gate/river_gate.glb"),
 			preload("res://assets/environment/quaternius/grove.glb"),
 			preload("res://assets/art/mounts/field_tack.glb"),

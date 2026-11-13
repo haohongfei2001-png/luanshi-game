@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
+uniform sampler2D ford_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D grove_leaf : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
@@ -23,7 +24,7 @@ varying vec2 bark_uv;
 
 void vertex() {
 	// Instanced inland trees retain world-space wind frequency and amplitude.
-	bool inland=UV2.y>=11.9;
+	bool inland=UV2.y>=11.9 && UV2.y<15.;
 	vec3 at=inland ? (MODEL_MATRIX*vec4(VERTEX,1.)).xyz : VERTEX;
 	float breeze=sin(TIME*1.22+at.x*.83+at.z*.44)*.025;
 	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+at.x*.58-at.z*.44);
@@ -44,7 +45,23 @@ void vertex() {
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>=13.5) {
+	if(crown>=15.5) {
+		vec4 painted=texture(ford_ink,UV);
+		float height=clamp(crown-16.,0.,1.);
+		float y=dot(painted.rgb,vec3(.26,.59,.15));
+		float pigment=OUTPUT_IS_SRGB ? y : sqrt(max(y,0.));
+		vec3 outward=normalize(crown_normal_world);
+		NORMAL=normalize(mat3(VIEW_MATRIX)*outward);
+		float face=clamp(.53+.47*dot(outward,normalize(vec3(-.68,.36,.64))),0.,1.);
+		float grade=.43*height+.49*face+.08*smoothstep(.20,.50,pigment);
+		vec3 low=OUTPUT_IS_SRGB ? vec3(.103,.178,.151) : vec3(.011,.027,.020);
+		vec3 body=OUTPUT_IS_SRGB ? vec3(.190,.280,.194) : vec3(.030,.064,.031);
+		vec3 aged=OUTPUT_IS_SRGB ? vec3(.323,.378,.226) : vec3(.085,.118,.042);
+		tone=mix(low,body,smoothstep(.30,.59,grade));
+		tone=mix(tone,aged,smoothstep(.62,.88,grade)*.84);
+		tone*=.94+.08*smoothstep(.21,.53,pigment);
+		opacity=painted.a;
+	} else if(crown>=13.5) {
 		vec3 bark=texture(grove_bark,UV).rgb;
 		float lum=dot(bark,vec3(.27,.57,.16));
 		float band=smoothstep(.14,.55,OUTPUT_IS_SRGB?lum:sqrt(max(lum,0.)));
@@ -125,5 +142,5 @@ void fragment() {
 	ALBEDO=tone;
 	ROUGHNESS=.97;
 	ALPHA=opacity;
-	ALPHA_SCISSOR_THRESHOLD=crown>=11.9 && crown<13.5 ? .35 : .44;
+	ALPHA_SCISSOR_THRESHOLD=crown>=15.5 ? .36 : (crown>=11.9 && crown<13.5 ? .35 : .44);
 }

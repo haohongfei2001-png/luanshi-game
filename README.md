@@ -18,6 +18,8 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
+河关 **0.16.0-rc.20** 正在实机验证不同兵种、桥头树冠和首帧初始化。已归档的 RC19 含 59.2 秒军议到回营实录以及九种武器、攻城、原速键鼠录像。[RC19 下载与实测](docs/evidence/river-gate-v1-rc19/PLAYTEST.md)
+
 河关 **0.16.0-rc.19** 在原战役中更新军士衣甲、行进动作、关楼、树冠与驿道。进入军议后可直接部署、带队攻门，或从旧档接着行军。[候选包与 CI 记录 #54](https://github.com/haohongfei2001-png/luanshi-game/pull/54) · [同一座关门的六处实机对照](https://github.com/haohongfei2001-png/luanshi-game/tree/82ee4e3752d705f9a2aa52a4c36f57bde1c115d8/docs/evidence/river-gate-v1-rc19/watchhall) · [近景及游玩距离的普通兵实录](https://github.com/haohongfei2001-png/luanshi-game/tree/910aa1eb35eed00c17b585df3eec1cb96949b23a/docs/evidence/river-gate-v1-rc19/fitted-infantry)
 
 可回退到已在托管 Apple Silicon 运行的 RC18。下载 ZIP 并解开，打开其中的 macOS 应用。[直接下载 RC18](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/43557e3cf888a347e171a4715e4ce0fb741ebb90/candidate/River-Gate-RC18-macOS.zip) · [包校验、真实帧时间与完整战役](https://github.com/haohongfei2001-png/luanshi-game/blob/233927d31835bddc96cb42e1fddea3dc50af77d9/docs/evidence/river-gate-v1-rc18/PLAYTEST.md)
