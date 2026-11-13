@@ -31,7 +31,8 @@ jobs:
           g=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
           dst="$PWD/artifacts/hands"
           mkdir -p "$dst"
-          if ! command -v blender >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends blender; fi
+          if ! command -v blender >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends blender python3-numpy; fi
+          export PYTHONPATH=/usr/lib/python3/dist-packages
           python3 tools/art/fetch_hand_source.py /tmp/river-hm08
           blender -b -t 1 --python-exit-code 1 --python tools/art/makehuman_hands.py -- /tmp/river-hm08 tools/art/source/hand_grips.glb | tee "$dst/blender.log"
           python3 tools/art/bake_river_company.py --geometry-only | tee "$dst/bake.log"
