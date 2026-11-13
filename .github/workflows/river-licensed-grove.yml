@@ -24,6 +24,21 @@ jobs:
           PYTHONPATH=/usr/lib/python3/dist-packages blender --python-use-system-env -b --factory-startup --python-exit-code 7 --python tools/art/import_valley_grove.py -- "$RUNNER_TEMP/nature.zip" assets/environment/quaternius
           mkdir -p proof/author-meshes
           cp assets/environment/quaternius/{grove.glb,bark.png,leaves.png,License_Standard.txt,sources.json} proof/author-meshes/
+          python3 - <<'PY'
+          import json, struct
+          from PIL import Image
+          from pathlib import Path
+          root=Path("proof/author-meshes")
+          im=Image.open(root/"leaves.png").convert("RGBA")
+          print("AUTHOR_LEAF_ALPHA",im.size,im.getchannel("A").getextrema())
+          assert im.getchannel("A").getextrema()==(0,255), "Missing cutout on artist's leaf texture"
+          data=(root/"grove.glb").read_bytes()
+          n=struct.unpack_from("<I",data,12)[0]
+          g=json.loads(data[20:20+n])
+          for mesh in g["meshes"]:
+              attrs=mesh["primitives"][0]["attributes"]
+              assert "TEXCOORD_1" in attrs, (mesh["name"],attrs)
+          PY
       - name: Replay the same input on the package source and the imported grove
         run: |
 

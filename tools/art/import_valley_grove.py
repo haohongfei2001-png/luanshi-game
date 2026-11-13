@@ -98,7 +98,10 @@ def convert(archive, folder, output):
     bpy.context.view_layer.objects.active=exported[0]
     bpy.ops.export_scene.gltf(filepath=str(output/"grove.glb"),export_format="GLB",use_selection=True,export_texcoords=True,export_normals=True,export_materials="NONE",export_animations=False,export_yup=True)
     # The leaves already carry a clean transparent silhouette. Downsample bark only.
-    for member,name in (("Leaves_NormalTree.png","leaves.png"),("Bark_NormalTree.png","bark.png")):
+    for member,name in (("Leaves_NormalTree_C.png","leaves.png"),("Bark_NormalTree.png","bark.png")):
+        raw=archive.read("glTF/"+member)
+        manifest["members"][member]=sha(raw)
+        (folder/member).write_bytes(raw)
         img=bpy.data.images.load(str(folder/member),check_existing=False)
         if max(img.size)>512:
             w,h=img.size[:]
@@ -106,6 +109,7 @@ def convert(archive, folder, output):
         img.filepath_raw=str(output/name)
         img.file_format="PNG"
         img.save()
+        print("SOURCE_TEXTURE",member,tuple(img.size),img.channels,flush=True)
     (output/"sources.json").write_text(json.dumps(manifest,indent=2)+"\n")
     print("GROVE_SOURCE",json.dumps(manifest),flush=True)
 
