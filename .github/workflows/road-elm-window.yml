@@ -1,0 +1,88 @@
+name: View two mature roadside elms between the approaching armies
+on:
+  push:
+    branches: ['codex/river-rc21-road-elm']
+permissions:
+  contents: read
+jobs:
+  game:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fit both original elms and their real diffuse cuts to the roadside
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/python3 -c 'import PIL, numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy python3-pil; fi
+          /usr/bin/python3 tools/art/import_road_elm.py "$RUNNER_TEMP/fort-corners"
+      - name: Import the shipping game for graphical regressions
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > artifacts/field-import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/field-import.log; then exit 1; fi
+      - name: Replay the same field and assault on one display
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc21/road-elm
+          mkdir -p "$proof"
+          cd "$GITHUB_WORKSPACE"
+          mkdir -p "$RUNNER_TEMP/prior"
+          git archive 126091196db530aa7ec13de61f839c9c41cac24b | tar -x -C "$RUNNER_TEMP/prior"
+          cp -a assets/fonts/. "$RUNNER_TEMP/prior/assets/fonts/"
+          cp tests/field_road_elm_window.gd "$RUNNER_TEMP/prior/tests/"
+          godot --headless --path "$RUNNER_TEMP/prior" --editor --import > "$RUNNER_TEMP/prior-import.log" 2>&1
+          if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$RUNNER_TEMP/prior-import.log"; then exit 1; fi
+          for side in before after; do
+            root="$GITHUB_WORKSPACE"
+            if [[ "$side" = before ]]; then root="$RUNNER_TEMP/prior"; fi
+            mkdir -p "$proof/$side"
+            xvfb-run -a -s '-screen 0 1920x1200x24' godot --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_road_elm_window.gd -- --field-size=512 2>&1 | tee "$proof/$side/window.log"
+            grep -q '^WATCHHALL_WINDOW true' "$proof/$side/window.log"
+            if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' "$proof/$side/window.log"; then exit 1; fi
+            cp "$root"/artifacts/river-art/{*.png,views.json} "$proof/$side/"
+          done
+
+          /usr/bin/python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          p=Path('docs/evidence/river-gate-v1-rc21/road-elm')
+          def load(k): return json.loads((p/k/'views.json').read_bytes())
+          before,after=load('before'),load('after')
+          assert before==after and len(after)==4
+          assert all(x['ordinary']==[512,512] and x['window']==[1920,1200] for x in after)
+          for frame in after:
+              label=frame['label']
+              pair=Image.new('RGB',(1600,500))
+              for i,k in enumerate(('before','after')):
+                  with Image.open(p/k/(label+'.png')) as source:
+                      assert source.size==(1920,1200)
+                      source.resize((1152,720),Image.Resampling.LANCZOS).convert('RGB').save(p/k/(label+'-window.jpg'),quality=90,subsampling=0)
+                      pair.paste(source.resize((800,500),Image.Resampling.LANCZOS),(800*i,0))
+              pair.save(p/(label+'-pair.jpg'),quality=92,subsampling=0)
+          PY
+          git add -- assets/third_party/wildfire_elm docs/evidence/river-gate-v1-rc21/road-elm
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Compare the two roadside elms at the centre of the playable battlefield'
+          git push origin HEAD:refs/heads/codex/river-rc21-road-elm
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-rc21-road-elm-window
+          path: |
+            docs/evidence/river-gate-v1-rc21/road-elm
+            assets/third_party/wildfire_elm
+            artifacts/field-import.log

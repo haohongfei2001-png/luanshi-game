@@ -13,6 +13,7 @@ var leaf_material:=ShaderMaterial.new()
 var terrain_tiles: Dictionary
 var rng:=RandomNumberGenerator.new()
 var trees: Array[Dictionary]=[]
+const ROAD_ELMS := preload("res://assets/third_party/wildfire_elm/road_elms.glb")
 var ford_willow: ArrayMesh
 var inland_meshes: Array[ArrayMesh]=[]
 var inland_stands: Dictionary = {}
@@ -113,6 +114,10 @@ func _bake_trees() -> void:
 			combined.append_from(broadleaves[prefix+part],0,Transform3D.IDENTITY)
 		inland_meshes.append(combined.commit())
 
+	var roadside := FieldMeshes.meshes(ROAD_ELMS)
+	for label: String in ["RoadElm", "YoungElm"]:
+		inland_meshes.append(roadside[label])
+
 func _place_inland_stands(parent: Node3D) -> void:
 	for key: Vector3i in inland_stands:
 		var placements: Array = inland_stands[key]
@@ -142,6 +147,10 @@ func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: fl
 		# Keep the former 21 x 18 metre culling boundaries. The 158 inland
 		# placements share two artist meshes instead of copying all triangles.
 		var archetype:=shape if kind==1 else 1-shape
+		if kind==1 and p.distance_squared_to(Vector2(-5.46,-10.70))<.20:
+			archetype=2
+		elif kind==1 and p.distance_squared_to(Vector2(-2.77,-11.69))<.20:
+			archetype=3
 		var key:=Vector3i(floori(p.x/21.),floori(p.y/18.),archetype)
 		if not inland_stands.has(key): inland_stands[key]=[]
 		inland_stands[key].append(placement)
@@ -501,6 +510,7 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
+	leaf_material.set_shader_parameter("road_elm",preload("res://assets/third_party/wildfire_elm/elm.png"))
 	leaf_material.set_shader_parameter("ford_ink",preload("res://assets/third_party/wildfire_willow/ford_willow.png"))
 	leaf_material.set_shader_parameter("grove_leaf",preload("res://assets/environment/quaternius/leaves.png"))
 	leaf_material.set_shader_parameter("grove_bark",preload("res://assets/environment/quaternius/bark.png"))

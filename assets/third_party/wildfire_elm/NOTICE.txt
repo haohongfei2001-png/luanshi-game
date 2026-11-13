@@ -1,0 +1,6 @@
+River Gate roadside elms · Wildfire Games
+Copyright (C) Wildfire Games and 0 A.D. contributors.
+The two meshes in road_elms.glb and the diffuse cutout elm.png are adapted from tree_elm_01.dae, tree_elm_02.dae and tree_elm_01.png in the upstream 0 A.D. public art collection. Luanshi contributors fitted the original fork to two pre-existing army-field placements, reduced the three diffuse value bands, and fitted foliage normals and wind weights. Both original and adapted artwork are Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/actors/flora/trees/elm.xml
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+https://creativecommons.org/licenses/by-sa/3.0/

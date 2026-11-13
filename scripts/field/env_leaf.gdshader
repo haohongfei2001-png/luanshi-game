@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
+uniform sampler2D road_elm : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D ford_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
@@ -24,7 +25,7 @@ varying vec2 bark_uv;
 
 void vertex() {
 	// Instanced inland trees retain world-space wind frequency and amplitude.
-	bool inland=UV2.y>=11.9 && UV2.y<15.;
+	bool inland=(UV2.y>=11.9 && UV2.y<15.) || UV2.y>=19.;
 	vec3 at=inland ? (MODEL_MATRIX*vec4(VERTEX,1.)).xyz : VERTEX;
 	float breeze=sin(TIME*1.22+at.x*.83+at.z*.44)*.025;
 	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+at.x*.58-at.z*.44);
@@ -45,7 +46,12 @@ void vertex() {
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>=15.5) {
+	if(crown>=19.) {
+		vec4 branch=texture(road_elm,UV);
+		NORMAL=normalize(mat3(VIEW_MATRIX)*crown_normal_world);
+		tone=branch.rgb;
+		opacity=branch.a;
+	} else if(crown>=15.5) {
 		vec4 painted=texture(ford_ink,UV);
 		float height=clamp(crown-16.,0.,1.);
 		float y=dot(painted.rgb,vec3(.26,.59,.15));
