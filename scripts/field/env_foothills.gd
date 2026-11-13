@@ -246,13 +246,13 @@ func _split_stone(patch: Patch,p: Vector2,extent: float,depth: float,rise: float
 	var top:=PackedVector3Array()
 	for v in cross_section:
 		var off:=along*(v.x+rng.randf_range(-.13,.11))*extent+crossway*(v.y+rng.randf_range(-.09,.09))*depth
+		var shoulder:=ground_point(p+off)
 		var relief:=rise*(.69+.29*v.y+.19*v.x+rng.randf_range(-.09,.11))
 		if bank:
 			# Border rock continues down into the non-walkable channel, rather
 			# than wrapping over the terrain as a flat biscuit.
 			relief+=clampf(ground_point(p).y-shoulder.y,-.35,.40)*.66
 		if not bank: relief=rise*(.27+.56*v.y+.45*v.x+rng.randf_range(-.10,.08))
-		var shoulder:=ground_point(p+off)
 		foot.append(shoulder-Vector3.UP*.11)
 		seam.append(ground_point(p+off*1.04)+Vector3.UP*relief*.34)
 		brow.append(ground_point(p+off*.90+crossway*(-rise*.13))+Vector3.UP*relief*.71)
