@@ -323,6 +323,29 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             chest_roll=-side_hit*17.*recoil
             crouch=.040+.107*settle
             hand=tuple(v+d*recoil for v,d in zip(hand,(side_hit*.074,.102,-.095,-20.,side_hit*18.,9.)))
+    # The timber shield is carried in the left palm. At rest set it across the
+    # ribs, with the left boot in front. A real contact gives at the elbow,
+    # passes through the shoulder and then loads the hip. At both endpoints
+    # the two directional reactions meet the exact same waiting guard.
+    board_give=0.
+    board_drive=0.
+    if kit==7 and clip==10:
+        sway=-.060; shift=.034; crouch=.139
+        lean=14.; hip_yaw=-9.; shoulder_yaw=-16.; hip_roll=1.4; chest_roll=-3.8
+        hand=(.300,1.258,.192,-49.,-9.,11.)
+        if side_hit:
+            board_give=ramp(t,0.,.19)*(1.-ramp(t,.34,.79))
+            board_drive=ramp(t,.38,.66)*(1.-ramp(t,.70,1.))
+            sway-=side_hit*(.044*board_give+.039*settle)
+            shift-=.083*settle
+            crouch+=.090*settle
+            lean-=15.*board_give-6.2*board_drive
+            hip_yaw+=side_hit*9.8*settle
+            shoulder_yaw+=side_hit*17.5*board_give
+            hip_roll-=side_hit*4.4*settle
+            chest_roll-=side_hit*8.*board_give
+            hand=tuple(v+d*board_give for v,d in zip(hand,
+                       (.035,-.020,-.080,9.,side_hit*10.,5.)))
     # Opening the torso places the drawing elbow to the side of the face.
     # Keep the head on its target while the bow shoulder reaches forward.
     bow_draw=0.
@@ -554,9 +577,17 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             offq=qm(euler((-12. if braced else 15.)*load_beat,
                           (11. if braced else -14.)*load_beat,
                           (8. if braced else -7.)*load_beat),offq)
-        if side_hit and clip==10:
-            off=add(off,(-side_hit*.074*recoil,.028*recoil-.022*settle,-.128*recoil))
-            offq=euler(-15.-20.*recoil,-9.+side_hit*25.*recoil,-14.+side_hit*14.*settle)
+        if clip==10:
+            # The old top edge was tilted backwards into the head while the
+            # board retreats. Carry the top slightly outward on impact and
+            # keep its working face towards the side of actual contact.
+            # The elbow yields behind the grip; the rear leg then helps push
+            # the board back out. No shaft or shield corner moves on its own.
+            off=(-.083+sway*.50,1.355-crouch,.344+shift)
+            off=add(off,(side_hit*.055*board_give,.032*board_give-.026*settle,
+                         -.083*board_give+.095*board_drive))
+            offq=euler(4.+11.*board_give-5.*board_drive,
+                       6.+side_hit*26.*board_give,-7.-side_hit*8.*board_give)
         if clip in (0,1):
             # Let the strapped board travel with the loaded shoulder. The
             # old low carry used the identical vertical board at both heel
@@ -611,6 +642,13 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
                 pole=(-.51-.08*pulse,-.70+.12*pulse,-.75)
             else:
                 pole=(.80+.12*pulse,-.43-.09*pulse,-.80)
+        if kit==7 and clip==10:
+            # A bent, strapped shield arm stays on the outer side of the
+            # board. The weapon elbow folds by the ribs, clear of the face.
+            if side<0:
+                pole=(-.91,-.34-.35*board_give,-.74+.22*board_drive)
+            else:
+                pole=(.83,-.54+.12*settle,-.78)
         if kit==5 and not ride:
             # The working elbow points outward as the fingers draw, while the
             # bow elbow remains outside the line of the string.
