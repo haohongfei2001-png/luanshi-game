@@ -51,8 +51,8 @@ vec3 painted_ground(vec2 p, float shore) {
     float clay_value=dot(clay,vec3(.30,.57,.13));
     float turf_value=dot(turf,vec3(.30,.57,.13));
     // Suppress orange and lime in sunlight, keeping the sampled shape and value.
-    clay=mix(vec3(clay_value),clay,.32)*(OUTPUT_IS_SRGB?vec3(.76,.78,.88):vec3(.60,.63,.79));
-    turf=mix(vec3(turf_value),turf,.52)*(OUTPUT_IS_SRGB?vec3(.78,.79,.82):vec3(.64,.65,.70));
+    clay=mix(vec3(clay_value),clay,.32)*(OUTPUT_IS_SRGB?vec3(.76,.78,.88):vec3(.82,.86,1.03));
+    turf=mix(vec3(turf_value),turf,.52)*(OUTPUT_IS_SRGB?vec3(.78,.79,.82):vec3(.86,.89,.93));
     float near_track=1.0-smoothstep(.55,.96,cover.a);
     float tilled=smoothstep(.25,.60,cover.r)*(1.0-smoothstep(.72,.89,cover.r))*(1.0-near_track);
     float broken=smoothstep(.23,.91,marks.g+.24*marks.b);

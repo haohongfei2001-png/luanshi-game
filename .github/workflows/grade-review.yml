@@ -1,0 +1,73 @@
+name: Compare Metal appearance on the same hosted display
+on:
+  push:
+    branches: [codex/river-rc7-linear-review]
+permissions:
+  contents: read
+jobs:
+  paint:
+    runs-on: macos-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install the pinned Godot macOS editor and its published checksum
+        run: |
+          set -euo pipefail
+          dist=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl --fail --location --retry 2 "$dist/Godot_v4.6.3-stable_macos.universal.zip" -o "$RUNNER_TEMP/Godot_v4.6.3-stable_macos.universal.zip"
+          curl --fail --location --retry 2 "$dist/SHA512-SUMS.txt" -o "$RUNNER_TEMP/editor-checksums"
+          (cd "$RUNNER_TEMP"; grep '  Godot_v4.6.3-stable_macos.universal.zip$' editor-checksums | shasum -a 512 -c -)
+          ditto -x -k "$RUNNER_TEMP/Godot_v4.6.3-stable_macos.universal.zip" "$RUNNER_TEMP/editor"
+          python3 -m venv "$RUNNER_TEMP/pil"
+          "$RUNNER_TEMP/pil/bin/pip" install --disable-pip-version-check Pillow==11.3.0
+      - name: Draw old and adjusted material with identical live state on Metal
+        run: |
+          set -euo pipefail
+          editor="$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot"
+          mkdir -p "$GITHUB_WORKSPACE/native-pair"
+          for side in before after; do
+            revision=cb85d58318b1379127a2465816a3917f79298090
+            if [[ "$side" == after ]]; then revision=HEAD; fi
+            dst="$RUNNER_TEMP/river-$side"; mkdir -p "$dst"
+            git archive "$revision" | tar -x -C "$dst"
+            (
+              cd "$dst"
+              mkdir -p artifacts; touch artifacts/.gdignore
+              export XDG_CACHE_HOME="$RUNNER_TEMP/cache-$side"
+              ./tools/prepare-font.sh
+              "$editor" --headless --editor --path . --import > "$GITHUB_WORKSPACE/native-pair/$side-import.log" 2>&1
+              sed 's/for i in 80:/for i in 0:/' tests/river_art_capture.gd > tests/rc7_quick.gd
+              "$editor" --path . --resolution 1280x800 --audio-driver Dummy --disable-vsync --rendering-method mobile --rendering-driver metal --fixed-fps 20 --script tests/rc7_quick.gd -- --field-size=512 2>&1 | tee "$GITHUB_WORKSPACE/native-pair/$side.log"
+              grep -q '^RIVER_ART_PASS' "$GITHUB_WORKSPACE/native-pair/$side.log"
+              if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$GITHUB_WORKSPACE/native-pair/$side.log"; then exit 1; fi
+              cp artifacts/river-art/formation.png "$GITHUB_WORKSPACE/native-pair/$side-formation.png"
+              cp artifacts/river-art/hero.png "$GITHUB_WORKSPACE/native-pair/$side-hero.png"
+              cp artifacts/river-art/gate.png "$GITHUB_WORKSPACE/native-pair/$side-gate.png"
+              cp artifacts/river-art/frames.json "$GITHUB_WORKSPACE/native-pair/$side.json"
+            )
+          done
+          "$RUNNER_TEMP/pil/bin/python" - <<'PY'
+          import base64,io,json,pathlib
+          from PIL import Image,ImageStat
+          p=pathlib.Path('native-pair')
+          a,b=[json.loads((p/(s+'.json')).read_text()) for s in ('before','after')]
+          assert len(a)==len(b)==15
+          for left,right in zip(a,b):
+              for k in ('label','tick','center','yaw','zoom','ordinary','in_frame_ids_sha256','internal_scale','shadows','contact','losses'):
+                  assert left[k]==right[k],(k,left[k],right[k])
+          for label in ('formation','hero','gate'):
+              for s in ('before','after'):
+                  im=Image.open(p/(s+'-'+label+'.png')).convert('RGB')
+                  mid=im.crop((im.width//8,im.height//5,7*im.width//8,4*im.height//5))
+                  buf=io.BytesIO();im.save(buf,'JPEG',quality=91,subsampling=0)
+                  print('RC7_METAL_GRADE',s,label,im.size,[round(i,2) for i in ImageStat.Stat(mid).mean])
+                  print('RC7_METAL_IMAGE',s,label,base64.b64encode(buf.getvalue()).decode())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: metal-material-before-and-after
+          path: native-pair/
+          retention-days: 14

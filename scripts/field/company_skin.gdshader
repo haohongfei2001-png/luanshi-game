@@ -159,6 +159,10 @@ void fragment() {
     float silhouette = 1.0 - smoothstep(.045, .30, abs(dot(normalize(NORMAL), normalize(VIEW))));
     colour *= (1.0 - .105 * silhouette) * (1.0 - .42 * sewn_shadow);
     colour *= mix(1.0, .73, fallen);
+    // Same exported game on a hosted Mac: the linear Metal path lost cloth
+    // mid-tones against the road while compatibility retained them. Lift the
+    // lit material itself; hair, recesses and shadow-band boundaries stay dark.
+    if (!OUTPUT_IS_SRGB) colour=min(colour*vec3(1.28,1.34,1.36),vec3(.96));
     ALBEDO = mix(colour, vec3(.65,.35,.19), flash * .24);
     ROUGHNESS = .93;
     SPECULAR = 0.0;
