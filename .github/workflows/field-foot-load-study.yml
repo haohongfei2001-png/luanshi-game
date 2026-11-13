@@ -138,7 +138,7 @@ jobs:
           assert a==b and all(c['follow'] and c['lens']==22 and c['ordinary']==[512,512] for c in b)
           print('LOAD_PERSONAL_SAME',json.dumps(b))
           for lab,kind,number,coord in [
-              ('advance','line',8,None),('waiting','line',17,None),('engage','line',41,None),('late','line',53,None),
+              ('advance','line',8,(775,681)),('waiting','line',17,(830,700)),('engage','line',41,(922,605)),('late','line',53,(925,586)),
               ('follow','follow',36,(940,620)),('first-blow','contact',0,(960,600))]:
               arr=[]
               for side in ('before','after'):
@@ -154,6 +154,17 @@ jobs:
               buf=io.BytesIO();sheet.save(buf,'JPEG',subsampling=0,quality=93)
               (root/(lab+'-pair.jpg')).write_bytes(buf.getvalue())
               print('PACE_IMAGE',lab,base64.b64encode(buf.getvalue()).decode())
+          # A fixed native crop at successive simulation times shows shoulders,
+          # planted feet and the front of the same formation on both trees.
+          sheet=Image.new('RGB',(960,600))
+          for row,frame in enumerate([11,18,26,34]):
+              for col,side in enumerate(('before','after')):
+                  im=Image.open(root/side/'line'/('%03d.jpg'%frame)).convert('RGB')
+                  cell=im.crop((665,576,1145,726))
+                  sheet.paste(cell,(480*col,150*row))
+          buf=io.BytesIO();sheet.save(buf,'JPEG',subsampling=0,quality=94)
+          (root/'sequence-pair.jpg').write_bytes(buf.getvalue())
+          print('PACE_IMAGE','sequence',base64.b64encode(buf.getvalue()).decode())
           PY
           for kind in follow line; do
             ffmpeg -v error -y -i "artifacts/body-weight/before-$kind.mp4" -i "artifacts/body-weight/after-$kind.mp4" -filter_complex '[0:v]scale=800:500[x];[1:v]scale=800:500[y];[x][y]hstack=inputs=2' -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart "artifacts/body-weight/$kind-pair.mp4"

@@ -306,10 +306,9 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     # support step. A forward levelled shaft is steadied on the leading arm;
     # a shouldered one tips back as the free elbow passes the ribcage.
     load_beat=0.
-    counter=0.
     if loadout and kit in (3,7) and (move or clip==1):
-        load_beat=-cos(2*pi*t-.10) if move else sin(2*pi*t-.32)
-        counter=sin(2*pi*t) if move else sin(2*pi*t-.85)
+        load_beat=-.42*cos(2*pi*t-.10) if move else .16*sin(2*pi*t-.32)
+        counter=.55*sin(2*pi*t) if move else .21*sin(2*pi*t-.85)
         if kit==3:
             high=loadout==1
             bias=.075 if high else -.057

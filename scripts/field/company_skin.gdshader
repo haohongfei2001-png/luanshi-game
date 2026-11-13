@@ -52,6 +52,7 @@ void vertex() {
     int clip=1;
     if(state==0) {
         clip=phase>.001 ? int(floor(phase*32.0)):1;
+        if (field_carries && slot==3) clip=int(floor(phase*32.0));
         phase=INSTANCE_CUSTOM.b;
     } else if(state==1 || state==2) {
         clip=(state==1 ? 2:6)+slot;
@@ -88,6 +89,31 @@ void vertex() {
         skin(second,tile,VERTEX,NORMAL,other_pos,other_nrm);
         pos=mix(other_pos,pos,blend);
         nrm=mix(other_nrm,nrm,blend);
+    }
+    // Lean into the actual opponent. Hands, both ends of a shaft, the blade
+    // and the shield all undergo one rigid change about the waist. Flexible
+    // cloth carries the transition to the original leg and planted-foot pose.
+    // The bound is twenty degrees; the half-angle approximation is normalized.
+    if (field_carries && code<64 && (kit==3 || kit==7)) {
+        float ready=0.;
+        if (state==0 && slot==3) {
+            ready=float(int(floor(INSTANCE_CUSTOM.g*1024.0))%32)/31.;
+        } else if (state==1 || state==2) {
+            ready=INSTANCE_CUSTOM.b*(state==1 ? 1.-smoothstep(0.,.57,phase) : smoothstep(.56,1.,phase));
+        }
+        if (ready>0.) {
+            bool rigid=first==2 || (first>=3 && first<=8) || first==15;
+            float load=rigid ? ready : ready*smoothstep(.63,1.04,bind_point.y);
+            if (load>0.) {
+                // The spearman reaches along the long axis; the shield bearer
+                // drops his left shoulder behind the board while stepping in.
+                vec3 half_turn=kit==3 ? vec3(.149,-.042,.019) : vec3(.096,.070,.059);
+                vec4 q=normalize(vec4(half_turn*load,1.));
+                vec3 pivot=vec3(0.,.89,.01);
+                pos=pivot+rotated(q,pos-pivot)+vec3(kit==3?.015:-.026,-.033,.027)*load;
+                nrm=rotated(q,nrm);
+            }
+        }
     }
     // Only the on-foot player may keep travelling through a weapon action. The
     // pelvis and coat keep the strike; weight passes to the running pose at the knee.
