@@ -5,6 +5,8 @@ support hand. No per-soldier Godot Skeleton3D or runtime inverse kinematics is r
 """
 from math import sin,cos,pi,acos,sqrt
 from PIL import Image
+from pathlib import Path
+import json
 from figure_mesh import add,sub,mul,dot,cross,unit,lerp,smooth
 from company_figures import *
 from company_weapons import TWO_HAND, FRONT_GRIP
@@ -13,6 +15,7 @@ BONES=16
 FRAMES=32
 CLIPS=31
 IDENT=(0.,0.,0.,1.)
+MARCH_BANK=json.loads((Path(__file__).parent/'source'/'march_curves.json').read_text())['curves']
 def qm(q,r):
     a,b=q[:3],r[:3]
     return (*add(add(mul(b,q[3]),mul(a,r[3])),cross(a,b)), q[3]*r[3]-dot(a,b))
@@ -90,6 +93,57 @@ REACTIONS=((10,-1),(10,1),(11,-1),(11,1))
 def ramp(t,start,end):
     return smooth(max(0.,min(1.,(t-start)/(end-start))))
 
+def blend_rigid(origin, target, amount):
+    q,p=origin
+    n,end=target
+    if dot(q,n)<0.:
+        n=tuple(-v for v in n)
+    return unit(lerp(q,n,amount)),lerp(p,end,amount)
+
+
+def grounded_rest(kit):
+    """Rest on the back or rear shoulder with the heavy parts on the earth.
+
+    Locations are body-joint pivots, never scaled. Forward +Z runs towards
+    the boots once prone. The unchanged 2-bone solver maintains bone lengths.
+    """
+    side=-1 if kit in (1,3,6,8) else 1
+    curl=kit in (2,4,7)
+    root=(side*.033,.164,-.018)
+    pelvis=placed((0,.86,0),root,euler(-82.,side*(6. if curl else 3.),side*4.))
+    chest_root=trans(pelvis,(0,1.008,0))
+    chest=placed((0,1.008,0),chest_root,euler(-91.,side*(14. if curl else 8.),side*5.))
+    neck=trans(chest,(0,1.427,.015))
+    head=placed((0,1.427,.015),neck,euler(-101.,side*23.,side*6.))
+    ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
+    ms[HIPS],ms[CHEST],ms[HEAD]=pelvis,chest,head
+    for direction in (-1,1):
+        thigh,shin,boot=(LT,LS,LB) if direction<0 else (RT,RS,RB)
+        binds=leg_nodes(direction)
+        hip=trans(pelvis,binds[0])
+        bent=direction==side
+        ankle=(direction*(.254 if bent else .168),.087 if bent else .080,
+               .655 if bent and curl else .675 if bent else .710)
+        # The bent knee falls out towards the soil. It does not hinge up in
+        # the air as in the standing IK pose.
+        ms[thigh],ms[shin]=two_link(binds,hip,ankle,(direction*.98,.12,-.10))
+        ms[boot]=placed(binds[2],ankle,euler(-70. if bent else -78.,
+                              direction*(31. if bent else 15.),direction*17.))
+        upper,fore,hand=(LU,LF,LH) if direction<0 else (RU,RF,RH)
+        arms=arm_nodes(direction)
+        shoulder=trans(chest,arms[0])
+        across = direction==-side and curl
+        elbow=(direction*(.248 if across else .402),.121,
+               -.267 if across else -.277)
+        wrist=(direction*(.123 if across else .461),.130 if across else .091,
+               -.095 if across else -.068)
+        pole=unit(sub(elbow,shoulder))
+        ms[upper],ms[fore]=two_link(arms,shoulder,wrist,pole)
+        ms[hand]=placed(arms[2],wrist,euler(-80.,direction*20.,direction*9.))
+    ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
+    return ms
+
+
 def pose(kit,clip,t,loadout=0,side_hit=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
@@ -160,12 +214,25 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     thrust=kit==3 and attack and slot<3
     if move:
         hips=cos(t*2*pi)
-        sway=(.022 if running else .044)*sin(t*2*pi)
-        hip_yaw=7*hips
-        shoulder_yaw=-8.5*hips
-        hip_roll=4.0*walk
-        chest_roll=-3.3*walk
-        crouch=(.088+.050*cos(t*4*pi-.22)) if running else (.089+.026*cos(t*4*pi))
+        # Imported gait first, then the two-hand grips and ground-locked soles.
+        # A rank bearing a shaft braces its shoulders more than a light footman.
+        mode="Jog_Fwd_Loop" if running or clip==12 else ("Walk_Formal_Loop" if kit in (3,4,7) else "Walk_Loop")
+        step=MARCH_BANK[mode][round(t*FRAMES)%FRAMES]
+        sway,rise,hip_yaw,shoulder_yaw,hip_roll,chest_roll=step
+        if mode=="Jog_Fwd_Loop":
+            # The unarmed source twists 80 degrees and bobs 25 cm peak to peak.
+            # Keep the planted phase and the asymmetric stride of the animator.
+            # A braced shaft or a shield limits the movement at the shoulder.
+            braced = kit in TWO_HAND or kit == 7
+            rise *= .43 if braced else .52
+            shoulder_yaw *= .36 if braced else .46
+            chest_roll *= .48 if braced else .64
+        lateral=abs(sin(heading))
+        sway*=1.-.34*lateral
+        hip_yaw*=1.-.42*lateral
+        shoulder_yaw*=(.83 if kit in TWO_HAND else 1.)*(1.-.40*lateral)
+        chest_roll*=.90
+        crouch=(.088 if running else .084)-rise
         lean=12*cos(heading) if running else (9 if clip==12 else 5.8*cos(heading))
         hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else
                       (5.2 if running else 3.7)*walk if i==3 else 2.4*hips if i==4 else 0) for i,v in enumerate(hand))
@@ -361,7 +428,20 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             elbow_height=(.015*walk if move else 0.)
             carry=add(carry,(.019*walk,elbow_height,.025*walk))
             anchor=lerp(carry,add((.136,1.420,.430),(sway*.72,-crouch,shift)),bow_draw)
-            aim=euler(-13.+11.*bow_draw,-32.+24.*bow_draw,-60.+48.*bow_draw)
+            pitch,yaw,roll=-13.+11.*bow_draw,-32.+24.*bow_draw,-60.+48.*bow_draw
+            if move:
+                # The old walking bow had exactly the same rotation in all 32
+                # poses. Let the support arm absorb the alternating footfall,
+                # while both hands and the nock travel as one loaded bow.
+                stride=2.*pi*t
+                support=cos(stride-.29)
+                swing=sin(stride-.24)
+                balance=(1.16 if running else 1.)*(1.-.30*abs(sin(heading)))
+                pitch+=balance*(7.4*support+1.35*sin(2.*stride-.49))
+                yaw+=balance*5.6*swing
+                roll-=balance*(8.1*support+1.2*sin(2.*stride+.60))
+                anchor=add(anchor,(.013*swing,.014*support,-.018*swing))
+            aim=euler(pitch,yaw,roll)
             offq=aim
             right,radius=reachable(chest,1,aim)
             anchor=limit_grip(anchor,right,radius)
@@ -401,7 +481,10 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             off=add(off,(-side_hit*.074*recoil,.028*recoil-.022*settle,-.128*recoil))
             offq=euler(-15.-20.*recoil,-9.+side_hit*25.*recoil,-14.+side_hit*14.*settle)
         if carried:
-            anchor=limit_grip(add(anchor,mul((.066,.043,.029),carried)),right,radius)
+            # The sword rests outside the leading edge of the shield. Its weight
+            # sits in a lowered elbow; both wrist and crossguard continue to be
+            # solved at the same palm, and release keeps the authored contact.
+            anchor=limit_grip(add(anchor,mul((.148,-.008,.206),carried)),right,radius)
     elif kit==8:
         off=(-hand[0],1.14+(1.24-hand[1])*.7-crouch,.225-(hand[2]-.21)*.52+shift)
         offq=euler(-11-hand[3]*.49,-hand[4]*.81,8)
@@ -490,9 +573,33 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         ms[thigh],ms[shin]=two_link(binds,trans(pelvic,binds[0]),foot,(side*(1.1 if ride else .16),-.08,1))
         ms[boot]=placed(binds[2],foot,foot_q)
     if clip==14:
-        k=smooth(max(0.,min(1.,(t-.14)/.80)))
+        k=ramp(t,.14,.75)
         fall=placed((0,.10,0),(0,.10,0),euler(-76*k,18*k,29*k))
         ms=[chain(fall,m) for m in ms]
+        if t>.28:
+            # When the pelvis reaches the floor, the inert body uncoils off
+            # the kneeling pose. Give the final ankles, torso and head their
+            # own support heights; turning a crouched upright rig around its
+            # feet left both boot shafts pointing into the air indefinitely.
+            weight=ramp(t,.28,.97)
+            rest=grounded_rest(kit)
+            ms=[blend_rigid(from_pose,to_pose,weight) for from_pose,to_pose in zip(ms,rest)]
+            # Keep each joint shared in the transitional frames. Blending
+            # translations around the world origin makes the forearm pull
+            # away from the palm when its quaternion turns ninety degrees.
+            # Rebuild the chain about the existing bind points instead.
+            ms[CHEST]=placed((0,1.008,0),trans(ms[HIPS],(0,1.008,0)),ms[CHEST][0])
+            ms[HEAD]=placed((0,1.427,.015),trans(ms[CHEST],(0,1.427,.015)),ms[HEAD][0])
+            for direction in (-1,1):
+                upper,fore,hand=(LU,LF,LH) if direction<0 else (RU,RF,RH)
+                thigh,shin,boot=(LT,LS,LB) if direction<0 else (RT,RS,RB)
+                for parent,chain_ids,pivots in ((CHEST,(upper,fore,hand),arm_nodes(direction)),
+                                                 (HIPS,(thigh,shin,boot),leg_nodes(direction))):
+                    for child,pivot in zip(chain_ids,pivots):
+                        ms[child]=placed(pivot,trans(ms[parent],pivot),ms[child][0])
+                        parent=child
+            if kit==5:
+                ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
     return ms
 
 def cycling(clip):

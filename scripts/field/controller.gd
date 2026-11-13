@@ -436,7 +436,7 @@ func _draw_field() -> void:
 	if frame_log: frame_log.pose_submitted(battle)
 	map.update_battle(battle)
 	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="",battle.gate_hp<260.0 or battle.ram.x>Ground.WALL_X-12.0)
-	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,half_extent-Vector2(4,6))
+	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,Vector2(hw,hd),camera_yaw)
 	view_us+=Time.get_ticks_usec()-t
 
 func _process(delta: float) -> void:

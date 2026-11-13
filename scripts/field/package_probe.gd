@@ -178,6 +178,9 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	var longest_frame_ms:=0.0
 	var longest_context: Dictionary={}
 	var previous_tick:=b.tick
+	b.trace_phase_us.resize(Battle.TRACE_STAGES.size())
+	b.trace_phase_us.fill(0)
+	var preceding_phases:=b.trace_phase_us.duplicate()
 	var previous_sim_us:=scene.sim_us
 	var previous_view_us:=scene.view_us
 	var last_camera_request:=-1
@@ -207,6 +210,12 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 				"render_cpu_timestamp_ms":renderer_cpu if renderer_cpu>0 else null,
 				"render_gpu_timestamp_ms":renderer_gpu if renderer_gpu>0 else null,
 				"camera":[scene.camera_center.x,scene.camera_center.y],"frames_since_camera_request":frames.size()-1-last_camera_request if last_camera_request>=0 else null}
+			var durations: Dictionary = {}
+			for i in Battle.TRACE_STAGES.size():
+				durations[Battle.TRACE_STAGES[i]]=(b.trace_phase_us[i]-preceding_phases[i])/1000.0
+			longest_context["step_phases_ms"]=durations
+		if b.tick!=previous_tick:
+			preceding_phases=b.trace_phase_us.duplicate()
 		previous=now
 		previous_tick=b.tick
 		previous_sim_us=scene.sim_us
@@ -239,6 +248,10 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 		var gpu:=RenderingServer.viewport_get_measured_render_time_gpu(rid)
 		if cpu>0: rcpu.append(cpu)
 		if gpu>0: rgpu.append(gpu)
+	var phase_totals: Dictionary = {}
+	for i in Battle.TRACE_STAGES.size():
+		phase_totals[Battle.TRACE_STAGES[i]]=b.trace_phase_us[i]/1000.0
+	b.trace_phase_us.clear()
 	var sorted:=frames.duplicate()
 	sorted.sort(); rcpu.sort(); rgpu.sort()
 	if sorted.is_empty(): return false
@@ -286,6 +299,7 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 		for interval: float in sorted:
 			if interval>budget: count+=1
 		over[str(rate)]=count
+	record["step_phase_totals_ms"]=phase_totals
 	record["frames_over_budget"]=over
 	record["max_ms"]=sorted[-1]
 	record["longest_frame_context"]=longest_context
