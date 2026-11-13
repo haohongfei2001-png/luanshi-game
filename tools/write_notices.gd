@@ -7,6 +7,8 @@ func _initialize() -> void:
 	text += "No open-source license has been selected for the game itself.\n\n"
 	text += "Human head topology and morph derived from the MakeHuman Team HM08 base and asian-male-young target. Published under CC0 1.0 Universal.\n"
 	text += "https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md\n\n"
+	text += "CommonTree_1 and CommonTree_3 meshes, bark and leaves by Quaternius from the free Stylized Nature MegaKit Standard, CC0 1.0 Universal. Adapted for River Gate.\n"
+	text += "https://quaternius.com/packs/stylizednaturemegakit.html\n\n"
 	text += "Terrain textures adapted from Poly Haven scans under CC0 1.0 Universal.\n"
 	text += "Sparse Grass by Amal Kumar. https://polyhaven.com/a/sparse_grass\n"
 	text += "Brown Mud Dry by Rob Tuytel. https://polyhaven.com/a/brown_mud_dry\n"
