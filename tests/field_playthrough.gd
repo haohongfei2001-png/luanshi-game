@@ -136,8 +136,12 @@ func _run() -> void:
 	var looked:=false
 	var last_pose:=0
 	var deadline:=0
+	var next_progress:=100
 	while b.result=="" and b.tick<2100 and deadline<1660:
 		deadline+=1
+		if b.tick>=next_progress:
+			print("JOURNEY_PROGRESS tick=%d gate=%.1f hits=%d" % [b.tick,b.gate_hp,b.hits[0]+b.hits[1]])
+			next_progress+=100
 		if b.tick<order_tick+115:
 			var best: Battle.Unit=null
 			var sep:=INF

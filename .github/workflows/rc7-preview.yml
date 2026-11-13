@@ -7,7 +7,7 @@ permissions:
 jobs:
   window:
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 37
     steps:
       - uses: actions/checkout@v4
       - name: Install official Godot and import the project
@@ -20,32 +20,31 @@ jobs:
           ./tools/prepare-font.sh
           godot --headless --editor --import --path . >/tmp/rg-import.log 2>&1
           if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' /tmp/rg-import.log; then exit 1; fi
-      - name: Play to a personal strike at normal zoom on the unmodified battlefield
-        env:
-          LIBGL_ALWAYS_SOFTWARE: '1'
+      - name: Prove that only increasing milestones extend an idle budget
         run: |
           set -euo pipefail
-          mkdir -p artifacts && touch artifacts/.gdignore
-          timeout 310s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512 2>&1 | tee /tmp/rg-window.log
-          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' /tmp/rg-window.log; then exit 1; fi
-          grep -q '^RC7_PERSONAL_PASS' /tmp/rg-window.log
-          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
-          python3 - <<'PY'
-          import base64,io
-          from PIL import Image
-          for key in ('personal-windup','personal-contact'):
-              im=Image.open('artifacts/personal-contact/'+key+'.png').convert('RGB')
-              for width in [1280,1920]:
-                  size=(width,int(im.height*width/im.width))
-                  view=im.resize(size,Image.Resampling.LANCZOS) if width<im.width else im
-                  buf=io.BytesIO();view.save(buf,'JPEG',quality=90,subsampling=0)
-                  print('RC7_CONTACT',key,width,base64.b64encode(buf.getvalue()).decode())
-          PY
-      - uses: actions/upload-artifact@v4
+          python3 tools/record-progress.py --idle 1 --limit 4 -- python3 -u -c "import time;print('JOURNEY_STAGE 01-muster tick=0');time.sleep(.65);print('JOURNEY_PROGRESS tick=100');time.sleep(.65);print('JOURNEY_STAGE 02-deploy tick=100')"
+          set +e
+          python3 tools/record-progress.py --idle 1 --limit 6 -- python3 -u -c "import time;print('JOURNEY_PROGRESS tick=100');[(print('JOURNEY_PROGRESS tick=100'),time.sleep(.25)) for _ in range(15)]"
+          status=$?
+          set -e
+          test "$status" -eq 124
+      - name: Record real battle and campaign return with the original quality
+        run: |
+          set -euo pipefail
+          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool ffmpeg; fi
+          ./tools/test-field-journey.sh
+          ./tools/test-field-render.sh journey
+      - name: Keep the checked continuous recording
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: personal-strike-full-windows
+          name: journey-recovery
           path: |
-            artifacts/personal-contact/
-            /tmp/rg-window.log
+            artifacts/journey*.log
+            artifacts/journey*.json
+            artifacts/field-escort*.log
+            artifacts/field-outcomes.log
+            artifacts/river-gate-journey.mp4
+            artifacts/river-gate-review.mp4
           retention-days: 14
