@@ -200,6 +200,8 @@ func _line_film(shell: Node) -> void:
 				_mouse(MOUSE_BUTTON_WHEEL_DOWN,center,true)
 				_mouse(MOUSE_BUTTON_WHEEL_DOWN,center,false)
 		rendered+=1
+		if rendered%90==0:
+			print("FIELD_FILM_ADVANCE ",rendered," ",b.tick)
 		await process_frame
 	_check(rendered==1020 and b.tick-start>=670,"34 continuous seconds of live battle")
 	_check(b.hero.impacts>0 and b.hits[0]+b.hits[1]>100,"Visible fighting followed real input and casualties")

@@ -1,5 +1,5 @@
 // Build the original river-gate prop meshes and material masks. No packages required.
-import {mkdirSync,writeFileSync} from "node:fs";
+import {mkdirSync,readFileSync,writeFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 
 // Original river-gate material masks. All sampling and paint strokes wrap at the edge.
@@ -218,13 +218,41 @@ function carriage() {
     }
     for(let x of [-1.44,-0.78,-0.15,0.45,1.35]) frame.block([x,0.69,0],[0.15,0.15,1.41],bark);
     for(let x of [-1.13,1.12]) frame.block([x,2.09,0],[0.16,0.12,0.64],worn);
-    // A strapped hide hood shelters the rear team. Its edge lies below the ridge.
-    for(let n=0;n<3;n++){
-        const x=-1.62+n*0.47, end=x+0.475;
-        for(let side of [-1,1]){
-            const a=[x,2.14,0], b=[end,2.14,0], c=[end,1.87,0.65*side], d=[x,1.83,0.70*side];
-            frame.face([a,b,c,d],n%2?hide:darkHide,0,[0,1,side]);
-            frame.rod([x,2.15,0],[x,1.87,0.69*side],0.018,0.018,cord,4);
+    // The small hide shelter is drawn back over one rear bay. Its tied, rolled
+    // fore edge leaves both slings, the upper rails and the moving nose in sight.
+    const oxhide=paint("836950"), weathered=paint("977b60"), roll=paint("705444");
+    function awning(u,t,side) {
+        const cut=.104*Math.sin(Math.PI*t);
+        const x=-1.64+.98*u-cut*u;
+        const arch=1.0-t*t;
+        const y=1.893+.255*arch-.024*Math.sin(u*Math.PI)*t-.031*Math.sin(2*t+u)*t;
+        return [x,y,side*(.012+.634*t)];
+    }
+    for(const side of [-1,1]){
+        for(let j=0;j<4;j++){
+            for(let i=0;i<3;i++){
+                const u=i/3, end=(i+1)/3, a=j/4, b=(j+1)/4;
+                frame.face([awning(u,a,side),awning(end,a,side),awning(end,b,side),awning(u,b,side)],
+                           i===0?weathered:oxhide,0,[0,1,side]);
+            }
+        }
+        for(let j=0;j<5;j++){
+            const a=awning(1,j/5,side),b=awning(1,(j+1)/5,side);
+            frame.rod(a,b,.046,.044,roll,7);
+        }
+        for(const t of [.18,.72]){
+            const pin=awning(1,t,side);
+            frame.rod(plus(pin,[.031,.038,0]),plus(pin,[-.034,-.040,0]),.013,.013,cord,5);
+        }
+        for(const u of [.10,.70]){
+            const p=awning(u,1,side);
+            frame.rod(p,[-1.14,1.31,side*.47],.014,.013,cord,6);
+        }
+        for(const x of [-1.13,1.12]){
+            for(const shift of [-.032,.025]){
+                const top=[x+shift,2.11,side*.205], low=[x+shift+.042,1.96,side*.29];
+                frame.rod(top,low,.022,.021,cord,6);
+            }
         }
     }
     beam.rod([-2.13,1.18,0],[1.96,1.18,0],0.167,0.20,worn,10);
@@ -344,6 +372,14 @@ function gltf(shapes) {
 
 const out = new URL("../assets/environment/",import.meta.url);
 mkdirSync(fileURLToPath(out),{recursive:true});
-for(const [name,bytes] of Object.entries(materials())) writeFileSync(new URL(name,out),png(bytes));
-writeFileSync(new URL("river_ram.gltf",out),gltf(carriage()));
-writeFileSync(new URL("grain_cart.gltf",out),gltf(baggage()));
+const ramTarget=new URL("river_ram.gltf",out);
+const ramModel=gltf(carriage());
+if (process.argv.includes("--check-ram")) {
+    if(readFileSync(ramTarget,"utf8")!==ramModel) throw Error("Unbaked river ram");
+} else if(process.argv.includes("--ram-only")) {
+    writeFileSync(ramTarget,ramModel);
+} else {
+    for(const [name,bytes] of Object.entries(materials())) writeFileSync(new URL(name,out),png(bytes));
+    writeFileSync(ramTarget,ramModel);
+    writeFileSync(new URL("grain_cart.gltf",out),gltf(baggage()));
+}

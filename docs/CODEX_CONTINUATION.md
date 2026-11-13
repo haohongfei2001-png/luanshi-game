@@ -4,6 +4,14 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 河关 RC9 工作点｜正常游玩镜头，美术仍在返工
+
+保留已交付的 RC8 作为回退包。第一轮在真实 1920×1200 游戏窗口看见两军的麻布上衣太亮，第二轮压低布色并从肩部区分队伍，修复远看城门时误切整片屋顶。摄影回归保留 512+512 名普通兵、正常输入、受击者、命中时刻及三种观察距离。新衣甲、马匹造型、武器握点和门楼只改变呈现。[首轮窗口](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43366685292) · [第二轮同输入窗口和切顶测试](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43368606849)。
+
+第二轮生长成圆壳的榆冠、偏黄的地面不符合参考。以正常亲战、河岸、城门复核树簇和路缘，同时看主角出枪与冲车悬梁。实机标准是中国古代动画式小人物的轮廓和动作在玩家视距可读。构建与功能测试不能代替美术验收。真实 MacBook Air M5 未运行。
+
+可复现入口为 `./tools/prepare-font.sh && godot --headless --editor --path . --import`，随后在云端显示环境运行 `godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/river_craft_camera.gd -- --field-size=512` 与 `tests/rc7_personal_contact.gd`。候选包和成功、失败的原始数据须钉在同一源码或经比较的同树提交。
+
 ## RC8 之后的步兵动作试作｜独立分支，未装进 RC8
 
 [三档实机、原生 22 米亲战与复现命令](evidence/river-gate-v1-rc8/carry-study/README.md)。目前枪、长刀、盾兵各有两种替代负重姿势，命中关键帧一致；正常距离轮廓有所改善，整套人物与场景仍未通过。可运行工作点分支 `codex/river-carry-reviewed`；可回退的安装包见下方 RC8。没有用这个动作试作宣称新运行包或 M5 通过。
