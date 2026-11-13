@@ -53,15 +53,15 @@ func _run() -> void:
 	var captain = null
 	var shield = null
 	for u in b.roster:
-		if not u.hero and not u.officer and not u.mounted and u.kit==7 and b.active(u) and (shield==null or u.pos.distance_to(b.hero.pos)<shield.pos.distance_to(b.hero.pos)): shield=u
-		if u.officer and not u.mounted and b.active(u) and (captain==null or u.pos.distance_to(b.hero.pos)<captain.pos.distance_to(b.hero.pos)): captain=u
+		if not u.hero and not u.officer and not u.mounted and u.kit==7 and b.active(u) and (shield==null or u.pos.distance_to(Vector2(0.,-13.))<shield.pos.distance_to(Vector2(0.,-13.))): shield=u
+		if u.officer and not u.mounted and b.active(u) and (captain==null or u.pos.distance_to(Vector2(5.,-18.))<captain.pos.distance_to(Vector2(5.,-18.))): captain=u
 	var labels:=["line","reverse","spearman","archer","guard","officer"]
 	for n in labels.size():
 		field.carry=.82*Battle.DT
 		if n>=2:
 			var focus = [b.roster[37],b.roster[94],shield,captain][n-2]
 			var aim_angle:float=atan2(focus.facing.y,focus.facing.x)
-			var yaw:float=1.19 if n==2 else (1.1 if n==3 else 1.58-aim_angle)
+			var yaw:float=1.19 if n==2 else (1.1 if n==3 else 1.16-aim_angle)
 			_view(focus.pos,5.8,yaw)
 		else:
 			_view(center,22.,-.576+PI*n)

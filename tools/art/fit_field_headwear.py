@@ -53,21 +53,76 @@ def source_mesh(path):
         assert cursor==len(rings)
     return points,triangles
 
+def exterior(points,triangles,role):
+    # Some artist meshes have complete coincident inward and outward walls.
+    # The river shader draws both sides. Remove reversed twins before computing
+    # normals or the two normals cancel and produce black blotches on the brow.
+    center=np.array([0.,.39,.043]) if role!="Archer" else np.array([0.,.47,.026])
+    faces={}
+    for f in triangles:
+        p=points[list(f)]
+        signature=tuple(sorted(tuple(x) for x in p.round(5)))
+        normal=np.cross(p[1]-p[0],p[2]-p[0])
+        facing=float(normal @ (p.mean(axis=0)-center))
+        if signature not in faces or facing>faces[signature][0]:
+            faces[signature]=(facing,f)
+    clean=[f for _,f in faces.values()]
+    removed=len(triangles)-len(clean)
+    print("COINCIDENT_HEAD_FACES_REMOVED",role,removed)
+    if role=="Regular": assert removed==84
+    if role=="Officer": assert removed>=32
+    return clean
+
+def bound(role,x,h,z,scale,bind_y,bind_z):
+    # Work with the original brow/hem rings and cheek/nape silhouettes. The
+    # annular binding sits away from the forehead and extends across the brow.
+    if role=="Regular":
+        edge=np.exp(-((h-.373)/.064)**2)
+        x*=1.+.13*edge
+        z+=edge*(.090*max(0.,(z+.12)/.482)-.022)
+        h-=.125*max(0.,h-.39)
+    elif role=="Guard":
+        skirt=float(np.clip((.39-h)/.50,0.,1.))
+        front=max(0.,z/.38)
+        x*=1.+.095*skirt
+        # Clear the forward cheeks and hang a flared lower edge over the nape.
+        h+=.152*skirt*front**1.6
+        z-=.089*skirt*(.33+max(0.,-z/.22))
+        z+=.077*np.exp(-((h-.363)/.052)**2)*front
+        h-=.066*max(0.,h-.38)
+    elif role=="Archer":
+        roll=np.exp(-((h-.457)/.061)**2)
+        x*=1.+.11*roll
+        z+=.019*roll*(z-.025)/.30
+        gathered=max(0.,(h-.46)/.186)
+        x-=.038*gathered
+        z-=.082*gathered
+        h-=.053*gathered
+    elif role=="Officer":
+        brim=np.exp(-((h-.414)/.068)**2)
+        x*=1.+.17*brim
+        z+=.061*brim*max(0.,(z+.11)/.43)
+        if h>.66:
+            above=h-.66
+            z-=.79*above
+            h=.66+.51*above
+    return (x*scale[0],bind_y+h*scale[1],bind_z+z*scale[2])
+
 def garment_material(role,p):
     x,h,z=p
     if role=="Archer":
-        if h<.32: return "felt"
-        if h<.465: return "facing"
-        return "felt"
+        if h<.39: return "leather"
+        if h<.50: return "facing"
+        return "coat"
     if role=="Regular":
         if h<.306: return "felt"
-        if h<.399: return "iron_binding"
+        if h<.421: return "iron_binding"
         return "iron"
     if role=="Guard":
-        if h<.038: return "binding"
-        if h<.288: return "lames"
-        if h<.383: return "iron_binding"
-        return "iron"
+        if h<.040: return "binding"
+        if h<.272: return "lames"
+        if h<.395: return "iron_binding"
+        return "black_iron"
     if h>.75: return "sash"
     if h<.305: return "lames"
     if h<.401: return "iron_binding"
@@ -76,6 +131,7 @@ def garment_material(role,p):
 def bake(role,item,cache):
     original,signature,scale,bind_y,bind_z=item
     points,triangles=source_mesh(source_file(cache,"meshes/props/helmet/"+original+".dae",signature))
+    triangles=exterior(points,triangles,role)
     surface=Surface()
     vertices={}
     for face in triangles:
@@ -85,13 +141,7 @@ def bake(role,item,cache):
             key=(i,section)
             if key not in vertices:
                 x,h,z=points[i]
-                # The officer's original hair brush is kept a short, tied knot
-                # laying backward, not a pair of needle-like helmet spikes.
-                if role=="Officer" and h>.66:
-                    above=h-.66
-                    z-=.79*above
-                    h=.66+.51*above
-                fitted=(x*scale[0],bind_y+h*scale[1],bind_z+z*scale[2])
+                fitted=bound(role,x,h,z,scale,bind_y,bind_z)
                 # Registered swatches retain large sections of matte iron and
                 # cloth, contiguous across welded geometry and all LODs.
                 coord=uv(section,float(np.clip(.5+x*.80,.17,.83)),float(np.clip(.52-h*.54,.17,.83)))
