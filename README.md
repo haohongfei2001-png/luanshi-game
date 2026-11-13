@@ -18,7 +18,7 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
-河关 RC15 在原地图上装入经许可的专业手部和阔叶树模型。主角枪侧调整为单肩披挂。编译、正常游玩录像、冷启动与画质实测见 [可玩候选 #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53)，已有 RC14 的 [macOS 包与原始战斗](https://github.com/haohongfei2001-png/luanshi-game/blob/c5962a730038168ac0079f46650a6be1a0fc6765/docs/evidence/river-gate-v1-rc14/PLAYTEST.md)。
+河关 RC16 在正常战役中实装三套有署名的军服、持械步态和共享树林网格。可核对军籍、窗口录像、冷启动与实测帧时间，详见 [可玩候选 #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53)，已有 RC14 的 [macOS 包与原始战斗](https://github.com/haohongfei2001-png/luanshi-game/blob/c5962a730038168ac0079f46650a6be1a0fc6765/docs/evidence/river-gate-v1-rc14/PLAYTEST.md)。
 
 **河关 0.16.0-rc.13 试玩候选** · [下载 macOS](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43426014852/artifacts/14037602462) · [实际跟随画面](docs/evidence/river-gate-v1-rc13/normal-native.jpg) · [连续战役实录](docs/evidence/river-gate-v1-rc13/playthrough-review.mp4) · [帧时间、回归及校验](docs/evidence/river-gate-v1-rc13/PLAYTEST.md)。解开 Actions 附件及内层 `Luanshi-macOS.zip`，打开应用。真实 M5 与最终美术质量尚待验收。 [RC12 回退包](docs/evidence/river-gate-v1-rc12/PLAYTEST.md)
 
