@@ -53,6 +53,18 @@ void fragment() {
 			float key=1.0-smoothstep(.035,.145,value-max(.0,chroma)*3.6-.58);
 			tone=mix(vec3(.068,.104,.075),vec3(.315,.35,.188),.21+.68*light)*(.72+.43*value);
 			opacity=twig.a*key*smoothstep(.016,.07,chroma);
+			if(UV.x>.5) {
+				// Young upper boughs carry short green growth underneath the long
+				// free whips. Only this island fills the open top of the crown.
+				vec2 u=vec2(.04+.92*fract(UV.x*4.0),.98-.96*UV.y);
+				vec4 crown_leaf=texture(elm_bough,u);
+				float moss=dot(crown_leaf.rgb,vec3(.29,.59,.12));
+				vec3 upper=mix(vec3(.076,.120,.085),vec3(.332,.383,.208),clamp(.18+light*.60+moss*.32,0.0,1.0));
+				float upper_leaf=crown_leaf.a*smoothstep(.09,.52,1.0-UV.y);
+				vec3 painted=mix(crown_leaf.rgb*vec3(.71,.80,.70),upper,.30)*(.71+.28*light);
+				tone=mix(tone,painted,upper_leaf);
+				opacity=max(opacity,upper_leaf*.85);
+			}
 		}
 	} else if(crown>.5) {
 		vec3 leaf=texture(canopy_paint,UV*1.73).rgb;

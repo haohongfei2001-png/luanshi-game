@@ -36,6 +36,7 @@ func _ready() -> void:
 	surface_material.set_shader_parameter("soil_cover",preload("res://assets/environment/soil-cover.png"))
 	surface_material.set_shader_parameter("floodplain",preload("res://assets/environment/floodplain-paint.png"))
 	surface_material.set_shader_parameter("verge_track",preload("res://assets/environment/verge-and-track.svg"))
+	surface_material.set_shader_parameter("shale_paint",preload("res://assets/environment/river-shale.png"))
 	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/grazed-meadow.png"))
 	surface_material.set_shader_parameter("lane_paint",preload("res://assets/environment/loess-wagonway.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
@@ -172,10 +173,11 @@ func _crossings(b: Builder) -> void:
 		for i in range(-13,14):
 			var length:=7.80+0.085*sin(i*13.0+z)
 			var seam:=1.02*sin(i*1.14+z*0.13)
-			var worn:=WOOD.lightened(0.018*posmod(i*7,5))
+			var worn:=Color("756657").lerp(Color("988774"),(.53+.42*sin(i*1.41+z*.71))*.73)
+			var board_top:=.085+.006*sin(i*4.32+z)
 			for edge_sign:float in [-1.0,1.0]:
 				var end:=edge_sign*length*0.5
-				b.block(center+Vector3(i*0.482,0.085,(end+seam)*0.5),Vector3(0.47,0.09,absf(end-seam)-0.021),worn.lightened(0.025*edge_sign))
+				b.block(center+Vector3(i*0.482,board_top,(end+seam)*0.5),Vector3(0.47,0.09,absf(end-seam)-0.021),worn.lightened(0.025*edge_sign))
 		for side:float in [-1.0,1.0]:
 			var edge:=center+Vector3(0,0,side*4)
 			b.joint=3
@@ -198,6 +200,18 @@ func _crossings(b: Builder) -> void:
 				var post:=edge+Vector3(x,0,0)
 				b.rod(post-Vector3.UP*0.70,post+Vector3.UP*1.03,0.13,0.109,WOOD,7)
 				b.rod(post+Vector3.UP*0.99,post+Vector3.UP*1.12,0.14,0.104,WOOD.lightened(0.11),7)
+				if absf(x)>4.0 and signf(x)==side:
+					# Rag strips on two corner posts show wind and mark the landing.
+					# Both tails stay outboard of the playable bridge deck.
+					b.joint=15
+					var at:=post+Vector3(.0,.87,side*.12)
+					var fold:=at+Vector3(.27,-.080,side*.18)
+					var tip:=at+Vector3(.72,-.136,side*.46)
+					var dye:=Color("884a42")
+					b.quad(at,fold,fold-Vector3.UP*.087,at-Vector3.UP*.108,dye.darkened(.12))
+					b.quad(fold,tip,tip-Vector3.UP*.071,fold-Vector3.UP*.087,dye)
+					b.tri(tip,tip+Vector3(.22,-.072,side*.10),tip-Vector3.UP*.071,dye)
+					b.joint=11
 				for h:float in [0.78,0.86]:
 					b.rod(post+Vector3.UP*h,post+Vector3.UP*(h+0.047),0.128,0.128,Color("998568"),7)
 				if absf(x)<3.0:
