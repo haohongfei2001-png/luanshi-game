@@ -12,6 +12,8 @@ uniform vec4 clay_bed : source_color = vec4(.275,.258,.226,1.0);
 uniform vec4 clay_dry : source_color = vec4(.462,.438,.372,1.0);
 uniform sampler2D shale_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D grazing_detail : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D track_detail : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D lane_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D verge_track : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform vec4 river_silt : source_color = vec4(.39,.40,.31,1.);
@@ -69,22 +71,25 @@ vec3 painted_ground(vec2 p, float shore) {
 	vec3 verge_marks=texture(verge_track,meadow_uv*1.41).rgb;
 	float grass_shape=smoothstep(.28,.70,grass)*.78+.22*smoothstep(.25,.69,verge_marks.r);
 	float dry_shape=smoothstep(.31,.73,soil);
-	// A single large wash describes open grass and sheltered banks. Painted
-	// lobes carry the hue changes and retain their shape when the view pulls back.
-	float stems=smoothstep(.45,.76,verge_marks.r)*.58+.42*smoothstep(.35,.70,verge_marks.b);
-	float pasture=smoothstep(.28,.61,grass);
-	float sun=clamp(.07+.55*grass_shape+.32*smoothstep(.19,.68,cover.b)-.30*margin.g+.09*margin.r,0.,1.);
-	vec3 turf=mix(turf_sheltered.rgb,turf_open.rgb,sun);
-	turf*=.91+.15*stems+.045*pasture;
-	// Retain the contrast and hue of broad grass shapes at a playing distance.
-	float cut=smoothstep(.27,.58,grass);
-	vec3 painted=OUTPUT_IS_SRGB?meadow:pow(max(meadow,vec3(.0001)),vec3(.48));
-	vec3 cast=clamp(painted/max(.075,grass),vec3(.70),vec3(1.27));
-	vec3 meadow_ink=mix(turf_sheltered.rgb,turf_open.rgb,.11+.78*cut);
-	turf=mix(turf,meadow_ink*mix(vec3(1.),cast,.44),.65)*(.82+.31*cut);
-	turf=mix(turf,clay_dry.rgb,margin.r*(.08+.17*grass_shape));
-	vec3 clay=mix(clay_bed.rgb,clay_dry.rgb,.14+.76*dry_shape);
-	clay*=.85+.19*smoothstep(.30,.68,soil)+.063*smoothstep(.24,.70,verge_marks.g);
+	// Large shape and small-scale painting occupy different world footprints.
+	// Averaging the swatches erased the dark grass at the feet and all of the
+	// cartway grain in the regular 22 metre view.
+	vec2 brush_uv=vec2(p.x*.134+p.y*.025,p.y*.141-p.x*.022);
+	vec3 grass_brush=texture(grazing_detail,brush_uv+bend).rgb;
+	vec3 earth_brush=texture(track_detail,vec2(brush_uv.y,-brush_uv.x)*.87+bend*.67).rgb;
+	float grass_v=dot(grass_brush,vec3(.29,.57,.14));
+	float clay_v=dot(earth_brush,vec3(.29,.57,.14));
+	vec3 turf=mix(vec3(grass_v),grass_brush,.58)*(OUTPUT_IS_SRGB?vec3(.73,.81,.82):vec3(.59,.66,.70));
+	vec3 clay=mix(vec3(clay_v),earth_brush,.42)*(OUTPUT_IS_SRGB?vec3(.78,.78,.84):vec3(.62,.63,.73));
+	float footprint=max(length(dFdx(p)),length(dFdy(p)));
+	float ranks=smoothstep(.014,.065,footprint);
+	float sun=clamp(.19+.40*grass_shape+.22*smoothstep(.18,.67,cover.b)-.21*margin.g+.12*margin.r,0.,1.);
+	vec3 canopy=mix(turf_sheltered.rgb,turf_open.rgb,sun);
+	turf=mix(turf,canopy,.20+.13*ranks)*(.88+.18*grass_shape);
+	turf*=mix(vec3(1.),vec3(.79,.88,.98),margin.g*.75);
+	turf*=mix(vec3(1.),vec3(1.15,1.01,.82),margin.r*.71);
+	vec3 loam=mix(clay_bed.rgb,clay_dry.rgb,.10+.76*dry_shape);
+	clay=mix(clay,loam,.22+.09*ranks)*(.93+.10*dry_shape);
 	float centre=1.-smoothstep(.57,.99,cover.a);
 	float fallow=smoothstep(.24,.58,cover.r)*(1.-smoothstep(.73,.9,cover.r))*(1.-centre);
 	float edge=cover.r-.21*fallow+(.53-grass_shape)*.20+(.50-verge_marks.r)*.09;

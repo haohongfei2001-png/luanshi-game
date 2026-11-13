@@ -46,6 +46,8 @@ func _ready() -> void:
 	surface_material.set_shader_parameter("verge_track",preload("res://assets/environment/verge-and-track.svg"))
 	surface_material.set_shader_parameter("shale_paint",preload("res://assets/environment/river-shale.png"))
 	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/valley-turf.png"))
+	surface_material.set_shader_parameter("grazing_detail",preload("res://assets/environment/grazed-meadow.png"))
+	surface_material.set_shader_parameter("track_detail",preload("res://assets/environment/loess-wagonway.png"))
 	surface_material.set_shader_parameter("lane_paint",preload("res://assets/environment/valley-loess.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
 	surface_material.set_shader_parameter("joinery",preload("res://assets/environment/joinery.png"))

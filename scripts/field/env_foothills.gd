@@ -98,8 +98,8 @@ func _leaf_platform(patch: Patch,root: Vector3,ray: Vector3,reach: float,width: 
 	var normals:=PackedVector3Array()
 	var coords:=PackedVector2Array()
 	var weights:=PackedFloat32Array()
-	var sections:=9
-	var across:=8
+	var sections:=11
+	var across:=11
 	for surface in 2:
 		for row in sections:
 			var t:=float(row)/(sections-1)
@@ -112,7 +112,7 @@ func _leaf_platform(patch: Patch,root: Vector3,ray: Vector3,reach: float,width: 
 				var tip:=smoothstep(.49,1.,t)
 				var finger:=.12*sin(9.3*v+seed*.73)+.046*sin(14.*v-seed*.31)
 				var along:=t+finger*tip-.39*absf(v)*pow(t,2.2)
-				var fan:=(.11+.98*pow(maxf(0.,sin(PI*(.035+.88*t))),.77))*(.95+.18*cos(t*12.+seed+signf(v)))
+				var fan:=(.045+.96*pow(maxf(0.,sin(PI*(.024+.95*t))),.68))*(.95+.18*cos(t*12.+seed+signf(v)))
 				var x:=v*fan+bend
 				var shell:=-.25*(1.-v*v)-.075*arch
 				if surface==0: shell=(1.-v*v)*(.58+.40*arch)+.29*ribs*arch+.12*sin(t*9.4+seed)*(1.-absf(v))
@@ -187,11 +187,11 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int,variant: int) -> void:
 		var root:=elbow.lerp(wrist,.22)
 		var turn_side:=1. if (i+variant)%2==0 else -1.
 		var leaf_dir:=radial.rotated(Vector3.UP,.20*turn_side)
-		_leaf_platform(patch,root,leaf_dir,reach*.89,width*.81,width*.68,grade,spin+2.07*i,lift)
+		_leaf_platform(patch,root,leaf_dir,reach*.75,width*.68,width*.68,grade,spin+2.07*i,lift)
 		var cross_ray:=radial.rotated(Vector3.UP,turn_side*(1.42+.11*i))
 		var crouch:=wrist-leaf_dir*reach*.09+Vector3.DOWN*width*.11
 		patch.stone.rod(wrist,crouch+cross_ray*reach*.41+Vector3.UP*width*.10,fac*.32,h*.0029,BARK,5)
-		_leaf_platform(patch,crouch,cross_ray,reach*.65,width*.58,width*.48,grade-.11,spin-.73+1.91*i,lift+.08)
+		_leaf_platform(patch,crouch,cross_ray,reach*.58,width*.54,width*.46,grade-.11,spin-.73+1.91*i,lift+.08)
 		# Branch-bearing sprays cross the boundary of the solid core along the
 		# long axis and both flanks. The visible hem follows the leaf silhouette.
 		for fringe in 5:
@@ -199,8 +199,8 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int,variant: int) -> void:
 			var off:=fringe_angles[fringe]
 			var lateral:=Vector3(-leaf_dir.z,0.,leaf_dir.x)
 			var tail:=leaf_dir.rotated(Vector3.UP,off)
-			var edge:=root+leaf_dir*reach*(.41+.16*cos(off))+lateral*width*.52*off+Vector3.UP*width*(.36+.23*lift+.08*sin(spin+fringe))
-			_bough(patch,edge,tail,reach*(.54+.07*sin(fringe*2.+i)),width*(.38+.06*cos(fringe*1.4)),-.28-.05*(fringe%3),grade,true,turn_side*.13)
+			var edge:=root+leaf_dir*reach*(.34+.14*cos(off))+lateral*width*.44*off+Vector3.UP*width*(.41+.23*lift+.085*sin(spin+fringe))
+			_bough(patch,edge,tail,reach*(.57+.11*sin(fringe*2.+i)),width*(.40+.12*cos(fringe*1.4)),-.30-.06*(fringe%3),grade,true,turn_side*.13)
 		var inland:=cross_ray.rotated(Vector3.UP,turn_side*.25)
 		_bough(patch,crouch+cross_ray*reach*.33+Vector3.UP*width*.26,inland,reach*.40,width*.34,-.38,grade-.07,true,turn_side*.17)
 
