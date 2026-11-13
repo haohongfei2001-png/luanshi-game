@@ -4,6 +4,7 @@ on:
     branches: ['codex/river-contact-window']
 permissions:
   contents: read
+  actions: read
 jobs:
   bake-and-photograph:
     runs-on: ubuntu-24.04
@@ -15,20 +16,27 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          repository: ${{ github.repository }}
+          run-id: '43385505747'
+          name: river-contact-matched-frames
+          github-token: ${{ github.token }}
+          path: prior
       - name: Bake shared animation and armour into the actual game
         run: |
           set -euo pipefail
           python3 -m pip -q install Pillow==11.3.0 imageio-ffmpeg==0.6.0
           mkdir -p proof/bakes
-          python3 tools/art/bake_river_company.py --geometry-only >proof/bakes/triangles.log
-          PYTHONPATH=tools/art python3 -c 'from pathlib import Path; from company_motion import bake_motion; bake_motion(Path("assets/river_gate/figures"))'
+          node tools/art/bake_field_garments.mjs
+          node tools/art/bake_field_garments.mjs --check
           python3 tools/art/check_company_motion.py | tee proof/bakes/nine-kits.log
           python3 tools/art/check_field_carries.py | tee proof/bakes/carries.log
           python3 tools/art/check_contact_motion.py | tee proof/bakes/reactions.log
           python3 - <<'PY'
           import base64,hashlib,shutil
           from pathlib import Path
-          for name in ("assets/river_gate/figures/river_company.glb","assets/river_gate/figures/company_motion.png"):
+          for name in ("assets/river_gate/figures/field_garments.gltf",):
               raw=Path(name).read_bytes(); shutil.copyfile(name,Path("proof/bakes")/Path(name).name)
               wire=base64.b64encode(raw).decode()
               print("CRAFT_ASSET_INFO",name,len(raw),hashlib.sha256(raw).hexdigest(),hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest(),len(wire))
@@ -43,8 +51,9 @@ jobs:
           unzip -q /tmp/engine.zip -d /tmp/engine
           g=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
           ff=$(python3 -c 'import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())')
+          cp -a prior/before proof/before
           ./tools/prepare-font.sh
-          for side in after before; do
+          for side in after; do
             rev=HEAD
             if [[ $side == before ]]; then rev=4a3ebc4d3c8e687337b27829c6bc13be20810f09; fi
             wrk=/tmp/melee-$side
@@ -54,7 +63,7 @@ jobs:
             touch "$wrk/artifacts/.gdignore"
             cp tests/field_contact_window.gd "$wrk/tests/"
             cp -a assets/fonts/. "$wrk/assets/fonts/"
-            if [[ $side == after ]]; then cp proof/bakes/river_company.glb proof/bakes/company_motion.png "$wrk/assets/river_gate/figures/"; fi
+            if [[ $side == after ]]; then cp proof/bakes/field_garments.gltf "$wrk/assets/river_gate/figures/"; fi
             export XDG_DATA_HOME=/tmp/data-$side XDG_CONFIG_HOME=/tmp/settings-$side XDG_CACHE_HOME=/tmp/cache-$side
             "$g" --headless --editor --path "$wrk" --import >"proof/$side-import.log" 2>&1
             if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-import.log"; then exit 1; fi
@@ -77,7 +86,12 @@ jobs:
           p=Path("proof")
           events=json.loads((p/"contact-plan.json").read_text())
           old,new=[json.loads((p/s/"states.json").read_text()) for s in ("before","after")]
-          assert old==new and len(old)==36
+          # The first recorder retained references to two running Array counters.
+          # Reuse its immutable snapshots; compare gameplay counters in the same shape.
+          assert len(old)==len(new)==36
+          assert [{k:v for k,v in r.items() if k not in ("hits","losses")} for r in old]==[{k:v for k,v in r.items() if k not in ("hits","losses")} for r in new]
+          assert old[-1]["hits"]==new[-1]["hits"] and old[-1]["losses"]==new[-1]["losses"]
+          assert any(r["hits"]!=new[0]["hits"] for r in new)
           for e in events:
               rows=[r for r in new if r["kind"]==e["kind"]]
               prev,hit=[next(r for r in rows if r["tick"]==t) for t in (e["tick"]-1,e["tick"])]

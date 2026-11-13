@@ -60,8 +60,10 @@ function surface(look,segments,rows) {
                 return [side*x,y,z,arm,CHEST,.46+.54*t];
             }
             const parts=look==="Regular"
-                ? [[0,.72,SWATCH.iron],[.72,.83,SWATCH.hide],[.83,1,SWATCH.cloth]]
-                : [[0,.64,SWATCH.iron],[.64,.73,SWATCH.edge],[.73,.88,SWATCH.iron],[.88,1,SWATCH.hide]];
+                ? [[0,.33,SWATCH.cloth],[.33,.76,SWATCH.iron],[.76,.83,SWATCH.hide],[.83,1,SWATCH.cloth]]
+                : (look==="Guard"
+                  ? [[0,.24,SWATCH.cloth],[.24,.70,SWATCH.iron],[.70,.81,SWATCH.hide],[.81,1,SWATCH.iron]]
+                  : [[0,.64,SWATCH.iron],[.64,.73,SWATCH.edge],[.73,.88,SWATCH.iron],[.88,1,SWATCH.hide]]);
             for(const [top,bottom,colour] of parts) panel(segments,top===0?rows:1,colour,(u,v)=>at(u,top+(bottom-top)*v),side===-1);
         }
     }
@@ -150,20 +152,8 @@ function surface(look,segments,rows) {
                 return [x,y,z,CHEST,HIPS,.98];
             });
         }
-        if(look==="Guard") {
-            for(const side of [-1,1]) {
-                const joint=side<0?9:12, span=side<0?.407:.297;
-                function flank(u,t) {
-                    const ang=side*(.54+(2.05-.23*t)*u+.13*t);
-                    const bulge=.206+.080*t+.014*Math.sin(PI*t), y=.962-t*span+
-                        t*(.081*(2*u-1)**2+.026*u);
-                    return [bulge*Math.sin(ang),y,(-.016+(.162+.085*t)*Math.cos(ang)),
-                            joint,HIPS,.60*t];
-                }
-                panel(segments,far?1:rows,30,(u,v)=>flank(u,v),side<0);
-                panel(segments,1,2,(u,v)=>flank(u,.96+.065*v),side<0);
-            }
-        }
+        // The iron leaves, exposed cloth and their bindings now share one
+        // fitted, thigh-weighted surface in field_armour.skirts at all distances.
     }
     for(let i=0;i<indices.length;i+=3) {
         const a=indices[i]*3,b=indices[i+1]*3,c=indices[i+2]*3;

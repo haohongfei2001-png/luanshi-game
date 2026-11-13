@@ -72,8 +72,8 @@ func _record(events: Array) -> bool:
 				if root.get_texture().get_image().save_png("%s/%s-native-%02d.png"%[OUTPUT,e.kind,offset+6])!=OK: return false
 			moments.append({"tick":tick,"kind":e.kind,"defender":u.id,"attacker":v.id,
 				"hp":u.hp,"source_hp":v.hp,"received":u.received,"impacts":v.impacts,"state":u.state,
-				"pos":[u.pos.x,u.pos.y,v.pos.x,v.pos.y],"hits":Array(b.hits),"blocked":b.blocked_hits,
-				"losses":Array(b.losses),"ordinary":Array(b.ordinary_counts)})
+				"pos":[u.pos.x,u.pos.y,v.pos.x,v.pos.y],"hits":b.hits.duplicate(),"blocked":b.blocked_hits,
+				"losses":b.losses.duplicate(),"ordinary":Array(b.ordinary_counts)})
 	var out:=FileAccess.open(OUTPUT+"/states.json",FileAccess.WRITE)
 	out.store_string(JSON.stringify(moments))
 	return moments.size()==36

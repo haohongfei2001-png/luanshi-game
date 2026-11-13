@@ -47,6 +47,10 @@ vec3 painted_ground(vec2 p, float shore) {
     vec2 uv=vec2(p.x*.134+p.y*.025,p.y*.141-p.x*.022);
     vec3 marks=texture(verge_track,uv*.78).rgb;
     vec2 warp=.10*vec2(sin(p.y*.22+p.x*.06),cos(p.x*.19-p.y*.087));
+    // Compress the value of small isolated marks as the player's window covers
+    // more ground. Keep wheel ruts, clump boundaries and the terrain's own hues.
+    float footprint=max(length(dFdx(p)),length(dFdy(p)));
+    float tactical=smoothstep(.009,.045,footprint);
     vec3 turf=texture(meadow_paint,uv+warp).rgb;
     vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66).rgb;
     float clay_value=dot(clay,vec3(.30,.57,.13));
@@ -54,6 +58,10 @@ vec3 painted_ground(vec2 p, float shore) {
     // Suppress orange and lime in sunlight, keeping the sampled shape and value.
     clay=mix(vec3(clay_value),clay,.32)*(OUTPUT_IS_SRGB?vec3(.76,.78,.88):vec3(.60,.63,.79));
     turf=mix(vec3(turf_value),turf,.52)*(OUTPUT_IS_SRGB?vec3(.78,.79,.82):vec3(.64,.65,.70));
+    float grass_mid=OUTPUT_IS_SRGB ? .224 : .097;
+    float clay_mid=OUTPUT_IS_SRGB ? .292 : .147;
+    turf=mix(turf,vec3(grass_mid)*vec3(.83,1.06,.80),.23+.22*tactical);
+    clay=mix(clay,vec3(clay_mid)*vec3(1.11,1.01,.84),.16+.14*tactical);
     float near_track=1.0-smoothstep(.55,.96,cover.a);
     float tilled=smoothstep(.25,.60,cover.r)*(1.0-smoothstep(.72,.89,cover.r))*(1.0-near_track);
     float broken=smoothstep(.23,.91,marks.g+.24*marks.b);
@@ -68,6 +76,10 @@ vec3 painted_ground(vec2 p, float shore) {
     vec3 margins=texture(field_margins,mapped).rgb;
     verge*=mix(vec3(1.0),vec3(.79,.88,.98),margins.g*.81);
     verge*=mix(vec3(1.0),vec3(1.16,1.018,.825),margins.r*.76);
+    // Isolated blades on the existing hand-painted margin map sit in small
+    // cool banks. They receive emphasis only where the verge is untrampled.
+    float clump=smoothstep(.24,.76,marks.r)*(1.-lane)*(.36+.64*margins.g);
+    verge*=1.-.095*clump;
     vec3 colour=mix(verge,clay*vec3(1.075,1.056,1.012),lane);
     colour=mix(colour,landscape,.159+.06*(1.0-lane));
     float lip=4.0*lane*(1.0-lane);
