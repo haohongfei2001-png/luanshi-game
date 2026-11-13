@@ -131,7 +131,7 @@ void fragment() {
 		// world space. Fine surface marks disappear into mipmaps at army scale.
 		color=painted_ground(p,0.0);
 	} else if (part>1.5 && part<2.5) {
-		float bank=abs(p.x+32.0);
+		float bank=min(abs(p.x+32.0),abs(p.x-24.0));
 		float turn=sin(p.y*.42)*.42+sin(p.y*.15+1.1)*.30;
 		vec2 flow=vec2(p.x*.27+turn*.33,p.y*.052-TIME*.017);
 		float ripple=texture(fieldbed,flow).r;

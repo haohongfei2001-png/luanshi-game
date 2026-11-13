@@ -74,6 +74,7 @@ def observe(args, focus_helper, output, label):
     master, slave = pty.openpty()
     started = time.monotonic()
     events, actors = [], []
+    interrupter = None
     sample_attempts = set()
     # Bound both initial renderer startup and each distinct, confirmed phase.
     deadline = started + 75
@@ -87,7 +88,7 @@ def observe(args, focus_helper, output, label):
         os.close(slave)
 
         def line(raw):
-            nonlocal promoted, deadline
+            nonlocal promoted, deadline, interrupter
             value = raw.decode(errors="replace").rstrip("\r")
             print(value, file=log, flush=True)
             if not value.startswith("FIELD_BOOT "):
@@ -108,10 +109,22 @@ def observe(args, focus_helper, output, label):
                 promoted, action = True, "foreground"
             if event["stage"] in {"control_armed", "startup_interruption_armed"}:
                 action = "interrupt"
+            if stage in {"focus_paused", "startup_paused_zero"} and interrupter and interrupter.stdin:
+                try:
+                    interrupter.stdin.write(b"1")
+                    interrupter.stdin.flush()
+                except BrokenPipeError:
+                    pass
+                interrupter.stdin.close()
+                interrupter = None
             if action:
                 print(action, event["pid"], file=actor_log, flush=True)
-                actors.append(subprocess.Popen([focus_helper, action, str(event["pid"])],
-                                               stdout=actor_log, stderr=actor_log))
+                actor = subprocess.Popen([focus_helper, action, str(event["pid"])],
+                                         stdin=subprocess.PIPE if action=="interrupt" else subprocess.DEVNULL,
+                                         stdout=actor_log, stderr=actor_log)
+                actors.append(actor)
+                if action=="interrupt":
+                    interrupter = actor
 
         timeout = False
         try:

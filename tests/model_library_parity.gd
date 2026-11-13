@@ -11,6 +11,7 @@ func _initialize() -> void:
 			preload("res://assets/third_party/wildfire_willow/ford_willow.glb"),
 			preload("res://assets/third_party/wildfire_headwear/headwear.glb"),
 			preload("res://assets/third_party/wildfire_gate/river_gate.glb"),
+			preload("res://assets/third_party/wildfire_bridge/bridge_edge.glb"),
 			preload("res://assets/third_party/wildfire_gate/corner_tower.glb"),
 			preload("res://assets/environment/quaternius/grove.glb"),
 			preload("res://assets/art/mounts/field_tack.glb"),

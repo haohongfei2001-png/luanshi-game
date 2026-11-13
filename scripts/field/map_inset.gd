@@ -4,6 +4,7 @@ extends Control
 const Ground := preload("res://scripts/field/ground.gd")
 const SURVEY := preload("res://assets/environment/river-survey.svg")
 signal chosen(at: Vector2)
+var bridgehead:=false
 var observer:=Vector2.ZERO
 var player:=Vector2.ZERO
 var heading:=Vector2.RIGHT
@@ -14,6 +15,7 @@ var mustering:=PackedVector2Array()
 var selected:=Vector2.INF
 
 func set_muster(b: RefCounted,index: int) -> void:
+	bridgehead=b.bridgehead
 	mustering.clear()
 	selected=Vector2.INF
 	if not b.started:
@@ -43,6 +45,10 @@ func _draw() -> void:
 	var area:=Rect2(Vector2(7,6),size-Vector2(14,12))
 	draw_rect(Rect2(Vector2.ZERO,size),Color("24312eeb"))
 	draw_texture_rect(SURVEY,area,false)
+	if bridgehead:
+		var wx:=Ground.MOAT_X
+		draw_line(_point(Vector2(wx,-Ground.MOAT_END)),_point(Vector2(wx,Ground.MOAT_END)),Color("538487"),3.,true)
+		draw_line(_point(Vector2(wx-5.8,0)),_point(Vector2(wx+5.8,0)),Color("bdac87"),2.,true)
 	draw_rect(Rect2(Vector2(.5,.5),size-Vector2.ONE),Color("92876d"),false,1.)
 	var gate:=_point(Ground.GATE)
 	draw_colored_polygon(PackedVector2Array([gate+Vector2(-2.8,0),gate+Vector2(0,-2.8),

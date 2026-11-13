@@ -9,6 +9,7 @@ const SLATE := Color("525b61")
 const STONE := Color("838274")
 const DIRT := Color("a28c67")
 const SKIFF_WATERLINE := Vector3(Ground.RIVER_X+2.04,-.33,-7.91)
+var bridgehead:=false
 var surface_material:=ShaderMaterial.new()
 var sun:=DirectionalLight3D.new()
 var gate: MeshInstance3D
@@ -56,6 +57,7 @@ func _ready() -> void:
 	_ground_tiles(terrain)
 	var river:=Builder.new()
 	_crossings(river)
+	if bridgehead: _outer_bridge(river)
 	_shore(river)
 	_moored_skiff(river)
 	_mesh(river,self)
@@ -68,7 +70,7 @@ func _ready() -> void:
 	_mesh(tents,self)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 8725
-	Foothills.new().build(self,terrain)
+	Foothills.new().build(self,terrain,bridgehead)
 	_bank_litter(terrain,rng)
 	for tile: Builder in terrain.values(): _mesh(tile,self)
 	var door:=Builder.new()
@@ -100,7 +102,9 @@ func _mesh(builder: Builder,parent: Node3D) -> MeshInstance3D:
 	return mesh
 
 func _point(x: float,z: float) -> Vector3:
-	return Foothills.ground_point(Vector2(x,z))
+	var point:=Foothills.ground_point(Vector2(x,z))
+	if bridgehead: point.y-=.87*Ground.moat_depth(Vector2(x,z))
+	return point
 
 func _ground_tiles(tiles: Dictionary) -> void:
 	for x0 in range(-168,168,42):
@@ -235,6 +239,63 @@ func _river_surface(b: Builder) -> void:
 		previous=next
 		previous_width=w
 	b.quad(Vector3(west,level,previous),Vector3(west,level,108),Vector3(east,level,108),Vector3(east,level,previous),water)
+
+func _outer_bridge(b: Builder) -> void:
+	var x:=Ground.MOAT_X
+	var origin:=Vector3(x,0.,0.)
+	# Both timber trusses carry the same tread. Their footings and rope
+	# sit outboard of the clear width used by pedestrians and the ram.
+	var frame:=preload("res://assets/third_party/wildfire_bridge/bridge_edge.glb")
+	var rail: Mesh=preload("res://scripts/field/model_library.gd").meshes(frame)["BoundTimber"]
+	var timber:=StandardMaterial3D.new()
+	timber.albedo_texture=preload("res://assets/third_party/wildfire_bridge/bound_timber.png")
+	timber.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	timber.roughness=1.
+	timber.metallic_specular=.11
+	b.joint=3
+	b.block(origin+Vector3(0,-.13,0),Vector3(11.84,.25,7.70),Color("65584a"))
+	b.joint=16
+	for i in 35:
+		var u:=(float(i)-17.)*.335
+		var length:=7.91+.042*sin(i*3.82)
+		var seam:=.87*sin(i*1.29)
+		var grain:=Color("a08464").lerp(Color("796953"),.31+.20*sin(i*.70))
+		for side:float in [-1.,1.]:
+			var end:=side*length*.5
+			b.block(origin+Vector3(u,.068+.003*sin(i*5.1),(end+seam)*.5),
+					Vector3(.325,.122,absf(end-seam)-.016),grain)
+	for side:float in [-1.,1.]:
+		var edge:=MeshInstance3D.new()
+		edge.mesh=rail
+		edge.material_override=timber
+		edge.rotation.y=PI if side<0 else 0.
+		edge.position=origin+Vector3(0,0,side*3.96)
+		add_child(edge)
+		b.joint=3
+		b.block(origin+Vector3(0,.40,side*3.96),Vector3(11.55,.12,.143),WOOD)
+		for bank:float in [-1.,1.]:
+			_bridge_landing(b,origin,bank,side)
+	# A shallow curved head and tail locate the end of the dug waterway.
+	# Under the deck the same bed remains continuous and visible between piles.
+	b.joint=2
+	for z in range(-27,27):
+		var h0:=clampf((27.-absf(z))*.47,0.,1.)
+		var h1:=clampf((27.-absf(z+1.))*.47,0.,1.)
+		var w0:=5.28*h0
+		var w1:=5.28*h1
+		b.quad(Vector3(x-w0,-.36,z),Vector3(x-w1,-.36,z+1),
+				Vector3(x+w1,-.36,z+1),Vector3(x+w0,-.36,z),Color("496f68"))
+	b.joint=13
+	for side:float in [-1.,1.]:
+		for z in range(-24,24):
+			var e0:=.14*sin(z*.74)+.16*cos(z*.46)
+			var e1:=.14*sin((z+1)*.74)+.16*cos((z+1)*.46)
+			var a:=Vector3(x+side*(4.73+e0),-.39,z)
+			var c:=Vector3(x+side*(4.73+e1),-.39,z+1)
+			var d:=_point(x+side*6.32,z+1)
+			var f:=_point(x+side*6.32,z)
+			_upward_quad(b,a,c,d,f,Color("82785e"))
+	b.joint=0
 
 func _crossings(b: Builder) -> void:
 	_river_surface(b)

@@ -19,7 +19,8 @@ def read_frame(path):
     doc = ET.parse(path).getroot()
     for node in doc.iter():
         node.tag = node.tag.split("}")[-1]
-    mesh = doc.find(".//geometry/mesh")
+    geometry = doc.find(".//geometry")
+    mesh = geometry.find("mesh")
     tri = mesh.find("triangles")
     if tri is None:
         tri=mesh.find("polylist")
@@ -37,10 +38,45 @@ def read_frame(path):
         return values, int(data.attrib["offset"])
     pos, pi = source("VERTEX")
     normal, ni = source("NORMAL")
-    uv, ui = source("TEXCOORD0")
+    uv, ui = source("TEXCOORD0" if "TEXCOORD0" in slots else "TEXCOORD")
     width = 1 + max(int(node.get("offset")) for node in tri.findall("input"))
     corners = np.fromstring(tri.find("p").text, dtype=int,sep=" ").reshape(-1,3,width)
-    transform = np.fromstring(doc.find(".//visual_scene/node/matrix").text,sep=" ").reshape(4,4)
+    # Cameras and lights sometimes precede the mesh in the active COLLADA scene.
+    # Follow the instance of this geometry and accumulate only its ancestors.
+    active = doc.find("./scene/instance_visual_scene").get("url")[1:]
+    scene = doc.find(".//visual_scene[@id='"+active+"']")
+    paths = []
+    def locate(parent, parents):
+        for child in parent.findall("node"):
+            branch = parents + [child]
+            for inst in child.findall("instance_geometry"):
+                if inst.get("url") == "#"+geometry.get("id"):
+                    paths.append(branch)
+            locate(child, branch)
+    locate(scene, [])
+    if len(paths) != 1:
+        raise ValueError(f"Expected one active geometry instance in {path}, found {len(paths)}")
+    transform = np.eye(4)
+    for child in paths[0]:
+        for component in child:
+            if component.tag == "matrix":
+                transform = transform @ np.fromstring(component.text, sep=" ").reshape(4,4)
+            elif component.tag in ("translate", "scale", "rotate"):
+                values = np.fromstring(component.text, sep=" ")
+                part = np.eye(4)
+                if component.tag == "translate":
+                    part[:3,3] = values
+                elif component.tag == "scale":
+                    part[:3,:3] = np.diag(values)
+                else:
+                    axis = values[:3] / np.linalg.norm(values[:3])
+                    x, y, z = axis
+                    cross = np.array([[0.,-z,y],[z,0.,-x],[-y,x,0.]])
+                    angle = np.deg2rad(values[3])
+                    part[:3,:3] += np.sin(angle)*cross + (1.-np.cos(angle))*(cross@cross)
+                transform = transform @ part
+            elif component.tag in ("skew", "lookat"):
+                raise ValueError(f"Unsupported {component.tag} on the geometry instance in {path}")
     pos = pos@transform[:3,:3].T + transform[:3,3]
     normal = normal@np.linalg.inv(transform[:3,:3])
     return pos,normal,uv,corners[:,:,[pi,ni,ui]]

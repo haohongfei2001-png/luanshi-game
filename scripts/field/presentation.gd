@@ -198,7 +198,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	var window:=get_viewport().get_visible_rect().size
 	var vertical_limit:=zoom*.5+4.2
 	var horizontal_limit:=zoom*.5*window.x/maxf(1.0,window.y)+4.2
-	var center_height:=Ground.unit_point(center).y
+	var center_height:=Ground.unit_point(center,battle.bridgehead).y
 	if cam:
 		right=Vector2(cam.global_basis.x.x,cam.global_basis.x.z)
 		vertical_xz=Vector2(cam.global_basis.y.x,cam.global_basis.y.z)
@@ -215,7 +215,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		# position has the identical sole height on every intervening draw.
 		if p!=grounded_at[u.id]:
 			grounded_at[u.id]=p
-			floor_y[u.id]=Ground.deck_height(p)
+			floor_y[u.id]=Ground.deck_height(p,battle.bridgehead)
 		var ground:=Vector3(p.x,floor_y[u.id],p.y)
 		# Test the oriented window in camera space. Keep enough padding for the
 		# longest blade, a raised banner, a mounted head and their projected shadows.
@@ -345,7 +345,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var role: String=battle.corps.title_of(battle,bearer)
 		var height:=1.25 if role=="战场主将" else (1.10 if role=="先锋" else 1.0)
 		var turn:=Basis(Vector3.UP,atan2(bearer.facing.x,bearer.facing.y))
-		var base:=Ground.unit_point(at)+turn*Vector3(-.26,.81 if bearer.mounted else 0.,-.08)
+		var base:=Ground.unit_point(at,battle.bridgehead)+turn*Vector3(-.26,.81 if bearer.mounted else 0.,-.08)
 		var breeze:=fposmod((float(battle.tick)+alpha)*Battle.DT*.64+.071*(bearer.id%19),1.)
 		_put(standards[bearer.team],base,turn,Color(breeze,0,0,0),height)
 	for id in [1,2]:
@@ -357,19 +357,19 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var vehicle_batch:=horse if close else horse_rank
 		if id==2: vehicle_batch=cart if close else cart_rank
 		var moved:=battle.hero.pos.distance_to(battle.hero.before) if battle.vehicle==id else 0.0
-		_put(vehicle_batch,Ground.unit_point(pos),Basis(Vector3.UP,atan2(heading.x,heading.y)),MountArt.pose(state,1.0,stride,moved,alpha,0.0,id))
+		_put(vehicle_batch,Ground.unit_point(pos,battle.bridgehead),Basis(Vector3.UP,atan2(heading.x,heading.y)),MountArt.pose(state,1.0,stride,moved,alpha,0.0,id))
 	for s in battle.shots:
 		var p := s.previous.lerp(s.pos,alpha)
 		var fraction := s.distance / maxf(1,s.distance+s.remaining)
 		var h := 1.1 + (2.5 if s.arrow else 0.32)*sin(PI*fraction)
-		var altitude := lerpf(s.launch_height,Ground.deck_height(p),fraction)+h
+		var altitude := lerpf(s.launch_height,Ground.deck_height(p,battle.bridgehead),fraction)+h
 		_put(arrows,Vector3(p.x,altitude,p.y),Basis(Vector3.UP,atan2(s.direction.x,s.direction.y)),Color(0,0,0,0))
 	for order in battle.orders:
 		if order.channel==Battle.Channel.COURIER and order.leg!=2:
 			var recipient: Battle.Unit=battle.corps.recipient(battle,battle.companies[order.squad])
 			var destination:=battle.hero.pos if order.leg==1 else recipient.pos
 			var dir := order.pos.direction_to(destination)
-			_put(runners,Ground.unit_point(order.pos),Basis(Vector3.UP,atan2(dir.x,dir.y)),Color(0,0,fposmod(order.age*3,1.0),0))
+			_put(runners,Ground.unit_point(order.pos,battle.bridgehead),Basis(Vector3.UP,atan2(dir.x,dir.y)),Color(0,0,fposmod(order.age*3,1.0),0))
 	for batch in batches:
 		if batch.used!=batch.submitted_count:
 			batch.mesh.visible_instance_count=batch.used

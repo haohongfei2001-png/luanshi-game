@@ -495,7 +495,7 @@ func _pavers(plan: Dictionary) -> void:
 				if not intact: continue
 				_shelf(_cell(center),center,span*.53,rng.randf_range(.29,.39),rng.randf_range(.018,.037),rng.randf_range(-.096,.096),true)
 
-func build(parent: Node3D,tiles: Dictionary) -> void:
+func build(parent: Node3D,tiles: Dictionary,bridgehead: bool=false) -> void:
 	terrain_tiles=tiles
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
@@ -511,6 +511,17 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	_bake_trees()
 	var plan:Dictionary=PLAN.data
 	_stands(plan)
+	if bridgehead:
+		# Frame the outer bridge with two mature willow stools and a pair of
+		# smaller alternating banks. None stands on the seven-metre tread.
+		for planting:Vector4 in [Vector4(18.4,-9.9,6.1,-.2),Vector4(30.5,-14.2,6.5,3.10),
+				Vector4(18.2,10.7,5.8,.28),Vector4(30.3,15.0,5.0,2.94)]:
+			var p:=Vector2(planting.x,planting.y)
+			_plant(_cell(p),p,planting.z,0,0,planting.w)
+		for stone:Vector4 in [Vector4(29.1,-6.6,1.40,.82),Vector4(30.3,-7.4,1.03,.62),
+				Vector4(18.8,6.8,1.34,.68),Vector4(18.5,-12.1,1.69,.78),Vector4(29.3,10.2,1.30,.61)]:
+			var p:=Vector2(stone.x,stone.y)
+			_river_bed(_cell(p).stone,p,stone.z,stone.z*.66,stone.w,.87+stone.x*.21,stone.y*.49)
 	_place_inland_stands(parent)
 	_bank_sedge()
 	_pavers(plan)
