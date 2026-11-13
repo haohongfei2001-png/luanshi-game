@@ -19,6 +19,8 @@ jobs:
       - name: Install hash-verified Godot editor
         run: |
           set -euo pipefail
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          python3 -m pip install --quiet Pillow
           base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
           curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
           echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
