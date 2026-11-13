@@ -8,12 +8,12 @@ const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FieldStandard := preload("res://scripts/field/field_standard.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
-const FRIEND := Color("34496a")
-const FOE := Color("783f34")
+const FRIEND := Color("2d485b")
+const FOE := Color("66362a")
 const PLAYER_CLOTH:=Color("364967")
 # The concentrated dye is confined to cut shoulder and upper sleeve panels.
-const INDIGO_BOLT:=Color("46637a")
-const MADDER_BOLT:=Color("76414a")
+const INDIGO_BOLT:=Color("345265")
+const MADDER_BOLT:=Color("69352b")
 const PLAYER_MANTLE:=Color("859ba2")
 
 class Batch:

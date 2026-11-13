@@ -258,6 +258,13 @@ void fragment() {
     // lacquer rim on the existing albedo response.
     float cloth_value=clamp(fold/mid,.64,mix(1.24,1.09,dyed_shoulder));
     vec3 colour=mix(ink,bolt*cloth_value,dye);
+    // The cuff is lined on its underside. Leave the warm skin on the wrist
+    // and the edge of the hand separate when it crosses the coat at 22 m.
+    if (!player_costume && cloth_panel==32) {
+        float opening=smoothstep(.204,.251,abs(bind_point.x))*
+                      (1.-smoothstep(1.13,1.20,bind_point.y));
+        colour*=1.-.18*opening*dye;
+    }
     if (cloth_panel==32 && (kit==5 || kit==6)) {
         // The original cross-collar already forms a woven facing. Preserve its
         // darker value where the front crosses and where the back cuffs the

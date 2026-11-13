@@ -1,0 +1,81 @@
+name: Check indigo, madder, and the player in two matched directions of play
+on:
+  push:
+    branches: ['codex/river-rc20-dyed-cloth']
+permissions:
+  contents: read
+jobs:
+  game:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Import the shipping game for graphical regressions
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > artifacts/field-import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/field-import.log; then exit 1; fi
+      - name: Replay a 22 metre player contact and both ranks with the original game
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc20/dyed-company
+          mkdir -p "$proof" "$RUNNER_TEMP/prior"
+          git archive 8ba9daec9b1dbed8717ecef5cfd15ac2e35e0566 | tar -x -C "$RUNNER_TEMP/prior"
+          cp -a assets/fonts/. "$RUNNER_TEMP/prior/assets/fonts/"
+          godot --headless --path "$RUNNER_TEMP/prior" --editor --import > "$RUNNER_TEMP/prior-import.log" 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$RUNNER_TEMP/prior-import.log"; then exit 1; fi
+          for side in before after; do
+            project="$GITHUB_WORKSPACE"
+            if [[ "$side" = before ]]; then project="$RUNNER_TEMP/prior"; fi
+            mkdir -p "$proof/$side" "$project/artifacts"
+            touch "$project/artifacts/.gdignore"
+            for script in rc7_personal_contact field_fitted_march; do
+              xvfb-run -a -s '-screen 0 1920x1200x24' godot --path "$project" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script "tests/$script.gd" -- --field-size=512 > "$proof/$side/$script.log" 2>&1
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$proof/$side/$script.log"; then exit 1; fi
+            done
+            cp "$project"/artifacts/personal-contact/{input.json,personal-contact.png,personal-windup.png} "$proof/$side/"
+            cp "$project"/artifacts/fitted-march/{line.json,line.png,reverse.png,spear-fit.png} "$proof/$side/"
+          done
+          python3 -c 'import PIL' || python3 -m pip install Pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import json
+          p=Path("docs/evidence/river-gate-v1-rc20/dyed-company")
+          for record in ("line.json","input.json"):
+              a,b=[json.loads((p/s/record).read_bytes()) for s in ("before","after")]
+              assert a==b
+              assert all(r["ordinary"]==[512,512] for r in a)
+          for name in ("personal-contact","personal-windup","line","reverse","spear-fit"):
+              pair=Image.new("RGB",(1600,500))
+              for i,s in enumerate(("before","after")):
+                  fr=Image.open(p/s/(name+".png")).convert("RGB")
+                  assert fr.size==(1920,1200)
+                  fr.resize((1152,720),Image.Resampling.LANCZOS).save(p/s/(name+"-window.jpg"),quality=92,subsampling=0)
+                  pair.paste(fr.resize((800,500),Image.Resampling.LANCZOS),(800*i,0))
+              pair.save(p/(name+"-pair.jpg"),quality=92,subsampling=0)
+          PY
+          git add -- "$proof/"
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Retain both 22 m facing windows and live contact for the two cloth lots'
+          git push origin HEAD:refs/heads/codex/river-rc20-dyed-cloth
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dyed-company-windows
+          path: |
+            docs/evidence/river-gate-v1-rc20/dyed-company/
+            artifacts/field-import.log
