@@ -1,18 +1,19 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## OWNER-ARTREF-20261114｜最新 Owner 强制视觉任务与可恢复入口
+
+**优先级 P0：**立即沿用 [八作真实视觉对标与 ARTREF-01..12 可玩游戏验收](ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md)；不要将此前 RC3/RC13 的“技术视觉纵切片”和局部修补当作 Owner 认可的画面基础。Codex 应完成实际模型/骨架/甲衣/动画/河关环境的商业质量重建，在正式 Godot 512v512 战役中验证远中近景、军阵、正常速度交战和操作，并将证据按新文档归档。主任务仍 [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)，既有生效工程与存档/战场逻辑必须保留。**当前状态：规范已写入；新美术效果未通过 Owner 验收，M5 真实 20 分钟压力测试未通过/未完成，不能标 DONE。** 继续开发时以 RC13 真实代码/实拍为问题基线而非已经合格的美术目标。
+
+
 **此文件是实际编码代理的交接日志，不是对未执行任务的完成声明。**
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 RC14 的实机美术返工
+## 河关 RC14 可恢复的实战基线
 
-RC13 已被美术验收明确退回。此次可运行样板在正常战斗窗口中复核枪盾服装、骑兵鞍具、地形、林冠和军旗。工程、画面审查和真实 M5 分别记录。原稿与失败试作保留在 [环境分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-painted-valley) 和 [人物分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-tailoring-study)。
+游戏源 `8a911eb8d77a4a5d0d2179b5304697dd9fa3db4d` 已有 [macOS 导出候选](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43466044060/artifacts/14059641456)，内层 ZIP 的 SHA-256 为 `14ca7fdbdabd4a36e581a0fab73b9e04f2f73c3da6a0023ca374b5ea8f4cc6c8`。部署、七个战役画面、破门、第 1030 步结算、还营加一小时、既有存档与九种武器均得到实跑记录。九次托管 Mac 新数据进程进入战斗；默认 Metal 24 秒，512v512、原生渲染 1024×640，P95 13.199 ms、P99 16.640 ms、最长 48.718 ms。真实 M5 仍未跑。第一遍完整 CI 的第二次护送已显示第 700 步胜利战报，后续营地操作被 900 秒宿主超时切断，不能记本次完整工程通过；第一个护送及独立公署战役已实际结算。[原 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43466044060)
 
-角色与动作生产源来自 `0dfd1c075652c5b603e99d3abdbb9df93311311c`，正式包直接读取同步烘焙的 GLB、服装和动作图集。枪盾、精锐、主角、军官的肩甲和下摆已重新剪裁；弓手沿用同一套骨架。中桥的船、桥台及军旗与人物位于同一作战场景。
-
-同一名弓手在第 25、32、36 步搭箭、引满、放弦，箭数 19→18。旧盾兵的手部阈值曾把棕木算成皮肤；已在原取样框用引擎的实际材质分色复查。角色不再同时穿两副肩甲或背两具箭囊。弓手在背侧镜头里穿出头巾的发髻已经重新剪裁。中桥船舱的水面在实拍发现穿模后修复。完整原图和游戏包以同一游戏树的 Actions 验证为准，美术标记为 `ART_REVIEW_REQUIRED`，真实 M5 为 `NOT_RUN`。
-
-在干净的云端工作树执行 `node tools/env_survey.mjs --check && node tools/art/bake_mounts.mjs --check && ./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。素材、代码与原始状态可回退到 `12bdc945b7bb4ce2db655555a567244984496e45`。仓库最新的[质量判退条件](VISUAL_RESET_AND_REJECTION_GATES_20261113.md)继续生效。
+已淘汰绿纸地表、船舱上方的水面和遮住整条后背的长披。22 米实战中的披挂改版为 `5174644f92908a887f4e2ba8d92077af26d5d263`，在同一名士兵身上重复了第 43 步起手和第 48 步命中。这个提交晚于上文的 Mac 包。公开可再分发的人体掌指、作者 CC0 树木的 Blender/glTF/Godot 实装是紧接的 P0。[角色窗口](https://github.com/haohongfei2001-png/luanshi-game/tree/084a820a65b4f39a13d6627f3b0369a5115596d0/docs/evidence/river-gate-v1-rc14/hero) · [完整实物筛选](evidence/river-gate-v1-rc14/asset-screening.md) · [美术源与试作](evidence/river-gate-v1-rc14/STUDIES.md)
 
 ## 河关 RC13 · 已合入的可玩候选
 
