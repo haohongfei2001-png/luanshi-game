@@ -2,6 +2,7 @@ shader_type spatial;
 render_mode diffuse_lambert, cull_disabled;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
 uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
@@ -87,6 +88,17 @@ vec3 painted_ground(vec2 p, float shore) {
     colour=mix(colour,clay*.94,.20*margins.b*(1.0-lane)*(.53+.47*marks.g));
     float rut=1.0-smoothstep(.028,.101,abs(cover.a-.385+(.5-marks.g)*.04));
     colour*=1.0-.23*rut*lane*(.38+.62*marks.g)*(1.0-wet);
+    // The worn bridge-to-gate approach was painted in world metres. Each
+    // channel describes an independent hollow, broken stone edge, or turf cut.
+    if (p.x > -25. && p.x < 47. && p.y > -8. && p.y < 8.) {
+        vec3 wear=texture(cartway,(p+vec2(25.,8.))/vec2(72.,16.)).rgb;
+        float dry=1.0-wet;
+        float packed=wear.r*(.59+.41*smoothstep(.19,.67,marks.g+.22*cover.b));
+        colour*=1.0-dry*.25*packed;
+        colour+=clay*vec3(.23,.22,.20)*wear.g*dry;
+        vec3 edge_earth=mix(verge,clay*vec3(.84,.85,.80),.74);
+        colour=mix(colour,edge_earth,wear.b*.79*dry);
+    }
     vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
     colour=mix(colour,alluvium, .73*smoothstep(.20,.98,wet));
     return colour;

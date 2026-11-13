@@ -4,6 +4,14 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 河关 RC13 · 普通跟随镜头的步兵接敌和战场路面进入验证
+
+两次同种子实录发现，步相本来已经按兵员错开，但同排枪手和盾手的肩胯与武器负重形态仍几乎一样。第一轮枪尖静立时摆动 0.869 米，实机退回。第二轮收至 0.156 米，以眼前已锁定的敌兵决定前排收盾、压枪和侧身的先后，保留原握点、落脚、起手与命中。正常 22 米跟随和阵线分别复拍 73 与 68 帧。[两次回放和同窗对照](https://github.com/haohongfei2001-png/luanshi-game/tree/2a4e20c8b0599ff3c23be048cf5426600c0591ac/docs/evidence/river-foot-load)。
+
+由桥到关门 72 米的官道增添断续的车轮压痕、路肩剥土和堆积碎石。真实跟随镜头退回曾悬在草上的三角形土片，也压低了第二轮太均匀的黑轮痕。状态栏把“破门 100%”明确写成城门耐久，破门后提示占领内庭。相同普通输入仍在第 43 步起手、第 48 步命中 584 号。[最终地表对照](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43422041385/artifacts/14034976176)。
+
+可回退版本为下方 RC12。等待正式包、全流程与同树主线验证时，云端检出 `codex/river-gate-rc13`，运行 `node tools/env_cartway.mjs --check && ./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。真实 M5 与最终画面质量仍待验收。
+
 ## 河关 RC12 · 已合入的可玩候选
 
 [安装包、原生画面、连续实录、原生窗口与校验](evidence/river-gate-v1-rc12/PLAYTEST.md)。游戏源 `5e12030486991d259c344b038605a13a70308ec7`，游戏合并 `e627086d985f0e458f187f4d691e816471574912`，导出 `92900dc79e381509e878ac0008e62fa9c3e95ba4` 的目录树相同。轻枪与重盾的头甲在 12 对实际画面中明确分开；过亮盔边和切顶后的悬空斗拱均已复修。正式固定镜头抓到盾盔遮眉，脸框从先前 19 个肤色像素降到 0。两次重烘后正式包读出 13，手框保持 106。第 635 步近侧檐枋让出攻城人群，其余四个机位保持逐像素一致。RC10/RC11 的左右受创、甲衣、马、四轮冲车与夺门结算均已保留。

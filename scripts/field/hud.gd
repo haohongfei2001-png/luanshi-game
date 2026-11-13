@@ -323,9 +323,9 @@ func update_model(b: Battle,paused: bool) -> void:
 		else:
 			objective.text="护送冲车 · 撞门 %d/%d" % [b.objectives.strokes,Battle.Objectives.ESCORT_STROKES]
 	elif b.gate_hp>0:
-		objective.text="攻破关门　%d%%" % ceili(b.gate_hp/260.0*100.0)
+		objective.text="破门 · 城门耐久 %d%%" % ceili(b.gate_hp/260.0*100.0)
 	else:
-		objective.text="内庭 %.1f / 6 秒" % b.capture
+		objective.text="占领内庭 %.1f / 6 秒" % b.capture
 	own.visible=not b.started or order_panel.visible or toggle_help
 	own.text="我军 %d　守军 %d" % [b.ordinary_counts[0]-b.losses[0]-b.escaped[0],b.ordinary_counts[1]-b.losses[1]-b.escaped[1]]
 	condition.text="%s · 生命 %d/%d　" % [Arms.NAMES[b.hero.kit],ceili(b.hero.hp),int(b.hero.max_hp)]

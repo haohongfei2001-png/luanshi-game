@@ -301,6 +301,31 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         lean+=carry*(5.5 if braced else -3.)
         crouch+=carry*(.047 if braced else -.013)
         sway+=carry*(-.030 if braced else .036)
+    # The old alternate carries changed the poles' starting angles, then all
+    # carriers traced almost the same path. Resolve the load against a real
+    # support step. A forward levelled shaft is steadied on the leading arm;
+    # a shouldered one tips back as the free elbow passes the ribcage.
+    load_beat=0.
+    if loadout and kit in (3,7) and (move or clip==1):
+        load_beat=-.42*cos(2*pi*t-.10) if move else .16*sin(2*pi*t-.32)
+        counter=.55*sin(2*pi*t) if move else .21*sin(2*pi*t-.85)
+        if kit==3:
+            high=loadout==1
+            bias=.075 if high else -.057
+            shoulder_yaw+=(12. if high else -6.)*load_beat
+            chest_roll+=(-6. if high else 4.)*load_beat
+            sway+=bias*(.63 if move else .80)*load_beat
+            offsets=(.023,.065,-.086,19.,-12.,6.) if high else (-.045,-.037,.093,-10.,9.,-4.)
+        else:
+            high=loadout==2
+            shoulder_yaw+=(-13. if high else 9.)*load_beat
+            chest_roll+=(6.8 if high else -4.)*load_beat
+            sway+=(-.054 if high else .044)*load_beat
+            offsets=(.016,-.034,-.055,-4.,8.,4.) if high else (.049,.055,.063,13.,-11.,-5.)
+        lean+=(3.0 if high else -2.2)*counter
+        shift+=(.048 if high else -.037)*counter
+        crouch+=.012*(1.-load_beat)
+        hand=tuple(v+d*load_beat for v,d in zip(hand,offsets))
     waist=(0,.86,0)
     pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
     chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
@@ -364,6 +389,14 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             off=add(off,mul((.020,.091,.032) if loadout==2 else (-.033,-.058,-.018),carry))
         offq=euler(-8-shield*7+carried*7+carry*(-13. if loadout==2 else 9.),
                    -9.-carried*22.+carry*(24. if loadout==2 else -10.),-shield*14+carried*8.)
+        if loadout and (move or clip==1):
+            # The upper edge of a braced board rolls out of the helmet as the
+            # loaded forearm takes the stride. A low side carry swings behind.
+            braced=loadout==2
+            off=add(off,mul((-.050,.083,.081) if braced else (.050,-.088,-.112),load_beat))
+            offq=qm(euler((-12. if braced else 15.)*load_beat,
+                          (11. if braced else -14.)*load_beat,
+                          (8. if braced else -7.)*load_beat),offq)
         if side_hit and clip==10:
             off=add(off,(-side_hit*.074*recoil,.028*recoil-.022*settle,-.128*recoil))
             offq=euler(-15.-20.*recoil,-9.+side_hit*25.*recoil,-14.+side_hit*14.*settle)
@@ -391,6 +424,14 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         hand_m=placed(grip(side),end,q)
         wrist=trans(hand_m,binds[2])
         pole=(side*.65,-.52,-.83)
+        if loadout and kit in (3,7) and (move or clip==1):
+            # The leading forearm seats the load; the trailing elbow has room
+            # to open. The two-link solve below still terminates at the palm.
+            lead=side<0
+            open_arm=(loadout==1 and not lead) or (loadout==2 and lead)
+            pole=(side*(.91 if open_arm else .49),
+                  (-.22 if open_arm else -.69)+(.14 if lead else -.12)*load_beat,
+                  -.64 if open_arm else -.95)
         if kit==5 and not ride:
             # The working elbow points outward as the fingers draw, while the
             # bow elbow remains outside the line of the string.
