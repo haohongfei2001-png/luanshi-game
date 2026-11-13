@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b7lsfieldlane"
+path="res://.godot/imported/loess-wagonway.png-de445218aa7c7602842258dc325214d6.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/loess-wagonway.png"
+dest_files=["res://.godot/imported/loess-wagonway.png-de445218aa7c7602842258dc325214d6.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

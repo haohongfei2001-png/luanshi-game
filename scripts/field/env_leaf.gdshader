@@ -1,6 +1,7 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D elm_bough : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D leaf_marks : filter_linear_mipmap, repeat_enable;
 uniform sampler2D canopy_paint : filter_linear_mipmap, repeat_enable;
@@ -24,7 +25,12 @@ void vertex() {
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>4.0) {
+	if(crown>6.0) {
+		vec4 brush=texture(elm_bough,UV);
+		float sun=clamp((crown-6.1)*1.42,0.0,1.0);
+		tone=brush.rgb*mix(vec3(.58,.76,.78),vec3(1.16,1.12,.91),sun);
+		opacity=brush.a;
+	} else if(crown>4.0) {
 		float ridge=clamp((crown-4.33)/.22,0.0,1.5);
 		float vein=texture(leaf_marks,vec2(bark_uv.x*3.7,bark_uv.y*.108)).g;
 		float groove=.5+.5*sin(bark_uv.x*71.3+bark_uv.y*.92+vein*1.51);

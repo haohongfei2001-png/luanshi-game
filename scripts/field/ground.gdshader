@@ -4,6 +4,8 @@ uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D lane_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D verge_track : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform vec4 river_silt : source_color = vec4(.39,.40,.31,1.);
 uniform vec4 deep_water : source_color = vec4(.13,.31,.34,1.0);
@@ -35,28 +37,30 @@ void vertex() {
 }
 
 vec3 painted_ground(vec2 p, float shore) {
-    // The map painting locates pasture, cultivated strips, camp lanes and shaded
-    // ground under each tree. These landmarks stay in world space at every zoom.
-    vec2 mapped = (p + vec2(168.0,108.0)) / vec2(336.0,216.0);
-    vec4 cover = texture(soil_cover,mapped);
-    vec3 colour = texture(floodplain,mapped).rgb;
-    float wet = max(cover.g,shore);
-    colour = mix(colour,river_silt.rgb, .46 * smoothstep(.16,.95,wet));
-    float rut = 1.0-smoothstep(.033,.112,abs(cover.a-.385));
-    colour *= 1.0-.095*rut*smoothstep(.68,.94,cover.r)*(1.0-wet);
-    // Discrete marks supply the middle scale between a whole meadow and a boot.
-    // The road mask continues through the junctions and independently clips the grass.
-    vec2 ground_uv=vec2(p.x*.131+p.y*.026,p.y*.146-p.x*.019);
-    vec3 marks=texture(verge_track,ground_uv).rgb;
-    float turf=(1.0-smoothstep(.32,.86,cover.r))*(1.0-.68*wet);
-    float worn=smoothstep(.35,.85,cover.r)*(1.0-.55*wet);
-    float grass_shelf=smoothstep(.28,.68,cover.b);
-    float cropped_edge=4.0*cover.r*(1.0-cover.r);
-    colour*=mix(.86,.96,grass_shelf);
-    colour*=1.0-.14*marks.b*turf-.13*marks.r*turf;
-    colour+=vec3(.028,.034,.012)*marks.r*turf*grass_shelf;
-    colour*=1.0-.15*cropped_edge*(.36+.64*marks.r);
-    colour+=vec3(.037,.030,.018)*marks.g*(.18+.82*worn);
+    // Soil cover is a measured distance field for the three cart routes. At play
+    // scale, keep their pale open centres distinct from the cooler cropped verges.
+    vec2 mapped=(p+vec2(168.0,108.0))/vec2(336.0,216.0);
+    vec4 cover=texture(soil_cover,mapped);
+    vec3 landscape=texture(floodplain,mapped).rgb;
+    vec2 uv=vec2(p.x*.134+p.y*.025,p.y*.141-p.x*.022);
+    vec3 marks=texture(verge_track,uv*.78).rgb;
+    vec2 warp=.10*vec2(sin(p.y*.22+p.x*.06),cos(p.x*.19-p.y*.087));
+    vec3 turf=texture(meadow_paint,uv+warp).rgb;
+    vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66).rgb;
+    float edge=cover.r+(.47-marks.r)*.22+(.54-marks.b)*.083;
+    float lane=smoothstep(.32,.79,edge);
+    float wet=max(cover.g,shore);
+    vec3 verge=turf*vec3(.84,.99,.95);
+    // Mown and uncropped banks differ in broad value, not just their highlights.
+    verge*=.83+.17*smoothstep(.22,.62,cover.b)+.16*clamp(landscape.g*1.55,0.0,1.0);
+    vec3 colour=mix(verge,clay*vec3(1.09,1.04,.96),lane);
+    colour=mix(colour,landscape,.159+.06*(1.0-lane));
+    float lip=4.0*lane*(1.0-lane);
+    colour*=1.0-lip*(.075+.085*marks.r);
+    float rut=1.0-smoothstep(.020,.077,abs(cover.a-.385+(.5-marks.g)*.04));
+    colour*=1.0-.19*rut*lane*(.38+.62*marks.g)*(1.0-wet);
+    vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
+    colour=mix(colour,alluvium, .73*smoothstep(.20,.98,wet));
     return colour;
 }
 
@@ -95,7 +99,14 @@ void fragment() {
 			color*=0.77+0.39*block;
 		} else if (part<5.5) {
 			float course=texture(joinery,p*0.48).b;
-			color*=0.88+0.22*course;
+			// Tile butt overlaps run across both pitches. The existing raised ribs
+			// run with the water. World-space derivatives soften a row under one pixel.
+			float across_pitch=abs(local_normal.x)>abs(local_normal.z)?p.x:p.y;
+			float run=across_pitch*2.52+local_pos.y*.68;
+			float seam=abs(fract(run+.5)-.5);
+			float mortar=1.0-smoothstep(.035,.088+min(.18,fwidth(run)*.6),seam);
+			float wear=smoothstep(.46,.71,texture(fieldbed,p*.28).r);
+			color*=(.84+.23*course+.08*wear)*(1.0-.19*mortar);
 			roughness=0.75; specularity=0.24;
 		} else if (part<6.5) {
 			float weave=texture(joinery,vec2(side*0.85,across*1.3)).b;
@@ -110,7 +121,10 @@ void fragment() {
 			float drip=texture(fieldbed,vec2(side*.12,across*.035)).g;
 			float footing=1.0-smoothstep(.55,1.56,local_pos.y+drip*.23);
 			float rain=smoothstep(.43,.71,drip)*smoothstep(.18,2.4,local_pos.y);
+			float strata=across*2.13+.12*(compact-.5);
+			float joint=1.0-smoothstep(.025,.085+min(.14,fwidth(strata)*.55),abs(fract(strata+.5)-.5));
 			color*=.74+.29*compact+.16*lift-.105*footing-.065*rain;
+			color*=1.0-joint*(.050+.07*rain);
 		} else if (part>11.5 && part<12.5) {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;

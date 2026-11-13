@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b7lsfieldelma"
+path="res://.godot/imported/elm-bough.png-635514d3210f79dc88cb6edf63179d69.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/elm-bough.png"
+dest_files=["res://.godot/imported/elm-bough.png-635514d3210f79dc88cb6edf63179d69.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0
