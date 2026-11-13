@@ -1,0 +1,152 @@
+name: Inspect the guard's real face aperture on the original control test
+on:
+  push:
+    branches: [codex/river-shield-aperture-probe]
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      BASE: 55a653742ba102435f2834ccd5d994caa323297f
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bake the original actor library and isolate the affected pieces
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          mkdir -p artifacts/helmet-pass
+          git show "$BASE:assets/river_gate/figures/river_company.glb" > "$RUNNER_TEMP/baseline-company.glb"
+          python3 tools/art/bake_river_company.py --geometry-only >artifacts/helmet-pass/bake.log
+          python3 - <<'PY'
+          import json,struct,hashlib,zlib,base64,subprocess
+          from pathlib import Path
+          import os
+          dst=Path('artifacts/helmet-pass')
+          def chunks(p):
+              src=p.read_bytes()
+              length=struct.unpack_from('<I',src,12)[0]
+              doc=json.loads(src[20:20+length])
+              raw=src[28+length:]
+              result={}
+              for m in doc['meshes']:
+                  prim=m['primitives'][0]
+                  indices=list(prim['attributes'].values())+[prim['indices']]
+                  attrs={}
+                  for i in indices:
+                      acc=doc['accessors'][i]
+                      view=doc['bufferViews'][acc['bufferView']]
+                      at=view['byteOffset']
+                      attrs[len(attrs)]=hashlib.sha256(raw[at:at+view['byteLength']]).hexdigest()
+                  count=doc['accessors'][prim['indices']]['count']//3
+                  result[m['name']]={'count':count,'sha256':list(attrs.values())}
+              return result
+          orig=Path(os.environ['RUNNER_TEMP'])/'baseline-company.glb'
+          glb=Path('assets/river_gate/figures/river_company.glb')
+          a,b=chunks(orig),chunks(glb)
+          changed={k:[v['count'],b[k]['count']] for k,v in a.items() if v!=b[k]}
+          assert len(a)==len(b)==36 and set(changed)=={'GuardClose','GuardLine','GuardRank'},changed
+          print('HELMET_CHANGED',json.dumps(changed))
+          data=glb.read_bytes()
+          packed=zlib.compress(data,9)
+          (dst/'digest.json').write_text(json.dumps({'changed':changed,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'blob':subprocess.check_output(['git','hash-object',str(glb)],text=True).strip()},indent=2))
+          print('HELMET_GEOMETRY',len(data),hashlib.sha256(data).hexdigest(),subprocess.check_output(['git','hash-object',str(glb)],text=True).strip(),len(packed))
+          encoded=base64.b64encode(data).decode()
+          for i in range(0,len(encoded),16000): print('HELMET_ASSET',i,encoded[i:i+16000])
+          PY
+          cp assets/river_gate/figures/river_company.glb artifacts/helmet-pass/
+      - name: Install the verified Godot editor
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/helmet-editor
+      - name: Capture the untouched portrait and normal battle cameras
+        run: |
+          set -euo pipefail
+          dst="$PWD/artifacts/helmet-pass"
+          godot=/tmp/helmet-editor/Godot_v4.6.3-stable_linux.x86_64
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev="$BASE"; fi
+            dir="$RUNNER_TEMP/head-$side"
+            git worktree add --quiet --detach "$dir" "$rev"
+            cp tests/guard_aperture_camera.gd tests/issued_helmet_camera.gd "$dir/tests/"
+            if test "$side" = after; then cp "$dst/river_company.glb" "$dir/assets/river_gate/figures/"; fi
+            (
+              cd "$dir"
+              ./tools/prepare-font.sh
+              mkdir -p artifacts
+              touch artifacts/.gdignore
+              "$godot" --headless --editor --path . --import >"$dst/$side-import.log" 2>&1
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side-import.log"; then exit 1; fi
+              set +e
+              timeout 110s xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/guard_aperture_camera.gd -- --field-size=20 >"$dst/$side-face.log" 2>&1
+              echo "$?" > "$dst/$side-face.exit"
+              set -e
+              grep '^FIELD_PORTRAIT {' "$dst/$side-face.log"
+              cp artifacts/guard-aperture.png "$dst/$side-portrait.png"
+              cp artifacts/soldier-portrait.jpg "$dst/$side-portrait.jpg"
+              timeout 150s xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/issued_helmet_camera.gd -- --field-size=512 >"$dst/$side-window.log" 2>&1
+              grep -q HELMET_TEST_PASS "$dst/$side-window.log"
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side-window.log"; then exit 1; fi
+              cp -r artifacts/helmets "$dst/$side"
+            )
+          done
+      - name: Verify the real face, preserve failed pixels and issue camera comparison
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from PIL import Image,ImageDraw
+          from pathlib import Path
+          import json,io,base64,re
+          root=Path('artifacts/helmet-pass')
+          def emit(name,image):
+              buf=io.BytesIO()
+              image.save(buf,format='JPEG',subsampling=0,quality=96)
+              (root/(name+'-pair.jpg')).write_bytes(buf.getvalue())
+              print('HELMET_IMAGE',name,base64.b64encode(buf.getvalue()).decode())
+          samples=[]
+          p=Image.new('RGB',(312,206))
+          for k,side in enumerate(('before','after')):
+              s=(root/(side+'-face.log')).read_text()
+              q=json.loads(re.search(r'^FIELD_PORTRAIT (\{.*\})$',s,re.M)[1])
+              print('APERTURE_STATS',side,q)
+              samples.append(q)
+              folder=root/side
+              trial=json.loads((folder/'receipts.json').read_text())
+              if k==0: baseline=trial
+              else: assert trial==baseline
+              native=Image.open(root/(side+'-portrait.png')).convert('RGB')
+              assert native.size==(156,206)
+              p.paste(native,(156*k,0))
+          emit('portrait',p)
+          marked=p.copy();ink=ImageDraw.Draw(marked)
+          for j in (0,156): ink.rectangle((j+72,46,j+84,58),outline=(244,182,57))
+          emit('sample',marked)
+          for e in baseline:
+              if e['label'] not in ('shield-front','shield-back','shield-22m','shield-42m','spear-line'): continue
+              name=e['label'];x,y=map(round,e['head'])
+              rad=136 if e['camera'][0]<10 else 186
+              pair=Image.new('RGB',(4*rad,2*rad))
+              for j,side in enumerate(('before','after')):
+                  im=Image.open(root/side/(name+'.png')).convert('RGB')
+                  pair.paste(im.crop((x-rad,y-rad+30,x+rad,y+rad+30)),(j*2*rad,0))
+              emit(name,pair)
+          x,y=samples
+          assert x['face_skin_pixels']==0 and x['hand_skin_pixels']==106
+          assert int((root/'before-face.exit').read_text())==1
+          assert y['face_skin_pixels']>=7 and y['hand_skin_pixels']>=3 and y['crop_px']==[156,206]
+          assert int((root/'after-face.exit').read_text())==0
+          print('HELMET_PAIR_PASS',len(baseline))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shield-fixed-portrait-and-field
+          path: artifacts/helmet-pass/

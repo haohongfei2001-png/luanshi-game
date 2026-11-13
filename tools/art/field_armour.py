@@ -10,7 +10,10 @@ def issue_headpiece(surface, guard, bone, rank):
     # The arming cloth stays inside the shell. The forehead clears the
     # character's existing brows and the side edge stops above the jaw.
     def brow(a):
-        return 1.613 + .035*cos(a) + (.009 if guard else .006)*cos(2*a)
+        base=1.613 + .035*cos(a) + (.009 if guard else .006)*cos(2*a)
+        # Tip the shield helmet away from the brow. The hinge and nape retain
+        # their depth; the forward opening exposes the cheek under a high camera.
+        return base+(.019*max(0.,cos(a))**1.4 if guard else 0.)
 
     sections = ((0.,.111,.122,.015),(.20,.112,.128,.011),
                 (.55,.095,.112,.004),(.84,.059,.079,-.001),(1.,.004,.010,-.008))
@@ -28,7 +31,9 @@ def issue_headpiece(surface, guard, bone, rank):
         ridge=(.022 if guard else .010)*abs(cos(a))**5*sin(pi*t)
         height=1.774 if guard else 1.741
         y=brow(a)+(height-brow(a))*t+ridge
-        return (rx*sin(a),y,cz+rz*cos(a)),bone
+        front=max(0.,cos(a))
+        pull=.012*front**2*(1.-t) if guard else 0.
+        return (rx*sin(a),y,cz+rz*cos(a)-pull),bone
     surface.grid(sides,len(sections)-1,dome,"black_iron")
 
     # A worked lower edge flares at the temples; it sits well above the eyes.
@@ -36,14 +41,15 @@ def issue_headpiece(surface, guard, bone, rank):
     def brim(u,v):
         a=TAU*u
         radius,depth=(.124,.140) if guard else (.112,.123)
-        # Only the forward lip shades the eyes. At the rear, the rim tucks
-        # against the nape leaves instead of circling the head like a hatband.
+        # The raised front lip ends at the forehead. Enough width remains
+        # at the temples to take the load from the long cheek leaves.
         front=max(0.,cos(a))
-        flare=(.004+.033*front**1.5+.012*sin(a)**2 if guard
+        flare=(.003+.003*front+.011*sin(a)**2 if guard
                else .004+.004*front+.003*sin(a)**2)
+        pull=.012*front**2 if guard else 0.
         if v<.5:
-            return ((radius+flare)*sin(a),brow(a)-.008,.015+(depth+flare)*cos(a)),bone
-        return (radius*sin(a),brow(a)+(.012 if guard else .006),.015+depth*cos(a)),bone
+            return ((radius+flare)*sin(a),brow(a)-.008,.015+(depth+flare)*cos(a)-pull),bone
+        return (radius*sin(a),brow(a)+(.012 if guard else .006),.015+depth*cos(a)-pull),bone
     surface.grid(sides,1,brim,"black_iron")
 
     def panel(points,side,mat,n,lo=0.,hi=1.,trim=.0):
@@ -67,7 +73,7 @@ def issue_headpiece(surface, guard, bone, rank):
         if guard:
             # Two backed leaves on the cheeks and a deeper, outward sloping
             # piece over the nape. The swept notch between them shows the collar.
-            cheek=((.81,.051,.14),(1.24,.127,.16),(1.68,.158,.10),
+            cheek=((1.06,.024,.12),(1.37,.097,.11),(1.69,.156,.08),
                    (1.98,.116,.045),(2.14,.071,0.))
             panel(cheek,side,"lames",4 if rank else 8)
             panel(cheek,side,"black_iron",4 if rank else 8,.90,1.018,.0014)
