@@ -69,13 +69,16 @@ func _ready() -> void:
 	hud.plan_requested.connect(func(style: int):
 		if battle.started: return
 		if style==5:
-			new_muster(selections,opposing_selection,true)
+			new_muster(selections,opposing_selection,true,battle.hero.kit)
 			return
 		if style==4:
 			patrol_muster()
 			return
-		if (battle.world_patrol or battle.bridgehead) and style==0:
+		if battle.world_patrol and style==0:
 			new_muster(512)
+			return
+		if battle.bridgehead and style==0:
+			new_muster(selections,opposing_selection,false,battle.hero.kit)
 			return
 		battle.objectives.task=Battle.Objectives.Task.ESCORT if style==3 else Battle.Objectives.Task.COURT
 		if style==0:
@@ -126,9 +129,9 @@ func _ready() -> void:
 		frame_log = preload("res://scripts/field/frame_log.gd").new()
 		frame_log.open(get_viewport())
 
-func new_muster(count: int,defenders: int=-1,at_moat: bool=false) -> void:
+func new_muster(count: int,defenders: int=-1,at_moat: bool=false,weapon: int=Battle.Arms.Kit.SPEAR) -> void:
 	var fresh := Battle.new()
-	fresh.setup(count,Battle.SEED,Battle.Arms.Kit.SPEAR,true,true,defenders,at_moat)
+	fresh.setup(count,Battle.SEED,weapon,true,true,defenders,at_moat)
 	if not _adopt(fresh): return
 	paused=false
 	hud.order_panel.show()

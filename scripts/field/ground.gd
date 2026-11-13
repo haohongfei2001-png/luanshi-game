@@ -103,7 +103,7 @@ static func needs_moat_crossing(p: Vector2, goal: Vector2) -> bool:
 
 static func moat_waypoint(p: Vector2,goal: Vector2,file: float=0.) -> Vector2:
 	var direction:=signf(goal.x-p.x)
-	if absf(p.x-MOAT_X)>MOAT_WATER and absf(p.y-file)>1.05:
+	if (p.x-MOAT_X)*direction < -MOAT_WATER and absf(p.y-file)>1.05:
 		return Vector2(MOAT_X-direction*(MOAT_BANK+.60),file)
 	return Vector2(MOAT_X+direction*(MOAT_BANK+.8),file)
 

@@ -1,5 +1,13 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC22 · 桥头攻门
+
+军议的「全军 → 桥头攻门」使用完整两军，把先锋部署在外壕桥头，守军守在门前。7.4 米宽的桥面、桥外水域、绕行、冲车与援队使用同一套地形规则。木桥的绑扎木架、城楼和岗楼、衣甲、马、柳树均有可再分发的来源和包内署名。盾兵新增左右承击，持械步态和种子 61112 的实机回放可回看。[盾牌承击原片](https://github.com/haohongfei2001-png/luanshi-game/tree/bff9e6be588f16c086e7dffc6856a678ef767cb9/docs/evidence/river-gate-v1-rc22/shield-brace) · [持械步态原片](https://github.com/haohongfei2001-png/luanshi-game/tree/703ce4e31b82c2ee130631d324cd6387fac280ae/docs/evidence/river-gate-v1-rc21/loaded-advance)
+
+首轮桥头部署中，先过桥的主角在第 71 步阵亡，渡过桥面的后队仅两人。调整为两支在编先锋先据东岸，西岸纵队再跟进，保留原有兵力、伤害、箭矢和永久伤亡。在军议即可选择、交战、存档和重新部署，同镜头原速片与本版本原生包仍以对应证据为准。
+
+复现渡桥和读档：`godot --headless --path . --script tests/field_bridgehead.gd`。录制步骤使用 `tests/bridgehead_window.gd` 的常规键鼠入口，22 米，默认画质，固定 61112。真实 M5 尚未测试。
+
 ## 河关 RC21 · 守军院落和城墙
 
 RC20 代码 `126091196db530aa7ec13de61f839c9c41cac24b`。新版本从相同战斗的四个机位检查城池。两侧城墙从地基、墙身接到城墙上的木质通道，四座角楼使用同一套屋脊和角柱。原先四个同款房屋分为临门的营舍、靠粮道的库房。战役视线遮挡时可独立打开各自屋面。第一轮原地摆放使列队的守军站进屋内，最终版将建筑移至城墙内缘。行动逻辑、驻军位置、路线和旧存档格式继承 RC20。完整验收以本版导出包为准。[正反四个真实镜头与退回记录](https://github.com/haohongfei2001-png/luanshi-game/blob/0437ebc6891399d34fd23423bcb509de64046540/docs/evidence/river-gate-v1-rc21/fort-corners/REVIEW.md)

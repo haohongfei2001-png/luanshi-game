@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_lambert, cull_disabled;
+uniform bool gate_crossing = false;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
@@ -117,6 +118,20 @@ vec3 painted_ground(vec2 p, float shore) {
 	float bank_wash=smoothstep(.24,.54,survey_value);
 	colour*=.92+.11*bank_wash;
 	colour=mix(colour,survey,.10*(1.-road)+.035);
+	// Two cart ruts continue from the timber tread toward both door leaves.
+	// The apron widens where the teams turn. It observes the dressed banks
+	// and stays behind the figures as one connected, quiet earth mass.
+	if (gate_crossing && p.x>13.0 && p.x<50.0 && abs(p.y)<9.2) {
+		float progress=smoothstep(24.0,47.2,p.x);
+		float bend=.30*sin((p.x-21.0)*.174)+.15*sin((p.x-18.0)*.62);
+		float side=p.y-bend;
+		float apron=3.28+1.37*progress+.21*sin(p.x*.43)+.40*(grass_shape-.50);
+		float lane=(1.-smoothstep(apron-.34,apron+.98,abs(side)))*smoothstep(13.,18.4,p.x);
+		vec3 compact=mix(clay,clay_dry.rgb,.17+.07*dry_shape);
+		float rut=1.-smoothstep(.043,.26,abs(abs(side+.09*sin(p.x*.55))-1.19));
+		compact*=1.-.105*rut*(.50+.5*surviving);
+		colour=mix(colour,compact,lane*.93);
+	}
 	float wet=smoothstep(.19,.98,max(cover.g,shore));
 	return mix(colour,mix(clay_bed.rgb,river_silt.rgb,.73),.79*wet);
 }
@@ -196,7 +211,7 @@ void fragment() {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;
 		} else if (part>12.5 && part<13.5) {
-			float bank=abs(p.x+32.0);
+			float bank=min(abs(p.x+32.0),abs(p.x-24.0));
 			float lip=bank+.28*sin(p.y*.39)+.14*sin(p.y*.87+.44);
 			color=painted_ground(p,1.0-smoothstep(4.38,6.58,lip));
 		} else if(part>15.5 && part<16.5) {

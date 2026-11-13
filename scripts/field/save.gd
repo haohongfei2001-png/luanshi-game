@@ -21,11 +21,13 @@ static func _rows(items: Array, fields: Array) -> Array:
 	return rows
 
 static func snapshot(b: Battle) -> Dictionary:
-	return {"version":4,"bridgehead":b.bridgehead,"defenders":b.ordinary_counts[1],"world_patrol":b.world_patrol,"ram_crew":b.ram_crew.duplicate(),"reliefs":b.reliefs,"officer_corps":b.corps.snapshot(),"traffic_enabled":b.traffic_enabled,"soft_crowd":b.soft_crowd,"keep_gate_file":b.keep_gate_file,"objectives":b.objectives.snapshot(),"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
+	var data:={"version":4,"defenders":b.ordinary_counts[1],"world_patrol":b.world_patrol,"ram_crew":b.ram_crew.duplicate(),"reliefs":b.reliefs,"officer_corps":b.corps.snapshot(),"traffic_enabled":b.traffic_enabled,"soft_crowd":b.soft_crowd,"keep_gate_file":b.keep_gate_file,"objectives":b.objectives.snapshot(),"seat_origin":b.seat_origin,"parked_heading":b.parked_heading.duplicate(),"dry_muster":b.dry_muster,"camp_actions":b.camp_actions.duplicate(true),"muster":b.muster_manifest(),"aftermath_hours":b.aftermath_hours,"at_camp":b.at_camp,"breath":b.breath,"winded":b.winded,"buffer_ticks":b.buffer_ticks,"buffered_slot":b.buffered_slot,"buffer_aim":b.buffer_aim,"buffer_wall":b.buffer_wall,"legacy_missiles":b.legacy_missiles,"side":b.side_size,"seed":b.rng.seed,"rng":b.rng.state,"weapon":b.hero.kit,"aim_at_wall_post":b.aim_at_wall_post,"locked_at_wall_post":b.locked_at_wall_post,
 		"battle":_row(b,HEAD),"units":_rows(b.roster,UNIT),"companies":_rows(b.companies,COMPANY),
 		"orders":_rows(b.orders,ORDER),"shots":_rows(b.shots,SHOT),
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
 		"vehicle_pos":b.vehicle_pos.duplicate(),"vehicle_hp":b.vehicle_hp.duplicate(),"skill_clocks":b.hero_cds.duplicate()}
+	if b.bridgehead: data["bridgehead"]=true
+	return data
 
 static func _valid(value: Variant, example: Variant) -> bool:
 	if typeof(value)!=typeof(example): return false

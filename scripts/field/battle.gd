@@ -225,9 +225,11 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 					company.home=Vector2(Ground.MOAT_X-8.3-float(file)*4.9-floorf(c/3.0)*1.25, float(floori(c/3.0)-2)*11.7)
 					if c==0: company.home=Vector2(Ground.MOAT_X-3.9,0)
 					elif c==6: company.home=Vector2(Ground.MOAT_X-19.1,-25.6)
+					elif c==1: company.home=Vector2(Ground.MOAT_X+10.7,-3.7)
+					elif c==2: company.home=Vector2(Ground.MOAT_X+12.5,5.8)
 					elif c==15: company.home=Vector2(1.2,33.)
 				else:
-					company.home=Vector2(Ground.MOAT_X+9.0+floorf(c/5.0)*5.7, (float(c%5)-2.0)*12.8)
+					company.home=Vector2(Ground.MOAT_X+15.3+floorf(c/5.0)*4.45, (float(c%5)-2.0)*12.8)
 			if garrison:
 				var post := c-ceili(company_count*0.58)
 				company.home = Vector2(55.5 + floorf(post/3.0)*8.4, (post%3-1)*12.0)
@@ -718,7 +720,7 @@ func _release(u: Unit, move: Arms.Move,apply_stride: bool=true) -> void:
 			shot.pos = u.pos + u.locked * 0.45
 			shot.previous = shot.pos
 			shot.direction = u.locked.rotated((float(j)-(count-1)*0.5)*0.12)
-			shot.launch_height=Ground.deck_height(u.pos)
+			shot.launch_height=Ground.deck_height(u.pos,bridgehead)
 			if seat_origin and (u.mounted or (u.hero and vehicle!=0)): shot.launch_height+=0.91 if u.hero and vehicle==2 else 0.81
 			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.hero and locked_at_wall_post) or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
