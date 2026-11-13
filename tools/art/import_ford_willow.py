@@ -40,9 +40,9 @@ def geometry(cache):
     assert set(map(int,faces.find("vcount").text.split()))=={3}
     corners=np.fromstring(faces.find("p").text,sep=" ",dtype=int).reshape(-1,3,3)
     assert len(corners)==783
-    data=[]; normals=[]; tex=[]; bindings=[]; indices=[]; found={}
-    # Open four low veils that hid the veteran trunk and both landings.
-    # The model is pinned above; retain the complete woody crown and high twigs.
+    # The old river crossing has its own swept trunk and roots over water.
+    # Dress its actual seven bough ends with fitted Wildfire willow sprays.
+    # Keep the artist's original folded geometry and alpha silhouette per spray.
     roots=np.arange(len(p))
     def root(i):
         while roots[i]!=i: i=roots[i]
@@ -51,46 +51,58 @@ def geometry(cache):
         a,b,c=face[:,0]
         roots[root(a)]=root(b)
         roots[root(a)]=root(c)
-    veils={434,481,490,550}
-    assert veils.issubset({root(i) for i in range(len(p))})
-    groups={}
-    for i in range(len(p)):
-        groups.setdefault(root(i), []).append(i)
-    envelopes={part:(p[points].mean(axis=0),p[points,1].max()) for part,points in groups.items()}
-    for face in corners:
-        part=root(face[0,0])
-        if part in veils: continue
-        leafy=uv[face[:,2],0].mean()<.62
-        for pi,ni,ti in face:
-            key=(int(pi),int(ni),int(ti))
-            if key not in found:
-                found[key]=len(data)
-                vert=p[pi].copy()
-                if leafy:
-                    # Each authored spray hangs from one bough. Tighten it round
-                    # that bough, leaving genuine strips of sky between the skirts.
-                    center,top=envelopes[part]
-                    breadth=.69 if part in (435,469,504,560) else .82
-                    vert[[0,2]]=center[[0,2]]+(vert[[0,2]]-center[[0,2]])*breadth
-                    reach=.86 if part in (469,560) else .64 if center[0]<.05 else .75
-                    vert[1]=top+(vert[1]-top)*reach
-                h=float(np.clip(vert[1],0.,1.))
-                # The bole leans over the stream. The inland edge remains open
-                # at foot height. This bend applies to wood and attached leaf veils alike.
-                weight=h*h*(3.-2.*h)
-                vert[0]+=.18*weight
-                vert[2]*=.82
-                if leafy:
-                    cloud=np.array([vert[0]-.12, .44+(h-.56)*1.20,vert[2]])
-                    direction=cloud/max(np.linalg.norm(cloud),1e-8)*.91+n[ni]*.09
-                else:
-                    direction=n[ni]
-                data.append(vert); normals.append(direction/max(np.linalg.norm(direction),1e-8))
-                tex.append((uv[ti,0],1.-uv[ti,1]))
-                h=np.clip(vert[1],0.,1.)
-                dist=np.hypot(vert[0],vert[2])
-                bindings.append((.48*h*min(1.,dist*3.),(16.+h if leafy else 18.+h)))
-            indices.append((found[key],))
+    # Fork centre, outer reach, width, pendant length, source island.
+    sprays=[
+        ((3.18,4.18,-1.55),(1.,-.29),2.59,2.18,469),
+        ((-.25,4.51,2.30),(-.32,1.),2.34,1.82,435),
+        ((-1.78,4.22,-2.18),(-.72,-.76),2.26,1.65,504),
+        ((3.82,4.38,1.58),(.86,.48),2.54,2.27,560),
+        ((2.48,5.28,-.60),(.93,.12),2.37,1.70,434),
+        ((-.54,5.07,1.34),(-.72,.79),2.08,1.55,490),
+        ((1.07,4.85,-2.39),(.03,-1.),2.36,1.88,481),
+        # Short leaf fans over the inner forks link the crown while leaving
+        # passages of daylight beside the trunk and underneath the leaders.
+        ((.77,5.03,.05),(-.87,-.30),1.94,1.14,463),
+        ((1.90,4.61,.54),(.68,.80),1.89,1.23,522),
+        ((.35,4.53,-.58),(-.52,-.85),1.76,1.21,547),
+    ]
+    data=[]; normals=[]; tex=[]; bindings=[]; indices=[]
+    for location,ray,breadth,fall,part in sprays:
+        faces=[face for face in corners if root(face[0,0])==part]
+        assert faces and all(uv[face[:,2],0].mean()<.62 for face in faces)
+        used=sorted({i for face in faces for i in face[:,0]})
+        shape=p[used]
+        horizontal=shape[:,[0,2]]
+        center=horizontal.mean(axis=0)
+        _,_,axes=np.linalg.svd(horizontal-center,full_matrices=False)
+        along=(horizontal-center)@axes[0]
+        thick=(horizontal-center)@axes[1]
+        width=max(np.ptp(along),.01)
+        fold=max(np.ptp(thick),.01)
+        top,bottom=shape[:,1].max(),shape[:,1].min()
+        forward=np.array(ray)/np.linalg.norm(ray)
+        across=np.array([-forward[1],forward[0]])
+        found={}
+        for face in faces:
+            for pi,ni,ti in face:
+                key=(int(pi),int(ni),int(ti))
+                if key not in found:
+                    found[key]=len(data)
+                    xy=p[pi,[0,2]]-center
+                    span=float((xy@axes[0]-.5*(along.min()+along.max()))/width)
+                    depth=float((xy@axes[1]-.5*(thick.min()+thick.max()))/fold)
+                    drop=(top-p[pi,1])/max(.01,top-bottom)
+                    # Crown starts over the fork, grows towards river and turns
+                    # down under its own weight. Each outside edge stays folded.
+                    bow=.22+.67*np.sin(drop*np.pi*.68)+.27*depth-.32*span*span
+                    xz=np.array([location[0],location[2]])+forward*bow+across*span*breadth
+                    vert=np.array([xz[0],location[1]-fall*drop-.22*abs(span),xz[1]])/5.63
+                    outward=forward*(.38+.65*drop)+across*span*.93
+                    normal=np.array([outward[0],1.21-.82*drop,outward[1]])
+                    data.append(vert); normals.append(normal/np.linalg.norm(normal))
+                    tex.append((uv[ti,0],1.-uv[ti,1]))
+                    bindings.append((.12+.45*drop,16.+float(vert[1])))
+                indices.append((found[key],))
     lib=Library()
     attr={"POSITION":lib.accessor(data,"f",3,True),"NORMAL":lib.accessor(normals,"f",3),
           "TEXCOORD_0":lib.accessor(tex,"f",2),"TEXCOORD_1":lib.accessor(bindings,"f",2)}
@@ -116,11 +128,11 @@ def colour(cache):
     # single quiet willow sprays; keep the large gaps between pendant fans.
     leaves=raw.getchannel("A")
     soft=leaves.resize((256,256),Image.Resampling.LANCZOS)
-    soft=soft.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
+    soft=soft.filter(ImageFilter.GaussianBlur(.34))
     soft=soft.filter(ImageFilter.GaussianBlur(.5)).resize(leaves.size,Image.Resampling.BICUBIC)
     a=np.asarray(soft,dtype=float)/255.
     leaf_columns=np.arange(alpha.shape[1])/alpha.shape[1]<.62
-    alpha[:,leaf_columns]=np.clip((a[:,leaf_columns]-.20)*1.87,0.,1.)
+    alpha[:,leaf_columns]=np.clip((.63*a[:,leaf_columns]+.37*alpha[:,leaf_columns]-.14)*1.55,0.,1.)
     rgba=np.dstack((rgb,alpha))
     target=OUT/"ford_willow.png"
     Image.fromarray(np.rint(255*rgba).astype("uint8")).save(target,optimize=True)
