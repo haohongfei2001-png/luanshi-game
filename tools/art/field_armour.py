@@ -13,7 +13,7 @@ def issue_headpiece(surface, guard, bone, rank):
         base=1.613 + .035*cos(a) + (.009 if guard else .006)*cos(2*a)
         # Tip the shield helmet away from the brow. The hinge and nape retain
         # their depth; the forward opening exposes the cheek under a high camera.
-        return base+(.019*max(0.,cos(a))**1.4 if guard else 0.)
+        return base+(.044*max(0.,cos(a))**1.1 if guard else 0.)
 
     sections = ((0.,.111,.122,.015),(.20,.112,.128,.011),
                 (.55,.095,.112,.004),(.84,.059,.079,-.001),(1.,.004,.010,-.008))
@@ -28,11 +28,11 @@ def issue_headpiece(surface, guard, bone, rank):
         t,rx,rz,cz=sections[round(v*(len(sections)-1))]
         # The shield shell is raised along the front-to-back fold. The light
         # shell is shallow above the temples. Both retain a continuous surface.
-        ridge=(.022 if guard else .010)*abs(cos(a))**5*sin(pi*t)
-        height=1.774 if guard else 1.741
+        ridge=(.015 if guard else .010)*abs(cos(a))**5*sin(pi*t)
+        height=1.761 if guard else 1.741
         y=brow(a)+(height-brow(a))*t+ridge
         front=max(0.,cos(a))
-        pull=.012*front**2*(1.-t) if guard else 0.
+        pull=.024*front**2*(1.-t) if guard else 0.
         return (rx*sin(a),y,cz+rz*cos(a)-pull),bone
     surface.grid(sides,len(sections)-1,dome,"black_iron")
 
@@ -46,7 +46,7 @@ def issue_headpiece(surface, guard, bone, rank):
         front=max(0.,cos(a))
         flare=(.003+.003*front+.011*sin(a)**2 if guard
                else .004+.004*front+.003*sin(a)**2)
-        pull=.012*front**2 if guard else 0.
+        pull=.024*front**2 if guard else 0.
         if v<.5:
             return ((radius+flare)*sin(a),brow(a)-.008,.015+(depth+flare)*cos(a)-pull),bone
         return (radius*sin(a),brow(a)+(.012 if guard else .006),.015+depth*cos(a)-pull),bone
@@ -73,7 +73,7 @@ def issue_headpiece(surface, guard, bone, rank):
         if guard:
             # Two backed leaves on the cheeks and a deeper, outward sloping
             # piece over the nape. The swept notch between them shows the collar.
-            cheek=((1.06,.024,.12),(1.37,.097,.11),(1.69,.156,.08),
+            cheek=((1.20,.016,.10),(1.47,.072,.09),(1.73,.149,.07),
                    (1.98,.116,.045),(2.14,.071,0.))
             panel(cheek,side,"lames",4 if rank else 8)
             panel(cheek,side,"black_iron",4 if rank else 8,.90,1.018,.0014)
