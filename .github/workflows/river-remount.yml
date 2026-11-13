@@ -20,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq python3-numpy python3-pil
+          sudo apt-get install -y -qq python3-numpy python3-pil ffmpeg
           /usr/bin/python3 tools/art/import_remount.py "$RUNNER_TEMP/remount-source"
           ./tools/prepare-font.sh
           git add assets/third_party/wildfire_remounts assets/art/mounts/field_tack.glb
@@ -42,7 +42,7 @@ jobs:
             "$godot" --headless --editor --path "$dir" --import >"receipt/$side/import.log" 2>&1
             if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "receipt/$side/import.log"; then exit 1; fi
             XDG_DATA_HOME="$RUNNER_TEMP/app-$side" timeout 280s xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$dir" --resolution 1280x800 --audio-driver Dummy --fixed-fps 20 --disable-vsync --script tests/river_mounted_camera.gd -- --field-size=512 >"receipt/$side/game.log" 2>&1
-            grep '^MOUNT_LIVE_PASS' "receipt/$side/game.log"
+            grep '^MOUNT_LIVE_PASS' "receipt/$side/game.log" || { tail -60 "receipt/$side/game.log"; exit 1; }
             if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "receipt/$side/game.log"; then exit 1; fi
             cp "$dir/artifacts/river-mounted/"*.png "$dir/artifacts/river-mounted/frames.json" "receipt/$side/"
             ffmpeg -loglevel error -y -framerate 20 -i "$dir/artifacts/river-mounted/film/%03d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "receipt/$side/mounted.mp4"
