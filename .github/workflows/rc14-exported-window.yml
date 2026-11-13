@@ -1,0 +1,39 @@
+name: Record normal controls in the exported River Gate game
+on:
+  push:
+    branches: ['codex/river-rc14-export-playtest']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exported-game:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 27
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-Linux-584870655703f3b7f7cfd927500880ce4d966818
+          path: package
+          run-id: 43466044060
+          github-token: ${{ github.token }}
+      - name: Open the exact shipping executable in an isolated X11 display
+        env:
+          EXPECTED_EXPORT: 584870655703f3b7f7cfd927500880ce4d966818
+          PACKAGE_HASH: 61c3d327428328f95debab7660f76f106b17241063d768f21723b18876d7d142
+        run: |
+          set -euo pipefail
+          echo "$PACKAGE_HASH  package/Luanshi-linux.tar.gz" | sha256sum --check
+          tar -C package -xf package/Luanshi-linux.tar.gz Luanshi-linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y xdotool ffmpeg xvfb xauth
+          xvfb-run -a -s '-screen 0 1280x800x24' python3 tools/record_export_window.py records "$RUNNER_TEMP/field-" package/Luanshi-linux.x86_64
+      - name: Preserve the audiovisual master and its controls
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exported-game-window-8a911eb
+          path: records/
+          if-no-files-found: warn
