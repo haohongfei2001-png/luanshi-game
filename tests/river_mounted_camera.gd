@@ -33,6 +33,11 @@ func _snap(label: String, point: Vector2, zoom: float, angle: float, id: int) ->
 	var heading: Vector2=Vector2.ZERO if id<0 else b.roster[id].facing
 	var muzzle: Vector2=point+heading*1.16
 	var nose:=field.camera.unproject_position(Ground.unit_point(muzzle)+Vector3.UP*1.58)
+	# canvas_items keeps input and unprojection in design coordinates. The
+	# saved image is in actual window pixels, including on a HiDPI target.
+	var scale_xy:=Vector2(pic.get_size())/root.get_visible_rect().size
+	at*=scale_xy
+	nose*=scale_xy
 	snapshots.append({"label":label,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"actor":id,
 		"pos":[point.x,point.y],"facing":[heading.x,heading.y],"center_pixel":[at.x,at.y],
 		"muzzle_pixel":[nose.x,nose.y],"zoom":zoom,"yaw":angle,"hits":Array(b.hits),

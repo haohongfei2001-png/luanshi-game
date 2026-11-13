@@ -143,12 +143,36 @@ function fitFace(m,hide,detail){
    for(let i=0;i<steps;i++)m.tri(centre,side<0?ps[(i+1)%steps]:ps[i],side<0?ps[i]:ps[(i+1)%steps]);
   }
   mark(1.761,.879,.013,.032,.17,EYE,detail?10:6,.010);
-  mark(1.545,1.225,.014,.032,-.68,EYE,detail?10:6,.007);
+  // The opening of the nares faces out AND forward. A side-projected
+  // flat dot vanishes when the game camera looks along the nasal ridge.
+  const nares=face(1.544,1.226,.004);
+  const outward=unit([side*.72,.22,.66]);
+  const along=unit([-side*.55,-.36,.72]);
+  const across=unit(cross(outward,along));
+  const root=add(nares,mul(outward,.003));
+  const inner=[],outer=[];
+  const count=detail?10:6;
+  const dark=m.pt(add(root,mul(outward,.011)),EYE,.47,.44,11);
+  for(let i=0;i<count;i++){
+   const a=TAU*i/count, long=Math.cos(a),short=Math.sin(a);
+   const pos=add(root,add(mul(along,.031*long),mul(across,.014*short*(1.-.24*long))));
+   const lip=add(root,add(mul(along,.039*long),mul(across,.021*short)));
+   const lift=.008+.005*short;
+   inner.push(m.pt(add(pos,mul(outward,lift+.003)),EYE,.5+.46*long,.5+.46*short,11));
+   outer.push(m.pt(add(lip,mul(outward,lift)),MUZZLE,.5+.45*long,.5+.45*short,11));
+  }
+  for(let i=0;i<count;i++){
+   let j=(i+1)%count;
+   m.tri(dark,inner[i],inner[j]);
+   // Make the rim a separate island; a triangle cannot span texture swatches.
+   const a=m.pt(m.p[inner[i]],MUZZLE,.46,.54,11),c=m.pt(m.p[inner[j]],MUZZLE,.54,.46,11);
+   m.quad(a,outer[i],outer[j],c);
+  }
   if(detail){
    // Fleshy outer wing, dark almond opening and lower-lip crease. The
    // forehead stays open between the brow and the bridle cheekpiece.
    m.line([face(1.767,.853,.007),face(1.779,.872,.008),face(1.778,.890,.008),face(1.766,.910,.004)],[.003,.007,.007,.003],POINT,5,11);
-   m.line([face(1.552,1.201,.004),face(1.563,1.209,.008),face(1.555,1.230,.008),face(1.539,1.249,.003)],[.004,.008,.007,.003],MUZZLE,5,11);
+
    m.line([face(1.501,1.169,.003),face(1.492,1.198,.003),face(1.489,1.231,.004),face(1.498,1.254,.004)],[.003,.005,.006,.003],POINT,4,11);
    mark(1.766,.887,.0036,.0039,0,FLAX,6,.0105);
   }
@@ -196,8 +220,16 @@ function horse(m, high, draught){
   }
  }
  if(high){
-  // A narrow irregular forehead star continues into a broken strip along the nasal bridge.
-  m.strip([[-.022,1.884,.835],[-.031,1.875,.884],[-.010,1.843,.933],[-.012,1.755,1.031]],[[.014,1.884,.835],[.031,1.875,.883],[.020,1.843,.933],[.002,1.755,1.031]],FLAX,11)
+  // An irregular central ridge sits directly on the top of the skull. Its
+  // quiet light plane leads to the dark upper lip under an overhead camera.
+  const bridge=[[.841,-.004,.025],[.876,-.009,.037],[.924,.003,.027],[.987,.007,.019],
+                [1.053,-.002,.015],[1.104,-.006,.015],[1.143,-.004,.006]];
+  function upper(x,z){
+   let lo=1.53,hi=1.95;
+   for(let i=0;i<17;i++){const y=(lo+hi)*.5;if(hide.distance(x,y,z)>0) hi=y;else lo=y;}
+   return [x,lo+.004,z];
+  }
+  m.panel(bridge.map(([z,x,w])=>[upper(x-w,z),upper(x,z),upper(x+w,z)]),LIGHT,11);
  }
  // Mane skin sections, separate forelock and one coherent tapering tail.
  let crest=[[0,1.47,.257,.042,.055,11,0],[-.018,1.57,.346,.054,.069,11,.1],[-.030,1.702,.47,.047,.063,11,.43],[-.034,1.819,.603,.043,.052,11,.73],[-.018,1.877,.72,.032,.038,11,1],[0,1.867,.794,.028,.026,11,1]];
@@ -326,7 +358,7 @@ function cart(m,high){
 function smallWheel(high){return high?7:4}
 // The hand-directed atlas uses coarse to fine strokes along hair, woven warp/weft, 
 // worn edges, hammered metal and growth rings. Avoid specular "plastic" on the cloth.
-const palette=[[112,83,68],[126,94,75],[64,51,44],[71,65,57],[48,42,40],[93,80,73],[111,71,46],[71,51,39],[126,68,54],[54,68,75],[177,139,81],[140,110,67],[128,94,57],[73,76,73],[37,32,26],[197,177,138]];
+const palette=[[112,83,68],[155,126,102],[64,51,44],[71,65,57],[48,42,40],[93,80,73],[111,71,46],[71,51,39],[126,68,54],[54,68,75],[177,139,81],[140,110,67],[128,94,57],[73,76,73],[37,32,26],[197,177,138]];
 function noise(x,y,seed){let v=Math.imul(x+seed*631,0x1e35a7bd)^Math.imul(y+seed*97,0x48d2a33d);v=Math.imul(v^(v>>>16),0x45d9f3b);return ((v^(v>>>13))>>>0)/4294967296}
 // Broad anatomical colour planes read in the real cavalry view. The ribs turn
 // under the saddle, the flank tucks up behind them and the cheek meets a dark muzzle.

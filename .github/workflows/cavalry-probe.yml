@@ -11,7 +11,7 @@ jobs:
     env:
       LIBGL_ALWAYS_SOFTWARE: '1'
       OLD_REV: 51587871bdcca259cf75777e8fdfa02d28e59a6a
-      NEW_REV: 4eadc7ce693ec3c2304cfbe954d995859e95a25c
+      NEW_REV: 051c6ed502afbe6b1036cc7c1508ae284269ebf5
     steps:
       - uses: actions/checkout@v4
         with:
