@@ -435,9 +435,19 @@ func _assessment(u: Unit) -> void:
 	if pos.x+reach<hostile_min_x[u.team] or pos.x-reach>hostile_max_x[u.team]:
 		rings=1
 	for ring in range(rings+1):
+		var left_edge:=cell.x-ring
+		var right_edge:=cell.x+ring
 		for y in range(maxi(0,cell.y-ring),mini(ROWS-1,cell.y+ring)+1):
-			for x in range(maxi(0,cell.x-ring),mini(COLS-1,cell.x+ring)+1):
-				if ring>0 and absi(x-cell.x)!=ring and absi(y-cell.y)!=ring: continue
+			var first:=maxi(0,left_edge)
+			var last:=mini(COLS-1,right_edge)
+			var stride:=1
+			if absi(y-cell.y)<ring:
+				# The interior of a ring was visited in earlier passes. Its end
+				# cells retain the same ascending order at normal and clipped edges.
+				first=left_edge if left_edge>=0 else right_edge
+				last=right_edge if right_edge<COLS else left_edge
+				stride=ring*2
+			for x in range(first,last+1,stride):
 				var id_cell:=y*COLS+x
 				var close_cell:=x>=close_lo.x and x<=close_hi.x and y>=close_lo.y and y<=close_hi.y
 				var i:=grid[id_cell] if close_cell else team_grid[id_cell+enemy_offset]

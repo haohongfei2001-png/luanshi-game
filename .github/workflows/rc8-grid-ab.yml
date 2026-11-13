@@ -1,0 +1,64 @@
+name: Compare exact army decisions and host time
+on:
+  push:
+    branches: ['codex/river-rc8-measured-grid-test']
+permissions:
+  contents: read
+jobs:
+  sample:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+      - name: Four interleaved samples on the same CPU
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/rg.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/rg.zip' | sha512sum -c -
+          unzip -q /tmp/rg.zip -d /tmp/rg
+          g=/tmp/rg/Godot_v4.6.3-stable_linux.x86_64
+          mkdir stats
+          n=0
+          for side in before after after before; do
+            if [[ "$side" == before ]]; then rev=5cf51e2f7ad9e4fe2768e2088b11bdfd0ab4979e; else rev=HEAD; fi
+            git show "$rev:scripts/field/battle.gd" > scripts/field/battle.gd
+            "$g" --headless --path . --script tests/field_target_timing.gd > "stats/$n-$side.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' "stats/$n-$side.log"; then exit 1; fi
+            test "$(grep -c '^FIELD_TARGET_TRIAL' "stats/$n-$side.log")" -eq 2
+            n=$((n+1))
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          from statistics import median
+          from math import ceil
+          import json,platform
+          by={}
+          for p in sorted(Path("stats").glob("*.log")):
+              side=p.stem.split("-")[1]
+              for l in p.read_text().splitlines():
+                  if l.startswith("FIELD_TARGET_TRIAL "):
+                      data=json.loads(l.split(" ",1)[1]);n=data["ordinary"][0]
+                      by.setdefault(n,{}).setdefault(side,[]).append(data)
+          result={}
+          for n,sides in by.items():
+              base=sides["before"][0]
+              assert len(sides["before"])==len(sides["after"])==2
+              for v in sides.values():
+                  for x in v:
+                      assert all(x[k]==base[k] for k in ("tick","hits","decisions","final_state_sha256"))
+              row={"same_five_target_and_separation_digests":True,"end_state_sha256":base["final_state_sha256"],"tick":base["tick"],"new_hits":base["hits"]}
+              for k in ("query_us","grid_us","step_us"):
+                  row[k]={}
+                  for side,visits in sides.items():
+                      a=sorted(x for v in visits for x in v[k]);row[k][side]={"samples":len(a),"median":median(a),"p95":a[ceil(.95*len(a))-1]}
+              result[n]=row
+          print("RC8_GRID_A_B "+json.dumps(result,separators=(",",":")))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-query-and-step-samples
+          path: stats/
