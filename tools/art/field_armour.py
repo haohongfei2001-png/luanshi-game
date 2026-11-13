@@ -4,21 +4,94 @@ from math import cos, pi, sin
 from figure_mesh import TAU
 
 
+def issue_headpiece(surface, guard, bone, rank):
+    """Light open ear cut or a deep shield helmet on the same head bind."""
+    sides = 10 if rank else (28 if surface.detail else 16)
+    # The arming cloth stays inside the shell. The forehead clears the
+    # character's existing brows and the side edge stops above the jaw.
+    def brow(a):
+        return 1.613 + .035*cos(a) + (.009 if guard else .006)*cos(2*a)
+
+    sections = ((0.,.111,.122,.015),(.20,.112,.128,.011),
+                (.55,.095,.112,.004),(.84,.059,.079,-.001),(1.,.004,.010,-.008))
+    if guard:
+        sections = ((0.,.124,.140,.014),(.15,.121,.136,.009),
+                    (.49,.099,.123,.001),(.80,.061,.084,-.011),(1.,.005,.014,-.024))
+    if rank:
+        sections = tuple(sections[i] for i in (0,2,3,4))
+
+    def dome(u,v):
+        a=TAU*u
+        t,rx,rz,cz=sections[round(v*(len(sections)-1))]
+        # The shield shell is raised along the front-to-back fold. The light
+        # shell is shallow above the temples. Both retain a continuous surface.
+        ridge=(.030 if guard else .009)*abs(cos(a))**5*sin(pi*t)
+        y=brow(a)+(1.780-brow(a) if guard else 1.740-brow(a))*t+ridge
+        return (rx*sin(a),y,cz+rz*cos(a)),bone
+    surface.grid(sides,len(sections)-1,dome,"black_iron")
+
+    # A worked lower edge flares at the temples; it sits well above the eyes.
+    # Its dark underside also separates the cap from the lining in side view.
+    def brim(u,v):
+        a=TAU*u
+        radius,depth=(.124,.140) if guard else (.112,.123)
+        flare=(.023 if guard else .009)*(.60+.40*sin(a)**2)
+        if v<.5:
+            return ((radius+flare)*sin(a),brow(a)-.008,.015+(depth+flare)*cos(a)),bone
+        return (radius*sin(a),brow(a)+(.016 if guard else .010),.015+depth*cos(a)),bone
+    surface.grid(sides,1,brim,"iron_binding" if guard else "leather")
+
+    def panel(points,side,mat,n,lo=0.,hi=1.,trim=.0):
+        # Stations run from the temple to the nape. Both sides wind outwards.
+        def sample(u,v):
+            along=u if side>0 else 1.-u
+            k=min(len(points)-2,int(along*(len(points)-1)))
+            f=along*(len(points)-1)-k
+            a,drop,swipe=[p+(q-p)*f for p,q in zip(points[k],points[k+1])]
+            down=hi-(hi-lo)*v
+            angle=a+swipe*down
+            radius=(.123 if guard else .111)+(.009 if guard else .005)*sin(pi*down)
+            depth=(.135 if guard else .119)
+            rx=radius+(.015 if guard else -.009)*down+trim
+            rz=depth+(.029 if guard else .009)*down+trim
+            return ((side*rx*sin(angle),brow(a)-.003-down*drop,
+                     .014+rz*cos(angle)-.007*down),bone)
+        surface.grid(n,1 if rank else 2,sample,mat)
+
+    for side in (-1,1):
+        if guard:
+            # Two backed leaves on the cheeks and a deeper, outward sloping
+            # piece over the nape. The swept notch between them shows the collar.
+            cheek=((.81,.051,.14),(1.24,.127,.16),(1.68,.158,.10),
+                   (1.98,.116,.045),(2.14,.071,0.))
+            panel(cheek,side,"lames",4 if rank else 8)
+            nape=((2.12,.075,.075),(2.36,.111,.04),(2.72,.128,0.),(pi,.122,0.))
+            panel(nape,side,"black_iron",3 if rank else 6)
+            panel(nape,side,"binding",3 if rank else 6,.90,1.045,.0014)
+        else:
+            # Short ear lappets end behind the cheekbone; the darker, inset
+            # textile at the nape reveals the neck as the spearman turns.
+            ear=((1.01,.025,.02),(1.36,.068,.08),(1.70,.092,.09),
+                 (1.97,.066,.045),(2.06,.032,0.))
+            panel(ear,side,"black_iron",4 if rank else 8)
+            cloth=((1.96,.030,.08),(2.36,.084,.07),(2.74,.097,.03),(pi,.088,0.))
+            panel(cloth,side,"felt",3 if rank else 6)
+            panel(cloth,side,"headcloth",3 if rank else 6,.84,1.02,.0014)
+
+
 def field_helmet(surface, look, bone, rank=False):
     """A raised comb, brow band and hinged cheek/nape coverage leave the face open."""
+    if look in ("regular", "guard"):
+        issue_headpiece(surface, look=="guard", bone, rank)
+        return
     sides = 8 if rank else (28 if surface.detail else 14)
     senior = look in ("officer", "player")
     # Forehead, sides and nape sit at different heights over the actual head sculpt.
     def brow(angle):
-        front=.038 if look=="guard" else .029
-        return 1.619 + front*cos(angle) - .008*sin(angle)**2
+        return 1.619 + .029*cos(angle) - .008*sin(angle)**2
 
     sections = ((0., .112, .127), (.17, .114, .125), (.49, .101, .117),
                 (.77, .079, .092), (.93, .040, .062), (1., .003, .012))
-    if look=="guard":
-        # A low, broader iron bowl and a deeper nape distinguish the shield man.
-        sections=((0.,.124,.139),(.19,.124,.139),(.52,.111,.126),
-                  (.79,.076,.090),(.95,.039,.049),(1.,.008,.013))
     if rank:
         sections = tuple(sections[i] for i in (0, 2, 3, 5))
 
@@ -26,7 +99,7 @@ def field_helmet(surface, look, bone, rank=False):
         angle = TAU * u
         t, rx, rz = sections[round(v * (len(sections) - 1))]
         y0 = brow(angle)
-        crown_height=1.746 if look=="guard" else 1.766
+        crown_height=1.766
         y = y0 + (crown_height - y0) * t
         return (rx * sin(angle), y, .020 + rz * cos(angle) - .018 * t), bone
     surface.grid(sides, len(sections) - 1, crown, "black_iron")
@@ -34,7 +107,7 @@ def field_helmet(surface, look, bone, rank=False):
     def rim(u, v):
         angle = TAU * u
         y = brow(angle) - .006 + .019 * v
-        radius,depth=(.126,.141) if look=="guard" else (.115,.130)
+        radius,depth=.115,.130
         return (radius*sin(angle), y, .019+depth*cos(angle)), bone
     surface.grid(sides, 1, rim, "iron_binding")
 
@@ -44,8 +117,7 @@ def field_helmet(surface, look, bone, rank=False):
         def flap(u, v):
             angle = side * (.84 + 2.315 * u + .19 * (1. - v))
             drop = (.057 + .073 * sin(pi * u) ** .65 + .029 * u) * (1. - v)
-            if look=="guard": drop+=(1.-v)*(.024+.034*u)
-            radius = (.119 if look=="guard" else .110)+.011*sin((1.-v)*pi)-.013*(1.-v)
+            radius = .110+.011*sin((1.-v)*pi)-.013*(1.-v)
             depth = .122 + .018 * (1. - v) * u
             return (radius * sin(angle), brow(angle) - .001 - drop,
                     .018 + depth * cos(angle)), bone

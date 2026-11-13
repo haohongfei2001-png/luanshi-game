@@ -1,0 +1,122 @@
+name: Compare open spear and shield helmets in the live river line
+on:
+  push:
+    branches: [codex/river-issue-helmets-probe]
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      BASE: e66ce35cdd0f81df5b8a28fffefa09050923682f
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bake the original actor library and isolate the affected pieces
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          mkdir -p artifacts/helmet-pass
+          git show "$BASE:assets/river_gate/figures/river_company.glb" > "$RUNNER_TEMP/baseline-company.glb"
+          python3 tools/art/bake_river_company.py --geometry-only >artifacts/helmet-pass/bake.log
+          python3 - <<'PY'
+          import json,struct,hashlib,zlib,base64,subprocess
+          from pathlib import Path
+          import os
+          dst=Path('artifacts/helmet-pass')
+          def chunks(p):
+              src=p.read_bytes()
+              length=struct.unpack_from('<I',src,12)[0]
+              doc=json.loads(src[20:20+length])
+              raw=src[28+length:]
+              result={}
+              for m in doc['meshes']:
+                  prim=m['primitives'][0]
+                  indices=list(prim['attributes'].values())+[prim['indices']]
+                  attrs={}
+                  for i in indices:
+                      acc=doc['accessors'][i]
+                      view=doc['bufferViews'][acc['bufferView']]
+                      at=view['byteOffset']
+                      attrs[len(attrs)]=hashlib.sha256(raw[at:at+view['byteLength']]).hexdigest()
+                  count=doc['accessors'][prim['indices']]['count']//3
+                  result[m['name']]={'count':count,'sha256':list(attrs.values())}
+              return result
+          orig=Path(os.environ['RUNNER_TEMP'])/'baseline-company.glb'
+          glb=Path('assets/river_gate/figures/river_company.glb')
+          a,b=chunks(orig),chunks(glb)
+          changed={k:[v['count'],b[k]['count']] for k,v in a.items() if v!=b[k]}
+          assert len(a)==len(b)==36 and set(changed)=={f'{k}{s}' for k in ('Regular','Guard') for s in ('Close','Line','Rank')},changed
+          print('HELMET_CHANGED',json.dumps(changed))
+          data=glb.read_bytes()
+          packed=zlib.compress(data,9)
+          (dst/'digest.json').write_text(json.dumps({'changed':changed,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'blob':subprocess.check_output(['git','hash-object',str(glb)],text=True).strip()},indent=2))
+          print('HELMET_GEOMETRY',len(data),hashlib.sha256(data).hexdigest(),subprocess.check_output(['git','hash-object',str(glb)],text=True).strip(),len(packed))
+          encoded=base64.b64encode(data).decode()
+          for i in range(0,len(encoded),16000): print('HELMET_ASSET',i,encoded[i:i+16000])
+          PY
+          cp assets/river_gate/figures/river_company.glb artifacts/helmet-pass/
+      - name: Install the verified Godot editor
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/helmet-editor
+      - name: Replay the same two soldiers on both trees
+        run: |
+          set -euo pipefail
+          dst="$PWD/artifacts/helmet-pass"
+          godot=/tmp/helmet-editor/Godot_v4.6.3-stable_linux.x86_64
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev="$BASE"; fi
+            dir="$RUNNER_TEMP/head-$side"
+            git worktree add --quiet --detach "$dir" "$rev"
+            cp tests/issued_helmet_camera.gd "$dir/tests/"
+            if test "$side" = after; then cp "$dst/river_company.glb" "$dir/assets/river_gate/figures/"; fi
+            (
+              cd "$dir"
+              ./tools/prepare-font.sh
+              mkdir -p artifacts
+              touch artifacts/.gdignore
+              "$godot" --headless --editor --path . --import >"$dst/$side-import.log" 2>&1
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side-import.log"; then exit 1; fi
+              timeout 170s xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/issued_helmet_camera.gd -- --field-size=512 2>&1 | tee "$dst/$side-window.log"
+              grep -q HELMET_TEST_PASS "$dst/$side-window.log"
+              if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$dst/$side-window.log"; then exit 1; fi
+              cp -r artifacts/helmets "$dst/$side"
+            )
+          done
+      - name: Compare original pixels and expose paired review windows
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from PIL import Image,ImageChops
+          from pathlib import Path
+          import base64,io,json
+          root=Path('artifacts/helmet-pass')
+          a,b=[json.loads((root/s/'receipts.json').read_text()) for s in ('before','after')]
+          assert a==b and len(b)==9 and all(v['ordinary']==[512,512] and v['size']==[1920,1200] for v in b)
+          for e in b:
+              name=e['label'];x,y=map(round,e['head'])
+              imgs=[Image.open(root/s/(name+'.png')).convert('RGB') for s in ('before','after')]
+              rad=136 if e['camera'][0]<10 else 186
+              pairs=[im.crop((x-rad,y-rad+30,x+rad,y+rad+30)) for im in imgs]
+              sheet=Image.new('RGB',(4*rad,2*rad))
+              for k,p in enumerate(pairs):sheet.paste(p,(2*k*rad,0))
+              sheet.save(root/(name+'-pair.jpg'),quality=93,subsampling=0)
+              h=max(6,round(310/e['camera'][0]));r=(x-h,y-h,x+h+1,y+h+1)
+              diff=ImageChops.difference(imgs[0].crop(r),imgs[1].crop(r))
+              print('HELMET_DELTA',name,e['actor'],e['lod'],sum(p!=(0,0,0) for p in diff.getdata()))
+              print('HELMET_IMAGE',name,base64.b64encode((root/(name+'-pair.jpg')).read_bytes()).decode())
+          print('HELMET_PAIR_PASS',len(b))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issued-helmets-native-512
+          path: artifacts/helmet-pass/
