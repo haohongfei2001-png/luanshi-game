@@ -315,9 +315,9 @@ def pose(kit,clip,t,loadout=0):
         if 6<=clip<=9: carried=smooth(max(0.,(t-.53)/.47))
         off=add(off,mul((-.093,-.091,-.042),carried))
         if carry:
-            off=add(off,mul((-.012,.052,.020) if loadout==2 else (-.033,-.058,-.018),carry))
-        offq=euler(-8-shield*7+carried*7+carry*(-5. if loadout==2 else 7.),
-                   -9.-carried*22.+carry*(9. if loadout==2 else -9.),-shield*14+carried*8.)
+            off=add(off,mul((.020,.091,.032) if loadout==2 else (-.033,-.058,-.018),carry))
+        offq=euler(-8-shield*7+carried*7+carry*(-13. if loadout==2 else 9.),
+                   -9.-carried*22.+carry*(24. if loadout==2 else -10.),-shield*14+carried*8.)
         if carried:
             anchor=limit_grip(add(anchor,mul((.066,.043,.029),carried)),right,radius)
     elif kit==8:
