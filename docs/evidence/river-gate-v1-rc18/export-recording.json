@@ -1,0 +1,241 @@
+{
+  "export": "a8da7469621bd9a93087d2baeea607dfa84d70f0",
+  "host": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "build": "0.16.0-rc.18",
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "driver": "X11",
+    "file": "river-gate-1794600466-3842.jsonl",
+    "godot": "4.6.3-stable (official)",
+    "kind": "host",
+    "platform": "Linux",
+    "renderer": "gl_compatibility",
+    "revision": "a8da7469621bd9a93087d2baeea607dfa84d70f0",
+    "vsync": 0
+  },
+  "movie_sha256": "23ec12bb318f8d0e6bf02d7dfb4dad0deeabc498d667617ee591609acbcbf76b",
+  "binary_sha256": "70324e6de5f8a8d214b39593ad50fc4c2563518449d4ee5e5b2510de3fd96a2a",
+  "package_sha256": "92a607065c12d77936b13738113d2fd31885d1a1074afd499d84923bb2afd7f2",
+  "streams": [
+    {
+      "codec_name": "h264",
+      "width": 1280,
+      "height": 800,
+      "avg_frame_rate": "24/1",
+      "duration": "40.000000",
+      "nb_frames": "960"
+    },
+    {
+      "codec_name": "aac",
+      "channels": 2,
+      "avg_frame_rate": "0/0",
+      "duration": "40.000000",
+      "nb_frames": "1876"
+    }
+  ],
+  "mix": {
+    "mean_db": -35.1,
+    "peak_db": -11.1
+  },
+  "inputs": [
+    {
+      "movie_frame": 7,
+      "input": "准备时选择弓"
+    },
+    {
+      "movie_frame": 17,
+      "input": "将各队设为协同攻门"
+    },
+    {
+      "movie_frame": 30,
+      "input": "从军议按钮开战"
+    },
+    {
+      "movie_frame": 48,
+      "input": "向前短行"
+    },
+    {
+      "movie_frame": 55,
+      "input": "停步，瞄向阵前"
+    },
+    {
+      "movie_frame": 95,
+      "input": "发出前压军令"
+    },
+    {
+      "movie_frame": 139,
+      "input": "抬弓发动技能"
+    },
+    {
+      "movie_frame": 184,
+      "input": "松开普通攻击"
+    },
+    {
+      "movie_frame": 212,
+      "input": "使用第二项技能"
+    },
+    {
+      "movie_frame": 255,
+      "input": "观察两翼队列"
+    },
+    {
+      "movie_frame": 347,
+      "input": "拉回主角"
+    },
+    {
+      "movie_frame": 385,
+      "input": "前锋集结"
+    },
+    {
+      "movie_frame": 462,
+      "input": "在小地图观察城门"
+    },
+    {
+      "movie_frame": 558,
+      "input": "拉远看城门"
+    },
+    {
+      "movie_frame": 665,
+      "input": "回到操作者"
+    },
+    {
+      "movie_frame": 735,
+      "input": "瞄向交战方向"
+    },
+    {
+      "movie_frame": 805,
+      "input": "观察城内目标"
+    }
+  ],
+  "samples": [
+    {
+      "start_tick": 15,
+      "end_tick": 165,
+      "per_side": 512,
+      "visible_combat_poses": 110,
+      "hits_in_window": 971,
+      "losses": [
+        92,
+        136
+      ],
+      "gate_hp": 260.0,
+      "estimated_internal_px": [
+        1280,
+        800
+      ],
+      "camera_size": 22.0,
+      "camera_travel": 2.49107074737549
+    },
+    {
+      "start_tick": 165,
+      "end_tick": 315,
+      "per_side": 512,
+      "visible_combat_poses": 15,
+      "hits_in_window": 664,
+      "losses": [
+        173,
+        214
+      ],
+      "gate_hp": 260.0,
+      "estimated_internal_px": [
+        1280,
+        800
+      ],
+      "camera_size": 21.7370548248291,
+      "camera_travel": 0.0485953539609909
+    },
+    {
+      "start_tick": 315,
+      "end_tick": 465,
+      "per_side": 512,
+      "visible_combat_poses": 14,
+      "hits_in_window": 70,
+      "losses": [
+        188,
+        217
+      ],
+      "gate_hp": 260.0,
+      "estimated_internal_px": [
+        1280,
+        800
+      ],
+      "camera_size": 31.3013572692871,
+      "camera_travel": 54.7308540344238
+    },
+    {
+      "start_tick": 465,
+      "end_tick": 615,
+      "per_side": 512,
+      "visible_combat_poses": 0,
+      "hits_in_window": 104,
+      "losses": [
+        207,
+        226
+      ],
+      "gate_hp": 0.0,
+      "estimated_internal_px": [
+        1280,
+        800
+      ],
+      "camera_size": 21.5635051727295,
+      "camera_travel": 53.5011520385742
+    },
+    {
+      "start_tick": 615,
+      "end_tick": 765,
+      "per_side": 512,
+      "visible_combat_poses": 68,
+      "hits_in_window": 253,
+      "losses": [
+        226,
+        253
+      ],
+      "gate_hp": 0.0,
+      "estimated_internal_px": [
+        1280,
+        800
+      ],
+      "camera_size": 21.5635051727295,
+      "camera_travel": 53.5011520385742
+    },
+    {
+      "start_tick": 765,
+      "end_tick": 774,
+      "per_side": 512,
+      "visible_combat_poses": 68,
+      "hits_in_window": 19,
+      "losses": [
+        226,
+        254
+      ],
+      "gate_hp": 0.0,
+      "estimated_internal_px": [
+        1280,
+        800
+      ],
+      "camera_size": 21.5635051727295,
+      "camera_travel": 0.0
+    }
+  ],
+  "accepted_actions": [
+    {
+      "kind": "accepted_action_to_frame_post_draw",
+      "ms": 1128.825,
+      "slot": 0,
+      "tick": 21
+    },
+    {
+      "kind": "accepted_action_to_frame_post_draw",
+      "ms": 1031.441,
+      "slot": 2,
+      "tick": 152
+    },
+    {
+      "kind": "accepted_action_to_frame_post_draw",
+      "ms": 667.296,
+      "slot": 2,
+      "tick": 588
+    }
+  ],
+  "performance_use": false
+}

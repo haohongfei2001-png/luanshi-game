@@ -1,0 +1,32 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+[1;33mWARNING:[0;93m Virtual Machine detected, switching to ANGLE.
+[0;90m     at: DisplayServerMacOS (platform/macos/display_server_macos.mm:3854)[0m
+OpenGL API OpenGL ES 3.0 (ANGLE 2.1.1 git hash: aaebda1c5a40) - Compatibility - Using Device: Google Inc. (Apple) - ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))
+
+FIELD_PROFILE_FILE /Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish/frame-times/river-gate-1794600483-1574.jsonl
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":13309,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"scene_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":31387,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"first_post_draw","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":2,"engine_ms":31797,"focus":true,"hits":0,"paused":false,"physics_frames":16,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"window_focus_in","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":7,"engine_ms":32158,"focus":true,"hits":0,"paused":false,"physics_frames":45,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"foreground_ready","started":false,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":7,"engine_ms":32166,"focus":true,"hits":0,"paused":false,"physics_frames":45,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"deployed","started":true,"tick":0}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":9,"engine_ms":32269,"focus":true,"hits":0,"paused":false,"physics_frames":49,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"first_tick","started":true,"tick":1}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":17,"engine_ms":34888,"focus":true,"hits":3,"paused":false,"physics_frames":91,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"first_hit","started":true,"tick":15}
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":104,"engine_ms":39122,"focus":true,"hits":607,"paused":false,"physics_frames":346,"pid":1574,"renderer":"gl_compatibility","result":"","stage":"contact_complete","started":true,"tick":100}
+FIELD_HOST_WINDOW {"adapter":"ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))","canvas_scale":[0.75,0.75],"content_design_px":[1280,800],"display":"macOS","display_window_px":[1000,600],"estimated_internal_px":[960,600],"four_second_windows":[],"fps":30.031540625542,"frames":120,"frames_over_budget":{"120":120,"60":120,"90":120},"gpu_timer_status":"measured","hits_in_window":480,"input_to_postdraw_ms":[39.2019996643066,21.3700008392334,23.3040008544922],"longest_frame_context":{"camera":[2.0,-18.0],"end_tick":174,"frame_zero_based":110,"frames_since_camera_request":71,"render_cpu_timestamp_ms":23.7059993743896,"render_gpu_timestamp_ms":null,"sim_cpu_ms":0.0,"start_tick":174,"step_phases_ms":{"grid_and_input":0.0,"objectives":0.0,"officers_and_orders":0.0,"projectiles":0.0,"siege":0.0,"target_selection":0.0,"unit_actions_and_density":0.0},"view_script_ms":3.039,"visible":450,"wall_end_ms":3689.996,"wall_ms":71.778},"max_ms":71.778,"mean_ms":33.298325,"p50_ms":31.722,"p95_ms":54.736,"p99_ms":61.449,"panned":true,"per_side":512,"platform":"macOS","preset":0,"processor":"Apple M1 (Virtual)","render_cpu_p95_ms":31.2950000762939,"render_cpu_samples":120,"render_gpu_p95_ms":4935945027584.0,"render_gpu_samples":40,"render_target_px":[960,600],"renderer":"gl_compatibility","reported_viewport_texture_px":[720.0,450.0],"requested_msaa_samples":4,"scale":1.0,"screen_px":[1024,768],"screen_space_aa":0,"seconds":3.995799,"shadows":true,"sim_cpu_ms_per_frame":7.46634166666667,"sim_cpu_total_ms":895.961,"static_bytes":null,"step_phase_totals_ms":{"grid_and_input":147.764,"objectives":4.8,"officers_and_orders":18.466,"projectiles":19.328,"siege":1.822,"target_selection":236.441,"unit_actions_and_density":466.742},"tour":false,"view_script_ms_per_frame":2.951875,"view_script_total_ms":354.225,"viewport":[1000,600]}
+FIELD_PACKAGE_PASS {"attacks":1673,"blocked_hits":20,"capture_sec":0.0,"crew_replacements":0,"dead":[104,145],"decision":"","device":"ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))","display":"macOS","dropped_weapons":[104,145],"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[654,433],"mission":"夺取河关","officer_corps":{"active_commands":[16,8],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[],[1040,1041,1042,1043,1044,1046,1048,1049]],"kills":[1,4],"ranked":true,"rescued":[[],[]],"skills":[10,12],"successions":[0,1],"wounded":[[],[1047]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":932,"ram_hp":150.0,"ram_strokes":0,"result":"","resume_equal":true,"routing":[3,49],"seed":61112,"soldiers_per_side":512,"tick":181,"visible":452}
+       44.12 real         9.06 user         2.46 sys
+           501219328  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44317  page reclaims
+                1317  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   2  messages sent
+                   0  messages received
+                   0  signals received
+                 281  voluntary context switches
+               25212  involuntary context switches
+           558927232  peak memory footprint
