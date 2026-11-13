@@ -1,0 +1,100 @@
+name: Read the moving support in the river infantry
+on:
+  push:
+    branches: ['codex/river-loaded-advance']
+    paths: ['tools/art/company_motion.py','tools/art/check_loaded_advance.py','tests/field_loaded_advance.gd','.github/workflows/loaded-advance-window.yml']
+permissions:
+  contents: read
+jobs:
+  field:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 21
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bake the actual company palette and decode support, joints and recoil rows
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get -yq install python3-pil ffmpeg
+          proof=docs/evidence/river-gate-v1-rc21/loaded-advance
+          mkdir -p "$proof"
+          git show 126091196db530aa7ec13de61f839c9c41cac24b:assets/river_gate/figures/company_motion.png > "$RUNNER_TEMP/old.png"
+          PYTHONPATH=tools/art /usr/bin/python3 -c 'from pathlib import Path; from company_motion import bake_motion; bake_motion(Path("assets/river_gate/figures"))'
+          /usr/bin/python3 tools/art/check_company_motion.py | tee "$proof/grips.log"
+          /usr/bin/python3 tools/art/check_contact_motion.py | tee "$proof/reactions.log"
+          /usr/bin/python3 tools/art/check_loaded_advance.py "$RUNNER_TEMP/old.png" assets/river_gate/figures/company_motion.png > "$proof/motion.json"
+          git add -- assets/river_gate/figures/company_motion.png
+          git -c user.name='River Gate animation' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake pelvis, support and travelling shoulder motion into the field bank'
+          git rev-parse HEAD
+      - name: Draw both RC20 and the loaded advance at the same inputs and battle time
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc21/loaded-advance
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev=126091196db530aa7ec13de61f839c9c41cac24b; fi
+            root="$RUNNER_TEMP/advance-$side"
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/field_loaded_advance.gd "$root/tests"
+            godot=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+            game="$root/artifacts/loaded-advance"
+            "$godot" --headless --editor --path "$root" --import > "$proof/$side/import.log" 2>&1
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/import.log"; then exit 1; fi
+            xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_loaded_advance.gd -- --field-size=512 > "$proof/$side/windows.log" 2>&1
+            grep -F 'LOADED_ADVANCE true' "$proof/$side/windows.log"
+            cp "$game"/*.png "$game/stills.json" "$proof/$side"
+            xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$root" --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_loaded_advance.gd -- --field-size=512 --advance-film > "$proof/$side/film.log" 2>&1
+            grep -F 'LOADED_ADVANCE true' "$proof/$side/film.log"
+            cp "$game/film.json" "$proof/$side"
+            for n in 004 012 021 039 055 066; do cp "$game/frame-$n.jpg" "$proof/$side/"; done
+            ffmpeg -loglevel error -framerate 20 -start_number 1 -i "$game/frame-%03d.jpg" -frames:v 76 -c:v libx264 -preset veryfast -crf 15 -pix_fmt yuv420p "$proof/$side/advance.mp4"
+          done
+          ffmpeg -loglevel error -i "$proof/before/advance.mp4" -i "$proof/after/advance.mp4" -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -c:v libx264 -crf 16 -pix_fmt yuv420p "$proof/equal-speed.mp4"
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from PIL import Image
+          r=Path("docs/evidence/river-gate-v1-rc21/loaded-advance")
+          for receipt in ("film","stills"):
+              a,b=[json.loads((r/s/(receipt+".json")).read_text()) for s in ("before","after")]
+              assert a==b,receipt
+          for label in ("front-012","front-041","front-064","reverse-012","reverse-041","reverse-064"):
+              pair=Image.new("RGB",(1500,469))
+              for i,s in enumerate(("before","after")):
+                  im=Image.open(r/s/(label+".png")).convert("RGB")
+                  assert im.size==(1920,1200)
+                  im.save(r/s/(label+"-native.jpg"),quality=86,subsampling=0)
+                  pair.paste(im.resize((750,469),Image.Resampling.LANCZOS),(750*i,0))
+              pair.save(r/(label+"-pair.jpg"),quality=93,subsampling=0)
+          tracks=[json.loads((r/s/"film.json").read_text())["states"] for s in ("before","after")]
+          for tri in ((4,12,21),(39,55,66)):
+              montage=Image.new("RGB",(960,420))
+              for j,s in enumerate(("before","after")):
+                  for i,k in enumerate(tri):
+                      p=tracks[j][k-1]["tracked"][0]["projection"]
+                      x,y=[round(n) for n in p]
+                      im=Image.open(r/s/("frame-%03d.jpg"%k)).convert("RGB").crop((x-160,y-97,x+160,y+113))
+                      montage.paste(im,(i*320,j*210))
+              montage.save(r/("support-%02d.jpg"%tri[0]),quality=95,subsampling=0)
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate animation' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record equal-speed 512-a-side advances and two directions at 22 metres'
+          git push origin HEAD:refs/heads/codex/river-loaded-advance
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-loaded-advance
+          path: docs/evidence/river-gate-v1-rc21/loaded-advance
