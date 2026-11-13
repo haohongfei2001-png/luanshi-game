@@ -1,0 +1,55 @@
+name: Check the living guard in the ordinary play camera
+on:
+  push:
+    branches: ['codex/river-guard-portrait']
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Bake the board, audit every held weapon and photograph the unchanged orbit
+        run: |
+          set -euo pipefail
+          mkdir -p proof artifacts
+          touch artifacts/.gdignore
+          python3 -m pip -q install Pillow==11.3.0
+          ./tools/prepare-font.sh
+          python3 tools/art/bake_river_company.py --geometry-only >proof/geometry.log
+          PYTHONPATH=tools/art python3 -c 'from pathlib import Path; from company_motion import bake_motion; bake_motion(Path("assets/river_gate/figures"))'
+          python3 tools/art/check_company_motion.py | tee proof/motion.log
+          python3 tools/art/check_field_carries.py | tee proof/carries.log
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          g=/tmp/godot/Godot_v4.6.3-stable_linux.x86_64
+          "$g" --headless --editor --path . --import >proof/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' proof/import.log; then exit 1; fi
+          set +e
+          xvfb-run -a -s '-screen 0 1280x800x24' "$g" --path . --resolution 1280x800 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/guard_camera_check.gd 2>&1 | tee proof/portrait.log
+          status=${PIPESTATUS[0]}
+          set -e
+          cp artifacts/soldier-portrait.jpg proof/
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib
+          for path in map(Path,("assets/river_gate/figures/river_company.glb","assets/river_gate/figures/company_motion.png")):
+              data=path.read_bytes()
+              enc=base64.b64encode(data).decode()
+              print("CRAFT_ASSET_INFO",path,len(data),hashlib.sha256(data).hexdigest(),hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest(),len(enc))
+              for at in range(0,len(enc),14000):print("CRAFT_ASSET_PART",path,at,enc[at:at+14000])
+          PY
+          exit "$status"
+      - name: Keep the real portrait, authoring checks and console transcript
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shield-and-weapon-hand
+          path: proof/

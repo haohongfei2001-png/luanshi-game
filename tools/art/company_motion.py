@@ -307,9 +307,19 @@ def pose(kit,clip,t,loadout=0):
     elif kit==7:
         shield=1 if clip==10 else (.85 if attack and slot in (1,3) else .32)
         off=(-.215,1.105+.18*shield-crouch,.256+shield*.113+shift)
+        # Let the soldier see over the upper rim during muster and the march.
+        # He carries the board against the outside of the left forearm, then
+        # brings it squarely forward for an actual block or the committed hit.
+        carried=1.0 if move or clip==1 else 0.0
+        if 2<=clip<=5: carried=1.-smooth(min(1.,t/.47))
+        if 6<=clip<=9: carried=smooth(max(0.,(t-.53)/.47))
+        off=add(off,mul((-.093,-.091,-.042),carried))
         if carry:
-            off=add(off,mul((-.015,.082,.022) if loadout==2 else (-.065,-.102,-.058),carry))
-        offq=euler(-8-shield*7+(carry*(-8. if loadout==2 else 11.)),-9+carry*(15. if loadout==2 else -20.),-shield*14)
+            off=add(off,mul((-.012,.052,.020) if loadout==2 else (-.033,-.058,-.018),carry))
+        offq=euler(-8-shield*7+carried*7+carry*(-5. if loadout==2 else 7.),
+                   -9.-carried*22.+carry*(9. if loadout==2 else -9.),-shield*14+carried*8.)
+        if carried:
+            anchor=limit_grip(add(anchor,mul((.066,.043,.029),carried)),right,radius)
     elif kit==8:
         off=(-hand[0],1.14+(1.24-hand[1])*.7-crouch,.225-(hand[2]-.21)*.52+shift)
         offq=euler(-11-hand[3]*.49,-hand[4]*.81,8)

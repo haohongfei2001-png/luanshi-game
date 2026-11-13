@@ -9,16 +9,21 @@ def field_shield(surface, detailed):
     """Slightly crowned timber board with a leather edge and a working inner grip."""
     # Position and angle are relative to the existing left-hand socket. The
     # board widens near the forearm and tapers towards the ground.
-    center=add(grip(-1),(0.,.033,.120))
+    center=add(grip(-1),(-.089,-.064,.102))
     levels=[(-.510,.096),(-.454,.198),(-.278,.250),(.205,.284),(.391,.258),(.482,.164),(.495,.122)]
     columns=8 if detailed else 4
     def face(u,v,back=False):
         row=round(v*(len(levels)-1))
         y,half_width=levels[row]
         side=2*u-1
-        z=.078*(1-side*side)-.070*side*side+.012*y
+        # The hand is inside the sword-side rail. Sweep the upper, inner
+        # corner away from the face without narrowing the central plank field.
+        high=max(0.,min(1.,(y-.20)/.27))
+        inner=max(0.,side)
+        x=side*half_width-.048*high-.046*inner*high
+        z=.077*(1-side*side)-.055*side*side+.085*x-.055*y
         if back: z-=.036
-        return add(center,(side*half_width,y,z)),LH
+        return add(center,(x,y-.056*inner*high,z)),LH
     surface.grid(columns,len(levels)-1,face,"shield")
     surface.grid(columns,len(levels)-1,lambda u,v:face(1-u,v,True),"shield")
     for side in (0,1):
@@ -28,8 +33,9 @@ def field_shield(surface, detailed):
         surface.tube([face(u/columns,v)[0] for u in range(columns+1)], [.018]*(columns+1),
                      "leather",LH,6 if detailed else 4)
     # The grip, dome and timber share the same animated hand, even edge-on.
-    surface.oval(add(center,(0,.023,.086)),(.079,.106,.028),"iron",LH,10 if detailed else 7,4)
-    surface.tube([add(center,(-.087,0.,-.010)),grip(-1),add(center,(.087,0.,-.010))],
+    surface.oval(add(center,(0,.023,.086)),(.070,.091,.026),"iron",LH,10 if detailed else 7,4)
+    socket=grip(-1)
+    surface.tube([add(socket,(-.102,.016,.123)),socket,add(socket,(.074,-.015,.103))],
                  [.018,.029,.018],"binding",LH,6 if detailed else 4)
     if detailed:
         for side in (-1,1):
