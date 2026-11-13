@@ -1,0 +1,52 @@
+name: Repeat the hosted field film with checked frame progress
+on:
+  push:
+    branches: ['codex/river-rc18-footage-recovery']
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Import the shipping game for graphical regressions
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          mkdir -p artifacts
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > artifacts/field-import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/field-import.log; then exit 1; fi
+      - name: Verify watchdog and capture the same army, inputs, resolution and frame count
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          python3 tools/record-progress.py --idle 2 --limit 5 --progress-marker 'FIELD_FILM_PROGRESS frame=' -- python3 -c 'import time; print("FIELD_FILM_PROGRESS frame=1 tick=4",flush=True);time.sleep(.5);print("FIELD_FILM_PROGRESS frame=2 tick=6",flush=True)'
+          ./tools/test-field-render.sh footage
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: gameplay-footage-corrected-rc18
+          path: |
+            artifacts/river-gate-512.mp4
+            artifacts/player-nine-weapons.mp4
+            artifacts/river-gate-full-siege.mp4
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: field-verification-footage-corrected-rc18
+          path: |
+            artifacts/
+            !artifacts/field-film/**
+            !artifacts/kit-film/**
+            !artifacts/siege-film/**
+            !artifacts/*.mp4

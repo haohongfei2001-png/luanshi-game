@@ -27,11 +27,14 @@ for mode in benchmark film; do
     args+=(--fixed-fps 30)
     user_args=(--field-size=512 --field-film)
   fi
-  # Previous native 4x MSAA recordings were much slower under llvmpipe than on Metal.
-  # Keep the game settings and the number of frames identical in the recording.
-  limit=360s
-  if [[ "$mode" == benchmark ]]; then limit=270s; fi
-  timeout "$limit" xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . "${args[@]}" --script tests/field_render.gd -- "${user_args[@]}" 2>&1 | tee "artifacts/field-$mode.log"
+  runner=(timeout 270s)
+  if [[ "$mode" == film ]]; then
+    # Under llvmpipe an active 360-frame capture can outlive six minutes.
+    # Keep the source, camera, samples, resolution and timing unchanged.
+    runner=(python3 tools/record-progress.py --idle 135 --limit 900)
+    runner+=(--progress-marker 'FIELD_FILM_PROGRESS frame=' --)
+  fi
+  "${runner[@]}" xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . "${args[@]}" --script tests/field_render.gd -- "${user_args[@]}" 2>&1 | tee "artifacts/field-$mode.log"
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "artifacts/field-$mode.log"; then exit 1; fi
 done
 timeout 480s xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/field_controls.gd -- --field-size=20 2>&1 | tee artifacts/field-controls.log
