@@ -1,0 +1,51 @@
+name: Diagnose a fresh Metal launch of the already exported RC19
+on:
+  push:
+    branches: ['codex/river-rc19-first-metal']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  first-frame:
+    runs-on: macos-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-9357483bc54c28e0c5d3c04b42dbe5c7e41b4bfd
+          path: package
+          run-id: 43510132831
+          github-token: ${{ github.token }}
+      - name: Run the exact same package on a fresh host and sample both sides of scene-ready
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir traces
+          echo '16ee9ef10b0b2ce62fcf49451567b08d2cefe5ab787e26a865e5c1e210bd4491  package/Luanshi-macOS.zip' | shasum -a 256 -c -
+          ditto -x -k package/Luanshi-macOS.zip package/unpacked
+          python3 tools/rc3_native_probe.py package/Luanshi-macOS.zip package/unpacked traces --startup-regression
+      - name: Summarise retained activity in the engine, graphics driver, asset and window calls
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("traces")
+          report=root/"renderer-comparison.json"
+          if report.exists():
+              doc=json.loads(report.read_bytes())
+              for r in doc["samples"]:
+                  print("NATIVE_BOOT_RECHECK",json.dumps({k:r[k] for k in ["label","returncode","validated","launch_milestones_ms","last_boot_stage","pre_frame_sample","pre_scene_sample"]}))
+          for sample in root.glob("*.sample.txt"):
+              lines=sample.read_text(errors="replace").splitlines()
+              start=next((i for i,l in enumerate(lines) if l.startswith("Call graph:")),0)
+              end=next((i for i,l in enumerate(lines) if "Total number in stack" in l),len(lines))
+              print("HOSTED_STACK",sample.name)
+              print("\n".join(lines[start:min(start+58,end)]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: first-metal-same-rc19
+          path: traces/
