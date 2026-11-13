@@ -1,0 +1,35 @@
+name: Summarise already recorded frame intervals
+on:
+  push:
+    branches: ['codex/river-rc9-frame-distribution']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  budget:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+          run-id: '43374886624'
+          artifact-ids: '14014556794'
+          merge-multiple: true
+          path: native
+      - uses: actions/download-artifact@v4
+        with:
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+          run-id: '43374886624'
+          artifact-ids: '14014512684'
+          merge-multiple: true
+          path: series
+      - name: Count every over-budget frame on the actual hardware and software traces
+        run: |
+          python3 docs/evidence/river-gate-v1-rc9/frame_budgets.py native series
+          python3 docs/evidence/river-gate-v1-rc8/measure_tail.py native
