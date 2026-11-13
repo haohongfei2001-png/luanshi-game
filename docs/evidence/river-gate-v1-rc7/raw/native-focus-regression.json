@@ -1,0 +1,101 @@
+{
+  "diagnostic_source": "74460b125fb0502d0430a92baad34eabe4baebe8",
+  "run": 43350173727,
+  "artifact_sha256": "937cb5520ae9f6d843de11ccb5b4c46cdadf2ad6c2ce3cc6a012854689bc25bb",
+  "package": 14002698727,
+  "evidence": 14003393052,
+  "scope": "Freshly exported diagnostic build on a distinct hosted Mac, not the original RC7 binary or a real M5.",
+  "trials": [
+    {
+      "label": "default-metal-1",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "launch_milestones_ms": {
+        "scene_ready": 19493.4,
+        "first_post_draw": 30778.4,
+        "foreground_ready": 31494.3,
+        "deployed": 31496.3,
+        "first_tick": 31558.6,
+        "first_hit": 32257.1,
+        "contact_complete": 36507.2
+      },
+      "startup_resume_count": 0,
+      "requested_method": "mobile",
+      "frames": 1078,
+      "fps": 307.817156608974,
+      "p95_ms": 10,
+      "p99_ms": 10.932,
+      "max_rss_bytes": 572571648,
+      "hits_in_window": 400,
+      "estimated_internal_px": [
+        960,
+        600
+      ],
+      "processor": "Apple M2 Pro (Virtual)",
+      "adapter": "Apple Paravirtual device (Apple5)"
+    },
+    {
+      "label": "default-metal-2",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "launch_milestones_ms": {
+        "scene_ready": 2963.8,
+        "first_post_draw": 3906.7,
+        "foreground_ready": 4564.6,
+        "deployed": 4566.8,
+        "first_tick": 4642.4,
+        "first_hit": 5336.5,
+        "contact_complete": 9589.9
+      },
+      "startup_resume_count": 0,
+      "requested_method": "mobile",
+      "frames": 6564,
+      "fps": 273.404319879889,
+      "p95_ms": 9.698,
+      "p99_ms": 11.3,
+      "max_rss_bytes": 572030976,
+      "hits_in_window": 1147,
+      "estimated_internal_px": [
+        960,
+        600
+      ],
+      "processor": "Apple M2 Pro (Virtual)",
+      "adapter": "Apple Paravirtual device (Apple5)"
+    },
+    {
+      "label": "startup-focus-control",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "launch_milestones_ms": {
+        "scene_ready": 3627.2,
+        "first_post_draw": 4912.1,
+        "foreground_ready": 5350.8,
+        "deployed": 5353.8,
+        "first_tick": 6996.9,
+        "first_hit": 7701.4,
+        "contact_complete": 11954.2,
+        "startup_interruption_armed": 5353.8,
+        "startup_paused_zero": 5612.5,
+        "focus_restored_at_zero": 6938.6,
+        "startup_resume_pressed": 6939
+      },
+      "startup_resume_count": 1,
+      "requested_method": "mobile",
+      "frames": 1063,
+      "fps": 303.309064803708,
+      "p95_ms": 9.92,
+      "p99_ms": 11.657,
+      "max_rss_bytes": 573784064,
+      "hits_in_window": 401,
+      "estimated_internal_px": [
+        960,
+        600
+      ],
+      "processor": "Apple M2 Pro (Virtual)",
+      "adapter": "Apple Paravirtual device (Apple5)"
+    }
+  ]
+}

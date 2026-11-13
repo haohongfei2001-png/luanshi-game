@@ -226,6 +226,7 @@ jobs:
       - name: Render the exported siege and compare two macOS backends on identical hardware
         run: |
           python3 tools/rc3_native_probe.py package/Luanshi-macOS.zip package/unpacked mac-evidence
+          python3 tools/check_playfield.py mac-evidence/*.png
       - name: Upload native macOS evidence
         if: always()
         uses: actions/upload-artifact@v4

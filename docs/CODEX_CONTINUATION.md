@@ -4,13 +4,17 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
+## 河关 RC8｜前线兵种与真实启动复核
+
+[在游戏中修改的内容与验收入口](evidence/river-gate-v1-rc8/PLAYTEST.md)。角色的 22 m 正常镜头实际输入在两版中都命中 584 号士兵（第 48 步）；重做弓手、执长兵与盾兵的剪影和待战姿势。保留 RC7 的清晰地表。下一条操作是检查当前游戏 PR 的六项 CI 和产物；原生两种后端须经真实战斗及输出像素检查，完整随军须录到继续读档。[第零步实证](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43350173727)。未通过的版本不得用作最终美术或 M5 验收。
+
 ## 河关 RC7｜可玩候选，美术与 M5 未验收
 
 [游戏 PR #38](https://github.com/haohongfei2001-png/luanshi-game/pull/38) 六项 CI 通过后，游戏合并提交 `b8e830f6d5f71620531ac76961decc31ef0b1581` 与导出源码树相同。源码 `dbae207abe51a305d2b9f392383dc00d016531cd`，实际导出 `4b9557b6d811880dffb9e6dc28d4531b27fd3456`，内层 macOS ZIP SHA-256 `2758b370eb60d848eaa6b4c026337d5eb29fe54838d8302ab03c8aa115cc2a44`。[候选包、实机和 A/B](evidence/river-gate-v1-rc7/PLAYTEST.md) · [自然出枪和敌兵扣血](evidence/river-gate-v1-rc7/PERSONAL.md) · [Mac 实机与未采用的调色](evidence/river-gate-v1-rc7/NATIVE.md)。两台独立托管虚拟 M1 结果有差异：最终包 9/9 冷启、默认 Metal 1024×640、P95/P99 24.34/36.10 ms，未达到稳定 60；M5 NOT_RUN。完整随军电影、战报、行军、F5/F9、两条护送已在修复后复核。正式剧情留白。
 
 最终安装包的九张原生 PNG 已逐张解码，九张中央都有有效游戏画面；同一检查拒绝了编辑器首次回读的全黑 PNG。见[原件指纹和抽样结果](evidence/river-gate-v1-rc7/raw/window-pixels.json)。这是对画面确实出现的验证，不是对美术或流畅度的验收。
 
-[后续正常镜头的兵种实装对照](evidence/river-gate-v1-rc7/FIELD_DRESS.md)未被采用为新候选包：箭囊、肩甲有改善，整屏角色仍太相似。主线同一游戏树独立重建为 5/6 项 CI 通过；原生 7/9，两个默认 Metal 测试分别在持续进展时被固定时限截断、部署后失焦停在第零步。保留[九次全部结果](evidence/river-gate-v1-rc7/raw/main-rebuild.json)和原来 9/9 的交付包。不得据此宣称 macOS 冷启已解决。
+[后续正常镜头的兵种实装对照](evidence/river-gate-v1-rc7/FIELD_DRESS.md)未被采用为新候选包：箭囊、肩甲有改善，整屏角色仍太相似。主线同一游戏树独立重建为 5/6 项 CI 通过；原生 7/9，两个默认 Metal 测试分别在持续进展时被固定时限截断、部署后失焦停在第零步。保留[九次全部结果](evidence/river-gate-v1-rc7/raw/main-rebuild.json)和原来 9/9 的交付包。定向导出包[复现第零步失焦并验证一次“继续”](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43350173727)：两次自然启动、一次可控真实窗口中断均通过。此修正仅在测试入口；这不覆盖原包失败或 M5。
 
 **下一步**：以已保存的第 43/48 步正常游玩镜头和城门/近景 A/B 为准，按排复查不同距离长兵、重甲、弓手的肩髋姿势与持械剪影，优先减少远景甲与兵器的跳点。托管 Metal 编辑器 A/B 曾报 fence 超时且首张回读全黑；需记录第一张非黑帧，切勿把“存在 PNG 文件”当作视觉通过。复现实际玩家接敌：在独立云端检出 `e1fa26e16da14545f0d83de0cf2c12638d4140ef`，按其工作流运行 `godot --path . --resolution 1920x1200 --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512`。全军最终美术、P2 全面分队后端、长期世界与人生闭环、M5 和正式发布均未宣称通过。
 

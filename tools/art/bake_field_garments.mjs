@@ -22,7 +22,7 @@ function accessor(values,components,index=false) {
     const entry={bufferView:views.length-1,componentType:index?5123:5126,count:values.length/components,type:["","SCALAR","VEC2","VEC3"][components]};
     if(components===3) {
         entry.min=[Infinity,Infinity,Infinity];entry.max=[-Infinity,-Infinity,-Infinity];
-        values.forEach((v,i)=>{const a=i%3;entry.min[a]=Math.min(entry.min[a],v);entry.max[a]=Math.max(entry.max[a],v);});
+        values.forEach((v,i)=>{const a=i%3,x=Math.fround(v);entry.min[a]=Math.min(entry.min[a],x);entry.max[a]=Math.max(entry.max[a],x);});
     }
     accessors.push(entry);return accessors.length-1;
 }
@@ -89,6 +89,78 @@ function surface(look,segments,rows) {
             const z=-.045+(.094+.072*v)*Math.cos(angle);
             return [x,y,z,CHEST,HIPS,.98];
         },true);
+    }
+    // Costume masses for a 22 m orthographic camera. They are fitted to the
+    // existing bind, not camera-facing badges. Hardware still uses the same surface.
+    const PI=Math.PI,TAU=2*PI;
+    const far=segments<=4, sides=far?5:segments+2;
+    if(look==="Archer") {
+        // A suspended leather quiver follows the diagonal from left hip to right
+        // shoulder. The mouth, lip and two long feather vanes read together.
+        function tube(u,t,pad=0) {
+            const a=TAU*u,bulge=Math.sin(PI*t),r=.053+.024*t+.012*bulge+pad;
+            const x=-.185+.350*t,z=-.228-.058*t;
+            return [x+r*.86*Math.cos(a),.804+.605*t-.50*r*Math.cos(a),
+                    z+r*.88*Math.sin(a),CHEST,HIPS,.83+.16*t];
+        }
+        panel(sides,far?2:3,21,(u,v)=>tube(u,v));
+        panel(sides,1,2,(u,v)=>tube(u,.87+.09*v,.004));
+        panel(sides,1,10,(u,v)=>tube(u,.966+.034*v,.003));
+        panel(sides,1,2,(u,v)=>{
+            const p=tube(u,1),q=tube(0,1);
+            return [.165+(p[0]-.165)*(1-.96*v),1.409+(p[1]-1.409)*(1-.96*v),
+                    -.286+(p[2]+.286)*(1-.96*v),q[3],q[4],q[5]];
+        });
+        for(const wing of [-1,1]) {
+            panel(far?1:2,far?2:3,18,(u,v)=>{
+                const s=wing*(.032+.037*v),span=Math.sin(PI*(.12+.86*v))*.027;
+                return [.168+s+.059*v+(u-.5)*span,1.41+.181*v+(wing<0?0:.041),
+                        -.290-.044*v+(u-.5)*span*.72,CHEST,HIPS,.99];
+            },wing<0);
+        }
+        // A single soft, cross-body wrap. Its taper exposes the opposite shoulder
+        // and elbow on the draw, instead of another symmetrical shoulder plate.
+        panel(segments,3,26,(u,v)=>{
+            const a=-2.80+u*2.48, spread=Math.sin(Math.PI*u);
+            return [(.169+.099*v)*Math.sin(a),1.432-.168*v*(.55+.51*spread)-.027*Math.sin(a)**2,
+                    -.012+(.108+.064*v)*Math.cos(a),LEFT_ARM,CHEST,.32*v*spread];
+        });
+    } else if(look==="Levy") {
+        // A small, soft ration satchel sits against the right hip, below the existing sling.
+        panel(sides,far?2:4,0,(u,v)=>{
+            const a=TAU*u, fullness=.56+.43*Math.sin(PI*(.02+.90*v)), y=.789+.212*v;
+            return [.185+.075*fullness*Math.cos(a),y-.016*Math.cos(a),
+                    -.092+.101*fullness*Math.sin(a),HIPS,12,.98-.15*(1-v)];
+        });
+        panel(segments,2,2,(u,v)=>{
+            const a=1.96+3.17*u;
+            return [.187+(.064+.009*v)*Math.cos(a),.966+.032*v-.017*Math.cos(a),
+                    -.094+(.093+.010*v)*Math.sin(a),HIPS,12,.98];
+        });
+    } else if(look==="Regular" || look==="Guard") {
+        // A single suspension yoke over the back of the cuirass: dark iron below
+        // the neck, visibly wider at the scapula than at the waist. The thinner
+        // spear kit ends above the girdle; the shield man's left tasset falls lower.
+        panel(segments,rows,28,(u,v)=>{
+            const a=1.83+2.64*u;
+            const arch=Math.sin(PI*u);
+            return [(.215+.044*v)*Math.sin(a),1.268+.134*v-.090*arch*(1-v),
+                    -.030+(.145+.028*v)*Math.cos(a),CHEST,HIPS,.97];
+        });
+        if(look==="Guard") {
+            for(const side of [-1,1]) {
+                const joint=side<0?9:12, span=side<0?.407:.297;
+                function flank(u,t) {
+                    const ang=side*(.54+(2.05-.23*t)*u+.13*t);
+                    const bulge=.206+.080*t+.014*Math.sin(PI*t), y=.962-t*span+
+                        t*(.081*(2*u-1)**2+.026*u);
+                    return [bulge*Math.sin(ang),y,(-.016+(.162+.085*t)*Math.cos(ang)),
+                            joint,HIPS,.60*t];
+                }
+                panel(segments,far?1:rows,30,(u,v)=>flank(u,v),side<0);
+                panel(segments,1,2,(u,v)=>flank(u,.96+.065*v),side<0);
+            }
+        }
     }
     for(let i=0;i<indices.length;i+=3) {
         const a=indices[i]*3,b=indices[i+1]*3,c=indices[i+2]*3;
