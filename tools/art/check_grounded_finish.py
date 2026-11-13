@@ -79,4 +79,4 @@ if __name__=="__main__":
         for foot in row["ankles_m"]: assert .035<foot<.17,row
         assert .04<row["chest_m"]<.35,row
         for part in ("skull","trunk","boots"):
-            assert -.13<row[part][0]<.17 and row[part][1]<.56,(part,row)
+            assert -.075<row[part][0]<.13 and row[part][1]<.51,(part,row)

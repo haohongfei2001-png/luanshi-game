@@ -109,12 +109,12 @@ def grounded_rest(kit):
     """
     side=-1 if kit in (1,3,6,8) else 1
     curl=kit in (2,4,7)
-    root=(side*.033,.201,-.018)
+    root=(side*.033,.164,-.018)
     pelvis=placed((0,.86,0),root,euler(-82.,side*(6. if curl else 3.),side*4.))
     chest_root=trans(pelvis,(0,1.008,0))
-    chest=placed((0,1.008,0),chest_root,euler(-89.,side*(14. if curl else 8.),side*5.))
+    chest=placed((0,1.008,0),chest_root,euler(-91.,side*(14. if curl else 8.),side*5.))
     neck=trans(chest,(0,1.427,.015))
-    head=placed((0,1.427,.015),neck,euler(-94.,side*23.,side*6.))
+    head=placed((0,1.427,.015),neck,euler(-101.,side*23.,side*6.))
     ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
     ms[HIPS],ms[CHEST],ms[HEAD]=pelvis,chest,head
     for direction in (-1,1):
@@ -140,7 +140,7 @@ def grounded_rest(kit):
         pole=unit(sub(elbow,shoulder))
         ms[upper],ms[fore]=two_link(arms,shoulder,wrist,pole)
         ms[hand]=placed(arms[2],wrist,euler(-80.,direction*20.,direction*9.))
-    ms[NOCK]=ms[LH]
+    ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
     return ms
 
 
@@ -584,6 +584,22 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             weight=ramp(t,.28,.97)
             rest=grounded_rest(kit)
             ms=[blend_rigid(from_pose,to_pose,weight) for from_pose,to_pose in zip(ms,rest)]
+            # Keep each joint shared in the transitional frames. Blending
+            # translations around the world origin makes the forearm pull
+            # away from the palm when its quaternion turns ninety degrees.
+            # Rebuild the chain about the existing bind points instead.
+            ms[CHEST]=placed((0,1.008,0),trans(ms[HIPS],(0,1.008,0)),ms[CHEST][0])
+            ms[HEAD]=placed((0,1.427,.015),trans(ms[CHEST],(0,1.427,.015)),ms[HEAD][0])
+            for direction in (-1,1):
+                upper,fore,hand=(LU,LF,LH) if direction<0 else (RU,RF,RH)
+                thigh,shin,boot=(LT,LS,LB) if direction<0 else (RT,RS,RB)
+                for parent,chain_ids,pivots in ((CHEST,(upper,fore,hand),arm_nodes(direction)),
+                                                 (HIPS,(thigh,shin,boot),leg_nodes(direction))):
+                    for child,pivot in zip(chain_ids,pivots):
+                        ms[child]=placed(pivot,trans(ms[parent],pivot),ms[child][0])
+                        parent=child
+            if kit==5:
+                ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
     return ms
 
 def cycling(clip):
