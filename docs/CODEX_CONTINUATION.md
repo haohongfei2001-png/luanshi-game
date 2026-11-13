@@ -1,5 +1,12 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## RC16 实机与失败留档
+
+程序 `7c9ac667ded0a8e80a05cd47593a4af70c28486c`，导出 `d0d665d6c61a7676ff8f4785c3f5be4bccb74b08`，macOS ZIP `5ad3811dbbc8419a78fe3218a4ebd27b4fdebb20bc514efa2c68c63bcd7c81d0`。7 个工作中 6 个通过。原生首次默认 Metal 在 75 秒尚未进入场景；第二次默认 Metal、兼容后端及实战窗口成功。默认 24.004 秒 P50/P95/P99 5.552 / 14.829 / 19.789 毫秒。两路护送回到营地。实际二进制 40 秒、正常速度、双声道录像以同一包录到第 774 步。[完整包、窗口原帧、录像与日志](evidence/river-gate-v1-rc16/PLAYTEST.md)
+
+接续用 `git fetch origin pull/53/head` 抓取 RC17，按候选源 `280ee8d92e04c5b9394093143f36ea273a611935` 运行 `./tools/test.sh`、`./tools/compare-river-art.sh`、`./tools/export.sh`；原生首次启动与检查点须独立复核。[新候选 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43493877091)
+
+
 ## 河关 RC16 · 可恢复的制作现场
 
 本次集成取自上一候选 `05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09`，合入的军服母版 `219e14b1662990735eeda60cc2bdeaf3b54a19a4`，持械行军母版 `4b4f96f7a6a1760a09d1a17057298370fa865a10`，共享树林几何 `299eec62a60a4b0b88f9015d080b1b26bb85a61e`。三套服装、三段实物动作曲线已绑定正常军阵，枪盾弓、原有伤亡和兵籍沿用正式输入。树林在 Linux 的六次新进程、四个同机位对照已复核，场景建造中位由 1615 降至 740 ms；全程 512 对 512，热稳态帧率仍需实测。
