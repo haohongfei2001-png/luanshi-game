@@ -46,7 +46,7 @@ def leg_group(name):
 def make_hide(cache):
     surface=Surface()
     for slot,(path,sha) in enumerate(MESHES):
-        pts,uv,faces,uvfaces,weights,_=read_dae(source_file(cache,path,sha))
+        pts,uv,faces,uvfaces,weights,_=read_dae(source_file(cache,path,sha),need_bind_positions=False)
         used={}
         for corners,seams in zip(faces,uvfaces):
             ids=[]
