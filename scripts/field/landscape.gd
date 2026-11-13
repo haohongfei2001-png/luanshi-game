@@ -451,51 +451,6 @@ func reveal_sightline(focus: Vector2,hero: Vector2,eye: Vector3,zoom: float,live
 				var normal:Vector3=piece.normal
 				far_eave.visible=occluding and direction.dot(normal)<0.0 and not _between(p,p+direction,piece) and not _between(h,h+direction,piece) and not _between(door,door+direction,piece)
 
-func _sight_deck(timber: Builder,at: Vector3,w: float,d: float) -> void:
-	var node:=_mesh(timber,self)
-	roofs.append({"node":node,"center":at,"w":w,"d":d})
-
-func _tower(b: Builder,p: Vector3) -> void:
-	# Keep masonry inside the actual wall footprint. Posts remain when a
-	# projecting watch floor cuts away along the player's line of sight.
-	b.joint=8
-	b.block(p+Vector3(0,1.56,0),Vector3(2.58,3.12,4.96),STONE)
-	b.joint=4
-	b.block(p+Vector3(0,0.31,0),Vector3(2.76,0.62,5.13),STONE.darkened(0.12))
-	var deck:=Builder.new()
-	deck.joint=3
-	b.joint=11
-	for plank in 7:
-		deck.block(p+Vector3(0,4.36,(plank-3)*0.75),Vector3(5.48,0.15,0.73),WOOD.lightened(0.07*(plank%2)))
-	for x: float in [-1.86,1.86]:
-		deck.block(p+Vector3(x,4.18,0),Vector3(0.20,0.24,5.52),WOOD)
-		for z: float in [-1.95,1.95]:
-			b.rod(p+Vector3(x*0.60,3.06,z),p+Vector3(x,4.23,z),0.13,0.12,WOOD,4)
-	# Install the gallery's wattle-and-daub knee walls on the same cutaway
-	# surface as its floor. The upper openings stay clear between the posts.
-	for side:float in [-1.0,1.0]:
-		for bay:float in [-1.07,1.07]:
-			deck.joint=8
-			deck.block(p+Vector3(side*1.87,4.79,bay),Vector3(0.14,0.54,1.78),Color("ab9b82"))
-			deck.joint=10
-			deck.block(p+Vector3(side*1.95,5.08,bay),Vector3(0.17,0.105,1.92),Color("70594a"))
-			deck.block(p+Vector3(side*1.95,5.91,bay),Vector3(0.16,0.11,1.92),Color("70594a"))
-			for bar:float in [-0.58,0.0,0.58]:
-				deck.joint=11
-				deck.block(p+Vector3(side*1.95,5.49,bay+bar),Vector3(0.10,0.76,0.077),WOOD)
-	_sight_deck(deck,p+Vector3.UP*4.32,2.74,2.75)
-	for x: float in [-1.95,1.95]:
-		for z: float in [-1.95,1.95]:
-			b.block(p+Vector3(x,5.55,z),Vector3(0.28,2.5,0.28),WOOD)
-	for side: float in [-1,1]:
-		b.block(p+Vector3(0,5.02,side*2.20),Vector3(4.6,0.10,0.12),WOOD)
-		b.block(p+Vector3(0,4.72,side*2.20),Vector3(4.6,0.075,0.10),WOOD)
-		for x: float in [-1.1,0,1.1]:
-			b.block(p+Vector3(x,4.72,side*2.2),Vector3(0.085,0.65,0.095),WOOD)
-	_cover(p+Vector3(0,6.55,0),3.62,3.37,1.45)
-
-# The front curtain is rammed earth above a battered stone plinth. Its
-# quoins and copings follow the existing collision and parapet footprint.
 func _dress_gate(b: Builder) -> void:
 	var rng:=RandomNumberGenerator.new()
 	rng.seed=14709
@@ -581,7 +536,7 @@ func _fort(b: Builder) -> void:
 		for x in range(49,90,2):
 			b.block(Vector3(x,3.58,side*(Ground.WALL_Z+0.79)),Vector3(1.19,0.64,0.49),LIME)
 		for x: float in [Ground.WALL_X,Ground.BACK_X]:
-			_tower(b,Vector3(x,0,side*Ground.WALL_Z))
+			TownGate.mount_corner(self,Vector3(x,0,side*Ground.WALL_Z),roofs)
 		var sentry_z:=side*(Ground.GATE_HALF+4.90)
 		# A battered stone footing marks the two flanks of the earthen gate.
 		# All masonry remains over the existing wall, clear of the ram's lane.
