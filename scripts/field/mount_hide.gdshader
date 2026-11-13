@@ -7,6 +7,7 @@ varying flat float hit;
 varying float coat_shade;
 varying float coat_under;
 varying flat float coat_lot;
+varying float animal_barrel;
 uniform float stable_clock = 0.0;
 
 vec3 rx(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(p.x,c*p.y-s*p.z,s*p.y+c*p.z);}
@@ -25,6 +26,7 @@ void vertex(){
 	// fetlock. It must not crawl up and down a moving leg or a nodding muzzle.
 	coat_shade=max(1.-smoothstep(.29,.66,p.y),smoothstep(1.085,1.241,p.z)*.76);
 	coat_under=max(0.,-n.y)*smoothstep(.50,.89,p.y);
+	animal_barrel=smoothstep(.49,.84,p.y)*(1.-smoothstep(.60,.79,p.z));
 	if(bone>=1 && bone<=4){
 		bool hind=bone>=3;
 		float side=(bone==1 || bone==3)?-1.0:1.0;
@@ -69,6 +71,13 @@ void vertex(){
 		contacting.y+=clearance+abs(sin(heel))*.077;
 		p=mix(articulated,contacting,lock);
 		n=mix(leg_n,rx(n,heel),lock);
+		// Fade the moving upper leg into the weight-bearing chest and pelvis.
+		// Below the knee the sole lock is unchanged.
+		vec3 barrel=p;
+		vec3 body_rest=VERTEX;
+		body_rest.y+=bounce*smoothstep(.71,1.28,body_rest.y)*smoothstep(-1.16,-.68,body_rest.z);
+		p=mix(body_rest,barrel,weight);
+		n=mix(NORMAL,n,weight);
 		p.y=max(.008,p.y);
 	}else if(bone==11){
 		vec3 poll=vec3(0,1.206,0.356);
@@ -120,4 +129,17 @@ void fragment(){
     SPECULAR=0.0;
 }
 
-#include "res://scripts/field/cloth_light.gdshaderinc"
+void light(){
+	float facing=dot(NORMAL,LIGHT);
+	float width=clamp(fwidth(facing)*.85,.032,.13);
+	float half_light=smoothstep(.04-width,.04+width,facing);
+	float high=smoothstep(.59-width,.59+width,facing);
+	float bands=.55*half_light+.43*high;
+	// A broad flank turns gradually from the sky-lit topline into shadow.
+	// Retain a compact shadow core and a rounded lit plane on the coat;
+	// eyes, skull, leather and carriage keep their original cel thresholds.
+	float broad=.35*smoothstep(-.25,.25,facing)+.41*smoothstep(.13,.77,facing)
+	           +.20*smoothstep(.59,.94,facing);
+	float is_coat=atlas_patch<1.5?animal_barrel:0.;
+	DIFFUSE_LIGHT+=LIGHT_COLOR*(mix(bands,broad,is_coat)*ATTENUATION/PI);
+}
