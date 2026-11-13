@@ -1,11 +1,11 @@
 name: Compare the complete river company uniforms in the ordinary field window
 on:
   push:
-    branches: [codex/river-tailoring-study]
+    branches: [codex/river-tailoring-final]
 permissions:
   contents: write
 jobs:
-  compare:
+  bake:
     runs-on: ubuntu-24.04
     timeout-minutes: 18
     env:
@@ -26,13 +26,34 @@ jobs:
           git show "$BASE:$art/river_company.glb" > "$RUNNER_TEMP/before.glb"
           python3 tools/art/bake_river_company.py --geometry-only > artifacts/tailoring/bake.log
           node tools/art/bake_field_garments.mjs
+          PYTHONPATH=tools/art python3 -c "from company_motion import bake_motion; from pathlib import Path; bake_motion(Path('assets/river_gate/figures'))"
           node tools/art/bake_field_garments.mjs --check
           python3 tests/tail_blobs.py mesh "$RUNNER_TEMP/before.glb" "$art/river_company.glb"
-          git diff --exit-code "$BASE" -- "$art/company_motion.png" tools/art/company_weapons.py
+          git diff --exit-code "$BASE" -- tools/art/company_weapons.py
+          python3 tools/art/check_field_carries.py
           python3 tools/art/check_company_motion.py | tee artifacts/tailoring/grips.log
           python3 tools/art/check_contact_motion.py | tee artifacts/tailoring/contact.log
-          cp "$art/river_company.glb" "$art/field_garments.gltf" artifacts/tailoring/
-          python3 tests/tail_blobs.py blobs "$art/river_company.glb" "$art/field_garments.gltf"
+          cp "$art/river_company.glb" "$art/field_garments.gltf" "$art/company_motion.png" artifacts/tailoring/
+          python3 tests/tail_blobs.py blobs "$art/river_company.glb" "$art/field_garments.gltf" "$art/company_motion.png"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-character-bake
+          path: artifacts/tailoring/
+  compare:
+    needs: bake
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      BASE: 416e413e0472cf3101da10ba52fe974e1312c7e2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: final-character-bake
+          path: artifacts/tailoring
       - name: Play the same follow window, shield portrait and two line formations
         run: |
           set -euo pipefail
@@ -50,7 +71,7 @@ jobs:
             git worktree add --quiet --detach "$dir" "$rev"
             cp tests/tail_{follow,actors,face}.gd "$dir/tests/"
             mkdir -p "$dst/$side"
-            if test "$side" = after; then cp "$dst/river_company.glb" "$dst/field_garments.gltf" "$dir/assets/river_gate/figures/"; fi
+            if test "$side" = after; then cp "$dst/river_company.glb" "$dst/field_garments.gltf" "$dst/company_motion.png" "$dir/assets/river_gate/figures/"; fi
             (
               cd "$dir"
               ./tools/prepare-font.sh
@@ -87,7 +108,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tailored-company-second-cut-512
+          name: tailored-company-third-cut-512
           path: |
             artifacts/tailoring/
             !artifacts/tailoring/*/follow/[0-9]*.jpg
