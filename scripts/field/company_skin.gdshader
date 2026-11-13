@@ -317,6 +317,34 @@ void fragment() {
                     (1.-smoothstep(.40-width,.40+width,panel_edge));
         colour=mix(colour,bolt*.88,.83*paint);
     }
+    // An issued woven shoulder is a single soft cap, while the adjacent
+    // lamellar plates keep their cut edges. Reconstruct the cap's outward
+    // normal in its moving arm frame from deformed versus bind derivatives.
+    if (cloth_panel==32 && dye>.31 && abs(bind_point.x)>.173 &&
+            bind_point.y>1.036 && bind_point.y<1.41) {
+        vec3 rest_x=dFdx(bind_point), rest_y=dFdy(bind_point);
+        vec3 view_x=dFdx(VERTEX), view_y=dFdy(VERTEX);
+        if (dot(rest_x,rest_x)>.0000000001 && dot(view_x,view_x)>.0000000001) {
+            vec3 rt=normalize(rest_x), vt=normalize(view_x);
+            vec3 rn=cross(rt,rest_y), vn=cross(vt,view_y);
+            if (dot(rn,rn)>.0000000001 && dot(vn,vn)>.0000000001) {
+                rn=normalize(rn);
+                vn=normalize(vn);
+                mat3 rest_frame=mat3(rt,cross(rn,rt),rn);
+                mat3 view_frame=mat3(vt,cross(vn,vt),vn);
+                float drop=clamp((1.405-bind_point.y)/.345,0.,1.);
+                float side=sign(bind_point.x);
+                vec3 cap=vec3((abs(bind_point.x)-(.225+.038*drop))*side,
+                              (bind_point.y-1.252)*.63,
+                              bind_point.z-(-.012+.035*drop));
+                vec3 smooth_cap=normalize(view_frame*transpose(rest_frame)*cap);
+                if (dot(smooth_cap,NORMAL)<0.) smooth_cap=-smooth_cap;
+                float shoulder=smoothstep(.173,.226,abs(bind_point.x))*
+                               smoothstep(1.036,1.118,bind_point.y);
+                NORMAL=normalize(mix(NORMAL,smooth_cap,.77*shoulder*dye));
+            }
+        }
+    }
     float silhouette = 1.0 - smoothstep(.045, .30, abs(dot(normalize(NORMAL), normalize(VIEW))));
     colour *= (1.0 - .105 * silhouette) * (1.0 - .42 * sewn_shadow);
     colour *= mix(1.0, .73, fallen);
