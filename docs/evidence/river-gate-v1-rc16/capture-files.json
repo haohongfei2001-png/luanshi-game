@@ -1,0 +1,106 @@
+{
+  "normal-camera-before-after/before.png": {
+    "bytes": 3769087,
+    "sha256": "0cb7ec1716028190b05360b12e2a215ddf5167bb26c8f1a75ba215ea2cde8b86"
+  },
+  "normal-camera-before-after/after.png": {
+    "bytes": 3788922,
+    "sha256": "9e557ff9164c929dedd687691eafc3d295fc070062eef2b240e55681314ec79c"
+  },
+  "normal-camera-before-after/windup-before.png": {
+    "bytes": 3770933,
+    "sha256": "14cda7f92cf0c6fb77ec2b24f321671de7d1aff61f5cb841854e5f3a3d2d56e7"
+  },
+  "groves/trees-pair.jpg": {
+    "bytes": 263965,
+    "sha256": "ed23d66b2d07909c0451c116eda0ea3edf3da9f75c28078f9f8bebe96cb4667d"
+  },
+  "groves/river-pair.jpg": {
+    "bytes": 206725,
+    "sha256": "2444eb672e6174aaa582af3f8f59525b684c18064f37f1bbc4828bd26006c991"
+  },
+  "groves/gate-pair.jpg": {
+    "bytes": 210068,
+    "sha256": "edb196b5a7902d738101bdc29f9a234511f7367fc28596b255e7b0775c0dc22b"
+  },
+  "groves/combat-pair.jpg": {
+    "bytes": 232439,
+    "sha256": "09bd895b7d03bc3a0ea1f3925702d52b62b3fb0abdeee75bc6c37df72e8d65e9"
+  },
+  "startup/default-metal-1-before-scene.sample.txt": {
+    "bytes": 163738,
+    "sha256": "b97599b5609faf65694288dd7e24ff9780ac62337ef6b2ac3c09d19e5ab8d013"
+  },
+  "startup/default-metal-1.log": {
+    "bytes": 161,
+    "sha256": "b7c516171c399f6d2912874db8cacedf092764b2177ab78dc4315c3879187224"
+  },
+  "startup/default-metal-1-focus.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "metal-renderer-comparison.json": {
+    "bytes": 31784,
+    "sha256": "dbb15aa7de92771798985a6b6d947db00cec565fff8a7cd4a14eef60b0781603"
+  },
+  "metal-window-frames.json": {
+    "bytes": 23560,
+    "sha256": "5adca1edef9ddc03efa362a7d9d56ddfb645d4a2e2de05ecf0a854fbba151cb0"
+  },
+  "normal-camera-before-after/windup.png": {
+    "bytes": 3791960,
+    "sha256": "98e01123e42f4ffca324a3a402a178ed37e675ee9a5c2783068c92a52e8ad195"
+  },
+  "close.png": {
+    "bytes": 3151529,
+    "sha256": "7758306eb306ea45f3a6a7f3a69e96131e8fd172b49d6a4147d0397d396f7e76"
+  },
+  "mid.png": {
+    "bytes": 3541103,
+    "sha256": "1deb169a21a5111159f580a6df85585d83b81fea5e1fc5e9d89ae6e81f64d9e5"
+  },
+  "wide.png": {
+    "bytes": 3566324,
+    "sha256": "d2822287bb6927aec64ec4e9551533b8a72c2445c4e4175ce1c81c36a3a34764"
+  },
+  "metal-window.png": {
+    "bytes": 889911,
+    "sha256": "ceee514d37019a1cf50b8c684d2ac40e8a2dc8e625c5347009f413d42bba8aab"
+  },
+  "playthrough-review.mp4": {
+    "bytes": 870899,
+    "sha256": "389e0c96e1a3cdf66a9d190295fafe70f2a82e1f4d328b0b97f2ea27f2851be1"
+  },
+  "playthrough-full.mp4": {
+    "bytes": 18944158,
+    "sha256": "f8d4206367a2121346c02427490aa82786cdb388d683bf9512fc2370e7f3b00f"
+  },
+  "journey-frames.jpg": {
+    "bytes": 238338,
+    "sha256": "e36ec26aa3777d6c5d8e60d97d6e810c89485cc849372a5359647ab8245f5dfb"
+  },
+  "normal-review.jpg": {
+    "bytes": 344940,
+    "sha256": "11894ed3a106dfda30ae5527fa436774c5e3d428aac4cb2bb51d724a7a21a186"
+  },
+  "normal-native.jpg": {
+    "bytes": 839741,
+    "sha256": "c203bf24aa120090ae2440d3b6035a8670d5a9eb02d4e3eda4a36fa7918a6728"
+  },
+  "normal-pair.jpg": {
+    "bytes": 496185,
+    "sha256": "323e7a54529f601d7de761ba6ca68ad241cd6da1e4330b3a6fd80b2456039f0f"
+  },
+  "combat-normal-speed.mp4": {
+    "bytes": 22258322,
+    "sha256": "9f016d76c9cefb4a1f1893869e715c16a0a309d3aff7c9603fcc03ae85076475"
+  },
+  "export-sequence.jpg": {
+    "bytes": 119805,
+    "sha256": "96b678676c6ebf098b750f0a3706f866e1412e44a09f4554d6b80af97a6b5d57"
+  },
+  "export-recording.json": {
+    "bytes": 5036,
+    "sha256": "881ab9949a763c5f1cdafe6416a84a8d0aad0e56dd151cfd251ede3d70f45dee"
+  }
+}

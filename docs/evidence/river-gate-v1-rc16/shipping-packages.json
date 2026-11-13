@@ -1,0 +1,9 @@
+{
+  "bundle_version": "16016",
+  "identifier": "com.luanshi.prototype",
+  "archive_sha256": "5ad3811dbbc8419a78fe3218a4ebd27b4fdebb20bc514efa2c68c63bcd7c81d0",
+  "linux_archive_sha256": "03648c05d20ae52a7f381e47b719dd5d1a1b3e3fa29d70c4ad4b35baede52d61",
+  "equal_notices": true,
+  "notices_sha256": "2d934a848aafb55d8aacc2f6497ffad5ea0d1989f560aa92e2c4d023c7baa331",
+  "export_commit": "d0d665d6c61a7676ff8f4785c3f5be4bccb74b08"
+}
