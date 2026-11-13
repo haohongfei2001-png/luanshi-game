@@ -8,6 +8,8 @@
 
 游戏 [PR #40](https://github.com/haohongfei2001-png/luanshi-game/pull/40) 的[六项 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045)通过；main 合并 `2c92c7eace980d76d538a646ca64ce9817d191b4` 与实际导出树相同。源 `5cf51e2f7ad9e4fe2768e2088b11bdfd0ab4979e`，[安装包、完整实录和同输入对照](evidence/river-gate-v1-rc8/PLAYTEST.md)。每方 512 普通兵、32 位军官另计。正常 22 m 跟随镜头出枪第 43→48 步，584 号敌兵由 62 降至 39.76；九武器、坐骑/战车、自然攻城、战报后行军/读档与 V3/V4 回归通过。托管虚拟 M1 九次原生图形试验 9/9，实际 1024×640、全分辨率 4× MSAA、24 s、P95/P99 13.59/17.10 ms，RSS 545.1 MiB；**不是 M5 或持续稳定 60 的验收**。
 
+**主线第二次重建未全绿**：[4/6 项](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43355984399)。相同游戏树及实际 1024×640、4× MSAA，托管虚拟 M1 实战为 46.60 FPS，P95/P99 46.67/64.73 ms；九次启动有一次默认 Metal 75 秒内未到场景就绪，8/9。Linux 长战线录像另在 660 秒时限退出，其他战役与战后连续录像通过。[新失败及全部九行原始数据](evidence/river-gate-v1-rc8/raw/main-rebuild.json)。用能捕获首个场景之前的诊断区分资源/引擎/宿主等待；不可把再启动成功或单次快速宿主当作修复。曲篷冲车在同一画面遮住悬梁，未替换交付模型。
+
 **仍需解决**：普通兵肩颈、体态、脸与马匹外形过于同质，前线武器重叠，冲车与城门切顶时木框太直太空。弓手、枪兵、盾兵的携械重心、衣摆、背甲已经重做；一次糊地表/亮腰袋的实验被回退，补背廊与省查询只改善局部，没有当成最终美术或性能突破。P2 个体现场对象仍未全面分队化，长期独立世界与人生也未通过。**下一条可执行工作**：在新的云端工作树以 `2c92c7eace980d76d538a646ca64ce9817d191b4` 为基线，执行 `./tools/prepare-font.sh && godot --headless --editor --path . --import`，用有显示服务的 `godot --path . --resolution 1920x1200 --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512` 建立基准；以原生 22 m、密集阵前与第 490 步的城门镜头检验肩髋/腿承重、马的肩背和整车轮廓。既有 gameplay、人数与存档不降级，M5 仍需独立真机授权。
 
 ## 河关 RC7｜可玩候选，美术与 M5 未验收
