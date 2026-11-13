@@ -1,0 +1,65 @@
+name: Bridgehead normal-lens play window
+on:
+  push:
+    branches: ['codex/river-rc22-bridge-window']
+permissions:
+  contents: read
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned Godot runtime and native input tool
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
+          mkdir -p artifacts/bridge-window
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > artifacts/bridge-window/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/bridge-window/import.log; then exit 1; fi
+      - name: Cross the physical drawbridge and restore both old and new saves
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/model_library_parity.gd
+          godot --headless --path . --script tests/field_bridgehead.gd 2>&1 | tee artifacts/bridge-window/sim.log
+      - name: Preview the real playable crossing without writing movie frames
+        run: |
+          set -uo pipefail
+          xvfb-run -a -s '-screen 0 1600x1000x24' godot --path . --display-driver x11 --resolution 1600x1000 --disable-vsync --audio-driver Dummy --fixed-fps 20 --script tests/bridgehead_window.gd -- --bridge-stills 2>&1 | tee artifacts/bridge-window/window.log
+          ok=$?
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/bridge-window/window.log; then ok=1; fi
+          exit "$ok"
+      - name: Store actual frames for visual inspection including failed runs
+        if: always()
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc22/bridge-scout
+          mkdir -p "$proof"
+          cp -a artifacts/bridge-window/. "$proof/"
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          p=Path('docs/evidence/river-gate-v1-rc22/bridge-scout')
+          for f in sorted(p.glob('view-*.jpg')):
+              with Image.open(f) as im:
+                  im.thumbnail((1100,690)); im.save(f.with_name('preview-'+f.name),quality=89)
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Keep the real crossing window and simulated outcomes'
+          git push origin HEAD:refs/heads/codex/river-rc22-bridge-window
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playable-bridge-first-window
+          path: artifacts/bridge-window
