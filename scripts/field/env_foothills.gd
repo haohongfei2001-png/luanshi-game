@@ -221,8 +221,8 @@ func _shelf(patch: Patch,p: Vector2,length: float,width: float,height: float,a: 
 	patch.stone.joint=12
 	var palette:=rng.randf_range(-0.08,0.04)
 	var paving:=height<0.08
-	var cap_tone:=Color("a3947c") if paving else TOP
-	var face_tone:=Color("887b68") if paving else LIMESTONE
+	var cap_tone:=Color("887a66") if paving else TOP
+	var face_tone:=Color("70695d") if paving else LIMESTONE
 	for i in ring.size():
 		var j:=(i+1)%ring.size()
 		var face:=face_tone.lightened(palette+0.035*((i+1)%4))
@@ -247,13 +247,14 @@ func _split_stone(patch: Patch,p: Vector2,extent: float,depth: float,rise: float
 	for v in cross_section:
 		var off:=along*(v.x+rng.randf_range(-.13,.11))*extent+crossway*(v.y+rng.randf_range(-.09,.09))*depth
 		var relief:=rise*(.69+.29*v.y+.19*v.x+rng.randf_range(-.09,.11))
+		if not bank: relief=rise*(.27+.56*v.y+.45*v.x+rng.randf_range(-.10,.08))
 		var shoulder:=ground_point(p+off)
 		foot.append(shoulder-Vector3.UP*.11)
 		seam.append(ground_point(p+off*1.04)+Vector3.UP*relief*.34)
 		brow.append(ground_point(p+off*.90+crossway*(-rise*.13))+Vector3.UP*relief*.71)
 		top.append(ground_point(p+off*.68+along*.095*extent)+Vector3.UP*relief)
 	var apex:=ground_point(p-along*.18*extent+crossway*.17*depth)+Vector3.UP*rise*(1.08 if bank else 1.0)
-	var cold:=Color("5b6261").lerp(Color("8a8679"),rng.randf_range(.04,.68))
+	var cold:=Color("5c605c").lerp(Color("898575"),rng.randf_range(.04,.68)) if bank else Color("716d60").lerp(Color("847f6c"),rng.randf_range(.03,.72))
 	var pale:=cold.lightened(rng.randf_range(.08,.22))
 	patch.stone.joint=12
 	for n in top.size():
@@ -267,7 +268,12 @@ func _split_stone(patch: Patch,p: Vector2,extent: float,depth: float,rise: float
 func _stands(plan: Dictionary) -> void:
 	for place:Array in STANDS.data:
 		var p:=Vector2(float(place[0]),float(place[1]))
-		_plant(_cell(p),p,float(place[2]),int(place[3]),int(place[4]),float(place[5]))
+		var kind:=int(place[3])
+		var height:=float(place[2])
+		# Low, multi-stem growth alternates with full standards in these stands.
+		if kind!=0 and height<5.20 and int(place[4])==1:
+			height*=.70 if kind==1 else .81
+		_plant(_cell(p),p,height,kind,int(place[4]),float(place[5]))
 	for group:Array in plan.groves:
 		var center:=Vector2(float(group[0]),float(group[1]))
 		var radius:=float(group[2])
@@ -281,15 +287,20 @@ func _stands(plan: Dictionary) -> void:
 		var along:=Vector2(cos(a),sin(a))
 		var across:=Vector2(-along.y,along.x)
 		var span:=float(group[2])
-		for i in 5:
-			var p:=center+along*span*(i/4.0-.5)+across*rng.randf_range(-.39,.46)
-			var radius:=rng.randf_range(.44,1.13)
+		for i in 4:
+			# Each bedding plane breaks into a small fan. One end is buried in
+			# the slope so it reads as in-situ rock rather than discs lying on grass.
+			var bank_side:float=-1.0 if i%3==0 else 1.0
+			var p:=center+along*span*(i/3.0-.5)+across*rng.randf_range(-.83,.72)
+			var radius:=rng.randf_range(.64,1.46)
 			_split_stone(_cell(p),p,radius,radius*rng.randf_range(.74,1.38),rng.randf_range(.095,.20),a+rng.randf_range(-.48,.38),false)
 			for chip in 2:
-				var q:=p+across*rng.randf_range(.40,.88)*radius+along*rng.randf_range(-.63,.79)
+				var q:=p+across*bank_side*rng.randf_range(.14,.56)*radius+along*rng.randf_range(-.63,.79)
 				var small:=rng.randf_range(.13,.34)
 				_split_stone(_cell(q),q,small,small*.93,small*.37,a+rng.randf_range(-.6,.8),false)
-			if i%2==0: _tuft(_cell(p),p+across*.30,rng.randf_range(.29,.53))
+			for fringe in 3:
+				var grass:=p+across*bank_side*rng.randf_range(.12,.69)+along*rng.randf_range(-.46,.62)
+				_tuft(_cell(grass),grass,rng.randf_range(.27,.46))
 	# These ledges emerge from the non-walkable water on both sides of the river.
 	for i in 38:
 		var z:float=-65.0+i*3.48+rng.randf_range(-0.96,0.96)
@@ -310,13 +321,14 @@ func _pavers(plan: Dictionary) -> void:
 				if rng.randf()<(0.09 if p.x>30.0 else 0.64): continue
 				var q:=p+Vector2((column-2.5+(row%2)*0.32)*extent/3.30,(row-2)*0.51)
 				q+=Vector2(rng.randf_range(-0.075,0.075),rng.randf_range(-0.055,0.055))
-				_shelf(_cell(q),q,rng.randf_range(0.35,0.61),rng.randf_range(0.32,0.53),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
+				_shelf(_cell(q),q,rng.randf_range(0.29,0.62),rng.randf_range(0.19,0.40),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
 
 func build(parent: Node3D,tiles: Dictionary) -> void:
 	terrain_tiles=tiles
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
+	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
 	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))
 	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))

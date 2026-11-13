@@ -1,6 +1,7 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D elm_bough : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D leaf_marks : filter_linear_mipmap, repeat_enable;
@@ -28,7 +29,8 @@ void fragment() {
 	if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
 		float sun=clamp((crown-6.1)*1.42,0.0,1.0);
-		tone=brush.rgb*mix(vec3(.58,.76,.78),vec3(1.16,1.12,.91),sun);
+		vec3 mids=mix(vec3(dot(brush.rgb,vec3(.30,.55,.15))),brush.rgb,.66);
+		tone=mids*mix(vec3(.54,.62,.72),vec3(.90,.94,.83),sun);
 		opacity=brush.a;
 	} else if(crown>4.0) {
 		float ridge=clamp((crown-4.33)/.22,0.0,1.5);
@@ -43,6 +45,15 @@ void fragment() {
 		tone=pow(brush.rgb,vec3(1.07))*vec3(.66,.76,.80)*(.63+.66*light);
 		tone+=vec3(.010,.016,.011)*crest;
 		opacity=brush.a;
+		// Three willow branch UV islands precede the reeds in the last quarter.
+		if(UV.x<.749) {
+			vec4 twig=texture(willow_pendant,vec2(.26+fract(UV.x*4.0)*.49,UV.y));
+			float value=dot(twig.rgb,vec3(.30,.57,.13));
+			float chroma=max(twig.g,twig.r)-twig.b;
+			float key=1.0-smoothstep(.035,.145,value-max(.0,chroma)*3.6-.58);
+			tone=mix(vec3(.068,.104,.075),vec3(.315,.35,.188),.21+.68*light)*(.72+.43*value);
+			opacity=twig.a*key*smoothstep(.016,.07,chroma);
+		}
 	} else if(crown>.5) {
 		vec3 leaf=texture(canopy_paint,UV*1.73).rgb;
 		vec3 sun=mix(sun_elm.rgb,sun_ash.rgb,smoothstep(.65,.95,paint.g));

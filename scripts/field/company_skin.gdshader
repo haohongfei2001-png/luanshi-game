@@ -96,10 +96,13 @@ void vertex() {
         float hem_weight=1.0-smoothstep(.55,1.395,VERTEX.y);
         bool moving=state==5 || (state==0 && INSTANCE_CUSTOM.g>.001);
         float travel=moving ? ((clip>=23 || state==5) ? 1.0 : .57) : 0.0;
-        float beat=(state==1 || state==2) ? sin(clamp(phase,0.,1.)*3.14159) : 0.;
+        // Carry the free hem through the windup / recovery boundary. Its
+        // peak follows release instead of snapping back between the two clips.
+        float beat=state==1 ? smoothstep(.58,1.,phase) :
+                   (state==2 ? 1.-smoothstep(.07,.93,phase) : 0.);
         float ripple=sin(6.28318*INSTANCE_CUSTOM.b-VERTEX.y*4.1+VERTEX.x*5.0);
-        pos.z-=hem_weight*(travel*(.072+.023*ripple)+beat*.045);
-        pos.x+=hem_weight*(travel*.024*ripple+beat*(state==1 ? .045 : -.050));
+        pos.z-=hem_weight*(travel*(.109+.029*ripple)+beat*.147);
+        pos.x+=hem_weight*(travel*.034*ripple-beat*.065);
     }
     // The free end of a cloth knot catches up after the head turns. Its root stays
     // with the original skull joint, and the same gait phase drives all three LODs.
@@ -131,17 +134,27 @@ void fragment() {
     // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
     // their own values even where soldiers overlap in the default orthographic view.
     float dye = 0.0;
-    if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = 0.97;
-    else if (cloth_panel == 22 || cloth_panel == 31) dye = 0.84;
-    else if (cloth_panel == 11 || cloth_panel == 26) dye = 0.43;
-    vec3 bolt = livery.rgb * mix(0.91, 1.09, cloth_lot);
+    if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = .96;
+    else if (cloth_panel == 22) dye = .82;
+    else if (cloth_panel == 26) dye = .66;
+    else if (cloth_panel == 11) dye = .35;
+    vec3 bolt = livery.rgb * mix(.85, 1.15, cloth_lot);
     float fold = dot(ink, vec3(.28, .56, .16));
     float mid = OUTPUT_IS_SRGB ? .73 : .52;
     vec3 colour = mix(ink, bolt * clamp(fold / mid, .64, 1.24), dye);
+    // A coarse underfold survives mipmapping; irregular fine weave does not.
+    // At the edge of a dark sleeve it stays subordinate to the hand and weapon.
+    if (cloth_panel==1 || cloth_panel==22 || cloth_panel==27) {
+        vec2 cloth_uv=fract(UV*vec2(8.,4.));
+        float tuck=abs(cloth_uv.x-.20-.44*cloth_uv.y);
+        float crease=(1.-smoothstep(.018,.12,tuck))*smoothstep(.12,.56,cloth_uv.y);
+        colour*=1.-crease*.15;
+    }
     if (cloth_panel == 13) {
-        float stripe = abs(shield_face.y - .10 * shield_face.x - .025);
-        float edge = clamp(fwidth(stripe), .006, .065);
-        colour = mix(colour, bolt, .93 * (1.0 - smoothstep(.12-edge, .12+edge, stripe)));
+        // Scuffed paint crosses several planks but leaves most wood visible.
+        float stripe = abs(shield_face.y - .27 * shield_face.x + .115);
+        float edge = clamp(fwidth(stripe), .004, .040);
+        colour = mix(colour, bolt, .72 * (1.0 - smoothstep(.060-edge, .060+edge, stripe)));
     }
     float silhouette = 1.0 - smoothstep(.045, .30, abs(dot(normalize(NORMAL), normalize(VIEW))));
     colour *= (1.0 - .105 * silhouette) * (1.0 - .42 * sewn_shadow);
