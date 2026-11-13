@@ -333,7 +333,7 @@ func _upward_quad(b: Builder,a: Vector3,c: Vector3,d: Vector3,end: Vector3,paint
 	else:
 		b.quad(a,c,d,end,paint)
 
-func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,retained_side: float=0.0) -> void:
+func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color) -> void:
 	var along:=Vector3.RIGHT if w>=d else Vector3.BACK
 	var across:=Vector3.BACK if w>=d else Vector3.RIGHT
 	var length:=maxf(w,d)
@@ -343,7 +343,6 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,ret
 	var ridge:=maxf(0.55,length-depth*0.65)
 	b.joint=5
 	for sign_side: float in [-1.0,1.0]:
-		if retained_side!=0.0 and sign_side!=retained_side: continue
 		var normal:=across*sign_side
 		for column in columns:
 			var x0:float=length*(2.0*column/columns-1.0)
@@ -352,7 +351,7 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,ret
 			# terminate at the diagonal hips instead of converging like fan blades.
 			var starts:=clampf((absf(x0)-ridge)/(length-ridge),0.0,1.0)
 			var shade:=col.lightened(0.018*((column*7)%5))
-			for row in range(1 if retained_side!=0.0 else 0,rows):
+			for row in rows:
 				var t0:=float(row)/rows
 				var t1:=float(row+1)/rows
 				var w0:=lerpf(ridge,length,t0)
@@ -370,7 +369,6 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,ret
 				if row==rows-1:
 					b.rod(c+Vector3.UP*0.036,c+Vector3.UP*0.036+normal*0.075,0.053,0.056,col.lightened(0.11),5)
 					b.rod(c-Vector3.UP*0.041,end-Vector3.UP*0.041,0.060,0.060,WOOD,5)
-		if retained_side!=0.0: continue
 		for end_sign: float in [-1.0,1.0]:
 			var top:=base+along*ridge*end_sign+Vector3.UP*rise
 			var edge:=_roof_point(base,along,normal,length,depth,rise,end_sign*length,1.0)
@@ -380,7 +378,6 @@ func _roof(b: Builder,base: Vector3,w: float,d: float,rise: float,col: Color,ret
 			else:
 				b.tri(top,edge,half_end,col)
 			b.rod(top,edge,0.065,0.077,col.lightened(0.11),5)
-	if retained_side!=0.0: return
 	b.rod(base-along*ridge+Vector3.UP*rise,base+along*ridge+Vector3.UP*rise,0.12,0.12,col.lightened(0.15),7)
 	for end_sign: float in [-1.0,1.0]:
 		var cap:=base+along*(end_sign*ridge)+Vector3.UP*rise
@@ -458,7 +455,7 @@ func _sight_deck(timber: Builder,at: Vector3,w: float,d: float) -> void:
 	var node:=_mesh(timber,self)
 	roofs.append({"node":node,"center":at,"w":w,"d":d})
 
-func _tower(b: Builder,p: Vector3, gate_flank: bool = false) -> void:
+func _tower(b: Builder,p: Vector3) -> void:
 	# Keep masonry inside the actual wall footprint. Posts remain when a
 	# projecting watch floor cuts away along the player's line of sight.
 	b.joint=8
@@ -495,12 +492,7 @@ func _tower(b: Builder,p: Vector3, gate_flank: bool = false) -> void:
 		b.block(p+Vector3(0,4.72,side*2.20),Vector3(4.6,0.075,0.10),WOOD)
 		for x: float in [-1.1,0,1.1]:
 			b.block(p+Vector3(x,4.72,side*2.2),Vector3(0.085,0.65,0.095),WOOD)
-	if gate_flank:
-		# The flanking watch galleries face the approach. The main arch stays
-		# visible between their shorter eaves when viewed from the open field.
-		_cover(p+Vector3(0,6.55,0),3.15,2.85,1.21)
-	else:
-		_cover(p+Vector3(0,6.55,0),3.62,3.37,1.45)
+	_cover(p+Vector3(0,6.55,0),3.62,3.37,1.45)
 
 # The front curtain is rammed earth above a battered stone plinth. Its
 # quoins and copings follow the existing collision and parapet footprint.

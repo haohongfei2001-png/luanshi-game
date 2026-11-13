@@ -81,13 +81,18 @@ vec3 painted_ground(vec2 p, float shore) {
 	float army_view=smoothstep(.012,.070,footprint);
 	vec3 grass_brush=texture(grazing_detail,brush_uv+bend,.8+army_view*1.4).rgb;
 	vec3 earth_brush=texture(track_detail,vec2(brush_uv.y,-brush_uv.x)*.87+bend*.67,.65+army_view).rgb;
-	float grass_mark=smoothstep(.27,.63,paint_value(grass_brush));
-	float clay_mark=smoothstep(.34,.69,paint_value(earth_brush));
-	float tuft=smoothstep(.35,.61,grass)*.64+smoothstep(.28,.74,verge_marks.r)*.36;
-	float shelter=clamp(.23+.38*grass_shape+.20*cover.b-.28*margin.g+.15*margin.r,0.,1.);
-	vec3 turf=mix(turf_sheltered.rgb,turf_open.rgb,clamp(shelter+.22*(tuft-.5),0.,1.));
-	turf*=.94+.075*grass_mark+.035*tuft;
-	vec3 clay=mix(clay_bed.rgb,clay_dry.rgb,.21+.58*dry_shape+.10*clay_mark);
+	float tuft=smoothstep(.32,.62,grass)*.64+smoothstep(.28,.74,verge_marks.r)*.36;
+	float shelter=clamp(.19+.42*grass_shape+.20*cover.b-.29*margin.g+.15*margin.r,0.,1.);
+	vec3 blade=mix(vec3(dot(grass_brush,vec3(.29,.57,.14))),grass_brush,.61);
+	vec3 loess=mix(vec3(dot(earth_brush,vec3(.29,.57,.14))),earth_brush,.37);
+	blade*=OUTPUT_IS_SRGB?vec3(.73,.83,.87):vec3(.59,.68,.75);
+	loess*=OUTPUT_IS_SRGB?vec3(.78,.78,.84):vec3(.62,.63,.73);
+	vec3 bed=mix(turf_sheltered.rgb,turf_open.rgb,shelter+.18*(tuft-.5));
+	vec3 turf=mix(blade,bed,.39+.07*army_view)*(.89+.19*tuft);
+	turf*=mix(vec3(1.),vec3(.87,.96,1.08),margin.g*.72);
+	turf*=mix(vec3(1.),vec3(1.09,1.01,.91),margin.r*.68);
+	vec3 dust=mix(clay_bed.rgb,clay_dry.rgb,.15+.68*dry_shape);
+	vec3 clay=mix(loess,dust,.36+.04*army_view)*(.92+.15*dry_shape);
 	float centre=1.-smoothstep(.57,.99,cover.a);
 	float fallow=smoothstep(.24,.58,cover.r)*(1.-smoothstep(.73,.9,cover.r))*(1.-centre);
 	float edge=cover.r-.21*fallow+(.53-grass_shape)*.20+(.50-verge_marks.r)*.09;
@@ -98,11 +103,11 @@ vec3 painted_ground(vec2 p, float shore) {
 	colour=mix(colour,clay,margin.b*(1.-road)*(.12+.18*dry_shape));
 	float rut=1.-smoothstep(.027,.095,abs(cover.a-.385+(.5-verge_marks.g)*.036));
 	float surviving=smoothstep(.37,.73,verge_marks.g*.53+dry_shape*.47);
-	colour*=1.-.14*rut*road*surviving;
+	colour*=1.-.19*rut*road*surviving;
 	if (p.x > -25. && p.x < 47. && p.y > -8. && p.y < 8.) {
 		vec3 wear=texture(cartway,(p+vec2(25.,8.))/vec2(72.,16.)).rgb;
 		colour*=1.-.22*wear.r*(.63+.37*dry_shape);
-		colour=mix(colour,clay_dry.rgb,wear.g*.53);
+		colour=mix(colour,clay_dry.rgb,wear.g*.29);
 		colour=mix(colour,mix(turf,clay_bed.rgb,.58),wear.b*.68);
 	}
 	// The old non-repeating survey painting carries the cuts of the real
@@ -111,7 +116,7 @@ vec3 painted_ground(vec2 p, float shore) {
 	float survey_value=paint_value(survey);
 	float bank_wash=smoothstep(.24,.54,survey_value);
 	colour*=.92+.11*bank_wash;
-	colour=mix(colour,survey,.082*(1.-road)+.026);
+	colour=mix(colour,survey,.10*(1.-road)+.035);
 	float wet=smoothstep(.19,.98,max(cover.g,shore));
 	return mix(colour,mix(clay_bed.rgb,river_silt.rgb,.73),.79*wet);
 }

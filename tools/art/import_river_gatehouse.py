@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fit the original 0 A.D. Han gate to the River Gate moat, wall walk and camera."""
 from collections import defaultdict
+from hashlib import md5
 from pathlib import Path
 import sys
 import xml.etree.ElementTree as ET
@@ -65,7 +66,9 @@ def mesh_library(cache):
     for name in ("Piers","WatchHall","WestPitch","EastPitch"):
         vertices=[]; directions=[]; tex=[]; indices=[]; used={}
         for face in shells[name]:
-            for pi,ni,ui in face:
+            # Z-up to Y-up with the river-axis rotation changes handedness.
+            # Keep the outer roofing facing the sky after Godot imports glTF.
+            for pi,ni,ui in face[[0,2,1]]:
                 key=(int(pi),int(ni),int(ui))
                 if key not in used:
                     used[key]=len(vertices)
@@ -92,12 +95,42 @@ def atlas(cache):
     # wider midtones. No normal-map glitter or specular map is used in game.
     grain=np.asarray(source.filter(ImageFilter.SMOOTH),dtype=float)/255.
     light=grain@np.array([.27,.59,.14])
-    laid=np.interp(light,[0.,.15,.33,.55,.76,1.],[.065,.155,.32,.53,.73,.875])
-    coloured=(grain-light[:,:,None])*.78+laid[:,:,None]
+    laid=np.interp(light,[0.,.12,.25,.43,.69,1.],[.085,.225,.345,.475,.69,.855])
+    chroma=grain-light[:,:,None]
+    coloured=chroma*.69+laid[:,:,None]
+    # Tint the neutral fired tile towards the same blue-grey as the corner
+    # towers. Pigmented brick, raw wood and plaster retain their diffuse hue.
+    neutral=np.clip(1.-np.ptp(grain,axis=2)/.16,0.,1.)
+    cool=neutral*np.clip(1.-abs(light-.21)/.33,0.,1.)
+    coloured+=cool[:,:,None]*np.array([-.014,.022,.058])
     # Bring white plaster back towards warm unglazed clay at the sunlit value.
     warm=np.maximum(0.,(laid-.56)/.44)[:,:,None]*np.array([.027,.009,-.028])
     dst=np.clip(coloured+warm,0.,1.)
-    Image.fromarray(np.rint(255*dst).astype('uint8')).save(OUT/"gate_clay_and_timber.png",optimize=True)
+    target=OUT/"gate_clay_and_timber.png"
+    Image.fromarray(np.rint(255*dst).astype('uint8')).save(target,optimize=True)
+    relative="res://"+target.relative_to(ROOT).as_posix()
+    imported="res://.godot/imported/"+target.name+"-"+md5(relative.encode()).hexdigest()+".ctex"
+    config=f'''[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://ch5heguangate"
+path="{imported}"
+metadata={{"vram_texture": false}}
+
+[deps]
+
+source_file="{relative}"
+dest_files=["{imported}"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+detect_3d/compress_to=0
+'''
+    target.with_suffix(".png.import").write_text(config)
 
 if __name__=="__main__":
     cache=Path(sys.argv[1])

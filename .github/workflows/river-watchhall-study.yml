@@ -76,7 +76,7 @@ jobs:
                       pair.paste(source.resize((800,500),Image.Resampling.LANCZOS),(800*i,0))
               pair.save(p/(label+'-pair.jpg'),quality=92,subsampling=0)
           PY
-          git add -- assets/third_party/wildfire_gate/river_gate.glb assets/third_party/wildfire_gate/gate_clay_and_timber.png docs/evidence/river-gate-v1-rc19/watchhall
+          git add -- assets/third_party/wildfire_gate/river_gate.glb assets/third_party/wildfire_gate/gate_clay_and_timber.png assets/third_party/wildfire_gate/gate_clay_and_timber.png.import docs/evidence/river-gate-v1-rc19/watchhall
           git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Retain fitted watchhall and original gates, grass and contact windows'
           git push origin HEAD:refs/heads/codex/river-watchhall-study
       - uses: actions/upload-artifact@v4
