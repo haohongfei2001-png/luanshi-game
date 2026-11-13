@@ -4,11 +4,13 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 RC11 · 候选整包验证
+## 河关 RC11 · 已合入并打包
 
-从已合入的 RC10 游戏 `74a79d1a6199eb82e965d3ba49c0400b0f1f086f` 与证据提交 `d47db84cd95dcc7105a6dce764c7cf8a7ee552cf` 接续。候选分支 `codex/river-gate-rc11`。五个前后机位的实际窗景显示主门楼与两侧望楼之间有了空隙，过门时仍为兵群留出视线。[全部原图](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43399255144/artifacts/14024466696)。坐骑肩、胸、后躯和腿根补成连续皮毛曲面，修改鞍后桥。演算中同一骑手 150 号走过 9.94 米，同种子 12 组机位与两段百帧影片已核对。[原生像素和录像](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43400591082/artifacts/14025271558)。成立的变化仍需在整包内回归。真实 M5 和最终美术继续待验。
+[macOS 实测包、默认视角、战役实录、全套测试和内层 ZIP 校验](evidence/river-gate-v1-rc11/PLAYTEST.md)。游戏源 `e66ce35cdd0f81df5b8a28fffefa09050923682f`，游戏合并 `59969ee84014a72f764aec1537787c58ae69edf1`；正式导出 `157a91a4f76830bd0ec09e4821dccc6a890ecaaf` 与这两个提交的游戏树完全相同。玩家默认距离能看清独立主门与两座望楼，穿门时近侧屋面按遮挡局部处理。战马肩臀、四肢接合与鞍后桥经过两轮同场复拍，近/远为 7010 / 1612 面。
 
-云端可运行 `./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。对照以 RC10 为基线，第 490/635 步另有集中检验，军令、损失、兵籍和实际镜头相同。
+默认包在托管 Apple M1 (Virtual)、1024×640、原生 100% 和 4× MSAA 运行 24.00 秒，P95/P99 26.38 / 49.37 毫秒，最长 134.22 毫秒，空游戏目录启动 9/9。真实 M5 内外屏持续 20 分钟 NOT_RUN。兵数、武器、本人命中、将领继任、两条护送、冲车轮距、V3/V4 及战后行军均在候选上回归。
+
+下一个可执行动作是在授权云端检出 `59969ee84014a72f764aec1537787c58ae69edf1`，执行 `./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。沿第 43/48 步与 22 米固定镜头比较枪、盾、弓手头颈和肩线；同时以原生逐帧数据检查城门与移镜时的长帧并保留不同宿主的差异。用普通玩家尺度验收轮廓与动势。近侧骑手遮挡、背光马毛和门楼切顶梁架仍有可见问题。
 
 ## 河关 RC10 已合入 main
 
