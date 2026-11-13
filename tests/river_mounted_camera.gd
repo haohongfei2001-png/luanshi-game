@@ -98,6 +98,10 @@ func _run() -> void:
 		_advance(9+frame)
 		distance+=last.distance_to(rider.pos)
 		last=rider.pos
+		if frame in [24,57,83]:
+			var reverse_angle:=(-1.12 if frame==24 else (-1.75 if frame==57 else -.83))
+			var current_yaw:=atan2(rider.facing.x,rider.facing.y)
+			await _snap("opposite-%03d"%b.tick,rider.pos,7.6,current_yaw+reverse_angle,rider.id)
 		_view(rider.pos,9.0,yaw+1.33)
 		await RenderingServer.frame_post_draw
 		var pic:=root.get_texture().get_image()

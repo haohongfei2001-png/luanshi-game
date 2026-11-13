@@ -11,7 +11,7 @@ jobs:
     env:
       LIBGL_ALWAYS_SOFTWARE: '1'
       OLD_REV: c3e39a78a6028aa2d396f1cc37757f02c56a9679
-      NEW_REV: 23c434a68441c46a429efcfe7e1b4b4a2e51b16f
+      NEW_REV: 2d79aade3766824396e8c11a8389b656c700b369
     steps:
       - uses: actions/checkout@v4
         with:
@@ -61,7 +61,7 @@ jobs:
           import base64,json,io
           root=Path('artifacts/horse')
           a,b=[json.loads((root/c/'frames.json').read_text()) for c in ('before','after')]
-          assert a==b and len(b)==9
+          assert a==b and len(b)==12
           rows=[]
           for entry in b:
               name=entry['label']
