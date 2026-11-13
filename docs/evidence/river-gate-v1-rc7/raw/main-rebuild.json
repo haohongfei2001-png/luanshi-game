@@ -1,0 +1,290 @@
+{
+  "run": 43346502411,
+  "url": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43346502411",
+  "game_source": "b8e830f6d5f71620531ac76961decc31ef0b1581",
+  "normal_build_artifact": 14002815623,
+  "native_evidence_artifact": 14002039551,
+  "jobs": [
+    {
+      "id": 131627036022,
+      "name": "Compare RC6 and candidate in the game window",
+      "conclusion": "success"
+    },
+    {
+      "id": 131627036091,
+      "name": "Verify field footage",
+      "conclusion": "success"
+    },
+    {
+      "id": 131627036192,
+      "name": "Verify field journey",
+      "conclusion": "success"
+    },
+    {
+      "id": 131627036227,
+      "name": "verify-and-export",
+      "conclusion": "success"
+    },
+    {
+      "id": 131630557561,
+      "name": "macos-runtime",
+      "conclusion": "failure"
+    },
+    {
+      "id": 131635878434,
+      "name": "Preserve review video bytes",
+      "conclusion": "success"
+    }
+  ],
+  "cold_launches": [
+    {
+      "label": "compat-1",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 15336.5,
+        "first_post_draw": 31465.5,
+        "foreground_ready": 32138.7,
+        "deployed": 32147,
+        "first_tick": 32228.6,
+        "first_hit": 32941.6,
+        "contact_complete": 37155.4
+      },
+      "frames": 120,
+      "fps": 17.647694659587,
+      "p50_ms": 51.965,
+      "p95_ms": 90.519,
+      "p99_ms": 114.88,
+      "max_rss_bytes": 514310144,
+      "per_side": 512,
+      "hits_in_window": 830,
+      "render_target_px": [
+        960,
+        600
+      ],
+      "shadows": true,
+      "requested_msaa_samples": 4
+    },
+    {
+      "label": "default-metal-1",
+      "validated": false,
+      "returncode": 124,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 48469.9,
+        "first_post_draw": 65670.5,
+        "foreground_ready": 66650.8,
+        "deployed": 66672.1,
+        "first_tick": 66772,
+        "first_hit": 67450.2,
+        "contact_complete": 71674.5
+      },
+      "max_rss_bytes": null
+    },
+    {
+      "label": "default-metal-2",
+      "validated": false,
+      "returncode": 124,
+      "last_boot_stage": "contact_timeout",
+      "activation_requested": false,
+      "launch_milestones_ms": {
+        "scene_ready": 8885.4,
+        "first_post_draw": 11249.4,
+        "foreground_ready": 12042.1,
+        "deployed": 12052.7
+      },
+      "max_rss_bytes": null
+    },
+    {
+      "label": "balanced-metal",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 9984.3,
+        "first_post_draw": 12198,
+        "foreground_ready": 12984.1,
+        "deployed": 13025.6,
+        "first_tick": 13205.3,
+        "first_hit": 15215.9,
+        "contact_complete": 19476.4
+      },
+      "frames": 355,
+      "fps": 101.30307139498,
+      "p50_ms": 7.319,
+      "p95_ms": 23.803,
+      "p99_ms": 29.216,
+      "max_rss_bytes": 567771136,
+      "per_side": 512,
+      "hits_in_window": 401,
+      "render_target_px": [
+        960,
+        600
+      ],
+      "shadows": true,
+      "requested_msaa_samples": 1
+    },
+    {
+      "label": "performance-metal",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 8481.5,
+        "first_post_draw": 10504.1,
+        "foreground_ready": 11466.2,
+        "deployed": 11473.5,
+        "first_tick": 12300.1,
+        "first_hit": 13188.7,
+        "contact_complete": 17442.4
+      },
+      "frames": 447,
+      "fps": 127.708374640945,
+      "p50_ms": 5.975,
+      "p95_ms": 17.774,
+      "p99_ms": 26.848,
+      "max_rss_bytes": 569376768,
+      "per_side": 512,
+      "hits_in_window": 398,
+      "render_target_px": [
+        960,
+        600
+      ],
+      "shadows": false,
+      "requested_msaa_samples": 1
+    },
+    {
+      "label": "compat-2",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 2882.9,
+        "first_post_draw": 5079.2,
+        "foreground_ready": 5736.1,
+        "deployed": 5740.7,
+        "first_tick": 5815.9,
+        "first_hit": 6519,
+        "contact_complete": 10785.8
+      },
+      "frames": 120,
+      "fps": 21.5226368817286,
+      "p50_ms": 44.159,
+      "p95_ms": 83.524,
+      "p99_ms": 94.751,
+      "max_rss_bytes": 541310976,
+      "per_side": 512,
+      "hits_in_window": 717,
+      "render_target_px": [
+        960,
+        600
+      ],
+      "shadows": true,
+      "requested_msaa_samples": 4
+    },
+    {
+      "label": "focus-control",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 3758.4,
+        "first_post_draw": 6277.8,
+        "foreground_ready": 6854.5,
+        "deployed": 6859.6,
+        "first_tick": 6950,
+        "first_hit": 9419.2,
+        "contact_complete": 13589.7,
+        "control_armed": 6950,
+        "focus_paused": 7840.6,
+        "still_paused_after_foreground": 8720.1,
+        "resume_pressed": 8720.2
+      },
+      "frames": 120,
+      "fps": 29.1742165081818,
+      "p50_ms": 35.499,
+      "p95_ms": 42.725,
+      "p99_ms": 44.759,
+      "max_rss_bytes": 540950528,
+      "per_side": 512,
+      "hits_in_window": 496,
+      "render_target_px": [
+        960,
+        600
+      ],
+      "shadows": true,
+      "requested_msaa_samples": 4
+    },
+    {
+      "label": "native-single-sample",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 8403.9,
+        "first_post_draw": 10764,
+        "foreground_ready": 11828.2,
+        "deployed": 11835,
+        "first_tick": 12891.2,
+        "first_hit": 13800,
+        "contact_complete": 18034.3
+      },
+      "frames": 2330,
+      "fps": 97.066823884371,
+      "p50_ms": 7.654,
+      "p95_ms": 24.213,
+      "p99_ms": 32.759,
+      "max_rss_bytes": 568410112,
+      "per_side": 512,
+      "hits_in_window": 1159,
+      "render_target_px": [
+        1024,
+        640
+      ],
+      "shadows": true,
+      "requested_msaa_samples": 1
+    },
+    {
+      "label": "shipping-metal",
+      "validated": true,
+      "returncode": 0,
+      "last_boot_stage": "contact_complete",
+      "activation_requested": true,
+      "launch_milestones_ms": {
+        "scene_ready": 7319.6,
+        "first_post_draw": 9665.5,
+        "foreground_ready": 10603.4,
+        "deployed": 10606.2,
+        "first_tick": 10683.4,
+        "first_hit": 11362.9,
+        "contact_complete": 15617.6
+      },
+      "frames": 2338,
+      "fps": 97.3958239603392,
+      "p50_ms": 7.726,
+      "p95_ms": 22.62,
+      "p99_ms": 32.188,
+      "max_rss_bytes": 569278464,
+      "per_side": 512,
+      "hits_in_window": 1159,
+      "render_target_px": [
+        1024,
+        640
+      ],
+      "shadows": true,
+      "requested_msaa_samples": 4
+    }
+  ],
+  "rejection_details": {
+    "default-metal-1": "contact_complete at 71.6745 s with 607 hits, before the original fixed 75 s deadline; no completed image/timing result before signal",
+    "default-metal-2": "after deployment a real focus loss paused tick zero. The window regained focus, correctly remained paused and timed out with no simulation progress. No Resume was sent."
+  }
+}

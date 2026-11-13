@@ -1,0 +1,191 @@
+{
+  "editor_run": 43344852040,
+  "editor_artifact": 14001327074,
+  "editor": {
+    "before-hero": {
+      "png_sha256": "c40cae706821f0d3a9e3dfa3366f11a352246507e0e9e4230f85e253406efc5f",
+      "valid": false,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 0,
+      "center_p90": 0,
+      "color_bins": 0
+    },
+    "before-formation": {
+      "png_sha256": "c8c97deb6171db92def6ead559a663c59a7ea6de999fafddf0cd4b588ffd389b",
+      "valid": true,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 76,
+      "center_p90": 95,
+      "color_bins": 50
+    },
+    "before-gate": {
+      "png_sha256": "eb8bbd9f368c8043cfa8874bd32ae2645e7567f7f19e31f39b39ecada4e2dbf6",
+      "valid": true,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 78,
+      "center_p90": 114,
+      "color_bins": 65
+    },
+    "after-hero": {
+      "png_sha256": "7365e7538c952b01c27c9bf526ebbf3a3d57a368d76c0682823185c2331bcf48",
+      "valid": true,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 62,
+      "center_p90": 109,
+      "color_bins": 74
+    },
+    "after-formation": {
+      "png_sha256": "cd79081f7fce7079ca51384c38a59b0ef722f0dabe1906052518fc3399b2d013",
+      "valid": true,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 84,
+      "center_p90": 105,
+      "color_bins": 50
+    },
+    "after-gate": {
+      "png_sha256": "c13f40056d01706e31a0052221ee57520b68007b4a5778cffa994e6e7acd78fc",
+      "valid": true,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 84,
+      "center_p90": 117,
+      "color_bins": 72
+    }
+  },
+  "package_run": 43343382291,
+  "package_artifact": 14001257614,
+  "package": {
+    "compat-1": {
+      "png_sha256": "1a35462d2a996797b1ad3f6d7cd012499887fbbba3e6a44fdb9c95182d54697e",
+      "valid": true,
+      "size": [
+        960,
+        600
+      ],
+      "sampled": 704,
+      "center_p10": 84,
+      "center_p90": 130,
+      "color_bins": 114
+    },
+    "default-metal-1": {
+      "png_sha256": "88a3a99bd269f1c6faf3bdf865ce6bdd7b27a78ec13348552ff38bbdb349e16d",
+      "valid": true,
+      "size": [
+        960,
+        600
+      ],
+      "sampled": 704,
+      "center_p10": 72,
+      "center_p90": 95,
+      "color_bins": 65
+    },
+    "default-metal-2": {
+      "png_sha256": "cf5dc9632b7ca9379ac3f992a0b294b9a492b21ad462974b1d66ce85c87739e4",
+      "valid": true,
+      "size": [
+        960,
+        600
+      ],
+      "sampled": 704,
+      "center_p10": 76,
+      "center_p90": 121,
+      "color_bins": 71
+    },
+    "balanced-metal": {
+      "png_sha256": "652cc00f93e4514b63262500bb7898baef051195e262b7e1c809d89d2c56bcf4",
+      "valid": true,
+      "size": [
+        960,
+        600
+      ],
+      "sampled": 704,
+      "center_p10": 72,
+      "center_p90": 96,
+      "color_bins": 57
+    },
+    "performance-metal": {
+      "png_sha256": "510125e64b9f7b45f0f73cba13bad07efa98141655a16219063f5d969af6b83e",
+      "valid": true,
+      "size": [
+        960,
+        600
+      ],
+      "sampled": 704,
+      "center_p10": 72,
+      "center_p90": 96,
+      "color_bins": 57
+    },
+    "compat-2": {
+      "png_sha256": "62bdc365d30bfb64ac802178ca8866df22ca87e8e973ce6a9240312915501ce5",
+      "valid": true,
+      "size": [
+        960,
+        600
+      ],
+      "sampled": 704,
+      "center_p10": 83,
+      "center_p90": 128,
+      "color_bins": 103
+    },
+    "native-single-sample": {
+      "png_sha256": "4f9e9ddcdb56d94bbb35b3f345c76dd1a358116ad4bf537aa585fca363a763e6",
+      "valid": true,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 76,
+      "center_p90": 121,
+      "color_bins": 66
+    },
+    "focus-control": {
+      "png_sha256": "e014a5986877c36c3e31a47cc4af916103fa8025cd74164da10ce788c80b2f98",
+      "valid": true,
+      "size": [
+        960,
+        600
+      ],
+      "sampled": 704,
+      "center_p10": 85,
+      "center_p90": 130,
+      "color_bins": 112
+    },
+    "shipping-metal": {
+      "png_sha256": "bf0f13268a962fd47abd4e5238dd32d87f46362b55a637ea79bb039346e9ee06",
+      "valid": true,
+      "size": [
+        1024,
+        640
+      ],
+      "sampled": 704,
+      "center_p10": 77,
+      "center_p90": 120,
+      "color_bins": 70
+    }
+  },
+  "validator_run": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43347842763"
+}

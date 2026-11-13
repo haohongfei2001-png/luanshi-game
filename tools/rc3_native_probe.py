@@ -29,6 +29,7 @@ PLANS = (
 CONTROL = ("focus-control", "gl_compatibility", 0)
 SHIPPING = ("shipping-metal", "mobile", 0)
 NATIVE_NO_AA = ("native-single-sample", "mobile", 3)
+STARTUP_CONTROL = ("startup-focus-control", "mobile", 0)
 
 
 @contextlib.contextmanager
@@ -57,6 +58,10 @@ def observe(args, focus_helper, output, label):
     master, slave = pty.openpty()
     started = time.monotonic()
     events, actors = [], []
+    # Bound both initial renderer startup and each distinct, confirmed phase.
+    deadline = started + 75
+    hard_stop = started + 145
+    seen = set()
     pending, promoted = b"", False
     log_file = output / (label + ".log")
     with log_file.open("w") as log, (output / (label + "-focus.log")).open("w") as actor_log:
@@ -65,7 +70,7 @@ def observe(args, focus_helper, output, label):
         os.close(slave)
 
         def line(raw):
-            nonlocal promoted
+            nonlocal promoted, deadline
             value = raw.decode(errors="replace").rstrip("\r")
             print(value, file=log, flush=True)
             if not value.startswith("FIELD_BOOT "):
@@ -73,10 +78,18 @@ def observe(args, focus_helper, output, label):
             event = json.loads(value.partition(" ")[2])
             event["launch_wall_ms"] = round((time.monotonic() - started) * 1000, 1)
             events.append(event)
+            stage = event["stage"]
+            if stage not in seen and stage in {"scene_ready", "first_post_draw", "deployed", "first_tick", "first_hit", "contact_complete"}:
+                seen.add(stage)
+                # A tour needs 24 s of real rendering after contact; a quick
+                # capture needs 3.5 s plus readback/compression/exit. No repeated
+                # focus event or heartbeat can extend this clock.
+                budget = (43 if "--field-window-tour" in args else 22) if stage == "contact_complete" else 30
+                deadline = min(hard_stop, max(deadline, time.monotonic() + budget))
             action = None
             if event["stage"] == "first_post_draw" and not event["focus"] and not promoted:
                 promoted, action = True, "foreground"
-            if event["stage"] == "control_armed":
+            if event["stage"] in {"control_armed", "startup_interruption_armed"}:
                 action = "interrupt"
             if action:
                 print(action, event["pid"], file=actor_log, flush=True)
@@ -85,7 +98,7 @@ def observe(args, focus_helper, output, label):
 
         timeout = False
         try:
-            while time.monotonic() - started < 75:
+            while time.monotonic() < deadline:
                 ready, _, _ = select.select([master], [], [], 0.3)
                 if not ready:
                     continue
@@ -138,6 +151,8 @@ def trial(executable, output, data_dir, helper, plan):
         args.append("--field-window-tour")
     if label == CONTROL[0]:
         args.append("--field-focus-control")
+    if label == STARTUP_CONTROL[0]:
+        args.append("--field-startup-focus-control")
 
     with empty_game_data(data_dir):
         empty_at_launch = not data_dir.exists()
@@ -170,6 +185,8 @@ def trial(executable, output, data_dir, helper, plan):
                 "first_hit", "contact_complete"]
     if label == CONTROL[0]:
         expected += ["control_armed", "focus_paused", "still_paused_after_foreground", "resume_pressed"]
+    if label == STARTUP_CONTROL[0]:
+        expected += ["startup_interruption_armed", "startup_paused_zero", "focus_restored_at_zero", "startup_resume_pressed"]
     valid = (code == 0 and empty_at_launch and all(stage in stages for stage in expected)
              and all(Path(event["data_dir"]) == data_dir for event in events)
              and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method
@@ -179,12 +196,18 @@ def trial(executable, output, data_dir, helper, plan):
              and row.get("requested_msaa_samples") == (4 if quality == 0 else 1)
              and abs(row.get("scale", 0) - [1.0, 0.85, 0.70, 1.0][quality]) < 0.001
              and not any(marker in log for marker in ("SCRIPT ERROR", "SHADER ERROR", "ERROR:")))
+    if label == STARTUP_CONTROL[0]:
+        sequence = [r["stage"] for r in events]
+        required = ["deployed", "startup_interruption_armed", "startup_paused_zero", "focus_restored_at_zero", "startup_resume_pressed", "first_tick", "first_hit", "contact_complete"]
+        valid = valid and all(stage in sequence for stage in required) and [sequence.index(s) for s in required] == sorted(sequence.index(s) for s in required) and sum(stage == "startup_resume_pressed" for stage in sequence) == 1
+        valid = valid and stages["startup_paused_zero"]["paused"] and stages["startup_paused_zero"]["tick"] == 0 and not stages["startup_resume_pressed"]["paused"]
     requested = [1280, 800] if default_size else [1000, 600]
     if default_size:
         valid = valid and png_size[0] >= 1000 and png_size[1] >= 600
     row.update(label=label, session_matches_image=session_matches_image, returncode=code, requested_method=method, validated=valid,
                requested_window_px=requested, png_ihdr_px=png_size, uses_default_window=default_size,
                max_rss_bytes=int(rss.group(1)) if rss else None, app_data_absent_at_spawn=empty_at_launch,
+               startup_resume_count=sum(e["stage"] == "startup_resume_pressed" for e in events),
                activation_requested=promoted, last_boot_stage=events[-1]["stage"] if events else None,
                launch_milestones_ms={key: stages[key]["launch_wall_ms"] for key in expected if key in stages})
     if not valid:
@@ -196,6 +219,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("archive", "unpacked", "evidence"):
         parser.add_argument(name, type=Path)
+    parser.add_argument("--startup-regression", action="store_true",
+                        help="Only the two natural default Metal launches plus one deliberate pre-tick focus interruption")
     args = parser.parse_args()
     output = args.evidence.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -211,7 +236,8 @@ def main():
         helper = Path(temporary) / "focus"
         subprocess.run(["clang", "-fobjc-arc", "-framework", "AppKit", "-o", helper,
                         Path(__file__).with_name("macos_probe_focus.m")], check=True)
-        for plan in (*PLANS, CONTROL, NATIVE_NO_AA, SHIPPING):
+        plans = (PLANS[1], PLANS[2], STARTUP_CONTROL) if args.startup_regression else (*PLANS, CONTROL, NATIVE_NO_AA, SHIPPING)
+        for plan in plans:
             row = trial(game, output, data_dir, helper, plan)
             if plan == CONTROL:
                 tag = "FOCUS_CONTROL"
@@ -224,7 +250,8 @@ def main():
                 report["samples"].append(row)
             print(tag, json.dumps(row), flush=True)
             (output / "renderer-comparison.json").write_text(json.dumps(report, indent=2))
-    if not all(row["validated"] for row in [*report["samples"], report["focus_control"], report["shipping_window"]]):
+    observed = report["samples"] if args.startup_regression else [*report["samples"], report["focus_control"], report["shipping_window"]]
+    if not all(row["validated"] for row in observed):
         raise SystemExit("Native startup or an exported window trial failed; individual logs retained.")
 
 

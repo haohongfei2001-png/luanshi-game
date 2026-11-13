@@ -34,6 +34,26 @@ for side in before after; do
       timeout 660s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/line.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 --field-line-film 2>&1 | tee "$out/battlefield-motion.log"
       grep -q '^FIELD_LINE_FILM ' "$out/battlefield-motion.log"
       if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/battlefield-motion.log"; then exit 1; fi
+      # The full scene above is a theatre tour. Also archive a real landed hit
+      # on the ordinary follow camera, without changing troop positions or HP.
+      timeout 240s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512 2>&1 | tee "$out/after-personal.log"
+      grep -q '^RC7_PERSONAL_PASS' "$out/after-personal.log"
+      if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/after-personal.log"; then exit 1; fi
+      python3 tools/check_playfield.py artifacts/personal-contact/personal-{windup,contact}.png
+      cp -a artifacts/personal-contact "$out/normal-22m"
+      python3 - "$out/normal-22m" <<'PY'
+import base64, hashlib, os.path, sys
+from pathlib import Path
+from PIL import Image
+folder=Path(sys.argv[1])
+for name,width,quality in (("normal-review",1280,88),("normal-full",1920,91)):
+    im=Image.open(folder/"personal-contact.png").convert("RGB")
+    if im.width!=width: im=im.resize((width,round(im.height*width/im.width)),Image.Resampling.LANCZOS)
+    target=folder/(name+".jpg"); im.save(target,quality=quality,subsampling=0)
+    data=target.read_bytes(); encoded=base64.b64encode(data).decode()
+    print("RC8_WINDOW_INFO",name,len(data),hashlib.sha256(data).hexdigest(),len(encoded),flush=True)
+    for at in range(0,len(encoded),16000): print("RC8_WINDOW_PART",name,at,encoded[at:at+16000],flush=True)
+PY
       ffmpeg -nostdin -loglevel error -y -i "$work/line.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -b:a 112k -movflags +faststart "$out/battlefield-motion.mp4"
     fi
     ffmpeg -nostdin -loglevel error -y -framerate 10 -i "$out/$side/film/frame-%03d.jpg" -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart "$out/$side.mp4"

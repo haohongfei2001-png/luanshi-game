@@ -93,9 +93,9 @@ def pose(kit,clip,t):
     # At rest a long arm rides diagonally with its point above its neighbours.
     # Its authored chamber and impact still level the shaft at the original hit time.
     rests=((.198,1.07,.17,-33,-22,-8),(.238,1.09,.12,-44,21,-13),
-           (.120,1.02,-.048,-30,18,-9),(.136,1.062,-.110,-31,-18,4),
+           (.120,1.02,-.048,-30,18,-9),(.143,1.110,-.115,-45,-19,8),
            (.167,1.059,-.072,-55,17,-8),(.164,1.075,.219,-5,-18,-32),
-           (.126,1.118,.084,16,-7,-5),(.216,1.125,.159,-34,-19,-2),
+           (.126,1.118,.084,16,-7,-5),(.206,1.117,.154,-31,-14,7),
            (.212,1.098,.142,-32,23,-12))
     rest=rests[kit]
     hand=rest
@@ -212,6 +212,17 @@ def pose(kit,clip,t):
         bow_draw=smooth(min(1.,t/.72)) if clip<=5 else 1.-smooth(t)
         shoulder_yaw+=26.*bow_draw
         hip_yaw+=9.*bow_draw
+    # Read the load of each kit before the motion is seen edge-on. March and
+    # idle carry differ, while contact frames, metres and the hand/foot solve remain.
+    if (move or clip==1) and not ride:
+        if kit==3:
+            shoulder_yaw-=10.; hip_yaw+=4.; chest_roll-=3.; lean+=3.; crouch+=.014
+        elif kit==7:
+            shoulder_yaw+=17.; hip_yaw+=5.; chest_roll-=4.; lean+=6.; crouch+=.043
+        elif kit==5:
+            shoulder_yaw+=14.; hip_yaw-=3.; chest_roll+=3.; lean-=4.
+        elif kit==4:
+            shoulder_yaw-=7.; lean+=2.; chest_roll+=4.
     waist=(0,.86,0)
     pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
     chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
@@ -241,13 +252,13 @@ def pose(kit,clip,t):
         # The bow stave is held in the right palm. In the moving/nocked carry
         # its canted upper limb passes outside the shoulder. The drawing hand
         # reaches the cheek, then clears the recoiling string after release.
-        carry=add((.128,1.060,.240),(sway*.72,-crouch,shift))
+        carry=add((.174,1.093,.234),(sway*.72,-crouch,shift))
         off=add(anchor,rot(aim,(0,0,-max(.18,pull))))
         if clip==1 or move or attack:
             elbow_height=(.015*walk if move else 0.)
             carry=add(carry,(.019*walk,elbow_height,.025*walk))
             anchor=lerp(carry,add((.136,1.420,.430),(sway*.72,-crouch,shift)),bow_draw)
-            aim=euler(-10.+8.*bow_draw,-24.+16.*bow_draw,-41.+29.*bow_draw)
+            aim=euler(-13.+11.*bow_draw,-32.+24.*bow_draw,-60.+48.*bow_draw)
             offq=aim
             right,radius=reachable(chest,1,aim)
             anchor=limit_grip(anchor,right,radius)
@@ -309,7 +320,8 @@ def pose(kit,clip,t):
         # bearer stays shorter and heavier; an archer can open his shoulders.
         stance=(.290 if kit==3 else .226) if crouched and kit in (2,3,4,5,7) else (.167 if crouched else .092)
         if clip in (11,13,14): stance=.161
-        if clip==1 and kit in (2,3,4,7): stance=.145
+        if clip==1 and kit in (2,3,4,7): stance=.192 if kit==7 else .161
+        if clip==1 and kit==5: stance=.151
         z=side*lead*stance
         pitch=0.
         lift=0.
