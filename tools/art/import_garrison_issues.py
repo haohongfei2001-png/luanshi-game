@@ -127,6 +127,59 @@ def fit_garment(path, role, slot):
         chest_scale,hem_scale=.990,1.025
     else:
         chest_scale,hem_scale=1.012,1.025
+    def cut_issue(position, skin):
+        # Cut the shirt on the original armhole. The long face hangs below
+        # the elbow-side of the upper arm, then draws back in above the wrist.
+        # All offsets are cloth ease. Shoulder, elbow, wrist and grip still
+        # use precisely their existing bind positions and original tracks.
+        x,y,z=position
+        side=1 if x>=0 else -1
+        upper,fore=(RU,RF) if side>0 else (LU,LF)
+        first,second,share=skin
+        sleeve_weight=(share if first in (upper,fore) else 0.)+((1.-share) if second in (upper,fore) else 0.)
+        if sleeve_weight>.001:
+            t=float(np.clip((1.405-y)/.345,0.,1.))
+            cx=.225+.038*t
+            cz=-.012+.035*t
+            radial_x,radial_z=abs(x)-cx,z-cz
+            length=math.hypot(radial_x,radial_z)
+            if length>.018:
+                slow=math.sin(math.pi*t)**.80
+                if role=="Archer":
+                    # Loose working sleeve, gathered above the shooting bracer.
+                    fullness=(.034+.010*(1. if side<0 else 0.))*slow
+                elif role=="Guard":
+                    fullness=.026*slow
+                else:
+                    fullness=.037*slow
+                facing=radial_x/length
+                back=-radial_z/length
+                ease=fullness*(.63+.37*facing+.26*back)
+                position[0]+=side*sleeve_weight*radial_x/length*ease
+                position[2]+=sleeve_weight*(radial_z/length*ease-.011*slow)
+                position[1]-=sleeve_weight*slow*(.012+.021*max(0.,back))
+        if y<.947 and (first in (LT,RT,HIPS) or second in (LT,RT)):
+            # A skirt is suspended from the girdle. In the upstream walk the
+            # middle of the skirt was split 50/50 between the two thighs and
+            # the side hem followed one thigh 100%, making it a pair of legs.
+            depth=np.clip((.947-y)/.47,0.,1.)
+            side_panel=min(1.,abs(x)/.205)
+            follow=(.08+.48*side_panel)*(.42+.58*depth)
+            thigh=RT if x>=0 else LT
+            skin=(thigh,HIPS,float(follow))
+            # The shield coat keeps its principal iron silhouette. An archer's
+            # working side opens above the bent knee, a spearman has a deep
+            # wrap at the other hip. Preserve the artists' separate cloth and
+            # cuirass UV islands instead of drawing a split over both.
+            free=(.068 if role=="Guard" else .115 if role=="Archer" else .143)
+            forward=max(0.,min(1.,(z+.03)/.18))
+            position[1]+=depth*depth*free*(.65*max(0.,x/.24)+.47*forward)
+            position[1]-=depth*depth*(.017 if role=="Guard" else .031)*max(0.,-x/.24)
+            # Fabric around the side of the planted thigh hangs away from the
+            # moving knee. Keep the two inside layers of the original coat.
+            position[2]-=depth*(.018+.038*max(0.,min(1.,(-z+.015)/.17)))
+        return position,skin
+
     def fitted(i):
         p=change_axis(points[i])
         central=np.array([p[0]*(.49 if role=="Guard" else .466),
@@ -149,7 +202,8 @@ def fit_garment(path, role, slot):
         total=sum(bones.values())
         two=sorted(bones,key=bones.get,reverse=True)[:2]
         if len(two)==1: two.append(two[0])
-        return pos/total,(two[0],two[1],1. if two[0]==two[1] else bones[two[0]]/(bones[two[0]]+bones[two[1]]))
+        skin=(two[0],two[1],1. if two[0]==two[1] else bones[two[0]]/(bones[two[0]]+bones[two[1]]))
+        return cut_issue(pos/total,skin)
     for tri,uvtri in zip(triangles,uv_triangles):
         st=uvs[uvtri]
         u,v=st.mean(axis=0)

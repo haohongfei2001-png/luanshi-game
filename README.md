@@ -18,9 +18,9 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
-河关 RC18 在 22 米游玩镜头中，通过靛色、绛色的交领上衣和主角的浅色半披辨认两军。实际步兵穿三类有来源的衣甲，按武器负重行走；四种毛色的坐骑用于原有骑兵与战车。编译、正常游玩录像、冷启动与画质实测见 [可玩候选 #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53)，已有 RC14 的 [macOS 包与原始战斗](https://github.com/haohongfei2001-png/luanshi-game/blob/c5962a730038168ac0079f46650a6be1a0fc6765/docs/evidence/river-gate-v1-rc14/PLAYTEST.md)。
+河关 **0.16.0-rc.19** 在原战役中更新军士衣甲、行进动作、关楼、树冠与驿道。进入军议后可直接部署、带队攻门，或从旧档接着行军。[候选包与 CI 记录 #54](https://github.com/haohongfei2001-png/luanshi-game/pull/54) · [同一座关门的六处实机对照](https://github.com/haohongfei2001-png/luanshi-game/tree/82ee4e3752d705f9a2aa52a4c36f57bde1c115d8/docs/evidence/river-gate-v1-rc19/watchhall) · [近景及游玩距离的普通兵实录](https://github.com/haohongfei2001-png/luanshi-game/tree/910aa1eb35eed00c17b585df3eec1cb96949b23a/docs/evidence/river-gate-v1-rc19/fitted-infantry)
 
-**河关 0.16.0-rc.13 试玩候选** · [下载 macOS](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43426014852/artifacts/14037602462) · [实际跟随画面](docs/evidence/river-gate-v1-rc13/normal-native.jpg) · [连续战役实录](docs/evidence/river-gate-v1-rc13/playthrough-review.mp4) · [帧时间、回归及校验](docs/evidence/river-gate-v1-rc13/PLAYTEST.md)。解开 Actions 附件及内层 `Luanshi-macOS.zip`，打开应用。真实 M5 与最终美术质量尚待验收。 [RC12 回退包](docs/evidence/river-gate-v1-rc12/PLAYTEST.md)
+可回退到已在托管 Apple Silicon 运行的 RC18。下载 ZIP 并解开，打开其中的 macOS 应用。[直接下载 RC18](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/43557e3cf888a347e171a4715e4ce0fb741ebb90/candidate/River-Gate-RC18-macOS.zip) · [包校验、真实帧时间与完整战役](https://github.com/haohongfei2001-png/luanshi-game/blob/233927d31835bddc96cb42e1fddea3dc50af77d9/docs/evidence/river-gate-v1-rc18/PLAYTEST.md)
 
 河关战役从军议进入。默认会战部署双方各 512 名普通兵，另有军官与玩家。也可选择「平陵巡防」按三城的现有兵力、军械出阵。请在 [Linux 与原生 macOS 构建记录](https://github.com/haohongfei2001-png/luanshi-game/actions/workflows/verify.yml?query=branch%3Amain) 下载对应的构建与实录。源码使用 Godot 4.6.3，首次检出后依次运行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import` 和 `godot --path .`。右上角「三城旧档」可进入已有战役。 [中文操作](docs/PLAYING_ZH.md) · [当前交付记录](docs/CODEX_CONTINUATION.md)
 

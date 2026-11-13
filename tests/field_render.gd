@@ -195,6 +195,8 @@ func _movie() -> void:
 			var pic:=root.get_texture().get_image()
 			pic.resize(768,480,Image.INTERPOLATE_BILINEAR)
 			check(pic.save_jpg("res://artifacts/field-film/frame-%03d.jpg"%i,0.88)==OK,"Movie frame write")
+			if frame%20==0 or frame==358:
+				print("FIELD_FILM_PROGRESS frame=%d tick=%d"%[i,field.battle.tick])
 			if frame==326: check(pic.save_jpg("res://artifacts/field-gate.jpg",0.94)==OK,"Gatehouse and wall garrison still")
 			if frame==174: check(pic.save_jpg("res://artifacts/field-close.jpg",0.94)==OK,"Close combat still")
 			i+=1

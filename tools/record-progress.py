@@ -12,12 +12,14 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--idle",type=float,required=True)
     parser.add_argument("--limit",type=float,required=True)
+    parser.add_argument("--progress-marker", default="JOURNEY_PROGRESS tick=")
     parser.add_argument("command",nargs=argparse.REMAINDER)
     a=parser.parse_args()
     command=a.command[1:] if a.command[:1]==["--"] else a.command
     if not command or min(a.idle,a.limit)<=0: parser.error("A command and positive time budgets are required.")
     proc=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,start_new_session=True)
     start=last=time.monotonic()
+    marker=a.progress_marker.encode()
     last_tick=-1
     last_stage=-1
     buf=b""
@@ -35,7 +37,7 @@ def main():
             while True:
                 now=time.monotonic()
                 if now-last>a.idle or now-start>a.limit:
-                    sys.stderr.write(f"Journey recorder expired: elapsed={now-start:.1f}s without simulation or UI progress={now-last:.1f}s tick={last_tick} stage={last_stage}\n")
+                    sys.stderr.write(f"Gameplay recorder expired: elapsed={now-start:.1f}s without simulation or UI progress={now-last:.1f}s progress={last_tick} stage={last_stage}\n")
                     stop()
                     return 124
                 if not events.select(timeout=min(2.0,a.idle,a.limit)): continue
@@ -45,8 +47,8 @@ def main():
                 buf+=block
                 while b"\n" in buf:
                     line,buf=buf.split(b"\n",1)
-                    if line.startswith(b"JOURNEY_PROGRESS tick="):
-                        number=int(line.split(b"=",1)[1].split(None,1)[0])
+                    if line.startswith(marker):
+                        number=int(line[len(marker):].split(None,1)[0])
                         if number>last_tick: last_tick=number;last=time.monotonic()
                     elif line.startswith(b"JOURNEY_STAGE "):
                         number=int(line.split(None,1)[1].split(b"-",1)[0])

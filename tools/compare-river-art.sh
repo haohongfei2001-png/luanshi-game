@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Replay the preceding RC17 package source and this shipping revision on one GPU, with the same seed, camera and live orders.
+# Replay the preceding RC18 package source and this shipping revision on one GPU, with the same seed, camera and live orders.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 repo_dir=$PWD
-baseline=280ee8d92e04c5b9394093143f36ea273a611935
+baseline=01bcdb90a1edbc41d8cb43de61abe37b0461f357
 out=$PWD/artifacts/river-art-comparison
 work=$(mktemp -d)
 mkdir -p "$out"

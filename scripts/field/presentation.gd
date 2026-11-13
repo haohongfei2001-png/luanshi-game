@@ -163,6 +163,17 @@ func _put(g: Batch,pos: Vector3,orientation: Basis,data: Color,stretch: float=1.
 		caster.mesh.set_instance_custom_data(caster.used,data)
 		caster.used+=1
 
+# The settled human extends from the head at -Z to the boots at +Z.
+# Keep the boot-size mark until the body actually rolls down onto the ground.
+func _fallen_contact(u: Battle.Unit,orientation: Basis,base: Vector3,floor_height: float,progress: float) -> Transform3D:
+	var laid:=smoothstep(.32,.94,progress)
+	var turn:=-.14 if u.kit in [Arms.Kit.DAO,Arms.Kit.SPEAR,Arms.Kit.CROSSBOW,Arms.Kit.DUAL] else .14
+	var axis:=orientation*Basis(Vector3.UP,turn*laid)
+	var footprint:=Vector3(lerpf(1.0,.66,laid),1.0,lerpf(1.0,2.08,laid))
+	var center:=base+orientation*Vector3(0,0,-.07*laid)
+	center.y=floor_height+.026
+	return Transform3D(axis.scaled_local(footprint),center)
+
 func _reserve(g: Batch,count: int) -> void:
 	if count > g.mesh.instance_count:
 		g.mesh.instance_count = maxi(count,g.mesh.instance_count*2)
@@ -311,8 +322,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			var walk_legs:=gait if battle.vehicle==0 and battle.hero_move.length_squared()>.001 else -1
 			material.set_shader_parameter("travelling_attack_legs",walk_legs)
 			material.set_shader_parameter("travelling_leg_phase",step_phase)
-		# The sole shader reads only mesh coordinates, so this batch contains transforms alone.
-		contact.mesh.set_instance_transform(contact.used,Transform3D(orientation,ground+Vector3.UP*.026))
+		var footprint:=Transform3D(orientation,ground+Vector3.UP*.026)
+		if u.state==Battle.State.DEAD:
+			footprint=_fallen_contact(u,orientation,base,ground.y,progress)
+		contact.mesh.set_instance_transform(contact.used,footprint)
 		contact.used+=1
 		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
 		# Keep footwear on the ground. Modest stable stature variation travels through all three LODs.

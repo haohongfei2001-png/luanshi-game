@@ -1,5 +1,18 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 河关 RC19 · 军士衣身、守关望楼和行军地面
+
+两军共用经过裁剪及重新蒙皮的衣甲。腰、股、肩、肘各带动不同衣片，骑行和持弓用原有手部握点。第一个版本的裙摆在迈步时被单侧腿硬拉，第二次在 22 米整窗、反打与等速行进中对照了两名普通士兵。[军士原窗与等速录像](https://github.com/haohongfei2001-png/luanshi-game/tree/910aa1eb35eed00c17b585df3eec1cb96949b23a/docs/evidence/river-gate-v1-rc19/fitted-infantry)
+
+攻门录像中死亡动作结束后，有士兵一只靴尖还高出地面 61 厘米。九类装备重做倒地收势，脚踝高度回到 8.0 / 8.7 厘米，战斗判定相同。弓手、普通兵原速交战保留，地面接触阴影按身体落点收长。[同一名弩手与九类动作实测](https://github.com/haohongfei2001-png/luanshi-game/tree/2e909df4d715db8c47913565f44c21e0942cc61d/docs/evidence/river-gate-v1-rc19/fitted-infantry/ground-rest)
+
+河关门楼由 Wildfire Games 的建筑母版按现有八米门洞适配。近镜沿实际屋脊切开挡住玩家的半片，远镜保留两座望楼。第一版瓦面发黑、路面泛黄；第二版校正了几何绕序和土色，第三版修掉屋面斜刺，重新铺设门前驿道残石并处理树冠明暗。六处机位以种子 61112、双方各 512 名普通兵在同一步比较，入镜士兵清单和命中数均一致。[六处前后原窗](https://github.com/haohongfei2001-png/luanshi-game/tree/82ee4e3752d705f9a2aa52a4c36f57bde1c115d8/docs/evidence/river-gate-v1-rc19/watchhall) · [第三次门厅与树冠实机运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43508615220)
+
+回退到 RC18 可直接取托管设备实际运行的通用包。[RC18 应用 ZIP](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/43557e3cf888a347e171a4715e4ce0fb741ebb90/candidate/River-Gate-RC18-macOS.zip) · [RC18 原始数据与首次录像超时的复测](https://github.com/haohongfei2001-png/luanshi-game/blob/233927d31835bddc96cb42e1fddea3dc50af77d9/docs/evidence/river-gate-v1-rc18/PLAYTEST.md) · [RC17 全部实测](https://github.com/haohongfei2001-png/luanshi-game/blob/d19653cf6bb9099aa6cee0b7b22e0c8de6383810/docs/evidence/river-gate-v1-rc17/PLAYTEST.md)
+
+在保有完整 Git 历史的 Linux 图形工作环境依次执行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import`、`./tools/compare-river-art.sh`。单跑攻门机位用 `xvfb-run -a -s '-screen 0 1920x1200x24' godot --resolution 1920x1200 --disable-vsync --fixed-fps 20 --script tests/watchhall_view.gd -- --field-size=512`。实际 M5 长测和最终画面验收仍在等待。
+
+
 ## 河关 RC18 · 正常战场距离的衣甲、中央路面行进
 
 保留 RC17 游戏 `280ee8d92e04c5b9394093143f36ea273a611935`。新军服按跨肩衣片和实际缝线染色，近处的肤色、皮革和铁甲独立。固定种子 61112 在 22 米逐对比较同一次命中、两军正面阵线、反方向 180° 阵线。实录第 43 步起枪、第 48 步命中，#584 生命 62→39.76；正光和反向都复核过，两次退回过橙衣肩。采用第三次的绛色外衣，保留弓手暗色交领。[正常镜头的三个原窗](https://github.com/haohongfei2001-png/luanshi-game/tree/fe30b4c5e18cbebda7bee9f0885dc25730196da7/docs/evidence/river-gate-v1-rc17/field-livery) · [染布改动](https://github.com/haohongfei2001-png/luanshi-game/commit/5cab87bc4595e42ae82bbb308b0cf57f06a76902)。
