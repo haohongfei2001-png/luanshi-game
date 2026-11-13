@@ -50,16 +50,20 @@ void fragment() {
 		float height=clamp(crown-16.,0.,1.);
 		float y=dot(painted.rgb,vec3(.26,.59,.15));
 		float pigment=OUTPUT_IS_SRGB ? y : sqrt(max(y,0.));
-		if(UV.x<.62) {
-			NORMAL=normalize(mat3(VIEW_MATRIX)*crown_normal_world);
-			float grade=.42*height+.28*clamp(facing_sky,0.,1.)+.30*smoothstep(.20,.53,pigment);
-			vec3 mid=mix(elm_body.rgb,elm_light.rgb,.42);
-			tone=mix(elm_under.rgb,mid,smoothstep(.26,.53,grade));
-			tone=mix(tone,mix(mid,sun_elm.rgb,.43),smoothstep(.55,.82,grade));
-			tone*=.91+.13*smoothstep(.21,.53,pigment);
+		if(crown<17.6) {
+			vec3 outward=normalize(crown_normal_world);
+			NORMAL=normalize(mat3(VIEW_MATRIX)*outward);
+			float face=clamp(.53+.47*dot(outward,normalize(vec3(-.68,.36,.64))),0.,1.);
+			float grade=.43*height+.49*face+.08*smoothstep(.20,.50,pigment);
+			vec3 low=OUTPUT_IS_SRGB ? vec3(.103,.178,.151) : vec3(.011,.027,.020);
+			vec3 body=OUTPUT_IS_SRGB ? vec3(.190,.280,.194) : vec3(.030,.064,.031);
+			vec3 aged=OUTPUT_IS_SRGB ? vec3(.323,.378,.226) : vec3(.085,.118,.042);
+			tone=mix(low,body,smoothstep(.30,.59,grade));
+			tone=mix(tone,aged,smoothstep(.62,.88,grade)*.84);
+			tone*=.94+.08*smoothstep(.21,.53,pigment);
 		} else {
-			vec3 bark=OUTPUT_IS_SRGB?vec3(.139,.121,.089):vec3(.021,.016,.010);
-			tone=mix(bark,painted.rgb,.48);
+			vec3 bark=OUTPUT_IS_SRGB ? vec3(.120,.105,.074) : vec3(.014,.011,.006);
+			tone=mix(bark,painted.rgb,.45);
 		}
 		opacity=painted.a;
 	} else if(crown>=13.5) {

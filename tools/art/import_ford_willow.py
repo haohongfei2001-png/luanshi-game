@@ -53,14 +53,27 @@ def geometry(cache):
         roots[root(a)]=root(c)
     veils={434,481,490,550}
     assert veils.issubset({root(i) for i in range(len(p))})
+    groups={}
+    for i in range(len(p)):
+        groups.setdefault(root(i), []).append(i)
+    envelopes={part:(p[points].mean(axis=0),p[points,1].max()) for part,points in groups.items()}
     for face in corners:
-        if root(face[0,0]) in veils: continue
+        part=root(face[0,0])
+        if part in veils: continue
         leafy=uv[face[:,2],0].mean()<.62
         for pi,ni,ti in face:
             key=(int(pi),int(ni),int(ti))
             if key not in found:
                 found[key]=len(data)
                 vert=p[pi].copy()
+                if leafy:
+                    # Each authored spray hangs from one bough. Tighten it round
+                    # that bough, leaving genuine strips of sky between the skirts.
+                    center,top=envelopes[part]
+                    breadth=.69 if part in (435,469,504,560) else .82
+                    vert[[0,2]]=center[[0,2]]+(vert[[0,2]]-center[[0,2]])*breadth
+                    reach=.86 if part in (469,560) else .64 if center[0]<.05 else .75
+                    vert[1]=top+(vert[1]-top)*reach
                 h=float(np.clip(vert[1],0.,1.))
                 # The bole leans over the stream. The inland edge remains open
                 # at foot height. This bend applies to wood and attached leaf veils alike.
@@ -76,7 +89,7 @@ def geometry(cache):
                 tex.append((uv[ti,0],1.-uv[ti,1]))
                 h=np.clip(vert[1],0.,1.)
                 dist=np.hypot(vert[0],vert[2])
-                bindings.append((.48*h*min(1.,dist*3.),16.+h))
+                bindings.append((.48*h*min(1.,dist*3.),(16.+h if leafy else 18.+h)))
             indices.append((found[key],))
     lib=Library()
     attr={"POSITION":lib.accessor(data,"f",3,True),"NORMAL":lib.accessor(normals,"f",3),
@@ -99,6 +112,15 @@ def colour(cache):
     y=smooth@np.array([.24,.60,.16])
     value=np.interp(y,[0.,.17,.34,.52,.72,1.],[.13,.21,.32,.415,.51,.60])
     rgb=np.clip(value[:,:,None]+(smooth-y[:,:,None])*.78,0.,1.)
+    # The raw atlas is tuned for very large vistas. Join subpixel cuts into
+    # single quiet willow sprays; keep the large gaps between pendant fans.
+    leaves=raw.getchannel("A")
+    soft=leaves.resize((256,256),Image.Resampling.LANCZOS)
+    soft=soft.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
+    soft=soft.filter(ImageFilter.GaussianBlur(.5)).resize(leaves.size,Image.Resampling.BICUBIC)
+    a=np.asarray(soft,dtype=float)/255.
+    leaf_columns=np.arange(alpha.shape[1])/alpha.shape[1]<.62
+    alpha[:,leaf_columns]=np.clip((a[:,leaf_columns]-.20)*1.87,0.,1.)
     rgba=np.dstack((rgb,alpha))
     target=OUT/"ford_willow.png"
     Image.fromarray(np.rint(255*rgba).astype("uint8")).save(target,optimize=True)
