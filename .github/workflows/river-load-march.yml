@@ -1,0 +1,101 @@
+name: Check the loaded walk and run against RC15 in the playable river field
+on:
+  push:
+    branches: ['codex/river-loaded-march']
+permissions:
+  contents: write
+jobs:
+  field:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 19
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sample the source joints and bake the unchanged runtime palette format
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y python3-numpy python3-pil ffmpeg
+          curl -fLsS --retry 1 'https://store.godotengine.org/asset/quaternius/universal-animation-library/download/44/?source=river-march-v1' -o "$RUNNER_TEMP/motion.zip"
+          /usr/bin/python3 tools/art/import_company_march.py "$RUNNER_TEMP/motion.zip" tools/art/source/march_curves.json
+          /usr/bin/python3 -c "from pathlib import Path; import sys; sys.path.insert(0,'tools/art'); from company_motion import bake_motion; bake_motion(Path('assets/river_gate/figures'))"
+          mkdir -p proof/motion
+          cp tools/art/source/march_curves.json assets/river_gate/figures/company_motion.png proof/motion/
+          /usr/bin/python3 tools/art/check_company_motion.py
+          /usr/bin/python3 tools/art/check_field_carries.py
+          /usr/bin/python3 tools/art/check_contact_motion.py
+          git show 05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09:assets/river_gate/figures/company_motion.png > "$RUNNER_TEMP/old-bank.png"
+          /usr/bin/python3 - "$RUNNER_TEMP/old-bank.png" <<'PY'
+          import json, sys
+          from pathlib import Path
+          from PIL import Image
+          sys.path.insert(0, "tools/art")
+          from company_motion import CARRY_CLIPS, CARRY_KITS, CLIPS, REACTIONS
+          base=Image.open(sys.argv[1]).convert("RGBA")
+          now=Image.open("assets/river_gate/figures/company_motion.png").convert("RGBA")
+          assert base.size==now.size
+          lanes=[(kit,clip) for kit in range(9) for clip in range(CLIPS)]
+          lanes.extend((kit,clip) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
+          lanes.extend((kit,clip) for kit in range(9) for clip,side in REACTIONS)
+          assert len(lanes)*4==now.height,(len(lanes),now.height)
+          changed=[]
+          for i,(kit,clip) in enumerate(lanes):
+              box=(0,i*4,base.width,(i+1)*4)
+              different=base.crop(box).tobytes()!=now.crop(box).tobytes()
+              if different:
+                  assert clip in (0,12) or clip>=16,(kit,clip)
+                  changed.append((kit,clip))
+          assert set(kit for kit,clip in changed)==set(range(9))
+          print("LOADED_MARCH_BANK",json.dumps({"changed_strips":len(changed),"total_strips":len(lanes),"same_finite_combat_and_rest":True}))
+          PY
+      - name: Record identical normal-speed soldier approaches in the actual game
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/engine.zip' | sha512sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/engine
+          godot=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          for side in before after; do
+            code=HEAD
+            if test "$side" = before; then code=05f0c7f1ff5ccea0f6cdba7da1b357111c1fcc09; fi
+            root="$RUNNER_TEMP/field-$side"
+            mkdir -p "$root"
+            git archive "$code" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            if test "$side" = after; then cp proof/motion/company_motion.png "$root/assets/river_gate/figures/"; fi
+            "$godot" --headless --editor --path "$root" --import > "proof/$side-import.log" 2>&1
+            if grep -E 'Parse Error|SCRIPT ERROR|SHADER ERROR|ERROR:' "proof/$side-import.log"; then exit 1; fi
+            xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$root" --resolution 1280x800 --disable-vsync --fixed-fps 30 --write-movie "$RUNNER_TEMP/$side.avi" --script tests/field_motion_review.gd -- --field-size=512 2>&1 | tee "proof/$side.log"
+            grep -q FIELD_MOTION_RECEIPT "proof/$side.log"
+            ffmpeg -loglevel error -y -i "$RUNNER_TEMP/$side.avi" -c:v libx264 -crf 20 -pix_fmt yuv420p -c:a aac "proof/$side.mp4"
+          done
+          ffmpeg -loglevel error -y -i proof/before.mp4 -i proof/after.mp4 -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -map 1:a:0 -c:v libx264 -crf 20 -pix_fmt yuv420p -c:a copy proof/march-pair.mp4
+          ffmpeg -loglevel error -y -i proof/march-pair.mp4 -vf 'select=not(mod(n\,9)),scale=900:-2,tile=1x6' -frames:v 1 proof/march-sheet.jpg
+          /usr/bin/python3 -c "from pathlib import Path; import base64; print('MARCH_SHEET',base64.b64encode(Path('proof/march-sheet.jpg').read_bytes()).decode())"
+          /usr/bin/python3 - <<'PY'
+          import json
+          from pathlib import Path
+          def read(name):
+              return json.loads(next(l.split("FIELD_MOTION_RECEIPT ",1)[1] for l in Path("proof/"+name+".log").read_text().splitlines() if "FIELD_MOTION_RECEIPT " in l))
+          a,b=read("before"),read("after")
+          assert a==b and a["ordinary"]==[512,512] and a["hero_hits"]>0,(a,b)
+          (Path("proof")/"combat-outcome.json").write_text(json.dumps(a,indent=2)+"\n")
+          PY
+      - name: Keep baked game data and original comparison on a new branch
+        run: |
+          set -euo pipefail
+          mkdir -p docs/evidence/river-gate-gait
+          cp proof/march-pair.mp4 proof/march-sheet.jpg proof/combat-outcome.json docs/evidence/river-gate-gait/
+          git add -- assets/river_gate/figures/company_motion.png tools/art/source/march_curves.json docs/evidence/river-gate-gait/
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Bake three licensed gaits and retain the synchronized field capture"
+          git push origin HEAD:refs/heads/codex/river-loaded-march-assets
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: loaded-march-and-contact-records
+          path: proof
