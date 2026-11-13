@@ -5,6 +5,8 @@ support hand. No per-soldier Godot Skeleton3D or runtime inverse kinematics is r
 """
 from math import sin,cos,pi,acos,sqrt
 from PIL import Image
+from pathlib import Path
+import json
 from figure_mesh import add,sub,mul,dot,cross,unit,lerp,smooth
 from company_figures import *
 from company_weapons import TWO_HAND, FRONT_GRIP
@@ -13,6 +15,7 @@ BONES=16
 FRAMES=32
 CLIPS=31
 IDENT=(0.,0.,0.,1.)
+MARCH_BANK=json.loads((Path(__file__).parent/'source'/'march_curves.json').read_text())['curves']
 def qm(q,r):
     a,b=q[:3],r[:3]
     return (*add(add(mul(b,q[3]),mul(a,r[3])),cross(a,b)), q[3]*r[3]-dot(a,b))
@@ -160,12 +163,17 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     thrust=kit==3 and attack and slot<3
     if move:
         hips=cos(t*2*pi)
-        sway=(.022 if running else .044)*sin(t*2*pi)
-        hip_yaw=7*hips
-        shoulder_yaw=-8.5*hips
-        hip_roll=4.0*walk
-        chest_roll=-3.3*walk
-        crouch=(.088+.050*cos(t*4*pi-.22)) if running else (.089+.026*cos(t*4*pi))
+        # Imported gait first, then the two-hand grips and ground-locked soles.
+        # A rank bearing a shaft braces its shoulders more than a light footman.
+        mode="Jog_Fwd_Loop" if running or clip==12 else ("Walk_Formal_Loop" if kit in (3,4,7) else "Walk_Loop")
+        step=MARCH_BANK[mode][round(t*FRAMES)%FRAMES]
+        sway,rise,hip_yaw,shoulder_yaw,hip_roll,chest_roll=step
+        lateral=abs(sin(heading))
+        sway*=1.-.34*lateral
+        hip_yaw*=1.-.42*lateral
+        shoulder_yaw*=(.83 if kit in TWO_HAND else 1.)*(1.-.40*lateral)
+        chest_roll*=.90
+        crouch=(.088 if running else .084)-rise
         lean=12*cos(heading) if running else (9 if clip==12 else 5.8*cos(heading))
         hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else
                       (5.2 if running else 3.7)*walk if i==3 else 2.4*hips if i==4 else 0) for i,v in enumerate(hand))
