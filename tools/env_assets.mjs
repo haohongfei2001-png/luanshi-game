@@ -218,14 +218,58 @@ function carriage() {
     }
     for(let x of [-1.44,-0.78,-0.15,0.45,1.35]) frame.block([x,0.69,0],[0.15,0.15,1.41],bark);
     for(let x of [-1.13,1.12]) frame.block([x,2.09,0],[0.16,0.12,0.64],worn);
-    // A strapped hide hood shelters the rear team. Its edge lies below the ridge.
-    for(let n=0;n<3;n++){
-        const x=-1.62+n*0.47, end=x+0.475;
-        for(let side of [-1,1]){
-            const a=[x,2.14,0], b=[end,2.14,0], c=[end,1.87,0.65*side], d=[x,1.83,0.70*side];
-            frame.face([a,b,c,d],n%2?hide:darkHide,0,[0,1,side]);
-            frame.rod([x,2.15,0],[x,1.87,0.69*side],0.018,0.018,cord,4);
+    // A field-repaired oxhide awning. The lower edges have weight between
+    // the bows, the overlaps turn down the eaves, and the forward bay stays
+    // open so the suspended timber can be seen and move with the old pivot.
+    const bays=[-1.73,-1.10,-.41,.28,1.04];
+    const taw=[paint("887766"),paint("978675"),paint("837766"),paint("95806c")];
+    const faded=paint("b5a58b"), rawEdge=paint("71604e"), nail=paint("625c52");
+    const xs=[-1.73,-1.10,-.41,.28,1.04];
+    const arcs=[[-.88,1.64],[-.75,1.98],[-.41,2.23],[0,2.31],[.43,2.23],[.74,1.98],[.89,1.62]];
+    function awn(i,u,k) {
+        const z=arcs[k][0], y=arcs[k][1], edge=Math.abs(z)/.89;
+        const x=bays[i]+(bays[i+1]-bays[i])*u;
+        const sag=Math.sin(u*Math.PI)*(.015+.085*edge**1.6);
+        const taper=.90+.1*Math.sin((x+1.73)/2.77*Math.PI);
+        return [x,y-sag-.064*(x+.35)**2+.015*Math.sin(1.32+x*3.2+z),
+                z*taper+Math.sign(z)*.023*Math.sin(Math.PI*u)*edge];
+    }
+    for(let i=0;i<bays.length-1;i++){
+        for(let k=0;k<arcs.length-1;k++) for(let u0 of [0,.5]){
+            const u1=u0+.5, a=awn(i,u0,k), b=awn(i,u1,k), c=awn(i,u1,k+1), d=awn(i,u0,k+1);
+            frame.face([a,b,c,d],taw[(i+(k>=4?1:0))%4],0,[0,1,(a[2]+d[2])*.22]);
+            if(k===0||k===5) {
+                const v=k===0?0:6, l=awn(i,u0,v),r=awn(i,u1,v);
+                const bottom=(p,t)=>plus(p,[0,-.050-.034*Math.sin(t*Math.PI),Math.sign(p[2])*.012]);
+                frame.face([l,r,bottom(r,u1),bottom(l,u0)],rawEdge,0,[0,0,k===0?-1:1]);
+            }
         }
+        // Sparse wide patches are readable in the orthographic scene.
+        if(i===0||i===2) {
+            const v=i===0?1:4, a=awn(i,.18,v),b=awn(i,.62,v),c=awn(i,.64,v+1),d=awn(i,.22,v+1);
+            const lift=p=>plus(p,[0,.010,Math.sign(p[2])*.005]);
+            frame.face([a,b,c,d].map(lift),i===0?darkHide:hide,0,[0,1,Math.sign(a[2])*.5]);
+        }
+        if(i===1||i===3) for(let k=0;k<arcs.length-1;k++){
+            let lift=p=>plus(p,[0,.017,Math.sign(p[2])*.012]);
+            frame.face([awn(i,.03,k),awn(i,.11,k),awn(i,.11,k+1),awn(i,.03,k+1)].map(lift),faded,0,[0,1,0]);
+        }
+    }
+    for(const x of [xs[0],xs[2],xs[4]]) {
+        const i=x===xs[4]?3:xs.indexOf(x),u=x===xs[4]?1:0;
+        for(let k=0;k<arcs.length-1;k++){
+            const l=plus(awn(i,u,k),[0,-.052,0]), r=plus(awn(i,u,k+1),[0,-.052,0]);
+            frame.rod(l,r,.047,.043,wood,6);
+        }
+        for(const s of [-1,1]){
+            const l=awn(i,u,s<0?0:6);
+            frame.rod(plus(l,[0,-.035,0]),[x,.92,s*.60],.052,.060,bark,6);
+            frame.rod([x,.98,s*.68],[x,.98,s*.73],.048,.047,nail,7,1);
+        }
+    }
+    for(let s of [-1,1]) {
+        frame.rod([-1.71,.79,s*.63],[1.54,.82,s*.63],.076,.068,wood,8);
+        frame.rod([-1.78,.825,s*.65],[-1.56,1.035,s*.63],.060,.055,wood,7);
     }
     beam.rod([-2.13,1.18,0],[1.96,1.18,0],0.167,0.20,worn,10);
     for(let x of [-1.78,-0.93,0.86,1.66]) beam.rod([x,1.18,0],[x+0.085,1.18,0],0.204,0.204,bark,10);
