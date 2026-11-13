@@ -1,0 +1,78 @@
+{
+  "source_commit": "114e86a972e9f51d0a5e1d738a696f36bb27b605",
+  "run": 43491973680,
+  "tested_archive_sha256": "2fd6ccb9d9a304a0ac8bb31e7d4811d48729d9e04829811819d83d9b02acfe27",
+  "headless_parity_resources": 87,
+  "tested_sources": "Isolated from RC16 to test direct SceneState access with the upstream cavalry. Final integrated package and its timings are measured separately.",
+  "prior_failure_sample_url": "https://github.com/haohongfei2001-png/luanshi-game/blob/be32d2d765a3bb05b2b2d918c9602d9bd29ffc29/docs/evidence/river-gate-v1-rc16/startup/default-metal-1-before-scene.sample.txt",
+  "samples": [
+    {
+      "label": "default-metal-1",
+      "validated": true,
+      "requested": "mobile",
+      "method": "mobile",
+      "app_data_absent_at_spawn": true,
+      "returncode": 0,
+      "contacts": 400,
+      "startup_resume_count": 0,
+      "pre_scene_sample": false,
+      "first_post_draw_ms": 59841.4,
+      "milestones_ms": {
+        "scene_ready": 35895.2,
+        "first_post_draw": 59841.4,
+        "foreground_ready": 61304.6,
+        "deployed": 61315.9,
+        "first_tick": 61385.1,
+        "first_hit": 62199.3,
+        "contact_complete": 66438.8
+      }
+    },
+    {
+      "label": "default-metal-2",
+      "validated": true,
+      "requested": "mobile",
+      "method": "mobile",
+      "app_data_absent_at_spawn": true,
+      "returncode": 0,
+      "contacts": 1106,
+      "startup_resume_count": 0,
+      "pre_scene_sample": false,
+      "first_post_draw_ms": 9459,
+      "milestones_ms": {
+        "scene_ready": 6799.7,
+        "first_post_draw": 9459,
+        "foreground_ready": 10624.3,
+        "deployed": 10634.8,
+        "first_tick": 10698.4,
+        "first_hit": 11511.9,
+        "contact_complete": 15774.4
+      }
+    },
+    {
+      "label": "startup-focus-control",
+      "validated": true,
+      "requested": "mobile",
+      "method": "mobile",
+      "app_data_absent_at_spawn": true,
+      "returncode": 0,
+      "contacts": 401,
+      "startup_resume_count": 1,
+      "pre_scene_sample": false,
+      "first_post_draw_ms": 9054.5,
+      "milestones_ms": {
+        "scene_ready": 6678.3,
+        "first_post_draw": 9054.5,
+        "foreground_ready": 10240,
+        "deployed": 10253.6,
+        "first_tick": 12037.4,
+        "first_hit": 12828.5,
+        "contact_complete": 17096.2,
+        "startup_interruption_armed": 10253.6,
+        "startup_paused_zero": 10439.7,
+        "focus_restored_at_zero": 11959.8,
+        "startup_resume_pressed": 11959.8
+      }
+    }
+  ],
+  "artifact": "https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43491973680/artifacts/14071227814"
+}
