@@ -247,23 +247,46 @@ func _split_stone(patch: Patch,p: Vector2,extent: float,depth: float,rise: float
 	for v in cross_section:
 		var off:=along*(v.x+rng.randf_range(-.13,.11))*extent+crossway*(v.y+rng.randf_range(-.09,.09))*depth
 		var relief:=rise*(.69+.29*v.y+.19*v.x+rng.randf_range(-.09,.11))
+		if bank:
+			# Border rock continues down into the non-walkable channel, rather
+			# than wrapping over the terrain as a flat biscuit.
+			relief+=clampf(ground_point(p).y-shoulder.y,-.35,.40)*.66
 		if not bank: relief=rise*(.27+.56*v.y+.45*v.x+rng.randf_range(-.10,.08))
 		var shoulder:=ground_point(p+off)
 		foot.append(shoulder-Vector3.UP*.11)
 		seam.append(ground_point(p+off*1.04)+Vector3.UP*relief*.34)
 		brow.append(ground_point(p+off*.90+crossway*(-rise*.13))+Vector3.UP*relief*.71)
 		top.append(ground_point(p+off*.68+along*.095*extent)+Vector3.UP*relief)
-	var apex:=ground_point(p-along*.18*extent+crossway*.17*depth)+Vector3.UP*rise*(1.08 if bank else 1.0)
+	var apex:=ground_point(p-along*.31*extent+crossway*.14*depth)+Vector3.UP*rise*(1.17 if bank else 1.0)
+	var split:=ground_point(p+along*.28*extent-crossway*.15*depth)+Vector3.UP*rise*(.85 if bank else .58)
 	var cold:=Color("5c605c").lerp(Color("898575"),rng.randf_range(.04,.68)) if bank else Color("716d60").lerp(Color("847f6c"),rng.randf_range(.03,.72))
 	var pale:=cold.lightened(rng.randf_range(.08,.22))
-	patch.stone.joint=12
+	patch.stone.joint=19
 	for n in top.size():
 		var m:=(n+1)%top.size()
 		var f:=float((2*n+1)%5)*.026
 		patch.stone.quad(foot[m],foot[n],seam[n],seam[m],cold.darkened(.20+f))
 		patch.stone.quad(seam[m],seam[n],brow[n],brow[m],cold.lightened(f*.62))
 		patch.stone.quad(brow[m],brow[n],top[n],top[m],cold.darkened(.020+f*.19))
-		patch.stone.tri(top[m],top[n],apex,pale.darkened(f))
+		if n in [1,2,3]:
+			patch.stone.tri(top[m],top[n],split,pale.darkened(.04+f))
+		else:
+			patch.stone.tri(top[m],top[n],apex,pale.darkened(f))
+		if n==0: patch.stone.tri(top[m],split,apex,pale.darkened(.15))
+		if n==3: patch.stone.tri(top[m],apex,split,pale.darkened(.04))
+
+# Edge habitat: small arching brush sprays and drooping seed heads at the
+# root, sharing the site's two existing batches. No props in the fighting lane.
+func _field_margin(patch: Patch,p: Vector2,reach: float,turn: float) -> void:
+	var foot:=ground_point(p)
+	patch.stone.joint=11
+	for i in 4:
+		var a:=turn+i*2.40+.23*sin(p.x+float(i))
+		var dir:=Vector3(cos(a),0,sin(a))
+		var root:=foot+dir*reach*.12
+		var fork:=root+dir*reach*.30+Vector3.UP*reach*(.42+.10*(i%2))
+		patch.stone.rod(root-Vector3.UP*.018,fork,.022*reach,.009*reach,BARK,4)
+		_bough(patch,fork-dir*.14*reach,dir,reach*.77,reach*.33,.11 if i%2 else -.24,.22+.10*i)
 
 func _stands(plan: Dictionary) -> void:
 	for place:Array in STANDS.data:
@@ -281,6 +304,15 @@ func _stands(plan: Dictionary) -> void:
 			var a:=rng.randf_range(0.0,TAU)
 			var p:=center+Vector2(cos(a),sin(a))*rng.randf_range(radius*0.55,radius*1.35)
 			if absf(p.x-Ground.RIVER_X)>4.9: _tuft(_cell(p),p,rng.randf_range(0.30,0.75))
+	for group:Array in plan.groves:
+		var margin:=Vector2(float(group[0]),float(group[1]))
+		var radius:=float(group[2])
+		var count:=3 if radius>4.5 else 2
+		for k in count:
+			var heading:=margin.x*.82+k*2.53
+			var p:=margin+Vector2(cos(heading),sin(heading))*radius*(.62+.20*(k%2))
+			if absf(p.x-Ground.RIVER_X)>5.0:
+				_field_margin(_cell(p),p,.73+.19*(k%3),heading)
 	for group:Array in plan.outcrops:
 		var center:=Vector2(float(group[0]),float(group[1]))
 		var a:=float(group[4])
@@ -307,7 +339,7 @@ func _stands(plan: Dictionary) -> void:
 		if absf(z-Ground.crossing(z))<5.1: continue
 		var side:float=1.0 if i%2 else -1.0
 		var p:=Vector2(Ground.RIVER_X+side*rng.randf_range(3.65,4.27),z)
-		_split_stone(_cell(p),p,rng.randf_range(.95,1.84),rng.randf_range(.83,1.54),rng.randf_range(.67,1.16),1.35+rng.randf_range(-.34,.30),true)
+		_split_stone(_cell(p),p,rng.randf_range(1.0,2.11),rng.randf_range(.87,1.64),rng.randf_range(.84,1.37),1.35+rng.randf_range(-.34,.30),true)
 		var q:=p+Vector2(-.49*side,rng.randf_range(.65,1.62))
 		_split_stone(_cell(q),q,.65,.83,rng.randf_range(.49,.80),rng.randf_range(.82,1.98),true)
 

@@ -4,6 +4,7 @@ uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D shale_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D lane_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D verge_track : repeat_enable, filter_linear_mipmap_anisotropic;
@@ -61,12 +62,12 @@ vec3 painted_ground(vec2 p, float shore) {
     vec3 verge=turf*vec3(.84,.99,.95);
     // Mown and uncropped banks differ in broad value, not just their highlights.
     verge*=.83+.17*smoothstep(.22,.62,cover.b)+.16*clamp(landscape.g*1.55,0.0,1.0);
-    vec3 colour=mix(verge,clay*vec3(1.02,1.01,.98),lane);
+    vec3 colour=mix(verge,clay*vec3(1.075,1.056,1.012),lane);
     colour=mix(colour,landscape,.159+.06*(1.0-lane));
     float lip=4.0*lane*(1.0-lane);
     colour*=1.0-lip*(.075+.085*marks.r);
-    float rut=1.0-smoothstep(.020,.077,abs(cover.a-.385+(.5-marks.g)*.04));
-    colour*=1.0-.19*rut*lane*(.38+.62*marks.g)*(1.0-wet);
+    float rut=1.0-smoothstep(.028,.101,abs(cover.a-.385+(.5-marks.g)*.04));
+    colour*=1.0-.23*rut*lane*(.38+.62*marks.g)*(1.0-wet);
     vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
     colour=mix(colour,alluvium, .73*smoothstep(.20,.98,wet));
     return colour;
@@ -160,6 +161,15 @@ void fragment() {
 			float peg=(1.0-smoothstep(.10,.21,abs(board-.44)))*(1.0-smoothstep(.08,.14,abs(cross_distance-3.41)));
 			color*=.68+.50*grain+.12*worn*(.27+weather)-.19*peg;
 			roughness=.91-.14*worn;
+		} else if(part>18.5 && part<19.5) {
+			// One projection per face; even short, walkable fragments show bedding
+			// that continues across the tilted ridgeline, buried edge and talus.
+			vec3 n=abs(local_normal);
+			vec2 rock_uv=n.y>max(n.x,n.z)*.72?vec2(p.x*.42+p.y*.12,p.y*.46-p.x*.15):
+				vec2((n.x>n.z?p.y:p.x)*.51+local_pos.y*.21,local_pos.y*.74+p.x*.12);
+			vec3 shale=texture(shale_paint,rock_uv).rgb;
+			float facet=.88+.17*clamp(local_normal.y,0.0,1.0);
+			color=mix(shale*facet,color,.22);
 		} else if(part>=17.5 && part<18.5) {
 			vec2 face_uv=vec2(local_pos.z*.39,local_pos.y*2.93);
 			float grit=texture(fieldbed,face_uv).r;
