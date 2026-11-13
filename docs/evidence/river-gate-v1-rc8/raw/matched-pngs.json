@@ -1,0 +1,37 @@
+{
+  "ci": 43356626073,
+  "source_before_png_run": 43341820740,
+  "source_after_png_run": 43353033045,
+  "frames": [
+    {
+      "label": "personal-windup",
+      "bytes": 424373,
+      "sha256": "9c37eca867539222650dfb4c6e6a29a43b385e24339e6d9c351db7d3b73e5376",
+      "source_png_sha256": [
+        "7f44593058204ca23c0d6012569b93a90a40379e1a7a59af6a0652e52f96bdc8",
+        "b115020ee4821df95e8cec6f33a98743d7c19768a56b4278f2798aed9edbe911"
+      ],
+      "box": [
+        525,
+        278,
+        1395,
+        912
+      ]
+    },
+    {
+      "label": "personal-contact",
+      "bytes": 424265,
+      "sha256": "f8bf2cbc3b8728f8e34fc5d591bab890ac0de222ca5d274381e0c87605ff32d6",
+      "source_png_sha256": [
+        "cb155a46803ed2700b759b180658d4586c41a37c88cc0867d2f82ef4803b2753",
+        "50f60a07432aba022ad8ebcac7e5b8cba4fd553e60c54e8af82b928c1b583055"
+      ],
+      "box": [
+        525,
+        278,
+        1395,
+        912
+      ]
+    }
+  ]
+}

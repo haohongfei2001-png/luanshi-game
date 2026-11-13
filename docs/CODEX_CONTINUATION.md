@@ -4,9 +4,11 @@
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 RC8｜前线兵种与真实启动复核
+## 河关 RC8｜已合入并可试玩；美术与 M5 未最终验收
 
-[在游戏中修改的内容与验收入口](evidence/river-gate-v1-rc8/PLAYTEST.md)。角色的 22 m 正常镜头实际输入在两版中都命中 584 号士兵（第 48 步）；重做弓手、执长兵与盾兵的剪影和待战姿势。保留 RC7 的清晰地表。下一条操作是检查当前游戏 PR 的六项 CI 和产物；原生两种后端须经真实战斗及输出像素检查，完整随军须录到继续读档。[第零步实证](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43350173727)。未通过的版本不得用作最终美术或 M5 验收。
+游戏 [PR #40](https://github.com/haohongfei2001-png/luanshi-game/pull/40) 的[六项 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045)通过；main 合并 `2c92c7eace980d76d538a646ca64ce9817d191b4` 与实际导出树相同。源 `5cf51e2f7ad9e4fe2768e2088b11bdfd0ab4979e`，[安装包、完整实录和同输入对照](evidence/river-gate-v1-rc8/PLAYTEST.md)。每方 512 普通兵、32 位军官另计。正常 22 m 跟随镜头出枪第 43→48 步，584 号敌兵由 62 降至 39.76；九武器、坐骑/战车、自然攻城、战报后行军/读档与 V3/V4 回归通过。托管虚拟 M1 九次原生图形试验 9/9，实际 1024×640、全分辨率 4× MSAA、24 s、P95/P99 13.59/17.10 ms，RSS 545.1 MiB；**不是 M5 或持续稳定 60 的验收**。
+
+**仍需解决**：普通兵肩颈、体态、脸与马匹外形过于同质，前线武器重叠，冲车与城门切顶时木框太直太空。弓手、枪兵、盾兵的携械重心、衣摆、背甲已经重做；一次糊地表/亮腰袋的实验被回退，补背廊与省查询只改善局部，没有当成最终美术或性能突破。P2 个体现场对象仍未全面分队化，长期独立世界与人生也未通过。**下一条可执行工作**：在新的云端工作树以 `2c92c7eace980d76d538a646ca64ce9817d191b4` 为基线，执行 `./tools/prepare-font.sh && godot --headless --editor --path . --import`，用有显示服务的 `godot --path . --resolution 1920x1200 --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512` 建立基准；以原生 22 m、密集阵前与第 490 步的城门镜头检验肩髋/腿承重、马的肩背和整车轮廓。既有 gameplay、人数与存档不降级，M5 仍需独立真机授权。
 
 ## 河关 RC7｜可玩候选，美术与 M5 未验收
 

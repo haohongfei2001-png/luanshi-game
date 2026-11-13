@@ -1,0 +1,1632 @@
+{
+  "RIVER_ART_FRAME": [
+    {
+      "center": [
+        -10,
+        -3
+      ],
+      "close": 85,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 22,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 40,
+      "in_frame_ids_sha256": "1c2fa3b469bfda18b362ff73ae06843bf213ef6a7c21e4c612d9aca16ac6c10b",
+      "internal_scale": 1,
+      "kind": "hero",
+      "label": "hero",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 113,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": 1.27,
+      "zoom": 6.4
+    },
+    {
+      "center": [
+        -11.8000001907349,
+        -3
+      ],
+      "close": 96,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 27,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 61,
+      "in_frame_ids_sha256": "d54d5cea69ba3188e22a7a86890314682a2a179e30f969ed3f282168ed0184b2",
+      "internal_scale": 1,
+      "kind": "horse",
+      "label": "saddle",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 155,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": 1.09,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -12.8000001907349,
+        -0.799999952316284
+      ],
+      "close": 86,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 38,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 99,
+      "in_frame_ids_sha256": "d64874a7b692e230e8aee480bda106018227ecae8ccc99ced3a4396f5b0f4bba",
+      "internal_scale": 1,
+      "kind": "cart",
+      "label": "cart",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 212,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.65,
+      "zoom": 10
+    },
+    {
+      "center": [
+        -32,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 50,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 225,
+      "in_frame_ids_sha256": "3b416935ff0125b01ec4ddafe216c802b987905c55c9dcaaafe0e1b270a7a4d6",
+      "internal_scale": 1,
+      "kind": "bridge",
+      "label": "ford",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 315,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 336,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.54,
+      "zoom": 31
+    },
+    {
+      "center": [
+        -35.7999992370605,
+        -8.39999961853027
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 5,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 14,
+      "in_frame_ids_sha256": "c2e05a0e812d671f949051bc5bd30c0768a50d0ab3c222834065e76d5ee1ada9",
+      "internal_scale": 1,
+      "kind": "bank",
+      "label": "bank",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 78,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.54,
+      "zoom": 17
+    },
+    {
+      "center": [
+        -23.7999992370605,
+        13.8000001907349
+      ],
+      "close": 12,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 43,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 182,
+      "in_frame_ids_sha256": "c13143c5ee33ced196d40aae724619315f3bd5ce52e8f795db72a971d8cf3211",
+      "internal_scale": 1,
+      "kind": "margin",
+      "label": "margin",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 172,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 255,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.64,
+      "zoom": 23
+    },
+    {
+      "center": [
+        -66,
+        -19
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 0,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 11,
+      "in_frame_ids_sha256": "cbb5d2b1bdf9e8ef9cdbff762d119968b02b24a69bb98435910c33b346b7ca09",
+      "internal_scale": 1,
+      "kind": "camp",
+      "label": "camp",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 28,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 27,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.54,
+      "zoom": 30
+    },
+    {
+      "center": [
+        -10,
+        -3
+      ],
+      "close": 24,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 57,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 1,
+      "in_frame_count": 250,
+      "in_frame_ids_sha256": "333bec8a5e2037ce6407426d89f4833128c9992ba2c06436f419d5de27f24e5a",
+      "internal_scale": 1,
+      "kind": "hero",
+      "label": "player-action",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 11,
+      "visible": 391,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 22
+    },
+    {
+      "center": [
+        6.52659225463867,
+        -26.5112113952637
+      ],
+      "close": 84,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 25,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 62,
+      "in_frame_ids_sha256": "bba120490ac1e40c6b06ba6d97de9e49925d6cb92da5b2c9d0bffd4af3c565e6",
+      "internal_scale": 1,
+      "kind": "officer",
+      "label": "officer",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 121,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -1.42,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -9.13926982879639,
+        -32.7672271728516
+      ],
+      "close": 39,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 27,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 36,
+      "in_frame_ids_sha256": "b0543389b085ca946ff0493f304284d30db751cee9145409a495d08060c73402",
+      "internal_scale": 1,
+      "kind": "archer",
+      "label": "bowline",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 105,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": 1.12,
+      "zoom": 8.6
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 121,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 459,
+      "in_frame_ids_sha256": "4f366865a9258d5e2214dfc157d266b806affbe0ce6e47a3c68ba6e0310deb12",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "ranks",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 567,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 551,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 51
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 37,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 31,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 76,
+      "in_frame_ids_sha256": "364dfe8ef289ba983782a63d7943b3a144b140db3868dfb52b19b5492dc2c196",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "contact",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 159,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 13
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 20,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 65,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 196,
+      "in_frame_ids_sha256": "8893515327a9bfbaa14ec7a9852490da4b2bddb6c6dc2fb7dd7b04eb6402650f",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "formation",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 171,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 277,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 26
+    },
+    {
+      "center": [
+        27.5943470001221,
+        0.357993453741074
+      ],
+      "close": 20,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 1,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 182,
+      "in_frame_ids_sha256": "b65f25e974c678846c4a053e8fc9ead3e38cf154e005f648e488c20d510ca5db",
+      "internal_scale": 1,
+      "kind": "ram",
+      "label": "siege",
+      "losses": [
+        180,
+        219
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 284,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.65,
+      "zoom": 19
+    },
+    {
+      "center": [
+        48,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 17,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 349,
+      "in_frame_ids_sha256": "31a81dd8142fe98ae30634535d7545e5af86675fab7f53812045971f5642e78e",
+      "internal_scale": 1,
+      "kind": "gate",
+      "label": "gate",
+      "losses": [
+        180,
+        219
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 385,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 445,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.89,
+      "zoom": 34
+    },
+    {
+      "center": [
+        -10,
+        -3
+      ],
+      "close": 85,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 22,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 40,
+      "in_frame_ids_sha256": "1c2fa3b469bfda18b362ff73ae06843bf213ef6a7c21e4c612d9aca16ac6c10b",
+      "internal_scale": 1,
+      "kind": "hero",
+      "label": "hero",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 113,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": 1.27,
+      "zoom": 6.4
+    },
+    {
+      "center": [
+        -11.8000001907349,
+        -3
+      ],
+      "close": 96,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 27,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 61,
+      "in_frame_ids_sha256": "d54d5cea69ba3188e22a7a86890314682a2a179e30f969ed3f282168ed0184b2",
+      "internal_scale": 1,
+      "kind": "horse",
+      "label": "saddle",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 155,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": 1.09,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -12.8000001907349,
+        -0.799999952316284
+      ],
+      "close": 86,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 38,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 99,
+      "in_frame_ids_sha256": "d64874a7b692e230e8aee480bda106018227ecae8ccc99ced3a4396f5b0f4bba",
+      "internal_scale": 1,
+      "kind": "cart",
+      "label": "cart",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 212,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.65,
+      "zoom": 10
+    },
+    {
+      "center": [
+        -32,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 50,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 225,
+      "in_frame_ids_sha256": "3b416935ff0125b01ec4ddafe216c802b987905c55c9dcaaafe0e1b270a7a4d6",
+      "internal_scale": 1,
+      "kind": "bridge",
+      "label": "ford",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 315,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 336,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.54,
+      "zoom": 31
+    },
+    {
+      "center": [
+        -35.7999992370605,
+        -8.39999961853027
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 5,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 14,
+      "in_frame_ids_sha256": "c2e05a0e812d671f949051bc5bd30c0768a50d0ab3c222834065e76d5ee1ada9",
+      "internal_scale": 1,
+      "kind": "bank",
+      "label": "bank",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 78,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.54,
+      "zoom": 17
+    },
+    {
+      "center": [
+        -23.7999992370605,
+        13.8000001907349
+      ],
+      "close": 12,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 43,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 182,
+      "in_frame_ids_sha256": "c13143c5ee33ced196d40aae724619315f3bd5ce52e8f795db72a971d8cf3211",
+      "internal_scale": 1,
+      "kind": "margin",
+      "label": "margin",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 172,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 255,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.64,
+      "zoom": 23
+    },
+    {
+      "center": [
+        -66,
+        -19
+      ],
+      "close": 0,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 0,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 11,
+      "in_frame_ids_sha256": "cbb5d2b1bdf9e8ef9cdbff762d119968b02b24a69bb98435910c33b346b7ca09",
+      "internal_scale": 1,
+      "kind": "camp",
+      "label": "camp",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 28,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 8,
+      "visible": 27,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.54,
+      "zoom": 30
+    },
+    {
+      "center": [
+        -10,
+        -3
+      ],
+      "close": 24,
+      "contact": [
+        0,
+        0
+      ],
+      "fighting": 57,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 1,
+      "in_frame_count": 250,
+      "in_frame_ids_sha256": "333bec8a5e2037ce6407426d89f4833128c9992ba2c06436f419d5de27f24e5a",
+      "internal_scale": 1,
+      "kind": "hero",
+      "label": "player-action",
+      "losses": [
+        0,
+        0
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 11,
+      "visible": 391,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 22
+    },
+    {
+      "center": [
+        6.52659225463867,
+        -26.5112113952637
+      ],
+      "close": 84,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 25,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 62,
+      "in_frame_ids_sha256": "bba120490ac1e40c6b06ba6d97de9e49925d6cb92da5b2c9d0bffd4af3c565e6",
+      "internal_scale": 1,
+      "kind": "officer",
+      "label": "officer",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 121,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -1.42,
+      "zoom": 7.8
+    },
+    {
+      "center": [
+        -9.13926982879639,
+        -32.7672271728516
+      ],
+      "close": 39,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 27,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 36,
+      "in_frame_ids_sha256": "b0543389b085ca946ff0493f304284d30db751cee9145409a495d08060c73402",
+      "internal_scale": 1,
+      "kind": "archer",
+      "label": "bowline",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 105,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": 1.12,
+      "zoom": 8.6
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 0,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 121,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 459,
+      "in_frame_ids_sha256": "4f366865a9258d5e2214dfc157d266b806affbe0ce6e47a3c68ba6e0310deb12",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "ranks",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 567,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 551,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 51
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 37,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 31,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 76,
+      "in_frame_ids_sha256": "364dfe8ef289ba983782a63d7943b3a144b140db3868dfb52b19b5492dc2c196",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "contact",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 159,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 13
+    },
+    {
+      "center": [
+        2.47159600257874,
+        -31.0614109039307
+      ],
+      "close": 20,
+      "contact": [
+        179,
+        88
+      ],
+      "fighting": 65,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 196,
+      "in_frame_ids_sha256": "8893515327a9bfbaa14ec7a9852490da4b2bddb6c6dc2fb7dd7b04eb6402650f",
+      "internal_scale": 1,
+      "kind": "line",
+      "label": "formation",
+      "losses": [
+        13,
+        42
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 171,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 65,
+      "visible": 277,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.576,
+      "zoom": 26
+    },
+    {
+      "center": [
+        27.5943470001221,
+        0.357993453741074
+      ],
+      "close": 20,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 1,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 182,
+      "in_frame_ids_sha256": "b65f25e974c678846c4a053e8fc9ead3e38cf154e005f648e488c20d510ca5db",
+      "internal_scale": 1,
+      "kind": "ram",
+      "label": "siege",
+      "losses": [
+        180,
+        219
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 0,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 284,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.65,
+      "zoom": 19
+    },
+    {
+      "center": [
+        48,
+        0
+      ],
+      "close": 0,
+      "contact": [
+        975,
+        739
+      ],
+      "fighting": 17,
+      "gate_hp": 260,
+      "hero_kit": 3,
+      "hero_slot": 0,
+      "hero_state": 0,
+      "in_frame_count": 349,
+      "in_frame_ids_sha256": "31a81dd8142fe98ae30634535d7545e5af86675fab7f53812045971f5642e78e",
+      "internal_scale": 1,
+      "kind": "gate",
+      "label": "gate",
+      "losses": [
+        180,
+        219
+      ],
+      "msaa_3d": 2,
+      "officers": [
+        16,
+        16
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "ranks": 385,
+      "screen_space_aa": 0,
+      "seed": 61112,
+      "shadows": true,
+      "tick": 490,
+      "visible": 445,
+      "window": [
+        1920,
+        1200
+      ],
+      "yaw": -0.89,
+      "zoom": 34
+    }
+  ],
+  "RC7_PLAY_INPUT": [
+    {
+      "distance": 2.41827321052551,
+      "drawn_tick": 43,
+      "foe_hp": 62,
+      "foe_id": 584,
+      "foe_position": [
+        5.10730171203613,
+        -3.83165073394775
+      ],
+      "follow": true,
+      "hero_hits": 0,
+      "hero_id": 1056,
+      "hero_position": [
+        2.68970727920532,
+        -3.77435398101807
+      ],
+      "hero_slot": 0,
+      "hero_state": 1,
+      "internal_scale": 1,
+      "label": "personal-windup",
+      "lens": 22,
+      "marked_tick": 43,
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    },
+    {
+      "distance": 1.8135017156601,
+      "drawn_tick": 48,
+      "foe_hp": 39.7627115547657,
+      "foe_id": 584,
+      "foe_position": [
+        4.96484184265137,
+        -3.8282744884491
+      ],
+      "follow": true,
+      "hero_hits": 1,
+      "hero_id": 1056,
+      "hero_position": [
+        3.1518816947937,
+        -3.87259197235107
+      ],
+      "hero_slot": 0,
+      "hero_state": 2,
+      "internal_scale": 1,
+      "label": "personal-contact",
+      "lens": 22,
+      "marked_tick": 48,
+      "ordinary": [
+        512,
+        512
+      ],
+      "previous_foe_hp": 62,
+      "received": 1,
+      "screen": [
+        1920,
+        1200
+      ],
+      "seed": 61112,
+      "yaw": -0.575958653158129
+    }
+  ],
+  "FIELD_MOTION_RECEIPT": [
+    {
+      "actions_seen": [
+        0,
+        1,
+        2
+      ],
+      "distance_m": 19.4658599495888,
+      "end_tick": 80,
+      "errors": [],
+      "hero_hits": 1,
+      "hero_hp": 0,
+      "hero_received": 5,
+      "move_directions": [
+        -2,
+        2,
+        0,
+        4
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "seed": 61112,
+      "start_tick": 2,
+      "view_size": 10.2415046691895
+    },
+    {
+      "actions_seen": [
+        0,
+        1,
+        2
+      ],
+      "distance_m": 19.4658599495888,
+      "end_tick": 80,
+      "errors": [],
+      "hero_hits": 1,
+      "hero_hp": 0,
+      "hero_received": 5,
+      "move_directions": [
+        -2,
+        2,
+        0,
+        4
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "seed": 61112,
+      "start_tick": 2,
+      "view_size": 10.2415046691895
+    }
+  ],
+  "FIELD_LINE_FILM": [
+    {
+      "attacks_pressed": 8,
+      "end_tick": 681,
+      "errors": [],
+      "fps": 30,
+      "frames": 1020,
+      "gate": 0,
+      "hero_hits": 7,
+      "hero_hp": 100,
+      "hits": [
+        1035,
+        797
+      ],
+      "losses": [
+        200,
+        233
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "start_tick": 1
+    }
+  ],
+  "RIVER_PAIR_PASS": [
+    15
+  ],
+  "RIVER_GRIP_AUDIT": [
+    [
+      {
+        "kit": 0,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000156,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      },
+      {
+        "kit": 1,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000154,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      },
+      {
+        "kit": 2,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000168,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      },
+      {
+        "kit": 3,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000162,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      },
+      {
+        "kit": 4,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000147,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      },
+      {
+        "kit": 5,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000155,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0.193068
+      },
+      {
+        "kit": 6,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000148,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      },
+      {
+        "kit": 7,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000162,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      },
+      {
+        "kit": 8,
+        "measurements": 1984,
+        "p95_m": 0,
+        "worst_wrist_m": 0,
+        "baked_wrist_m": 0.000165,
+        "worst_nock_m": 0,
+        "released_brace_m": 0,
+        "gripping_span_m": 0
+      }
+    ]
+  ]
+}

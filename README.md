@@ -6,7 +6,7 @@ An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
 
-当前开发候选 **0.16.0-rc.8**：[实际改动与验收状态](docs/evidence/river-gate-v1-rc8/PLAYTEST.md)。最近已完整验收可玩的 **RC7**：[macOS 下载](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43343382291/artifacts/14001017125) · [59 秒实机录像](docs/evidence/river-gate-v1-rc7/playthrough-review.mp4) · [实战、已知限制和校验值](docs/evidence/river-gate-v1-rc7/PLAYTEST.md)。下载 Actions 附件后，解开内层 `Luanshi-macOS.zip`，打开其中的 `.app`。
+**河关 0.16.0-rc.8** · [下载 macOS 候选包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43353033045/artifacts/14005925103) · [59 秒实机录像](docs/evidence/river-gate-v1-rc8/playthrough-review.mp4) · [默认镜头的实战截图](docs/evidence/river-gate-v1-rc8/normal-full.jpg) · [本次实测、校验值和未完成项](docs/evidence/river-gate-v1-rc8/PLAYTEST.md)。下载 Actions 附件后，解开内层 `Luanshi-macOS.zip`，打开其中的 `.app`。历史构建和[RC7 回退记录](docs/evidence/river-gate-v1-rc7/PLAYTEST.md)保留。
 
 河关战役从军议进入。默认会战部署双方各 512 名普通兵，另有军官与玩家。也可选择「平陵巡防」按三城的现有兵力、军械出阵。请在 [Linux 与原生 macOS 构建记录](https://github.com/haohongfei2001-png/luanshi-game/actions/workflows/verify.yml?query=branch%3Amain) 下载对应的构建与实录。源码使用 Godot 4.6.3，首次检出后依次运行 `./tools/prepare-font.sh`、`godot --headless --editor --path . --import` 和 `godot --path .`。右上角「三城旧档」可进入已有战役。 [中文操作](docs/PLAYING_ZH.md) · [当前交付记录](docs/CODEX_CONTINUATION.md)
 
