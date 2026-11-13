@@ -1,0 +1,283 @@
+{
+  "base": "5174644f92908a887f4e2ba8d92077af26d5d263",
+  "with_hands": "25558957154c4fb9a878edf17179986acb33cf48",
+  "run": 43475685868,
+  "artifact": 14062547162,
+  "window": [
+    1280,
+    800
+  ],
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "method": "Godot 4.6.3 tests/company_render_cost.gd replayed an identical set of live poses and camera locations on a GitHub Actions Ubuntu 24.04 x64 runner, with 32 measured frames per case and one pass per version. Presentation and frame submit are timed. Simulation steps and image readback are outside the measured frame. Linux Mesa llvmpipe has no hardware GPU; this is a within-run render cost comparison.",
+  "M5": "NOT_RUN",
+  "before": [
+    {
+      "camera_size": 26,
+      "case": "line",
+      "dead": [
+        35,
+        78
+      ],
+      "draws": 159,
+      "hits": [
+        332,
+        174
+      ],
+      "memory_bytes": 73152498,
+      "p50_ms": 639.455,
+      "p95_ms": 785.587,
+      "p99_ms": 799.828,
+      "per_side": 512,
+      "render_cpu95_ms": 779.413024902344,
+      "render_gpu95_ms": 784.028991699219,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 94,
+      "triangles": 1349087,
+      "view_p50": 3.307,
+      "view_p95": 4.511,
+      "visible": 461
+    },
+    {
+      "camera_size": 12,
+      "case": "melee",
+      "dead": [
+        71,
+        111
+      ],
+      "draws": 123,
+      "hits": [
+        474,
+        307
+      ],
+      "memory_bytes": 73170231,
+      "p50_ms": 728.974,
+      "p95_ms": 788.238,
+      "p99_ms": 797.926,
+      "per_side": 512,
+      "render_cpu95_ms": 780.801025390625,
+      "render_gpu95_ms": 783.27001953125,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 144,
+      "triangles": 1599621,
+      "view_p50": 2.542,
+      "view_p95": 2.882,
+      "visible": 283
+    },
+    {
+      "camera_size": 27,
+      "case": "gate",
+      "dead": [
+        186,
+        219
+      ],
+      "draws": 145,
+      "hits": [
+        975,
+        762
+      ],
+      "memory_bytes": 73108271,
+      "p50_ms": 558.254,
+      "p95_ms": 579.139,
+      "p99_ms": 603.789,
+      "per_side": 512,
+      "render_cpu95_ms": 570.97998046875,
+      "render_gpu95_ms": 573.406982421875,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 539,
+      "triangles": 1322322,
+      "view_p50": 2.862,
+      "view_p95": 3.065,
+      "visible": 394
+    },
+    {
+      "camera_size": 50,
+      "case": "pan",
+      "dead": [
+        192,
+        225
+      ],
+      "draws": 178,
+      "hits": [
+        1007,
+        791
+      ],
+      "memory_bytes": 73164656,
+      "p50_ms": 544.395,
+      "p95_ms": 611.59,
+      "p99_ms": 614.02,
+      "per_side": 512,
+      "render_cpu95_ms": 605.796020507812,
+      "render_gpu95_ms": 608.265991210938,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 604,
+      "triangles": 1270894,
+      "view_p50": 3.792,
+      "view_p95": 4.268,
+      "visible": 563
+    }
+  ],
+  "after": [
+    {
+      "camera_size": 26,
+      "case": "line",
+      "dead": [
+        35,
+        78
+      ],
+      "draws": 159,
+      "hits": [
+        332,
+        174
+      ],
+      "memory_bytes": 73272282,
+      "p50_ms": 697.172,
+      "p95_ms": 725.851,
+      "p99_ms": 726.391,
+      "per_side": 512,
+      "render_cpu95_ms": 716.286010742188,
+      "render_gpu95_ms": 719.067016601562,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 94,
+      "triangles": 1533502,
+      "view_p50": 3.383,
+      "view_p95": 3.748,
+      "visible": 461
+    },
+    {
+      "camera_size": 12,
+      "case": "melee",
+      "dead": [
+        71,
+        111
+      ],
+      "draws": 123,
+      "hits": [
+        474,
+        307
+      ],
+      "memory_bytes": 73290015,
+      "p50_ms": 825.449,
+      "p95_ms": 841.664,
+      "p99_ms": 843.58,
+      "per_side": 512,
+      "render_cpu95_ms": 836.322021484375,
+      "render_gpu95_ms": 839.049987792969,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 144,
+      "triangles": 1849441,
+      "view_p50": 2.672,
+      "view_p95": 2.785,
+      "visible": 283
+    },
+    {
+      "camera_size": 27,
+      "case": "gate",
+      "dead": [
+        186,
+        219
+      ],
+      "draws": 145,
+      "hits": [
+        975,
+        762
+      ],
+      "memory_bytes": 73228055,
+      "p50_ms": 585.405,
+      "p95_ms": 607.847,
+      "p99_ms": 610.223,
+      "per_side": 512,
+      "render_cpu95_ms": 629.942016601562,
+      "render_gpu95_ms": 632.552001953125,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 539,
+      "triangles": 1509301,
+      "view_p50": 2.933,
+      "view_p95": 3.155,
+      "visible": 394
+    },
+    {
+      "camera_size": 50,
+      "case": "pan",
+      "dead": [
+        192,
+        225
+      ],
+      "draws": 178,
+      "hits": [
+        1007,
+        791
+      ],
+      "memory_bytes": 73284440,
+      "p50_ms": 560.639,
+      "p95_ms": 627.316,
+      "p99_ms": 762.48,
+      "per_side": 512,
+      "render_cpu95_ms": 645.609985351562,
+      "render_gpu95_ms": 648.010986328125,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "samples": 32,
+      "seed": 61112,
+      "tick": 604,
+      "triangles": 1397174,
+      "view_p50": 3.886,
+      "view_p95": 4.409,
+      "visible": 563
+    }
+  ],
+  "delta": [
+    {
+      "case": "line",
+      "triangles": 184415,
+      "triangle_percent": 13.67,
+      "draws": 0,
+      "static_memory_bytes": 119784,
+      "p50_ms": 57.717,
+      "p95_ms": -59.736,
+      "p99_ms": -73.437
+    },
+    {
+      "case": "melee",
+      "triangles": 249820,
+      "triangle_percent": 15.62,
+      "draws": 0,
+      "static_memory_bytes": 119784,
+      "p50_ms": 96.475,
+      "p95_ms": 53.426,
+      "p99_ms": 45.654
+    },
+    {
+      "case": "gate",
+      "triangles": 186979,
+      "triangle_percent": 14.14,
+      "draws": 0,
+      "static_memory_bytes": 119784,
+      "p50_ms": 27.151,
+      "p95_ms": 28.708,
+      "p99_ms": 6.434
+    },
+    {
+      "case": "pan",
+      "triangles": 126280,
+      "triangle_percent": 9.94,
+      "draws": 0,
+      "static_memory_bytes": 119784,
+      "p50_ms": 16.244,
+      "p95_ms": 15.726,
+      "p99_ms": 148.46
+    }
+  ]
+}
