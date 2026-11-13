@@ -2,7 +2,7 @@
 // The swatches and two-joint weights use the same bind and UV grid as river_company.glb.
 import { readFileSync, writeFileSync } from "node:fs";
 
-const HIPS=0, CHEST=1, HEAD=2, LEFT_ARM=3;
+const HIPS=0, CHEST=1, HEAD=2, LEFT_ARM=3, RIGHT_ARM=6;
 const SWATCH={ cloth:1, hide:2, lining:10, headcloth:18 };
 const pack=[];
 const views=[], accessors=[], nodes=[], meshes=[];
@@ -60,7 +60,7 @@ function surface(look,segments,rows) {
             const fold=.009*Math.sin(2*a+.47)*Math.sin(Math.PI*down);
             const shoulder=Math.abs(side);
             return [(rx+fold)*side,y,-.008+(rz+fold)*front,
-                    side<0?LEFT_ARM:6,CHEST,.33*shoulder*down];
+                    side<0?LEFT_ARM:RIGHT_ARM,CHEST,.33*shoulder*down];
         }
         // The spearman's left mantle fastens under a bare right shoulder. A
         // shieldman wears the much shorter padded cover beneath a dark corslet.

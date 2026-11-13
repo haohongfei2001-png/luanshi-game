@@ -17,18 +17,23 @@ jobs:
       - name: Read the swatch indices in both original hand windows
         run: |
           set -euo pipefail
+          python3 -m pip install --quiet Pillow
           mkdir -p artifacts/hand-material
+          python3 tools/art/bake_river_company.py --geometry-only >artifacts/hand-material/bake.log
+          node tools/art/bake_field_garments.mjs
+          PYTHONPATH=tools/art python3 -c "from company_motion import bake_motion; from pathlib import Path; bake_motion(Path('assets/river_gate/figures'))"
           dst="$PWD/artifacts/hand-material"
           src=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
           curl -fsSL --retry 2 "$src/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/godot.zip
           echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
           unzip -q /tmp/godot.zip -d /tmp/hand-godot
           godot=/tmp/hand-godot/Godot_v4.6.3-stable_linux.x86_64
-          for side in earlier recent; do
+          for side in recent; do
             rev=HEAD
             if test "$side" = earlier; then rev=46e6abbc7fb5f6839805e07e7dcaae2ed98c384f; fi
             dir="$RUNNER_TEMP/hand-$side"
             git worktree add --quiet --detach "$dir" "$rev"
+            cp assets/river_gate/figures/{river_company.glb,company_motion.png,field_garments.gltf} "$dir/assets/river_gate/figures/"
             cp tests/hand_material.gd "$dir/tests/hand_material.gd"
             (
               cd "$dir"
@@ -56,7 +61,7 @@ jobs:
           from PIL import Image,ImageDraw
           dst=Path('artifacts/hand-material')
           r=Image.new('RGB',(312,412))
-          for x,s in enumerate(('earlier','recent')):
+          for x,s in enumerate(('recent',)):
               for y,k in enumerate(('natural','skin')):
                   im=Image.open(dst/(s+'-'+k+'.png'));r.paste(im,(x*156,y*206))
           r.save(dst/'material.png')

@@ -366,7 +366,17 @@ def limbs(s,look):
                  (.139,.054,.063,ankle[0],-.003)],"boots",boot,n,footwear)
         forearm(s,look,side,n)
         g=grip(side)
-        s.oval((g[0]+side*.018,g[1]+.005,g[2]-.004),(.034,.046,.058),"skin",hand,n,5)
+        if look=="guard":
+            # Dorsal knuckles and the heel of the thumb span the grip of a
+            # weighted sword or shield. Fingers wrap from this continuous palm.
+            s.rings([(g[1]-.032,.022,.039,g[0]+side*.014,g[2]-.007),
+                     (g[1]-.011,.033,.054,g[0]+side*.020,g[2]-.004),
+                     (g[1]+.013,.035,.058,g[0]+side*.019,g[2]-.002),
+                     (g[1]+.032,.026,.051,g[0]+side*.017,g[2]-.006),
+                     (g[1]+.044,.013,.038,g[0]+side*.011,g[2]-.008)],
+                     "skin",hand,n)
+        else:
+            s.oval((g[0]+side*.018,g[1]+.005,g[2]-.004),(.034,.046,.058),"skin",hand,n,5)
         if close:
             for i in range(4):
                 z=g[2]-.037+i*.020

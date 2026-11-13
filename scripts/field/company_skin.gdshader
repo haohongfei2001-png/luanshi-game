@@ -224,8 +224,8 @@ void fragment() {
         float sleeve=smoothstep(.183,.238,abs(bind_point.x))*
                      smoothstep(1.07,1.12,bind_point.y)*(1.-smoothstep(1.35,1.41,bind_point.y));
         float diagonal=bind_point.y-1.196+.51*bind_point.z+.32*(abs(bind_point.x)-.248);
-        float fold=smoothstep(-.043,-.006,diagonal)*(1.-smoothstep(-.004,.018,diagonal));
-        colour*=1.-.28*sleeve*fold;
+        float sleeve_fold=smoothstep(-.043,-.006,diagonal)*(1.-smoothstep(-.004,.018,diagonal));
+        colour*=1.-.28*sleeve*sleeve_fold;
     }
     // A coarse underfold survives mipmapping; irregular fine weave does not.
     // At the edge of a dark sleeve it stays subordinate to the hand and weapon.
