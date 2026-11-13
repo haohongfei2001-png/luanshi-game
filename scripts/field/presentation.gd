@@ -13,7 +13,7 @@ const FOE := Color("783f34")
 const PLAYER_CLOTH:=Color("364967")
 # The concentrated dye is confined to cut shoulder and upper sleeve panels.
 const INDIGO_BOLT:=Color("46637a")
-const MADDER_BOLT:=Color("884f45")
+const MADDER_BOLT:=Color("76414a")
 const PLAYER_MANTLE:=Color("859ba2")
 
 class Batch:

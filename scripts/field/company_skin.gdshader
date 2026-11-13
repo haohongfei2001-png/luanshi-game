@@ -258,6 +258,15 @@ void fragment() {
     // lacquer rim on the existing albedo response.
     float cloth_value=clamp(fold/mid,.64,mix(1.24,1.09,dyed_shoulder));
     vec3 colour=mix(ink,bolt*cloth_value,dye);
+    if (cloth_panel==32 && (kit==5 || kit==6)) {
+        // The original cross-collar already forms a woven facing. Preserve its
+        // darker value where the front crosses and where the back cuffs the
+        // neck; without the facing, sun on madder can read as another skin area.
+        float top=smoothstep(1.19,1.345,bind_point.y);
+        float turn=1.-smoothstep(.12,.235,abs(bind_point.x));
+        float facing=(1.-smoothstep(mid*.28,mid*.84,fold))*top*turn*dye;
+        colour*=1.-.24*facing;
+    }
     if (!player_costume && cloth_panel==0) {
         // The undyed coat is slightly warmer than its sleeves. Light from above
         // falls off under the folded shoulder, leaving the waist legible from above.
