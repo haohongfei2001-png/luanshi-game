@@ -2,6 +2,7 @@ extends Node3D
 const Ground := preload("res://scripts/field/ground.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const Foothills := preload("res://scripts/field/env_foothills.gd")
+const TownGate := preload("res://scripts/field/river_gatehouse.gd")
 const WOOD := Color("796752")
 const LIME := Color("946d58")
 const SLATE := Color("525b61")
@@ -396,43 +397,6 @@ func _brackets(frame: Builder,base: Vector3,w: float,d: float) -> void:
 			frame.block(foot+Vector3(0,0.25,sz*0.15),Vector3(0.25,0.15,0.73),WOOD.lightened(0.06))
 			frame.block(foot+Vector3(sx*0.12,0.36,sz*0.16),Vector3(0.68,0.13,0.63),WOOD)
 
-# The central gallery is a built upper storey. It leaves the passage below the
-# floor open; its full facade follows the roof when sight to a fighter is cut.
-func _gate_gallery(base: Vector3, parent: Node3D) -> void:
-	var hall:=Builder.new()
-	var sill:=4.32
-	var slab:=Vector3(base.x,sill,base.z)
-	hall.joint=3
-	hall.block(slab,Vector3(4.73,0.26,8.68),Color("624a3d"))
-	for xside:float in [-1.0,1.0]:
-		var x:=base.x+xside*2.10
-		for bay in 4:
-			var z:=base.z+(bay-1.5)*1.97
-			hall.joint=15
-			hall.block(Vector3(x,sill+.52,z),Vector3(.15,.79,1.79),Color("a99a79"))
-			hall.joint=3
-			hall.block(Vector3(x+xside*.023,sill+1.47,z),Vector3(.19,.97,1.70),Color("494138"))
-			var plane:=x+xside*.15
-			for picket in 3:
-				hall.block(Vector3(plane,sill+1.47,z+(picket-1)*.40),Vector3(.065,.94,.061),WOOD)
-			hall.block(Vector3(plane,sill+1.15,z),Vector3(.071,.075,1.67),WOOD)
-		for station in 5:
-			var foot:=Vector3(x,sill+.08,base.z+(station-2)*1.97)
-			hall.joint=11
-			hall.rod(foot,Vector3(foot.x,base.y+.08,foot.z),.143,.112,Color("78523f"),8)
-		hall.joint=3
-		hall.block(Vector3(x,base.y-.14,base.z),Vector3(.23,.31,8.35),Color("705240"))
-		hall.block(Vector3(x,sill+.96,base.z),Vector3(.24,.12,8.31),WOOD)
-	for zside:float in [-1.0,1.0]:
-		var z:=base.z+zside*3.95
-		hall.joint=15
-		hall.block(Vector3(base.x,sill+1.14,z),Vector3(4.01,2.02,.17),Color("9e9176"))
-		hall.joint=3
-		hall.block(Vector3(base.x,sill+.98,z),Vector3(4.24,.14,.25),WOOD)
-		for post:float in [-.98,.98]:
-			hall.block(Vector3(base.x+post,sill+1.22,z),Vector3(.16,2.25,.23),WOOD)
-	_mesh(hall,parent)
-
 # These roofs can lift away independently while the posts, eaves, and the
 # people inside remain. No soldier or combat state changes with the camera.
 func _cover(base: Vector3,w: float,d: float,rise: float) -> void:
@@ -446,56 +410,7 @@ func _cover(base: Vector3,w: float,d: float,rise: float) -> void:
 		cover.block(base+Vector3(side*w*0.84,-0.09,0),Vector3(0.19,0.18,d*1.70),WOOD)
 	_brackets(cover,base,w,d)
 	var node:=_mesh(cover,self)
-	if absf(base.x-Ground.WALL_X)<.01 and absf(base.z)<.01:
-		_gate_gallery(base,node)
-	var pieces: Array[Dictionary]=[]
-	if absf(base.x-Ground.WALL_X)<3.0 and absf(base.z)<11.0:
-		var axis:=Vector3.BACK if w>=d else Vector3.RIGHT
-		for side:float in [-1.0,1.0]:
-			var strip:=Builder.new()
-			_roof(strip,base,w,d,rise,SLATE,side)
-			# When the near pitch clears the fight, the far eave still rests on
-			# the back gallery's posts, sill and open lattice windows.
-			var along:=Vector3.RIGHT if w>=d else Vector3.BACK
-			var reach:=maxf(w,d)*0.77
-			var gallery:=base+axis*side*minf(w,d)*0.71
-			strip.joint=11
-			for station:float in [-1.0,-0.34,0.34,1.0]:
-				var post:=gallery+along*reach*station
-				strip.rod(post-Vector3.UP*1.78,post+Vector3.UP*0.10,0.105,0.09,WOOD,6)
-			strip.joint=10 if along==Vector3.BACK else 3
-			for drop:float in [0.19,1.06,1.53]:
-				var start:=gallery-along*reach-Vector3.UP*drop
-				strip.rod(start,start+along*reach*2,0.069,0.069,WOOD,4)
-			# Frame a low, solid sill on the retained pitch. Soldiers in the
-			# doorway remain visible over it through three upright window bays.
-			for bay in 3:
-				var mid:=gallery+along*reach*((bay-1)*.6667)
-				var half:=along*reach*.294
-				var inset:=axis*side*.05
-				var foot:=mid-Vector3.UP*1.80+inset
-				var top:=mid-Vector3.UP*1.16+inset
-				strip.joint=8
-				strip.quad(foot-half,foot+half,top+half,top-half,Color("a2977e"))
-				strip.joint=11
-				for offset:float in [-.37,.37]:
-					var mullion:=top+half*offset
-					strip.rod(mullion,mullion+Vector3.UP*.92,.041,.039,WOOD.darkened(.07),4)
-			strip.joint=10 if along==Vector3.BACK else 3
-			var plate:=base+axis*side*minf(w,d)*.84-Vector3.UP*.09
-			strip.rod(plate-along*reach*1.12,plate+along*reach*1.12,.11,.11,WOOD,6)
-			# Each bracket belongs to a surviving post. The two unsupported
-			# brackets on the open, cut-away pitch go with the front roof.
-			strip.joint=3
-			for station:float in [-1.0,-.34,.34,1.0]:
-				var seat:=gallery+along*reach*station-Vector3.UP*.31
-				strip.block(seat,Vector3(.25,.17,.25),WOOD.darkened(.12))
-				strip.rod(seat+Vector3.UP*.16-axis*side*.18,seat+Vector3.UP*.16+axis*side*.33,.106,.106,WOOD,4)
-			var lip:=_mesh(strip,self)
-			lip.visible=false
-			pieces.append({"node":lip,"normal":axis*side,"center":base+axis*side*minf(w,d)*0.625+Vector3.UP*(rise*0.38),
-				"w":w if w>=d else w*0.39,"d":d if d>w else d*0.39})
-	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d,"pieces":pieces})
+	roofs.append({"node":node,"center":base+Vector3.UP*rise*0.42,"w":w,"d":d})
 
 func _between(target: Vector3,eye: Vector3,roof: Dictionary) -> bool:
 	var center: Vector3=roof.center
@@ -676,7 +591,6 @@ func _fort(b: Builder) -> void:
 		for x: float in [Ground.WALL_X,Ground.BACK_X]:
 			_tower(b,Vector3(x,0,side*Ground.WALL_Z))
 		var sentry_z:=side*(Ground.GATE_HALF+4.90)
-		_tower(b,Vector3(Ground.WALL_X,0,sentry_z),true)
 		# A battered stone footing marks the two flanks of the earthen gate.
 		# All masonry remains over the existing wall, clear of the ram's lane.
 		var face:=Ground.WALL_X-1.29
@@ -697,26 +611,11 @@ func _fort(b: Builder) -> void:
 		b.block(Vector3(Ground.BACK_X,1.65,rear_center),Vector3(2.3,3.3,rear_length),LIME)
 	b.block(Vector3(Ground.BACK_X,3.05,0),Vector3(2.3,0.50,Ground.POSTERN_HALF*2.0),LIME)
 	b.block(Vector3(Ground.BACK_X+1.20,2.73,0),Vector3(0.25,0.23,Ground.POSTERN_HALF*2.0+0.45),WOOD)
-	var gallery:=Builder.new()
-	gallery.joint=3
-	for plank in 9:
-		gallery.block(Vector3(Ground.WALL_X,4.16,(plank-4)*1.04),Vector3(4.1,0.21,1.02),WOOD.lightened(0.045*(plank%2)))
-	_sight_deck(gallery,Vector3(Ground.WALL_X,4.16,0),2.05,4.74)
-	_cover(Vector3(Ground.WALL_X,7.62,0),3.43,4.71,1.94)
-	# Tapered gateposts support the passage even when its roof is out of sight.
-	for x:float in [-1.32,1.32]:
-		for z:float in [-4.18,4.18]:
-			var foot:=Vector3(Ground.WALL_X+x,0,z)
-			b.joint=4
-			b.block(foot+Vector3.UP*0.14,Vector3(0.71,0.28,0.68),STONE)
-			b.joint=11
-			b.rod(foot+Vector3.UP*0.23,foot+Vector3.UP*4.12,0.25,0.217,WOOD,8)
-		b.joint=10
-		b.block(Vector3(Ground.WALL_X+x,4.01,0),Vector3(0.32,0.24,8.75),WOOD)
+	TownGate.mount(self,Ground.WALL_X,roofs)
 	# The plaque is mounted on the gatehouse in the world. It uses the same
 	# redistributable Chinese face as the existing HUD when it is installed.
-	b.block(Vector3(Ground.WALL_X-2.10,4.25,0),Vector3(0.16,0.85,3.5),Color("61483a"))
-	b.block(Vector3(Ground.WALL_X-2.20,4.25,0),Vector3(0.06,0.62,2.95),Color("344a46"))
+	b.block(Vector3(Ground.WALL_X-2.85,4.45,0),Vector3(0.16,0.69,3.10),Color("61483a"))
+	b.block(Vector3(Ground.WALL_X-2.95,4.45,0),Vector3(0.06,0.52,2.75),Color("344a46"))
 	var font_path:="res://assets/fonts/NotoSansSC-Regular.otf"
 	if ResourceLoader.exists(font_path):
 		var plaque:=Label3D.new()
@@ -727,7 +626,7 @@ func _fort(b: Builder) -> void:
 		plaque.outline_size=0
 		plaque.modulate=Color("d8bd83")
 		plaque.double_sided=false
-		plaque.position=Vector3(Ground.WALL_X-2.245,4.25,0)
+		plaque.position=Vector3(Ground.WALL_X-2.995,4.45,0)
 		plaque.rotation.y=-PI*0.5
 		add_child(plaque)
 	for side: float in [-1,1]:
