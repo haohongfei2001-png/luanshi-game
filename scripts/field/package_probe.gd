@@ -76,21 +76,61 @@ static func run(tree: SceneTree,scene: Field) -> void:
 			if opt.is_valid_int(): scene.set_quality(opt.to_int())
 	scene.hud.weapon.select(Arms.Kit.BOW)
 	scene.hud.weapon.item_selected.emit(Arms.Kit.BOW)
+	# The probe may deploy before the host finishes activating its window.
+	# Only a real focus loss spanning deployment can arm its simulated click.
+	var launch_focus:={"armed":false,"lost":false,"return_ms":-1}
+	if native_window:
+		tree.root.focus_exited.connect(func():
+			if launch_focus.armed:
+				launch_focus.lost=true
+				launch_focus.return_ms=-1
+		)
+		tree.root.focus_entered.connect(func():
+			if launch_focus.armed and launch_focus.lost:
+				launch_focus.return_ms=Time.get_ticks_msec()
+		)
+		launch_focus.armed=true
+	# In the dedicated native race reproduction only, hold the first simulation
+	# step so the external Cocoa helper can take focus between deployment and tick 1.
+	# Other launches use the unaltered scheduler.
+	var zero_control:=native_window and "--field-startup-focus-control" in OS.get_cmdline_user_args()
+	if zero_control: scene.set_physics_process(false)
 	scene.hud.go.pressed.emit()
 	var b:=scene.battle
 	if native_window:
 		_boot(tree,scene,"deployed")
-		if not b.started or scene.paused:
+		if not b.started or (scene.paused and not launch_focus.lost):
 			tree.quit(1)
 			return
+	if zero_control:
+		_boot(tree,scene,"startup_interruption_armed")
+		var focus_limit:=Time.get_ticks_msec()+10000
+		while not scene.paused and Time.get_ticks_msec()<focus_limit:
+			await tree.process_frame
+		scene.set_physics_process(true)
+		if not scene.paused or not launch_focus.lost or b.tick!=0:
+			_boot(tree,scene,"startup_control_not_reproduced")
+			tree.quit(1)
+			return
+		_boot(tree,scene,"startup_paused_zero")
 	b.command(0,Battle.Mission.PRESS,Battle.Channel.HORN)
 	var limit := Time.get_ticks_msec()+45000
 	var saw_tick := false
 	var saw_hit := false
+	var resumed_after_focus:=false
 	while b.tick<100 and b.result=="" and Time.get_ticks_msec()<limit:
 		await tree.physics_frame
 		if native_window:
+			# Only the test operator, once, after a real loss and return at
+			# tick zero, may press the visible Resume button. Never change the
+			# controller's pause/focus rules. Losing focus later still pauses play.
+			if b.tick==0 and scene.paused and launch_focus.lost and tree.root.has_focus() and int(launch_focus.return_ms)>=0 and Time.get_ticks_msec()-int(launch_focus.return_ms)>=350 and not resumed_after_focus:
+				resumed_after_focus=true
+				_boot(tree,scene,"focus_restored_at_zero")
+				scene.hud.change.pressed.emit()
+				_boot(tree,scene,"startup_resume_pressed")
 			if not saw_tick and b.tick>0:
+				launch_focus.armed=false
 				saw_tick=true
 				_boot(tree,scene,"first_tick")
 				if "--field-focus-control" in OS.get_cmdline_user_args():
@@ -103,6 +143,10 @@ static func run(tree: SceneTree,scene: Field) -> void:
 		if b.tick==35: scene.pan_to(Vector2(0,-20))
 		if b.tick==70: scene.pan_to(Vector2(0,20))
 	if native_window: _boot(tree,scene,"contact_complete" if b.tick>=100 else "contact_timeout")
+	if native_window and b.tick<100:
+		push_error("Native verification could not reach contact; see focus and tick milestones")
+		tree.quit(1)
+		return
 	var saved := Save.snapshot(b)
 	var loaded := Save.restore(bytes_to_var(var_to_bytes(saved)))
 	var ok: bool = b.side_size==512 and b.roster.size()==1057 and b.hits[0]>0 and b.hits[1]>0 and b.arrow_count>0 and b.tick>=100 and b.messages_arrived>0
