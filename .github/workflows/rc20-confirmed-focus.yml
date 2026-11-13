@@ -1,0 +1,39 @@
+name: Verify actual window focus transfer and explicit resume on the unchanged game
+on:
+  push:
+    branches: ['codex/river-rc20-confirmed-window-handoff']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compare:
+    runs-on: macos-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-1cb28abbe3013771da2a0d73a698ea0a4d420c5d
+          run-id: 43517463436
+          github-token: ${{ github.token }}
+          path: package
+      - name: Exercise the held window transfer on two launches and at deployment
+        run: |
+          set -euo pipefail
+          echo '742ee0c369b992ed70d31e620488333e1bf962923e0bc38669e3dd74217828ec  package/Luanshi-macOS.zip' | shasum -a 256 -c -
+          ditto -x -k package/Luanshi-macOS.zip unpacked
+          codesign --verify --deep --strict --verbose=2 unpacked/*.app
+          mkdir -p timings
+          uname -a > timings/host.log
+          sw_vers >> timings/host.log
+          python3 tools/rc20_focus_control_probe.py package/Luanshi-macOS.zip unpacked timings
+          python3 tools/check_playfield.py timings/*.png
+      - name: Save original framebuffers, app phases, process samples and timings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unchanged-rc20-confirmed-window-handoff
+          path: timings/
+          if-no-files-found: error
