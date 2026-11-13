@@ -401,7 +401,10 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             off=add(off,(-side_hit*.074*recoil,.028*recoil-.022*settle,-.128*recoil))
             offq=euler(-15.-20.*recoil,-9.+side_hit*25.*recoil,-14.+side_hit*14.*settle)
         if carried:
-            anchor=limit_grip(add(anchor,mul((.066,.043,.029),carried)),right,radius)
+            # The sword rests outside the leading edge of the shield. Its weight
+            # sits in a lowered elbow; both wrist and crossguard continue to be
+            # solved at the same palm, and release keeps the authored contact.
+            anchor=limit_grip(add(anchor,mul((.148,-.008,.206),carried)),right,radius)
     elif kit==8:
         off=(-hand[0],1.14+(1.24-hand[1])*.7-crouch,.225-(hand[2]-.21)*.52+shift)
         offq=euler(-11-hand[3]*.49,-hand[4]*.81,8)

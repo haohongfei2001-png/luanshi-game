@@ -255,7 +255,7 @@ jobs:
           PY
 
   art-comparison:
-    name: Compare RC12 and candidate in the game window
+    name: Compare RC13 and candidate in the game window
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -280,7 +280,9 @@ jobs:
           node tools/art/bake_mounts.mjs --check
           node tools/art/bake_field_garments.mjs --check
           node tools/env_assets.mjs --check-ram
+          node tools/env_assets.mjs --check-skiff
           node tools/env_cartway.mjs --check
+          node tools/env_survey.mjs --check
       - name: Replay two game revisions on the same display
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

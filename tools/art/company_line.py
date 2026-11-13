@@ -1,6 +1,6 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
-from field_armour import field_helmet, skirts
+from field_armour import field_helmet
 from company_weapons import field_shield
 from figure_mesh import Surface, add, lerp
 
@@ -20,15 +20,14 @@ def costume(look,rank=False):
             s.rings([(1.27,.207,.134,0,-.012),(1.346,.169,.108,0,-.009),
                      (1.43,.078,.069,0,0)],"dyed",body,8)
         else:
-            hem=.58 if look=="archer" else .53
-            width=.293 if look=="guard" else .255
-            s.rings([(hem,width,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
-                     (1.447,.083,.07,0,0)],"dyed",body,6)
+            hem=.475 if look=="archer" else .516
+            width=.228 if look in ("guard","archer") else .207
+            s.rings([(hem,width,.150,0,-.017),(.744,width*.92,.141,0,-.015),
+                     (.953,.161,.119,0,-.013),(1.31,.216,.143,0,-.014),
+                     (1.447,.070,.069,0,0)],"coat",body,8)
         if heavy:
-            rib=.286 if look=="guard" else .251
-            s.rings([(1.01,rib*.79,.154,0,-.014),(1.28,rib,.177,0,-.009),
-                     (1.385,rib*.83,.128,0,-.01)],"lamellar",CHEST,8)
-            skirts(s,look,HIPS,(LT,RT),rank=True)
+            issue_vest(s,look,rank=True)
+            wrapping(s,look,rank=True)
         if look=="levy":
             for front in (True,False):
                 def sling(u,v):
@@ -73,11 +72,11 @@ def costume(look,rank=False):
         a,b,c=arm_nodes(side)
         if rank:
             if heavy:
-                hem=lerp(a,b,.59 if look=="regular" else .79)
-                shoulder=lerp(a,hem,.37)
-                s.tube([a,shoulder],[.081,.100],"dyed" if look in ("regular","guard") else "lames",upper,5)
-                s.tube([shoulder,hem],[.100,.082],"lames",upper,5)
-                s.tube([hem,b],[.070,.067],"dyed",upper,4)
+                shoulder=lerp(a,b,.28)
+                hem=lerp(a,b,.74)
+                s.tube([a,shoulder,hem],[.051,.064,.079],
+                       "quilt" if look=="guard" else "dyed",upper,5)
+                s.tube([hem,b],[.079,.059],"quilt" if look=="guard" else "linen",upper,5)
             elif look=="levy":
                 shoulder=lerp(a,b,.40)
                 s.tube([a,shoulder],[.078,.083],"dyed",upper,5)

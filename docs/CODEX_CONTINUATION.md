@@ -8,6 +8,8 @@
 
 RC13 已被美术验收明确退回。此次可运行样板在正常战斗窗口中复核枪盾服装、骑兵鞍具、地形、林冠和军旗。工程、画面审查和真实 M5 分别记录。原稿与失败试作保留在 [环境分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-painted-valley) 和 [人物分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-tailoring-study)。
 
+角色与动作生产源来自 `0dfd1c075652c5b603e99d3abdbb9df93311311c`，正式包直接读取同步烘焙的 GLB、服装和动作图集。枪盾、精锐、主角、军官的肩甲和下摆已重新剪裁；弓手保留原有主体。中桥的船、桥台及军旗与人物位于同一作战场景。
+
 在干净的云端工作树执行 `node tools/env_survey.mjs --check && node tools/art/bake_mounts.mjs --check && ./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。素材、代码与原始状态可回退到 `12bdc945b7bb4ce2db655555a567244984496e45`。仓库最新的[质量判退条件](VISUAL_RESET_AND_REJECTION_GATES_20261113.md)继续生效。
 
 ## 河关 RC13 · 已合入的可玩候选

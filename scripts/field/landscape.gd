@@ -53,6 +53,7 @@ func _ready() -> void:
 	var river:=Builder.new()
 	_crossings(river)
 	_shore(river)
+	_moored_skiff(river)
 	_mesh(river,self)
 	var city:=Builder.new()
 	_fort(city)
@@ -168,6 +169,26 @@ func _shore(b: Builder) -> void:
 						_upward_quad(b,last[band],row[band],row[band+1],last[band+1],Color.WHITE)
 			last=row
 	b.joint=0
+
+func _moored_skiff(bank: Builder) -> void:
+	# The working bank lies upstream of the middle bridge, in the unwalkable channel.
+	var origin:=Vector3(Ground.RIVER_X+2.04,-.33,-7.91)
+	var skiff:=preload("res://assets/environment/river_skiff.gltf").instantiate() as Node3D
+	skiff.position=origin
+	add_child(skiff)
+	var bow:=origin+Vector3(.09,.55,-2.49)
+	var post:=Vector3(Ground.RIVER_X+4.88,.30,-10.96)
+	bank.joint=11
+	bank.rod(post-Vector3(.035,.77,0),post+Vector3(.025,.16,0),.103,.083,WOOD,7)
+	var sag:=bow.lerp(post,.54)-Vector3.UP*.19
+	bank.joint=6
+	var flax:=Color("a89572")
+	bank.rod(bow,sag,.031,.029,flax,6)
+	bank.rod(sag,post,.029,.033,flax,6)
+	for ring in 2:
+		var tie:=post-Vector3.UP*(ring*.061)
+		bank.rod(tie-Vector3.UP*.029,tie+Vector3.UP*.029,.112,.111,flax,7)
+	bank.joint=0
 
 # Multi-course landings grow out of the existing blocked riverbank. The cap
 # returns end below the deck; the playable width and foot heights are unchanged.
