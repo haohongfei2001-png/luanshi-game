@@ -1,0 +1,46 @@
+name: Finish the cut-uniform comparison from the saved game windows
+on:
+  push:
+    branches: [codex/review-saved-company-windows]
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43459976982
+          name: tailored-company-third-cut-512
+          path: saved
+      - name: Compare archived original windows without replaying the game
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          prior=$(find saved -name before-face.exit -print -quit)
+          test -n "$prior"
+          mkdir -p artifacts
+          ln -s "$PWD/$(dirname "$prior")" artifacts/tailoring
+          python3 -u tests/tail_compare.py
+          r=artifacts/tailoring
+          ffmpeg -v error -y -i "$r/before-follow.mp4" -i "$r/after-follow.mp4" -filter_complex '[0:v]scale=880:550[x];[1:v]scale=880:550[y];[x][y]hstack=inputs=2' -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart "$r/equal-time-follow.mp4"
+          mkdir result
+          cp "$r"/*.jpg "$r/equal-time-follow.mp4" result
+      - name: Preserve native crops and comparison film
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tests/tail_blobs.py blobs result/*
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: restored-window-comparison
+          path: result/
