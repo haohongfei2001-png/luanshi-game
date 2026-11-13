@@ -30,7 +30,7 @@ func _snap(label: String, point: Vector2, zoom: float, angle: float, id: int) ->
 	if pic.save_png(directory+"/"+label+".png")!=OK: failed=true
 	var b:=field.battle
 	var at:=field.camera.unproject_position(Ground.unit_point(point)+Vector3.UP*1.18)
-	var heading: Vector2=Vector2.ZERO if id<0 else b.roster[id].facing
+	var heading: Vector2=b.riding_heading if id<0 else b.roster[id].facing
 	var muzzle: Vector2=point+heading*1.16
 	var nose:=field.camera.unproject_position(Ground.unit_point(muzzle)+Vector3.UP*1.58)
 	# canvas_items keeps input and unprojection in design coordinates. The
@@ -38,7 +38,11 @@ func _snap(label: String, point: Vector2, zoom: float, angle: float, id: int) ->
 	var scale_xy:=Vector2(pic.get_size())/root.get_visible_rect().size
 	at*=scale_xy
 	nose*=scale_xy
-	snapshots.append({"label":label,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"actor":id,
+	var rump: Vector2=point-heading*.61
+	var chest: Vector2=point+heading*.32
+	var at_rump: Vector2=field.camera.unproject_position(Ground.unit_point(rump)+Vector3.UP*1.17)*scale_xy
+	var at_shoulder: Vector2=field.camera.unproject_position(Ground.unit_point(chest)+Vector3.UP*1.12)*scale_xy
+	snapshots.append({"rump_pixel":[at_rump.x,at_rump.y],"shoulder_pixel":[at_shoulder.x,at_shoulder.y],"label":label,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"actor":id,
 		"pos":[point.x,point.y],"facing":[heading.x,heading.y],"center_pixel":[at.x,at.y],
 		"muzzle_pixel":[nose.x,nose.y],"zoom":zoom,"yaw":angle,"hits":Array(b.hits),
 		"losses":Array(b.losses),"visible":field.view.visible_soldiers,"width":pic.get_width(),
@@ -83,6 +87,9 @@ func _run() -> void:
 	await _snap("quiet-side",b.vehicle_pos[1],7.1,1.62,-1)
 	await _snap("moving-three-quarter",rider.pos,7.6,yaw+.74,rider.id)
 	await _snap("moving-profile",rider.pos,7.6,yaw+1.58,rider.id)
+	await _snap("rider-opposite",rider.pos,7.6,yaw-1.53,rider.id)
+	await _snap("rider-rear",rider.pos,7.6,yaw+2.56,rider.id)
+	await _snap("standing-rear",b.vehicle_pos[1],7.1,-2.25,-1)
 	await _snap("formation-22m",rider.pos,22.,yaw+.88,rider.id)
 	await _snap("formation-42m",rider.pos,42.,yaw+.88,rider.id)
 	var last:=rider.pos
