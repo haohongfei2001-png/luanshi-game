@@ -1,0 +1,8 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+RC7_PLAY_INPUT {"distance":2.41827321052551,"drawn_tick":43,"foe_hp":62.0,"foe_id":584,"foe_position":[5.10730171203613,-3.83165073394775],"follow":true,"hero_hits":0,"hero_id":1056,"hero_position":[2.68970727920532,-3.77435398101807],"hero_slot":0,"hero_state":1,"internal_scale":1.0,"label":"personal-windup","lens":22.0,"marked_tick":43,"ordinary":[512,512],"previous_foe_hp":62.0,"received":1,"screen":[1920,1200],"seed":61112,"yaw":-0.575958653158129}
+RC7_PLAY_INPUT {"distance":1.8135017156601,"drawn_tick":48,"foe_hp":39.7627115547657,"foe_id":584,"foe_position":[4.96484184265137,-3.8282744884491],"follow":true,"hero_hits":1,"hero_id":1056,"hero_position":[3.1518816947937,-3.87259197235107],"hero_slot":0,"hero_state":2,"internal_scale":1.0,"label":"personal-contact","lens":22.0,"marked_tick":48,"ordinary":[512,512],"previous_foe_hp":62.0,"received":1,"screen":[1920,1200],"seed":61112,"yaw":-0.575958653158129}
+RC7_PERSONAL_PASS 1
