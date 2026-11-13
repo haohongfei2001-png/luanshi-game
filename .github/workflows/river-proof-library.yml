@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 3c8b455389411c3550a872a09c0b02a48615caca
+          ref: c5962a730038168ac0079f46650a6be1a0fc6765
           fetch-depth: 1
       - uses: actions/download-artifact@v4
         with:
@@ -33,7 +33,7 @@ jobs:
         with:
           name: exported-game-window-8a911eb
           path: /tmp/river-film
-          run-id: 43469213308
+          run-id: 43472948747
           github-token: ${{ github.token }}
       - name: Copy the original captures, match the app hash and publish only this evidence
         run: |
@@ -68,6 +68,9 @@ jobs:
           assert len(timings)==native["shipping_window"]["frames"]
           assert abs(max(timings)-native["shipping_window"]["max_ms"])<.001
           (d/"native-frame-times.json").write_text(json.dumps(timings,separators=(",",":"))+"\n")
+          for name in ("combat-normal-speed.mp4","export-sequence.jpg","export-recording.json"):
+              shutil.copyfile(d/name,d/("first-defeat"+Path(name).suffix))
+          assert max(s["end_tick"] for s in rec["samples"])>=570
           before,after=[json.loads((root/k/"input.json").read_text()) for k in ("before-22m","normal-22m")]
           assert before==after and len(after)==2
           (d/"normal-camera-before-after").mkdir(exist_ok=True)
@@ -91,4 +94,4 @@ jobs:
           PY
           git add -- docs/evidence/river-gate-v1-rc14/
           git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Archive native camera PNGs, Metal timings and the played export"
-          git push origin HEAD:refs/heads/codex/river-rc14-original-windows
+          git push origin HEAD:refs/heads/codex/river-rc14-ranged-record
