@@ -1,18 +1,21 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## OWNER-ARTREF-20261114｜最新 Owner 强制视觉任务与可恢复入口
+
+**优先级 P0：**立即沿用 [八作真实视觉对标与 ARTREF-01..12 可玩游戏验收](ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md)；不要将此前 RC3/RC13 的“技术视觉纵切片”和局部修补当作 Owner 认可的画面基础。Codex 应完成实际模型/骨架/甲衣/动画/河关环境的商业质量重建，在正式 Godot 512v512 战役中验证远中近景、军阵、正常速度交战和操作，并将证据按新文档归档。主任务仍 [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)，既有生效工程与存档/战场逻辑必须保留。**当前状态：规范已写入；新美术效果未通过 Owner 验收，M5 真实 20 分钟压力测试未通过/未完成，不能标 DONE。** 继续开发时以 RC13 真实代码/实拍为问题基线而非已经合格的美术目标。
+
+
 **此文件是实际编码代理的交接日志，不是对未执行任务的完成声明。**
 **主任务**：[CODEX_MASTER_EXECUTION_MANDATE_20261112.md](CODEX_MASTER_EXECUTION_MANDATE_20261112.md)，总 Issue [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。
 **Owner 要求**：一次下达完整战斗 V1 研发任务。每个阶段应在能力允许范围内自主继续，不要求用户再次代传指令。正式文学剧情完全留空。不新增费用或远控个人 Mac。
 
-## 河关 RC14 的实机美术返工
+## 河关 RC15 · 美术工作基线与恢复
 
-RC13 已被美术验收明确退回。此次可运行样板在正常战斗窗口中复核枪盾服装、骑兵鞍具、地形、林冠和军旗。工程、画面审查和真实 M5 分别记录。原稿与失败试作保留在 [环境分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-painted-valley) 和 [人物分支](https://github.com/haohongfei2001-png/luanshi-game/commits/codex/river-tailoring-study)。
+RC15 使用 Quaternius 免费 Standard 版的两个可编辑阔叶树母版，把原先折成大片的树冠换成具有连续分枝、叶片 UV 和专用树皮的原模型。第一遍树影成了深色剪影，第二遍改用整冠法线，保留了第一次失败。树身与叶簇按原场地格合批，两种母版合计源三角形 9,770 个。主角改成偏肩披衣，同一敌兵在 22 米镜头中仍是第 43 步起手、第 48 步受伤。造型、树林和群体腿部姿态离美术目标仍有距离。[两版树林原片](https://github.com/haohongfei2001-png/luanshi-game/tree/75d94996e37c3292ca497bd5d1f9d7f4cacd8210/docs/evidence/river-gate-v1-rc15/grove) · [单肩披挂实拍](https://github.com/haohongfei2001-png/luanshi-game/tree/084a820a65b4f39a13d6627f3b0369a5115596d0/docs/evidence/river-gate-v1-rc14/hero)
 
-角色与动作生产源来自 `0dfd1c075652c5b603e99d3abdbb9df93311311c`，正式包直接读取同步烘焙的 GLB、服装和动作图集。枪盾、精锐、主角、军官的肩甲和下摆已重新剪裁；弓手沿用同一套骨架。中桥的船、桥台及军旗与人物位于同一作战场景。
+使用 `blender -b --factory-startup --python-exit-code 7 --python tools/art/import_valley_grove.py -- /tmp/Stylized_Nature_MegaKitStandard.zip assets/environment/quaternius` 重建，源归档 SHA-256、再分发许可与转换结果均在 `assets/environment/quaternius/`。游戏启动和完整战役用同一个入口。双手使用经 CC0 核验的 HM08 掌指网格与原指骨，重做弓把、枪杆、扣弦和空手微屈。近档每手 785、远档 55–56 个三角形，实时合批内没有增加每指骨骼。操作者和敌我双方普通兵使用相同手部库。[真实窗及正常输入](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43474240506/artifacts/14061349563)。候选合并环境源 `89410bad7ed36018229f63388da5993f1e45aa36` 及手部源 `25558957154c4fb9a878edf17179986acb33cf48`，从 [PR #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53) 查看正在验证的统一检出。图形回归的下一条可执行命令为 `./tools/test-field-render.sh footage`。
 
-同一名弓手在第 25、32、36 步搭箭、引满、放弦，箭数 19→18。旧盾兵的手部阈值曾把棕木算成皮肤；已在原取样框用引擎的实际材质分色复查。角色不再同时穿两副肩甲或背两具箭囊。弓手在背侧镜头里穿出头巾的发髻已经重新剪裁。中桥船舱的水面在实拍发现穿模后修复。完整原图和游戏包以同一游戏树的 Actions 验证为准，美术标记为 `ART_REVIEW_REQUIRED`，真实 M5 为 `NOT_RUN`。
-
-在干净的云端工作树执行 `node tools/env_survey.mjs --check && node tools/art/bake_mounts.mjs --check && ./tools/prepare-font.sh && godot --headless --editor --path . --import && ./tools/compare-river-art.sh`。素材、代码与原始状态可回退到 `12bdc945b7bb4ce2db655555a567244984496e45`。仓库最新的[质量判退条件](VISUAL_RESET_AND_REJECTION_GATES_20261113.md)继续生效。
+[RC14 可回退游戏包与原始录像](https://github.com/haohongfei2001-png/luanshi-game/blob/c5962a730038168ac0079f46650a6be1a0fc6765/docs/evidence/river-gate-v1-rc14/PLAYTEST.md)。RC14 托管 M1 的 24 秒样本 P95 13.199 ms、P99 16.640 ms，独立战役从部署到还营成功。第二条护送的最终营地点击遇到 900 秒托管超时，失败日志保留。真实 M5 与最终美术质量均待验。
 
 ## 河关 RC13 · 已合入的可玩候选
 

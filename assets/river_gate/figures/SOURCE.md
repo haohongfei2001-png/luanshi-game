@@ -33,3 +33,5 @@ The divided thigh guards and fitted sleeve yokes share their colour cuts across 
 这套河关野战衣甲的内甲、肩腋开口、短枪衣及盾兵分片裙由 `tools/art/field_dress.py` 和 `tools/art/field_armour.py` 制作。普通弓手的斜背箭囊与腰带只保留实际使用的一套。蓄力箭从手指弦点随前臂瞄准，放弦步由战斗系统创建有弹道的飞箭。衣服与装具共用既有三档批次及动作图集。本段所述衣甲、箭袋与箭都是本项目原创。
 
 弓手的束发被收在有顶的软头巾内，近、中、远档共同保留眉线、后折和结尾。原有布色与头骨随同一动作，回放使用实战中的第 94 号弓手。
+
+双手的连续掌面、虎口、指节与指尖同样取自 MakeHuman Community 的 CC0 HM08 底模。Blender 按原始手指权重塑出持杆、持弓、扣弦、托盾与空手垂放的姿势，三档几何与现有左右腕关节共用。随仓库提交的手部 GLB 支持离线烘焙。上游版本、文件校验及重新取材命令见[手部来源](../../../tools/art/source/MAKEHUMAN.md)。

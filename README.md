@@ -1,5 +1,15 @@
 # Luanshi (working title)
 
+## OWNER-ASSET-FIRST-20261114｜采用成熟资产底座、先高品质再创新
+
+**最新 Codex 美术生产方式：[真实高品质合法资产先行 → Godot 实机高保真还原 → 精修创新](docs/ASSET_FIRST_HIGH_FIDELITY_PRODUCTION_20261114.md)。** 不再把“自己生成低质积木兵，再多轮微调”作为主方案。已经找到具体唐式甲士、可组合甲衣、三国军营、中国城墙/城市、马匹动画等**尚未获得许可和资源文件的候选**；须先检查价格与授权、FBX/Blender/GLB 格式、材质/骨骼/动作导入、正常可玩战场效果及 512v512 性能。不照搬商业游戏独创角色/场景，不将付费商业原始模型上传公共 GitHub。此前 [八作参考和 ARTREF 验收](docs/ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md) 继续适用，M5 真实持续性能与 Owner 美术通过仍未确认。
+
+
+## OWNER-ARTREF-20261114｜八款真实游戏美术对标与实机验收
+
+**正式质量执行规范：[八款游戏参考、真实截图与 ARTREF-01～12 美术验收](docs/ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md)。** Codex 必须借鉴《赵云传》的可操作斜俯视镜头、《王者荣耀》的成熟画面精度、《全面战争：三国》的千人军阵、《战意》的兵种近战、《真·三国无双 起源》的动作完成度、《帝国时代 IV》的城池场景、《燕云十六声》的历史环境、《炽焰帝国 II》的英雄与军团共存表现，并落实为**实际可玩的国风动画式 3D 游戏资源与效果**。禁止拷贝商业游戏知识产权或用概念图、调色、粗糙旧模型小修、单独精致主角冒充完成。当前 RC13 的功能/性能记录不是美术验收；MacBook Air M5 真实 20 分钟 512v512 性能及最终 Owner 审美认可仍待完成。
+
+
 **OWNER-QUALITY-20261113 正式提高质量目标：**《乱世》须追赶《王者荣耀》级或更高的**画面精度、制作完成度与流畅度**，同时坚持独立的精致国风 3D 卡通色块/Cel Shading 方向；不再接受粗糙人物与地图。作品内容和资源体量可同级甚至更大（文件 GB 数字不是质量指标）。MacBook Air M5 千人高画质交战**稳定 60 FPS 是基线，进一步向 90/120 FPS 及 120Hz 体验优化**；M5 真机未经证实不能宣称达标。明清专属内容延期。**[最新 Owner 质量权威](docs/OWNER_QUALITY_FIDELITY_PERFORMANCE_TARGET_20261113.md) · [QUALITY 验收条款](docs/ACCEPTANCE_MATRIX.md)**。
 
 **2026-11-13 美术方向更新：** 用户认可“3D 国风动画式卡通 + 干净色块 + 分级明暗 + 清晰军阵”的优先方向；保留可信的中国古代战争表现与 3D 战斗架构。详见 [正式视觉方向规范](docs/ART_DIRECTION_CEL_SHADED_BATTLEFIELD_20261113.md)。这是概念方向，游戏内实现与视觉品质尚待真实验收。
@@ -7,6 +17,8 @@
 An experimental single-player game set in a fictional ancient Chinese dynasty.
 
 ## Play the river gate candidate
+
+河关 RC15 在原地图上装入经许可的专业手部和阔叶树模型。主角枪侧调整为单肩披挂。编译、正常游玩录像、冷启动与画质实测见 [可玩候选 #53](https://github.com/haohongfei2001-png/luanshi-game/pull/53)，已有 RC14 的 [macOS 包与原始战斗](https://github.com/haohongfei2001-png/luanshi-game/blob/c5962a730038168ac0079f46650a6be1a0fc6765/docs/evidence/river-gate-v1-rc14/PLAYTEST.md)。
 
 **河关 0.16.0-rc.13 试玩候选** · [下载 macOS](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43426014852/artifacts/14037602462) · [实际跟随画面](docs/evidence/river-gate-v1-rc13/normal-native.jpg) · [连续战役实录](docs/evidence/river-gate-v1-rc13/playthrough-review.mp4) · [帧时间、回归及校验](docs/evidence/river-gate-v1-rc13/PLAYTEST.md)。解开 Actions 附件及内层 `Luanshi-macOS.zip`，打开应用。真实 M5 与最终美术质量尚待验收。 [RC12 回退包](docs/evidence/river-gate-v1-rc12/PLAYTEST.md)
 
