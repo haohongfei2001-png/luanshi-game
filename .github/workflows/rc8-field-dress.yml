@@ -12,13 +12,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-          fetch-depth: 3
+          fetch-depth: 5
       - name: Check the baked model, then run both real game windows
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
+          node tools/art/bake_field_garments.mjs
           node tools/art/bake_field_garments.mjs --check
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,json,zlib
+          blob=Path("assets/river_gate/figures/field_garments.gltf").read_bytes()
+          data=base64.b64encode(zlib.compress(blob,9)).decode()
+          print("DRESS_MESH_INFO",len(blob),hashlib.sha256(blob).hexdigest(),len(data))
+          # Two source floats can round differently between V8 versions. Transfer the
+          # exact Node-baked bytes used by the actual game; preserve the original asset.
+          for i in range(0,len(data),5500):print("DRESS_MESH_PART",i,data[i:i+5500])
+          PY
           BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
           curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
           echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
@@ -32,6 +43,7 @@ jobs:
             mkdir -p "$root"
             git archive "$rev" | tar -x -C "$root"
             cp -a assets/fonts/. "$root/assets/fonts/"
+            if [[ "$side" == after ]]; then cp assets/river_gate/figures/field_garments.gltf "$root/assets/river_gate/figures/"; fi
             cp tests/rc7_personal_contact.gd "$root/tests/"
             "$g" --headless --editor --path "$root" --import > "proof/$side-import.log" 2>&1
             if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "proof/$side-import.log"; then exit 1; fi
@@ -40,6 +52,7 @@ jobs:
             grep -q '^RC7_PERSONAL_PASS' "proof/$side.log"
             cp -a "$root/artifacts/personal-contact" "proof/$side"
           done
+          python3 -c 'from PIL import Image' || python3 -m pip install Pillow==11.3.0
           python3 - <<'PY'
           import base64, json, io, hashlib
           from PIL import Image, ImageOps
