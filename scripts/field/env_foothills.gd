@@ -450,56 +450,6 @@ func _bridge_ledges() -> void:
 			var turf:=center+Vector2(side*(1.62+.25*i),-1.23+i*1.13)*scale_factor
 			_field_margin(_cell(turf),turf,.53+.081*i,bank.y+i*2.1)
 
-# Stretches where cart traffic has cut into the grass. x is the starting easting
-# along the main approach, y is the bank and z its reach.
-# The cuts stop at the bridge and disappear inside the gate.
-func _cart_road_edges(road: Dictionary) -> void:
-	var points := PackedVector2Array()
-	for pair: Array in road.points:
-		points.append(Vector2(float(pair[0]),float(pair[1])))
-	var stretches: Array[Vector3]=[
-		Vector3(-20.5,-1,4.8),Vector3(-13.5,1,5.3),Vector3(-6.8,-1,6.2),
-		Vector3(.8,1,8.6),Vector3(3.5,-1,5.1),Vector3(12.7,-1,7.2),
-		Vector3(17.0,1,4.1),Vector3(25.5,1,8.4),Vector3(32.8,-1,5.4),
-		Vector3(39.1,1,4.7)]
-	for cut: Vector3 in stretches:
-		var segment:=0
-		var previous:=PackedVector3Array()
-		for i in 13:
-			var t:=float(i)/12.0
-			var x:=cut.x+t*cut.z
-			while segment<points.size()-2 and x>points[segment+1].x:
-				segment+=1
-			# Use the same smooth route as the soil painting, including the
-			# tangent through bends.
-			var a:=points[segment]
-			var b:=points[segment+1]
-			var u:=inverse_lerp(a.x,b.x,x)
-			var prior:=points[maxi(0,segment-1)]
-			var next:=points[mini(points.size()-1,segment+2)]
-			var center:=a.cubic_interpolate(b,prior,next,u)
-			var ahead:=a.cubic_interpolate(b,prior,next,u+.005)
-			var tangent:=center.direction_to(ahead)
-			var outward:=Vector2(-tangent.y,tangent.x)*cut.y
-			var swell:=sin(t*PI)
-			var width:=float(road.width)+.23+.28*sin(x*.70+cut.y)
-			var edge:=center+outward*width
-			var depth:=swell*(.59+.19*sin(x*1.68))
-			var shoulder:=ground_point(edge+outward*(depth+.28))-Vector3.UP*.009
-			var crest:=ground_point(edge+outward*depth*.31)+Vector3.UP*(.005+swell*(.11+.032*sin(1.54*x)))
-			var toe:=ground_point(edge-outward*(.22+depth*.50))+Vector3.DOWN*.014
-			var row:=PackedVector3Array([toe,crest,shoulder])
-			if cut.y<0: row.reverse()
-			if not previous.is_empty():
-				var terrain:Builder=_cell(edge).stone
-				terrain.joint=22
-				var earth:=Color("786b51")
-				var turf:=Color("708059")
-				terrain.quad(previous[0],previous[1],row[1],row[0],earth if cut.y>0 else turf)
-				terrain.quad(previous[1],previous[2],row[2],row[1],turf if cut.y>0 else earth)
-				terrain.joint=0
-			previous=row
-
 func _pavers(plan: Dictionary) -> void:
 	for bed:Array in plan.masonry:
 		var p:=Vector2(float(bed[0]),float(bed[1]))
@@ -530,7 +480,6 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	_pavers(plan)
 	_field_banks()
 	_bridge_ledges()
-	_cart_road_edges(plan.roads[0])
 	for patch:Patch in cells.values():
 		if patch.sprays>0:
 			patch.leaves.index()

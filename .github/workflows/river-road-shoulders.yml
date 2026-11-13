@@ -24,6 +24,7 @@ jobs:
           unzip -q /tmp/engine.zip -d /tmp/engine
           g=/tmp/engine/Godot_v4.6.3-stable_linux.x86_64
           mkdir -p proof
+          node tools/env_cartway.mjs --check
           ./tools/prepare-font.sh
           for side in before after; do
             rev=HEAD
