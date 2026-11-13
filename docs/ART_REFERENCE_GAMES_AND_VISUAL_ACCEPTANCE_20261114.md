@@ -30,11 +30,11 @@
 | [![赵云传 Steam 斜俯视战场](https://cdn.akamai.steamstatic.com/steam/apps/2201710/ss_8e6eb482d3c64a691653d98791dfd5a133f06590.1920x1080.jpg?t=1710128020)](https://store.steampowered.com/app/2201710/Three_Kingdoms_Zhao_Yun/) | 镜头、主角/士兵/建筑相对比例 |
 | [![王者荣耀官方游戏地图](https://www.honorofkings.com/img/map_bigimg3.jpg)](https://www.honorofkings.com/global-en/) | 清晰的地形色面、层次、细节与人物可读性 |
 | [![战意 Steam 军阵](https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/835570/ss_0ddbbb1bc1a0f5f38ae2a22077330d38040c5611.1920x1080.jpg?t=1726748286)](https://store.steampowered.com/app/835570/Conquerors_Blade/) | 战士站位、甲胄、盾枪、攻城 |
-| [真·三国无双 起源官方实机图](https://www.koeitecmoamerica.com/games/dynasty-warriors-origins/) | 冲锋、动作重量、成军动势 |
-| [全面战争：三国发行方实机介绍](https://asia.sega.com/totalwar-three-kingdoms/en/) | 军阵与战场地理关系 |
-| [帝国时代 IV 中国文明官方图](https://www.ageofempires.com/games/age-of-empires-iv/civilizations/chinese/) | 城池、道路、军阵、斜俯视场景 |
-| [燕云十六声官方 Steam 截图](https://store.steampowered.com/app/3564740/Where_Winds_Meet/) | 古代城市与自然景观 |
-| [炽焰帝国 II 实机存档](https://steamdb.info/app/1132210/screenshots/) | 英雄/兵团同时运动 |
+| [![真·三国无双 起源—真实战役画面（巴哈姆特媒体截图）](https://p2.bahamut.com.tw/B/2KU/19/284f82ef3a2bcf60dc0a69b99d1sqhr5.JPG?v=1736406719901)](https://www.koeitecmoamerica.com/games/dynasty-warriors-origins/) | 冲锋、动作重量、成军动势；[截图出处](https://gnn.gamer.com.tw/detail.php?sn=279446) |
+| [![全面战争：三国—攻城实际截图（VICE）](https://www.vice.com/wp-content/uploads/sites/2/2019/05/1558614529731-TW33.jpeg)](https://asia.sega.com/totalwar-three-kingdoms/en/) | 军阵与战场地理关系；[截图出处](https://www.vice.com/en/article/three-kingdoms-is-the-best-total-war-game-in-a-decade/) |
+| [![帝国时代 IV—中国式攻城实际截图（Steam 扩展）](https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3746540/f94377217b41d44cebcfe41b7590614771c5ad69/ss_f94377217b41d44cebcfe41b7590614771c5ad69.jpg)](https://www.ageofempires.com/games/age-of-empires-iv/civilizations/chinese/) | 城池、道路、军阵、斜俯视场景；[Steam 图片出处](https://steamdb.info/app/3746540/screenshots/) |
+| [![燕云十六声—古代城市实机画面](https://static.deltiasgaming.com/2025/11/3-Where-Winds-Meet_-Official-Gameplay-Trailer-0-0-42.jpeg)](https://store.steampowered.com/app/3564740/Where_Winds_Meet/) | 古代城市与自然景观；[截图出处](https://deltiasgaming.com/where-winds-meet-edition-guide-lite-vs-standard-vs-ultimate/) |
+| [![炽焰帝国 II—真实大军战斗画面（历史商店截图）](https://gaming-cdn.com/images/products/5821/screenshot/kingdom-under-fire-2-hero-edition-hero-edition-pc-jogo-steam-wallpaper-1.jpg?v=1712761866)](https://steamdb.info/app/1132210/screenshots/) | 英雄/兵团同时运动；[截图出处](https://www.instant-gaming.com/br/5821-comprar-kingdom-under-fire-2-hero-edition-hero-edition-pc-jogo-steam/) |
 
 ## 2. 目标图像：三个镜头都必须像成熟商业游戏
 
