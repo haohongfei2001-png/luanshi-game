@@ -40,15 +40,15 @@
     "sha256": "a67f875835160d00f5a39d291310032cbec78127abfc157fc5f74ad447931463"
   },
   "combat-normal-speed.mp4": {
-    "bytes": 9090353,
-    "sha256": "0330a5fa0fb12594a9fa008fd0d6d0fd8b29ed75db18811202f8b79152488440"
+    "bytes": 21066333,
+    "sha256": "71b76f225fba670dc295a51cda3ca131a4980b3c92db52526fa2d647c28ad2f1"
   },
   "export-sequence.jpg": {
-    "bytes": 109994,
-    "sha256": "ee5753c16213887ca5c70fac3eb010650edaf525df658040bc9b16dbbbb34f0f"
+    "bytes": 117131,
+    "sha256": "48d89ef450f3d125f4df9c43a00b916874f2b70baf39da87a369cfddedc09adc"
   },
   "export-recording.json": {
-    "bytes": 2736,
-    "sha256": "925eec6cc9ca36247ac5caef15169abc1ab0a025f98b3e19913e57ffe322b9d2"
+    "bytes": 5036,
+    "sha256": "6215a0832adb80591f2d3754937ffdbe760e139b5072a021b18ce9457a6c89e4"
   }
 }
