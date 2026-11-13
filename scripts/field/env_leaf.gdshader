@@ -9,6 +9,9 @@ uniform sampler2D canopy_paint : filter_linear_mipmap, repeat_enable;
 uniform vec4 deep_leaf : source_color = vec4(.15,.238,.216,1.0);
 uniform vec4 elm : source_color = vec4(.31,.401,.284,1.0);
 uniform vec4 sun_elm : source_color = vec4(.495,.565,.355,1.0);
+uniform vec4 elm_umbra : source_color = vec4(.177,.252,.216,1.0);
+uniform vec4 elm_body : source_color = vec4(.309,.382,.233,1.0);
+uniform vec4 elm_lit : source_color = vec4(.489,.527,.305,1.0);
 uniform vec4 sun_ash : source_color = vec4(.54,.52,.32,1.0);
 varying vec3 paint;
 varying float crown;
@@ -26,7 +29,18 @@ void vertex() {
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>6.0) {
+	if(crown>=7.8) {
+		float grade=crown-8.0;
+		float shadow_step=smoothstep(.225,.355,grade);
+		float light_step=smoothstep(.55,.72,grade);
+		tone=mix(elm_umbra.rgb,elm_body.rgb,shadow_step);
+		tone=mix(tone,elm_lit.rgb,.86*light_step);
+		// Sparse shapes inside the crown connect its volume to the irregular
+		// foliage cards on the rim. Only broad marks survive in the distance.
+		vec2 mark=texture(canopy_paint,UV*1.29).rb;
+		tone*=1.0-.085*mark.y;
+		tone=mix(tone,elm_lit.rgb,.15*mark.x*shadow_step);
+	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
 		float sun=clamp((crown-6.1)*1.42,0.0,1.0);
 		vec3 mids=mix(vec3(dot(brush.rgb,vec3(.30,.55,.15))),brush.rgb,.66);
