@@ -393,8 +393,85 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         shift+=(.048 if high else -.037)*counter
         crouch+=.012*(1.-load_beat)
         hand=tuple(v+d*load_beat for v,d in zip(hand,offsets))
+    # The source formal march was taken from an upright parade. Its feet
+    # have useful contact timing; its level shoulders and pelvis turn in the
+    # same direction. Let the loaded hip lead, and let the chest overtake it
+    # over the opposite planted leg. Feet are solved against the ground below.
+    pelvic_pitch=lean*.40
+    if clip==0:
+        a=2.*pi*t
+        support=sin(a)                 # left support in the first half
+        strike=cos(a-.10)              # left heel arrives, right shoulder leads
+        absorb=cos(2.*a-.55)           # compress just after each foot arrives
+        forward=cos(heading)
+        across=sin(heading)
+        front=.48+.52*abs(forward)
+        heavy=kit in (4,7)
+        bow=kit in (5,6)
+        root_turn=6.5 if running else 7.2
+        upper_turn=(4.0 if heavy else 4.2 if bow else 6.4) * (.72 if running else 1.)
+        # Swing the girdle into the leading thigh while seating the belt on the
+        # current support. Reverse and oblique steps keep their true footpath.
+        hip_yaw+=(root_turn*strike*forward)
+        hip_roll-=(4.3 if running else 5.)*support*front
+        sway-=(.041 if heavy else .034)*support*front
+        shift+=(.030 if running else .024)*(.24+.76*abs(forward))*sin(2.*a-.36)*forward
+        crouch+=(.016 if running else .009)*absorb+(.019 if heavy else .006)
+        pelvic_pitch+=(4.5 if running else 3.3)*absorb*forward
+        # The shoulders turn about a different centre than the belt. A shield
+        # keeps the loaded left side forward; an archer controls the bow with
+        # a quieter outside shoulder. Let the free side complete the stride.
+        shoulder_yaw-=upper_turn*(cos(a+.19)*forward+.32*support*across)
+        chest_roll+=((1.2 if heavy else 1.8) if running else (5.1 if heavy else 6.0))*sin(a-.26)*front
+        lean+=(7.2 if running else 5.7)*cos(2.*a-.80)*forward
+        lean+=(4.0 if heavy else 2.2 if kit==3 else 0.)*forward
+        # This offset falls away on a backstep: a loaded forward advance
+        # puts the sternum ahead of the pelvis, while the rear file can step
+        # away without pitching its head across the rear heel.
+        advancing=max(0.,forward)
+        if kit==7:
+            sway-=.041; shoulder_yaw+=10.; chest_roll-=7.
+            lean+=7.*advancing; shift+=.045*advancing; crouch+=.034
+        elif kit==3:
+            shoulder_yaw-=9.; chest_roll+=2.3
+            lean+=6.2*advancing; shift+=.040*advancing; crouch+=.024
+        elif kit==4:
+            shoulder_yaw-=5.; chest_roll+=3.6
+            lean+=5.5*advancing; shift+=.030*advancing; crouch+=.020
+        elif kit==6:
+            shoulder_yaw-=15.; chest_roll+=3.6; crouch+=.033
+            lean+=4.6*advancing; shift+=.030*advancing
+        elif kit==5:
+            sway+=.018; shoulder_yaw+=2.7; lean-=2.1*advancing
+        else:
+            lean+=4.6*advancing; shift+=.041*advancing; crouch+=.010
+        if kit in (2,3,4,6):
+            # Both palms still lie on the rigid weapon axis. The support
+            # forearm rides the carried mass instead of following the sternum.
+            reach=(.011,.022,-.029,-3.5,2.1,1.4) if heavy else (.020,.028,-.043,-5.8,3.2,2.4)
+            hand=tuple(v+d*strike*front for v,d in zip(hand,reach))
+        elif kit not in (5,7):
+            hand=tuple(v+d*strike*front for v,d in zip(hand,(.013,.027,-.066,-7.,3.,4.)))
+    elif clip==1:
+        # Split stance when the file checks its advance. Put the belt over
+        # the front or rear leg and keep the face looking down the weapon.
+        # This is the existing idle row, including when a target checks a file.
+        if kit in (2,3,4,6,7):
+            forward_leg=kit in (3,6,7)
+            sway+=-.046 if forward_leg else .037
+            crouch+=.049 if kit==7 else .036
+            shift+=.039 if forward_leg else -.023
+            hip_yaw+=7. if kit in (3,4) else -7.
+            shoulder_yaw+=-9.5 if kit in (3,6) else 8.5
+            chest_roll+=-4.8 if forward_leg else 4.
+            lean+=5.2 if forward_leg else 2.5
+            pelvic_pitch+=2.
+        elif kit==5:
+            sway+=.034; hip_yaw-=8.; shoulder_yaw+=9.; chest_roll+=3.
+        else:
+            sway+=.023; hip_yaw+=5.; shoulder_yaw-=5.
     waist=(0,.86,0)
-    pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
+    pelvic=placed(waist,(sway,.86-crouch,shift),euler(pelvic_pitch,hip_yaw,hip_roll))
     chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
     head_m=placed((0,1.427,.015),trans(chest,(0,1.427,.015)),euler(lean*.42,shoulder_yaw*.40,chest_roll*.28))
     ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
@@ -480,6 +557,14 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         if side_hit and clip==10:
             off=add(off,(-side_hit*.074*recoil,.028*recoil-.022*settle,-.128*recoil))
             offq=euler(-15.-20.*recoil,-9.+side_hit*25.*recoil,-14.+side_hit*14.*settle)
+        if clip in (0,1):
+            # Let the strapped board travel with the loaded shoulder. The
+            # old low carry used the identical vertical board at both heel
+            # strikes while the shield shoulder moved visibly around it.
+            step=sin(2.*pi*t-.28)*front if clip==0 else .15*sin(2.*pi*t)
+            heel=cos(2.*pi*t-.32)*front if clip==0 else .10*cos(2.*pi*t)
+            off=add(off,(-.012-.027*step,.022-.032*step,.048+.049*heel))
+            offq=qm(euler(-4.+5.4*heel,5.5-5.1*heel,2.2+4.*step),offq)
         if carried:
             # The sword rests outside the leading edge of the shield. Its weight
             # sits in a lowered elbow; both wrist and crossguard continue to be
@@ -515,6 +600,17 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             pole=(side*(.91 if open_arm else .49),
                   (-.22 if open_arm else -.69)+(.14 if lead else -.12)*load_beat,
                   -.64 if open_arm else -.95)
+        if clip in (0,1) and kit in (3,4,6):
+            # The front elbow supports a shaft from underneath, the other
+            # hangs back beside the ribs. A crossbow tucks both closer to
+            # the torso so the stock lies on the line of the shoulder.
+            pulse=sin(2.*pi*t-.31) if clip==0 else .14*sin(2.*pi*t)
+            if kit==6:
+                pole=(side*(.43+.07*pulse),-.86+.08*pulse,-.58)
+            elif side<0:
+                pole=(-.51-.08*pulse,-.70+.12*pulse,-.75)
+            else:
+                pole=(.80+.12*pulse,-.43-.09*pulse,-.80)
         if kit==5 and not ride:
             # The working elbow points outward as the fingers draw, while the
             # bow elbow remains outside the line of the string.
