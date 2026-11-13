@@ -1,0 +1,278 @@
+[
+  {
+    "center": [
+      -10.0,
+      -3.0
+    ],
+    "close": 26,
+    "contact": [
+      86,
+      46
+    ],
+    "fighting": 77,
+    "gate_hp": 260.0,
+    "hero_kit": 3,
+    "hero_slot": 0,
+    "hero_state": 0,
+    "in_frame_count": 260,
+    "in_frame_ids_sha256": "da1c959e474446f5e1cc01155b3c079bfb82fd6597dc713991b67863b549932e",
+    "internal_scale": 1.0,
+    "kind": "hero",
+    "label": "army",
+    "losses": [
+      3,
+      15
+    ],
+    "msaa_3d": 2,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "screen_space_aa": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 48,
+    "visible": 406,
+    "window": [
+      1920,
+      1200
+    ],
+    "yaw": -0.576,
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      2.10505390167236,
+      -25.0368137359619
+    ],
+    "close": 22,
+    "contact": [
+      86,
+      46
+    ],
+    "fighting": 60,
+    "gate_hp": 260.0,
+    "hero_kit": 3,
+    "hero_slot": 0,
+    "hero_state": 0,
+    "in_frame_count": 231,
+    "in_frame_ids_sha256": "ef8cade9183daff0aafd85cb06550ed37846580c553c62aa1b3a0a09e28875dc",
+    "internal_scale": 1.0,
+    "kind": "line",
+    "label": "pasture",
+    "losses": [
+      3,
+      15
+    ],
+    "msaa_3d": 2,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "screen_space_aa": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 48,
+    "visible": 317,
+    "window": [
+      1920,
+      1200
+    ],
+    "yaw": -0.576,
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      -35.7999992370605,
+      -8.39999961853027
+    ],
+    "close": 0,
+    "contact": [
+      86,
+      46
+    ],
+    "fighting": 19,
+    "gate_hp": 260.0,
+    "hero_kit": 3,
+    "hero_slot": 0,
+    "hero_state": 0,
+    "in_frame_count": 16,
+    "in_frame_ids_sha256": "bc2c159bd659de9c333e37a058d3215be5c64133efad9a5ad69f545da825f3a0",
+    "internal_scale": 1.0,
+    "kind": "bank",
+    "label": "bank",
+    "losses": [
+      3,
+      15
+    ],
+    "msaa_3d": 2,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "screen_space_aa": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 48,
+    "visible": 82,
+    "window": [
+      1920,
+      1200
+    ],
+    "yaw": -0.576,
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      27.5943470001221,
+      0.357993453741074
+    ],
+    "close": 20,
+    "contact": [
+      975,
+      739
+    ],
+    "fighting": 1,
+    "gate_hp": 260.0,
+    "hero_kit": 3,
+    "hero_slot": 0,
+    "hero_state": 0,
+    "in_frame_count": 255,
+    "in_frame_ids_sha256": "7530982bd7e01be2b636edd2f9053646ca43e246e0018be40189500079c18511",
+    "internal_scale": 1.0,
+    "kind": "ram",
+    "label": "approach",
+    "losses": [
+      180,
+      219
+    ],
+    "msaa_3d": 2,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 226,
+    "screen_space_aa": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 490,
+    "visible": 366,
+    "window": [
+      1920,
+      1200
+    ],
+    "yaw": -0.54,
+    "zoom": 24.0
+  },
+  {
+    "center": [
+      48.0,
+      0.0
+    ],
+    "close": 0,
+    "contact": [
+      975,
+      739
+    ],
+    "fighting": 17,
+    "gate_hp": 260.0,
+    "hero_kit": 3,
+    "hero_slot": 0,
+    "hero_state": 0,
+    "in_frame_count": 349,
+    "in_frame_ids_sha256": "31a81dd8142fe98ae30634535d7545e5af86675fab7f53812045971f5642e78e",
+    "internal_scale": 1.0,
+    "kind": "gate",
+    "label": "gate",
+    "losses": [
+      180,
+      219
+    ],
+    "msaa_3d": 2,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 385,
+    "screen_space_aa": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 490,
+    "visible": 445,
+    "window": [
+      1920,
+      1200
+    ],
+    "yaw": -0.89,
+    "zoom": 34.0
+  },
+  {
+    "center": [
+      48.0,
+      0.0
+    ],
+    "close": 0,
+    "contact": [
+      975,
+      739
+    ],
+    "fighting": 16,
+    "gate_hp": 260.0,
+    "hero_kit": 3,
+    "hero_slot": 0,
+    "hero_state": 0,
+    "in_frame_count": 105,
+    "in_frame_ids_sha256": "be06ba17b1f27fb39250fcf3b1ec4b0892dac82612f3b3ebf00184ca9084c7d2",
+    "internal_scale": 1.0,
+    "kind": "gate",
+    "label": "ramp",
+    "losses": [
+      180,
+      219
+    ],
+    "msaa_3d": 2,
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "ranks": 0,
+    "screen_space_aa": 0,
+    "seed": 61112,
+    "shadows": true,
+    "tick": 490,
+    "visible": 227,
+    "window": [
+      1920,
+      1200
+    ],
+    "yaw": 2.15,
+    "zoom": 18.0
+  }
+]
