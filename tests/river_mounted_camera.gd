@@ -30,8 +30,8 @@ func _snap(label: String, point: Vector2, zoom: float, angle: float, id: int) ->
 	if pic.save_png(directory+"/"+label+".png")!=OK: failed=true
 	var b:=field.battle
 	var at:=field.camera.unproject_position(Ground.unit_point(point)+Vector3.UP*1.18)
-	var heading=Vector2.ZERO if id<0 else b.roster[id].facing
-	var muzzle:=point+heading*1.16
+	var heading: Vector2=Vector2.ZERO if id<0 else b.roster[id].facing
+	var muzzle: Vector2=point+heading*1.16
 	var nose:=field.camera.unproject_position(Ground.unit_point(muzzle)+Vector3.UP*1.58)
 	snapshots.append({"label":label,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"actor":id,
 		"pos":[point.x,point.y],"facing":[heading.x,heading.y],"center_pixel":[at.x,at.y],
