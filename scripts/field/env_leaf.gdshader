@@ -11,6 +11,10 @@ uniform vec4 deep_leaf : source_color = vec4(.15,.238,.216,1.0);
 uniform vec4 elm : source_color = vec4(.31,.401,.284,1.0);
 uniform vec4 sun_elm : source_color = vec4(.495,.565,.355,1.0);
 uniform vec4 sun_ash : source_color = vec4(.54,.52,.32,1.0);
+uniform vec4 elm_under : source_color = vec4(.113,.178,.154,1.);
+uniform vec4 elm_body : source_color = vec4(.197,.284,.198,1.);
+uniform vec4 elm_light : source_color = vec4(.345,.407,.236,1.);
+varying float facing_sky;
 varying vec3 paint;
 varying float crown;
 varying vec2 bark_uv;
@@ -21,6 +25,7 @@ void vertex() {
 	VERTEX.x+=breeze*UV2.x;
 	VERTEX.z+=breeze*.53*UV2.x;
 	crown=UV2.y;
+	facing_sky=NORMAL.y;
 	bark_uv=UV;
 	paint=crown>.5?vec3(UV2.x,(UV2.y-1.0)*2.0,0.0):COLOR.rgb;
 }
@@ -28,17 +33,16 @@ void fragment() {
 	float opacity=1.0;
 	vec3 tone;
 	if(crown>=8.0) {
-		// The edge and gaps of a tuft are authored on the same folded branch
-		// surface as its veins. Sky is visible between actual branch tips.
 		vec4 brush=texture(elm_spray,UV);
-		float sun=clamp((crown-8.1)/.7,0.0,1.0);
-		// Keep a quiet, continuous canopy shadow under each fork.
-		// Luminance comes from the matte painting; sunlight still follows
-		// the actual folded 3D surface and its neighbouring branches.
-		float val=dot(brush.rgb,vec3(.25,.61,.14));
-		vec3 balanced=mix(vec3(val),brush.rgb,.75);
-		tone=balanced*mix(vec3(.62,.77,.79),vec3(.94,.98,.89),sun);
-		opacity=brush.a;
+		bool filled=crown>=10.;
+		float tier=clamp((crown-(filled?10.1:8.1))/.70,0.,1.);
+		float value=dot(brush.rgb,vec3(.28,.59,.13));
+		if (!OUTPUT_IS_SRGB) value=sqrt(max(value,0.));
+		float pigment=filled?mix(.46,value,brush.a*.56):value;
+		float exposed=clamp(.24+.36*max(facing_sky,0.)+.28*tier+.34*(pigment-.45),0.,1.);
+		tone=mix(elm_under.rgb,elm_body.rgb,smoothstep(.20,.49,exposed));
+		tone=mix(tone,elm_light.rgb,.77*smoothstep(.49,.75,exposed));
+		opacity=filled?1.:brush.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
 		float sun=clamp((crown-6.1)*1.42,0.0,1.0);

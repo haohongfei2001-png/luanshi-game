@@ -90,6 +90,44 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 				patch.leaves.add_vertex(verts[k])
 	patch.sprays+=1
 
+# The outer lobes have an undercut, a low edge, a rounded shoulder and an
+# uneven top. Smooth normals preserve the continuous foliage volume at army zoom.
+func _crown_mass(patch: Patch,at: Vector3,ray: Vector3,reach: float,width: float,depth: float,grade: float,seed: float) -> void:
+	var side:=Vector3(-ray.z,0.0,ray.x)
+	var points:=PackedVector3Array()
+	var normals:=PackedVector3Array()
+	var colours:=PackedVector2Array()
+	var rings: Array[Vector2]=[Vector2(.025,-.53),Vector2(.74,-.44),Vector2(1.,-.05),
+		Vector2(.85,.34),Vector2(.49,.69),Vector2(.022,.77)]
+	var slopes:=PackedFloat32Array([-1.85,-.68,.18,.80,1.95,5.0])
+	var sides:=16
+	for j in rings.size():
+		var r:=rings[j]
+		for i in sides:
+			var a:=TAU*i/sides
+			var lobes:=1.+.102*sin(3.*a+seed)+.077*cos(5.*a-seed*.60)+.056*sin(7.*a+seed*1.36)
+			var x:=cos(a)*r.x*lobes
+			var z:=sin(a)*r.x*lobes
+			var rise:=r.y+.076*r.x*sin(3.*a+seed)-.16*x+.13*z
+			var p:=at+ray*(reach*(x+.10*r.y))+side*(width*(z-.16*r.y))+Vector3.UP*depth*rise
+			points.append(p)
+			var slope:=slopes[j]
+			var n:=(ray*cos(a)+side*sin(a)+Vector3.UP*slope).normalized()
+			normals.append(n)
+			colours.append(Vector2(.52+.43*x,.53+.42*z))
+	for j in rings.size()-1:
+		for i in sides:
+			var next:=(i+1)%sides
+			var a:=j*sides+i
+			var b:=j*sides+next
+			for n:int in [a,a+sides,b,b,a+sides,b+sides]:
+				patch.leaves.set_color(Color.WHITE)
+				patch.leaves.set_normal(normals[n])
+				patch.leaves.set_uv(colours[n])
+				patch.leaves.set_uv2(Vector2(.27,10.1+.70*grade))
+				patch.leaves.add_vertex(points[n])
+	patch.sprays+=1
+
 func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 	var foot:=ground_point(p)
 	var spin:=rng.randf_range(0.0,TAU)
@@ -132,7 +170,10 @@ func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
 			var grade:=clampf(.24+.135*index+(.14 if side==0 else -.08),.12,.93)
 			var rib:=socket+ray*length*.59+Vector3.UP*length*(.23+.58*pitch)
 			patch.stone.rod(socket,rib,h*.0075,h*.0027,BARK,4)
-			_bough(patch,socket,ray,length,width,pitch,grade,true,hand*(.17 if side==0 else -.21))
+			var center:=socket+ray*length*.57+Vector3.UP*width*(.24+.16*pitch)
+			_crown_mass(patch,center,ray,length*.74,width*.86,width*.78,grade,index*2.17+.91*side+spin)
+			var edge:=center+ray*(.29*length)+Vector3.DOWN*(.10*width)
+			_bough(patch,edge,ray,length*.55,width*.68,-.19,grade,true,hand*.18)
 
 func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D

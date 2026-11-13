@@ -5,10 +5,10 @@ uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
-uniform vec4 turf_sheltered : source_color = vec4(.237,.325,.252,1.0);
-uniform vec4 turf_open : source_color = vec4(.455,.521,.341,1.0);
-uniform vec4 clay_bed : source_color = vec4(.405,.352,.282,1.0);
-uniform vec4 clay_dry : source_color = vec4(.638,.579,.463,1.0);
+uniform vec4 turf_sheltered : source_color = vec4(.166,.227,.188,1.0);
+uniform vec4 turf_open : source_color = vec4(.329,.402,.299,1.0);
+uniform vec4 clay_bed : source_color = vec4(.275,.258,.226,1.0);
+uniform vec4 clay_dry : source_color = vec4(.462,.438,.372,1.0);
 uniform sampler2D shale_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D lane_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
@@ -57,10 +57,15 @@ vec3 painted_ground(vec2 p, float shore) {
 	vec3 margin=texture(field_margins,mapped).rgb;
 	vec2 meadow_uv=vec2(p.x*.069+p.y*.021,p.y*.077-p.x*.019);
 	vec2 loess_uv=vec2(p.y*.067+p.x*.012,-p.x*.082+p.y*.023);
-	float grass=paint_value(texture(meadow_paint,meadow_uv).rgb);
-	float soil=paint_value(texture(lane_paint,loess_uv).rgb);
+	// Mirror the edge of each painting. The change of direction happens
+	// continuously; no square border is exposed when a squad crosses a tile.
+	vec2 bend=vec2(sin(.17*p.y+.071*p.x),sin(.16*p.x-.057*p.y))*.067;
+	vec2 turf_tile=1.-abs(2.*fract((meadow_uv+bend)*.5)-1.);
+	vec2 dirt_tile=1.-abs(2.*fract((loess_uv-bend)*.5)-1.);
+	float grass=paint_value(texture(meadow_paint,turf_tile).rgb);
+	float soil=paint_value(texture(lane_paint,dirt_tile).rgb);
 	vec3 verge_marks=texture(verge_track,meadow_uv*1.41).rgb;
-	float grass_shape=smoothstep(.28,.70,grass);
+	float grass_shape=smoothstep(.28,.70,grass)*.78+.22*smoothstep(.25,.69,verge_marks.r);
 	float dry_shape=smoothstep(.42,.78,soil);
 	// A single large wash describes open grass and sheltered banks. Painted
 	// lobes carry the hue changes and retain their shape when the view pulls back.
@@ -71,13 +76,14 @@ vec3 painted_ground(vec2 p, float shore) {
 	float centre=1.-smoothstep(.57,.99,cover.a);
 	float fallow=smoothstep(.24,.58,cover.r)*(1.-smoothstep(.73,.9,cover.r))*(1.-centre);
 	float edge=cover.r-.21*fallow+(.53-grass_shape)*.20+(.50-verge_marks.r)*.09;
-	float road=smoothstep(.345,.72,edge);
+	float road=smoothstep(.30,.76,edge);
 	vec3 colour=mix(turf,clay,road);
 	float lip=4.*road*(1.-road);
 	colour*=1.-lip*(.05+.065*grass_shape);
 	colour=mix(colour,clay,margin.b*(1.-road)*(.12+.18*dry_shape));
 	float rut=1.-smoothstep(.027,.095,abs(cover.a-.385+(.5-verge_marks.g)*.036));
-	colour*=1.-.17*rut*road*(.40+.60*dry_shape);
+	float surviving=smoothstep(.37,.73,verge_marks.g*.53+dry_shape*.47);
+	colour*=1.-.14*rut*road*surviving;
 	if (p.x > -25. && p.x < 47. && p.y > -8. && p.y < 8.) {
 		vec3 wear=texture(cartway,(p+vec2(25.,8.))/vec2(72.,16.)).rgb;
 		colour*=1.-.22*wear.r*(.63+.37*dry_shape);
