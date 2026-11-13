@@ -1,0 +1,21 @@
+name: Inspect the redistributable sewn tunic before adapting it
+on:
+  push:
+    branches: [codex/river-robe-input]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 tools/art/fetch_field_tunic.py /tmp/tunic
+      - name: Save the two source files for the fitting study
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tests/garment_blob.py blobs /tmp/tunic/*.obj /tmp/tunic/*.mhclo
