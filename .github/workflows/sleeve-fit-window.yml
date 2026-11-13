@@ -1,0 +1,112 @@
+name: Inspect the cut and load of infantry sleeves
+on:
+  push:
+    branches: ['codex/river-sleeve-gusset']
+    paths: ['tools/art/import_garrison_issues.py','tools/art/field_sleeves.py','tools/art/bake_field_garments.mjs','tests/sleeve_fit_window.gd','.github/workflows/sleeve-fit-window.yml']
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 17
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fit the recorded fabric shoulder, rigid plate, elbow and original sewn cuffs
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get -yq install python3-numpy python3-pil ffmpeg
+          proof=docs/evidence/river-gate-v1-rc21/sleeve-fit
+          mkdir -p "$proof"
+          /usr/bin/python3 tools/art/import_garrison_issues.py "$RUNNER_TEMP/field-source" | tee "$proof/fit.log"
+          node tools/art/bake_field_garments.mjs
+          node tools/art/bake_field_garments.mjs --check
+          git diff --exit-code -- assets/river_gate/figures/garrison_bodies.glb assets/river_gate/figures/river_company.glb assets/river_gate/figures/company_motion.png assets/third_party/wildfire_garments/field_colours.png assets/third_party/wildfire_headwear/headwear.glb
+          git add -- assets/third_party/wildfire_garments/field_issues.glb assets/river_gate/figures/field_garments.gltf
+          git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake fitted sleeve heads, mobile elbows and separate turned cuffs'
+          git rev-parse HEAD
+      - name: Render the fixed gate battle, wearers and matching equal-speed game
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 1 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          proof=docs/evidence/river-gate-v1-rc21/sleeve-fit
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev=126091196db530aa7ec13de61f839c9c41cac24b; fi
+            root="$RUNNER_TEMP/helms-$side"
+            mkdir -p "$root" "$proof/$side"
+            git archive "$rev" | tar -x -C "$root"
+            cp -a assets/fonts/. "$root/assets/fonts/"
+            cp tests/sleeve_fit_window.gd "$root/tests"
+            godot=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+            "$godot" --headless --editor --path "$root" --import > "$proof/$side/import.log" 2>&1
+            if grep -E 'ERROR:|Parse Error' "$proof/$side/import.log"; then exit 1; fi
+            for tool in sleeve_fit_window rc7_personal_contact; do
+              xvfb-run -a -s '-screen 0 1920x1200x24' "$godot" --path "$root" --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script "tests/$tool.gd" -- --field-size=512 > "$proof/$side/$tool.log" 2>&1
+              if grep -E 'ERROR:|Parse Error' "$proof/$side/$tool.log"; then exit 1; fi
+            done
+            cp "$root"/artifacts/sleeve-fit/{line.png,reverse.png,spearman.png,archer.png,guard.png,crossbow.png,line.json} "$proof/$side"
+            cp "$root"/artifacts/personal-contact/{personal-contact.png,input.json} "$proof/$side"
+            xvfb-run -a -s '-screen 0 1280x800x24' "$godot" --path "$root" --resolution 1280x800 --disable-vsync --fixed-fps 20 --write-movie "$RUNNER_TEMP/$side.avi" --script tests/sleeve_fit_window.gd -- --field-size=512 --march-film > "$proof/$side/movie.log" 2>&1
+            grep -F 'FITTED_MARCH true' "$proof/$side/movie.log"
+            cp "$root/artifacts/sleeve-fit/film.json" "$proof/$side"
+            ffmpeg -loglevel error -y -i "$RUNNER_TEMP/$side.avi" -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac "$proof/$side/march.mp4"
+          done
+          ffmpeg -loglevel error -y -i "$proof/before/march.mp4" -i "$proof/after/march.mp4" -filter_complex '[0:v]scale=640:400[l];[1:v]scale=640:400[r];[l][r]hstack[v]' -map '[v]' -map 1:a:0 -c:v libx264 -crf 19 -pix_fmt yuv420p -c:a copy "$proof/equal-speed.mp4"
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from PIL import Image
+          r=Path("docs/evidence/river-gate-v1-rc21/sleeve-fit")
+          for name in ("line","input","film"):
+              assert json.loads((r/"before"/(name+".json")).read_text())==json.loads((r/"after"/(name+".json")).read_text()),name
+          for shot in ("line","reverse","personal-contact","spearman","archer","guard","crossbow"):
+              close=shot in ("spearman","archer","guard","crossbow")
+              pair=Image.new("RGB",(1000,340) if close else (1500,469))
+              for i,side in enumerate(("before","after")):
+                  im=Image.open(r/side/(shot+".png")).convert("RGB")
+                  assert im.size==(1920,1200)
+                  if close:
+                      im=im.crop((700,325,1220,665))
+                  else:
+                      im.save(r/side/(shot+"-native.jpg"),quality=86,subsampling=0)
+                  sz=(pair.width//2,pair.height)
+                  pair.paste(im.resize(sz,Image.Resampling.LANCZOS),(i*sz[0],0))
+              pair.save(r/(shot+"-pair.jpg"),quality=94,subsampling=0)
+          PY
+          for side in before after; do
+            mkdir -p "$RUNNER_TEMP/view-$side"
+            ffmpeg -loglevel error -i "$proof/$side/march.mp4" -vf 'fps=5,scale=800:500' "$RUNNER_TEMP/view-$side/f%03d.jpg"
+          done
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import os
+          r=Path("docs/evidence/river-gate-v1-rc21/sleeve-fit")
+          strips=Image.new("RGB",(1050,434))
+          for row,side in enumerate(("before","after")):
+              files=sorted((Path(os.environ["RUNNER_TEMP"])/("view-"+side)).glob("f*.jpg"))
+              assert len(files)>=22
+              for col,j in enumerate((4,10,18)):
+                  im=Image.open(files[j]).convert("RGB").crop((255,139,547,320))
+                  strips.paste(im.resize((350,217),Image.Resampling.LANCZOS),(col*350,row*217))
+          strips.save(r/"arm-motion.jpg",quality=94,subsampling=0)
+          PY
+          git add -- "$proof"
+          git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record the real weapon movement on fitted field sleeves'
+          git push origin HEAD:refs/heads/codex/river-sleeve-gusset
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-sleeve-gusset
+          path: docs/evidence/river-gate-v1-rc21/sleeve-fit

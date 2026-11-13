@@ -16,6 +16,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 from company_figures import HIPS, CHEST, HEAD, LU, LF, RU, RF, LT, RT, arm_nodes
 from figure_mesh import Library, Surface
+from field_sleeves import refit_sleeves
 from figure_atlas import NAMES as MATERIALS
 from company_figures import costume as close_costume
 from company_line import costume as line_costume
@@ -239,7 +240,7 @@ def fit_garment(path, role, slot):
     bounds=np.array(s.positions)
     if not .42<bounds[:,1].min()<.83 or not 1.44<bounds[:,1].max()<1.55:
         raise ValueError((role,bounds.min(axis=0),bounds.max(axis=0)))
-    return s
+    return refit_sleeves(s,role)
 
 def cloth(source,role):
     # Upstream alpha carries the player's dye, not transparency. Preserve the

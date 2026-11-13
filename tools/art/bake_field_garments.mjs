@@ -80,7 +80,8 @@ function surface(look,segments,rows) {
         for (const side of sides) {
             const upper=side<0?LEFT_ARM:RIGHT_ARM;
             const rootY=1.407, shoulderBone=.225;
-            const length=heavy?.199:.166;
+            const issued=heavy || look==="Regular";
+            const length=heavy?.181:(look==="Regular"?.123:.166);
             const material=heavy?3:30;
             const sweep=heavy?1.83:1.60;
             const clothAt=(u,v,lip=0)=>{
@@ -92,9 +93,19 @@ function surface(look,segments,rows) {
                 const breadth=.045+.046*Math.sin(1.36*v)+.008*v+lip;
                 const depth=.051+.048*Math.sin(1.48*v)+lip;
                 const cx=shoulderBone+.021*v,cz=-.013+.014*v;
-                const y=rootY+.015*flank-length*v+.047*v*Math.abs(toward)**1.60;
-                const arm=.20+.72*v+.045*Math.max(0,flank);
-                return [side*(cx+breadth*flank),y,cz+depth*toward,upper,CHEST,arm];
+                let y=rootY+.015*flank-length*v+.047*v*Math.abs(toward)**1.60;
+                let arm=.20+.72*v+.045*Math.max(0,flank);
+                let width=breadth,thickness=depth;
+                if(issued) {
+                    // The upper courses are laced to the padding at the shoulder.
+                    // The cuff and bent elbow are cloth, visible under the plate.
+                    // Two similar rigid rotations preserve the straight iron lip.
+                    width*=heavy?.97:.90;
+                    thickness*=heavy?.99:.91;
+                    y+=v*(heavy?.019:.035)*Math.max(0,toward);
+                    arm=(heavy?.77:.73)+.165*v;
+                }
+                return [side*(cx+width*flank),y,cz+thickness*toward,upper,CHEST,arm];
             };
             const n=segments<=4?4:(segments<=6?6:9);
             panel(n,2,material,(u,v)=>clothAt(u,v*.52,.003));
