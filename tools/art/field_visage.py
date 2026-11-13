@@ -49,6 +49,58 @@ def marching_head():
             faces.extend([(a,b,b+n),(a,b+n,a+n)])
     return {"p":points,"f":faces}
 
+def archer_brow(a):
+    # Farther above the eyes than the nape and tied just behind the left ear.
+    return 1.612 + .037*cos(a) + .006*sin(a+.4)
+
+
+def archer_wrap(s,bone,rank=False):
+    """Folded field headcloth on the same silhouette at all camera distances."""
+    sides=9 if rank else (26 if s.detail else 15)
+    stations=[(0.,.088,.113,.029),(.22,.091,.115,.027),(.54,.083,.104,.023),
+              (.79,.061,.082,.019),(.935,.039,.052,.014),(1.,.0004,.0005,.012)]
+    if rank:
+        stations=[stations[i] for i in (0,1,3,5)]
+
+    def crown(u,v):
+        a=TAU*u
+        t,rx,rz,cz=stations[round(v*(len(stations)-1))]
+        ease=sin(pi*t)
+        # A length of folded cloth passes from the right temple up to the left
+        # rear corner. The high and low faces meet over a continuous filled crown.
+        crease=(.008*cos(2*a+.57)-.004*cos(3*a-.91))*ease
+        x=-.019*t*t+(rx+crease)*sin(a)
+        z=cz-.022*t*t+(rz+crease)*cos(a)
+        y=archer_brow(a)*(1-t)+1.751*t+ease*(.009*sin(a+.29)-.004*cos(2*a))
+        return (x,y,z),bone
+    s.grid(sides,len(stations)-1,crown,"felt")
+
+    def wrap(a,t,lip=0.):
+        w=sin(pi*t)
+        # The rolled edge and broad, crossing turn have a slight offset over
+        # the temple. Nothing is attached to the face, collar or draw hand.
+        x=(.089+.003*w+lip)*sin(a)
+        y=archer_brow(a)+.003*sin(2*a)-.006+t*(.030+.008*cos(a+.84))
+        z=.029+(.115+.004*w+lip)*cos(a)
+        return (x,y,z),bone
+    s.grid(sides,2 if s.detail else 1,lambda u,v:wrap(TAU*u,v),"facing")
+    if not rank:
+        # The outer end crosses the band obliquely before disappearing behind the knot.
+        def turn(u,v):
+            a=TAU*u
+            h=.43+.42*cos(a+.74)
+            return wrap(a,h+(.16 if s.detail else .19)*v,.0018)
+        s.grid(sides,1,turn,"felt")
+    def tie(u,v):
+        # A flattened, doubled end tucked back under the band leaves the front
+        # and drawing-side eye unobstructed. Its taper reads in profile.
+        t=v
+        width=.014*(1.-.66*t)*(1.+.27*sin(pi*t))
+        return (-.060-.039*sin(t*pi*.79)+(u-.5)*2.*width,
+                1.605-.079*t+.006*sin(pi*t),
+                -.064-.037*t+.012*sin(pi*t)+(u-.5)*width*.63),bone
+    s.grid(1,2 if rank else 4,tie,"felt")
+
 def head(s,look,bone):
     close=s.detail
     data=sculpt()
@@ -81,6 +133,8 @@ def head(s,look,bone):
     for face in source["f"]:
         raw=[source["p"][i] for i in face]
         if heavy and all(y>brow(atan2(x,z-.35))+.12 for x,y,z in raw):
+            continue
+        if look=="archer" and all(bind(x,y,z)[1]>archer_brow(atan2(x*width,(z-.35)*.112))+.014 for x,y,z in raw):
             continue
         x,y,z=[sum(p[k] for p in raw)/3 for k in range(3)]
         # One continuous sculpt carries both the hairline and the brow. Eye/mouth
@@ -116,18 +170,7 @@ def head(s,look,bone):
     if heavy:
         field_helmet(s,look,bone)
     elif look=="archer":
-        # The archer's soft cloth cap follows the skull, leaving his draw shoulder clear.
-        def cap(u,v):
-            a=TAU*u
-            h=brow(a)+.035+(8.045-brow(a))*v
-            p=scalp(a,min(h,8.025),.070+.05*(1-v))
-            top=bind(0,8.125,.22)
-            return lerp(p,top,max(0.,(v-.80)/.20)),bone
-        s.grid(n,5 if close else 3,cap,"facing")
-        band(-.023,.13,"headcloth",.143)
-        p=scalp(pi,7.15,.18)
-        s.ribbon([p,(p[0]-.021,p[1]-.059,p[2]-.012),
-                  (p[0]-.040,p[1]-.112,p[2]+.006)],.036,"headcloth",bone)
+        archer_wrap(s,bone)
     else:
         band(-.015,.16,"leather" if look=="player" else "headcloth",.053)
         if close: band(.06,.095,"headcloth",.082)

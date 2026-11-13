@@ -1,6 +1,7 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
 from field_armour import field_helmet
+from field_visage import archer_wrap
 from company_weapons import field_shield, nocked_arrow
 from figure_mesh import Surface, add, lerp
 
@@ -58,8 +59,10 @@ def costume(look,rank=False):
                  (1.635,.085,.099,0,.034),(1.703,.065,.077,0,.018)],"skin",HEAD,ns)
         if heavy and look!="player":
             field_helmet(s,look,HEAD,rank=True)
+        elif look=="archer":
+            archer_wrap(s,HEAD,rank=True)
         else:
-            s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"facing" if look=="archer" else "hair",HEAD,ns)
+            s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"hair",HEAD,ns)
             s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"leather" if look=="player" else "headcloth",HEAD,ns)
             if look=="player":
                 s.oval((-.016,1.750,-.054),(.057,.058,.067),"hair",HEAD,7,4)
