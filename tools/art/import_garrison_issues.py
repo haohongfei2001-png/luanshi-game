@@ -147,11 +147,11 @@ def fit_garment(path, role, slot):
                 slow=math.sin(math.pi*t)**.80
                 if role=="Archer":
                     # Loose working sleeve, gathered above the shooting bracer.
-                    fullness=(.025+.009*(1. if side<0 else 0.))*slow
+                    fullness=(.034+.010*(1. if side<0 else 0.))*slow
                 elif role=="Guard":
                     fullness=.026*slow
                 else:
-                    fullness=.031*slow
+                    fullness=.037*slow
                 facing=radial_x/length
                 back=-radial_z/length
                 ease=fullness*(.63+.37*facing+.26*back)
@@ -171,13 +171,13 @@ def fit_garment(path, role, slot):
             # working side opens above the bent knee, a spearman has a deep
             # wrap at the other hip. Preserve the artists' separate cloth and
             # cuirass UV islands instead of drawing a split over both.
-            free=(.047 if role=="Guard" else .089 if role=="Archer" else .103)
+            free=(.068 if role=="Guard" else .115 if role=="Archer" else .143)
             forward=max(0.,min(1.,(z+.03)/.18))
             position[1]+=depth*depth*free*(.65*max(0.,x/.24)+.47*forward)
             position[1]-=depth*depth*(.017 if role=="Guard" else .031)*max(0.,-x/.24)
             # Fabric around the side of the planted thigh hangs away from the
             # moving knee. Keep the two inside layers of the original coat.
-            position[2]-=depth*(.014+.025*max(0.,min(1.,(-z+.015)/.17)))
+            position[2]-=depth*(.018+.038*max(0.,min(1.,(-z+.015)/.17)))
         return position,skin
 
     def fitted(i):

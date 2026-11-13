@@ -2,13 +2,13 @@ name: Compare the fitted shoulders and a full-speed infantry march
 on:
   push:
     branches: ['codex/river-fitted-shoulders']
-    paths-ignore: ['docs/**','assets/river_gate/figures/river_company.glb','assets/river_gate/figures/field_garments.gltf','assets/third_party/wildfire_garments/field_issues.glb']
+    paths-ignore: ['docs/**','assets/river_gate/figures/company_motion.png','assets/river_gate/figures/river_company.glb','assets/river_gate/figures/field_garments.gltf','assets/third_party/wildfire_garments/field_issues.glb']
 permissions:
   contents: read
 jobs:
   game:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 16
     permissions:
       contents: write
     env:
@@ -25,10 +25,28 @@ jobs:
           node tools/art/bake_field_garments.mjs
           node tools/art/bake_field_garments.mjs --check
           /usr/bin/python3 tools/art/bake_river_company.py --geometry-only
+          /usr/bin/python3 -c "import sys;sys.path.insert(0,'tools/art');from company_motion import bake_motion;from pathlib import Path;bake_motion(Path('assets/river_gate/figures'))"
+          git show 01bcdb90a1edbc41d8cb43de61abe37b0461f357:assets/river_gate/figures/company_motion.png > "$RUNNER_TEMP/old.png"
+          /usr/bin/python3 tools/art/check_company_motion.py
+          /usr/bin/python3 tools/art/check_field_carries.py
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import os
+          a=Image.open(Path(os.environ["RUNNER_TEMP"])/"old.png").convert("RGBA")
+          b=Image.open("assets/river_gate/figures/company_motion.png").convert("RGBA")
+          changes=[]
+          for i in range(a.height//4):
+              box=(0,i*4,a.width,4*(i+1))
+              if a.crop(box).tobytes()!=b.crop(box).tobytes(): changes.append(i)
+          allowed={5*31+j for j in [0,12,*range(16,31)]}
+          assert set(changes)==allowed,(changes,allowed)
+          print("LEGACY_ATTACK_ROWS_EXACT",a.height//4-len(allowed),"BOW_TRAVEL_ROWS",len(changes))
+          PY
           /usr/bin/python3 tools/art/import_garrison_issues.py "$RUNNER_TEMP/garrison"
           # No face, hand, bracer, dye, or other pre-existing asset may have changed.
           git diff --exit-code -- assets/river_gate/figures/garrison_bodies.glb assets/third_party/wildfire_garments/field_colours.png
-          git add -- assets/river_gate/figures/river_company.glb assets/third_party/wildfire_garments/field_issues.glb assets/river_gate/figures/field_garments.gltf
+          git add -- assets/river_gate/figures/company_motion.png assets/river_gate/figures/river_company.glb assets/third_party/wildfire_garments/field_issues.glb assets/river_gate/figures/field_garments.gltf
           if ! git diff --cached --quiet; then
             git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the shouldered cuirasses, fitted sleeves and suspended skirts'
           fi
@@ -84,6 +102,28 @@ jobs:
                   cell=pair.width//2,pair.height
                   pair.paste(im.resize(cell,Image.Resampling.LANCZOS),(i*cell[0],0))
               pair.save(root/(name+'-pair.jpg'),quality=94,subsampling=0)
+          PY
+          for view in before after; do
+            mkdir -p "$RUNNER_TEMP/film-$view"
+            ffmpeg -loglevel error -i "$proof/$view/march.mp4" -vf 'fps=5,scale=800:500' "$RUNNER_TEMP/film-$view/f%03d.jpg"
+          done
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import os
+          root=Path('docs/evidence/river-gate-v1-rc19/fitted-infantry')
+          temp=Path(os.environ['RUNNER_TEMP'])
+          for kind in ('window','motion'):
+              size=(390,244) if kind=='window' else (335,240)
+              plate=Image.new('RGB',(size[0]*3,size[1]*2))
+              for row,side in enumerate(('before','after')):
+                  frames=sorted((temp/('film-'+side)).glob('f*.jpg'))
+                  assert len(frames)>=22
+                  for col,j in enumerate((4,10,18)):
+                      im=Image.open(frames[j]).convert('RGB')
+                      if kind=='motion': im=im.crop((270,135,525,318))
+                      plate.paste(im.resize(size,Image.Resampling.LANCZOS),(col*size[0],row*size[1]))
+              plate.save(root/(kind+'-time.jpg'),quality=95,subsampling=0)
           PY
           git add -- "$proof"
           git -c user.name='River Gate field art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record equal-speed fitted infantry and the native 22 metre game windows'

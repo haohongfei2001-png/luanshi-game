@@ -19,6 +19,7 @@ func _run() -> void:
 		var b0:=b.ordinary_counts.duplicate()
 		var steps:=[]
 		var marcher:=b.roster[37]
+		var archer:=b.roster[94]
 		var start:=marcher.pos
 		var previous:=marcher.pos
 		var distance:=0.
@@ -26,14 +27,15 @@ func _run() -> void:
 			_step_neutral()
 			distance+=marcher.pos.distance_to(previous)
 			previous=marcher.pos
-			var point:=Ground.unit_point(marcher.before.lerp(marcher.pos,.82))
+			var moving:=archer if frame<27 else marcher
+			var point:=Ground.unit_point(moving.before.lerp(moving.pos,.82))
 			field.carry=.82*Battle.DT
 			_view(Vector2(point.x,point.z),22.,-.576)
 			await RenderingServer.frame_post_draw
 			if frame in [3,12,22,32,44,58,72,90,101]:
 				steps.append({"frame":frame,"id":marcher.id,"pos":[marcher.pos.x,marcher.pos.y],
 					"facing":[marcher.facing.x,marcher.facing.y],"stride":marcher.visual_stride,
-					"state":marcher.state,"hp":marcher.hp,"hits":Array(b.hits),"losses":Array(b.losses)})
+					"state":marcher.state,"hp":marcher.hp,"view_id":moving.id,"bow_state":archer.state,"bow_ammo":archer.ammo,"hits":[b.hits[0],b.hits[1]],"losses":[b.losses[0],b.losses[1]]})
 		var file:=FileAccess.open(directory+"/film.json",FileAccess.WRITE)
 		file.store_string(JSON.stringify({"soldiers":Array(b0),"seed":Battle.SEED,
 			"actor":marcher.id,"world_distance":distance,"meters":marcher.pos.distance_to(start),

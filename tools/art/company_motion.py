@@ -377,7 +377,20 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             elbow_height=(.015*walk if move else 0.)
             carry=add(carry,(.019*walk,elbow_height,.025*walk))
             anchor=lerp(carry,add((.136,1.420,.430),(sway*.72,-crouch,shift)),bow_draw)
-            aim=euler(-13.+11.*bow_draw,-32.+24.*bow_draw,-60.+48.*bow_draw)
+            pitch,yaw,roll=-13.+11.*bow_draw,-32.+24.*bow_draw,-60.+48.*bow_draw
+            if move:
+                # The old walking bow had exactly the same rotation in all 32
+                # poses. Let the support arm absorb the alternating footfall,
+                # while both hands and the nock travel as one loaded bow.
+                stride=2.*pi*t
+                support=cos(stride-.29)
+                swing=sin(stride-.24)
+                balance=(1.16 if running else 1.)*(1.-.30*abs(sin(heading)))
+                pitch+=balance*(7.4*support+1.35*sin(2.*stride-.49))
+                yaw+=balance*5.6*swing
+                roll-=balance*(8.1*support+1.2*sin(2.*stride+.60))
+                anchor=add(anchor,(.013*swing,.014*support,-.018*swing))
+            aim=euler(pitch,yaw,roll)
             offq=aim
             right,radius=reachable(chest,1,aim)
             anchor=limit_grip(anchor,right,radius)

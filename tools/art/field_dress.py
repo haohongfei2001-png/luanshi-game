@@ -144,12 +144,12 @@ def player_half_mantle(s, rank=False):
         row = min(int(f), len(stations)-2)
         blend = f-row
         y, width, depth = (a+(b-a)*blend for a,b in zip(stations[row],stations[row+1]))
-        angle = -.36-2.76*u-v*(.63-.79*u)
+        angle = -.25-2.94*u-v*(.59-.84*u)
         shoulder=max(0.,-sin(angle))
         back=max(0.,-cos(angle))
         # Weigh a long back corner against a shorter front point. The hem is
         # a continuously cut curve rather than separate hanging strips.
-        y+=v*v*(.092*(1.-u)-.215*back**.82-.035*shoulder)
+        y+=v*v*(.076*(1.-u)-.235*back**.82-.043*shoulder)
         fold=.014*sin(2.40*pi*u-.52*v)*sin(.91*pi*v)
         breath=sin(pi*v)*shoulder
         x=(width+fold+.010*breath)*sin(angle)

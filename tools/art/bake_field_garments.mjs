@@ -53,10 +53,10 @@ function surface(look,segments,rows) {
         const n=segments<=4?4:segments;
         function textile(a,down) {
             const front=Math.cos(a),side=Math.sin(a),left=Math.max(0,-side);
-            const fall=.47+.29*(1-front)+.53*left;
-            const y=1.445-depth*fall*down-.020*side*side;
-            const rx=.086+(.146+.018*left)*Math.sin(down*1.49);
-            const rz=.083+(.084+.020*Math.max(0,-front))*Math.sin(down*1.45);
+            const fall=.50+.31*(1-front)+.66*left;
+            const y=1.456-depth*fall*down-.025*side*side;
+            const rx=.086+(.166+.031*left)*Math.sin(down*1.49);
+            const rz=.083+(.092+.044*Math.max(0,-front))*Math.sin(down*1.45);
             const fold=.009*Math.sin(2*a+.47)*Math.sin(Math.PI*down);
             const shoulder=Math.abs(side);
             return [(rx+fold)*side,y,-.008+(rz+fold)*front,
@@ -80,20 +80,20 @@ function surface(look,segments,rows) {
         for (const side of sides) {
             const upper=side<0?LEFT_ARM:RIGHT_ARM;
             const rootY=1.407, shoulderBone=.225;
-            const length=heavy?.171:.143;
+            const length=heavy?.199:.166;
             const material=heavy?3:30;
-            const sweep=heavy?1.74:1.54;
+            const sweep=heavy?1.83:1.60;
             const clothAt=(u,v,lip=0)=>{
                 const angle=(2*u-1)*sweep-.09;
                 const flank=Math.cos(angle),toward=Math.sin(angle);
                 // Sloped crown and recessed ends wrap around the front and
                 // back of the sleeve. The largest radius follows the actual
                 // padding above the elbow, then hangs in a shallow curve.
-                const breadth=.049+.062*Math.sin(1.64*v)-.006*v*v+lip;
-                const depth=.057+.053*Math.sin(1.62*v)+lip;
+                const breadth=.045+.046*Math.sin(1.36*v)+.008*v+lip;
+                const depth=.051+.048*Math.sin(1.48*v)+lip;
                 const cx=shoulderBone+.021*v,cz=-.013+.014*v;
                 const y=rootY+.015*flank-length*v+.047*v*Math.abs(toward)**1.60;
-                const arm=.14+.78*v+.045*Math.max(0,flank);
+                const arm=.20+.72*v+.045*Math.max(0,flank);
                 return [side*(cx+breadth*flank),y,cz+depth*toward,upper,CHEST,arm];
             };
             const n=segments<=4?4:(segments<=6?6:9);
