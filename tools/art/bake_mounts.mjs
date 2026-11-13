@@ -112,39 +112,131 @@ class HorseHide {
  }
 }
 
+// The cheek, poll, nasal bridge and lips form a continuous falling line.
+const neckStations=[[0,1.116,.264,.235,.251,11,0],[0,1.238,.369,.232,.289,11,.10],
+ [0,1.384,.490,.204,.264,11,.31],[0,1.536,.586,.162,.216,11,.54],
+ [0,1.662,.682,.130,.164,11,.78],[0,1.756,.765,.108,.106,11,.98]];
+const skullStations=[[0,1.726,.718,.077,.098,11],[0,1.751,.788,.141,.139,11],
+ [0,1.723,.856,.149,.167,11],[0,1.685,.940,.132,.151,11],
+ [0,1.653,1.015,.112,.123,11],[0,1.606,1.089,.090,.091,11],
+ [0,1.562,1.156,.086,.078,11],[0,1.537,1.203,.097,.065,11],
+ [0,1.515,1.245,.088,.049,11],[0,1.504,1.264,.062,.027,11]];
+
+function fitFace(m,hide,detail){
+ // Seat the orbit and nostril onto the actual signed-distance cheek, on
+ // both sides. Sparse distant faces keep their same orbital and nasal cues.
+ function width(y,z) {
+  let low=0,high=.24;
+  for(let step=0;step<17;step++){const x=(low+high)*.5;if(hide.distance(x,y,z)>0)high=x;else low=x;}
+  return low;
+ }
+ for(const side of [-1,1]){
+  function face(y,z,depth=.002){return [side*(width(y,z)+depth),y,z];}
+  function mark(y,z,ys,zs,tilt,tile,steps,bulge) {
+   const ps=[];
+   const centre=m.pt(face(y,z,bulge),tile,.5,.5,11);
+   for(let i=0;i<steps;i++){
+    const a=TAU*i/steps, long=zs*Math.cos(a), high=ys*Math.sin(a);
+    const yy=y+high+tilt*long, zz=z+long;
+    ps.push(m.pt(face(yy,zz,.0035),tile,.5+.48*Math.cos(a),.5+.48*Math.sin(a),11));
+   }
+   for(let i=0;i<steps;i++)m.tri(centre,side<0?ps[(i+1)%steps]:ps[i],side<0?ps[i]:ps[(i+1)%steps]);
+  }
+  mark(1.761,.879,.013,.032,.17,EYE,detail?10:6,.010);
+  // The opening of the nares faces out AND forward. A side-projected
+  // flat dot vanishes when the game camera looks along the nasal ridge.
+  const nares=face(1.544,1.226,.004);
+  const outward=unit([side*.72,.22,.66]);
+  const along=unit([-side*.55,-.36,.72]);
+  const across=unit(cross(outward,along));
+  const root=add(nares,mul(outward,.003));
+  const inner=[],outer=[];
+  const count=detail?10:6;
+  const dark=m.pt(add(root,mul(outward,.011)),EYE,.47,.44,11);
+  for(let i=0;i<count;i++){
+   const a=TAU*i/count, long=Math.cos(a),short=Math.sin(a);
+   const pos=add(root,add(mul(along,.031*long),mul(across,.014*short*(1.-.24*long))));
+   const lip=add(root,add(mul(along,.039*long),mul(across,.021*short)));
+   const lift=.008+.005*short;
+   inner.push(m.pt(add(pos,mul(outward,lift+.003)),EYE,.5+.46*long,.5+.46*short,11));
+   outer.push(m.pt(add(lip,mul(outward,lift)),MUZZLE,.5+.45*long,.5+.45*short,11));
+  }
+  for(let i=0;i<count;i++){
+   let j=(i+1)%count;
+   m.tri(dark,inner[i],inner[j]);
+   // Make the rim a separate island; a triangle cannot span texture swatches.
+   const a=m.pt(m.p[inner[i]],MUZZLE,.46,.54,11),c=m.pt(m.p[inner[j]],MUZZLE,.54,.46,11);
+   m.quad(a,outer[i],outer[j],c);
+  }
+  if(detail){
+   // Fleshy outer wing, dark almond opening and lower-lip crease. The
+   // forehead stays open between the brow and the bridle cheekpiece.
+   m.line([face(1.767,.853,.007),face(1.779,.872,.008),face(1.778,.890,.008),face(1.766,.910,.004)],[.003,.007,.007,.003],POINT,5,11);
+
+   m.line([face(1.501,1.169,.003),face(1.492,1.198,.003),face(1.489,1.231,.004),face(1.498,1.254,.004)],[.003,.005,.006,.003],POINT,4,11);
+   mark(1.766,.887,.0036,.0039,0,FLAX,6,.0105);
+  }
+ }
+}
+
+function riverMane(m,close){
+ // A horse's mane falls off the crest to one side. Four broad overlapping
+ // locks protect its silhouette in motion; the root line also marks the wither.
+ const locks=[
+  [.282,1.472,.421,1.612,.175,.99], [.392,1.589,.536,1.738,.156,.78],
+  [.506,1.702,.638,1.815,.137,.74], [.604,1.790,.751,1.858,.112,.70]];
+ for(let k=0;k<locks.length;k++){
+  const [z0,y0,z1,y1,depth,bias]=locks[k], l=[],r=[];
+  for(const t of [0,.38,.74,1]){
+   const fall=depth*t, back=t*(.066+.025*bias);
+   const root=-.015-.078*Math.sin(t*1.47);
+   const pinch=t*t*(.62+.04*k);
+   l.push([root-.013*t, y0-fall+.014*Math.sin(t*PI), z0-back+pinch*(z1-z0)*.30]);
+   r.push([root-.030*Math.sin(t*PI), y1-fall-.035*t, z1-back-pinch*(z1-z0)*.55]);
+  }
+  m.strip(l,r,HAIR,11);
+ }
+ // Forelock comes forward between the ears, then parts onto the visible brow.
+ m.skin([[0,1.864,.766,.037,.027,11],[-.007,1.875,.817,.046,.028,11],
+         [-.038,1.859,.861,.048,.024,11],[-.056,1.823,.908,.029,.014,11],
+         [-.050,1.800,.920,.006,.006,11]],close?7:4,HAIR);
+}
 function horse(m, high, draught){
  const hide=new HorseHide();
  const body=high?14:8, neck=high?12:8, limb=high?8:5, small=high?7:5;
  // Barrel: croup, tucked flank, deep rib cage and prominent withers. Ventral line rises aft.
  hide.skin([[0,1.035,-.85,.085,.09],[0,1.085,-.77,.245,.223],[0,1.085,-.60,.319,.302],[0,1.065,-.43,.335,.306],[0,1.045,-.20,.295,.28],[0,1.047,.04,.315,.316],[0,1.06,.26,.333,.342],[0,1.087,.44,.295,.342],[0,1.083,.58,.198,.255],[0,1.077,.65,.087,.153]],body,COAT)
  // Neck incl. crest, throat and jaw: the taper follows a rising diagonal rather than a cone.
- hide.skin([[0,1.115,.28,.238,.26,11,0],[0,1.24,.37,.238,.30,11,.08],[0,1.365,.49,.202,.268,11,.23],[0,1.52,.60,.155,.21,11,.53],[0,1.66,.694,.137,.172,11,.77],[0,1.76,.758,.111,.119,11,.96]],neck,COAT)
- hide.skin([[0,1.722,.695,.064,.095,11],[0,1.753,.763,.139,.149,11],[0,1.732,.862,.15,.18,11],[0,1.694,.958,.122,.147,11],[0,1.624,1.067,.096,.108,11],[0,1.58,1.151,.096,.088,11],[0,1.56,1.187,.082,.068,11]],neck,COAT)
- hide.skin([[0,1.592,1.119,.090,.074,11],[0,1.56,1.183,.099,.075,11],[0,1.543,1.231,.086,.053,11],[0,1.544,1.244,.066,.035,11]],small,MUZZLE)
+ hide.skin(neckStations);
+ hide.skin(skullStations);
+ // Large upper cheek behind a slim nasal bridge. The throat is left open.
+ for(const side of [-1,1])hide.skin([[side*.052,1.677,.810,.084,.102],[side*.052,1.626,.868,.083,.107],[side*.044,1.602,.951,.057,.064]]);
+ fitFace(m,hide,true);
  // Two ears, dark inner pinnae, black eyes under an orbital ridge and fleshy nostrils.
  for(const s of [-1,1]){
-  m.skin([[s*.079,1.831,.765,.047,.059,11],[s*.094,1.895,.765,.045,.052,11],[s*.116,1.960,.758,.030,.035,11],[s*.13,2.005,.75,.007,.011,11]],high?7:4,POINT,[1,0,0]);
+  m.skin([[s*.079,1.831,.765,.047,.059,11],[s*.094,1.895,.765,.045,.052,11],[s*.116,1.960,.758,.030,.035,11],[s*.126,1.993+s*.009,.759+s*.022,.006,.010,11]],high?7:4,POINT,[1,0,0]);
   if(high){
    m.strip([[s*.077,1.863,.797],[s*.083,1.924,.797],[s*.126,1.971,.769]],[[s*.110,1.865,.786],[s*.125,1.923,.779],[s*.128,1.972,.766]],MUZZLE,11)
-   m.oval([s*.138,1.751,.898],[.012,.026,.039],EYE,8,11)
-   m.line([[s*.124,1.771,.929],[s*.148,1.786,.89],[s*.145,1.782,.848]],[.008,.016,.009],POINT,5,11)
-   m.oval([s*.148,1.763,.906],[.003,.006,.005],FLAX,5,11)
-   m.oval([s*.0855,1.574,1.214],[.007,.02,.025],EYE,7,11)
-   m.line([[s*.083,1.513,1.185],[s*.070,1.515,1.228],[s*.043,1.521,1.246]],.0055,POINT,4,11)
-  }else{m.oval([s*.142,1.754,.898],[.009,.018,.029],EYE,5,11)}
+  }
  }
  if(high){
-  // A narrow irregular forehead star continues into a broken strip along the nasal bridge.
-  m.strip([[-.022,1.884,.835],[-.031,1.875,.884],[-.010,1.843,.933],[-.012,1.755,1.031]],[[.014,1.884,.835],[.031,1.875,.883],[.020,1.843,.933],[.002,1.755,1.031]],FLAX,11)
+  // An irregular central ridge sits directly on the top of the skull. Its
+  // quiet light plane leads to the dark upper lip under an overhead camera.
+  const bridge=[[.841,-.004,.025],[.876,-.009,.037],[.924,.003,.027],[.987,.007,.019],
+                [1.053,-.002,.015],[1.104,-.006,.015],[1.143,-.004,.006]];
+  function upper(x,z){
+   let lo=1.53,hi=1.95;
+   for(let i=0;i<17;i++){const y=(lo+hi)*.5;if(hide.distance(x,y,z)>0) hi=y;else lo=y;}
+   return [x,lo+.004,z];
+  }
+  m.panel(bridge.map(([z,x,w])=>[upper(x-w,z),upper(x,z),upper(x+w,z)]),LIGHT,11);
  }
  // Mane skin sections, separate forelock and one coherent tapering tail.
  let crest=[[0,1.47,.257,.042,.055,11,0],[-.018,1.57,.346,.054,.069,11,.1],[-.030,1.702,.47,.047,.063,11,.43],[-.034,1.819,.603,.043,.052,11,.73],[-.018,1.877,.72,.032,.038,11,1],[0,1.867,.794,.028,.026,11,1]];
  m.skin(crest,high?7:5,HAIR);
- m.skin([[0,1.861,.76,.034,.033,11],[-.025,1.877,.824,.047,.033,11],[-.043,1.848,.884,.035,.027,11],[-.064,1.816,.922,.007,.008,11]],small,HAIR)
- if(high) for(let i=0;i<7;i++){
-  let t=i/7,z=.30+.398*t,y=1.445+.397*t; m.strip([[-.042,y+.043,z+.025],[-.064,y+.021,z-.019],[-.116,y-.05,z-.075]], [[-.041,y+.04,z+.084],[-.083,y+.006,z+.03],[-.117,y-.05,z-.072]],HAIR,11)
- }
- m.skin([[0,1.299,-.696,.073,.060,12,0],[0,1.237,-.826,.094,.090,12,.10],[-.014,1.026,-.958,.079,.107,12,.33],[-.029,.813,-1.005,.072,.11,12,.56],[-.052,.608,-1.006,.049,.077,12,.85],[-.064,.474,-1.036,.011,.033,12,1]],high?9:5,HAIR)
+
+ riverMane(m,high);
+ m.skin([[0,1.299,-.696,.073,.060,12,0],[0,1.237,-.826,.094,.090,12,.10],[-.014,1.026,-.904,.097,.104,12,.33],[-.012,.816,-.952,.086,.100,12,.56],[-.042,.608,-1.018,.066,.084,12,.85],[-.079,.450,-1.077,.014,.041,12,1]],high?9:5,HAIR)
  for(const s of [-1,1]){
   // Front: pectoral overlap → elbow → carpus → fetlock → inclined pastern and hoof.
   // Back: gluteal → stifle (forward) → projecting hock → cannon/pastern.
@@ -199,19 +291,17 @@ function rankHorse(m,tow){
          [0,1.045,-.161,.295,.278],[0,1.050,.051,.320,.310],
          [0,1.080,.282,.340,.342],[0,1.102,.437,.291,.319],
          [0,1.078,.616,.156,.208]],10,COAT);
- m.skin([[0,1.146,.300,.223,.263,11,0],[0,1.305,.418,.214,.256,11,.19],
-         [0,1.478,.546,.177,.223,11,.47],[0,1.642,.670,.136,.161,11,.77],
-         [0,1.762,.753,.110,.113,11,1]],8,COAT);
- m.skin([[0,1.730,.709,.084,.105,11],[0,1.748,.822,.148,.165,11],
-         [0,1.712,.932,.134,.153,11],[0,1.631,1.055,.098,.105,11],
-         [0,1.555,1.203,.085,.057,11]],7,COAT);
- m.skin([[0,1.563,1.17,.097,.068,11],[0,1.541,1.239,.074,.04,11]],5,MUZZLE)
+ m.skin(neckStations.filter((_,i)=>i!==1),8,COAT);
+ m.skin(skullStations.filter((_,i)=>i!==3 && i!==6),8,COAT);
+ const cheek=new HorseHide();cheek.skin(skullStations);
+ fitFace(m,cheek,false);
+ riverMane(m,false);
  m.skin([[0,1.467,.251,.041,.053,11,0],[-.024,1.567,.343,.060,.069,11,.13],
          [-.034,1.699,.473,.057,.068,11,.42],[-.027,1.810,.605,.045,.053,11,.75],
          [0,1.866,.760,.036,.035,11,1]],6,HAIR);
- m.skin([[0,1.289,-.70,.065,.068,12,0],[-.01,1.04,-.943,.085,.107,12,.33],[-.031,.769,-1.005,.064,.094,12,.65],[-.067,.474,-1.036,.017,.027,12,1]],5,HAIR)
+ m.skin([[0,1.289,-.70,.065,.068,12,0],[-.014,1.026,-.904,.096,.103,12,.33],[-.013,.790,-.963,.082,.098,12,.65],[-.079,.450,-1.077,.017,.034,12,1]],5,HAIR)
  for(const s of [-1,1]){
-  m.skin([[s*.08,1.829,.765,.045,.051,11],[s*.10,1.92,.759,.04,.044,11],[s*.13,2.005,.75,.005,.009,11]],4,POINT);
+  m.skin([[s*.08,1.829,.765,.045,.051,11],[s*.10,1.92,.759,.04,.044,11],[s*.126,1.993+s*.009,.759+s*.022,.005,.009,11]],4,POINT);
   for(const h of [false,true]){
    let j=(h?3:1)+(s>0?1:0),x=s*.217,z=h?-.608:.446;
    let leg=h?[[1.14,-.56,.119,.147],[.826,-.479,.099,.115],[.502,-.705,.054,.068],[.171,-.637,.043,.049],[.113,z,.039,.041]]:[[1.145,.368,.123,.152],[.816,.329,.087,.105],[.509,.425,.051,.064],[.177,.413,.045,.052],[.113,z,.039,.041]];
@@ -221,7 +311,8 @@ function rankHorse(m,tow){
    m.skin([[x,.124,z,.045,.044,j],[x,.035,z+.034,.062,.078,j],[x,.012,z+.035,.06,.073,j]],4,HOOF);
   }
   let r=tow?[[s*.105,1.563,1.14],[s*.32,1.34,.04],[s*.36,1.41,-1.10],[s*.18,1.66,-1.60]]:[[s*.105,1.563,1.14],[s*.244,1.445,.70],[s*.17,1.594,.24]];
-  m.strip(r.map(p=>add(p,[0,-.011,0])),r.map(p=>add(p,[0,.011,0])),STRAP,11)
+  // Weight the bit but hold the rider/driver end, as on the close mesh.
+  m.skin(r.map((p,k)=>[...p,.009,.011,11,1-k/(r.length-1)]),3,STRAP);
   if(!tow){
    let left=[[0,1.387,-.46],[s*.24,1.286,-.455],[s*.304,1.022,-.426]],right=[[0,1.387,.255],[s*.24,1.285,.254],[s*.307,1.067,.231]];
    m.panel([left,right],WOOL);m.strip([left[2],right[2]],[add(left[2],[s*.002,.042,0]),add(right[2],[s*.002,.04,0])],PIPING)
@@ -267,7 +358,7 @@ function cart(m,high){
 function smallWheel(high){return high?7:4}
 // The hand-directed atlas uses coarse to fine strokes along hair, woven warp/weft, 
 // worn edges, hammered metal and growth rings. Avoid specular "plastic" on the cloth.
-const palette=[[124,77,53],[142,90,61],[69,47,36],[72,67,56],[47,38,33],[90,72,64],[111,71,46],[71,51,39],[126,68,54],[54,68,75],[177,139,81],[140,110,67],[128,94,57],[73,76,73],[37,32,26],[197,177,138]];
+const palette=[[112,83,68],[155,126,102],[64,51,44],[71,65,57],[48,42,40],[93,80,73],[111,71,46],[71,51,39],[126,68,54],[54,68,75],[177,139,81],[140,110,67],[128,94,57],[73,76,73],[37,32,26],[197,177,138]];
 function noise(x,y,seed){let v=Math.imul(x+seed*631,0x1e35a7bd)^Math.imul(y+seed*97,0x48d2a33d);v=Math.imul(v^(v>>>16),0x45d9f3b);return ((v^(v>>>13))>>>0)/4294967296}
 // Broad anatomical colour planes read in the real cavalry view. The ribs turn
 // under the saddle, the flank tucks up behind them and the cheek meets a dark muzzle.
@@ -296,7 +387,8 @@ function atlas(){
   else if(tile>=8&&tile<=10){const warp=((u+Math.floor(v/9))%3===0)?4:-2,weft=(v%4===0)?4:-1;a=warp+weft+6*grit+4*low;if(tile===10)a+=Math.sin(TAU*(u/12+v/30))*4;}
   else if(tile===12){a=7*Math.sin((X+0.035*Math.sin(Y*8)+.02*Math.sin(Y*13+X*3))*TAU*6)+5*Math.sin((X+.015*Math.sin(Y*12))*TAU*18)+4*grit+3*low;}
   else {a=12*grit+8*low+4*Math.sin(5*ang+Y);b=tile===11?3*low:0;}
-  if(tile===COAT||tile===LIGHT)a+=coatPlanes(X,Y);
+  if(tile===COAT||tile===LIGHT) a=coatPlanes(X,Y)+2.8*grit+2.0*low;
+  if(tile===HAIR) a=.36*a+3*Math.sin((X+.09*Y)*PI*3);
   for(let c=0;c<3;c++)px[i+c]=clamp(Math.round(palette[tile][c]+a*(1.0-c*.1)+b*(1-c)),0,255)
  }
  return px;

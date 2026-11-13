@@ -28,6 +28,10 @@ func _run() -> void:
 	var contact:=-1
 	var breach:=-1
 	var io_ok:=true
+	var last_axle:=Vector2(field.map.ram.position.x,field.map.ram.position.z)
+	var last_angle:=0.
+	var rolling_distance:=0.
+	var rolling_angle:=0.
 	while b.result=="" and b.tick<2400 and pictures<1250:
 		if b.tick<155:
 			field.camera.size=48
@@ -40,6 +44,14 @@ func _run() -> void:
 			field.camera.size=lerpf(23,36,clampf((b.tick-breach)/200.0,0,1))
 			field.pan_to(Vector2(50,-3))
 		await RenderingServer.frame_post_draw
+		if field.map.ram_wheels.size()==4:
+			var angle:float=field.map.ram_wheels[0].rotation.z
+			var axle:=Vector2(field.map.ram.position.x,field.map.ram.position.z)
+			var distance:=last_axle.distance_to(axle)
+			rolling_distance+=distance
+			rolling_angle-=angle_difference(last_angle,angle)
+			last_axle=axle
+			last_angle=angle
 		var screen:=root.get_texture().get_image()
 		screen.resize(768,480,Image.INTERPOLATE_BILINEAR)
 		io_ok=screen.save_jpg("%s/frame-%04d.jpg"%[root_dir,pictures],0.84)==OK and io_ok
@@ -51,10 +63,11 @@ func _run() -> void:
 	var data:=b.report()
 	data.merge({"gate_first_damage_tick":contact,"breach_tick":breach,"frames_captured":pictures,"capture_fps":10,
 		"receipt":not field.theater.receipt.is_empty(),"ordinary_survivors":[b.side_size-b.losses[0],b.side_size-b.losses[1]],
+		"wheel_count":field.map.ram_wheels.size(),"wheel_travel_m":rolling_distance,"rim_travel_m":rolling_angle*.48,
 		"quivers_balanced":field.theater.audit_quivers()})
 	var file:=FileAccess.open("res://artifacts/natural-siege.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(data,"  "))
-	var ok:bool=io_ok and b.side_size==512 and contact>0 and breach>contact and b.result!="" and data.receipt and data.quivers_balanced and b.losses[1]<512
+	var ok:bool=io_ok and data.wheel_count==4 and rolling_distance>8. and absf(rolling_distance-rolling_angle*.48)<.02 and b.side_size==512 and contact>0 and breach>contact and b.result!="" and data.receipt and data.quivers_balanced and b.losses[1]<512
 	print("FIELD_SIEGE_FILM_"+("PASS " if ok else "FAIL ")+JSON.stringify(data))
 	shell.queue_free()
 	await process_frame
