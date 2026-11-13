@@ -1,0 +1,12 @@
+[remap]
+importer="texture"
+type="CompressedTexture2D"
+path="res://.godot/imported/bound_timber.png-420eb44e770686ab01a7e586412a3f3b.ctex"
+metadata={"vram_texture": false}
+[deps]
+source_file="res://assets/third_party/wildfire_bridge/bound_timber.png"
+dest_files=["res://.godot/imported/bound_timber.png-420eb44e770686ab01a7e586412a3f3b.ctex"]
+[params]
+compress/mode=0
+mipmaps/generate=true
+detect_3d/compress_to=0
