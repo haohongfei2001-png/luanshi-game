@@ -1,0 +1,35 @@
+name: Measure the step at the native long frame
+on:
+  push:
+    branches: ['codex/river-contact-step-profile']
+permissions:
+  contents: read
+jobs:
+  profile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Time seven phases during repeatable live engagements
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fsSL --retry 2 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/probe-engine.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/probe-engine.zip' | sha512sum -c -
+          unzip -q /tmp/probe-engine.zip -d /tmp/probe-engine
+          engine=/tmp/probe-engine/Godot_v4.6.3-stable_linux.x86_64
+          ./tools/prepare-font.sh
+          mkdir -p /tmp/step-logs
+          "$engine" --headless --editor --path . --import >/tmp/step-logs/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' /tmp/step-logs/import.log; then exit 1; fi
+          "$engine" --headless --path . --script tests/review_step_phases.gd 2>&1 | tee /tmp/step-logs/timings.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/step-logs/timings.log; then exit 1; fi
+          python3 tools/review_step_phases.py /tmp/step-logs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rc13-512-step-phase-samples
+          path: /tmp/step-logs
+          retention-days: 14

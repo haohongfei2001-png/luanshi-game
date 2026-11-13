@@ -1052,6 +1052,8 @@ func _court_holders(team: int) -> int:
 		if u.state!=State.ROUT and not corps.is_wounded(id): standing+=1
 	return standing
 
+var review_phases:=PackedInt64Array()
+
 func step() -> void:
 	if not started or result != "":
 		return
@@ -1069,7 +1071,9 @@ func step() -> void:
 			aim_at_wall_post=wall
 		buffer_ticks-=1
 		if buffer_ticks==0: buffered_slot=-1
+	var mark:=Time.get_ticks_usec()
 	_rebuild_grid()
+	var grid_done:=Time.get_ticks_usec()
 	corps.advance(self)
 	if tick%20==0: _rotate_ram_crew()
 	_dispatches()
@@ -1078,6 +1082,7 @@ func step() -> void:
 			c.regrouping = corps.can_command(self,c) and c.standing*2 < c.initial and c.standing>0 and c.mission in [Mission.PRESS,Mission.HOLD]
 			if objectives.garrison_retiring and c.team==0 and c.mission in [Mission.PRESS,Mission.FLANK]: c.regrouping=false
 			c.aim = corps.guide_company(self,c,_objective(c))
+	var orders_done:=Time.get_ticks_usec()
 	for u in roster:
 		u.before = u.pos
 		u.facing_before = u.facing
@@ -1085,6 +1090,7 @@ func step() -> void:
 			var interval := 8 if u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 5
 			if (tick+u.id)%interval==0 or (u.target>=0 and not active(roster[u.target])):
 				_assessment(u)
+	var targets_done:=Time.get_ticks_usec()
 	# Alternate initiative for contacts that share a tick.
 	for i in roster.size():
 		var u := roster[i if tick % 2 == 0 else roster.size()-1-i]
@@ -1107,10 +1113,15 @@ func step() -> void:
 		u.visual_run=travel>DT*(3.0 if u.visual_run else 3.55)
 		u.visual_stride=fposmod(u.visual_stride+travel*(.42 if u.visual_run else .68),1.)
 		u.stride = fposmod(u.stride + travel * 0.68, 1.0)
+	var units_done:=Time.get_ticks_usec()
 	_projectiles()
+	var arrows_done:=Time.get_ticks_usec()
 	_siege()
+	var ram_done:=Time.get_ticks_usec()
 	if objectives.enabled:
 		result=objectives.resolve(self)
+		var end:=Time.get_ticks_usec()
+		review_phases=PackedInt64Array([grid_done-mark,orders_done-grid_done,targets_done-orders_done,units_done-targets_done,arrows_done-units_done,ram_done-arrows_done,end-ram_done])
 		return
 	_resolve_historical()
 
