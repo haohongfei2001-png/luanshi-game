@@ -39,12 +39,12 @@ func _ready() -> void:
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
 	surface_material.set_shader_parameter("cartway",preload("res://assets/environment/river-cartway.svg"))
 	surface_material.set_shader_parameter("soil_cover",preload("res://assets/environment/soil-cover.png"))
-	surface_material.set_shader_parameter("floodplain",preload("res://assets/environment/floodplain-paint.png"))
+
 	surface_material.set_shader_parameter("field_margins",preload("res://assets/environment/field-margins.svg"))
 	surface_material.set_shader_parameter("verge_track",preload("res://assets/environment/verge-and-track.svg"))
 	surface_material.set_shader_parameter("shale_paint",preload("res://assets/environment/river-shale.png"))
-	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/grazed-meadow.png"))
-	surface_material.set_shader_parameter("lane_paint",preload("res://assets/environment/loess-wagonway.png"))
+	surface_material.set_shader_parameter("meadow_paint",preload("res://assets/environment/valley-turf.png"))
+	surface_material.set_shader_parameter("lane_paint",preload("res://assets/environment/valley-loess.png"))
 	surface_material.set_shader_parameter("fieldbed",preload("res://assets/environment/fieldbed.png"))
 	surface_material.set_shader_parameter("joinery",preload("res://assets/environment/joinery.png"))
 	var terrain:={}

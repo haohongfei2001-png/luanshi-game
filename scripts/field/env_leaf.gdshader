@@ -32,7 +32,12 @@ void fragment() {
 		// surface as its veins. Sky is visible between actual branch tips.
 		vec4 brush=texture(elm_spray,UV);
 		float sun=clamp((crown-8.1)/.7,0.0,1.0);
-		tone=brush.rgb*mix(vec3(.50,.63,.69),vec3(.84,.86,.77),sun);
+		// Keep a quiet, continuous canopy shadow under each fork.
+		// Luminance comes from the matte painting; sunlight still follows
+		// the actual folded 3D surface and its neighbouring branches.
+		float val=dot(brush.rgb,vec3(.25,.61,.14));
+		vec3 balanced=mix(vec3(val),brush.rgb,.75);
+		tone=balanced*mix(vec3(.62,.77,.79),vec3(.94,.98,.89),sun);
 		opacity=brush.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
