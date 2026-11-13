@@ -4,6 +4,10 @@
 
 RC19 建筑、衣甲、倒地动作与存档在此基础上保留。过桥时可辨老柳向水探出的枝干和桥面留白；四个 1920 × 1200 实机机位与 RC19 同种子、同一批士兵，进度、伤亡相同。前几版整株过亮、露枝和方向遮挡的缺点已保留。[桥上军阵的完整对照](https://github.com/haohongfei2001-png/luanshi-game/tree/aeb09e7a3f9f7ecc12c7997ba238e4fc11cb0232/docs/evidence/river-gate-v1-rc20/ford-willows)
 
+普通弓弩手戴软帻，枪刀手用有翻边的浅铁盔，重装有护颊和护颈，军官用低束缨。底下的头脸、既有握点、士兵编队和发号逻辑沿用原件。第一轮发现一顶盔的三角面前后重叠产生黑块；下一轮又发现头盔上沿缺片，第三次才选取完整帽胎并检查两军同一击。[四类兵员正反面实拍](https://github.com/haohongfei2001-png/luanshi-game/tree/3a43d35148eb3c026faeca8c2262ca7d2a8a6fa7/docs/evidence/river-gate-v1-rc20/headwear)
+
+军服染料单独用同一输入对照；靛与茜现在集中在接近手臂和肩的布面，甲片、手与主角披肩保留自己的明暗。[同击、两军及衣袖的原窗](https://github.com/haohongfei2001-png/luanshi-game/tree/c65a580a95ebf32ea933de1c4c6081ea485c779d/docs/evidence/river-gate-v1-rc20/dyed-company)
+
 两个托管 Mac 的 RC19 第一次 Metal 启动都在第一帧前超过期限。场景几何已齐，88 个进程栈样本全在 Godot 等待正向移动渲染材质的着色器编译。新分支在创建地形与兵员之前设置已保存的抗锯齿和分辨率；首次绘制前后记录各类管线编译，并可直接采样等待中的原生进程。保持正常游玩画质、原来的启动时限及显式恢复按钮。是否改善以正式导出包上连续冷启动的记录为准。[同包复现与原始调用栈](https://github.com/haohongfei2001-png/luanshi-game/tree/2db3813aaf94f27cb28dc67af96d76b8a49640d8/docs/evidence/river-gate-v1-rc19/startup/same-package-fresh-host)
 
 完整复拍用 `./tools/compare-river-art.sh`。单独复查桥头用 `xvfb-run -a -s '-screen 0 1920x1200x24' godot --resolution 1920x1200 --disable-vsync --fixed-fps 20 --script tests/ford_willow_view.gd -- --field-size=512`，随后检查 `artifacts/river-art/views.json`。
