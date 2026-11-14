@@ -1,0 +1,2 @@
+a778c5ef0509b37460017e33e0b546a4f17c90f25e565a2828ec95e6241d5408  docs/evidence/river-gate-v1-rc25/native-spear/draft/after.mp4
+564f86cfd57fc6fb0e7d49b6489fe1ac708a2b1b7d5c693498debebe77a4c5c1  docs/evidence/river-gate-v1-rc25/native-spear/draft/before.mp4

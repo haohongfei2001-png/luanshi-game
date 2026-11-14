@@ -1,0 +1,8 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+BRIDGE_MENU (78, 280) (200, 176) logical=(168.0, 438.4) pixel=(336.0, 876.8)
+BRIDGE_MENU_SELECTED 5 encounter=true popup=false
+NATIVE_PIKE_FILM {"actor":548,"camera":[37.7679977416992,-10.9319744110107,6.3,-0.785398163397448],"duration":0.0,"facing":[-0.606791079044342,0.794861376285553],"hits":[2,2],"hp":62.0,"impacts":0,"instance":{"custom":[0.19140625,0.01708984375,0.767578125,0.8818359375],"matching_origin_error_squared":0.0,"tier":0,"transform":[[0.808373987674713,0.0,0.61710649728775],[0.0,1.01699995994568,0.0],[-0.61710649728775,0.0,0.808373987674713],[38.3801689147949,0.0,-11.3197793960571]]},"kit":3,"losses":[0,0],"move_slot":0,"ordinary":[512,512],"position":[38.3646049499512,-11.2993907928467],"state":0,"team":1,"tick":10,"timer":0.0} last={"actor":548,"camera":[37.7679977416992,-10.9319744110107,6.3,-0.785398163397448],"duration":0.48,"facing":[-0.781063258647919,0.62445193529129],"hits":[40,70],"hp":62.0,"impacts":1,"instance":{"custom":[0.19140625,0.71630859375,0.347900390625,0.8818359375],"matching_origin_error_squared":0.0,"tier":0,"transform":[[0.608789801597595,0.0,0.814655721187592],[0.0,1.01699995994568,0.0],[-0.814655721187592,0.0,0.608789801597595],[37.6526718139648,0.0,-10.9311056137085]]},"kit":3,"losses":[17,6],"move_slot":0,"ordinary":[512,512],"position":[37.6273574829102,-10.9309148788452],"state":0,"team":1,"tick":32,"timer":0.0}

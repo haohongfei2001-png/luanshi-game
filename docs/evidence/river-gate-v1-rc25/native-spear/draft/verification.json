@@ -1,0 +1,10 @@
+{
+  "equal_simulation_and_render_instance_inputs": true,
+  "fps": 20,
+  "duration": 1.15,
+  "dimensions": [
+    2560,
+    1600
+  ],
+  "realtime_performance_measurement": false
+}
