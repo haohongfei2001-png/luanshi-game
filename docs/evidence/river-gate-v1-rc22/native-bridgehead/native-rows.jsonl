@@ -1,0 +1,2 @@
+{"adapter":"Apple Paravirtual device (Apple5)","build":"0.16.0-rc.22","cpu":"Apple M1 (Virtual)","driver":"macOS","file":"river-gate-1794618338-3581.jsonl","godot":"4.6.3-stable (official)","kind":"host","platform":"macOS","renderer":"mobile","revision":"34b5af8db16793566df89139ccdd783ad7d6b723","vsync":0}
+{"actual_px":[1024,640],"kind":"render_attachment"}
