@@ -187,3 +187,21 @@ this control much brighter, not equivalent. That proposed correction is REJECTED
 It does not justify changing field lighting. The full atlas color difference
 remains unresolved; a bounded next probe isolates sampler-array and scissor
 render-pass differences on the exact same frozen image. No S3TC/motion/art pass.
+
+## Invalid inverse probe and corrected CI error gate
+
+Run43631132595/source92c141b reported workflow success but its shader FAILED to
+compile (`E` conflicts with a Godot shader constant). The default-plane output
+and numerical comparison are INVALID, not a failed or passed color algorithm.
+The raw logs/images remain artifact14128072204, ZIP SHA256
+`97f7633539d03e413edc8211141ba9246b26ff18258b83e0f5537b7e7e63b062`.
+The independent log/image review caught this before any acceptance statement.
+
+Bash `set -e` does not exit on a failed inverted `! grep` condition. The old
+workflow error-check form therefore was insufficient. All representation
+workflows now use assert_clean_logs.py, a normal nonzero Python gate. Six local
+fault-injection cases prove it allows a clean warning but rejects each actual
+error marker, missing log and empty log. Earlier recovered six images and crop
+were also independently checked from downloaded logs; no shader errors there.
+Only coefficient naming is corrected before retrying the same one-pose inverse
+probe, without relaxing its quality or full-implementation limitations.

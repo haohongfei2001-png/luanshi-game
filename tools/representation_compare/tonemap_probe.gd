@@ -89,9 +89,9 @@ uniform sampler2D pigment:source_color,filter_linear,repeat_disable;
 float decode_srgb(float c){return c<=.04045?c/12.92:pow((c+.055)/1.055,2.4);}
 float encode_srgb(float c){return c<=.0031308?c*12.92:1.055*pow(c,1./2.4)-.055;}
 float inv_filmic(float y){
- float A=.88;float B=.60;float C=.10;float D=.20;float E=.01;float F=.30;
- float white=((A+C*B+D*E)/(A+B+D*F))-E/F;
- float q=y*white+E/F;float a=A*(q-1.);float b=B*(q-C);float c=D*(q*F-E);
+ float ca=.88;float cb=.60;float cc=.10;float cd=.20;float ce=.01;float cf=.30;
+ float white=((ca+cc*cb+cd*ce)/(ca+cb+cd*cf))-ce/cf;
+ float q=y*white+ce/cf;float a=ca*(q-1.);float b=cb*(q-cc);float c=cd*(q*cf-ce);
  return max(0.,(-b-sqrt(max(0.,b*b-4.*a*c)))/(2.*a));
 }
 void vertex(){MODELVIEW_MATRIX=VIEW_MATRIX*mat4(INV_VIEW_MATRIX[0],INV_VIEW_MATRIX[1],INV_VIEW_MATRIX[2],MODEL_MATRIX[3]);}

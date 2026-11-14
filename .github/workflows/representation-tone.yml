@@ -43,7 +43,7 @@ jobs:
         run: |
           set -euo pipefail
           timeout 180s xvfb-run -a -s '-screen 0 1280x720x24' /tmp/engine/bin/godot-patched --path . --resolution 1280x720 --disable-vsync --rendering-method gl_compatibility --audio-driver Dummy --script tools/representation_compare/tonemap_probe.gd > evidence/tonemap.log 2>&1
-          ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/tonemap.log
+          python tools/representation_compare/assert_clean_logs.py evidence/tonemap.log
           test -s evidence/tonemap/report.json
       - uses: actions/upload-artifact@v4
         if: always()
