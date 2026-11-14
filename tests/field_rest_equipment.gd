@@ -41,7 +41,7 @@ func _bounds(mesh:ArrayMesh,bones:Array[Transform3D],settled_cloth:bool=false) -
 		if first==15 and second==15: continue # The shader hides the released arrow.
 		var p:=_point(positions[i],skin[i],bones)
 		var tile:=Vector2i(floori(tex[i].x*8.),floori(tex[i].y*4.))
-		var cloth:=(tex[i].x>=2. and tex[i].x<3.) or (tile.y==2 and tile.x in [3,7])
+		var cloth:=(tex[i].x>=2. and tex[i].x<3.) or (tile.y==2 and tile.x in [3,7]) or (first==2 and tile==Vector2i(4,2))
 		if settled_cloth and cloth and p.y<.047:
 			p.y=.012+.035*(.035/(.082-p.y))
 		if p.y<low.y:

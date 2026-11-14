@@ -189,7 +189,7 @@ void vertex() {
     }
     // Let the finished back hem settle on the local ground. Compress the
     // contact layer with a continuous slope so draped folds keep a rounded edge.
-    bool resting_cloth=(UV.x>=2.0 && UV.x<3.0) || cape;
+    bool resting_cloth=(UV.x>=2.0 && UV.x<3.0) || cape || (first==2 && swatch==ivec2(4,2));
     if (state==7 && resting_cloth && pos.y<.047) {
         float settling=smoothstep(.32,.95,phase);
         float ratio=.035/(.082-pos.y);
