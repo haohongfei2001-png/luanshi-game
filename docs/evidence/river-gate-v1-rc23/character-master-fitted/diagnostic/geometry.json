@@ -1,0 +1,119 @@
+{
+  "actor": 62,
+  "hits": [
+    181,
+    241
+  ],
+  "losses": [
+    60,
+    48
+  ],
+  "meshes": [
+    {
+      "close": false,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Archer",
+      "triangles": 7344,
+      "vertices": 4395
+    },
+    {
+      "close": true,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Archer",
+      "triangles": 13985,
+      "vertices": 8009
+    },
+    {
+      "close": false,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Regular",
+      "triangles": 7561,
+      "vertices": 4550
+    },
+    {
+      "close": true,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Regular",
+      "triangles": 14195,
+      "vertices": 8166
+    },
+    {
+      "close": false,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Guard",
+      "triangles": 7701,
+      "vertices": 4611
+    },
+    {
+      "close": true,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Guard",
+      "triangles": 14335,
+      "vertices": 8227
+    },
+    {
+      "close": false,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Player",
+      "triangles": 7907,
+      "vertices": 4773
+    },
+    {
+      "close": true,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Player",
+      "triangles": 14597,
+      "vertices": 8421
+    },
+    {
+      "close": false,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Officer",
+      "triangles": 7809,
+      "vertices": 4701
+    },
+    {
+      "close": true,
+      "normal_length": [
+        0.99999988079071,
+        1.00000011920929
+      ],
+      "role": "Officer",
+      "triangles": 14443,
+      "vertices": 8317
+    }
+  ],
+  "stance": 2,
+  "tick": 135,
+  "xz": [
+    30.1693019866943,
+    -0.00587815046310425
+  ]
+}
