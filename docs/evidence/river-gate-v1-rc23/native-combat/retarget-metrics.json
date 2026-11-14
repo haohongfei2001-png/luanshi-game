@@ -1,0 +1,34 @@
+{
+  "max_connected_joint_gap_m": 1.2008898127460164e-15,
+  "minimum_sole_y_m": 0.005999999999999983,
+  "release_socket_error_m": 5.661048867003676e-16,
+  "windup_recovery_seam_m": 3.3306690738754696e-16,
+  "kits": [
+    {
+      "kit": 0,
+      "loadout": 0,
+      "release_socket_error_m": 5.661048867003676e-16
+    },
+    {
+      "kit": 1,
+      "loadout": 0,
+      "release_socket_error_m": 2.7194799110210365e-16
+    },
+    {
+      "kit": 7,
+      "loadout": 0,
+      "release_socket_error_m": 2.220446049250313e-16
+    },
+    {
+      "kit": 7,
+      "loadout": 1,
+      "release_socket_error_m": 2.220446049250313e-16
+    },
+    {
+      "kit": 7,
+      "loadout": 2,
+      "release_socket_error_m": 2.220446049250313e-16
+    }
+  ],
+  "failed_joint_samples": []
+}
