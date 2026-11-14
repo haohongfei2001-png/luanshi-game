@@ -42,9 +42,10 @@ func run() -> void:
 	scene.set_meta("survey_bounds",Rect2(-144.,-112.,304.,224.))
 	scene.set_meta("survey_step_m",.5)
 	var terrain_triangles:=0;var tiles:=0
+	var sampler:=preload("res://tools/art/continuous_landform/adaptive_surface.gd").new()
 	for z in range(-112,112,16):
 		for x in range(-144,160,16):
-			var mesh:=Surface.tile(Vector2(x,z),16.,.5)
+			var mesh:=sampler.tile(Vector2(x,z),16.)
 			var arrays:=mesh.surface_get_arrays(0)
 			var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
 			var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX];var colors:=PackedColorArray()
@@ -65,6 +66,8 @@ func run() -> void:
 	var water:=MeshInstance3D.new();water.name="SurveyContourWater_NO_RECTANGLE";water.mesh=water_mesh;scene.add_child(water)
 	var water_material:=ShaderMaterial.new();water_material.shader=load("res://shaders/experimental/surveyed_water.gdshader");water.material_override=water_material
 	water.set_meta("water_model","survey depth absorption plus metre-scale normal slopes; NO FLUID SIMULATION")
+	scene.set_meta("adaptive_cell_distribution",sampler.distribution)
+	scene.set_meta("sampling","edge-conforming adaptive cells, sampled error target .008m")
 	own(scene,scene);var packed:=PackedScene.new();assert(packed.pack(scene)==OK);assert(ResourceSaver.save(packed,args[0])==OK)
-	print("CONTINUOUS_LANDFORM_BUILT ",JSON.stringify({"tiles":tiles,"terrain_triangles":terrain_triangles,"water_triangles":water_vertices.size()/3,"water_height":WATER,"collision":"same sampled mesh","graphics":"NOT_RUN","default":"OFF"}))
+	print("CONTINUOUS_LANDFORM_BUILT ",JSON.stringify({"cell_resolution_distribution":sampler.distribution,"tiles":tiles,"terrain_triangles":terrain_triangles,"water_triangles":water_vertices.size()/3,"water_height":WATER,"collision":"same sampled mesh","graphics":"NOT_RUN","default":"OFF"}))
 	scene.free();quit()

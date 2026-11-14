@@ -210,3 +210,27 @@ The real road65 frame exposed missing land beyond x64. The new single survey ext
 Actual full-basin build: exit0,16.175s,307,496KiB Linux peak RSS, **offline builder only, not game performance**. Full mesh test passed266 tiles/shapes, route interpolation maximum.0169378m and water contour error.00756647m. Water depth test passed88,596 vertices with6,862 shallow vertices, maximum encoded-depth quantization error.01568475m. Exact vertex/collision height is shared; interpolated triangle interior is not falsely described as analytically identical at every point. Latest original512-per-side tick400 battle passed299 crossings, hits[512,559], deaths[135,138]. No battle results were forced. Real graphics, new water shader compilation, actual grass RenderingServer poses, total draw calls/performance and art quality remain NOT_RUN for this new full closure.
 
 The first full-basin timing attempt never invoked Godot because /usr/bin/time was absent; its exit127 and subsequent missing-scene test log are retained locally. A Python subprocess/resource wrapper performed the successful build above. No failed execution is counted as evidence.
+
+### Expanded support diagnostic, after frozen 018372b
+
+An additional exhaustive face-centre sample within actual Ground.LIMIT (±118,±64), excluding blocked cells and elevated bridge/parapet decks, found220,144 accessible terrain samples. Maximum analytic support versus triangle interpolation error is **.108443m** at(-23.333334,8.166667), on the original main-river bank. The earlier .016938m finding applies only to the central bridge-to-gate road, not the entire playable region. This is a real remaining support-fidelity defect; the scene is not a full feet-contact pass. Outside gameplay bounds the broad background maximum was.295925m; do not describe those outside-bound samples as reachable. The test now records both the protected-route threshold and expanded diagnostic. Next production step is crack-free error-driven surface sampling, not changing battle rules or hiding floating feet. Frozen018372b remains unchanged for reproducible actual graphics review.
+
+### Edge-conforming adaptive sampling, separate from frozen018372b
+
+`adaptive_surface.gd` subdivides only .5m cells whose sampled geometric error exceeds .008m, up to8 subdivisions per side (.0625m). It tests original triangle centroids and edge midpoints. Neighbor cells agree on the maximum edge subdivision; transition subcells triangulate a shared boundary ring around their actual support-height centre. This makes tile boundaries and internal transitions conforming without changing Ground.height/travel, navigation, saves, anchors or the material UV system. Background-only cells retain the original grid. The builder may cache neighboring cells just outside output bounds; its resolution histogram includes these queries, not only emitted cells.
+
+Actual output is771,266 terrain triangles (+41.58% from544,768, not global4×/16× refinement),266 matching collision tiles and105,079 contour-water triangles. The water increase is disclosed, not hidden in a terrain-only budget. All mesh interior edges have two incident faces; every tile boundary segment pairs exactly with its neighbor, except2,112 outside perimeter segments. This tests topology rather than merely equal AABBs.
+
+Expanded playable-domain face-centre audit:357,829 samples, maximum error.0097508m (previous.108443m); protected central route.00728087m (previous.0169378m). The midpoint/centroid target is a sample target, **not a mathematical continuous-surface error bound**; transition fans can modestly exceed.008m. The expanded mesh test explicitly gates sampled reachable error below.012m.
+
+Actual headless PhysicsServer ray queries against the packed triangle colliders followed existing Ground.travel on three routes (including the failed old river-bank location):360 travel steps,25.9301m, maximum support/collider gap.00702159m. This is actual collision geometry and existing movement rules, not a second mock height calculation. It is **not animated graphical gameplay or final feet-animation acceptance**. Original frozen018372b remains available for independent art review; new adaptive scene is a separate derivative.
+
+```sh
+# Same build command now selects error-driven, edge-conforming production sampling.
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tools/art/continuous_landform/build_region.gd -- /tmp/adaptive-ground.scn /tmp/earth-source
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tests/art_reset/continuous_landform_mesh.gd -- /tmp/adaptive-ground.scn
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tests/art_reset/adaptive_surface_seams.gd -- /tmp/adaptive-ground.scn
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tests/art_reset/adaptive_surface_walk_collision.gd -- /tmp/adaptive-ground.scn
+```
+
+Final regressions: original512-per-side400-tick bridgehead simulation again returned299 crossings, hits[512,559], deaths[135,138], pass=true. Three PBR packed-scene roundtrips checked1,212,123 normal/tangent pairs, maxdot.000141017. Default-OFF/open-field/nav compatibility passed7,735 samples. Its first invocation incorrectly inherited the opt-in environment and correctly rejected it; the failed assertion log and corrected `env -u LUANSHI_AUTHORED_LANDFORM` run are both retained. No graphical performance or MacBook Air M5 test is claimed.
