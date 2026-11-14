@@ -1,0 +1,29 @@
+{
+  "run_id": 43635849360,
+  "source_commit": "945b2c676705460f97ba0d9e5c9d892f2a64390d",
+  "actual_godot_logs_checked": 7,
+  "engine_errors": {
+    "walk-motion.log": [],
+    "walk-near.log": [],
+    "walk-normal.log": [],
+    "thrust-near.log": [],
+    "thrust-normal.log": [],
+    "thrust-motion.log": [],
+    "color-calibration.log": []
+  },
+  "cache_members_verified": 91,
+  "parts_verified": 6,
+  "archive_sha256": "a738117dad6e22249e80b2394fe03f080dfde4368b2e81ab0acb9a4a268e2cee",
+  "art_pass": false,
+  "review": "Personally viewed actual native 3840x2160 walk near and 2560x1440 normal. Uniform color-space darkening fixed; coherent plate attachment, boot design, shaft grip and source foot contact still fail. Not shipping or crowd runtime.",
+  "source_files": {
+    "walk": {
+      "sha256": "b0a4c90b9c792565c3fb0b2dd0f3ce4b673b0bfe75408c26ee1f99cb184b5b50",
+      "bytes": 175482048
+    },
+    "thrust": {
+      "sha256": "1418ecf933ec85641196f4daf53abae3dfc61b9e8df94584b86bcf64192e523f",
+      "bytes": 71236528
+    }
+  }
+}

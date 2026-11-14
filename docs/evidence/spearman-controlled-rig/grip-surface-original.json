@@ -1,0 +1,89 @@
+{
+  "source_sha256": "5d9ed8484e2d92ce1aefbc92f48c09dc58d9f41651e3954cdcd736de4960b37b",
+  "method": "Evaluated full hand vertices vs finite actual evaluated wood cylinder; not triangle intersection proof or pressure/contact acceptance",
+  "art_pass": false,
+  "grip_pass": false,
+  "samples": [
+    {
+      "phase": 0.0,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 0.125,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 0.25,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 0.375,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 0.5,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 0.625,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 0.75,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 0.875,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    },
+    {
+      "phase": 1.0,
+      "mesh": "GEO-HandsJA.001",
+      "evaluated_vertices": 38346,
+      "shaft_radius_m": 0.013999999260705817,
+      "surface_vertices_inside_shaft": 1372,
+      "worst_surface_radial_penetration_m": 0.013369774049631179,
+      "vertices_within_2mm_of_shaft_surface": 1383
+    }
+  ]
+}

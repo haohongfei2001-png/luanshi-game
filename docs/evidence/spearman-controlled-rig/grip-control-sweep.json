@@ -1,0 +1,70 @@
+{
+  "art_pass": false,
+  "accepted_candidate": null,
+  "limitation": "Surface vertices only, not triangle contact or natural pose proof; thumb unchanged; no candidate applied to pipeline",
+  "samples": [
+    {
+      "finger_native_scale_y": 0.72,
+      "wrist_local_z_offset_m": -0.012,
+      "inside_over_1mm": 373,
+      "near_2mm": 412,
+      "max_penetration_m": 0.009750222613891076
+    },
+    {
+      "finger_native_scale_y": 0.72,
+      "wrist_local_z_offset_m": 0,
+      "inside_over_1mm": 397,
+      "near_2mm": 871,
+      "max_penetration_m": 0.003931198734896477
+    },
+    {
+      "finger_native_scale_y": 0.72,
+      "wrist_local_z_offset_m": 0.012,
+      "inside_over_1mm": 1162,
+      "near_2mm": 1369,
+      "max_penetration_m": 0.01051744640931839
+    },
+    {
+      "finger_native_scale_y": 0.8,
+      "wrist_local_z_offset_m": -0.012,
+      "inside_over_1mm": 0,
+      "near_2mm": 0,
+      "max_penetration_m": 0.0
+    },
+    {
+      "finger_native_scale_y": 0.8,
+      "wrist_local_z_offset_m": 0,
+      "inside_over_1mm": 13,
+      "near_2mm": 447,
+      "max_penetration_m": 0.0012694221574955072
+    },
+    {
+      "finger_native_scale_y": 0.8,
+      "wrist_local_z_offset_m": 0.012,
+      "inside_over_1mm": 991,
+      "near_2mm": 1149,
+      "max_penetration_m": 0.010774648259410474
+    },
+    {
+      "finger_native_scale_y": 0.88,
+      "wrist_local_z_offset_m": -0.012,
+      "inside_over_1mm": 0,
+      "near_2mm": 0,
+      "max_penetration_m": 0.0
+    },
+    {
+      "finger_native_scale_y": 0.88,
+      "wrist_local_z_offset_m": 0,
+      "inside_over_1mm": 13,
+      "near_2mm": 367,
+      "max_penetration_m": 0.0012694221574955072
+    },
+    {
+      "finger_native_scale_y": 0.88,
+      "wrist_local_z_offset_m": 0.012,
+      "inside_over_1mm": 840,
+      "near_2mm": 1053,
+      "max_penetration_m": 0.011050674960992869
+    }
+  ]
+}
