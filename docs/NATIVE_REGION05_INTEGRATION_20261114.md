@@ -8,7 +8,7 @@ Five runtime members: portal07, continuous05 ground, same-scale complete profess
 
 Capture two native originals only: QHD destination26 and UHD destination26, same actual frozenBattle, normal gameplay body screen size, FOV65/pitch26/yaw-65/lead3/lookheight1.5. Static integrity still checks exact pixels/internal1/source/complete gate/body projection/frozen tick135/20per side. This is an explicit smaller capture scope, not a weaker resolution/quality threshold.
 
-Then18s actual Controller input. Logical unprojected aim is transformed to native event coordinates so Input does not stretch it twice. Record actual Controller pointer. State mapping remains Walk/thrust only and explicit old fallback; no claim of all characters or all combat. Hits may remain zero if the legal route never gets near an enemy; report measured distances/blocking. Native body pixels are derived only by joining engine_drawn with actual readback frame.pixels, never get_texture metadata.
+Then18s actual Controller input. Logical unprojected aim is transformed to native event coordinates so Input does not stretch it twice. Record requested logical pointer; actual Controller get_mouse_position was NOT captured in93ee, a documented gap to fix next. State mapping remains Walk/thrust only and explicit old fallback; no claim of all characters or all combat. Hits may remain zero if the legal route never gets near an enemy; report measured distances/blocking. Native body pixels are derived only by joining engine_drawn with actual readback frame.pixels, never get_texture metadata.
 
 VFR uses no B-frame reordering, preserving every actual frame/PTS and endpoint with unchanged2ms PTS/10ms duration gates. Prior04 movie remains failed, never relabeled. Synthetic255frame irregular-cadence regression reproduced failure then passed fixed encoder.
 
@@ -17,3 +17,5 @@ Local integrated05 two-view headless PASS11.10s, one real sky applied, all5 reso
 ## Frozen runtime available
 
 Source2590db24175e257dd1bf9c27360888e054eb8d52 / run43651739659 SUCCESS. Independently restored18 members from7 verified original ZIP groups; all5 runtime hashes and matching05 profile checked. The actual CI portal bytes exactly match04 CI, while ground/tree/grass/sky are05. Native job pins these exact artifacts and shader closure; graphics not yet run.
+
+Actual native run43652380636/93ee66b SUCCESS technically; whole scene self-rejected, zero authoredWalk and heroHits. See evidence/native-region05/93ee66b/SELF-REVIEW.md for exact action/pointer/body limits and independent timing.

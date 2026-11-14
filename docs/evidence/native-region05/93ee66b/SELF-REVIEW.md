@@ -1,0 +1,13 @@
+# Scene05 actual originals: entire scene remains rejected
+
+M1 Virtual, native Metal mobile, exact five frozen runtime resources. QHD2560x1440 and UHD3840x2160 originals independently pass identity/pixel/internal1/same-state gates. Original HDR sky/ambient/reflection and continuous ridges genuinely appear. Portal07 bytes are identical to04 CI, so its changed shading is environment rather than an asset swap. Upper timber is more legible but still very dark; naked repetitive smooth slopes, empty banks, striped water and old crowd/horses remain below the whole-scene target. Not an artistic acceptance.
+
+Personally inspected full QHD static and actual live movement sample; full movie and full4K have technical timing/hash validation, not claimed frame-by-frame artistic approval. Preserved original VFR239 real frames plus one endpoint,18.004474s source→18.005s encoded, maximum PTS error0.499ms. No-Bframe fix passes unchanged strict gates in actual Mac recording. Original04 failure remains archived unchanged.
+
+Input/camera diagnostic passed, NOT full action acceptance: fourJ events,10held physics ticks,four releases,35thrust samples,135idle fallback,69strafe fallback,zero authoredWalk and zero hero hit. Enemies remained at least30.678m away;45 half-metre movement probes hit legal Ground blocking near bridge rail. Unblocked early motion also classified strafe, so blocking alone is not the explanation.
+
+6c53 code does transform logical pointer to native input. However the live pointer receipt records requested logical coordinates only, not actual get_mouse_position. Earlier integration wording “record actual Controller pointer” was premature and is corrected here. CPU roundtrip is not proof this complete native route fixed aiming. Next contact harness must observe requested logical/native and actual Controller coordinates and move to a real reachable enemy using legal input; noBattle/HP/position/AI manipulation.
+
+Body measurement now joins engine_drawn to actual readback pixels:35valid samples around191.365px at2K. Raw texture metadata4608x2592 remains observable and explicitly not the real attachment2560x1440. Geometry projection is not a visible silhouette or quality score.
+
+All new image/video data retained with hashes. No new MacBookAirM5 result, no FPS/crowd performance claim. Next coherent scene may integrate frozen06ecosystem + full enclosure02 with legitimate contact input and separate scene-specific uninstrumented20/100/250/512 matrix. Future enclosure camera profile may allow natural roof cropping; do not shrink actors or flatten buildings to pass an old gate-context condition.

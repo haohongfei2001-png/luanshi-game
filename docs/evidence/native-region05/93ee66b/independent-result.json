@@ -1,0 +1,50 @@
+{
+  "source": "93ee66b1418f6c6af818c59ddf63c0bb7788c7b0",
+  "runtime_source": "2590db24175e257dd1bf9c27360888e054eb8d52",
+  "run": 43652380636,
+  "workflow_result": "SUCCESS",
+  "art": "FAIL_WHOLE_SCENE_NOT_ACCEPTED",
+  "independent_stills": "PASS_TWO_NATIVE_ORIGINALS",
+  "independent_input_camera": "PASS_LIMITED_DIAGNOSTIC",
+  "independent_video": {
+    "encoded_frames_including_endpoint": 240,
+    "native_samples": 239,
+    "wall_seconds": 18.004474,
+    "encoded_seconds": 18.005,
+    "max_timestamp_error_seconds": 0.0004990000000013595,
+    "movie_sha256": "b52585542419837e135b8b7e80db35f731ef80ba426f30358500cc96117f15c0",
+    "original_movie_bytes": 22378053,
+    "status": "PASS_INDEPENDENT_FFPROBE",
+    "scope": "actual original VFR timing only; no performance/art/full-actions acceptance"
+  },
+  "mapping_counts": {
+    "idle_without_clip": 135,
+    "strafe_or_backward_without_clip": 69,
+    "thrust": 35
+  },
+  "author_walk": 0,
+  "hero_hits": 0,
+  "actual_J_events": 4,
+  "held_physics_ticks": 10,
+  "releases": 4,
+  "nearest_enemy_min_m": 30.678201675415,
+  "blocked_probes": 45,
+  "current_position_blocked": 0,
+  "pointer_limit": "logical to native conversion exists and CPU roundtrip passed, but live log records requested logical pointer ONLY; actual viewport mouse coordinate absent, zero authoredWalk unresolved",
+  "body_measurement": "35 actual-frame engine_drawn joins, 2560x1440 attachment and ~191.365px body; original texture metadata4608x2592 retained separately; not visible mask",
+  "rss_bytes": 1107427328,
+  "performance": "NOT_MEASURED_READBACK_INSTRUMENTED",
+  "M5": "DEVICE_NOT_RUN",
+  "images": [
+    {
+      "name": "qhd-perspective-destination26.png",
+      "sha256": "3555605f75c5a4d507c93b41e7130840d242ee645689397eef6c9ef33d0698c5",
+      "bytes": 5422845
+    },
+    {
+      "name": "uhd-perspective-destination26.png",
+      "sha256": "2bce0de938544c750348f7e6e71f3d87e1710bab1615cb4b21f16d726535c798",
+      "bytes": 12290594
+    }
+  ]
+}
