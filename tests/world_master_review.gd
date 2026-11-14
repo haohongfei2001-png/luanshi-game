@@ -5,6 +5,7 @@ const Ground:=preload("res://scripts/field/ground.gd")
 const OUT:="res://docs/evidence/river-whole-rebuild/review"
 var field
 var records:Array=[]
+var source_sha:=OS.get_environment("WORLD_SOURCE_SHA")
 func _initialize() -> void:
 	_run.call_deferred()
 func _snap(label:String,point:Vector2,zoom:float) -> void:
@@ -20,9 +21,30 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	pic.resize(1440,810,Image.INTERPOLATE_LANCZOS)
 	pic.save_jpg(OUT+"/"+label+"-preview.jpg",.93)
 	var b=field.battle
-	var row:={"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
+	var row:={"source_sha":source_sha,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
+func _inventory() -> void:
+	for path:String in [field.map.BROADLEAF,field.map.SHRUB,field.map.FERN,field.map.PINE]:
+		var packed:Node3D=(load(path) as PackedScene).instantiate()
+		var members:Array=[packed]
+		members.append_array(packed.find_children("*","MeshInstance3D",true,false))
+		var parts:Array=[]
+		for node:Node in members:
+			if not node is MeshInstance3D:continue
+			var mesh:Mesh=node.mesh
+			var materials:Array=[]
+			for i in mesh.get_surface_count():
+				var m:=mesh.surface_get_material(i) as StandardMaterial3D
+				materials.append({"name":m.resource_name,"transparency":m.transparency,"color":str(m.albedo_color),"scissor":m.alpha_scissor_threshold,"texture":m.albedo_texture.resource_path if m.albedo_texture else ""})
+			parts.append({"name":node.name,"aabb":str(mesh.get_aabb()),"surfaces":mesh.get_surface_count(),"materials":materials})
+		print("WORLD_PLANT_SOURCE ",JSON.stringify({"path":path,"root_type":packed.get_class(),"parts":parts}))
+		packed.free()
+	var instances:Array=[]
+	for node:Node in field.map.get_children():
+		if String(node.name).begins_with("island_tree_01"):
+			instances.append({"name":node.name,"position":str(node.position),"children":node.get_child_count()})
+	print("WORLD_PLANT_INSTANCES ",JSON.stringify(instances))
 func _run() -> void:
 	if DisplayServer.get_name()=="headless":quit(1);return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
@@ -34,6 +56,7 @@ func _run() -> void:
 	field.set_physics_process(false)
 	field.hud.go.pressed.emit()
 	assert(field.battle.started and field.battle.bridgehead)
+	_inventory()
 	assert(field.map._land_height(Vector2(Ground.MOAT_X,12.))<-.38,"The actual moat bed must remain below its visible water")
 	assert(field.map._land_height(Vector2(Ground.RIVER_X,12.))<-.37,"The river bed must remain below its visible water")
 	for tick in 50:field._physics_process(Battle.DT)
@@ -41,6 +64,7 @@ func _run() -> void:
 	for tick in 85:field._physics_process(Battle.DT)
 	await _snap("bridgehead-0135",Ground.BRIDGE_VIEW,22.)
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
+	await _snap("grove-0135",Vector2(38.,-19.),18.)
 	var file:=FileAccess.open(OUT+"/frames.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(records,"  "))
 	print("WORLD_MASTER_STILLS ",field.theater.audit().is_empty())
