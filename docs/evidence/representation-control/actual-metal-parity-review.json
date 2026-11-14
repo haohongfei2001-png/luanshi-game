@@ -1,0 +1,56 @@
+{
+  "source_sha": "6e5eb866060295f14f70e22edff09947da8023e6",
+  "run": 43635144121,
+  "artifact": 14129362631,
+  "artifact_zip_sha256": "cdf7fd5c43d3ee17bda33b61bb0c5dcb6edd6e2ecc9ca3d472ab86b5476f7812",
+  "host": "Apple M1 Virtual, 3cores,7GB; Apple Paravirtual device Apple5",
+  "backend": "Metal4.0 Forward Mobile",
+  "engine_source": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+  "binary_sha256": "9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3",
+  "cpu_checks": 68047,
+  "cpu_failures": 0,
+  "external_strict_result": {
+    "actual_mobile_metal_pixel_gate": true,
+    "external_png_recalculation": [
+      {
+        "clip": "Idle",
+        "visible_pixels": 12004,
+        "mae": 1.481000114889706e-06,
+        "pixels_over_two_levels": 0
+      },
+      {
+        "clip": "Walk",
+        "visible_pixels": 12248,
+        "mae": 1.6305960860906862e-06,
+        "pixels_over_two_levels": 0
+      },
+      {
+        "clip": "Sword_Attack",
+        "visible_pixels": 10018,
+        "mae": 1.3014849494485294e-06,
+        "pixels_over_two_levels": 0
+      },
+      {
+        "clip": "Death01",
+        "visible_pixels": 8717,
+        "mae": 7.62939453125e-07,
+        "pixels_over_two_levels": 0
+      }
+    ],
+    "original_thresholds_unchanged": true,
+    "fixture_adapter_hashes_checked": true,
+    "cpu_checked": true,
+    "art_pass": false,
+    "M5": "NOT_TESTED"
+  },
+  "actual_process_wall_seconds": 28.011216291999972,
+  "wall_time_is_not_fps": true,
+  "normal_exported_entry": true,
+  "empty_cwd_pack_closure": true,
+  "review": "Walk full source StandardMaterial/Skin and shared palette PNGs personally viewed; external gate independently recomputed all eight actual PNGs after download. No GLES patch port was applied to Metal.",
+  "scope": "Original UBC65 source with four influences per vertex; synthetic >8 source had prior CPU tests, not covered by this four-pose GPU result. Does not validate Guardian MeshDeform/DQ clothes or MH nine-weight source.",
+  "M5": "NOT_TESTED",
+  "art_pass": false,
+  "army_performance": "NOT_TESTED",
+  "default_game_changed": false
+}
