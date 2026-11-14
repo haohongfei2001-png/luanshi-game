@@ -42,7 +42,7 @@ jobs:
           timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu.log 2>&1 || pixel_status=$?
           INTACT_PARITY_FULL_MESH=1 timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu-full.log 2>&1 || full_status=$?
           printf "bake_exit=%s pixel_exit=%s full_mesh_exit=%s\n" "$bake_status" "$pixel_status" "$full_status" >artifacts/native-character-parity/gate-status.txt
-          test "$bake_status" = 0 && test "$pixel_status" = 0 && test "$full_status" = 0
+          if [ "$bake_status" != 0 ] || [ "$pixel_status" != 0 ] || [ "$full_status" != 0 ]; then exit 1; fi
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/native-character-parity/*.log; then exit 1; fi
           git rev-parse HEAD >artifacts/native-character-parity/ACTUAL_SOURCE_SHA
       - uses: actions/upload-artifact@v4
