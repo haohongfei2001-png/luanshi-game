@@ -45,3 +45,21 @@ textures. Bounds are (-3.865013,-2.366305,-3.735504), size
 (7.172149,7.005995,8.130166). This is import data, not real draw calls or art.
 All normals baked so far are source material normals on the derived geometry,
 NOT high-poly geometric detail projected to low-poly meshes.
+
+## Woodland region 01
+
+`assemble_woodland_region.gd -- TREE_GLB BUSH_GLB OUTPUT_SCN` now creates a
+whole edge composition of five complete trees and five complete bushes, not
+random points. Three northern crowns connect behind the action lane; two
+southern crowns form a sparse near frame. Root origin is preserved at shared
+terrain height, so the original exaggerated underground roots are not raised
+by bounding-box normalization. No army/simulation/collision writes occur.
+
+Inputs are the frozen tree `4c2d42c37a3df11d9982180cfdf1c2020f77e15d2b673dbb258a38b5616c4760`
+and PBR bush from PRODUCTION.md. Output stores each input SHA256. Generated
+binary is not committed; restore with the production bake commands. Nominal
+instanced triangles: 1,380,800, NOT measured submitted primitives/draw calls.
+The engine lifecycle test opens and frees this packed scene three times and
+verifies ten instances share only two mesh resources. Graphical composition,
+material appearance, shadows, branch visibility and performance are NOT RUN.
+The assembly is a woodland component, not a complete playable environment.
