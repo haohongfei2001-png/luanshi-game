@@ -1,0 +1,7 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FAILED_ROUTE [65.0, -29.0, 1.0, -17.0] start=(65.0, -34.0) goal=(65.0, -24.0) actual=(64.99999, -24.24561) target=(65.0, -24.0) start_blocked=false goal_blocked=false
+SCRIPT ERROR: Assertion failed: Tree avoidance got stuck
+          at: _initialize (res://tests/art_reset/native_woodland_navigation.gd:23)
+          GDScript backtrace (most recent call first):
+              [0] _initialize (res://tests/art_reset/native_woodland_navigation.gd:23)

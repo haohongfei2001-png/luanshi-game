@@ -1,0 +1,156 @@
+{
+  "collision_geometry": "unchanged05",
+  "grass_tufts": 11714,
+  "lod_pixels_and_performance": "NOT_RUN",
+  "real_graphics": "NOT_RUN",
+  "roots": [
+    {
+      "ground_height": 0.424597173929214,
+      "position": [
+        10.0,
+        -17.0
+      ],
+      "root_ground_range_m": 0.32156143551482
+    },
+    {
+      "ground_height": 0.926400184631348,
+      "position": [
+        7.0,
+        -23.0
+      ],
+      "root_ground_range_m": 1.28913474778191
+    },
+    {
+      "ground_height": 0.883181631565094,
+      "position": [
+        13.0,
+        -28.0
+      ],
+      "root_ground_range_m": 0.432124572622986
+    },
+    {
+      "ground_height": 0.293896555900574,
+      "position": [
+        32.0999984741211,
+        -14.8000001907349
+      ],
+      "root_ground_range_m": 0.176661068659574
+    },
+    {
+      "ground_height": 0.700027287006378,
+      "position": [
+        36.0,
+        -21.0
+      ],
+      "root_ground_range_m": 0.268120167601248
+    },
+    {
+      "ground_height": 0.844723522663116,
+      "position": [
+        38.0,
+        -29.0
+      ],
+      "root_ground_range_m": 0.595164416683935
+    },
+    {
+      "ground_height": 0.424597173929214,
+      "position": [
+        10.0,
+        17.0
+      ],
+      "root_ground_range_m": 0.270466444429473
+    },
+    {
+      "ground_height": 0.86871999502182,
+      "position": [
+        7.0,
+        24.0
+      ],
+      "root_ground_range_m": 0.703432425692086
+    },
+    {
+      "ground_height": 0.830038785934448,
+      "position": [
+        14.0,
+        29.0
+      ],
+      "root_ground_range_m": 0.181450409517463
+    },
+    {
+      "ground_height": 0.342082142829895,
+      "position": [
+        34.0,
+        15.6999998092651
+      ],
+      "root_ground_range_m": 0.248111429262387
+    },
+    {
+      "ground_height": 0.756185710430145,
+      "position": [
+        38.0,
+        22.0
+      ],
+      "root_ground_range_m": 0.222591972070948
+    },
+    {
+      "ground_height": 0.695009410381317,
+      "position": [
+        39.0,
+        30.0
+      ],
+      "root_ground_range_m": 0.282175487568343
+    },
+    {
+      "ground_height": 3.45018672943115,
+      "position": [
+        64.0,
+        -39.0
+      ],
+      "root_ground_range_m": 1.30017495636031
+    },
+    {
+      "ground_height": 4.23767757415771,
+      "position": [
+        71.0,
+        -42.0
+      ],
+      "root_ground_range_m": 1.7198074235336
+    },
+    {
+      "ground_height": 4.67083501815796,
+      "position": [
+        79.0,
+        -44.0
+      ],
+      "root_ground_range_m": 1.36970821987385
+    },
+    {
+      "ground_height": 2.44992589950562,
+      "position": [
+        64.0,
+        40.0
+      ],
+      "root_ground_range_m": 1.00703352306013
+    },
+    {
+      "ground_height": 3.67204070091248,
+      "position": [
+        71.0,
+        44.0
+      ],
+      "root_ground_range_m": 2.12735537502563
+    },
+    {
+      "ground_height": 3.89680147171021,
+      "position": [
+        79.0,
+        46.0
+      ],
+      "root_ground_range_m": 2.14456472171869
+    }
+  ],
+  "terrain_cover_tiles": 266,
+  "tree_groups": 18,
+  "visual_acceptance": "NOT_ACCEPTED",
+  "water_surfaces": 1
+}
