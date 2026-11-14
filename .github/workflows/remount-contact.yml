@@ -1,0 +1,29 @@
+name: Audit source horse contact and full skeleton registration
+on:
+  push:
+    branches: ['codex/river-remount-contact']
+    paths: ['tools/art/analyse_remount_contacts.py','tools/art/bake_native_remount.py','.github/workflows/remount-contact.yml']
+permissions:
+  contents: write
+concurrency:
+  group: remount-contact
+  cancel-in-progress: false
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Measure source animation contacts
+        run: |
+          set -euo pipefail
+          python3 -m pip install numpy Pillow
+          python3 tools/art/analyse_remount_contacts.py "$RUNNER_TEMP/horse-source"
+          git add reports/remount/native-contact-audit.json
+          git -c user.name='River Gate motion review' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve original horse contact and rig registration measurements'
+          git push origin HEAD:refs/heads/codex/river-remount-contact
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-horse-contact
+          path: reports/remount/
