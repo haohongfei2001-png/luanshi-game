@@ -5,3 +5,5 @@
 New authored masonry surfaces have actual world-metre dominant-plane UVs; professional source UVs are retained. Old mixed X/(Z+Y) UV projection made vertical front faces nearly degenerate. Native-band roof has separate actual Godot evidence. These changes remain opt-in and not enabled in any delivered game.
 
 Remaining: full stone/lime mortar/wood material system, actual normal-camera whole-scene review, complete source/runtime gameplay regression. Current plain material prototype is NOT an acceptable art candidate. Do not present it as finished structure merely because the gap is closed.
+
+Integrated road-section03 default-gameplay full regression: `./tools/test.sh` completed exit 0 (2026-11-14 UTC). Local full-game setup for 03 plus reused native tree/grass completed three candidate views without graphics; this is not packed-release proof or a new image. Next actual image must use the complete material system rather than present the untextured structural study as finished.
