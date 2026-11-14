@@ -6,6 +6,9 @@ on:
 permissions:
   contents: write
   actions: write
+concurrency:
+  group: whole-world-rebuild
+  cancel-in-progress: true
 jobs:
   playable:
     runs-on: ubuntu-24.04
@@ -18,7 +21,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api --method POST repos/haohongfei2001-png/luanshi-game/actions/runs/43553508581/cancel || true
+          for run in 43553508581 43554399919; do gh api --method POST "repos/haohongfei2001-png/luanshi-game/actions/runs/$run/cancel" || true; done
       - name: Prepare the ground and complete gate library
         run: |
           set -euo pipefail
@@ -46,7 +49,7 @@ jobs:
       - name: Render the rebuilt full scene before its continuous-input run
         run: |
           set -euo pipefail
-          printf '[display]\\nwindow/size/window_width_override=2560\\nwindow/size/window_height_override=1440\\n' > override.cfg
+          printf '[display]\nwindow/size/window_width_override=2560\nwindow/size/window_height_override=1440\n' > override.cfg
           timeout 480s xvfb-run -a -s "-screen 0 2560x1440x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --script tests/world_master_review.gd > artifacts/world-rebuild/stills.log 2>&1 || { cat artifacts/world-rebuild/stills.log; exit 1; }
           cat artifacts/world-rebuild/stills.log
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/world-rebuild/stills.log; then exit 1; fi
