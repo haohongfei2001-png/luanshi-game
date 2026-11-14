@@ -158,7 +158,7 @@ def grounded_rest(kit):
     ms[NOCK]=ms[RH]
     return ms
 
-def pose(kit,clip,t,loadout=0,side_hit=0):
+def legacy_pose(kit,clip,t,loadout=0,side_hit=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
     running=clip>=23
@@ -750,6 +750,131 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
                 ms[NOCK]=ms[RH]
     return ms
 
+
+# Full authored Wildfire chain, with the original bind axes retained.
+COMBAT_SOURCE=json.loads((Path(__file__).parent/'source'/'wildfire_combat_curves.json').read_text())
+NATIVE_CUT=COMBAT_SOURCE['curves']['shield_cut_02']
+NATIVE_READY=COMBAT_SOURCE['curves']['shield_ready']
+NATIVE_REST=NATIVE_CUT['rest_points']
+SOURCE_GROUND={curve['source_path']:{side:min(p[1] for frame in curve['frames'] for p in frame['sole'][side])
+                                   for side in ('L','R')} for curve in (NATIVE_CUT,NATIVE_READY)}
+MOUNTED_BASIC=((0,2),(0,6),(1,2),(1,6))
+
+def native_sample(phase,curve=NATIVE_CUT):
+    rows=curve['frames']
+    at=max(0.,min(1.,phase))*(len(rows)-1)
+    index=min(int(at),len(rows)-2)
+    weight=at-index
+    first,last=rows[index:index+2]
+    points={name:lerp(p,last['p'][name],weight) for name,p in first['p'].items()}
+    quats={}
+    for name,q in first['q'].items():
+        end=last['q'][name]
+        if dot(q,end)<0: end=mul(end,-1.)
+        quats[name]=unit(lerp(q,end,weight))
+    a,b=first['weapon'],last['weapon']
+    if dot(a,b)<0: b=mul(b,-1.)
+    weapon=unit(lerp(a,b,weight))
+    sole={side:(1.-weight)*min(p[1] for p in first['sole'][side])+
+               weight*min(p[1] for p in last['sole'][side])-SOURCE_GROUND[curve['source_path']][side] for side in ('L','R')}
+    return points,quats,weapon,sole
+
+def source_limb_rotation(q,name,child,binds):
+    source_axis=sub(NATIVE_REST[child],NATIVE_REST[name])
+    return qm(q[name],towards(sub(binds[1],binds[0]),source_axis))
+
+def fit_leg(binds,root,foot,pole,upper_q,lower_q):
+    upper,lower=two_link(binds,root,foot,pole)
+    knee=trans(lower,binds[1])
+    result=[]
+    for base,end,origin,at,preferred in (
+            (binds[0],binds[1],root,knee,upper_q),
+            (binds[1],binds[2],knee,foot,lower_q)):
+        axis=sub(end,base)
+        q=qm(towards(rot(preferred,axis),sub(at,origin)),preferred)
+        result.append(placed(base,origin,q))
+    return result
+
+def native_chain_pose(phase,curve=NATIVE_CUT):
+    points,q,weapon,sole=native_sample(phase,curve)
+    waist=(0.,.86,0.)
+    at=add(points['hips'],sub(waist,NATIVE_REST['hips']))
+    feet={}
+    for side,label in ((-1,'L'),(1,'R')):
+        ankle=leg_nodes(side)[2]
+        foot_q=q['foot.'+label]
+        minimum=min(rot(foot_q,(dx,-.117,dz))[1] for dx in (-.05,.05) for dz in (-.072,.187))
+        desired=add(points['foot.'+label],sub(ankle,NATIVE_REST['foot.'+label]))
+        desired=(desired[0],.006+max(0.,sole[label])-minimum,desired[2])
+        feet[side]=(desired,foot_q)
+        # Fit the shorter target leg through its original support, lowering
+        # only enough to keep its two rigid lengths physically reachable.
+        a,b,c=leg_nodes(side)
+        length=sqrt(dot(sub(b,a),sub(b,a)))+sqrt(dot(sub(c,b),sub(c,b)))-.002
+        offset=rot(q['hips'],sub(a,waist))
+        planar=(at[0]+offset[0]-desired[0])**2+(at[2]+offset[2]-desired[2])**2
+        ceiling=desired[1]+sqrt(max(.001,length*length-planar))-offset[1]
+        at=(at[0],min(at[1],ceiling),at[2])
+    ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
+    ms[HIPS]=placed(waist,at,q['hips'])
+    ms[CHEST]=placed((0.,1.008,0.),trans(ms[HIPS],(0.,1.008,0.)),q['spine.003'])
+    ms[HEAD]=placed((0.,1.427,.015),trans(ms[CHEST],(0.,1.427,.015)),q['head'])
+    for side,label in ((-1,'L'),(1,'R')):
+        upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
+        a,b,c=arm_nodes(side)
+        upper_q=source_limb_rotation(q,'upper_arm.'+label,'forearm.'+label,(a,b))
+        fore_q=source_limb_rotation(q,'forearm.'+label,'hand.'+label,(b,c))
+        shoulder=trans(ms[CHEST],a)
+        elbow=add(shoulder,rot(upper_q,sub(b,a)))
+        wrist=add(elbow,rot(fore_q,sub(c,b)))
+        ms[upper]=placed(a,shoulder,upper_q)
+        ms[fore]=placed(b,elbow,fore_q)
+        # Source weapon_R is the author's actual attachment orientation.
+        # The target hand and blade keep their existing relative registration.
+        fingers=sub(NATIVE_REST['finger.'+label],NATIVE_REST['hand.'+label])
+        hand_q=weapon if side>0 else qm(q['hand.'+label],towards((0.,-1.,0.),fingers))
+        ms[hand]=placed(c,wrist,hand_q)
+        thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
+        binds=leg_nodes(side)
+        hip=trans(ms[HIPS],binds[0])
+        foot,foot_q=feet[side]
+        pole=sub(points['shin.'+label],points['thigh.'+label])
+        thigh_q=source_limb_rotation(q,'thigh.'+label,'shin.'+label,binds[:2])
+        shin_q=source_limb_rotation(q,'shin.'+label,'foot.'+label,binds[1:])
+        ms[thigh],ms[shin]=fit_leg(binds,hip,foot,pole,thigh_q,shin_q)
+        ms[boot]=placed(binds[2],foot,foot_q)
+    ms[NOCK]=ms[LH]
+    return ms
+
+def blade_tip(kit,bones):
+    far_z=1.1036090310278026 if kit==0 else 1.139332698972023
+    return trans(bones[RH],(.273,.943,far_z))
+
+def authored_contact(kit):
+    # Locate the leading blade's first crossing of the opponent's centre
+    # during the forward cut. Keep this phase at the simulation release.
+    samples=[blade_tip(kit,native_chain_pose(i/256.)) for i in range(257)]
+    for i in range(1,len(samples)):
+        a,b=samples[i-1],samples[i]
+        if a[0]>0. and b[0]<=0. and b[2]>.8:
+            return (i-1+a[0]/(a[0]-b[0]))/256.
+    raise ValueError("The native blade never crosses the frontal contact plane")
+
+NATIVE_CONTACT={kit:authored_contact(kit) for kit in (0,1)}
+
+def pose(kit,clip,t,loadout=0,side_hit=0):
+    if kit not in (0,1) or clip not in (1,2,6) or side_hit:
+        return legacy_pose(kit,clip,t,loadout,side_hit)
+    if clip==1:
+        return native_chain_pose(t,NATIVE_READY)
+    release=NATIVE_CONTACT[kit]
+    phase=release*t if clip==2 else release+(1.-release)*t
+    # The author's ready stance and the cut share the same loaded leg.
+    # Switching back through the older opposite-foot pose added two rapid
+    # half-metre ankle slides to every strike, despite planted source feet.
+    return native_chain_pose(phase)
+
+
 def cycling(clip):
     return clip in (0,1,12,15) or clip>=16
 
@@ -760,6 +885,7 @@ def bake_motion(out):
     lanes=[(kit,clip,0,0) for kit in range(9) for clip in range(CLIPS)]
     lanes.extend((kit,clip,loadout,0) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
     lanes.extend((kit,clip,0,side) for kit in range(9) for clip,side in REACTIONS)
+    lanes.extend((kit,clip,0,99) for kit,clip in MOUNTED_BASIC)
     tex=Image.new("RGBA",((FRAMES+1)*BONES,len(lanes)*4))
     px=tex.load()
     for lane,(kit,clip,loadout,side) in enumerate(lanes):
@@ -767,7 +893,8 @@ def bake_motion(out):
         y=lane*4
         for frame in range(FRAMES+1):
             t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
-            for b,(q,offset) in enumerate(pose(kit,clip,t,loadout,side)):
+            bones=legacy_pose(kit,clip,t) if side==99 else pose(kit,clip,t,loadout,side)
+            for b,(q,offset) in enumerate(bones):
                 # q and -q describe the same rotation. Choose neighbours on
                 # the same hemisphere before interpolation, including the wrap.
                 if previous[b] and sum(a*c for a,c in zip(q,previous[b]))<0:
