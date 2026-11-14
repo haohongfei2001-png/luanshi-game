@@ -1,0 +1,411 @@
+{
+  "fingerprint": {
+    "actor": 617,
+    "hits": [
+      151,
+      196
+    ],
+    "hp": 41.8142786294222,
+    "losses": [
+      45,
+      41
+    ],
+    "position": [
+      37.7242202758789,
+      4.7592134475708
+    ],
+    "tick": 100
+  },
+  "ordinary": [
+    512,
+    512
+  ],
+  "seed": 61112,
+  "simulated_steps": 500,
+  "top": [
+    {
+      "actor": 713,
+      "end": 407,
+      "facing": [
+        -0.528150320053101,
+        0.849150836467743
+      ],
+      "hit": 397,
+      "impacts": 0,
+      "kit": 1,
+      "peak_dead": 7,
+      "peak_horses": 0,
+      "peak_live": 7,
+      "position": [
+        42.301139831543,
+        -13.7045612335205
+      ],
+      "recovered": true,
+      "resume": 406,
+      "score": 84,
+      "start": 385,
+      "walked": 0.221159398555756,
+      "windup": 391
+    },
+    {
+      "actor": 45,
+      "end": 41,
+      "facing": [
+        0.976907074451447,
+        -0.213664889335632
+      ],
+      "hit": 31,
+      "impacts": 0,
+      "kit": 1,
+      "peak_dead": 3,
+      "peak_horses": 1,
+      "peak_live": 10,
+      "position": [
+        36.123233795166,
+        -2.12215304374695
+      ],
+      "recovered": true,
+      "resume": 40,
+      "score": 171,
+      "start": 19,
+      "walked": 0.25334033370018,
+      "windup": 25
+    },
+    {
+      "actor": 45,
+      "end": 55,
+      "facing": [
+        0.997894704341888,
+        0.0648548901081085
+      ],
+      "hit": 49,
+      "impacts": 1,
+      "kit": 1,
+      "peak_dead": 7,
+      "peak_horses": 1,
+      "peak_live": 12,
+      "position": [
+        36.6290817260742,
+        -2.14834880828857
+      ],
+      "recovered": true,
+      "resume": 54,
+      "score": 209,
+      "start": 37,
+      "walked": 0.226351723074913,
+      "windup": 43
+    },
+    {
+      "actor": 45,
+      "end": 71,
+      "facing": [
+        0.996630907058716,
+        0.0820175632834435
+      ],
+      "hit": 63,
+      "impacts": 2,
+      "kit": 1,
+      "peak_dead": 11,
+      "peak_horses": 1,
+      "peak_live": 10,
+      "position": [
+        37.0707321166992,
+        -2.23712706565857
+      ],
+      "recovered": true,
+      "resume": 70,
+      "score": 227,
+      "start": 51,
+      "walked": 0.15203370153904,
+      "windup": 57
+    },
+    {
+      "actor": 584,
+      "end": 35,
+      "facing": [
+        -0.992404699325562,
+        -0.123016387224197
+      ],
+      "hit": 27,
+      "impacts": 0,
+      "kit": 0,
+      "peak_dead": 2,
+      "peak_horses": 2,
+      "peak_live": 8,
+      "position": [
+        38.2360992431641,
+        -5.95013999938965
+      ],
+      "recovered": true,
+      "resume": 34,
+      "score": 254,
+      "start": 16,
+      "walked": 0.142501011490822,
+      "windup": 22
+    },
+    {
+      "actor": 300,
+      "end": 309,
+      "facing": [
+        0.97621488571167,
+        0.216805085539818
+      ],
+      "hit": 301,
+      "impacts": 1,
+      "kit": 0,
+      "peak_dead": 12,
+      "peak_horses": 1,
+      "peak_live": 18,
+      "position": [
+        43.108757019043,
+        2.18928718566895
+      ],
+      "recovered": true,
+      "resume": 308,
+      "score": 274,
+      "start": 290,
+      "walked": 0.206630207598209,
+      "windup": 296
+    },
+    {
+      "actor": 268,
+      "end": 366,
+      "facing": [
+        0.949499309062958,
+        -0.313769042491913
+      ],
+      "hit": 358,
+      "impacts": 0,
+      "kit": 0,
+      "peak_dead": 10,
+      "peak_horses": 1,
+      "peak_live": 21,
+      "position": [
+        45.0833396911621,
+        1.93560886383057
+      ],
+      "recovered": true,
+      "resume": 365,
+      "score": 275,
+      "start": 347,
+      "walked": 0.16706582903862,
+      "windup": 353
+    },
+    {
+      "actor": 564,
+      "end": 267,
+      "facing": [
+        -0.922347545623779,
+        0.386360973119736
+      ],
+      "hit": 259,
+      "impacts": 0,
+      "kit": 0,
+      "peak_dead": 6,
+      "peak_horses": 2,
+      "peak_live": 7,
+      "position": [
+        38.6304092407227,
+        -12.6173753738403
+      ],
+      "recovered": true,
+      "resume": 266,
+      "score": 277,
+      "start": 248,
+      "walked": 0.185781136155128,
+      "windup": 254
+    },
+    {
+      "actor": 108,
+      "end": 390,
+      "facing": [
+        0.785285711288452,
+        0.619133532047272
+      ],
+      "hit": 382,
+      "impacts": 1,
+      "kit": 0,
+      "peak_dead": 6,
+      "peak_horses": 2,
+      "peak_live": 15,
+      "position": [
+        45.6926422119141,
+        5.99417018890381
+      ],
+      "recovered": true,
+      "resume": 389,
+      "score": 317,
+      "start": 371,
+      "walked": 0.154852330684662,
+      "windup": 377
+    },
+    {
+      "actor": 108,
+      "end": 372,
+      "facing": [
+        0.981159329414368,
+        0.193200379610062
+      ],
+      "hit": 364,
+      "impacts": 0,
+      "kit": 0,
+      "peak_dead": 9,
+      "peak_horses": 2,
+      "peak_live": 11,
+      "position": [
+        45.3058280944824,
+        5.13535785675049
+      ],
+      "recovered": true,
+      "resume": 371,
+      "score": 318,
+      "start": 353,
+      "walked": 0.18618905544281,
+      "windup": 359
+    },
+    {
+      "actor": 245,
+      "end": 414,
+      "facing": [
+        0.331396907567978,
+        0.943491399288177
+      ],
+      "hit": 404,
+      "impacts": 3,
+      "kit": 1,
+      "peak_dead": 8,
+      "peak_horses": 2,
+      "peak_live": 14,
+      "position": [
+        46.5829086303711,
+        6.77995777130127
+      ],
+      "recovered": true,
+      "resume": 413,
+      "score": 326,
+      "start": 392,
+      "walked": 0.160409927368164,
+      "windup": 398
+    },
+    {
+      "actor": 169,
+      "end": 425,
+      "facing": [
+        0.974548101425171,
+        -0.224178582429886
+      ],
+      "hit": 415,
+      "impacts": 0,
+      "kit": 1,
+      "peak_dead": 13,
+      "peak_horses": 2,
+      "peak_live": 8,
+      "position": [
+        40.0354385375977,
+        -13.25523853302
+      ],
+      "recovered": true,
+      "resume": 424,
+      "score": 331,
+      "start": 403,
+      "walked": 0.216068133711815,
+      "windup": 409
+    },
+    {
+      "actor": 300,
+      "end": 347,
+      "facing": [
+        0.988998472690582,
+        -0.14792512357235
+      ],
+      "hit": 339,
+      "impacts": 2,
+      "kit": 0,
+      "peak_dead": 11,
+      "peak_horses": 2,
+      "peak_live": 11,
+      "position": [
+        45.2618179321289,
+        4.25634813308716
+      ],
+      "recovered": true,
+      "resume": 346,
+      "score": 332,
+      "start": 328,
+      "walked": 0.22869373857975,
+      "windup": 334
+    },
+    {
+      "actor": 364,
+      "end": 492,
+      "facing": [
+        0.999727845191956,
+        -0.0233288127928972
+      ],
+      "hit": 485,
+      "impacts": 0,
+      "kit": 0,
+      "peak_dead": 9,
+      "peak_horses": 2,
+      "peak_live": 15,
+      "position": [
+        47.0858535766602,
+        2.59671783447266
+      ],
+      "recovered": true,
+      "resume": 492,
+      "score": 338,
+      "start": 474,
+      "walked": 0.240000650286674,
+      "windup": 480
+    },
+    {
+      "actor": 245,
+      "end": 356,
+      "facing": [
+        0.999720454216003,
+        0.0236416663974524
+      ],
+      "hit": 346,
+      "impacts": 2,
+      "kit": 1,
+      "peak_dead": 12,
+      "peak_horses": 2,
+      "peak_live": 12,
+      "position": [
+        45.2270088195801,
+        3.9007408618927
+      ],
+      "recovered": true,
+      "resume": 355,
+      "score": 344,
+      "start": 334,
+      "walked": 0.154657334089279,
+      "windup": 340
+    },
+    {
+      "actor": 140,
+      "end": 332,
+      "facing": [
+        0.980833947658539,
+        -0.194845631718636
+      ],
+      "hit": 324,
+      "impacts": 0,
+      "kit": 0,
+      "peak_dead": 10,
+      "peak_horses": 2,
+      "peak_live": 15,
+      "position": [
+        44.022891998291,
+        3.01871943473816
+      ],
+      "recovered": true,
+      "resume": 331,
+      "score": 345,
+      "start": 313,
+      "walked": 0.214690655469894,
+      "windup": 319
+    }
+  ]
+}
