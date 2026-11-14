@@ -49,9 +49,20 @@ def main(cache):
     base=source_file(cache,"textures/skins/structural/han_struct_02.png","5af91f43b3ea9fc73ebeda6f1517b98df0d3a57a")
     original=np.asarray(Image.open(base).convert("RGB"),dtype=float)/255.
     light=original@np.array([.26,.62,.12])
-    plaster=np.clip((light-.34)/.29,0.,1.)*np.clip((original[:,:,0]-original[:,:,2]+.12)/.19,0.,1.)
-    clay=np.stack((light*.72,light*.52,light*.36),axis=-1)
-    painted=original*(1.-plaster[:,:,None]*.94)+clay*plaster[:,:,None]*.94
+    # Preserve the authored roof and joinery. Clay and masonry occupy distinct
+    # native UV-atlas rectangles, so each keeps its own material identity.
+    painted=original.copy()
+    height,width=light.shape
+    y,x=np.mgrid[0:height,0:width]
+    u=x/width;v=y/height
+    plaster=((u>.581)&(v<.349))|((u>.619)&(v>.680))
+    clay=np.stack((light*.92,light*.66,light*.46),axis=-1)
+    painted[plaster]=clay[plaster]
+    masonry=((u>.226)&(u<.452)&(v>.701))|((u>.619)&(v>.350)&(v<.673))
+    grey=np.stack((light*.87,light*.91,light*.85),axis=-1)
+    moss=np.clip((original[:,:,1]-original[:,:,0])/.12,0.,.45)[:,:,None]
+    stone=grey*(1.-moss)+original*moss
+    painted[masonry]=stone[masonry]
     colour=Image.fromarray(np.rint(np.clip(painted,0.,1.)*255).astype("uint8"))
     colour.save(OUT/"native_clay_tiles_timber.png")
     preview=colour.copy();preview.thumbnail((1024,1024));preview.save(OUT/"atlas_review.jpg",quality=92)

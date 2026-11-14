@@ -23,6 +23,7 @@ ASSETS=[
     ("fern_02",6000,"Rico Cilliers and Rob Tuytel"),
     ("shrub_03",22000,"Rico Cilliers"),
     ("shrub_01",42000,"Rico Cilliers"),
+    ("searsia_burchellii",100000,"James Ray Cock and Jenelle van Heerden"),
 ]
 HEADERS={"User-Agent":"Luanshi-River-Art/1.0 (github.com/haohongfei2001-png/luanshi-game)"}
 def read(url):
