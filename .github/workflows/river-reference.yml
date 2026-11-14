@@ -1,0 +1,75 @@
+name: Play the original wooden bridge with grain fitted to the actual tread
+on:
+  push:
+    branches: [codex/river-rc23-bridge-oak]
+    paths: ['.github/workflows/river-reference.yml','tools/art/bake_bridge_oak.py']
+permissions:
+  contents: write
+jobs:
+  crossing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 23
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fit the grain to individual boards and retain their licensed source record
+        run: |
+          set -eu
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-numpy python3-pil xdotool
+          mkdir -p "$RUNNER_TEMP/boards"
+          /usr/bin/python3 tools/art/bake_bridge_oak.py "$RUNNER_TEMP/boards"
+          git add assets/third_party/polyhaven_bank
+          git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Register eight unbroken oak grain strips to the physical bridge boards'
+          git push origin HEAD:refs/heads/codex/river-rc23-bridge-oak
+      - name: Prepare the pinned game runtime and real-input driver
+        run: |
+          set -eu
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/g
+          if ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool; fi
+          mkdir -p artifacts/bridge-window
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --import > /tmp/import.log 2>&1
+          if grep -E 'ERROR:|Parse Error|SHADER ERROR' /tmp/import.log; then exit 1; fi
+      - name: Play the same bridge charge at physical 1440p and 2160p
+        run: |
+          set -eu
+          for dims in 2560x1440; do
+            out="docs/evidence/river-gate-v1-rc23/bridge-oak/$dims"
+            mkdir -p "$out"
+            printf '[display]\nwindow/size/window_width_override=%s\nwindow/size/window_height_override=%s\n' "${dims%x*}" "${dims#*x}" > override.cfg
+            xvfb-run -a -s "-screen 0 ${dims}x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution "$dims" --audio-driver Dummy --disable-vsync --fixed-fps 24 --script tests/bridgehead_window.gd -- --bridge-stills --native-plates > "$out/window.log" 2>&1 || { tail -c 5500 "$out/window.log"; exit 1; }
+            grep -F 'BRIDGE_WINDOW true' "$out/window.log"
+            cp artifacts/bridge-window/input-and-camera.json artifacts/bridge-window/view-0050.png artifacts/bridge-window/view-0145.png "$out/"
+            DIM="$dims" DST="$out" /usr/bin/python3 - <<'PY'
+          import json,os,shutil
+          from pathlib import Path
+          from PIL import Image
+          size=tuple(map(int,os.environ['DIM'].split('x')))
+          dst=Path(os.environ['DST'])
+          source=Path('artifacts/bridge-window')
+          receipt=json.loads((dst/'input-and-camera.json').read_bytes())
+          assert receipt['internal']==1. and receipt['ordinary']==[512,512] and not receipt['different_lens']
+          for name in ['view-0050.jpg','view-0105.jpg','view-0145.jpg']:
+              p=source/name
+              im=Image.open(p)
+              assert im.size==size,(p,im.size,size)
+              shutil.copyfile(p,dst/name)
+              im.thumbnail((1440,810))
+              im.save(dst/(p.stem+'-preview.jpg'),quality=93,subsampling=0)
+          print(size,receipt['last']['hits'],receipt['first_player_strike'])
+          PY
+            git add "$out"
+            git -c user.name='River Gate verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Archive the physical $dims window and the corresponding battle inputs"
+            git push origin HEAD:refs/heads/codex/river-rc23-bridge-oak
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-native-reference-frames
+          path: docs/evidence/river-gate-v1-rc23/bridge-oak/

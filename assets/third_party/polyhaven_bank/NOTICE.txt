@@ -15,3 +15,5 @@ https://creativecommons.org/publicdomain/zero/1.0/
 The Luanshi conversion preserves metre-relative contours and UVs, rebuilds the palette for river limestone and rammed earth, and reduces the scan to six reusable field meshes. See source.json for input digests and tools/art/fit_scanned_banks.py for the Blender/Pillow conversion. The original source files can be retrieved from the asset pages.
 
 The forecourt's 4096 by 2160 albedo incorporates CC0 Brown Mud Dry by Rob Tuytel (https://polyhaven.com/a/brown_mud_dry) and Sandy Gravel 02 by Dario Barresi (https://polyhaven.com/a/sandy_gravel_02), with metre-spaced cart tracks painted for this crossing.
+
+Bridge Oak uses Wood Planks, photographed by Amal Kumar, Poly Haven (CC0 1.0). https://polyhaven.com/a/wood_planks . The conversion isolates complete grain strips and registers them in metres to the actual two-piece transverse timbers. No original preview renders ship in the game.

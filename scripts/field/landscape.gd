@@ -41,6 +41,7 @@ func _ready() -> void:
 	add_child(sun)
 	surface_material.shader=preload("res://scripts/field/ground.gdshader")
 	surface_material.set_shader_parameter("gate_crossing",bridgehead)
+	surface_material.set_shader_parameter("bridge_oak",preload("res://assets/third_party/polyhaven_bank/bridge_oak.jpg"))
 	surface_material.set_shader_parameter("forecourt",preload("res://assets/third_party/polyhaven_bank/forecourt.jpg"))
 	surface_material.set_shader_parameter("cartway",preload("res://assets/environment/river-cartway.svg"))
 	surface_material.set_shader_parameter("valley_wash",preload("res://assets/environment/floodplain-paint.png"))
