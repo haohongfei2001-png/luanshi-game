@@ -2,7 +2,7 @@ name: Dot native same-camera art review
 on:
   push:
     branches: ['dot/river-terrain-rebuild']
-    paths: ['scripts/field/**', 'assets/river_gate/**', 'tests/world_master_review.gd', 'tests/river_environment_slice.gd', '.github/workflows/dot-art-review.yml']
+    paths: ['scripts/field/**', 'assets/river_gate/**', 'tests/world_master_review.gd', 'tests/river_environment_structure.gd', '.github/workflows/dot-art-review.yml']
 permissions:
   contents: read
 concurrency:
@@ -41,14 +41,17 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/dot-art-review/import.log; then exit 1; fi
           timeout 90s godot --headless --path . --script tests/world_terrain_compat.gd | tee artifacts/dot-art-review/terrain.log
           timeout 90s godot --headless --path . --script tests/field_bridgehead.gd | tee artifacts/dot-art-review/bridgehead.log
-          if test -f tests/river_environment_slice.gd; then
-            timeout 90s godot --headless --path . --script tests/river_environment_slice.gd | tee artifacts/dot-art-review/environment.log
+          if test -f tests/river_environment_structure.gd; then
+            timeout 90s godot --headless --path . --script tests/river_environment_structure.gd | tee artifacts/dot-art-review/environment.log
           fi
       - name: Capture untouched native 2K and 4K game frames at the same seed and ticks
         run: |
           set -euo pipefail
           printf '[display]\nwindow/size/window_width_override=2560\nwindow/size/window_height_override=1440\n' > override.cfg
           export WORLD_SOURCE_SHA="$(git rev-parse HEAD)"
+          # The checkout contains older evidence; never upload it as this run.
+          rm -rf docs/evidence/river-whole-rebuild/review
+          mkdir -p docs/evidence/river-whole-rebuild/review
           { uname -a; lscpu; free -m; godot --version; } > artifacts/dot-art-review/host.txt
           timeout 1200s xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --script tests/world_master_review.gd > artifacts/dot-art-review/stills.log 2>&1 || { cat artifacts/dot-art-review/stills.log; exit 1; }
           cat artifacts/dot-art-review/stills.log

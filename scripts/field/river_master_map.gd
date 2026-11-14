@@ -15,6 +15,14 @@ var libraries:Dictionary={}
 var ground_material:ShaderMaterial
 var water_material:ShaderMaterial
 var botanical_materials:Dictionary={}
+# Authored canopy groups, not a uniform tree grid. The 22 m bridge/gate
+# action corridor stays open; lower native bushes join the trees to the bank.
+const APPROACH_GROVES: Array[Vector4] = [
+ Vector4(35.2,-15.8,7.0,0), Vector4(41.5,-20.8,8.0,1),
+ Vector4(32.6,-23.8,5.8,2), Vector4(39.1,-29.5,7.2,3),
+ Vector4(33.0,23.0,6.2,1), Vector4(40.5,27.0,7.8,0),
+ Vector4(31.0,31.2,5.5,3), Vector4(45.0,34.0,7.1,2)]
+const CANOPY_PARTS := ["FieldOakBroadA","FieldOakBroadB","FieldElmA","FieldMapleGreen"]
 
 func _ready() -> void:
 	name="RiverMasterMap"
@@ -35,6 +43,7 @@ func _ready() -> void:
 	_fortress()
 	_river()
 	_banks_and_groves()
+	_riparian_verges()
 	_ground_dressing()
 	_field_quarters()
 	ram=preload("res://assets/environment/river_ram.gltf").instantiate() as Node3D
@@ -84,10 +93,14 @@ func _library(path:String) -> Dictionary:
 				material.alpha_antialiasing_mode=BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
 
 			if path==BOULDERS:
-				material.albedo_color=Color("a6b1b5")
+				material.albedo_color=Color("8d988c")
 			if path==BROADLEAF or path==WOODLAND or path==FERN or path==SHRUB or path==THICKET:
 				var kind:=1 if "leaves" in material.resource_name else 0
-				if path==WOODLAND:kind=0 if "dead" in material.resource_name else 1
+				if path==WOODLAND:
+					var label:=material.resource_name.to_lower()
+					kind=0 if "dead" in label or "bark" in label else 1
+					if "willow" in label and not "bark" in label:kind=2
+					elif "grass" in label or "bush" in label:kind=3
 				if path==FERN or path==SHRUB:kind=3
 				if path==THICKET:
 					var label:=material.resource_name.to_lower()
@@ -116,8 +129,8 @@ func _botanical_material(source:StandardMaterial3D,kind:int,bounds:AABB=AABB()) 
 	material.set_shader_parameter("uv_offset",source.uv1_offset)
 	material.set_shader_parameter("botanical_part",kind)
 	var pigment:=Color("544635")
-	if kind==1:pigment=Color("536447")
-	elif kind==2:pigment=Color("96904b")
+	if kind==1:pigment=Color("465a36")
+	elif kind==2:pigment=Color("657143")
 	elif kind==3:pigment=Color("697444")
 	material.set_shader_parameter("pigment",pigment)
 	if bounds.size.length_squared()>.01:
@@ -148,6 +161,18 @@ func _plant(path:String,part:String,at:Vector2,size:float,yaw:float=0.) -> MeshI
 
 func _land_height(p:Vector2) -> float:
 	var h:=Ground.height(p,bridgehead)-(Ground.MOAT_BED_DEPTH*Ground.moat_depth(p) if bridgehead else 0.)
+	# Sculpt shallow silt shelves in the existing blocked riverbed, not through
+	# walkable ground. The mature outcrop clusters grow out of these eroded banks.
+	if bridgehead and Ground.blocked(p,true,true):
+		for channel:float in [Ground.river_center(p.y),Ground.MOAT_X]:
+			var is_moat:=channel==Ground.MOAT_X
+			var crossing_z:=0. if is_moat else Ground.crossing(p.y)
+			if absf(p.y-crossing_z)<5.2:continue
+			if is_moat and absf(p.y)>Ground.MOAT_END:continue
+			var distance:=absf(p.x-channel)
+			var shelf:=smoothstep(2.2,3.4,distance)*(1.-smoothstep(4.6,5.6,distance))
+			var cove:=.5+.5*sin(p.y*.43+sin(p.y*.19))
+			h+=shelf*cove*.48
 	# The distant ridge begins outside every playable coordinate.
 	var outside:=maxf(absf(p.x)-Ground.LIMIT.x,absf(p.y)-Ground.LIMIT.y)
 	if outside>8.:
@@ -264,11 +289,9 @@ func _river() -> void:
 	boat.rotation.y=.12
 	add_child(boat)
 
-func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
-	# Retain the complete artist-built bark, branch and leaf-card assembly.
-	# The 22 m game comparison selected a coherent crown over isolated tiny leaves.
-	var variant:=posmod(roundi(at.x*3.+at.y*5.),2)
-	var part:="FieldOakA" if variant==0 else "FieldOakB"
+func _broadleaf_tree(at:Vector2,height:float,yaw:float,variant:int=-1) -> MeshInstance3D:
+	var selection:=posmod(roundi(at.x*3.+at.y*5.),CANOPY_PARTS.size()) if variant<0 else posmod(variant,CANOPY_PARTS.size())
+	var part:String=CANOPY_PARTS[selection]
 	var mesh:Mesh=_library(WOODLAND)[part]
 	var plant:=_plant(WOODLAND,part,at,height/maxf(mesh.get_aabb().size.y,.01),yaw)
 	plant.name="WholeBroadleaf"
@@ -277,30 +300,28 @@ func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
 	return plant
 
 func _bank_foundation(channel:float,moat:bool) -> void:
-	# Whole rock volumes form the submerged bank. Keep every scan's original
-	# proportions and rotate its full silhouette into the eroded shore.
+	# Replace the continuous, evenly spaced boulder necklace with submerged
+	# talus fans attached to existing collision outcrops. Whole CC0 scans retain
+	# their topology, UVs and proportions; long earth banks remain exposed.
 	var parts:=_library(BOULDERS)
 	var names:=parts.keys()
 	names.sort()
-	var reaches:=range(-24,25,2) if moat else range(-63,64,2)
-	for side:float in [-1.,1.]:
-		for index in reaches.size():
-			var station:int=reaches[index]
-			var z:=float(station)+.35*sin(station*1.7+side)
-			var crossing:=0. if moat else Ground.crossing(z)
-			if absf(z-crossing)<5.:continue
-			var center:=channel if moat else Ground.river_center(z)
-			var part:String=names[posmod(index*5+int(side),names.size())]
-			var mesh:Mesh=parts[part]
-			var bounds:=mesh.get_aabb()
+	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
+	if not moat:stations.append_array(Ground.RIVER_OUTCROPS)
+	for i in stations.size():
+		var station:=stations[i]
+		if i%3==1:continue
+		var center:=channel if moat else Ground.river_center(station.y)
+		for j in 3:
+			var part:String=names[posmod(i*5+j*2,names.size())]
+			var bounds: AABB=parts[part].get_aabb()
 			var anchor:=bounds.get_center()
 			anchor.y=bounds.position.y
-			var diameter:=2.45+.15*sin(station*2.4)
-			var size:=diameter/Vector2(bounds.size.x,bounds.size.z).length()
-			var at:=Vector3(center+side*(3.0 if moat else 4.05),
-				Ground.BATTLE_WATER_LEVEL-.24, z)
-			var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,station*1.37+side,anchor)
-			rock.name="WholeBankFooting"
+			var size:=station.z*(.38-.07*j)/maxf(bounds.size.x,bounds.size.z)
+			var at:=Vector3(center+station.x*((2.9 if moat else 3.9)-.24*j),
+				Ground.BATTLE_WATER_LEVEL-bounds.size.y*size*.55,station.y+(.5+j*.42)*station.z)
+			var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,i*1.37+j*2.4,anchor)
+			rock.name="SubmergedTalusFan"
 			rock.lod_bias=1.
 
 func _bank_rocks(channel:float,moat:bool) -> void:
@@ -333,37 +354,24 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 			_native_understory(THICKET,p,1.12+.17*((i+j)%3),i*1.43+j,i+j)
 			_native_understory(FERN,p+Vector2(entry.x*.75,.48),.45,i*.8+j,i+j)
 
-func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
-	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
-	tree.position=Vector3(at.x,_land_height(at),at.y)
-	tree.scale=Vector3.ONE*scale_value
-	tree.rotation.y=yaw
-	for node in tree.find_children("*","GeometryInstance3D",true,false):
-		node.visibility_range_end=180.
+func _willow(at:Vector2,_variant:int,scale_value:float,yaw:float) -> void:
+	# Complete authored willow replaces the old generated pendant-leaf tree.
+	# Use the green source in this biome; the yellow autumn variant was rejected.
+	var part:="RiverWillowGreen"
+	var mesh:Mesh=_library(WOODLAND)[part]
+	var tree:=_plant(WOODLAND,part,at,7.7*scale_value/maxf(mesh.get_aabb().size.y,.01),yaw)
+	tree.name="WholeNativeWillow"
+	tree.visibility_range_end=220.
+	tree.lod_bias=2.
 
-		node.lod_bias=1.2
-		if node is MeshInstance3D:
-			for surface in node.mesh.get_surface_count():
-				var source:=node.mesh.surface_get_material(surface) as StandardMaterial3D
-				if source:
-					var kind:=2 if String(node.name).begins_with("PendantLeaves") else 0
-					node.set_surface_override_material(surface,_botanical_material(source,kind,node.mesh.get_aabb()))
-	add_child(tree)
+func _maple(at:Vector2,_variant:int,scale_value:float,yaw:float) -> void:
+	_broadleaf_tree(at,7.6*scale_value,yaw,3)
 
-func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
-	var tree:Node3D=(load(WORLD+"willows/river_maple_%d.glb"%variant) as PackedScene).instantiate()
-	tree.position=Vector3(at.x,_land_height(at),at.y)
-	tree.scale=Vector3.ONE*scale_value
-	tree.rotation.y=yaw
-	for node in tree.find_children("*","GeometryInstance3D",true,false):
-		node.visibility_range_end=180.
-		node.lod_bias=.65
-	add_child(tree)
-
-func _native_understory(path:String,at:Vector2,height:float,yaw:float,variant:int) -> MeshInstance3D:
+func _native_understory(path:String,at:Vector2,height:float,yaw:float,variant:int,filter:String="") -> MeshInstance3D:
 	var parts:=_library(path)
 	var names:=parts.keys()
 	names.sort()
+	if filter=="brush":names=["FieldBrushA","FieldBrushB"]
 	var part:String=names[posmod(variant,names.size())]
 	var mesh:Mesh=parts[part]
 	var plant:=_plant(path,part,at,height/maxf(mesh.get_aabb().size.y,.01),yaw)
@@ -377,19 +385,18 @@ func _banks_and_groves() -> void:
 		_bank_foundation(Ground.MOAT_X,true)
 	_bank_rocks(Ground.RIVER_X,false)
 	if bridgehead: _bank_rocks(Ground.MOAT_X,true)
-	var near_groves:Array[Vector3]=[
-		Vector3(37.5,-8.5,6.7),Vector3(34.,-15.,5.7),Vector3(43.,-17.,6.4),
-		Vector3(34.,19.,6.2),Vector3(40.,24.,7.1),Vector3(29.,25.,5.8)]
-	for i in near_groves.size():
-		var entry:=near_groves[i]
+	for i in APPROACH_GROVES.size():
+		var entry:=APPROACH_GROVES[i]
 		var p:=Vector2(entry.x,entry.y)
-		_broadleaf_tree(p,entry.z,i*2.1)
-		for j in 3:
-			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.7+.22*j)
-			_native_understory(THICKET,q,1.15+.16*(j%3),i+j*1.9,i+j)
-			_native_understory(FERN,q+Vector2(.9,-.4),.42+.06*(j%3),j+.8*i,i+j)
+		_broadleaf_tree(p,entry.z,i*2.1,int(entry.w))
+		# A broken low/middle/tall skirt, not isolated crowns on bare grass.
+		for j in 5:
+			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.8+.35*j)
+			if absf(q.y)<11.5:continue
+			_native_understory(WOODLAND,q,.75+.20*(j%3),i+j*1.9,i+j,"brush")
+			_native_understory(FERN,q+Vector2(.7,-.4),.32+.06*(j%3),j+.8*i,i+j)
 	var willow_positions:Array[Vector3]=[
-		Vector3(17.5,-11.5,0.),Vector3(17.5,11.5,1.),
+		Vector3(16.2,-15.5,0.),Vector3(16.0,17.5,0.),
 		Vector3(30.5,-25.,1.),Vector3(17.3,23.,0.),
 		Vector3(-39.,-15.,0.),Vector3(-24.8,20.,1.),
 		Vector3(-40.,47.,1.),Vector3(-24.5,-49.,0.)]
@@ -420,6 +427,25 @@ func _banks_and_groves() -> void:
 		var p:=Vector2(-141.+i*22.,-96.-5.*sin(i*.8))
 		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",p,.60+.05*(i%4),i*.63)
 		cliff.position.y-=2.0
+
+
+func _riparian_verges() -> void:
+	# Whole authored grass clumps concentrate at bank coves, never in the
+	# bridge/gate route. Separate forms and scale give the shore a lower layer.
+	for channel:float in [Ground.RIVER_X,Ground.MOAT_X]:
+		if channel==Ground.MOAT_X and not bridgehead:continue
+		for side:float in [-1.,1.]:
+			for i in 21:
+				var z:=-25.+i*2.55+.6*sin(i*1.8)
+				if absf(z)<7.2 or (channel==Ground.MOAT_X and absf(z)>24.):continue
+				var x:=channel if channel==Ground.MOAT_X else Ground.river_center(z)
+				var p:=Vector2(x+side*(6.4+.48*sin(i*2.1)),z)
+				if Ground.blocked(p,true,bridgehead):continue
+				var part:="VergeGrassA" if i%2==0 else "VergeGrassB"
+				var mesh:Mesh=_library(WOODLAND)[part]
+				var plant:=_plant(WOODLAND,part,p,(.32+.10*(i%3))/maxf(mesh.get_aabb().size.y,.01),i*2.4)
+				plant.name="RiparianGrassCove"
+				plant.visibility_range_end=110.
 
 
 func _ground_dressing() -> void:

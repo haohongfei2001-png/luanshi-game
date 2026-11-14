@@ -40,7 +40,8 @@ void fragment() {
 	ALPHA_TEXTURE_COORDINATE = coordinates*vec2(textureSize(native_atlas,0));
 	vec3 native_color = linear_color(source.rgb);
 	vec3 paint = linear_color(pigment);
-	vec3 color = mix(native_color,paint,.30);
+	float native_value = dot(native_color,vec3(.2126,.7152,.0722));
+	vec3 color = paint*clamp(.65+sqrt(max(native_value,0.))*.75,.65,1.25);
 	if (botanical_part == 0) color = mix(native_color*paint*1.6,paint,.48);
 	ALBEDO = render_color(color);
 	float crown_depth = smoothstep(crown_center.y-crown_extent.y,crown_center.y+crown_extent.y,local_position.y);
