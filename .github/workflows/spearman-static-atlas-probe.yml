@@ -1,0 +1,44 @@
+name: Static AI spearman asset probe (not animation or shipping)
+on:
+  push:
+    branches: ['dot/guardian-native-source']
+    paths: ['.github/workflows/spearman-static-atlas-probe.yml', 'tools/art/spearman_sprite_probe/**']
+  workflow_dispatch:
+jobs:
+  actual-static-asset:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p evidence
+      - name: Prepare software rendering
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri mesa-utils
+      - name: Pinned official Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.6.3-stable_linux.x86_64
+      - name: Actual native-resolution raw-alpha and scissor diagnostics
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          uname -a > evidence/hardware.txt
+          lscpu >> evidence/hardware.txt
+          ATLAS="$PWD/tools/art/spearman_sprite_probe/static-atlas.png"
+          echo "91fce351c709de249798f64064251a89494fb141f9567dbd03cb68dcf5bff3b3  $ATLAS" | sha256sum -c - | tee evidence/source-check.log
+          for SIZE in 2560x1440 3840x2160; do
+            for ALPHA in raw scissor; do
+              SPEARMAN_ATLAS="$ATLAS" SPEARMAN_ALPHA=$ALPHA SPEARMAN_CAPTURE="$PWD/evidence/$SIZE-$ALPHA.png" timeout 90 xvfb-run -a -s '-screen 0 3840x2160x24' /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 --path tools/art/spearman_sprite_probe --resolution "$SIZE" --rendering-method gl_compatibility --audio-driver Dummy 2>&1 | tee "evidence/$SIZE-$ALPHA.log"
+            done
+          done
+          ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/*.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: static-spearman-actual-godot-software-diagnostics
+          path: evidence/
+          retention-days: 14
