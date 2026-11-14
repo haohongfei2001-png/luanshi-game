@@ -1,0 +1,40 @@
+{
+  "asset": "searsia_burchellii",
+  "author": "James Ray Cock and Jenelle van Heerden",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/searsia_burchellii",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/searsia_burchellii/searsia_burchellii_2k.gltf",
+  "gltf_md5": "02f6ca91643bd14ef264f1c575baca99",
+  "inputs": {
+    "searsia_burchellii.bin": "a415e710a2b077d2b1b33401a13f8b9a",
+    "textures/searsia_burchellii_diff_2k.jpg": "4eaa95cb6016f417e8240f4a8ec755d1"
+  },
+  "bounds_blender": [
+    [
+      -3.971266984939575,
+      -2.7516541481018066,
+      -0.035730160772800446
+    ],
+    [
+      4.384283065795898,
+      2.3086371421813965,
+      3.2078750133514404
+    ]
+  ],
+  "source_triangles": 616336,
+  "game_triangles": 99997,
+  "objects": [
+    {
+      "name": "searsia_burchellii_large_LOD0",
+      "triangles": 58661
+    },
+    {
+      "name": "searsia_burchellii_medium_LOD0",
+      "triangles": 34114
+    },
+    {
+      "name": "searsia_burchellii_small_LOD0",
+      "triangles": 7222
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+searsia_burchellii by James Ray Cock and Jenelle van Heerden
+CC0-1.0. https://polyhaven.com/license
+https://polyhaven.com/a/searsia_burchellii
+Derived game geometry and original matched albedo/AO; see SOURCE.json for exact source and checksums.
