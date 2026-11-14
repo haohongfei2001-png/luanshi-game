@@ -1,3 +1,7 @@
+## Dot 2026-11-14 17:33 UTC continuation update
+
+Codex PAUSED / Dot owner-authorized continuation remains in force. Whole-frame ART FAIL; default game/engine and RC24/RC25 remain unchanged. New full source-character actual Godot run43620541977 succeeded, but this is a gray source diagnostic, not a Chinese soldier or battle art pass. Same-source engine tangent run43618127716 now passed all four pose gates and twelve blend/Skin cases; original failures and both binaries preserved, no Mac engine switch. New coherent forest/ground and whole gate/bridge scene integration continue; architecture run43620505673 is pending at this snapshot. Read [Dot checkpoint](DOT_REBUILD_CHECKPOINT_20261114.md) for exact SHA/results and recovery. M5 DEVICE_NOT_RUN.
+
 ## Dot 2026-11-14 16:44 UTC continuation update
 
 Codex PAUSED / Dot owner-authorized continuation remains in force. Whole-frame ART FAIL; no RC/main promotion. Native run43612407649 completed: export SUCCESS, final fixed-camera encoder FAIL. Internal ad-hoc macOS package and original-speed 2K/4K evidence recovered, hash-verified and archived; not a new art candidate. 512v512 averaged35.852/27.680 FPS at native2K/4K on M1 Virtual; M5 DEVICE_NOT_RUN. Coherent production environment/costume conversion and same-source engine tangent validation continue. Read the latest section of [Dot checkpoint](DOT_REBUILD_CHECKPOINT_20261114.md); older sections are historical, not current pass claims.

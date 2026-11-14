@@ -1,5 +1,79 @@
 # Dot 全面重建检查点 · 2026-11-14
 
+## 2026-11-14 17:33 UTC · 新完整人物进入实际 Godot；同源切线修复通过
+
+**全画面仍为 ART FAIL / OWNER NOT ACCEPTED。** 不是用户等待验收的成品。
+Codex PAUSED / Dot 接续不变；RC24/RC25 和默认游戏、默认引擎均未被实验覆盖。
+本次仅更新工程恢复记录，所有新视觉仍在隔离分支。正式文学剧情留空。
+
+### 可复核的实际新人物画面
+
+- `dot/guardian-native-source` 的实际取证源码
+  `6050d08fa94d939d8c21af84e677795573d7a40f`，
+  [run43620541977](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43620541977)
+  SUCCESS；artifact14123409787。后续纯证据记录 `0cf0491` 不代表重跑。
+- 这是完整 Guardians r854 源人物的原生结构诊断：19 meshes、56,760 triangles、
+  113,714 split vertices，308 原 rig / 79 deform bones；不是最终电影角色或中国士兵。
+  本轮保留完整衣物并实际烘焙上衣、裤、靴、腰布细节法线；运行时从当前变形几何及
+  原 UV 导数重建 TBN，而非用静姿切线假冒动态材质。
+- 官方 Godot4.6.3 / Linux X11 / llvmpipe 的原生4K近景和2K正常投影图已亲看。
+  4K为3m、50°全身近景；2K为游戏 Field 正交 size22 / yaw−33° / pitch50.77539°，
+  相机真实距离77.5m，不把正交 size22误称透视距离22m。内部比例均1.0。
+  首轮裁头脚、旧透视正常机位和误选 rest frame24 均保留；本轮真正峰值 frame12。
+- 实际26帧单调时钟录像跨度4.068752s，含截图开销，**不是性能分数或全动作验收**。
+  仍是测试场单角色灰模：电影徽章/交叉胸带、老年面部、护腕棱角、服制和局部法线
+  都没有通过美术；没有声称持枪/盾/骑乘/大军交战已完成。
+- 178,618,368 bytes 纹理载荷是一次生成的源求值缓存 oracle，不是可扩展千人正式架构；
+  无每帧 CPU 全顶点上传不代表 GPU 内存/性能已合格。正在独立迁移原生骨骼/成衣表示。
+  原 cage 使用 preserve-volume 双四元数，不能硬替换为 LBS 后声称完整保真。
+
+### 渲染缺陷已在同源双引擎实验中修复，不更换默认版本
+
+- `dot/godot-native-tangent-fix` / `5c59b7369cc9a19f9e5dcc93fec29b66d3d7aba9`，
+  [run43618127716](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43618127716)
+  SUCCESS，artifact14124017040。独立证据分支
+  `dot/godot-native-tangent-evidence` / `67ff0cdf35bd410b2024680a07fdefdb627fa495`。
+- 同一官方源35e80b3、同一构建参数，先复现原版后比较补丁。原版 identity/roundtrip
+  切线误差0.4314，补丁为0；原版四姿态像素门禁全 FAIL，补丁四姿态全 PASS，
+  超2色阶差异点依次为5/12004、5/12248、10/10018、3/8716，门槛未放宽。
+  非零 blend shape、可选 Skin、正负 handedness 的12项 N/T/B 组合：原6项失败，
+  补丁12项全通过且差异像素为0。协调线程独立读JSON、看Walk原图并重算二进制SHA。
+- 原版二进制 SHA256 `1039827ef3508d33579c4ba15dcc1cd4cf8f40957d11ce80bc95d2e771fd97c1`；
+  修复版 `16cd16ae2a2f7f5fd9ca18ba9f68a0ef0d043cdfbb3b51df2cec2183def26f5a`。
+  build flags、MIT/作者说明、原失败、源码补丁和真实双二进制均保留。
+  这是 Linux Compatibility 正确性验证，不是 macOS/Metal、M5、性能或美术验收；
+  不把自编35e80引擎标成官方release7d41，也未向外部上游提交 issue/PR。
+
+### 全片环境/建筑继续实际生产
+
+- `dot/river-authored-reset` / `18cf9dedbfc6301ab730041f479f092e08270df9`：
+  同一 Sprite Fright 生产体系的完整树/灌木保留原布局、UV/材质；共享图集已解决此前
+  千张叶片独立1K图集黑斑问题。现形成5整树+5整灌木的林缘组件，10实例共享2mesh，
+  三次开关测试无ERROR；名义1,380,800 triangles，不冒充实际draw/FPS已测。
+  全地面原作者 moss/dirt 材质烘焙与行军路线覆盖门禁在进行，边缘纹理拉伸仍未通过。
+- `dot/river-gate-structure-evidence` / `eae3a392fa1fb2114d484902571b4c1e81b41ae5`，
+  [run43620505673](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43620505673)
+  在此快照时实际游戏截图步骤进行中，**结果待查，不能称已成功**。
+  新门桥以许可清晰的完整可编辑专业屋瓦/梁架/木板结构重建，不是旧0 A.D.局部染色。
+  本轮先与真实20v20系统联动，旧人物与临时支撑地面明确标注；整套新森林/地面接入下一轮。
+- `dot/native-evidence-reliability` / `19e6422efaf82a6ecd29bb4bce8a370d89e59591`：
+  保留原镜头门槛修复退步路线、记录实际HUD刷新值、每profile失败独立保留原样本；
+  0/NaN/Inf/负/布尔帧间隔拒绝，短窗口保留partial但汇总失败。aggregate exit0、
+  5 Python suites通过；不是又跑了一轮Mac，也没有将旧失败改写为成功。
+
+### 下一条恢复
+
+```sh
+git fetch origin main dot/guardian-native-source dot/river-authored-reset \
+  dot/river-gate-structure-evidence dot/godot-native-tangent-evidence \
+  dot/native-evidence-reliability
+```
+
+先读取这些固定 run 最终结果及实际图像，再推进新完整人物的服制/原材质、原DQ成衣运行表示，
+以及新整片门桥/林缘/地表同场景；按同种子、同仿真态与正常机位做前后证据。
+不得把源许可、CI绿、单体灰模或Blender预览当整图合格。RC24 artifacts目前有效至
+2027-02-12 10:49:52 UTC；已归档的新内部包仍是旧美术工程底座，不重复重建包装旧画面。
+
 ## 2026-11-14 16:44 UTC · 原生工程归档完成，整体美术仍淘汰
 
 **ART FAIL / OWNER NOT ACCEPTED**。下面的 macOS 包是被淘汰的 R1 美术工程底座，
