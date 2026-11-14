@@ -21,8 +21,8 @@ void vertex() {
         float weight=i<4?CUSTOM1[i]:CUSTOM3[i-4];
         if (weight<=0.0) {continue;}
         int bone=int(round(i<4?CUSTOM0[i]:CUSTOM2[i-4]));
-        pose+=weight*mix(bind_pose(bone,int(round(INSTANCE_CUSTOM.r))),
-                         bind_pose(bone,int(round(INSTANCE_CUSTOM.g))),INSTANCE_CUSTOM.b);
+        pose+=weight*((1.0-INSTANCE_CUSTOM.b)*bind_pose(bone,int(round(INSTANCE_CUSTOM.r)))
+                     +INSTANCE_CUSTOM.b*bind_pose(bone,int(round(INSTANCE_CUSTOM.g))));
     }
     // Match actual GLES3 skeleton.glsl, not CPU bake's orthonormalized normals.
     // Normal/tangent follow the blended full affine basis, including bone scale.
