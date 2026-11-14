@@ -13,7 +13,7 @@
 | Codex Goal | NOT_CONFIGURED_OR_UNVERIFIED；下一次 Codex 执行应设置或检查 |
 | Codex Automation | NOT_CONFIGURED_OR_UNVERIFIED；应设置现有订阅内的定时续接并验证；不可虚报已安排 |
 | 权威总任务 | [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12) |
-| 最新已验证游戏改动 SHA | `dc9805fd2930344be9737cfc19074442618d7e5c`，实机包导出 `34b5af8db16793566df89139ccdd783ad7d6b723`。 |
+| 最新已验证游戏改动 SHA | `dc9805fd2930344be9737cfc19074442618d7e5c`，实机包导出 `34b5af8db16793566df89139ccdd783ad7d6b723`。[正式 CI 六项通过，一项首次 Metal 启动失败](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43538171412)。 |
 | 最新可检查正常镜头与视频 | [原像素等速录像](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/c6fc9d564244eaca4c9c40ba9b3bf3a7e207312d/docs/evidence/river-gate-v1-rc22/bridgehead/river-gate-bridgehead.mp4) · [Mac 窗口原片](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/fd411e7e6e1209d5d3b1ea84e05005771735e35e/docs/evidence/river-gate-v1-rc22/native-bridgehead/hosted-bridgehead.mp4) |
 | 下一件具体工作 | 复现固定种子第 135 步，改善桥头骑兵与后排枪兵轮廓，跟踪首帧着色器编译。实测细节和下一条可执行命令见 [续接记录](CODEX_CONTINUATION.md)。 |
 | 禁止阻塞循环 | 无付费资源/无 M5/无法启动 Automation 时，记录 blocker，继续合法免费资产与真实可运行代码开发；不要交纯调研报告后退出 |
