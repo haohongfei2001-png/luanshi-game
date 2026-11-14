@@ -1,0 +1,33 @@
+{
+  "preserved_existing_strips": 398,
+  "changed_ground_strips": [
+    2,
+    6,
+    14,
+    33,
+    37,
+    45,
+    76,
+    107,
+    138,
+    169,
+    200,
+    219,
+    223,
+    231,
+    262,
+    356,
+    360,
+    373,
+    377
+  ],
+  "mounted_strips_identical_to_baseline": 6,
+  "baseline_dimensions": [
+    528,
+    1668
+  ],
+  "new_dimensions": [
+    528,
+    1692
+  ]
+}
