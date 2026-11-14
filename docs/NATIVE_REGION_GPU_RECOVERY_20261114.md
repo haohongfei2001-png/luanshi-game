@@ -74,3 +74,26 @@ its dedicated workflow runs without creating a release or changing main.
 Read the final `native-region-evidence-<SHA>` process/host/route receipts and
 movie groups. If native execution works, reuse it for the new camera and
 rebuilt region rather than repeating the rejected old framing.
+
+## First hosted attempt: exact diagnosed failure, not graphics success
+
+Run `43630015984`, source `a87108e616b7752b8bb33bc8d2f19d1feb267c41`,
+completed asset restoration, Mac editor import, entry parse, and actual scene
+headless setup. The already-built production template then explicitly refused
+`--path` because it was compiled without path overrides. No graphical scene,
+movement, or performance evidence was produced. Failure artifact `14128116627`
+preserves the exact error and Apple M1 Virtual, three-core, 7 GB host report.
+
+The repair exports a normal adjacent `.pck` using the official editor and leaves
+the runtime protection unchanged. Only this internal QA export temporarily
+includes the test/tool resource paths; its original export settings are restored
+byte-for-byte. Public scripts remain text in this QA pack so the evidence can
+hash the original source instead of missing it behind a compiled remap. The
+actual template reads its adjacent resource pack normally,
+without `--path` or `--main-pack`. Pack and engine hashes are independently
+verified before launch. This remains an internal test, not a shipping package.
+
+Local repair validation: 11 integrity/gate tests pass. The normal QA PCK
+export and a full-scene headless startup from that pack were exercised with the
+official editor; the hosted protected template remains pending a fresh run.
+This does not claim that a Linux editor is the actual Mac runtime.

@@ -6,6 +6,7 @@ sys.path.insert(0, str(ROOT/'tools/native_region'))
 from restore_inputs import verified_copy, FILES
 from run_native import validate_engine
 from validate_route import validate
+from export_pack import transform_preset
 
 class NativeRegionInputs(unittest.TestCase):
     def setUp(self):
@@ -41,5 +42,13 @@ class NativeRegionInputs(unittest.TestCase):
     def test_duplicate_result_rejected(self):
         p=self.path/'frames';row=json.dumps({'kind':'traversal_result','status':'ROUTE_COMPLETED_REQUIRES_VISUAL_REVIEW','reached':2,'required':2});p.write_text(row+'\n'+row)
         with self.assertRaises(ValueError):validate(p)
+    def test_internal_pack_filter_only_one_preset(self):
+        data=(ROOT/'export_presets.cfg').read_bytes();converted=transform_preset(data)
+        self.assertEqual(converted.count(b'exclude_filter="docs/*,artifacts/*,builds/*"'),1)
+        self.assertEqual(converted.count(b'exclude_filter="tests/*,tools/*,docs/*,artifacts/*,builds/*"'),1)
+        self.assertEqual(converted.count(b'script_export_mode=0'),1)
+        self.assertEqual(converted.count(b'script_export_mode=2'),1)
+    def test_unknown_pack_config_rejected(self):
+        with self.assertRaises(ValueError):transform_preset(b'wrong')
 
 if __name__=='__main__':unittest.main()

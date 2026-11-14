@@ -91,6 +91,8 @@ jobs:
       - name: Rebuild pinned source only if existing cache and artifact are absent
         if: steps.engine-cache.outputs.cache-hit != 'true' && steps.engine-artifact.outcome == 'failure'
         run: bash tools/build_macos_engine.sh patch
+      - name: Export normal adjacent internal resource pack without path overrides
+        run: python3 tools/native_region/export_pack.py "$GODOT_EDITOR" "$PWD" "$PWD/patch" "$PWD/artifacts/native-region"
       - name: Run genuine native 2K and 4K frame plus real-speed traversal
         run: |
           set -euo pipefail

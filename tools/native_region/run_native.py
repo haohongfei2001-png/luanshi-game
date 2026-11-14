@@ -17,13 +17,17 @@ def run(project, patch, output, helper):
     if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("RUNNER_OS") != "macOS" or sys.platform != "darwin":
         raise RuntimeError("Only disposable authorized GitHub macOS runner; never the owner's computer")
     executable, engine_receipt = validate_engine(patch)
+    pack = executable.with_suffix('.pck')
+    pack_receipt = json.loads((output/'pack-integrity.json').read_text())
+    if not pack.is_file() or pack.stat().st_size != pack_receipt['bytes'] or hashlib.sha256(pack.read_bytes()).hexdigest() != pack_receipt['sha256']:
+        raise ValueError('Adjacent resource pack integrity mismatch')
     output.mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
     env.update(ARCHITECTURE_CAPTURE_OUT=str(output / "pixels"), LUANSHI_AUTHORED_LANDFORM="1",
                RIVER_SOURCE_SHA=env["GITHUB_SHA"])
     master, slave = pty.openpty()
     args = ["/usr/bin/time", "-l", "-o", str(output / "resource-time.log"), str(executable),
-            "--path", str(project), "--rendering-method", "mobile", "--rendering-driver", "metal",
+            "--rendering-method", "mobile", "--rendering-driver", "metal",
             "--audio-driver", "Dummy", "--disable-vsync", "--script", "res://tests/native_region_capture.gd",
             "--", "--wall-clock-action", "--traversal-review", "--shadow-diagnostic"]
     process = subprocess.Popen(args, env=env, cwd=project, stdout=slave, stderr=slave,
@@ -69,7 +73,7 @@ def run(project, patch, output, helper):
             except subprocess.TimeoutExpired:
                 os.killpg(process.pid, signal.SIGKILL); process.wait(); failure = failure or "EXIT_TIMEOUT"
     receipt = {"source":env["GITHUB_SHA"],"command":args,"exit":process.returncode,"failure":failure,
-               "elapsed_seconds":time.monotonic()-started,"focus":focus,"engine":engine_receipt,
+               "elapsed_seconds":time.monotonic()-started,"focus":focus,"engine":engine_receipt,"pack":pack_receipt,
                "M5":"DEVICE_NOT_RUN","art_status":"NOT_ACCEPTED",
                "scope":"Real native Metal execution, readback-instrumented, not performance acceptance"}
     (output / "process.json").write_text(json.dumps(receipt, indent=2))

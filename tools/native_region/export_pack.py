@@ -1,0 +1,42 @@
+"""Build a normal adjacent resource pack; never relax template path restrictions."""
+from pathlib import Path
+import argparse, hashlib, json, subprocess, sys
+
+def transform_preset(data):
+    old = b'exclude_filter="tests/*,tools/*,docs/*,artifacts/*,builds/*"'
+    if data.count(old) != 2:
+        raise ValueError("Unexpected source export filters")
+    # This internal QA pack needs its explicitly invoked test entry and dependencies.
+    if data.count(b'script_export_mode=2') != 2:
+        raise ValueError('Unexpected script export configuration')
+    # Evidence hashes the exact public .gd source, not an engine-version token stream.
+    return data.replace(old, b'exclude_filter="docs/*,artifacts/*,builds/*"', 1).replace(b'script_export_mode=2', b'script_export_mode=0', 1)
+
+def export(editor, project, patch, output):
+    config = project/'export_presets.cfg'
+    original = config.read_bytes()
+    temporary = transform_preset(original)
+    pack = patch/'godot.macos.template_release.pck'
+    if pack.exists(): raise ValueError("Refuse to overwrite an earlier review pack")
+    output.mkdir(parents=True, exist_ok=True)
+    try:
+        config.write_bytes(temporary)
+        subprocess.run([sys.executable, str(project/'tools/art/gate_structure/run_capture_checked.py'),
+                        str(output/'pack-export.log'), '180', '--', str(editor), '--headless', '--path', str(project),
+                        '--export-pack', 'macOS', str(pack)], check=True, cwd=project)
+    finally:
+        config.write_bytes(original)
+    if not pack.is_file() or pack.stat().st_size < 1000000:
+        raise ValueError("Review pack absent or implausibly small")
+    result={'pack':pack.name,'bytes':pack.stat().st_size,'sha256':hashlib.sha256(pack.read_bytes()).hexdigest(),
+            'original_export_config_sha256':hashlib.sha256(original).hexdigest(),
+            'internal_review_export_config_sha256':hashlib.sha256(temporary).hexdigest(),
+            'original_export_config_restored':config.read_bytes()==original,
+            'scope':'Internal QA pack includes test/tool resources; not release or default configuration'}
+    (output/'pack-integrity.json').write_text(json.dumps(result,indent=2)+'\n')
+    return result
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser()
+    for name in ('editor','project','patch','output'):p.add_argument(name,type=Path)
+    a=p.parse_args();print(json.dumps(export(*(getattr(a,n).resolve() for n in ('editor','project','patch','output')))))
