@@ -8,15 +8,24 @@ manifest=json.loads((root/'docs/evidence/river-authored-reset/sprite-source/SOUR
 cache=Path(sys.argv[1]);cache.mkdir(parents=True,exist_ok=True)
 archive=cache/'sprite-source.zip'
 if not archive.exists():
-    with urllib.request.urlopen(manifest['source_url'],timeout=60) as probe:
-        assert probe.status==200
-        assert probe.read(4)==b'PK\x03\x04','Not a source ZIP'
-    temporary=archive.with_suffix('.partial')
-    with urllib.request.urlopen(manifest['source_url'],timeout=90) as source,temporary.open('wb') as target:
-        while chunk:=source.read(1024*1024):target.write(chunk)
-    assert temporary.stat().st_size==manifest['archive_bytes']
-    assert hashlib.sha256(temporary.read_bytes()).hexdigest()==manifest['archive_sha256']
-    temporary.replace(archive)
+    # Blender's published mirror list, same immutable archive/hash, no login bypass.
+    urls=[manifest['source_url'],manifest['source_url'].replace('https://download.blender.org/','https://ftp.halifax.rwth-aachen.de/blender/')]
+    errors=[]
+    for url in urls:
+        temporary=archive.with_suffix('.partial')
+        try:
+            with urllib.request.urlopen(url,timeout=90) as source,temporary.open('wb') as target:
+                assert source.status==200
+                while chunk:=source.read(1024*1024):target.write(chunk)
+            assert temporary.stat().st_size==manifest['archive_bytes']
+            assert hashlib.sha256(temporary.read_bytes()).hexdigest()==manifest['archive_sha256']
+            temporary.replace(archive)
+            print('VERIFIED_OFFICIAL_SOURCE',url)
+            break
+        except Exception as error:
+            errors.append(str(error))
+            print('SOURCE_ATTEMPT_FAILED',url,type(error).__name__,str(error))
+    if not archive.exists():raise RuntimeError('All official mirrors failed: '+repr(errors))
 assert archive.stat().st_size==manifest['archive_bytes']
 assert hashlib.sha256(archive.read_bytes()).hexdigest()==manifest['archive_sha256']
 destination=cache/'unpacked';destination.mkdir(exist_ok=True)

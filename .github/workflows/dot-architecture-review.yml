@@ -24,7 +24,9 @@ jobs:
           set -euo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri ffmpeg
-          curl -fLsS --retry 2 https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
+          # Official mirror list: https://projects.blender.org/infrastructure/mirror/wiki
+          curl -fLsS --retry 2 https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz || curl -fLsS --retry 2 https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
+          python -m pip install 'Pillow==11.1.0'
           echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum -c -
           tar -xJf /tmp/blender.tar.xz -C /tmp
           curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/godot.zip
