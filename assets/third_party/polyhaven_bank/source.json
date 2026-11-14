@@ -31,5 +31,13 @@
     "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/wood_planks/wood_planks_diff_2k.jpg",
     "md5": "29f2d08d585433fb54034a0e8fa79adc",
     "license": "CC0-1.0"
+  },
+  "plastered_wall_03": {
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/plastered_wall_03/plastered_wall_03_diff_2k.jpg",
+    "md5": "6a5e793104f98260474a86abd8d6b336",
+    "license": "CC0-1.0",
+    "author": "Rob Tuytel",
+    "output": "rammed_earth.jpg",
+    "operation": "warm earth palette, fine scanned relief retained"
   }
 }
