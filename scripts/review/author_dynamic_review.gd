@@ -126,7 +126,7 @@ func observe_camera()->void:
 	_last_body_frame=drawn
 	var c:Camera3D=field.camera
 	var body=actor.projected_current_body(c) if actor.visible and actor.has_method("projected_current_body") else {"valid":false,"reason":"original_visual_fallback"}
-	recorder.write({"kind":"author_after_draw_camera","monotonic_us":Time.get_ticks_usec(),"engine_drawn":drawn,"tick":field.battle.tick,"projection":c.projection,"fov":c.fov,"size":c.size,"near":c.near,"far":c.far,"transform":str(c.global_transform),"projection_matrix":str(c.get_camera_projection()),"review_profile":field.review_camera_profile.duplicate(true),"body":body,"measurement":"CPU projected current-pose vertices; readback-instrumented diagnostic, not FPS benchmark"})
+	recorder.write({"kind":"author_after_draw_camera","monotonic_us":Time.get_ticks_usec(),"engine_drawn":drawn,"tick":field.battle.tick,"yaw_radians":field.camera_yaw,"pitch_radians":field.camera_pitch,"camera_center":[field.camera_center.x,field.camera_center.y],"hero_pos":[field.battle.hero.pos.x,field.battle.hero.pos.y],"projection":c.projection,"fov":c.fov,"size":c.size,"near":c.near,"far":c.far,"transform":str(c.global_transform),"projection_matrix":str(c.get_camera_projection()),"review_profile":field.review_camera_profile.duplicate(true),"body":body,"measurement":"CPU projected current-pose vertices; readback-instrumented diagnostic, not FPS benchmark"})
 
 func finish(reason: String = "cancelled") -> void:
 	if RenderingServer.frame_post_draw.is_connected(observe_camera):RenderingServer.frame_post_draw.disconnect(observe_camera)
