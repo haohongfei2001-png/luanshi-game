@@ -295,37 +295,52 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 	const STONE_PATH:="res://assets/third_party/polyhaven_bank/bank_stones.glb"
 	var stone:=StandardMaterial3D.new()
 	stone.albedo_texture=preload("res://assets/third_party/polyhaven_bank/lichen_and_stone.jpg")
-	stone.albedo_color=Color("b0b2aa")
+	stone.albedo_color=Color("a8b0a5")
 	stone.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	stone.roughness=.96
-	stone.metallic_specular=.06
+	stone.metallic_specular=.0
 	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
 	if not moat:stations.append_array(Ground.RIVER_OUTCROPS)
+	var cliff_mesh:Mesh=_library(CLIFF)["coastal_cliff_02_LOD0"]
+	var native_bounds:=cliff_mesh.get_aabb()
+	var anchor:=native_bounds.get_center()
+	anchor.y=native_bounds.position.y
 	for i in stations.size():
 		var entry:=stations[i]
 		var center:=Ground.river_center(entry.y) if bridgehead and not moat else channel
 		var shoulder:=3.85 if moat else (4.8 if bridgehead else 3.5)
-		# Complete scanned strata overlap below ground, forming an embedded bank.
-		var reach:=entry.z*1.68
-		var at:=Vector2(center+entry.x*shoulder,entry.y)
-		var scale_value:=reach/40.93
-		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",at,scale_value,
-			PI*.5 if entry.x>0. else -PI*.5)
-		cliff.position.y=-.66
-		cliff.name="EmbeddedRockBank"
-		cliff.lod_bias=1.15
-		cliff.visibility_range_end=210.
-		for j in 3:
-			var width:=entry.z*(.84 if j==0 else .58)
-			var accent:=_piece(STONE_PATH,"RiverStone%02d"%[(i*5+j)%6],
-				Vector3(center+entry.x*(shoulder+.15+.28*j),-.57,entry.y+(j-1)*entry.z*.43),
-				Vector3(width,width*(.81 if j==0 else .73),width*.82),i*1.83+j*1.37)
+		var yaw:=entry.x*PI*.5+.11*sin(i*1.71)
+		var at:=Vector2(center+entry.x*(shoulder-.25),entry.y)
+		# The complete scanned strata face the water. Large low shelves alternate
+		# with earth coves, keeping every solid mass within the existing bank footprint.
+		if i%3!=1:
+			var reach:=entry.z*(1.48+.15*sin(i*2.3))
+			var scale_value:=reach/native_bounds.size.x
+			var footing:=Vector3(at.x,-.48-.14*(i%2),at.y)
+			var cliff:=_piece(CLIFF,"coastal_cliff_02_LOD0",footing,
+				Vector3(scale_value,scale_value*1.28,scale_value*1.45),yaw,anchor)
+			cliff.name="EmbeddedRockShelf"
+			cliff.lod_bias=1.15
+			cliff.visibility_range_end=210.
+		if i%3!=0:
+			var part:="RiverStone%02d"%[(i*5+2)%6]
+			var mesh:Mesh=_library(STONE_PATH)[part]
+			var bounds:=mesh.get_aabb()
+			var origin:=bounds.get_center()
+			origin.y=bounds.position.y
+			var width:=entry.z*(.68 if i%3==1 else .50)
+			var scale_value:=width/maxf(bounds.size.x,.01)
+			var position:=Vector3(at.x+entry.x*.25,-.18-bounds.size.y*scale_value*.42,at.y+.24*entry.z)
+			var accent:=_piece(STONE_PATH,part,position,Vector3.ONE*scale_value,i*1.83,origin)
 			accent.material_override=stone
-			accent.name="BankShoulderStone"
-		for j in 2:
-			var p:=Vector2(center+entry.x*(6.0+.48*j),entry.y+(j-.5)*1.55)
-			_native_understory(THICKET,p,1.12+.17*((i+j)%3),i*1.43+j,i+j)
-			_native_understory(FERN,p+Vector2(entry.x*.75,.48),.45,i*.8+j,i+j)
+			accent.name="BuriedBankCrown"
+		# Ferns emerge above the shelf, shrubs sit on the earthen shoulder.
+		# Their roots use the same visible terrain height as nearby combatants.
+		var p:=Vector2(center+entry.x*(5.8+.35*(i%2)),entry.y-.35*entry.z)
+		_native_understory(THICKET,p,1.28+.19*(i%3),i*1.43,i)
+		_native_understory(FERN,p+Vector2(-entry.x*.48,.65),.64+.09*(i%2),i*.8,i)
+		if i%2==0:
+			_native_understory(FERN,p+Vector2(entry.x*.38,-.62),.47,i*.8+1.,i+1)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()

@@ -51,6 +51,35 @@ func _inventory() -> void:
 		if String(node.name).begins_with("island_tree_01"):
 			instances.append({"name":node.name,"position":str(node.position),"children":node.get_child_count()})
 	print("WORLD_PLANT_INSTANCES ",JSON.stringify(instances))
+func _canopy_alternatives() -> void:
+	# Compare complete authored crowns in the actual same-seed battlefield.
+	# Source geometry, native atlas/alpha and the ordinary battle remain intact.
+	var pairs:Array=field.map.crown_pairs
+	for pair:Dictionary in pairs:
+		for leaf:MeshInstance3D in pair.close:leaf.visible=false
+		pair.overview.visible=true
+	await _snap("authored-oak-bridgehead",Ground.BRIDGE_VIEW,22.)
+	await _snap("authored-oak-grove",Vector2(38.,-10.),18.)
+	var alternate:Array[MeshInstance3D]=[]
+	for index in pairs.size():
+		var pair:Dictionary=pairs[index]
+		var old:MeshInstance3D=pair.overview
+		var host:Node3D=old.get_parent()
+		var height:=old.mesh.get_aabb().size.y*old.global_basis.get_scale().y
+		var part:="FieldElmA" if index%2==0 else "FieldElmB"
+		var mesh:Mesh=field.map._library(field.map.WOODLAND)[part]
+		var at:=Vector2(host.position.x,host.position.z)
+		var tree:MeshInstance3D=field.map._plant(field.map.WOODLAND,part,at,height/mesh.get_aabb().size.y,old.global_rotation.y)
+		tree.lod_bias=2.
+		alternate.append(tree)
+		old.visible=false
+	await _snap("authored-elm-bridgehead",Ground.BRIDGE_VIEW,22.)
+	await _snap("authored-elm-grove",Vector2(38.,-10.),18.)
+	for tree:MeshInstance3D in alternate:tree.free()
+	for pair:Dictionary in pairs:
+		for leaf:MeshInstance3D in pair.close:leaf.visible=true
+		pair.overview.visible=false
+
 func _run() -> void:
 	if DisplayServer.get_name()=="headless":quit(1);return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
@@ -79,6 +108,7 @@ func _run() -> void:
 	field.map.sun.rotation_degrees=Vector3(-48.,-31.,0.)
 	await _snap("previous-daylight",Ground.BRIDGE_VIEW,22.)
 	field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)
+	await _canopy_alternatives()
 	root.size=Vector2i(3840,2160)
 	await process_frame
 	await _snap("bridgehead-0135-uhd",Ground.BRIDGE_VIEW,22.)
