@@ -1,0 +1,21 @@
+name: Diagnose pike retarget subkey continuity
+on:
+  push:
+    branches: [codex/river-rc25-native-spear]
+    paths: ['tools/art/diagnose_pike_subkeys.py','.github/workflows/diagnose-pike.yml']
+permissions:
+  contents: write
+jobs:
+  curves:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Measure exact interpolation and preserve rejected draft data
+        run: |
+          set -euo pipefail
+          python3 -m pip install pillow
+          python3 tools/art/diagnose_pike_subkeys.py
+          git add docs/evidence/river-gate-v1-rc25/native-spear/draft/subkey-diagnostic.json
+          git -c user.name='River Gate pike continuity audit' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Locate the rejected draft spear wrist interpolation discontinuity'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
