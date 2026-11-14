@@ -47,6 +47,7 @@ func _run()->void:
 	h.set_inputs(true,true)
 	assert(Input.is_action_pressed("move_right"))
 	assert(Input.is_physical_key_pressed(KEY_J))
+	assert(h.actual_attack_keydowns==1)
 	var movement:=Input.get_vector("move_left","move_right","move_up","move_down")
 	assert(movement.x>0.0 and movement.x<0.8)
 	h.binding.hidden_unit_id=field.battle.hero.id;field.view.review_hidden_actor_id=field.battle.hero.id

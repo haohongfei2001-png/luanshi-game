@@ -101,3 +101,34 @@ XDG_DATA_HOME="$PWD/.test-data" godot --headless --path . --script tests/author_
 Next: integrate this optional harness into the existing native review entry and
 record actual wall-clock inputs/motion plus fallback frames. Do not call that
 mixed old/new diagnostic a complete rebuilt character or final army renderer.
+
+### Dynamic camera and event evidence
+
+The optional input harness observes the camera after draw, after the actual
+Controller follow update, recording projection/FOV/near/far/transform/projection
+matrix and retained review profile. Current actor body extent is computed from
+its selected helmet/face/boot vertices using the exact same cached frame blend
+as the shader, converted between recorded logical viewport and native attachment.
+This is a geometric footprint, NOT visible pixel-mask measurement, and excludes
+weapons/shadows; original-visual fallback explicitly has no new-body measurement.
+CPU marker bytes are retained only for this readback-instrumented single-actor
+oracle, not proposed as thousand-person runtime or benchmark configuration.
+
+Actual emitted J keydown events and observed key-held physics ticks are counted
+separately from intended120ms pulses and sampled release transitions. Slow frames
+can skip an intended pulse; only actual input/state observations are evidence.
+The120-step real Controller `_process`/`_camera` test suppresses heavy setup/draw
+but does not replace camera math; it tests follow preserves the perspective
+review profile. Full Controller/GPU/input run remains a separate pending gate.
+
+The destination26 audit found a real integration gap: its initial3m lead was only
+assigned to camera_center, so ordinary follow gradually erased that lead while
+retaining FOV/pitch. The isolated profile now stores follow_lead_world=[3,0]
+(destination28=[4,0]); Controller uses it only when that explicit review key exists.
+Default camera/deadzone behavior is unchanged. The actual Controller methods ran
+120 steps in the complete native-region project with destination26 FOV65,pitch26,
+yaw-65,lead3m,lookheight1.5 and exact expected follow interpolation; clean exit0,
+no error/warning markers. Heavy ready/draw setup was suppressed, not camera math.
+This CPU test's nominal fraction0.12 is a fixture, not a claim that the runtime
+calibrated actual actor footprint was measured; after-draw current-pose receipts
+are still required on the real integrated GPU run.

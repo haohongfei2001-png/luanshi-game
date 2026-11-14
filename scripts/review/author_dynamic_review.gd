@@ -19,6 +19,9 @@ var _previous_state := -1
 var releases_observed := 0
 var _prior_follow := false
 var _owns_slot := false
+var _last_body_frame := -1
+var actual_attack_keydowns := 0
+var observed_key_held_ticks := 0
 const DURATION_US := 18000000
 
 static func intent(elapsed_us: int) -> Dictionary:
@@ -50,7 +53,7 @@ func begin(game_field: Node, configured_actor: Node3D, wall_recorder: Node, cach
 		if Input.is_action_pressed(name):return ERR_ALREADY_IN_USE
 	field=game_field;actor=configured_actor;recorder=wall_recorder
 	binding.enabled=true;binding.thrust_peak=validated_peak(actor.metadata,phase_evidence)
-	_previous_stage="";_previous_tick=-1;_previous_state=-1;releases_observed=0;binding.walk_phase=0.0
+	_previous_stage="";_previous_tick=-1;_previous_state=-1;releases_observed=0;binding.walk_phase=0.0;actual_attack_keydowns=0;observed_key_held_ticks=0;_last_body_frame=-1
 	_prior_follow=field.follow;field.follow=true
 	process_priority=field.process_priority-1
 	process_physics_priority=field.process_physics_priority+1
@@ -63,6 +66,7 @@ func _physics_process(_delta: float) -> void:
 	if not active or not is_instance_valid(field):return
 	var b=field.battle
 	if b.tick != _previous_tick:
+		if Input.is_physical_key_pressed(KEY_J):observed_key_held_ticks+=1
 		if _previous_state == Contract.Battle.State.WINDUP and b.hero.state == Contract.Battle.State.RECOVER:
 			releases_observed+=1
 		_previous_tick=b.tick;_previous_state=b.hero.state
@@ -94,6 +98,8 @@ func _process(_delta: float) -> void:
 	var sample: Dictionary = binding.update_once(field.battle,actor)
 	field.view.review_hidden_actor_id=binding.hidden_unit_id
 	var b=field.battle;var u=b.hero
+	# The pre-draw field process updates camera after this harness. Observe AFTER draw.
+	if not RenderingServer.frame_post_draw.is_connected(observe_camera):RenderingServer.frame_post_draw.connect(observe_camera)
 	recorder.write({"kind":"author_render_observation","monotonic_us":Time.get_ticks_usec(),"engine_process_frame":Engine.get_process_frames(),"engine_drawn":Engine.get_frames_drawn(),"tick":b.tick,"stage":wanted.stage,"mapping":sample,"pos":[u.pos.x,u.pos.y],"before":[u.before.x,u.before.y],"facing":[u.facing.x,u.facing.y],"state":u.state,"timer":u.timer,"duration":u.duration,"move_slot":u.move_slot,"hero_hp":u.hp,"hero_impacts":u.impacts,"battle_attacks":b.attacks,"battle_hits":b.hits.duplicate(),"camera_size":field.camera.size,"follow":field.follow,"input_vector":str(Input.get_vector("move_left","move_right","move_up","move_down")),"scope":"pre_draw_controller_observation; join captured JPEGs by monotonic timestamp, not one row per JPEG"})
 
 func set_inputs(move: bool, attack: bool) -> void:
@@ -104,6 +110,7 @@ func set_inputs(move: bool, attack: bool) -> void:
 	if attack != held_attack:
 		var event:=InputEventKey.new();event.keycode=KEY_J;event.physical_keycode=KEY_J;event.pressed=attack
 		Input.parse_input_event(event);Input.flush_buffered_events();held_attack=attack
+		if attack:actual_attack_keydowns+=1
 		input_receipt({"type":"InputEventKey","key":KEY_J,"pressed":attack})
 
 func input_receipt(row: Dictionary) -> void:
@@ -112,7 +119,17 @@ func input_receipt(row: Dictionary) -> void:
 		if is_instance_valid(field):row["tick"]=field.battle.tick
 		recorder.write(row)
 
+func observe_camera()->void:
+	if not active or not is_instance_valid(field) or not is_instance_valid(actor) or not is_instance_valid(recorder) or not recorder.active:return
+	var drawn:=Engine.get_frames_drawn()
+	if drawn==_last_body_frame:return
+	_last_body_frame=drawn
+	var c:Camera3D=field.camera
+	var body=actor.projected_current_body(c) if actor.visible and actor.has_method("projected_current_body") else {"valid":false,"reason":"original_visual_fallback"}
+	recorder.write({"kind":"author_after_draw_camera","monotonic_us":Time.get_ticks_usec(),"engine_drawn":drawn,"tick":field.battle.tick,"projection":c.projection,"fov":c.fov,"size":c.size,"near":c.near,"far":c.far,"transform":str(c.global_transform),"projection_matrix":str(c.get_camera_projection()),"review_profile":field.review_camera_profile.duplicate(true),"body":body,"measurement":"CPU projected current-pose vertices; readback-instrumented diagnostic, not FPS benchmark"})
+
 func finish(reason: String = "cancelled") -> void:
+	if RenderingServer.frame_post_draw.is_connected(observe_camera):RenderingServer.frame_post_draw.disconnect(observe_camera)
 	set_inputs(false,false)
 	if is_instance_valid(actor):binding.disable(actor)
 	if _owns_slot and is_instance_valid(field):
@@ -120,7 +137,7 @@ func finish(reason: String = "cancelled") -> void:
 	_owns_slot=false
 	if active and is_instance_valid(recorder) and recorder.active:
 		var impact_delta: int = field.battle.hero.impacts-_initial_impacts if is_instance_valid(field) else 0
-		recorder.write({"kind":"author_dynamic_result","reason":reason,"monotonic_us":Time.get_ticks_usec(),"wall_seconds":(Time.get_ticks_usec()-started_us)/1000000.0,"hero_impacts_delta":impact_delta,"hit_status":"ACTUAL_HERO_IMPACT_OBSERVED" if impact_delta>0 else "NO_HERO_HIT_OBSERVED","observed_release_transitions":releases_observed,"release_sampling":"observed controller ticks; multiple catch-up ticks may skip transitions","inputs_released":not Input.is_action_pressed("move_right") and not Input.is_physical_key_pressed(KEY_J),"hidden_unit_id":binding.hidden_unit_id,"art_status":"NOT_ACCEPTED_MIXED_VISUAL_DIAGNOSTIC"})
+		recorder.write({"kind":"author_dynamic_result","reason":reason,"monotonic_us":Time.get_ticks_usec(),"wall_seconds":(Time.get_ticks_usec()-started_us)/1000000.0,"hero_impacts_delta":impact_delta,"hit_status":"ACTUAL_HERO_IMPACT_OBSERVED" if impact_delta>0 else "NO_HERO_HIT_OBSERVED","actual_attack_keydown_events":actual_attack_keydowns,"observed_key_held_physics_ticks":observed_key_held_ticks,"pulse_warning":"120ms intended pulse may be skipped at low render cadence; only actual emitted input and observed state counts are evidence","observed_release_transitions":releases_observed,"release_sampling":"observed controller ticks; multiple catch-up ticks may skip transitions","inputs_released":not Input.is_action_pressed("move_right") and not Input.is_physical_key_pressed(KEY_J),"hidden_unit_id":binding.hidden_unit_id,"art_status":"NOT_ACCEPTED_MIXED_VISUAL_DIAGNOSTIC"})
 		recorder.stop(reason)
 	active=false
 

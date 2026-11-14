@@ -579,7 +579,11 @@ func _process(delta: float) -> void:
 		# The gate watch keeps the crossing and arch in view while the player
 		# advances. Follow again when they actually leave the approach.
 		var focus:=battle.hero.pos
-		if battle.bridgehead:
+		if review_camera_profile.has("follow_lead_world"):
+			# Isolated destination-review contract; shipping profiles never set this.
+			var lead:Array=review_camera_profile.follow_lead_world
+			focus+=Vector2(float(lead[0]),float(lead[1]))
+		elif battle.bridgehead:
 			var offset:=focus-Ground.BRIDGE_VIEW
 			focus=Ground.BRIDGE_VIEW+offset-offset.clamp(Vector2(-17.,-4.8),Vector2(12.,4.8))
 		camera_center=camera_center.lerp(focus,1.0-exp(-delta*7.5))
