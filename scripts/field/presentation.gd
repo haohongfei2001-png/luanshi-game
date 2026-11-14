@@ -38,6 +38,8 @@ var floor_y:=PackedFloat32Array()
 var high_detail_soldiers := 0
 var horse: Batch
 var loose_mounts: Dictionary[int,LooseMount]={}
+var mount_ids:=PackedInt32Array()
+var mount_scan_tick:=-1
 var horse_rank: Batch
 var cart_rank: Batch
 var cart: Batch
@@ -75,6 +77,8 @@ func _batch(geometry: Mesh,mat: Material,capacity: int,custom_data: bool=true) -
 func configure(model: Battle) -> void:
 	battle = model
 	loose_mounts.clear()
+	mount_ids.clear()
+	mount_scan_tick=-1
 	lod_by_id.resize(battle.roster.size())
 	lod_by_id.fill(255)
 	grounded_at.resize(battle.roster.size())
@@ -89,6 +93,7 @@ func configure(model: Battle) -> void:
 		ranks_mesh.append(CompanyArt.fighter(kit, CompanyArt.costume(kit), false, true))
 	var counts := {}
 	for u in battle.roster:
+		if u.mounted: mount_ids.append(u.id)
 		var key := _key(u)
 		counts[key] = int(counts.get(key,0))+1
 	for key: int in counts:
@@ -208,11 +213,16 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		vertical_y=cam.global_basis.y.y
 	var portrait_radius:=lerpf(9.5,5.2,smoothstep(7.2,16.8,zoom))
 	var portrait_radius_sq:=portrait_radius*portrait_radius
+	# Losing a mount is a fixed-step event. Offscreen riders are discovered
+	# too; the draw loop has no per-foot-soldier mount lookup.
+	if battle.bridgehead and mount_scan_tick!=battle.tick:
+		mount_scan_tick=battle.tick
+		for id in mount_ids:
+			var rider:=battle.roster[id]
+			if rider.state==Battle.State.DEAD and rider.mounted and rider.mount_hp>0. and rider.lost_tick>=0 and not loose_mounts.has(id):
+				loose_mounts[id]=LooseMount.new(rider.pos,rider.facing,id)
 	for u in battle.roster:
 		if u.state == Battle.State.ESCAPED: continue
-		var loose:=battle.bridgehead and u.mounted and u.state==Battle.State.DEAD and u.mount_hp>0. and u.lost_tick>=0
-		if loose and not loose_mounts.has(u.id):
-			loose_mounts[u.id]=LooseMount.new(u.pos,u.facing,u.id)
 		var p := u.before.lerp(u.pos,alpha)
 		if absf(p.x-center.x)>half_extent.x or absf(p.y-center.y)>half_extent.y: continue
 		var offset:=p-center
@@ -259,7 +269,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if u.mounted:
 			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
 			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
-			if not loose:
+			if not (unhorsed and loose_mounts.has(u.id)):
 				var mounts:=horse if zoom<36 and distance_sq<185.0 else horse_rank
 				_put(mounts,base,orientation,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a,u.id))
 			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
@@ -349,8 +359,13 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if not rider.mounted or rider.mount_hp<=0. or rider.state!=Battle.State.DEAD: continue
 		var path:=loose_mounts[id]
 		var age:=(float(battle.tick-rider.lost_tick-1)+alpha)*Battle.DT
-		var distance:=path.distance_at(age)
-		var transform_xz:=path.sample(distance)
+		var distance:=path.length
+		var transform_xz:=path.rest_pose
+		var travelled:=0.
+		if age<path.wait+path.duration+Battle.DT:
+			distance=path.distance_at(age)
+			transform_xz=path.sample(distance)
+			travelled=distance-path.distance_at(age-Battle.DT)
 		var at:=transform_xz.origin
 		var offset:=at-center
 		if absf(offset.x)>half_extent.x or absf(offset.y)>half_extent.y: continue
@@ -360,7 +375,6 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var turn:=Basis(Vector3.UP,transform_xz.get_rotation())
 		var mounts:=horse if zoom<36 and offset.length_squared()<185. else horse_rank
 		var stride:=rider.stride+distance*.68
-		var travelled:=distance-path.distance_at(age-Battle.DT)
 		_put(mounts,ground,turn,MountArt.pose(Battle.State.MARCH,0.,stride,travelled,1.,0.,id))
 	# A standard follows the current officer, including a successor drawn from the ranks.
 	for company in battle.companies:
