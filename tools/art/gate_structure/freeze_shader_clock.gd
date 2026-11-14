@@ -25,9 +25,13 @@ func material(value:Material,seconds:float)->void:
  seen[id]=true
  var code=shader.code
  audit_includes(code)
- var token=RegEx.new();assert(token.compile('\\bTIME\\b')==OK)
+ var token=RegEx.new()
+ if token.compile('\\bTIME\\b')!=OK:
+  push_error('Static shader clock TIME pattern failed');return
  if not token.search(code):return
- var declaration=RegEx.new();assert(declaration.compile('shader_type\\s+\\w+\\s*;')==OK)
+ var declaration=RegEx.new()
+ if declaration.compile('shader_type\\s+\\w+\\s*;')!=OK:
+  push_error('Static shader clock declaration pattern failed');return
  var match=declaration.search(code);assert(match,'Unknown shader declaration')
  var modified=token.sub(code,'DOT_CAPTURE_TIME',true)
  var point=declaration.search(modified).get_end()
@@ -39,8 +43,12 @@ func restore()->void:
  changed.clear();seen.clear()
 
 func audit_includes(code:String)->void:
- var pattern=RegEx.new();assert(pattern.compile('#include\\s+"([^"]+)"')==OK)
- var clock=RegEx.new();assert(clock.compile('\\bTIME\\b')==OK)
+ var pattern=RegEx.new()
+ if pattern.compile('#include\\s+"([^"]+)"')!=OK:
+  push_error('Static shader clock include pattern failed');return
+ var clock=RegEx.new()
+ if clock.compile('\\bTIME\\b')!=OK:
+  push_error('Static shader clock include TIME pattern failed');return
  for match in pattern.search_all(code):
   var path=match.get_string(1)
   assert(path.begins_with('res://') and FileAccess.file_exists(path),'Unresolved shader include')

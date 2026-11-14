@@ -35,7 +35,12 @@ func run()->void:
   assert(var_to_bytes(Store.snapshot(field.battle))==frozen)
   if '--setup-only' not in OS.get_cmdline_user_args():
    await RenderingServer.frame_post_draw
-   var image=root.get_texture().get_image();assert(image.get_size()==Vector2i(2560,1440));assert(image.save_png(out+'/'+mode+'.png')==OK)
+   var image=root.get_texture().get_image()
+   if image.get_size()!=Vector2i(2560,1440):
+    push_error('Unexpected actual roof capture dimensions');quit(1);return
+   var save_error=image.save_png(out+'/'+mode+'.png')
+   if save_error!=OK:
+    push_error('Roof PNG save failed: '+str(save_error));quit(1);return
   rows.append({'view':mode,'scope':'ROOF_GEOMETRY_ISOLATION_NOT_GAMEPLAY_CAMERA_OR_ART_ACCEPTANCE','source':OS.get_environment('GITHUB_SHA'),'model_sha256':FileAccess.get_sha256(paths[index]),'pixels':[2560,1440],'internal_scale':1.,'tick':field.battle.tick,'snapshot_sha256':snapshot_sha,'camera_size':field.camera.size,'camera_center':str(field.camera_center),'camera_transform':str(field.camera.global_transform),'camera_projection':str(field.camera.get_camera_projection()),'shader_clock':frozen_shaders})
   for entry in saved:entry[0].material_override=entry[1]
   saved.clear()

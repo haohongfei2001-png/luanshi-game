@@ -6,7 +6,9 @@ static func run(tree:SceneTree,field:Node,out:String)->void:
  field.camera.size=22.;field.follow=true
  field.set_process(true);field.set_physics_process(true)
  var recorder=Capture.new();tree.root.add_child(recorder)
- assert(recorder.start(tree.root,out,field),'Traversal recorder preflight failed')
+ var recorder_started=recorder.start(tree.root,out,field)
+ if not recorder_started:
+  push_error('Traversal recorder preflight failed');tree.quit(1);return
  recorder.write({'kind':'traversal_contract','source':OS.get_environment('GITHUB_SHA'),'camera':'normal follow; size22; NOT_FIXED_CAMERA_COMPARISON','initial_tick':field.battle.tick,'start_fixture':'same static battle initialized at tick135; subsequent motion real engine only','route':[[17.,-1.25],[46.2,-1.25]],'scope':'bridge-to-gate movement only, not full combat action acceptance'})
  var targets=[Vector2(17.,-1.25),Vector2(46.2,-1.25)]
  var index=0;var held={};var start=Time.get_ticks_usec()

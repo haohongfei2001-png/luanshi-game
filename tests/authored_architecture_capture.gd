@@ -75,7 +75,9 @@ func run() -> void:
   print('ARCHITECTURE_CAPTURE_BEGIN ',mode)
   await RenderingServer.frame_post_draw
   var img=root.get_texture().get_image();assert(img.get_size()==root.size)
-  assert(img.save_png(out+'/'+mode+'.png')==OK)
+  var image_save_error=img.save_png(out+'/'+mode+'.png')
+  if image_save_error!=OK:
+   push_error('Native image write failed: '+mode+' error='+str(image_save_error));quit(1);return
   assert(var_to_bytes(Store.snapshot(field.battle))==frozen,'Battle state changed between matched views')
   var camera=field.camera
   var projection=camera.get_camera_projection()

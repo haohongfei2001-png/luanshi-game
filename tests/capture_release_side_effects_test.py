@@ -1,0 +1,9 @@
+from pathlib import Path
+import unittest
+ROOT=Path(__file__).resolve().parents[1]
+class CaptureReleaseSafety(unittest.TestCase):
+ def test_effects_are_executed_outside_debug_assert(self):
+  for name in ['tests/authored_architecture_capture.gd','tests/authored_roof_isolation.gd','tools/art/gate_structure/traversal_review.gd','tools/art/gate_structure/freeze_shader_clock.gd']:
+   with self.subTest(source=name):
+    self.assertNotRegex((ROOT/name).read_text(),r'assert\([^\n]*(?:\.save_png|\.compile|recorder\.start)\(')
+if __name__=='__main__':unittest.main()
