@@ -64,7 +64,7 @@ void vertex(){
 	coat_shade=max(1.-smoothstep(.29,.66,p.y),smoothstep(1.085,1.241,p.z)*.76);
 	coat_under=max(0.,-n.y)*smoothstep(.50,.89,p.y);
 	animal_barrel=smoothstep(.49,.84,p.y)*(1.-smoothstep(.60,.79,p.z));
-	if(native_hide && bone>=1 && bone<=4) {
+	if(native_hide && bone>=0 && bone<=4) {
         vec3 walk_point,walk_normal,trot_point,trot_normal;
         native_position(native_index,INSTANCE_CUSTOM.b,0,walk_point,walk_normal);
         native_position(native_index,INSTANCE_CUSTOM.b,1,trot_point,trot_normal);

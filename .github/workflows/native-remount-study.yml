@@ -1,105 +1,70 @@
-name: Evaluate original-speed native horse movement
+name: Diagnose the complete authored horse hierarchy
 on:
   push:
     branches: [codex/river-rc23-complete-remount]
-    paths: ['tools/art/bake_native_remount.py','.github/workflows/native-remount-study.yml','tests/native_remount_motion.gd','scripts/field/mount_art.gd','scripts/field/mount_hide.gdshader']
+    paths: ['tools/art/bake_native_remount.py','.github/workflows/native-remount-study.yml','scripts/field/mount_hide.gdshader']
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: native-remount-study
   cancel-in-progress: true
 jobs:
-  compare:
+  support:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
-    env:
-      LIBGL_ALWAYS_SOFTWARE: "1"
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
-      - name: Install the pinned Godot and licensed source tools
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-remount-original-speed
+          run-id: 43563632815
+          github-token: ${{ github.token }}
+          path: /tmp/completed-baseline
+      - name: Install small offline source tools
         shell: bash
         run: |
           set -euo pipefail
-          if ! /usr/bin/python3 -c 'import numpy,PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy python3-pil; fi
-          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool ffmpeg; fi
-          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
-          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
-          unzip -q /tmp/editor.zip -d /tmp/editor
-          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
-          ./tools/prepare-font.sh
-          mkdir -p artifacts/remount-motion reports/remount docs/evidence/river-gate-v1-rc23/native-remount/motion
-          touch artifacts/.gdignore docs/evidence/river-gate-v1-rc23/native-remount/.gdignore
-          cat >override.cfg <<'CFG'
-          [display]
-          window/size/window_width_override=2560
-          window/size/window_height_override=1600
-          CFG
-      - name: Measure the unmodified author support paths
-        run: /usr/bin/python3 tools/art/bake_native_remount.py /tmp/native-remount | tee reports/remount/support.log
-      - name: Record consecutive actual battle steps at the native resolution
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-numpy python3-pil ffmpeg
+      - name: Retain the completed original film and first support failure
         shell: bash
         run: |
           set -euo pipefail
           proof=docs/evidence/river-gate-v1-rc23/native-remount/motion
-          cp scripts/field/mount_art.gd /tmp/native-mount-art.gd
-          cp scripts/field/mount_hide.gdshader /tmp/native-mount-hide.gdshader
-          for side in before after; do
-            if [ "$side" = before ]; then
-              for file in scripts/field/mount_art.gd scripts/field/mount_hide.gdshader; do curl -fsSL --retry 2 "https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/3859cb318746bf2552ba1fab26ea438af5db8be1/$file" -o "$file"; done
-            else
-              cp /tmp/native-mount-art.gd scripts/field/mount_art.gd
-              cp /tmp/native-mount-hide.gdshader scripts/field/mount_hide.gdshader
-            fi
-            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side-import.log" 2>&1
-            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side-import.log"; then exit 1; fi
-            timeout 12m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 20 --script tests/native_remount_motion.gd > "$proof/$side.log" 2>&1
-            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side.log"; then exit 1; fi
-            grep NATIVE_REMOUNT_MOTION "$proof/$side.log"
-            cp artifacts/remount-motion/sequence.json "$proof/$side.json"
-            for view in normal close; do
-              ffmpeg -v error -y -framerate 20 -i "artifacts/remount-motion/$view/frame-%03d.png" -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p -movflags +faststart "$proof/$side-$view.mp4"
-              ffprobe -v error -count_frames -show_entries stream=width,height,r_frame_rate,nb_read_frames,duration -of json "$proof/$side-$view.mp4" > "$proof/$side-$view-stream.json"
-            done
-            SIDE="$side" /usr/bin/python3 - <<'PY'
+          mkdir -p "$proof" reports/remount
+          cp /tmp/completed-baseline/docs/evidence/river-gate-v1-rc23/native-remount/motion/before* "$proof/"
+          cp /tmp/completed-baseline/reports/remount/native.json "$proof/rejected-parent-freeze.json"
+          sha256sum "$proof/"before*.mp4 >"$proof/baseline-video-sha256.txt"
+          for view in normal close; do
+            mkdir -p "artifacts/decoded/$view"
+            ffmpeg -v error -i "$proof/before-$view.mp4" -start_number 0 "artifacts/decoded/$view/frame-%03d.png"
+          done
+          /usr/bin/python3 - <<'PY'
           from PIL import Image
           from pathlib import Path
-          import os
           out=Path("docs/evidence/river-gate-v1-rc23/native-remount/motion")
           for view in ("normal","close"):
               sheet=Image.new("RGB",(1280,1600))
               for n,k in enumerate((0,4,8,12,16,20,25,31)):
-                  im=Image.open(Path("artifacts/remount-motion")/view/f"frame-{k:03d}.png")
+                  im=Image.open(Path("artifacts/decoded")/view/f"frame-{k:03d}.png").convert("RGB")
                   assert im.size==(2560,1600)
-                  if k in (0,8,20,31): im.save(out/f"{os.environ['SIDE']}-{view}-{k:03d}-native-preview.jpg",quality=78,subsampling=2)
-                  small=im.resize((640,400),Image.Resampling.LANCZOS)
-                  sheet.paste(small,((n%2)*640,(n//2)*400))
-              sheet.save(out/f"{os.environ['SIDE']}-{view}-eight-times.jpg",quality=86)
+                  if k in (0,8,20,31): im.save(out/f"before-{view}-{k:03d}-video-preview.jpg",quality=78,subsampling=2)
+                  sheet.paste(im.resize((640,400),Image.Resampling.LANCZOS),((n%2)*640,(n//2)*400))
+              sheet.save(out/f"before-{view}-eight-times.jpg",quality=86)
           PY
-          done
-          /usr/bin/python3 - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path("docs/evidence/river-gate-v1-rc23/native-remount/motion")
-          a=json.loads((p/"before.json").read_text());b=json.loads((p/"after.json").read_text())
-          assert a==b
-          assert len(a["index"])==32 and [x["tick"] for x in a["index"]]==list(range(85,117))
-          for path in p.glob("*-stream.json"):
-              stream=json.loads(path.read_text())["streams"][0]
-              assert stream["width"]==2560 and stream["height"]==1600 and int(stream["nb_read_frames"])==32
-              assert stream["r_frame_rate"]=="20/1"
-          (p/"verification.json").write_text(json.dumps({"physics_sequences_equal":True,"consecutive_steps":32,"fps":20,"duration":1.6,"dimensions":[2560,1600],"realtime_performance_measurement":False},indent=2)+"\n")
-          PY
-          git diff --exit-code -- scripts/field/mount_art.gd scripts/field/mount_hide.gdshader
-          git add "$proof" reports/remount/native.json reports/remount/support.log
-          git -c user.name='River Gate native remount proof' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive original-speed complete horse comparison and unchanged gameplay sequence'
+      - name: Measure the full FK source registered at the saddle
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/art/bake_native_remount.py /tmp/native-remount | tee reports/remount/full-fk.log
+          git add assets/third_party/wildfire_remounts/complete_remount.glb assets/third_party/wildfire_remounts/native_pose_*.png assets/third_party/wildfire_remounts/native_pose_*.png.import reports/remount docs/evidence/river-gate-v1-rc23/native-remount/motion
+          git -c user.name='River Gate native remount proof' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve the completed baseline film and measure full horse spine-parent motion'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
-      - name: Preserve actual errors
-        if: failure()
-        run: find docs/evidence/river-gate-v1-rc23/native-remount/motion -name '*.log' -exec tail -100 '{}' +
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: native-remount-original-speed
+          name: native-remount-full-hierarchy
           path: |
             reports/remount
             docs/evidence/river-gate-v1-rc23/native-remount/motion

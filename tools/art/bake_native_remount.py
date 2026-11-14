@@ -67,9 +67,10 @@ def pose(nodes,animation,phase):
     world={}
     for name,(parent,bind) in nodes.items():
         local=bind
-        # Retain the existing rider's saddle frame and neck/rein relationship.
-        # Every authored shoulder, elbow, wrist, hip, hock and hoof joint moves.
-        if 1<=leg_group(name)<=4 and name in animation:
+        # The original leg keys include compensation for their animated spine
+        # and belly parents. Evaluate the whole hierarchy before registering
+        # its saddle frame; freezing parents changes the authored hoof paths.
+        if name in animation:
             time,values=animation[name]
             moment=phase*duration
             i=min(len(time)-2,max(0,int(np.searchsorted(time,moment)-1)))
@@ -153,7 +154,9 @@ def main():
         samples=[]
         for key in range(KEYS+1):
             world=pose(nodes,clip,key/KEYS)
-            samples.append([world[name]@inverse[i] for i,name in enumerate(names)])
+            saddle=initial["prop_saddle"]@np.linalg.inv(world["prop_saddle"])
+            assert np.allclose(saddle@world["prop_saddle"],initial["prop_saddle"],atol=1.e-7)
+            samples.append([saddle@world[name]@inverse[i] for i,name in enumerate(names)])
         transforms.append(samples)
     transforms=np.asarray(transforms)
     sources=[]
@@ -167,7 +170,7 @@ def main():
         sources.append((points,weights,faces,uv,uvfaces))
     library=Library()
     all_positions,all_normals,all_groups,all_strength=[],[],[],[]
-    metrics={"bind_residual":residual,"authored_joint_count":len(names),"clips":[x[0] for x in ANIMATIONS],"meshes":{}}
+    metrics={"bind_residual":residual,"authored_joint_count":len(names),"saddle_registration":"full native parent hierarchy registered to bind prop_saddle","clips":[x[0] for x in ANIMATIONS],"meshes":{}}
     for tier in ("Close","Rank"):
         surface=Surface()
         for slot,source in enumerate(sources):
