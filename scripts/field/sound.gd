@@ -71,3 +71,13 @@ func cue(kind: String,volume: float,pan: float=0.0) -> void:
 	voice.stream=streams[kind][0 if pan< -0.20 else (2 if pan>0.20 else 1)]
 	voice.volume_db=volume
 	voice.play()
+
+func _exit_tree() -> void:
+	# Release active playback before a battlefield is closed or replaced.
+	# Freeing players alone leaves mixer-held WAV playback alive at immediate quit.
+	for voice:AudioStreamPlayer in voices:
+		if is_instance_valid(voice):
+			voice.stop()
+			voice.stream=null
+	voices.clear()
+	streams.clear()

@@ -1,5 +1,14 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## DOT-RIVER-PASS-MASTER · 全新可编辑整片场景开始真实验图
+
+当前分支 `dot/river-pass-integration` 以0e465f97的工程修复/Owner暂停记录为底，整片场景来源5ccf015209fc6612371ea1c1bd745bfd3e950df0及入口证明17b10767541b041af39a910fa55ce8566d23fa2b。**没有把R2地形合回新地形**；新视觉树加载独立离线作者场景，旧失败R1/R2源码/图/资产保留但不作为新场景。SharedGround改为新PassProfile；旧open-field兼容仍保留。
+
+17个完整CC0自然模型和完整CC0四角亭进入可编辑场景；80地形块、13空间分组、436实例只是库存，并非质量证明。旧军用门墙与桥跨暂留，人物完整新母版另分支研发，不能说全游戏已经重做完成。详见[源与许可、真实测试](evidence/river-pass-master/README.md)。
+
+下一条：读本分支最新远端SHA、实际2K/4K same-camera workflow，下载原始图，针对整片构图/人物质量评审再继续；不得拿库存数量、headless通过或原型骨架指标当美术达标。统一seed61112/tick50、135/22m/512每方/内部1.0/同太阳方向，地形改变的路径和战果差异如实保留。未产新候选包，Owner art未通过，M5 DEVICE_NOT_RUN，Codex PAUSED。
+
+
 ## DOT-FULL-REBUILD-20261114 · Owner 拒绝旧几何补丁主线
 
 最新 Owner 要求整个地图、背景、人物重建，效果图仅为及格线。Dot 已停止把 R1/R2 旧布局修饰当美术主路线；不将被拒的 R2 冻结为新候选。保留 RC24 / RC25 与 PR61 可恢复代码，Codex 继续 PAUSED。

@@ -1,0 +1,25 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://scripts/field/river_master_ground.gdshader" id="1_if7o0"]
+[ext_resource type="Texture2D" path="res://assets/river_gate/world/ground/leafy_grass.jpg" id="2_4ipci"]
+[ext_resource type="Texture2D" path="res://assets/river_gate/world/ground/leafy_grass_nor_gl.jpg" id="3_c343s"]
+[ext_resource type="Texture2D" path="res://assets/river_gate/world/ground/sandy_gravel_02.jpg" id="4_y8l0b"]
+[ext_resource type="Texture2D" path="res://assets/river_gate/world/ground/sandy_gravel_02_nor_gl.jpg" id="5_2ol5h"]
+[ext_resource type="Texture2D" path="res://assets/river_gate/world/ground/forest_ground_04.jpg" id="6_u1ioo"]
+[ext_resource type="Texture2D" path="res://assets/river_gate/world/ground/brown_mud_dry.jpg" id="7_8n76x"]
+[ext_resource type="Texture2D" path="res://assets/river_gate/world/ground/brown_mud_dry_nor_gl.jpg" id="8_wdehg"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_if7o0")
+shader_parameter/soil = ExtResource("7_8n76x")
+shader_parameter/grass = ExtResource("2_4ipci")
+shader_parameter/leaves = ExtResource("6_u1ioo")
+shader_parameter/gravel = ExtResource("4_y8l0b")
+shader_parameter/soil_normal = ExtResource("8_wdehg")
+shader_parameter/grass_normal = ExtResource("3_c343s")
+shader_parameter/gravel_normal = ExtResource("5_2ol5h")
+shader_parameter/bridgehead = true
+shader_parameter/road_pigment = null
+shader_parameter/grass_pigment = null
+shader_parameter/litter_pigment = null

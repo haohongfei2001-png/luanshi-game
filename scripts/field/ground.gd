@@ -1,4 +1,5 @@
 extends RefCounted
+const PassProfile:=preload("res://scripts/field/river_pass_profile.gd")
 ## All planar coordinates are (x,z). Geometry and simulated movement share these landmarks.
 const LIMIT := Vector2(118, 64)
 const RIVER_X := -32.0
@@ -44,43 +45,12 @@ static func height(p: Vector2,bridgehead:bool=false) -> float:
 		var legacy_east := (p-EAST_HILL)/EAST_RADII
 		var legacy_bank := clampf((absf(p.x-RIVER_X)-3.9)/2.4,0.0,1.0)
 		return 3.9*legacy_hill*legacy_hill+1.8*pow(maxf(0.0,1.0-legacy_east.length_squared()),2)-(1.0-legacy_bank)*.92
-	var slope := (p - RIDGE) / RIDGE_RADII
-	var hill := maxf(0.0, 1.0 - slope.length_squared())
-	var east := (p - EAST_HILL) / EAST_RADII
-	var bank := smoothstep(3.9,6.8,absf(p.x-river_center(p.y))-river_shore_variation(p.y))
-	var western_ridge:=(p-Vector2(-86.,-48.))/Vector2(46.,17.)
-	var northern_ridge:=(p-Vector2(-4.,58.))/Vector2(29.,11.)
-	var eastern_ridge:=(p-Vector2(112.,-45.))/Vector2(25.,17.)
-	var relief:=4.8*pow(maxf(0.,1.-western_ridge.length_squared()),2)+3.6*pow(maxf(0.,1.-northern_ridge.length_squared()),2)+5.4*pow(maxf(0.,1.-eastern_ridge.length_squared()),2)
-	relief*=smoothstep(6.3,14.,absf(p.x-RIVER_X))
-	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief + bridgehead_relief(p) - (1.0 - bank) * RIVER_BED_DEPTH
-
-static func bridgehead_relief(p:Vector2) -> float:
-	# Shared, actual actor/terrain height. Keep the original bridge abutments,
-	# gate sill and wall foundations fixed; shape the land between them.
-	var approach:=smoothstep(29.8,33.2,p.x)*(1.-smoothstep(42.5,46.,p.x))
-	var road:=.58*approach*(1.-smoothstep(3.2,6.6,absf(p.y)))
-	var north:=(p-Vector2(35.,-11.8))/Vector2(10.3,8.8)
-	var south:=(p-Vector2(36.8,14.2))/Vector2(10.5,10.0)
-	var shoulders:=2.15*pow(maxf(0.,1.-north.length_squared()),2)
-	shoulders+=1.72*pow(maxf(0.,1.-south.length_squared()),2)
-	shoulders*=smoothstep(29.8,35.,p.x)*(1.-smoothstep(40.,46.,p.x))
-	# Broad valley benches break the formerly empty plain. Their feet feather
-	# into the existing road and river clearances, not isolated cone mounds.
-	var west:=(p-Vector2(-4.,-23.))/Vector2(24.,18.)
-	var lower:=(p-Vector2(-9.,24.))/Vector2(19.,17.)
-	var benches:=2.6*pow(maxf(0.,1.-west.length_squared()),2)
-	benches+=1.9*pow(maxf(0.,1.-lower.length_squared()),2)
-	var northern:=(p-Vector2(41.,-45.))/Vector2(31.,19.)
-	benches+=5.2*pow(maxf(0.,1.-northern.length_squared()),2)
-	return road+shoulders+benches
+	return PassProfile.height(p)
 
 static func river_center(z: float) -> float:
-	var approach:=smoothstep(4.2,12.,absf(z-crossing(z)))
-	return RIVER_X+approach*(1.10*sin(z*.083)+.45*sin(z*.173+.7))
-
+	return PassProfile.river_center(z)
 static func river_shore_variation(z: float) -> float:
-	return smoothstep(4.2,9.,absf(z-crossing(z)))*(.44*sin(z*.63)+.22*sin(z*1.27+.8))
+	return PassProfile.river_width(z)
 
 static func crossing(z: float) -> float:
 	var best := 0.0
@@ -95,8 +65,7 @@ static func parapet(p: Vector2) -> float:
 	return clampf((z-5.5)*0.43,0.0,3.25)
 
 static func moat_depth(p: Vector2) -> float:
-	var edge:=smoothstep(MOAT_DECK+1.,MOAT_DECK+4.,absf(p.y))*(.48*sin(p.y*.71)+.25*sin(p.y*1.33))
-	return (1.0-smoothstep(2.7,MOAT_BANK+edge*.5,absf(p.x-MOAT_X))) * (1.0-smoothstep(MOAT_END-2.2,MOAT_END+1.5,absf(p.y)))
+	return PassProfile.moat_depth(p)
 
 static func moat_blocks(p: Vector2) -> bool:
 	if absf(p.y)<=MOAT_DECK: return false
@@ -105,7 +74,7 @@ static func moat_blocks(p: Vector2) -> bool:
 static func bank_outcrop_blocks(p:Vector2,channel:float,moat:bool) -> bool:
 	if absf(p.x-channel)>8.: return false
 	for station:Vector3 in BANK_OUTCROPS:
-		var x:=channel if moat else river_center(station.y)
+		var x:=PassProfile.moat_center(station.y) if moat else river_center(station.y)
 		var centre:=Vector2(x+station.x*(3.9 if moat else 4.8),station.y)
 		if p.distance_squared_to(centre)<pow(station.z*.53,2): return true
 	if not moat:
@@ -127,7 +96,7 @@ static func restore_bank_position(p:Vector2,bridgehead:bool) -> Vector2:
 	var restored:=p
 	if bridgehead and moat_blocks(p):
 		restored.x=MOAT_X+(-1. if p.x<MOAT_X else 1.)*(MOAT_BANK+.6)
-	elif bridgehead and absf(p.y-crossing(p.y))>3.8 and absf(p.x-RIVER_X)<9. and blocked(p,true,true):
+	elif bridgehead and absf(p.y-crossing(p.y))>3.8 and absf(p.x-RIVER_X)<13. and blocked(p,true,true):
 		var centre:=river_center(p.y)
 		restored.x=centre+(-1. if p.x<centre else 1.)*8.5
 	return restored

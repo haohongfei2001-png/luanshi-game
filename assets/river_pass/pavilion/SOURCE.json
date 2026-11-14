@@ -1,0 +1,14 @@
+{
+  "author": "vvaytoyek",
+  "author_page": "https://vvaytoyek.itch.io/chinese-four-corner-pavilion-free",
+  "license": "CC0 (author page; source ZIP contains no LICENSE file)",
+  "archive_sha256": "008fb5c4508ce57c4203e5763fd01a177ded16ca94fd5de34ea26c422b483efa",
+  "original_member": "四角亭.fbx",
+  "fbx_sha256": "e5a745fceef8eb0e4b45230e4d964f618c64ab0981f098e1e329c982c159e89c",
+  "glb_sha256": "a479fabe231183d8ad4651726181ce8e903566d37e642090150461db066a32f5",
+  "conversion": "Full source imported/exported by Blender, original component/material structure preserved",
+  "triangles": 76926,
+  "vertices": 40029,
+  "meshes": 70,
+  "role": "Complete bridge-side pavilion, not a historical military gate reconstruction"
+}

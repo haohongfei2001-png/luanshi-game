@@ -57,13 +57,14 @@ grep -q '^FIELD_SIM_PASS' artifacts/field-simulation.log
 "$GODOT" --headless --path . --script tests/field_bridgehead.gd 2>&1 | tee artifacts/bridgehead-simulation.log
 grep -q '^BRIDGEHEAD_SIM .*"pass":true' artifacts/bridgehead-simulation.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/bridgehead-simulation.log; then exit 1; fi
-for scenario in world_terrain_compat river_environment_structure river_approach_relief field_bridgehead_outcome; do
+for scenario in world_terrain_compat river_pass_master river_pass_entry river_pass_lifecycle field_bridgehead_outcome; do
   "$GODOT" --headless --path . --script "tests/$scenario.gd" 2>&1 | tee "artifacts/$scenario.log"
   if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' "artifacts/$scenario.log"; then exit 1; fi
 done
 grep -q '^WORLD_TERRAIN_COMPAT_PASS ' artifacts/world_terrain_compat.log
-grep -q '^RIVER_ENVIRONMENT_STRUCTURE_PASS ' artifacts/river_environment_structure.log
-grep -q '^RIVER_APPROACH_RELIEF_PASS ' artifacts/river_approach_relief.log
+grep -q '^RIVER_PASS_MASTER_PASS ' artifacts/river_pass_master.log
+grep -q '^RIVER_PASS_ENTRY_PASS ' artifacts/river_pass_entry.log
+grep -q '^RIVER_PASS_LIFECYCLE_PASS ' artifacts/river_pass_lifecycle.log
 grep -q '^BRIDGE_FULL_RUN .*"audits":true' artifacts/field_bridgehead_outcome.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-simulation.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/test_battle.gd 2>&1 | tee artifacts/simulation-tests.log

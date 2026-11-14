@@ -28,6 +28,9 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _inventory() -> void:
+	if field.map.has_method("composition_audit"):
+		print("WORLD_EDITABLE_MASTER ",JSON.stringify(field.map.composition_audit()))
+		return
 	for path:String in [field.map.BROADLEAF]:
 		var packed:Node3D=(load(path) as PackedScene).instantiate()
 		var members:Array=[packed]
@@ -63,6 +66,7 @@ func _run() -> void:
 	field.hud.go.pressed.emit()
 	assert(field.battle.started and field.battle.bridgehead)
 	_inventory()
+	field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)
 	assert(field.map._land_height(Vector2(Ground.MOAT_X,12.))<Ground.BATTLE_WATER_LEVEL,"The actual moat bed must remain below its visible water")
 	assert(field.map._land_height(Vector2(Ground.RIVER_X,12.))<Ground.BATTLE_WATER_LEVEL,"The river bed must remain below its visible water")
 	for tick in 50:field._physics_process(Battle.DT)

@@ -1,8 +1,8 @@
 name: Dot native same-camera art review
 on:
   push:
-    branches: ['dot/river-terrain-rebuild']
-    paths: ['scripts/field/**', 'assets/river_gate/**', 'tests/world_master_review.gd', 'tests/river_environment_structure.gd', '.github/workflows/dot-art-review.yml']
+    branches: ['dot/river-terrain-rebuild', 'dot/river-pass-integration']
+    paths: ['scripts/field/**', 'assets/river_gate/**', 'assets/river_pass/**', 'tests/world_master_review.gd', 'tests/river_environment_structure.gd', '.github/workflows/dot-art-review.yml']
 permissions:
   contents: read
 concurrency:
@@ -41,9 +41,14 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/dot-art-review/import.log; then exit 1; fi
           timeout 90s godot --headless --path . --script tests/world_terrain_compat.gd | tee artifacts/dot-art-review/terrain.log
           timeout 90s godot --headless --path . --script tests/field_bridgehead.gd | tee artifacts/dot-art-review/bridgehead.log
-          if test -f tests/river_environment_structure.gd; then
+          if test -f tests/river_pass_master.gd; then
+            timeout 90s godot --headless --path . --script tests/river_pass_master.gd | tee artifacts/dot-art-review/environment.log
+            timeout 90s godot --headless --path . --script tests/river_pass_entry.gd | tee artifacts/dot-art-review/entry.log
+            timeout 90s godot --headless --path . --script tests/river_pass_lifecycle.gd | tee artifacts/dot-art-review/lifecycle.log
+          elif test -f tests/river_environment_structure.gd; then
             timeout 90s godot --headless --path . --script tests/river_environment_structure.gd | tee artifacts/dot-art-review/environment.log
           fi
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/dot-art-review/{terrain,bridgehead,environment,entry,lifecycle}.log 2>/dev/null; then exit 1; fi
       - name: Capture untouched native 2K and 4K game frames at the same seed and ticks
         run: |
           set -euo pipefail

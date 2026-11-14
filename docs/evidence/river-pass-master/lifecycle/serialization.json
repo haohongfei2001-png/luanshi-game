@@ -1,0 +1,12 @@
+{
+  "authored_node_properties_identical": true,
+  "property_lines": [
+    1906,
+    1906
+  ],
+  "serialized_node_counts": [
+    1155,
+    1155
+  ],
+  "comparison": "Compared all authored node property lines after canonicalizing external resource IDs by source path; transforms, meshes, materials unchanged. Packed instance headers intentionally replaced by explicit node types."
+}
