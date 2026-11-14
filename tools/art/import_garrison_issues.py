@@ -19,6 +19,7 @@ from figure_mesh import Library, Surface
 from figure_atlas import NAMES as MATERIALS
 from company_figures import costume as close_costume
 from company_line import costume as line_costume
+from tailor_field_coats import refit_issue
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "assets" / "third_party" / "wildfire_garments"
@@ -239,7 +240,7 @@ def fit_garment(path, role, slot):
     bounds=np.array(s.positions)
     if not .42<bounds[:,1].min()<.83 or not 1.44<bounds[:,1].max()<1.55:
         raise ValueError((role,bounds.min(axis=0),bounds.max(axis=0)))
-    return s
+    return refit_issue(s,role)
 
 def cloth(source,role):
     # Upstream alpha carries the player's dye, not transparency. Preserve the
@@ -272,6 +273,10 @@ def cloth(source,role):
     hem=(tex_y>=210)&(np.mean(rgb,axis=2)>86)
     brown=(rgb[:,:,0]>=rgb[:,:,1])&(rgb[:,:,1]>=rgb[:,:,2])
     dye=np.where(hem & brown,np.maximum(dye,.91),dye)
+    # Regular spear companies wear a cross-collared work robe and shoulder
+    # baldric; heavy shield companies retain the original laced corselet.
+    # The ordinary tunic uses Wildfire's separate Han cloth tile, checked by
+    # its published blob, rather than recolouring iron rows blue.
     luminance=.25*rgb[:,:,0]+.56*rgb[:,:,1]+.19*rgb[:,:,2]
     # Translate photographic black iron into three broad, blue-grey values;
     # keep the lighter edge of each lacing row and warm leather distinct.
@@ -330,6 +335,9 @@ def main():
         library.insert(look+"Issue",s,check_tiles=False)
         for lod in ("Close","Line","Rank"):
             bodies.insert(look+lod+"Body",body_under_issue(look,lod))
+        if look=="Regular":
+            cloth_name,cloth_sha=ISSUES[2][3:5]
+            texture=source_file(cache,"textures/skins/skeletal/han/"+cloth_name+".png",cloth_sha)
         atlas.paste(cloth(texture,look),(264*(slot%2),264*(slot//2)))
         print("WILDFIRE_GARMENT",look,len(s.faces),len(s.positions))
     library.save(OUTPUT/"field_issues.glb")
