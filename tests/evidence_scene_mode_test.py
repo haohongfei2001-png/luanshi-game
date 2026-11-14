@@ -23,4 +23,12 @@ class SceneDependencies(unittest.TestCase):
   self.assertIn('tools/missing.py',scan(self.root,True,scene_mode='road-section')['missing'])
  def test_unknown_mode_fails(self):
   with self.assertRaises(ValueError):scan(self.root,scene_mode='ignore-everything')
+ def test_cold_import_path_prefix_is_not_a_file(self):
+  p=self.root/'tests/authored_architecture_capture.gd';p.write_text(p.read_text()+'\nif path.begins_with("res://.godot/imported/"): pass\n')
+  self.assertFalse((self.root/'.godot').exists())
+  r=scan(self.root,True,scene_mode='road-section')
+  self.assertEqual(r['missing'],[]);self.assertEqual(r['engine_import_path_prefixes_not_source_files'],['.godot/imported/'])
+ def test_exact_missing_import_file_still_fails(self):
+  p=self.root/'tests/authored_architecture_capture.gd';p.write_text(p.read_text()+'\nload("res://.godot/imported/missing.scn")\n')
+  self.assertIn('.godot/imported/missing.scn',scan(self.root,True,scene_mode='road-section')['missing'])
 if __name__=='__main__':unittest.main()

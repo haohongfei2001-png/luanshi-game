@@ -455,3 +455,23 @@ mission/traffic logic, economy, hunger, saves/process restarts, youth causality
 and attrition/restart tests. Full log SHA256:
 `b12502416df5f8ee69261689f561a9f8daa8b6761ccdcaf23a965cb022d7d326`.
 These are regression checks, not new art or hardware-performance acceptance.
+
+
+### Destination attempt 230de161: cold-checkout scanner failure, no new pixels
+
+Run **43641641034**, job **132590281986**, artifact **14132620822** verified
+and restored every scene/actor input and passed the Python tests, then stopped
+in the pre-import dependency scanner. It treated the new runtime identity
+helper's literal `res://.godot/imported/` **path-prefix guard** as a required
+source file. That engine-generated directory existed in the warm local
+checkout but correctly did not yet exist before Godot import on the cold Mac.
+No native editor/import/rendering step began, and no destination PNG exists
+from this run. The small failure artifact SHA256 is
+`83b4f7c0561db8d901312a7b7b24ade58483ec25cc6be3510bf5a94fc65ce6dd`.
+
+The scanner now explicitly distinguishes that exact engine import prefix from
+files. A cold fixture without `.godot` passes; a referenced missing exact
+`.godot/imported/missing.scn` still fails, as do missing active grass and source
+scripts. This does not bypass import/setup or the stricter actual packed-byte
+identity checks. Seven dependency-mode tests pass. Earlier successful native
+images and the original post-capture metadata failure remain preserved.
