@@ -2,6 +2,7 @@ name: Play the exact exported bridgehead on a hosted Mac
 on:
   push:
     branches: ['codex/river-rc22-native-crossing']
+    paths: ['.github/workflows/bridge-native.yml', 'tests/hosted_bridge_input.m', 'tests/native_bridge_window.py', 'tests/hosted_bridge_movie.swift']
 permissions:
   contents: read
   actions: read
