@@ -1,0 +1,49 @@
+{
+  "art_pass": false,
+  "source_code_commit": "e37fa04",
+  "archive_sha256": "4d4f978503ffb5482a272d18f58344a60a346797099c30fd41d5e500810af962",
+  "parts": [
+    {
+      "file": "editable.part00",
+      "bytes": 25165824,
+      "sha256": "cc0375daaca6d2248aa297da6390d0d5d0356db09a21322f085a27f383ae0682"
+    },
+    {
+      "file": "editable.part01",
+      "bytes": 25165824,
+      "sha256": "ef1d0833887b94e321ca3079a9c7eb8d5ad3335c7087465720605e64e485e56b"
+    },
+    {
+      "file": "editable.part02",
+      "bytes": 25165824,
+      "sha256": "95eb8b550cd308fa0e5b125872c761018b90bd107761070904b835910f9eacb0"
+    },
+    {
+      "file": "editable.part03",
+      "bytes": 8197497,
+      "sha256": "1b8479d46102c2495aece9cacd2d8ba0ae8fc3976e9ec8014ef9c318cf518a69"
+    }
+  ],
+  "files": [
+    {
+      "path": "joint-grip.blend",
+      "bytes": 71155844,
+      "sha256": "007bd18c9bda1c248a45648fc01c9ee4e3031921bbe5ef7f7ab16d30e5806363"
+    },
+    {
+      "path": "thrust/soldier-single-thrust.blend",
+      "bytes": 71236488,
+      "sha256": "317263d2138bcb07f9394f8e29b4aad2b659bbd3d2eb0cb014cfc7c1a9a20591"
+    },
+    {
+      "path": "joint-fit.json",
+      "bytes": 4722,
+      "sha256": "8b5482e48987916dc18c1a9d39c0a236b7d666b374da173d9892f9f32ee98028"
+    },
+    {
+      "path": "thrust/report.json",
+      "bytes": 14171,
+      "sha256": "9e123b4b7957a3c287b84da3dd384c075774b3a398d9be3ddf674ff567295a89"
+    }
+  ]
+}

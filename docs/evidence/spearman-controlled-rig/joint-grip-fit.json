@@ -1,0 +1,276 @@
+{
+  "art_pass": false,
+  "method": "independent native joint rotations, original masters neutral scale1; no hand/body/wrist move; centerline fit is not surface contact acceptance",
+  "fingers": [
+    {
+      "side": "L",
+      "finger": "finger_index",
+      "native_joint_x_radians": [
+        0.165,
+        1.0300000000000002,
+        0.9550000000000001
+      ],
+      "centerline_objective": 0.00016614874251385527,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "L",
+      "finger": "finger_middle",
+      "native_joint_x_radians": [
+        0.37,
+        1.2350000000000003,
+        1.4049999999999994
+      ],
+      "centerline_objective": 0.00014269855688104214,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "L",
+      "finger": "finger_ring",
+      "native_joint_x_radians": [
+        0.2,
+        1.4150000000000003,
+        0.805
+      ],
+      "centerline_objective": 0.00018055086306532504,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "L",
+      "finger": "finger_pinky",
+      "native_joint_x_radians": [
+        -0.04999999999999999,
+        1.1,
+        0.655
+      ],
+      "centerline_objective": 0.000131313824695244,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "L",
+      "finger": "thumb",
+      "native_joint_x_radians": [
+        0.385,
+        0.2199999999999999,
+        1.2749999999999995
+      ],
+      "centerline_objective": 0.004778544687389766,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "R",
+      "finger": "finger_index",
+      "native_joint_x_radians": [
+        0.165,
+        1.0300000000000002,
+        0.9550000000000001
+      ],
+      "centerline_objective": 0.0001656809595421413,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "R",
+      "finger": "finger_middle",
+      "native_joint_x_radians": [
+        0.37,
+        1.2350000000000003,
+        1.4049999999999994
+      ],
+      "centerline_objective": 0.00014265276239089505,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "R",
+      "finger": "finger_ring",
+      "native_joint_x_radians": [
+        0.2,
+        1.4150000000000003,
+        0.805
+      ],
+      "centerline_objective": 0.00018038051258328737,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "R",
+      "finger": "finger_pinky",
+      "native_joint_x_radians": [
+        -0.04999999999999999,
+        1.1,
+        0.655
+      ],
+      "centerline_objective": 0.00013095462690832136,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "side": "R",
+      "finger": "thumb",
+      "native_joint_x_radians": [
+        0.385,
+        0.2199999999999999,
+        1.2749999999999995
+      ],
+      "centerline_objective": 0.004774633636894024,
+      "scale_preserved": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    }
+  ]
+}
