@@ -1,0 +1,23 @@
+name: Extract the complete licensed armed chain
+on:
+  push:
+    branches: [codex/river-rc23-native-chain]
+    paths: ['tools/art/import_company_combat.py','.github/workflows/native-chain-source.yml']
+permissions:
+  contents: write
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract author bind, fingers and complete attack without game-pose constraints
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install numpy
+          curl -fsSL --retry 2 'https://store.godotengine.org/asset/quaternius/universal-animation-library/download/44/?study=rc23-complete-armed-chain-20261114' -o /tmp/quaternius-standard.zip
+          python3 tools/art/import_company_combat.py /tmp/quaternius-standard.zip
+          git add tools/art/source/combat_curves.json docs/evidence/river-gate-v1-rc23/native-combat/source-survey.json docs/evidence/river-gate-v1-rc23/native-combat/source-license.txt
+          git -c user.name='River Gate source audit' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve the original combat bind and full authored joint chain'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
