@@ -1,0 +1,93 @@
+name: Compare first draw with baked Metal versions of the actual field shaders
+on:
+  push:
+    branches: ['codex/river-rc22-baked-metal-trial']
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: macos-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Obtain the official matching editor and prepare the shipping resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "30630f3e9b11e10b35c1f90ba8814185dcec43fae1a48345159be7552c64bfe8  $RUNNER_TEMP/editor.zip" | shasum -a 256 -c
+          ditto -x -k "$RUNNER_TEMP/editor.zip" "$RUNNER_TEMP/editor"
+          editor=$(find "$RUNNER_TEMP/editor" -path '*/Contents/MacOS/Godot' -print -quit)
+          test -x "$editor"
+          mkdir -p artifacts builds tools/art
+          touch artifacts/.gdignore builds/.gdignore
+          ./tools/prepare-font.sh
+          python3 - <<'PY'
+          from pathlib import Path
+          for shader in sorted(Path("scripts/field").glob("*.gdshader")):
+              material=Path("assets/river_gate/shaders")/(shader.stem+".tres")
+              material.parent.mkdir(exist_ok=True)
+              material.write_text('[gd_resource type="ShaderMaterial" load_steps=2 format=3]\n\n[ext_resource type="Shader" path="res://'+shader.as_posix()+'" id="1"]\n\n[resource]\nshader = ExtResource("1")\n')
+          p=Path("export_presets.cfg")
+          s=p.read_text().replace("[preset.0.options]","[preset.0.options]\nshader_baker/enabled=true")
+          p.write_text(s)
+          PY
+          echo 'dc9805fd2930344be9737cfc19074442618d7e5c' > assets/build-revision.txt
+          "$editor" --headless --editor --path . --import > artifacts/baker-import.log 2>&1
+          if grep -E 'Parse Error|SCRIPT ERROR|SHADER ERROR' artifacts/baker-import.log; then exit 1; fi
+          # A graphical RenderingDevice is required for the baker. The package
+          # is built on a different host from the one that does the first launch.
+          "$editor" --path . --rendering-method mobile --rendering-driver metal --audio-driver Dummy --export-pack macOS "$PWD/builds/river-metal.pck" > artifacts/baker-export.log 2>&1
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, hashlib
+          root=Path(".godot")
+          files=[p for p in root.rglob("*") if p.is_file() and "shader_baker" in p.parts and "metal" in p.parts and p.name!="file_cache"]
+          out=Path("builds/river-metal.pck")
+          assert len(files)>10 and out.is_file(),(len(files),out.exists())
+          receipt={"cache_file_count":len(files),"compiled_bytes":sum(p.stat().st_size for p in files),"pack_bytes":out.stat().st_size,"sha256":hashlib.sha256(out.read_bytes()).hexdigest()}
+          print("BAKED_FIELD",json.dumps(receipt))
+          Path("artifacts/baker.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: metal-baker-result
+          path: |
+            builds/river-metal.pck
+            artifacts/baker*
+  first-launch:
+    needs: prepare
+    runs-on: macos-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: metal-baker-result
+          path: baked
+      - name: Test first boot on a fresh Mac using the same game and official executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p unpacked native-evidence
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/9ed812d8dd8036ea92d54c3f77a17e58b771e22c/candidate/River-Gate-RC22-macOS.zip -o "$RUNNER_TEMP/input.zip"
+          echo "b4d05fcd03baae04b7f8fa73daf11a8002dcee7322aa1bca9565eabd1afa27f7  $RUNNER_TEMP/input.zip" | shasum -a 256 -c
+          ditto -x -k "$RUNNER_TEMP/input.zip" unpacked
+          app=$(find unpacked -maxdepth 1 -name '*.app' -print -quit)
+          pck=$(find "$app/Contents/Resources" -name '*.pck' -print -quit)
+          test -f "$pck"
+          cp baked/builds/river-metal.pck "$pck"
+          codesign --force --deep --sign - "$app"
+          codesign --verify --deep --strict "$app"
+          ditto -c -k --sequesterRsrc --keepParent "$app" "river-metal-trial.zip"
+          (cd unpacked && zip -q ../river-metal-trial.zip THIRD_PARTY_NOTICES.txt README-zh.md)
+          python3 tools/verify_macos.py river-metal-trial.zip
+          python3 tools/rc3_native_probe.py river-metal-trial.zip unpacked native-evidence --startup-regression
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: baked-mac-two-natural-and-one-interrupted
+          path: |
+            native-evidence
+            river-metal-trial.zip
