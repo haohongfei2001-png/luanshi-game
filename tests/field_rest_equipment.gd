@@ -25,10 +25,11 @@ func _point(point:Vector3,uv:Vector2,bones:Array[Transform3D]) -> Vector3:
 	var second:=packed&31
 	return (bones[second]*point).lerp(bones[first]*point,clampf(uv.y,0.,1.))
 
-func _bounds(mesh:ArrayMesh,bones:Array[Transform3D],hands_only:bool=false) -> Dictionary:
+func _bounds(mesh:ArrayMesh,bones:Array[Transform3D],settled_cloth:bool=false) -> Dictionary:
 	var arrays:=mesh.surface_get_arrays(0)
 	var positions:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
 	var skin:PackedVector2Array=arrays[Mesh.ARRAY_TEX_UV2]
+	var tex:PackedVector2Array=arrays[Mesh.ARRAY_TEX_UV]
 	var low:=Vector3(INF,INF,INF)
 	var high:=Vector3(-INF,-INF,-INF)
 	var count:=0
@@ -38,8 +39,11 @@ func _bounds(mesh:ArrayMesh,bones:Array[Transform3D],hands_only:bool=false) -> D
 		var first:=packed>>5
 		var second:=packed&31
 		if first==15 and second==15: continue # The shader hides the released arrow.
-		if hands_only and first not in [5,8] and second not in [5,8]: continue
 		var p:=_point(positions[i],skin[i],bones)
+		var tile:=Vector2i(floori(tex[i].x*8.),floori(tex[i].y*4.))
+		var cloth:=(tex[i].x>=2. and tex[i].x<3.) or (tile.y==2 and tile.x in [3,7])
+		if settled_cloth and cloth and p.y<.047:
+			p.y=.012+.035*(.035/(.082-p.y))
 		if p.y<low.y:
 			lowest={"bind":[positions[i].x,positions[i].y,positions[i].z],"joints":[first,second],"weight":skin[i].y}
 		low=low.min(p)
@@ -59,15 +63,23 @@ func _run() -> void:
 		var body:ArrayMesh=Company.pieces[label]
 		var weapon_name:=("FieldArms" if kit in [0,1,3,7,8] else "Arms")+str(kit)+"Close"
 		var weapon:ArrayMesh=Company.pieces[weapon_name]
-		var body_bounds:=_bounds(body,bones)
-		var hand_bounds:=_bounds(weapon,bones,true)
+		var raw_body:=_bounds(body,bones)
+		var body_bounds:=_bounds(body,bones,true)
 		var equipment:=_bounds(weapon,bones)
-		var row:={"kit":kit,"body":body_bounds,"hands":hand_bounds,"weapon":equipment}
+		var row:={"kit":kit,"raw_body":raw_body,"body":body_bounds,"held_mesh":equipment}
+		var ranked:={}
+		for role:String in ["Officer","Player"]:
+			var ranked_body:ArrayMesh=Company.pieces[role+"CloseMaster"]
+			ranked[role]={"raw":_bounds(ranked_body,bones),"settled":_bounds(ranked_body,bones,true)}
+		row["ranked"]=ranked
 		if kit==7:
 			row["shield"]=_bounds(Company.pieces["GarrisonShield"],bones)
 		rows.append(row)
-		if hand_bounds.vertices==0 or float(hand_bounds.min[1])<-.025:
-			failures.append("Hand under terrain for kit "+str(kit))
+		if float(body_bounds.min[1])<-.025:
+			failures.append("Body under terrain for kit "+str(kit))
+		for role:String in ranked:
+			if float(ranked[role].settled.min[1])<-.025:
+				failures.append(role+" under terrain for kit "+str(kit))
 		if float(equipment.min[1])<-.025 or float(equipment.max[1])>.40:
 			failures.append("Equipment leaves the ground plane for kit "+str(kit))
 		if kit==7 and (float(row.shield.min[1])<-.025 or float(row.shield.max[1])>.40):

@@ -187,6 +187,16 @@ void vertex() {
         pos.x+=loose*(.012*flick*pace);
         pos.z-=loose*.018*pace;
     }
+    // Let the finished back hem settle on the local ground. Compress the
+    // contact layer with a continuous slope so draped folds keep a rounded edge.
+    bool resting_cloth=(UV.x>=2.0 && UV.x<3.0) || cape;
+    if (state==7 && resting_cloth && pos.y<.047) {
+        float settling=smoothstep(.32,.95,phase);
+        float ratio=.035/(.082-pos.y);
+        float slope=mix(1.0,ratio*ratio,settling);
+        pos.y=mix(pos.y,.012+.035*ratio,settling);
+        nrm.y/=max(slope,.01);
+    }
     // Broad painted occlusion stays on the garment as the shoulder or hem turns.
     float armhole=smoothstep(.12,.23,abs(VERTEX.x))*(1.0-smoothstep(.035,.105,abs(VERTEX.y-1.285)));
     float hem=1.0-smoothstep(.52,1.38,VERTEX.y);
