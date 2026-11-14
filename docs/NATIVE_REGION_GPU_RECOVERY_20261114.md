@@ -183,3 +183,15 @@ The exported 507,503,596-byte QA pack (SHA-256
 also reached the custom entry and 20v20/tick135 setup in 8.68 s, without a
 script override. Both original configuration files match their pre-export
 bytes. These editor-based Linux checks do not certify Mac Metal startup.
+
+## Release assertion side effects corrected before judging any image
+
+The same exact upstream GDScript compiler removes the **entire expression**
+of an assertion when `DEBUG_ENABLED` is absent. This revealed three real
+editor/template differences in the review helpers: PNG `save_png`, regex
+`compile`, and traversal recorder `start` were called inside assertions.
+They now execute outside assertions with explicit failure exits/errors, with
+a source regression test. This is not a relaxation: missing images, incorrect
+shader time and absent recording remain failures. The earlier c4756d5 run
+is preserved as an entry diagnostic only and cannot qualify art or output.
+Source: https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/gdscript/gdscript_compiler.cpp

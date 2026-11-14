@@ -1,5 +1,5 @@
 from pathlib import Path
-import hashlib, importlib.util, json, sys, tempfile, unittest
+import hashlib, importlib.util, json, re, sys, tempfile, unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools/native_region'))
@@ -66,5 +66,9 @@ class NativeRegionInputs(unittest.TestCase):
             with self.subTest(key=key):
                 wrong={**row,key:value}
                 with self.assertRaises(ValueError):validate_pack_receipt(wrong)
+    def test_no_capture_side_effect_inside_release_assert(self):
+        for name in ['tests/authored_architecture_capture.gd','tools/art/gate_structure/traversal_review.gd','tools/art/gate_structure/freeze_shader_clock.gd']:
+            text=(ROOT/name).read_text()
+            self.assertNotRegex(text,r'assert\([^\n]*(?:\.save_png|\.compile|recorder\.start)\(')
 
 if __name__=='__main__':unittest.main()
