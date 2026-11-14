@@ -1,5 +1,14 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## OWNER-DOT-HANDOFF-20261114 · Codex 已暂停，Dot 接续
+
+Owner 最新要求暂停 Codex 开发并交给 Dot。Codex Goal 和 automation-2 均为 PAUSED，子代理已停止。后续负责人读取 [Dot 开发交接](DOT_DEVELOPMENT_HANDOFF_20261114.md) 和 [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。本节覆盖后文旧的 Codex 自动续接指令。
+
+RC25 固定源码 d1c1895221c33386d471922807ed590a6987dbe1，草稿PR59。新环境独立分支 codex/river-biome-rebuild，最近静帧提交814417f12092d95d0086d59b5e90ce8db00964cb。双手枪分支codex/river-rc25-native-spear停在7aaf21be288a607132ec96e1c9a1f5cdbf2f16f3，尚待接纳。全部已推送。
+
+正式RC25基础验证通过，footage与escort两项失败，其他图形/原生/环境运行尚在收尾。精确日志、恢复命令、已验证RC24包和性能见交接。整体美术ART_REBUILD_REQUIRED / OWNER_REJECTED，真实M5 DEVICE_NOT_RUN。当前未确认Dot已接收或开工。
+
+
 ## OWNER-AUTONOMOUS-20261114｜自动续接入口（真实进展仍以本文件最新 commit 为准）
 
 所有后续 Codex 执行窗口遵循 [长期自主开发与自动续接协议](CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)。**已授权持续开发、常规修复/测试、现有规则允许的 PR/合并与内部可玩候选交付，无需 Owner 每步中转**。应优先完成真实高质量角色/环境/战斗，而不是无限方案或对旧粗糙图做小修；每轮留真实 SHA、截图、录像、运行结果、当前 ARTREF 与真实 M5 状态、下一轮第一件工作。尝试 Codex Goal/Automations 跨会话续接；未实际启动则标记 AUTOMATION_UNAVAILABLE，不得假称 Codex 正在后台运行。当前此节仅新增执行约束，不宣称 Codex 已安装资源、跑出新美术、测试通过或真正设置定时工作。

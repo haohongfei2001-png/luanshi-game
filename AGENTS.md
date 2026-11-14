@@ -1,3 +1,7 @@
+# Owner execution handoff — 2026-11-14
+
+The owner has paused Codex development and transferred subsequent development to Dot. Codex's persistent Goal and automation-2 are PAUSED, and its sub-agent work has stopped. Read `docs/DOT_DEVELOPMENT_HANDOFF_20261114.md`, `docs/AUTONOMOUS_DEV_STATE.md`, and Issue #12 for exact source SHAs, pending CI, failed checks and recovery commands. This execution decision supersedes older instructions below that tell Codex to auto-resume or keep developing. Product, art quality, license, save preservation and evidence requirements continue to apply. Codex requires explicit owner authorization to resume.
+
 # AI development instructions
 
 ## OWNER-AUTONOMOUS-20261114 — top-priority continuous development and resumption protocol
