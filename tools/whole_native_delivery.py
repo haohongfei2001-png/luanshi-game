@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib,json,os,plistlib,pty,re,select,signal,subprocess,sys,time
 from rc3_native_probe import empty_game_data
+from evidence_steps import attempt
 
 def run_game(executable,output,helper,user_args,movie=None):
     output.mkdir(parents=True,exist_ok=True)
@@ -107,14 +108,17 @@ def main():
     with empty_game_data(data):
         text=run_game(executable,out/"input-smoke",helper,["--native-qhd","--menu-only","--light-study"])
         assert "BRIDGE_MENU_INPUT_PASS" in text
-    profiles = [(str(count), count, []) for count in (20, 100, 250, 512)]
-    profiles.append(("512-camera-tour", 512, ["--camera-tour"]))
-    for label, count, extra in profiles:
-        destination = out / ("profile-qhd-" + label)
+    profiles = [("qhd", str(count), count, []) for count in (20, 100, 250, 512)]
+    profiles.append(("qhd", "512-camera-tour", 512, ["--camera-tour"]))
+    if "--profile-uhd" in sys.argv[4:]:
+        profiles.extend(("uhd", str(count), count, []) for count in (20, 100, 250, 512))
+    require_master = ["--require-river-pass-master"] if "--require-river-pass-master" in sys.argv[4:] else []
+    for resolution, label, count, extra in profiles:
+        destination = out / ("profile-" + resolution + "-" + label)
         with empty_game_data(data):
             text = run_game(executable, destination, helper,
-                            ["--native-qhd", "--real-time-profile", "--field-profile",
-                             "--field-size=" + str(count), *extra])
+                            ["--native-" + resolution, "--real-time-profile", "--field-profile",
+                             "--field-size=" + str(count), *extra, *require_master])
             assert "BRIDGE_WINDOW true" in text
             profile = destination / "frame-times"
             profile.mkdir(parents=True, exist_ok=True)
@@ -122,10 +126,26 @@ def main():
                 (profile / path.name).write_bytes(path.read_bytes())
     subprocess.run([sys.executable, str(workspace / "tools/summarize_native_profiles.py"),
                     str(out)], check=True)
+    evidence_failures=[]
+    evidence_status=out/"evidence-status.json"
+    # Separate readback-instrumented process; never pollute the profiles above.
+    if "--wall-clock-video" in sys.argv[4:]:
+        modes = ["qhd", "uhd"] if "--wall-clock-uhd" in sys.argv[4:] else ["qhd"]
+        for mode in modes:
+            destination = out / ("wall-clock-" + mode)
+            def capture_wall():
+                with empty_game_data(data):
+                    run_game(executable, destination, helper,
+                        ["--native-" + mode, "--wall-clock-capture", "--field-size=512", *(["--wall-clock-action"] if "--wall-clock-action" in sys.argv[4:] else []), *require_master])
+            attempt("wall-clock-"+mode+"-capture",capture_wall,evidence_failures,evidence_status)
+            attempt("wall-clock-"+mode+"-encode",lambda: subprocess.run(
+                [sys.executable,str(workspace/"tools/encode_wall_clock_capture.py"),
+                 str(destination/"wall-clock"),str(destination/"wall-clock.mp4")],check=True),
+                evidence_failures,evidence_status)
     capture=out/"take/native-window.avi"
     try:
         with empty_game_data(data):
-            text=run_game(executable,out/"movie",helper,["--native-qhd","--complete-battle"],capture)
+            text=run_game(executable,out/"movie",helper,["--native-qhd","--complete-battle",*require_master],capture)
             assert "BRIDGE_WINDOW true" in text
             subprocess.run([sys.executable,str(workspace/"tools/encode_whole_battle.py"),
                             str(capture),str(out/"movie"),os.environ["GITHUB_SHA"]],check=True)
@@ -136,5 +156,10 @@ def main():
                             "-movflags","+faststart",str(out/"movie/incomplete-attempt.mp4")],
                            timeout=180,check=False)
         raise
+    evidence_status.write_text(json.dumps({"status":"NOT_PASSED" if evidence_failures else "COMPLETE", "failures":evidence_failures,
+        "raw_policy":"Transient raw JPEG sequence is not automatically a persistent artifact; curate with native_evidence_bundle.py."},indent=2)+"\n")
+    if evidence_failures:
+        print("WHOLE_NATIVE_PARTIAL_EVIDENCE_FAILURES "+json.dumps(evidence_failures),flush=True)
+        raise SystemExit(1)
     print("WHOLE_NATIVE_INPUT_MOVIE_PROFILE_PASS",flush=True)
 if __name__=="__main__":main()

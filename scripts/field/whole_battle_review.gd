@@ -5,9 +5,13 @@ const Field:=preload("res://scripts/field/controller.gd")
 const Battle:=preload("res://scripts/field/battle.gd")
 const Ground:=preload("res://scripts/field/ground.gd")
 var out:=OS.get_environment("RIVER_CAPTURE_OUT")
-var real_time:="--real-time-profile" in OS.get_cmdline_user_args()
+var wall_capture_enabled:="--wall-clock-capture" in OS.get_cmdline_user_args()
+var wall_capture:Node
+var mounted_attempt_tick:=-100
+var real_time:="--real-time-profile" in OS.get_cmdline_user_args() or "--wall-clock-capture" in OS.get_cmdline_user_args()
 var wall_started:=0
 var requested_side:=512
+var expected_native:=Vector2i.ZERO
 var camera_tour:="--camera-tour" in OS.get_cmdline_user_args()
 var complete_battle:="--complete-battle" in OS.get_cmdline_user_args()
 var last_tour_tick:=-1000
@@ -34,8 +38,10 @@ func _ready() -> void:
 		if argument.begins_with("--field-size="):requested_side=argument.trim_prefix("--field-size=").to_int()
 	assert(requested_side in Battle.SCALES)
 	if out.is_empty():out=ProjectSettings.globalize_path("user://whole-battle-review")
-	if "--native-qhd" in OS.get_cmdline_user_args():
-		root.content_scale_size=Vector2i(2560,1440)
+	if "--native-qhd" in OS.get_cmdline_user_args():expected_native=Vector2i(2560,1440)
+	if "--native-uhd" in OS.get_cmdline_user_args():expected_native=Vector2i(3840,2160)
+	if expected_native!=Vector2i.ZERO:
+		root.content_scale_size=expected_native
 		root.content_scale_mode=Window.CONTENT_SCALE_MODE_VIEWPORT
 		root.content_scale_aspect=Window.CONTENT_SCALE_ASPECT_KEEP
 	_run.call_deferred()
@@ -121,6 +127,14 @@ func _drive() -> void:
 		goal=target.pos+target.pos.direction_to(b.hero.pos)*2.15
 	var rear_guard:=real_time and requested_side==250
 	if rear_guard or b.hero.hp<64. or b.hero.impacts>=3:goal=Vector2(26.8,-1.)
+	if wall_capture_enabled and t<150 and b.vehicle==0:
+		goal=b.vehicle_pos[1]
+		if b.hero.pos.distance_to(goal)<2.6 and t-mounted_attempt_tick>=20:
+			_key(KEY_F,true);_key(KEY_F,false);mounted_attempt_tick=t
+			notes.append({"tick":t,"key":"F","purpose":"attempt_nearby_horse","vehicle_after":b.vehicle})
+	elif wall_capture_enabled and t>=200 and b.vehicle==1:
+		_key(KEY_F,true);_key(KEY_F,false)
+		notes.append({"tick":t,"key":"F","purpose":"dismount","vehicle_after":b.vehicle})
 	# A human can follow the cart ruts with eight directions and retire
 	# behind the other advancing soldiers. Send the same four mapped keys.
 	var walk:=Vector2.ZERO
@@ -164,12 +178,15 @@ func _facts() -> Dictionary:
 	var shields:=0
 	var guards:=0
 	var feet_inside:=0
+	var offscreen_contact_samples:=0
 	var canvas:=root.get_visible_rect()
 	for u in b.roster:
 		if u.team==0 and initial_west.has(u.id) and u.pos.x>Ground.MOAT_X+4. and absf(u.pos.y)<5.:
 			crossed[u.id]=true
 		if u.officer or u.hero or u.state==Battle.State.ESCAPED: continue
-		if not canvas.has_point(field.camera.unproject_position(Ground.unit_point(u.pos,true)+Vector3.UP*.95)): continue
+		if not canvas.has_point(field.camera.unproject_position(Ground.unit_point(u.pos,true)+Vector3.UP*.95)):
+			if u.contact_tick==b.tick and u.contact_source>=0:offscreen_contact_samples+=1
+			continue
 		in_frame+=1
 		if Ground.moat_blocks(u.pos): feet_inside+=1
 		if u.contact_tick==b.tick and u.contact_source>=0 and troop_contacts.size()<12:
@@ -184,9 +201,9 @@ func _facts() -> Dictionary:
 				contacts[str(u.id)+"@"+str(b.tick)]={"tick":b.tick,"defender":u.id,"source":u.contact_source}
 	var bridge:=field.camera.unproject_position(Vector3(Ground.MOAT_X,.13,0))
 	var arch:=field.camera.unproject_position(Vector3(Ground.WALL_X,3.7,0))
-	return {"tick":b.tick,"hero":[b.hero.pos.x,b.hero.pos.y],"hp":b.hero.hp,"hero_impacts":b.hero.impacts,
+	return {"tick":b.tick,"hero":[b.hero.pos.x,b.hero.pos.y],"hp":b.hero.hp,"vehicle":b.vehicle,"hero_state":b.hero.state,"hero_kit":b.hero.kit,"hero_impacts":b.hero.impacts,
 		"hits":b.hits.duplicate(),"arrows_fired":b.arrow_count,"ram_strokes":b.objectives.strokes,"blocks":b.blocked_hits,"losses":b.losses.duplicate(),"gate_hp":b.gate_hp,
-		"visible_ordinary":in_frame,"visible_shields":shields,"guarding":guards,"feet_in_deep_water":feet_inside,
+		"sampled_offscreen_contacts":offscreen_contact_samples,"visible_ordinary":in_frame,"visible_shields":shields,"guarding":guards,"feet_in_deep_water":feet_inside,
 		"crossed":crossed.size(),"soldier_shield_contacts":contacts.size(),"center":[field.camera_center.x,field.camera_center.y],"zoom":field.camera.size,"yaw":field.camera_yaw,
 		"pitch":field.camera_pitch,"deck_screen":[bridge.x,bridge.y],"arch_screen":[arch.x,arch.y],
 		"both_landmarks":canvas.has_point(bridge) and canvas.has_point(arch),"orders_delivered":b.messages_arrived,"result":b.result}
@@ -210,12 +227,16 @@ func _run() -> void:
 	if not await _select_bridge():
 		push_error("The bridgehead plan could not be selected in its regular popup")
 		get_tree().quit(1);return
+	if "--require-river-pass-master" in OS.get_cmdline_user_args():
+		if not field.map.has_method("composition_audit") or field.map.composition_audit().get("layout","")!="river-pass-master-v1":
+			push_error("Expected authored river-pass master did not load through normal deployment")
+			get_tree().quit(1);return
 	await RenderingServer.frame_post_draw
 	var native:=root.get_texture().get_image()
 	rendered_size=native.get_size()
 	native.save_jpg(out+"/prepared-native.jpg",.95)
-	if "--native-qhd" in OS.get_cmdline_user_args() and rendered_size!=Vector2i(2560,1440):
-		push_error("Native render attachment must be QHD, got "+str(rendered_size))
+	if expected_native!=Vector2i.ZERO and rendered_size!=expected_native:
+		push_error("Native render attachment must be "+str(expected_native)+", got "+str(rendered_size))
 		get_tree().quit(1)
 		return
 	if not is_equal_approx(root.scaling_3d_scale,1.):
@@ -257,13 +278,20 @@ func _run() -> void:
 	if not b.started:
 		push_error("Deploy button failed")
 		get_tree().quit(1);return
+	if wall_capture_enabled:
+		wall_capture=load("res://scripts/field/wall_clock_capture.gd").new();add_child(wall_capture)
+		if not wall_capture.start(root,out+"/wall-clock",field):
+			push_error("Wall-clock capture rejected fixed-step flags or existing evidence destination")
+			get_tree().quit(1);return
 	first_game_frame=Engine.get_frames_drawn()
 	var preview:="--bridge-stills" in OS.get_cmdline_user_args()
 	var frames:=0
 	wall_started=Time.get_ticks_usec()
 	while frames<(100000 if real_time else (4320 if complete_battle else 960)) and b.result=="" and not field.paused:
 		frames+=1
-		if real_time and Time.get_ticks_usec()-wall_started>45000000:break
+		var wall_budget:=45000000
+		if wall_capture_enabled and "--wall-clock-action" in OS.get_cmdline_user_args():wall_budget=30000000 if expected_native==Vector2i(3840,2160) else 60000000
+		if real_time and Time.get_ticks_usec()-wall_started>wall_budget:break
 		if b.tick!=last_tick:
 			last_tick=b.tick
 			_drive()
@@ -291,6 +319,7 @@ func _run() -> void:
 			await get_tree().process_frame
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_jpg(out+"/battle-result-native.jpg",.95)
+	if wall_capture_enabled:wall_capture.stop("review_complete")
 	var fact:=_facts()
 	var clear_count:=0
 	var entered_water:=false
@@ -301,7 +330,7 @@ func _run() -> void:
 		if row.feet_in_deep_water>0: entered_water=true
 		if not is_equal_approx(row.zoom,22.) or absf(row.yaw-deg_to_rad(-33.))>.0001: off_lens=true
 		if first_blow<0 and row.hero_impacts>0: first_blow=row.tick
-	var terminal:={"ordinary":Array(b.ordinary_counts),"officers":Array(b.command_counts),"seed":Battle.SEED,
+	var terminal:={"scene_composition":field.map.composition_audit() if field.map.has_method("composition_audit") else {"layout":"legacy"},"coverage_limits":{"offscreen_contacts":"snapshot lower bound, not all contacts","mounted_player_input":"ATTEMPTED_CHECK_FRAME_VEHICLE" if wall_capture_enabled else "NOT_EXERCISED","weapon_switching":"NOT_EXERCISED","movie_timing":"fixed 24 fps simulation capture is not real-time performance"},"ordinary":Array(b.ordinary_counts),"officers":Array(b.command_counts),"seed":Battle.SEED,
 		"native_render_px":[rendered_size.x,rendered_size.y],"physical_window_px":[DisplayServer.window_get_size().x,DisplayServer.window_get_size().y],"post_battle_frames":post_battle_frames,"complete_battle_requested":complete_battle,"camera_tour":camera_tour,"wall_seconds":float(Time.get_ticks_usec()-wall_started)/1000000.,"real_time_profile":real_time,"game_source":OS.get_environment("RIVER_SOURCE_SHA"),"frames_of_play":frames,"sampled_ticks":snapshots.size(),"first_player_strike":first_blow,
 		"held_both":clear_count,"feet_in_deep_water":entered_water,"different_lens":off_lens,
 		"shield_contacts":contacts.values(),"rank_spear_contacts":troop_contacts,"resolution":[root.size.x,root.size.y],"internal":root.scaling_3d_scale,

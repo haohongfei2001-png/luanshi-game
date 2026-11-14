@@ -16,7 +16,7 @@ def resource_value(text, name):
 
 root = Path(sys.argv[1])
 profiles = []
-for directory in sorted(root.glob("profile-qhd-*")):
+for directory in sorted(list(root.glob("profile-qhd-*")) + list(root.glob("profile-uhd-*"))):
     rows = []
     for path in sorted((directory / "frame-times").glob("*.jsonl")):
         rows.extend(json.loads(line) for line in path.read_text().splitlines() if line.strip())
@@ -24,7 +24,8 @@ for directory in sorted(root.glob("profile-qhd-*")):
     frames = [row for row in rows if row["kind"] == "frames"]
     intervals = [value for row in frames for value in row["raw_wall_ms"]]
     assert intervals, directory
-    assert all(row["render_target_px"] == [2560, 1440] and row["internal_scale"] == 1 for row in frames)
+    expected_px = [3840, 2160] if directory.name.startswith("profile-uhd-") else [2560, 1440]
+    assert all(row["render_target_px"] == expected_px and row["internal_scale"] == 1 for row in frames)
     facts = json.loads((directory / "input-and-camera.json").read_text())
     resources = (directory / "resource-time.log").read_text()
     phases = {}
@@ -39,9 +40,10 @@ for directory in sorted(root.glob("profile-qhd-*")):
         "source_sha": os.environ["GITHUB_SHA"],
         "host": host,
         "ordinary": facts["ordinary"],
-        "render_px": [2560, 1440],
+        "render_px": expected_px,
         "internal_scale": 1,
         "sample_frames": len(intervals),
+        "sampling_status": "SUFFICIENT_WINDOW" if len(intervals) >= 120 and sum(intervals) >= 10000 else "INSUFFICIENT_WINDOW",
         "engaged_seconds": sum(intervals) / 1000.,
         "elapsed_play_seconds": facts["wall_seconds"],
         "average_fps": len(intervals) * 1000. / sum(intervals),
@@ -58,6 +60,9 @@ for directory in sorted(root.glob("profile-qhd-*")):
         "maximum_rss_bytes": resource_value(resources, "maximum resident set size"),
         "peak_memory_footprint_bytes": resource_value(resources, "peak memory footprint"),
         "last_battle_state": facts["last"],
+        "scene_composition": facts.get("scene_composition", {"layout": "not_recorded"}),
+        "sampled_offscreen_contacts": sum(row.get("sampled_offscreen_contacts", 0) for row in facts.get("frames", [])),
+        "coverage_limits": facts.get("coverage_limits", {}),
         "camera_tour": facts.get("camera_tour", False),
         "status": "MEASURED_HOSTED_ONLY",
         "real_M5": "DEVICE_NOT_RUN",

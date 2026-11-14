@@ -1,0 +1,268 @@
+name: Upload bounded recoverable artifact groups
+description: Upload each pre-validated group separately, never aggregate raw capture frames
+inputs:
+  path:
+    required: true
+    description: Staged group directory
+  prefix:
+    required: true
+    description: Unique artifact namespace
+runs:
+  using: composite
+  steps:
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-00/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-00
+        path: ${{ inputs.path }}/group-00/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-01/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-01
+        path: ${{ inputs.path }}/group-01/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-02/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-02
+        path: ${{ inputs.path }}/group-02/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-03/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-03
+        path: ${{ inputs.path }}/group-03/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-04/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-04
+        path: ${{ inputs.path }}/group-04/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-05/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-05
+        path: ${{ inputs.path }}/group-05/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-06/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-06
+        path: ${{ inputs.path }}/group-06/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-07/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-07
+        path: ${{ inputs.path }}/group-07/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-08/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-08
+        path: ${{ inputs.path }}/group-08/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-09/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-09
+        path: ${{ inputs.path }}/group-09/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-10/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-10
+        path: ${{ inputs.path }}/group-10/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-11/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-11
+        path: ${{ inputs.path }}/group-11/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-12/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-12
+        path: ${{ inputs.path }}/group-12/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-13/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-13
+        path: ${{ inputs.path }}/group-13/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-14/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-14
+        path: ${{ inputs.path }}/group-14/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-15/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-15
+        path: ${{ inputs.path }}/group-15/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-16/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-16
+        path: ${{ inputs.path }}/group-16/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-17/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-17
+        path: ${{ inputs.path }}/group-17/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-18/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-18
+        path: ${{ inputs.path }}/group-18/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-19/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-19
+        path: ${{ inputs.path }}/group-19/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-20/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-20
+        path: ${{ inputs.path }}/group-20/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-21/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-21
+        path: ${{ inputs.path }}/group-21/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-22/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-22
+        path: ${{ inputs.path }}/group-22/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-23/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-23
+        path: ${{ inputs.path }}/group-23/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-24/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-24
+        path: ${{ inputs.path }}/group-24/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-25/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-25
+        path: ${{ inputs.path }}/group-25/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-26/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-26
+        path: ${{ inputs.path }}/group-26/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-27/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-27
+        path: ${{ inputs.path }}/group-27/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-28/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-28
+        path: ${{ inputs.path }}/group-28/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-29/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-29
+        path: ${{ inputs.path }}/group-29/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-30/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-30
+        path: ${{ inputs.path }}/group-30/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() && hashFiles(format('{0}/group-31/**', inputs.path)) != '' }}
+      with:
+        name: ${{ inputs.prefix }}-${{ github.sha }}-31
+        path: ${{ inputs.path }}/group-31/
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 30
