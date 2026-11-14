@@ -1,0 +1,294 @@
+{
+  "game_source": "5d6aa17716d0b7206a10288405957b13e4764357",
+  "capture_run": "43570498673",
+  "mode": "Godot Movie Maker, 24 successive frames per simulated second, normal mapped inputs",
+  "capture_container": "MJPEG AVI with stereo PCM, native dimensions and every frame retained",
+  "capture_sha256": "e51d9b5b51c56bc92c1e95d7b949531643b9289d4c98e48018df3d3f523d8a18",
+  "fps": 24,
+  "native_capture_px": [
+    2560,
+    1440
+  ],
+  "physical_window_px": [
+    1024,
+    645
+  ],
+  "logical_root": [
+    1024,
+    645
+  ],
+  "art_acceptance": "ART_REBUILD_REQUIRED",
+  "seconds": 41.041666666666664,
+  "simulated_battle_seconds": 40.0,
+  "source_frame_count": 985,
+  "streams": [
+    {
+      "codec_name": "h264",
+      "width": 2560,
+      "height": 1440,
+      "avg_frame_rate": "24/1",
+      "duration": "41.041667",
+      "nb_frames": "985"
+    },
+    {
+      "codec_name": "aac",
+      "channels": 2,
+      "avg_frame_rate": "0/0",
+      "duration": "41.041667",
+      "nb_frames": "1925"
+    }
+  ],
+  "max_signal_db": -12.4,
+  "sha256": "440f476306de5c1886cbd3435913fe981b268479c3dd0ea77b824582795e7273",
+  "bytes": 179060718,
+  "summary": {
+    "camera_start": [
+      34.2000007629395,
+      1.0
+    ],
+    "different_lens": false,
+    "feet_in_deep_water": false,
+    "first_game_frame": 24,
+    "first_player_strike": 135,
+    "frames_of_play": 960,
+    "game_source": "5d6aa17716d0b7206a10288405957b13e4764357",
+    "held_both": 800,
+    "inputs": [
+      {
+        "aimed_at": 737,
+        "cursor": [
+          1465.95349121094,
+          378.461761474609
+        ],
+        "direction": [
+          0.983457505702972,
+          0.181139335036278
+        ],
+        "hero": [
+          35.2785758972168,
+          -3.35905027389526
+        ],
+        "key": "E",
+        "mouse": "(1465.0, 377.5)",
+        "range": 4.66742486698137,
+        "target": [
+          39.8687896728516,
+          -2.51359605789185
+        ],
+        "tick": 128
+      },
+      {
+        "aimed_at": 737,
+        "cursor": [
+          1465.9306640625,
+          378.434417724609
+        ],
+        "direction": [
+          0.990560352802277,
+          0.137076944112778
+        ],
+        "hero": [
+          37.097957611084,
+          -2.89703273773193
+        ],
+        "key": "Space",
+        "mouse": "(1465.0, 377.5)",
+        "range": 2.79723684005512,
+        "target": [
+          39.8687896728516,
+          -2.51359605789185
+        ],
+        "tick": 146
+      }
+    ],
+    "internal": 1.0,
+    "last": {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "blocks": 52,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999940395355
+      ],
+      "crossed": 383,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        27.007532119751,
+        -1.00424420833588
+      ],
+      "hero_impacts": 1,
+      "hits": [
+        1201,
+        1125
+      ],
+      "hp": 26.8338893246651,
+      "losses": [
+        269,
+        274
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "result": "",
+      "soldier_shield_contacts": 8,
+      "tick": 800,
+      "visible_ordinary": 501,
+      "visible_shields": 13,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    "native_render_px": [
+      2560,
+      1440
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "physical_window_px": [
+      1024,
+      645
+    ],
+    "physics_fps": 60,
+    "rank_spear_contacts": [
+      {
+        "blocked": false,
+        "spearman": 68,
+        "target": 583,
+        "tick": 7
+      },
+      {
+        "blocked": false,
+        "spearman": 580,
+        "target": 65,
+        "tick": 10
+      },
+      {
+        "blocked": false,
+        "spearman": 610,
+        "target": 71,
+        "tick": 10
+      },
+      {
+        "blocked": true,
+        "spearman": 65,
+        "target": 581,
+        "tick": 10
+      },
+      {
+        "blocked": false,
+        "spearman": 578,
+        "target": 72,
+        "tick": 12
+      },
+      {
+        "blocked": false,
+        "spearman": 33,
+        "target": 551,
+        "tick": 12
+      },
+      {
+        "blocked": false,
+        "spearman": 66,
+        "target": 582,
+        "tick": 12
+      },
+      {
+        "blocked": true,
+        "spearman": 577,
+        "target": 36,
+        "tick": 13
+      },
+      {
+        "blocked": false,
+        "spearman": 583,
+        "target": 68,
+        "tick": 17
+      },
+      {
+        "blocked": false,
+        "spearman": 548,
+        "target": 40,
+        "tick": 21
+      },
+      {
+        "blocked": false,
+        "spearman": 39,
+        "target": 588,
+        "tick": 21
+      },
+      {
+        "blocked": false,
+        "spearman": 581,
+        "target": 55,
+        "tick": 22
+      }
+    ],
+    "real_time_profile": false,
+    "resolution": [
+      1024,
+      645
+    ],
+    "sampled_ticks": 800,
+    "seed": 61112,
+    "shield_contacts": [
+      {
+        "defender": 70,
+        "source": 633,
+        "tick": 14
+      },
+      {
+        "defender": 70,
+        "source": 618,
+        "tick": 16
+      },
+      {
+        "defender": 70,
+        "source": 617,
+        "tick": 17
+      },
+      {
+        "defender": 358,
+        "source": 784,
+        "tick": 369
+      },
+      {
+        "defender": 358,
+        "source": 633,
+        "tick": 371
+      },
+      {
+        "defender": 358,
+        "source": 634,
+        "tick": 393
+      },
+      {
+        "defender": 358,
+        "source": 892,
+        "tick": 395
+      },
+      {
+        "defender": 358,
+        "source": 890,
+        "tick": 397
+      }
+    ],
+    "software": "Apple Paravirtual device (Apple5)",
+    "wall_seconds": 86.748407,
+    "world_audit": true
+  },
+  "device_framerate_measurement": false,
+  "input_replay_pass": true
+}

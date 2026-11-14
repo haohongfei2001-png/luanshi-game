@@ -1,0 +1,443 @@
+{
+  "source": "5d6aa17716d0b7206a10288405957b13e4764357",
+  "run": "43570498673",
+  "files": [
+    {
+      "file": "cold-1/default-metal-1-boot.json",
+      "bytes": 4227,
+      "sha256": "bf6d3ee79e6db15b5fa27f1e66564b93878f901fa8440f4904162ddf2c42381d"
+    },
+    {
+      "file": "cold-1/default-metal-1-focus.log",
+      "bytes": 58,
+      "sha256": "682711b41b5db8b020e1499b7265d56d55188f7bcad2dade834edb97fd61ebae"
+    },
+    {
+      "file": "cold-1/default-metal-1-frames.json",
+      "bytes": 3936,
+      "sha256": "33d3d96ed40a0dde0caf9f1f86985a359c6232f88b10f2f884a09d971757644c"
+    },
+    {
+      "file": "cold-1/default-metal-1-session.jsonl",
+      "bytes": 17809,
+      "sha256": "dd86e1e3e45af641a22ade524bd6718cfd4068fe8bdbdebd154b4c2c33f137d5"
+    },
+    {
+      "file": "cold-1/default-metal-1.log",
+      "bytes": 6823,
+      "sha256": "b98d5bb067aa2c76c096bf61f6243b7a365bbf3709e71e26642ac98c6ba51190"
+    },
+    {
+      "file": "cold-1/default-metal-2-boot.json",
+      "bytes": 5820,
+      "sha256": "b222d9c92d612e96a54c3b403b7b8190dd27eb8a483e2c0b01e09172ad556a58"
+    },
+    {
+      "file": "cold-1/default-metal-2-focus.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "cold-1/default-metal-2-frames.json",
+      "bytes": 17383,
+      "sha256": "31f4260af6c48174cdbdaf40919738b41644d57d4b1f9cde3d1db19ba0ebc6b0"
+    },
+    {
+      "file": "cold-1/default-metal-2-session.jsonl",
+      "bytes": 62441,
+      "sha256": "22904823be0ab945a6c53785d88111dc9cfebda599ae54261c6e9f54324ead77"
+    },
+    {
+      "file": "cold-1/default-metal-2.log",
+      "bytes": 8364,
+      "sha256": "b2c8f281c8de5eb4e5846a76700e6cb2ddd54c1a2ca0540ae39f7f1d5a53d07c"
+    },
+    {
+      "file": "cold-1/renderer-comparison.json",
+      "bytes": 12110,
+      "sha256": "dcf3d0c5a642c93c9b3a58c52c374f24e72e8b39dfa5c544fe74465b73158928"
+    },
+    {
+      "file": "cold-1/startup-focus-control-boot.json",
+      "bytes": 7443,
+      "sha256": "f1523ecdd322da0668cef12e687b87e2b4258eddd730cd33ed6ddd7a8771bd7e"
+    },
+    {
+      "file": "cold-1/startup-focus-control-focus.log",
+      "bytes": 170,
+      "sha256": "780bc49ec402b3702f3f0b1b5b5a3b5203d7c212f21a592b1387adce4958cafd"
+    },
+    {
+      "file": "cold-1/startup-focus-control-frames.json",
+      "bytes": 4018,
+      "sha256": "ae51547bd869315786f19130f18b7effbd7363120aa425bf3e67ecc6ed3d819e"
+    },
+    {
+      "file": "cold-1/startup-focus-control-session.jsonl",
+      "bytes": 18330,
+      "sha256": "a2e42b3ce7786914e8703c4a0a6bb1ad101939fd51e898f59c05fd4fcd0acaf6"
+    },
+    {
+      "file": "cold-1/startup-focus-control.log",
+      "bytes": 9116,
+      "sha256": "43a2471cf738562a275677d97cd33c0de99c502a2bbddf5f36495984fceee17e"
+    },
+    {
+      "file": "cold-2/default-metal-1-boot.json",
+      "bytes": 4230,
+      "sha256": "cad0be83bfdb200bf3cd8001506ba771fdfbce8ca2d0a76eb471b6b610a5d884"
+    },
+    {
+      "file": "cold-2/default-metal-1-focus.log",
+      "bytes": 59,
+      "sha256": "37a402a6cf5603b39e700bb72c41a7500509cc00837f95a99ac511033f745a5e"
+    },
+    {
+      "file": "cold-2/default-metal-1-frames.json",
+      "bytes": 3958,
+      "sha256": "7ad5bf67af1b29e9547180b93bb68a7356b1f70d496549cb20a5e0e14c1c219b"
+    },
+    {
+      "file": "cold-2/default-metal-1-session.jsonl",
+      "bytes": 17558,
+      "sha256": "36d73389d923b5b66ec67ab5a1c50f64e4824b6c3bf4e2c6f3745b765cb4f135"
+    },
+    {
+      "file": "cold-2/default-metal-1.log",
+      "bytes": 6815,
+      "sha256": "3fa8562491a97b770c035861254d68654d48ba28459c09a425a199b8dd10552f"
+    },
+    {
+      "file": "cold-2/default-metal-2-boot.json",
+      "bytes": 4230,
+      "sha256": "016d9d731055663cb388e19d00cdca7dce31aa034468eaa80aaf2633488b326d"
+    },
+    {
+      "file": "cold-2/default-metal-2-focus.log",
+      "bytes": 59,
+      "sha256": "ccd3f1bd8604c288acd3fe9028ba8ba5f1c8dfcbd4a4990213512df81d5a6a4e"
+    },
+    {
+      "file": "cold-2/default-metal-2-frames.json",
+      "bytes": 16981,
+      "sha256": "bd9c64e140d50fbce041167fce77325920eeda7e2f6ef5e22e887a44f9e9b2d6"
+    },
+    {
+      "file": "cold-2/default-metal-2-session.jsonl",
+      "bytes": 60685,
+      "sha256": "c29612e7dd8381916ed623b95955a2f569b7ab29feeca1a50e83d178f915cb85"
+    },
+    {
+      "file": "cold-2/default-metal-2.log",
+      "bytes": 7242,
+      "sha256": "c9c371d76071683ddbc97472c0e86eb377b73bc7cb1036669e19ce397a7fa5ec"
+    },
+    {
+      "file": "cold-2/renderer-comparison.json",
+      "bytes": 12090,
+      "sha256": "e86edd4e66739eb4b066d88c5ba52a92a4602886cb78228076498caaca89bbda"
+    },
+    {
+      "file": "cold-2/startup-focus-control-boot.json",
+      "bytes": 7437,
+      "sha256": "f65bb3afabef60b74c4a12a9c93190eb2e4ebaaf76cc0bd5662901d322a29e66"
+    },
+    {
+      "file": "cold-2/startup-focus-control-focus.log",
+      "bytes": 170,
+      "sha256": "ce621e765ea2bdacafaa3a4d3161d4ee747ca9f88a8c50fcf1ab99b469346970"
+    },
+    {
+      "file": "cold-2/startup-focus-control-frames.json",
+      "bytes": 4034,
+      "sha256": "633f664db5b19f70a77ba504064b6da207c4df9de158aab176ae1b7d1c605901"
+    },
+    {
+      "file": "cold-2/startup-focus-control-session.jsonl",
+      "bytes": 18501,
+      "sha256": "acc878718550d92f46691547a78f879271b14d98286d47b019d63cc5c50ab8e3"
+    },
+    {
+      "file": "cold-2/startup-focus-control.log",
+      "bytes": 9110,
+      "sha256": "8404501589485f084ca539513215b8629af4bbc6ed8a3f97ef992efc54a2e4fc"
+    },
+    {
+      "file": "cold-3/default-metal-1-boot.json",
+      "bytes": 4231,
+      "sha256": "0da1fe05eb796d2366686560b1ecafc914525c47c8c62ef94bb41ae9331217f6"
+    },
+    {
+      "file": "cold-3/default-metal-1-focus.log",
+      "bytes": 59,
+      "sha256": "0affdc18bab6f9d92b6df0c343b4f822a3c29f32d5381d59344d1879da7e0a0a"
+    },
+    {
+      "file": "cold-3/default-metal-1-frames.json",
+      "bytes": 4045,
+      "sha256": "14517a904a25978145886a792d7e7de713602d1082da5a2c12540357155a1481"
+    },
+    {
+      "file": "cold-3/default-metal-1-session.jsonl",
+      "bytes": 18353,
+      "sha256": "71898f7bd0c2c473c10d14d05e64e69089757d54511d6b0e5347950cd1e904bc"
+    },
+    {
+      "file": "cold-3/default-metal-1.log",
+      "bytes": 6697,
+      "sha256": "f18d8a3439d65cf0e744941dd5a6ddb1d058a9c230bdf27276ccf461e6f7333d"
+    },
+    {
+      "file": "cold-3/default-metal-2-boot.json",
+      "bytes": 4230,
+      "sha256": "75ec802ececa2b062ce269799abf44f34c5b592b84a4fccee65422d30d21e1ba"
+    },
+    {
+      "file": "cold-3/default-metal-2-focus.log",
+      "bytes": 59,
+      "sha256": "67ae3e9a9a4d2c207eae67f3dde5c591ef130584ff660233d7d9478788e3a5e9"
+    },
+    {
+      "file": "cold-3/default-metal-2-frames.json",
+      "bytes": 17482,
+      "sha256": "32501cf1b3a4e9c128765bf03ee413f5b4d534e22238e25d6be99eba4a8fff5d"
+    },
+    {
+      "file": "cold-3/default-metal-2-session.jsonl",
+      "bytes": 63055,
+      "sha256": "2526ae967bf05a25701f6fd27c652387685519b53db2645aeee970bd512083b1"
+    },
+    {
+      "file": "cold-3/default-metal-2.log",
+      "bytes": 7237,
+      "sha256": "f630b99cf16dc31611b8bd7bff8fbc904632de96bb403054c66ff1d80912c6c6"
+    },
+    {
+      "file": "cold-3/renderer-comparison.json",
+      "bytes": 12087,
+      "sha256": "219e986261bf5ea7bc882c7585af64ca3aa0d23b82cea1f7f76792d8b8ec18f6"
+    },
+    {
+      "file": "cold-3/startup-focus-control-boot.json",
+      "bytes": 7437,
+      "sha256": "376f81c6c940f382da78096c87ca57fd735bfc22c74e16ee9b8d5011188fc061"
+    },
+    {
+      "file": "cold-3/startup-focus-control-focus.log",
+      "bytes": 170,
+      "sha256": "060f267c67cb0240cef89d69ec32fe336385c53fcbe500a19ac5802909197c37"
+    },
+    {
+      "file": "cold-3/startup-focus-control-frames.json",
+      "bytes": 4020,
+      "sha256": "af8e9c00b39161c558ad3ab8aa4f894d33b3655a8e1cd25ce7011dd5a1d8ad91"
+    },
+    {
+      "file": "cold-3/startup-focus-control-session.jsonl",
+      "bytes": 17671,
+      "sha256": "e9037185177ec7bbe2a6e64acde033a4a27f87def69d1c943d2d02f8ff4715ed"
+    },
+    {
+      "file": "cold-3/startup-focus-control.log",
+      "bytes": 9109,
+      "sha256": "7c908216fad8c10c56f90200307476fd4a63e0e4e3560fb39748fbe803215e64"
+    },
+    {
+      "file": "delivery.json",
+      "bytes": 1031,
+      "sha256": "8988cc990f9e2da3570edcc292a243bab763054ff80684472b958a1d87e87508"
+    },
+    {
+      "file": "host.txt",
+      "bytes": 786,
+      "sha256": "7b2fa6b67474ae581fb6b0c402a472216d103aa3cabfd62b3d4ff77e3a54dc6e"
+    },
+    {
+      "file": "input-smoke/muster.jpg",
+      "bytes": 894951,
+      "sha256": "f0986b63c1c31b6660b29a70337356594d4fda5d8ede76a4e26e2f5a1a9a2f08"
+    },
+    {
+      "file": "input-smoke/prepared-native.jpg",
+      "bytes": 1479092,
+      "sha256": "6f299b31291ed105ba4b293ab3854e4be636099be63bada920b17406cc98e6ae"
+    },
+    {
+      "file": "input-smoke/progress.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "input-smoke/resource-time.log",
+      "bytes": 697,
+      "sha256": "3d0c1564463c4dbe85ad90645af7089f7b1ccce0f20d3235dc957b1ea0526112"
+    },
+    {
+      "file": "input-smoke/side-daylight-native.jpg",
+      "bytes": 1470243,
+      "sha256": "e0a158f2f08bb721f0060c0cb1f2c9107bf1ddd7c077a42ac43b35e6c3392d65"
+    },
+    {
+      "file": "input-smoke/window.log",
+      "bytes": 416,
+      "sha256": "5a37701a125755d39269230596edd4e639d608ee56ba1609079882881ade5bee"
+    },
+    {
+      "file": "movie/approach-preview.jpg",
+      "bytes": 488339,
+      "sha256": "6613cf4cc16f8a4971cb3d0bf5521e4f74ad7ec3c3d6a13d4be0d7a34ea62e78"
+    },
+    {
+      "file": "movie/approach.jpg",
+      "bytes": 1373818,
+      "sha256": "0811cf6bd38659051babc1d9de67d1830dfe2b289d72b181593efa63cfaca4d9"
+    },
+    {
+      "file": "movie/first-contact-preview.jpg",
+      "bytes": 529334,
+      "sha256": "7301e8848a484d680d473cd21f02b47a25347c3bd9e1cf7b417a69994d331cdc"
+    },
+    {
+      "file": "movie/first-contact.jpg",
+      "bytes": 1525323,
+      "sha256": "83197ad6ff7d36f5d9281fda24f50c6461080b92683b052ef9a767331c5bc170"
+    },
+    {
+      "file": "movie/gate-preview.jpg",
+      "bytes": 561032,
+      "sha256": "1abdc5475c1d9495b266abe24c8a413e759d76bf29ea16870e3b07658c1f2cf1"
+    },
+    {
+      "file": "movie/gate.jpg",
+      "bytes": 1627909,
+      "sha256": "004c5d3f089fa7a2c00469113dd117b0e8f73e10cdf913040eeb97cc21148855"
+    },
+    {
+      "file": "movie/input-and-camera.json",
+      "bytes": 709760,
+      "sha256": "49c4ed2d16b4f4f5781458d048a10e4e53603bd5d7b98b939764e72b0bfc662b"
+    },
+    {
+      "file": "movie/muster.jpg",
+      "bytes": 895008,
+      "sha256": "8c800cd8f6259178a484352e55b999c613827f6b01d9e655a249e29067544ff6"
+    },
+    {
+      "file": "movie/prepared-native.jpg",
+      "bytes": 1481771,
+      "sha256": "7333a93eb36f9fc65bda799aff9483c4f23b969072230471b012869217b4dce4"
+    },
+    {
+      "file": "movie/progress.jsonl",
+      "bytes": 25116,
+      "sha256": "9763611cd7aac2c1ca9e76a6fd93656a148899ab93984c2ce3791a7c785b00a6"
+    },
+    {
+      "file": "movie/recording.json",
+      "bytes": 5977,
+      "sha256": "ce47bb1fadfa0f1f4ce38a910e7406e7169badd48d94de9003ea2744a87503ac"
+    },
+    {
+      "file": "movie/resource-time.log",
+      "bytes": 697,
+      "sha256": "2a6c0b72f10721bb59d2a2ca6a5cbdcb91f03596046571ccf99a5aeb9a988c04"
+    },
+    {
+      "file": "movie/sequence.jpg",
+      "bytes": 246753,
+      "sha256": "84e4b8713142d449476ad4c3ee8be5e69ef55802d498f2ddbde0318f038e01b4"
+    },
+    {
+      "file": "movie/view-0015.jpg",
+      "bytes": 1290501,
+      "sha256": "3637bfa23949b6d2048a318ec8b798747ab2158cdf0b59be819a4c316e622a9a"
+    },
+    {
+      "file": "movie/view-0050.jpg",
+      "bytes": 1306029,
+      "sha256": "c3c1e8588a069f3060330cb9aca6b6cfcf1c4585980b016d2d5ddc7eabb0e58f"
+    },
+    {
+      "file": "movie/view-0075.jpg",
+      "bytes": 1331968,
+      "sha256": "585a37301ebbfd89b7e1e3dd1f615c83489c8c3d2b82200e0cb3b894ff039000"
+    },
+    {
+      "file": "movie/view-0105.jpg",
+      "bytes": 1375190,
+      "sha256": "10580df8d1a6d12e6d4e9d5216946e7db66a1beb7684dc518bc7fce8a8bf9877"
+    },
+    {
+      "file": "movie/view-0135.jpg",
+      "bytes": 1389474,
+      "sha256": "149b16836f447830485b0d2abfb0ee5d8550712621aadf5a861c559b94c1ba9b"
+    },
+    {
+      "file": "movie/view-0145.jpg",
+      "bytes": 1383041,
+      "sha256": "6adf36133089befd5768f92512187d616f4aa1d7e98f01bc79d68169067bc82d"
+    },
+    {
+      "file": "movie/view-0185.jpg",
+      "bytes": 1412397,
+      "sha256": "bb7f09caca82deb99c67a140e742b09a7e8a4f25c752168dd963ac15236a7089"
+    },
+    {
+      "file": "movie/view-0245.jpg",
+      "bytes": 1465135,
+      "sha256": "f997ae1d4f596d548fa797b743f97b7a253cc1e32b67bc1aa2f62a01bfd47db1"
+    },
+    {
+      "file": "movie/view-0355.jpg",
+      "bytes": 1506819,
+      "sha256": "6e65968076df6daabf9eac10fe848e9a5804d093b9dc291bc64ee3c1c28468cc"
+    },
+    {
+      "file": "movie/view-0460.jpg",
+      "bytes": 1496025,
+      "sha256": "a03daf1567e8e56dba4ec08258d00d72db2033b162520b5053d039473ff25bcd"
+    },
+    {
+      "file": "movie/window.log",
+      "bytes": 19185,
+      "sha256": "869007ad35a44e5dc8c3acf114144c2e031a7b561647cc73e61d184b8acb8c8e"
+    },
+    {
+      "file": "profile-qhd/frame-times/river-gate-1794641421-3050.jsonl",
+      "bytes": 31013,
+      "sha256": "bdbfa7760ce834f4c8c6054102307e1e27befb67a238921343e90128aa946740"
+    },
+    {
+      "file": "profile-qhd/input-and-camera.json",
+      "bytes": 35514,
+      "sha256": "970a179f31d2558cd905c5cb650608a14ed0b19ba7f66cefa65b27179052b7ea"
+    },
+    {
+      "file": "profile-qhd/muster.jpg",
+      "bytes": 894775,
+      "sha256": "e1616e6dc689ffa66d7f7f2daeb1b2e92c0c82fe7b3824c67a279174dcbb8a75"
+    },
+    {
+      "file": "profile-qhd/prepared-native.jpg",
+      "bytes": 1481873,
+      "sha256": "d162ee72d5879091439bdbf0598284a7ae8a9c2ca41754c408d3746a35c3bdcd"
+    },
+    {
+      "file": "profile-qhd/progress.jsonl",
+      "bytes": 29115,
+      "sha256": "6ac31c33dae1293c11fc92b470bee6ce27ecfca2dead3130e6c4493eec40de6c"
+    },
+    {
+      "file": "profile-qhd/resource-time.log",
+      "bytes": 697,
+      "sha256": "5ac63c6bb229068aeb4d5da640a4f0db0d6b9b29696ca9c51df2fca5ef38c9e5"
+    },
+    {
+      "file": "profile-qhd/window.log",
+      "bytes": 21272,
+      "sha256": "aaed5ccb1b7dc5591c6732251a0c204a1a68db69cc193632054392f5949a5223"
+    }
+  ],
+  "art_status": "ART_REBUILD_REQUIRED",
+  "device": "Hosted macOS, actual M5 DEVICE_NOT_RUN"
+}
