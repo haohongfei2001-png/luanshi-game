@@ -2,7 +2,7 @@ River Gate complete character master — source and adaptation
 
 The anatomical foundation is MakeHuman Community HM08 base.obj, default.mhskel
 and default_weights.mhw at revision a8bc2d54ff0ac92e78ff71431b1023eda42bf482.
-The upstream asset files identify CC0 1.0. The named upstream rights holders
+The upstream asset files identify CC0 1.0. The original author was Manuel Bastioni. The named upstream rights holders
 are Data Collection AB, Joel Palmius and Jonas Hauquier.
 https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md
 https://creativecommons.org/publicdomain/zero/1.0/
@@ -22,6 +22,7 @@ These are publicly editable game art from revision
 61a3b9507d974084e6badb88a0826bd89a6d5b8b, distributed CC BY-SA 3.0.
 https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/LICENSE.txt
 https://creativecommons.org/licenses/by-sa/3.0/
+Wildfire Games — https://www.wildfiregames.com/
 The COLLADA files identify their authoring tool as Blender 2.80 and the author
 field as Blender User. Attribution is to Wildfire Games and its contributors.
 No more specific personal authorship is asserted.

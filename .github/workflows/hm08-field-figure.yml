@@ -16,6 +16,8 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
+      - name: Keep the rejected first render separately
+        run: cp -a docs/evidence/river-gate-v1-rc23/character-master/after /tmp/first-person-after
       - name: Install the pinned runtime and known upstream clothing tools
         run: |
           set -eu
@@ -42,7 +44,7 @@ jobs:
           proof=docs/evidence/river-gate-v1-rc23/character-master
           cp scripts/field/company_art.gd /tmp/complete-company.gd
           curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/0315c9fc4665d33e7c2fc7d1e793b2c6cb82f725/scripts/field/company_art.gd -o scripts/field/company_art.gd
-          for side in before after; do
+          for side in after; do
             mkdir -p "$proof/$side"
             if [ "$side" = after ]; then
               /usr/bin/python3 tools/art/fetch_hand_source.py /tmp/river-hm08
@@ -57,6 +59,7 @@ jobs:
             grep ROBE_GAME_WINDOW "$proof/$side/window.log"
             cp artifacts/bridge-window/line-*.jpg artifacts/bridge-window/reverse-*.jpg artifacts/bridge-window/kit*.jpg artifacts/bridge-window/field.json "$proof/$side/"
           done
+          cp -a /tmp/first-person-after "$proof/rejected-first-after"
           /usr/bin/python3 - <<'PY'
           from PIL import Image
           import pathlib,json,numpy as np
@@ -71,6 +74,7 @@ jobs:
                   im=Image.open(path).convert("RGB")
                   assert im.size==(2560,1600)
                   pair.append(np.array(im,dtype=np.int16))
+                  im.save(root/side/(name+"-native-preview.jpg"),quality=78,subsampling=2)
                   im.thumbnail((1280,800));im.save(root/side/(name+"-window.jpg"),quality=91,subsampling=0)
               delta=np.max(abs(pair[0]-pair[1]),axis=-1)
               out[name]={"pixels_changed_12":int((delta>12).sum()),"pixels_changed_25":int((delta>25).sum())}

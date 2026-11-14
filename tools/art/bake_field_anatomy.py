@@ -30,7 +30,8 @@ def checked(folder,path,digest):
     return raw.decode()
 def frame(axis):
     axis=axis/np.linalg.norm(axis)
-    lateral=np.cross(axis,[0.,0.,1.])
+    reference=np.array([0.,1.,0.]) if abs(axis[2])>.95 else np.array([0.,0.,1.])
+    lateral=np.cross(axis,reference)
     lateral/=np.linalg.norm(lateral)
     return np.stack([lateral,np.cross(axis,lateral),axis],axis=1)
 def fit(point,first,last,start,end):
@@ -136,6 +137,7 @@ def main():
                 weights=(*weights,amount)
             source_pos.append(position)
             compact_weights.append(weights)
+        assert np.isfinite(source_pos).all(), (name,"non-finite fitted anatomy")
         kd=KDTree(len(used))
         for i,v in enumerate(source_pos): kd.insert(Vector(v),i)
         kd.balance()
@@ -150,6 +152,13 @@ def main():
                 bmesh.ops.holes_fill(bm,edges=[e for e in bm.edges if e.is_boundary],sides=0)
                 bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
                 bm.to_mesh(mesh);bm.free();mesh.update()
+            if name=="head":
+                chart_xy=mesh.uv_layers.new(name="Original face XY")
+                chart_z=mesh.uv_layers.new(name="Original face Z")
+                for loop in mesh.loops:
+                    x,y,z=chart[used[loop.vertex_index]]
+                    chart_xy.data[loop.index].uv=(x,y)
+                    chart_z.data[loop.index].uv=(z,0.)
             obj=bpy.data.objects.new(name+tier,mesh);bpy.context.collection.objects.link(obj)
             bpy.context.view_layer.objects.active=obj
             if name=="feet":
@@ -164,13 +173,29 @@ def main():
             final=obj.data
             final.calc_loop_triangles()
             verts=[list(v.co) for v in final.vertices]
+            assert np.isfinite(verts).all(), (name,tier,"non-finite reduced anatomy")
+            assert len(final.loop_triangles)<=budget*1.1, (name,tier,len(final.loop_triangles),budget)
             nearest=[kd.find(v.co)[1] for v in final.vertices]
-            result={"p":[[round(a,6) for a in v] for v in verts],
-                    "f":[list(t.vertices) for t in final.loop_triangles],
-                    "w":[compact_weights[i] for i in nearest],
-                    "chart":[chart[used[i]].round(5).tolist() for i in nearest]}
+            result={"p":[],"f":[],"w":[],"chart":[]}
+            remapped={}
+            for triangle in final.loop_triangles:
+                face=[]
+                for i,loop in zip(triangle.vertices,triangle.loops):
+                    sample=chart[used[nearest[i]]].round(5).tolist()
+                    if name=="head":
+                        a=final.uv_layers["Original face XY"].data[loop].uv
+                        z=final.uv_layers["Original face Z"].data[loop].uv[0]
+                        sample=[round(a[0],5),round(a[1],5),round(z,5)]
+                    key=(i,*sample)
+                    if key not in remapped:
+                        remapped[key]=len(result["p"])
+                        result["p"].append([round(a,6) for a in verts[i]])
+                        result["chart"].append(sample)
+                        result["w"].append(compact_weights[nearest[i]])
+                    face.append(remapped[key])
+                result["f"].append(face)
             data[name+tier]=result
-            print("MATURE_FIELD_SURFACE",name,tier,len(verts),len(result["f"]),flush=True)
+            print("MATURE_FIELD_SURFACE",name,tier,len(result["p"]),len(result["f"]),flush=True)
     out=Path(__file__).with_name("source")/"field_anatomy.json"
     out.write_text(json.dumps(data,separators=(",",":"))+"\n")
     Path("reports/hm08").mkdir(parents=True,exist_ok=True)

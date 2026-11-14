@@ -63,6 +63,9 @@ def anatomical_body(look,tier,data):
                 if key not in used:
                     p=list(mesh["p"][i]);sx,sy,sz=mesh["chart"][i]
                     if part=="head":
+                        neck=max(0.,min(1.,(1.525-p[1])/.090))
+                        p[0]*=1.-.21*neck
+                        p[2]=.012+(p[2]-.012)*(1.-.16*neck)
                         jaw=max(0,min(1,(7.1-sy)/1.37))
                         if look in ("Guard","Officer"): p[0]*=1.+.09*jaw
                         elif look=="Levy": p[0]*=1.-.08*jaw
@@ -90,6 +93,7 @@ def main():
             body=anatomical_body(look,tier,data)
             append(body,cloth);append(body,headgear)
             if look=="Player": player_half_mantle(body,rank=tier=="Rank")
+            assert np.isfinite(body.positions).all(), (look,tier)
             library.insert(look+tier+"Master",body,check_tiles=False)
             record[look+tier]={"triangles":len(body.faces),"vertices":len(body.positions)}
             print("COMPLETE_FIELD_PERSON",look,tier,record[look+tier],flush=True)
