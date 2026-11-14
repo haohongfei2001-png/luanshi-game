@@ -59,7 +59,7 @@ jobs:
             grep ROBE_GAME_WINDOW "$proof/$side/window.log"
             cp artifacts/bridge-window/line-*.jpg artifacts/bridge-window/reverse-*.jpg artifacts/bridge-window/kit*.jpg artifacts/bridge-window/field.json "$proof/$side/"
           done
-          cp -a /tmp/first-person-after "$proof/rejected-first-after"
+          if [ ! -d "$proof/rejected-first-after" ]; then cp -a /tmp/first-person-after "$proof/rejected-first-after"; fi
           /usr/bin/python3 - <<'PY'
           from PIL import Image
           import pathlib,json,numpy as np

@@ -162,10 +162,27 @@ def main():
             obj=bpy.data.objects.new(name+tier,mesh);bpy.context.collection.objects.link(obj)
             bpy.context.view_layer.objects.active=obj
             if name=="feet":
-                obj.data.remesh_voxel_size=.006
-                bpy.ops.object.voxel_remesh()
-                smooth=obj.modifiers.new("Sewn leather last","SMOOTH");smooth.factor=.65;smooth.iterations=2
-                bpy.ops.object.modifier_apply(modifier=smooth.name)
+                # A leather shoe encloses the original anatomical last. Build
+                # each foot's outer hull independently so the separated toe
+                # islands and open ankle cannot become a voxel wire lattice.
+                hp,hf=[],[]
+                for side in (-1,1):
+                    bm=bmesh.new()
+                    for point in source_pos:
+                        if point[0]*side>0: bm.verts.new(tuple(point))
+                    bm.verts.ensure_lookup_table()
+                    result=bmesh.ops.convex_hull(bm,input=list(bm.verts),use_existing_faces=False)
+                    unused=[v for v in bm.verts if not v.link_faces]
+                    if unused: bmesh.ops.delete(bm,geom=unused,context="VERTS")
+                    bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
+                    bm.verts.index_update()
+                    offset=len(hp)
+                    hp.extend(tuple(v.co) for v in bm.verts)
+                    hf.extend(tuple(v.index+offset for v in f.verts) for f in bm.faces)
+                    bm.free()
+                replacement=bpy.data.meshes.new("Closed anatomical shoe")
+                replacement.from_pydata(hp,[],hf);replacement.update()
+                obj.data=replacement
             dec=obj.modifiers.new("Field surface reduction","DECIMATE")
             budget={"head":(1100,360,100),"forearms":(360,150,60),"legs":(560,240,100),"feet":(220,100,48)}[name][("Close","Line","Rank").index(tier)]
             dec.ratio=min(ratio,budget/max(1,sum(len(p.vertices)-2 for p in obj.data.polygons)));dec.use_collapse_triangulate=True
