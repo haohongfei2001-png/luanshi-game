@@ -45,3 +45,5 @@ static PNG and this rejected attempt remain separate; no stretching, mirroring,
 procedural repaint or false frame-completion claim is used to hide the failure.
 
 M5:NOT_TESTED. True battle integration:NOT_TESTED. Art:NOT_ACCEPTED.
+
+Second bounded correction attempt: `exec-6038a937-24ef-4029-abac-2f58a1efb82d.png`, SHA256`b65a3b9a81a8ec668293a34e9634fb6b11b77e25add7e2d094010e6067621ae8`. Helmet crest restored, but phases3/7 again lift the same apparent leg rather than alternating support. Rejected before gameplay/CI. Stop repeating uncontrolled eight-frame generation; neither attempt constitutes a usable authored walking cycle.
