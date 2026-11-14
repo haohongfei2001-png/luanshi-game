@@ -1,0 +1,118 @@
+{
+  "independent_recovered_source_sha256": "c289e03bbc3bc48cbc00a792aeab53c560e8f4b66c538b4aa37f1b0ea235cf82",
+  "actual945b_cache_source": {
+    "walk": {
+      "sha256": "b0a4c90b9c792565c3fb0b2dd0f3ce4b673b0bfe75408c26ee1f99cb184b5b50",
+      "bytes": 175482048
+    },
+    "thrust": {
+      "sha256": "1418ecf933ec85641196f4daf53abae3dfc61b9e8df94584b86bcf64192e523f",
+      "bytes": 71236528
+    }
+  },
+  "same_blend_bytes_claimed": false,
+  "positions_match_within_2e5_m": true,
+  "UV_exact": true,
+  "normals_match_within_2e5": false,
+  "normal_scope": "Measured maximum vector difference0.000354; not exact original CI normals. Future GPU reference is this separately SHA-pinned mother evaluated directly, never silently replacing old CI normals.",
+  "matching_scope": "Four head parts at common authored walk0/.5/1. No clothing/whole-mother equivalence claim.",
+  "rows": [
+    {
+      "mesh": "Eyes",
+      "pose": "walk-0",
+      "vertices": 1076,
+      "max_position_error_m": 3.823099020322412e-07,
+      "max_normal_vector_error": 9.31163356999472e-05,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "walk-0",
+      "vertices": 4346,
+      "max_position_error_m": 3.693113843021908e-07,
+      "max_normal_vector_error": 0.00034380167458561943,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "walk-0",
+      "vertices": 124,
+      "max_position_error_m": 2.6708668776095576e-07,
+      "max_normal_vector_error": 0.00011288363229088844,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "walk-0",
+      "vertices": 250,
+      "max_position_error_m": 3.7726726833498965e-07,
+      "max_normal_vector_error": 0.0002774608227429328,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "walk-50",
+      "vertices": 1076,
+      "max_position_error_m": 4.882404747405001e-07,
+      "max_normal_vector_error": 5.571899451515358e-05,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "walk-50",
+      "vertices": 4346,
+      "max_position_error_m": 5.409316818190648e-07,
+      "max_normal_vector_error": 0.0003535962045304423,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "walk-50",
+      "vertices": 124,
+      "max_position_error_m": 2.667227207228677e-07,
+      "max_normal_vector_error": 0.00020511030681072615,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "walk-50",
+      "vertices": 250,
+      "max_position_error_m": 5.108344647789312e-07,
+      "max_normal_vector_error": 0.00023700561828505422,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "walk-100",
+      "vertices": 1076,
+      "max_position_error_m": 4.75729927132862e-07,
+      "max_normal_vector_error": 9.36363629664586e-05,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "walk-100",
+      "vertices": 4346,
+      "max_position_error_m": 3.693113843021908e-07,
+      "max_normal_vector_error": 0.0003436385306239807,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "walk-100",
+      "vertices": 124,
+      "max_position_error_m": 3.169398958791919e-07,
+      "max_normal_vector_error": 0.00011289297525945225,
+      "max_uv_error": 0.0
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "walk-100",
+      "vertices": 250,
+      "max_position_error_m": 3.579381748874281e-07,
+      "max_normal_vector_error": 0.000277552358857353,
+      "max_uv_error": 0.0
+    }
+  ],
+  "art_pass": false
+}
