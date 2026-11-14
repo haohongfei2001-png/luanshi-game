@@ -43,6 +43,7 @@ enum DisplayChoice { WINDOW, SCREEN, QHD, UHD }
 const DISPLAY_PIXELS:=[Vector2i.ZERO,Vector2i.ZERO,Vector2i(2560,1440),Vector2i(3840,2160)]
 var windowed_size:=Vector2i.ZERO
 var windowed_position:=Vector2i.ZERO
+var display_measure_pending:=false
 var last_hero_hit:=-100
 var step_distance:=0.0
 const QUALITY_FILE:="user://river-gate-graphics.cfg"
@@ -231,9 +232,16 @@ func _refresh_display() -> void:
 	for i in range(DisplayChoice.QHD,DISPLAY_PIXELS.size()):
 		var wanted:Vector2i=DISPLAY_PIXELS[i]
 		hud.display_mode.set_item_disabled(i,wanted.x>screen.x or wanted.y>screen.y)
-	var pixels:=win.get_texture().get_size()
-	if pixels.x>0 and pixels.y>0:
-		var rendered:=Vector2i((Vector2(pixels)*win.scaling_3d_scale).round())
+	if display_measure_pending: return
+	display_measure_pending=true
+	await RenderingServer.frame_post_draw
+	if not is_instance_valid(win) or not is_inside_tree(): return
+	# The stretched root ViewportTexture reports logical canvas dimensions.
+	# Measure the actual color attachment once after a display change.
+	var image:=win.get_texture().get_image()
+	display_measure_pending=false
+	if image!=null and not image.is_empty():
+		var rendered:=Vector2i((Vector2(image.get_size())*win.scaling_3d_scale).round())
 		hud.physical_size.text="3D  %d × %d"%[rendered.x,rendered.y]
 
 func _choose_display(index: int,remember: bool=true) -> void:

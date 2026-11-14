@@ -289,7 +289,7 @@ func _bank_foundation(channel:float,moat:bool) -> void:
 			var center:=channel if moat else Ground.river_center(z)
 			var face:=_piece(CLIFF,"coastal_cliff_02_LOD0",
 				Vector3(center+side*(5.0 if moat else 5.8),.10,z),Vector3.ONE*.40,
-				PI*.5 if side>0. else -PI*.5,anchor)
+				-PI*.5 if side>0. else PI*.5,anchor)
 			face.name="EmbeddedRockBank"
 			face.lod_bias=.9
 
