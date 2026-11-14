@@ -10,10 +10,18 @@ to Input.parse_input_event applies stretch again. Actual Godot4.6.3 headless
 round trip at root2560x1440/logic1422x800:400,300 arrives222.1875,166.6667.
 This turns aim away from movement and correctly triggers strafe fallback.
 The opt-in harness now uses viewport.get_final_transform before the native
-Input event and records emitted plus actual Controller pointer coordinates.
+Input event. Correction: frozen6c53 only recorded the requested logical position;
+its attempted actual-pointer logging edit was not present. Do not claim those
+logs contain observed Controller coordinates. The separate contact harness adds
+requested logical/native and observed Controller pointer/ground aim receipts.
 Test proves unconverted route misses, corrected600,500 arrives600.0001,500.
 No Battle writes, default Controller change or OS pointer warp. Actual Metal
-retest remains required; this is not source walk rejection or acceptance.
+05 retest run43652380636 still showed0 authoredWalk,69 strafe fallback,135 idle,
+35 thrust and0 hero hits. Coordinate roundtrip is NOT a real-game fix claim.
+Long8m aim can also hit intervening bank:2m/4m CPU ground targets inverted
+correctly while8m hit a different surface. Original05 lacks observed pointer
+receipts, so do not assert an OS overwrite as its cause. The next contact harness
+uses short2m movement aim and observes both walking and attack ground hits.
 
 Old body receipts incorrectly called ViewportTexture metadata4608x2592 native
 attachment. Same-engine_drawn JPEGs are2560x1440. Screen fraction13.2892647%
