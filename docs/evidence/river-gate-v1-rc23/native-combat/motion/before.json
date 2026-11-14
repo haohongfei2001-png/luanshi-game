@@ -1,0 +1,2084 @@
+{
+  "duration": 2.4,
+  "fps": 20,
+  "frames": 48,
+  "index": [
+    {
+      "actor": 80,
+      "camera_close": [
+        35.6834182739258,
+        0.748836994171143,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.0,
+      "facing": [
+        0.97750449180603,
+        0.210914626717567
+      ],
+      "hits": [
+        12,
+        24
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        4,
+        1
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 588,
+      "team": 0,
+      "tick": 17,
+      "timer": 0.0,
+      "travel": 0.138255998492241,
+      "xz": [
+        35.6834182739258,
+        0.748836994171143
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        35.8180618286133,
+        0.780228674411774,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.0,
+      "facing": [
+        0.977662086486816,
+        0.21018260717392
+      ],
+      "hits": [
+        13,
+        27
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        4,
+        1
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 588,
+      "team": 0,
+      "tick": 18,
+      "timer": 0.0,
+      "travel": 0.138254567980766,
+      "xz": [
+        35.8180618286133,
+        0.780228674411774
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        35.951961517334,
+        0.814897537231445,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.0,
+      "facing": [
+        0.97243344783783,
+        0.233180567622185
+      ],
+      "hits": [
+        14,
+        30
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        4,
+        1
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 588,
+      "team": 0,
+      "tick": 19,
+      "timer": 0.0,
+      "travel": 0.138315066695213,
+      "xz": [
+        35.951961517334,
+        0.814897537231445
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.0864639282227,
+        0.774592995643616,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.0,
+      "facing": [
+        0.972656548023224,
+        0.232248321175575
+      ],
+      "hits": [
+        16,
+        33
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        5,
+        1
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 588,
+      "team": 0,
+      "tick": 20,
+      "timer": 0.0,
+      "travel": 0.140411376953125,
+      "xz": [
+        36.0864639282227,
+        0.774592995643616
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.2191886901855,
+        0.741003513336182,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.0,
+      "facing": [
+        0.960183084011078,
+        0.279371649026871
+      ],
+      "hits": [
+        18,
+        39
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        6,
+        1
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 588,
+      "team": 0,
+      "tick": 21,
+      "timer": 0.0,
+      "travel": 0.136909142136574,
+      "xz": [
+        36.2191886901855,
+        0.741003513336182
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.0,
+      "facing": [
+        0.95093184709549,
+        0.30940055847168
+      ],
+      "hits": [
+        21,
+        47
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        6,
+        2
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 588,
+      "team": 0,
+      "tick": 22,
+      "timer": 0.0,
+      "travel": 0.13463781774044,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        24,
+        51
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        8,
+        3
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 588,
+      "team": 0,
+      "tick": 23,
+      "timer": 0.2,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        27,
+        53
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        8,
+        3
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 588,
+      "team": 0,
+      "tick": 24,
+      "timer": 0.15,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        32,
+        54
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        9,
+        3
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 588,
+      "team": 0,
+      "tick": 25,
+      "timer": 0.1,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        32,
+        57
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        10,
+        3
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 588,
+      "team": 0,
+      "tick": 26,
+      "timer": 0.05,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        32,
+        60
+      ],
+      "hp": 62.0,
+      "impacts": 0,
+      "kit": 0,
+      "losses": [
+        12,
+        3
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 588,
+      "team": 0,
+      "tick": 27,
+      "timer": 0.0000000000000000138777878078145,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        33,
+        60
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        12,
+        4
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 2,
+      "target": 588,
+      "team": 0,
+      "tick": 28,
+      "timer": 0.34,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        33,
+        61
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        12,
+        4
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 2,
+      "target": 588,
+      "team": 0,
+      "tick": 29,
+      "timer": 0.29,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        35,
+        64
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        14,
+        5
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 2,
+      "target": 588,
+      "team": 0,
+      "tick": 30,
+      "timer": 0.24,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        38,
+        69
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        16,
+        5
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 2,
+      "target": 588,
+      "team": 0,
+      "tick": 31,
+      "timer": 0.19,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        40,
+        70
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        6
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 2,
+      "target": 588,
+      "team": 0,
+      "tick": 32,
+      "timer": 0.14,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        47,
+        71
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        6
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 2,
+      "target": 588,
+      "team": 0,
+      "tick": 33,
+      "timer": 0.0900000000000001,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        49,
+        72
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        7
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 2,
+      "target": 588,
+      "team": 0,
+      "tick": 34,
+      "timer": 0.0400000000000001,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.3505973815918,
+        0.711693167686462,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.940285980701447,
+        0.340385347604752
+      ],
+      "hits": [
+        52,
+        72
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        7
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 588,
+      "team": 0,
+      "tick": 35,
+      "timer": 0.0,
+      "travel": 0.0,
+      "xz": [
+        36.3505973815918,
+        0.711693167686462
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.5078582763672,
+        0.709644436836243,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.975119292736053,
+        0.221680909395218
+      ],
+      "hits": [
+        53,
+        73
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        8
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 596,
+      "team": 0,
+      "tick": 36,
+      "timer": 0.0,
+      "travel": 0.15727424621582,
+      "xz": [
+        36.5078582763672,
+        0.709644436836243
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.34,
+      "facing": [
+        0.971198976039886,
+        0.238270103931427
+      ],
+      "hits": [
+        54,
+        73
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        8
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 0,
+      "target": 596,
+      "team": 0,
+      "tick": 37,
+      "timer": 0.0,
+      "travel": 0.156704261898994,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        60,
+        76
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        8
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 596,
+      "team": 0,
+      "tick": 38,
+      "timer": 0.2,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        60,
+        76
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        8
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 596,
+      "team": 0,
+      "tick": 39,
+      "timer": 0.15,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": -100,
+      "duration": 0.2,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        61,
+        76
+      ],
+      "hp": 62.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        8
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 0,
+      "state": 1,
+      "target": 596,
+      "team": 0,
+      "tick": 40,
+      "timer": 0.1,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 41,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        61,
+        77
+      ],
+      "hp": 39.8905643820763,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        8
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 1,
+      "state": 4,
+      "target": 596,
+      "team": 0,
+      "tick": 41,
+      "timer": 0.12,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 41,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        63,
+        79
+      ],
+      "hp": 39.8905643820763,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        9
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 1,
+      "state": 4,
+      "target": 596,
+      "team": 0,
+      "tick": 42,
+      "timer": 0.07,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 41,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        64,
+        79
+      ],
+      "hp": 39.8905643820763,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        9
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 1,
+      "state": 4,
+      "target": 596,
+      "team": 0,
+      "tick": 43,
+      "timer": 0.02,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 44,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        65,
+        83
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        9
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "state": 4,
+      "target": 596,
+      "team": 0,
+      "tick": 44,
+      "timer": 0.17,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 44,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        68,
+        91
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        20,
+        9
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "state": 4,
+      "target": 596,
+      "team": 0,
+      "tick": 45,
+      "timer": 0.12,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 44,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        71,
+        94
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        22,
+        11
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "state": 4,
+      "target": 596,
+      "team": 0,
+      "tick": 46,
+      "timer": 0.07,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 44,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        72,
+        97
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        22,
+        12
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "state": 4,
+      "target": 596,
+      "team": 0,
+      "tick": 47,
+      "timer": 0.02,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        77,
+        100
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        15
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 48,
+      "timer": 0.7,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        80,
+        101
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        18
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 49,
+      "timer": 0.65,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        82,
+        104
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        19
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 50,
+      "timer": 0.6,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        84,
+        104
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        19
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 51,
+      "timer": 0.55,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        85,
+        106
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        19
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 52,
+      "timer": 0.5,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        89,
+        109
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        24,
+        20
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 53,
+      "timer": 0.45,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        90,
+        113
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        27,
+        20
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 54,
+      "timer": 0.4,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        91,
+        117
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        27,
+        21
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 55,
+      "timer": 0.35,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        97,
+        120
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        28,
+        22
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 56,
+      "timer": 0.3,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        98,
+        127
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        30,
+        22
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 57,
+      "timer": 0.25,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        99,
+        130
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        32,
+        23
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 58,
+      "timer": 0.2,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        100,
+        131
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        32,
+        24
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 59,
+      "timer": 0.15,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        100,
+        133
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        33,
+        24
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 60,
+      "timer": 0.0999999999999999,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        100,
+        135
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        24
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 61,
+      "timer": 0.0499999999999999,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        101,
+        136
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        25
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 62,
+      "timer": 0.0,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        104,
+        136
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        26
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 63,
+      "timer": 0.0,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "camera_close": [
+        36.6645622253418,
+        0.709959626197815,
+        6.3,
+        2.02346962386948
+      ],
+      "contact_blocked": false,
+      "contact_tick": 48,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "hits": [
+        104,
+        136
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        26
+      ],
+      "move_slot": 0,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "state": 7,
+      "target": 596,
+      "team": 0,
+      "tick": 64,
+      "timer": 0.0,
+      "travel": 0.0,
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    }
+  ],
+  "kind": "consecutive original-speed actual game steps, no realtime performance claim",
+  "normal_camera": [
+    34.2000007629395,
+    1.0,
+    22.0,
+    -0.575958653158129
+  ],
+  "scale": 1.0,
+  "seed": 61112,
+  "size": [
+    2560,
+    1600
+  ]
+}

@@ -1,0 +1,4 @@
+a6912c6f1ed774d06039afeefab6873c0181b4098e1cc7c7ec76c9d6d57a46ef  docs/evidence/river-gate-v1-rc23/native-combat/motion/after-close.mp4
+fe1fb30ee3fb53a0703538d0bebf92e840c2ac8216a32f42d2b54511422121e8  docs/evidence/river-gate-v1-rc23/native-combat/motion/after-normal.mp4
+6141ecca223b0b877da2756bf1a778196db739c9228ae24eee707172ce4f2e68  docs/evidence/river-gate-v1-rc23/native-combat/motion/before-close.mp4
+801903f701a3ec35c1f68de18e919af225824bcf6be71970eb13194aee1edc99  docs/evidence/river-gate-v1-rc23/native-combat/motion/before-normal.mp4
