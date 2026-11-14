@@ -7,6 +7,8 @@ func run() -> void:
 	var args:=OS.get_cmdline_user_args();assert(args.size()==1)
 	var packed:=load(args[0]) as PackedScene;assert(packed)
 	var scene:=packed.instantiate();root.add_child(scene)
+	assert(scene.get_meta("survey_bounds")==Rect2(-144.,-112.,304.,224.))
+	assert(float(scene.get_meta("survey_step_m"))==.5)
 	var terrains:=0;var shapes:=0;var water_triangles:=0;var max_water_dry:=0.;var max_support_error:=0.
 	for mesh:MeshInstance3D in scene.find_children("*","MeshInstance3D",true,false):
 		var arrays:=mesh.mesh.surface_get_arrays(0);var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
@@ -25,7 +27,7 @@ func run() -> void:
 				if p.x>=29.95 and p.x<=46.6 and absf(p.z)<=3.7:max_support_error=maxf(max_support_error,absf(p.y-Surface.height(Vector2(p.x,p.z))))
 	for collision:CollisionShape3D in scene.find_children("*","CollisionShape3D",true,false):
 		assert(collision.shape is ConcavePolygonShape3D);shapes+=1
-	assert(terrains==42 and shapes==42 and water_triangles>1000)
+	assert(terrains==266 and shapes==266 and water_triangles>1000)
 	assert(max_water_dry<.05 and max_support_error<.02,"Surface sampling insufficient")
 	print("LANDFORM_MESH_PASS ",JSON.stringify({"terrain_tiles":terrains,"collision_shapes":shapes,"water_triangles":water_triangles,"max_water_contour_error_m":max_water_dry,"max_route_interpolation_error_m":max_support_error,"graphics":"NOT_RUN"}))
 	scene.free();quit()

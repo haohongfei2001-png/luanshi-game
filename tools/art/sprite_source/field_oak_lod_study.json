@@ -1,0 +1,26 @@
+{
+  "status": "GEOMETRY_STUDY_NOT_QUALITY_OR_PERFORMANCE_ACCEPTANCE",
+  "default_ratio": 0.5,
+  "rules": [
+    {
+      "prefix": "GEO-leaves-oak",
+      "ratio": 0.012
+    },
+    {
+      "prefix": "GEO-tree_branch_medium",
+      "ratio": 0.65
+    },
+    {
+      "prefix": "GEO-tree_branch_small",
+      "ratio": 0.45
+    },
+    {
+      "prefix": "GEO-tree_branch_twig",
+      "ratio": 0.3
+    },
+    {
+      "prefix": "GEO-branch.",
+      "ratio": 0.02
+    }
+  ]
+}

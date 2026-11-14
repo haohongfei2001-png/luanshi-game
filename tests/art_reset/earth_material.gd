@@ -10,7 +10,7 @@ func run() -> void:
 		for node:MeshInstance3D in scene.find_children("Survey_*","MeshInstance3D",true,false):
 			var material:=node.material_override as ShaderMaterial;assert(material)
 			if shared==null:shared=material
-			assert(shared==material,"42 tiles should share one material")
+			assert(shared==material,"All survey tiles should share one material")
 			assert(material.get_shader_parameter("earth_enabled")==true)
 			assert(float(material.get_shader_parameter("earth_width_m"))==2.)
 			for key in ["earth_albedo","earth_normal","earth_roughness"]:
