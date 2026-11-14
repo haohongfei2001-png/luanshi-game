@@ -1,0 +1,37 @@
+name: Author whole river willows and complete fort structures
+on:
+  push:
+    branches: ['codex/river-world-composition']
+    paths: ['.github/workflows/world-composition.yml','tools/art/build_river_willows.py','tools/art/build_river_architecture.py']
+permissions:
+  contents: write
+jobs:
+  author:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the connected architecture and foliage masters
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender python3-numpy python3-pil
+          /usr/bin/python3 tools/art/build_river_architecture.py "$RUNNER_TEMP/han-buildings" | tee /tmp/architecture.log
+          blender --background --factory-startup --python tools/art/build_river_willows.py -- "$RUNNER_TEMP/river-willows" > /tmp/willow-authoring.log 2>&1 || { tail -n 65 /tmp/willow-authoring.log; exit 1; }
+          cat /tmp/willow-authoring.log
+          test -s assets/river_gate/world/willows/river_willow_0.glb
+          test -s assets/river_gate/world/architecture/river_fort.glb
+      - name: Save complete editable masters and their provenance
+        run: |
+          set -euo pipefail
+          git add assets/river_gate/world/architecture assets/river_gate/world/willows
+          git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Restore complete native architectural surfaces and connected willow geometry for the world rebuild'
+          git push origin HEAD:refs/heads/codex/river-world-composition
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-world-authored-masters
+          path: |
+            assets/river_gate/world/
+            /tmp/architecture.log
+            /tmp/willow-authoring.log
