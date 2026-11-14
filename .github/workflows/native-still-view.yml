@@ -14,7 +14,8 @@ jobs:
         run: |
           set -euo pipefail
           cd docs/evidence/river-gate-v1-rc22/native-bridgehead
-          /usr/bin/python3 - <<'PY'
+          python3 -c 'from PIL import Image' || python3 -m pip install --quiet --disable-pip-version-check 'Pillow==11.3.0'
+          python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
           for p in Path(".").glob("*.png"):
