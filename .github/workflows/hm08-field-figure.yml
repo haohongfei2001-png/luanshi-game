@@ -18,8 +18,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Preserve the actual previous full-person windows
         run: |
-          mkdir -p docs/evidence/river-gate-v1-rc23/character-master-fitted
-          cp -a docs/evidence/river-gate-v1-rc23/character-master/after docs/evidence/river-gate-v1-rc23/character-master-fitted/before
+          mkdir -p docs/evidence/river-gate-v1-rc23/character-master-finished-surface
+          cp -a docs/evidence/river-gate-v1-rc23/character-master/after docs/evidence/river-gate-v1-rc23/character-master-finished-surface/before
       - name: Install the pinned runtime and known upstream clothing tools
         run: |
           set -eu
@@ -29,7 +29,7 @@ jobs:
           sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           if ! command -v blender >/dev/null || ! command -v xdotool >/dev/null || ! /usr/bin/python3 -c 'import PIL,numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool python3-numpy python3-pil blender ffmpeg; fi
           ./tools/prepare-font.sh
-          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/character-master-fitted
+          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/character-master-finished-surface
           touch artifacts/.gdignore
           cat >override.cfg <<'CFG'
           [display]
@@ -38,12 +38,12 @@ jobs:
           CFG
       - name: Keep evidence outside Godot's resource import
         run: |
-          touch docs/evidence/river-gate-v1-rc23/character-master-fitted/.gdignore
+          touch docs/evidence/river-gate-v1-rc23/character-master-finished-surface/.gdignore
       - name: Photograph both complete 2560 x 1600 windows on matching soldiers
         shell: bash
         run: |
           set -euo pipefail
-          proof=docs/evidence/river-gate-v1-rc23/character-master-fitted
+          proof=docs/evidence/river-gate-v1-rc23/character-master-finished-surface
           cp scripts/field/company_art.gd /tmp/complete-company.gd
           for side in after; do
             mkdir -p "$proof/$side"
@@ -67,7 +67,7 @@ jobs:
           /usr/bin/python3 - <<'PY'
           from PIL import Image
           import pathlib,json,numpy as np
-          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master-fitted")
+          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master-finished-surface")
           assert json.loads((root/"before"/"field.json").read_bytes())==json.loads((root/"after"/"field.json").read_bytes())
           out={}
           for name in ("line-055","line-105","line-135","line-185","reverse-135","kit3-135","kit5-135","kit7-135"):
@@ -92,7 +92,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          proof=docs/evidence/river-gate-v1-rc23/character-master-fitted/diagnostic
+          proof=docs/evidence/river-gate-v1-rc23/character-master-finished-surface/diagnostic
           mkdir -p "$proof"
           timeout 4m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/person_surface_diagnostic.gd >"$proof/window.log" 2>&1
           grep PERSON_DIAGNOSTIC "$proof/window.log"
@@ -101,7 +101,7 @@ jobs:
           /usr/bin/python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
-          p=Path("docs/evidence/river-gate-v1-rc23/character-master-fitted/diagnostic")
+          p=Path("docs/evidence/river-gate-v1-rc23/character-master-finished-surface/diagnostic")
           for mode in ("actual","clay","normal","unlit"):
               im=Image.open(p/(mode+".jpg"))
               im.save(p/(mode+"-native-preview.jpg"),quality=78,subsampling=2)
@@ -112,13 +112,13 @@ jobs:
       - name: Show the actual import and window errors
         if: failure()
         run: |
-          for f in docs/evidence/river-gate-v1-rc23/character-master-fitted/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
+          for f in docs/evidence/river-gate-v1-rc23/character-master-finished-surface/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: complete-character-master-2k
           path: |
-            docs/evidence/river-gate-v1-rc23/character-master-fitted
+            docs/evidence/river-gate-v1-rc23/character-master-finished-surface
             artifacts/bridge-window
             assets/river_gate/figures/field_company_master.glb
             tools/art/source/field_anatomy.json

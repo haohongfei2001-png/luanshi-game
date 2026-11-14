@@ -19,6 +19,8 @@ varying float sewn_shadow;
 varying flat int cloth_panel;
 varying vec3 bind_point;
 
+#include "res://scripts/field/field_person_pigment.gdshaderinc"
+
 vec3 rotated(vec4 q, vec3 v) {
     return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
 }
@@ -190,17 +192,17 @@ void vertex() {
         if (cloth_lot>.72) UV+=vec2(.125,.25);
         else if (cloth_lot>.31) UV.y+=.25;
     }
-    cloth_panel=UV.x>=3.0 ? 33 : (UV.x>=2.0 ? 32 : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0)));
+    cloth_panel=UV.x>=2.0 ? 30+int(floor(UV.x)) : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0));
     flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
 void fragment() {
-    vec4 swatch = cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV);
+    vec4 swatch = cloth_panel>=34 ? vec4(field_person_pigment(cloth_panel,UV,bind_point,cloth_lot),0.) : (cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV));
     vec3 ink = swatch.rgb;
     // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
     // their own values even where soldiers overlap in the default orthographic view.
     float dye = 0.0;
-    if (cloth_panel>=32) dye=swatch.a;
+    if (cloth_panel==32 || cloth_panel==33) dye=swatch.a;
     else if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = .96;
     else if (cloth_panel == 22) dye = .82;
     else if (cloth_panel == 26) dye = .66;
@@ -313,4 +315,4 @@ void fragment() {
     SPECULAR = 0.0;
 }
 
-#include "res://scripts/field/cloth_light.gdshaderinc"
+#include "res://scripts/field/field_person_light.gdshaderinc"

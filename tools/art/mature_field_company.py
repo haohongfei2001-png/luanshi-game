@@ -46,8 +46,7 @@ def anatomical_body(look,tier,data):
                 brow=7.+.44*math.cos(angle)+.07*math.sin(angle+.4)
                 if heavy and sy>brow+.10: continue
                 if not heavy and sy>7.13+.33*math.cos(angle): continue
-                hairline=6.62+.86*max(0,min(1,(sz+.32)/1.66))-.12*abs(sx)
-                material="hair" if sy>hairline else ("visage" if sz>.60 and abs(sx)<.745 else "skin")
+                material="visage"
             elif part=="forearms":
                 # The new native long sleeve covers the upper forearm. Only
                 # the hand transition can show; accurate held hands are separate.
@@ -68,15 +67,15 @@ def anatomical_body(look,tier,data):
                         jaw=max(0,min(1,(7.1-sy)/1.37))
                         if look in ("Guard","Officer"): p[0]*=1.+.09*jaw
                         elif look=="Levy": p[0]*=1.-.08*jaw
-                        if material=="visage":
-                            coord=(max(.012,min(.988,.5+sx/1.90))/8.,
-                                   (2.+max(.012,min(.988,(8.13-sy)/2.63)))/4.)
-                        else: coord=uv(material,max(.01,min(.99,.5+sx/1.90)),max(.01,min(.99,(8.13-sy)/2.63)))
+                        coord=(4.+max(.012,min(.988,.5+sx/1.90))/8.,
+                               (2.+max(.012,min(.988,(8.13-sy)/2.63)))/4.)
                     else:
                         # Continuous chart across the knee and ankle. A modulo
                         # chart stretched one triangle over the whole painted tile.
                         value=(p[1]-.135)/.728 if part=="legs" else (p[1]-.935)/.185 if part=="forearms" else (p[2]+.10)/.36
                         coord=uv(material,max(.08,min(.92,.5+(p[2]-.015)*3)),.08+.84*max(0.,min(1.,value)))
+                    if part!="head" and material in ("binding","felt"):
+                        coord=((5. if material=="binding" else 6.)+coord[0],coord[1])
                     used[key]=target.vertex(tuple(p),coord,tuple(mesh["w"][i]))
                     normal=np.asarray(mesh["n"][i],dtype=float)
                     if part=="head":

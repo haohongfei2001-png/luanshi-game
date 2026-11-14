@@ -104,7 +104,8 @@ def main():
         for i in used:
             if name=="head":
                 position=headpoint(reflected[i])
-                weight=max(0.,min(1.,(position[1]-1.415)/.10))
+                weight=max(0.,min(1.,(position[1]-1.486)/.043))
+                weight=weight*weight*(3.-2.*weight)
                 weights=(2,1,weight)
             else:
                 w=bone_weights[i]
@@ -200,7 +201,10 @@ def main():
                         result["p"].append([round(a,6) for a in verts[i]])
                         result["n"].append([round(a,7) for a in final.vertices[i].normal])
                         result["chart"].append(sample)
-                        result["w"].append(compact_weights[nearest[i]])
+                        if name=="head":
+                            t=max(0.,min(1.,(verts[i][1]-1.486)/.043))
+                            result["w"].append((2,1,t*t*(3.-2.*t)))
+                        else: result["w"].append(compact_weights[nearest[i]])
                     face.append(remapped[key])
                 result["f"].append(face)
             data[name+tier]=result
