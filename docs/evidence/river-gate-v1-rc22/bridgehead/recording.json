@@ -1,0 +1,107 @@
+{
+  "game_source": "a0dffd422fa222a88a79791dd9f9d3c69c681249",
+  "capture_run": "43532283406",
+  "export_candidate": "788e4325e62e72c0a15129bdb734925780d91f8e",
+  "file": "river-gate-bridgehead.mp4",
+  "sha256": "56058094ff3988dbb70a090884dbb6f3c729da03b8b4682d192c85461452229f",
+  "bytes": 60705860,
+  "fps": 24,
+  "frames": 798,
+  "seconds": 33.25,
+  "battle_seconds": 32.7,
+  "game_window_pixels": [
+    1600,
+    1000
+  ],
+  "encoded_pixels": [
+    1280,
+    800
+  ],
+  "resolution_note": "Godot writer downsampled this first take. The full resolution edition is recorded separately from the game.",
+  "original_audio": {
+    "channels": 2,
+    "peak_db": -11.8,
+    "seconds": 33.25
+  },
+  "encoded": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 800,
+        "avg_frame_rate": "24/1",
+        "duration": "33.250000",
+        "nb_frames": "798"
+      },
+      {
+        "codec_name": "aac",
+        "channels": 2,
+        "avg_frame_rate": "0/0",
+        "duration": "33.250000",
+        "nb_frames": "1560"
+      }
+    ]
+  },
+  "held_camera_frames_sampled": 654,
+  "camera_metres": 22,
+  "pitch_deg": 50.77539062499997,
+  "yaw_deg": -33.000000000000014,
+  "seed": 61112,
+  "first_player_contact_seconds": 6.8,
+  "rank_spear_hits_observed": 12,
+  "rank_shield_hits_observed": 4,
+  "ordinary": [
+    512,
+    512
+  ],
+  "officers": [
+    16,
+    16
+  ],
+  "last": {
+    "arch_screen": [
+      1041.05517578125,
+      79.5673599243164
+    ],
+    "blocks": 22,
+    "both_landmarks": true,
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "crossed": 354,
+    "deck_screen": [
+      309.12451171875,
+      529.878112792969
+    ],
+    "feet_in_deep_water": 0,
+    "gate_hp": 0.0,
+    "guarding": 0,
+    "hero": [
+      28.8037662506104,
+      -2.83164668083191
+    ],
+    "hero_impacts": 1,
+    "hits": [
+      880,
+      856
+    ],
+    "hp": 100.0,
+    "losses": [
+      203,
+      214
+    ],
+    "orders_delivered": 1,
+    "pitch": 0.886197745392511,
+    "result": "",
+    "soldier_shield_contacts": 4,
+    "tick": 654,
+    "visible_ordinary": 564,
+    "visible_shields": 11,
+    "yaw": -0.575958653158129,
+    "zoom": 22.0
+  },
+  "real_input": "Regular deployment menu, native X11 click, WASD, pointer aim, skill and order keys. Original stereo. Fixed Godot simulation speed.",
+  "device_framerate_measurement": false
+}
