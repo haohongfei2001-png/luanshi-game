@@ -45,3 +45,15 @@ The bounded Ubuntu workflow now compares raw alpha and explicit128/255 scissor
 at native2K/4K. Neither setting claims a source-background repair. Images require
 manual inspection of spear tip, cloth edge, plume, halo and anchor consistency.
 No result is claimed until that actual run finishes and images are inspected.
+
+## First actual graphical failure, run43627386395
+Native2560×1440 and3840×2160 frames ran on Godot4.6.3 Mesa llvmpipe.
+Both raw and scissor images show lower feet/shaft clipped by the ground because
+camera-facing quads intersect it below their mean foot anchor. This is NOT source
+PNG cropping and NOT fixed by an alpha threshold. Original failure retained in
+artifact14126237296 (SHA2568a4c008b0a73ce50f4125431f9cf894077f53611c3506aaf7462f3870c591024).
+The next isolated readability probe explicitly disables depth test and marks
+provisional foot anchors green. This permits inspection of the complete sprite,
+**not** a claim of proper battlefield ground/obstacle occlusion or foot contact.
+Real gameplay requires a separate depth/occlusion representation, not blindly
+copying this diagnostic material. Static view size drift remains uncorrected.

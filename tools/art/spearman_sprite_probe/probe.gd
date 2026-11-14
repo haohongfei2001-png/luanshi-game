@@ -66,9 +66,23 @@ func _ready() -> void:
 			mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 			mat.alpha_scissor_threshold = 128.0/255.0
 		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		# Isolated asset readability only: tilted quad otherwise intersects the floor.
+		# This explicitly DOES NOT establish battlefield/terrain occlusion support.
+		mat.no_depth_test = true
 		mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 		actor.material_override = mat
 		add_child(actor)
+		var mark := MeshInstance3D.new()
+		var ring := TorusMesh.new()
+		ring.inner_radius = 0.035
+		ring.outer_radius = 0.055
+		mark.mesh = ring
+		mark.position = actor.position + Vector3(0,0.01,0)
+		var mark_mat := StandardMaterial3D.new()
+		mark_mat.albedo_color = Color(0.25,0.85,0.45)
+		mark_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mark.material_override = mark_mat
+		add_child(mark)
 	capture_path = OS.get_environment("SPEARMAN_CAPTURE")
 	print("STATIC_ATLAS_LOADED: 8 static views; provisional anchors; no animation/gameplay; 12m orthographic candidate")
 func _process(delta: float) -> void:
@@ -76,7 +90,7 @@ func _process(delta: float) -> void:
 	if elapsed > 2.0 and not capture_path.is_empty():
 		await RenderingServer.frame_post_draw
 		var error := get_viewport().get_texture().get_image().save_png(capture_path)
-		var metadata := {"actual_viewport":[get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y],"projection":"orthographic","size":12.0,"camera_position":[0,12,10],"camera_target":[0,0,0],"alpha_mode":OS.get_environment("SPEARMAN_ALPHA"),"scissor_threshold_if_enabled":128.0/255.0,"source_sha256":FileAccess.get_sha256(OS.get_environment("SPEARMAN_ATLAS")),"render_device":RenderingServer.get_video_adapter_name(),"static_only":true,"owner_acceptance":false}
+		var metadata := {"actual_viewport":[get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y],"projection":"orthographic","size":12.0,"camera_position":[0,12,10],"camera_target":[0,0,0],"alpha_mode":OS.get_environment("SPEARMAN_ALPHA"),"scissor_threshold_if_enabled":128.0/255.0,"source_sha256":FileAccess.get_sha256(OS.get_environment("SPEARMAN_ATLAS")),"render_device":RenderingServer.get_video_adapter_name(),"static_only":true,"depth_test":false,"terrain_occlusion_supported":false,"ground_anchors":"provisional visual estimates marked green","owner_acceptance":false}
 		var report := FileAccess.open(capture_path+".json",FileAccess.WRITE)
 		report.store_string(JSON.stringify(metadata,"  "))
 		print("CAPTURE_RESULT:",error)
