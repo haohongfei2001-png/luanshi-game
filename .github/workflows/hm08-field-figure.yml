@@ -41,7 +41,7 @@ jobs:
           set -euo pipefail
           proof=docs/evidence/river-gate-v1-rc23/character-master
           cp scripts/field/company_art.gd /tmp/complete-company.gd
-          git show 0315c9fc4665d33e7c2fc7d1e793b2c6cb82f725:scripts/field/company_art.gd > scripts/field/company_art.gd
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/0315c9fc4665d33e7c2fc7d1e793b2c6cb82f725/scripts/field/company_art.gd -o scripts/field/company_art.gd
           for side in before after; do
             mkdir -p "$proof/$side"
             if [ "$side" = after ]; then
