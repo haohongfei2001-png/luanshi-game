@@ -74,7 +74,11 @@ func _run() -> void:
 	var buttons: Array = scene.hud.buttons.values()
 	for i in range(buttons.size() - 1):
 		check(not buttons[i].get_rect().intersects(buttons[i + 1].get_rect()), "adjacent HUD buttons do not overlap: %d" % i)
-	check(not scene.hud.is_world_pointer(Vector2(100, 750)), "HUD area does not aim or attack the world")
+	for button: Button in buttons:
+		check(not scene.hud.is_world_pointer(button.get_global_rect().get_center()), "HUD button cannot aim or attack the world: "+button.text)
+	var hud_size: Vector2 = scene.hud.size
+	check(not scene.hud.is_world_pointer(Vector2(hud_size.x*.5,hud_size.y-43)), "bottom HUD background cannot aim or attack the world")
+	check(scene.hud.is_world_pointer(hud_size*.5), "playfield centre receives world pointing")
 	var hp: float = scene.sim.player().hp
 	action(scene, "restart_battle")
 	check(scene.sim.player().hp == hp and scene.sim.elapsed > 0.0, "restart key cannot reset an active encounter")
