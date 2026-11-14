@@ -1,4 +1,9 @@
 # 《乱世》产品所有者最终决策 / Product Authority v4.6
+
+## Dot 2026-11-14 18:02 UTC · Owner MOBA camera / no premature art release
+
+最新权威以 Wild Rift 角色屏幕比例与 MOBA 清晰质感为主，旧正交size22仅历史基线；不为千军同屏缩小人物。512每方是总战斗验证，屏内数量随自然镜头，屏外真实推进不变。枪兵方向认可、白袍白马方向大致认可、双方兵种图片未批准；概念均不是实机验收。普通兵枪无红缨。所有当前美术仍ART FAIL，失败试验不当合格RC/可用成品推送，继续内部自审重建。完整要求、原始AI参考及哈希：[Owner最新权威](OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md)。Codex PAUSED / Dot接续、RC24/RC25、默认游戏/引擎、正式剧情空白与M5 DEVICE_NOT_RUN保持。
+
 状态：**产品所有者已正式确认最初四项产品方向与后续九项高杠杆创作决定。** 产品创作基线现可正式执行；实际操作手感、画面品质、性能及商业发行仍须依据真实成果验证或授权。详见 [OWNER_CREATIVE_DECISIONS_PENDING.md](OWNER_CREATIVE_DECISIONS_PENDING.md)，其中九项已转为已决，不再作为开发阻塞。
 更新时间：2026-11-13。责任：Owner（用户）／Codex（主要工程）／Dot（可选协调）／Pro（设计审查）。
 
