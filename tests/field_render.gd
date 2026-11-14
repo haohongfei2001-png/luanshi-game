@@ -3,6 +3,7 @@ extends SceneTree
 const Field := preload("res://scripts/field/controller.gd")
 const Battle := preload("res://scripts/field/battle.gd")
 const Ground := preload("res://scripts/field/ground.gd")
+const SampleBudget := preload("res://tests/field_sample_budget.gd")
 var failures: Array[String]=[]
 var field: Field
 var film := false
@@ -102,7 +103,10 @@ func _measure(count: int) -> void:
 	var before_hits: int=b.hits[0]+b.hits[1]
 	var rid:=root.get_viewport_rid()
 	var shifted:=false
-	while b.result=="" and Time.get_ticks_msec()<time_limit and (Time.get_ticks_usec()-begin<2800000 or clips.size()<20):
+	# Contact acquisition must not consume the independent measurement window.
+	# Keep slow renderer samples honest; allow enough wall time to collect the
+	# same minimum frame count instead of weakening the moving/hitting assertion.
+	while b.result=="" and SampleBudget.keep_sampling(Time.get_ticks_usec()-begin,clips.size()):
 		await RenderingServer.frame_post_draw
 		var now:=Time.get_ticks_usec()
 		clips.append((now-previous)/1000.0)
@@ -116,7 +120,7 @@ func _measure(count: int) -> void:
 		if cpu_ms>0: cpu.append(cpu_ms)
 		if gpu_ms>0: gpu.append(gpu_ms)
 		draws.append(RenderingServer.viewport_get_render_info(rid,RenderingServer.VIEWPORT_RENDER_INFO_TYPE_VISIBLE,RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME))
-	check(clips.size()>=10 and peak_poses>0 and b.hits[0]+b.hits[1]>before_hits,"Sampled moving, damaging combat frames")
+	check(clips.size()>=SampleBudget.MIN_FRAMES and peak_poses>0 and b.hits[0]+b.hits[1]>before_hits,"Sampled at least 20 moving, damaging combat frames")
 	var span: float=(previous-begin)/1000.0
 	clips.sort(); cpu.sort(); gpu.sort(); draws.sort()
 	var record:=b.report()
@@ -128,9 +132,9 @@ func _measure(count: int) -> void:
 		for interval: float in clips:
 			if interval>budget: over+=1
 		missed[str(rate)]=over
-	record.merge({"frames_over_budget":missed,"max_ms":clips[-1],"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"device":RenderingServer.get_video_adapter_name(),
+	record.merge({"frames_over_budget":missed,"max_ms":null if clips.is_empty() else clips[-1],"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"device":RenderingServer.get_video_adapter_name(),
 		"viewport_px":[root.size.x,root.size.y],"render_scale":root.scaling_3d_scale,"shadows":true,"seed":Battle.SEED,"frame_samples":clips.size(),
-		"wall_seconds":span/1000.0,"fps":clips.size()*1000.0/maxf(span,0.01),"mean_ms":span/maxi(1,clips.size()),"p95_ms":_pct(clips,0.95),"p99_ms":_pct(clips,0.99),
+		"sample_budget_seconds":SampleBudget.MAX_US/1000000.0,"sample_min_frames":SampleBudget.MIN_FRAMES,"wall_seconds":span/1000.0,"fps":clips.size()*1000.0/maxf(span,0.01),"mean_ms":span/maxi(1,clips.size()),"p95_ms":_pct(clips,0.95),"p99_ms":_pct(clips,0.99),
 		"sim_ms_per_tick":float(field.sim_us-sim_begin)/maxi(1,b.tick-first_tick)/1000.0,"view_script_ms_per_frame":float(field.view_us-view_begin)/maxi(1,clips.size())/1000.0,
 		"render_cpu_p95_ms":_pct(cpu,0.95),"render_gpu_p95_ms":_pct(gpu,0.95),"draw_calls_p95":_pct(draws,0.95),
 		"resident_kib":rss,"median_ms":_pct(clips,0.50),"last_rank_soldiers":field.view.rank_soldiers,"static_memory_bytes":OS.get_static_memory_usage(),"input_observed_ms":latency,"peak_visible_combat_poses":peak_poses,"last_visible_soldiers":field.view.visible_soldiers,"last_high_detail_soldiers":field.view.high_detail_soldiers,"hits_during_sample":b.hits[0]+b.hits[1]-before_hits})

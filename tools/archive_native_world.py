@@ -9,7 +9,8 @@ def git(*args,**options):
 def main():
     assert os.environ.get("GITHUB_ACTIONS")=="true" and os.environ.get("RUNNER_OS")=="macOS"
     source=Path(sys.argv[1]).resolve()
-    branch="codex/river-whole-native-evidence"
+    branch=os.environ.get("RIVER_EVIDENCE_BRANCH","codex/river-whole-native-evidence")
+    assert branch in ("codex/river-whole-native-evidence","dot/river-native-evidence"), branch
     source_sha=os.environ["GITHUB_SHA"]
     workspace=Path(os.environ["RUNNER_TEMP"])/("native-evidence-"+os.environ["GITHUB_RUN_ID"])
     remote=subprocess.run(["git","ls-remote","--exit-code","origin","refs/heads/"+branch],capture_output=True,text=True)

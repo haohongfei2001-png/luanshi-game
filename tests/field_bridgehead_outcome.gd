@@ -39,5 +39,5 @@ func _initialize() -> void:
 	var audit:=campaign.audit().is_empty() and campaign.audit_quivers()
 	var result:={"tick":b.tick,"end":b.result,"gate":b.gate_hp,"hero_health":b.hero.hp,"losses":b.losses,"hits":b.hits,"blocks":b.blocked_hits,"hero_crossed":crossing_tick,"breached":breach_tick,"camp":camp,"wait_one_hour":waited,"march":march,"saved_result":legacy_ok,"ledger":not ledger.is_empty(),"audits":audit,"captured_city":ledger.get("captured_gate",false),"spoils":ledger.get("spoils",{})}
 	print("BRIDGE_FULL_RUN ",JSON.stringify(result))
-	var ok:=b.result=="守城成功" and breach_tick>0 and not ledger.is_empty() and not ledger.get("captured_gate",true) and audit and legacy_ok and camp and waited and march
+	var ok:bool=b.result=="守城成功" and breach_tick>0 and not ledger.is_empty() and not ledger.get("captured_gate",true) and audit and legacy_ok and camp and waited and march
 	quit(0 if ok else 1)

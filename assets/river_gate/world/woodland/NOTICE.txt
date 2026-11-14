@@ -1,4 +1,4 @@
-Complete elm, oak, associated branch and undergrowth masters by Wildfire Games contributors.
+Complete willow, elm, oak, maple, associated branch and grass masters by Wildfire Games contributors.
 https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
 CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/
 Derived Y-up conversion and whole-tree library use the same license. Native leaf alpha, UVs and painted value structure are preserved.

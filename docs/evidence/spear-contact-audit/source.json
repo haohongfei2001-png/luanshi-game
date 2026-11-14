@@ -1,0 +1,60 @@
+{
+  "source_sha256": "323164ab1ecc44e752c2fc23e2457b61e916ac132979acbf9b58b2a62e5a6759",
+  "authors": "Wildfire Games contributors",
+  "license": "CC BY-SA 3.0",
+  "source_blob": "1f319000b3e49a12bf85262a553442472feca293",
+  "source_path": "animation/biped/infantry/pikeman/attack_melee_02.dae",
+  "source_duration_s": 1.666667,
+  "sample_count": 65,
+  "bind_matrix_error": 1.2827903774770277e-06,
+  "motion": {
+    "hips": {
+      "extent_xyz_m": [
+        0.060958,
+        0.09390999999999994,
+        0.347115
+      ],
+      "start_end_gap_m": 0.0,
+      "path_length_m": 0.8262615695572313
+    },
+    "foot.L": {
+      "extent_xyz_m": [
+        0.006721000000000005,
+        0.075935,
+        0.23296699999999998
+      ],
+      "start_end_gap_m": 0.0,
+      "path_length_m": 0.5455285097172627
+    },
+    "foot.R": {
+      "extent_xyz_m": [
+        0.004587000000000008,
+        0.03933299999999999,
+        0.06950200000000001
+      ],
+      "start_end_gap_m": 0.0008156751804486842,
+      "path_length_m": 0.15984817683963845
+    },
+    "hand.L": {
+      "extent_xyz_m": [
+        0.066886,
+        0.201801,
+        0.571597
+      ],
+      "start_end_gap_m": 0.03131357196169102,
+      "path_length_m": 1.6154604192611866
+    },
+    "hand.R": {
+      "extent_xyz_m": [
+        0.066447,
+        0.18204900000000002,
+        0.588247
+      ],
+      "start_end_gap_m": 0.0,
+      "path_length_m": 1.6849993506250494
+    }
+  },
+  "source_curves_modified": false,
+  "source_motion_is_not_world_contact": true,
+  "godot_visual_pass": false
+}

@@ -1,0 +1,322 @@
+[
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "bridgehead-0050",
+    "hits": [
+      82,
+      104
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 50,
+    "world_audit": [],
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "bridgehead-0135",
+    "hits": [
+      185,
+      231
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      9.0,
+      0.0
+    ],
+    "frame": "whole-war-0135",
+    "hits": [
+      185,
+      231
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 135.062576293945,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 115.0
+  },
+  {
+    "center": [
+      38.0,
+      -10.0
+    ],
+    "frame": "grove-0135",
+    "hits": [
+      185,
+      231
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.0821762084961,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 18.0
+  },
+  {
+    "center": [
+      48.0,
+      0.0
+    ],
+    "frame": "gate-architecture",
+    "hits": [
+      185,
+      231
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.0821762084961,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 18.0
+  },
+  {
+    "center": [
+      38.0,
+      -10.0
+    ],
+    "frame": "native-crowns-full-geometry",
+    "hits": [
+      185,
+      231
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.0821762084961,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 18.0
+  },
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "previous-daylight",
+    "hits": [
+      185,
+      231
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, -31.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "bridgehead-0135-uhd",
+    "hits": [
+      185,
+      231
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      3840,
+      2160
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      3840,
+      2160
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 22.0
+  }
+]

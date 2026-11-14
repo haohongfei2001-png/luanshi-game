@@ -10,14 +10,31 @@
     "oak_holly_3": "a0c71565389bf869a89f353648fc519dd2f592ed",
     "oak_holly_3_dead": "ab6fe0dbf30343ae7bf6121a4704c4fb8b2ca7b0",
     "temp_bush_01": "d5a6aaff926b260450501c938f939baea7bb6af7",
-    "temp_bush_03": "d257b47b409b47c0710c22e49172e008537d0171"
+    "temp_bush_03": "d257b47b409b47c0710c22e49172e008537d0171",
+    "trees/willow_a": "88fffd3d5f319b27e03f464d70dc9f772777585c",
+    "maple_a": "22856cc64d15ee028dcf0ebe6d2964f7c8299d08",
+    "maple_b": "0fa90be176e27ba177e7c5661f5f5afdcbd82cd5",
+    "oak_hungarian_1": "276cfcc0a449ba10230a5c220ee12471356f641c",
+    "oak_hungarian_1_dead": "23ff81cadf43c9c8ebed6babbade0452c3666b08",
+    "oak_hungarian_3": "c9a085decf13b11fd1cb20ef667b6df928d818f3",
+    "oak_hungarian_3_dead": "4615041443aaccfb16304a85f4775d3998ba8b33",
+    "grass_la_tall_a": "937ba8fdf695beb93a4f11d83fc384da92d615cb",
+    "grass_la_tall_b": "cf5d048eb78733aa206bc5922a2b1dd0d29ddeec"
   },
   "textures": {
     "tree_elm_01": "76d494660eaba54f6c3926b5a1614d9c7adbfef5",
     "oak_holly_1": "1f9a2c0e53ad3a4514134fbc96dd22db2e474caa",
     "oak_holly_dead": "46d05cd34f9329fbff482c30bb2f63f30bdaa220",
     "temperate_bush_01": "9824a1cd63170fb4598d6e966cec441fc7b65f40",
-    "temperate_bush_02": "159b47806423807e91d314ef6ee22109beefaa2c"
+    "temperate_bush_02": "159b47806423807e91d314ef6ee22109beefaa2c",
+    "willow_green": "394245aef453fb83995098a182b32d654cc754ec",
+    "willow_aut_b": "e35a37a4afc9af0365d73467f33c89796196f5e7",
+    "maple_tree_a": "01da7cb920321b4e06e612b6c1ae8e552f62edc3",
+    "maple_tree_autumn_a": "74dcfbcafaa4bc0d088c2dcbc848510cafcd36f5",
+    "oak_hungarian_1": "6a231e4f674d9401fd1cd53a596033851de2299a",
+    "oak_hungarian_3": "49f4d0757c524633714cdee0e5271418360ba9fc",
+    "oak_hungarian_dead": "922a587e3f0fd74eb01b7293f8bd77ba02303cc7",
+    "grass_field": "53f7838ab6fdaba10ff24cb6d6373f4adf2a4d1e"
   },
   "groups": [
     {
@@ -159,6 +176,191 @@
         ]
       ],
       "triangles": 76
+    },
+    {
+      "name": "RiverWillowGreen",
+      "native_parts": [
+        [
+          "trees/willow_a",
+          "willow_green"
+        ]
+      ],
+      "bounds": [
+        [
+          -10.651258411884,
+          -3.097601060179999,
+          -10.693584350387999
+        ],
+        [
+          10.651264877807998,
+          18.274534367296,
+          10.651258411884
+        ]
+      ],
+      "triangles": 783
+    },
+    {
+      "name": "RiverWillowGold",
+      "native_parts": [
+        [
+          "trees/willow_a",
+          "willow_aut_b"
+        ]
+      ],
+      "bounds": [
+        [
+          -10.651258411884,
+          -3.097601060179999,
+          -10.693584350387999
+        ],
+        [
+          10.651264877807998,
+          18.274534367296,
+          10.651258411884
+        ]
+      ],
+      "triangles": 783
+    },
+    {
+      "name": "FieldMapleGreen",
+      "native_parts": [
+        [
+          "maple_a",
+          "maple_tree_a"
+        ]
+      ],
+      "bounds": [
+        [
+          -8.45089,
+          -0.2442293,
+          -7.386742
+        ],
+        [
+          6.615877,
+          16.80763,
+          8.025278
+        ]
+      ],
+      "triangles": 620
+    },
+    {
+      "name": "FieldMapleCopper",
+      "native_parts": [
+        [
+          "maple_b",
+          "maple_tree_autumn_a"
+        ]
+      ],
+      "bounds": [
+        [
+          -7.860356,
+          -0.3270855,
+          -8.008919
+        ],
+        [
+          7.04285,
+          19.91747,
+          8.001878
+        ]
+      ],
+      "triangles": 620
+    },
+    {
+      "name": "FieldOakBroadA",
+      "native_parts": [
+        [
+          "oak_hungarian_1",
+          "oak_hungarian_1"
+        ],
+        [
+          "oak_hungarian_1_dead",
+          "oak_hungarian_dead"
+        ]
+      ],
+      "bounds": [
+        [
+          -11.14042,
+          -1.2173584,
+          -9.434785
+        ],
+        [
+          10.19816,
+          18.3928896,
+          10.45084
+        ]
+      ],
+      "triangles": 448
+    },
+    {
+      "name": "FieldOakBroadB",
+      "native_parts": [
+        [
+          "oak_hungarian_3",
+          "oak_hungarian_3"
+        ],
+        [
+          "oak_hungarian_3_dead",
+          "oak_hungarian_dead"
+        ]
+      ],
+      "bounds": [
+        [
+          -13.33802,
+          -1.151299,
+          -11.45396
+        ],
+        [
+          11.13309,
+          18.79217,
+          15.29428
+        ]
+      ],
+      "triangles": 495
+    },
+    {
+      "name": "VergeGrassA",
+      "native_parts": [
+        [
+          "grass_la_tall_a",
+          "grass_field"
+        ]
+      ],
+      "bounds": [
+        [
+          -4.105939,
+          -0.07176798,
+          -3.849381
+        ],
+        [
+          2.811412,
+          3.15235,
+          2.971098
+        ]
+      ],
+      "triangles": 12
+    },
+    {
+      "name": "VergeGrassB",
+      "native_parts": [
+        [
+          "grass_la_tall_b",
+          "grass_field"
+        ]
+      ],
+      "bounds": [
+        [
+          -7.474494,
+          -0.113502,
+          -5.392144
+        ],
+        [
+          5.613827,
+          3.190914,
+          5.052984
+        ]
+      ],
+      "triangles": 60
     }
-  ]
+  ],
+  "biome_revision": 2
 }

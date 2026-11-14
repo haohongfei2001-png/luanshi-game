@@ -1,0 +1,14 @@
+{
+  "source": "141031aaaa8f5607aa8e1b2d97065b60b32f3bc5",
+  "run": 43602701915,
+  "artifact": 14116419597,
+  "artifact_sha256": "8de406e73980322c966325a9b9b766916d3a3be1faf4b9efcb938c72e171f1d2",
+  "render_result": "SUCCESS",
+  "art_result": "REJECTED_SMALL_REBUILD_ROUTE",
+  "M5": "DEVICE_NOT_RUN",
+  "notes": [
+    "Native 2560x1440 and 3840x2160; internal scale 1.0; seed 61112; normal 22 m; tick 135; 512 ordinary per side.",
+    "Shared new relief changes travel speed and battle positions; same setup is not an identical actor/hit-state assertion.",
+    "Owner explicitly directs whole scene and character replacement, not further patches on the old geometry."
+  ]
+}

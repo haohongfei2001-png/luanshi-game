@@ -1,6 +1,56 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
-## 2026-11-14 当前 P0 · 完整战场、人物与马匹重建
+## DOT-FULL-REBUILD-20261114 · Owner 拒绝旧几何补丁主线
+
+最新 Owner 要求整个地图、背景、人物重建，效果图仅为及格线。Dot 已停止把 R1/R2 旧布局修饰当美术主路线；不将被拒的 R2 冻结为新候选。保留 RC24 / RC25 与 PR61 可恢复代码，Codex 继续 PAUSED。
+
+R2 `141031aaaa` 真正 Godot 原生2K/4K run43602701915成功、已亲自审图并交付，但仍拒绝。[实图与失败记录](evidence/river-environment-slice/round2/VISUAL_REVIEW.md)。本地全回归 exit0；正式run43602706015在新审计顶层Pillow导入失败。本提交将纯数学审计与图像回放依赖隔离，标准Python和无site-packages各10测试通过，正式CI结论等待。
+
+下一动作：核实成熟完整可编辑且允许公共仓库再分发的场景/人物资产，完整重建桥至城门场景结构和人物骨架/权重/衣甲/动作。不可把已有Han城门/衣物/HM08部件再次导入或换色说成全面重建；新资源未授权的步骤保留阻塞，继续独立开发。不得购买/新增账号/访问Owner电脑。
+
+`dot/spear-contact-experiment` 源1d496bfb08b8、run43603906190正在实际A/B验证，只有单演员探针且默认关闭；这不是人物美术主路线。远端结果未读前不能声称实机通过。继续恢复：`git fetch origin && git switch dot/river-terrain-rebuild && git pull --ff-only`，先读本节、当前PR61与最新真实运行。
+
+
+## DOT-RC26-R2 · 当前第二轮重建，实际画面待复核
+
+本提交继续 PR61。第一轮源 `70cdb716` 已在 run `43601296024` 真正运行原生2K/4K，8组同条件元数据一致，但自审仍不满足参考，不能作为美术PASS。[第一轮真实审图](evidence/river-environment-slice/VISUAL_REVIEW.md)。
+
+第二轮新增实际共享路基/缓坡/谷地台地，原生林冠重回正常镜头边框，岩体下埋。旧open-field 7,735点高度保持，桥台/墙基/桥宽不变。地形影响外围行速，结算仍自然守城成功（tick2100），死亡289/286、门破492；第一轮为309/329、门破439。保存真实差异而非伪造完全相同战果。[第二轮源与5项回归](evidence/river-environment-slice/round2/README.md)。新增52树冠的图形成本仍未测，继续同镜头原生图与实时性能验证。
+
+双手枪新增严格全clip切换审计和默认关闭的单演员过渡探针。原枪链、马匹和其他兵器默认完全未改；仿射过渡出现地面穿透/靴形变，明确拒绝激活并继续保刚体修复。[失败与实际数值](SPEAR_TRANSITION_EXPERIMENT.md)。
+
+本提交不以 `Package ` 开头，不触发新 macOS 冻结包；先审实际第二轮图。已备好 Dot 独立原生证据分支，旧RC24/RC25证据不覆盖。下一动作仍为读取 PR61 当前头、图形和正式回归最终结果，下载真实图片，返工未达标处，再进行内部候选冻结。Codex PAUSED / Owner art未通过 / M5 DEVICE_NOT_RUN 不变。
+
+## DOT-RC26-20261114 · 已恢复实际开发，未验收
+
+Dot 已按 Owner 最新授权接管，Codex Goal / automation-2 继续 PAUSED。当前草稿 [PR61](https://github.com/haohongfei2001-png/luanshi-game/pull/61) 堆叠于 PR59；远端环境切片源 `70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b`，不是已接受版本。`main`、RC24 回退包、PR59 和两条实验分支未被覆盖。
+
+- 已落地：独立采样预算、真实进度监督、完整原生柳/橡/榆/枫与桥门林层、成簇沉积岸石、原生岸草；不是光照或颜色单改。只复用 biome 的合法完整源模型，未合入其不合格布局、白岩 shader 或截图。
+- 已验证：Godot 4.6.3 完整 headless 回归，14 条采样预算断言和 9 个真实子进程测试；环境结构、7,132 个可行走高度一致、512v512 桥头400步、自然结算2100步和战后存档/驻营/等待/行军。
+- 实际失败与修复记录：[CI 恢复](RC25_CI_RECOVERY.md)、[环境切片](evidence/river-environment-slice/README.md)。所有人数、伤亡、伤害、碰撞通行与桥宽未改，旧存档保留。
+- 当前源码正式回归 run `43601300513`；同种子、时间、22米、512/512、内部1.0 原生2K/4K对照 run `43601296024`。前一轮 RC25 基线采集 `43601118419` 已通过，但不是新环境通过。最终状态须重新读取。
+- 云环境本地图形显示创建 socket 失败，标准提权重试亦失败；不绕过限制，不使用 Owner 电脑。通过既有 GitHub 托管运行真实 Godot。当前美术仍 `ART_REBUILD_REQUIRED / OWNER_REJECTED`，真实 M5 `DEVICE_NOT_RUN`。
+- 双手枪独立实验未启用：第32步同一state内从新作者待机回旧步态产生踝跳，旧审计漏检；继续修复完整链而非冻结脚底，保留RC25马匹。
+
+**下一条恢复命令**：`git fetch origin && git switch dot/river-terrain-rebuild && git pull --ff-only`。先核对 PR61 / 上述运行、下载实际2K/4K输出并与RC25同机位逐张检查；未满足参考继续返工。通过内部自审后，以独立 `Package ` 冻结提交触发现有完整 macOS 交付，跑20/100/250/512实时采样、原速操作影片、冷启动和正式回归。制作内部候选不等于 Owner 美术认可或正式发行。
+
+### 已保留并重新核实的 RC25 原生证据（交接前成果）
+
+源 `d1c1895221c33386d471922807ed590a6987dbe1`，run `43595539334` 成功，证据分支 `codex/river-whole-native-evidence` 提交 `2872bb2678e203221ca2e2322f82bacb95e1355f`，artifact `14115346270`。arm64实际测试包 SHA256 `b94b5394042ad2cff602df0ac088f66bd9aa4217f5e2d36af19979f1d1e24272`，ad-hoc 签名、未公证。115秒/2760帧原生2K影片，111秒自然守城结算，保留72结果帧；24fps是模拟采样率，不是设备实时FPS。
+
+M1 Virtual / Metal Mobile / 2560×1440 / 内部1.0的实时结果：20/100/250/512每方平均58.43/48.53/40.12/33.11FPS；512交战44.52秒，P50 30.510ms、P95 45.403ms、P99 48.888ms，最大RSS619,413,504字节、峰值footprint1,751,387,456字节。未达到60FPS目标，不是M5验收。RC24完整包及其哈希保留于下方历史记录。
+
+
+## OWNER-DOT-HANDOFF-20261114 · Codex 已暂停，Dot 接续
+
+Owner 最新要求暂停 Codex 开发并交给 Dot。Codex Goal 和 automation-2 均为 PAUSED，子代理已停止。后续负责人读取 [Dot 开发交接](DOT_DEVELOPMENT_HANDOFF_20261114.md) 和 [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。本节覆盖后文旧的 Codex 自动续接指令。
+
+RC25 固定源码 d1c1895221c33386d471922807ed590a6987dbe1，草稿PR59。新环境独立分支 codex/river-biome-rebuild，最近静帧提交814417f12092d95d0086d59b5e90ce8db00964cb。双手枪分支codex/river-rc25-native-spear停在7aaf21be288a607132ec96e1c9a1f5cdbf2f16f3，尚待接纳。全部已推送。
+
+正式RC25基础验证通过，footage与escort两项失败，其他图形/原生/环境运行尚在收尾。精确日志、恢复命令、已验证RC24包和性能见交接。整体美术ART_REBUILD_REQUIRED / OWNER_REJECTED，真实M5 DEVICE_NOT_RUN。Dot已在自身云电脑接手；当前不接纳未通过审图的biome/双手枪实验，直接以RC25重建。
+
+
+## 2026-11-14 交接前技术记录（结果以最新证据为准）· 完整战场、人物与马匹重建
 
 整体美术仍为 **ART_REBUILD_REQUIRED / OWNER_REJECTED**。批准参考是最低门槛。全部开发与实机验证在托管环境进行。真实M5为 **DEVICE_NOT_RUN**。
 
@@ -38,7 +88,7 @@
 
 512固定镜头RSS约589MiB，峰值内存占用约1664MiB，实时60FPS目标未达成。P95/P99高于先前b715样本，后续需要结合原始CPU分段和可见模型成本继续优化。GPU设备时间戳不可用。禁止以1000×600启动样本或24fps影片采样率替代这张2K性能表。
 
-Goal active。automation-2已配置上海10/22点，独立定时执行未证实。旧重叠PR保持原样。
+历史 Goal active 和 automation-2 配置已被 Owner 暂停决定覆盖，保持 PAUSED。旧重叠PR保持原样。
 
 下一条执行动作读取本分支head、PR59检查、whole-world-delivery与独立枪链。RC25完成全部回归、两后端、5种实时场景、完整自然战役影片和9冷启动之后再更新结果。若任一失败，保留日志、定位实际失败并修复。继续重建地图远景层次、自然岸坡、统一树冠色块及剩余兵器全身动作，整体美术维持未通过。
 

@@ -8,6 +8,7 @@ const Ground:=preload("res://scripts/field/ground.gd")
 var held: Array[Key]=[]
 var results: Array=[]
 var failures: Array[String]=[]
+var progress_ticks:=0
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -55,6 +56,7 @@ func _run() -> void:
 		_check(b.started and b.companies[0].mission==(Battle.Mission.WITHDRAW if retreat else Battle.Mission.HOLD),"Selected mission and deployed through normal bindings")
 		_key(KEY_SHIFT,true)
 		var frames:=0
+		var previous_tick:=b.tick
 		while b.result=="" and b.tick<1800 and frames<1000:
 			frames+=1
 			var dest:=Vector2(-91,0)
@@ -69,6 +71,14 @@ func _run() -> void:
 			var via:=Ground.waypoint(b.hero.pos,dest)
 			_steer(b.hero.pos.direction_to(via) if dest.distance_to(b.hero.pos)>0.7 else Vector2.ZERO)
 			await process_frame
+			if b.tick>previous_tick:
+				progress_ticks+=b.tick-previous_tick
+				previous_tick=b.tick
+				if frames%10==0 or b.result!="":
+					var detail: Dictionary={"case":"withdrawal" if retreat else "defeat","tick":b.tick,"frame":frames,"progress_ticks":progress_ticks,"hero_x":b.hero.pos.x,"result":b.result}
+					var progress_file:=FileAccess.open("res://artifacts/field-outcomes-progress.json",FileAccess.WRITE)
+					progress_file.store_string(JSON.stringify(detail))
+					print("FIELD_ENDING_PROGRESS tick=%d case=%s battle_tick=%d frame=%d"%[progress_ticks,detail.case,b.tick,frames])
 		_steer(Vector2.ZERO)
 		_key(KEY_SHIFT,false)
 		for i in 4: await process_frame

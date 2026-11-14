@@ -35,6 +35,8 @@ def main():
         with selectors.DefaultSelector() as events:
             events.register(proc.stdout,selectors.EVENT_READ)
             while True:
+                if proc.poll() is not None and not events.get_map():
+                    return proc.returncode
                 now=time.monotonic()
                 if now-last>a.idle or now-start>a.limit:
                     sys.stderr.write(f"Gameplay recorder expired: elapsed={now-start:.1f}s without simulation or UI progress={now-last:.1f}s progress={last_tick} stage={last_stage}\n")
@@ -42,7 +44,11 @@ def main():
                     return 124
                 if not events.select(timeout=min(2.0,a.idle,a.limit)): continue
                 block=os.read(proc.stdout.fileno(),65536)
-                if not block: break
+                if not block:
+                    events.unregister(proc.stdout)
+                    # A child can close stdout and keep running. Keep watching
+                    # both deadlines rather than blocking forever in wait().
+                    continue
                 sys.stdout.buffer.write(block); sys.stdout.buffer.flush()
                 buf+=block
                 while b"\n" in buf:

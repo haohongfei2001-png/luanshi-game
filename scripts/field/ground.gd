@@ -53,7 +53,27 @@ static func height(p: Vector2,bridgehead:bool=false) -> float:
 	var eastern_ridge:=(p-Vector2(112.,-45.))/Vector2(25.,17.)
 	var relief:=4.8*pow(maxf(0.,1.-western_ridge.length_squared()),2)+3.6*pow(maxf(0.,1.-northern_ridge.length_squared()),2)+5.4*pow(maxf(0.,1.-eastern_ridge.length_squared()),2)
 	relief*=smoothstep(6.3,14.,absf(p.x-RIVER_X))
-	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief - (1.0 - bank) * RIVER_BED_DEPTH
+	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief + bridgehead_relief(p) - (1.0 - bank) * RIVER_BED_DEPTH
+
+static func bridgehead_relief(p:Vector2) -> float:
+	# Shared, actual actor/terrain height. Keep the original bridge abutments,
+	# gate sill and wall foundations fixed; shape the land between them.
+	var approach:=smoothstep(29.8,33.2,p.x)*(1.-smoothstep(42.5,46.,p.x))
+	var road:=.58*approach*(1.-smoothstep(3.2,6.6,absf(p.y)))
+	var north:=(p-Vector2(35.,-11.8))/Vector2(10.3,8.8)
+	var south:=(p-Vector2(36.8,14.2))/Vector2(10.5,10.0)
+	var shoulders:=2.15*pow(maxf(0.,1.-north.length_squared()),2)
+	shoulders+=1.72*pow(maxf(0.,1.-south.length_squared()),2)
+	shoulders*=smoothstep(29.8,35.,p.x)*(1.-smoothstep(40.,46.,p.x))
+	# Broad valley benches break the formerly empty plain. Their feet feather
+	# into the existing road and river clearances, not isolated cone mounds.
+	var west:=(p-Vector2(-4.,-23.))/Vector2(24.,18.)
+	var lower:=(p-Vector2(-9.,24.))/Vector2(19.,17.)
+	var benches:=2.6*pow(maxf(0.,1.-west.length_squared()),2)
+	benches+=1.9*pow(maxf(0.,1.-lower.length_squared()),2)
+	var northern:=(p-Vector2(41.,-45.))/Vector2(31.,19.)
+	benches+=5.2*pow(maxf(0.,1.-northern.length_squared()),2)
+	return road+shoulders+benches
 
 static func river_center(z: float) -> float:
 	var approach:=smoothstep(4.2,12.,absf(z-crossing(z)))

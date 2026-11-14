@@ -59,7 +59,8 @@ cmd = [str(binary), "--display-driver","x11","--resolution","1280x800","--disabl
 with (out/"export-window.log").open("w") as log:
     p = subprocess.Popen(cmd, cwd=binary.parent, env=env, stdout=log, stderr=subprocess.STDOUT)
     focused = False
-    prev, last = 0, time.monotonic()
+    started = time.monotonic()
+    prev, last = 0, started
     checkpoint = 0
     try:
         while p.poll() is None:
@@ -75,6 +76,8 @@ with (out/"export-window.log").open("w") as log:
                 state = {"frames": count, "expected": total, "inputs": timeline}
                 (out/"capture-progress.json").write_text(json.dumps(state, ensure_ascii=False)+"\n")
                 print("PACKAGE_FRAMES", count, "of", total, flush=True)
+            if time.monotonic() - started > 75 * 60:
+                raise RuntimeError(f"Package recording reached its 75-minute cap at {count}/{total} frames")
             if time.monotonic() - last > 115:
                 raise RuntimeError(f"No new movie frame for 115 seconds (last {count}): {(out/'export-window.log').read_text()[-2500:]}")
             if count>=3 and not focused:
