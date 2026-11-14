@@ -1,0 +1,33 @@
+name: Playtest the approach, polearm reach and retirement from the front
+on:
+  push:
+    branches: ['codex/river-rc22-bridge-playtest-route']
+permissions:
+  contents: read
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned Godot runtime and native input tool
+        id: setup
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v xdotool >/dev/null || ! /usr/bin/python3 -c 'from PIL import Image'; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool python3-pil; fi
+          mkdir -p artifacts/bridge-window
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > artifacts/bridge-window/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/bridge-window/import.log; then exit 1; fi
+      - name: Compare five normal escorted approach distances and three lanes at fixed seed
+        run: godot --headless --path . --script tests/bridge_route_trials.gd
