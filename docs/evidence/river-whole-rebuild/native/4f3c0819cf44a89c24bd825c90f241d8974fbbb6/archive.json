@@ -1,0 +1,923 @@
+{
+  "source": "4f3c0819cf44a89c24bd825c90f241d8974fbbb6",
+  "run": "43587113557",
+  "files": [
+    {
+      "file": "both-renderers/balanced-metal-boot.json",
+      "bytes": 4239,
+      "sha256": "c5c8d70ca719a15624857b4be3e20dc148e3ae0d69425cb4e547e58da3dccd5f"
+    },
+    {
+      "file": "both-renderers/balanced-metal-focus.log",
+      "bytes": 58,
+      "sha256": "eac60cade5df4702b1f543d04a9b336e4fb2606e5e7a35a38d6d012c52612b73"
+    },
+    {
+      "file": "both-renderers/balanced-metal-frames.json",
+      "bytes": 3483,
+      "sha256": "32a10649ca5abcf2698d29ec434b55aa3f6ab5ed9f216405c5be2c003361a441"
+    },
+    {
+      "file": "both-renderers/balanced-metal-session.jsonl",
+      "bytes": 13230,
+      "sha256": "8a6fee51cedbc3804d98593a52dd20c119a048cc41cc782730c52fdcf5f53885"
+    },
+    {
+      "file": "both-renderers/balanced-metal.log",
+      "bytes": 6728,
+      "sha256": "53323e71fd9f5b491d1263de5f1b322478440c5c01e9876c38c9edcd16ba62ad"
+    },
+    {
+      "file": "both-renderers/compat-1-before-frame.sample.txt",
+      "bytes": 287345,
+      "sha256": "922550611eead93310fabec52485d31ed9c8101416080e8df705402d9144fae5"
+    },
+    {
+      "file": "both-renderers/compat-1-before-scene.sample.txt",
+      "bytes": 248587,
+      "sha256": "d94a32099f6cb6a1920aa62a00e0ad7427b1f2d704fcc2eee05df389fc218857"
+    },
+    {
+      "file": "both-renderers/compat-1-boot.json",
+      "bytes": 4288,
+      "sha256": "fe6e9cfe4bf3aab4b80a3fc2a01f5024a1c7dc09d91a6b03574d82908428bd3a"
+    },
+    {
+      "file": "both-renderers/compat-1-focus.log",
+      "bytes": 58,
+      "sha256": "51d289f2291d2511b460b0b529f044a11694a3664a0f55a7c0f91a0c92b369c2"
+    },
+    {
+      "file": "both-renderers/compat-1-frames.json",
+      "bytes": 2776,
+      "sha256": "56e66dfea7b296f0a60cbcbb93d74c2fcdb0bf59cc99f2d1460335d07788c28c"
+    },
+    {
+      "file": "both-renderers/compat-1-session.jsonl",
+      "bytes": 4942,
+      "sha256": "a0493b628c24c3d4c018e40eafb7df759ef84a9207d30f13f89e476227d42d2c"
+    },
+    {
+      "file": "both-renderers/compat-1.log",
+      "bytes": 7178,
+      "sha256": "fdfb9c19c54849f9f1e0c43be03fbc1715b3dcbd243bbba5e8ca922ef40a9cb6"
+    },
+    {
+      "file": "both-renderers/compat-2-boot.json",
+      "bytes": 4288,
+      "sha256": "eee61ea36ccbaeb8acda8f21b12d466058eca6e5cf04bc84c7a3762ba5b61a9c"
+    },
+    {
+      "file": "both-renderers/compat-2-focus.log",
+      "bytes": 58,
+      "sha256": "5eb04d728f081efbea0964b26919d3161553814fa8ea35227034778d13b67c1f"
+    },
+    {
+      "file": "both-renderers/compat-2-frames.json",
+      "bytes": 2783,
+      "sha256": "256234292bbed134aee60320b203feccb9cefb5ef423bc0006f282216d0055d9"
+    },
+    {
+      "file": "both-renderers/compat-2-session.jsonl",
+      "bytes": 4833,
+      "sha256": "a6af0125a972ae616ea21cecd190f7b4d6ffdb12540b72e06541b20c2461ecee"
+    },
+    {
+      "file": "both-renderers/compat-2.log",
+      "bytes": 7187,
+      "sha256": "78a526f946fac673da93cf0bd5522e09a7dfa0410037bab1863dc239f276bcf2"
+    },
+    {
+      "file": "both-renderers/default-metal-1-before-frame.sample.txt",
+      "bytes": 238879,
+      "sha256": "d6bb1b34a80b3d356c1ba840dbd6643173060b0d3143dbd77a1125543c877397"
+    },
+    {
+      "file": "both-renderers/default-metal-1-before-scene.sample.txt",
+      "bytes": 279962,
+      "sha256": "cc72a48916e40a327581051008a41fbcea89cbe64aab1fa8ed321e921bcd4bc4"
+    },
+    {
+      "file": "both-renderers/default-metal-1-boot.json",
+      "bytes": 4233,
+      "sha256": "9563d953e9645667ebcf10378b908c3eba9df73595db6a99c7d8779c40aace8c"
+    },
+    {
+      "file": "both-renderers/default-metal-1-focus.log",
+      "bytes": 58,
+      "sha256": "3a4ad47f2b8c6b51daa0dd9d8e4628423ffcaa19b23fe5a7b4e530eac983e098"
+    },
+    {
+      "file": "both-renderers/default-metal-1-frames.json",
+      "bytes": 2645,
+      "sha256": "e13a287f44c434c78e6715c85ec7538e37eeff49e8bfbc886b9cbae30b96dc7f"
+    },
+    {
+      "file": "both-renderers/default-metal-1-session.jsonl",
+      "bytes": 7083,
+      "sha256": "5101209d12b6a79e2d054dd71a7792ac03476758c0a48df8adba8e9bb0d23bf6"
+    },
+    {
+      "file": "both-renderers/default-metal-1.log",
+      "bytes": 6649,
+      "sha256": "29da4ea52f543822c9e69270b46081f2893a15ac1a9967d84cf144508bf1a310"
+    },
+    {
+      "file": "both-renderers/default-metal-2-boot.json",
+      "bytes": 4232,
+      "sha256": "a64d644ff367ed700710b6d1665f67d20d0a26afaffa86a3fec43ffa7492e5b0"
+    },
+    {
+      "file": "both-renderers/default-metal-2-focus.log",
+      "bytes": 58,
+      "sha256": "e570c94c5cb14ec22db103969aadaef915ab1b6d3c1aa92c3749eecfb9c5c4d2"
+    },
+    {
+      "file": "both-renderers/default-metal-2-frames.json",
+      "bytes": 11631,
+      "sha256": "e442caf5b9475600199042ce1cb9817f56c4df093dd9020ddbf61fcf368c575f"
+    },
+    {
+      "file": "both-renderers/default-metal-2-session.jsonl",
+      "bytes": 40308,
+      "sha256": "7f9d34afa2574651000346ad71ad022529b2bcc946871353281787f2aa2c9b0b"
+    },
+    {
+      "file": "both-renderers/default-metal-2.log",
+      "bytes": 7107,
+      "sha256": "d733b4d8e3637860a6e417f3a456ca53f869c23a8d9f5d7322987ed225897c2e"
+    },
+    {
+      "file": "both-renderers/focus-control-boot.json",
+      "bytes": 7520,
+      "sha256": "f8635419c33debee8f89ba3cec73c2775f54feb391e556b1bcb4e06000d98cd8"
+    },
+    {
+      "file": "both-renderers/focus-control-focus.log",
+      "bytes": 168,
+      "sha256": "6e1ad2a5c87d27970f2128abaf3ca87b6e79ced257cab69341dbfdb47039bd54"
+    },
+    {
+      "file": "both-renderers/focus-control-frames.json",
+      "bytes": 2746,
+      "sha256": "5f0ed1ec216f6246c72d1f55d8326c0c88669ffad7be573014d7637efe4fee1e"
+    },
+    {
+      "file": "both-renderers/focus-control-session.jsonl",
+      "bytes": 4751,
+      "sha256": "8560a5fc48785261c8fa258198293cf8c4c2ead308c0d9aff287c97485736fae"
+    },
+    {
+      "file": "both-renderers/focus-control.log",
+      "bytes": 9601,
+      "sha256": "89f32b3dcfeb91fdd1cc3c382d3a5b0cb0879be5e92695b6a18cb4f4dd37644b"
+    },
+    {
+      "file": "both-renderers/native-single-sample-boot.json",
+      "bytes": 4243,
+      "sha256": "346b3fa66681cb99e5953028fe3790fc2cfccf939f59ea4e5aa1385f8b5e1a1a"
+    },
+    {
+      "file": "both-renderers/native-single-sample-focus.log",
+      "bytes": 59,
+      "sha256": "49089f72b8171aa3cf0ac079f3a87350f8f38551e3979f24d633858a5614e157"
+    },
+    {
+      "file": "both-renderers/native-single-sample-frames.json",
+      "bytes": 15902,
+      "sha256": "8d78beb52e47d742b01d7eb21bcec9d38b24fad384f2bda6db28f143dc4dabd0"
+    },
+    {
+      "file": "both-renderers/native-single-sample-session.jsonl",
+      "bytes": 59510,
+      "sha256": "6f5a8c9237fe9d4f258b67e6099e174884c2d33e88b2316eff4d08fcf36b1bba"
+    },
+    {
+      "file": "both-renderers/native-single-sample.log",
+      "bytes": 7132,
+      "sha256": "daa98ce466147da4b28c17a48b39a008534d05b942794233d5860030647e71e4"
+    },
+    {
+      "file": "both-renderers/performance-metal-boot.json",
+      "bytes": 4236,
+      "sha256": "a6d3c1e400133da286f089a03186e1c993a0f5bfffb60146b4111f2d6d407f6b"
+    },
+    {
+      "file": "both-renderers/performance-metal-focus.log",
+      "bytes": 58,
+      "sha256": "0781ce7dbe485ff2b303141102790644d127c0059ee88e21166d43fd67936961"
+    },
+    {
+      "file": "both-renderers/performance-metal-frames.json",
+      "bytes": 4572,
+      "sha256": "64202aa5a9878e4f2f64246d61c7ccf9be0bb90abf028521556e587dbd0c2dcf"
+    },
+    {
+      "file": "both-renderers/performance-metal-session.jsonl",
+      "bytes": 21531,
+      "sha256": "43495f1002c81f711e21455054173a8ff1ec96b3343c8ef20d9c15b73e4b493b"
+    },
+    {
+      "file": "both-renderers/performance-metal.log",
+      "bytes": 6860,
+      "sha256": "89cf2a8cd6dad883fbf362301ee6d15aa366a539858d72a956617cbd0994af43"
+    },
+    {
+      "file": "both-renderers/renderer-comparison.json",
+      "bytes": 35528,
+      "sha256": "7fa5b4a7e304e8d2e9c3cc213ba3e958bfc058862f92619262776a7447fd3e5a"
+    },
+    {
+      "file": "both-renderers/shipping-metal-boot.json",
+      "bytes": 4241,
+      "sha256": "f56fc716f203e5244418228a7865d851e28d4a1d5f53bd3f395a2d1990055a22"
+    },
+    {
+      "file": "both-renderers/shipping-metal-focus.log",
+      "bytes": 59,
+      "sha256": "db53f5ee529c1d808c22a52c09596e826e1f6c87af7266d1722eca3bb605f464"
+    },
+    {
+      "file": "both-renderers/shipping-metal-frames.json",
+      "bytes": 13995,
+      "sha256": "d4c498eff71068e5c26d80718db5d40e4d28bf8de377097b16f51707a5e85c04"
+    },
+    {
+      "file": "both-renderers/shipping-metal-session.jsonl",
+      "bytes": 50437,
+      "sha256": "7145c52462b01052fbbb86f4b2244a44f3fb573434b698a1b78f456a6debfcd0"
+    },
+    {
+      "file": "both-renderers/shipping-metal.log",
+      "bytes": 7283,
+      "sha256": "c352a7c12e9cbf2ff4b57237ac70dbdf093f88f0ddda62854f17e46cf4cc66d7"
+    },
+    {
+      "file": "cold-1/default-metal-1-boot.json",
+      "bytes": 4241,
+      "sha256": "ee19aa327a5ffd6b94d6e8745a231e240d4dfb28573383fdecab578bc4758b07"
+    },
+    {
+      "file": "cold-1/default-metal-1-focus.log",
+      "bytes": 59,
+      "sha256": "624c694266b9b7460ec14e6e19868f3677b9239af4610529de055213f125f5f6"
+    },
+    {
+      "file": "cold-1/default-metal-1-frames.json",
+      "bytes": 3715,
+      "sha256": "53b1342bc7b0729e66087988fe01b587968a1e6bf55f655276ea1928f94744f1"
+    },
+    {
+      "file": "cold-1/default-metal-1-session.jsonl",
+      "bytes": 16567,
+      "sha256": "4ad9c9775d866f5c98241938c2bd1a296adf293f6cc1fb590964e72285d96120"
+    },
+    {
+      "file": "cold-1/default-metal-1.log",
+      "bytes": 6852,
+      "sha256": "0ff81dd406084f54de9647654afec4f98ca5fad7baa552df243529b413297c8c"
+    },
+    {
+      "file": "cold-1/default-metal-2-boot.json",
+      "bytes": 4239,
+      "sha256": "d03b7a93285a4816778ab36955434ed0bd399b1be2e45582ffeac4e3372489a9"
+    },
+    {
+      "file": "cold-1/default-metal-2-focus.log",
+      "bytes": 59,
+      "sha256": "bb7a6f7a2538dc1428f0475f090f370c8d0e6310c31f269dcb66603d95539a1f"
+    },
+    {
+      "file": "cold-1/default-metal-2-frames.json",
+      "bytes": 16592,
+      "sha256": "4a9cf43accf4c09613aca308a5d30b64f5d6873601b337058b49c9f20341f348"
+    },
+    {
+      "file": "cold-1/default-metal-2-session.jsonl",
+      "bytes": 61824,
+      "sha256": "2468e708b6c88cf4a5196d83be64e1a9a56311a04516206d5c4d238bd78ac5ca"
+    },
+    {
+      "file": "cold-1/default-metal-2.log",
+      "bytes": 7249,
+      "sha256": "aba61af89289da2277a24c9a9ab1cda0b1b7655e477e39be6f7e104572f619b4"
+    },
+    {
+      "file": "cold-1/renderer-comparison.json",
+      "bytes": 12272,
+      "sha256": "c64ef6a3e1b197aadb850774dd59aff47940fb7b3251b27e3553fb3a944a2d55"
+    },
+    {
+      "file": "cold-1/startup-focus-control-boot.json",
+      "bytes": 7462,
+      "sha256": "95046c1e8d3a03c7d9b50cb262f6f3c572cbbeba4f6ff483d779d60831cdf63f"
+    },
+    {
+      "file": "cold-1/startup-focus-control-focus.log",
+      "bytes": 170,
+      "sha256": "c512d845a4b02a98ff9dc959250aaa787ced40c79e22ac41a99f882016c5af68"
+    },
+    {
+      "file": "cold-1/startup-focus-control-frames.json",
+      "bytes": 3592,
+      "sha256": "6597aefa01a5b6f4ea3a350ebc02184e29239bf83b06cfdb2867561261ed7806"
+    },
+    {
+      "file": "cold-1/startup-focus-control-session.jsonl",
+      "bytes": 15496,
+      "sha256": "c78c82827334cfa3050b11565d85a50099c8ed3663048f8e75fea5aa60fddaaa"
+    },
+    {
+      "file": "cold-1/startup-focus-control.log",
+      "bytes": 9140,
+      "sha256": "a872293fb42954d483abfcbd3bb14a914032404f71e0da7c0d66298e64ae1a92"
+    },
+    {
+      "file": "cold-2/default-metal-1-boot.json",
+      "bytes": 4242,
+      "sha256": "0f28a0376ce71fe15f2788078699a3f7db3143520c49e28ece3c5a781d8f75ec"
+    },
+    {
+      "file": "cold-2/default-metal-1-focus.log",
+      "bytes": 59,
+      "sha256": "2b1e6348586fc70d530f42f7c39196789d1dbaa76963cf09f68b13215a9bd429"
+    },
+    {
+      "file": "cold-2/default-metal-1-frames.json",
+      "bytes": 3759,
+      "sha256": "b5c77ce50a3ef985f849e7eac4f342ff961c01ec085cc05d7d2beeb409631fb4"
+    },
+    {
+      "file": "cold-2/default-metal-1-session.jsonl",
+      "bytes": 16409,
+      "sha256": "df3db2f3ed2422eabc37612f1ff24d275d852462a6b8034715364ee1ca352205"
+    },
+    {
+      "file": "cold-2/default-metal-1.log",
+      "bytes": 6838,
+      "sha256": "e59cc60d9700f2ee1c38727239bde53a62536067a339e851bff6323afdee6c25"
+    },
+    {
+      "file": "cold-2/default-metal-2-boot.json",
+      "bytes": 4239,
+      "sha256": "c4545819cc3b3404036f85dd13c3a731873666b83a5b29dca50828bc42bd4481"
+    },
+    {
+      "file": "cold-2/default-metal-2-focus.log",
+      "bytes": 59,
+      "sha256": "6712faefa1aa6e05e30fc350751e2e556320e824747cb24d424e8743d809532f"
+    },
+    {
+      "file": "cold-2/default-metal-2-frames.json",
+      "bytes": 16692,
+      "sha256": "90260f1ad43d28b699208f8f4008730cf6c82da5fed24f48c16d487bb8390fdd"
+    },
+    {
+      "file": "cold-2/default-metal-2-session.jsonl",
+      "bytes": 62727,
+      "sha256": "052957ee545069fe52d1b5a9966b6e0b2cb13aef4bfcbce68664377f41b86e31"
+    },
+    {
+      "file": "cold-2/default-metal-2.log",
+      "bytes": 7232,
+      "sha256": "b64334f3ea3477c61091a6431d244132e2eeb693f8e9def5294c12d5d9a157f2"
+    },
+    {
+      "file": "cold-2/renderer-comparison.json",
+      "bytes": 12220,
+      "sha256": "69319f12c75823c91aa159e7488c660d43ac54dfc091f32b6136beba25ec4f95"
+    },
+    {
+      "file": "cold-2/startup-focus-control-boot.json",
+      "bytes": 7460,
+      "sha256": "2972043fe47b859ff50175f3baf32bed81d4aeadd45df0eff6c434af11bd0ac0"
+    },
+    {
+      "file": "cold-2/startup-focus-control-focus.log",
+      "bytes": 170,
+      "sha256": "1526b60b1e37be0f471ce30ff26eb2ec28af8f43440361e1a89188aac4f53c9d"
+    },
+    {
+      "file": "cold-2/startup-focus-control-frames.json",
+      "bytes": 3811,
+      "sha256": "767c1a7edc261653757478b25f83fd32b8cc6c288e18966ad29397ec8d111e42"
+    },
+    {
+      "file": "cold-2/startup-focus-control-session.jsonl",
+      "bytes": 16293,
+      "sha256": "3c0d21ce02f31e146f41d1c47e64f0b38943f490bd68212b1bef8d1eb346409e"
+    },
+    {
+      "file": "cold-2/startup-focus-control.log",
+      "bytes": 9120,
+      "sha256": "ed33f054e5a69532067e5a70bf04a0ced7ee619d6263ac5c07c8074fde525a95"
+    },
+    {
+      "file": "cold-3/default-metal-1-boot.json",
+      "bytes": 4243,
+      "sha256": "129cadc167ff696a2cc436a44337670fec0235a0d5e0baf5ea971ea10b9e7a35"
+    },
+    {
+      "file": "cold-3/default-metal-1-focus.log",
+      "bytes": 59,
+      "sha256": "638fe353e5afb01b2780dbb786c39de92f45e65b7d92f12fd144079e8b1df8ad"
+    },
+    {
+      "file": "cold-3/default-metal-1-frames.json",
+      "bytes": 3751,
+      "sha256": "54a195ff202bc8c62ab3fd81ec71c670209ff441ac2648121fbf674b23c1e123"
+    },
+    {
+      "file": "cold-3/default-metal-1-session.jsonl",
+      "bytes": 15868,
+      "sha256": "ef955a735bafdd2351a5309b5add71f19b2804652d227f7ec7eaa94cc7b4dc17"
+    },
+    {
+      "file": "cold-3/default-metal-1.log",
+      "bytes": 6829,
+      "sha256": "718001f3f1f68512404f0ab9c860856584ad8f406de894e45cbede86113b6be9"
+    },
+    {
+      "file": "cold-3/default-metal-2-boot.json",
+      "bytes": 4239,
+      "sha256": "27981ba261324717c737d66ecd2bd9746426dee374bc82a02536ae102b8bb854"
+    },
+    {
+      "file": "cold-3/default-metal-2-focus.log",
+      "bytes": 59,
+      "sha256": "7f7310712292374d2412f9ad5c333963678059d8c99235d281533372d9e26d65"
+    },
+    {
+      "file": "cold-3/default-metal-2-frames.json",
+      "bytes": 16765,
+      "sha256": "464b0cdc6496d7846133bb986ad48561e56e8052651328b478e868b59448b51f"
+    },
+    {
+      "file": "cold-3/default-metal-2-session.jsonl",
+      "bytes": 62728,
+      "sha256": "b5974a39eb0ef58785bd718a9cfc2c83fb61c322ba4cd78579a74aa54beee5ef"
+    },
+    {
+      "file": "cold-3/default-metal-2.log",
+      "bytes": 7245,
+      "sha256": "a2678f3d220b085b55783add6c755515697ab3448544b047b1341f964d47ccfc"
+    },
+    {
+      "file": "cold-3/renderer-comparison.json",
+      "bytes": 12246,
+      "sha256": "3dac73dd6f69560b3204f2bc870a027245d8509c126b8da4c1b2330d3ced7f4d"
+    },
+    {
+      "file": "cold-3/startup-focus-control-boot.json",
+      "bytes": 7465,
+      "sha256": "87ff8d77fb2a00dc1a5d0595b0e97fab29db682da8d8c9e05973f3041bfc4c8f"
+    },
+    {
+      "file": "cold-3/startup-focus-control-focus.log",
+      "bytes": 170,
+      "sha256": "102c1f103103be786a4e47834754f1cccf9ebd5aa63b971b92edbb4abd5da706"
+    },
+    {
+      "file": "cold-3/startup-focus-control-frames.json",
+      "bytes": 3728,
+      "sha256": "e2453dd87428e8a240e1e1558e54d855d9eb343dc3a4c6b0f427a67657571592"
+    },
+    {
+      "file": "cold-3/startup-focus-control-session.jsonl",
+      "bytes": 16367,
+      "sha256": "c6d4cb17ae26d22b2e5c7fd9eef151b396691276bf59167a37ee3f46c26dbd74"
+    },
+    {
+      "file": "cold-3/startup-focus-control.log",
+      "bytes": 9146,
+      "sha256": "ead315ee5ffbd8f84b7b1e45a55d08b0475750bb7d4fab461e28ea2ee230361f"
+    },
+    {
+      "file": "delivery.json",
+      "bytes": 1334,
+      "sha256": "281bdc2051b34b5031ab0b8c67054f84264102deb13d3c75ef3205aecb4485f8"
+    },
+    {
+      "file": "host.txt",
+      "bytes": 785,
+      "sha256": "66ad07b12e2cf402fa4353eccb72573c1e0caa089c9f56177dfd69f26ecae56b"
+    },
+    {
+      "file": "input-smoke/grove-native.jpg",
+      "bytes": 1742133,
+      "sha256": "534720e50763ae3756e4b348bef0f3d34f292979184556fb55195e3805680bc7"
+    },
+    {
+      "file": "input-smoke/muster.jpg",
+      "bytes": 1289976,
+      "sha256": "417e8f4ec1820c54e21ecab962c9855d3673ab3ecddde728a5bd3bf9fda8fcac"
+    },
+    {
+      "file": "input-smoke/near-company-native.jpg",
+      "bytes": 1740871,
+      "sha256": "a20db153bf74d617875b946b1d9ce9cabc2f89b77dcc3ef10841e9e460b73c41"
+    },
+    {
+      "file": "input-smoke/prepared-native.jpg",
+      "bytes": 1783672,
+      "sha256": "d7a09d565afd6e3b56494ffba7ec7f4b9a57497d39c374c10ecfabb26f17b028"
+    },
+    {
+      "file": "input-smoke/previous-daylight-native.jpg",
+      "bytes": 1846101,
+      "sha256": "b5d80b33f2c0ee3a8093dc20cd2462a1de6c2a56763e15f007612d7af1c063ce"
+    },
+    {
+      "file": "input-smoke/progress.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "input-smoke/resource-time.log",
+      "bytes": 697,
+      "sha256": "04cf85f8bad6101f15b7b62afa2d162e7cadc2d48f92b34f4f7d8b61e1689a10"
+    },
+    {
+      "file": "input-smoke/whole-map-native.jpg",
+      "bytes": 1339077,
+      "sha256": "cbcbb588f5bf80fa0567c20d9f78c7cc0d73f029d665f53fab4d5a6f42737df4"
+    },
+    {
+      "file": "input-smoke/window.log",
+      "bytes": 416,
+      "sha256": "7ec31d68edf79a134d17f2e01f3bc7bc7bc00fb62d34f6ea59f342f6635cc86f"
+    },
+    {
+      "file": "movie/approach-preview.jpg",
+      "bytes": 548187,
+      "sha256": "911a6715e8431b6257c91a1c2dc1d575e199aec4bb8e5a185b364c31540e72ac"
+    },
+    {
+      "file": "movie/approach.jpg",
+      "bytes": 1653276,
+      "sha256": "e381f30c4f3668b63bacf8b1209fa1a67bf3e76d6e43f62222352a0856c1dac1"
+    },
+    {
+      "file": "movie/battle-result-native.jpg",
+      "bytes": 1757311,
+      "sha256": "f16ea19ebcbf3a34c03d81d35d24d0d0dc8d3d2794d2cc749cc39d2288f309ab"
+    },
+    {
+      "file": "movie/first-contact-preview.jpg",
+      "bytes": 582916,
+      "sha256": "ad78195d682724ccbbb42d79f1bb7d89957fa0c3f5f6fdce346bb36c5331c491"
+    },
+    {
+      "file": "movie/first-contact.jpg",
+      "bytes": 1774275,
+      "sha256": "d500f8c728a97a5773b9b421ee1fe1d01d03b090ffaa566d78a593c041c55887"
+    },
+    {
+      "file": "movie/gate-preview.jpg",
+      "bytes": 601501,
+      "sha256": "6c2cbc3b2d5572875254243a3cded106011c784e95f88f26d75fe7dbdb670d44"
+    },
+    {
+      "file": "movie/gate.jpg",
+      "bytes": 1825732,
+      "sha256": "6441696e3732c5c2698b7a1ce8fcb11cfb28676b8d38dbfbefb7c6a647355b14"
+    },
+    {
+      "file": "movie/input-and-camera.json",
+      "bytes": 2085804,
+      "sha256": "de24d57a56fd9fe859711da0676a64c459c1458b54a769a2839bf66bc1275b72"
+    },
+    {
+      "file": "movie/muster.jpg",
+      "bytes": 1290134,
+      "sha256": "170766cc2394d7dabb10294e0f3d789fbf236c5b370553bfc85842488c5f77ad"
+    },
+    {
+      "file": "movie/parts/river-gate-part-00.mp4",
+      "bytes": 47655876,
+      "sha256": "2d04c7aa73c597c7cf94246e7aa590cc66cd345d4cab4e22e546d478cb4c35eb"
+    },
+    {
+      "file": "movie/parts/river-gate-part-01.mp4",
+      "bytes": 55231816,
+      "sha256": "01f1d93c390090f9745808b9abd4d9f7b115b53f4b27cdf135c1294dd6c53400"
+    },
+    {
+      "file": "movie/parts/river-gate-part-02.mp4",
+      "bytes": 44819751,
+      "sha256": "2d6591026f34d453abc32ba6da229474365fd0e29a32fc36588b5564ec5a3dbc"
+    },
+    {
+      "file": "movie/parts/river-gate-part-03.mp4",
+      "bytes": 36790027,
+      "sha256": "e8f26be8415c9ec181702b531a6cafa9c23254441f8c323d52d8e820882f659c"
+    },
+    {
+      "file": "movie/parts/river-gate-part-04.mp4",
+      "bytes": 30731901,
+      "sha256": "b7155b55249f37993260943561d80761299da2acdda49e74158fa5efdd49c78d"
+    },
+    {
+      "file": "movie/parts/river-gate-part-05.mp4",
+      "bytes": 21899840,
+      "sha256": "3285e6d17e442cfc0fcd07732c45fb57930e6711f7af30a05d83764ee862b465"
+    },
+    {
+      "file": "movie/parts/river-gate-part-06.mp4",
+      "bytes": 16586029,
+      "sha256": "fdbf754ffc41126c4b4ef82b562f9e0911d2644e27046c1c02977b026364380d"
+    },
+    {
+      "file": "movie/parts/river-gate-part-07.mp4",
+      "bytes": 16177186,
+      "sha256": "d39ffedc2a18e416641738b1a18d5333e957b1ed1482556e5742eb504ec65550"
+    },
+    {
+      "file": "movie/parts/river-gate-part-08.mp4",
+      "bytes": 16155764,
+      "sha256": "84bd3be98392383bee228d9bf02018f80f48455360b9b9a0466bf1231515cec7"
+    },
+    {
+      "file": "movie/parts/river-gate-part-09.mp4",
+      "bytes": 16377356,
+      "sha256": "79e103db614f44c7aff3c5b86eec44a38957efc37ffabb37f51dec4e1d777944"
+    },
+    {
+      "file": "movie/parts/river-gate-part-10.mp4",
+      "bytes": 14147310,
+      "sha256": "96b89ea3f30c39aeb0d433097fbe0849d11893bc25f127db2481c6d02abc8507"
+    },
+    {
+      "file": "movie/parts/river-gate-part-11.mp4",
+      "bytes": 1057198,
+      "sha256": "8c067d74577fb2e9f52c9487fba155c41356d0091e5c3522b96f4620d84b15a6"
+    },
+    {
+      "file": "movie/parts/viewable-film.json",
+      "bytes": 3893,
+      "sha256": "d9df6ec537558cfe7a678240f349282c51c0114914108a8f6b025c958327ee02"
+    },
+    {
+      "file": "movie/prepared-native.jpg",
+      "bytes": 1783258,
+      "sha256": "5ece735745318f9afa4135d0c659ca311f49f5f42ca12e705225295c097ca0dd"
+    },
+    {
+      "file": "movie/progress.jsonl",
+      "bytes": 76349,
+      "sha256": "0f0766136e504dc2befad1a094a13f6f6b5e8c2ba9b4b89cc67ac25238fe2add"
+    },
+    {
+      "file": "movie/recording.json",
+      "bytes": 10405,
+      "sha256": "f0e7cbeef58bc475210cb8baadbff64e5c117cf22308e933870cae3c806e7b5f"
+    },
+    {
+      "file": "movie/resource-time.log",
+      "bytes": 697,
+      "sha256": "d01a99cc77ca27dc747c2cd64bb2445f141f6fa7851a70e34c062e7d42bf2ac5"
+    },
+    {
+      "file": "movie/sequence.jpg",
+      "bytes": 247364,
+      "sha256": "eb24f46717d0075d5704ebd67dfa5d253a725cb911480813eb3427f1855517fd"
+    },
+    {
+      "file": "movie/view-0015.jpg",
+      "bytes": 1584842,
+      "sha256": "886db01c578e1473dc912d30301e606b8f410f636facfd95a05bd4109fa90eb9"
+    },
+    {
+      "file": "movie/view-0050.jpg",
+      "bytes": 1593634,
+      "sha256": "199ea146a3cc0e9c3e9a3fd738ee42260e1c90ab1cba6a45849a1870abfb0d5e"
+    },
+    {
+      "file": "movie/view-0075.jpg",
+      "bytes": 1615216,
+      "sha256": "974f6d5fcace84bc1ab907ea97bbbbf71b0f3f9bac1afc78be5cc77f78ba397c"
+    },
+    {
+      "file": "movie/view-0105.jpg",
+      "bytes": 1640970,
+      "sha256": "0cb2e5a0de9443b2a89a5bddd228905838f615d5aaeea38d60adadc78749bfb4"
+    },
+    {
+      "file": "movie/view-0135.jpg",
+      "bytes": 1650532,
+      "sha256": "0e8b5b5dd6afd82a1c7188b1e129d3a90c12dc81de9bb8871df09a60d547171a"
+    },
+    {
+      "file": "movie/view-0145.jpg",
+      "bytes": 1646407,
+      "sha256": "dbada610cd35be8431d44b2cfa372ba3c6962e68306769d7a8bb2647ef071798"
+    },
+    {
+      "file": "movie/view-0185.jpg",
+      "bytes": 1655309,
+      "sha256": "b51f92e31251684cc887a3f4fccc2f826a696e67d59edfaf338243ee71200718"
+    },
+    {
+      "file": "movie/view-0245.jpg",
+      "bytes": 1683318,
+      "sha256": "c4d30c4f366fbe2d98d8c59c4c9e32f0c47bc156b73ed7a88bbfdde4f2f2eb59"
+    },
+    {
+      "file": "movie/view-0355.jpg",
+      "bytes": 1703754,
+      "sha256": "1280bce7cc52000595ccefb0fdbd379f83c279083630e102d7e50e7ab8d2ed8e"
+    },
+    {
+      "file": "movie/view-0460.jpg",
+      "bytes": 1697731,
+      "sha256": "96b6b0786aac42d5bea6690716766ca5233358adda0cd7bc9d41ceb253c5f62f"
+    },
+    {
+      "file": "movie/window.log",
+      "bytes": 54109,
+      "sha256": "d041fde41a1095883411863da89ac09cefef12d03a17735c7bcf7e1923ff086c"
+    },
+    {
+      "file": "native-performance.json",
+      "bytes": 22151,
+      "sha256": "96e73238c2b3cb0ceb58f4ddc1a901f49f7cb76de6d04e82bd0d131cca65fb1c"
+    },
+    {
+      "file": "profile-qhd-100/frame-times/river-gate-1794654666-15244.jsonl",
+      "bytes": 29618,
+      "sha256": "2aa3b112ab16c54d13ba7f0eb05f8f32d442ac2d34aae28bcf76abe8bcf9d3b4"
+    },
+    {
+      "file": "profile-qhd-100/input-and-camera.json",
+      "bytes": 24890,
+      "sha256": "d9a0b386ef46fb4c6c512db6431426922a3b9890786ce27980f93b229927839f"
+    },
+    {
+      "file": "profile-qhd-100/muster.jpg",
+      "bytes": 1158289,
+      "sha256": "fe96b29bf23c2276c6432af58530dd7118099f056853de2c7021a55d5f826e1c"
+    },
+    {
+      "file": "profile-qhd-100/prepared-native.jpg",
+      "bytes": 1713457,
+      "sha256": "f2444baf7e5ab550d1da7c8de3d013b374a64fb6f351194815a2e33dfc4d9b3d"
+    },
+    {
+      "file": "profile-qhd-100/progress.jsonl",
+      "bytes": 14710,
+      "sha256": "fac90dc0977670f746244db0ef53d8187dcaebb22d84774bb8161f66cd409c97"
+    },
+    {
+      "file": "profile-qhd-100/resource-time.log",
+      "bytes": 697,
+      "sha256": "f9cf895aff6dc521d9a970e3f4f898e2b232f4931f171f3643031c7767a9fbb2"
+    },
+    {
+      "file": "profile-qhd-100/window.log",
+      "bytes": 15670,
+      "sha256": "c1cc20a64c27d2f98ee5fa89287f1285c6386f1db0a0283b81efba18cde06938"
+    },
+    {
+      "file": "profile-qhd-20/frame-times/river-gate-1794654605-13679.jsonl",
+      "bytes": 39815,
+      "sha256": "0578875e434490d45212da18f2d86bcf0cf20fcf34e9fc50a330c3a7e1d75746"
+    },
+    {
+      "file": "profile-qhd-20/input-and-camera.json",
+      "bytes": 26385,
+      "sha256": "105332e4c75cca55f0d2846e8d8fc2243cd43edd0db2fc1eb87a3298a0ad6d74"
+    },
+    {
+      "file": "profile-qhd-20/muster.jpg",
+      "bytes": 1081455,
+      "sha256": "b3d33a4e6581522f622fb919812f6eeb8ff9f000c948329d16b075baaf050254"
+    },
+    {
+      "file": "profile-qhd-20/prepared-native.jpg",
+      "bytes": 1602745,
+      "sha256": "6c2e36898a2cadbb5d9c9359cd6a14cc4d3a30e6058c9da3dbec18896fb094b7"
+    },
+    {
+      "file": "profile-qhd-20/progress.jsonl",
+      "bytes": 15643,
+      "sha256": "ae06cb4cea6cd0cf1998f92b82aeaa3b74f99f51c9841a996cdbf2a7500b29bf"
+    },
+    {
+      "file": "profile-qhd-20/resource-time.log",
+      "bytes": 697,
+      "sha256": "5dbae19188584a93e6680c9ea59bff61dddad3760c6623a3e6395c24aef1a85f"
+    },
+    {
+      "file": "profile-qhd-20/window.log",
+      "bytes": 16570,
+      "sha256": "861b8f27ea2a5fbb8f1c226e8782ab81f2424a218ebdd2f7427ac32e2d4814fe"
+    },
+    {
+      "file": "profile-qhd-250/frame-times/river-gate-1794654722-16789.jsonl",
+      "bytes": 37667,
+      "sha256": "35ecb06e8952ae897b47b85338eb9fdc6548f8869fb968fa7d506ac5b5decba7"
+    },
+    {
+      "file": "profile-qhd-250/input-and-camera.json",
+      "bytes": 35714,
+      "sha256": "2f7519be669f330ede00a7691defe364392b3dcf87e586f8695da8b1a826fb7f"
+    },
+    {
+      "file": "profile-qhd-250/muster.jpg",
+      "bytes": 1218440,
+      "sha256": "cfe4e835582dd03d7949980c722f1dbda80b3a8a027bf3c077e222d2d6c39989"
+    },
+    {
+      "file": "profile-qhd-250/prepared-native.jpg",
+      "bytes": 1758576,
+      "sha256": "925b1557db7602beddc35c44d1ca438eff15d14d679fee0ffd10a0a643db0a38"
+    },
+    {
+      "file": "profile-qhd-250/progress.jsonl",
+      "bytes": 21352,
+      "sha256": "4b7f81da0999a550189e63a4e40d7e1732bf859d3b954626b39c64011de8b932"
+    },
+    {
+      "file": "profile-qhd-250/resource-time.log",
+      "bytes": 697,
+      "sha256": "2f15c9605044663414ddeaad46ca7945998f62166df097b62ae6087ee6d844e8"
+    },
+    {
+      "file": "profile-qhd-250/window.log",
+      "bytes": 21996,
+      "sha256": "b04c223e108e7543ac52ba847fdbf3060fa3dcc7d9c1e78f6605e35f2db8aef5"
+    },
+    {
+      "file": "profile-qhd-512/frame-times/river-gate-1794654794-18549.jsonl",
+      "bytes": 29897,
+      "sha256": "b8fb28738eb94d426b08f76938f4f076ccdd178b2d4be5ad70a0120285b2d9d9"
+    },
+    {
+      "file": "profile-qhd-512/input-and-camera.json",
+      "bytes": 35572,
+      "sha256": "5fc70c99d3fa4facec40c7b3d86290b31ac489005dab9618c3a5039760ed21a0"
+    },
+    {
+      "file": "profile-qhd-512/muster.jpg",
+      "bytes": 1289859,
+      "sha256": "fa8c361697c5863f3a921d52451387ab354bde84d82f8ea2625bc115c6f62bae"
+    },
+    {
+      "file": "profile-qhd-512/prepared-native.jpg",
+      "bytes": 1784049,
+      "sha256": "a85b7e6b1f852c8486092d9648a7ea5ad265672e8796564b12c5769900f3d8f5"
+    },
+    {
+      "file": "profile-qhd-512/progress.jsonl",
+      "bytes": 28566,
+      "sha256": "8e42ec4d5c15a2ab9865ac8cc3e96574caff3dd5c74fada21719dade8604869e"
+    },
+    {
+      "file": "profile-qhd-512/resource-time.log",
+      "bytes": 697,
+      "sha256": "89b93ece04a0614427e74f903752c52d5ad8f545bfa6bda60e3644c0cee145fc"
+    },
+    {
+      "file": "profile-qhd-512/window.log",
+      "bytes": 21335,
+      "sha256": "1fe20b5dbb2573d58700074ed4e054252f493c581290c23a15fa145f210ba4c6"
+    },
+    {
+      "file": "profile-qhd-512-camera-tour/frame-times/river-gate-1794654867-20318.jsonl",
+      "bytes": 45710,
+      "sha256": "fadd51cc91b04e74a2c1800e166ad05615090b2c64941f32abbbfdd95848d281"
+    },
+    {
+      "file": "profile-qhd-512-camera-tour/input-and-camera.json",
+      "bytes": 37600,
+      "sha256": "1d62487e5b2964276ef51afeb9565e529a37dff12e94e8ea975f200905b09dd3"
+    },
+    {
+      "file": "profile-qhd-512-camera-tour/muster.jpg",
+      "bytes": 1289907,
+      "sha256": "d90f82a7c6af47e987dce344034872582d6c31c74444bc0f1ea3dbe2078c5411"
+    },
+    {
+      "file": "profile-qhd-512-camera-tour/prepared-native.jpg",
+      "bytes": 1784191,
+      "sha256": "0d2f61cc735d46bfe1d8ef2d2c4bd7f012e3719da8fdd648889d4fea2c7bc717"
+    },
+    {
+      "file": "profile-qhd-512-camera-tour/progress.jsonl",
+      "bytes": 22578,
+      "sha256": "2ff53f90fcd9e254abf66c921a0ec4c9a5eb6ccb59a1ced53f6a229b08a65605"
+    },
+    {
+      "file": "profile-qhd-512-camera-tour/resource-time.log",
+      "bytes": 697,
+      "sha256": "6ea3a1dad47866514e55be246562824c9cd780e68c348eec717b6ae5cb8117c2"
+    },
+    {
+      "file": "profile-qhd-512-camera-tour/window.log",
+      "bytes": 21820,
+      "sha256": "a9d200f0595d429e39943c9be05066e99b2827f682520e48bb997c8b5f740f49"
+    }
+  ],
+  "art_status": "ART_REBUILD_REQUIRED",
+  "device": "Hosted macOS, actual M5 DEVICE_NOT_RUN"
+}
