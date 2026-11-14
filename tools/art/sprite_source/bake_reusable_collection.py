@@ -6,6 +6,10 @@ from array import array
 from mathutils import Vector
 args=sys.argv[sys.argv.index('--')+1:];source,collection_name,out=args[:3]
 out=pathlib.Path(out);out.mkdir(parents=True,exist_ok=True)
+lod_policy=json.loads(pathlib.Path(args[3]).read_text()) if len(args)>3 else None
+if lod_policy:
+ assert 0<float(lod_policy['default_ratio'])<=1
+ assert all(0<float(rule['ratio'])<=1 for rule in lod_policy['rules'])
 bpy.ops.wm.read_factory_settings(use_empty=True)
 with bpy.data.libraries.load(source,link=False) as (a,b):
  assert collection_name in a.collections
@@ -18,6 +22,10 @@ for o in list(bpy.data.objects):
  if o.type!='MESH':continue
  name=o.name
  ratio=.04 if name.startswith('GEO-leaves-oak') else (.2 if name.startswith('GEO-branch.') else (.3 if name=='GEO-tree' else .15))
+ if lod_policy:
+  ratio=float(lod_policy['default_ratio'])
+  for rule in lod_policy['rules']:
+   if name.startswith(rule['prefix']):ratio=float(rule['ratio']);break
  mod=o.modifiers.new('DERIVED_STUDY_native_LOD','DECIMATE');mod.ratio=ratio;lod_edits.append({'name':name,'ratio':ratio})
 s.render.use_simplify=True;s.render.simplify_subdivision=1;s.render.simplify_subdivision_render=1
 s.render.engine='CYCLES';s.cycles.samples=8;s.cycles.use_denoising=False
@@ -53,6 +61,9 @@ for inst in deps.object_instances:
  else:bpy.data.meshes.remove(mesh)
  triangles+=unique[key]['triangles'];assert triangles<=1500000,'DERIVED_TRIANGLE_BUDGET_EXCEEDED'
  instances.append((key,inst.matrix_world.copy()));bounds.extend(inst.matrix_world@v.co for v in unique[key]['mesh'].vertices)
+instance_counts={}
+for key,matrix in instances:instance_counts[key]=instance_counts.get(key,0)+1
+geometry_costs=sorted([{'source_geometry':k.split(':')[0],'instances':instance_counts[k],'triangles_each':v['triangles'],'total_triangles':instance_counts[k]*v['triangles']} for k,v in unique.items()],key=lambda x:-x['total_triangles'])
 lo=Vector(tuple(min(v[i] for v in bounds) for i in range(3)));hi=Vector(tuple(max(v[i] for v in bounds) for i in range(3)))
 col.hide_render=True
 # Each source type gets its own tile; thousands of leaf instances share it.
@@ -62,6 +73,8 @@ for index,(key,entry) in enumerate(unique.items()):
  bpy.ops.object.select_all(action='DESELECT');obj.select_set(True);bpy.context.view_layer.objects.active=obj
  atlas=obj.data.uv_layers.new(name='LuanshiSharedAtlas');obj.data.uv_layers.active=atlas;atlas.active_render=True
  bpy.ops.object.mode_set(mode='EDIT');bpy.ops.mesh.select_all(action='SELECT');bpy.ops.uv.smart_project(angle_limit=1.151917,island_margin=.004);bpy.ops.object.mode_set(mode='OBJECT')
+ # Edit-mode roundtrip may replace RNA layer storage; never retain its pointer.
+ atlas=obj.data.uv_layers['LuanshiSharedAtlas']
  for loop in atlas.data:loop.uv=(loop.uv+Vector((index%n,index//n)))/n
  canonical.append(obj)
 # Join copies for baking, preserving cached source meshes/UVs for all instances.
@@ -134,5 +147,5 @@ world=bpy.data.worlds.new('Review_world');world.use_nodes=True;world.node_tree.n
 bpy.ops.object.select_all(action='DESELECT');target.select_set(True);bpy.context.view_layer.objects.active=target
 bpy.ops.export_scene.gltf(filepath=str(out/'derived.glb'),export_format='GLB',use_selection=True,export_apply=False,export_texcoords=True,export_normals=True)
 s.render.image_settings.file_format='PNG';s.render.filepath=str(out/'derived-NOT-GAME.png');bpy.ops.render.render(write_still=True)
-report={'source_blend_sha256':hashlib.sha256(pathlib.Path(source).read_bytes()).hexdigest(),'collection':collection_name,'triangles':triangles,'source_instances':len(instances),'unique_source_geometry':len(unique),'geometry_signature_policy':'vertices/topology/smoothing/UV/attributes/material identity','same_name_geometry_variants':{k:len(v) for k,v in name_signatures.items() if len(v)>1},'atlas_size':2048,'atlas_grid':n,'original_uv_values_preserved':True,'material_surfaces':1,'lod_edits':lod_edits,'author_origin_offset':list(shift),'source_world_min':list(lo),'source_world_max':list(hi),'derived_world_bounds_error':max((actual_lo-lo).length,(actual_hi-hi).length),'peak_rss_kib_linux':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'outputs_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.suffix in ('.png','.glb')},'limits':['Source per-instance object/random variation is canonicalized by source type','Realtime transmission not implemented','Godot graphics and draw calls NOT_RUN','Not battlefield or art acceptance']}
+report={'source_blend_sha256':hashlib.sha256(pathlib.Path(source).read_bytes()).hexdigest(),'collection':collection_name,'triangles':triangles,'geometry_costs':geometry_costs,'source_instances':len(instances),'unique_source_geometry':len(unique),'geometry_signature_policy':'vertices/topology/smoothing/UV/attributes/material identity','same_name_geometry_variants':{k:len(v) for k,v in name_signatures.items() if len(v)>1},'atlas_size':2048,'atlas_grid':n,'original_uv_values_preserved':True,'material_surfaces':1,'lod_edits':lod_edits,'lod_policy':lod_policy,'author_origin_offset':list(shift),'source_world_min':list(lo),'source_world_max':list(hi),'derived_world_bounds_error':max((actual_lo-lo).length,(actual_hi-hi).length),'peak_rss_kib_linux':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'outputs_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.suffix in ('.png','.glb')},'limits':['Source per-instance object/random variation is canonicalized by source type','Realtime transmission not implemented','Godot graphics and draw calls NOT_RUN','Not battlefield or art acceptance']}
 (out/'complete.json').write_text(json.dumps(report,indent=2));print('REUSABLE_ATLAS_COMPLETE',json.dumps(report))

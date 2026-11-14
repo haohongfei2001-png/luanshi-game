@@ -30,6 +30,17 @@ func load_native(path:String) -> Node3D:
 			material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 			mesh.mesh.surface_set_material(index,material)
 	return node
+static func template_cost(node:Node3D) -> Dictionary:
+	var triangles:=0;var surfaces:=0;var nodes:=0
+	for mesh:MeshInstance3D in node.find_children("*","MeshInstance3D",true,false):
+		nodes+=1
+		for surface in mesh.mesh.get_surface_count():
+			assert(mesh.mesh.surface_get_primitive_type(surface)==Mesh.PRIMITIVE_TRIANGLES)
+			var arrays:=mesh.mesh.surface_get_arrays(surface)
+			var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX] if arrays[Mesh.ARRAY_INDEX]!=null else PackedInt32Array()
+			triangles+=(indices.size() if not indices.is_empty() else arrays[Mesh.ARRAY_VERTEX].size())/3
+			surfaces+=1
+	return {"triangles":triangles,"surfaces":surfaces,"mesh_nodes":nodes,"actual_draw_calls":"NOT_MEASURED"}
 func own(node:Node,scene:Node) -> void:
 	for child in node.get_children():child.owner=scene;own(child,scene)
 func add_group(scene:Node3D,template:Node3D,layout:Array,label:String) -> void:
@@ -46,9 +57,11 @@ func add_group(scene:Node3D,template:Node3D,layout:Array,label:String) -> void:
 func run() -> void:
 	var args:=OS.get_cmdline_user_args();assert(args.size()==3,"tree.glb bush.glb output.scn")
 	var tree:=load_native(args[0]);var bush:=load_native(args[1])
+	var tree_cost:=template_cost(tree);var bush_cost:=template_cost(bush)
 	var region:=Node3D.new();region.name="SpriteFamilyWoodland_PRODUCTION_EXPERIMENT";root.add_child(region)
 	region.set_meta("composition","sprite-native-woodland-region-02-mipmapped")
 	region.set_meta("art_status","NOT_ACCEPTED; GODOT_GRAPHICS_NOT_RUN")
+	region.set_meta("tree_resource_cost",tree_cost);region.set_meta("bush_resource_cost",bush_cost)
 	region.set_meta("source_tree_sha256",FileAccess.get_sha256(args[0]))
 	region.set_meta("source_bush_sha256",FileAccess.get_sha256(args[1]))
 	region.set_meta("scope","Woodland family only; not complete battlefield or terrain")
@@ -56,5 +69,5 @@ func run() -> void:
 	own(region,region)
 	var packed:=PackedScene.new();assert(packed.pack(region)==OK)
 	assert(ResourceSaver.save(packed,args[2])==OK)
-	print("WOODLAND_REGION_EXPORTED ",JSON.stringify({"trees":TREE_LAYOUT.size(),"bushes":BUSH_LAYOUT.size(),"nominal_triangles":TREE_LAYOUT.size()*185676+BUSH_LAYOUT.size()*90484,"actual_draw_calls":"NOT_MEASURED","graphics":"NOT_RUN","output":args[2]}))
+	print("WOODLAND_REGION_EXPORTED ",JSON.stringify({"trees":TREE_LAYOUT.size(),"bushes":BUSH_LAYOUT.size(),"nominal_triangles":TREE_LAYOUT.size()*int(tree_cost.triangles)+BUSH_LAYOUT.size()*int(bush_cost.triangles),"actual_draw_calls":"NOT_MEASURED","graphics":"NOT_RUN","output":args[2]}))
 	tree.free();bush.free();region.free();quit()
