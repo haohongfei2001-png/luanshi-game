@@ -17,6 +17,8 @@ jobs:
           set -euo pipefail
           python3 -m pip install numpy pillow
           python3 tools/art/import_wildfire_combat.py /tmp/wildfire-combat
-          git add tools/art/source/wildfire_combat_curves.json docs/evidence/river-gate-v1-rc23/native-chain/source-comparison.json
+          python3 tools/art/inspect_company_geometry.py
+          python3 tools/art/check_native_entry.py
+          git add tools/art/source/wildfire_combat_curves.json docs/evidence/river-gate-v1-rc23/native-chain/source-comparison.json docs/evidence/river-gate-v1-rc23/native-chain/company-geometry.json docs/evidence/river-gate-v1-rc23/native-chain/overhead/entry-audit.json
           git -c user.name='River Gate armed motion audit' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive original complete armed source chains and sole measurements'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"

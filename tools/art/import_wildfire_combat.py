@@ -10,6 +10,7 @@ from import_company_march import quat_matrix, sample
 from import_garrison_issues import source_file, read_dae, UPSTREAM
 
 SOURCES=(
+    ("shield_ready","animation/biped/infantry/swordsman/idle_ready_shield_01.dae","fbbb12bcef7b5cb1a409596d7db293de160c080c"),
     ("shield_cut_01","animation/biped/infantry/swordsman/attack_melee_shield_01.dae","c4cae448aeb20d5945cb8f94f354729062815084"),
     ("shield_cut_02","animation/biped/infantry/swordsman/attack_melee_shield_02.dae","32ace1da919078a25f156a0fbb80131af477e1ff"),
     ("shield_cut_03","animation/biped/infantry/swordsman/attack_melee_shield_03.dae","5eda4275dd86bb68eda2e4af934d4314fee5889c"),
