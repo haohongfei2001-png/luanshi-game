@@ -14,8 +14,6 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: 76bda632db5573364ca886f8602264c2f81bb423
       - uses: actions/download-artifact@v4
         with:
           name: Luanshi-macOS-34b5af8db16793566df89139ccdd783ad7d6b723
@@ -38,7 +36,7 @@ jobs:
           git add -- "$dst"
           if ! git diff --cached --quiet; then
             git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record the hosted macOS bridgehead: raw window and actual frame times'
-            git push origin HEAD:refs/heads/codex/river-rc22-mac-window-evidence
+            git push origin HEAD:refs/heads/codex/river-rc22-mac-window-input
           fi
       - uses: actions/upload-artifact@v4
         if: always()
