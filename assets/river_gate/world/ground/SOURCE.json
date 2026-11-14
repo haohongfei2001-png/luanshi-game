@@ -1,0 +1,20 @@
+{
+  "brown_mud_dry": {
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_dry/brown_mud_dry_diff_2k.jpg",
+    "md5": "7c062619553df423ce2085c48b2ef3c8",
+    "license": "CC0-1.0",
+    "author": "Rob Tuytel"
+  },
+  "leafy_grass": {
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/leafy_grass/leafy_grass_diff_2k.jpg",
+    "md5": "8014f4dace676a62ed71b3dd76119dae",
+    "license": "CC0-1.0",
+    "author": "Charlotte Baglioni"
+  },
+  "forest_ground_04": {
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_ground_04/forest_ground_04_diff_2k.jpg",
+    "md5": "f6ce9c8af4316c2627a4b3fbab8ad944",
+    "license": "CC0-1.0",
+    "author": "Rob Tuytel and Rico Cilliers"
+  }
+}
