@@ -4,6 +4,14 @@ func _init() -> void:
  if path.is_empty():push_error('Explicit candidate GLB required');quit(1);return
  var doc:=GLTFDocument.new();var state:=GLTFState.new()
  if doc.append_from_file(path,state)!=OK:push_error('Candidate GLB import failed');quit(1);return
+ # Check the actual glTF declaration as well as Godot's resulting material.
+ # Godot ignoring texCoord=1 must be rejected, not mistaken for a good UV0 map.
+ for material in state.json.get('materials',[]):
+  if material.get('name','') not in ['timber','timber_cut','masonry']:continue
+  var pbr:Dictionary=material.get('pbrMetallicRoughness',{})
+  for texture in [material.get('occlusionTexture',{}),material.get('normalTexture',{}),pbr.get('baseColorTexture',{}),pbr.get('metallicRoughnessTexture',{})]:
+   if not texture.has('index') or int(texture.get('texCoord',0))!=0:
+    push_error('PBR texture declaration not supported primary UV: '+str(material.get('name')));quit(1);return
  var scene=doc.generate_scene(state)
  if scene==null:push_error('Candidate scene missing');quit(1);return
  var materials={};var pending=[scene]
