@@ -1,0 +1,14 @@
+{
+  "engine": "4.6.3.stable.official.7d41c59c4 Linux",
+  "minimal_source_bytes": 30792865,
+  "cpu_checks": 68047,
+  "cpu_failures": 0,
+  "native_bones": 65,
+  "original_lods": 18,
+  "weight_texture_checks": 125,
+  "weight_texture_failures": 0,
+  "gpu": "NOT_RUN",
+  "Metal": "NOT_RUN",
+  "M5": "NOT_TESTED",
+  "fresh_checkout_inputs": "single original GLB plus tracked text importer templates; seven PNGs extracted byte-identically from original embedded bufferViews"
+}
