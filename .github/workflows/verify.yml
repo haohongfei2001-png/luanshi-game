@@ -198,7 +198,10 @@ jobs:
     name: Play the exported Linux package through its normal inputs
     needs: verify-and-export
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    # RC25 llvmpipe progressed to 576/960 frames in 35 minutes. Preserve all
+    # 960 frames and native pixels. The recorder rejects 115s without a frame
+    # and has its own 75-minute total cap; leave setup/encoding/upload headroom.
+    timeout-minutes: 85
     steps:
       - uses: actions/checkout@v4
         with:

@@ -9,7 +9,9 @@ GODOT="${GODOT:-godot}"
 suite=${1:-all}
 case "$suite" in all|journey|footage) ;; *) echo "Usage: $0 [all|journey|footage]" >&2; exit 2 ;; esac
 if [[ "$suite" != footage ]]; then
-  timeout 100s xvfb-run -a -s '-screen 0 800x500x24' "$GODOT" --path . --resolution 800x500 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_alternate_outcomes.gd -- --field-size=20 2>&1 | tee artifacts/field-outcomes.log
+  # The 100s wall cap killed RC25 before either ending could be reported.
+  # Retain both real outcomes, reject stagnant ticks and bound total execution.
+  python3 tools/record-progress.py --idle 150 --limit 1500 --progress-marker 'FIELD_ENDING_PROGRESS tick=' -- xvfb-run -a -s '-screen 0 800x500x24' "$GODOT" --path . --resolution 800x500 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_alternate_outcomes.gd -- --field-size=20 2>&1 | tee artifacts/field-outcomes.log
   grep -q '^FIELD_ENDINGS_PASS' artifacts/field-outcomes.log
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-outcomes.log; then exit 1; fi
   # Both real escort routes share the same game process. Under hosted software

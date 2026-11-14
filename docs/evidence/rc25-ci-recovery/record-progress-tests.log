@@ -1,0 +1,14 @@
+test_actual_progress_extends_idle_but_not_total (test_record_progress.ProgressWatchdogTests.test_actual_progress_extends_idle_but_not_total) ... ok
+test_closing_output_does_not_bypass_deadline (test_record_progress.ProgressWatchdogTests.test_closing_output_does_not_bypass_deadline) ... ok
+test_exit_code_is_preserved (test_record_progress.ProgressWatchdogTests.test_exit_code_is_preserved) ... ok
+test_increasing_ticks_cannot_bypass_total_cap (test_record_progress.ProgressWatchdogTests.test_increasing_ticks_cannot_bypass_total_cap) ... ok
+test_regressing_ticks_do_not_keep_a_stall_alive (test_record_progress.ProgressWatchdogTests.test_regressing_ticks_do_not_keep_a_stall_alive) ... ok
+test_repeated_ticks_do_not_keep_a_stall_alive (test_record_progress.ProgressWatchdogTests.test_repeated_ticks_do_not_keep_a_stall_alive) ... ok
+test_silence_is_stopped (test_record_progress.ProgressWatchdogTests.test_silence_is_stopped) ... ok
+test_split_output_reassembles_progress (test_record_progress.ProgressWatchdogTests.test_split_output_reassembles_progress) ... ok
+test_unrelated_logs_do_not_keep_a_stall_alive (test_record_progress.ProgressWatchdogTests.test_unrelated_logs_do_not_keep_a_stall_alive) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 5.870s
+
+OK

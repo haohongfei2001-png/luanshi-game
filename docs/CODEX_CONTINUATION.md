@@ -1,6 +1,15 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
-## 2026-11-14 当前 P0 · 完整战场、人物与马匹重建
+## OWNER-DOT-HANDOFF-20261114 · Codex 已暂停，Dot 接续
+
+Owner 最新要求暂停 Codex 开发并交给 Dot。Codex Goal 和 automation-2 均为 PAUSED，子代理已停止。后续负责人读取 [Dot 开发交接](DOT_DEVELOPMENT_HANDOFF_20261114.md) 和 [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。本节覆盖后文旧的 Codex 自动续接指令。
+
+RC25 固定源码 d1c1895221c33386d471922807ed590a6987dbe1，草稿PR59。新环境独立分支 codex/river-biome-rebuild，最近静帧提交814417f12092d95d0086d59b5e90ce8db00964cb。双手枪分支codex/river-rc25-native-spear停在7aaf21be288a607132ec96e1c9a1f5cdbf2f16f3，尚待接纳。全部已推送。
+
+正式RC25基础验证通过，footage与escort两项失败，其他图形/原生/环境运行尚在收尾。精确日志、恢复命令、已验证RC24包和性能见交接。整体美术ART_REBUILD_REQUIRED / OWNER_REJECTED，真实M5 DEVICE_NOT_RUN。Dot已在自身云电脑接手；当前不接纳未通过审图的biome/双手枪实验，直接以RC25重建。
+
+
+## 2026-11-14 交接前技术记录（结果以最新证据为准）· 完整战场、人物与马匹重建
 
 整体美术仍为 **ART_REBUILD_REQUIRED / OWNER_REJECTED**。批准参考是最低门槛。全部开发与实机验证在托管环境进行。真实M5为 **DEVICE_NOT_RUN**。
 
@@ -38,7 +47,7 @@
 
 512固定镜头RSS约589MiB，峰值内存占用约1664MiB，实时60FPS目标未达成。P95/P99高于先前b715样本，后续需要结合原始CPU分段和可见模型成本继续优化。GPU设备时间戳不可用。禁止以1000×600启动样本或24fps影片采样率替代这张2K性能表。
 
-Goal active。automation-2已配置上海10/22点，独立定时执行未证实。旧重叠PR保持原样。
+历史 Goal active 和 automation-2 配置已被 Owner 暂停决定覆盖，保持 PAUSED。旧重叠PR保持原样。
 
 下一条执行动作读取本分支head、PR59检查、whole-world-delivery与独立枪链。RC25完成全部回归、两后端、5种实时场景、完整自然战役影片和9冷启动之后再更新结果。若任一失败，保留日志、定位实际失败并修复。继续重建地图远景层次、自然岸坡、统一树冠色块及剩余兵器全身动作，整体美术维持未通过。
 
