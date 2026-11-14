@@ -13,12 +13,12 @@ static func build(parent: Node3D) -> void:
 	surface.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	surface.roughness=1.0
 	surface.metallic_specular=.08
-	# X is along the river. The second value sets the length of the cut.
+	# Each group gives the bank side, longitudinal station, width and height.
 	# Run the large faces into the water, with low shingle broken around their heels.
 	var groups:Array[Vector4]=[
-		Vector4(1,-9.3,4.6,1.03),Vector4(1,-18.0,5.2,1.28),Vector4(-1,-13.1,5.4,1.16),
-		Vector4(-1,-6.05,2.2,.70),Vector4(-1,8.9,4.4,1.06),Vector4(1,8.4,3.6,.92),
-		Vector4(1,16.1,5.2,1.19),Vector4(-1,20.4,4.4,1.09)]
+		Vector4(1,-9.3,5.6,1.34),Vector4(1,-18.0,5.9,1.43),Vector4(-1,-13.1,6.0,1.42),
+		Vector4(-1,-6.05,2.2,.70),Vector4(-1,8.9,4.9,1.32),Vector4(1,8.4,4.1,1.22),
+		Vector4(1,16.1,5.8,1.32),Vector4(-1,20.4,4.4,1.09)]
 	var shapes:Array[Vector4]=[Vector4(-.29,.35,.56,.79),Vector4(.17,.03,.68,1.),
 		Vector4(.43,.46,.41,.72),Vector4(-.13,.96,.39,.54),Vector4(.34,1.26,.28,.41),
 		Vector4(-.46,.93,.25,.38),Vector4(.58,1.03,.21,.29)]
@@ -34,9 +34,22 @@ static func build(parent: Node3D) -> void:
 			if absf(p.y)-width*.48<Ground.MOAT_DECK+.60: continue
 			var yaw:=.79*k+1.61*j+.16*sin(k*4.+j*.9)
 			var basis:=Basis(Vector3.UP,yaw).scaled_local(Vector3(width, width*bed.w*piece.w,width*(.82+.09*sin(k+j))))
-			var offset:=Vector3(p.x,-.56-.12*piece.y,p.y)
 			var index:=(k*5+j*7)%library.size()
 			var key:="RiverStone%02d"%index
+			var rock:Mesh=library[key]
+			var footprint:=rock.get_aabb()
+			var outward:=-INF
+			var towards_deck:=INF
+			for corner in 8:
+				var vertex:=basis*footprint.get_endpoint(corner)
+				outward=maxf(outward,vertex.x*bed.x)
+				towards_deck=minf(towards_deck,absf(p.y+vertex.z))
+			# The tall faces remain in the already impassable channel. A soldier
+			# on the navigable bank never walks through a protruding scanned rock.
+			var shoreline:=Ground.MOAT_WATER-.12
+			p.x=Ground.MOAT_X+bed.x*minf(inset,shoreline-outward)
+			if towards_deck<Ground.MOAT_DECK+.58: continue
+			var offset:=Vector3(p.x,-.49-.12*piece.y,p.y)
 			if not instances.has(key): instances[key]=[]
 			instances[key].append(Transform3D(basis,offset))
 	for key:String in instances:

@@ -55,7 +55,16 @@ void fragment() {
 		NORMAL=normalize(mat3(VIEW_MATRIX)*outward);
 		// The artist's actual sprays retain their structure and light gaps.
 		// A broad height envelope gives the connected crown its overall volume.
-		tone=painted.rgb*(.68+.27*smoothstep(.20,.93,height));
+		float luminance=dot(painted.rgb,vec3(.27,.58,.15));
+		float value=OUTPUT_IS_SRGB ? luminance : sqrt(max(luminance,0.));
+		float leaf_value=smoothstep(.17,.83,value);
+		vec3 deep=OUTPUT_IS_SRGB ? vec3(.137,.189,.115) : vec3(.017,.030,.013);
+		vec3 mid=OUTPUT_IS_SRGB ? vec3(.295,.338,.173) : vec3(.071,.094,.025);
+		vec3 tip=OUTPUT_IS_SRGB ? vec3(.493,.476,.261) : vec3(.208,.193,.055);
+		float turn=.55*height+.45*leaf_value;
+		tone=mix(deep,mid,smoothstep(.20,.52,turn));
+		tone=mix(tone,tip,smoothstep(.58,.92,turn));
+		tone*=.94+.10*leaf_value;
 		opacity=painted.a;
 	} else if(crown>=13.5) {
 		vec3 bark=texture(grove_bark,UV).rgb;

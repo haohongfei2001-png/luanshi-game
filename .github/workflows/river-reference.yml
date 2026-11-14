@@ -2,7 +2,7 @@ name: Inspect the complete artist willow in the native-pixel playable crossing
 on:
   push:
     branches: [codex/river-rc23-complete-willow]
-    paths: ['.github/workflows/river-reference.yml','tools/art/import_ford_willow.py','scripts/field/env_foothills.gd','scripts/field/env_leaf.gdshader']
+    paths: ['.github/workflows/river-reference.yml','tools/art/import_ford_willow.py','scripts/field/env_foothills.gd','scripts/field/env_leaf.gdshader','scripts/field/presentation.gd','scripts/field/scanned_banks.gd','tools/art/bake_gate_plaster.py']
 permissions:
   contents: write
 jobs:
@@ -19,9 +19,9 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq python3-pil python3-numpy xdotool
           test -s assets/third_party/polyhaven_bank/forecourt.jpg
-          /usr/bin/python3 tools/art/import_ford_willow.py "$RUNNER_TEMP/willow-source"
-          git add assets/third_party/wildfire_willow/ford_willow.glb assets/third_party/wildfire_willow/ford_willow.png assets/third_party/wildfire_willow/ford_willow.png.import
-          git -c user.name='River Gate art build' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Retain the source willow trunk, complete drooping crown and original leaf alpha'
+          /usr/bin/python3 tools/art/bake_gate_plaster.py "$RUNNER_TEMP/gate-plaster"
+          git add assets/third_party/polyhaven_bank/rammed_earth.jpg assets/third_party/polyhaven_bank/source.json
+          git -c user.name='River Gate art build' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Replace the swirling gate plaster with the fine authored matte surface'
           git push origin HEAD:refs/heads/codex/river-rc23-complete-willow
       - name: Prepare the pinned game runtime and real-input driver
         run: |
@@ -40,7 +40,7 @@ jobs:
         run: |
           set -eu
           for dims in 2560x1440; do
-            out="docs/evidence/river-gate-v1-rc23/complete-willow/$dims"
+            out="docs/evidence/river-gate-v1-rc23/river-shelf/$dims"
             mkdir -p "$out"
             printf '[display]\nwindow/size/window_width_override=%s\nwindow/size/window_height_override=%s\n' "${dims%x*}" "${dims#*x}" > override.cfg
             xvfb-run -a -s "-screen 0 ${dims}x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution "$dims" --audio-driver Dummy --disable-vsync --fixed-fps 24 --script tests/bridgehead_window.gd -- --bridge-stills --native-plates > "$out/window.log" 2>&1 || { tail -c 5500 "$out/window.log"; exit 1; }
@@ -72,4 +72,4 @@ jobs:
         if: always()
         with:
           name: river-native-reference-frames
-          path: docs/evidence/river-gate-v1-rc23/complete-willow/
+          path: docs/evidence/river-gate-v1-rc23/river-shelf/
