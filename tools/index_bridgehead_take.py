@@ -14,7 +14,7 @@ n,fps=map(int,re.search(r"(\d+) frames at (\d+) FPS \(movie length",caplog).grou
 duration=float(v["duration"])
 stills=sorted(folder.glob("view-*.jpg"))
 image_size=list(Image.open(stills[0]).size)
-assert [v["width"],v["height"]]==image_size==[1600,1000],(image_size,v,facts["resolution"])
+assert image_size==facts["resolution"]==[1600,1000] and [v["width"],v["height"]]==[1280,800],(image_size,v,facts["resolution"])
 assert v["codec_name"]=="h264" and int(v["nb_frames"])==n and fps==24 and v["avg_frame_rate"]=="24/1"
 assert facts["internal"]==1. and len(facts["frames"])>570 and facts["ordinary"]==[512,512]
 assert a["codec_name"]=="aac" and a["channels"]==2 and abs(float(a["duration"])-duration)<.12
@@ -32,7 +32,7 @@ for name,tick in [("approach",50),("first-contact",facts["first_player_strike"])
         im.thumbnail((1152,720));im.save(folder/(name+"-preview.jpg"),quality=94,subsampling=0)
 run(["ffmpeg","-nostdin","-loglevel","error","-y","-i",str(video),"-vf",r"select=eq(n\,48)+eq(n\,132)+eq(n\,178)+eq(n\,280)+eq(n\,470)+eq(n\,705),scale=320:200,tile=3x2:padding=2","-frames:v","1",str(folder/"sequence.jpg")])
 stamp={"game_source":sys.argv[2],"capture_run":sys.argv[3],"export_candidate":sys.argv[4],"file":video.name,"sha256":sha(video),"bytes":video.stat().st_size,
-       "fps":fps,"frames":n,"seconds":duration,"battle_seconds":battle_seconds,"physical_capture_pixels":image_size,"logical_root_size":facts["resolution"],
+       "fps":fps,"frames":n,"seconds":duration,"battle_seconds":battle_seconds,"game_window_pixels":image_size,"encoded_pixels":[v["width"],v["height"]],"resolution_note":"Godot writer downsampled this first take. The full resolution edition is recorded separately from the game.",
        "original_audio":{"channels":a["channels"],"peak_db":peak,"seconds":float(a["duration"])},"encoded":metadata,"held_camera_frames_sampled":len(facts["frames"]),"camera_metres":22,
        "pitch_deg":math.degrees(facts["last"]["pitch"]),"yaw_deg":math.degrees(facts["last"]["yaw"]),"seed":facts["seed"],"first_player_contact_seconds":facts["first_player_strike"]/20.,
        "rank_spear_hits_observed":len(facts["rank_spear_contacts"]),"rank_shield_hits_observed":len(facts["shield_contacts"]),"ordinary":facts["ordinary"],"officers":facts["officers"],"last":facts["last"],
