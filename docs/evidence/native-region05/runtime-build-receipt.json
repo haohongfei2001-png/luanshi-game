@@ -1,0 +1,78 @@
+{
+  "source": "2590db24175e257dd1bf9c27360888e054eb8d52",
+  "art": "NOT_ACCEPTED",
+  "profile_sha256": "011b1563b379e73ae4ca488f7d9bfaed2904183bb975e79d3c6f468b05c55478",
+  "files": [
+    {
+      "path": "assets/river_authored/architecture/architecture.glb",
+      "bytes": 113334740,
+      "sha256": "2dc5018e859c0fcd331d6f33c035f45d4abf5fc9c31eebe0ec1d386a846f622a"
+    },
+    {
+      "path": "assets/river_authored/ground/continuous-region.scn",
+      "bytes": 167047631,
+      "sha256": "63190f3dbe29645c58593a7b44ab8b41135bbe03a09013df6aa005cb21826e47"
+    },
+    {
+      "path": "assets/river_authored/woodland/region.scn",
+      "bytes": 261295921,
+      "sha256": "b41f0eae1cb736c39b4935678d07f76313068e4eaafd708724dbb4a6887f884d"
+    },
+    {
+      "path": "assets/river_authored/grass/region.scn",
+      "bytes": 4234071,
+      "sha256": "9256e1644cd60aa84d9f4a0564bdef93c131721dee0cf6a4991f0df187c9fe2b"
+    },
+    {
+      "path": "assets/river_authored/sky/regional-sky.res",
+      "bytes": 33555616,
+      "sha256": "cb3e3f17d4dd196a9cc1e2e6f4adfa126941af2a98f8e327be8bbd6ae6df6a00"
+    }
+  ],
+  "run": 43651739659,
+  "workflow": "SUCCESS",
+  "verification": "7 original ZIP digests+CRC and all18 restored members PASS; 5 runtime hashes verified; original float32 radiance/sun/exposure contract PASS",
+  "artifacts": [
+    {
+      "name": "complete-region-runtime-00",
+      "id": 14136905128,
+      "digest": "sha256:ab5c01242350b27a03930b476a870b5fc7469c0f5676d78d732010a66133ee74"
+    },
+    {
+      "name": "complete-region-runtime-06",
+      "id": 14136657013,
+      "digest": "sha256:ecd7aa58b7309bfc23c28ee0204cdacae9199ce2269e5049f637786eb9748ff5"
+    },
+    {
+      "name": "complete-region-build-logs",
+      "id": 14136582238,
+      "digest": "sha256:0ac41ea9a5edf27bc2958076494c2f58f73220bcdd0f906fa66dda443d11aea3"
+    },
+    {
+      "name": "complete-region-runtime-02",
+      "id": 14136052901,
+      "digest": "sha256:1c0d0c987ef3838a8598788a47fb2fc989cb3e45f0ce6571463d595db52da5f4"
+    },
+    {
+      "name": "complete-region-runtime-03",
+      "id": 14135993322,
+      "digest": "sha256:ada1ab5bd84b2fbfeb833c565a59c3211c0534ef3d686b5811a9aaef8945bc34"
+    },
+    {
+      "name": "complete-region-runtime-05",
+      "id": 14135968733,
+      "digest": "sha256:5fd9acae7491e402e6853f8807de0f2d201c0545be7ac93a992245416d90b716"
+    },
+    {
+      "name": "complete-region-runtime-04",
+      "id": 14135819370,
+      "digest": "sha256:e0008166b775e76beeb0d03bb73db58cd89e22e17a3cb1f0a0eeac22ec615bdc"
+    },
+    {
+      "name": "complete-region-runtime-01",
+      "id": 14135534928,
+      "digest": "sha256:90268816a22b9115226b9b12e0395baa663fd61ce9d4ce1005cacf3103d098a2"
+    }
+  ],
+  "GPU": "NOT_RUN"
+}

@@ -18,7 +18,7 @@ jobs:
       LUANSHI_NATIVE_WOODLAND: '1'
       LUANSHI_REGIONAL_SKY: '1'
       REGION_REVIEW_MODE: 'destination-primary-action'
-      REGION_ASSET_SOURCE: '287e2ae375bc2f33cd03cbf37508faf388d7e85e'
+      REGION_ASSET_SOURCE: '2590db24175e257dd1bf9c27360888e054eb8d52'
       LUANSHI_AUTHOR_ORACLE_CACHE: ${{ github.workspace }}/.pipeline/actor-cache
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
         with:
           script: |
             const inputs = [
-              [43648903794,'287e2ae375bc2f33cd03cbf37508faf388d7e85e',{"complete-region-runtime-00": 14135571007, "complete-region-runtime-01": 14135501201, "complete-region-runtime-02": 14135715846, "complete-region-runtime-03": 14135041936, "complete-region-runtime-04": 14135775722, "complete-region-runtime-05": 14135086886}],
+              [43651739659,'2590db24175e257dd1bf9c27360888e054eb8d52',{"complete-region-runtime-00": 14136905128, "complete-region-runtime-01": 14135534928, "complete-region-runtime-02": 14136052901, "complete-region-runtime-03": 14135993322, "complete-region-runtime-04": 14135819370, "complete-region-runtime-05": 14135968733, "complete-region-runtime-06": 14136657013}],
               [43635849360,'945b2c676705460f97ba0d9e5c9d892f2a64390d',{'controlled-cache-part00':14130322625,'controlled-cache-part01':14130118176,'controlled-cache-part02':14129928581,'controlled-cache-part03':14130073371,'controlled-cache-part04':14130058319,'controlled-cache-part05':14130078406,'controlled-cache-manifest':14129998513}],
             ];
             for (const [run_id,sha,expected] of inputs) {
@@ -44,7 +44,7 @@ jobs:
           pattern: complete-region-runtime-*
           merge-multiple: true
           path: .pipeline/region-groups
-          run-id: '43648903794'
+          run-id: '43651739659'
           github-token: ${{ github.token }}
       - uses: actions/download-artifact@v4
         with:
@@ -53,7 +53,7 @@ jobs:
           path: .pipeline/actor-groups
           run-id: '43635849360'
           github-token: ${{ github.token }}
-      - name: Restore four exact runtime assets and complete external author cache, no rebake
+      - name: Restore five exact runtime assets and complete external author cache, no rebake
         run: |
           set -euo pipefail
           mkdir -p artifacts/native-region
