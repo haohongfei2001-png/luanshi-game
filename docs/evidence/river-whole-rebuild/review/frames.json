@@ -29,7 +29,11 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "3482a6e0c554c0142b00a6cefa86748c29bbc0e7",
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
     "tick": 50,
     "world_audit": [],
     "zoom": 22.0
@@ -64,7 +68,11 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "3482a6e0c554c0142b00a6cefa86748c29bbc0e7",
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
     "tick": 135,
     "world_audit": [],
     "zoom": 22.0
@@ -99,7 +107,11 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "3482a6e0c554c0142b00a6cefa86748c29bbc0e7",
+    "shadow_distance": 135.062576293945,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
     "tick": 135,
     "world_audit": [],
     "zoom": 115.0
@@ -134,10 +146,131 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "3482a6e0c554c0142b00a6cefa86748c29bbc0e7",
+    "shadow_distance": 97.0821762084961,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
     "tick": 135,
     "world_audit": [],
     "zoom": 18.0
+  },
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "shadow-split",
+    "hits": [
+      189,
+      228
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "shadow-orthogonal",
+    "hits": [
+      189,
+      228
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 0,
+    "shadow_pancake": 20.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "shadow-unclipped",
+    "hits": [
+      189,
+      228
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 0,
+    "shadow_pancake": 0.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 22.0
   },
   {
     "center": [
@@ -169,7 +302,11 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "3482a6e0c554c0142b00a6cefa86748c29bbc0e7",
+    "shadow_distance": 97.479248046875,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
     "tick": 135,
     "world_audit": [],
     "zoom": 22.0
