@@ -32,7 +32,7 @@ def main():
         assert len(used)<65536
         attrs={}
         for name in ("POSITION","NORMAL","TEXCOORD_0"):
-            vals=data[name][used];attrs[name]=lib.accessor(vals,"f",vals.shape[1],name=="POSITION")
+            vals=data[name][used];attrs[name]=lib.accessor(vals.tolist(),"f",vals.shape[1],name=="POSITION")
         result.append({"attributes":attrs,"indices":lib.accessor(indices[:,None],"H",1),"material":p["material"]})
         triangle_count+=len(selected)
     assert triangle_count>1000,triangle_count
