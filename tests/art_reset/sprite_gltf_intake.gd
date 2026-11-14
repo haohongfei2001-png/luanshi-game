@@ -1,14 +1,18 @@
 extends SceneTree
 ## Geometry/import verification only. This cannot render or accept the art.
-func _initialize() -> void:
+func _initialize() -> void:run.call_deferred()
+func run() -> void:
 	var args:=OS.get_cmdline_user_args();assert(args.size() in [1,2],"Pass derived GLB path after --")
 	var document:=GLTFDocument.new();var state:=GLTFState.new()
 	assert(document.append_from_file(args[0],state)==OK)
 	var scene:=document.generate_scene(state);assert(scene)
 	root.add_child(scene)
+	var bounds:=AABB();var first:=true
 	var triangles:=0;var surfaces:=0;var nodes:=0;var textures:=0;var uv_channels:=0;var normals:=0;var roughness:=0
 	for node:MeshInstance3D in scene.find_children("*","MeshInstance3D",true,false):
 		nodes+=1
+		var box:AABB=node.global_transform*node.mesh.get_aabb()
+		bounds=box if first else bounds.merge(box);first=false
 		for surface:int in node.mesh.get_surface_count():
 			surfaces+=1;var arrays:=node.mesh.surface_get_arrays(surface)
 			triangles+=int(arrays[Mesh.ARRAY_INDEX].size()/3)
@@ -22,5 +26,5 @@ func _initialize() -> void:
 	assert(triangles==(int(args[1]) if args.size()==2 else 90484),"Unexpected source geometry change")
 	assert(normals==1 and roughness==1,"Missing baked source normal/roughness")
 	assert(textures==1 and uv_channels>=1,"Missing baked color material")
-	print("SPRITE_GLTF_INTAKE ",JSON.stringify({"triangles":triangles,"surfaces":surfaces,"mesh_nodes":nodes,"textured_surfaces":textures,"uv_channels":uv_channels,"normal_surfaces":normals,"roughness_surfaces":roughness,"actual_draw_calls":"NOT_MEASURED","graphics":"NOT_RUN"}))
+	print("SPRITE_GLTF_INTAKE ",JSON.stringify({"bounds_position":str(bounds.position),"bounds_size":str(bounds.size),"triangles":triangles,"surfaces":surfaces,"mesh_nodes":nodes,"textured_surfaces":textures,"uv_channels":uv_channels,"normal_surfaces":normals,"roughness_surfaces":roughness,"actual_draw_calls":"NOT_MEASURED","graphics":"NOT_RUN"}))
 	scene.free();quit()
