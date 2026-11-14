@@ -1,0 +1,284 @@
+{
+  "run": 43628580816,
+  "commit": "07832d9babbea075991c2bd82469c8b4a2c87d65",
+  "artifact": 14127074889,
+  "artifact_zip_sha256": "a618f1d9f03d2f162c4e9c2217dbefc633a5876e354e9075b5696db2d995ce15",
+  "six_captures_success": true,
+  "error_log_count": 0,
+  "performance_tested": false,
+  "M5": "NOT_TESTED",
+  "art_accepted": false,
+  "visual_review": [
+    "magenta missing textures fixed",
+    "source character complete but unarmored/weaponless control",
+    "sprite darker than source3D, full material equivalence FAIL",
+    "flat shadows and absent per-pixel depth/normal remain quality gaps",
+    "no motion continuity/weapon-grip acceptance"
+  ],
+  "samples": [
+    {
+      "path": "smoke-2560x1440-hybrid-lod0/report.json",
+      "mode": "hybrid",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "camera_ortho_size": 12.0,
+      "seed": 61112,
+      "end_tick": 300,
+      "end_snapshot_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "independent_simulation_oracle_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "explicit_lod_inventory": [
+        {
+          "mesh": "Eyebrows",
+          "surfaces": [
+            {
+              "edge_length": 0.0,
+              "selected_tier": 0,
+              "selected_triangles": 984,
+              "source_triangles": 984,
+              "source_vertices": 646
+            }
+          ],
+          "tier": 0
+        },
+        {
+          "mesh": "Eyes",
+          "surfaces": [
+            {
+              "edge_length": 0.0,
+              "selected_tier": 0,
+              "selected_triangles": 768,
+              "source_triangles": 768,
+              "source_vertices": 556
+            }
+          ],
+          "tier": 0
+        },
+        {
+          "mesh": "SuperHero_Male",
+          "surfaces": [
+            {
+              "edge_length": 0.0,
+              "selected_tier": 0,
+              "selected_triangles": 12566,
+              "source_triangles": 12566,
+              "source_vertices": 7281
+            }
+          ],
+          "tier": 0
+        }
+      ],
+      "visible_units_conservative_cull": 147,
+      "palette_bytes": 349440,
+      "atlas_compressed_mip_bytes": 488753152,
+      "texture_memory": 1189446637.0,
+      "resident_process_memory": {
+        "VmHWM": "1944296 kB",
+        "VmRSS": "1930804 kB",
+        "scope": "Linux /proc/self/status process RSS/HWM, not total system memory"
+      },
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+    },
+    {
+      "path": "smoke-2560x1440-shared3d-lod0/report.json",
+      "mode": "shared3d",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "camera_ortho_size": 12.0,
+      "seed": 61112,
+      "end_tick": 300,
+      "end_snapshot_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "independent_simulation_oracle_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "explicit_lod_inventory": [
+        {
+          "mesh": "Eyebrows",
+          "surfaces": [
+            {
+              "edge_length": 0.0,
+              "selected_tier": 0,
+              "selected_triangles": 984,
+              "source_triangles": 984,
+              "source_vertices": 646
+            }
+          ],
+          "tier": 0
+        },
+        {
+          "mesh": "Eyes",
+          "surfaces": [
+            {
+              "edge_length": 0.0,
+              "selected_tier": 0,
+              "selected_triangles": 768,
+              "source_triangles": 768,
+              "source_vertices": 556
+            }
+          ],
+          "tier": 0
+        },
+        {
+          "mesh": "SuperHero_Male",
+          "surfaces": [
+            {
+              "edge_length": 0.0,
+              "selected_tier": 0,
+              "selected_triangles": 12566,
+              "source_triangles": 12566,
+              "source_vertices": 7281
+            }
+          ],
+          "tier": 0
+        }
+      ],
+      "visible_units_conservative_cull": 147,
+      "palette_bytes": 349440,
+      "atlas_compressed_mip_bytes": 0,
+      "texture_memory": 700693485.0,
+      "resident_process_memory": {
+        "VmHWM": "2287180 kB",
+        "VmRSS": "2273680 kB",
+        "scope": "Linux /proc/self/status process RSS/HWM, not total system memory"
+      },
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+    },
+    {
+      "path": "smoke-2560x1440-shared3d-lod2/report.json",
+      "mode": "shared3d",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "camera_ortho_size": 12.0,
+      "seed": 61112,
+      "end_tick": 300,
+      "end_snapshot_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "independent_simulation_oracle_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "explicit_lod_inventory": [
+        {
+          "mesh": "Eyebrows",
+          "surfaces": [
+            {
+              "edge_length": 0.00453615421429276,
+              "selected_tier": 2,
+              "selected_triangles": 246,
+              "source_triangles": 984,
+              "source_vertices": 646
+            }
+          ],
+          "tier": 2
+        },
+        {
+          "mesh": "Eyes",
+          "surfaces": [
+            {
+              "edge_length": 0.00220415228977799,
+              "selected_tier": 2,
+              "selected_triangles": 192,
+              "source_triangles": 768,
+              "source_vertices": 556
+            }
+          ],
+          "tier": 2
+        },
+        {
+          "mesh": "SuperHero_Male",
+          "surfaces": [
+            {
+              "edge_length": 0.0145201673731208,
+              "selected_tier": 2,
+              "selected_triangles": 3140,
+              "source_triangles": 12566,
+              "source_vertices": 7281
+            }
+          ],
+          "tier": 2
+        }
+      ],
+      "visible_units_conservative_cull": 147,
+      "palette_bytes": 349440,
+      "atlas_compressed_mip_bytes": 0,
+      "texture_memory": 700693485.0,
+      "resident_process_memory": {
+        "VmHWM": "1611152 kB",
+        "VmRSS": "1611152 kB",
+        "scope": "Linux /proc/self/status process RSS/HWM, not total system memory"
+      },
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+    },
+    {
+      "path": "smoke-2560x1440-sprite16-lod0/report.json",
+      "mode": "sprite16",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "camera_ortho_size": 12.0,
+      "seed": 61112,
+      "end_tick": 300,
+      "end_snapshot_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "independent_simulation_oracle_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "explicit_lod_inventory": [],
+      "visible_units_conservative_cull": 147,
+      "palette_bytes": 0,
+      "atlas_compressed_mip_bytes": 918280448,
+      "texture_memory": 1522305936.0,
+      "resident_process_memory": {
+        "VmHWM": "2206456 kB",
+        "VmRSS": "2192584 kB",
+        "scope": "Linux /proc/self/status process RSS/HWM, not total system memory"
+      },
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+    },
+    {
+      "path": "smoke-2560x1440-sprite8-lod0/report.json",
+      "mode": "sprite8",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "camera_ortho_size": 12.0,
+      "seed": 61112,
+      "end_tick": 300,
+      "end_snapshot_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "independent_simulation_oracle_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "explicit_lod_inventory": [],
+      "visible_units_conservative_cull": 147,
+      "palette_bytes": 0,
+      "atlas_compressed_mip_bytes": 488753152,
+      "texture_memory": 1092778640.0,
+      "resident_process_memory": {
+        "VmHWM": "1821676 kB",
+        "VmRSS": "1807756 kB",
+        "scope": "Linux /proc/self/status process RSS/HWM, not total system memory"
+      },
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+    },
+    {
+      "path": "smoke-3840x2160-sprite16-lod0/report.json",
+      "mode": "sprite16",
+      "viewport": [
+        3840,
+        2160
+      ],
+      "camera_ortho_size": 12.0,
+      "seed": 61112,
+      "end_tick": 300,
+      "end_snapshot_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "independent_simulation_oracle_sha": "baef951e2b69ad7c665bb471fb5d6ab817420fb143b1a22a1449a88743ae3025",
+      "explicit_lod_inventory": [],
+      "visible_units_conservative_cull": 147,
+      "palette_bytes": 0,
+      "atlas_compressed_mip_bytes": 918280448,
+      "texture_memory": 1706625936.0,
+      "resident_process_memory": {
+        "VmHWM": "2460588 kB",
+        "VmRSS": "2411312 kB",
+        "scope": "Linux /proc/self/status process RSS/HWM, not total system memory"
+      },
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+    }
+  ]
+}

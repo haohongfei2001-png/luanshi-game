@@ -151,3 +151,26 @@ Native100+/four-size performance remains incomplete. No route winner exists.
 True alpha bounds at the fixed pitch show UBC Idle size16 is only112–135px body
 height at2K. Size12 predicts149–180px (10.35–12.5%screen height), so the bounded
 recovery smoke uses size12, not an invented official Wild Rift size.
+
+An opt-in `COMPARE_MODE=environment` diagnostic now retains all Battle steps,
+RNG, hit/casualty state and environment rendering while not preparing/drawing
+any character. It is NOT playable performance or an optimized soldier result.
+It exists to isolate the heavy shared map cost before attributing frame time to
+characters. The callback delta accumulation is explicitly reported separately
+from wall time; no claim that engine-clamped delta is a real-time clock.
+This new diagnostic has parsed locally, but has NOT yet been run in real GUI.
+
+## Recovered actual GPU six-image smoke: run43628580816 SUCCESS
+
+Commit07832d9 / artifact14127074889 (58312547B), ZIP SHA256
+`a618f1d9f03d2f162c4e9c2217dbefc633a5876e354e9075b5696db2d995ce15`.
+All six capture cases completed with zero ERROR logs and identical real tick300
+Battle snapshot. Direct compressed-byte runtime texture construction removed
+magenta missing textures. Actual2K/4K images were reviewed; sprite bodies now
+render, but are darker than full3D and have visibly different flat shadows.
+This is a texture-load recovery, NOT full appearance parity or art acceptance.
+
+`recovery-smoke.json` records the real measured allocation counters/RSS/HWM.
+At2K:3D texture counter700693485B, sprite8 1092778640B, sprite16 1522305936B.
+Those counters are not driver-resident physical VRAM. No performance was tested
+in this smoke. No default game/Mac engine/art verdict changed.
