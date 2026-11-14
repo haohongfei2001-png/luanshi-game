@@ -1,8 +1,9 @@
 {
-  "max_connected_joint_gap_m": 1.2008898127460164e-15,
+  "max_connected_joint_gap_m": 1.1188630228279524e-15,
   "minimum_sole_y_m": 0.005999999999999983,
   "release_socket_error_m": 5.661048867003676e-16,
-  "windup_recovery_seam_m": 3.3306690738754696e-16,
+  "windup_recovery_seam_m": 5.087681048627601e-16,
+  "ready_seam_m": 1.7519023829470347e-15,
   "kits": [
     {
       "kit": 0,
