@@ -1,0 +1,95 @@
+{
+  "proof": {
+    "checks": 10752.0,
+    "copied_bbox_pixels_with_repeated_8way_subset": 220314370.0,
+    "filtered_mipmap_quality": "NOT_YET_GPU_TESTED",
+    "method": "exact source alpha bounding boxes, 16px transparent guards, no resample; original root projection via per-frame offsets",
+    "original_meta_sha256": "8ec7384c5d77c32e5e5eda4bab6b6e3bd987979155d58359d02575fdeeb3b5a2",
+    "records": [
+      {
+        "clip": "Death01",
+        "copied_body_extent_max": [
+          598.0,
+          532.0
+        ],
+        "new_tile": [
+          640.0,
+          576.0
+        ],
+        "old_tile": [
+          976.0,
+          864.0
+        ]
+      },
+      {
+        "clip": "Hit_Chest",
+        "copied_body_extent_max": [
+          223.0,
+          411.0
+        ],
+        "new_tile": [
+          256.0,
+          448.0
+        ],
+        "old_tile": [
+          304.0,
+          528.0
+        ]
+      },
+      {
+        "clip": "Idle",
+        "copied_body_extent_max": [
+          209.0,
+          386.0
+        ],
+        "new_tile": [
+          256.0,
+          432.0
+        ],
+        "old_tile": [
+          304.0,
+          528.0
+        ]
+      },
+      {
+        "clip": "Sword_Attack",
+        "copied_body_extent_max": [
+          425.0,
+          498.0
+        ],
+        "new_tile": [
+          464.0,
+          544.0
+        ],
+        "old_tile": [
+          560.0,
+          688.0
+        ]
+      },
+      {
+        "clip": "Walk",
+        "copied_body_extent_max": [
+          255.0,
+          408.0
+        ],
+        "new_tile": [
+          288.0,
+          448.0
+        ],
+        "old_tile": [
+          368.0,
+          576.0
+        ]
+      }
+    ],
+    "root_projected_anchor_exact": true,
+    "visible_pixels_exact": true
+  },
+  "compressed_byte_payload": {
+    "8": 308134592,
+    "16": 532488672
+  },
+  "gpu_loaded": false,
+  "filtered_mip_quality_accepted": false,
+  "art_accepted": false
+}

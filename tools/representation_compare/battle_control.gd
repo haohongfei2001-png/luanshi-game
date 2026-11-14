@@ -74,7 +74,7 @@ func setup()->void:
   assert(atlas_meta.source_sha256==FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb"))
   for clip:String in asset.clips:
    var data=atlas_meta.clips[clip];var texture:Texture2DArray=load_atlas_pages(path,data["atlas"+str(direction_count)])
-   var mat=ShaderMaterial.new();mat.shader=load("res://tools/representation_compare/sprite.gdshader");mat.set_shader_parameter("atlas",texture);mat.set_shader_parameter("tile_pixels",Vector2(data.tile[0],data.tile[1]));mat.set_shader_parameter("atlas_pixels",Vector2(texture.get_width(),texture.get_height()));mat.set_shader_parameter("columns",int(data["columns"+str(direction_count)]));mat.set_shader_parameter("directions",direction_count);mat.set_shader_parameter("page_rows",int(data.page_rows));mat.set_shader_parameter("projected_center",Vector2(data.center_projected[0],data.center_projected[1]))
+   var mat=ShaderMaterial.new();mat.shader=load("res://tools/representation_compare/sprite.gdshader");mat.set_shader_parameter("atlas",texture);mat.set_shader_parameter("tile_pixels",Vector2(data.tile[0],data.tile[1]));mat.set_shader_parameter("atlas_pixels",Vector2(texture.get_width(),texture.get_height()));mat.set_shader_parameter("columns",int(data["columns"+str(direction_count)]));mat.set_shader_parameter("directions",direction_count);mat.set_shader_parameter("page_rows",int(data.page_rows));mat.set_shader_parameter("projected_center",Vector2(data.center_projected[0],data.center_projected[1]));mat.set_shader_parameter("per_frame_center",data.has("center_offsets16"))
    var quad=QuadMesh.new();quad.size=Vector2(data.world_size[0],data.world_size[1]);quad.material=mat
    var node=MultiMeshInstance3D.new();var mm=MultiMesh.new();mm.transform_format=MultiMesh.TRANSFORM_3D;mm.use_custom_data=true;mm.use_colors=true;mm.mesh=quad;mm.instance_count=battle.roster.size();mm.custom_aabb=AABB(Vector3(-150,-5,-100),Vector3(300,60,200));node.multimesh=mm;scene.add_child(node);sprites[clip]=node
    atlas_memory+=int(data["atlas"+str(direction_count)].compressed_mip_bytes)
@@ -114,7 +114,12 @@ func update_view()->void:
   if use3:
    asset.set_actor(batches,count3,Transform3D(Basis(Vector3.UP,pose.yaw),p),int(asset.clips[pose.clip].offset)+pose.local);count3+=1
   elif not sprites.is_empty():
-   var mm:MultiMesh=sprites[pose.clip].multimesh;var index=int(used[pose.clip]);mm.set_instance_color(index,Color.WHITE);mm.set_instance_transform(index,Transform3D(Basis.IDENTITY,p+Vector3(0,.95,0)));mm.set_instance_custom_data(index,Color(pose.local,posmod(roundi(pose.yaw/TAU*direction_count),direction_count),0,0));used[pose.clip]=index+1
+   var mm:MultiMesh=sprites[pose.clip].multimesh;var index=int(used[pose.clip]);mm.set_instance_color(index,Color.WHITE);mm.set_instance_transform(index,Transform3D(Basis.IDENTITY,p+Vector3(0,.95,0)));var facing=posmod(roundi(pose.yaw/TAU*direction_count),direction_count)
+   var center=Vector2.ZERO;var clip_meta:Dictionary=atlas_meta.clips[pose.clip]
+   if clip_meta.has("center_offsets16"):
+    var source_direction=facing if direction_count==16 else facing*2
+    var offset:Array=clip_meta.center_offsets16[pose.local*16+source_direction];center=Vector2(offset[0],offset[1])
+   mm.set_instance_custom_data(index,Color(pose.local,facing,center.x,center.y));used[pose.clip]=index+1
  for node in batches:node.multimesh.visible_instance_count=count3
  for clip in sprites:sprites[clip].multimesh.visible_instance_count=used[clip]
  if not before.is_empty():assert(before==var_to_bytes(Save.snapshot(battle)),"Presentation mutated real combat")
