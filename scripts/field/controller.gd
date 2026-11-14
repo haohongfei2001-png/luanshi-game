@@ -343,7 +343,7 @@ func _camera() -> void:
 			camera.fov=float(review_camera_profile['fov_degrees'])
 			distance=body_span/(2.*tan(deg_to_rad(camera.fov)*.5)*fraction)
 		else:camera.projection=Camera3D.PROJECTION_ORTHOGONAL
-		p.y+=.8
+		p.y+=float(review_camera_profile.get("look_height",.8))
 		camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*distance
 		camera.look_at(p);camera.near=.1;camera.far=400.
 		map.sun.directional_shadow_max_distance=distance+80.
