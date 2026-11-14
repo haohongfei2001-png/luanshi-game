@@ -6,9 +6,26 @@ const OUT:="res://docs/evidence/river-whole-rebuild/review"
 var field
 var records:Array=[]
 var source_sha:=OS.get_environment("WORLD_SOURCE_SHA")
+var master_file_sha:=""
+func _master_identity() -> Dictionary:
+	assert(field.map.has_method("composition_audit"),"Missing new master runtime adapter")
+	var audit:Dictionary=field.map.composition_audit()
+	assert(audit.get("layout","")=="river-pass-master-v1","Capture is not the new authored master")
+	var master:Node3D=field.map.master
+	assert(master!=null and master.get_parent()==field.map and master.is_visible_in_tree())
+	assert(field.map.get_child_count()==1,"Unexpected legacy art siblings beside master")
+	assert(master.has_node("SculptedTerrain") and master.has_node("AuthoredShoreGroups"))
+	var meshes:=master.find_children("*","MeshInstance3D",true,false)
+	audit["instantiated_mesh_nodes"]=meshes.size()
+	audit["visible_in_tree"]=master.is_visible_in_tree()
+	audit["map_script"]=field.map.get_script().resource_path
+	audit["master_node_path"]=str(master.get_path())
+	audit["packed_scene_sha256"]=master_file_sha
+	return audit
 func _initialize() -> void:
 	_run.call_deferred()
 func _snap(label:String,point:Vector2,zoom:float) -> void:
+	var composition:=_master_identity()
 	field.camera_yaw=deg_to_rad(-33.)
 	field.camera.size=zoom
 	field.pan_to(point)
@@ -24,13 +41,12 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	pic.resize(1440,810,Image.INTERPOLATE_LANCZOS)
 	pic.save_jpg(OUT+"/"+label+"-preview.jpg",.93)
 	var b=field.battle
-	var row:={"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"shadow_mode":field.map.sun.directional_shadow_mode,"shadow_pancake":field.map.sun.directional_shadow_pancake_size,"shadow_enabled":field.map.sun.shadow_enabled,"sun_degrees":str(field.map.sun.rotation_degrees),"shadow_distance":field.map.sun.directional_shadow_max_distance,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
+	var row:={"composition":composition,"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"shadow_mode":field.map.sun.directional_shadow_mode,"shadow_pancake":field.map.sun.directional_shadow_pancake_size,"shadow_enabled":field.map.sun.shadow_enabled,"sun_degrees":str(field.map.sun.rotation_degrees),"shadow_distance":field.map.sun.directional_shadow_max_distance,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _inventory() -> void:
-	if field.map.has_method("composition_audit"):
-		print("WORLD_EDITABLE_MASTER ",JSON.stringify(field.map.composition_audit()))
-		return
+	print("WORLD_EDITABLE_MASTER ",JSON.stringify(_master_identity()))
+	if field.map.has_method("composition_audit"):return
 	for path:String in [field.map.BROADLEAF]:
 		var packed:Node3D=(load(path) as PackedScene).instantiate()
 		var members:Array=[packed]
@@ -65,8 +81,8 @@ func _run() -> void:
 	field.set_physics_process(false)
 	field.hud.go.pressed.emit()
 	assert(field.battle.started and field.battle.bridgehead)
+	master_file_sha=FileAccess.get_sha256(field.map.MASTER_SCENE)
 	_inventory()
-	field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)
 	assert(field.map._land_height(Vector2(Ground.MOAT_X,12.))<Ground.BATTLE_WATER_LEVEL,"The actual moat bed must remain below its visible water")
 	assert(field.map._land_height(Vector2(Ground.RIVER_X,12.))<Ground.BATTLE_WATER_LEVEL,"The river bed must remain below its visible water")
 	for tick in 50:field._physics_process(Battle.DT)

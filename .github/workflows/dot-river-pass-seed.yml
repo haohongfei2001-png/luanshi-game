@@ -6,7 +6,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: dot-river-pass-first-source
+  group: dot-river-pass-r2-source
   cancel-in-progress: false
 jobs:
   build-and-review:
@@ -21,7 +21,7 @@ jobs:
       - name: Refuse to overwrite any existing integration branch
         run: |
           set -euo pipefail
-          if git ls-remote --exit-code --heads origin refs/heads/dot/river-pass-integration >/tmp/existing-pass-ref; then
+          if git ls-remote --exit-code --heads origin refs/heads/dot/river-pass-r2-source >/tmp/existing-pass-ref; then
             echo 'Integration branch already exists; refusing overwrite.'; exit 1
           else
             result=$?; test "$result" = 2 || exit "$result"
@@ -77,14 +77,14 @@ jobs:
           git config user.name 'Dot development'
           git config user.email 'dot-development@users.noreply.github.com'
           git commit -m 'Build editable whole-pass master from verified redistributable sources' -m 'Experimental art, not owner accepted. Exact raw asset hashes verified. Derived bytes and actual source are recorded; no claim of identity with the local reference tree. Codex remains paused.'
-          if git ls-remote --exit-code --heads origin refs/heads/dot/river-pass-integration >/tmp/existing-pass-ref; then
+          if git ls-remote --exit-code --heads origin refs/heads/dot/river-pass-r2-source >/tmp/existing-pass-ref; then
             echo 'Integration branch appeared during build; refusing overwrite.'; exit 1
           else
             result=$?; test "$result" = 2 || exit "$result"
           fi
-          git push origin HEAD:refs/heads/dot/river-pass-integration
+          git push origin HEAD:refs/heads/dot/river-pass-r2-source
           actual="$(git rev-parse HEAD)"
-          test "$(git ls-remote --heads origin refs/heads/dot/river-pass-integration | cut -f1)" = "$actual"
+          test "$(git ls-remote --heads origin refs/heads/dot/river-pass-r2-source | cut -f1)" = "$actual"
           printf '%s\n' "$actual" >artifacts/pass-rebuild/ACTUAL_SOURCE_SHA
           printf 'WORLD_SOURCE_SHA=%s\n' "$actual" >> "$GITHUB_ENV"
       - name: Immediately capture real same-camera native 2K and 4K before aggregate tests
@@ -103,6 +103,7 @@ jobs:
           rows=json.loads(Path('artifacts/pass-rebuild/frames.json').read_text())
           assert {tuple(r['pixels']) for r in rows}=={(2560,1440),(3840,2160)}
           assert all(r['internal']==1 and r['source_sha']==os.environ['WORLD_SOURCE_SHA'] for r in rows)
+          assert all(r['composition']['layout']=='river-pass-master-v1' and r['composition']['native_instances']==643 and r['composition']['visible_in_tree'] and len(r['composition']['packed_scene_sha256'])==64 for r in rows)
           assert all(r['ordinary']==[512,512] and not r['world_audit'] for r in rows)
           assert all(r['zoom']==22 and r['tick']==135 for r in rows if r['frame'] in ('bridgehead-0135','bridgehead-0135-uhd'))
           print('RECONSTRUCTED_ACTUAL_NATIVE_FRAMES',len(rows),os.environ['WORLD_SOURCE_SHA'])
@@ -111,7 +112,7 @@ jobs:
         if: steps.capture.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: river-pass-first-real-pixels-${{ github.sha }}
+          name: river-pass-r2-real-pixels-${{ github.sha }}
           path: |
             artifacts/pass-rebuild/
             docs/evidence/river-whole-rebuild/review/bridgehead-0050.*

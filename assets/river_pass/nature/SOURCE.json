@@ -20,7 +20,8 @@
     "RockPath_Round_Wide",
     "RockPath_Square_Wide",
     "Pebble_Round_1",
-    "Pebble_Round_3"
+    "Pebble_Round_3",
+    "Bush_Common_Flowers"
   ],
   "members": {
     "Bark_NormalTree.png": "f36e94fdd73255347325b998e02a0b2575fdf714b0315bfe5e8ff34bc8e13603",
@@ -67,6 +68,15 @@
     "Rock_Medium_3.gltf": "9a575b911372cf91693aa3a56aea8137ec2251c2b99fb34a31272ee64503047f",
     "Rocks_Diffuse.png": "b813696df6081f469a127092eb0ce45cc39d56f3ccc0699152bfcd3804810b48",
     "TwistedTree_1.bin": "58e4c16c16e0a71051af76a37be0641ea8f7089652687f957383d3c4bd24723b",
-    "TwistedTree_1.gltf": "8544b084e1fadfbec981e964ce27463f50c39c460513e0d3442160880c5908a7"
+    "TwistedTree_1.gltf": "8544b084e1fadfbec981e964ce27463f50c39c460513e0d3442160880c5908a7",
+    "Bush_Common_Flowers.gltf": "08768c680e3abeafd25858c9d3f369bcb7eed014661d3b6825a397f2a6a3deea",
+    "Bush_Common_Flowers.bin": "15f56a013afe0eecaded0eb97fd8f323305af11e1f0f7bb9b68472ec4cdc20d5",
+    "Flowers.png": "5c531f2329c241c625aafd6cb769de29f33b480ef2a16491c2489f3c68e62a6a"
+  },
+  "additional_original_members": {
+    "Bush_Common_Flowers.gltf": "08768c680e3abeafd25858c9d3f369bcb7eed014661d3b6825a397f2a6a3deea",
+    "Bush_Common_Flowers.bin": "15f56a013afe0eecaded0eb97fd8f323305af11e1f0f7bb9b68472ec4cdc20d5",
+    "Leaves_NormalTree_C.png": "998612bdf0b76a22f5f54d65cd7a457815d2842d89653fa4348a4ebb42933ad3",
+    "Flowers.png": "5c531f2329c241c625aafd6cb769de29f33b480ef2a16491c2489f3c68e62a6a"
   }
 }

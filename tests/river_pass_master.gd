@@ -19,6 +19,11 @@ func _run() -> void:
 			var expected:=map._land_height(p)
 			max_error=maxf(max_error,absf(expected-v.y));sampled+=1
 	assert(max_error<.0001,"Baked master and actor support geometry disagree")
+	for mesh:MeshInstance3D in map.master.get_node("AuthoredShoreGroups").find_children("*","MeshInstance3D",true,false):
+		assert(not "RockPath" in mesh.mesh.resource_name,"Compound rock carpets must not fill the channel")
+		if "Rock_Medium" in mesh.mesh.resource_name:
+			var bounds:AABB=mesh.global_transform*mesh.mesh.get_aabb()
+			assert(maxf(bounds.size.x,bounds.size.z)<2.8,"Bank single-rock footprint exceeded authored bound")
 	# This proves support-surface parity, NOT animated sole/ankle contact.
 	print("RIVER_PASS_MASTER_PASS ",JSON.stringify({"audit":audit,"sampled_baked_vertices":sampled,"max_height_error":max_error,"animated_foot_contact":"NOT_RUN","graphics":"NOT_RUN"}))
 	map.queue_free();await process_frame;quit(0)

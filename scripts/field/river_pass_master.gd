@@ -24,7 +24,7 @@ func _ready() -> void:
 	var material_cache:Dictionary={}
 	for node:MeshInstance3D in master.find_children("*","MeshInstance3D",true,false):
 		for surface in node.mesh.get_surface_count():
-			var source:=node.mesh.surface_get_material(surface) as StandardMaterial3D
+			var source:=node.get_active_material(surface) as StandardMaterial3D
 			if not source:continue
 			if material_cache.has(source):
 				node.set_surface_override_material(surface,material_cache[source])

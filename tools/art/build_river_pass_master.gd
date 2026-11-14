@@ -9,6 +9,7 @@ var master:=Node3D.new()
 var libraries:Dictionary={}
 var terrains:=0
 var native_instances:=0
+var source_materials:Dictionary={}
 func _initialize() -> void:
 	_build.call_deferred()
 func group(label:String) -> Node3D:
@@ -34,7 +35,7 @@ func part(parent:Node3D,label:String,pos:Vector3,scale_value:Vector3=Vector3.ONE
 func h(p:Vector2) -> float:
 	var ledge:=Ground.parapet(p)
 	return ledge if ledge>0. else Ground.height(p,true)-Ground.MOAT_BED_DEPTH*Ground.moat_depth(p)
-func native(parent:Node3D,label:String,p:Vector2,height:float,yaw:float=0.) -> Node3D:
+func native(parent:Node3D,label:String,p:Vector2,height:float,yaw:float=0.,footprint:float=0.) -> Node3D:
 	var n:Node3D=load(label if label.begins_with("res://") else NATURE+label+".gltf").instantiate()
 	var bounds:=AABB();var first:=true
 	for mesh:MeshInstance3D in n.find_children("*","MeshInstance3D",true,false):
@@ -46,7 +47,19 @@ func native(parent:Node3D,label:String,p:Vector2,height:float,yaw:float=0.) -> N
 		bounds=box if first else bounds.merge(box);first=false
 		mesh.visibility_range_end=250.
 		mesh.lod_bias=1.
-	var factor:=height/maxf(bounds.size.y,.01)
+		for surface in mesh.mesh.get_surface_count():
+			var original:=mesh.mesh.surface_get_material(surface) as StandardMaterial3D
+			if not original:continue
+			if not source_materials.has(original):
+				var material:=original.duplicate() as StandardMaterial3D
+				material.roughness=.95;material.metallic=0.;material.metallic_specular=.08
+				var id:=original.resource_name.to_lower()
+				if "leaves" in id:material.albedo_color=Color("62825d")
+				elif "rock" in id:material.albedo_color=Color("797c69")
+				elif "bark" in id:material.albedo_color=Color("b4aaa0")
+				source_materials[original]=material
+			mesh.set_surface_override_material(surface,source_materials[original])
+	var factor:=footprint/maxf(maxf(bounds.size.x,bounds.size.z),.01) if footprint>0. else height/maxf(bounds.size.y,.01)
 	n.scale=Vector3.ONE*factor;n.rotation.y=yaw
 	n.position=Vector3(p.x,h(p)-bounds.position.y*factor,p.y)
 	parent.add_child(n);own(n);native_instances+=1;return n
@@ -88,13 +101,13 @@ func bridges() -> void:
 	var region:=group("BridgesAndLandings")
 	for point:Vector2 in [Vector2(-32.,-35.),Vector2(-32.,0.),Vector2(-32.,35.),Vector2(24.,0.)]:
 		var span:Node3D=load("res://assets/river_gate/world/bridge/intact_bridge_span.glb").instantiate();span.position=Vector3(point.x,0,point.y);region.add_child(span);own(span)
-		# Replace the old tall tied-timber rails with complete mature stone
-		# embankment/landing modules below the retained physical deck.
+		# Complete span stays surveyed. Low single-stone abutments sit beside
+		# the deck; no multi-rock path carpet is scaled by its shallow height.
 		for side:float in [-1.,1.]:
 			for end:float in [-1.,1.]:
-				var p:=point+Vector2(end*5.4,side*4.2)
-				var rock:=native(region,"RockPath_Round_Wide",p,.65,PI*.5)
-				rock.position.y=-.54
+				var p:=point+Vector2(end*5.5,side*4.55)
+				var rock:=native(region,"Rock_Medium_2",p,1.,PI*.5,1.35)
+				rock.position.y=-.65
 func wall(parent:Node3D,a:Vector2,b:Vector2) -> void:
 	var count:=ceili(a.distance_to(b)/12.8);var length:=a.distance_to(b)/count
 	for i in count:
@@ -121,19 +134,19 @@ func groves() -> void:
 	var background:=group("RidgeForestAndCliffs")
 	# Designed irregular pockets. The central movement strip is never seeded.
 	var stands:Array[Dictionary]=[
-	 {"p":Vector2(33,-10.8),"r":Vector2(3.0,4.),"count":3,"height":5.2,"layer":foreground},
-	 {"p":Vector2(40,13),"r":Vector2(3.2,4.2),"count":3,"height":5.3,"layer":foreground},
-	 {"p":Vector2(15,-14),"r":Vector2(5,7),"count":5,"height":7.,"layer":foreground},
-	 {"p":Vector2(13,20),"r":Vector2(5,7),"count":5,"height":7.,"layer":foreground},
-	 {"p":Vector2(37,-22),"r":Vector2(8,5),"count":9,"height":7.8,"layer":middle},
-	 {"p":Vector2(40,31),"r":Vector2(8,8),"count":10,"height":8.,"layer":middle},
-	 {"p":Vector2(-4,-30),"r":Vector2(22,13),"count":24,"height":8.5,"layer":middle},
-	 {"p":Vector2(-4,36),"r":Vector2(18,14),"count":20,"height":8.,"layer":middle},
-	 {"p":Vector2(40,-52),"r":Vector2(28,14),"count":28,"height":10.,"layer":background},
-	 {"p":Vector2(82,49),"r":Vector2(20,12),"count":20,"height":9.,"layer":background},
-	 {"p":Vector2(-84,-47),"r":Vector2(30,13),"count":20,"height":8.,"layer":background},
-	 {"p":Vector2(126,-39),"r":Vector2(22,18),"count":18,"height":11.,"layer":background}]
-	var types:=["CommonTree_1","CommonTree_2","CommonTree_4","TwistedTree_1"]
+	 {"p":Vector2(32,-12.8),"r":Vector2(2.4,2.8),"count":2,"height":7.3,"layer":foreground},
+	 {"p":Vector2(39,15.5),"r":Vector2(3.4,3.5),"count":3,"height":8.3,"layer":foreground},
+	 {"p":Vector2(13,-18),"r":Vector2(6,7),"count":10,"height":9.2,"layer":foreground},
+	 {"p":Vector2(12,23),"r":Vector2(7,8),"count":12,"height":9.5,"layer":foreground},
+	 {"p":Vector2(37,-26),"r":Vector2(11,7),"count":18,"height":10.8,"layer":middle},
+	 {"p":Vector2(39,35),"r":Vector2(12,10),"count":22,"height":11.,"layer":middle},
+	 {"p":Vector2(-4,-23),"r":Vector2(18,10),"count":26,"height":11.,"layer":middle},
+	 {"p":Vector2(-7,28),"r":Vector2(17,11),"count":26,"height":10.7,"layer":middle},
+	 {"p":Vector2(40,-51),"r":Vector2(28,14),"count":42,"height":13.,"layer":background},
+	 {"p":Vector2(82,49),"r":Vector2(20,12),"count":30,"height":12.,"layer":background},
+	 {"p":Vector2(-84,-47),"r":Vector2(30,13),"count":32,"height":11.,"layer":background},
+	 {"p":Vector2(126,-39),"r":Vector2(22,18),"count":30,"height":14.,"layer":background}]
+	var types:=["CommonTree_1","CommonTree_2","CommonTree_4"]
 	var index:=0
 	for stand:Dictionary in stands:
 		for i in int(stand.count):
@@ -143,27 +156,30 @@ func groves() -> void:
 			var tree:String=types[(i+index)%types.size()]
 			if stand.layer==background and i%4==0:tree="Pine_1" if i%2==0 else "Pine_3"
 			native(stand.layer,tree,p,float(stand.height)*(.82+.09*(i%4)),angle)
-			if i%2==0:
-				native(stand.layer,"Bush_Common",p+Vector2(1.6,-1.2),.85+.10*(i%3),angle+.5)
-				native(stand.layer,"Fern_1",p+Vector2(-1.2,.6),.45,angle)
+			if i%3!=0:
+				native(stand.layer,"Bush_Common_Flowers",p+Vector2(1.6,-1.2),1.1+.18*(i%3),angle+.5)
+				native(stand.layer,"Fern_1",p+Vector2(-1.2,.6),.65,angle)
 		index+=1
 	# A small number of complete large rock masters anchor forest masses.
 	for p:Vector2 in [Vector2(33,-17),Vector2(39,23),Vector2(7,-35),Vector2(-12,39),Vector2(45,-44),Vector2(87,47),Vector2(118,-35)]:
 		native(middle,"Rock_Medium_2",p,2.0,.7)
 func shore() -> void:
 	var region:=group("AuthoredShoreGroups")
-	var sites:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate();sites.append_array(Ground.RIVER_OUTCROPS)
-	for channel:float in [-32.,24.]:
-		for i in sites.size():
-			var e:=sites[i]
-			if channel==24. and absf(e.y)>24.:continue
-			var center:=Ground.PassProfile.moat_center(e.y) if channel==24. else Ground.river_center(e.y)
-			var p:=Vector2(center+e.x*(4.1 if channel==24. else 5.1),e.y)
-			var rock:=native(region,"RockPath_Round_Wide" if i%2==0 else "Rock_Medium_1",p,.55+.16*(i%3),i*1.8)
-			rock.position.y=Ground.BATTLE_WATER_LEVEL-.18
-			var margin:=Vector2(center+e.x*(7.0 if channel==24. else 8.4+Ground.river_shore_variation(e.y)),e.y)
-			native(region,"Grass_Wispy_Tall",margin,.65,i*.8)
-			if i%3==0:native(region,"Bush_Common",margin+Vector2(e.x*.6,1.2),.8,i)
+	# Sparse single native rocks: continuous open water is the dominant shape.
+	# Footprint, not height, controls scale; complete topology and UVs survive.
+	var anchors:Array[Vector3]=[
+	 Vector3(-1,-59,1.9),Vector3(1,-48,1.5),Vector3(-1,-19,1.6),
+	 Vector3(1,-12,1.2),Vector3(-1,16,1.8),Vector3(1,24,1.5),Vector3(-1,49,1.7),Vector3(1,61,1.4)]
+	for i in anchors.size():
+		var a:=anchors[i];var center:=Ground.river_center(a.y)
+		var p:=Vector2(center+a.x*(6.1+Ground.river_shore_variation(a.y)),a.y)
+		var rock:=native(region,"Rock_Medium_1" if i%2==0 else "Rock_Medium_3",p,1.,i*.79,a.z)
+		rock.position.y=Ground.BATTLE_WATER_LEVEL-.35
+		for offset:Vector2 in [Vector2(a.x*1.9,-1.7),Vector2(a.x*2.4,.8),Vector2(a.x*1.5,2.7)]:
+			native(region,"Grass_Wispy_Tall",p+offset,.65,i*.8)
+	for row:Vector3 in [Vector3(18.7,-17.,1.25),Vector3(29.1,-10.,1.4),Vector3(18.8,12.5,1.5),Vector3(28.9,20.,1.3)]:
+		var rock:=native(region,"Rock_Medium_3",Vector2(row.x,row.y),1.,row.y*.2,row.z)
+		rock.position.y=Ground.BATTLE_WATER_LEVEL-.38
 func _build() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 	master.name="RiverPassMaster"
