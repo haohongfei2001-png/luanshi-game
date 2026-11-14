@@ -13,7 +13,7 @@ float patch(vec2 p) {
 }
 vec3 ground_sample(sampler2D tex,vec2 p,float metres) {
 	vec3 a=texture(tex,p/metres).rgb;
-	vec3 b=texture(tex,mat2(.80,-.60,.60,.80)*p/(metres*1.71)+vec2(.37,.21)).rgb;
+	vec3 b=texture(tex,mat2(vec2(.80,-.60),vec2(.60,.80))*p/(metres*1.71)+vec2(.37,.21)).rgb;
 	return mix(a,b,.42);
 }
 void fragment() {
