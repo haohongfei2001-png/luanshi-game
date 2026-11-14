@@ -78,3 +78,34 @@ LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . \
 LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . \
  --script tests/art_reset/original_tree_region.gd -- /woodland04.scn
 ```
+
+## Navigation closure, supersedes the prior known-gap status
+
+Two optional trees now share their exact placement constants with actual
+Ground.blocked and Ground.waypoint. From the original full GLTF,71,944 wooden
+vertices in physical Y[-.05,2.0] (leaf material excluded) define a conservative
+XZ convex footprint, padded .35m for character-centre clearance. The actual
+source/material counts and polygon are in navigation-footprint.json. It is not
+a canopy AABB or a source-name guess. Root-space rotation/scale are the same
+as rendering, with no gameplay unit relocation.
+
+`LUANSHI_NATIVE_WOODLAND=1` is required *in addition to* the existing landform
+opt-in. Default/open-field behavior stays unchanged. The whole-tree packed
+scene now hides and errors if its shared navigation is absent. Trees cannot be
+displayed as nonblocking scenery by silently forgetting the flag.
+
+A bounded visibility graph around the same conservative polygon gives normal
+AI waypoint detours; normal controller Ground.travel rejects the solid area.
+A StaticBody alone would not have fixed this controller, so none is offered as
+substitute. Six actual Ground.waypoint+Ground.travel routes ran945 incremental
+steps and reached their goals without entering wood. Twenty/100/250/512-per-side
+real musters total1,826 actual units, zero initial overlaps. The central military
+road remains outside both footprints. In7,735 old/default/support samples, new
+navigation changes are only the known moat and exact two tree polygons.
+
+The unchanged512-per-side400-tick battle test passed with281 crossings,
+hits[482,555], deaths[135,135]. These are real simulated outcomes, not forced to
+match old counts. This is headless gameplay validation, not rendered foot/contact
+or performance acceptance. The new scene `woodland04-original-tree-navigation.scn`
+is distinct from the prior deliberately incomplete graph-only source comparison.
+Real GPU traversal still has to demonstrate its visual contact and avoidance.

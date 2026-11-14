@@ -1,0 +1,61 @@
+{
+  "actor_clearance_m": 0.35,
+  "local_xz_polygon": [
+    [
+      2.15971994400024,
+      -0.962130010128021
+    ],
+    [
+      2.32789993286133,
+      0.769590020179749
+    ],
+    [
+      -0.0107899997383356,
+      2.26695990562439
+    ],
+    [
+      -0.239959999918938,
+      2.17755007743835
+    ],
+    [
+      -1.5179500579834,
+      1.47348999977112
+    ],
+    [
+      -2.56356000900269,
+      -0.200220003724098
+    ],
+    [
+      -2.67974996566772,
+      -0.841059982776642
+    ],
+    [
+      -2.54391002655029,
+      -1.11757004261017
+    ],
+    [
+      1.53922998905182,
+      -2.42779994010925
+    ]
+  ],
+  "max_radius_m": 2.87462043762207,
+  "physical_projection_height_m": [
+    -0.05,
+    2.0
+  ],
+  "policy": "conservative convex footprint of all original low wood, excluding leaves; not canopy AABB; .35m character centre clearance",
+  "quality": "NAVIGATION_DERIVATION_NOT_ART_PASS",
+  "source_gltf_sha256": "6024cf385e9e0add29030925f8b891de264b813948f1cb9fb95633e256f50dc7",
+  "source_transform": "original GLTF root transforms evaluated; world Y up",
+  "wood_surfaces": [
+    {
+      "included_wood_vertices": 11699,
+      "material": "island_tree_01"
+    },
+    {
+      "included_wood_vertices": 60245,
+      "material": "island_tree_01_branches"
+    }
+  ],
+  "wood_vertex_samples": 71944
+}

@@ -4,7 +4,7 @@ const Builder:=preload("res://tools/art/sprite_source/assemble_woodland_region.g
 const Surface:=preload("res://tools/art/authored_reset/surface_authoring.gd")
 func _initialize() -> void: run.call_deferred()
 func run() -> void:
-	assert(Ground.authored_landform_enabled);var args:=OS.get_cmdline_user_args();assert(args.size()==1)
+	assert(Ground.authored_landform_enabled and Ground.native_woodland_enabled);var args:=OS.get_cmdline_user_args();assert(args.size()==1)
 	var packed:=load(args[0]) as PackedScene;assert(packed)
 	for cycle in 3:
 		var scene:=packed.instantiate() as Node3D;root.add_child(scene)
@@ -24,5 +24,5 @@ func run() -> void:
 					for texture:Texture2D in [m.albedo_texture,m.normal_texture,m.roughness_texture]:assert(texture and texture.get_image().has_mipmaps())
 		assert(resources.size()==1 and sum_triangles==3198806)
 		scene.free();await process_frame
-	print("ORIGINAL_TREE_REGION_PASS opens=3 trees=2 unique_tree_mesh=1 full_tree_triangles=3198806 PBR_sets=3 graphics=NOT_RUN navigation_trunks=NOT_INTEGRATED")
+	print("ORIGINAL_TREE_REGION_PASS opens=3 trees=2 unique_tree_mesh=1 full_tree_triangles=3198806 PBR_sets=3 graphics=NOT_RUN navigation_trunks=EXPLICIT_SHARED_FOOTPRINT")
 	quit()

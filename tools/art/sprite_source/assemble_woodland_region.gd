@@ -6,7 +6,7 @@ const TREE_LAYOUT:=[
 	[32.1,-14.8,1.22,-18.0],[37.7,-16.3,1.36,23.0],[41.2,-12.8,1.12,107.0],
 	# Sparse near frame: crowns do not span the protected central travel lane.
 	[34.0,15.7,1.28,-42.0],[41.0,19.0,1.42,68.0]]
-const COMPLETE_TREE_LAYOUT:=[[32.1,-14.8,1.0,-18.0],[34.0,15.7,1.0,-42.0]]
+const COMPLETE_TREE_LAYOUT:=Ground.NativeWoodland.LAYOUT
 const BUSH_LAYOUT:=[
 	[31.5,-11.2,.70,12.0],[35.9,-12.9,.85,37.0],[40.8,-10.2,.62,-22.0],
 	[33.8,12.3,.72,-20.0],[38.8,16.4,.8,55.0]]
@@ -81,7 +81,9 @@ func run() -> void:
 	region.set_meta("scope","Woodland family only; not complete battlefield or terrain")
 	if whole_tree:
 		region.set_meta("composition","two-complete-original-mature-trees-no-leaf-inflation; diagnostic NOT completed woodland")
-		region.set_meta("known_limit","Tree trunk navigation footprints not integrated; no complete collision or forest performance acceptance")
+		region.set_script(load("res://scripts/field/experimental_native_woodland_guard.gd"))
+		region.set_meta("navigation_footprint_source",Ground.NativeWoodland.SOURCE_SHA256)
+		region.set_meta("known_limit","Conservative low-wood footprint with real Ground detours; complete action/render/performance still unaccepted")
 	add_group(region,tree,trees,"CanopyEdge");add_group(region,bush,BUSH_LAYOUT,"UnderstoryEdge")
 	own(region,region)
 	var packed:=PackedScene.new();assert(packed.pack(region)==OK)
