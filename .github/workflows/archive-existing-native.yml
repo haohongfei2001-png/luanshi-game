@@ -1,0 +1,30 @@
+name: Preserve completed native film as lossless viewable parts
+on:
+  push:
+    branches: ['codex/river-native-film-recovery']
+    paths: ['tools/segment_whole_battle.py','tools/archive_existing_native.py','.github/workflows/archive-existing-native.yml']
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: archive-completed-native-film
+  cancel-in-progress: false
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CAPTURE_SOURCE_SHA: 5d6aa17716d0b7206a10288405957b13e4764357
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: whole-world-native-window-5d6aa17716d0b7206a10288405957b13e4764357
+          run-id: '43570498673'
+          github-token: ${{ github.token }}
+          path: completed
+      - name: Verify original video packets and preserve all native frames
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          python3 tools/archive_existing_native.py completed
