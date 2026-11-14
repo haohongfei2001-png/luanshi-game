@@ -46,3 +46,32 @@ compression/mipmap/scissor boundaries and LDR material response need actual
 review. Cropped8-way/16-way atlases are large shared resources, not per-soldier
 copies or an automatic win. No final route selection, art/M5/army performance
 acceptance or source/default/RC promotion follows from these changes.
+
+## Authorized bounded hosted-Mac smoke
+
+`representation-metal-smoke.yml` uses only existing pinned source atlas14126743401,
+source bundle14129705496 and already built Metal template14108148499. No new render
+bake or engine build. Lossless crop plus8way-only offline compression retains source
+pixels and original root anchors;15 external compressed pages308134592B are checked
+against hashes. Exact old CC0 license files and NOTICE are preserved with evidence.
+Normal MainLoop PCK is tested from an empty cwd, loading the complete environment,
+source mesh/palette/explicitLOD1 and all atlas page bytes before real graphics.
+
+Only20-per-side, same seed61112, camera12 at original atlas pitch, source/material,
+and real Battle is compared: shared3D explicitLOD1 (7158tri) versus8way sprites.
+Two2K actual captures tick300, then separate no-readback windows tick300→620. Local
+simulation verified the20-per-side fight ends at675, so the planned measured window
+remains real battle rather than padding idle post-result frames. All modes must match
+an independent simulation oracle and each other's start/end state and camera.
+Existing minimum120 intervals/10seconds is retained from native reliability19e6422;
+raw intervals independently produce mean/P50/P95/P99, with finite-positive checks.
+P99 remains descriptive, not stable-tail/device qualification. Per-case RSS is from
+macOS time-l, Godot counters explicitly do not establish actual driver residency.
+
+Each case is bounded180seconds, workflow25minutes. No automatic escalation to larger
+armies, no retry loop, no engine rebuild fallback. Failure artifacts remain; current
+Metal/alpha/occlusion/pixel quality is unproven until the actual results are reviewed.
+The normal source-scene closure check passed locally with all15 atlas pages; this is
+not yet an exported Mac PCK test. First synthetic color-noise test fixture was too flat
+for the nonempty-image gate, fixed to deterministic RGB coordinate pattern; gate not
+relaxed. Synthetic short-window, changed-state and magenta-image fixtures all fail.

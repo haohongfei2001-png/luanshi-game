@@ -6,7 +6,7 @@ func run()->void:
  var meta=JSON.parse_string(FileAccess.get_file_as_string(path.path_join("atlas.json")))
  assert(meta.padding_failures.is_empty(),"Source body was cropped")
  for clip:String in meta.clips:
-  for directions in [8,16]:
+  for directions in ([8] if OS.get_environment("COMPARE_PACK_8_ONLY")=="1" else [8,16]):
    var receipt=meta.clips[clip]["atlas"+str(directions)];var descriptors=[];var bytes=0;var raw_mips=0
    for page in int(receipt.png_pages):
     var image=Image.load_from_file(path.path_join(clip+"-"+str(directions)+"-page"+str(page)+".png"))
