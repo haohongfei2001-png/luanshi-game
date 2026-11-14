@@ -369,6 +369,7 @@ objects=[o for o in bpy.data.objects if o.type=='MESH']
 for o in objects:o.data.calc_loop_triangles()
 report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':floor,'upper_hall_column_head_m':column_head,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN','complete_gate_masonry':('--complete-gate-masonry' in args),'protected_walkway_clear_height_m':2.20}
 report['portal']=portal_report
+report['runtime_uv_layout']='MaterialUV_Metre promoted to TEXCOORD_0 for Godot4.6; original UV preserved in TEXCOORD_1 and unchanged editable mother'
 report['source_ngon_triangulation']='original mesh-local loop triangles before world transform/clip; original corner UV and normal indices preserved'
 report['material_projection_axis']='lowest axis within 1e-5 of largest absolute normal component; source UV unchanged'
 report['authored_solid_orientation']={'scope':'closed authored solids only; professional original UV/custom-normal surfaces unchanged','objects':len(orientation_audits),'flipped_components':sum(c['flipped'] for a in orientation_audits for c in a['components']),'explicit_open_walk_surfaces':open_surface_audits}
@@ -381,19 +382,9 @@ for child in door.children:
 door.location=Vector(pt(48,0,0))
 bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'source/architecture.blend'))
-# Runtime meshes consolidate by load-bearing assembly; authored blend retains every editable part.
-for parent in [gate,door,walls,bridge,west]:
- children=[o for o in parent.children if o.type=='MESH']
- batches={}
- for ob in children:
-  key=('Roof_'+('East' if 'East' in ob.name else 'West' if 'West' in ob.name else 'HipNorth' if 'HipNorth' in ob.name else 'HipSouth') if ob.name.startswith('Roof_') else parent.name+'_Structure')
-  batches.setdefault(key,[]).append(ob)
- for name,obs in batches.items():
-  bpy.ops.object.select_all(action='DESELECT')
-  for ob in obs:ob.select_set(True)
-  bpy.context.view_layer.objects.active=obs[0];bpy.ops.object.join();obs[0].name=name
-bpy.ops.object.select_all(action='DESELECT')
-bpy.ops.export_scene.gltf(filepath=str(out/'architecture.glb'),export_format='GLB',export_yup=True,export_extras=True)
+# Export the runtime derivative only after saving the unchanged editable mother.
+from export_runtime_architecture import export_runtime
+export_runtime(out/'architecture.glb')
 if '--no-preview' in args:raise SystemExit(0)
 # Real Blender model review renders; explicitly not Godot gameplay evidence.
 world=bpy.data.worlds.new('ReviewWorld');world.use_nodes=True;world.node_tree.nodes['Background'].inputs[0].default_value=(.21,.23,.27,1);world.node_tree.nodes['Background'].inputs[1].default_value=.7;scene.world=world

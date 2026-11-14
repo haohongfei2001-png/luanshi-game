@@ -18,6 +18,16 @@ def apply(materials,root):
    links.new(texture('Diffuse',True).outputs['Color'],bsdf.inputs['Base Color'])
    links.new(texture('Rough').outputs['Color'],bsdf.inputs['Roughness'])
    normal=nodes.new('ShaderNodeNormalMap');normal.uv_map='MaterialUV_Metre';normal.inputs['Strength'].default_value=float(spec['normal_strength']);links.new(texture('nor_gl').outputs['Color'],normal.inputs['Color']);links.new(normal.outputs['Normal'],bsdf.inputs['Normal'])
-   # AO stays archived, not multiplied into base colour to fake lighting.
+   # Preserve source micro-occlusion as standard glTF occlusion data. Never
+   # multiply it into albedo or pretend this is architectural contact shadow.
+   # Blender 4.3 glTF exporter consumes this explicitly named group/socket.
+   group=bpy.data.node_groups.get('glTF Material Output')
+   if group is None:
+    group=bpy.data.node_groups.new('glTF Material Output','ShaderNodeTree')
+    group.interface.new_socket(name='Occlusion',in_out='INPUT',socket_type='NodeSocketFloat')
+    group.nodes.new('NodeGroupInput');group.nodes.new('NodeGroupOutput')
+   settings=nodes.new('ShaderNodeGroup');settings.node_tree=group
+   links.new(texture('AO').outputs['Color'],settings.inputs['Occlusion'])
+   m['occlusion_scope']='original licensed material micro-occlusion; not baked architectural/global contact shadow'
    scales[name]=float(spec['tile_metres']);m['source']=spec['source'];m['license']='CC0-1.0';m['tile_metres']=scales[name]
  return scales

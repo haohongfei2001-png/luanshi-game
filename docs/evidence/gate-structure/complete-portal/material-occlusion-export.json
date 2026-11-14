@@ -1,0 +1,47 @@
+{
+  "result": "PASS_STANDARD_OCCLUSION_EXPORT_NOT_GAMEPLAY_ART",
+  "materials": [
+    {
+      "material": "masonry",
+      "occlusionTexture": {
+        "index": 1
+      },
+      "ao_red_min_max": [
+        111,
+        255
+      ],
+      "albedo_byte_identical": true,
+      "albedo_sha256": "e8ad3b194f8db5cc51456a2bee062a39a5e168108ba1c7fff72e226d151a339f",
+      "roughness_green_byte_identical": true,
+      "source": "original hash-locked Poly Haven material micro-occlusion; not global contact shadow"
+    },
+    {
+      "material": "timber",
+      "occlusionTexture": {
+        "index": 4
+      },
+      "ao_red_min_max": [
+        5,
+        255
+      ],
+      "albedo_byte_identical": true,
+      "albedo_sha256": "a90e4b26c0fb05b8144c7dacf5f9caa76fc781966ab05b5239b1fc2daad69673",
+      "roughness_green_byte_identical": true,
+      "source": "original hash-locked Poly Haven material micro-occlusion; not global contact shadow"
+    },
+    {
+      "material": "timber_cut",
+      "occlusionTexture": {
+        "index": 8
+      },
+      "ao_red_min_max": [
+        5,
+        255
+      ],
+      "albedo_byte_identical": true,
+      "albedo_sha256": "a90e4b26c0fb05b8144c7dacf5f9caa76fc781966ab05b5239b1fc2daad69673",
+      "roughness_green_byte_identical": true,
+      "source": "original hash-locked Poly Haven material micro-occlusion; not global contact shadow"
+    }
+  ]
+}
