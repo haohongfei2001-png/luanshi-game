@@ -11,7 +11,11 @@ Luanshi contributors extracted garment and sleeve faces from these author-publis
 COLLADA meshes: m_pants_tunic_long, m_armor_tunic_long, m_tunic_short. They refitted
 the body and arm weights to the river company, kept the artist UV seams, and adapted
 lamellar_01_lacquered_01, lamellar_02_lacquered_01 and tunic_01_01 into a shared
-cel-colour atlas. The output consists solely of clothing adaptations. There is no
+cel-colour atlas. For the tied field issues, the regular coat uses the Han tunic
+skin. The separate gores, fitted collar and girdle fit the exposed source
+waist sections and move with the existing field hips and legs. The editable
+cut and skin weights are in tools/art/tailor_field_coats.py.
+The output consists solely of clothing adaptations. There is no
 Wildfire code, animation file, logo or material from a retail game in the conversion.
 Source retrieval and verified upstream blob identifiers: tools/art/import_garrison_issues.py.
 No affiliation or endorsement is implied.
