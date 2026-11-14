@@ -1,0 +1,22 @@
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_name": "h264",
+            "width": 1600,
+            "height": 1000,
+            "avg_frame_rate": "24/1",
+            "duration": "12.833333",
+            "nb_frames": "308"
+        },
+        {
+            "codec_name": "aac",
+            "channels": 2,
+            "avg_frame_rate": "0/0",
+            "duration": "12.833000",
+            "nb_frames": "603"
+        }
+    ]
+}

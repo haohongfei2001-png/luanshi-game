@@ -1,0 +1,1033 @@
+{
+  "product": "aaa694176abdbf925193fc65dc7cc7dd74684ede",
+  "source_and_capture": "10f682df251f13ba22d9e4b2b2ddf04975bce637",
+  "camera": [
+    34.2000007629395,
+    1.0
+  ],
+  "inputs": [
+    {
+      "aimed_at": 595,
+      "cursor": [
+        721.584228515625,
+        279.271362304688
+      ],
+      "direction": [
+        0.900077700614929,
+        0.435729503631592
+      ],
+      "key": "E",
+      "range": 4.63919137715951,
+      "tick": 128
+    }
+  ],
+  "roster": [
+    512,
+    512
+  ],
+  "first_hit": 135,
+  "samples": [
+    {
+      "tick": 0,
+      "losses": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 0,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 64,
+      "visible_foot_spear_shield": 63
+    },
+    {
+      "tick": 5,
+      "losses": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 0,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 64,
+      "visible_foot_spear_shield": 62
+    },
+    {
+      "tick": 10,
+      "losses": [
+        0,
+        0
+      ],
+      "hits": [
+        2,
+        2
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 0,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 64,
+      "visible_foot_spear_shield": 62
+    },
+    {
+      "tick": 15,
+      "losses": [
+        3,
+        0
+      ],
+      "hits": [
+        11,
+        17
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 0,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 64,
+      "visible_foot_spear_shield": 59
+    },
+    {
+      "tick": 20,
+      "losses": [
+        5,
+        1
+      ],
+      "hits": [
+        17,
+        34
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 1,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 63,
+      "visible_foot_spear_shield": 58
+    },
+    {
+      "tick": 25,
+      "losses": [
+        10,
+        3
+      ],
+      "hits": [
+        31,
+        56
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 2,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 62,
+      "visible_foot_spear_shield": 58
+    },
+    {
+      "tick": 30,
+      "losses": [
+        14,
+        3
+      ],
+      "hits": [
+        33,
+        68
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 3,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 61,
+      "visible_foot_spear_shield": 58
+    },
+    {
+      "tick": 35,
+      "losses": [
+        15,
+        4
+      ],
+      "hits": [
+        52,
+        77
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 3,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 61,
+      "visible_foot_spear_shield": 59
+    },
+    {
+      "tick": 40,
+      "losses": [
+        18,
+        8
+      ],
+      "hits": [
+        60,
+        84
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 6,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 58,
+      "visible_foot_spear_shield": 59
+    },
+    {
+      "tick": 45,
+      "losses": [
+        20,
+        10
+      ],
+      "hits": [
+        67,
+        94
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 7,
+      "empty_moved": 0,
+      "in_water": 0,
+      "ridden": 57,
+      "visible_foot_spear_shield": 61
+    },
+    {
+      "tick": 50,
+      "losses": [
+        23,
+        17
+      ],
+      "hits": [
+        85,
+        112
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 1,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 64
+    },
+    {
+      "tick": 55,
+      "losses": [
+        24,
+        20
+      ],
+      "hits": [
+        97,
+        120
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 1,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 2,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 66
+    },
+    {
+      "tick": 60,
+      "losses": [
+        32,
+        24
+      ],
+      "hits": [
+        107,
+        139
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 1,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 3,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 66
+    },
+    {
+      "tick": 65,
+      "losses": [
+        34,
+        27
+      ],
+      "hits": [
+        112,
+        144
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 2,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 3,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 66
+    },
+    {
+      "tick": 70,
+      "losses": [
+        37,
+        28
+      ],
+      "hits": [
+        121,
+        153
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 1,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 5,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 67
+    },
+    {
+      "tick": 75,
+      "losses": [
+        39,
+        30
+      ],
+      "hits": [
+        126,
+        159
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 7,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 70
+    },
+    {
+      "tick": 80,
+      "losses": [
+        41,
+        32
+      ],
+      "hits": [
+        130,
+        169
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 7,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 75
+    },
+    {
+      "tick": 85,
+      "losses": [
+        41,
+        33
+      ],
+      "hits": [
+        135,
+        176
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 77
+    },
+    {
+      "tick": 90,
+      "losses": [
+        44,
+        35
+      ],
+      "hits": [
+        144,
+        187
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 79
+    },
+    {
+      "tick": 95,
+      "losses": [
+        48,
+        38
+      ],
+      "hits": [
+        150,
+        197
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 76
+    },
+    {
+      "tick": 100,
+      "losses": [
+        50,
+        39
+      ],
+      "hits": [
+        154,
+        203
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 1,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 78
+    },
+    {
+      "tick": 105,
+      "losses": [
+        51,
+        42
+      ],
+      "hits": [
+        158,
+        211
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 8,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 56,
+      "visible_foot_spear_shield": 79
+    },
+    {
+      "tick": 110,
+      "losses": [
+        52,
+        44
+      ],
+      "hits": [
+        162,
+        216
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 9,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 55,
+      "visible_foot_spear_shield": 80
+    },
+    {
+      "tick": 115,
+      "losses": [
+        53,
+        45
+      ],
+      "hits": [
+        165,
+        218
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 10,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 54,
+      "visible_foot_spear_shield": 81
+    },
+    {
+      "tick": 120,
+      "losses": [
+        54,
+        45
+      ],
+      "hits": [
+        169,
+        222
+      ],
+      "covered_any": 3,
+      "covered_by_empty": 1,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 11,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 53,
+      "visible_foot_spear_shield": 82
+    },
+    {
+      "tick": 125,
+      "losses": [
+        58,
+        47
+      ],
+      "hits": [
+        175,
+        232
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 11,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 53,
+      "visible_foot_spear_shield": 85
+    },
+    {
+      "tick": 130,
+      "losses": [
+        61,
+        49
+      ],
+      "hits": [
+        179,
+        242
+      ],
+      "covered_any": 5,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 5,
+      "covered_empty_near_player": 0,
+      "empty": 11,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 53,
+      "visible_foot_spear_shield": 84
+    },
+    {
+      "tick": 135,
+      "losses": [
+        61,
+        49
+      ],
+      "hits": [
+        180,
+        244
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 11,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 53,
+      "visible_foot_spear_shield": 89
+    },
+    {
+      "tick": 140,
+      "losses": [
+        61,
+        52
+      ],
+      "hits": [
+        186,
+        245
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 11,
+      "empty_moved": 8,
+      "in_water": 0,
+      "ridden": 53,
+      "visible_foot_spear_shield": 89
+    },
+    {
+      "tick": 145,
+      "losses": [
+        62,
+        54
+      ],
+      "hits": [
+        193,
+        251
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 12,
+      "empty_moved": 10,
+      "in_water": 0,
+      "ridden": 52,
+      "visible_foot_spear_shield": 89
+    },
+    {
+      "tick": 150,
+      "losses": [
+        63,
+        55
+      ],
+      "hits": [
+        195,
+        258
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 13,
+      "empty_moved": 11,
+      "in_water": 0,
+      "ridden": 51,
+      "visible_foot_spear_shield": 90
+    },
+    {
+      "tick": 155,
+      "losses": [
+        64,
+        56
+      ],
+      "hits": [
+        203,
+        261
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 14,
+      "empty_moved": 11,
+      "in_water": 0,
+      "ridden": 50,
+      "visible_foot_spear_shield": 91
+    },
+    {
+      "tick": 160,
+      "losses": [
+        66,
+        58
+      ],
+      "hits": [
+        209,
+        268
+      ],
+      "covered_any": 2,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 2,
+      "covered_empty_near_player": 0,
+      "empty": 15,
+      "empty_moved": 11,
+      "in_water": 0,
+      "ridden": 49,
+      "visible_foot_spear_shield": 91
+    },
+    {
+      "tick": 165,
+      "losses": [
+        69,
+        58
+      ],
+      "hits": [
+        211,
+        273
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 17,
+      "empty_moved": 11,
+      "in_water": 0,
+      "ridden": 47,
+      "visible_foot_spear_shield": 92
+    },
+    {
+      "tick": 170,
+      "losses": [
+        69,
+        58
+      ],
+      "hits": [
+        212,
+        274
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 17,
+      "empty_moved": 11,
+      "in_water": 0,
+      "ridden": 47,
+      "visible_foot_spear_shield": 96
+    },
+    {
+      "tick": 175,
+      "losses": [
+        69,
+        59
+      ],
+      "hits": [
+        214,
+        278
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 17,
+      "empty_moved": 11,
+      "in_water": 0,
+      "ridden": 47,
+      "visible_foot_spear_shield": 97
+    },
+    {
+      "tick": 180,
+      "losses": [
+        69,
+        61
+      ],
+      "hits": [
+        216,
+        281
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 17,
+      "empty_moved": 13,
+      "in_water": 0,
+      "ridden": 47,
+      "visible_foot_spear_shield": 98
+    },
+    {
+      "tick": 185,
+      "losses": [
+        69,
+        63
+      ],
+      "hits": [
+        219,
+        282
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 17,
+      "empty_moved": 13,
+      "in_water": 0,
+      "ridden": 47,
+      "visible_foot_spear_shield": 101
+    },
+    {
+      "tick": 190,
+      "losses": [
+        70,
+        64
+      ],
+      "hits": [
+        224,
+        283
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 18,
+      "empty_moved": 14,
+      "in_water": 0,
+      "ridden": 46,
+      "visible_foot_spear_shield": 104
+    },
+    {
+      "tick": 195,
+      "losses": [
+        72,
+        64
+      ],
+      "hits": [
+        230,
+        292
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 1,
+      "covered_empty_near_player": 0,
+      "empty": 19,
+      "empty_moved": 17,
+      "in_water": 0,
+      "ridden": 45,
+      "visible_foot_spear_shield": 105
+    },
+    {
+      "tick": 200,
+      "losses": [
+        75,
+        65
+      ],
+      "hits": [
+        231,
+        302
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 20,
+      "empty_moved": 17,
+      "in_water": 0,
+      "ridden": 44,
+      "visible_foot_spear_shield": 104
+    },
+    {
+      "tick": 205,
+      "losses": [
+        76,
+        66
+      ],
+      "hits": [
+        232,
+        306
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 21,
+      "empty_moved": 17,
+      "in_water": 0,
+      "ridden": 43,
+      "visible_foot_spear_shield": 106
+    },
+    {
+      "tick": 210,
+      "losses": [
+        76,
+        67
+      ],
+      "hits": [
+        233,
+        307
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 21,
+      "empty_moved": 17,
+      "in_water": 0,
+      "ridden": 43,
+      "visible_foot_spear_shield": 109
+    },
+    {
+      "tick": 215,
+      "losses": [
+        79,
+        67
+      ],
+      "hits": [
+        234,
+        315
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 22,
+      "empty_moved": 17,
+      "in_water": 0,
+      "ridden": 42,
+      "visible_foot_spear_shield": 109
+    },
+    {
+      "tick": 220,
+      "losses": [
+        79,
+        67
+      ],
+      "hits": [
+        234,
+        321
+      ],
+      "covered_any": 1,
+      "covered_by_empty": 1,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 22,
+      "empty_moved": 17,
+      "in_water": 0,
+      "ridden": 42,
+      "visible_foot_spear_shield": 109
+    },
+    {
+      "tick": 225,
+      "losses": [
+        82,
+        67
+      ],
+      "hits": [
+        237,
+        329
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 22,
+      "empty_moved": 19,
+      "in_water": 0,
+      "ridden": 41,
+      "visible_foot_spear_shield": 109
+    },
+    {
+      "tick": 230,
+      "losses": [
+        83,
+        68
+      ],
+      "hits": [
+        244,
+        337
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 22,
+      "empty_moved": 20,
+      "in_water": 0,
+      "ridden": 41,
+      "visible_foot_spear_shield": 108
+    },
+    {
+      "tick": 235,
+      "losses": [
+        86,
+        71
+      ],
+      "hits": [
+        249,
+        343
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 23,
+      "empty_moved": 21,
+      "in_water": 0,
+      "ridden": 40,
+      "visible_foot_spear_shield": 106
+    },
+    {
+      "tick": 240,
+      "losses": [
+        88,
+        73
+      ],
+      "hits": [
+        261,
+        351
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 23,
+      "empty_moved": 21,
+      "in_water": 0,
+      "ridden": 40,
+      "visible_foot_spear_shield": 107
+    },
+    {
+      "tick": 245,
+      "losses": [
+        89,
+        74
+      ],
+      "hits": [
+        266,
+        356
+      ],
+      "covered_any": 0,
+      "covered_by_empty": 0,
+      "covered_by_ridden": 0,
+      "covered_empty_near_player": 0,
+      "empty": 23,
+      "empty_moved": 22,
+      "in_water": 0,
+      "ridden": 40,
+      "visible_foot_spear_shield": 108
+    }
+  ],
+  "game_state_digest": "9fa8aa485ae51bbbd3d5e41c22a5910d85c8da099db7acccdc44c3fc76e5b880",
+  "video_sha256": "5159661cb98b01385cc37ec87d3c0351d1bf18c53a213514446a319b60af5914"
+}
