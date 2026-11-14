@@ -1,0 +1,4 @@
+863ebb53ae68ce85d65855bf1dee6c74b6566a29139c31420117c59041c6dc8d  docs/evidence/river-gate-v1-rc23/native-combat/weighted-motion/after-normal.mp4
+6314afc46b00bc76aad6a7f79f97744f5476c5bc23c8804c1fd412245e944203  docs/evidence/river-gate-v1-rc23/native-combat/weighted-motion/after-side.mp4
+71a55aa5eb4a72b5a4c9078ff77e34853fec9d720baa8668356990b3c5ddf18a  docs/evidence/river-gate-v1-rc23/native-combat/weighted-motion/before-normal.mp4
+1748e4c96094c78d64e7544a9bb984edd020ff7e578e5d98f0c3ea36531916a8  docs/evidence/river-gate-v1-rc23/native-combat/weighted-motion/before-side.mp4
