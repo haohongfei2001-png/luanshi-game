@@ -18,7 +18,10 @@ Codex PAUSED / Dot 自主接续继续有效。
   364,124,927 bytes，SHA256 `41e7b36915acbf685b4418462ef58483c1f2adaa0f55901b9aee9ce10290f956`。
   含引擎来源/许可；未公证、非正式商业发行。原 run 的 internal-package 00–03 artifacts
   可按manifest拼回同一包，当前有效至2026-12-14 16:30 UTC，下载需GitHub登录。
-  完整包与原速影片已存用户Library；因聊天单文件20MB上限，正在做不重编译的单包artifact交付。
+  完整包与原速影片已存用户Library；聊天单文件20MB上限已改用单包artifact交付。
+  [完整内部Mac包](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43617369748/artifacts/14121709569)
+  单件下载可用，需GitHub登录，有效至2026-12-14 16:46 UTC；重组job全绿，
+  只重组同一已签名字节、不重编译。分发工作流59539b37不是新的游戏源。
 - 硬件是 GitHub M1 Virtual / Apple Paravirtual，3 cores / 7GB，macOS26.7.2。
   **实际 MacBook Air M5 DEVICE_NOT_RUN**。原生内部像素比例1.0。
   512v512的2K均值35.852 FPS / P50 29.103ms / P95 47.752ms / P99 55.723ms；
@@ -43,7 +46,10 @@ Codex PAUSED / Dot 自主接续继续有效。
   **尚无新的完整Godot战场美术达标图**。
 - 完整专业成衣母版另取得Sintel Guardians r854工作版；不是最终电影角色。
   本地禁autoexec审计实际保留308主rig/79变形骨、原笼与Multires，FK变化确实带动完整袖子。
-  材质/旧贴图槽/许可作用域仍在核验，不公开未经准入的原资产，不冒称已成中国兵。
+  2026-11-14 16:47核完官网原包发布与CC BY3全部公开数据授权、36成员hash，
+  原13缺图均为禁用槽/编辑器/工作参考，启用表面依赖齐备，已准入完整源适配。
+  原ZIP无独立LICENSE，不伪称包内有；必须保留官方署名、来源与改编说明。
+  旧shader现代迁移仍在验证，不冒称已成中国兵；电影身份/徽记不直接入游戏。
 - 官方Compatibility原生Skin切线缺陷仍是原门禁FAIL；第三方CPU全权重静态mesh+原材质
   已与batch实际像素严格通过。独立同源引擎原版/补丁实验
   `dot/godot-native-tangent-fix` / `8c937c111a99f98da8df334ad7c899a64d286b9c`，
@@ -51,7 +57,7 @@ Codex PAUSED / Dot 自主接续继续有效。
   因此必须先复现干净35e80b3再比较补丁，不能改版本字串伪装同版。未改游戏默认引擎。
 
 下一条恢复：先fetch各分支与读取最终CI，再继续完整自然母版共享材质转换、成衣原生结构
-迁移、同源引擎原版/补丁实际像素比较；单包归档完成即记录真实artifact。不要重复昂贵Mac
+迁移、同源引擎原版/补丁实际像素比较。不要重复昂贵Mac
 运行来包装旧画面，先在本地修复取证契约、保留失败场景后续样本，再用于新完整样板。
 
 ## 2026-11-14 16:23 UTC · 完整母版准入与原生渲染阻塞定位
