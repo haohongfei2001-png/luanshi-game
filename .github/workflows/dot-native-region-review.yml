@@ -17,7 +17,7 @@ jobs:
       LUANSHI_AUTHORED_LANDFORM: '1'
       LUANSHI_NATIVE_WOODLAND: '1'
       REGION_REVIEW_MODE: 'destination-action'
-      REGION_ASSET_SOURCE: '4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd'
+      REGION_ASSET_SOURCE: '287e2ae375bc2f33cd03cbf37508faf388d7e85e'
       LUANSHI_AUTHOR_ORACLE_CACHE: ${{ github.workspace }}/.pipeline/actor-cache
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
         with:
           script: |
             const inputs = [
-              [43637786209,'4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd',{'complete-region-runtime-00':14130681650,'complete-region-runtime-01':14131275730,'complete-region-runtime-02':14130641702,'complete-region-runtime-03':14130721517,'complete-region-runtime-04':14131190917}],
+              [43648903794,'287e2ae375bc2f33cd03cbf37508faf388d7e85e',{"complete-region-runtime-00": 14135571007, "complete-region-runtime-01": 14135501201, "complete-region-runtime-02": 14135715846, "complete-region-runtime-03": 14135041936, "complete-region-runtime-04": 14135775722, "complete-region-runtime-05": 14135086886}],
               [43635849360,'945b2c676705460f97ba0d9e5c9d892f2a64390d',{'controlled-cache-part00':14130322625,'controlled-cache-part01':14130118176,'controlled-cache-part02':14129928581,'controlled-cache-part03':14130073371,'controlled-cache-part04':14130058319,'controlled-cache-part05':14130078406,'controlled-cache-manifest':14129998513}],
             ];
             for (const [run_id,sha,expected] of inputs) {
@@ -43,7 +43,7 @@ jobs:
           pattern: complete-region-runtime-*
           merge-multiple: true
           path: .pipeline/region-groups
-          run-id: '43637786209'
+          run-id: '43648903794'
           github-token: ${{ github.token }}
       - uses: actions/download-artifact@v4
         with:

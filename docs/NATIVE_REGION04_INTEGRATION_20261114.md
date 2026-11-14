@@ -1,6 +1,6 @@
 # Isolated complete scene04 + genuine input diagnostic integration
 
-Status: FROZEN_SOURCE_VALIDATION_IN_PROGRESS; ART_NOT_ACCEPTED. Main and RC24/25 unchanged.
+Status: RUNTIME_BUILD_AND_DEFAULT_REGRESSION_PASS; NATIVE_CAPTURE_PENDING; ART_NOT_ACCEPTED. Main and RC24/25 unchanged.
 
 This is one coordinated intake, not a merge of diverged experimental histories:
 - Causeway04 exact 28-file intake: e689f5602e3ab598796d99da5b2922a4444352f0, matching local57a7745. Terrain query/render/collision/sampling and surveyed water use `asymmetric-military-watercourse-and-causeway-04` together. Rebuild terrain, woodland and grass; never reuse profile03 instances.
@@ -21,3 +21,7 @@ The actual-input evidence gate refuses absent native frames, frozen simulation, 
 Complete-runtime CI builds/reconstructs one frozen exact source closure and writes runtime-manifest.json with source SHA, profile hash and every four runtime member hash. Artifacts are bounded to120MiB groups; eight group slots allow the complete original tree without silently deleting source or changing texture quality. This capacity is not performance optimization. Keep editable architecture source separate from runtime; preserve original asset-source licenses/hashes.
 
 Only after this exact runtime run succeeds and its manifest is independently recovered may the native Mac job pin its run, source and four hashes. Do not use moving branches or mix old runtime groups. Keep native Metal execution and default regression separate from artistic judgment. Current whole-scene direction is Owner-approved AI reference31fa, not a real-game approval; all known failed old pixels remain archived.
+
+## Verified frozen runtime build
+
+Source `287e2ae375bc2f33cd03cbf37508faf388d7e85e`, run `43648903794` completed SUCCESS. Six original ZIP digests/CRC and all13 restored members independently verified. The actual four runtime hashes are recorded in `runtime-build-receipt.json`; do not substitute local export hashes. Default full `tools/test.sh` final exit0, no SCRIPT/SHADER/ERROR markers. These are build/technical results, not GPU or artistic acceptance. Native capture pins these exact six artifact identities.
