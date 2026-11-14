@@ -30,6 +30,17 @@
       "height": 1024,
       "format": "PNG",
       "status": "CANDIDATE_NOT_APPROVED"
+    },
+    {
+      "path": "battlefield-conditional-candidate.png",
+      "sha256": "8d3a8cd836a915b447bdaa20085a65e2127d27dc1ac65c6285693f8cc617f755",
+      "bytes": 3790646,
+      "width": 1672,
+      "height": 941,
+      "format": "PNG",
+      "status": "CONDITIONAL_DIRECTION_FEEDBACK_NOT_FINAL_ART_APPROVAL",
+      "owner_correction": "Prefer clean character/background insets; simple is acceptable; no painterly smearing, dirty texture or noise."
     }
-  ]
+  ],
+  "updated_utc": "2026-11-14T18:08:00Z"
 }
