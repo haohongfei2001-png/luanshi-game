@@ -1,0 +1,75 @@
+name: Representation texture recovery smoke (not art acceptance)
+on:
+  push:
+    branches: ['dot/representation-load-fix']
+    paths: ['tools/representation_compare/**', 'scripts/field/experimental/**', '.github/workflows/representation-recovery.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  controlled-battle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare provenance and official graphics dependencies
+        run: |
+          mkdir -p evidence
+          echo '${{ github.sha }}' > evidence/source-sha.txt
+          sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri fonts-noto-cjk
+          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc assets/fonts/NotoSansSC-Regular.otf
+          sha256sum assets/fonts/NotoSansSC-Regular.otf > evidence/import-font-sha.txt
+      - name: Verify retained fixed engine and official importer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/haohongfei2001-png/luanshi-game/actions/artifacts/14124017040/zip > /tmp/engine.zip
+          echo '86a1d627854559bbed35f6a360cea05fac0c9572bb165f1ed43c4984a0979909  /tmp/engine.zip' | sha256sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/engine
+          echo '16cd16ae2a2f7f5fd9ca18ba9f68a0ef0d043cdfbb3b51df2cec2183def26f5a  /tmp/engine/bin/godot-patched' | sha256sum -c -
+          chmod +x /tmp/engine/bin/godot-patched
+          cp /tmp/engine/{BUILD_COMMAND,PATCH_SHA256,BINARY_SHA256,patched-version.txt} evidence/
+          curl -fsSL https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          chmod +x /tmp/editor/Godot_v4.6.3-stable_linux.x86_64
+          /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --import --path . > evidence/import.log 2>&1
+      - name: Restore exact prior Godot source atlas and pack direct Image bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMPARE_ASSETS: ${{ runner.temp }}/control-atlas
+        run: |
+          set -euo pipefail
+          gh api repos/haohongfei2001-png/luanshi-game/actions/artifacts/14126743401/zip > /tmp/source-atlas.zip
+          echo '1e817b66e1c649db59b875f14655f8638b51f6a2f4c2313dc1d8c9462a45ab3e  /tmp/source-atlas.zip' | sha256sum -c -
+          unzip -q /tmp/source-atlas.zip -d "$COMPARE_ASSETS"
+          echo 'Source atlas actual Godot run43625844890 code4fc9708, identical source model and pose bank; NO rebake this run' > evidence/atlas-origin.txt
+          timeout 300s /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tools/representation_compare/pack_control_atlas.gd > evidence/pack-atlas.log 2>&1
+          cp "$COMPARE_ASSETS/atlas.json" evidence/atlas.json
+          ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/pack-atlas.log
+      - name: Small complete actual graphics smoke before any long benchmark
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          COMPARE_ASSETS: ${{ runner.temp }}/control-atlas
+        run: |
+          set -euo pipefail
+          uname -a > evidence/hardware.txt
+          lscpu >> evidence/hardware.txt
+          for CASE in '2560x1440 shared3d 0' '2560x1440 sprite8 0' '2560x1440 sprite16 0' '2560x1440 hybrid 0' '2560x1440 shared3d 2' '3840x2160 sprite16 0'; do
+            read -r SIZE MODE LOD <<< "$CASE"
+            IFS=x read -r W H <<< "$SIZE"
+            printf '[display]\nwindow/size/viewport_width=%s\nwindow/size/viewport_height=%s\nwindow/size/window_width_override=%s\nwindow/size/window_height_override=%s\n' "$W" "$H" "$W" "$H" > override.cfg
+            OUT="$PWD/evidence/smoke-$SIZE-$MODE-lod$LOD"
+            COMPARE_MODE=$MODE COMPARE_LOD_TIER=$LOD COMPARE_COUNT=100 COMPARE_CAMERA_SIZE=12 COMPARE_CAPTURE=1 COMPARE_OUTPUT="$OUT" timeout 180s xvfb-run -a -s "-screen 0 ${SIZE}x24" /tmp/engine/bin/godot-patched --path . --resolution "$SIZE" --disable-vsync --rendering-method gl_compatibility --audio-driver Dummy --script tools/representation_compare/battle_control.gd > "$OUT.log" 2>&1
+            ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' "$OUT.log"
+            test -s "$OUT/report.json" && test -s "$OUT/same-tick-native.png"
+          done
+          python tools/representation_compare/check_smoke.py evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: representation-recovery-${{ github.sha }}
+          path: evidence/
+          retention-days: 30

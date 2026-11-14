@@ -8,6 +8,7 @@ var entries:Array=[]
 var source:Node3D
 var palette_bytes:=0
 var mesh_triangles:=0
+var explicit_lod_inventory:Array=[]
 func prepare(parent:Node,measure_bounds:bool=false)->void:
  source=load("res://assets/ubc_lab/ubc_animated.glb").instantiate();parent.add_child(source)
  var skeleton:Skeleton3D=source.find_children("*","Skeleton3D",true,false)[0]
@@ -50,6 +51,12 @@ func prepare(parent:Node,measure_bounds:bool=false)->void:
    entry.mesh.surface_set_material(surface,material);entry.materials.append(material)
    mesh_triangles+=entry.mesh.surface_get_array_index_len(surface)/3
   entry.erase("frames")
+ if OS.has_environment("COMPARE_LOD_TIER"):
+  var tier=int(OS.get_environment("COMPARE_LOD_TIER"));assert(tier>=0 and tier<=3)
+  for entry:Dictionary in entries:
+   var selected=preload("res://tools/representation_compare/explicit_lod.gd").select(entry.mesh,tier)
+   assert(not selected.has("error"),str(selected));entry.mesh=selected.mesh
+   explicit_lod_inventory.append({"mesh":entry.native.name,"tier":tier,"surfaces":selected.inventory})
  source.visible=false
 func batches(parent:Node,count:int)->Array:
  var result=[]

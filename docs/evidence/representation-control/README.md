@@ -105,3 +105,49 @@ quality or vertex-shader speed: unchanged vertex buffers and weight tables
 remain allocated. The first arrays-to-mesh implementation was rejected because
 normal re-encoding was not byte identical; direct 4.6.3 packed surface
 serialization preserves the source instead. No LOD is enabled by this evidence.
+
+## Action mapping / coverage limits
+
+The first control updates rendered positions and walk phase at Battle ticks,
+without fractional-tick interpolation. WINDUP and RECOVER each map their local
+phase onto the full Sword_Attack clip, so they can visually repeat a swing.
+This is equal between representation modes, NOT accepted natural locomotion,
+contact-synchronized attacks, two-handed spear use, or a complete art animation.
+Later production mapping must align one attack timeline, contact and recovery,
+plus ground-relative foot speed and frame-to-frame turning.
+
+A separate local 7d41 simulation-only oracle reaches tick500 with the actual
+seed61112 and gives hits/losses:20 per side [36,0]/[0,9];100 [245,151]/[30,62];
+250 [305,541]/[132,82];512 [631,648]/[159,163]. Thus the20 troop window does NOT
+cover enemy hits. These are not graphics tests and are not presumed to equal
+another engine revision; the GPU run checks its own independent same-run oracle.
+
+## First full graphics run43625844890: FAILED, retained evidence
+
+Source4fc9708 completed actual atlas rendering/compression and16 native captures,
+then produced only20-per-side timing reports before100/shared3D exceeded its
+180-second case timeout. Every sprite/hybrid case logged `img.is_null()` loading
+Texture2DArray and showed missing-texture magenta rectangles. Their images and
+performance are INVALID, not evidence that sprite drawing is faster. The
+headless offline editor had saved GPU-backed Texture2DArray through a dummy
+renderer; its serialized Image layers were null. Recovery writes compressed
+Image CPU bytes plus hashes and constructs arrays in the actual renderer.
+
+Artifact14127007730 (133775177B) SHA256
+`d9a76e4e54a8f2514d9d2d3ae9ee4fdc847409485739fe4cba5446d848116955`.
+Exact source PNG artifact14126743401 (136197843B), SHA256
+`1e817b66e1c649db59b875f14655f8638b51f6a2f4c2313dc1d8c9462a45ab3e`.
+The recovery smoke reuses these original PNGs rather than rerendering them.
+Actual compressed payload8-way488753152B /16-way918280448B is retained honestly.
+This conservative layout is not a final memory-optimal sprite representation.
+
+The valid20/shared3D short control had76 frames in128.950341wall seconds,
+0.589374FPS,P95=1769.115ms,P99=1774.662ms on llvmpipe. It is not a meaningful
+stable-tail/device result or evidence against3D onM5. Engine-clamped delta means
+10simulation seconds took129wall seconds; later real-time measurement must
+explicitly handle and disclose this, not silently call it10wall seconds.
+Native100+/four-size performance remains incomplete. No route winner exists.
+
+True alpha bounds at the fixed pitch show UBC Idle size16 is only112–135px body
+height at2K. Size12 predicts149–180px (10.35–12.5%screen height), so the bounded
+recovery smoke uses size12, not an invented official Wild Rift size.
