@@ -1,6 +1,6 @@
-## Dot 2026-11-14 16:23 UTC continuation update
+## Dot 2026-11-14 16:44 UTC continuation update
 
-Codex PAUSED / Dot owner-authorized continuation remains in force. Whole-frame ART FAIL; no RC/main promotion. New coherent Sprite Fright CC BY4 production source acquired; conversion is not complete. MH original-axis audit corrected an earlier fidelity claim. Official Compatibility Skin tangent failure is independently reproduced; patch validation pending. Native run43612407649 export SUCCESS, native graphics/performance still in progress. Read the latest section of [Dot checkpoint](DOT_REBUILD_CHECKPOINT_20261114.md) before resuming; older sections below are historical, not current pass claims.
+Codex PAUSED / Dot owner-authorized continuation remains in force. Whole-frame ART FAIL; no RC/main promotion. Native run43612407649 completed: export SUCCESS, final fixed-camera encoder FAIL. Internal ad-hoc macOS package and original-speed 2K/4K evidence recovered, hash-verified and archived; not a new art candidate. 512v512 averaged35.852/27.680 FPS at native2K/4K on M1 Virtual; M5 DEVICE_NOT_RUN. Coherent production environment/costume conversion and same-source engine tangent validation continue. Read the latest section of [Dot checkpoint](DOT_REBUILD_CHECKPOINT_20261114.md); older sections are historical, not current pass claims.
 
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
