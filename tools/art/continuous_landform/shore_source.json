@@ -1,0 +1,37 @@
+{
+  "asset": "coastal_cliff_02",
+  "author": "Rob Tuytel",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/coastal_cliff_02",
+  "license_url": "https://polyhaven.com/license",
+  "reuse": "existing 89999-triangle repository derivative; not newly acquired source",
+  "source_triangles_reported_by_existing_manifest": 943284,
+  "derived_triangles": 89999,
+  "files": [
+    {
+      "path": "assets/river_gate/world/masters/coastal_cliff_02/coastal_cliff_02.gltf",
+      "bytes": 2294,
+      "sha256": "816f04fe30073af7e5466ca1974b12a48823327bf884c29da4a0e1b1c4cff11b"
+    },
+    {
+      "path": "assets/river_gate/world/masters/coastal_cliff_02/coastal_cliff_02.bin",
+      "bytes": 2187292,
+      "sha256": "e85114bacc75d0fad2c4611e4d7dfd47e4148441b1719d9d7213739a3a24711d"
+    },
+    {
+      "path": "assets/river_gate/world/masters/coastal_cliff_02/coastal_cliff_02_diff_2k.jpg",
+      "bytes": 2655313,
+      "sha256": "f2d65dfc3480ee2df23f47d768aa2a285cf1cd1a1b8be5173aa333f8ece854b8"
+    },
+    {
+      "path": "assets/river_gate/world/masters/coastal_cliff_02/NOTICE.txt",
+      "bytes": 213,
+      "sha256": "c7628b487b099dd3c0604ab596fa9567977985127832d2670d6c059b7ee079dd"
+    },
+    {
+      "path": "assets/river_gate/world/masters/coastal_cliff_02/SOURCE.json",
+      "bytes": 821,
+      "sha256": "6cf42ec5673325fb27946a97b8465e9521447a965a7aa77da08f20800e3c72e1"
+    }
+  ]
+}

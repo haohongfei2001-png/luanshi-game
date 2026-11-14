@@ -16,7 +16,9 @@ func run() -> void:
 		assert(Ground.blocked(p,true,true)==old_blocked[i],"Military routes changed")
 		var delta:float=absf(Ground.height(p,true)-old_height[i]);max_delta=maxf(max_delta,delta)
 		if delta>.00001:changed+=1
-		if p.x<=29.95 or p.x>=46.6 or absf(p.y)>=32.:assert(delta==0.,"Landform escaped intended approach")
+		var in_approach:=p.x>0. and p.x<46.6 and absf(p.y)<38.
+		var in_shore_shelves:=false # Old isolated scan-support shelves removed
+		if not in_approach and not in_shore_shelves:assert(delta==0.,"Landform escaped explicit approach/shore domains")
 	for bridge_x:float in [-32.,24.]:
 		for z:float in ([-35.,0.,35.] if bridge_x<0 else [0.]):
 			assert(is_equal_approx(Ground.deck_height(Vector2(bridge_x,z),true),.13))

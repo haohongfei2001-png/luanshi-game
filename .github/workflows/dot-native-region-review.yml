@@ -15,44 +15,51 @@ jobs:
     timeout-minutes: 40
     env:
       LUANSHI_AUTHORED_LANDFORM: '1'
-      REGION_REVIEW_MODE: 'camera-study'
+      REGION_REVIEW_MODE: 'gate-context-study'
+      REGION_ASSET_SOURCE: '4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd'
+      LUANSHI_AUTHOR_ORACLE_CACHE: ${{ github.workspace }}/.pipeline/actor-cache
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Verify exact existing derivative run and repository
+      - name: Verify exact complete-region and complete-author sources
         uses: actions/github-script@v7
         with:
           script: |
-            const run = (await github.rest.actions.getWorkflowRun({...context.repo,run_id:43627776697})).data;
-            if (run.head_sha !== 'ee5d1389944a4e3a3a13487856066e0631f8ca25' || run.status !== 'completed' || run.conclusion !== 'success' || run.repository.full_name !== `${context.repo.owner}/${context.repo.repo}`) throw new Error('Unexpected source run');
-            const all = (await github.rest.actions.listWorkflowRunArtifacts({...context.repo,run_id:43627776697,per_page:100})).data.artifacts;
-            const expected = {'new-architecture-editable-source':14127177778,'reusable-region-derivatives-00':14126604039,'reusable-region-derivatives-01':14126978235,'reusable-region-derivatives-02':14126364620};
-            for (const [name,id] of Object.entries(expected)) {
-              const found = all.filter(a => a.name === name && a.id === id && !a.expired);
-              if(found.length !== 1) throw new Error(`Missing exact source artifact ${name}`);
+            const inputs = [
+              [43637786209,'4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd',{'complete-region-runtime-00':14130681650,'complete-region-runtime-01':14131275730,'complete-region-runtime-02':14130641702,'complete-region-runtime-03':14130721517,'complete-region-runtime-04':14131190917}],
+              [43635849360,'945b2c676705460f97ba0d9e5c9d892f2a64390d',{'controlled-cache-part00':14130322625,'controlled-cache-part01':14130118176,'controlled-cache-part02':14129928581,'controlled-cache-part03':14130073371,'controlled-cache-part04':14130058319,'controlled-cache-part05':14130078406,'controlled-cache-manifest':14129998513}],
+            ];
+            for (const [run_id,sha,expected] of inputs) {
+              const run = (await github.rest.actions.getWorkflowRun({...context.repo,run_id})).data;
+              if(run.head_sha!==sha || run.status!=='completed' || run.conclusion!=='success' || run.repository.full_name!==`${context.repo.owner}/${context.repo.repo}`) throw new Error('Unexpected input run');
+              const all=(await github.rest.actions.listWorkflowRunArtifacts({...context.repo,run_id,per_page:100})).data.artifacts;
+              for(const [name,id] of Object.entries(expected)) if(all.filter(a=>a.name===name && a.id===id && !a.expired).length!==1) throw new Error(`Missing exact input ${name}`);
             }
-            // Success here is source integrity, never visual acceptance.
+            // Technical/source closure only. All art and action remain unaccepted.
       - uses: actions/download-artifact@v4
         with:
-          pattern: reusable-region-derivatives-*
+          pattern: complete-region-runtime-*
           merge-multiple: true
-          path: .pipeline/groups
-          run-id: '43627776697'
+          path: .pipeline/region-groups
+          run-id: '43637786209'
           github-token: ${{ github.token }}
       - uses: actions/download-artifact@v4
         with:
-          name: new-architecture-editable-source
-          path: .pipeline/architecture
-          run-id: '43627776697'
+          pattern: controlled-cache-*
+          merge-multiple: true
+          path: .pipeline/actor-groups
+          run-id: '43635849360'
           github-token: ${{ github.token }}
-      - name: Verify and restore exact three runtime assets
+      - name: Restore four exact runtime assets and complete external author cache, no rebake
         run: |
           set -euo pipefail
           mkdir -p artifacts/native-region
           touch artifacts/.gdignore .pipeline/.gdignore
-          python3 tools/native_region/restore_inputs.py .pipeline/groups .pipeline/architecture "$PWD" .pipeline/restored >artifacts/native-region/asset-integrity.json
+          python3 tools/native_region/restore_complete.py .pipeline/region-groups .pipeline/actor-groups "$PWD" .pipeline/restored .pipeline/actor-cache >artifacts/native-region/asset-integrity.json
+          cp .pipeline/actor-groups/ATTRIBUTION.md artifacts/native-region/author-attribution.md
           python3 tests/native_region_inputs_test.py
+          python3 tests/native_complete_restore_test.py
           ./tools/prepare-font.sh
           python3 tools/art/gate_structure/check_evidence_dependencies.py --require-generated >artifacts/native-region/dependency-closure.json
       - name: Install exact official import editor
@@ -72,7 +79,7 @@ jobs:
           set -euo pipefail
           python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/import.log 180 -- "$GODOT_EDITOR" --headless --editor --path . --import
           python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/parse.log 45 -- "$GODOT_EDITOR" --headless --path . --check-only --script tests/native_region_capture.gd
-          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/setup.log 75 -- "$GODOT_EDITOR" --headless --path . --script tests/native_region_capture.gd -- --validate-setup
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/setup.log 75 -- "$GODOT_EDITOR" --headless --path . --script tests/native_region_capture.gd -- --validate-setup --gate-context-study --road-section-study --author-oracle
         env:
           ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/native-region/setup
       - name: Restore already verified native Metal mutex-fix engine
@@ -94,7 +101,7 @@ jobs:
         if: steps.engine-cache.outputs.cache-hit != 'true' && steps.engine-artifact.outcome == 'failure'
         run: bash tools/build_macos_engine.sh patch
       - name: Export normal adjacent internal resource pack without path overrides
-        run: python3 tools/native_region/export_pack.py "$GODOT_EDITOR" "$PWD" "$PWD/patch" "$PWD/artifacts/native-region"
+        run: python3 tools/native_region/export_pack.py "$GODOT_EDITOR" "$PWD" "$PWD/patch" "$PWD/artifacts/native-region" --mode "$REGION_REVIEW_MODE"
       - name: Run genuine native 2K and 4K experimental camera frames
         run: |
           set -euo pipefail
@@ -107,7 +114,7 @@ jobs:
         if: always()
         run: |
           set -uo pipefail
-          if [ "$REGION_REVIEW_MODE" = camera-study ]; then echo 'STATIC_CAMERA_STUDY_ONLY_NO_ACTION_OR_PERFORMANCE_CLAIM'; exit 0; fi
+          if [ "$REGION_REVIEW_MODE" != baseline ]; then echo 'STATIC_CAMERA_STUDY_ONLY_NO_ACTION_OR_PERFORMANCE_CLAIM'; exit 0; fi
           RAW=artifacts/native-region/pixels/traversal-raw
           if [ ! -f "$RAW/frames.jsonl" ]; then echo 'TRAVERSAL_NOT_RUN'; exit 1; fi
           status=0

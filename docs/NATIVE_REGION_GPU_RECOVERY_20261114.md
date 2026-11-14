@@ -315,3 +315,29 @@ empty-working-directory closure check must load the actual single actor, not
 only the old default crowd. A bounded 240 seconds covers cold setup plus three
 readbacks; it is not a performance relaxation. New-scene graphics remain
 **NOT_RUN** until the exact reusable asset bundle is loaded and captured.
+
+## Complete road03 / stone-timber / single-actor native integration
+
+The next native run consumes already built runtime files from successful
+[run 43637786209](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43637786209),
+source `4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd`.
+Exactly five `complete-region-runtime-*` groups are used, not the separate
+editable-source artifacts. The four files are pinned in
+`tools/native_region/restore_complete.py`; the terrain profile must also match
+the actual game source. The CI-produced gateway bytes differ from the local
+build and are recorded as such, rather than relabelled as an identical build.
+
+The 43-mesh single-unit author oracle uses the six cache parts plus manifest
+from run43635849360/source945b2c676705460f97ba0d9e5c9d892f2a64390d.
+All six part hashes, the full archive hash, and all 91 extracted member hashes
+were independently revalidated through the new restoration function. The
+external raw cache remains excluded from imported `res://` resources, with
+attribution retained. It replaces one real unit's visualization only at a
+fixed author walk phase; no Battle values, fixed identity, crowd architecture,
+full animation mapping, foot/grip acceptance or performance result is implied.
+
+The exact merged capture source parses in Godot4.6.3, the release-side-effect
+and traversal guards pass, and native input/restoration/still unit tests pass.
+The source-closed exported pack and actual new-scene native frames are still
+**NOT_RUN** at this checkpoint. They are the next CI steps, with ordinary
+capture failures preserved, not converted into art acceptance.

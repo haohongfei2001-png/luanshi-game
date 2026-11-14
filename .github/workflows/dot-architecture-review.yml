@@ -45,6 +45,7 @@ jobs:
           python tests/bounded_artifact_groups_test.py
           python tests/native_evidence_bundle_test.py
           python tests/wall_clock_encoding_test.py
+          python tests/traversal_result_test.py
           timeout 30s godot --headless --path . --script tests/art_reset/surface_front_face.gd >artifacts/gate-structure/surface-front-face.log 2>&1
           timeout 30s godot --headless --path . --script tests/authored_support_winding.gd >artifacts/gate-structure/support-winding.log 2>&1
           timeout 45s godot --headless --path . --script tests/authored_architecture.gd >artifacts/gate-structure/structure-test.log 2>&1
@@ -184,6 +185,7 @@ jobs:
           python tools/encode_wall_clock_capture.py "$RAW" "$RAW/traversal.mp4" >"$RAW/encode.log" 2>&1 || status=1
           python tools/native_evidence_bundle.py "$RAW" artifacts/traversal-curated || status=1
           python -c "import sys;sys.path.insert(0,'tools');from bounded_artifact_groups import stage;stage('artifacts/traversal-curated','artifacts/traversal-groups',max_groups=4)" || status=1
+          python tools/art/gate_structure/validate_traversal.py "$RAW/frames.jsonl" >"$RAW/route-acceptance.json" 2>&1 || status=1
           exit "$status"
       - uses: actions/upload-artifact@v4
         if: always()

@@ -1,0 +1,29 @@
+{
+  "scope": "Explicitly reused CC0 source maps, not old scene or shaders; original repository SOURCE and NOTICE retained",
+  "files": [
+    {
+      "path": "assets/river_gate/world/ground/leafy_grass.jpg",
+      "sha256": "4361e4cb771dd45e96c283a079fc258c639484eabb7f47e573dc8e8afcce2f92"
+    },
+    {
+      "path": "assets/river_gate/world/ground/leafy_grass_nor_gl.jpg",
+      "sha256": "df0cf0ce96e653f033e5b934d5b12995464bda027aa53bd12e329be889aa9f45"
+    },
+    {
+      "path": "assets/river_gate/world/ground/brown_mud_dry.jpg",
+      "sha256": "08911da4508314c2dffba0d96d656a6cd9ca4b1ef7843036a6fac494cc02ce05"
+    },
+    {
+      "path": "assets/river_gate/world/ground/brown_mud_dry_nor_gl.jpg",
+      "sha256": "b2cc46b8497f1c4a1e9cd51883175b1ae1c4eb8862c553573efb41ca0a4088bc"
+    },
+    {
+      "path": "assets/river_gate/world/ground/SOURCE.json",
+      "sha256": "490cdd12f54c1e0bd0d4eb5ea541f41d43c7e64aeac94915ef16664d28d2c92e"
+    },
+    {
+      "path": "assets/river_gate/world/ground/NOTICE.txt",
+      "sha256": "cdc86be7e17a282163b0eb8be17c11db35966fc1b5db95ca5e9e3e96fa77cc2e"
+    }
+  ]
+}

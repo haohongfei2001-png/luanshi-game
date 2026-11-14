@@ -1,0 +1,166 @@
+{
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "materials": {
+    "timber": {
+      "asset": "fine_grained_wood",
+      "author": "Rob Tuytel",
+      "source": "https://polyhaven.com/a/fine_grained_wood",
+      "tile_metres": 0.6,
+      "scale_note": "Current page and dimensions used; legacy scale string says 30x30CM and conflicts",
+      "normal_strength": 0.65,
+      "normal_strength_note": "Explicit production normal-scale attenuation, source bytes unmodified; actual view review required.",
+      "alpha_mode": "OPAQUE; ignore near-opaque source alpha",
+      "files": [
+        {
+          "asset": "fine_grained_wood",
+          "role": "Diffuse",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/fine_grained_wood/fine_grained_wood_col_2k.png",
+          "bytes": 5970519,
+          "md5": "7762bdf53e42e7aa622140788bc5b291",
+          "sha256": "a90e4b26c0fb05b8144c7dacf5f9caa76fc781966ab05b5239b1fc2daad69673",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 8,
+            "color_type": 6
+          },
+          "file": "fine_grained_wood/fine_grained_wood_col_2k.png"
+        },
+        {
+          "asset": "fine_grained_wood",
+          "role": "nor_gl",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/fine_grained_wood/fine_grained_wood_nor_gl_2k.png",
+          "bytes": 3210822,
+          "md5": "c29616d3509274d1ba7c3fa7a111045f",
+          "sha256": "8bf311cca68565541749b32c91960e6e40fd9bfce651b923512394d571e21759",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 8,
+            "color_type": 6
+          },
+          "file": "fine_grained_wood/fine_grained_wood_nor_gl_2k.png"
+        },
+        {
+          "asset": "fine_grained_wood",
+          "role": "Rough",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/fine_grained_wood/fine_grained_wood_rough_2k.png",
+          "bytes": 2103115,
+          "md5": "470f4054f357efccd166b6683c621c06",
+          "sha256": "135bacfcb37c5aed18bf6374ccff063cbaf7d16ad1029b3f1d5a67258be610f7",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 8,
+            "color_type": 4
+          },
+          "file": "fine_grained_wood/fine_grained_wood_rough_2k.png"
+        },
+        {
+          "asset": "fine_grained_wood",
+          "role": "AO",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/fine_grained_wood/fine_grained_wood_ao_2k.png",
+          "bytes": 4094065,
+          "md5": "24f355bec68864da28d99452bf221f43",
+          "sha256": "9e508cd0bb5a262df1774c9c8d9c7454c6adf4357878ada250204a7a02562ba7",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 8,
+            "color_type": 4
+          },
+          "file": "fine_grained_wood/fine_grained_wood_ao_2k.png"
+        }
+      ]
+    },
+    "masonry": {
+      "asset": "medieval_blocks_03",
+      "author": "Rob Tuytel",
+      "source": "https://polyhaven.com/a/medieval_blocks_03",
+      "tile_metres": 2,
+      "scale_note": "Current official page 2m wide; API dimensions [2000,2000]",
+      "normal_strength": 0.45,
+      "normal_strength_note": "Explicit production normal-scale attenuation, source bytes unmodified; actual view review required.",
+      "alpha_mode": "OPAQUE; ignore near-opaque source alpha",
+      "files": [
+        {
+          "asset": "medieval_blocks_03",
+          "role": "Diffuse",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/medieval_blocks_03/medieval_blocks_03_diff_2k.png",
+          "bytes": 26360398,
+          "md5": "df9759f8ded05bbc5dc3f596d5126ce8",
+          "sha256": "e8ad3b194f8db5cc51456a2bee062a39a5e168108ba1c7fff72e226d151a339f",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 16,
+            "color_type": 6
+          },
+          "file": "medieval_blocks_03/medieval_blocks_03_diff_2k.png"
+        },
+        {
+          "asset": "medieval_blocks_03",
+          "role": "nor_gl",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/medieval_blocks_03/medieval_blocks_03_nor_gl_2k.png",
+          "bytes": 27155833,
+          "md5": "400232c1e351507d7c4e31cb6f77ed31",
+          "sha256": "4308f08adde54d9e0c5b104c8d4ca3959fdfa2ce3850c94cb61d8bccb4bb7e42",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 16,
+            "color_type": 6
+          },
+          "file": "medieval_blocks_03/medieval_blocks_03_nor_gl_2k.png"
+        },
+        {
+          "asset": "medieval_blocks_03",
+          "role": "Rough",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/medieval_blocks_03/medieval_blocks_03_rough_2k.png",
+          "bytes": 6946171,
+          "md5": "85d47104654d3e95f9cea3b6141d997d",
+          "sha256": "b320a030fc501aee303ebd9e2be5c81bf29017d89dee5a3560170a7712873b8f",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 16,
+            "color_type": 0
+          },
+          "file": "medieval_blocks_03/medieval_blocks_03_rough_2k.png"
+        },
+        {
+          "asset": "medieval_blocks_03",
+          "role": "AO",
+          "resolution": "2k",
+          "format": "png",
+          "source_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/medieval_blocks_03/medieval_blocks_03_ao_2k.png",
+          "bytes": 6896149,
+          "md5": "a030bb2a4076270c7e17faca444843a9",
+          "sha256": "6551c2c1b69f5ef6815e3465e522b6d973a1d6d3b0c508e01056bd905027a784",
+          "png_IHDR": {
+            "width": 2048,
+            "height": 2048,
+            "bit_depth": 16,
+            "color_type": 0
+          },
+          "file": "medieval_blocks_03/medieval_blocks_03_ao_2k.png"
+        }
+      ]
+    }
+  }
+}

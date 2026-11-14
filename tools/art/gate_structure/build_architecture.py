@@ -49,6 +49,11 @@ for name,color,rough in [('masonry','897e6a',.92),('mortar','716a59',1),('timber
  m=bpy.data.materials.new(name);m.diffuse_color=tuple((int(color[i:i+2],16)/255)**2.2 for i in (0,2,4))+(1,);m.use_nodes=True;p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Base Color'].default_value=m.diffuse_color;p.inputs['Roughness'].default_value=rough;materials[name]=m
 m=bpy.data.materials.new('ProfessionalDeckWood_CC0');m.use_nodes=True;p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Roughness'].default_value=.92
 tex=m.node_tree.nodes.new('ShaderNodeTexImage');tex.image=bpy.data.images.load(str(out/'source/wooden_pier/modular_wooden_pier_planks_diff_2k.jpg'));m.node_tree.links.new(tex.outputs['Color'],p.inputs['Base Color']);materials['deck_wood']=m
+surface_scales={}
+if '--surface-root' in args:
+ sys.path.insert(0,str(Path(__file__).resolve().parent))
+ from apply_surface_materials import apply
+ surface_scales=apply(materials,args[args.index('--surface-root')+1])
 root=bpy.data.objects.new('AuthoredArchitecture',None);bpy.context.collection.objects.link(root)
 groups={}
 def group(name):
@@ -60,7 +65,30 @@ def mesh(name,verts,faces,mat,parent,uvs=None,normals=None):
  layer=d.uv_layers.new(name='UVMap')
  for poly in d.polygons:
   for li in poly.loop_indices:
-   v=d.vertices[d.loops[li].vertex_index].co;layer.data[li].uv=uvs[d.loops[li].vertex_index] if uvs else (v.x*.3,v.z*.3+v.y*.05)
+   v=d.vertices[d.loops[li].vertex_index].co
+   if uvs:layer.data[li].uv=uvs[d.loops[li].vertex_index]
+   elif '--complete-gate-masonry' in args:
+    # World-metre box projection keeps vertical facade UVs non-degenerate.
+    # The old mixed X/(Z+Y) plane collapsed front walls into narrow strips.
+    axis=max(range(3),key=lambda k:abs(poly.normal[k]))
+    layer.data[li].uv=(v.y,v.z) if axis==0 else (v.x,v.z) if axis==1 else (v.x,v.y)
+   else:layer.data[li].uv=(v.x*.3,v.z*.3+v.y*.05)
+ if mat in surface_scales:
+  # Preserve the author's original UVMap; a separate explicitly named material
+  # layer has metre-scale coordinates with timber grain along the member axis.
+  material_uv=d.uv_layers.new(name='MaterialUV_Metre');tile=surface_scales[mat]
+  lo=[min(v.co[k] for v in d.vertices) for k in range(3)];hi=[max(v.co[k] for v in d.vertices) for k in range(3)]
+  grain=max(range(3),key=lambda k:hi[k]-lo[k])
+  for poly in d.polygons:
+   normal_axis=max(range(3),key=lambda k:abs(poly.normal[k]));plane=[k for k in range(3) if k!=normal_axis]
+   if mat in ['timber','timber_cut'] and grain in plane:plane=[k for k in plane if k!=grain]+[grain]
+   for li in poly.loop_indices:
+    v=d.vertices[d.loops[li].vertex_index].co
+    if mat=='masonry' and name.startswith('GateVault_') and normal_axis==0:
+     # Radial voussoirs are individual cut stones: use a stone interior island,
+     # never print the wall's horizontal mortar courses over an arch block.
+     material_uv.data[li].uv=(.17+.28*(v.y-lo[1])/max(hi[1]-lo[1],.001),.03+.15*(v.z-lo[2])/max(hi[2]-lo[2],.001))
+    else:material_uv.data[li].uv=(v[plane[0]]/tile,v[plane[1]]/tile)
  if normals:
   for poly in d.polygons:poly.use_smooth=True
   d.normals_split_custom_set([normals[loop.vertex_index] for loop in d.loops])
@@ -100,6 +128,30 @@ for sign in [-1,1]:
   else:
    for center,depth in [(47.95,2.35),(53.15,.6)]:box('GatePier_walk_jamb',(center,y,sign*(inner+width/2)),(depth,.584,width),'masonry',gate,.025)
  for center,depth in [(47.95,2.35),(53.15,.6)]:box('GatePier_coping',(center,4.43,sign*6.25),(depth,.32,4.42),'masonry',gate)
+# Complete load-bearing gateway enclosure. Keep the real wall-walk corridor
+# x49.4..52.6 clear to y5.45; the gallery sits on continuous facade spandrels
+# and a high bearing course, not on isolated piers beneath a floating floor.
+if '--complete-gate-masonry' in args:
+ def arch_outer(z):
+  return cz+math.sqrt(max(0.,(R+.55)**2-z*z))
+ for front,back,label in [(46.65,49.12,'Front'),(52.85,53.45,'Rear')]:
+  intervals=[-8.15,-4.25]+[-4.25+i*8.5/34 for i in range(1,34)]+[4.25,8.15]
+  vs=[];faces=[]
+  for za,zb in zip(intervals,intervals[1:]):
+   # The arch's native voussoir outer edge is the exact underside of infill.
+   ya=arch_outer(za) if abs(za)<4.25 else 4.59
+   yb=arch_outer(zb) if abs(zb)<4.25 else 4.59
+   start=len(vs)
+   for x in [front,back]:
+    for z,y in [(za,ya),(zb,yb),(zb,5.69),(za,5.69)]:vs.append(pt(x,y,z))
+   faces.extend([tuple(start+j for j in face) for face in [(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)]])
+  ob=mesh('GateContinuousSpandrel_'+label,vs,faces,'masonry',gate)
+  ob['structural_role']='continuous arch shoulder to timber-gallery bearing; full depth facade; clear historic gameplay passage'
+ # Header above the interior wall-walk. No masonry is placed in its adult
+ # headroom; floor bearing continues over the passage at 2.20m clear height.
+ for sign in [-1,1]:
+  box('GateGalleryBearing',(50.05,5.62,sign*6.15),(6.8,.14,4.0),'masonry',gate,.012)
+
 # Functional replaceable door leaves, independently hideable; opening preserved as gameplay-controlled.
 for sign in [-1,1]:
  for i in range(11):box('GateDoor_board',(48.,2.05,sign*(.18+i*.35)),(.21,4.05,.34),'timber',door,.014)
@@ -119,22 +171,33 @@ def clip(poly,axis,value,keep_less):
 S=.19;extension=5.;roof_pieces=[]
 # Full adult-height upper hall: floor5.72, column head7.92, original roof frame above.
 ROOF_BASE=7.92-20.36121940612793*S
-def roof_part(name,polys,offset=0,lo=None,hi=None,material='tile'):
+def roof_part(name,polys,offset=0,lo=None,hi=None,material='tile',longitudinal_scale=1.):
  vs=[];fs=[];uv=[];normals=[]
  for poly in polys:
   if lo is not None:poly=clip(poly,1,lo,False)
   if hi is not None:poly=clip(poly,1,hi,True)
   if len(poly)<3:continue
   fs.append(tuple(range(len(vs),len(vs)+len(poly))))
-  for v,t,n in poly:vs.append((50.05+v[0]*S,v[1]*S+offset,ROOF_BASE+v[2]*S));uv.append(t);normals.append(n)
+  for v,t,n in poly:
+   vs.append((50.05+v[0]*S,v[1]*S*longitudinal_scale+offset,ROOF_BASE+v[2]*S));uv.append(t)
+   normals.append(tuple(Vector((n[0],n[1]/longitudinal_scale,n[2])).normalized()))
  o=mesh(name,vs,fs,material,gate,uv,normals);o['source']='VVayToyek CC0 pavilion roof; polygon clipped, UV interpolated, ridge extended';roof_pieces.append(o)
 roof_part('Roof_HipNorth',roof['瓦面1'],-extension)
 roof_part('Roof_HipSouth',roof['瓦面3'],extension)
 for source_name,label in [('瓦面2','East'),('瓦面4','West')]:
- roof_part('Roof_'+label+'_north',roof[source_name],-extension,hi=0)
- roof_part('Roof_'+label+'_south',roof[source_name],extension,lo=0)
- n=44;step=2*extension/n;half=step/S/2
- for i in range(n):roof_part('Roof_'+label+'_central_%02d'%i,roof[source_name],-extension+step*(i+.5),lo=-half,hi=half)
+ if '--native-roof-band' in args:
+  # Preserve complete native hip/corner regions. The only replaced central band
+  # is one full straight tile-column phase, not arbitrary narrow slices.
+  native_pitch_m=.17180710002779964;half=native_pitch_m/(2*S)
+  roof_part('Roof_'+label+'_north',roof[source_name],-extension,hi=-half)
+  roof_part('Roof_'+label+'_south',roof[source_name],extension,lo=half)
+  span=2*extension+native_pitch_m;n=round(span/native_pitch_m);step=span/n
+  for i in range(n):roof_part('Roof_'+label+'_central_%02d'%i,roof[source_name],-span/2+step*(i+.5),lo=-half,hi=half,longitudinal_scale=step/native_pitch_m)
+ else:
+  roof_part('Roof_'+label+'_north',roof[source_name],-extension,hi=0)
+  roof_part('Roof_'+label+'_south',roof[source_name],extension,lo=0)
+  n=44;step=2*extension/n;half=step/S/2
+  for i in range(n):roof_part('Roof_'+label+'_central_%02d'%i,roof[source_name],-extension+step*(i+.5),lo=-half,hi=half)
 # Original continuous hip ridge cover closes the source tile seams.
 for i in range(1,5):roof_part('Roof_HipRidge%d'%i,roof['垂脊%d'%i],-extension if i<=2 else extension)
 # Source rafters retain the same curved load path as the tiles, avoiding straight
@@ -267,7 +330,7 @@ scene=bpy.context.scene;scene.unit_settings.system='METRIC';scene.unit_settings.
 root['status']='ART_NOT_ACCEPTED';root['layout']='river-authored-reset-design-01';door['gameplay_hideable']=True
 objects=[o for o in bpy.data.objects if o.type=='MESH']
 for o in objects:o.data.calc_loop_triangles()
-report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':5.72,'upper_hall_column_head_m':7.92,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN'}
+report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':5.72,'upper_hall_column_head_m':7.92,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN','complete_gate_masonry':('--complete-gate-masonry' in args),'protected_walkway_clear_height_m':2.20}
 (out/'architecture-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 # Door pivot is exactly the gameplay gate center, while child geometry stays put.
 for child in door.children:

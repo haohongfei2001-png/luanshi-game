@@ -3,11 +3,11 @@ Generated resources are an explicit allowlist, not an exemption for missing scri
 """
 from pathlib import Path
 import argparse,json,re,hashlib
-GENERATED={'assets/fonts/NotoSansSC-Regular.otf','assets/river_authored/architecture/architecture.glb','assets/river_authored/woodland/region.scn','assets/river_authored/ground/continuous-region.scn'}
+GENERATED={'assets/fonts/NotoSansSC-Regular.otf','assets/river_authored/architecture/architecture.glb','assets/river_authored/woodland/region.scn','assets/river_authored/ground/continuous-region.scn','assets/river_authored/shore/region.scn','assets/river_authored/grass/region.scn'}
 OUTPUT_OR_OPTIONAL={'artifacts/battle-proof.png','artifacts/campaign-battle-proof.png','assets/build-revision.txt'}
 TEXT={'.gd','.gdshader','.gdshaderinc','.tscn','.tres'}
-def scan(root,require_generated=False):
- root=Path(root).resolve();workflow=root/'.github/workflows/dot-architecture-review.yml'
+def scan(root,require_generated=False,workflow_name=".github/workflows/dot-architecture-review.yml"):
+ root=Path(root).resolve();workflow=root/workflow_name
  queue=['tools/evidence_steps.py','scenes/game.tscn','tests/authored_architecture_capture.gd','tools/native_evidence_bundle.py','tools/bounded_artifact_groups.py','tools/encode_wall_clock_capture.py','tools/prepare-font.sh']
  queue+=re.findall(r'(?:python|--python|--script)\s+([\w/.-]+\.(?:py|gd))',workflow.read_text())
  seen=set();missing=[];generated=[];hashes={};directories=[]
@@ -29,4 +29,4 @@ def scan(root,require_generated=False):
     if '%' not in target and '{' not in target:queue.append(target)
  return {'checked_files':len(hashes),'missing':sorted(missing),'generated_resources':generated,'directory_references_require_runtime_setup':directories,'source_file_sha256':hashes,'scope':'static source closure plus explicit generated resources; real clean import/setup still required'}
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--require-generated',action='store_true');p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[3]);a=p.parse_args();result=scan(a.root,a.require_generated);print(json.dumps(result,indent=2));raise SystemExit(bool(result['missing']))
+ p=argparse.ArgumentParser();p.add_argument('--require-generated',action='store_true');p.add_argument('--workflow',default='.github/workflows/dot-architecture-review.yml');p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[3]);a=p.parse_args();result=scan(a.root,a.require_generated,a.workflow);print(json.dumps(result,indent=2));raise SystemExit(bool(result['missing']))
