@@ -13,7 +13,7 @@ func _initialize():
  var catalog:=Catalog.new();assert(catalog.register(first)==OK);assert(catalog.register(second)==OK);assert(catalog.register(first)==ERR_ALREADY_EXISTS)
  var old={"version":4,"bridgehead":true,"unit_pos":[3,5]};var old_bytes=var_to_bytes(old)
  var legacy=catalog.resolve_save(old);assert(legacy.error==OK and legacy.legacy);assert(var_to_bytes(old)==old_bytes)
- var save={"map_identity":first.identity(),"unit_pos":[1,2]};var snapshot=var_to_bytes(save)
+ var save={"version":5,"map_identity":first.identity(),"unit_pos":[1,2]};var snapshot=var_to_bytes(save)
  assert(catalog.resolve_save(save).profile==first);assert(var_to_bytes(save)==snapshot)
  save.map_identity.topology_revision=2;assert(catalog.resolve_save(save).profile==second)
  save.map_identity.topology_revision=3;assert(catalog.resolve_save(save).error==ERR_DOES_NOT_EXIST)
@@ -25,6 +25,6 @@ func _initialize():
  visual.scene.derived_from_source_sha256=visual.authored_source_sha256;visual.navigation.derived_from_source_sha256=visual.authored_source_sha256
  var refreshed:=Identity.new();assert(refreshed.configure(visual,hashes)==OK);assert(refreshed.matches(first.identity()),"Pure visual/source revision must not invalidate saved topology identity")
  var json_profile:=Identity.new();assert(json_profile.configure(JSON.parse_string(JSON.stringify(fixture(1))),hashes)==OK);assert(json_profile.matches(first.identity()),"Actual JSON numeric parsing must preserve identity")
- var other:=Catalog.new();assert(other.resolve_save({"map_identity":first.identity()}).error==ERR_DOES_NOT_EXIST)
+ var other:=Catalog.new();assert(other.resolve_save({"version":5,"map_identity":first.identity()}).error==ERR_DOES_NOT_EXIST)
  print("MAP_IDENTITY_ISOLATION_PASS immutable_snapshot exact_revision source_nav_closure old_save_untouched separate_catalogs; BATTLE_BINDING_AND_NEW_ART_NOT_RUN")
  quit()

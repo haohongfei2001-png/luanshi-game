@@ -2,6 +2,7 @@ extends RefCounted
 ## Exact revision resolver, instance-owned. Missing old save identity means legacy;
 ## unknown/mutated new identity fails closed, never silently relocates old units.
 const Identity:=preload("res://scripts/field/maps/map_identity.gd")
+const MAP_SAVE_VERSION:=5
 var _profiles:Dictionary={}
 func register(profile:RefCounted)->Error:
  var identity:Dictionary=profile.identity()
@@ -12,7 +13,9 @@ func register(profile:RefCounted)->Error:
  return OK
 func resolve_save(save_data:Dictionary)->Dictionary:
  if not save_data.has("map_identity"):
+  if save_data.get("version") not in [1,2,3,4]:return {"error":ERR_INVALID_DATA,"legacy":false}
   return {"error":OK,"legacy":true,"profile":null,"mutation":"NONE"}
+ if save_data.get("version")!=MAP_SAVE_VERSION:return {"error":ERR_INVALID_DATA,"legacy":false}
  var identity=save_data.map_identity
  if not identity is Dictionary:return {"error":ERR_INVALID_DATA,"legacy":false}
  var key=str(identity.get("map_id",""))+":"+str(identity.get("topology_revision",-1))

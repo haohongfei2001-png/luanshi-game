@@ -79,3 +79,10 @@ separate bridge/ground layers, malformed triangles and map-instance isolation.
 This module does not yet provide obstacle clearance, portal routes or Battle
 binding; the tiny test triangles are not game art. Next consume the real mother
 scene sidecar and validate support/spawn capacity before any newmap play claim.
+
+Actual legacy Battle boundary test: two real20v20 battles (open field and river
+gate), each advanced20 simulation ticks. Map queries leave the entire Save
+snapshot byte-identical, including RNG/units/casualties; actual Save.restore
+returns the exact same snapshot. The actual current old loader rejects a
+version5 mapped save. Catalog rejects version4 carrying new map identity and
+version5 without map identity. These checks do not yet implement newmap restore.
