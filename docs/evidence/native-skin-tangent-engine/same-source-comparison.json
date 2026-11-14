@@ -1,0 +1,338 @@
+{
+  "original": {
+    "identity_errors": {
+      "identity_skin": 0.4314,
+      "identity_skin_roundtrip": 0.4314
+    },
+    "pixel_reports": [
+      {
+        "clip": "Idle",
+        "mae": 0.000757314668078379,
+        "max": 0.258823543787003,
+        "pass": false,
+        "phase": 0.0,
+        "pixels_over_2_levels": 4204,
+        "visible": 12004
+      },
+      {
+        "clip": "Walk",
+        "mae": 0.000894344571037209,
+        "max": 0.266666680574417,
+        "pass": false,
+        "phase": 0.45,
+        "pixels_over_2_levels": 4646,
+        "visible": 12248
+      },
+      {
+        "clip": "Sword_Attack",
+        "mae": 0.000610486237803798,
+        "max": 0.254901975393295,
+        "pass": false,
+        "phase": 0.5,
+        "pixels_over_2_levels": 3276,
+        "visible": 10018
+      },
+      {
+        "clip": "Death01",
+        "mae": 0.000488445827471651,
+        "max": 0.294117659330368,
+        "pass": false,
+        "phase": 0.75,
+        "pixels_over_2_levels": 3149,
+        "visible": 8716
+      }
+    ],
+    "blend_cases": [
+      {
+        "axis": "NORMAL",
+        "case": "false--1.0-NORMAL",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "TANGENT",
+        "case": "false--1.0-TANGENT",
+        "handedness": -1.0,
+        "mae": 0.093987678742451,
+        "over_2_levels": 13778,
+        "pass": false,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "false--1.0-BINORMAL",
+        "handedness": -1.0,
+        "mae": 0.210235595703125,
+        "over_2_levels": 13778,
+        "pass": false,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "NORMAL",
+        "case": "false-1.0-NORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "TANGENT",
+        "case": "false-1.0-TANGENT",
+        "handedness": 1.0,
+        "mae": 0.0618339981833742,
+        "over_2_levels": 13778,
+        "pass": false,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "false-1.0-BINORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "NORMAL",
+        "case": "true--1.0-NORMAL",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "TANGENT",
+        "case": "true--1.0-TANGENT",
+        "handedness": -1.0,
+        "mae": 0.0944515459332251,
+        "over_2_levels": 13846,
+        "pass": false,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "true--1.0-BINORMAL",
+        "handedness": -1.0,
+        "mae": 0.209616148804344,
+        "over_2_levels": 13846,
+        "pass": false,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "NORMAL",
+        "case": "true-1.0-NORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "TANGENT",
+        "case": "true-1.0-TANGENT",
+        "handedness": 1.0,
+        "mae": 0.0621391739618957,
+        "over_2_levels": 13846,
+        "pass": false,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "true-1.0-BINORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      }
+    ],
+    "blend_failures": 6,
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+  },
+  "patched": {
+    "identity_errors": {
+      "identity_skin": 0.0,
+      "identity_skin_roundtrip": 0.0
+    },
+    "pixel_reports": [
+      {
+        "clip": "Idle",
+        "mae": 1.60067679644271e-06,
+        "max": 0.0901960730552673,
+        "pass": true,
+        "phase": 0.0,
+        "pixels_over_2_levels": 5,
+        "visible": 12004
+      },
+      {
+        "clip": "Walk",
+        "mae": 1.46604054407362e-06,
+        "max": 0.094117671251297,
+        "pass": true,
+        "phase": 0.45,
+        "pixels_over_2_levels": 5,
+        "visible": 12248
+      },
+      {
+        "clip": "Sword_Attack",
+        "mae": 2.55809129612317e-06,
+        "max": 0.0980392098426819,
+        "pass": true,
+        "phase": 0.5,
+        "pixels_over_2_levels": 10,
+        "visible": 10018
+      },
+      {
+        "clip": "Death01",
+        "mae": 6.58222461424884e-07,
+        "max": 0.0666666626930237,
+        "pass": true,
+        "phase": 0.75,
+        "pixels_over_2_levels": 3,
+        "visible": 8716
+      }
+    ],
+    "blend_cases": [
+      {
+        "axis": "NORMAL",
+        "case": "false--1.0-NORMAL",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "TANGENT",
+        "case": "false--1.0-TANGENT",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "false--1.0-BINORMAL",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "NORMAL",
+        "case": "false-1.0-NORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "TANGENT",
+        "case": "false-1.0-TANGENT",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "false-1.0-BINORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": false,
+        "visible": 13778
+      },
+      {
+        "axis": "NORMAL",
+        "case": "true--1.0-NORMAL",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "TANGENT",
+        "case": "true--1.0-TANGENT",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "true--1.0-BINORMAL",
+        "handedness": -1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "NORMAL",
+        "case": "true-1.0-NORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "TANGENT",
+        "case": "true-1.0-TANGENT",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      },
+      {
+        "axis": "BINORMAL",
+        "case": "true-1.0-BINORMAL",
+        "handedness": 1.0,
+        "mae": 0.0,
+        "over_2_levels": 0,
+        "pass": true,
+        "skin": true,
+        "visible": 13846
+      }
+    ],
+    "blend_failures": 0,
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+  }
+}

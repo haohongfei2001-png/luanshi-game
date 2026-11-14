@@ -1,0 +1,22 @@
+{
+  "workflow_source_sha": "5c59b7369cc9a19f9e5dcc93fec29b66d3d7aba9",
+  "godot_source_sha": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+  "run_id": 43618127716,
+  "artifact_id": 14124017040,
+  "build_command": "scons -j2 platform=linuxbsd target=template_debug disable_path_overrides=no arch=x86_64 vulkan=no wayland=no alsa=no pulseaudio=no speechd=no use_static_cpp=no debug_symbols=no lto=none cache_path=/tmp/godot-scons-cache cache_limit=2",
+  "patch_sha256": "d69c0b92025f5ec3732e557a5003fedada7021c8598806adfb0ed1a9c662663e",
+  "binaries": {
+    "godot-patched": {
+      "sha256": "16cd16ae2a2f7f5fd9ca18ba9f68a0ef0d043cdfbb3b51df2cec2183def26f5a",
+      "bytes": 80988136
+    },
+    "godot-original": {
+      "sha256": "1039827ef3508d33579c4ba15dcc1cd4cf8f40957d11ce80bc95d2e771fd97c1",
+      "bytes": 80988136
+    }
+  },
+  "versions": {
+    "original": "4.6.3.stable.custom_build.35e80b3a8",
+    "patched": "4.6.3.stable.custom_build.35e80b3a8"
+  }
+}
