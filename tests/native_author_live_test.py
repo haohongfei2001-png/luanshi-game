@@ -8,6 +8,10 @@ def fixture():
 class Gate(unittest.TestCase):
  def test_valid_diagnostic_not_game_acceptance(self):
   r=validate_rows(fixture());self.assertEqual(r['input_camera_integrity'],'PASS');self.assertEqual(r['art'],'NOT_ACCEPTED');self.assertEqual(r['hero_impacts_delta'],0)
+ def test_gameplay_profile_keeps_real_follow_and_rejects_old_camera(self):
+  r=fixture();r[4].update(fov=50,pitch_radians=math.radians(45),camera_center=[2.5,2],review_profile={'pitch_degrees':45,'look_height':1,'follow_lead_world':[1.5,0]})
+  self.assertEqual(validate_rows(r,'gameplay45')['input_camera_integrity'],'PASS')
+  r[4]['fov']=65;self.assertNotEqual(validate_rows(r,'gameplay45')['input_camera_integrity'],'PASS')
  def test_missing_native_frames(self):self.assertIn('MISSING_NATIVE_REAL_FRAMES',validate_rows([r for r in fixture() if r['kind']!='frame'])['problems'])
  def test_no_real_attack(self):
   r=fixture();r[1]['actual_attack_keydown_events']=0;self.assertIn('NO_ACTUAL_ATTACK_INPUT',validate_rows(r)['problems'])

@@ -2,7 +2,9 @@
 import argparse,json,math
 from pathlib import Path
 
-def validate_rows(rows):
+def validate_rows(rows, profile="destination26"):
+    if profile not in ("destination26","gameplay45"):raise ValueError("Unknown declared camera scope")
+    pitch,fov,height,lead=(45,50,1.,[1.5,0]) if profile=="gameplay45" else (26,65,1.5,[3,0])
     contracts=[r for r in rows if r.get('kind')=='author_dynamic_contract']
     results=[r for r in rows if r.get('kind')=='author_dynamic_result']
     frames=[r for r in rows if r.get('kind')=='frame']
@@ -18,8 +20,8 @@ def validate_rows(rows):
     if not camera:problems.append('NO_POST_DRAW_CAMERA')
     for r in camera:
         p=r.get('review_profile',{})
-        if r.get('projection')!=0 or not math.isclose(r.get('fov',0),65,abs_tol=.001) or p.get('pitch_degrees')!=26 or p.get('look_height')!=1.5 or p.get('follow_lead_world')!=[3,0]:problems.append('DESTINATION26_CAMERA_CHANGED');break
-        if not math.isclose(r.get('yaw_radians',0),math.radians(-65),abs_tol=.001) or not math.isclose(r.get('pitch_radians',0),math.radians(26),abs_tol=.001):problems.append('DESTINATION26_ANGLE_CHANGED');break
+        if r.get('projection')!=0 or not math.isclose(r.get('fov',0),fov,abs_tol=.001) or p.get('pitch_degrees')!=pitch or p.get('look_height')!=height or p.get('follow_lead_world')!=lead:problems.append('DESTINATION26_CAMERA_CHANGED');break
+        if not math.isclose(r.get('yaw_radians',0),math.radians(-65),abs_tol=.001) or not math.isclose(r.get('pitch_radians',0),math.radians(pitch),abs_tol=.001):problems.append('DESTINATION26_ANGLE_CHANGED');break
         if len(r.get('camera_center',[]))!=2 or len(r.get('hero_pos',[]))!=2:problems.append('MISSING_FOLLOW_OBSERVATION');break
         if not r.get('transform') or not r.get('projection_matrix'):problems.append('MISSING_ACTUAL_CAMERA_MATRIX');break
     ticks=[r.get('tick',-1) for r in observations]
@@ -42,5 +44,5 @@ def validate_rows(rows):
                             'scope':'same engine_drawn actual JPEG attachment; projected geometry NOT visible silhouette'})
     return {'joined_actual_body_pixels':body_pixels,'input_camera_integrity':'PASS' if not problems else 'FAIL','problems':problems,'frames':len(frames),'post_draw_samples':len(camera),'actual_input_events':len(inputs),'actual_attack_keydowns':result.get('actual_attack_keydown_events',0),'release_transitions_observed':result.get('observed_release_transitions',0),'hero_impacts_delta':result.get('hero_impacts_delta',0),'hit_status':result.get('hit_status','NOT_OBSERVED'),'scope':'ONE_HERO_MIXED_FALLBACK_DIAGNOSTIC; no shield/riding/full army action claim; geometry projection not visible pixel mask','art':'NOT_ACCEPTED','performance':'NOT_MEASURED','M5':'DEVICE_NOT_RUN'}
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('journal',type=Path);a=p.parse_args()
-    result=validate_rows([json.loads(line) for line in a.journal.read_text().splitlines() if line.strip()]);print(json.dumps(result,indent=2));raise SystemExit(0 if result['input_camera_integrity']=='PASS' else 1)
+    p=argparse.ArgumentParser();p.add_argument('journal',type=Path);p.add_argument('--profile',choices=('destination26','gameplay45'),default='destination26');a=p.parse_args()
+    result=validate_rows([json.loads(line) for line in a.journal.read_text().splitlines() if line.strip()],a.profile);print(json.dumps(result,indent=2));raise SystemExit(0 if result['input_camera_integrity']=='PASS' else 1)

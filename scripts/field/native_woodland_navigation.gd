@@ -2,6 +2,9 @@ extends RefCounted
 ## Exact whole-source placement shared by rendering and experimental navigation.
 ## Convex low-wood projection is conservative; source evidence is checked in.
 const LAYOUT:=[[32.1,-14.8,1.0,-18.0],[34.0,15.7,1.0,-42.0]]
+const Landscape:=preload("res://scripts/field/regional_landscape_plan.gd")
+static func layout() -> Array:
+ return Landscape.TREE_GROUPS if OS.get_environment("LUANSHI_REGIONAL_LANDSCAPE")=="1" else LAYOUT
 const SOURCE_SHA256:="6024cf385e9e0add29030925f8b891de264b813948f1cb9fb95633e256f50dc7"
 const RADIUS:=2.875
 static var LOCAL_POLYGON:=PackedVector2Array([Vector2(2.15971994400024,-0.962130010128021),Vector2(2.32789993286133,0.769590020179749),Vector2(-0.0107899997383356,2.26695990562439),Vector2(-0.239959999918938,2.17755007743835),Vector2(-1.5179500579834,1.47348999977112),Vector2(-2.56356000900269,-0.200220003724098),Vector2(-2.67974996566772,-0.841059982776642),Vector2(-2.54391002655029,-1.11757004261017),Vector2(1.53922998905182,-2.42779994010925)])
@@ -12,7 +15,7 @@ static func world_polygon(row:Array,extra:float=0.) -> PackedVector2Array:
  for p:Vector2 in local:result.append(Vector2(row[0],row[1])+p.rotated(-deg_to_rad(row[3])))
  return result
 static func blocked(p:Vector2) -> bool:
- for row:Array in LAYOUT:
+ for row:Array in layout():
   var center:=Vector2(row[0],row[1])
   if p.distance_squared_to(center)>RADIUS*RADIUS:continue
   if Geometry2D.is_point_in_polygon((p-center).rotated(deg_to_rad(row[3])),LOCAL_POLYGON):return true
@@ -23,7 +26,7 @@ static func segment_clear(a:Vector2,b:Vector2,polygon:PackedVector2Array) -> boo
   if Geometry2D.segment_intersects_segment(a,b,polygon[i],polygon[(i+1)%polygon.size()])!=null:return false
  return true
 static func detour(start:Vector2,goal:Vector2) -> Vector2:
- for row:Array in LAYOUT:
+ for row:Array in layout():
   var center:=Vector2(row[0],row[1]);var near:=Geometry2D.get_closest_point_to_segment(center,start,goal)
   if near.distance_squared_to(center)>RADIUS*RADIUS:continue
   var polygon:=world_polygon(row)

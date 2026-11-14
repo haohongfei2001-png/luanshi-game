@@ -56,11 +56,28 @@ def destination_rows():
 
 def destination_validate(rows):return validate_records(rows,'a'*40,'destination-study',identities())
 
+def gameplay_rows():
+    result=[]
+    for name,size in VIEWS['whole-gameplay-action'].items():
+        r=context_rows()[0];r.update({k:list(size) for k in ['pixels','internal_pixels','attachment_size','viewport']})
+        r.update(view=name,gameplay_fit={'error':0,'target_body_fraction':.125},whole_scene_framing_policy='PLAYER_CENTRED_ALLOW_NATURAL_STRUCTURE_CROPPING',actual_structure_projection={'front_bound_points':48,'normalized_front_bounds':[-.2,-.6,1.4,.8]})
+        r['camera_review_profile'].update(profile_id='gameplay45',pitch_degrees=45,fov_degrees=50,look_height=1,follow_lead_world=[1.5,0])
+        r['actual_author_body_projection'].update(height_px=100,height_fraction=.125,boot_bottom_y=460,attachment_projection={'attachment_size':list(size),'scale_xy':[size[0]/1422,size[1]/800],'top_y':size[1]*.45,'boot_bottom_y':size[1]*.575,'height_px':size[1]*.125})
+        result.append(r)
+    return result
+
 class StillGate(unittest.TestCase):
     def test_live_mode_keeps_exact_static_gate(self):
         self.assertEqual(validate_records(destination_rows(),'a'*40,'destination-action',identities()),'b'*64)
         wrong=destination_rows();wrong[1]['internal_scale']=.5
         with self.assertRaises(ValueError):validate_records(wrong,'a'*40,'destination-action',identities())
+
+    def test_gameplay_natural_cropping_is_explicit_not_gate_fit(self):
+        self.assertEqual(validate_records(gameplay_rows(),'a'*40,'whole-gameplay-action',identities()),'b'*64)
+    def test_gameplay_rejects_scale_camera_scope_drift(self):
+        for top,key,value in [('camera_review_profile','pitch_degrees',26),('camera_review_profile','follow_lead_world',[3,0]),('gameplay_fit','target_body_fraction',.1),('actual_structure_projection','front_bound_points',0)]:
+            r=gameplay_rows();r[0][top][key]=value
+            with self.assertRaises(ValueError):validate_records(r,'a'*40,'whole-gameplay-action',identities())
 
     def test_correct(self):self.assertEqual(validate_records(rows(),'a'*40,'camera-study'),'b'*64)
     def test_missing(self):

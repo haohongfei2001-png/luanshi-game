@@ -24,7 +24,9 @@ static func contact_observation(field:Node,recorder:Node)->void:
 static func run(tree:SceneTree,field:Node,actor:Node3D,out:String)->bool:
  tree.root.size=Vector2i(2560,1440);tree.root.scaling_3d_scale=1.
  # Last matched view is destination26. Keep its solved actor scale and follow lead.
- if field.review_camera_profile.get('pitch_degrees',0.)!=26. or field.review_camera_profile.get('fov_degrees',0.)!=65. or field.review_camera_profile.get('follow_lead_world',[])!=[3.,0.]:return false
+ var gameplay=field.review_camera_profile.get('profile_id','')=='gameplay45'
+ var pitch=45. if gameplay else 26.;var fov=50. if gameplay else 65.;var lead=[1.5,0.] if gameplay else [3.,0.]
+ if field.review_camera_profile.get('pitch_degrees',0.)!=pitch or field.review_camera_profile.get('fov_degrees',0.)!=fov or field.review_camera_profile.get('follow_lead_world',[])!=lead:return false
  field.view.review_hidden_actor_id=-1
  field._camera()
  await tree.process_frame;await tree.process_frame

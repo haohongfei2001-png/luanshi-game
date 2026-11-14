@@ -1,4 +1,4 @@
-name: Dot complete stone timber regional05 runtime build
+name: Dot complete stone timber regional06 full-fort runtime build
 on:
   push:
     branches: ['dot/complete-region-runtime-build']
@@ -14,6 +14,7 @@ jobs:
       LUANSHI_AUTHORED_LANDFORM: '1'
       LUANSHI_NATIVE_WOODLAND: '1'
       LUANSHI_REGIONAL_SKY: '1'
+      LUANSHI_REGIONAL_LANDSCAPE: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Prepare bounded logs
@@ -61,27 +62,33 @@ jobs:
           mkdir -p /tmp/complete-gate/source assets/river_authored/architecture
           ln -s "$PWD/assets/river_gate/world/masters/modular_wooden_pier" /tmp/complete-gate/source/wooden_pier
           BLENDER=/tmp/blender-4.3.2-linux-x64/blender
-          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx /tmp/complete-gate --no-preview --native-roof-band --complete-gate-masonry --complete-portal --surface-root /tmp/gate-surfaces >artifacts/complete-study/gate-build.log 2>&1
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx /tmp/complete-gate --no-preview --native-roof-band --complete-gate-masonry --complete-portal --fort-enclosure --surface-root /tmp/gate-surfaces >artifacts/complete-study/gate-build.log 2>&1
           $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/audit_gate_bearing.py -- /tmp/complete-gate/source/architecture.blend /tmp/complete-gate/bearing-audit.json >artifacts/complete-study/gate-bearing.log 2>&1
           $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/audit_portal_interfaces.py -- /tmp/complete-gate/source/architecture.blend /tmp/complete-gate/portal-interface.json >artifacts/complete-study/portal-interface.log 2>&1
+          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/fort-ground.log 100 -- godot --headless --path . --script tests/fort_enclosure_navigation_samples.gd -- /tmp/complete-gate/ground-samples.json
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/audit_enclosure_navigation.py -- /tmp/complete-gate/source/architecture.blend /tmp/complete-gate/ground-samples.json /tmp/complete-gate/enclosure-audit.json >artifacts/complete-study/fort-enclosure.log 2>&1
           cp /tmp/complete-gate/architecture.glb assets/river_authored/architecture/
           LUANSHI_GATE_CONTRACT_GLB="$PWD/assets/river_authored/architecture/architecture.glb" python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/gate-occlusion-import.log 150 -- godot --headless --path . --script tests/gate_occlusion_import.gd
-      - name: Rebuild profile-matched regional05 and shared instances, no source rebake
+      - name: Rebuild coherent regional06 from complete source LODs and preserved terrain collision
         run: |
           set -euo pipefail
           python tools/art/continuous_landform/fetch_earth.py /tmp/earth-source >artifacts/complete-study/earth-source.log 2>&1
           mkdir -p assets/river_authored/{ground,woodland,grass}
           godot --headless --path . --script tools/art/continuous_landform/build_region.gd -- assets/river_authored/ground/continuous-region.scn /tmp/earth-source >artifacts/complete-study/terrain-build.log 2>&1
-          godot --headless --path . --script tools/art/continuous_landform/build_grass_shoulders.gd -- /tmp/basin-restored/editable-sources/low-grass/realtime/derived.glb assets/river_authored/grass/region.scn >artifacts/complete-study/grass-build.log 2>&1
+          cp assets/river_authored/ground/continuous-region.scn /tmp/terrain05.scn
           python3 tools/art/native_woodland/restore_original_tree.py /tmp/original-tree >artifacts/complete-study/original-tree-source.log 2>&1
-          godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/original-tree/island_tree_01_2k.gltf /tmp/legacy-restored/bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn --complete-tree-intake >artifacts/complete-study/woodland-build.log 2>&1
+          godot --headless --path . --script tools/art/native_woodland/build_source_lods.gd -- /tmp/original-tree/island_tree_01_2k.gltf /tmp/original-tree/tree-lods.scn >artifacts/complete-study/tree-lods-build.log 2>&1
+          godot --headless --path . --script tools/art/river_valley06/build_landscape.gd -- /tmp/original-tree/tree-lods.scn /tmp/basin-restored/editable-sources/low-grass/realtime/derived.glb /tmp/terrain05.scn /tmp/landscape06 >artifacts/complete-study/landscape-build.log 2>&1
+          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/landscape-contract.log 150 -- godot --headless --path . --script tests/art_reset/regional_landscape06.gd -- /tmp/landscape06 /tmp/terrain05.scn
+          cp /tmp/landscape06/terrain06.scn assets/river_authored/ground/continuous-region.scn
+          cp /tmp/landscape06/woodland06.scn assets/river_authored/woodland/region.scn
+          cp /tmp/landscape06/grass06.scn assets/river_authored/grass/region.scn
           python -m pip install 'numpy==2.2.6'
           mkdir -p assets/river_authored/sky
           SKY_SOURCE=$(python3 tools/art/regional_sky/restore_source.py /tmp/regional-sky)
           python3 tools/art/regional_sky/decode_radiance.py "$SKY_SOURCE" /tmp/regional-sky/linear.f32 >artifacts/complete-study/sky-decode.log 2>&1
           godot --headless --path . --script tools/art/regional_sky/build_sky.gd -- /tmp/regional-sky/linear.f32 assets/river_authored/sky/regional-sky.res >artifacts/complete-study/sky-build.log 2>&1
           python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/sky-contract.log 100 -- godot --headless --path . --script tests/art_reset/regional_sky.gd -- assets/river_authored/sky/regional-sky.res
-          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/original-tree-contract.log 150 -- godot --headless --path . --script tests/art_reset/original_tree_region.gd -- assets/river_authored/woodland/region.scn
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/*build.log; then exit 1; fi
           godot --headless --editor --path . --import >artifacts/complete-study/assembled-import.log 2>&1
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/assembled-import.log; then exit 1; fi

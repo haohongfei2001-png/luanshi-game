@@ -1,0 +1,157 @@
+[
+  {
+    "path": "docs/evidence/river-valley06/README.md",
+    "sha256": "d638ceb722172f1e7b61c44201d0d1e8af420f72feb103871c79cc8dd2ad5801",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/failed-nested-scene-sharing.log",
+    "sha256": "e9be6a615c86b767fcd082a0119d2722f64cc9900053821613894f71c30750b0",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/final-build.json",
+    "sha256": "bdd0a849df48e167cc3dc293a1f194968d51e806fcdc5fa315cfa4290529bcb8",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-512.log",
+    "sha256": "a87765055bd3bfacfca7d79ab08a0cc82aeee6dfaf55b15c4714b5de6270b09f",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-default-contract.log",
+    "sha256": "b727486e6185fe3be5e2dd02a3a2a42d07c77cd70cd1789c19ccf1a62445b78e",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-navigation-final.log",
+    "sha256": "dfe3344d3c93b40cf20fe53d96b73721e13c2a6c4e7c40951c1302f35dcb68d4",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-navigation.log",
+    "sha256": "c753a5006616b49843243f7b0d9e522658f89953a02193360c27e11712023905",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-navigation2.log",
+    "sha256": "9a8478d8a43a15f1b656e8b72612b8e8e635febd61eaa713d07a486fd1b47a40",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-navigation3.log",
+    "sha256": "7e1cb4034f48e6dfa4e094f006c8e74e606e6c75c51f3d97c021dd22afb646b4",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-navigation4.log",
+    "sha256": "3e487786886dbf16bf6a7a5754ed0087105b7e27913c17809c81e1954a9c8428",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-navigation5.log",
+    "sha256": "92f5dceee23d28aad318ce6bc56726b7ac303ef86dba0c729b6717abe96c0ffe",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/landscape06-navigation6.log",
+    "sha256": "dfe3344d3c93b40cf20fe53d96b73721e13c2a6c4e7c40951c1302f35dcb68d4",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/regional06-build-verified.log",
+    "sha256": "e4732ade99a5413163e5f1961583327b21cb84d2d519c97df9893c0f5eea7428",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/regional06-disabled-native-baseline.log",
+    "sha256": "a6c273827e21ac2d61d8c0acd9d39654ee54fd4a80fb11f209fe30938e9e4041",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/regional06-resource-final-strict.log",
+    "sha256": "9a17324616279a4c22d03c624c59a52f9f02dccc82bfff3acdb57053841d86b0",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/regional06-source-lod-final.log",
+    "sha256": "d0ceeb0661525ef2d88497000789e7a86017a15a58a25516c80a3f4c0b3ae1e9",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/rejected-first-layout.json",
+    "sha256": "d3436a6b22112612884abbbbdc939d865c6abfd01c19ebc3b2577d5d0b6da037",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "docs/evidence/river-valley06/source-lods.json",
+    "sha256": "920cef0a66f34e99dd8e3cf63e4b71ad7ce239f98009e4b76d06e8968fee43f4",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "scripts/field/experimental_regional_landscape_guard.gd",
+    "sha256": "81d2a83f6dde6fd44dbe26d92300b6f428c4c0452ca552fcc963f8430135c60b",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "scripts/field/native_woodland_navigation.gd",
+    "sha256": "800a7d57e18310928d738a438cb50597c9b7445bcd9af96aa45209a132b018ec",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "scripts/field/regional_landscape_plan.gd",
+    "sha256": "cb848a7d040d2d7da99aae0b6d0986a2ed7795d9f754b233932b4f3ba42c81da",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "shaders/experimental/river_valley_water06.gdshader",
+    "sha256": "071f5eca34cbb5f028192ec03d22bc12967b7e36cb0a2263284a0a17563012e3",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "tests/art_reset/native_woodland_navigation.gd",
+    "sha256": "07e48731e7e03d5b2f2e9c8cae60d6f3fe438c7693b19e101b1778db2a309cd6",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "tests/art_reset/regional_landscape06.gd",
+    "sha256": "31b7dbf98d689ec8691c61f071d7f8ba63203e0fd16f7fbf1ed448a950c0b536",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "tools/art/native_woodland/build_source_lods.gd",
+    "sha256": "ff46aeea8a45d8bdc2b1797f3b2df0aa213219f811424f137841f7c892ec805b",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "tools/art/river_valley06/build_landscape.gd",
+    "sha256": "1e53791749800a1b2e9e2d337ebf492d426af0e0e35b0977796ecab6849104bf",
+    "source": "e3afa5c0724a4cb2278d51dab8f140a884216565"
+  },
+  {
+    "path": "tests/fort_enclosure_navigation_samples.gd",
+    "sha256": "80337a7c02604d74f241ea6b7509d61daf3c53b6e8a63e649fff6bc991a58e8b",
+    "source": "60083a91fd2f61b85e7d53e1adfd261f6600fe4f"
+  },
+  {
+    "path": "tools/art/gate_structure/FORTIFIED_ENCLOSURE.md",
+    "sha256": "1e2f7ae6d28ffb5bd9dd32a8e2df9f2f3384bdb92aaa875dea2fb93f93793a2f",
+    "source": "60083a91fd2f61b85e7d53e1adfd261f6600fe4f"
+  },
+  {
+    "path": "tools/art/gate_structure/audit_enclosure_navigation.py",
+    "sha256": "b82f060ff1f9965bd6ef6254b62ed36212de9b0b4867552dee89c7d7e55028d6",
+    "source": "60083a91fd2f61b85e7d53e1adfd261f6600fe4f"
+  },
+  {
+    "path": "tools/art/gate_structure/author_fortified_enclosure.py",
+    "sha256": "933d5c03af48fb692eeb1d9086d9f3759f79d85155e89bbd49fe5065bb10af97",
+    "source": "60083a91fd2f61b85e7d53e1adfd261f6600fe4f"
+  },
+  {
+    "path": "tools/art/gate_structure/build_architecture.py",
+    "sha256": "2711e099d2b2c9ad3c7d45513a1faf8fe8b381a3ce1889900bd86ef2e28bdc31",
+    "source": "60083a91fd2f61b85e7d53e1adfd261f6600fe4f"
+  }
+]
