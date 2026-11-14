@@ -1,0 +1,17 @@
+{
+  "game_source": "db9d1bd80d6979d35554a139471ee22c9e7dc481",
+  "original_package_sha256": "74abf26c87bccca4bfd465720e85f40373f32f2b1bdf8405346eb4ac37eac70e",
+  "original_binary_sha256": "089bd18ee5e284fd3a4235b8c3214c1e660c5cc0d95bd1ab59ac3015f272372a",
+  "engine": {
+    "game_source": "7481b60411540e8c6c23a4553a0a99cc2a3a5df2",
+    "original_binary_sha256": "3b5392d57243e130cb2aed46cf2675e2f1d6707e4b1e12bc77dc7ef65b5e442e",
+    "patched_binary_sha256": "a15d4f6966910500befb32344dc72b180f109479f207a18448129a70b0ad81f1",
+    "engine_source": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+    "upstream_fix": "https://github.com/godotengine/godot/pull/123312",
+    "role": "isolated startup regression, arm64 only, no game assets changed"
+  },
+  "scope": "arm64 hosted Mac review candidate, upstream shader mutex backport, actual M5 DEVICE_NOT_RUN",
+  "art_status": "ART_REBUILD_REQUIRED",
+  "codesign": "ad-hoc verified, not notarized",
+  "package_sha256": "65e36529982d6827e05257b18afbe8816781f4696016905e938e3d058869af22"
+}

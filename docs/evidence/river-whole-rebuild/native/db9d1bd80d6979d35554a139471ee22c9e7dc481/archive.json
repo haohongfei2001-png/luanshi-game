@@ -1,0 +1,33 @@
+{
+  "source": "db9d1bd80d6979d35554a139471ee22c9e7dc481",
+  "run": "43565644461",
+  "files": [
+    {
+      "file": "delivery.json",
+      "bytes": 1031,
+      "sha256": "9e798c62cf075626c1e76d03aa81f334884e55d4ab256ff7a94f8901b95de30f"
+    },
+    {
+      "file": "host.txt",
+      "bytes": 785,
+      "sha256": "8680190e6087bc5e294eebeb02fc82ec9eee3043de7afc34dbfb41fbcdf1df1c"
+    },
+    {
+      "file": "input-smoke/muster.jpg",
+      "bytes": 886853,
+      "sha256": "e951be8fb7a0249e94083e71e410c0a9f3b3a48b305ad5738c8076078378b758"
+    },
+    {
+      "file": "input-smoke/resource-time.log",
+      "bytes": 697,
+      "sha256": "de045b6ae1b41abf6f3a329285e380be4a85d6088ae0f0cb4fc73a1022929fcc"
+    },
+    {
+      "file": "input-smoke/window.log",
+      "bytes": 441,
+      "sha256": "1341ebce5924273f3c1630242dea32cfedff3d1b1301756fe6b0b157a7482e7a"
+    }
+  ],
+  "art_status": "ART_REBUILD_REQUIRED",
+  "device": "Hosted macOS, actual M5 DEVICE_NOT_RUN"
+}
