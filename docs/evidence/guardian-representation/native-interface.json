@@ -1,0 +1,663 @@
+{
+  "bones": {
+    "torso": {
+      "head": [
+        -2.8801778739762085e-09,
+        -0.07482588291168213,
+        1.2389357089996338
+      ],
+      "tail": [
+        1.213176574310637e-06,
+        -0.07482586055994034,
+        1.3989356756210327
+      ],
+      "parent": "MCH-torso_hinge",
+      "props": {
+        "hinge": "1.0",
+        "pivot_slide": "0.25",
+        "bend_tot": "2.4000000953674316",
+        "bend_01": "1.0",
+        "bend_02": "1.0",
+        "bend_03": "0.4"
+      },
+      "constraints": [
+        [
+          "COPY_LOCATION",
+          "Copy Location"
+        ]
+      ]
+    },
+    "head": {
+      "head": [
+        8.975565606306191e-07,
+        -0.05525071546435356,
+        1.7458404302597046
+      ],
+      "tail": [
+        1.1017439192073653e-06,
+        -0.055247530341148376,
+        1.870200514793396
+      ],
+      "parent": "MCH-head_hinge",
+      "props": {
+        "hinge": "1.1754943508222875e-38",
+        "bend_tot": "3.0",
+        "bend_01": "1.0",
+        "bend_02": "1.0",
+        "bend_03": "1.0"
+      },
+      "constraints": [
+        [
+          "COPY_LOCATION",
+          "Copy Location"
+        ]
+      ]
+    },
+    "root": {
+      "head": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tail": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "parent": null,
+      "props": {},
+      "constraints": []
+    },
+    "foot_ik.L": {
+      "head": [
+        0.18425685167312622,
+        -0.06982553005218506,
+        0.15116676688194275
+      ],
+      "tail": [
+        0.20782490074634552,
+        -0.26458442211151123,
+        0.15116673707962036
+      ],
+      "parent": "root",
+      "props": {
+        "ik": "1.0"
+      },
+      "constraints": []
+    },
+    "foot_ik.R": {
+      "head": [
+        -0.18425685167312622,
+        -0.06982564926147461,
+        0.15116733312606812
+      ],
+      "tail": [
+        -0.20782487094402313,
+        -0.2645843029022217,
+        0.15116684138774872
+      ],
+      "parent": "root",
+      "props": {
+        "ik": "1.0"
+      },
+      "constraints": []
+    },
+    "hand_ik.L": {
+      "head": [
+        0.7624009847640991,
+        -0.04018115997314453,
+        1.402239441871643
+      ],
+      "tail": [
+        0.7981808185577393,
+        -0.038281798362731934,
+        1.3784945011138916
+      ],
+      "parent": "root",
+      "props": {
+        "ik": "1.1754943508222875e-38"
+      },
+      "constraints": []
+    },
+    "hand_ik.R": {
+      "head": [
+        -0.7623971700668335,
+        -0.04018259048461914,
+        1.4022457599639893
+      ],
+      "tail": [
+        -0.7981770634651184,
+        -0.038283348083496094,
+        1.3785008192062378
+      ],
+      "parent": "root",
+      "props": {
+        "ik": "1.1754943508222875e-38"
+      },
+      "constraints": []
+    },
+    "thigh.L": {
+      "head": [
+        0.11890999227762222,
+        -0.08531541377305984,
+        1.1031630039215088
+      ],
+      "tail": [
+        0.1519530862569809,
+        -0.09097587317228317,
+        0.5901165008544922
+      ],
+      "parent": "MCH-thigh.L_hinge",
+      "props": {
+        "hinge": "1.1754943508222875e-38"
+      },
+      "constraints": [
+        [
+          "COPY_LOCATION",
+          "Copy Location"
+        ]
+      ]
+    },
+    "shin.L": {
+      "head": [
+        0.1519530862569809,
+        -0.09097587317228317,
+        0.5901165008544922
+      ],
+      "tail": [
+        0.18425600230693817,
+        -0.06982125341892242,
+        0.15117046236991882
+      ],
+      "parent": "thigh.L",
+      "props": {},
+      "constraints": []
+    },
+    "upper_arm.L": {
+      "head": [
+        0.2742578387260437,
+        -0.05247951298952103,
+        1.653881549835205
+      ],
+      "tail": [
+        0.5731338262557983,
+        -0.05248130485415459,
+        1.6538804769515991
+      ],
+      "parent": "MCH-upper_arm.L_hinge",
+      "props": {
+        "hinge": "1.1754943508222875e-38"
+      },
+      "constraints": [
+        [
+          "COPY_LOCATION",
+          "Copy Location"
+        ]
+      ]
+    },
+    "forearm.L": {
+      "head": [
+        0.5731338262557983,
+        -0.05248130485415459,
+        1.6538804769515991
+      ],
+      "tail": [
+        0.8224924206733704,
+        -0.06424158066511154,
+        1.686371088027954
+      ],
+      "parent": "upper_arm.L",
+      "props": {},
+      "constraints": []
+    }
+  },
+  "meshes": [
+    {
+      "name": "GEO-HandsJA.001",
+      "vertices": 2406,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "ARMATURE",
+          "name": "Armature",
+          "show": true,
+          "preserve_volume": true,
+          "cage": "rig"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "SkinJackHands"
+      ]
+    },
+    {
+      "name": "GEO-headLT",
+      "vertices": 2740,
+      "modifiers": [
+        {
+          "type": "ARMATURE",
+          "name": "Armature",
+          "show": true,
+          "preserve_volume": false,
+          "cage": "rig"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": false,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "SkinLaoFace"
+      ]
+    },
+    {
+      "name": "GEO-cornea",
+      "vertices": 290,
+      "modifiers": [
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "name": "Mirror",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "cornea"
+      ]
+    },
+    {
+      "name": "GEO-cornea.001",
+      "vertices": 290,
+      "modifiers": [
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "name": "Mirror",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "cornea"
+      ]
+    },
+    {
+      "name": "GEO-eyeballs_new",
+      "vertices": 338,
+      "modifiers": [
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "name": "Mirror",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "eye_white",
+        null,
+        null
+      ]
+    },
+    {
+      "name": "GEO-eyeballs_new.001",
+      "vertices": 338,
+      "modifiers": [
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "name": "Mirror",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "eye_white",
+        null,
+        null
+      ]
+    },
+    {
+      "name": "GEO-pant_detailsL_S",
+      "vertices": 592,
+      "modifiers": [
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_cloth3.005",
+        "GuardianMetal.005"
+      ]
+    },
+    {
+      "name": "GEO-pant_detailsR_S",
+      "vertices": 592,
+      "modifiers": [
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_cloth3.005",
+        "GuardianMetal.005"
+      ]
+    },
+    {
+      "name": "GEO-belt2JA.003",
+      "vertices": 1475,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_Leather2.001",
+        "GuardianMetal.001"
+      ]
+    },
+    {
+      "name": "GEO-bootsLT.001",
+      "vertices": 1040,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "name": "Multires",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_Boots"
+      ]
+    },
+    {
+      "name": "GEO-gauntletsDG",
+      "vertices": 2248,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_Leather2.001",
+        "Guardian_Leather.001",
+        null
+      ]
+    },
+    {
+      "name": "GEO-pantsLT.001",
+      "vertices": 652,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "name": "Multires",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_Pants"
+      ]
+    },
+    {
+      "name": "GEO-sashDG.001",
+      "vertices": 576,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "name": "Multires",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_cloth2.001"
+      ]
+    },
+    {
+      "name": "GEO-toplaceLT.001",
+      "vertices": 960,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "GuardianMetal.001",
+        "Flat_Material4.001"
+      ]
+    },
+    {
+      "name": "GEO-topLT",
+      "vertices": 1373,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "name": "Multires",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "GuardianTop"
+      ]
+    },
+    {
+      "name": "GEO-torso-beltsLT.001",
+      "vertices": 735,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "Guardian_TorsoBelts"
+      ]
+    },
+    {
+      "name": "GEO-symbolLT.001",
+      "vertices": 337,
+      "modifiers": [
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "DragonBloodTree_lo"
+      ]
+    },
+    {
+      "name": "GEO-headLT.002",
+      "vertices": 32,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-headLT"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        },
+        {
+          "type": "PARTICLE_SYSTEM",
+          "name": "ParticleSystem 1",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "LTHair"
+      ]
+    },
+    {
+      "name": "GEO-headLT.003",
+      "vertices": 70,
+      "modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "name": "MeshDeform",
+          "show": true,
+          "preserve_volume": null,
+          "cage": "GEO-headLT"
+        },
+        {
+          "type": "SUBSURF",
+          "name": "Subsurf",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        },
+        {
+          "type": "PARTICLE_SYSTEM",
+          "name": "ParticleSystem 1",
+          "show": true,
+          "preserve_volume": null,
+          "cage": null
+        }
+      ],
+      "materials": [
+        "LTHair"
+      ]
+    }
+  ]
+}
