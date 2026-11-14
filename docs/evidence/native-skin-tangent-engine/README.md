@@ -42,3 +42,21 @@ those results are inspected, this is an **UNVERIFIED ENGINE PATCH**, not a fix
 claim. Build artifacts retain original/patched versions, source SHA, patch,
 commands and logs. No upstream issue/PR is sent on the user's behalf. Neither
 the default game engine nor macOS candidate is replaced.
+
+## First same-source build result and harness recovery
+
+Run 43615580739 compiled both same-SHA engines successfully (original 20m27s;
+incremental patch 30.7s). Both report 4.6.3.stable.custom_build.35e80b3a8.
+Original SHA256 279e4e961a278ad558f4c541cca20e4784e3e67e2239cfc5145456b3cfbb570f;
+patched SHA256 e2de32d20a966efce2d61696d54a0098cd18374621d31ce6d4899dbeb21dff50.
+Artifact 14123040322 preserves build logs, but runtime was blocked before any
+probe: templates default to disable_path_overrides and rejected --path. This
+is a harness failure, NOT successful patched graphics. Both builds now add
+disable_path_overrides=no, preserving all other equal options. Next run also
+preserves internal binaries and bounded 2GiB compilation cache.
+
+Additional synthetic regression covers nonzero 0.35 normalized blend shape,
+optional nonidentity one-bone Skin, both tangent handedness signs and N/T/B:
+12 cases compare native animation against CPU-deformed static controls. This
+does not enable live blend shapes in the batched adapter, which still rejects
+unbaked expression meshes. Its actual renderer results remain pending.

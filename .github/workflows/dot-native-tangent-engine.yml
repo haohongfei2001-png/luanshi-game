@@ -38,10 +38,17 @@ jobs:
           cp tools/engine/godot-4.6.3-gles3-native-tangent.patch artifacts/engine-compare/
           cp .engine/LICENSE.txt .engine/AUTHORS.md artifacts/engine-compare/
           sha256sum tools/engine/godot-4.6.3-gles3-native-tangent.patch >artifacts/engine-compare/PATCH_SHA256
+      - uses: actions/cache/restore@v4
+        id: source_cache
+        with:
+          path: /tmp/godot-scons-cache
+          key: native-tangent-source-35e80-linux-x64-path-v2-${{ hashFiles('tools/engine/godot-4.6.3-gles3-native-tangent.patch') }}
+          restore-keys: native-tangent-source-35e80-linux-x64-path-v2-
       - name: Compile original and patched engines with identical options
+        id: compile
         run: |
           set -euo pipefail
-          args='platform=linuxbsd target=template_debug arch=x86_64 vulkan=no wayland=no alsa=no pulseaudio=no speechd=no use_static_cpp=no debug_symbols=no lto=none'
+          args='platform=linuxbsd target=template_debug disable_path_overrides=no arch=x86_64 vulkan=no wayland=no alsa=no pulseaudio=no speechd=no use_static_cpp=no debug_symbols=no lto=none cache_path=/tmp/godot-scons-cache cache_limit=2'
           echo "scons -j2 $args" >artifacts/engine-compare/BUILD_COMMAND
           (cd .engine && timeout 5400s scons -j2 $args) >artifacts/engine-compare/build-original.log 2>&1
           cp .engine/bin/godot.linuxbsd.template_debug.x86_64 /tmp/godot-original
@@ -52,20 +59,27 @@ jobs:
           cp .engine/bin/godot.linuxbsd.template_debug.x86_64 /tmp/godot-patched
           /tmp/godot-patched --version >artifacts/engine-compare/patched-version.txt
           sha256sum /tmp/godot-original /tmp/godot-patched >artifacts/engine-compare/BINARY_SHA256
+          mkdir -p artifacts/engine-compare/bin
+          cp /tmp/godot-original /tmp/godot-patched artifacts/engine-compare/bin/
       - name: Same-renderer actual source material and minimal identity probe
         run: |
           set -euo pipefail
           for variant in original patched; do
             bin="/tmp/godot-$variant"
             mkdir -p artifacts/native-character-parity
-            probe=0; pixels=0
+            probe=0; pixels=0; blend=0
             timeout 120s xvfb-run -a -s '-screen 0 1280x800x24' "$bin" --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/native_skin_tangent_probe.gd >artifacts/native-character-parity/probe.log 2>&1 || probe=$?
             timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' "$bin" --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu.log 2>&1 || pixels=$?
-            printf 'probe_exit=%s full_native_pixels_exit=%s\n' "$probe" "$pixels" >artifacts/native-character-parity/gates.txt
+            timeout 180s xvfb-run -a -s '-screen 0 1280x800x24' "$bin" --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/native_blend_skin_tangent_probe.gd >artifacts/native-character-parity/blend-probe.log 2>&1 || blend=$?
+            printf 'probe_exit=%s full_native_pixels_exit=%s blend_probe_exit=%s\n' "$probe" "$pixels" "$blend" >artifacts/native-character-parity/gates.txt
             mv artifacts/native-character-parity "artifacts/engine-compare/$variant"
-            if [ "$probe" != 0 ]; then exit 1; fi
           done
           python3 tools/engine/verify_engine_comparison.py artifacts/engine-compare
+      - uses: actions/cache/save@v4
+        if: always() && steps.compile.outcome == 'success' && steps.source_cache.outputs.cache-hit != 'true'
+        with:
+          path: /tmp/godot-scons-cache
+          key: native-tangent-source-35e80-linux-x64-path-v2-${{ hashFiles('tools/engine/godot-4.6.3-gles3-native-tangent.patch') }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
