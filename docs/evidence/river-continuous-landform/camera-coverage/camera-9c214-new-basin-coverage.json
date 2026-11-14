@@ -1,0 +1,80 @@
+[
+	{
+		"maximum_hit_distance_m": 152.828887939453,
+		"missing_normalized_screen_samples": [
+			[
+				0.875,
+				0.0
+			],
+			[
+				0.90625,
+				0.0
+			],
+			[
+				0.9375,
+				0.0
+			],
+			[
+				0.96875,
+				0.0
+			],
+			[
+				1.0,
+				0.0
+			]
+		],
+		"original_capture_source": "9c214ca46836dbd8f22eb75e25f12fdeecda98d4",
+		"receipt_sha256": "89d068f4c443fac7513eac6919b56f9dcffdfd9601c496fed25085208ec955e0",
+		"sample_count": 627,
+		"scope": "GEOMETRY_ONLY_NO_WALL_TREE_WATER_OCCLUSION_NOT_GRAPHICS_ACCEPTANCE",
+		"terrain_hits": 622,
+		"terrain_sha256": "e6c53f70f7e0609db03b4e19cf8b223719b49bcb94e6f02f8b53b8fe4e89b0b2",
+		"top_three_rows_hits_of_99": 94,
+		"view": "qhd-perspective-road65"
+	},
+	{
+		"maximum_hit_distance_m": 151.860214233398,
+		"missing_normalized_screen_samples": [],
+		"original_capture_source": "9c214ca46836dbd8f22eb75e25f12fdeecda98d4",
+		"receipt_sha256": "89d068f4c443fac7513eac6919b56f9dcffdfd9601c496fed25085208ec955e0",
+		"sample_count": 627,
+		"scope": "GEOMETRY_ONLY_NO_WALL_TREE_WATER_OCCLUSION_NOT_GRAPHICS_ACCEPTANCE",
+		"terrain_hits": 627,
+		"terrain_sha256": "e6c53f70f7e0609db03b4e19cf8b223719b49bcb94e6f02f8b53b8fe4e89b0b2",
+		"top_three_rows_hits_of_99": 99,
+		"view": "qhd-perspective-road75"
+	},
+	{
+		"maximum_hit_distance_m": 152.828887939453,
+		"missing_normalized_screen_samples": [
+			[
+				0.875,
+				0.0
+			],
+			[
+				0.90625,
+				0.0
+			],
+			[
+				0.9375,
+				0.0
+			],
+			[
+				0.96875,
+				0.0
+			],
+			[
+				1.0,
+				0.0
+			]
+		],
+		"original_capture_source": "9c214ca46836dbd8f22eb75e25f12fdeecda98d4",
+		"receipt_sha256": "89d068f4c443fac7513eac6919b56f9dcffdfd9601c496fed25085208ec955e0",
+		"sample_count": 627,
+		"scope": "GEOMETRY_ONLY_NO_WALL_TREE_WATER_OCCLUSION_NOT_GRAPHICS_ACCEPTANCE",
+		"terrain_hits": 622,
+		"terrain_sha256": "e6c53f70f7e0609db03b4e19cf8b223719b49bcb94e6f02f8b53b8fe4e89b0b2",
+		"top_three_rows_hits_of_99": 94,
+		"view": "uhd-perspective-road65"
+	}
+]

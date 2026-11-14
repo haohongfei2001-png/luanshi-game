@@ -234,3 +234,15 @@ LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tests/art_reset/a
 ```
 
 Final regressions: original512-per-side400-tick bridgehead simulation again returned299 crossings, hits[512,559], deaths[135,138], pass=true. Three PBR packed-scene roundtrips checked1,212,123 normal/tangent pairs, maxdot.000141017. Default-OFF/open-field/nav compatibility passed7,735 samples. Its first invocation incorrectly inherited the opt-in environment and correctly rejected it; the failed assertion log and corrected `env -u LUANSHI_AUTHORED_LANDFORM` run are both retained. No graphical performance or MacBook Air M5 test is claimed.
+
+### Frozen real-camera coverage preparation (not an art rewrite)
+
+`audit_camera_coverage.gd` replays the exact projection matrix and basis/origin from real9c214ca QHD/UHD receipts against actual terrain PhysicsServer colliders. At33×19 normalized screen rays, the old112×96m extent yields562/627 terrain hits for road65 and561/627 for road75; the new304×224m basin yields622/627 and627/627. In the top three rows old coverage is37/99 and33/99, versus new94/99 and99/99. The five missing new road65 rays are on the top-right screen edge; sky can be legitimate. This is **terrain-only geometric coverage**, not a rendered image or proof of attractive background, tree/wall/water occlusion or final camera choice. The old-extent scene here uses the same lowered support profile, so this diagnoses extent, not an exact recreation of old9c214ca pixels. Original capture receipt and both terrain hashes/results are preserved in `camera-coverage/`.
+
+```sh
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tools/art/continuous_landform/audit_camera_coverage.gd -- /tmp/adaptive-ground.scn docs/evidence/river-continuous-landform/camera-coverage/source-9c214ca-receipt.json /tmp/coverage.json
+```
+
+Material audit before the next real image: with `earth_enabled`, the current land shader replaces the preceding road/bank/drain colour calculation with source PBR albedo, retaining only a restrained woodland tint. Accordingly the current road/drain readability is predominantly actual geometry, **not a completed distinct worn-road/wet-bank material family**. No blind recolouring or exposure change was made while the frozen full-scene capture runs. The water shader has TIME; matched capture must freeze/report it while realtime traversal must restore real TIME. The new mature forest, material hierarchy and full architecture relationship remain unaccepted.
+
+Next live traversal must use the current integration's normal-input controller, preserve actual battle/death and frame timestamps, and name river-bank support diagnosis separately from full combat acceptance. The implemented PhysicsServer route test uses starts/deltas (-23.3,8.16)+(3,2), (30,0)+(16,0), (34,8)+(6,2),120 Ground.travel increments each. These are collision diagnoses, not permission to teleport the hero during live footage. A graphical follow-input run must approach the points naturally or explicitly disclose a separate initial fixture; no concealed position overwrite.
