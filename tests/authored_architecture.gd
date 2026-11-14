@@ -17,6 +17,12 @@ func run() -> void:
   for i in m.mesh.get_surface_count():
    var a=m.mesh.surface_get_arrays(i)
    assert(a[Mesh.ARRAY_TEX_UV].size()==a[Mesh.ARRAY_VERTEX].size())
+   var material=m.get_active_material(i) as StandardMaterial3D
+   if material and material.albedo_texture:
+    var uv=a[Mesh.ARRAY_TEX_UV] as PackedVector2Array
+    var low=uv[0];var high=uv[0]
+    for value in uv:low=low.min(value);high=high.max(value)
+    assert(low.distance_to(high)>.1,'Textured surface lost source UV at mesh join')
    triangles+=a[Mesh.ARRAY_INDEX].size()/3
  print('AUTHORED_ARCHITECTURE_IMPORT_PASS ',JSON.stringify({'meshes':meshes.size(),'surfaces':surfaces,'triangles':triangles,'door_pivot':str(door.global_position),'visual':'NOT_ACCEPTED','graphics':'NOT_RUN'}))
  model.queue_free();await process_frame;await process_frame

@@ -20,7 +20,28 @@ pier_path=out/'source/wooden_pier/modular_wooden_pier.gltf'
 bpy.ops.import_scene.gltf(filepath=str(pier_path))
 plank=bpy.data.objects['modular_wooden_pier_planks'];uv=plank.data.uv_layers.active
 plank_polys=[[(tuple(plank.matrix_world@plank.data.vertices[plank.data.loops[i].vertex_index].co),tuple(uv.data[i].uv)) for i in p.loop_indices] for p in plank.data.polygons]
-plank_pts=[v for p in plank_polys for v,_ in p];pmn=[min(v[i] for v in plank_pts) for i in range(3)];pmx=[max(v[i] for v in plank_pts) for i in range(3)]
+# Recover original separate boards using welded positions (glTF splits vertices at UV seams).
+from collections import defaultdict
+keys=[tuple(round(c,5) for c in v.co) for v in plank.data.vertices];adj=defaultdict(set)
+for poly in plank.data.polygons:
+ ids=list(poly.vertices)
+ for a,b in zip(ids,ids[1:]+ids[:1]):adj[keys[a]].add(keys[b]);adj[keys[b]].add(keys[a])
+labels={};components=[]
+for key in adj:
+ if key in labels:continue
+ stack=[key];label=len(components);group=[]
+ while stack:
+  k=stack.pop()
+  if k in labels:continue
+  labels[k]=label;group.append(k);stack.extend(adj[k]-labels.keys())
+ components.append(group)
+boards=[]
+for i in range(len(components)):
+ polys=[plank_polys[k] for k,p in enumerate(plank.data.polygons) if labels[keys[p.vertices[0]]]==i]
+ pts=[v for p in polys for v,_ in p];mn=[min(v[j] for v in pts) for j in range(3)];mx=[max(v[j] for v in pts) for j in range(3)]
+ if mx[0]-mn[0]>2:boards.append((polys,mn,mx))
+boards.sort(key=lambda b:b[1][1]);assert len(boards)==10
+
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
 for m in list(bpy.data.materials):bpy.data.materials.remove(m)
 materials={}
@@ -35,7 +56,8 @@ def group(name):
 gate=group('GateHall');door=group('GateDoor');walls=group('WallWalk');bridge=group('GateBridge');west=group('WestBridge')
 def mesh(name,verts,faces,mat,parent,uvs=None):
  d=bpy.data.meshes.new(name);d.from_pydata(verts,[],faces);d.materials.append(materials[mat]);d.update();o=bpy.data.objects.new(name,d);bpy.context.collection.objects.link(o);o.parent=parent
- layer=d.uv_layers.new(name='SourceUV' if uvs else 'StructuralUV')
+ # One shared active UV channel is required when source and authored surfaces join.
+ layer=d.uv_layers.new(name='UVMap')
  for poly in d.polygons:
   for li in poly.loop_indices:
    v=d.vertices[d.loops[li].vertex_index].co;layer.data[li].uv=uvs[d.loops[li].vertex_index] if uvs else (v.x*.3,v.z*.3+v.y*.05)
@@ -153,21 +175,24 @@ for sign in [-1,1]:
 # Timber bridge: continuous transverse deck, longitudinal stringers, pile bents,
 # wedged crossheads/knee braces, rails completely outside 7.4m roadway.
 def make_bridge(parent,cx,length):
- for z in [-3.25,-1.62,0,1.62,3.25]:beam('BridgeStringer',(cx-length/2,-.25,z),(cx+length/2,-.25,z),.22,.42,'timber',parent)
- # 5 professionally authored deck sections by 3 width sections; no flat box top.
- for i in range(5):
+ for z in [-3.6,-7.52/6,7.52/6,3.6]:beam('BridgeStringer',(cx-length/2,-.12,z),(cx+length/2,-.12,z),.22,.42,'timber',parent)
+ # Fit each original board independently: whole-palette AABB repetition leaves
+ # dangerous long seams because the professional source boards have different lengths.
+ count=round(length/.29)
+ for i in range(count):
   for j in range(3):
+   polys,mn,mx=boards[(i+3*j)%len(boards)]
    vs=[];fs=[];uvs=[]
-   for poly in plank_polys:
+   for poly in polys:
     fs.append(tuple(range(len(vs),len(vs)+len(poly))))
     for v,uv in poly:
-     x=cx-length/2+(i+(v[1]-pmn[1])/(pmx[1]-pmn[1]))*length/5
-     z=-3.76+(j+(v[0]-pmn[0])/(pmx[0]-pmn[0]))*7.52/3
-     y=.13+(v[2]-pmx[2])
+     x=cx-length/2+(i+.02+(v[1]-mn[1])/(mx[1]-mn[1])*.96)*length/count
+     z=-3.76+(j+.002+(v[0]-mn[0])/(mx[0]-mn[0])*.996)*7.52/3
+     y=.13+(v[2]-mx[2])
      vs.append(pt(x,y,z));uvs.append(uv)
    mesh('ProfessionalDeck_%d_%d'%(i,j),vs,fs,'deck_wood',parent,uvs)
  for x in [cx-length*.28,cx+length*.28]:
-  beam('BridgeCrosshead',(x,-.62,-3.8),(x,-.62,3.8),.35,.42,'timber',parent)
+  beam('BridgeCrosshead',(x,-.52,-3.8),(x,-.52,3.8),.35,.42,'timber',parent)
   for z in [-3.1,0,3.1]:
    beam('BridgePile',(x,-3.6,z),(x,-.65,z),.38,.38,'timber',parent)
    for dx in [-1,1]:beam('BridgeKneeBrace',(x,-1.8,z),(x+dx*1.0,-.48,z),.19,.19,'timber',parent)

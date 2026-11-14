@@ -37,13 +37,15 @@ jobs:
           sha256sum assets/river_authored/architecture/architecture.glb >artifacts/gate-structure/derived-sha256.txt
           godot --headless --editor --path . --import >artifacts/gate-structure/import.log 2>&1
           timeout 45s godot --headless --path . --script tests/authored_architecture.gd >artifacts/gate-structure/structure-test.log 2>&1
+          timeout 75s godot --headless --path . --script tests/authored_architecture_capture.gd -- --validate-setup >artifacts/gate-structure/setup-test.log 2>&1
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/gate-structure/setup-test.log; then exit 1; fi
       - name: Capture actual game with new structures and unchanged battle systems
         env:
           ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/gate-structure/pixels
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
-          timeout 600s xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --rendering-method gl_compatibility --audio-driver Dummy --script tests/authored_architecture_capture.gd >artifacts/gate-structure/actual-game.log 2>&1
+          python tools/art/gate_structure/run_capture_checked.py artifacts/gate-structure/actual-game.log 600 -- xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --rendering-method gl_compatibility --audio-driver Dummy --script tests/authored_architecture_capture.gd
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/gate-structure/actual-game.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always()
