@@ -1,6 +1,6 @@
 """Capture and profile only the exported game in a disposable hosted macOS job."""
 from pathlib import Path
-import hashlib,json,os,plistlib,pty,select,signal,subprocess,sys,time
+import hashlib,json,os,plistlib,pty,re,select,signal,subprocess,sys,time
 from rc3_native_probe import empty_game_data
 
 def run_game(executable,output,helper,user_args,movie=None):
@@ -53,7 +53,7 @@ def run_game(executable,output,helper,user_args,movie=None):
             try:process.wait(timeout=5)
             except subprocess.TimeoutExpired:
                 os.killpg(process.pid,signal.SIGKILL);process.wait()
-    text=(output/"window.log").read_text()
+    text=re.sub(r"\x1b\[[0-9;]*m","",(output/"window.log").read_text())
     assert not timed_out and process.returncode==0,(output.name,process.returncode,text[-2200:])
     assert not any(marker in text for marker in ("SCRIPT ERROR","SHADER ERROR","ERROR:")),text[-2200:]
     return text

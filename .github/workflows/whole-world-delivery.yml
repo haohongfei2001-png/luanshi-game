@@ -36,6 +36,14 @@ jobs:
           timeout 30s godot --headless --path . --script tests/world_terrain_compat.gd
           godot --headless --path . --check-only --script tests/whole_battle_replay.gd
           godot --headless --path . --check-only --script scripts/field/whole_battle_review.gd
+      - name: Verify the real deployment menu through embedded-window input
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/native-menu-routing
+          export RIVER_CAPTURE_OUT="$PWD/artifacts/native-menu-routing"
+          timeout 150s xvfb-run -a -s "-screen 0 2560x1440x24" godot --path . --display-driver x11 --audio-driver Dummy -- --whole-battle-review --native-qhd --menu-only > artifacts/native-menu-routing/window.log 2>&1 || { cat artifacts/native-menu-routing/window.log; exit 1; }
+          cat artifacts/native-menu-routing/window.log
+          grep -q BRIDGE_MENU_INPUT_PASS artifacts/native-menu-routing/window.log
       - name: Export the complete game with full license notices
         run: ./tools/export.sh
       - uses: actions/upload-artifact@v4
@@ -85,10 +93,6 @@ jobs:
       - name: Play and record the actual exported 512v512 game at native QHD
         run: |
           "$RUNNER_TEMP/review-python/bin/python" tools/whole_native_delivery.py package/Luanshi-macOS.zip patch artifacts/whole-native
-      - name: Preserve viewable native pictures, movie and failure receipts
-        if: always()
-        run: |
-          "$RUNNER_TEMP/review-python/bin/python" tools/archive_native_world.py artifacts/whole-native
       - name: Repeat cold-data Metal startup and pre-tick focus interruption
         if: success()
         run: |
@@ -96,6 +100,10 @@ jobs:
           for pass in 1 2 3; do
             "$RUNNER_TEMP/review-python/bin/python" tools/rc3_native_probe.py artifacts/whole-native/Luanshi-macOS-arm64-world-review.zip artifacts/whole-native/unpacked "artifacts/whole-native/cold-$pass" --startup-regression
           done
+      - name: Preserve viewable native pictures, movie and failure receipts
+        if: always()
+        run: |
+          "$RUNNER_TEMP/review-python/bin/python" tools/archive_native_world.py artifacts/whole-native
       - uses: actions/upload-artifact@v4
         if: always()
         with:

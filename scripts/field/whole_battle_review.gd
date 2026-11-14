@@ -64,14 +64,26 @@ func _select_bridge() -> bool:
 	if not popup.visible: return false
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_jpg(out+"/muster.jpg",.92)
-	for code:Key in [KEY_END,KEY_ENTER]:
+	# PopupMenu handles window input before Viewport.push_input().
+	# Send actual arrow keys through the root so its embedded-window route runs.
+	for attempt in menu.item_count+1:
+		if popup.get_focused_item()==5:break
 		for down:bool in [true,false]:
 			var event:=InputEventKey.new()
-			event.keycode=code
-			event.physical_keycode=code
+			event.keycode=KEY_DOWN
+			event.physical_keycode=KEY_DOWN
 			event.pressed=down
-			popup.push_input(event,true)
+			root.push_input(event,true)
 			await get_tree().process_frame
+	print("BRIDGE_MENU_FOCUS ",popup.get_focused_item()," embedded=",popup.is_embedded())
+	if popup.get_focused_item()!=5:return false
+	for down:bool in [true,false]:
+		var event:=InputEventKey.new()
+		event.keycode=KEY_ENTER
+		event.physical_keycode=KEY_ENTER
+		event.pressed=down
+		root.push_input(event,true)
+		await get_tree().process_frame
 	for i in 3:await get_tree().process_frame
 	print("BRIDGE_MENU_SELECTED ",menu.selected," encounter=",field.battle.bridgehead," popup=",popup.visible)
 	return menu.selected==5 and field.battle.bridgehead and not field.battle.started
@@ -173,9 +185,14 @@ func _run() -> void:
 	var native:=root.get_texture().get_image()
 	rendered_size=native.get_size()
 	native.save_jpg(out+"/prepared-native.jpg",.95)
-	if "--native-qhd" in OS.get_cmdline_user_args():
-		assert(rendered_size==Vector2i(2560,1440),"Native render attachment must be QHD")
-	assert(is_equal_approx(root.scaling_3d_scale,1.))
+	if "--native-qhd" in OS.get_cmdline_user_args() and rendered_size!=Vector2i(2560,1440):
+		push_error("Native render attachment must be QHD, got "+str(rendered_size))
+		get_tree().quit(1)
+		return
+	if not is_equal_approx(root.scaling_3d_scale,1.):
+		push_error("The review requires full internal render resolution")
+		get_tree().quit(1)
+		return
 	print("BRIDGE_NATIVE_ATTACHMENT ",rendered_size," window=",DisplayServer.window_get_size()," internal=",root.scaling_3d_scale)
 	if "--menu-only" in OS.get_cmdline_user_args():
 		if "--light-study" in OS.get_cmdline_user_args():
