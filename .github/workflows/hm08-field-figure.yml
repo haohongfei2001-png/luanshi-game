@@ -11,7 +11,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - run: python3 tests/inspect_hm08_body.py
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy
+      - run: /usr/bin/python3 tests/inspect_hm08_body.py
       - name: Save exact master dimensions
         run: |
           git config user.name "Luanshi art source worker"
