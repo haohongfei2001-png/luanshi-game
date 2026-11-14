@@ -1,0 +1,49 @@
+name: Archive the completed bridge-side motion proof
+on:
+  push:
+    branches: [codex/river-rc23-native-chain]
+    paths: ['.github/workflows/native-chain-proof-recovery.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore completed captures without rendering again
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh run download 43585505869 --repo haohongfei2001-png/luanshi-game --name native-clear-west-original-speed --dir /tmp/native-west-proof
+          gh run download 43585904013 --repo haohongfei2001-png/luanshi-game --name native-chain-clean-checkout --dir /tmp/native-clean-failure
+          python3 - <<'PY'
+          import hashlib,json,shutil
+          from pathlib import Path
+          source=Path("/tmp/native-west-proof/docs/evidence/river-gate-v1-rc23/native-chain/clear-west")
+          assert source.is_dir()
+          destination=Path("docs/evidence/river-gate-v1-rc23/native-chain/clear-west")
+          shutil.copytree(source,destination,dirs_exist_ok=True)
+          verify=json.loads((destination/"verification.json").read_text())
+          assert verify["equal_simulation_and_render_instance_inputs"] and not verify["realtime_performance_measurement"]
+          assert (destination/"candidate-source.txt").read_text().strip()=="76d08342ddfef33b889cb4bc7476b7660329bee5"
+          for side in ("before","after"):
+              stream=json.loads((destination/(side+"-stream.json")).read_text())["streams"][0]
+              assert stream["width"]==2560 and stream["height"]==1600 and int(stream["nb_read_frames"])==20
+          failure=Path("docs/evidence/river-gate-v1-rc23/native-chain/clean-failure")
+          shutil.copytree("/tmp/native-clean-failure",failure,dirs_exist_ok=True)
+          (destination/"archive-receipt.json").write_text(json.dumps({
+              "render_run":43585505869,"artifact":14110451155,
+              "archive_failure":"Concurrent source audit advanced the same research ref before capture push",
+              "regenerated_images":False,"render_source":"76d08342ddfef33b889cb4bc7476b7660329bee5",
+              "artifact_sha256":"8a3c9ab6e7cf5c2374b35f30b48a0d36df1e69ce8bf94181cfd2962544bf2a56",
+              "movies":{side:hashlib.sha256((destination/(side+".mp4")).read_bytes()).hexdigest() for side in ("before","after")}
+              },indent=2)+"\n")
+          PY
+          sha256sum --check docs/evidence/river-gate-v1-rc23/native-chain/clear-west/video-sha256.txt
+          git add docs/evidence/river-gate-v1-rc23/native-chain/clear-west docs/evidence/river-gate-v1-rc23/native-chain/clean-failure
+          git -c user.name='River Gate captured evidence archive' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve the completed bridge-side equal-speed footage and clean-check failure'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
