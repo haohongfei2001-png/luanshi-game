@@ -1,7 +1,7 @@
 name: Play the exact exported bridgehead on a hosted Mac
 on:
   push:
-    branches: ['codex/river-rc22-native-crossing']
+    branches: ['codex/river-rc22-mac-play-window']
     paths: ['.github/workflows/bridge-native.yml', 'tests/hosted_bridge_input.m', 'tests/native_bridge_window.py', 'tests/hosted_bridge_movie.swift']
 permissions:
   contents: read
@@ -19,7 +19,7 @@ jobs:
         with:
           name: Luanshi-macOS-34b5af8db16793566df89139ccdd783ad7d6b723
           path: package
-          run-id: 43535370706
+          run-id: '43535370706'
           github-token: ${{ github.token }}
       - name: Run the released binary at normal speed with unmodified default graphics
         run: |
@@ -37,7 +37,7 @@ jobs:
           git add -- "$dst"
           if ! git diff --cached --quiet; then
             git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record the hosted macOS bridgehead: raw window and actual frame times'
-            git push origin HEAD:refs/heads/codex/river-rc22-native-crossing
+            git push origin HEAD:refs/heads/codex/river-rc22-mac-play-window
           fi
       - uses: actions/upload-artifact@v4
         if: always()
