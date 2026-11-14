@@ -14,6 +14,7 @@ from company_weapons import TWO_HAND, FRONT_GRIP
 BONES=16
 FRAMES=32
 CLIPS=31
+MOUNTED_ATTACKS=((0,2),(0,6),(1,2),(1,6),(7,2),(7,6))
 IDENT=(0.,0.,0.,1.)
 MARCH_BANK=json.loads((Path(__file__).parent/'source'/'march_curves.json').read_text())['curves']
 SWORD_SOURCE=json.loads((Path(__file__).parent/'source'/'combat_curves.json').read_text())['curves']['Sword_Attack']
@@ -136,12 +137,27 @@ def grounded_rest(kit):
         across = direction==-side and curl
         elbow=(direction*(.248 if across else .402),.121,
                -.267 if across else -.277)
-        wrist=(direction*(.123 if across else .461),.130 if across else .091,
+        # A long blade/shaft runs along the hand's +Z axis. A falling palm
+        # pitched eighty degrees left that axis vertical above a prone body.
+        # Rest blades on their broad face, the bow in its stave plane and the
+        # crossbow across its prod. The hand remains joined at the same wrist.
+        hand_q=euler(0.,direction*20.,direction*90.)
+        height=.070
+        if direction==1 and kit==5:
+            hand_q=euler(-90.,20.)
+            height=.150
+        elif direction==1 and kit==6:
+            hand_q=euler(0.,20.)
+            height=.120
+        elif direction==-1 and kit==7:
+            hand_q=euler(-90.,-20.)
+            height=.035
+        wrist=(direction*(.123 if across else .461),height,
                -.095 if across else -.068)
         pole=unit(sub(elbow,shoulder))
         ms[upper],ms[fore]=two_link(arms,shoulder,wrist,pole)
-        ms[hand]=placed(arms[2],wrist,euler(-80.,direction*20.,direction*9.))
-    ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
+        ms[hand]=placed(arms[2],wrist,hand_q)
+    ms[NOCK]=ms[RH]
     return ms
 
 
@@ -734,7 +750,7 @@ def procedural_pose(kit,clip,t,loadout=0,side_hit=0):
                         ms[child]=placed(pivot,trans(ms[parent],pivot),ms[child][0])
                         parent=child
             if kit==5:
-                ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
+                ms[NOCK]=ms[RH]
     return ms
 
 
@@ -876,14 +892,19 @@ def bake_motion(out):
     lanes=[(kit,clip,0,0) for kit in range(9) for clip in range(CLIPS)]
     lanes.extend((kit,clip,loadout,0) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
     lanes.extend((kit,clip,0,side) for kit in range(9) for clip,side in REACTIONS)
+    # Preserve the seated torso for native ground cuts. The shader selects
+    # these six existing poses only for a mounted basic sword/dao/shield action.
+    mounted_start=len(lanes)
+    lanes.extend((kit,clip,0,0) for kit,clip in MOUNTED_ATTACKS)
     tex=Image.new("RGBA",((FRAMES+1)*BONES,len(lanes)*4))
     px=tex.load()
     for lane,(kit,clip,loadout,side) in enumerate(lanes):
         previous=[None]*BONES
         y=lane*4
+        sample_pose=procedural_pose if lane>=mounted_start else pose
         for frame in range(FRAMES+1):
             t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
-            for b,(q,offset) in enumerate(pose(kit,clip,t,loadout,side)):
+            for b,(q,offset) in enumerate(sample_pose(kit,clip,t,loadout,side)):
                 # q and -q describe the same rotation. Choose neighbours on
                 # the same hemisphere before interpolation, including the wrap.
                 if previous[b] and sum(a*c for a,c in zip(q,previous[b]))<0:

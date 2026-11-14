@@ -87,6 +87,12 @@ void vertex() {
         int reaction=(clip==10 ? 0 : 2)+slot-1;
         tile.y=float(4*(381+kit*4+reaction))+.5;
     }
+    // Ground step-through cuts have separate seated upper-body strips. The
+    // existing saddle leg selection above continues to choose clip 15.
+    int mounted_kit=sample_kit==0 ? 0 : (sample_kit==1 ? 1 : (sample_kit==7 ? 2 : -1));
+    if (code>=64 && mounted_kit>=0 && (clip==2 || clip==6)) {
+        tile.y=float(4*(417+mounted_kit*2+(clip==6 ? 1 : 0)))+.5;
+    }
     // Legacy heads deform only their skin tiles. The continuous anatomical master
     // keeps coincident hair/skin UV seams together and has authored role variants.
     ivec2 swatch=ivec2(UV*vec2(8.,4.));

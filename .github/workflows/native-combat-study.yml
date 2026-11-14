@@ -2,7 +2,7 @@ name: Check the authored sword retarget and support
 on:
   push:
     branches: [codex/river-rc23-authored-combat]
-    paths: ['tools/art/company_motion.py','tools/art/check_native_combat.py','.github/workflows/native-combat-study.yml']
+    paths: ['tools/art/company_motion.py','tools/art/check_native_combat.py','.github/workflows/native-combat-study.yml','tools/art/check_mounted_combat.py','tests/field_rest_equipment.gd','scripts/field/company_skin.gdshader']
 permissions:
   contents: write
 concurrency:
@@ -11,7 +11,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Bake only the shared pose palette and check actual joints
@@ -30,12 +30,32 @@ jobs:
           /usr/bin/python3 tools/art/check_company_motion.py
           /usr/bin/python3 tools/art/check_field_carries.py
           /usr/bin/python3 tools/art/check_contact_motion.py
-          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/native-combat/retarget-metrics.json
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aa6623fab538de37cfb92ff18f0c37bb5e443e93/assets/river_gate/figures/company_motion.png -o /tmp/baseline-motion.png
+          /usr/bin/python3 tools/art/check_mounted_combat.py /tmp/baseline-motion.png
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/field-rest
+          touch artifacts/.gdignore
+          godot --headless --audio-driver Dummy --editor --path . --import > artifacts/field-rest/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-rest/import.log; then exit 1; fi
+          godot --headless --audio-driver Dummy --path . --script tests/field_rest_equipment.gd 2>&1 | tee artifacts/field-rest/runtime.log
+          cp artifacts/field-rest/mesh-bounds.json docs/evidence/river-gate-v1-rc23/native-combat/rest-mesh-bounds.json
+          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/native-combat/retarget-metrics.json docs/evidence/river-gate-v1-rc23/native-combat/mounted-strip-check.json docs/evidence/river-gate-v1-rc23/native-combat/rest-mesh-bounds.json
           git -c user.name='River Gate authored combat source' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake a complete authored cut with shared grip and support evidence'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Preserve any actual import failure
+        if: failure()
+        run: find artifacts/field-rest -name '*.log' -exec tail -n 70 '{}' +
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: authored-combat-support-check
-          path: docs/evidence/river-gate-v1-rc23/native-combat
+          path: |
+            docs/evidence/river-gate-v1-rc23/native-combat/retarget-metrics.json
+            docs/evidence/river-gate-v1-rc23/native-combat/mounted-strip-check.json
+            docs/evidence/river-gate-v1-rc23/native-combat/rest-mesh-bounds.json
+            artifacts/field-rest
           retention-days: 7

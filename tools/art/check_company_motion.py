@@ -61,7 +61,7 @@ def measure():
                     # At the instant the missile leaves, the string recoils but
                     # a loose hand must finish behind the cheek. During the set
                     # and the pull the nock still meets the fingers exactly.
-                    if clip<2 or clip>=10 or (clip<=5 and phase<.92):
+                    if clip<2 or (clip>=10 and clip!=14) or (clip<=5 and phase<.92):
                         nocks.append(dist(string,fingers))
                     if clip==2 and frame==FRAMES-1:
                         bow_release.append(dist(string,trans(bones[RH],add(grip(1),(0,0,-.159)))))
