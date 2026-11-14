@@ -1,0 +1,9 @@
+{
+  "source_blend_sha256": "72a8d78ac2f9eed59b5d28a4dc8024a1175bca358e1d2e5a7967e969b6714bb3",
+  "opening_clear_rays": 15,
+  "walkway_clear_rays": 12,
+  "upper_facade_bearing_rays": 14,
+  "nondegenerate_new_spandrel_uv_triangles": 864,
+  "scope": "SOURCE_GEOMETRY_ONLY; no runtime collision/gameplay/image acceptance",
+  "art": "NOT_ACCEPTED"
+}

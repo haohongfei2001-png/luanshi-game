@@ -1,0 +1,74 @@
+{
+  "source": "287e2ae375bc2f33cd03cbf37508faf388d7e85e",
+  "art": "NOT_ACCEPTED",
+  "profile_sha256": "53f544f8ea8de19e5a901239123f3e98232235a4a459bdbd6a0fa6e5965e18a1",
+  "files": [
+    {
+      "path": "assets/river_authored/architecture/architecture.glb",
+      "bytes": 113334740,
+      "sha256": "2dc5018e859c0fcd331d6f33c035f45d4abf5fc9c31eebe0ec1d386a846f622a"
+    },
+    {
+      "path": "assets/river_authored/ground/continuous-region.scn",
+      "bytes": 168951813,
+      "sha256": "41e5a5bda57ad8e923e487f76629076a4a11201f016af6748d27fff4907bcb01"
+    },
+    {
+      "path": "assets/river_authored/woodland/region.scn",
+      "bytes": 261295927,
+      "sha256": "52047795a7efa22f80504cc80a90046fd33b87e3a8f046d0a6eb55e8d4d9bd59"
+    },
+    {
+      "path": "assets/river_authored/grass/region.scn",
+      "bytes": 4234077,
+      "sha256": "2779459c919b556b9e2c0c61df2655355e7840a2b66ebeffb3cfd956a4a04629"
+    }
+  ],
+  "runtime_run": 43648903794,
+  "runtime_result": "SUCCESS",
+  "independent_verification": "ALL_6_ZIP_SHA256_CRC_AND_13_RESTORED_MEMBERS_PASS",
+  "default_regression": {
+    "command": "tools/test.sh with experimental flags absent",
+    "exit": 0,
+    "log_sha256": "621c5c13e6f9e5a1ccd2728280865420dab6b133c3911981d14a8f71b10d97ce"
+  },
+  "artifacts": [
+    {
+      "name": "complete-region-runtime-04",
+      "id": 14135775722,
+      "digest": "sha256:1e760d9f439ad26add78714aedb8cf65cc1cbbedb539f5b5b4338d555b0fe725"
+    },
+    {
+      "name": "complete-region-runtime-02",
+      "id": 14135715846,
+      "digest": "sha256:95930c7de9658a8073dd960bdd7995aab46ab404c6c6f33ec84f4f130b26a36a"
+    },
+    {
+      "name": "complete-region-runtime-00",
+      "id": 14135571007,
+      "digest": "sha256:2c69b694f0b16391847f7392664968216861923919c057490da56866c61be676"
+    },
+    {
+      "name": "complete-region-runtime-01",
+      "id": 14135501201,
+      "digest": "sha256:34fc8b19479ad87eead10e7f29c12a5999c6dd27fdcc2a4b9d350a787c27cfc5"
+    },
+    {
+      "name": "complete-region-runtime-05",
+      "id": 14135086886,
+      "digest": "sha256:5e2cd419081389de9bc15fd310fd6eee78f15217869814cf5e5a39f840a9c48d"
+    },
+    {
+      "name": "complete-region-runtime-03",
+      "id": 14135041936,
+      "digest": "sha256:6c431564dff0257d1f68207c08e6ae75c32c3aec5577adfdf9fb7252109b713f"
+    },
+    {
+      "name": "complete-region-build-logs",
+      "id": 14134962016,
+      "digest": "sha256:ad00daa17a7c15ce1b2c46b47ac4c6a2064649c8923b361548e0acd3ecf90955"
+    }
+  ],
+  "gpu_status": "NEXT_NATIVE_CAPTURE_NOT_RUN",
+  "scope": "No new artistic acceptance, no M5 or performance result"
+}

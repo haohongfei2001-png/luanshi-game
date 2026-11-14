@@ -57,6 +57,11 @@ def destination_rows():
 def destination_validate(rows):return validate_records(rows,'a'*40,'destination-study',identities())
 
 class StillGate(unittest.TestCase):
+    def test_live_mode_keeps_exact_static_gate(self):
+        self.assertEqual(validate_records(destination_rows(),'a'*40,'destination-action',identities()),'b'*64)
+        wrong=destination_rows();wrong[1]['internal_scale']=.5
+        with self.assertRaises(ValueError):validate_records(wrong,'a'*40,'destination-action',identities())
+
     def test_correct(self):self.assertEqual(validate_records(rows(),'a'*40,'camera-study'),'b'*64)
     def test_missing(self):
         with self.assertRaises(ValueError):validate_records(rows()[:2],'a'*40,'camera-study')

@@ -1,0 +1,6 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SOURCE_OCCLUSION_MATERIAL timber ao_enabled=true ao_uv2=false channel=0 normal=true roughness=true
+SOURCE_OCCLUSION_MATERIAL timber_cut ao_enabled=true ao_uv2=false channel=0 normal=true roughness=true
+SOURCE_OCCLUSION_MATERIAL masonry ao_enabled=true ao_uv2=false channel=0 normal=true roughness=true
+GATE_OCCLUSION_IMPORT_PASS_NOT_GPU_ART

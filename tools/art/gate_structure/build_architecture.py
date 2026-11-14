@@ -5,6 +5,8 @@ Source roof is VVayToyek CC0; original object topology/UV clipped and extended i
 import bpy,math,json,sys,hashlib
 from pathlib import Path
 from mathutils import Vector
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from projection_axes import dominant_axis
 args=sys.argv[sys.argv.index('--')+1:];source,out=map(Path,args[:2]);out.mkdir(parents=True,exist_ok=True)
 if source.suffix.lower()=='.fbx':
  bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False);bpy.ops.import_scene.fbx(filepath=str(source))
@@ -14,7 +16,16 @@ source_objects={o.name:o for o in bpy.data.objects if o.type=='MESH'}
 roof={}
 for name in source_objects:
  o=source_objects[name];uv=o.data.uv_layers.active
- roof[name]=[[(tuple(o.matrix_world@o.data.vertices[o.data.loops[i].vertex_index].co),tuple(uv.data[i].uv) if uv else (0.,0.),tuple((o.matrix_world.to_3x3().inverted().transposed()@o.data.corner_normals[i].vector).normalized())) for i in p.loop_indices] for p in o.data.polygons]
+ # Tessellate native ngons in original mesh-local coordinates, BEFORE world
+ # conversion/clipping/extension. Exporters must not choose different 71-gon
+ # diagonals from metre-scale floating-point noise at the new world position.
+ # Original corner UVs/normals are carried through via original loop indices.
+ o.data.calc_loop_triangles();triangles_by_polygon={}
+ for tri in o.data.loop_triangles:triangles_by_polygon.setdefault(tri.polygon_index,[]).append(tuple(tri.loops))
+ loops=[]
+ for p in o.data.polygons:
+  loops.extend(triangles_by_polygon[p.index] if len(p.loop_indices)>4 else [tuple(p.loop_indices)])
+ roof[name]=[[(tuple(o.matrix_world@o.data.vertices[o.data.loops[i].vertex_index].co),tuple(uv.data[i].uv) if uv else (0.,0.),tuple((o.matrix_world.to_3x3().inverted().transposed()@o.data.corner_normals[i].vector).normalized())) for i in indices] for indices in loops]
 # Professional CC0 deck boards: preserve their actual worn silhouette and UV islands.
 pier_path=out/'source/wooden_pier/modular_wooden_pier.gltf'
 bpy.ops.import_scene.gltf(filepath=str(pier_path))
@@ -54,12 +65,27 @@ if '--surface-root' in args:
  sys.path.insert(0,str(Path(__file__).resolve().parent))
  from apply_surface_materials import apply
  surface_scales=apply(materials,args[args.index('--surface-root')+1])
+orientation_audits=[];open_surface_audits=[]
 root=bpy.data.objects.new('AuthoredArchitecture',None);bpy.context.collection.objects.link(root)
 groups={}
 def group(name):
  o=bpy.data.objects.new(name,None);bpy.context.collection.objects.link(o);o.parent=root;groups[name]=o;return o
 gate=group('GateHall');door=group('GateDoor');walls=group('WallWalk');bridge=group('GateBridge');west=group('WestBridge')
 def mesh(name,verts,faces,mat,parent,uvs=None,normals=None):
+ if '--complete-portal' in args and uvs is None and normals is None:
+  sys.path.insert(0,str(Path(__file__).resolve().parent))
+  from solid_orientation import orient_closed
+  if name=='WallWalk_ramp':
+   # Explicit authored one-sided walk surface, not a closed solid. Orient it
+   # toward Blender +Z (Godot +Y); do not manufacture volume or touch sources.
+   fixed=[]
+   for face in faces:
+    cross=(Vector(verts[face[1]])-Vector(verts[face[0]])).cross(Vector(verts[face[2]])-Vector(verts[face[0]]))
+    if abs(cross.z)<1e-9:raise ValueError('Walk surface has no upward orientation')
+    fixed.append(tuple(reversed(face)) if cross.z<0 else tuple(face))
+   faces=fixed;open_surface_audits.append({'object':name,'semantic_normal':'Blender+Z / Godot+Y','closed_volume_test':'not applicable'})
+  else:
+   faces,audit=orient_closed(verts,faces);orientation_audits.append({'object':name,'components':audit})
  d=bpy.data.meshes.new(name);d.from_pydata(verts,[],faces);d.materials.append(materials[mat]);d.update();o=bpy.data.objects.new(name,d);bpy.context.collection.objects.link(o);o.parent=parent
  # One shared active UV channel is required when source and authored surfaces join.
  layer=d.uv_layers.new(name='UVMap')
@@ -70,7 +96,7 @@ def mesh(name,verts,faces,mat,parent,uvs=None,normals=None):
    elif '--complete-gate-masonry' in args:
     # World-metre box projection keeps vertical facade UVs non-degenerate.
     # The old mixed X/(Z+Y) plane collapsed front walls into narrow strips.
-    axis=max(range(3),key=lambda k:abs(poly.normal[k]))
+    axis=dominant_axis(poly.normal)
     layer.data[li].uv=(v.y,v.z) if axis==0 else (v.x,v.z) if axis==1 else (v.x,v.y)
    else:layer.data[li].uv=(v.x*.3,v.z*.3+v.y*.05)
  if mat in surface_scales:
@@ -80,7 +106,7 @@ def mesh(name,verts,faces,mat,parent,uvs=None,normals=None):
   lo=[min(v.co[k] for v in d.vertices) for k in range(3)];hi=[max(v.co[k] for v in d.vertices) for k in range(3)]
   grain=max(range(3),key=lambda k:hi[k]-lo[k])
   for poly in d.polygons:
-   normal_axis=max(range(3),key=lambda k:abs(poly.normal[k]));plane=[k for k in range(3) if k!=normal_axis]
+   normal_axis=dominant_axis(poly.normal);plane=[k for k in range(3) if k!=normal_axis]
    if mat in ['timber','timber_cut'] and grain in plane:plane=[k for k in plane if k!=grain]+[grain]
    for li in poly.loop_indices:
     v=d.vertices[d.loops[li].vertex_index].co
@@ -113,11 +139,17 @@ def beam(name,a,b,width,depth,mat,parent):
  mod=o.modifiers.new('hewn corners','BEVEL');mod.width=.025;mod.segments=2;bpy.context.view_layer.objects.active=o;o.select_set(True);bpy.ops.object.modifier_apply(modifier=mod.name);o.select_set(False);return o
 # Real shallow barrel voussoir construction: minimum opening 8m wide x4.2m tall.
 R=(4**2+.9**2)/(2*.9);cz=5.1-R;angle=math.asin(4/R)
-for i in range(17):
- a=-angle+2*angle*i/17+.001;b=-angle+2*angle*(i+1)/17-.001;vs=[]
- for x in [46.65,53.45]:
-  for r,t in [(R,a),(R,b),(R+.55,b),(R+.55,a)]:vs.append(pt(x,cz+r*math.cos(t),r*math.sin(t)))
- mesh('GateVault_ashlar_%02d'%i,vs,[(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)],'masonry',gate)
+portal_report={}
+if '--complete-portal' in args:
+ sys.path.insert(0,str(Path(__file__).resolve().parent))
+ from author_gate_portal import build_vault,build_leaves
+ build_vault(mesh,pt,gate,R,cz,angle)
+else:
+ for i in range(17):
+  a=-angle+2*angle*i/17+.001;b=-angle+2*angle*(i+1)/17-.001;vs=[]
+  for x in [46.65,53.45]:
+   for r,t in [(R,a),(R,b),(R+.55,b),(R+.55,a)]:vs.append(pt(x,cz+r*math.cos(t),r*math.sin(t)))
+  mesh('GateVault_ashlar_%02d'%i,vs,[(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)],'masonry',gate)
 # Piers use battered connected masonry courses; stone joints stay restrained at normal camera.
 for sign in [-1,1]:
  for row in range(7):
@@ -150,14 +182,17 @@ if '--complete-gate-masonry' in args:
  # Header above the interior wall-walk. No masonry is placed in its adult
  # headroom; floor bearing continues over the passage at 2.20m clear height.
  for sign in [-1,1]:
-  box('GateGalleryBearing',(50.05,5.62,sign*6.15),(6.8,.14,4.0),'masonry',gate,.012)
+  box('GateGalleryBearing',((49.12+52.85)*.5 if '--complete-portal' in args else 50.05,5.62,sign*6.15),(52.85-49.12 if '--complete-portal' in args else 6.8,.14,4.0),'masonry',gate,.012)
 
 # Functional replaceable door leaves, independently hideable; opening preserved as gameplay-controlled.
-for sign in [-1,1]:
- for i in range(11):box('GateDoor_board',(48.,2.05,sign*(.18+i*.35)),(.21,4.05,.34),'timber',door,.014)
- for y in [.65,2.05,3.55]:box('GateDoor_strap',(47.86,y,sign*1.95),(.06,.13,3.75),'iron',door,.012)
- for z in [.4,3.5]:
-  for y in [.65,2.05,3.55]:box('GateDoor_bolt',(47.81,y,sign*z),(.07,.08,.08),'iron',door,.025)
+if '--complete-portal' in args:
+ portal_report=build_leaves(mesh,box,beam,pt,gate,door,R,cz)
+else:
+ for sign in [-1,1]:
+  for i in range(11):box('GateDoor_board',(48.,2.05,sign*(.18+i*.35)),(.21,4.05,.34),'timber',door,.014)
+  for y in [.65,2.05,3.55]:box('GateDoor_strap',(47.86,y,sign*1.95),(.06,.13,3.75),'iron',door,.012)
+  for z in [.4,3.5]:
+   for y in [.65,2.05,3.55]:box('GateDoor_bolt',(47.81,y,sign*z),(.07,.08,.08),'iron',door,.025)
 # Clip professional roof polygons with UV interpolation, preserving native tile barrel geometry.
 def clip(poly,axis,value,keep_less):
  result=[]
@@ -170,7 +205,9 @@ def clip(poly,axis,value,keep_less):
  return result
 S=.19;extension=5.;roof_pieces=[]
 # Full adult-height upper hall: floor5.72, column head7.92, original roof frame above.
-ROOF_BASE=7.92-20.36121940612793*S
+HALL_FLOOR=5.93 if '--complete-portal' in args else 5.72
+HALL_HEAD=HALL_FLOOR+2.20
+ROOF_BASE=HALL_HEAD-20.36121940612793*S
 def roof_part(name,polys,offset=0,lo=None,hi=None,material='tile',longitudinal_scale=1.):
  vs=[];fs=[];uv=[];normals=[]
  for poly in polys:
@@ -229,7 +266,7 @@ def native_member(label,source_name,scale,translation):
    normals.append(tuple(Vector(tuple(n[i]/scale[i] for i in range(3))).normalized()))
  ob=mesh(label,vs,fs,'timber',gate,uvs,normals);ob['source_member']=source_name
  return ob
-column_head=7.92;floor=5.72;column_scale=(column_head-floor)/20.36121940612793
+column_head=HALL_HEAD;floor=HALL_FLOOR;column_scale=(column_head-floor)/20.36121940612793
 # Cross frames are spaced as full bays, their inner longitudinal corners shared.
 lines=[-7.09,-2.363333333,2.363333333,7.09]
 for line in lines:
@@ -330,7 +367,13 @@ scene=bpy.context.scene;scene.unit_settings.system='METRIC';scene.unit_settings.
 root['status']='ART_NOT_ACCEPTED';root['layout']='river-authored-reset-design-01';door['gameplay_hideable']=True
 objects=[o for o in bpy.data.objects if o.type=='MESH']
 for o in objects:o.data.calc_loop_triangles()
-report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':5.72,'upper_hall_column_head_m':7.92,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN','complete_gate_masonry':('--complete-gate-masonry' in args),'protected_walkway_clear_height_m':2.20}
+report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':floor,'upper_hall_column_head_m':column_head,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN','complete_gate_masonry':('--complete-gate-masonry' in args),'protected_walkway_clear_height_m':2.20}
+report['portal']=portal_report
+report['runtime_uv_layout']='MaterialUV_Metre promoted to TEXCOORD_0 for Godot4.6; original UV preserved in TEXCOORD_1 and unchanged editable mother'
+report['source_ngon_triangulation']='original mesh-local loop triangles before world transform/clip; original corner UV and normal indices preserved'
+report['material_projection_axis']='lowest axis within 1e-5 of largest absolute normal component; source UV unchanged'
+report['authored_solid_orientation']={'scope':'closed authored solids only; professional original UV/custom-normal surfaces unchanged','objects':len(orientation_audits),'flipped_components':sum(c['flipped'] for a in orientation_audits for c in a['components']),'explicit_open_walk_surfaces':open_surface_audits}
+(out/'solid-orientation-audit.json').write_text(json.dumps(orientation_audits,indent=2)+'\n')
 (out/'architecture-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 # Door pivot is exactly the gameplay gate center, while child geometry stays put.
 for child in door.children:
@@ -339,19 +382,9 @@ for child in door.children:
 door.location=Vector(pt(48,0,0))
 bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'source/architecture.blend'))
-# Runtime meshes consolidate by load-bearing assembly; authored blend retains every editable part.
-for parent in [gate,door,walls,bridge,west]:
- children=[o for o in parent.children if o.type=='MESH']
- batches={}
- for ob in children:
-  key=('Roof_'+('East' if 'East' in ob.name else 'West' if 'West' in ob.name else 'HipNorth' if 'HipNorth' in ob.name else 'HipSouth') if ob.name.startswith('Roof_') else parent.name+'_Structure')
-  batches.setdefault(key,[]).append(ob)
- for name,obs in batches.items():
-  bpy.ops.object.select_all(action='DESELECT')
-  for ob in obs:ob.select_set(True)
-  bpy.context.view_layer.objects.active=obs[0];bpy.ops.object.join();obs[0].name=name
-bpy.ops.object.select_all(action='DESELECT')
-bpy.ops.export_scene.gltf(filepath=str(out/'architecture.glb'),export_format='GLB',export_yup=True,export_extras=True)
+# Export the runtime derivative only after saving the unchanged editable mother.
+from export_runtime_architecture import export_runtime
+export_runtime(out/'architecture.glb')
 if '--no-preview' in args:raise SystemExit(0)
 # Real Blender model review renders; explicitly not Godot gameplay evidence.
 world=bpy.data.worlds.new('ReviewWorld');world.use_nodes=True;world.node_tree.nodes['Background'].inputs[0].default_value=(.21,.23,.27,1);world.node_tree.nodes['Background'].inputs[1].default_value=.7;scene.world=world

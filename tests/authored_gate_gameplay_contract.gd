@@ -12,7 +12,16 @@ func run() -> void:
  field.hud.plan_requested.emit(5)
  field.set_process(false)
  field.set_physics_process(false)
- var model=(load('res://assets/river_authored/architecture/architecture.glb') as PackedScene).instantiate()
+ var model:Node3D
+ var external_glb:=OS.get_environment('LUANSHI_GATE_CONTRACT_GLB')
+ if external_glb.is_empty():model=(load('res://assets/river_authored/architecture/architecture.glb') as PackedScene).instantiate()
+ else:
+  var document:=GLTFDocument.new();var state:=GLTFState.new()
+  var error:=document.append_from_file(external_glb,state)
+  if error!=OK:push_error('Cannot load candidate gate for contract');quit(1);return
+  model=document.generate_scene(state)
+  if model==null:push_error('Candidate gate scene missing');quit(1);return
+  print('GATE_CONTRACT_EXTERNAL_SOURCE ',FileAccess.get_sha256(external_glb))
  field.add_child(model)
  var pivot=model.find_child('GateDoor',true,false) as Node3D
  var door=model.find_child('GateDoor_Structure',true,false) as MeshInstance3D

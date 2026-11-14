@@ -10,11 +10,11 @@ for name in ['architecture/architecture.glb','ground/continuous-region.scn','woo
  if not source.is_file():raise RuntimeError('Missing runtime: '+str(relative))
  target=out/relative;target.parent.mkdir(parents=True,exist_ok=True);os.link(source,target)
  manifest['files'].append({'path':str(relative),'bytes':source.stat().st_size,'sha256':hashlib.file_digest(source.open('rb'),'sha256').hexdigest()})
-provenance=['tools/art/gate_structure/surface-sources.json','tools/art/continuous_landform/earth_source.json','tools/art/continuous_landform/road_material_sources.json','docs/evidence/river-authored-reset/sprite-source/SOURCE.json','docs/evidence/gate-structure/COMPLETE_REGION_RECOVERY.md']
+provenance=['docs/evidence/native-region04/source-intake.json','tools/art/native_woodland/original_tree_manifest.json','docs/NATIVE_REGION04_INTEGRATION_20261114.md','tools/art/gate_structure/surface-sources.json','tools/art/continuous_landform/earth_source.json','tools/art/continuous_landform/road_material_sources.json','docs/evidence/river-authored-reset/sprite-source/SOURCE.json','docs/evidence/gate-structure/COMPLETE_REGION_RECOVERY.md']
 for name in provenance:
  target=out/'provenance'/Path(name).name;target.parent.mkdir(exist_ok=True);shutil.copy2(root/name,target)
 (out/'runtime-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
-print(json.dumps(stage(out,root/'artifacts/complete-runtime-groups',max_groups=5)['groups']))
+print(json.dumps(stage(out,root/'artifacts/complete-runtime-groups',max_groups=8)['groups']))
 # Separate artifact: never required by Mac runtime restoration.
 editable=root/'artifacts/complete-editable';editable.mkdir()
 for name in ['source/architecture.blend','architecture-manifest.json','bearing-audit.json']:

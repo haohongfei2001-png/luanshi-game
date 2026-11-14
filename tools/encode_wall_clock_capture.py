@@ -22,7 +22,9 @@ def encode(directory: Path, output: Path):
     lines.extend([f"file '{frames[-1]['file']}'",'option framerate 1000'])
     concat=directory/'wall-clock.ffconcat';concat.write_text('\n'.join(lines)+'\n')
     if output.exists():raise ValueError('Refusing to overwrite prior movie')
-    subprocess.run(['ffmpeg','-nostdin','-v','error','-safe','0','-i',str(concat),'-an','-c:v','libx264','-preset','veryfast','-crf','20','-pix_fmt','yuv420p','-fps_mode','vfr','-enc_time_base','1:1000000','-video_track_timescale','1000000','-movflags','+faststart',str(output)],check=True)
+    # No B-frame reorder: MP4 duration must include the measured endpoint PTS.
+    # Otherwise muxer DTS duration can end before its final presentation frame.
+    subprocess.run(['ffmpeg','-nostdin','-v','error','-safe','0','-i',str(concat),'-an','-c:v','libx264','-preset','veryfast','-crf','20','-bf','0','-pix_fmt','yuv420p','-fps_mode','vfr','-enc_time_base','1:1000000','-video_track_timescale','1000000','-movflags','+faststart',str(output)],check=True)
     probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-select_streams','v:0','-show_frames','-show_streams','-of','json',str(output)],text=True))
     actual=[float(f['best_effort_timestamp_time']) for f in probe['frames']]
     expected=[(t-stamps[0])/1e6 for t in stamps]

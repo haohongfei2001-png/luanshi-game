@@ -1,0 +1,3 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+CONTINUOUS_LANDFORM_BUILT {"cell_resolution_distribution":{"1":264881,"16":77,"2":3880,"4":5110,"8":548},"collision":"same sampled mesh","default":"OFF","graphics":"NOT_RUN","terrain_triangles":865320,"tiles":266,"water_height":-1.48,"water_triangles":163109}

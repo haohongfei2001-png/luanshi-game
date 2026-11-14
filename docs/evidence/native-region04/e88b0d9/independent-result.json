@@ -1,0 +1,51 @@
+{
+  "source": "e88b0d95e0a94eab5640f0abe14536cd8bc21c77",
+  "runtime_source": "287e2ae375bc2f33cd03cbf37508faf388d7e85e",
+  "run": 43649674554,
+  "job": 132615120313,
+  "workflow_conclusion": "FAILURE",
+  "native_capture_step": "SUCCESS",
+  "static_integrity": "PASS_INDEPENDENT",
+  "input_camera_integrity": "PASS_INDEPENDENT",
+  "dynamic_body_attachment_measurement": "INVALID_TEXTURE_METADATA_NOT_ACTUAL_ATTACHMENT; get_texture dimensions4608x2592 disagree with actual get_image/JPEG2560x1440; fraction13.289% about191.37px not344px",
+  "encoding": "FAIL_UNCHANGED_THRESHOLD; PTS maxerror.000498s, stream17.972s vs wall17.983366s; original MP4 retained",
+  "encoding_fix": "Synthetic255timestamp exact reproduction then -bf0 fixes stream17.984s; original movie NOT declared repaired; next run needed",
+  "art": "NOT_ACCEPTED",
+  "m5": "DEVICE_NOT_RUN",
+  "frames": 255,
+  "real_J": 4,
+  "hero_hits": 0,
+  "walk_author_samples": 0,
+  "thrust_author_samples": 39,
+  "idle_fallback_samples": 143,
+  "strafe_fallback_samples": 73,
+  "nearest_enemy_min_m": 30.678201675415,
+  "blocked_current_samples": 0,
+  "blocked_halfmetre_probe_samples": 49,
+  "probe_scope": "queries only, never applied",
+  "peak_rss_bytes": 1101070336,
+  "peak_footprint_bytes": 3446788992,
+  "performance_scope": "readback-instrumented20each; NOT a performance benchmark",
+  "images": [
+    {
+      "name": "qhd-perspective-destination26.png",
+      "bytes": 4994726,
+      "sha256": "1d73418bfcfc4128ec34a7e556b2509ffce76ab31f25a125ab1c5684d8c0c8e5"
+    },
+    {
+      "name": "qhd-perspective-destination28.png",
+      "bytes": 4958670,
+      "sha256": "876dcf8c8840ff6f402f4bc97836d65db3b1f3e2729b794568627351382dc501"
+    },
+    {
+      "name": "qhd-perspective-road65.png",
+      "bytes": 5270340,
+      "sha256": "4a0a39a1c94ff8876d95b04db443f01e48a528d46cae16de429833c8c0bb5166"
+    },
+    {
+      "name": "uhd-perspective-destination26.png",
+      "bytes": 11305391,
+      "sha256": "4b18bd922e425ee967112fe837baf51302817fdb777bc3a9adc8846a209fb18c"
+    }
+  ]
+}

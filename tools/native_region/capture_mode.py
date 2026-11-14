@@ -1,9 +1,11 @@
 """Explicit bounded capture scopes; no mode is a performance/art acceptance."""
-MODES = ('baseline', 'camera-study', 'gate-context-study', 'destination-study')
+MODES = ('baseline', 'camera-study', 'gate-context-study', 'destination-study', 'destination-action')
 
 def arguments(mode):
     if mode == 'camera-study':
         return ['--camera-study']
+    if mode == 'destination-action':
+        return ['--destination-study', '--road-section-study', '--author-oracle', '--author-dynamic-review', '--wall-clock-action']
     if mode == 'destination-study':
         return ['--destination-study', '--road-section-study', '--author-oracle']
     if mode == 'gate-context-study':

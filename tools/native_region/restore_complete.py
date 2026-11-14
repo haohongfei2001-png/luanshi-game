@@ -4,16 +4,12 @@ import argparse, hashlib, json, shutil, sys, tarfile, tempfile
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from bounded_artifact_groups import restore as restore_groups
 from restore_inputs import verified_copy, sha
-SOURCE='4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd'
-RUN=43637786209
+SOURCE='287e2ae375bc2f33cd03cbf37508faf388d7e85e'
+RUN=43648903794
 ACTOR_SOURCE='945b2c676705460f97ba0d9e5c9d892f2a64390d'
 ACTOR_RUN=43635849360
 ACTOR_ARCHIVE='a738117dad6e22249e80b2394fe03f080dfde4368b2e81ab0acb9a4a268e2cee'
-RUNTIME_FILES={
- 'assets/river_authored/architecture/architecture.glb':'cd8c420e6ff964c9fe1ee23ad1b5fc9e9100da2df791a243600d24541b2c76aa',
- 'assets/river_authored/ground/continuous-region.scn':'4ec003b444f34a07df38639cae72f3e37b4044a2b119a0274f44f05ee97e848f',
- 'assets/river_authored/woodland/region.scn':'c47e120a666ba4001178e89d3b4a089c48d619c6ea2e632a5df05665a9b9a417',
- 'assets/river_authored/grass/region.scn':'a78423520b3c62d1833df2c3364a10ccea42373841bfa4cad282e0297a2ddefc'}
+RUNTIME_FILES={'assets/river_authored/architecture/architecture.glb': '2dc5018e859c0fcd331d6f33c035f45d4abf5fc9c31eebe0ec1d386a846f622a', 'assets/river_authored/ground/continuous-region.scn': '41e5a5bda57ad8e923e487f76629076a4a11201f016af6748d27fff4907bcb01', 'assets/river_authored/woodland/region.scn': '52047795a7efa22f80504cc80a90046fd33b87e3a8f046d0a6eb55e8d4d9bd59', 'assets/river_authored/grass/region.scn': '2779459c919b556b9e2c0c61df2655355e7840a2b66ebeffb3cfd956a4a04629'}
 
 def safe_relative(name):
     p=PurePosixPath(name)

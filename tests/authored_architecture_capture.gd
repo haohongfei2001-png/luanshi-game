@@ -1,4 +1,5 @@
 extends SceneTree
+const LiveSequence:=preload("res://scripts/review/author_live_sequence.gd")
 const Destination:=preload("res://scripts/review/destination_camera.gd")
 const ResourceIdentity:=preload("res://scripts/review/resource_identity.gd")
 const AuthorOracle:=preload("res://scripts/review/author_unit_oracle.gd")
@@ -63,6 +64,11 @@ func run() -> void:
   if not require_capture(bound.error==OK,'Single real-unit author oracle failed: '+str(bound.error)):return
   oracle_actor=bound.actor;oracle_receipt=bound.receipt
  field.camera_center=Vector2(34.2,1.0);field.camera.size=22.;field._process(.05)
+ if '--author-dynamic-review' in OS.get_cmdline_user_args():
+  if not require_capture(is_instance_valid(oracle_actor),'Dynamic fixture requires exact complete actor'):return
+  var fixture_check=LiveSequence.fixture_for(oracle_actor)
+  if not require_capture(not fixture_check.has('error'),'Live phase fixture unavailable: '+str(fixture_check)):return
+  print('AUTHOR_DYNAMIC_FIXTURE_VALIDATED ',fixture_check.sha256)
  if '--validate-setup' in OS.get_cmdline_user_args():
   if not require_capture(field.map.gate is MeshInstance3D and not old.visible,'Wrong authored scene setup'):return
   if not require_capture(Array(field.battle.ordinary_counts)==[20,20],'Wrong real battle fixture'):return
@@ -147,5 +153,9 @@ func run() -> void:
  print('MATCHED_REGION_HEADLESS_SETUP_COMPLETE' if '--validate-pairs' in OS.get_cmdline_user_args() else 'AUTHORED_ARCHITECTURE_ACTUAL_GAME_CAPTURE '+JSON.stringify(receipts))
  field.map.sun.shadow_enabled=reference_shadow
  clock.restore()
+ if '--author-dynamic-review' in OS.get_cmdline_user_args() and '--validate-pairs' not in OS.get_cmdline_user_args():
+  if not require_capture(is_instance_valid(oracle_actor),'Missing complete actor for explicit live diagnostic'):return
+  if not await LiveSequence.run(self,field,oracle_actor,out+'/author-live-raw'):
+   push_error('Author live sequence failed; partial receipt retained');quit(1);return
  if '--traversal-review' in OS.get_cmdline_user_args():await Traversal.run(self,field,out+'/traversal-raw')
  scene.queue_free();await process_frame;await process_frame;await create_timer(.15).timeout;quit()

@@ -8,7 +8,7 @@ static func apply(field:Node,actor:Node3D,variant:String="destination26")->Dicti
  var target:float=before.height_fraction
  field.camera_yaw=deg_to_rad(-65.)
  field.camera_center=field.battle.hero.pos+Vector2(3. if variant=='destination26' else 4.,0.)
- field.review_camera_profile={'projection':'perspective','nominal_body_fraction':.10,'pitch_degrees':26. if variant=='destination26' else 28.,'fov_degrees':65. if variant=='destination26' else 70.,'look_height':1.5}
+ field.review_camera_profile={'projection':'perspective','nominal_body_fraction':.10,'pitch_degrees':26. if variant=='destination26' else 28.,'fov_degrees':65. if variant=='destination26' else 70.,'look_height':1.5,'follow_lead_world':[3. if variant=='destination26' else 4.,0.]}
  var low:=.03;var high:=.30
  for iteration in 24:
   field.review_camera_profile.nominal_body_fraction=(low+high)*.5

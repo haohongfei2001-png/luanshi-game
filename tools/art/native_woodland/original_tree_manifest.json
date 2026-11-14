@@ -1,0 +1,75 @@
+{
+  "asset": "island_tree_01",
+  "author": "Rico Cilliers and Rob Tuytel",
+  "license": "CC0-1.0",
+  "source": "https://polyhaven.com/a/island_tree_01",
+  "files": [
+    {
+      "path": "island_tree_01_2k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/island_tree_01/island_tree_01_2k.gltf",
+      "md5": "5facbb0c10b6bce8956bba1c179bfdad",
+      "size": 8576
+    },
+    {
+      "path": "textures/island_tree_01_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_nor_gl_2k.jpg",
+      "md5": "1a4aa5c3c599fa9e69d27636680d03f1",
+      "size": 4527774
+    },
+    {
+      "path": "textures/island_tree_01_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_diff_2k.jpg",
+      "md5": "06808aa5ccbfbc2a7e2f99a23f412c17",
+      "size": 2954942
+    },
+    {
+      "path": "textures/island_tree_01_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_arm_2k.jpg",
+      "md5": "d6429928be150750d4cb51ef2bc4232f",
+      "size": 2460274
+    },
+    {
+      "path": "textures/island_tree_01_leaves_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_leaves_nor_gl_2k.jpg",
+      "md5": "b7d1e6306288a64119e1d17dae3c272d",
+      "size": 1378585
+    },
+    {
+      "path": "textures/island_tree_01_leaves_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_leaves_diff_2k.jpg",
+      "md5": "9898a7bf79fe6214f7ca8c3b139c4116",
+      "size": 661175
+    },
+    {
+      "path": "textures/island_tree_01_leaves_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_leaves_arm_2k.jpg",
+      "md5": "a03c8dd6852becfbc0fbec70a4f0b30f",
+      "size": 1645169
+    },
+    {
+      "path": "textures/island_tree_01_branches_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_branches_nor_gl_2k.jpg",
+      "md5": "0b598c975ce1515ea0d51fb0d5696ea3",
+      "size": 2437750
+    },
+    {
+      "path": "textures/island_tree_01_branches_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_branches_diff_2k.jpg",
+      "md5": "3210126439a8423b3caba28de0f3c25f",
+      "size": 1476655
+    },
+    {
+      "path": "textures/island_tree_01_branches_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_branches_arm_2k.jpg",
+      "md5": "969af8206d91a37edfefaf65a668470e",
+      "size": 1523257
+    },
+    {
+      "path": "island_tree_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/island_tree_01/island_tree_01.bin",
+      "md5": "8271f2d12c2727bd647ce0c242acdcec",
+      "size": 60709812
+    }
+  ],
+  "scope": "Original geometry and complete original PBR dependency restoration; not old derivative and not visual approval"
+}

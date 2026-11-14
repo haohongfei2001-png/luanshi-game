@@ -19,3 +19,18 @@ with tempfile.TemporaryDirectory() as temp:
         except ValueError:pass
         else:raise AssertionError('Invalid/incomplete timing accepted')
 print('WALL_CLOCK_ENCODING_SYNTHETIC_PASS')
+
+# Reproduce a real irregular cadence with SYNTHETIC pixels. Default B-frame
+# reorder previously made stream duration 11.366ms shorter than final PTS.
+stamps=json.loads((Path(__file__).parent/'fixtures/wall_clock_reorder_timestamps.json').read_text())['relative_us']
+with tempfile.TemporaryDirectory() as temp:
+    p=Path(temp);rows=[{'kind':'header','synthetic':True}]
+    for i,t in enumerate(stamps[:-1]):
+        name=f'frame-{i:06d}.jpg';Image.new('RGB',(320,180),(20,30,40)).save(p/name)
+        rows.append({'kind':'frame','file':name,'monotonic_us':t,'pixels':[320,180],'scale':1,'bytes':(p/name).stat().st_size})
+    rows.append({'kind':'end','monotonic_us':stamps[-1],'frames':len(stamps)-1})
+    (p/'frames.jsonl').write_text('\n'.join(map(json.dumps,rows)))
+    result=encode(p,p/'result.mp4')
+    assert result['native_frames']==255 and abs(result['encoded_seconds']-result['wall_seconds'])<=.01
+    assert result['max_timestamp_error_s']<=.002
+print('WALL_CLOCK_REORDER_REGRESSION_SYNTHETIC_PASS')

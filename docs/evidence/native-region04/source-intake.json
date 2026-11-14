@@ -1,0 +1,401 @@
+{
+  "files": [
+    {
+      "path": "docs/evidence/river-continuous-landform/README.md",
+      "sha256": "c0333b4f01e163faebeba3f4e7331dfbe3cd894d927b07ae8c86996f818b15d7",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-color-interface.log",
+      "sha256": "6f283ee6225d2cef4c0127d95456a6f954c45141c92b97dd89016cb1c630e8f4",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-final-adaptive_surface_seams.log",
+      "sha256": "d055ce475f9980084f3a1a004033b044a2637192acaa25e6bf02351af6d9c512",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-final-adaptive_surface_walk_collision.log",
+      "sha256": "c3a095bcb488fc3f1425c8e0a5fc8dd6badd14d4ac4303609742847effb5c4d8",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-final-build.log",
+      "sha256": "82a4c3a55829ca30e6ccee05da487445b048fda17cce28d08722e89864f8a8ae",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-final-continuous_landform_mesh.log",
+      "sha256": "5e53016836cf3c13cccf2a1c81d3232f40aed814538e0660668ea386294211d6",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-final-road_section_material.log",
+      "sha256": "41a5d124a78943855fc5c9b527841d99cfda33bc8599ccaf9ec0d351d36a58a1",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-final-surveyed_water_depth.log",
+      "sha256": "749e63647726c638f5e254072847275170a97f2afdec2e21c52a59b277b2b6c2",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-fixed-location-diagnostic.log",
+      "sha256": "f70a786967edd14fb414fc840e349a6b01cc70ca885590b79549e33beec3033f",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-join-probe.log",
+      "sha256": "167547709397c339b2e808cd4e361df63b12dd2692ae2bda70ed9fe78c1b0117",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-joined-512-battle.log",
+      "sha256": "1cb81030f1832bc37cc6f1291a59a8a4f550370fab37e1ce128587a6aaa59db1",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-joined-continuous_landform_mesh.log",
+      "sha256": "0a7003cafccc848cbf1d81c67045104299d237e5e7c115083d3e617175d25d1d",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-joined-contract.log",
+      "sha256": "a49faa181146a824d604741d7bf12f9a0fdfe2a0548c251deabb04fe93bf9be1",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-joined-watercourse.log",
+      "sha256": "e637aa69129bfd15a315e90d98b7c46b95554f11d19f9ab958d4130faedea05e",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-sampling-diagnostic.log",
+      "sha256": "c810b906c00438e3a35de43d9098f4844db54cd17083ca933ae32b4ecf6c445a",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/causeway04-tip-local-refinement.log",
+      "sha256": "d76752d4b23cf1cab43630926252e985abd2078e2668bd67279947515d49b529",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/rejected-hard-centre-join.gd.txt",
+      "sha256": "e7a1aa6afb1f25fcec6ca05d3723a77bfb328b08ff1fca9714b920697c8b86ad",
+      "source": "e689f560"
+    },
+    {
+      "path": "docs/evidence/river-continuous-landform/causeway04/rejected-needle-end.gd.txt",
+      "sha256": "cb6605fd627403e934f072faed34a501c5b45b79c4ef36ad5142c6d41a91e87b",
+      "source": "e689f560"
+    },
+    {
+      "path": "scripts/field/authored_landform_profile.gd",
+      "sha256": "53f544f8ea8de19e5a901239123f3e98232235a4a459bdbd6a0fa6e5965e18a1",
+      "source": "e689f560"
+    },
+    {
+      "path": "shaders/experimental/surveyed_water.gdshader",
+      "sha256": "c446ed497f89071e5a3d4388bbbe8ea20ff5f026ee0def6ae639e65fa67c50c4",
+      "source": "e689f560"
+    },
+    {
+      "path": "tests/art_reset/asymmetric_tip_refinement.gd",
+      "sha256": "97d25c63e4a8180f190718180f78938f92d956d309d015b0815edbb4839ce8d1",
+      "source": "e689f560"
+    },
+    {
+      "path": "tests/art_reset/asymmetric_watercourse.gd",
+      "sha256": "6703acc911b96fbecbabeda1a62055cb02867b8b71e7a8b348c65995026bbe3f",
+      "source": "e689f560"
+    },
+    {
+      "path": "tests/art_reset/continuous_landform_mesh.gd",
+      "sha256": "da5a5fa49f97cd391d58d05c130f7878d46909bf9da13f6b00f12337100f64ed",
+      "source": "e689f560"
+    },
+    {
+      "path": "tests/art_reset/road_section_material.gd",
+      "sha256": "349cebb2e3d179965a755a036de7a6bcf491565273cc62e99f49aac76a12d3a3",
+      "source": "e689f560"
+    },
+    {
+      "path": "tests/test_landform_color_contract.py",
+      "sha256": "734d5aae4d64ab2a0a5af4f69ca0a1cdd27f7e218aee938a52c962f8b9478d61",
+      "source": "e689f560"
+    },
+    {
+      "path": "tools/art/continuous_landform/adaptive_surface.gd",
+      "sha256": "ad09bea2c30c6ef8b7710aba1802a81d54edb3c740fae7fc0e79c32e8ac1c0a5",
+      "source": "e689f560"
+    },
+    {
+      "path": "scripts/field/controller.gd",
+      "sha256": "d7e3b871d8bb5b80ce493607375f3545a4f2b5e2c43298aa9b5350db3a3e4ddc",
+      "source": "47b7a6d2f615df4bcd84ba074cf4d859d4422edc"
+    },
+    {
+      "path": "scripts/field/experimental/controlled_author_actor.gd",
+      "sha256": "62edf2dc485076f0019bca13c29c27be08847f71112ad9510315075f4759c09e",
+      "source": "47b7a6d2f615df4bcd84ba074cf4d859d4422edc"
+    },
+    {
+      "path": "scripts/field/experimental/author_phase_contract.gd",
+      "sha256": "1158a267ec022555d982072e7f70e2aa2ec898da66240cd3c15ef47d85a308c7",
+      "source": "47b7a6d2f615df4bcd84ba074cf4d859d4422edc"
+    },
+    {
+      "path": "scripts/field/experimental/author_unit_binding.gd",
+      "sha256": "c1c2dd8adfefbaa90e9f33829da3b35f9566a5a15bc16edc57d84c9f49cfd387",
+      "source": "47b7a6d2f615df4bcd84ba074cf4d859d4422edc"
+    },
+    {
+      "path": "scripts/review/author_dynamic_review.gd",
+      "sha256": "1221b78787e330926c53ba85cd33245209febcbd3f22a451206fbd76d87c4e73",
+      "source": "47b7a6d2f615df4bcd84ba074cf4d859d4422edc"
+    },
+    {
+      "path": "scripts/review/destination_camera.gd",
+      "sha256": "7ca8134b9cf007d9cc5b11ed9eb5d5a5d9a11794a871fe12939c35946456c80c",
+      "source": "47b7a6d2f615df4bcd84ba074cf4d859d4422edc"
+    },
+    {
+      "path": "tests/fixtures/author_thrust_peak.json",
+      "sha256": "7d98bf2624e0d62faef1b0ee7a4c17944d100ba8fb543729b723ec31a1e59970",
+      "source": "47b7a6d2f615df4bcd84ba074cf4d859d4422edc"
+    },
+    {
+      "path": "docs/evidence/gate-structure/CI_DERIVATION_DIAGNOSIS.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "159e91af9d4abf8955f4f386e2ac75e04a8bd515979f173236f2d342ae9c69e5"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/RECOVERY.md",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "bc7c19331892a17b7aa86082cef138b93551eed45209ccc678dcad00c943c106"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/audit_gate_bearing.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "888ecec96141d415cbdd83bf8c8ef83bbccdf090ba53ecb99cfc7f66532049f0"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/audit_portal_interfaces.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "e09bf49c9888e11959d5f14131b82897e2d3239c10785f721d94110d8f044d63"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/audit_roof_band.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "1424b6931d2624055b95c57d1e29dd34a7e3f87444d5828bd9dd9af8567f81d3"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/godot-hp-contract.log",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "f73a45ab128389f9f286a8427a5178d87fcc27b056ac1ce7a80d4837157743b0"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/material-godot-hp-contract.log",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "7aa114977f181a5c7ad0d0551a60d632e32b9cc0eb5fb5f9918f87412999c564"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/material-occlusion-export.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "ed7273661c6aa0efe2da85e51c567d63091226c803014a8c72e27f6b07a13692"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/material-occlusion-import.log",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "5db086af9b78b4f37c7fd843498d581b8bd34a796bc784d39ab761f865613d1b"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/material-runtime-manifest.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "4b85953cac118e3986b819bc67bc52d552d57a37d608372c71f9e141757f2fce"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/projection-tests.log",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/rejected-primary-uv.log",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "4ef1d8d9fc588d7e6fab1d4770b49b2fec6ab6d222a38b52756276ddafaa56ba"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/solid-summary.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "6abd91348fde4e949865de0386b013fd4a3e0b2d930f96df60b3e1405cbd4e2f"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/solid-tests.log",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "fe008aab760eb03ccac7578e2b84665b1b50b0d7f855b17a0c7a8d039435b658"
+    },
+    {
+      "path": "docs/evidence/gate-structure/complete-portal/source-and-runtime-manifest.json",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "59d48220c6b986a502437f47efcc76db915a935dc2ea59f21155ae0d010052bb"
+    },
+    {
+      "path": "tests/authored_gate_gameplay_contract.gd",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "245cdbecc87f71dde40b1a85355dbef39cc9d0cefa60d968b5e5738e86edd052"
+    },
+    {
+      "path": "tests/gate_occlusion_import.gd",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "2dc85b40f202da6946f980b6732e6857f7c264cb047fcdc8c7ed07a0788a351e"
+    },
+    {
+      "path": "tests/gate_projection_axes_test.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "cc90b3cf0038956f495ce931a727af2851d0bdb966234d9f03c69484c1c7afe1"
+    },
+    {
+      "path": "tests/solid_orientation_test.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "a7378f620deb9aaf255e3a55706f73aca2e8071c98a596f77b0042751019b076"
+    },
+    {
+      "path": "tools/art/gate_structure/apply_surface_materials.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "6a884a48431be7633bfb27574e31ed9491f6e4d141b75fd860d77dc439aeba5f"
+    },
+    {
+      "path": "tools/art/gate_structure/audit_authored_solids.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "4baad8ba3ab7d5c7a0314d7394e41f90465df2d48c70dceba7f72cc63c60add5"
+    },
+    {
+      "path": "tools/art/gate_structure/audit_occlusion_export.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "fd6840aad55c60c64255fcda41871cc3a510deee4f8f75aad97b3efcaaea7f6e"
+    },
+    {
+      "path": "tools/art/gate_structure/audit_portal_interfaces.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "9f4bc49667d4d7c54ea8e47e6945527b5c041bc8c8db081049ec4f0917bf9364"
+    },
+    {
+      "path": "tools/art/gate_structure/author_gate_portal.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "a5ec09e0c058806db32a7faad982a3da563a23f2a4b17194223f545aff5cc60a"
+    },
+    {
+      "path": "tools/art/gate_structure/build_architecture.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "43ddc3397fcd33ac120d3fe92f6780ed676d7408f70ab3159a65a9f2d974866d"
+    },
+    {
+      "path": "tools/art/gate_structure/export_runtime_architecture.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "67d977cf547e8b181e3cf8bf1f20524a4d0e44ac6f03536f89a26d277af9c97e"
+    },
+    {
+      "path": "tools/art/gate_structure/preview_portal.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "83da3e12df69e2e15f045d192a9f50cee7d545ce2fd613342a5eb3faa5695521"
+    },
+    {
+      "path": "tools/art/gate_structure/projection_axes.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "99934cdd7306fb53543d77a8833caa88681b9cd3e10606e0d97f119dcfdb535f"
+    },
+    {
+      "path": "tools/art/gate_structure/solid_orientation.py",
+      "source": "a582dbe497bc75f3c2de3c565632607b20178c7a",
+      "sha256": "1a0c8291ad3b69b55ab48bd9f4f9a08e30a5f5c793a415675769a5cbfa267e9b"
+    },
+    {
+      "path": "tools/art/native_woodland/restore_original_tree.py",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "c0105b574af575ef14eb6f5ac022c17538a747e860f3323bf59ecec14089a3c9"
+    },
+    {
+      "path": "tools/art/native_woodland/original_tree_manifest.json",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "f7bafad76e2f00a93bac54c5670e3b9aa24ce912cccbe453138110dd053cfa30"
+    },
+    {
+      "path": "tools/art/sprite_source/assemble_woodland_region.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "560ed992af66233da2a7a2d70abe0e821be9315ff176adcd05de0f3060a8be2c"
+    },
+    {
+      "path": "tests/art_reset/original_tree_region.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "3f6308606c40984e9bf98470b43aa063a31aae14ec9c27e533bd3fea659edb6d"
+    },
+    {
+      "path": "docs/evidence/native-woodland-original/512.log",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "bf40627498966f2ae28078f901063b50dc9abcaf5740e3004af5a3ec4aa53404"
+    },
+    {
+      "path": "docs/evidence/native-woodland-original/README.md",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "1306a13810902dc3189913ea5c84a7502f7ce79bf4fd02f41a51e1e44c4b7e6d"
+    },
+    {
+      "path": "docs/evidence/native-woodland-original/default-contract.log",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "669b45ac8d9fec26f9493a7ce9a67242e535ba53d39a2cb6d7c36337883b16e3"
+    },
+    {
+      "path": "docs/evidence/native-woodland-original/navigation-build.log",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "21b38b8ef62d79214da70d99e24da070562bb37095c3a10be0904ccfd9de0695"
+    },
+    {
+      "path": "docs/evidence/native-woodland-original/navigation-footprint.json",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "5a83f3464b19bb5a1415003fa5c67df2aa0f78da794e3a80fd0f35695cafa41a"
+    },
+    {
+      "path": "docs/evidence/native-woodland-original/navigation-roundtrip.log",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "52e7e6b5bc9afc87d838be543a9e6bd109ff89b5f934b2a8d165c4b8122f2550"
+    },
+    {
+      "path": "docs/evidence/native-woodland-original/navigation.log",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "a6c273827e21ac2d61d8c0acd9d39654ee54fd4a80fb11f209fe30938e9e4041"
+    },
+    {
+      "path": "scripts/field/experimental_native_woodland_guard.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "5a05e5a262a6ee66e569536e03995bb6b5e75a1568fd8bd9418583c9c07ce9df"
+    },
+    {
+      "path": "scripts/field/ground.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "aff520619223f2d6a1bc96648863461772d1e96b036640164cf2f47d1541b035"
+    },
+    {
+      "path": "scripts/field/native_woodland_navigation.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "292b2f0c929ed15ac93b7d5ed8d5b9943234eb85a8d3bb21a83c501d49c61c79"
+    },
+    {
+      "path": "tests/art_reset/continuous_landform_contract.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "ea5a8871e275b459be113c99b47f9421a9d3062a083428f66de560e1727f3d5c"
+    },
+    {
+      "path": "tests/art_reset/native_woodland_navigation.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "43c5012b36871913e7e1ff31ac81911631b4e4fb88d5237017a25f302db6ecab"
+    },
+    {
+      "path": "tools/art/native_woodland/extract_navigation_footprint.gd",
+      "source": "aadcec6baba08e587baca09ea07ae0f62a1d15b8",
+      "sha256": "5bdd608edc7663c3ef0d2f0a486bd99a82094694f03416bf5ec161d29c684408"
+    }
+  ],
+  "source_status": "FROZEN_COMPLETE_04_PORTAL07_TREE_NAV_AND_LIVE_INTERFACE",
+  "art": "NOT_ACCEPTED"
+}

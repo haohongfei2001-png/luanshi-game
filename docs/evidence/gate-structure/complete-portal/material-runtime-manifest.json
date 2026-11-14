@@ -1,0 +1,17 @@
+{
+  "state": "LOCAL_FULL_RUNTIME_IMPORT_PASS_NATIVE_GPU_PENDING_ART_NOT_ACCEPTED",
+  "files": [
+    {
+      "path": "architecture.glb",
+      "bytes": 113334740,
+      "sha256": "ac028067d971d9272c81828229e0508bd2200d6622bbd84ffc84ff32cd97b488"
+    },
+    {
+      "path": "source/architecture.blend",
+      "bytes": 127343364,
+      "sha256": "31f79aa6b3fbc5d0995e3dae2be4b6b5cbfc5cf625468068485c24370f7c0f33"
+    }
+  ],
+  "prior_without_ao": "b30919a4c4f0e1303b2e11d094622d3d5089bb3b92b47cd87b2e4cf13a58a19c",
+  "prior_bad_uv_derivative_preserved": "portal-05 and portal-06 retained, not candidates"
+}
