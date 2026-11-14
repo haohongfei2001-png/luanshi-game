@@ -141,5 +141,17 @@
       ]
     }
   ],
-  "known_failure": "Author source spear intersects torso. Mapping must remain opt-in diagnostic."
+  "known_failure": "Author source spear intersects torso. Mapping must remain opt-in diagnostic.",
+  "animation_source_sha256": "1418ecf933ec85641196f4daf53abae3dfc61b9e8df94584b86bcf64192e523f",
+  "provenance_chain": {
+    "run": 43635849360,
+    "commit": "945b2c676705460f97ba0d9e5c9d892f2a64390d",
+    "measurement_input": "source_sha256 refers to input grip.blend, not animated output",
+    "animation_output": "animation_source_sha256 is cache character.json source_files.thrust.sha256",
+    "report": "evidence/author-thrust.json",
+    "commands": "tools/art/soldier_controlled_probe/rebuild.sh creates thrust then exports that output, copies its report",
+    "generator": "tools/art/sintel_guard/spearman_single_thrust.py",
+    "cache_exporter": "tools/art/soldier_controlled_probe/export.py",
+    "scope": "Same exact successful job provenance; no independent rehash of missing output blend, no contact acceptance"
+  }
 }

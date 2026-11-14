@@ -62,3 +62,42 @@ Initial default user-log path crashed before script start; explicit writable
 XDG_DATA_HOME resolves it. Initial typing and fallback-fixture issues were corrected
 and tests rerun. This is not a full repository regression or animation/art PASS.
 M5 DEVICE_NOT_RUN; native visuals NOT_RUN; ART_REVIEW_REQUIRED.
+
+## Recovered live-input harness, source identity chain (2026-11-14)
+
+`res://scripts/review/author_dynamic_review.gd` is an opt-in 18-second diagnostic
+for an already configured complete actor, real Field controller and active
+wall-clock recorder. No default setup or production controller changes. It emits
+real input events and records actual observed states, fallback reasons and input
+release on cancel/unload. It does not step Battle or invent hits. It must not run
+alongside the static actor oracle: release that oracle's hide slot first.
+Pass a fifth `phase_evidence` dictionary to `begin`; thrust activates only when
+its `animation_source_sha256` matches the actor metadata thrust source. Missing,
+invalid or mismatched chain evidence leaves thrust on the original visual.
+
+Important provenance distinction: author-thrust.json source_sha256=cc090e7… is
+its INPUT grip blend; cache thrust hash1418ecf… is the OUTPUT animated blend.
+They should not be compared as the same file. Exact successful run43635849360 at
+945b2c6 creates the output via spearman_single_thrust.py, exports that same path,
+and copies the measured report. Report SHA99def4dc… exactly matches the saved
+phase fixture. The fixture now records this chain and output hash separately.
+No independent rehash of the missing output blend or physical contact is claimed.
+The earlier local diagnostic rejected the unbound hash; it did not establish that
+the phase was wrong. Unknown future source outputs remain disabled by default.
+
+`tests/author_cache_binding.gd` loads all43 actual meshes/ShaderMaterials and
+224198656 bytes of pose textures, retaining original163/308 rigs in metadata.
+It checks240 twin real Battle ticks, actual material frame parameters and repeat
+idempotence. This is stronger than ProbeActor but headless dummy renderer is NOT
+GPU/pixel verification, live-controller input acceptance, native performance or art.
+Source stride/feet/weapon failures remain unresolved. Boundary tests cover held
+input release/cancel/unload and identity/finite-phase guards.
+
+Recovery (reuse existing cache; no new download):
+```
+LUANSHI_AUTHOR_ORACLE_CACHE=/workspace/shared/controlled-soldier-run43635849360/cache \
+XDG_DATA_HOME="$PWD/.test-data" godot --headless --path . --script tests/author_cache_binding.gd
+```
+Next: integrate this optional harness into the existing native review entry and
+record actual wall-clock inputs/motion plus fallback frames. Do not call that
+mixed old/new diagnostic a complete rebuilt character or final army renderer.
