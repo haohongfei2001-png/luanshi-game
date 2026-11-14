@@ -1,0 +1,66 @@
+name: Shared complete source LOD2 motions and depth diagnostic
+on:
+  push:
+    branches: ['dot/representation-lod-motion']
+    paths: ['tools/representation_lod_motion/**', 'tools/metal_character_oracle/**', 'tools/representation_compare/**', 'scripts/field/experimental/**', '.github/workflows/representation-lod-motion.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  controlled-battle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare provenance and official graphics dependencies
+        run: |
+          mkdir -p evidence
+          echo '${{ github.sha }}' > evidence/source-sha.txt
+          sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri fonts-noto-cjk python3-pil ffmpeg
+          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc assets/fonts/NotoSansSC-Regular.otf
+          sha256sum assets/fonts/NotoSansSC-Regular.otf > evidence/import-font-sha.txt
+      - name: Verify retained fixed engine and official importer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/haohongfei2001-png/luanshi-game/actions/artifacts/14124017040/zip > /tmp/engine.zip
+          echo '86a1d627854559bbed35f6a360cea05fac0c9572bb165f1ed43c4984a0979909  /tmp/engine.zip' | sha256sum -c -
+          unzip -q /tmp/engine.zip -d /tmp/engine
+          echo '16cd16ae2a2f7f5fd9ca18ba9f68a0ef0d043cdfbb3b51df2cec2183def26f5a  /tmp/engine/bin/godot-patched' | sha256sum -c -
+          chmod +x /tmp/engine/bin/godot-patched
+          cp /tmp/engine/{BUILD_COMMAND,PATCH_SHA256,BINARY_SHA256,patched-version.txt} evidence/
+          curl -fsSL https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          chmod +x /tmp/editor/Godot_v4.6.3-stable_linux.x86_64
+          python tools/metal_character_oracle/prepare.py /tmp/lod-project
+          mkdir -p /tmp/lod-project/tools/representation_compare /tmp/lod-project/tools/representation_lod_motion
+          cp tools/representation_compare/explicit_lod.gd /tmp/lod-project/tools/representation_compare/
+          cp tools/representation_lod_motion/probe.gd /tmp/lod-project/tools/representation_lod_motion/
+          /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --import --path /tmp/lod-project > evidence/import.log 2>&1
+          python tools/representation_compare/assert_clean_logs.py evidence/import.log
+      - name: Actual full source and LOD2 same pose depth captures
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          LOD_MOTION_VIDEO: '1'
+          LOD_MOTION_OUTPUT: ${{ github.workspace }}/evidence/lod-motion
+        run: |
+          set -euo pipefail
+          timeout 900s xvfb-run -a -s '-screen 0 1280x720x24' /tmp/engine/bin/godot-patched --path /tmp/lod-project --resolution 1280x720 --disable-vsync --rendering-method gl_compatibility --audio-driver Dummy --script tools/representation_lod_motion/probe.gd > evidence/lod-motion.log 2>&1
+          python tools/representation_compare/assert_clean_logs.py evidence/lod-motion.log
+          python tools/representation_lod_motion/check.py evidence/lod-motion
+          ffmpeg -y -framerate 24 -i evidence/lod-motion/motion-frames/%06d.jpg -c:v libx264 -crf 18 -pix_fmt yuv420p evidence/lod-motion/all-original-clips-lod2.mp4
+          ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=width,height,nb_read_frames,r_frame_rate -of json evidence/lod-motion/all-original-clips-lod2.mp4 > evidence/lod-motion/movie-probe.json
+          python tools/representation_lod_motion/check_movie.py evidence/lod-motion
+          tar --exclude=.godot -czf evidence/metal-oracle-source.tar.gz -C /tmp/lod-project .
+          sha256sum evidence/metal-oracle-source.tar.gz > evidence/metal-oracle-source.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: representation-lod-motion-${{ github.sha }}
+          path: |
+            evidence/
+            !evidence/lod-motion/motion-frames/**
+          retention-days: 30

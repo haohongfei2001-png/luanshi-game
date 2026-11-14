@@ -1,0 +1,24 @@
+{
+  "source_sha": "168be6dc390474c980d18314cc8d9586797c24d3",
+  "run": 43632236510,
+  "artifact": 14128960923,
+  "artifact_sha256": "aff99479c052529253b48500026ca473844864092ceb1996b81d29e1d5e481db",
+  "logs": "import and actual GPU logs independently checked: no ERROR",
+  "final_probe": {
+    "bake": "actual native final FILMIC image with original Field shadow lighting",
+    "comparison": {
+      "art_pass": false,
+      "interior_pixels": 17218,
+      "max_alpha_error": 0.0,
+      "max_rgb_error_levels": 5.0000006519258,
+      "mean_max_rgb_error_levels": 0.999012653373951,
+      "over_two_levels_fraction": 0.0646416540829365,
+      "silhouette_iou_alpha035": 1.0
+    },
+    "compressed_texture_tested": false,
+    "reconstruction": "mathematical inverse of locked FILMIC white1 exposure1 before same final pipeline; not scene retuning",
+    "relighting_supported": false
+  },
+  "decision": "Reject strict appearance equivalence. Stop fixed-light inverse curve investigation; continue shared3D LOD2 motion/occlusion. Sprite remains possible with explicit depth/lighting and atlas memory costs, not current default.",
+  "scope": "One Idle pose, 512 square, uncompressed RGBA8 on llvmpipe; no China armor, dynamic lighting, Metal, M5 or performance acceptance."
+}

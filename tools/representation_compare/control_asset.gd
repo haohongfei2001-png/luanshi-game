@@ -9,13 +9,14 @@ var source:Node3D
 var palette_bytes:=0
 var mesh_triangles:=0
 var explicit_lod_inventory:Array=[]
-func prepare(parent:Node,measure_bounds:bool=false)->void:
+func prepare(parent:Node,measure_bounds:bool=false)->Error:
  source=load("res://assets/ubc_lab/ubc_animated.glb").instantiate();parent.add_child(source)
  var skeleton:Skeleton3D=source.find_children("*","Skeleton3D",true,false)[0]
  var player:AnimationPlayer=source.find_children("*","AnimationPlayer",true,false)[0]
  player.callback_mode_process=AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
  for native:MeshInstance3D in source.find_children("*","MeshInstance3D",true,false):
-  var packed=Palette.pack_textured_mesh(native.mesh,native.skin.get_bind_count());assert(not packed.has("error"),str(packed))
+  var packed=Palette.pack_textured_mesh(native.mesh,native.skin.get_bind_count())
+  if packed.has("error"):push_error(str(packed));return ERR_INVALID_DATA
   entries.append({"native":native,"mesh":packed.mesh,"tables":packed.tables,"frames":[],"materials":[],"transform":source.global_transform.affine_inverse()*native.global_transform})
  var offset=0
  for clip:String in CLIPS:
@@ -25,7 +26,9 @@ func prepare(parent:Node,measure_bounds:bool=false)->void:
    var time=length*float(frame)/float(CLIPS[clip]-1 if clip in ["Death01","Hit_Chest","Sword_Attack"] else CLIPS[clip])
    player.play(clip);player.seek(time,true);player.advance(0.0);skeleton.force_update_all_bone_transforms()
    for entry:Dictionary in entries:
-    var pose=Palette.capture(skeleton,entry.native.skin);assert(not pose.has("error"),str(pose));entry.frames.append(pose.transforms)
+    var pose=Palette.capture(skeleton,entry.native.skin)
+    if pose.has("error"):push_error(str(pose));return ERR_INVALID_DATA
+    entry.frames.append(pose.transforms)
     if measure_bounds:
      var box: AABB=pose_bounds(entry.native.mesh,pose.transforms)
      var pitch=lerpf(deg_to_rad(31.),deg_to_rad(51.),smoothstep(7.,23.,22.));var yaw=deg_to_rad(-33.)
@@ -41,23 +44,28 @@ func prepare(parent:Node,measure_bounds:bool=false)->void:
   offset+=CLIPS[clip]
  var dedup={}
  for entry:Dictionary in entries:
-  var bank=Palette.encode(entry.frames);assert(not bank.has("error"),str(bank))
+  var bank=Palette.encode(entry.frames)
+  if bank.has("error"):push_error(str(bank));return ERR_INVALID_DATA
   var key=bank.image.get_data().hex_encode().sha256_text()
   if not dedup.has(key):dedup[key]=ImageTexture.create_from_image(bank.image);palette_bytes+=bank.bytes
   for surface in entry.mesh.get_surface_count():
-   var adapted=Adapter.adapt(entry.native.get_active_material(surface));assert(not adapted.has("error"),str(adapted))
+   var adapted=Adapter.adapt(entry.native.get_active_material(surface))
+   if adapted.has("error"):push_error(str(adapted));return ERR_INVALID_DATA
    var material:ShaderMaterial=adapted.material
    material.set_shader_parameter("palette",dedup[key]);material.set_shader_parameter("influence_table",ImageTexture.create_from_image(entry.tables[surface].image));material.set_shader_parameter("influence_groups",entry.tables[surface].groups)
    entry.mesh.surface_set_material(surface,material);entry.materials.append(material)
    mesh_triangles+=entry.mesh.surface_get_array_index_len(surface)/3
   entry.erase("frames")
  if OS.has_environment("COMPARE_LOD_TIER"):
-  var tier=int(OS.get_environment("COMPARE_LOD_TIER"));assert(tier>=0 and tier<=3)
+  var tier=int(OS.get_environment("COMPARE_LOD_TIER"))
+  if tier<0 or tier>3:push_error("Invalid explicit LOD tier");return ERR_INVALID_PARAMETER
   for entry:Dictionary in entries:
    var selected=preload("res://tools/representation_compare/explicit_lod.gd").select(entry.mesh,tier)
-   assert(not selected.has("error"),str(selected));entry.mesh=selected.mesh
+   if selected.has("error"):push_error(str(selected));return ERR_INVALID_DATA
+   entry.mesh=selected.mesh
    explicit_lod_inventory.append({"mesh":entry.native.name,"tier":tier,"surfaces":selected.inventory})
  source.visible=false
+ return OK
 func batches(parent:Node,count:int)->Array:
  var result=[]
  for entry:Dictionary in entries:

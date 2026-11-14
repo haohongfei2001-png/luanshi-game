@@ -1,3 +1,4 @@
+class_name RepresentationBattleControl
 extends SceneTree
 const Asset=preload("res://tools/representation_compare/control_asset.gd")
 const Battle=preload("res://scripts/field/battle.gd")
@@ -6,8 +7,8 @@ const Save=preload("res://scripts/field/save.gd")
 const Landscape=preload("res://scripts/field/river_master_map.gd")
 var asset=Asset.new()
 var battle=Battle.new()
-var scene=Node3D.new()
-var camera=Camera3D.new()
+var scene:Node3D
+var camera:Camera3D
 var batches:Array=[]
 var sprites:Dictionary={}
 var mode="shared3d"
@@ -33,6 +34,8 @@ var camera_size=22.
 var presentation_sha:String
 var expected_end_sha:String
 var controlled_time_shaders:Array=[]
+var scene_scope="complete"
+var failed:=false
 func _initialize()->void:setup.call_deferred()
 func quantile(values:Array,q:float)->float:
  if values.is_empty():return 0.
@@ -42,16 +45,35 @@ func summary(values:Array)->Dictionary:
  var sum=0.
  for value in values:sum+=value
  return {"average_ms":sum/values.size(),"p50_ms":quantile(values,.5),"p95_ms":quantile(values,.95),"p99_ms":quantile(values,.99),"samples":values.size()}
+func fail(reason:String)->void:
+ failed=true;push_error(reason);quit(1)
+func source_hash()->String:
+ return FileAccess.get_sha256("res://assets/ubc_lab/ubc-source.glb.bin") if FileAccess.file_exists("res://assets/ubc_lab/ubc-source.glb.bin") else FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb")
 func setup()->void:
- assert(DisplayServer.get_name()!="headless","Graphics run required")
+ if OS.get_environment("COMPARE_VALIDATE_PACK")=="1":
+  var packed=load("res://assets/ubc_lab/ubc_animated.glb") as PackedScene
+  if packed==null or source_hash()!="64705ebc4a20650b79f863bae4b6ec47df06dfefe0ed451fe73a04ebc46295c0":fail("Comparison PCK source closure failed");return
+  var proof=packed.instantiate();root.add_child(proof)
+  if proof.find_children("*","Skeleton3D",true,false).size()!=1:fail("Comparison PCK source skeleton missing");return
+  print("REPRESENTATION_PACK_SOURCE_CLOSURE_PASS; full environment/atlas execution not yet checked");quit(0);return
+ if DisplayServer.get_name()=="headless":fail("Graphics run required");return
+ if OS.get_environment("COMPARE_REQUIRE_METAL")=="1" and (RenderingServer.get_current_rendering_driver_name()!="metal" or RenderingServer.get_current_rendering_method()!="mobile"):
+  fail("Actual Mobile Metal required, no backend fallback");return
  mode=OS.get_environment("COMPARE_MODE");size=int(OS.get_environment("COMPARE_COUNT"));out=OS.get_environment("COMPARE_OUTPUT");capture=OS.get_environment("COMPARE_CAPTURE")=="1"
  if mode.is_empty():mode="shared3d"
  if size==0:size=20
+ if mode not in ["shared3d","sprite8","sprite16","hybrid","environment"] or size not in [20,100,250,512] or out.is_empty():fail("Invalid explicit comparison case");return
  DirAccess.make_dir_recursive_absolute(out)
+ scene=Node3D.new();camera=Camera3D.new()
  root.add_child(scene)
  root.msaa_3d=Viewport.MSAA_4X;root.scaling_3d_scale=1.
  RenderingServer.global_shader_parameter_add("representation_clock",RenderingServer.GLOBAL_VAR_TYPE_FLOAT,0.)
  var map=Landscape.new();map.bridgehead=true;scene.add_child(map);lock_environment_clock(map)
+ scene_scope=OS.get_environment("COMPARE_SCENE_SCOPE")
+ if scene_scope.is_empty():scene_scope="complete"
+ if scene_scope not in ["complete","actors_only"]:fail("Unknown diagnostic scene scope");return
+ if scene_scope=="actors_only":
+  for geometry in map.find_children("*","GeometryInstance3D",true,false):geometry.visible=false
  if OS.has_environment("COMPARE_CAMERA_SIZE"):camera_size=float(OS.get_environment("COMPARE_CAMERA_SIZE"))
  scene.add_child(camera);camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=camera_size;camera.far=360.
  var pitch=lerpf(deg_to_rad(31.),deg_to_rad(51.),smoothstep(7.,23.,22.));var yaw=deg_to_rad(-33.)
@@ -66,19 +88,22 @@ func setup()->void:
   for u in battle.roster:distance[u.id]+=u.before.distance_to(u.pos)
  presentation_sha=var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text()
  if mode in ["shared3d","hybrid"]:
-  asset.prepare(scene);batches=asset.batches(scene,battle.roster.size())
+  if asset.prepare(scene)!=OK:quit(1);return
+  batches=asset.batches(scene,battle.roster.size())
  if mode.begins_with("sprite") or mode=="hybrid":
   direction_count=16 if mode=="sprite16" else 8
   var path=OS.get_environment("COMPARE_ASSETS");atlas_meta=JSON.parse_string(FileAccess.get_file_as_string(path.path_join("atlas.json")))
   if mode!="hybrid":asset.clips=atlas_meta.clips
-  assert(atlas_meta.source_sha256==FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb"))
+  if atlas_meta.source_sha256!=source_hash():fail("Atlas source identity mismatch");return
   for clip:String in asset.clips:
    var data=atlas_meta.clips[clip];var texture:Texture2DArray=load_atlas_pages(path,data["atlas"+str(direction_count)])
-   var mat=ShaderMaterial.new();mat.shader=load("res://tools/representation_compare/sprite.gdshader");mat.set_shader_parameter("atlas",texture);mat.set_shader_parameter("tile_pixels",Vector2(data.tile[0],data.tile[1]));mat.set_shader_parameter("atlas_pixels",Vector2(texture.get_width(),texture.get_height()));mat.set_shader_parameter("columns",int(data["columns"+str(direction_count)]));mat.set_shader_parameter("directions",direction_count);mat.set_shader_parameter("page_rows",int(data.page_rows));mat.set_shader_parameter("projected_center",Vector2(data.center_projected[0],data.center_projected[1]))
+   if texture==null:return
+   var mat=ShaderMaterial.new();mat.shader=load("res://tools/representation_compare/sprite.gdshader");mat.set_shader_parameter("atlas",texture);mat.set_shader_parameter("tile_pixels",Vector2(data.tile[0],data.tile[1]));mat.set_shader_parameter("atlas_pixels",Vector2(texture.get_width(),texture.get_height()));mat.set_shader_parameter("columns",int(data["columns"+str(direction_count)]));mat.set_shader_parameter("directions",direction_count);mat.set_shader_parameter("page_rows",int(data.page_rows));mat.set_shader_parameter("projected_center",Vector2(data.center_projected[0],data.center_projected[1]));mat.set_shader_parameter("per_frame_center",data.has("center_offsets16"))
    var quad=QuadMesh.new();quad.size=Vector2(data.world_size[0],data.world_size[1]);quad.material=mat
    var node=MultiMeshInstance3D.new();var mm=MultiMesh.new();mm.transform_format=MultiMesh.TRANSFORM_3D;mm.use_custom_data=true;mm.use_colors=true;mm.mesh=quad;mm.instance_count=battle.roster.size();mm.custom_aabb=AABB(Vector3(-150,-5,-100),Vector3(300,60,200));node.multimesh=mm;scene.add_child(node);sprites[clip]=node
    atlas_memory+=int(data["atlas"+str(direction_count)].compressed_mip_bytes)
  update_view()
+ if failed:return
  for frame in 5:await process_frame
  if capture:
   await RenderingServer.frame_post_draw
@@ -114,11 +139,17 @@ func update_view()->void:
   if use3:
    asset.set_actor(batches,count3,Transform3D(Basis(Vector3.UP,pose.yaw),p),int(asset.clips[pose.clip].offset)+pose.local);count3+=1
   elif not sprites.is_empty():
-   var mm:MultiMesh=sprites[pose.clip].multimesh;var index=int(used[pose.clip]);mm.set_instance_color(index,Color.WHITE);mm.set_instance_transform(index,Transform3D(Basis.IDENTITY,p+Vector3(0,.95,0)));mm.set_instance_custom_data(index,Color(pose.local,posmod(roundi(pose.yaw/TAU*direction_count),direction_count),0,0));used[pose.clip]=index+1
+   var mm:MultiMesh=sprites[pose.clip].multimesh;var index=int(used[pose.clip]);mm.set_instance_color(index,Color.WHITE);mm.set_instance_transform(index,Transform3D(Basis.IDENTITY,p+Vector3(0,.95,0)));var facing=posmod(roundi(pose.yaw/TAU*direction_count),direction_count)
+   var center=Vector2.ZERO;var clip_meta:Dictionary=atlas_meta.clips[pose.clip]
+   if clip_meta.has("center_offsets16"):
+    var source_direction=facing if direction_count==16 else facing*2
+    var offset:Array=clip_meta.center_offsets16[pose.local*16+source_direction];center=Vector2(offset[0],offset[1])
+   mm.set_instance_custom_data(index,Color(pose.local,facing,center.x,center.y));used[pose.clip]=index+1
  for node in batches:node.multimesh.visible_instance_count=count3
  for clip in sprites:sprites[clip].multimesh.visible_instance_count=used[clip]
- if not before.is_empty():assert(before==var_to_bytes(Save.snapshot(battle)),"Presentation mutated real combat")
+ if not before.is_empty() and before!=var_to_bytes(Save.snapshot(battle)):fail("Presentation mutated real combat");return
 func _process(delta:float)->bool:
+ if failed:return true
  if start_us==0:return false
  var now=Time.get_ticks_usec();timings.append((now-previous_us)/1000.);previous_us=now
  engine_delta_seconds+=delta
@@ -132,9 +163,10 @@ func _process(delta:float)->bool:
  if battle.tick>=end_tick:finish();return true
  return false
 func finish()->void:
- assert(var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text()==expected_end_sha,"Renderer/full-chain differs from independent simulation-only oracle")
+ if failed:return
+ if var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text()!=expected_end_sha:fail("Renderer/full-chain differs from independent simulation-only oracle");return
  var wall=(Time.get_ticks_usec()-start_us)/1000000. if start_us>0 else 0.
- var report={"control_only":"environment diagnostic, not playable performance" if mode=="environment" else "unclothed UBC, no armor or held weapon quality claim","engine_delta_seconds_accumulated":engine_delta_seconds,"simulation_clock_policy":"engine callback delta, may clamp below actual wall time; no realtime-speed claim","mode":mode,"per_side":size,"seed":Battle.SEED,"start_tick":start_tick,"end_tick":battle.tick,"start_snapshot_sha":presentation_sha,"end_snapshot_sha":var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text(),"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate(),"roster":battle.roster.size(),"visible_units_conservative_cull":visible_units,"state_keys":observed_states.keys(),"battle_unchanged_by_renderer":true,"independent_simulation_oracle_sha":expected_end_sha,"invariant_guard_policy":"startup before-after; final independent simulation oracle, no per-frame serialization in timings","capture_run_not_performance":capture,"frames":timings.size(),"wall_seconds":wall,"average_fps":timings.size()/wall if wall>0 else 0.,"measurement_scope":"short fixed-simulation-window control, not thermal/device qualification", "sample_adequacy":{"actual_frames":timings.size(),"wall_seconds":wall,"p99_tail_sample_count":timings.size()*.01,"stable_p99_claimed":false,"M5_tested":false},"frame_time":summary(timings),"simulation_cpu":summary(sim_cost),"presentation_cpu":summary(view_cost),"explicit_lod_inventory":asset.explicit_lod_inventory,"palette_bytes":asset.palette_bytes,"unnecessary_3d_source_loaded":mode in ["shared3d","hybrid"],"controlled_shader_clock":controlled_time_shaders,"clock_seconds":float(battle.tick)*Battle.DT,"atlas_compressed_mip_bytes":atlas_memory,"texture_memory":Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED),"video_memory":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"process_static_memory":OS.get_static_memory_usage(),"process_static_peak":OS.get_static_memory_peak_usage(),"render_primitives":Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),"renderer":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info(),"viewport":[root.size.x,root.size.y],"logical_viewport":[root.get_visible_rect().size.x,root.get_visible_rect().size.y],"internal_scale":root.scaling_3d_scale,"camera_ortho_size":camera_size,"camera_pitch_policy":"fixed Field22 pitch while comparing new MOBA screen scale; atlas uses identical elevation","camera_transform":str(camera.transform),"shadow_note":"sprite casts alpha plane shadow, not body-depth-correct; quality pending","missing_visuals":["all weapons","riding","full unit class costumes"],"resident_process_memory":resident_memory(),"gpu_memory_scope":"Godot allocation counters; driver residency and software-render RAM duplication not measured","lighting_note":"same sun/ambient; atlas LDR linear-tonemap bake followed by final scene FILMIC, HDR clipping needs image review","sprite_quality_gaps":["direction quantization","LDR bake","no normal/depth atlas","alpha threshold/mipmap/compression edges","flat-plane shadow"],"art_pass":false,"M5":"NOT_TESTED"}
+ var report={"scene_scope":scene_scope,"environment_resources_retained":true,"diagnostic_drawing_only":scene_scope=="actors_only" or mode=="environment","control_only":"draw isolation diagnostic, not playable performance" if mode=="environment" or scene_scope=="actors_only" else "unclothed UBC, no armor or held weapon quality claim","engine_delta_seconds_accumulated":engine_delta_seconds,"simulation_clock_policy":"engine callback delta, may clamp below actual wall time; no realtime-speed claim","mode":mode,"per_side":size,"seed":Battle.SEED,"start_tick":start_tick,"end_tick":battle.tick,"start_snapshot_sha":presentation_sha,"end_snapshot_sha":var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text(),"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate(),"roster":battle.roster.size(),"visible_units_conservative_cull":visible_units,"state_keys":observed_states.keys(),"battle_unchanged_by_renderer":true,"independent_simulation_oracle_sha":expected_end_sha,"invariant_guard_policy":"startup before-after; final independent simulation oracle, no per-frame serialization in timings","capture_run_not_performance":capture,"frames":timings.size(),"wall_seconds":wall,"average_fps":timings.size()/wall if wall>0 else 0.,"measurement_scope":"short fixed-simulation-window control, not thermal/device qualification", "sample_adequacy":{"actual_frames":timings.size(),"wall_seconds":wall,"p99_tail_sample_count":timings.size()*.01,"stable_p99_claimed":false,"M5_tested":false},"frame_time":summary(timings),"simulation_cpu":summary(sim_cost),"presentation_cpu":summary(view_cost),"explicit_lod_inventory":asset.explicit_lod_inventory,"palette_bytes":asset.palette_bytes,"unnecessary_3d_source_loaded":mode in ["shared3d","hybrid"],"controlled_shader_clock":controlled_time_shaders,"clock_seconds":float(battle.tick)*Battle.DT,"atlas_compressed_mip_bytes":atlas_memory,"texture_memory":Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED),"video_memory":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"process_static_memory":OS.get_static_memory_usage(),"process_static_peak":OS.get_static_memory_peak_usage(),"render_primitives":Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),"renderer":RenderingServer.get_video_adapter_name(),"driver":RenderingServer.get_current_rendering_driver_name(),"method":RenderingServer.get_current_rendering_method(),"source_model_sha256":source_hash(),"engine":Engine.get_version_info(),"viewport":[root.size.x,root.size.y],"logical_viewport":[root.get_visible_rect().size.x,root.get_visible_rect().size.y],"internal_scale":root.scaling_3d_scale,"camera_ortho_size":camera_size,"camera_pitch_policy":"fixed Field22 pitch while comparing new MOBA screen scale; atlas uses identical elevation","camera_transform":str(camera.transform),"shadow_note":"sprite casts alpha plane shadow, not body-depth-correct; quality pending","missing_visuals":["all weapons","riding","full unit class costumes"],"resident_process_memory":resident_memory(),"gpu_memory_scope":"Godot allocation counters; driver residency and software-render RAM duplication not measured","lighting_note":"same sun/ambient; atlas LDR linear-tonemap bake followed by final scene FILMIC, HDR clipping needs image review","sprite_quality_gaps":["direction quantization","LDR bake","no normal/depth atlas","alpha threshold/mipmap/compression edges","flat-plane shadow"],"art_pass":false,"M5":"NOT_TESTED"}
  FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
  print("REPRESENTATION_CONTROL ",JSON.stringify(report));quit()
 
@@ -169,10 +201,14 @@ func load_atlas_pages(path:String,receipt:Dictionary)->Texture2DArray:
  var images:Array[Image]=[]
  for page:Dictionary in receipt.pages:
   var filename=path.path_join(page.file)
-  assert(FileAccess.get_sha256(filename)==page.sha256,"Compressed page SHA changed")
-  var bytes=FileAccess.get_file_as_bytes(filename);assert(bytes.size()==int(page.bytes))
+  if FileAccess.get_sha256(filename)!=page.sha256:fail("Compressed page SHA changed");return null
+  var bytes=FileAccess.get_file_as_bytes(filename)
+  if bytes.size()!=int(page.bytes):fail("Compressed page byte count changed");return null
   var image=Image.create_from_data(int(page.width),int(page.height),page.mipmaps,int(page.format),bytes)
-  assert(image!=null and not image.is_empty());images.append(image)
- var texture=Texture2DArray.new();assert(texture.create_from_images(images)==OK)
- assert(texture.get_width()==int(receipt.pages[0].width) and texture.get_layers()==int(receipt.layers))
+  if image==null or image.is_empty():fail("Invalid atlas image payload");return null
+  images.append(image)
+ var texture=Texture2DArray.new()
+ var creation_error=texture.create_from_images(images)
+ if creation_error!=OK:push_error("Actual Texture2DArray creation failed: "+str(creation_error));quit(1);return null
+ if texture.get_width()!=int(receipt.pages[0].width) or texture.get_layers()!=int(receipt.layers):fail("Atlas array dimensions mismatch");return null
  return texture

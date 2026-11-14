@@ -1,0 +1,103 @@
+{
+  "source_sha": "ab1b22064e8cf6a3a55137d89faae494190f44d7",
+  "run": 43634271139,
+  "artifact": 14129705496,
+  "artifact_sha256": "a3db89380c76c3622478e94fe729d83dc33948398d3b81475c4bd67e1140398e",
+  "actual_gpu_log_errors": 0,
+  "static_pose_pairs_2k": 39,
+  "matched_native_4k_pair": "Walk phase .47 clear, full vs original index LOD2",
+  "motion": {
+    "clips": [
+      {
+        "clip": "Death01",
+        "first_frame": 0,
+        "frames": 58,
+        "sampling_hz": 24,
+        "source_length": 2.40000009536743
+      },
+      {
+        "clip": "Hit_Chest",
+        "first_frame": 58,
+        "frames": 9,
+        "sampling_hz": 24,
+        "source_length": 0.333333343267441
+      },
+      {
+        "clip": "Hit_Head",
+        "first_frame": 67,
+        "frames": 11,
+        "sampling_hz": 24,
+        "source_length": 0.433333337306976
+      },
+      {
+        "clip": "Idle",
+        "first_frame": 78,
+        "frames": 60,
+        "sampling_hz": 24,
+        "source_length": 2.5
+      },
+      {
+        "clip": "Jog_Fwd",
+        "first_frame": 138,
+        "frames": 23,
+        "sampling_hz": 24,
+        "source_length": 0.933333337306976
+      },
+      {
+        "clip": "Sprint",
+        "first_frame": 161,
+        "frames": 17,
+        "sampling_hz": 24,
+        "source_length": 0.666666686534882
+      },
+      {
+        "clip": "Sword_Attack",
+        "first_frame": 178,
+        "frames": 37,
+        "sampling_hz": 24,
+        "source_length": 1.53333330154419
+      },
+      {
+        "clip": "Sword_Idle",
+        "first_frame": 215,
+        "frames": 40,
+        "sampling_hz": 24,
+        "source_length": 1.66666662693024
+      },
+      {
+        "clip": "Walk",
+        "first_frame": 255,
+        "frames": 33,
+        "sampling_hz": 24,
+        "source_length": 1.33333337306976
+      }
+    ],
+    "codec_source": "actual GPU JPEG95 frames, not lossless",
+    "native_pixels": [
+      2560,
+      1440
+    ],
+    "performance_benchmark": false,
+    "simulated_playback_hz": 24,
+    "total_frames": 288
+  },
+  "source_bundle": {
+    "filename": "metal-oracle-source.tar.gz",
+    "sha256": "e5ccee3bdd2383d19a7019e3a45283b84a594317d80663ac80e6a7ff8403b968",
+    "contains": "minimal explicit original GLB/PNG/importers/licenses and oracle plus LOD scripts; no .godot cache"
+  },
+  "review": "Nine source action midpoint frames viewed at 1:1 pixel crops; no gross missing limbs. Whole-cycle movie generated from actual GPU at original source time. No ground/contact proof, weapons, armor, natural transitions or live Battle in this fixture.",
+  "full_source_triangles": 14318,
+  "lod2_triangles": 3578,
+  "preserved": "65 bones, all original weights/materials/UV; index-only selected original LOD",
+  "art_pass": false,
+  "game_default_changed": false,
+  "M5": "NOT_TESTED",
+  "performance": "NOT_MEASURED; 24Hz is output playback clock, not wall-frame speed",
+  "empty_cwd_pack": {
+    "bytes": 15067268,
+    "sha256": "8c2e9852d7c81c4c8c2e345a506edc1f2824de2700e797e37d16452bc2d5f125",
+    "tested": "Linux official editor7d41 + template_debug35e80, normal MainLoop enters then deliberately rejects headless GPU",
+    "Mac_release": "NOT_RUN"
+  }
+}

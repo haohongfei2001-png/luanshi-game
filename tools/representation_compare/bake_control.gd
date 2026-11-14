@@ -3,7 +3,8 @@ const Asset=preload("res://tools/representation_compare/control_asset.gd")
 var asset=Asset.new()
 func _initialize()->void:run.call_deferred()
 func save_page(image:Image,path:String)->void:
- assert(image.save_png(path)==OK)
+ var error=image.save_png(path)
+ if error!=OK:push_error("Atlas PNG save failed: "+str(error));quit(1)
 func receipt(size:Vector2i,pages:int)->Dictionary:
  return {"png_pages":pages,"rgba8_bytes":size.x*size.y*4*pages,"dimensions":[size.x,size.y]}
 func run()->void:

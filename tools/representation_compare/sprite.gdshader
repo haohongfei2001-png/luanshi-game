@@ -7,6 +7,7 @@ uniform int columns=1;
 uniform int page_rows=1;
 uniform int directions=8;
 uniform vec2 projected_center;
+uniform bool per_frame_center=false;
 varying vec2 cell;
 varying float layer;
 void vertex(){
@@ -14,7 +15,7 @@ void vertex(){
  layer=float(index/(columns*page_rows));index=index%(columns*page_rows);
  cell=vec2(float(index%columns),float(index/columns));
  MODELVIEW_MATRIX=VIEW_MATRIX*mat4(INV_VIEW_MATRIX[0],INV_VIEW_MATRIX[1],INV_VIEW_MATRIX[2],MODEL_MATRIX[3]);
- VERTEX.xy+=projected_center;
+ VERTEX.xy+=per_frame_center ? INSTANCE_CUSTOM.ba : projected_center;
 }
 void fragment(){
  vec2 pixel=(cell+UV)*tile_pixels;

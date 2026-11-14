@@ -48,7 +48,7 @@ jobs:
           echo 'Source atlas actual Godot run43625844890 code4fc9708, identical source model and pose bank; NO rebake this run' > evidence/atlas-origin.txt
           timeout 300s /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tools/representation_compare/pack_control_atlas.gd > evidence/pack-atlas.log 2>&1
           cp "$COMPARE_ASSETS/atlas.json" evidence/atlas.json
-          ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/pack-atlas.log
+          python tools/representation_compare/assert_clean_logs.py evidence/pack-atlas.log
       - name: Small complete actual graphics smoke before any long benchmark
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
@@ -63,7 +63,7 @@ jobs:
             printf '[display]\nwindow/size/viewport_width=%s\nwindow/size/viewport_height=%s\nwindow/size/window_width_override=%s\nwindow/size/window_height_override=%s\n' "$W" "$H" "$W" "$H" > override.cfg
             OUT="$PWD/evidence/smoke-$SIZE-$MODE-lod$LOD"
             COMPARE_MODE=$MODE COMPARE_LOD_TIER=$LOD COMPARE_COUNT=100 COMPARE_CAMERA_SIZE=12 COMPARE_CAPTURE=1 COMPARE_OUTPUT="$OUT" timeout 180s xvfb-run -a -s "-screen 0 ${SIZE}x24" /tmp/engine/bin/godot-patched --path . --resolution "$SIZE" --disable-vsync --rendering-method gl_compatibility --audio-driver Dummy --script tools/representation_compare/battle_control.gd > "$OUT.log" 2>&1
-            ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' "$OUT.log"
+            python tools/representation_compare/assert_clean_logs.py "$OUT.log"
             test -s "$OUT/report.json" && test -s "$OUT/same-tick-native.png"
           done
           python tools/representation_compare/check_smoke.py evidence

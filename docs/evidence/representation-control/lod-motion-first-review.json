@@ -1,0 +1,16 @@
+{
+  "source": "3464e08d1109bc9d886104c6dffd24487a584249",
+  "run": 43633978025,
+  "artifact": 14129023971,
+  "artifact_sha256": "ad7854c208ca50eabf87fcd5c2c4fb255be432bb0ef4fa940f5b9104b36aa1e0",
+  "pairs": 39,
+  "clear_min_silhouette_iou": 0.9755440879515369,
+  "logs": "zero SCRIPT/SHADER/ERROR markers",
+  "status": "sampled full source vs LOD2 actual GPU capture complete; NOT exact pixel parity, full-cycle motion or art acceptance",
+  "previous_failure": {
+    "run": 43633535734,
+    "reason": "detached SubViewport WHEN_VISIBLE caused black images; independent PNG gate correctly failed",
+    "fix": "explicit UPDATE_ALWAYS"
+  },
+  "M5": "NOT_TESTED"
+}
