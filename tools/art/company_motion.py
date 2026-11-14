@@ -788,6 +788,28 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     waist=(0.,.86,0.)
     hip_shift=mul(sub(points["hips"],start_points["hips"]),.60*settling)
     result[HIPS]=placed(waist,add(trans(ready[HIPS],waist),hip_shift),result[HIPS][0])
+    feet={}
+    lower_hips=0.
+    for side in (-1,1):
+        boot=LB if side<0 else RB
+        suffix="L" if side<0 else "R"
+        name="foot."+suffix
+        binds=leg_nodes(side)
+        delta=qm(rotations[name],inverse_rotation(start_rotations[name]))
+        rotation=qm(rotation_mix(IDENT,delta,.50*settling),ready[boot][0])
+        offset=mul(sub(points[name],start_points[name]),.40*settling)
+        foot=add(trans(ready[boot],binds[2]),offset)
+        lowest=min(rot(rotation,(x,-.117,z))[1] for x in (-.05,.05) for z in (-.072,.187))
+        foot=(foot[0],max(foot[1],.006-lowest),foot[2])
+        hip=trans(result[HIPS],binds[0])
+        reach=sum(sqrt(dot(sub(b,a),sub(b,a))) for a,b in zip(binds,binds[1:]))-.003
+        horizontal=(hip[0]-foot[0])**2+(hip[2]-foot[2])**2
+        lower_hips=min(lower_hips,foot[1]+sqrt(max(0.,reach*reach-horizontal))-hip[1])
+        feet[side]=(foot,rotation)
+    # Register the authored stepping feet before solving the torso. A straight
+    # support leg lowers the pelvis instead of opening the ankle/knee seams.
+    hip_q,hip_translation=result[HIPS]
+    result[HIPS]=(hip_q,add(hip_translation,(0.,lower_hips,0.)))
     result[CHEST]=placed((0.,1.008,0.),trans(result[HIPS],(0.,1.008,0.)),result[CHEST][0])
     result[HEAD]=placed((0.,1.427,.015),trans(result[CHEST],(0.,1.427,.015)),result[HEAD][0])
     # Motion warping preserves the exact grip at both endpoints while keeping
@@ -814,6 +836,10 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             rotation=qm(rotation_mix(IDENT,delta,.65*settling),ready[LH][0])
         center,radius=reachable(result[CHEST],side,rotation)
         palm=limit_grip(palm,center,radius)
+        arm_lengths=[sqrt(dot(sub(b,a),sub(b,a))) for a,b in zip(binds,binds[1:])]
+        folded_reach=abs(arm_lengths[0]-arm_lengths[1])+.003
+        toward_palm=sub(palm,center)
+        palm=add(center,mul(unit(toward_palm),max(folded_reach,sqrt(dot(toward_palm,toward_palm)))))
         hand_pose=placed(grip(side),palm,rotation)
         elbow=unit(sub(points["forearm."+suffix],points["upper_arm."+suffix]))
         result[upper],result[fore]=two_link(binds,trans(result[CHEST],binds[0]),trans(hand_pose,binds[2]),elbow)
@@ -821,14 +847,8 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     for side in (-1,1):
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
         suffix="L" if side<0 else "R"
-        name="foot."+suffix
         binds=leg_nodes(side)
-        delta=qm(rotations[name],inverse_rotation(start_rotations[name]))
-        rotation=qm(rotation_mix(IDENT,delta,.50*settling),ready[boot][0])
-        offset=mul(sub(points[name],start_points[name]),.40*settling)
-        foot=add(trans(ready[boot],binds[2]),offset)
-        lowest=min(rot(rotation,(x,-.117,z))[1] for x in (-.05,.05) for z in (-.072,.187))
-        foot=(foot[0],max(foot[1],.006-lowest),foot[2])
+        foot,rotation=feet[side]
         knee=unit(sub(points["shin."+suffix],points["thigh."+suffix]))
         result[thigh],result[shin]=two_link(binds,trans(result[HIPS],binds[0]),foot,knee)
         result[boot]=placed(binds[2],foot,rotation)

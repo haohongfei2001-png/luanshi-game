@@ -20,8 +20,11 @@ def main():
                     assert all(isfinite(v) for q,p in bones for v in (*q,*p))
                     for side,upper,fore,hand in ((-1,LU,LF,LH),(1,RU,RF,RH)):
                         elbow,wrist=arm_nodes(side)[1:]
-                        worst_gap=max(worst_gap,dist(trans(bones[upper],elbow),trans(bones[fore],elbow)),
-                                      dist(trans(bones[fore],wrist),trans(bones[hand],wrist)))
+                        gap=max(dist(trans(bones[upper],elbow),trans(bones[fore],elbow)),
+                                dist(trans(bones[fore],wrist),trans(bones[hand],wrist)))
+                        worst_gap=max(worst_gap,gap)
+                        if gap>.008: failing.append({"kit":kit,"loadout":loadout,"clip":clip,"phase":t,"arm":side,"gap":gap,
+                            "shoulder":trans(bones[CHEST],arm_nodes(side)[0]),"wrist":trans(bones[hand],wrist)})
                     for side,thigh,shin,boot in ((-1,LT,LS,LB),(1,RT,RS,RB)):
                         knee,ankle=leg_nodes(side)[1:]
                         gap=dist(trans(bones[shin],ankle),trans(bones[boot],ankle))
@@ -35,11 +38,12 @@ def main():
             b=pose(kit,6,0.,loadout)
             boundary=max(boundary,max(dist(trans(x,(.2,1.,.1)),trans(y,(.2,1.,.1))) for x,y in zip(a,b)))
             old=procedural_pose(kit,2,1.,loadout)
-            error=dist(trans(a[RH],grip(1)),trans(old[RH],grip(1)))
+            error=max(dist(trans(a[RH],grip(1)),trans(old[RH],grip(1))),
+                      dist(trans(a[RH],add(grip(1),(0.,0.,.8))),trans(old[RH],add(grip(1),(0.,0.,.8)))))
             release_error=max(release_error,error)
             rows.append({"kit":kit,"loadout":loadout,"release_socket_error_m":error})
     report={"max_connected_joint_gap_m":worst_gap,"minimum_sole_y_m":floor,
-            "release_socket_error_m":release_error,"windup_recovery_seam_m":boundary,"kits":rows,"failed_leg_samples":sorted(failing,key=lambda x:x["gap"],reverse=True)[:8]}
+            "release_socket_error_m":release_error,"windup_recovery_seam_m":boundary,"kits":rows,"failed_joint_samples":sorted(failing,key=lambda x:x["gap"],reverse=True)[:8]}
     out=Path("docs/evidence/river-gate-v1-rc23/native-combat/retarget-metrics.json")
     out.write_text(json.dumps(report,indent=2)+"\n")
     print("NATIVE_COMBAT_CHECK",json.dumps(report),flush=True)
