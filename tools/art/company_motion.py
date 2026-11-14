@@ -135,14 +135,28 @@ def grounded_rest(kit):
         across = direction==-side and curl
         elbow=(direction*(.248 if across else .402),.121,
                -.267 if across else -.277)
-        wrist=(direction*(.123 if across else .461),.130 if across else .091,
+        # A long blade/shaft runs along the hand's +Z axis. A falling palm
+        # pitched eighty degrees left that axis vertical above a prone body.
+        # Rest blades on their broad face, the bow in its stave plane and the
+        # crossbow across its prod. The hand remains joined at the same wrist.
+        hand_q=euler(0.,direction*20.,direction*90.)
+        height=.070
+        if direction==1 and kit==5:
+            hand_q=euler(-90.,20.)
+            height=.150
+        elif direction==1 and kit==6:
+            hand_q=euler(0.,20.)
+            height=.120
+        elif direction==-1 and kit==7:
+            hand_q=euler(-90.,-20.)
+            height=.035
+        wrist=(direction*(.123 if across else .461),height,
                -.095 if across else -.068)
         pole=unit(sub(elbow,shoulder))
         ms[upper],ms[fore]=two_link(arms,shoulder,wrist,pole)
-        ms[hand]=placed(arms[2],wrist,euler(-80.,direction*20.,direction*9.))
-    ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
+        ms[hand]=placed(arms[2],wrist,hand_q)
+    ms[NOCK]=ms[RH]
     return ms
-
 
 def pose(kit,clip,t,loadout=0,side_hit=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
@@ -733,7 +747,7 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
                         ms[child]=placed(pivot,trans(ms[parent],pivot),ms[child][0])
                         parent=child
             if kit==5:
-                ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
+                ms[NOCK]=ms[RH]
     return ms
 
 def cycling(clip):

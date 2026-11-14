@@ -1,0 +1,59 @@
+name: Bake and check the isolated fallen equipment repair
+on:
+  push:
+    branches: [codex/river-rc23-ground-contact]
+    paths: ['tools/art/company_motion.py','.github/workflows/ground-contact-bake.yml','tools/art/check_ground_contact.py','tests/field_rest_equipment.gd','scripts/field/company_skin.gdshader']
+permissions:
+  contents: write
+concurrency:
+  group: ground-contact-bake
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bake only the shared pose palette and check actual joints
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/python3 -c 'import PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-pil; fi
+          /usr/bin/python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,"tools/art")
+          from company_motion import bake_motion
+          bake_motion(Path("assets/river_gate/figures"))
+          PY
+          /usr/bin/python3 tools/art/check_company_motion.py
+          /usr/bin/python3 tools/art/check_field_carries.py
+          /usr/bin/python3 tools/art/check_contact_motion.py
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aa6623fab538de37cfb92ff18f0c37bb5e443e93/assets/river_gate/figures/company_motion.png -o /tmp/baseline-motion.png
+          /usr/bin/python3 tools/art/check_ground_contact.py /tmp/baseline-motion.png
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/field-rest
+          touch artifacts/.gdignore
+          godot --headless --audio-driver Dummy --editor --path . --import > artifacts/field-rest/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-rest/import.log; then exit 1; fi
+          godot --headless --audio-driver Dummy --path . --script tests/field_rest_equipment.gd 2>&1 | tee artifacts/field-rest/runtime.log
+          cp artifacts/field-rest/mesh-bounds.json docs/evidence/river-gate-v1-rc23/ground-contact/rest-mesh-bounds.json
+          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/ground-contact/rest-mesh-bounds.json docs/evidence/river-gate-v1-rc23/ground-contact/palette-check.json
+          git -c user.name='River Gate authored combat source' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake grounded equipment while preserving every live motion strip'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Preserve any actual import failure
+        if: failure()
+        run: find artifacts/field-rest -name '*.log' -exec tail -n 70 '{}' +
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ground-contact-support-check
+          path: |
+            docs/evidence/river-gate-v1-rc23/ground-contact/rest-mesh-bounds.json
+            docs/evidence/river-gate-v1-rc23/ground-contact/palette-check.json
+            artifacts/field-rest
+          retention-days: 7
