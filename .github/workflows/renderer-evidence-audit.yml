@@ -1,0 +1,38 @@
+name: Inspect the retained renderer attachment evidence
+on:
+  push:
+    branches: ['codex/river-rc23-mobile-mutex']
+    paths: ['.github/workflows/renderer-evidence-audit.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: mobile-mutex-angle-template
+          path: evidence
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+      - name: Read the actual sampled dimensions and engine receipt
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import collections,json
+          root=Path("evidence")
+          print("ENGINE", (root/"provenance.json").read_text())
+          for path in sorted(root.rglob("*-session.jsonl")):
+              rows=[json.loads(line) for line in path.read_text().splitlines()]
+              attachments=[row for row in rows if row.get("kind")=="render_attachment"]
+              frames=[row for row in rows if row.get("kind")=="frames"]
+              counts=collections.Counter(str(row.get("render_target_px")) for row in frames)
+              print("SESSION",str(path),"attachments",json.dumps(attachments),"frame_dimensions",dict(counts))
+              print("FRAME_BOUNDS",json.dumps(frames[:1]+frames[-1:]))
+          for path in sorted(root.rglob("renderer-comparison.json")):
+              data=json.loads(path.read_text())
+              for row in [*data.get("samples",[]),data.get("focus_control",{}),data.get("shipping_window",{})]:
+                  print("TRIAL",json.dumps({key:row.get(key) for key in ["label","validated","session_matches_image","render_target_px","png_ihdr_px","renderer","returncode"]}))
+          PY
