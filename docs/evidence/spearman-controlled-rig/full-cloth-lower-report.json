@@ -1,0 +1,26 @@
+{
+  "source_sha256": "19a5758652a3824306a3b7e12f37098c9b3d60b9be2736e6f6f8f203f906b258",
+  "retained_original_boot_topology_uv": true,
+  "derived_material_regions": true,
+  "new_complete_wrapped_cloth": [
+    {
+      "side": "L",
+      "vertices": 1805,
+      "faces": 1440,
+      "continuous_turns": 9,
+      "band_width_m": 0.054,
+      "meshdeform_bound": true
+    },
+    {
+      "side": "R",
+      "vertices": 1805,
+      "faces": 1440,
+      "continuous_turns": 9,
+      "band_width_m": 0.054,
+      "meshdeform_bound": true
+    }
+  ],
+  "art_pass": false,
+  "game_tested": false,
+  "foot_contact_pass": false
+}

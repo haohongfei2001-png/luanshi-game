@@ -1,0 +1,24 @@
+{
+  "renderer": "Blender Cycles authoring diagnostic",
+  "projection": "perspective",
+  "pitch_degrees": 32,
+  "yaw_degrees": -65,
+  "vertical_fov_degrees": 55,
+  "nominal_fraction": 0.1,
+  "actual_camera_position": [
+    -9.797589302062988,
+    -6.4339213371276855,
+    10.312983512878418
+  ],
+  "target": [
+    4.0,
+    0.0,
+    0.800000011920929
+  ],
+  "native_resolution": [
+    2560,
+    1440
+  ],
+  "owner_camera_final": false,
+  "art_pass": false
+}
