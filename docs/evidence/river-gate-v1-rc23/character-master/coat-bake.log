@@ -1,30 +1,30 @@
 COINCIDENT_HEAD_FACES_REMOVED Archer 0
 HEADWEAR Archer 54 [-0.10956517  1.50850344 -0.13122338] [0.10952969 1.7192303  0.16192851]
-COMPLETE_FIELD_PERSON Levy Close {'triangles': 4958, 'vertices': 2718}
-COMPLETE_FIELD_PERSON Levy Line {'triangles': 4208, 'vertices': 2261}
-COMPLETE_FIELD_PERSON Levy Rank {'triangles': 3959, 'vertices': 2085}
+COMPLETE_FIELD_PERSON Levy Close {'triangles': 2460, 'vertices': 1649}
+COMPLETE_FIELD_PERSON Levy Line {'triangles': 1298, 'vertices': 961}
+COMPLETE_FIELD_PERSON Levy Rank {'triangles': 859, 'vertices': 672}
 COINCIDENT_HEAD_FACES_REMOVED Archer 0
 HEADWEAR Archer 54 [-0.10956517  1.50850344 -0.13122338] [0.10952969 1.7192303  0.16192851]
-COMPLETE_FIELD_PERSON Archer Close {'triangles': 4958, 'vertices': 2718}
-COMPLETE_FIELD_PERSON Archer Line {'triangles': 4208, 'vertices': 2261}
-COMPLETE_FIELD_PERSON Archer Rank {'triangles': 3959, 'vertices': 2085}
+COMPLETE_FIELD_PERSON Archer Close {'triangles': 2460, 'vertices': 1649}
+COMPLETE_FIELD_PERSON Archer Line {'triangles': 1298, 'vertices': 961}
+COMPLETE_FIELD_PERSON Archer Rank {'triangles': 859, 'vertices': 672}
 COINCIDENT_HEAD_FACES_REMOVED Regular 0
 HEADWEAR Regular 96 [-0.13248941  1.54008904 -0.13724621] [0.1409316  1.76067706 0.17829209]
-COMPLETE_FIELD_PERSON Regular Close {'triangles': 4992, 'vertices': 2757}
-COMPLETE_FIELD_PERSON Regular Line {'triangles': 4251, 'vertices': 2302}
-COMPLETE_FIELD_PERSON Regular Rank {'triangles': 4001, 'vertices': 2123}
+COMPLETE_FIELD_PERSON Regular Close {'triangles': 2490, 'vertices': 1684}
+COMPLETE_FIELD_PERSON Regular Line {'triangles': 1340, 'vertices': 1002}
+COMPLETE_FIELD_PERSON Regular Rank {'triangles': 901, 'vertices': 710}
 COINCIDENT_HEAD_FACES_REMOVED Guard 0
 HEADWEAR Guard 236 [-0.14915133  1.48316761 -0.11417935] [0.14910508 1.76948697 0.17494335]
-COMPLETE_FIELD_PERSON Guard Close {'triangles': 5180, 'vertices': 2849}
-COMPLETE_FIELD_PERSON Guard Line {'triangles': 4439, 'vertices': 2394}
-COMPLETE_FIELD_PERSON Guard Rank {'triangles': 4189, 'vertices': 2215}
+COMPLETE_FIELD_PERSON Guard Close {'triangles': 2678, 'vertices': 1776}
+COMPLETE_FIELD_PERSON Guard Line {'triangles': 1528, 'vertices': 1094}
+COMPLETE_FIELD_PERSON Guard Rank {'triangles': 1089, 'vertices': 802}
 COINCIDENT_HEAD_FACES_REMOVED Officer 32
 HEADWEAR Officer 344 [-0.13870323  1.53981128 -0.21677643] [0.14026773 1.83996355 0.17435375]
-COMPLETE_FIELD_PERSON Officer Close {'triangles': 5288, 'vertices': 2939}
-COMPLETE_FIELD_PERSON Officer Line {'triangles': 4547, 'vertices': 2484}
-COMPLETE_FIELD_PERSON Officer Rank {'triangles': 4297, 'vertices': 2305}
+COMPLETE_FIELD_PERSON Officer Close {'triangles': 2786, 'vertices': 1866}
+COMPLETE_FIELD_PERSON Officer Line {'triangles': 1636, 'vertices': 1184}
+COMPLETE_FIELD_PERSON Officer Rank {'triangles': 1197, 'vertices': 892}
 COINCIDENT_HEAD_FACES_REMOVED Officer 32
 HEADWEAR Officer 344 [-0.13870323  1.53981128 -0.21677643] [0.14026773 1.83996355 0.17435375]
-COMPLETE_FIELD_PERSON Player Close {'triangles': 5442, 'vertices': 3043}
-COMPLETE_FIELD_PERSON Player Line {'triangles': 4645, 'vertices': 2556}
-COMPLETE_FIELD_PERSON Player Rank {'triangles': 4329, 'vertices': 2335}
+COMPLETE_FIELD_PERSON Player Close {'triangles': 2940, 'vertices': 1970}
+COMPLETE_FIELD_PERSON Player Line {'triangles': 1734, 'vertices': 1256}
+COMPLETE_FIELD_PERSON Player Rank {'triangles': 1229, 'vertices': 922}

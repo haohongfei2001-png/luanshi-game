@@ -1,34 +1,34 @@
 {
-  "kit3-135": {
-    "pixels_changed_12": 735262,
-    "pixels_changed_25": 488380
-  },
-  "kit5-135": {
-    "pixels_changed_12": 663757,
-    "pixels_changed_25": 421251
-  },
-  "kit7-135": {
-    "pixels_changed_12": 806734,
-    "pixels_changed_25": 547287
-  },
   "line-055": {
-    "pixels_changed_12": 253732,
-    "pixels_changed_25": 157112
+    "pixels_changed_12": 241385,
+    "pixels_changed_25": 146675
   },
   "line-105": {
-    "pixels_changed_12": 322953,
-    "pixels_changed_25": 196402
+    "pixels_changed_12": 306573,
+    "pixels_changed_25": 183054
   },
   "line-135": {
-    "pixels_changed_12": 371100,
-    "pixels_changed_25": 229193
+    "pixels_changed_12": 354001,
+    "pixels_changed_25": 215021
   },
   "line-185": {
-    "pixels_changed_12": 404110,
-    "pixels_changed_25": 251939
+    "pixels_changed_12": 387903,
+    "pixels_changed_25": 238344
   },
   "reverse-135": {
-    "pixels_changed_12": 327544,
-    "pixels_changed_25": 193249
+    "pixels_changed_12": 309873,
+    "pixels_changed_25": 177329
+  },
+  "kit3-135": {
+    "pixels_changed_12": 700827,
+    "pixels_changed_25": 465905
+  },
+  "kit5-135": {
+    "pixels_changed_12": 608626,
+    "pixels_changed_25": 380616
+  },
+  "kit7-135": {
+    "pixels_changed_12": 776956,
+    "pixels_changed_25": 529612
   }
 }
