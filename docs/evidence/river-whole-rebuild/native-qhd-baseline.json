@@ -1,0 +1,134 @@
+{
+  "source_sha": "5d6aa17716d0b7206a10288405957b13e4764357",
+  "run": 43570498673,
+  "scenario": "normal bridgehead plan, real-time actual exported game, seed 61112, 512 ordinary per side",
+  "device": "Apple M1 (Virtual), 3 CPU cores, 7GB hosted VM, macOS 26.7.2, Metal Mobile",
+  "real_M5": "DEVICE_NOT_RUN",
+  "render_px": [
+    2560,
+    1440
+  ],
+  "internal_scale": 1,
+  "msaa": 4,
+  "samples": 1375,
+  "engaged_wall_seconds": 44.550760949134826,
+  "fps": 30.863670355033573,
+  "p50_ms": 32.318000793457,
+  "p95_ms": 49.4269981384277,
+  "p99_ms": 63.1769981384277,
+  "max_ms": 148.820999145508,
+  "maximum_rss_bytes": 588398592,
+  "peak_memory_footprint_bytes": 1571228800,
+  "sim_cpu_ms": 11036.54,
+  "view_script_ms": 6399.611999999999,
+  "gpu_timestamps_available": false,
+  "status": "BELOW_60_FPS_TARGET",
+  "note": "Instrumented 45-second hosted run. Frame interval percentiles use every preserved raw interval. Recording encoder frame cadence is measured separately.",
+  "film": {
+    "seconds": 41.0416666667,
+    "frames": 985,
+    "fps": 24,
+    "px": [
+      2560,
+      1440
+    ],
+    "bytes": 179060718,
+    "sha256": "440f476306de5c1886cbd3435913fe981b268479c3dd0ea77b824582795e7273",
+    "normal_speed": true,
+    "device_performance_proof": false
+  },
+  "cold_trials": [
+    {
+      "batch": 1,
+      "label": "default-metal-1",
+      "pass": true,
+      "first_post_draw_ms": 9040,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 1,
+      "label": "default-metal-2",
+      "pass": true,
+      "first_post_draw_ms": 8201.7,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 1,
+      "label": "startup-focus-control",
+      "pass": true,
+      "first_post_draw_ms": 7813.6,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 2,
+      "label": "default-metal-1",
+      "pass": true,
+      "first_post_draw_ms": 7956.9,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 2,
+      "label": "default-metal-2",
+      "pass": true,
+      "first_post_draw_ms": 7959.5,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 2,
+      "label": "startup-focus-control",
+      "pass": true,
+      "first_post_draw_ms": 7796.5,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 3,
+      "label": "default-metal-1",
+      "pass": true,
+      "first_post_draw_ms": 7388.6,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 3,
+      "label": "default-metal-2",
+      "pass": true,
+      "first_post_draw_ms": 7545.4,
+      "res": [
+        1000,
+        600
+      ]
+    },
+    {
+      "batch": 3,
+      "label": "startup-focus-control",
+      "pass": true,
+      "first_post_draw_ms": 7480.5,
+      "res": [
+        1000,
+        600
+      ]
+    }
+  ],
+  "package_sha256": "fbc7564d36afb8cb57ac03ce53812ddadce2c0212c352b8eaf9d5c88de003c24",
+  "cold_scope": "New processes with empty game data. OS driver caches retained. Nine trials include six natural Metal launches and three deliberate pre-tick focus interruptions."
+}

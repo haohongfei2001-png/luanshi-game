@@ -26,12 +26,17 @@ func _ready() -> void:
 	ground_material.set_shader_parameter("soil",load(WORLD+"ground/brown_mud_dry.jpg"))
 	ground_material.set_shader_parameter("grass",load(WORLD+"ground/leafy_grass.jpg"))
 	ground_material.set_shader_parameter("leaves",load(WORLD+"ground/forest_ground_04.jpg"))
+	ground_material.set_shader_parameter("gravel",load(WORLD+"ground/sandy_gravel_02.jpg"))
+	ground_material.set_shader_parameter("soil_normal",load(WORLD+"ground/brown_mud_dry_nor_gl.jpg"))
+	ground_material.set_shader_parameter("grass_normal",load(WORLD+"ground/leafy_grass_nor_gl.jpg"))
+	ground_material.set_shader_parameter("gravel_normal",load(WORLD+"ground/sandy_gravel_02_nor_gl.jpg"))
 	water_material=ShaderMaterial.new()
 	water_material.shader=preload("res://scripts/field/river_master_water.gdshader")
 	_terrain()
 	_fortress()
 	_river()
 	_banks_and_groves()
+	_ground_dressing()
 	_field_quarters()
 	ram=preload("res://assets/environment/river_ram.gltf").instantiate() as Node3D
 	add_child(ram)
@@ -405,6 +410,70 @@ func _banks_and_groves() -> void:
 		var p:=Vector2(-141.+i*22.,-96.-5.*sin(i*.8))
 		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",p,.60+.05*(i%4),i*.63)
 		cliff.position.y-=2.0
+
+
+func _ground_dressing() -> void:
+	var random:=RandomNumberGenerator.new()
+	random.seed=61112027
+	const STONES:="res://assets/third_party/polyhaven_bank/bank_stones.glb"
+	var stone_material:=StandardMaterial3D.new()
+	stone_material.albedo_texture=preload("res://assets/third_party/polyhaven_bank/lichen_and_stone.jpg")
+	stone_material.albedo_color=Color("9a998c")
+	stone_material.roughness=.98
+	stone_material.metallic_specular=0.
+	stone_material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	var sources:Array[Dictionary]=[]
+	var batches:Dictionary={}
+	for index in 6:
+		sources.append({"mesh":_library(STONES)["RiverStone%02d"%index],
+			"material":stone_material,"name":"EmbeddedGroundStone"})
+	var herbs:=_library(FERN)
+	var names:=herbs.keys()
+	names.sort()
+	sources.append({"mesh":herbs[names[0]],"material":null,"name":"NativeVergeFern"})
+	for x in range(-116,118,2):
+		for z in range(-61,63,2):
+			var at:=Vector2(x+random.randf_range(-.85,.85),z+random.randf_range(-.85,.85))
+			var roadside:=absf(at.y)
+			if at.x < -17.:
+				roadside=minf(roadside,minf(absf(at.y-35.),absf(at.y+35.)))
+			if roadside>12.5 or Ground.blocked(at,true,bridgehead):continue
+			if absf(at.x-Ground.RIVER_X)<7.:continue
+			if bridgehead and absf(at.x-Ground.MOAT_X)<7. and absf(at.y)<29.:continue
+			if at.x>62. and absf(at.y)>12.:continue
+			if Ground.parapet(at)>0.:continue
+			var herb:=roadside>4.8 and random.randf()<.18
+			if not herb and random.randf()>.38:continue
+			var kind:=6 if herb else random.randi_range(0,5)
+			var key:=Vector3i(floori(at.x/24.),floori(at.y/24.),kind)
+			if not batches.has(key):
+				var entry:Dictionary=sources[kind].duplicate()
+				entry.transforms=[]
+				entry.origin=Vector3(key.x*24.+12.,0.,key.y*24.+12.)
+				batches[key]=entry
+			var batch:Dictionary=batches[key]
+			var bounds:AABB=batch.mesh.get_aabb()
+			var anchor:=bounds.get_center()
+			anchor.y=bounds.position.y
+			var size:=random.randf_range(.20,.38)/maxf(bounds.size.y,.01) if herb else random.randf_range(.12,.33)/maxf(bounds.size.x,.01)
+			var basis:=Basis(Vector3.UP,random.randf_range(0.,TAU)).scaled_local(Vector3.ONE*size)
+			var position:=Vector3(at.x,_land_height(at)-(.02 if herb else bounds.size.y*size*.48),at.y)
+			batch.transforms.append(Transform3D(basis,position-basis*anchor-batch.origin))
+	for batch:Dictionary in batches.values():
+		var instances:=MultiMesh.new()
+		instances.transform_format=MultiMesh.TRANSFORM_3D
+		instances.mesh=batch.mesh
+		instances.instance_count=batch.transforms.size()
+		for index in batch.transforms.size():
+			instances.set_instance_transform(index,batch.transforms[index])
+		var node:=MultiMeshInstance3D.new()
+		node.name=batch.name
+		node.position=batch.origin
+		node.multimesh=instances
+		node.material_override=batch.material
+		node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.visibility_range_end=150.
+		add_child(node)
 
 func _field_quarters() -> void:
 	for side:float in [-1.,1.]:
