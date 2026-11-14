@@ -81,6 +81,8 @@ class NativeRegionInputs(unittest.TestCase):
         self.assertNotIn('--traversal-review',arguments('gate-context-study'))
         self.assertEqual(capture_budget('gate-context-study'),240)
         self.assertEqual(capture_budget('camera-study'),120)
+        self.assertEqual(arguments('destination-study'),['--destination-study','--road-section-study','--author-oracle'])
+        self.assertEqual(capture_budget('destination-study'),240)
         with self.assertRaises(ValueError):arguments('unexpected')
         with self.assertRaises(ValueError):capture_budget('unexpected')
 

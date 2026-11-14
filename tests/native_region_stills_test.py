@@ -39,6 +39,23 @@ def context_rows():
         result.append(r)
     return result
 
+def destination_rows():
+    result=[]
+    for name,size in VIEWS['destination-study'].items():
+        r=context_rows()[0]
+        r.update({k:list(size) for k in ['pixels','internal_pixels','attachment_size','viewport']})
+        r['view']=name
+        b=r['actual_author_body_projection'];b['attachment_projection']={'attachment_size':list(size),'scale_xy':[size[0]/1422,size[1]/800],'top_y':size[1]*.45,'boot_bottom_y':size[1]*.57,'height_px':size[1]*.12}
+        if 'destination' in name:
+            variant=name.split('-')[-1];pitch,fov=(26,65) if variant=='destination26' else (28,70)
+            r['camera_review_profile'].update(pitch_degrees=pitch,fov_degrees=fov,look_height=1.5)
+            r['destination_fit']={'error':0,'variant':variant,'before':{'height_fraction':.12},'after':{'height_fraction':.12}}
+            r['actual_gate_projection']={'all_bounds_inside':True,'bound_points':40,'normalized_rect':[.4,.06,.8,.34]}
+        result.append(r)
+    return result
+
+def destination_validate(rows):return validate_records(rows,'a'*40,'destination-study',identities())
+
 class StillGate(unittest.TestCase):
     def test_correct(self):self.assertEqual(validate_records(rows(),'a'*40,'camera-study'),'b'*64)
     def test_missing(self):
@@ -82,4 +99,18 @@ class StillGate(unittest.TestCase):
     def test_missing_logical_provenance_rejected(self):
         r=context_rows();r[1].pop('logical_viewport_size')
         with self.assertRaises(ValueError):context_validate(r)
+    def test_destination_correct(self):self.assertEqual(destination_validate(destination_rows()),'b'*64)
+    def test_destination_clipped_gate_rejected(self):
+        for key,value in [('all_bounds_inside',False),('normalized_rect',[.4,-.01,.8,.34]),('bound_points',0)]:
+            r=destination_rows();r[1]['actual_gate_projection'][key]=value
+            with self.assertRaises(ValueError):destination_validate(r)
+    def test_wrong_destination_camera_rejected(self):
+        for key,value in [('pitch_degrees',38),('fov_degrees',55),('look_height',.8)]:
+            r=destination_rows();r[1]['camera_review_profile'][key]=value
+            with self.assertRaises(ValueError):destination_validate(r)
+    def test_missing_or_changed_destination_fit_rejected(self):
+        r=destination_rows();r[1]['destination_fit']['before']['height_fraction']=.1
+        with self.assertRaises(ValueError):destination_validate(r)
+        r=destination_rows();r[1]['destination_fit']={}
+        with self.assertRaises(ValueError):destination_validate(r)
 if __name__=='__main__':unittest.main()

@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 40
     env:
       LUANSHI_AUTHORED_LANDFORM: '1'
-      REGION_REVIEW_MODE: 'gate-context-study'
+      REGION_REVIEW_MODE: 'destination-study'
       REGION_ASSET_SOURCE: '4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd'
       LUANSHI_AUTHOR_ORACLE_CACHE: ${{ github.workspace }}/.pipeline/actor-cache
     steps:
@@ -81,7 +81,7 @@ jobs:
           set -euo pipefail
           python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/import.log 180 -- "$GODOT_EDITOR" --headless --editor --path . --import
           python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/parse.log 45 -- "$GODOT_EDITOR" --headless --path . --check-only --script tests/native_region_capture.gd
-          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/setup.log 75 -- "$GODOT_EDITOR" --headless --path . --script tests/native_region_capture.gd -- --validate-setup --gate-context-study --road-section-study --author-oracle
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/setup.log 75 -- "$GODOT_EDITOR" --headless --path . --script tests/native_region_capture.gd -- --validate-setup --destination-study --road-section-study --author-oracle
         env:
           ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/native-region/setup
       - name: Restore already verified native Metal mutex-fix engine

@@ -8,10 +8,11 @@ from restore_complete import RUNTIME_FILES
 VIEWS = {
     'baseline': {'qhd-after':(2560,1440), 'uhd-after':(3840,2160), 'qhd-after-no-shadow':(2560,1440)},
     'camera-study': {'qhd-perspective-road65':(2560,1440), 'qhd-perspective-road75':(2560,1440), 'uhd-perspective-road65':(3840,2160)},
+    'destination-study': {'qhd-perspective-road65':(2560,1440), 'qhd-perspective-destination26':(2560,1440), 'qhd-perspective-destination28':(2560,1440), 'uhd-perspective-destination26':(3840,2160)},
     'gate-context-study': {'qhd-perspective-road65':(2560,1440), 'qhd-perspective-context65':(2560,1440), 'uhd-perspective-context65':(3840,2160)},
 }
 
-def validate_author_context(rows, resource_identities):
+def validate_author_context(rows, resource_identities, mode):
     """Geometry projection and source identity, never an artistic quality score."""
     if not resource_identities or {p[6:]:r.get('original_source_sha256') for p,r in resource_identities.items()}!=RUNTIME_FILES:
         raise ValueError('Missing or wrong verified original scene inputs')
@@ -56,9 +57,20 @@ def validate_author_context(rows, resource_identities):
         if body.get('vertices_checked',0)<=0:raise ValueError('No actual author body points measured')
         fractions.append(fraction)
         profile=row['camera_review_profile']
-        pitch=32 if row['view'].endswith('road65') else 38
-        if profile.get('projection')!='perspective' or profile.get('pitch_degrees')!=pitch or profile.get('fov_degrees')!=55:
+        candidate=row['view'].endswith(('destination26','destination28'))
+        pitch,fov=(26,65) if row['view'].endswith('destination26') else (28,70) if row['view'].endswith('destination28') else (32,55) if row['view'].endswith('road65') else (38,55)
+        if profile.get('projection')!='perspective' or profile.get('pitch_degrees')!=pitch or profile.get('fov_degrees')!=fov:
             raise ValueError('Wrong gate-context camera candidate')
+        if candidate:
+            fit=row.get('destination_fit',{});gate=row.get('actual_gate_projection',{});rect=gate.get('normalized_rect',())
+            if fit.get('error')!=0 or fit.get('variant')!=row['view'].split('-')[-1] or profile.get('look_height')!=1.5:
+                raise ValueError('Missing exact destination camera fit')
+            if gate.get('all_bounds_inside') is not True or gate.get('bound_points',0)<=0 or len(rect)!=4 or any(not math.isfinite(v) or not 0<=v<=1 for v in rect) or not (rect[0]<rect[2] and rect[1]<rect[3]):
+                raise ValueError('Gate conservative geometry bounds clipped or unmeasured')
+            if body['boot_bottom_y']/logical[1]>=.75:raise ValueError('Hero pushed down to force gate into view')
+            for sample in ('before','after'):
+                if not math.isclose(fit.get(sample,{}).get('height_fraction',float('nan')),fraction,abs_tol=.2/1440):
+                    raise ValueError('Destination fit changed actor screen scale')
         if not math.isclose(math.degrees(row['camera_yaw']),-65,abs_tol=.001):raise ValueError('Wrong context yaw')
         if not math.isclose(row['shader_clock']['fixed_seconds'],6.75,abs_tol=1e-6):raise ValueError('Wrong frozen scene time')
     if (max(fractions)-min(fractions))*1440>.2:
@@ -85,13 +97,13 @@ def validate_records(rows, source, mode, resource_identities=None):
             yaw=-75 if row['view'].endswith('road75') else -65
             if not math.isclose(math.degrees(row['camera_yaw']),yaw,abs_tol=.001):
                 raise ValueError('Wrong actual camera yaw')
-    if mode=='gate-context-study':validate_author_context(rows,resource_identities)
+    if mode in ('gate-context-study','destination-study'):validate_author_context(rows,resource_identities,mode)
     return snapshot
 
 def validate(directory, source, mode):
     rows=json.loads((directory/'receipt.json').read_text())
     identities=None
-    if mode=='gate-context-study':
+    if mode in ('gate-context-study','destination-study'):
         packed=json.loads((directory.parent/'pack-integrity.json').read_text())
         if packed.get('packed_resource_identity_verified_in_isolated_process') is not True:raise ValueError('Packed identities not isolated-process verified')
         identities=packed.get('resource_identities')

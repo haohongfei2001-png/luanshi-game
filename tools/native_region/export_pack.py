@@ -26,7 +26,7 @@ def transform_preset(data):
 
 def export(editor, project, patch, output, mode='baseline'):
     mode_arguments=arguments(mode)
-    resource_identities=collect(project,RUNTIME_FILES if mode=='gate-context-study' else FILES)
+    resource_identities=collect(project,RUNTIME_FILES if mode in ('gate-context-study','destination-study') else FILES)
     config = project/'export_presets.cfg'
     original = config.read_bytes()
     temporary = transform_preset(original)
@@ -60,11 +60,11 @@ def export(editor, project, patch, output, mode='baseline'):
     resource_lines=[line.split('RUNTIME_RESOURCE_IDENTITY ',1)[1] for line in setup_log.splitlines() if line.startswith('RUNTIME_RESOURCE_IDENTITY ')]
     if len(resource_lines)!=1:raise ValueError('Missing isolated packed-resource observation')
     verify_runtime_observation(json.loads(resource_lines[0]),resource_identities)
-    if collect(project,RUNTIME_FILES if mode=='gate-context-study' else FILES)!=resource_identities:
+    if collect(project,RUNTIME_FILES if mode in ('gate-context-study','destination-study') else FILES)!=resource_identities:
         raise ValueError('Source/imported resources changed during pack export')
     if 'NATIVE_REGION_FOCUS ' not in setup_log or 'ARCHITECTURE_GAME_SETUP_PASS tick=135 ordinary=[20, 20]' not in setup_log:
         raise ValueError('Isolated exported pack did not reach real intended setup')
-    if mode=='gate-context-study' and 'REGION_SETUP_LOADING_ONE_REAL_UNIT_AUTHOR_ORACLE' not in setup_log:
+    if mode in ('gate-context-study','destination-study') and 'REGION_SETUP_LOADING_ONE_REAL_UNIT_AUTHOR_ORACLE' not in setup_log:
         raise ValueError('Isolated pack did not load the requested real-unit author oracle')
     result={'resource_identities':resource_identities,'packed_resource_identity_verified_in_isolated_process':True,'pack':pack.name,'bytes':pack.stat().st_size,'sha256':hashlib.sha256(pack.read_bytes()).hexdigest(),
             'original_export_config_sha256':hashlib.sha256(original).hexdigest(),

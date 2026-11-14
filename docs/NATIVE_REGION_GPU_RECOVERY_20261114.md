@@ -425,3 +425,33 @@ and gatehouse projections together, then rebuild the complete bridgehead →
 bank/road shoulder → gate entrance spatial structure. New whole-garment and
 full-source character runtime work continues independently. No default visual
 promotion, qualified package, owner art pass, M5 pass or PR #67 merge occurs.
+
+## Next native comparison: actual-body and complete-destination constraints
+
+`destination-study` replaces the rejected context38 trial, not the default game
+camera. It captures four images from the same frozen Battle and 945 single
+actor: road32/FOV55 baseline at 2K; destination26/FOV65 and destination28/FOV70
+at 2K; destination26 at 4K. Both candidates retain yaw −65°, look 1.5 m above
+the actual terrain, and preserve the baseline's measured body-height fraction
+through the actor's actual head/boot vertices. They use 3 m and 4 m forward
+look respectively. These are project candidates, not official Wild Rift lens
+specifications or owner acceptance.
+
+The camera helper from `2fde3cc2b48461e7eb07746142cf0c12470bb8ac` records 40
+conservative GateHall mesh-bound points. Candidates must fit those points
+within the viewport, keep the hero above the lower-quarter boundary, preserve
+Battle bytes and body screen scale. Gate bounds do not prove absence of
+occlusion, readable roofs or artistic composition. The actual four-view local
+headless fixture passed in 10.16 s, preserving snapshot
+`91488d0e247f461f2535651867035cbdc8b34bdb302a2373a0a7cbf607cb2b5e`;
+this local asset derivation is not the exact CI 4bbc runtime. Hosted native
+pixels are still pending at this commit. The 50 Python input/resource/still/
+restore/mode tests pass, plus release-side-effect and traversal-result guards.
+
+The complete existing `tools/test.sh` also finished **exit 0** after the
+optional controller/capture changes, with explicit worktree XDG paths and
+experimental authored-landform mode unset. This includes battle, 512-per-side
+mission/traffic logic, economy, hunger, saves/process restarts, youth causality
+and attrition/restart tests. Full log SHA256:
+`b12502416df5f8ee69261689f561a9f8daa8b6761ccdcaf23a965cb022d7d326`.
+These are regression checks, not new art or hardware-performance acceptance.
