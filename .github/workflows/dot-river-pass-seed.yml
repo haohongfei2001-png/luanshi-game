@@ -46,13 +46,14 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/art/source_rebuild/restore_sources.py /tmp/pass-source-cache | tee artifacts/pass-rebuild/raw-source-hashes.log
-          /tmp/blender-4.3.2-linux-x64/blender --background --factory-startup --disable-autoexec --python tools/art/source_rebuild/convert_pavilion.py -- "$PWD/assets/river_pass/pavilion/pavilion-source.fbx" "$PWD/assets/river_pass/pavilion/pavilion" >artifacts/pass-rebuild/pavilion-conversion.log 2>&1
+          /tmp/blender-4.3.2-linux-x64/blender --background --factory-startup --disable-autoexec --python tools/art/source_rebuild/convert_pavilion.py -- "$PWD/assets/river_pass/pavilion/pavilion-source.fbx" /tmp/pass-pavilion >artifacts/pass-rebuild/pavilion-conversion.log 2>&1
           python3 - <<'PY'
           import json,hashlib
           from pathlib import Path
           p=Path('assets/river_pass/pavilion')
-          r=json.loads((p/'pavilion.json').read_text())
+          r=json.loads(Path('/tmp/pass-pavilion.json').read_text())
           assert (r['meshes'],r['vertices'],r['triangles'])==(70,40029,76926),r
+          (p/'pavilion.glb').write_bytes(Path('/tmp/pass-pavilion.glb').read_bytes())
           print('PAVILION_GLTF_ACTUAL_SHA256',hashlib.sha256((p/'pavilion.glb').read_bytes()).hexdigest())
           PY
       - name: Build the frozen editable scene and verify actual lifecycle before publication
