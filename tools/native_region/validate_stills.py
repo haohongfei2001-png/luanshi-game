@@ -2,6 +2,8 @@
 from pathlib import Path
 import argparse, hashlib, json, math
 from PIL import Image
+from resource_identity import verify_runtime_observation
+from restore_complete import RUNTIME_FILES
 
 VIEWS = {
     'baseline': {'qhd-after':(2560,1440), 'uhd-after':(3840,2160), 'qhd-after-no-shadow':(2560,1440)},
@@ -9,13 +11,19 @@ VIEWS = {
     'gate-context-study': {'qhd-perspective-road65':(2560,1440), 'qhd-perspective-context65':(2560,1440), 'uhd-perspective-context65':(3840,2160)},
 }
 
-def validate_author_context(rows):
+def validate_author_context(rows, resource_identities):
     """Geometry projection and source identity, never an artistic quality score."""
+    if not resource_identities or {p[6:]:r.get('original_source_sha256') for p,r in resource_identities.items()}!=RUNTIME_FILES:
+        raise ValueError('Missing or wrong verified original scene inputs')
     baseline=next(r for r in rows if r['view']=='qhd-perspective-road65')
     first=baseline['single_real_unit_author_oracle']
     hashes=('runtime_architecture_sha256','runtime_ground_sha256','runtime_woodland_sha256')
     fractions=[]
     for row in rows:
+        verify_runtime_observation(row.get('runtime_resource_identities'),resource_identities)
+        for key,path in [('runtime_architecture_sha256','architecture/architecture.glb'),('runtime_ground_sha256','ground/continuous-region.scn'),('runtime_woodland_sha256','woodland/region.scn')]:
+            if row[key]!=resource_identities['res://assets/river_authored/'+path]['packed_resource_sha256']:
+                raise ValueError('Legacy hash is not the observed packed-resource identity')
         for key in hashes:
             value=row[key]
             if len(value)!=64 or value!=baseline[key]:raise ValueError('Mixed or missing runtime asset identity')
@@ -29,12 +37,22 @@ def validate_author_context(rows):
         if len(actor.get('metadata_sha256',''))!=64 or not actor.get('source_files'):
             raise ValueError('Missing original actor source identity')
         body=row['actual_author_body_projection']; height=body['height_px']; fraction=body['height_fraction']
-        if body.get('display_backend')!='macOS' or tuple(body.get('projection_viewport',()))!=VIEWS['gate-context-study'][row['view']]:
-            raise ValueError('Body measurement is not from the actual native viewport')
+        logical=body.get('projection_viewport',())
+        if body.get('display_backend')!='macOS' or body.get('coordinate_space')!='logical_viewport_units' or tuple(logical)!=tuple(row.get('logical_viewport_size',())) or len(logical)!=2 or min(logical)<=0:
+            raise ValueError('Body projection lacks explicit matching logical viewport coordinates')
         if not math.isfinite(height) or height<=0 or not math.isfinite(fraction) or not 0<fraction<1:
             raise ValueError('Invalid body projection')
-        if not math.isclose(body['boot_bottom_y']-body['top_y'],height,abs_tol=.01) or not math.isclose(height/row['pixels'][1],fraction,abs_tol=1e-6):
-            raise ValueError('Inconsistent body projection units')
+        if not math.isclose(body['boot_bottom_y']-body['top_y'],height,abs_tol=.01) or not math.isclose(height/logical[1],fraction,abs_tol=1e-6):
+            raise ValueError('Inconsistent logical body projection units')
+        attachment=body.get('attachment_projection',{})
+        if tuple(attachment.get('attachment_size',()))!=tuple(row['pixels']):raise ValueError('Missing native projection attachment')
+        scale=[row['pixels'][i]/logical[i] for i in range(2)]
+        if len(attachment.get('scale_xy',()))!=2 or any(not math.isclose(a,b,abs_tol=1e-8) for a,b in zip(scale,attachment['scale_xy'])):
+            raise ValueError('Wrong logical-to-native pixel conversion')
+        for key in ('top_y','boot_bottom_y','height_px'):
+            if not math.isclose(attachment.get(key,float('nan')),body[key]*scale[1],abs_tol=.001):
+                raise ValueError('Wrong converted native body projection')
+        if not math.isclose(attachment['height_px']/row['pixels'][1],fraction,abs_tol=1e-6):raise ValueError('Wrong native body fraction')
         if body.get('vertices_checked',0)<=0:raise ValueError('No actual author body points measured')
         fractions.append(fraction)
         profile=row['camera_review_profile']
@@ -46,7 +64,7 @@ def validate_author_context(rows):
     if (max(fractions)-min(fractions))*1440>.2:
         raise ValueError('New camera resized the actor instead of preserving normal screen scale')
 
-def validate_records(rows, source, mode):
+def validate_records(rows, source, mode, resource_identities=None):
     views=VIEWS[mode]
     if len(rows)!=len(views) or {r['view'] for r in rows}!=set(views):
         raise ValueError('Missing, duplicate or unexpected actual frame')
@@ -67,12 +85,17 @@ def validate_records(rows, source, mode):
             yaw=-75 if row['view'].endswith('road75') else -65
             if not math.isclose(math.degrees(row['camera_yaw']),yaw,abs_tol=.001):
                 raise ValueError('Wrong actual camera yaw')
-    if mode=='gate-context-study':validate_author_context(rows)
+    if mode=='gate-context-study':validate_author_context(rows,resource_identities)
     return snapshot
 
 def validate(directory, source, mode):
     rows=json.loads((directory/'receipt.json').read_text())
-    snapshot=validate_records(rows,source,mode)
+    identities=None
+    if mode=='gate-context-study':
+        packed=json.loads((directory.parent/'pack-integrity.json').read_text())
+        if packed.get('packed_resource_identity_verified_in_isolated_process') is not True:raise ValueError('Packed identities not isolated-process verified')
+        identities=packed.get('resource_identities')
+    snapshot=validate_records(rows,source,mode,identities)
     if hashlib.sha256((directory/'battle-snapshot.bin').read_bytes()).hexdigest()!=snapshot:
         raise ValueError('Frozen Battle file hash mismatch')
     files=[]
@@ -84,7 +107,7 @@ def validate(directory, source, mode):
         files.append({'view':row['view'],'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size})
     return {'source':source,'mode':mode,'frame_integrity':'PASS','files':files,'battle_snapshot_sha256':snapshot,
             'art':'NOT_ACCEPTED_REQUIRES_PIXEL_REVIEW','performance':'NOT_MEASURED','M5':'DEVICE_NOT_RUN',
-            'scope':'Native actual-frame integrity only; nominal adult box is not measured character readability'}
+            'scope':'Native actual-frame integrity only; camera projections are explicitly logical/converted native, not manual visible silhouette or readability acceptance'}
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('directory',type=Path);p.add_argument('source');p.add_argument('--mode',choices=VIEWS,default='baseline');a=p.parse_args()

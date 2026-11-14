@@ -1,0 +1,102 @@
+{
+  "run": 43638813145,
+  "source": "e3d8d24568b936e09c58602345297262472f47d8",
+  "artifact": 14131402326,
+  "ci": "FAIL_POST_CAPTURE_METADATA",
+  "renderer_exit": 0,
+  "art": "FAIL_SELF_AND_INDEPENDENT_REVIEW",
+  "original_receipt_preserved": true,
+  "files": [
+    {
+      "name": "qhd-perspective-road65.png",
+      "sha256": "4bfa8552d47ba3987f86a119eac7f8b1dd52f487d5f5b684d4bb17bbb230bd9a",
+      "bytes": 5150496,
+      "native_png_size": [
+        2560,
+        1440
+      ],
+      "logical_viewport": [
+        1422.0,
+        800.0
+      ],
+      "actual_body_height_logical_units": 99.0905456542969,
+      "derived_body_height_attachment_pixels": 178.3629821777344,
+      "body_fraction": 0.123863182067871,
+      "derivation_scope": "camera geometry projection converted using recorded logical/native sizes, NOT hand-measured visible silhouette"
+    },
+    {
+      "name": "qhd-perspective-context65.png",
+      "sha256": "c0f18f71f59e7d7723a26e42a74e4f91c5dbf8270a5ec612bf5609cd8235a79f",
+      "bytes": 4950227,
+      "native_png_size": [
+        2560,
+        1440
+      ],
+      "logical_viewport": [
+        1422.0,
+        800.0
+      ],
+      "actual_body_height_logical_units": 99.0903930664062,
+      "derived_body_height_attachment_pixels": 178.36270751953114,
+      "body_fraction": 0.123862991333008,
+      "derivation_scope": "camera geometry projection converted using recorded logical/native sizes, NOT hand-measured visible silhouette"
+    },
+    {
+      "name": "uhd-perspective-context65.png",
+      "sha256": "efb1383d8de687a56b4a965b9115f600d950cd26e1765079194a19384d8f0947",
+      "bytes": 11108772,
+      "native_png_size": [
+        3840,
+        2160
+      ],
+      "logical_viewport": [
+        1422.0,
+        800.0
+      ],
+      "actual_body_height_logical_units": 99.0903930664062,
+      "derived_body_height_attachment_pixels": 267.5440612792967,
+      "body_fraction": 0.123862991333008,
+      "derivation_scope": "camera geometry projection converted using recorded logical/native sizes, NOT hand-measured visible silhouette"
+    }
+  ],
+  "logs": {
+    "import.log": {
+      "sha256": "3b8a753386fbc1f6f5ce5ff421a279341e5a060cbcccd53358fe9b7193ecde8d",
+      "errors": [],
+      "count": 0
+    },
+    "parse.log": {
+      "sha256": "7c8a540bf568a3293105a4a7a3b9d8f0aa8f1f2df78557b75169a48237214ad8",
+      "errors": [],
+      "count": 0
+    },
+    "setup.log": {
+      "sha256": "e5b38fe824948293f85539d7fdc4e6a71e1709b6f17d2f7e78f77e643b4f1b5e",
+      "errors": [],
+      "count": 0
+    },
+    "isolated-pack-setup.log": {
+      "sha256": "6402be817f8f392e9bb8d9ae578961b88b3a4c31b4213eac600c18689d5e7d68",
+      "errors": [],
+      "count": 0
+    },
+    "pack-export.log": {
+      "sha256": "eab2386b8b160fb5bd220a251c95c9884b7b702d33d1d7b4adccbb3ca21302b8",
+      "errors": [],
+      "count": 0
+    },
+    "actual-game.log": {
+      "sha256": "f14e2e176f4d4b4484c4852d0ff819b3d8cc10b82298433851e96f39443fbe1d",
+      "errors": [],
+      "count": 0
+    }
+  },
+  "memory": {
+    "maximum_resident_bytes": 992346112,
+    "peak_footprint_bytes": 3077706176
+  },
+  "process_seconds": 153.82877899999994,
+  "not_performance_benchmark": true,
+  "M5": "DEVICE_NOT_RUN",
+  "actions": "NOT_RUN_STATIC_ACTOR_ONLY"
+}

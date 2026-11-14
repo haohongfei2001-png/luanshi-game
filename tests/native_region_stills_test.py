@@ -2,6 +2,13 @@ from pathlib import Path
 import copy, math, sys, unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools/native_region'))
 from validate_stills import VIEWS,validate_records
+from restore_complete import RUNTIME_FILES
+from resource_identity import runtime_rows
+
+def identities():
+    return {'res://'+p:{'source_resource_path':'res://'+p,'original_source_sha256':h,'packed_resource_path':'res://.godot/imported/gate.scn' if p.endswith('.glb') else 'res://'+p,'packed_resource_sha256':'1'*64 if p.endswith('.glb') else h,'identity_method':'godot_import_remap' if p.endswith('.glb') else 'direct_resource'} for p,h in RUNTIME_FILES.items()}
+
+def context_validate(rows):return validate_records(rows,'a'*40,'gate-context-study',identities())
 
 def rows():
     result=[]
@@ -20,13 +27,15 @@ def context_rows():
         r.update({k:list(size) for k in ['pixels','internal_pixels','attachment_size','viewport']})
         r.update(view=name, camera_yaw=math.radians(-65),
             camera_review_profile={'projection':'perspective','nominal_body_fraction':.1,'pitch_degrees':32 if name.endswith('road65') else 38,'fov_degrees':55},
-            runtime_architecture_sha256='1'*64,runtime_ground_sha256='2'*64,runtime_woodland_sha256='3'*64,
+            runtime_resource_identities=runtime_rows(identities()),logical_viewport_size=[1422,800],
+            runtime_architecture_sha256='1'*64,runtime_ground_sha256=RUNTIME_FILES['assets/river_authored/ground/continuous-region.scn'],runtime_woodland_sha256=RUNTIME_FILES['assets/river_authored/woodland/region.scn'],
             shader_clock={'fixed_seconds':6.75},
             single_real_unit_author_oracle={'mesh_count':43,'unit_is_real_hero':True,'art_pass':False,'actions_accepted':False,
                 'battle_state_written':False,'single_actor_author_oracle_not_army_runtime':True,'ground_lift_m':0,
                 'metadata_sha256':'4'*64,'source_files':{'walk':{'sha256':'5'*64}}},
-            actual_author_body_projection={'display_backend':'macOS','projection_viewport':list(size),'top_y':size[1]*.45,
-                'boot_bottom_y':size[1]*.57,'height_px':size[1]*.12,'height_fraction':.12,'vertices_checked':13242})
+            actual_author_body_projection={'display_backend':'macOS','coordinate_space':'logical_viewport_units','projection_viewport':[1422,800],'top_y':360.,
+                'boot_bottom_y':456.,'height_px':96.,'height_fraction':.12,'vertices_checked':13242,
+                'attachment_projection':{'attachment_size':list(size),'scale_xy':[size[0]/1422,size[1]/800],'top_y':size[1]*.45,'boot_bottom_y':size[1]*.57,'height_px':size[1]*.12}})
         result.append(r)
     return result
 
@@ -42,7 +51,7 @@ class StillGate(unittest.TestCase):
             with self.subTest(key=key):
                 r=rows();r[1][key]=value
                 with self.assertRaises(ValueError):validate_records(r,'a'*40,'camera-study')
-    def test_context_correct(self):self.assertEqual(validate_records(context_rows(),'a'*40,'gate-context-study'),'b'*64)
+    def test_context_correct(self):self.assertEqual(context_validate(context_rows()),'b'*64)
     def test_context_rejects_drift_and_wrong_evidence(self):
         mutations=[('runtime_ground_sha256',None,'f'*64),('single_real_unit_author_oracle','mesh_count',1),
             ('single_real_unit_author_oracle','actions_accepted',True),('single_real_unit_author_oracle','ground_lift_m',.04),
@@ -54,8 +63,23 @@ class StillGate(unittest.TestCase):
                 r=context_rows()
                 if sub is None:r[1][top]=value
                 else:r[1][top][sub]=value
-                with self.assertRaises(ValueError):validate_records(r,'a'*40,'gate-context-study')
+                with self.assertRaises(ValueError):context_validate(r)
     def test_consistent_but_shrunken_actor_is_rejected(self):
-        r=context_rows();b=r[1]['actual_author_body_projection'];b.update(height_px=144,height_fraction=.1,boot_bottom_y=b['top_y']+144)
-        with self.assertRaisesRegex(ValueError,'resized'):validate_records(r,'a'*40,'gate-context-study')
+        r=context_rows();b=r[1]['actual_author_body_projection'];b.update(height_px=80,height_fraction=.1,boot_bottom_y=b['top_y']+80);b['attachment_projection'].update(height_px=144,boot_bottom_y=(b['top_y']+80)*1.8)
+        with self.assertRaisesRegex(ValueError,'resized'):context_validate(r)
+    def test_original_raw_glb_is_not_runtime_hash(self):
+        r=context_rows();r[0]['runtime_architecture_sha256']=RUNTIME_FILES['assets/river_authored/architecture/architecture.glb']
+        with self.assertRaises(ValueError):context_validate(r)
+    def test_missing_export_identity_rejected(self):
+        with self.assertRaises(ValueError):validate_records(context_rows(),'a'*40,'gate-context-study')
+    def test_packed_resource_mutation_rejected(self):
+        r=context_rows();r[1]['runtime_resource_identities']['res://assets/river_authored/architecture/architecture.glb']['packed_resource_sha256']='9'*64
+        with self.assertRaises(ValueError):context_validate(r)
+    def test_no_false_native_projection_label(self):
+        for key,value in [('height_px',96),('scale_xy',[1,1]),('attachment_size',[1422,800])]:
+            r=context_rows();r[0]['actual_author_body_projection']['attachment_projection'][key]=value
+            with self.assertRaises(ValueError):context_validate(r)
+    def test_missing_logical_provenance_rejected(self):
+        r=context_rows();r[1].pop('logical_viewport_size')
+        with self.assertRaises(ValueError):context_validate(r)
 if __name__=='__main__':unittest.main()

@@ -358,3 +358,70 @@ fails. Python3 workflow entry references are now scanned too. Five focused
 negative/positive tests pass. This corrects a false source dependency, not an
 art gate or a missing resource hidden from real execution. The empty-cwd pack
 and actual native setup checks remain mandatory and unchanged.
+
+
+## Complete region actually rendered: e3d8d245, evidence gate failed afterward
+
+Run **43638813145**, source **e3d8d24568b936e09c58602345297262472f47d8**,
+artifact **14131402326** produced all three requested native PNGs and the
+actual Metal process exited **0**. The overall CI is **FAILED**, specifically
+in the post-capture metadata validator. Do not rename this run a CI pass.
+Six returned import/setup/export/game logs contain no `SCRIPT ERROR`,
+`SHADER ERROR` or leading `ERROR:`. Exact PNG SHA256, sizes, original logical
+projection values, logs and scope are in `evidence/native-region-e3d8d245/file-integrity.json`.
+
+- 4bbc88b complete scene runtime and 945b2c6 external single-author actor were
+  restored from their verified CI artifacts. Original 91-member actor cache
+  remained unchanged. This is one static real-unit visual replacement, not
+  mapped battle actions or army-ready character rendering.
+- The PCK is 670,056,296 bytes, SHA256
+  `46c128c080e2905c6b7cb53b619294cabfc7dba9a01eed41b00613bc8429181b`.
+- Apple M1 Virtual / Apple Paravirtual Apple5 / native Metal Mobile. Max RSS
+  992,346,112 bytes; peak footprint 3,077,706,176 bytes. The 153.83-second
+  startup/readback process is **not FPS or sustained performance**. M5 not run.
+
+Two evidence-code errors are corrected prospectively, without editing the
+old receipt or lowering asset/pixel gates:
+
+1. Godot exports a GLB as an imported PackedScene. The original raw GLB may
+   be absent from the PCK, so hashing its source path returns empty even when
+   its actual imported resource loaded correctly. The new exporter separately
+   records verified original-source SHA256 and imported-resource path/SHA256.
+   An **empty-working-directory exported process** must observe those exact
+   packed bytes; native screenshots must repeat the identical resource index.
+   No expected hash is passed off as an observed runtime hash.
+2. `Camera3D.unproject_position` uses the canvas-stretched **logical viewport**,
+   here 1422×800, not the actual 2560×1440 or 3840×2160 attachment. New receipts
+   label logical units explicitly and separately record the derived native
+   attachment projection. The earlier 99.09 logical-unit height corresponds
+   to approximately 178.36 native 2K pixels or 267.54 native 4K pixels, about
+   12.3863% of image height. These are geometry projections, not manual visible
+   silhouette measurements. PNG/output/internal resolution remains native 1.0.
+
+Local validation: 12 still-gate tests, 17 input/mode tests and six imported-
+resource identity tests pass. A tiny real PCK with omitted raw GLB loaded its
+imported PackedScene from an empty cwd and returned the exact imported byte
+hash. The complete scene headless setup/identity observation also passed in
+10.14 s against the explicitly labeled **local derivation**, not the CI asset
+hashes. Initial local attempts exposed missing borrowed grass and unset XDG
+write directories; those failed attempts are retained locally, not called
+passes. The actual hosted correction remains pending at this source.
+
+### Actual art review, not integrity acceptance
+
+Coordinator personally viewed the new context65 native 2K; an independent
+reviewer viewed all three originals and the owner-approved whole-scene target.
+Both conclude **ART_FAIL**. Stonework, natural source tree trunks and the new
+actor's clothing/armor structure are visibly present and worth retaining.
+However the wood gatehouse is still cut out of frame, broad uniform dirt and
+regular moat lips dominate, water is a flat gray-green mass, vegetation is
+isolated rather than a coherent bank/forest edge, and legacy soldiers/horse/
+ram differ sharply in completion. This is not fixed by sharpening, exposure,
+more scattered grass or declaring the reference optional.
+
+The 38° context candidate is rejected: it pushes the hero lower and removes
+more destination architecture. Preserve adult scale and solve the actual hero
+and gatehouse projections together, then rebuild the complete bridgehead →
+bank/road shoulder → gate entrance spatial structure. New whole-garment and
+full-source character runtime work continues independently. No default visual
+promotion, qualified package, owner art pass, M5 pass or PR #67 merge occurs.

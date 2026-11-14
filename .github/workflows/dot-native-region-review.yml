@@ -59,6 +59,7 @@ jobs:
           python3 tools/native_region/restore_complete.py .pipeline/region-groups .pipeline/actor-groups "$PWD" .pipeline/restored .pipeline/actor-cache >artifacts/native-region/asset-integrity.json
           cp .pipeline/actor-groups/ATTRIBUTION.md artifacts/native-region/author-attribution.md
           python3 tests/native_region_inputs_test.py
+          python3 tests/native_resource_identity_test.py
           python3 tests/native_complete_restore_test.py
           python3 tests/evidence_scene_mode_test.py
           ./tools/prepare-font.sh

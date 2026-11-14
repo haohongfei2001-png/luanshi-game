@@ -2,6 +2,9 @@
 from pathlib import Path
 import argparse, hashlib, json, os, subprocess, sys, tempfile
 from capture_mode import MODES, arguments
+from resource_identity import collect, verify_runtime_observation
+from restore_complete import RUNTIME_FILES
+from restore_inputs import FILES
 
 def transform_project(data):
     old=b'run/main_scene="res://scenes/game.tscn"'
@@ -23,6 +26,7 @@ def transform_preset(data):
 
 def export(editor, project, patch, output, mode='baseline'):
     mode_arguments=arguments(mode)
+    resource_identities=collect(project,RUNTIME_FILES if mode=='gate-context-study' else FILES)
     config = project/'export_presets.cfg'
     original = config.read_bytes()
     temporary = transform_preset(original)
@@ -53,11 +57,16 @@ def export(editor, project, patch, output, mode='baseline'):
                         '--main-pack',str(pack),'--','--validate-setup',*mode_arguments],
                        check=True,cwd=isolated,env=env)
     setup_log=(output/'isolated-pack-setup.log').read_text()
+    resource_lines=[line.split('RUNTIME_RESOURCE_IDENTITY ',1)[1] for line in setup_log.splitlines() if line.startswith('RUNTIME_RESOURCE_IDENTITY ')]
+    if len(resource_lines)!=1:raise ValueError('Missing isolated packed-resource observation')
+    verify_runtime_observation(json.loads(resource_lines[0]),resource_identities)
+    if collect(project,RUNTIME_FILES if mode=='gate-context-study' else FILES)!=resource_identities:
+        raise ValueError('Source/imported resources changed during pack export')
     if 'NATIVE_REGION_FOCUS ' not in setup_log or 'ARCHITECTURE_GAME_SETUP_PASS tick=135 ordinary=[20, 20]' not in setup_log:
         raise ValueError('Isolated exported pack did not reach real intended setup')
     if mode=='gate-context-study' and 'REGION_SETUP_LOADING_ONE_REAL_UNIT_AUTHOR_ORACLE' not in setup_log:
         raise ValueError('Isolated pack did not load the requested real-unit author oracle')
-    result={'pack':pack.name,'bytes':pack.stat().st_size,'sha256':hashlib.sha256(pack.read_bytes()).hexdigest(),
+    result={'resource_identities':resource_identities,'packed_resource_identity_verified_in_isolated_process':True,'pack':pack.name,'bytes':pack.stat().st_size,'sha256':hashlib.sha256(pack.read_bytes()).hexdigest(),
             'original_export_config_sha256':hashlib.sha256(original).hexdigest(),
             'internal_review_export_config_sha256':hashlib.sha256(temporary).hexdigest(),
             'original_export_config_restored':config.read_bytes()==original,
