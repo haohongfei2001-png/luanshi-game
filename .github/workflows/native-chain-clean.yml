@@ -1,0 +1,60 @@
+name: Rebuild the isolated authored chain on the integrated world
+on:
+  push:
+    branches: [codex/river-rc23-native-chain-clean]
+    paths: ['.github/workflows/native-chain-clean.yml']
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate only the selected legally attributed motion assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install pillow numpy
+          proof=docs/evidence/river-gate-v1-rc23/native-chain/clean
+          mkdir -p "$proof"
+          printf '%s\n' "$GITHUB_SHA" > "$proof/source.txt"
+          test ! -e tools/art/import_company_combat.py
+          cp assets/river_gate/figures/company_motion.png /tmp/shipped-motion.png
+          cp tools/art/source/wildfire_combat_curves.json /tmp/shipped-curves.json
+          python3 tools/art/import_wildfire_combat.py /tmp/wildfire-native > "$proof/source.log"
+          python3 - <<'PY' > "$proof/rebuild.json"
+          import hashlib,json,sys
+          from pathlib import Path
+          from PIL import Image
+          sys.path.insert(0,"tools/art")
+          from company_motion import bake_motion
+          bake_motion(Path("assets/river_gate/figures"))
+          original=Image.open("/tmp/shipped-motion.png").convert("RGBA")
+          current=Image.open("assets/river_gate/figures/company_motion.png").convert("RGBA")
+          assert original.size==current.size and original.tobytes()==current.tobytes()
+          first=json.loads(Path("/tmp/shipped-curves.json").read_text())
+          second=json.loads(Path("tools/art/source/wildfire_combat_curves.json").read_text())
+          assert first==second
+          print(json.dumps({"pixel_identical":True,"source_curves_identical":True,"dimensions":list(current.size),
+              "decoded_pixel_sha256":hashlib.sha256(current.tobytes()).hexdigest(),
+              "selected_curves":list(second["curves"]),"research_importer_present":False},indent=2))
+          PY
+          cp /tmp/shipped-motion.png assets/river_gate/figures/company_motion.png
+          cp /tmp/shipped-curves.json tools/art/source/wildfire_combat_curves.json
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/e10b336005497a26de914ac0f0ddc5630bb758d3/assets/river_gate/figures/company_motion.png -o /tmp/original-motion.png
+          for check in check_company_motion check_field_carries check_contact_motion; do
+            python3 "tools/art/$check.py" > "$proof/$check.log"
+          done
+          python3 tools/art/check_native_chain.py /tmp/original-motion.png > "$proof/check_native_chain.log"
+          python3 tools/art/check_native_entry.py > "$proof/check_native_entry.log"
+          git diff --exit-code -- assets tools/art scripts
+          git add "$proof"
+          git -c user.name='River Gate clean motion verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Verify authored motion rebuild on a clean integrated-world checkout'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-chain-clean-checkout
+          path: docs/evidence/river-gate-v1-rc23/native-chain/clean
+          retention-days: 7
