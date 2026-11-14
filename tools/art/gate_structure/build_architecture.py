@@ -119,22 +119,33 @@ def clip(poly,axis,value,keep_less):
 S=.19;extension=5.;roof_pieces=[]
 # Full adult-height upper hall: floor5.72, column head7.92, original roof frame above.
 ROOF_BASE=7.92-20.36121940612793*S
-def roof_part(name,polys,offset=0,lo=None,hi=None,material='tile'):
+def roof_part(name,polys,offset=0,lo=None,hi=None,material='tile',longitudinal_scale=1.):
  vs=[];fs=[];uv=[];normals=[]
  for poly in polys:
   if lo is not None:poly=clip(poly,1,lo,False)
   if hi is not None:poly=clip(poly,1,hi,True)
   if len(poly)<3:continue
   fs.append(tuple(range(len(vs),len(vs)+len(poly))))
-  for v,t,n in poly:vs.append((50.05+v[0]*S,v[1]*S+offset,ROOF_BASE+v[2]*S));uv.append(t);normals.append(n)
+  for v,t,n in poly:
+   vs.append((50.05+v[0]*S,v[1]*S*longitudinal_scale+offset,ROOF_BASE+v[2]*S));uv.append(t)
+   normals.append(tuple(Vector((n[0],n[1]/longitudinal_scale,n[2])).normalized()))
  o=mesh(name,vs,fs,material,gate,uv,normals);o['source']='VVayToyek CC0 pavilion roof; polygon clipped, UV interpolated, ridge extended';roof_pieces.append(o)
 roof_part('Roof_HipNorth',roof['瓦面1'],-extension)
 roof_part('Roof_HipSouth',roof['瓦面3'],extension)
 for source_name,label in [('瓦面2','East'),('瓦面4','West')]:
- roof_part('Roof_'+label+'_north',roof[source_name],-extension,hi=0)
- roof_part('Roof_'+label+'_south',roof[source_name],extension,lo=0)
- n=44;step=2*extension/n;half=step/S/2
- for i in range(n):roof_part('Roof_'+label+'_central_%02d'%i,roof[source_name],-extension+step*(i+.5),lo=-half,hi=half)
+ if '--native-roof-band' in args:
+  # Preserve complete native hip/corner regions. The only replaced central band
+  # is one full straight tile-column phase, not arbitrary narrow slices.
+  native_pitch_m=.17180710002779964;half=native_pitch_m/(2*S)
+  roof_part('Roof_'+label+'_north',roof[source_name],-extension,hi=-half)
+  roof_part('Roof_'+label+'_south',roof[source_name],extension,lo=half)
+  span=2*extension+native_pitch_m;n=round(span/native_pitch_m);step=span/n
+  for i in range(n):roof_part('Roof_'+label+'_central_%02d'%i,roof[source_name],-span/2+step*(i+.5),lo=-half,hi=half,longitudinal_scale=step/native_pitch_m)
+ else:
+  roof_part('Roof_'+label+'_north',roof[source_name],-extension,hi=0)
+  roof_part('Roof_'+label+'_south',roof[source_name],extension,lo=0)
+  n=44;step=2*extension/n;half=step/S/2
+  for i in range(n):roof_part('Roof_'+label+'_central_%02d'%i,roof[source_name],-extension+step*(i+.5),lo=-half,hi=half)
 # Original continuous hip ridge cover closes the source tile seams.
 for i in range(1,5):roof_part('Roof_HipRidge%d'%i,roof['垂脊%d'%i],-extension if i<=2 else extension)
 # Source rafters retain the same curved load path as the tiles, avoiding straight
