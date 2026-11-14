@@ -3,18 +3,18 @@ from pathlib import Path
 import hashlib,json,os,plistlib,pty,select,signal,subprocess,sys,time
 from rc3_native_probe import empty_game_data
 
-def run_game(executable,pack,driver,output,helper,user_args,movie=None):
+def run_game(executable,output,helper,user_args,movie=None):
     output.mkdir(parents=True,exist_ok=True)
     env=os.environ.copy()
     env["RIVER_CAPTURE_OUT"]=str(output)
     env["RIVER_SOURCE_SHA"]=os.environ["GITHUB_SHA"]
     args=["/usr/bin/time","-l","-o",str(output/"resource-time.log"),str(executable),
-          "--main-pack",str(pack),"--script",str(driver),"--rendering-method","mobile",
+          "--rendering-method","mobile",
           "--rendering-driver","metal","--audio-driver","Dummy","--disable-vsync"]
     if movie:
         movie.parent.mkdir(parents=True,exist_ok=True)
         args+=["--fixed-fps","24","--write-movie",str(movie)]
-    args+=["--",*user_args]
+    args+=["--","--whole-battle-review",*user_args]
     master,slave=pty.openpty()
     process=subprocess.Popen(args,stdin=subprocess.DEVNULL,stdout=slave,stderr=slave,env=env,
                              cwd=output,start_new_session=True)
@@ -91,18 +91,18 @@ def main():
     subprocess.run(["clang","-fobjc-arc","-framework","AppKit","-o",str(helper),
                     str(workspace/"tools/macos_probe_focus.m")],check=True)
     pack,=app.glob("Contents/Resources/*.pck")
-    driver=workspace/"tests/whole_battle_replay.gd"
+    assert pack.stat().st_size>1000000
     data=Path.home()/"Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish"
     with empty_game_data(data):
-        text=run_game(executable,pack,driver,out/"input-smoke",helper,["--native-qhd","--menu-only"])
+        text=run_game(executable,out/"input-smoke",helper,["--native-qhd","--menu-only","--light-study"])
         assert "BRIDGE_MENU_INPUT_PASS" in text
     with empty_game_data(data):
-        text=run_game(executable,pack,driver,out/"movie",helper,["--native-qhd"],out/"take/frame.png")
+        text=run_game(executable,out/"movie",helper,["--native-qhd"],out/"take/frame.png")
         assert "BRIDGE_WINDOW true" in text
         subprocess.run([sys.executable,str(workspace/"tools/encode_whole_battle.py"),
                         str(out/"take"),str(out/"movie"),os.environ["GITHUB_SHA"]],check=True)
     with empty_game_data(data):
-        text=run_game(executable,pack,driver,out/"profile-qhd",helper,
+        text=run_game(executable,out/"profile-qhd",helper,
                       ["--native-qhd","--real-time-profile","--field-profile"])
         assert "BRIDGE_WINDOW true" in text
         profile=out/"profile-qhd/frame-times";profile.mkdir(parents=True,exist_ok=True)

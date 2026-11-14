@@ -186,7 +186,6 @@ static func restore(data: Variant) -> Battle:
 	if modern and (not b.corps.restore(b,data.officer_corps) or not b.objectives.restore(data.get("objectives"),b.tick)): return null
 	b.hero_cds=data.skill_clocks.duplicate()
 	b.rng.state=data.rng
-	b._rebuild_grid()
 	if terrain_revision<3:
 		for unit in b.roster:
 			var repaired:=Ground.restore_bank_position(unit.pos,b.bridgehead)
@@ -198,6 +197,7 @@ static func restore(data: Variant) -> Battle:
 			company.home=Ground.restore_bank_position(company.home,b.bridgehead)
 		for i in b.vehicle_pos.size():
 			b.vehicle_pos[i]=Ground.restore_bank_position(b.vehicle_pos[i],b.bridgehead)
+	b._rebuild_grid()
 	return b
 
 static func save(b: Battle) -> Error:

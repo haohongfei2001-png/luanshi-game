@@ -16,6 +16,7 @@ func _initialize() -> void:
 	assert(restored.hero.pos.x>Ground.MOAT_X)
 	assert(restored.hero.hp==old.hero.hp and restored.losses==old.losses)
 	assert(restored.rng.state==old.rng.state)
+	assert(restored.hero.id in restored._near(restored.hero.pos,.05,0),"Migrated actors must be searchable before the next step")
 	assert(restored.ordinary_counts==old.ordinary_counts)
 	data["terrain_revision"]=2
 	var intermediate:=Store.restore(data)

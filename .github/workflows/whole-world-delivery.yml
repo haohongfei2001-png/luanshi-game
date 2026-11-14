@@ -2,9 +2,9 @@ name: Package and play the complete replacement world on hosted macOS
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py','tests/field_history_probe.gd','scripts/field/save.gd','scripts/field/ground.gd','scripts/field/battle.gd']
+    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py','tests/field_history_probe.gd','scripts/field/save.gd','scripts/field/ground.gd','scripts/field/battle.gd','scripts/game.gd','scripts/field/whole_battle_review.gd','tools/archive_native_world.py']
 permissions:
-  contents: read
+  contents: write
   actions: read
 concurrency:
   group: whole-world-native-delivery
@@ -35,6 +35,7 @@ jobs:
           timeout 8m ./tools/test.sh
           timeout 30s godot --headless --path . --script tests/world_terrain_compat.gd
           godot --headless --path . --check-only --script tests/whole_battle_replay.gd
+          godot --headless --path . --check-only --script scripts/field/whole_battle_review.gd
       - name: Export the complete game with full license notices
         run: ./tools/export.sh
       - uses: actions/upload-artifact@v4
@@ -84,6 +85,10 @@ jobs:
       - name: Play and record the actual exported 512v512 game at native QHD
         run: |
           "$RUNNER_TEMP/review-python/bin/python" tools/whole_native_delivery.py package/Luanshi-macOS.zip patch artifacts/whole-native
+      - name: Preserve viewable native pictures, movie and failure receipts
+        if: always()
+        run: |
+          "$RUNNER_TEMP/review-python/bin/python" tools/archive_native_world.py artifacts/whole-native
       - name: Repeat cold-data Metal startup and pre-tick focus interruption
         if: success()
         run: |
