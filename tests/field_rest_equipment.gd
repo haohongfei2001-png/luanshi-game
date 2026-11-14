@@ -32,6 +32,7 @@ func _bounds(mesh:ArrayMesh,bones:Array[Transform3D],hands_only:bool=false) -> D
 	var low:=Vector3(INF,INF,INF)
 	var high:=Vector3(-INF,-INF,-INF)
 	var count:=0
+	var lowest:={}
 	for i:int in positions.size():
 		var packed:=floori(skin[i].x*1024.)
 		var first:=packed>>5
@@ -39,10 +40,12 @@ func _bounds(mesh:ArrayMesh,bones:Array[Transform3D],hands_only:bool=false) -> D
 		if first==15 and second==15: continue # The shader hides the released arrow.
 		if hands_only and first not in [5,8] and second not in [5,8]: continue
 		var p:=_point(positions[i],skin[i],bones)
+		if p.y<low.y:
+			lowest={"bind":[positions[i].x,positions[i].y,positions[i].z],"joints":[first,second],"weight":skin[i].y}
 		low=low.min(p)
 		high=high.max(p)
 		count+=1
-	return {"vertices":count,"min":[low.x,low.y,low.z],"max":[high.x,high.y,high.z]}
+	return {"vertices":count,"min":[low.x,low.y,low.z],"max":[high.x,high.y,high.z],"lowest":lowest}
 
 func _run() -> void:
 	bank=Company.MOTION.get_image()
@@ -57,7 +60,7 @@ func _run() -> void:
 		var weapon_name:=("FieldArms" if kit in [0,1,3,7,8] else "Arms")+str(kit)+"Close"
 		var weapon:ArrayMesh=Company.pieces[weapon_name]
 		var body_bounds:=_bounds(body,bones)
-		var hand_bounds:=_bounds(body,bones,true)
+		var hand_bounds:=_bounds(weapon,bones,true)
 		var equipment:=_bounds(weapon,bones)
 		var row:={"kit":kit,"body":body_bounds,"hands":hand_bounds,"weapon":equipment}
 		if kit==7:
