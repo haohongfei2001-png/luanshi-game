@@ -198,7 +198,6 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	_reserve(arrows,battle.shots.size())
 	_reserve(runners,battle.orders.size())
 	# Orthographic zoom determines how much of the army actually occupies face-scale pixels.
-	MountArt.material().set_shader_parameter("stable_clock",(float(battle.tick)+alpha)*Battle.DT)
 	var cam:=get_viewport().get_camera_3d()
 	var right:=Vector2.RIGHT
 	var vertical_xz:=Vector2.ZERO
@@ -266,6 +265,8 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var stride:=u.visual_stride if u.visual_stride>=0 else u.stride
 		var step_phase:=fposmod(stride-(1.0-alpha)*travelled*(.42 if u.visual_run else .68),1.0)
 		var data := Color((code+0.5)/128.0,progress,step_phase,clampf(u.flash/0.22,0,1))
+		var rider_socket:=Transform3D.IDENTITY
+		var saddle_heading:=orientation
 		if u.mounted:
 			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
 			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
@@ -275,7 +276,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
 			var gait:=clampf(travelled/(Battle.DT*4.0),0,1)
 			var hoof_phase:=fposmod(u.stride-(1.0-alpha)*travelled*.68,1.)
-			base.y+=(.73+.021*gait*sin(hoof_phase*TAU*2.0))*(1.0-fall)
+			base.y+=.73*(1.0-fall)
+			if u.state!=Battle.State.DEAD:
+				rider_socket=MountArt.saddle_pose(hoof_phase,gait)
 			var side:=u.facing.orthogonal()*fall*(0.91 if u.id%2==0 else -0.91)
 			base+=Vector3(side.x,0,side.y)
 		if u.hero and battle.vehicle != 0:
@@ -283,6 +286,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			if battle.vehicle == 2 and not battle.seat_origin:
 				base -= Vector3(heading.x,0,heading.y)*1.83
 			base.y += 0.73 if battle.vehicle==1 else 0.91
+			if battle.vehicle==1 and u.state!=Battle.State.DEAD:
+				saddle_heading=Basis(Vector3.UP,atan2(heading.x,heading.y))
+				var mount_phase:=fposmod(u.stride-(1.0-alpha)*travelled*.68,1.)
+				rider_socket=MountArt.saddle_pose(mount_phase,clampf(travelled/(Battle.DT*4.),0.,1.))
 		var was_close:=lod_by_id[u.id]==0
 		var was_rank:=lod_by_id[u.id]==2
 		var full:=reference_detail or u.hero or (u.officer and (reference_officer_detail or (zoom<30 and distance_sq<(209.0 if was_close else 178.0)))) or (zoom<17 and distance_sq<portrait_radius_sq*(1.14 if was_close else 1.0)) or (zoom<36 and distance_sq<(23.0 if was_close else 17.0))
@@ -347,6 +354,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
 		# Keep footwear on the ground. Modest stable stature variation travels through all three LODs.
 		var stature:=1.07 if u.hero or u.officer else (1.0 if u.mounted else .966+.0085*((u.id*7+u.squad*5)%9))
+		if (u.mounted or (u.hero and battle.vehicle==1)) and u.state!=Battle.State.DEAD:
+			base.y-=.757*(stature-1.)
+			base=ground+saddle_heading*(rider_socket*(saddle_heading.inverse()*(base-ground)))
+			orientation=saddle_heading*rider_socket.basis*saddle_heading.inverse()*orientation
 		_put(groups[key],base,orientation,data,stature,caster)
 		if not u.hero and not u.officer:
 			visible_soldiers += 1
