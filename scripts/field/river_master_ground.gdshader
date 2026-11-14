@@ -67,6 +67,11 @@ void fragment() {
 	}
 	float patches = noise(p*.17)*.62+noise(p*.49)*.38;
 	float grass_pockets = smoothstep(.35,.70,patches);
+	// Leaf litter belongs to the new shoulder groves; the sloping roadbed
+	// exposes compacted soil, keeping the scene's geometry readable.
+	float shoulder = smoothstep(29.,33.,p.x)*(1.-smoothstep(42.,46.,p.x))
+		*smoothstep(5.5,8.5,abs(p.y))*(1.-smoothstep(16.,23.,abs(p.y)));
+	float slope_soil = smoothstep(.06,.22,1.-terrain_normal.y);
 	vec2 dust_uv = p/2.6;
 	vec2 turf_uv = mat2(vec2(.8,-.6),vec2(.6,.8))*p/3.;
 	vec2 gravel_uv = p/2.5+vec2(.17,.43);
@@ -78,7 +83,8 @@ void fragment() {
 	float gravel_weight = gravel_pockets*clamp(.26+bank*.55+court*.40,0.,.85);
 	dust = mix(dust,stones,gravel_weight);
 	float bare = clamp(lane+bank*.60+(patches-.55)*.6,0.,1.);
-	vec3 verge = mix(litter,turf,.36+.61*grass_pockets);
+	vec3 verge = mix(litter,turf,(.36+.61*grass_pockets)*(1.-shoulder*.72));
+	verge = mix(verge,dust,slope_soil*.58);
 	vec3 col = mix(verge,dust,bare);
 	float rut = 0.;
 	for (int i=0;i<2;i++) {

@@ -38,6 +38,10 @@ Linux cloud, Godot 4.6.3 official `7d41c59c4`, headless editor import completed.
 `tests/river_environment_structure.gd`: PASS; 7,132 walkable height samples,
 138 native crowns, eight native willows, 69 talus parts, 49 grass clumps.
 `tests/world_terrain_compat.gd`: PASS.
+Integrated source `70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b`: full
+`./tools/test.sh` aggregate PASS after environment integration; unedited log in
+`aggregate.log`. This includes combat, field orders, old saves, world/economy,
+youth-system preservation and real subprocess watchdog tests.
 `tests/field_bridgehead.gd`: PASS; 512 per side, tick 400, 300 crossed,
 hits 522/558, deaths 135/144. Simulation, Ground, roster, damage, bridge width,
 orders and casualty accounting were not changed.

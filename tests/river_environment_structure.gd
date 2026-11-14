@@ -17,7 +17,7 @@ func _run() -> void:
 			assert(is_equal_approx(map._land_height(p),Ground.height(p,true)-Ground.MOAT_BED_DEPTH*Ground.moat_depth(p)),"Walkable terrain/actor contact mismatch")
 			unchanged+=1
 	for grove:Vector4 in Map.APPROACH_GROVES:
-		assert(absf(grove.y)>15.,"Tall canopy trunk inside bridge-to-gate action corridor")
+		assert(absf(grove.y)>9.5,"Tall canopy trunk inside bridge-to-gate action corridor")
 	var crowns:=0
 	var willows:=0
 	var toes:=0

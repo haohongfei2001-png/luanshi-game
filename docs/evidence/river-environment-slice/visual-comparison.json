@@ -1,0 +1,384 @@
+{
+  "baseline_source": "d1c1895221c33386d471922807ed590a6987dbe1",
+  "candidate_source": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+  "capture_run": 43601296024,
+  "candidate_artifact": 14116338395,
+  "baseline_run_used": 43601118419,
+  "baseline_artifact_used": 14116468703,
+  "matching_fields": [
+    "frame",
+    "pixels",
+    "seed",
+    "tick",
+    "ordinary",
+    "hits",
+    "center",
+    "zoom",
+    "internal",
+    "world_audit"
+  ],
+  "compared_frames": 8,
+  "metadata_comparison": "PASS",
+  "art": "ART_REBUILD_REQUIRED",
+  "device": "M5 DEVICE_NOT_RUN",
+  "candidate_frames": [
+    {
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "frame": "bridgehead-0050",
+      "hits": [
+        82,
+        104
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        2560,
+        1440
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        2560,
+        1440
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 97.479248046875,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, 58.0, 0.0)",
+      "tick": 50,
+      "world_audit": [],
+      "zoom": 22.0
+    },
+    {
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "frame": "bridgehead-0135",
+      "hits": [
+        189,
+        228
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        2560,
+        1440
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        2560,
+        1440
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 97.479248046875,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, 58.0, 0.0)",
+      "tick": 135,
+      "world_audit": [],
+      "zoom": 22.0
+    },
+    {
+      "center": [
+        9.0,
+        0.0
+      ],
+      "frame": "whole-war-0135",
+      "hits": [
+        189,
+        228
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        2560,
+        1440
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        2560,
+        1440
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 135.062576293945,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, 58.0, 0.0)",
+      "tick": 135,
+      "world_audit": [],
+      "zoom": 115.0
+    },
+    {
+      "center": [
+        38.0,
+        -10.0
+      ],
+      "frame": "grove-0135",
+      "hits": [
+        189,
+        228
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        2560,
+        1440
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        2560,
+        1440
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 97.0821762084961,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, 58.0, 0.0)",
+      "tick": 135,
+      "world_audit": [],
+      "zoom": 18.0
+    },
+    {
+      "center": [
+        48.0,
+        0.0
+      ],
+      "frame": "gate-architecture",
+      "hits": [
+        189,
+        228
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        2560,
+        1440
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        2560,
+        1440
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 97.0821762084961,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, 58.0, 0.0)",
+      "tick": 135,
+      "world_audit": [],
+      "zoom": 18.0
+    },
+    {
+      "center": [
+        38.0,
+        -10.0
+      ],
+      "frame": "native-crowns-full-geometry",
+      "hits": [
+        189,
+        228
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        2560,
+        1440
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        2560,
+        1440
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 97.0821762084961,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, 58.0, 0.0)",
+      "tick": 135,
+      "world_audit": [],
+      "zoom": 18.0
+    },
+    {
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "frame": "previous-daylight",
+      "hits": [
+        189,
+        228
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        2560,
+        1440
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        2560,
+        1440
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 97.479248046875,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, -31.0, 0.0)",
+      "tick": 135,
+      "world_audit": [],
+      "zoom": 22.0
+    },
+    {
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "frame": "bridgehead-0135-uhd",
+      "hits": [
+        189,
+        228
+      ],
+      "internal": 1.0,
+      "msaa": 2,
+      "native_window": [
+        3840,
+        2160
+      ],
+      "ordinary": [
+        512,
+        512
+      ],
+      "pixels": [
+        3840,
+        2160
+      ],
+      "preview_px": [
+        1440,
+        810
+      ],
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 61112,
+      "shadow_distance": 97.479248046875,
+      "shadow_enabled": true,
+      "shadow_mode": 2,
+      "shadow_pancake": 20.0,
+      "source_sha": "70cdb716585d3a0ac0cdd75ab5a1c670d8e3768b",
+      "sun_degrees": "(-48.0, 58.0, 0.0)",
+      "tick": 135,
+      "world_audit": [],
+      "zoom": 22.0
+    }
+  ],
+  "files": [
+    {
+      "side": "baseline",
+      "file": "bridgehead-0135.jpg",
+      "bytes": 1856586,
+      "sha256": "5d28af43a8ad7cfdfd2cfafee269f785b024d14f2bdaecc69a0e6f36993c9587"
+    },
+    {
+      "side": "baseline",
+      "file": "bridgehead-0135-uhd.png",
+      "bytes": 16546256,
+      "sha256": "a5013440504ce35707e8e26ac335f65f9c44d89fcd5279e025d900340fe56962"
+    },
+    {
+      "side": "baseline",
+      "file": "whole-war-0135.jpg",
+      "bytes": 1397938,
+      "sha256": "50df1b76cd624c443bc802f63eb788b69b6924f6dbccc183adb7ca9180a7a51f"
+    },
+    {
+      "side": "candidate",
+      "file": "bridgehead-0135.jpg",
+      "bytes": 1726843,
+      "sha256": "0d4df141e8e6639942a684ffb7a5257daf30e58e7ae580fbe5700a44521aca24"
+    },
+    {
+      "side": "candidate",
+      "file": "bridgehead-0135-uhd.png",
+      "bytes": 15721362,
+      "sha256": "37c9e8f5e8191f403ae7da9fad70084f72d2e695a21fda4033886f1a50cd2550"
+    },
+    {
+      "side": "candidate",
+      "file": "whole-war-0135.jpg",
+      "bytes": 1328276,
+      "sha256": "5d41ac003216bfcfc2932551a64dafcadf79eb0ab2b753e5c6aaf43dd1741f6b"
+    }
+  ]
+}

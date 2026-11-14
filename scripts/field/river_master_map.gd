@@ -18,9 +18,9 @@ var botanical_materials:Dictionary={}
 # Authored canopy groups, not a uniform tree grid. The 22 m bridge/gate
 # action corridor stays open; lower native bushes join the trees to the bank.
 const APPROACH_GROVES: Array[Vector4] = [
- Vector4(35.2,-15.8,7.0,0), Vector4(41.5,-20.8,8.0,1),
+ Vector4(32.5,-10.6,4.8,2), Vector4(39.5,-18.0,7.0,0),
  Vector4(32.6,-23.8,5.8,2), Vector4(39.1,-29.5,7.2,3),
- Vector4(33.0,23.0,6.2,1), Vector4(40.5,27.0,7.8,0),
+ Vector4(39.8,12.8,5.1,3), Vector4(40.5,24.0,7.8,1),
  Vector4(31.0,31.2,5.5,3), Vector4(45.0,34.0,7.1,2)]
 const CANOPY_PARTS := ["FieldOakBroadA","FieldOakBroadB","FieldElmA","FieldMapleGreen"]
 
@@ -43,6 +43,7 @@ func _ready() -> void:
 	_fortress()
 	_river()
 	_banks_and_groves()
+	_approach_hedges()
 	_riparian_verges()
 	_ground_dressing()
 	_field_quarters()
@@ -344,7 +345,7 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 			var width:=entry.z*(.97 if j==0 else .55)
 			var size:=width/maxf(box.size.x,box.size.z)
 			var at:=Vector3(center+entry.x*(shoulder-.75*j),
-				(Ground.BATTLE_WATER_LEVEL-.25 if bridgehead and j==1 else -.48)-box.size.y*size*.12,entry.y+j*entry.z*.31)
+				(Ground.BATTLE_WATER_LEVEL-.25 if bridgehead and j==1 else -.62)-box.size.y*size*(.32 if bridgehead else .12),entry.y+j*entry.z*.31)
 			var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,i*1.83+j*2.1,anchor)
 			rock.name="WholeErodedBoulder"
 			rock.lod_bias=1.3
@@ -392,11 +393,11 @@ func _banks_and_groves() -> void:
 		# A broken low/middle/tall skirt, not isolated crowns on bare grass.
 		for j in 5:
 			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.8+.35*j)
-			if absf(q.y)<11.5:continue
+			if absf(q.y)<7.8:continue
 			_native_understory(WOODLAND,q,.75+.20*(j%3),i+j*1.9,i+j,"brush")
 			_native_understory(FERN,q+Vector2(.7,-.4),.32+.06*(j%3),j+.8*i,i+j)
 	var willow_positions:Array[Vector3]=[
-		Vector3(16.2,-15.5,0.),Vector3(16.0,17.5,0.),
+		Vector3(16.6,-10.2,0.),Vector3(15.8,16.4,0.),
 		Vector3(30.5,-25.,1.),Vector3(17.3,23.,0.),
 		Vector3(-39.,-15.,0.),Vector3(-24.8,20.,1.),
 		Vector3(-40.,47.,1.),Vector3(-24.5,-49.,0.)]
@@ -407,6 +408,8 @@ func _banks_and_groves() -> void:
 	# The approach and its line of sight remain the retained playable geometry.
 	var wooded_slopes:Array[Vector3]=[
 		Vector3(-2.,37.,12.5),Vector3(-18.,49.,9.),
+		Vector3(4.,-25.,9.),Vector3(36.,-43.,13.),Vector3(53.,-40.,10.),
+		Vector3(-12.,24.,8.),
 		Vector3(-70.,-42.,10.),Vector3(-87.,-47.,13.),Vector3(-106.,-42.,9.),
 		Vector3(-98.,39.,10.),Vector3(-72.,43.,10.),
 		Vector3(79.,47.,11.),Vector3(98.,48.,10.),Vector3(112.,-41.,12.)]
@@ -417,7 +420,7 @@ func _banks_and_groves() -> void:
 			var radius:=sqrt(float(j)/12.)*stand.z
 			var angle:=j*2.399963+i*.83
 			var q:=p+Vector2(cos(angle),sin(angle))*radius
-			if absf(q.y)<24.:continue
+			if absf(q.y)<17.:continue
 			var height:=6.8+.65*((i+j)%4)
 			_broadleaf_tree(q,height,i+j*1.1)
 			if j%3==0:
@@ -427,6 +430,20 @@ func _banks_and_groves() -> void:
 		var p:=Vector2(-141.+i*22.,-96.-5.*sin(i*.8))
 		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",p,.60+.05*(i%4),i*.63)
 		cliff.position.y-=2.0
+
+
+func _approach_hedges() -> void:
+	for side:float in [-1.,1.]:
+		for i in 11:
+			var x:=30.5+i*1.15
+			var z:=side*(8.8+1.35*sin(i*.58)+.11*i)
+			var p:=Vector2(x,z)
+			if Ground.blocked(p,true,bridgehead):continue
+			# Discontinuous clustered skirts retain military sight lines and
+			# avoid turning the approach into a decorative formal garden hedge.
+			if i%4==2:continue
+			_native_understory(WOODLAND,p,.65+.22*(i%3),i*1.6,i,"brush")
+			_native_understory(FERN,p+Vector2(.65,side*.55),.35+.05*(i%2),i*.8,i)
 
 
 func _riparian_verges() -> void:
