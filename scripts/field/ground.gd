@@ -165,8 +165,8 @@ static func waypoint(p: Vector2, goal: Vector2, bridgehead: bool=false) -> Vecto
 	if (p.x < RIVER_X - 5.0 and goal.x > RIVER_X - 5.0) or (p.x > RIVER_X + 5.0 and goal.x < RIVER_X + 5.0):
 		var z := crossing(p.y)
 		if absf(p.y - z) > 2.7:
-			return Vector2(RIVER_X + signf(p.x - RIVER_X) * 8.8, z)
-		return Vector2(RIVER_X - signf(p.x - RIVER_X) * 8.9, z)
+			return Vector2(RIVER_X + signf(p.x - RIVER_X) * 7.0, z)
+		return Vector2(RIVER_X - signf(p.x - RIVER_X) * 7.1, z)
 	if p.x < WALL_X and goal.x >= WALL_X and absf(p.y) > GATE_HALF - 1.2:
 		return Vector2(WALL_X - 4.0, 0)
 	return goal
