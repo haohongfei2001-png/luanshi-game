@@ -21,11 +21,11 @@ func transform(r:Array)->Transform3D:
 func viewport(target:Vector3)->SubViewport:
  var v=SubViewport.new();v.size=Vector2i(512,512);v.own_world_3d=true;v.render_target_update_mode=SubViewport.UPDATE_ALWAYS;v.msaa_3d=Viewport.MSAA_4X;v.mesh_lod_threshold=0.;root.add_child(v)
  var world=WorldEnvironment.new();world.environment=Environment.new();world.environment.background_mode=Environment.BG_COLOR;world.environment.background_color=Color(.035,.045,.055);world.environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;world.environment.ambient_light_color=Color.WHITE;world.environment.ambient_light_energy=.45;v.add_child(world)
- var sun=DirectionalLight3D.new();sun.rotation_degrees=Vector3(-35,-25,0);sun.shadow_enabled=cycle_mode;v.add_child(sun)
+ var sun=DirectionalLight3D.new();sun.rotation_degrees=Vector3(-65 if cycle_mode else -35,-25,0);sun.shadow_enabled=cycle_mode;v.add_child(sun);v.set_meta("diagnostic_sun",sun)
  if cycle_mode:
   var ground=MeshInstance3D.new();ground.mesh=PlaneMesh.new();ground.mesh.size=Vector2(2,2);ground.position=target-Vector3(0,.31,0)
   var ground_material=StandardMaterial3D.new();ground_material.albedo_color=Color(.27,.29,.25);ground_material.roughness=1.;ground.material_override=ground_material;v.add_child(ground);v.set_meta("diagnostic_ground",ground)
- var camera=Camera3D.new();camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=.7;v.add_child(camera);camera.position=target+Vector3(1,.35,2);camera.look_at(target);camera.current=true
+ var camera=Camera3D.new();camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=1.05 if cycle_mode else .7;v.add_child(camera);camera.position=target+(Vector3(1,1.2,2) if cycle_mode else Vector3(1,.35,2));camera.look_at(target-Vector3(0,.1,0) if cycle_mode else target);camera.current=true
  return v
 func run()->void:
  out=OS.get_environment("HEAD_OUTPUT");if out.is_empty():out="user://complete-head-oracle"
@@ -119,8 +119,15 @@ func run()->void:
     var isolated_status=views[i].get_texture().get_image().save_png(out+"/"+pose.name+("-author-isolated.png" if i==0 else "-shared-isolated.png"))
     if isolated_status!=OK:stop("Isolated actor PNG failed");return
    for v in views:v.get_meta("diagnostic_ground").visible=true
+   if pose.name in ["cycle-00","cycle-07","cycle-12","cycle-19"]:
+    views[0].get_meta("diagnostic_sun").shadow_enabled=false
+    for frame in 3:await process_frame
+    await RenderingServer.frame_post_draw
+    var shadow_status=views[0].get_texture().get_image().save_png(out+"/"+pose.name+"-author-shadow-off.png")
+    if shadow_status!=OK:stop("Shadow off diagnostic save failed");return
+    views[0].get_meta("diagnostic_sun").shadow_enabled=true
   pose_index+=1
   rows.append({"name":pose.name,"authored_motion":pose.authored_motion,"synthetic_bones":pose.synthetic_bones,"phase":pose.phase,"normal_bank_indices":[na,nb],"normal_bank_blend":blend,"world_turn_degrees":float(pose.phase)*360. if cycle_mode else 0.});print("COMPLETE_HEAD_CAPTURE ",pose.name)
- var report={"walk_cycle":cycle_mode,"actor_isolation_mask":cycle_mode,"ground_and_directional_shadow":cycle_mode,"normal_mode":(("shared_authored_RGBA16F_interpolated_walk" if cycle_mode else "shared_authored_RGBA16F_exact_samples") if normal_bank_enabled else "weighted_bind_normal"),"normal_bank_bytes":normal_bank_bytes,"normal_bank_limit":"Six sparse samples interpolated for held-out Walk only; no arbitrary facial deformation or whole-actor claim" if cycle_mode else "Only seven exact sampled poses, no interpolation or arbitrary facial deformation claim; shared per template, not per actor","source_sha256":data.source_sha256,"fixture_sha256":FileAccess.get_sha256("res://assets/head/head-source.json"),"engine":Engine.get_version_info(),"driver":RenderingServer.get_current_rendering_driver_name(),"method":RenderingServer.get_current_rendering_method(),"renderer":RenderingServer.get_video_adapter_name(),"rows":rows,"inventory":inventory,"reference":"Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin","materials":"source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence","art_pass":false,"M5":"NOT_TESTED","army_performance":"NOT_TESTED"}
+ var report={"walk_cycle":cycle_mode,"actor_isolation_mask":cycle_mode,"ground_and_directional_shadow":cycle_mode,"shadow_on_off_checks":(["cycle-00","cycle-07","cycle-12","cycle-19"] if cycle_mode else []),"normal_mode":(("shared_authored_RGBA16F_interpolated_walk" if cycle_mode else "shared_authored_RGBA16F_exact_samples") if normal_bank_enabled else "weighted_bind_normal"),"normal_bank_bytes":normal_bank_bytes,"normal_bank_limit":"Six sparse samples interpolated for held-out Walk only; no arbitrary facial deformation or whole-actor claim" if cycle_mode else "Only seven exact sampled poses, no interpolation or arbitrary facial deformation claim; shared per template, not per actor","source_sha256":data.source_sha256,"fixture_sha256":FileAccess.get_sha256("res://assets/head/head-source.json"),"engine":Engine.get_version_info(),"driver":RenderingServer.get_current_rendering_driver_name(),"method":RenderingServer.get_current_rendering_method(),"renderer":RenderingServer.get_video_adapter_name(),"rows":rows,"inventory":inventory,"reference":"Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin","materials":"source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence","art_pass":false,"M5":"NOT_TESTED","army_performance":"NOT_TESTED"}
  var f=FileAccess.open(out+"/report.json",FileAccess.WRITE);if f==null:stop("Report creation failed");return
  f.store_string(JSON.stringify(report,"  "));f.close();quit(0)
