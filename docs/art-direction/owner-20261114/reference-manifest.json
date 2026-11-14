@@ -40,7 +40,17 @@
       "format": "PNG",
       "status": "CONDITIONAL_DIRECTION_FEEDBACK_NOT_FINAL_ART_APPROVAL",
       "owner_correction": "Prefer clean character/background insets; simple is acceptable; no painterly smearing, dirty texture or noise."
+    },
+    {
+      "path": "whole-scene-direction.png",
+      "sha256": "00b44d060580384da939029e52935d7f35025fd73dd4f8d981e4c16dfb56786b",
+      "bytes": 3574214,
+      "width": 1672,
+      "height": 941,
+      "format": "PNG",
+      "status": "WHOLE_SCENE_DIRECTION_ACCEPTED_ACTUAL_GODOT_REVIEW_REQUIRED",
+      "owner_next_deliverable": "Implement this quality in actual Godot full-scene gameplay and supply real in-game image for owner review; not another concept."
     }
   ],
-  "updated_utc": "2026-11-14T18:08:00Z"
+  "updated_utc": "2026-11-14T18:21:22Z"
 }
