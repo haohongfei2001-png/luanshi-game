@@ -6,6 +6,7 @@ const TREE_LAYOUT:=[
 	[32.1,-14.8,1.22,-18.0],[37.7,-16.3,1.36,23.0],[41.2,-12.8,1.12,107.0],
 	# Sparse near frame: crowns do not span the protected central travel lane.
 	[34.0,15.7,1.28,-42.0],[41.0,19.0,1.42,68.0]]
+const COMPLETE_TREE_LAYOUT:=[[32.1,-14.8,1.0,-18.0],[34.0,15.7,1.0,-42.0]]
 const BUSH_LAYOUT:=[
 	[31.5,-11.2,.70,12.0],[35.9,-12.9,.85,37.0],[40.8,-10.2,.62,-22.0],
 	[33.8,12.3,.72,-20.0],[38.8,16.4,.8,55.0]]
@@ -55,9 +56,19 @@ func add_group(scene:Node3D,template:Node3D,layout:Array,label:String) -> void:
 		instance.set_meta("author_origin_preserved",true)
 		instance.set_meta("placement_reason","north linked crown / south sparse frame; central route clear")
 func run() -> void:
-	var args:=OS.get_cmdline_user_args();assert(args.size()==3,"tree.glb bush.glb output.scn")
+	var args:=OS.get_cmdline_user_args();assert(args.size() in [3,4],"tree.glb bush.glb output.scn [--complete-tree-intake]")
+	var whole_tree:=args.size()==4
+	if whole_tree:assert(args[3]=="--complete-tree-intake")
 	var tree:=load_native(args[0]);var bush:=load_native(args[1])
 	var tree_cost:=template_cost(tree);var bush_cost:=template_cost(bush)
+	var trees:=COMPLETE_TREE_LAYOUT if whole_tree else TREE_LAYOUT
+	if whole_tree:
+		assert(tree_cost.triangles==1599403,"Full-source tree count mismatch")
+		var receipt_path:=args[0].get_base_dir().path_join("restoration.json")
+		var receipt:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
+		assert(receipt.files.size()==11 and receipt.license=="CC0-1.0")
+		for f:Dictionary in receipt.files:
+			assert(FileAccess.get_sha256(args[0].get_base_dir().path_join(str(f.path)))==str(f.sha256),"Original tree source changed")
 	var region:=Node3D.new();region.name="SpriteFamilyWoodland_PRODUCTION_EXPERIMENT";root.add_child(region)
 	if Ground.authored_landform_enabled:
 		region.set_script(load("res://scripts/field/experimental_landform_guard.gd"))
@@ -68,9 +79,12 @@ func run() -> void:
 	region.set_meta("source_tree_sha256",FileAccess.get_sha256(args[0]))
 	region.set_meta("source_bush_sha256",FileAccess.get_sha256(args[1]))
 	region.set_meta("scope","Woodland family only; not complete battlefield or terrain")
-	add_group(region,tree,TREE_LAYOUT,"CanopyEdge");add_group(region,bush,BUSH_LAYOUT,"UnderstoryEdge")
+	if whole_tree:
+		region.set_meta("composition","two-complete-original-mature-trees-no-leaf-inflation; diagnostic NOT completed woodland")
+		region.set_meta("known_limit","Tree trunk navigation footprints not integrated; no complete collision or forest performance acceptance")
+	add_group(region,tree,trees,"CanopyEdge");add_group(region,bush,BUSH_LAYOUT,"UnderstoryEdge")
 	own(region,region)
 	var packed:=PackedScene.new();assert(packed.pack(region)==OK)
 	assert(ResourceSaver.save(packed,args[2])==OK)
-	print("WOODLAND_REGION_EXPORTED ",JSON.stringify({"trees":TREE_LAYOUT.size(),"bushes":BUSH_LAYOUT.size(),"nominal_triangles":TREE_LAYOUT.size()*int(tree_cost.triangles)+BUSH_LAYOUT.size()*int(bush_cost.triangles),"actual_draw_calls":"NOT_MEASURED","graphics":"NOT_RUN","output":args[2]}))
+	print("WOODLAND_REGION_EXPORTED ",JSON.stringify({"trees":trees.size(),"bushes":BUSH_LAYOUT.size(),"nominal_triangles":trees.size()*int(tree_cost.triangles)+BUSH_LAYOUT.size()*int(bush_cost.triangles),"actual_draw_calls":"NOT_MEASURED","graphics":"NOT_RUN","output":args[2]}))
 	tree.free();bush.free();region.free();quit()

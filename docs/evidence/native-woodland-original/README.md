@@ -46,3 +46,35 @@ local57a7745. Its existing binary is168,951,813B,
 SHA256 e9999c8940aa1299fef7658aa534bcec27f4177973a2d6cd23383832c6e09b97.
 Rebuild terrain, grass and woodland under matching profile04 before next combined
 capture; never combine03 support with04 water/navigation.
+
+## Bounded profile04 whole-source scene intake
+
+The optional fourth argument `--complete-tree-intake` selects exactly two complete
+original trees at (32.1,-14.8), (34.0,15.7), both uniform scale1, with rotations
+-18/-42degrees. It replaces the five field-oak study instances, not adds to them.
+The old three-argument assembler remains unchanged. Five existing shrubs reuse
+the exact CI source SHA d4b2e7ef4983fb633def874654ae50a877e5287df4c6dfe051f01f8835133da2.
+
+Three actual Godot4.6.3 headless packed-scene roundtrips verify profile04 root
+support, both full 1,599,403-triangle instances sharing ONE mesh, three original
+PBR material sets and their native mip chains. Tree triangles total3,198,806;
+including shrubs nominal total3,651,226. The 241MB single-tree pack and ~250MiB
+whole woodland pack are explicitly full-source fidelity baselines, NOT a final
+optimized forest budget. No per-instance duplicate source resources. Final draw
+calls, memory residency, GPU cost and normal-pixel readability NOT_MEASURED.
+
+Important known gap: like the prior field-oak scene, these trees have not added
+trunk footprints to Ground navigation. A StaticBody alone would not fix the
+normal controller's Ground.travel movement. This is a bounded graphical source
+comparison, NOT a complete playable forest collision pass. It remains a failure
+if traversal goes through trunks. A later coherent forest must supply shared
+navigation footprints and preserve protected military lanes.
+
+```
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . \
+ --script tools/art/sprite_source/assemble_woodland_region.gd -- \
+ /original-tree/island_tree_01_2k.gltf /verified-bush/derived-EN-bush.01.glb \
+ /woodland04.scn --complete-tree-intake
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . \
+ --script tests/art_reset/original_tree_region.gd -- /woodland04.scn
+```
