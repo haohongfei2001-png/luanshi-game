@@ -24,7 +24,15 @@ func view() -> SubViewport:
 	return viewport
 func abort(detail:String) -> void:
 	push_error(detail);quit(1)
+func source_hash()->String:
+	return FileAccess.get_sha256("res://assets/ubc_lab/ubc-source.glb.bin") if FileAccess.file_exists("res://assets/ubc_lab/ubc-source.glb.bin") else FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb")
 func run() -> void:
+	if OS.get_environment("INTACT_VALIDATE_PACK")=="1":
+		var fixture=load("res://assets/ubc_lab/ubc_animated.glb") as PackedScene
+		if fixture==null:abort("Pack source resource absent");return
+		var proof=fixture.instantiate();root.add_child(proof)
+		if proof.find_children("*","Skeleton3D",true,false).size()!=1 or source_hash()!="64705ebc4a20650b79f863bae4b6ec47df06dfefe0ed451fe73a04ebc46295c0":abort("Pack source skeleton/hash mismatch");return
+		print("METAL_ORACLE_PACK_CLOSURE_PASS");quit(0);return
 	if DisplayServer.get_name()=="headless":abort("GPU parity requires an actual graphics renderer");return
 	if OS.get_environment("INTACT_REQUIRE_METAL")=="1":
 		if RenderingServer.get_current_rendering_driver_name()!="metal" or RenderingServer.get_current_rendering_method()!="mobile":abort("Actual Mobile/Metal required, no silent backend fallback");return
@@ -131,5 +139,5 @@ func run() -> void:
 		var row:={"clip":sample[0],"phase":sample[1],"mae":error_sum/(512*512),"max":error_max,"visible":visible,"pixels_over_2_levels":different,"pass":pass_value}
 		reports.append(row);print("INTACT_NATIVE_GPU ",JSON.stringify(row))
 	var f:=FileAccess.open(folder+"/parity.json",FileAccess.WRITE)
-	f.store_string(JSON.stringify({"source":OS.get_environment("GITHUB_SHA"),"engine":Engine.get_version_info(),"rendering_driver":RenderingServer.get_current_rendering_driver_name(),"rendering_method":RenderingServer.get_current_rendering_method(),"source_glb_sha256":FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb"),"M5":"NOT_TESTED","os":OS.get_name(),"processor":OS.get_processor_name(),"renderer":RenderingServer.get_video_adapter_name(),"diagnostic_only":not diagnostic.is_empty(),"diagnostic":diagnostic,"lod_threshold":native_view.mesh_lod_threshold,"native_size":[512,512],"internal":1.,"reports":reports,"art_pass":false,"shipping_enabled":false,"full_battle_performance":"NOT_RUN","source_weights":"UBC four-slot import; explicit >8 source tested separately on CPU only"},"  "));f.close()
+	f.store_string(JSON.stringify({"source":OS.get_environment("GITHUB_SHA"),"engine":Engine.get_version_info(),"rendering_driver":RenderingServer.get_current_rendering_driver_name(),"rendering_method":RenderingServer.get_current_rendering_method(),"source_glb_sha256":source_hash(),"source_hash_scope":"exact retained source bytes; runtime geometry is Godot importer derivative","M5":"NOT_TESTED","os":OS.get_name(),"processor":OS.get_processor_name(),"renderer":RenderingServer.get_video_adapter_name(),"diagnostic_only":not diagnostic.is_empty(),"diagnostic":diagnostic,"lod_threshold":native_view.mesh_lod_threshold,"native_size":[512,512],"internal":1.,"reports":reports,"art_pass":false,"shipping_enabled":false,"full_battle_performance":"NOT_RUN","source_weights":"UBC four-slot import; explicit >8 source tested separately on CPU only"},"  "));f.close()
 	quit(0 if failures==0 else 1)

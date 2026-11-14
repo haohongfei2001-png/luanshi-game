@@ -82,3 +82,23 @@ PNGs. It independently recomputes the original2-level/2% and MAE threshold from
 PNG pixels, checks the optional complete68047 CPU assertions, and rejects any
 actual SCRIPT/SHADER/ERROR marker. PNG/global-mode metadata alone is not a pass.
 Pillow is the only external checker dependency; no original asset rewriting.
+
+## Actual hosted Mac runner, normal release-template entry
+
+`metal-character-oracle.yml` restores source bundle from run43634271139,
+artifact14129705496, tar SHA256
+`e5ccee3bdd2383d19a7019e3a45283b84a594317d80663ac80e6a7ff8403b968`.
+It uses only the already-built35e80 Mac template from run43580708251,
+binary SHA256`9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3`.
+No rebuild fallback, paid service or user computer. The current entry overlay
+is recorded separately from the retained source-bundle manifest.
+
+`run_mac.py` exports plaintext scripts and validates the complete source scene,
+preloaded helper classes and source-byte hash in an empty cwd before launching
+the protected template normally with its adjacent PCK. The exporter omits an
+imported original GLB even with an include filter: exact original bytes are
+therefore retained as opaque `ubc-source.glb.bin`. This provenance hash is not
+misrepresented as the hash of the imported runtime geometry. A local exported
+closure test actually passed with this correction; the earlier failed GLB hash
+check is retained in local logs. Actual Mac GPU pass still requires the external
+four-pose/eight-PNG strict gate, unchanged thresholds and real Metal telemetry.

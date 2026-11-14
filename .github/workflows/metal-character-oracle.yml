@@ -1,0 +1,71 @@
+name: Isolated complete source native Metal parity (not game acceptance)
+on:
+  push:
+    branches: ['dot/metal-character-oracle']
+    paths: ['tools/metal_character_oracle/**', '.github/workflows/metal-character-oracle.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native-metal:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: representation-lod-motion-ab1b22064e8cf6a3a55137d89faae494190f44d7
+          run-id: '43634271139'
+          github-token: ${{ github.token }}
+          path: .inputs/source
+      - uses: actions/download-artifact@v4
+        with:
+          name: mobile-mutex-angle-template
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+          path: .inputs/engine
+      - name: Verify pinned source and reused binary; no rebuild fallback
+        run: |
+          set -euo pipefail
+          mkdir -p evidence "$RUNNER_TEMP/oracle-project" "$RUNNER_TEMP/empty-oracle"
+          echo "$GITHUB_SHA" > evidence/source-sha.txt
+          echo 'e5ccee3bdd2383d19a7019e3a45283b84a594317d80663ac80e6a7ff8403b968  .inputs/source/metal-oracle-source.tar.gz' | shasum -a 256 -c -
+          echo '9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3  .inputs/engine/godot.macos.template_release.arm64' | shasum -a 256 -c -
+          tar -xzf .inputs/source/metal-oracle-source.tar.gz -C "$RUNNER_TEMP/oracle-project"
+          cp tools/metal_character_oracle/gpu.gd "$RUNNER_TEMP/oracle-project/tools/metal_character_oracle/gpu.gd"
+          shasum -a 256 tools/metal_character_oracle/gpu.gd > evidence/entry-overlay.sha256
+          cp "$RUNNER_TEMP/oracle-project/fixture-manifest.json" evidence/original-fixture-manifest.json
+          { uname -a; sw_vers; system_profiler SPHardwareDataType SPDisplaysDataType; } > evidence/host.txt
+      - name: Install pinned official importer and external strict checker
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "0155bbc8dcf179edab4ef08e3dbbd4480d7434ab1990cb3fb25517d453b1b65787c7fe6dfc8824b15ff25e1fdcec59e8584f765054106894fee00311868c3964  $RUNNER_TEMP/editor.zip" | shasum -a 512 -c -
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/editor"
+          echo "GODOT_EDITOR=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+          python3 -m venv "$RUNNER_TEMP/oracle-python"
+          "$RUNNER_TEMP/oracle-python/bin/pip" install 'Pillow==11.1.0'
+          clang -fobjc-arc -framework AppKit -o "$RUNNER_TEMP/oracle-focus" tools/metal_character_oracle/focus.m
+      - name: Import minimal complete source and run independent CPU invariant gate
+        env:
+          INTACT_OUTPUT: ${{ github.workspace }}/evidence/cpu
+        run: |
+          set -euo pipefail
+          "$GODOT_EDITOR" --headless --editor --path "$RUNNER_TEMP/oracle-project" --import > evidence/import.log 2>&1
+          "$GODOT_EDITOR" --headless --path "$RUNNER_TEMP/oracle-project" --script tools/metal_character_oracle/cpu.gd > evidence/cpu.log 2>&1
+          python3 tools/representation_compare/assert_clean_logs.py evidence/import.log evidence/cpu.log
+      - name: Normal exported MainLoop empty-cwd closure and actual Apple Metal
+        run: |
+          set -euo pipefail
+          python3 tools/metal_character_oracle/run_mac.py "$GODOT_EDITOR" "$RUNNER_TEMP/oracle-project" "$PWD/.inputs/engine" "$PWD/evidence" "$RUNNER_TEMP/oracle-focus"
+          "$RUNNER_TEMP/oracle-python/bin/python" tools/metal_character_oracle/check_gpu_result.py evidence/gpu --log evidence/actual-metal.log --fixture-manifest "$RUNNER_TEMP/oracle-project/fixture-manifest.json" --cpu-json evidence/cpu/cpu.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: actual-metal-character-oracle-${{ github.sha }}
+          path: evidence/
+          retention-days: 30
+          if-no-files-found: error
