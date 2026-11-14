@@ -5,4 +5,6 @@ OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Usi
 
 BRIDGE_MENU (78, 280) (200, 176) logical=(168.0, 438.4) pixel=(336.0, 876.8)
 BRIDGE_MENU_SELECTED 5 encounter=true popup=false
-AUTHORED_CLOSE {"actor":80,"camera":[36.6645622253418,0.709959626197815,6.3,0.0],"duration":0.7,"hits":[77,100],"hp":0.0,"impacts":1,"losses":[23,15],"ordinary":[512,512],"position":[36.6645622253418,0.709959626197815],"scale":1.0,"size":[2560,1600],"state":7,"tick":48,"timer":0.7,"view":"side"}
+BRIDGE_MENU (78, 280) (200, 176) logical=(168.0, 438.4) pixel=(336.0, 876.8)
+BRIDGE_MENU_SELECTED 5 encounter=true popup=false
+AUTHORED_CLOSE {"actor":617,"camera":[37.4553146362305,3.53290915489197,6.3,0.0],"duration":0.41,"hits":[178,220],"hp":41.8142786294222,"impacts":6,"losses":[53,50],"ordinary":[512,512],"position":[37.4553146362305,3.53290915489197],"scale":1.0,"size":[2560,1600],"state":0,"tick":123,"timer":0.0,"view":"side"}
