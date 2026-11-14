@@ -1,0 +1,32 @@
+"""Fail early on missing evidence/bootstrap sources in the actual checkout.
+Generated resources are an explicit allowlist, not an exemption for missing scripts.
+"""
+from pathlib import Path
+import argparse,json,re,hashlib
+GENERATED={'assets/fonts/NotoSansSC-Regular.otf','assets/river_authored/architecture/architecture.glb','assets/river_authored/woodland/region.scn','assets/river_authored/ground/continuous-region.scn'}
+OUTPUT_OR_OPTIONAL={'artifacts/battle-proof.png','artifacts/campaign-battle-proof.png','assets/build-revision.txt'}
+TEXT={'.gd','.gdshader','.gdshaderinc','.tscn','.tres'}
+def scan(root,require_generated=False):
+ root=Path(root).resolve();workflow=root/'.github/workflows/dot-architecture-review.yml'
+ queue=['tools/evidence_steps.py','scenes/game.tscn','tests/authored_architecture_capture.gd','tools/native_evidence_bundle.py','tools/bounded_artifact_groups.py','tools/encode_wall_clock_capture.py','tools/prepare-font.sh']
+ queue+=re.findall(r'(?:python|--python|--script)\s+([\w/.-]+\.(?:py|gd))',workflow.read_text())
+ seen=set();missing=[];generated=[];hashes={};directories=[]
+ while queue:
+  path=queue.pop()
+  if path in seen:continue
+  seen.add(path);file=root/path
+  if not file.resolve().is_relative_to(root):raise ValueError('Resource outside checkout')
+  if path in OUTPUT_OR_OPTIONAL:continue
+  if path in GENERATED:
+   generated.append({'path':path,'present':file.is_file()})
+   if require_generated and not file.is_file():missing.append(path)
+   continue
+  if file.is_dir():directories.append(path);continue
+  if not file.is_file():missing.append(path);continue
+  data=file.read_bytes();hashes[path]=hashlib.sha256(data).hexdigest()
+  if file.suffix in TEXT:
+   for target in re.findall(r'res://([^\"\'\s)]+)',data.decode()):
+    if '%' not in target and '{' not in target:queue.append(target)
+ return {'checked_files':len(hashes),'missing':sorted(missing),'generated_resources':generated,'directory_references_require_runtime_setup':directories,'source_file_sha256':hashes,'scope':'static source closure plus explicit generated resources; real clean import/setup still required'}
+if __name__=='__main__':
+ p=argparse.ArgumentParser();p.add_argument('--require-generated',action='store_true');p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[3]);a=p.parse_args();result=scan(a.root,a.require_generated);print(json.dumps(result,indent=2));raise SystemExit(bool(result['missing']))

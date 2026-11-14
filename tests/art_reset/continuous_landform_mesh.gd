@@ -1,0 +1,31 @@
+extends SceneTree
+const Ground:=preload("res://scripts/field/ground.gd")
+const Surface:=preload("res://tools/art/authored_reset/surface_authoring.gd")
+func _initialize() -> void: run.call_deferred()
+func run() -> void:
+	assert(Ground.authored_landform_enabled)
+	var args:=OS.get_cmdline_user_args();assert(args.size()==1)
+	var packed:=load(args[0]) as PackedScene;assert(packed)
+	var scene:=packed.instantiate();root.add_child(scene)
+	var terrains:=0;var shapes:=0;var water_triangles:=0;var max_water_dry:=0.;var max_support_error:=0.
+	for mesh:MeshInstance3D in scene.find_children("*","MeshInstance3D",true,false):
+		var arrays:=mesh.mesh.surface_get_arrays(0);var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
+		if mesh.name=="SurveyContourWater_NO_RECTANGLE":
+			water_triangles=vertices.size()/3
+			for i in range(0,vertices.size(),3):
+				assert((vertices[i+1]-vertices[i]).cross(vertices[i+2]-vertices[i]).y<0.,"Water front faces point down")
+				var p:Vector3=(vertices[i]+vertices[i+1]+vertices[i+2])/3.
+				assert(absf(p.y-Ground.BATTLE_WATER_LEVEL)<.00001)
+				max_water_dry=maxf(max_water_dry,Surface.height(Vector2(p.x,p.z))-p.y)
+		else:
+			terrains+=1;var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
+			for v:Vector3 in vertices:assert(absf(v.y-Surface.height(Vector2(v.x,v.z)))<.00001)
+			for i in range(0,indices.size(),3):
+				var p:Vector3=(vertices[indices[i]]+vertices[indices[i+1]]+vertices[indices[i+2]])/3.
+				if p.x>=29.95 and p.x<=46.6 and absf(p.z)<=3.7:max_support_error=maxf(max_support_error,absf(p.y-Surface.height(Vector2(p.x,p.z))))
+	for collision:CollisionShape3D in scene.find_children("*","CollisionShape3D",true,false):
+		assert(collision.shape is ConcavePolygonShape3D);shapes+=1
+	assert(terrains==42 and shapes==42 and water_triangles>1000)
+	assert(max_water_dry<.05 and max_support_error<.02,"Surface sampling insufficient")
+	print("LANDFORM_MESH_PASS ",JSON.stringify({"terrain_tiles":terrains,"collision_shapes":shapes,"water_triangles":water_triangles,"max_water_contour_error_m":max_water_dry,"max_route_interpolation_error_m":max_support_error,"graphics":"NOT_RUN"}))
+	scene.free();quit()

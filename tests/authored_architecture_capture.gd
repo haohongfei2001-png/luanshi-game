@@ -1,5 +1,7 @@
 extends SceneTree
 const Traversal:=preload('res://tools/art/gate_structure/traversal_review.gd')
+const FreezeClock:=preload('res://tools/art/gate_structure/freeze_shader_clock.gd')
+const WaterContours:=preload('res://tools/art/continuous_landform/water_contours.gd')
 const Store:=preload('res://scripts/field/save.gd')
 const Support:=preload('res://tools/art/gate_structure/region_support.gd')
 const Surface:=preload('res://tools/art/authored_reset/surface_authoring.gd')
@@ -23,20 +25,10 @@ func run() -> void:
  field.map.gate=model.find_child('GateDoor_Structure',true,false) as MeshInstance3D
  print('REGION_SETUP_LOADING_WOODLAND')
  var woodland=(load('res://assets/river_authored/woodland/region.scn') as PackedScene).instantiate();field.add_child(woodland)
- var material=StandardMaterial3D.new();material.albedo_color=Color('8f7957');material.roughness=.95
- var support=Node3D.new();support.name='SurveySupport_NOT_FINISHED_ENVIRONMENT';field.add_child(support)
- # Exact non-overlapping support rectangle partition: never offset the professional ground.
- print('REGION_SETUP_BUILDING_SUPPORT')
- var xs=[-48.,29.6,46.6,96.];var zs=[-64.,-12.,12.,64.]
- for ix in 3:
-  for iz in 3:
-   if ix==1 and iz==1:continue
-   var m=MeshInstance3D.new();m.mesh=Support.rectangle(xs[ix],xs[ix+1],zs[iz],zs[iz+1]);m.material_override=material;support.add_child(m)
- print('REGION_SETUP_LOADING_GROUND')
- var ground=(load('res://assets/river_authored/ground/ground-approach.glb') as PackedScene).instantiate();support.add_child(ground)
- assert(ground.transform==Transform3D.IDENTITY,'Native ground must remain world-space, no scale/offset')
- var watermat=StandardMaterial3D.new();watermat.albedo_color=Color('355c5c');watermat.roughness=.3
- var water=MeshInstance3D.new();water.mesh=PlaneMesh.new();water.mesh.size=Vector2(11.7,51);water.position=Vector3(24,-1.48,0);water.material_override=watermat;support.add_child(water)
+ assert(OS.get_environment('LUANSHI_AUTHORED_LANDFORM')=='1','Entire game process must use matching authored Ground')
+ print('REGION_SETUP_LOADING_CONTINUOUS_LANDFORM')
+ var support=(load('res://assets/river_authored/ground/continuous-region.scn') as PackedScene).instantiate();field.add_child(support)
+ assert(support.transform==Transform3D.IDENTITY,'Continuous ground must remain world-space')
  print('REGION_SETUP_STARTING_REAL_BATTLE')
  field.hud.go.pressed.emit()
  for tick in 135:field._physics_process(.05)
@@ -46,13 +38,16 @@ func run() -> void:
   assert(Array(field.battle.ordinary_counts)==[20,20])
   print('ARCHITECTURE_GAME_SETUP_PASS tick=',field.battle.tick,' ordinary=',field.battle.ordinary_counts)
   scene.queue_free();await process_frame;await process_frame;await create_timer(.15).timeout;quit();return
+ var clock=FreezeClock.new()
+ var clock_report=clock.freeze(scene,field.battle.tick*field.Battle.DT)
+ print('STATIC_SHADER_CLOCK_FROZEN ',JSON.stringify({'overrides':clock_report,'include_audit':clock.include_audit}))
  var frozen=var_to_bytes(Store.snapshot(field.battle))
  var hasher=HashingContext.new();hasher.start(HashingContext.HASH_SHA256);hasher.update(frozen)
  var frozen_hash=hasher.finish().hex_encode()
  var snapshot_file=FileAccess.open(out+'/battle-snapshot.bin',FileAccess.WRITE);snapshot_file.store_buffer(frozen);snapshot_file.close()
  var receipts=[]
  var reference_shadow=field.map.sun.shadow_enabled
- var modes=['qhd-before','qhd-after','uhd-before','uhd-after']
+ var modes=['qhd-after','uhd-after']
  if '--shadow-diagnostic' in OS.get_cmdline_user_args():modes.append('qhd-after-no-shadow')
  for mode in modes:
   root.size=Vector2i(3840,2160) if mode.begins_with('uhd') else Vector2i(2560,1440)
@@ -73,10 +68,11 @@ func run() -> void:
   var camera=field.camera
   var projection=camera.get_camera_projection()
   var transform=camera.global_transform
-  receipts.append({'shadow_enabled':field.map.sun.shadow_enabled,'comparison_role':'SHADOW_ONLY_DIAGNOSTIC_NOT_STANDARD_LIGHTING' if mode.ends_with('no-shadow') else 'FIXED_SAME_LIGHTING_PAIR','woodland_composition':woodland.get_meta('composition','MISSING'),'battle_snapshot_sha256':frozen_hash,'controller_git_blob':OS.get_environment('CONTROLLER_BLOB'),'controller_sha256':FileAccess.get_sha256('res://scripts/field/controller.gd'),'camera_transform':{'origin':vec(transform.origin),'basis':[vec(transform.basis.x),vec(transform.basis.y),vec(transform.basis.z)]},'camera_projection':[vec4(projection.x),vec4(projection.y),vec4(projection.z),vec4(projection.w)],'camera_yaw':field.camera_yaw,'viewport':[root.size.x,root.size.y],'internal_pixels':[root.size.x,root.size.y],'seed':str(field.battle.rng.seed),'composition':'original-master' if not after else 'new-architecture-and-sprite-woodland; professional safe-core approach 17x24m; other terrain support only','view':mode,'pixels':[img.get_width(),img.get_height()],'internal_scale':root.scaling_3d_scale,'camera_center':str(field.camera_center),'camera_size':field.camera.size,'tick':field.battle.tick,'ordinary':Array(field.battle.ordinary_counts),'hits':field.battle.hits.duplicate(),'source':OS.get_environment('GITHUB_SHA'),'stage':'MATCHED_REAL_GAME_REGION_EXPERIMENT; professional safe-core approach 17x24m; other terrain support only; old characters; ART_NOT_ACCEPTED; REALTIME_INPUT_NOT_RUN'})
+  receipts.append({'shader_clock':{'fixed_seconds':field.battle.tick*field.Battle.DT,'overrides':clock_report,'include_audit':clock.include_audit},'logical_viewport_size':[root.get_visible_rect().size.x,root.get_visible_rect().size.y],'attachment_size':[img.get_width(),img.get_height()],'shadow_enabled':field.map.sun.shadow_enabled,'comparison_role':'SHADOW_ONLY_DIAGNOSTIC_NOT_STANDARD_LIGHTING' if mode.ends_with('no-shadow') else 'NEW_TERRAIN_SAME_STATE_RESOLUTION_COMPARISON_NOT_OLD_TERRAIN_PAIR','woodland_composition':woodland.get_meta('composition','MISSING'),'battle_snapshot_sha256':frozen_hash,'controller_git_blob':OS.get_environment('CONTROLLER_BLOB'),'controller_sha256':FileAccess.get_sha256('res://scripts/field/controller.gd'),'camera_transform':{'origin':vec(transform.origin),'basis':[vec(transform.basis.x),vec(transform.basis.y),vec(transform.basis.z)]},'camera_projection':[vec4(projection.x),vec4(projection.y),vec4(projection.z),vec4(projection.w)],'camera_yaw':field.camera_yaw,'viewport':[root.size.x,root.size.y],'internal_pixels':[root.size.x,root.size.y],'seed':str(field.battle.rng.seed),'composition':'original-master' if not after else 'new-architecture-and-sprite-woodland; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR','view':mode,'pixels':[img.get_width(),img.get_height()],'internal_scale':root.scaling_3d_scale,'camera_center':str(field.camera_center),'camera_size':field.camera.size,'tick':field.battle.tick,'ordinary':Array(field.battle.ordinary_counts),'hits':field.battle.hits.duplicate(),'source':OS.get_environment('GITHUB_SHA'),'stage':'MATCHED_REAL_GAME_REGION_EXPERIMENT; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR; old characters; ART_NOT_ACCEPTED; REALTIME_INPUT_SEPARATE_RECEIPT'})
   var partial=FileAccess.open(out+'/receipt.json',FileAccess.WRITE);partial.store_string(JSON.stringify(receipts,'  '));partial.close()
   print('ARCHITECTURE_CAPTURE_SAVED ',mode)
  print('MATCHED_REGION_HEADLESS_SETUP_COMPLETE' if '--validate-pairs' in OS.get_cmdline_user_args() else 'AUTHORED_ARCHITECTURE_ACTUAL_GAME_CAPTURE '+JSON.stringify(receipts))
  field.map.sun.shadow_enabled=reference_shadow
+ clock.restore()
  if '--traversal-review' in OS.get_cmdline_user_args():await Traversal.run(self,field,out+'/traversal-raw')
  scene.queue_free();await process_frame;await process_frame;await create_timer(.15).timeout;quit()

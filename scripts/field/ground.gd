@@ -1,4 +1,6 @@
 extends RefCounted
+const AuthoredProfile:=preload("res://scripts/field/authored_landform_profile.gd")
+static var authored_landform_enabled:bool=OS.get_environment("LUANSHI_AUTHORED_LANDFORM")=="1"
 const PassProfile:=preload("res://scripts/field/river_pass_profile.gd")
 ## All planar coordinates are (x,z). Geometry and simulated movement share these landmarks.
 const LIMIT := Vector2(118, 64)
@@ -45,7 +47,7 @@ static func height(p: Vector2,bridgehead:bool=false) -> float:
 		var legacy_east := (p-EAST_HILL)/EAST_RADII
 		var legacy_bank := clampf((absf(p.x-RIVER_X)-3.9)/2.4,0.0,1.0)
 		return 3.9*legacy_hill*legacy_hill+1.8*pow(maxf(0.0,1.0-legacy_east.length_squared()),2)-(1.0-legacy_bank)*.92
-	return PassProfile.height(p)
+	return AuthoredProfile.height(p) if authored_landform_enabled else PassProfile.height(p)
 
 static func river_center(z: float) -> float:
 	return PassProfile.river_center(z)

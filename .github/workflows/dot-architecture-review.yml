@@ -9,12 +9,15 @@ jobs:
   actual-game:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    env:
+      LUANSHI_AUTHORED_LANDFORM: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Verify fixed existing source bytes before building
         run: |
           mkdir -p artifacts/gate-structure
           touch artifacts/.gdignore
+          python tools/art/gate_structure/check_evidence_dependencies.py >artifacts/gate-structure/dependency-preflight.json
           python tools/art/gate_structure/prepare_sources.py | tee artifacts/gate-structure/source-hashes.log
       - name: Install official pinned tools and virtual display
         run: |
@@ -36,32 +39,129 @@ jobs:
           /tmp/blender-4.3.2-linux-x64/blender -b --factory-startup --disable-autoexec --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx "$PWD/assets/river_authored/architecture" --no-preview >artifacts/gate-structure/build.log 2>&1
           sha256sum assets/river_authored/architecture/architecture.glb >artifacts/gate-structure/derived-sha256.txt
           godot --headless --editor --path . --import >artifacts/gate-structure/import.log 2>&1
+          python tools/art/gate_structure/run_capture_checked.py artifacts/gate-structure/entry-parse.log 45 -- godot --headless --path . --check-only --script tests/authored_architecture_capture.gd
+          python tests/bounded_artifact_groups_test.py
+          python tests/native_evidence_bundle_test.py
+          python tests/wall_clock_encoding_test.py
           timeout 30s godot --headless --path . --script tests/art_reset/surface_front_face.gd >artifacts/gate-structure/surface-front-face.log 2>&1
           timeout 30s godot --headless --path . --script tests/authored_support_winding.gd >artifacts/gate-structure/support-winding.log 2>&1
           timeout 45s godot --headless --path . --script tests/authored_architecture.gd >artifacts/gate-structure/structure-test.log 2>&1
-      - name: Fetch pinned professional woodland source and bake complete family
+      - uses: actions/cache/restore@v4
+        id: source_archive_cache
+        with:
+          path: /tmp/luanshi-sprite/sprite-source.zip
+          key: luanshi-official-sprite-archive-21ee25dfffc76030770b644de5fe897559aead064b384fba77166b71a9337791
+      - name: Verify official source and derive independent content keys
+        id: sprite_keys
         run: |
           set -euo pipefail
           python tools/art/gate_structure/fetch_sprite_source.py /tmp/luanshi-sprite >artifacts/gate-structure/sprite-source.log 2>&1
+          godot --headless --path . --script tools/art/sprite_source/export_ground_survey.gd -- /tmp/ground-survey.json >artifacts/gate-structure/ground-survey.log 2>&1
+          python tools/art/gate_structure/bake_recipe_cache.py keys "$(cat /tmp/luanshi-sprite/source-root.txt)" /tmp/ground-survey.json /tmp/sprite-recipes >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/save@v4
+        if: ${{ steps.source_archive_cache.outputs.cache-hit != 'true' }}
+        with:
+          path: /tmp/luanshi-sprite/sprite-source.zip
+          key: luanshi-official-sprite-archive-21ee25dfffc76030770b644de5fe897559aead064b384fba77166b71a9337791
+      - uses: actions/cache/restore@v4
+        id: cache_tree
+        with:
+          path: /tmp/sprite-tree
+          key: ${{ steps.sprite_keys.outputs.tree_key }}
+      - uses: actions/cache/restore@v4
+        id: cache_bush
+        with:
+          path: /tmp/sprite-bush
+          key: ${{ steps.sprite_keys.outputs.bush_key }}
+      - name: Verify or rebuild tree derivative only
+        id: bake_tree
+        run: |
+          set -euo pipefail
           SOURCE_ROOT=$(cat /tmp/luanshi-sprite/source-root.txt)
           BLENDER=/tmp/blender-4.3.2-linux-x64/blender
-          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_reusable_collection.py -- "$SOURCE_ROOT/lib/env/trees.blend" EN-tree.1 /tmp/sprite-tree >artifacts/gate-structure/tree-bake.log 2>&1
-          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_native_collection.py -- "$SOURCE_ROOT/lib/env/bushes.blend" EN-bush.01 /tmp/sprite-bush >artifacts/gate-structure/bush-bake.log 2>&1
+          if ! python tools/art/gate_structure/bake_recipe_cache.py verify /tmp/sprite-recipes/tree.json /tmp/sprite-tree >artifacts/gate-structure/tree-cache.log 2>&1; then
+            python tools/art/gate_structure/bake_recipe_cache.py quarantine /tmp/sprite-tree >>artifacts/gate-structure/tree-cache.log
+            $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_reusable_collection.py -- "$SOURCE_ROOT/lib/env/trees.blend" EN-tree.1 /tmp/sprite-tree >artifacts/gate-structure/tree-bake.log 2>&1
+            python tools/art/gate_structure/bake_recipe_cache.py stamp /tmp/sprite-recipes/tree.json /tmp/sprite-tree >>artifacts/gate-structure/tree-cache.log
+          fi
+          echo 'verified=true' >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/save@v4
+        if: ${{ always() && steps.bake_tree.outputs.verified == 'true' && steps.cache_tree.outputs.cache-hit != 'true' }}
+        with:
+          path: /tmp/sprite-tree
+          key: ${{ steps.sprite_keys.outputs.tree_key }}
+      - name: Verify or rebuild bush derivative only
+        id: bake_bush
+        run: |
+          set -euo pipefail
+          SOURCE_ROOT=$(cat /tmp/luanshi-sprite/source-root.txt)
+          BLENDER=/tmp/blender-4.3.2-linux-x64/blender
+          if ! python tools/art/gate_structure/bake_recipe_cache.py verify /tmp/sprite-recipes/bush.json /tmp/sprite-bush >artifacts/gate-structure/bush-cache.log 2>&1; then
+            python tools/art/gate_structure/bake_recipe_cache.py quarantine /tmp/sprite-bush >>artifacts/gate-structure/bush-cache.log
+            $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_native_collection.py -- "$SOURCE_ROOT/lib/env/bushes.blend" EN-bush.01 /tmp/sprite-bush >artifacts/gate-structure/bush-bake.log 2>&1
+            python tools/art/gate_structure/bake_recipe_cache.py stamp /tmp/sprite-recipes/bush.json /tmp/sprite-bush >>artifacts/gate-structure/bush-cache.log
+          fi
+          echo 'verified=true' >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/save@v4
+        if: ${{ always() && steps.bake_bush.outputs.verified == 'true' && steps.cache_bush.outputs.cache-hit != 'true' }}
+        with:
+          path: /tmp/sprite-bush
+          key: ${{ steps.sprite_keys.outputs.bush_key }}
+      - name: Build complete matching terrain from verified CC0 earth
+        run: |
+          set -euo pipefail
+          python tools/art/continuous_landform/fetch_earth.py /tmp/earth-source >artifacts/gate-structure/earth-source.log 2>&1
+          mkdir -p assets/river_authored/ground
+          godot --headless --path . --script tools/art/continuous_landform/build_region.gd -- assets/river_authored/ground/continuous-region.scn /tmp/earth-source >artifacts/gate-structure/continuous-build.log 2>&1
+          LUANSHI_AUTHORED_LANDFORM=0 godot --headless --path . --script tests/art_reset/continuous_landform_contract.gd >artifacts/gate-structure/continuous-default-contract.log 2>&1
+          godot --headless --path . --script tests/art_reset/continuous_landform_mesh.gd -- assets/river_authored/ground/continuous-region.scn >artifacts/gate-structure/continuous-mesh.log 2>&1
+          godot --headless --path . --script tests/art_reset/earth_material.gd -- assets/river_authored/ground/continuous-region.scn >artifacts/gate-structure/earth-material.log 2>&1
+      - name: Assemble verified family and validate actual scene
+        run: |
+          set -euo pipefail
+          cp /tmp/sprite-recipes/*.json artifacts/gate-structure/
           mkdir -p assets/river_authored/woodland
           godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/sprite-tree/derived.glb /tmp/sprite-bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn >artifacts/gate-structure/woodland-build.log 2>&1
           timeout 60s godot --headless --path . --script tests/art_reset/woodland_region_lifecycle.gd -- assets/river_authored/woodland/region.scn >artifacts/gate-structure/woodland-lifecycle.log 2>&1
           cp /tmp/sprite-tree/complete.json artifacts/gate-structure/tree-bake.json
           cp /tmp/sprite-bush/complete.json artifacts/gate-structure/bush-bake.json
-          godot --headless --path . --script tools/art/sprite_source/export_ground_survey.gd -- /tmp/ground-survey.json >artifacts/gate-structure/ground-survey.log 2>&1
-          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_ground_base.py -- "$SOURCE_ROOT/lib/sets/mushroom_grove/mushroom_grove.blend" /tmp/ground-survey.json /tmp/sprite-ground --road-wear --safe-core >artifacts/gate-structure/ground-bake.log 2>&1
           mkdir -p assets/river_authored/ground
-          cp /tmp/sprite-ground/ground-approach.glb assets/river_authored/ground/
-          cp /tmp/sprite-ground/complete.json artifacts/gate-structure/ground-bake.json
           godot --headless --editor --path . --import >artifacts/gate-structure/region-import.log 2>&1
-          timeout 90s godot --headless --path . --script tests/art_reset/sprite_ground_intake.gd -- assets/river_authored/ground/ground-approach.glb /tmp/sprite-ground/complete.json >artifacts/gate-structure/ground-support.log 2>&1
+          python tools/art/gate_structure/check_evidence_dependencies.py --require-generated >artifacts/gate-structure/dependency-complete.json
           timeout 160s godot --headless --path . --script tests/authored_architecture_capture.gd -- --validate-pairs >artifacts/gate-structure/region-setup.log 2>&1
           timeout 60s godot --headless --path . --script tests/authored_gate_gameplay_contract.gd >artifacts/gate-structure/gate-gameplay.log 2>&1
           if grep -E 'SCRIPT ERROR|ERROR:' artifacts/gate-structure/{woodland-build,region-setup,gate-gameplay}.log; then exit 1; fi
+      - name: Preserve verified derivatives independently of later rendering
+        if: always()
+        run: python tools/art/gate_structure/preserve_derivatives.py
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/derived-groups/group-00/**') != '' }}
+        with:
+          name: reusable-region-derivatives-00
+          path: artifacts/derived-groups/group-00
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/derived-groups/group-01/**') != '' }}
+        with:
+          name: reusable-region-derivatives-01
+          path: artifacts/derived-groups/group-01
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/derived-groups/group-02/**') != '' }}
+        with:
+          name: reusable-region-derivatives-02
+          path: artifacts/derived-groups/group-02
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/derived-groups/group-03/**') != '' }}
+        with:
+          name: reusable-region-derivatives-03
+          path: artifacts/derived-groups/group-03
+          retention-days: 30
+          if-no-files-found: error
       - name: Capture actual game with new structures and unchanged battle systems
         env:
           ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/gate-structure/pixels

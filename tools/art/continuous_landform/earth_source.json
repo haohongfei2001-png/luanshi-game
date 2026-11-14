@@ -1,0 +1,50 @@
+{
+  "asset": "dirt",
+  "author": "Charlotte Baglioni",
+  "source": "https://polyhaven.com/a/dirt",
+  "license": "CC0",
+  "physical_width_m": 2,
+  "files": [
+    {
+      "channel": "Diffuse",
+      "file": "dirt_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dirt/dirt_diff_2k.jpg",
+      "bytes": 3053062,
+      "md5": "8e6fb7316bca5840c386cb72a3f16c62",
+      "sha256": "126d3e4886cc94b494ba609ddc323a77ff0362a1b156c3750d5d2a0a0ead02b8",
+      "actual_pixels": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    },
+    {
+      "channel": "nor_gl",
+      "file": "dirt_nor_gl_2k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/dirt/dirt_nor_gl_2k.png",
+      "bytes": 23484882,
+      "md5": "532cc425ffeef26eca43ef638ef4fb9c",
+      "sha256": "d269f7e4c8f113474735c1d9e346f48272dcb5c2cba72c3976b0181a0867d7aa",
+      "actual_pixels": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    },
+    {
+      "channel": "Rough",
+      "file": "dirt_rough_2k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/dirt/dirt_rough_2k.png",
+      "bytes": 6297012,
+      "md5": "f65936208f208392005031b131b86de1",
+      "sha256": "620354e281625391002fba6e9bcb1123859b434370f7ed6f046f4e8cb107f6f8",
+      "actual_pixels": [
+        2048,
+        2048
+      ],
+      "mode": "I;16"
+    }
+  ],
+  "license_url": "https://polyhaven.com/license",
+  "status": "SOURCE_VERIFIED_NOT_GAME_ART_ACCEPTED"
+}
