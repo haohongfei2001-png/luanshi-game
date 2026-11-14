@@ -24,11 +24,11 @@
     "forearmsClose": 359,
     "forearmsLine": 150,
     "forearmsRank": 60,
-    "legsClose": 1982,
-    "legsLine": 1982,
-    "legsRank": 1982,
-    "feetClose": 1986,
-    "feetLine": 1986,
-    "feetRank": 1986
+    "legsClose": 559,
+    "legsLine": 239,
+    "legsRank": 100,
+    "feetClose": 220,
+    "feetLine": 100,
+    "feetRank": 38
   }
 }
