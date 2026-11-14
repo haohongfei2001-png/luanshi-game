@@ -1,5 +1,21 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## 2026-11-14 当前 P0 · 整套地图与人物视觉重建
+
+Owner 再次否定局部修饰，要求地图、背景、人物全部更换视觉母版，效果图是最低门槛。当前状态 **ART_REBUILD_REQUIRED / OWNER_REJECTED**。旧画面及下方历史记录保留用于对照，未进入下一版美术交付候选。
+
+- 整地图正常入口已接入 `codex/river-whole-rebuild`。代码 `0ee9367016fd84418491de9a564d4cfaabb0a682`，地面与门扇烘焙 `0ac8b112e3e9403c58bdbfe06670d31ff014c6c5`。替换 controller 的地图装配，包含完整城墙/城楼/城内房舍/营舍、原生地表、木桥、岩岸、整株垂柳、阔叶林和背景松林。保留原 Ground 与真实军队模拟接口。[当前原生 QHD 实玩运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43553508581)
+- 全部源资产云端烘焙完成。CC0 Poly Haven 完整结构在 `09cddac79638275c6e02ed42cc8d6498c5ec86da`，0AD CC BY-SA 建筑原生 UV2/AO 和 Sapling 连接完整枝条的柳树在 `22ad3946dcbb58d9a228f80fc52093794b549cf3`。每个资源保留原作者、来源哈希与制作代码，输出可编辑 glTF/GLB。
+- 完整人物母版由当前 `uniform_master` 工作线独占，分支 `codex/river-rc23-hm08-body`。已可运行的源提交 `cc6ae7e59b5f49d3d3e93bfc73970cb5d67f61b7` 使用真实 HM08 人体与 0AD 整衣，修复足轴非有限值，六种身份均有三档模型。本人实拍自审仍发现颈口、胸区和低模观感，正在继续改整套衣甲结构。未经该工作线确认固定 head，不覆盖其公司装配文件。
+- 前一工程基线是 PR #58 的 `7481b60411540e8c6c23a4553a0a99cc2a3a5df2`。已有真实 2560×1440 与 3840×2160、内部 1.0 帧证据；分辨率验证通过未代表视觉质量通过。RC23 整段 33.25 秒 QHD 原速回放在 run43546643601，sha256 `d98cb829146721b92b4f406cb1af8a913773892a83fc994156cb205cd800e3e6`，使用 llvmpipe 离线 MovieMaker，不能用回放帧率证明实时性能。
+- 原 macOS 首次 Metal 卡住的样本已定位至上游 shader singleton 锁等待。独立移植 Godot PR123312 后，run43550761384 的默认 Metal 首次及后续窗口可运行，兼容后端因自编译模板缺少 EGL 动态库失败。该模板仍隔离，尚未采用为产品。六次空应用数据冷启动与三次焦点中断复验分支 `codex/river-rc23-mobile-cold`，初始提交 `df11f1ac8c19099f59d042aa1479ee6e62aa915e`。真实 M5 为 **DEVICE_NOT_RUN**。
+- Goal 仍为 active。原生 automation-2 已更新为整套重建方向，每天上海时间 10 点与 22 点。设置存在，独立定时执行记录尚未证实。
+
+下一步先检查上述整地图运行的实际结果与 `docs/evidence/river-whole-rebuild/2560x1440/view-0145.png`。修复运行失败后，整合人物母版固定资源，按参考图的 22 米镜头自审全幅构图和连续动作，继续制作达到门槛的完整场景。后续原速驾驶脚本需持续接敌，移除一次命中就自动回退的旧规则。再录完整 2K 原片与 4K 原帧，完成九兵器/512v512/战后存档回归。托管设备实测与 M5 分别记录。
+
+可恢复的云端入口命令为 `git fetch origin codex/river-whole-rebuild codex/river-rc23-hm08-body`；先核对写入者和运行状态，再建立独立整合 checkout，执行 `godot --headless --editor --import` 与 `godot --headless --path . --script tests/field_bridgehead.gd`。当前整地图 workflow 自动完成真实 X11 QHD 窗口的正常菜单、移动与攻击回放。
+
+
 ## OWNER-AUTONOMOUS-20261114｜自动续接入口（真实进展仍以本文件最新 commit 为准）
 
 所有后续 Codex 执行窗口遵循 [长期自主开发与自动续接协议](CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)。**已授权持续开发、常规修复/测试、现有规则允许的 PR/合并与内部可玩候选交付，无需 Owner 每步中转**。应优先完成真实高质量角色/环境/战斗，而不是无限方案或对旧粗糙图做小修；每轮留真实 SHA、截图、录像、运行结果、当前 ARTREF 与真实 M5 状态、下一轮第一件工作。尝试 Codex Goal/Automations 跨会话续接；未实际启动则标记 AUTOMATION_UNAVAILABLE，不得假称 Codex 正在后台运行。当前此节仅新增执行约束，不宣称 Codex 已安装资源、跑出新美术、测试通过或真正设置定时工作。

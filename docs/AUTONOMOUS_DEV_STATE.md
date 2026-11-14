@@ -1,14 +1,23 @@
-# 《乱世》自主开发状态
+# 《乱世》Codex 自主开发续接状态
 
-| 项目 | 已核对的状态 |
+更新于 2026-11-14，本表记录真实开发状态。当前最终质量未验收。
+
+| 字段 | 实际状态 |
 |---|---|
-| 工程基线 | main `844f83191daf8223464a35711e5a428d09e5d92f`，候选工作在 [PR #58](https://github.com/haohongfei2001-png/luanshi-game/pull/58)。RC22 的代码、录像和兼容记录保存在祖先提交中。 |
-| 优先级 | Owner 要求按 [战场全图](art-direction/river-gate/battle-view.png) 和 [人物近图](art-direction/river-gate/pose-detail.png) 高还原。必须看正常可操作的 2560×1440、3840×2160 原始游戏帧。 |
-| 最近的游戏源码 | `d5ea3052449377f8d389a30fbacaa005cfec0869`。PR 头 `7481b60411540e8c6c23a4553a0a99cc2a3a5df2` 随后把旧战场 HUD 回归改为检查实际绘制的按钮、屏底和场地中心。 |
-| 实装 | 游戏内原生分辨率与宽屏设置、可通行门洞上的门楼比例、石基与土墙、2K 扫描岸石、4K 车辙路面、握在左掌的盾及落主马离开遗体。 |
-| 实机 | [2560×1440 第 50 步原帧](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aac32eb883aa05844e812bbd62cfafa3eee04058/docs/evidence/river-gate-v1-rc23/fitted-crossing/2560x1440/view-0050.png)；[512v512 宽屏和 UHD 运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43546458665)。 |
-| 试验取舍 | 拒收普通兵的第一版贴脸和闭筒战袍。正在同机位复查真实枝条柳冠、桥板以及第二版交领宽带，取舍以相同战斗输入的原帧为准。 |
-| 质量与设备 | Owner 已明确拒绝此前画面。全图视觉还原仍未通过；`ART_REVIEW_REQUIRED`。真实 MacBook Air M5 `DEVICE_NOT_RUN`。 |
-| Codex 长期 Goal | `ACTIVE`，所在对话 `01a1cbad-2467-7310-b9fc-81b5a5b96466`。 |
-| 自动续接 | 单项原生 heartbeat，`automation-2`，北京时间每天 10:00、22:00。状态和目标对话已核实。10:00 当期在本对话开发期间推迟，读回时尚无独立运行记录。 |
-| 接续与验收 | [本轮可执行入口与历史](CODEX_CONTINUATION.md) · [正式 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43547163844) · [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。 |
+| 当前 main | `844f83191daf8223464a35711e5a428d09e5d92f`，下一轮重新获取 |
+| 美术 | **ART_REBUILD_REQUIRED / OWNER_REJECTED**，效果图为最低门槛 |
+| 当前 P0 | 整地图、背景和完整人物母版重建，停止在旧粗糙母版上修饰零件 |
+| 可运行工程基础 | PR #58，`7481b60411540e8c6c23a4553a0a99cc2a3a5df2` |
+| 整地图工作分支 | `codex/river-whole-rebuild`，代码 `0ee9367`，地面门扇烘焙 `0ac8b11` |
+| 地图验证 | run43553508581，真实 2560×1440 正常入口回放进行中，结果须重新读取 |
+| 人物工作分支 | `codex/river-rc23-hm08-body`，完整 HM08 与整衣库已可运行，继续修复颈胸与整套衣甲结构 |
+| 新环境资产 | 合法 CC0 整片岩岸/木桥/阔叶与松林、0AD CC BY-SA 完整建筑原生 AO、原创整株垂柳，均已烘焙保存 |
+| 2K / 4K | 原工程已实测完整物理画幅和内部比例 1.0，新整套美术继续重录 |
+| macOS 启动 | 原官方模板首次 Metal 卡住证据保留；上游锁修复隔离测试的 Metal 已启动，兼容 EGL 依赖未解决 |
+| 真实 M5 | **DEVICE_NOT_RUN** |
+| Goal | active，目标未完成 |
+| 自动续接 | automation-2 ACTIVE，每日上海 10 / 22 点，提示词已更新为整套重建；独立定时执行尚未证实 |
+| 下一项 | 自审整地图 QHD 原帧，整合完整人物固定版本，继续改整幅实机观感与动作，再录原速、4K 和回归 |
+| 详细恢复 | docs/CODEX_CONTINUATION.md 顶部当前段 |
+
+所有源码、许可、失败样本和可回退版本通过 GitHub 保存。旧候选包仍可用于玩法回归，当前视觉交付状态以本表为准。剧情保留 Owner 创作边界。
