@@ -7,6 +7,7 @@ from company_weapons import weapon
 from company_motion import bake_motion
 from figure_atlas import make_atlas
 from figure_mesh import Library
+from hand_grips import field_hands
 import company_line
 
 def bake_geometry(dest):
@@ -18,10 +19,17 @@ def bake_geometry(dest):
             print(look,suffix,len(surface.faces),"triangles")
         for kit in range(9):
             surface=weapon(kit,True) if detailed else company_line.arms(kit)
+            field_hands(surface,kit,suffix)
             library.insert("Arms"+str(kit)+suffix,surface)
     for look in ("levy","archer","regular","guard","officer","player"):
         surface=company_line.costume(look,rank=True)
         library.insert(look.capitalize()+"Rank",surface)
+    # Formation distance uses the same existing line-grade weapons with a much
+    # smaller grasp. The body and weapon still merge into one draw per group.
+    for kit in range(9):
+        surface=company_line.arms(kit)
+        field_hands(surface,kit,"Rank")
+        library.insert("Arms"+str(kit)+"Rank",surface)
     library.save(dest/"river_company.glb")
 
 def main():

@@ -1,13 +1,27 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D surface_atlas : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D coat_pigments : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D mane_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 varying flat float atlas_patch;
 varying flat float fallen;
 varying flat float hit;
 varying float coat_shade;
 varying float coat_under;
+varying float sock;
+varying float nose;
 varying flat float coat_lot;
 varying float animal_barrel;
+uniform vec4 bay_deep : source_color = vec4(.166,.113,.098,1.);
+uniform vec4 bay_lit : source_color = vec4(.388,.262,.189,1.);
+uniform vec4 iron_deep : source_color = vec4(.159,.164,.156,1.);
+uniform vec4 iron_lit : source_color = vec4(.406,.425,.385,1.);
+uniform vec4 chestnut_deep : source_color = vec4(.214,.131,.110,1.);
+uniform vec4 chestnut_lit : source_color = vec4(.474,.294,.201,1.);
+uniform vec4 seal_deep : source_color = vec4(.136,.115,.111,1.);
+uniform vec4 seal_lit : source_color = vec4(.305,.253,.221,1.);
+uniform vec4 unpigmented : source_color = vec4(.487,.463,.386,1.);
+uniform vec4 nose_leather : source_color = vec4(.193,.172,.158,1.);
 uniform float stable_clock = 0.0;
 
 vec3 rx(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(p.x,c*p.y-s*p.z,s*p.y+c*p.z);}
@@ -105,21 +119,42 @@ void vertex(){
 	}
 	VERTEX=p; NORMAL=normalize(n);
 	vec2 tile=floor(UV*4.0);
-	atlas_patch=tile.x+tile.y*4.0;
+	atlas_patch=UV.x>=3.0?33.0:(UV.x>=2.0?32.0:tile.x+tile.y*4.0);
+	// Socks and muzzle markings are anchored to that horse's bind-space
+	// legs and nose. They stay put as joints move or the LOD changes.
 	float pigment=INSTANCE_CUSTOM.a*4.0;
 	coat_lot=floor(pigment);
+	float front_mark=smoothstep(.25,.34,VERTEX.z)*smoothstep(.04,.13,VERTEX.x);
+	float rear_mark=(1.-smoothstep(-.56,-.41,VERTEX.z))*(1.-smoothstep(-.13,-.04,VERTEX.x));
+	float sock_height=.215+.036*sin(VERTEX.z*17.+VERTEX.x*22.);
+	sock=(1.-smoothstep(sock_height-.015,sock_height+.015,VERTEX.y))*max(front_mark,rear_mark);
+	nose=smoothstep(1.04,1.20,VERTEX.z);
 	fallen=collapse;hit=clamp((fract(pigment)-.03)/.92,0.0,1.0);
 }
 void fragment(){
 	vec3 color=texture(surface_atlas,UV,1.1).rgb;
-	if(atlas_patch<1.5) {
-		vec3 pigment;
-		if(coat_lot<.5) pigment=vec3(.73,.61,.52);
-		else if(coat_lot<1.5) pigment=vec3(.59,.65,.67);
-		else if(coat_lot<2.5) pigment=vec3(.87,.74,.61);
-		else pigment=vec3(.58,.52,.49);
-		color*=pigment*mix(vec3(1.),vec3(.53,.59,.62),coat_shade);
-		color*=1.-.11*coat_under;
+	if(atlas_patch>32.5) {
+		vec4 tuft=texture(mane_ink,UV-vec2(3.,0.));
+		if(tuft.a<.50) discard;
+		color=tuft.rgb;
+	} else if(atlas_patch>31.5) {
+		vec2 cell=vec2(mod(coat_lot,2.0),floor(coat_lot*.5));
+		vec2 ink_uv=(cell+clamp(UV-vec2(2.,0.),vec2(.001),vec2(.999)))*.5;
+		vec3 hide=texture(coat_pigments,ink_uv).rgb;
+		float value=dot(hide,vec3(.30,.55,.15));
+		color=mix(vec3(value),hide,.83)*.95;
+	} else if(atlas_patch<1.5) {
+		float ink=dot(color,vec3(.30,.56,.14));
+		if (!OUTPUT_IS_SRGB) ink=sqrt(max(ink,0.));
+		float wash=smoothstep(.22,.58,ink);
+		vec3 base=mix(bay_deep.rgb,bay_lit.rgb,wash);
+		if(coat_lot>.5 && coat_lot<1.5) base=mix(iron_deep.rgb,iron_lit.rgb,wash);
+		else if(coat_lot>1.5 && coat_lot<2.5) base=mix(chestnut_deep.rgb,chestnut_lit.rgb,wash);
+		else if(coat_lot>2.5) base=mix(seal_deep.rgb,seal_lit.rgb,wash);
+		color=mix(base,base*vec3(.48,.49,.48),coat_shade*.73);
+		color=mix(color,nose_leather.rgb,nose*.61);
+		if(coat_lot>.5 && coat_lot<2.5) color=mix(color,unpigmented.rgb,sock*.75);
+		color*=1.-.13*coat_under;
 	}
     // Leather and mane keep a dark mass beneath the rider; shaped metal fittings
     // already carry their own bright swatch in the shared tack atlas.
@@ -140,6 +175,6 @@ void light(){
 	// eyes, skull, leather and carriage keep their original cel thresholds.
 	float broad=.35*smoothstep(-.25,.25,facing)+.41*smoothstep(.13,.77,facing)
 	           +.20*smoothstep(.59,.94,facing);
-	float is_coat=atlas_patch<1.5?animal_barrel:0.;
+	float is_coat=(atlas_patch<1.5 || atlas_patch==32.)?animal_barrel:0.;
 	DIFFUSE_LIGHT+=LIGHT_COLOR*(mix(bands,broad,is_coat)*ATTENUATION/PI);
 }

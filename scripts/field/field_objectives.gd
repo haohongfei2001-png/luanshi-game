@@ -102,14 +102,25 @@ func resolve(b) -> String:
 			decision=("守军失去关前阵地" if side==1 else "我军无法维持攻势")+"，存留战力 %d 对 %d，可指挥部队 %d 支。" % [roundi(friendly),roundi(enemy),s.command[side]]
 			return "守军溃退" if side==1 else "攻势瓦解"
 	var strikes: int=b.hits[0]+b.hits[1]
-	var stationary: bool=s.moving<=maxi(2,ceili((s.ready[0]+s.ready[1])*0.035)) and strikes==last_hits and is_equal_approx(last_gate,b.gate_hp) and b.ram.distance_squared_to(last_ram)<0.1 and b.capture<=0
+	# A broken bridge assault can still have troops marching back and forth
+	# while no one is trying to take the court. Require the defender to hold
+	# it, the player outside the breach, and no attacking command or dispatch.
+	var held_court:=false
+	if b.bridgehead and b.gate_hp<=0 and s.court[0]==0 and s.court[1]>0 and b.orders.is_empty() and b.hero.pos.distance_squared_to(Ground.GATE)>100.:
+		held_court=true
+		for c in b.companies:
+			if c.team==0 and c.standing>0 and not c.regrouping and c.mission in [b.Mission.PRESS,b.Mission.FLANK,b.Mission.ESCORT,b.Mission.INTERCEPT] and b.corps.can_command(b,c):
+				held_court=false
+				break
+	var little_motion: bool=s.moving<=maxi(2,ceili((s.ready[0]+s.ready[1])*0.035))
+	var stationary: bool=(little_motion or held_court) and strikes==last_hits and is_equal_approx(last_gate,b.gate_hp) and b.ram.distance_squared_to(last_ram)<0.1 and b.capture<=0
 	quiet=quiet+1 if stationary else 0
 	last_hits=strikes
 	last_gate=b.gate_hp
 	last_ram=b.ram
 	if b.tick*b.DT>=1500 or quiet>=50:
-		if b.gate_hp>0 and s.ready[1]>0:
-			decision="守军保住城门，攻方长时间未能继续推进。"
+		if (b.gate_hp>0 and s.ready[1]>0) or held_court:
+			decision="城门已破，守军仍占内庭。攻方各队已收拢或失去指挥，长时间未能恢复进攻。" if held_court else "守军保住城门，攻方长时间未能继续推进。"
 			return "守城成功"
 		decision="双方已停止接敌，河关归属维持。"
 		return "两军脱离接战"

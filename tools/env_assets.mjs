@@ -292,6 +292,59 @@ function baggage() {
     }
     return [cart];
 }
+// Local waterline is y=0. The bottom, chine and rising sheer are separate
+// longitudinal runs. Returning the gunwale to the inside leaves an open hull.
+function riverSkiff() {
+    const hull = new Joinery("MooredRiverSkiff");
+    const lower = paint("615244"), upper = paint("866548"), inner = paint("806b54");
+    const bottom = paint("584b41"), rail = paint("ab8c65"), frame = paint("9c815e");
+    // z, beam at the sheer, sheer height, rocker at the bottom
+    const stations = [[-2.54,.11,.59,.18],[-2.19,.40,.46,-.07],[-1.45,.68,.34,-.20],
+        [-.55,.78,.30,-.23],[.60,.77,.30,-.23],[1.52,.64,.34,-.17],
+        [2.13,.40,.43,-.02],[2.43,.33,.50,.10]];
+    function section(station, side) {
+        const [z,w,h,k] = station;
+        return [[.52*w,k],[.81*w,k+.12],[w,h-.062],[w-.013,h],[Math.max(.018,w-.078),h-.006],
+            [Math.max(.014,.79*w-.036),k+.17],[Math.max(.009,.52*w-.022),k+.082]]
+            .map(([x,y]) => [side*x,y,z]);
+    }
+    const skin = [bottom,lower,upper,rail,inner,inner];
+    for (let i=1; i<stations.length; i++) {
+        const prev=stations[i-1], next=stations[i];
+        for (const side of [-1,1]) {
+            const a=section(prev,side), b=section(next,side);
+            for (let j=0; j<skin.length; j++) {
+                const normal=j===3 ? [0,1,0] : [j<3 ? side : -side,0,0];
+                hull.face([a[j],b[j],b[j+1],a[j+1]],skin[j],0,normal);
+            }
+        }
+        for (const j of [0,6]) {
+            hull.face([section(prev,-1)[j],section(prev,1)[j],section(next,1)[j],section(next,-1)[j]],
+                j===0 ? bottom : inner,0,[0,j===0?-1:1,0]);
+        }
+    }
+    for (const [i,normal] of [[0,-1],[stations.length-1,1]]) {
+        const a=section(stations[i],-1), b=section(stations[i],1);
+        hull.face([a[0],b[0],b[1],b[3],a[3],a[1]],upper,0,[0,0,normal]);
+        hull.rod(a[3],b[3],.038,.038,rail,6);
+    }
+    for (const i of [2,3,4,5]) {
+        const a=section(stations[i],-1), b=section(stations[i],1);
+        hull.rod(a[6],b[6],.027,.027,frame,5);
+        for (const rim of [a,b]) hull.rod(rim[6],rim[4],.032,.024,frame,5);
+    }
+    for (const [i,z] of [[2,-1.43],[4,.60]]) {
+        const [unused,w,h]=stations[i];
+        hull.block([0,h-.105,z],[w*1.79,.068,.24],rail);
+    }
+    // One scull rests across both thwarts, with a paddle-shaped planform.
+    hull.rod([-.31,.33,-1.83],[.30,.34,1.14],.026,.040,rail,7);
+    const blade=[ [.23,.34,1.01],[.34,.35,1.03],[.49,.30,1.58],[.49,.28,1.86],
+        [.34,.28,1.82],[.28,.31,1.59] ];
+    hull.face(blade,frame,0,[0,1,0]);
+    return [hull];
+}
+
 function base64(bytes) {
     const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let out="";
@@ -383,12 +436,16 @@ const out = new URL("../assets/environment/",import.meta.url);
 mkdirSync(fileURLToPath(out),{recursive:true});
 const ramTarget=new URL("river_ram.gltf",out);
 const ramModel=gltf(carriage());
+const skiffTarget=new URL("river_skiff.gltf",out);
 if (process.argv.includes("--check-ram")) {
     if(readFileSync(ramTarget,"utf8")!==ramModel) throw Error("Unbaked river ram");
+} else if(process.argv.includes("--check-skiff")) {
+    if(readFileSync(skiffTarget,"utf8")!==gltf(riverSkiff())) throw Error("Unbaked river skiff");
 } else if(process.argv.includes("--ram-only")) {
     writeFileSync(ramTarget,ramModel);
 } else {
     for(const [name,bytes] of Object.entries(materials())) writeFileSync(new URL(name,out),png(bytes));
     writeFileSync(ramTarget,ramModel);
     writeFileSync(new URL("grain_cart.gltf",out),gltf(baggage()));
+    writeFileSync(skiffTarget,gltf(riverSkiff()));
 }

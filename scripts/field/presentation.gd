@@ -6,12 +6,15 @@ const Figures := preload("res://scripts/field/figures.gd")
 const CompanyArt := preload("res://scripts/field/company_art.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
+const FieldStandard := preload("res://scripts/field/field_standard.gd")
 const FIGURE_SHADER := preload("res://scripts/field/figure.gdshader")
-const FRIEND := Color("34496a")
-const FOE := Color("783f34")
-const CLOTH_COLOR:=Color("dbcba4")
+const FRIEND := Color("2d485b")
+const FOE := Color("66362a")
 const PLAYER_CLOTH:=Color("364967")
-const GOLD := Color("b69c66")
+# The concentrated dye is confined to cut shoulder and upper sleeve panels.
+const INDIGO_BOLT:=Color("345265")
+const MADDER_BOLT:=Color("69352b")
+const PLAYER_MANTLE:=Color("a2b7b6")
 
 class Batch:
 	var node: MultiMeshInstance3D
@@ -88,7 +91,8 @@ func configure(model: Battle) -> void:
 	for key: int in counts:
 		var kit := key % 10
 		var col := PLAYER_CLOTH if key >= 20 else (FRIEND if key < 10 else FOE)
-		var mat := CompanyArt.material(col,kit,key>=20)
+		var shoulder:=PLAYER_MANTLE if key>=20 else (INDIGO_BOLT if key<10 else MADDER_BOLT)
+		var mat := CompanyArt.material(col,kit,key>=20,shoulder)
 		mat.set_shader_parameter("field_carries",key<20 and kit in [3,4,7])
 		var detailed: Mesh = CompanyArt.fighter(kit, "Player", true) if key>=20 else near_mesh[kit]
 		groups[key] = _batch(detailed,mat,counts[key])
@@ -107,7 +111,7 @@ func configure(model: Battle) -> void:
 		var officer_key := 90 + _key(u)
 		if not groups.has(officer_key):
 			var side_colour:=FRIEND if u.team==0 else FOE
-			var mat:=CompanyArt.material(side_colour,u.kit)
+			var mat:=CompanyArt.material(side_colour,u.kit,false,INDIGO_BOLT if u.team==0 else MADDER_BOLT)
 			var capacity:int=battle.command_counts[u.team]
 			groups[officer_key]=_batch(CompanyArt.fighter(u.kit,"Officer",true),mat,capacity)
 			groups[officer_key+30]=_batch(CompanyArt.fighter(u.kit,"Officer",false),mat,capacity)
@@ -117,7 +121,7 @@ func configure(model: Battle) -> void:
 	# Keep one small batch per potential player kit. Re-equipping in muster is immediate.
 	for kit in Arms.NAMES.size():
 		if not groups.has(20+kit):
-			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(PLAYER_CLOTH,kit,true),1)
+			groups[20+kit] = _batch(CompanyArt.fighter(kit,"Player",true),CompanyArt.material(PLAYER_CLOTH,kit,true,PLAYER_MANTLE),1)
 	var shadow_mesh := Builder.new()
 	var rim:=shadow_mesh.ring(Vector3.ZERO,Vector2(0.53,0.41),8)
 	for k in 8:
@@ -138,27 +142,11 @@ func configure(model: Battle) -> void:
 	b.rod(Vector3(0,0,0.34),Vector3(0,0,0.48),0.055,0.001,Color("a8aaa2"),4)
 	var am := b.finish()
 	arrows = _batch(am,_material(FRIEND,0),64)
-	var flag := Builder.new()
-	flag.rod(Vector3(0,0,0),Vector3(0,3.65,0),0.045,0.036,Color("796343"))
-	flag.dye = 1
-	flag.quad(Vector3(0,3.50,0),Vector3(0.90,3.43,0.09),Vector3(0.91,2.70,0.18),Vector3(0,2.67,0),Color.WHITE)
-	flag.tri(Vector3(0.89,3.41,0.09),Vector3(1.32,3.34,0.16),Vector3(0.90,3.06,0.15),Color.WHITE)
-	flag.dye = 0
-	flag.block(Vector3(0.38,3.11,0.02),Vector3(0.13,0.42,0.09),GOLD)
-	# A notched tail and two light hems remain legible beyond clothing detail.
-	flag.quad(Vector3(0,3.49,0.012),Vector3(0.9,3.42,0.101),Vector3(0.9,3.36,0.105),Vector3(0,3.43,0.012),CLOTH_COLOR)
-	flag.tri(Vector3(0.91,2.96,0.15),Vector3(1.36,2.77,0.19),Vector3(0.91,2.72,0.18),GOLD)
-	var fm := flag.finish()
-	var garrison:=Builder.new()
-	garrison.rod(Vector3.ZERO,Vector3(0,3.62,0),0.046,0.034,Color("745636"),4)
-	garrison.dye=1
-	garrison.quad(Vector3(0,3.48,0),Vector3(0.89,3.39,0.09),Vector3(0.91,2.89,0.16),Vector3(0,2.82,0),Color.WHITE)
-	garrison.tri(Vector3(0.07,2.84,0),Vector3(0.42,2.49,0.10),Vector3(0.52,2.87,0.09),Color.WHITE)
-	garrison.tri(Vector3(0.49,2.88,0.09),Vector3(0.83,2.56,0.18),Vector3(0.90,2.91,0.16),Color.WHITE)
-	garrison.dye=0
-	garrison.quad(Vector3(0.12,3.14,0.045),Vector3(0.43,3.32,0.075),Vector3(0.72,3.10,0.13),Vector3(0.42,2.96,0.082),CLOTH_COLOR)
-	standards.append(_batch(fm,_material(FRIEND,0),battle.companies_per_side))
-	standards.append(_batch(garrison.finish(),_material(FOE,0),battle.command_counts[1]))
+	# Company signals use their own woven marks, cut and attachment on both faces.
+	for side in 2:
+		var garrison:=side==1
+		var capacity:=battle.command_counts[1] if garrison else battle.companies_per_side
+		standards.append(_batch(FieldStandard.mesh(garrison),FieldStandard.material(garrison),capacity))
 	runners = _batch(far_mesh[Arms.Kit.SWORD],CompanyArt.material(Color("ab8962"),0),8)
 
 func _key(u: Battle.Unit) -> int:
@@ -174,6 +162,17 @@ func _put(g: Batch,pos: Vector3,orientation: Basis,data: Color,stretch: float=1.
 		caster.mesh.set_instance_transform(caster.used,transform_3d)
 		caster.mesh.set_instance_custom_data(caster.used,data)
 		caster.used+=1
+
+# The settled human extends from the head at -Z to the boots at +Z.
+# Keep the boot-size mark until the body actually rolls down onto the ground.
+func _fallen_contact(u: Battle.Unit,orientation: Basis,base: Vector3,floor_height: float,progress: float) -> Transform3D:
+	var laid:=smoothstep(.32,.94,progress)
+	var turn:=-.14 if u.kit in [Arms.Kit.DAO,Arms.Kit.SPEAR,Arms.Kit.CROSSBOW,Arms.Kit.DUAL] else .14
+	var axis:=orientation*Basis(Vector3.UP,turn*laid)
+	var footprint:=Vector3(lerpf(1.0,.66,laid),1.0,lerpf(1.0,2.08,laid))
+	var center:=base+orientation*Vector3(0,0,-.07*laid)
+	center.y=floor_height+.026
+	return Transform3D(axis.scaled_local(footprint),center)
 
 func _reserve(g: Batch,count: int) -> void:
 	if count > g.mesh.instance_count:
@@ -199,7 +198,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	var window:=get_viewport().get_visible_rect().size
 	var vertical_limit:=zoom*.5+4.2
 	var horizontal_limit:=zoom*.5*window.x/maxf(1.0,window.y)+4.2
-	var center_height:=Ground.unit_point(center).y
+	var center_height:=Ground.unit_point(center,battle.bridgehead).y
 	if cam:
 		right=Vector2(cam.global_basis.x.x,cam.global_basis.x.z)
 		vertical_xz=Vector2(cam.global_basis.y.x,cam.global_basis.y.z)
@@ -216,7 +215,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		# position has the identical sole height on every intervening draw.
 		if p!=grounded_at[u.id]:
 			grounded_at[u.id]=p
-			floor_y[u.id]=Ground.deck_height(p)
+			floor_y[u.id]=Ground.deck_height(p,battle.bridgehead)
 		var ground:=Vector3(p.x,floor_y[u.id],p.y)
 		# Test the oriented window in camera space. Keep enough padding for the
 		# longest blade, a raised banner, a mounted head and their projected shadows.
@@ -323,8 +322,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			var walk_legs:=gait if battle.vehicle==0 and battle.hero_move.length_squared()>.001 else -1
 			material.set_shader_parameter("travelling_attack_legs",walk_legs)
 			material.set_shader_parameter("travelling_leg_phase",step_phase)
-		# The sole shader reads only mesh coordinates, so this batch contains transforms alone.
-		contact.mesh.set_instance_transform(contact.used,Transform3D(orientation,ground+Vector3.UP*.026))
+		var footprint:=Transform3D(orientation,ground+Vector3.UP*.026)
+		if u.state==Battle.State.DEAD:
+			footprint=_fallen_contact(u,orientation,base,ground.y,progress)
+		contact.mesh.set_instance_transform(contact.used,footprint)
 		contact.used+=1
 		var caster: Batch=groups[200+key] if tier==0 and not u.hero and not u.officer and not contact_for_all else null
 		# Keep footwear on the ground. Modest stable stature variation travels through all three LODs.
@@ -343,8 +344,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if absf(at.x-center.x)>half_extent.x or absf(at.y-center.y)>half_extent.y: continue
 		var role: String=battle.corps.title_of(battle,bearer)
 		var height:=1.25 if role=="战场主将" else (1.10 if role=="先锋" else 1.0)
-		var base:=Ground.unit_point(at)+Vector3(-0.32,0.81 if bearer.mounted else 0.0,0)
-		_put(standards[bearer.team],base,Basis(Vector3.UP,atan2(bearer.facing.x,bearer.facing.y)),Color(0,0,0,0),height)
+		var turn:=Basis(Vector3.UP,atan2(bearer.facing.x,bearer.facing.y))
+		var base:=Ground.unit_point(at,battle.bridgehead)+turn*Vector3(-.26,.81 if bearer.mounted else 0.,-.08)
+		var breeze:=fposmod((float(battle.tick)+alpha)*Battle.DT*.64+.071*(bearer.id%19),1.)
+		_put(standards[bearer.team],base,turn,Color(breeze,0,0,0),height)
 	for id in [1,2]:
 		var pos: Vector2 = battle.vehicle_pos[id]
 		var state := Battle.State.DEAD if battle.vehicle_hp[id]<=0 else Battle.State.MARCH
@@ -354,19 +357,19 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var vehicle_batch:=horse if close else horse_rank
 		if id==2: vehicle_batch=cart if close else cart_rank
 		var moved:=battle.hero.pos.distance_to(battle.hero.before) if battle.vehicle==id else 0.0
-		_put(vehicle_batch,Ground.unit_point(pos),Basis(Vector3.UP,atan2(heading.x,heading.y)),MountArt.pose(state,1.0,stride,moved,alpha,0.0,id))
+		_put(vehicle_batch,Ground.unit_point(pos,battle.bridgehead),Basis(Vector3.UP,atan2(heading.x,heading.y)),MountArt.pose(state,1.0,stride,moved,alpha,0.0,id))
 	for s in battle.shots:
 		var p := s.previous.lerp(s.pos,alpha)
 		var fraction := s.distance / maxf(1,s.distance+s.remaining)
 		var h := 1.1 + (2.5 if s.arrow else 0.32)*sin(PI*fraction)
-		var altitude := lerpf(s.launch_height,Ground.deck_height(p),fraction)+h
+		var altitude := lerpf(s.launch_height,Ground.deck_height(p,battle.bridgehead),fraction)+h
 		_put(arrows,Vector3(p.x,altitude,p.y),Basis(Vector3.UP,atan2(s.direction.x,s.direction.y)),Color(0,0,0,0))
 	for order in battle.orders:
 		if order.channel==Battle.Channel.COURIER and order.leg!=2:
 			var recipient: Battle.Unit=battle.corps.recipient(battle,battle.companies[order.squad])
 			var destination:=battle.hero.pos if order.leg==1 else recipient.pos
 			var dir := order.pos.direction_to(destination)
-			_put(runners,Ground.unit_point(order.pos),Basis(Vector3.UP,atan2(dir.x,dir.y)),Color(0,0,fposmod(order.age*3,1.0),0))
+			_put(runners,Ground.unit_point(order.pos,battle.bridgehead),Basis(Vector3.UP,atan2(dir.x,dir.y)),Color(0,0,fposmod(order.age*3,1.0),0))
 	for batch in batches:
 		if batch.used!=batch.submitted_count:
 			batch.mesh.visible_instance_count=batch.used
