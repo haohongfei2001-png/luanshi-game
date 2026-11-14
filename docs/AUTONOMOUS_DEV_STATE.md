@@ -1,4 +1,12 @@
+## Dot 2026-11-14 16:44 UTC continuation update
+
+Codex PAUSED / Dot owner-authorized continuation remains in force. Whole-frame ART FAIL; no RC/main promotion. Native run43612407649 completed: export SUCCESS, final fixed-camera encoder FAIL. Internal ad-hoc macOS package and original-speed 2K/4K evidence recovered, hash-verified and archived; not a new art candidate. 512v512 averaged35.852/27.680 FPS at native2K/4K on M1 Virtual; M5 DEVICE_NOT_RUN. Coherent production environment/costume conversion and same-source engine tangent validation continue. Read the latest section of [Dot checkpoint](DOT_REBUILD_CHECKPOINT_20261114.md); older sections are historical, not current pass claims.
+
 # 《乱世》自主开发状态
+
+## Dot 实际接管与全面重建检查点 · 2026-11-14
+
+Dot 已按 Owner 新授权实际编码、测试和发布隔离源码。Codex Goal/Automation 继续 PAUSED，不得恢复旧 Codex 自动执行指令。最新实际源码、原生画面失败、保护版本、许可证边界和恢复命令见 [Dot 重建检查点](DOT_REBUILD_CHECKPOINT_20261114.md)。下面的原交接状态保留为历史快照，不代表当前在途 CI。正式美术仍未通过，真实 M5 未测。
 
 Owner于2026-11-14暂停Codex开发并转交Dot。[完整交接与恢复入口](DOT_DEVELOPMENT_HANDOFF_20261114.md)。
 
