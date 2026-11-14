@@ -13,13 +13,13 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir -p evidence
+      - run: mkdir -p evidence && printf "%s\n" "${{ github.sha }}" > evidence/attempt-source.txt
       - name: Official tools and retained isolated patched engine
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri blender
+          sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri blender python3-numpy
           blender --version | tee evidence/blender-version.txt
           apt-cache policy blender > evidence/blender-package-source.txt
           gh api repos/haohongfei2001-png/luanshi-game/actions/artifacts/14124017040/zip > /tmp/engine.zip
@@ -32,6 +32,7 @@ jobs:
         env:
           OPENBLAS_NUM_THREADS: '1'
           OMP_NUM_THREADS: '1'
+          PYTHONPATH: /usr/lib/python3/dist-packages
         run: |
           set -euo pipefail
           python tools/art/sintel_guard/fetch_source.py --output /tmp/guardian-source | tee evidence/source.log

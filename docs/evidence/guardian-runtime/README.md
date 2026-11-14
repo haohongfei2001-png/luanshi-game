@@ -41,3 +41,25 @@ FIXED_CAGE_RESPONSE_NPZ OUTPUT_DIR`. The original response is produced by
 `cage_coefficients.py`. Original source hash and every pose error are in
 `dq-cage-probe.json`; generated NPZ retains raw weights, names, reference
 matrices and corresponding cage/top points for independent GPU comparison.
+
+## Measured cost/approximation boundary
+
+`response_cost.py` examines SVD factors and coefficient magnitude pruning
+against the same 25 held-out native poses, without changing original weights.
+Rank 256 still gives 1.22 mm error; rank 384 returns to about 27 micrometers
+but costs 2.98 MB and 2.23 million scalar MACs, worse than exact sparse
+response's 208133 entries / 624399 scalar MACs. Thresholds through 1e-6
+remove no entries. Threshold 1e-4 drops to 140169 entries but increases worst
+cloth error to 0.722 mm, outside the near-view positional gate. These shortcuts
+are not enabled. Row-L1 omitted coefficient bounds are recorded, not hidden.
+
+Real GPU probe runs a complete DQ stage and an exact-nonzero sparse response
+stage, with encoded position pixels read back against independent native
+Blender evaluation. Its 5 micrometer cage threshold includes 24-bit position
+transport quantization; CPU reference remains 2 micrometers. Coat threshold
+stays 100 micrometers. This is not yet an actual garment material renderer.
+First run 43621502775 failed before any source/GPU execution because the
+Blender official CDN returned HTTP403. The upload step found no evidence files;
+no artifact or graphics success is claimed. Recovery uses Ubuntu's official
+signed Blender package with its actual version recorded, rebuilding both oracle
+and response within that same run rather than pretending it is Blender4.3.2.

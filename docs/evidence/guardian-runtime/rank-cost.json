@@ -1,0 +1,87 @@
+{
+  "poses": 25,
+  "scope": "top1373 only, author evaluated cage; not GPU timing or full outfit",
+  "svd_seconds": 1.1652758920026827,
+  "ranks": [
+    {
+      "rank": 8,
+      "max_m": 0.4221700450037658,
+      "max_pose_rms_m": 0.11684665420833919,
+      "shared_bytes_float32": 62048,
+      "scalar_macs_per_frame": 46536,
+      "discarded_spectral_norm": 1.9730962140353432
+    },
+    {
+      "rank": 16,
+      "max_m": 0.20803872645812435,
+      "max_pose_rms_m": 0.04109713707208388,
+      "shared_bytes_float32": 124096,
+      "scalar_macs_per_frame": 93072,
+      "discarded_spectral_norm": 1.6661886170757019
+    },
+    {
+      "rank": 32,
+      "max_m": 0.14232726864119724,
+      "max_pose_rms_m": 0.02607423579816562,
+      "shared_bytes_float32": 248192,
+      "scalar_macs_per_frame": 186144,
+      "discarded_spectral_norm": 1.220058047337105
+    },
+    {
+      "rank": 64,
+      "max_m": 0.09838328190301948,
+      "max_pose_rms_m": 0.014747833435644024,
+      "shared_bytes_float32": 496384,
+      "scalar_macs_per_frame": 372288,
+      "discarded_spectral_norm": 0.8040385886923794
+    },
+    {
+      "rank": 96,
+      "max_m": 0.06199044849722743,
+      "max_pose_rms_m": 0.0074529769219507415,
+      "shared_bytes_float32": 744576,
+      "scalar_macs_per_frame": 558432,
+      "discarded_spectral_norm": 0.603519140381247
+    },
+    {
+      "rank": 128,
+      "max_m": 0.048034678470193846,
+      "max_pose_rms_m": 0.005453277841314236,
+      "shared_bytes_float32": 992768,
+      "scalar_macs_per_frame": 744576,
+      "discarded_spectral_norm": 0.4362805009468648
+    },
+    {
+      "rank": 192,
+      "max_m": 0.03845001904261763,
+      "max_pose_rms_m": 0.0032847317652794084,
+      "shared_bytes_float32": 1489152,
+      "scalar_macs_per_frame": 1116864,
+      "discarded_spectral_norm": 0.19832012565914606
+    },
+    {
+      "rank": 256,
+      "max_m": 0.0012218073993912903,
+      "max_pose_rms_m": 0.00010248063441814055,
+      "shared_bytes_float32": 1985536,
+      "scalar_macs_per_frame": 1489152,
+      "discarded_spectral_norm": 0.004940968431064524
+    },
+    {
+      "rank": 384,
+      "max_m": 2.716713113730502e-05,
+      "max_pose_rms_m": 4.0794418045590755e-06,
+      "shared_bytes_float32": 2978304,
+      "scalar_macs_per_frame": 2233728,
+      "discarded_spectral_norm": 2.984427477640957e-06
+    },
+    {
+      "rank": 566,
+      "max_m": 2.7164304609432234e-05,
+      "max_pose_rms_m": 4.077606478527153e-06,
+      "shared_bytes_float32": 4389896,
+      "scalar_macs_per_frame": 3292422,
+      "discarded_spectral_norm": 0.0
+    }
+  ]
+}
