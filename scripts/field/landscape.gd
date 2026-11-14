@@ -727,6 +727,6 @@ func update_battle(battle) -> void:
 		ram_roll=fposmod(ram_roll-distance/.48,TAU)
 		last_ram_position=battle.ram
 		for wheel in ram_wheels: wheel.rotation.z=ram_roll
-	ram.position=Ground.unit_point(battle.ram)
+	ram.position=Ground.unit_point(battle.ram,battle.bridgehead)
 	ram.rotation.z = 0.24 if battle.ram_hp <= 0 else 0.0
 	ram_beam.position.x = 0.38*sin((1.7-battle.ram_timer)*TAU/1.7) if battle.ram_timer > 0 else 0.0

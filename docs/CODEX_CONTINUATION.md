@@ -13,6 +13,8 @@
 
 固定窗口第一跑确认城门和桥心同屏，但主角直接沿路心冲入射界，在第 128 步阵亡。复看实机后给桥两侧补了小片水边莎草，收暗木板湿端，在同一镜头保留主角足边的两段识别线。压力测试还覆盖桥头横阵、疏列与纵队的换位。原速采集改用现有长枪进步刺，随先锋过桥，从桥的一侧交手后退到同伴身后。常规兵力、战斗伤害和敌方决策维持原规则。[原始失败窗口](https://github.com/haohongfei2001-png/luanshi-game/tree/b8dd831a1506277702eabeee83a1703fd4624732/docs/evidence/river-gate-v1-rc22/bridge-scout) · [同种子 21 条进退路线实测](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43531597957)
 
+门已被攻破的回放另外暴露了一个问题。五分钟后双方仍在整队，内庭有 64 名守军、没有攻方，军报却一直不出。桥头各队现在回本部一侧就近整队。内庭仍有守军、无人进攻、主角未逼近且没有军令在途，连续五十秒停止交战后可以判定守城成功。新回放在第 112 秒结算，阵亡 316 / 292 名普通兵。战后军籍、读档、驻营与行军已核对。复现用 `godot --headless --path . --script tests/field_bridgehead_outcome.gd`。[未结算的原始日志](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43533921991) · [修复后同种子实测](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43534219405)
+
 复现渡桥和读档：`godot --headless --path . --script tests/field_bridgehead.gd`。录制步骤使用 `tests/bridgehead_window.gd` 的常规键鼠入口，22 米，默认画质，固定 61112。真实 M5 尚未测试。
 
 ## 河关 RC21 · 守军院落和城墙
