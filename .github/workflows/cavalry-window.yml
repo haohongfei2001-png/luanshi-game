@@ -3,6 +3,9 @@ on:
   push:
     branches: [codex/river-rc23-cavalry-window-before]
     paths: ['.github/workflows/cavalry-window.yml','tests/bridgehead_remount_window.gd','tests/field_loose_horses.gd']
+concurrency:
+  group: cavalry-proof-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -23,18 +26,26 @@ jobs:
           sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool ffmpeg; fi
           mkdir -p "$OUT" artifacts/movie
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
           godot --headless --editor --import --path . >/tmp/loose-mounts-import.log 2>&1
       - name: Trace actual bridgehead camera and input
         shell: bash
         run: |
           set -euo pipefail
           if [ -f tests/field_loose_horses.gd ]; then godot --headless --path . --script tests/field_loose_horses.gd 2>&1 | tee "$OUT/terrain-and-reload.log"; grep -q LOOSE_HORSE_PASS "$OUT/terrain-and-reload.log"; fi
-          timeout 11m xvfb-run -a -s '-screen 0 1600x1000x24' godot --path . --rendering-method gl_compatibility --resolution 1600x1000 --audio-driver Dummy --fixed-fps 24 --write-movie artifacts/movie/horse.png --script tests/bridgehead_remount_window.gd 2>&1 | tee "$OUT/game.log"
+          test ! -e override.cfg
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=1600
+          window/size/window_height_override=1000
+          CFG
+          timeout 11m xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --display-driver x11 --resolution 1600x1000 --disable-vsync --fixed-fps 24 --write-movie artifacts/movie/horse.png --script tests/bridgehead_remount_window.gd 2>&1 | tee "$OUT/game.log"
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:|WARNING:.*freed' "$OUT/game.log"; then exit 1; fi
           grep -q 'BRIDGE_WINDOW true' "$OUT/game.log"
           cp artifacts/bridge-window/input-and-camera.json "$OUT/"
           cp artifacts/bridge-window/view-0*.jpg "$OUT/"
-          ffmpeg -hide_banner -loglevel error -framerate 24 -pattern_type glob -i 'artifacts/movie/horse*.png' -c:v libx264 -preset veryfast -crf 22 -pix_fmt yuv420p -movflags +faststart "$OUT/bridgehead-original-speed.mp4"
+          ffmpeg -hide_banner -loglevel error -framerate 24 -pattern_type glob -i 'artifacts/movie/horse*.png' -i artifacts/movie/horse.wav -c:a aac -b:a 128k -c:v libx264 -preset veryfast -crf 22 -pix_fmt yuv420p -movflags +faststart "$OUT/bridgehead-original-speed.mp4"
           ls -l "$OUT/bridgehead-original-speed.mp4"
           python - <<'PY'
           import json,os,pathlib,hashlib
