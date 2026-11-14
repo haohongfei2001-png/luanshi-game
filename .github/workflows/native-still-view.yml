@@ -1,0 +1,27 @@
+name: Inspect lossless window originals from the finished native run
+on:
+  push:
+    branches: ['codex/river-rc22-host-stills']
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy both full windows to viewable JPEGs at their original dimensions
+        run: |
+          set -euo pipefail
+          cd docs/evidence/river-gate-v1-rc22/native-bridgehead
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          for p in Path(".").glob("*.png"):
+              image=Image.open(p)
+              image.convert("RGB").save(p.with_suffix(".jpg"),quality=92,subsampling=0)
+              print(p.name,image.size)
+          PY
+          git add *.jpg
+          git -c user.name='River Gate native inspection' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Keep native window source and same-size JPEG for direct inspection'
+          git push origin HEAD:refs/heads/codex/river-rc22-mac-window-inspection
