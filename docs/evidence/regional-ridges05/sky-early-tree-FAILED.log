@@ -1,0 +1,16 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:642)
+   GDScript backtrace (most recent call first):
+       [0] apply (res://scripts/field/experimental_regional_environment.gd:13)
+       [1] _initialize (res://tests/art_reset/regional_sky.gd:12)
+ERROR: REGIONAL_SKY_SUN_MISMATCH: preserve actual light, do not fake physical source alignment
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] apply (res://scripts/field/experimental_regional_environment.gd:15)
+       [1] _initialize (res://tests/art_reset/regional_sky.gd:12)
+SCRIPT ERROR: Assertion failed.
+          at: _initialize (res://tests/art_reset/regional_sky.gd:12)
+          GDScript backtrace (most recent call first):
+              [0] _initialize (res://tests/art_reset/regional_sky.gd:12)

@@ -118,4 +118,9 @@ class StillGate(unittest.TestCase):
         with self.assertRaises(ValueError):destination_validate(r)
         r=destination_rows();r[1]['destination_fit']={}
         with self.assertRaises(ValueError):destination_validate(r)
+    def test_primary_native_pair_keeps_all_integrity_gates(self):
+        r=[x for x in destination_rows() if x['view'].endswith('destination26')]
+        self.assertEqual(validate_records(r,'a'*40,'destination-primary-action',identities()),'b'*64)
+        r[1]['internal_scale']=.5
+        with self.assertRaises(ValueError):validate_records(r,'a'*40,'destination-primary-action',identities())
 if __name__=='__main__':unittest.main()

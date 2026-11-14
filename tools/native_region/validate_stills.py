@@ -13,12 +13,13 @@ VIEWS = {
 }
 
 VIEWS['destination-action']=VIEWS['destination-study'].copy()
+VIEWS['destination-primary-action']={k:v for k,v in VIEWS['destination-study'].items() if k.endswith('destination26')}
 
 def validate_author_context(rows, resource_identities, mode):
     """Geometry projection and source identity, never an artistic quality score."""
     if not resource_identities or {p[6:]:r.get('original_source_sha256') for p,r in resource_identities.items()}!=RUNTIME_FILES:
         raise ValueError('Missing or wrong verified original scene inputs')
-    baseline=next(r for r in rows if r['view']=='qhd-perspective-road65')
+    baseline=next(r for r in rows if r['view']==('qhd-perspective-destination26' if mode=='destination-primary-action' else 'qhd-perspective-road65'))
     first=baseline['single_real_unit_author_oracle']
     hashes=('runtime_architecture_sha256','runtime_ground_sha256','runtime_woodland_sha256')
     fractions=[]
@@ -99,13 +100,13 @@ def validate_records(rows, source, mode, resource_identities=None):
             yaw=-75 if row['view'].endswith('road75') else -65
             if not math.isclose(math.degrees(row['camera_yaw']),yaw,abs_tol=.001):
                 raise ValueError('Wrong actual camera yaw')
-    if mode in ('gate-context-study','destination-study','destination-action'):validate_author_context(rows,resource_identities,mode)
+    if mode in ('gate-context-study','destination-study','destination-action','destination-primary-action'):validate_author_context(rows,resource_identities,mode)
     return snapshot
 
 def validate(directory, source, mode):
     rows=json.loads((directory/'receipt.json').read_text())
     identities=None
-    if mode in ('gate-context-study','destination-study','destination-action'):
+    if mode in ('gate-context-study','destination-study','destination-action','destination-primary-action'):
         packed=json.loads((directory.parent/'pack-integrity.json').read_text())
         if packed.get('packed_resource_identity_verified_in_isolated_process') is not True:raise ValueError('Packed identities not isolated-process verified')
         identities=packed.get('resource_identities')

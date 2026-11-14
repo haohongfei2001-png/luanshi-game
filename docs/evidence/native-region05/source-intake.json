@@ -1,0 +1,162 @@
+{
+  "base": "c4ab184c72ad624f4ca6b68d14e95eda489b77da",
+  "files": [
+    {
+      "path": "docs/evidence/regional-ridges05/512.log",
+      "sha256": "68ef8b891735be2f80ff54687d0bec5cfe2cebdacf5d9ae4710ac8b67b5ba691",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/README.md",
+      "sha256": "9da5e8fae9729694233dcc7de0dec7c7af40cf1a5aeb81ca63dc277b5faf818f",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/adaptive_surface_walk_collision.log",
+      "sha256": "c3a095bcb488fc3f1425c8e0a5fc8dd6badd14d4ac4303609742847effb5c4d8",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/build.log",
+      "sha256": "2289c6afb60401c27a70c12b47569013dc7c41f265c53185647f128244cc4af5",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/continuous_landform_mesh.log",
+      "sha256": "68681d2cd9b608b209789f56c31e311d54a1fc4c7d48afcbb8befa1373cf0cf1",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/contract.log",
+      "sha256": "08bbb75ab1db6f66c5728a8c91038839a3433d1a8dac722ac534133c6a111527",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-HDR-load-REJECTED.log",
+      "sha256": "d868c74a1928ede489412755151c4f2c6f4bb9a56afd3b46818a3e5583187abb",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-build-f32.log",
+      "sha256": "d94549cf16e062a8ae4a04b137f118ca16a0eca15c397689c57f5a9f26c30e57",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-constant-FAILED.log",
+      "sha256": "15b46cf3baca1fdb85cb90f57b76d30032b9c441b6c23c42b13ee00b2c5a20f1",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-decode-tests.log",
+      "sha256": "581a24ba7f7226e1e7c6f2ea13444e63c267514a387d35a23d88d0943bcf82e9",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-decode.log",
+      "sha256": "870cf2cd696d17b4f0c10a726f299b1d8869a1e0f5c80d469d883f7a4bc5ba06",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-default.log",
+      "sha256": "b4ad21247ca2982ac59f4841a4bc37f77402b53ab6b2af2ba7c9341740266ddf",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-early-tree-FAILED.log",
+      "sha256": "4d2d21b5534235e76e76b1bb4b124d4f9214f0cb57d00e6dc38bef4b7381b7e8",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/sky-resource.log",
+      "sha256": "0b3d63c8b2a4a1dca6a014d4b81e4bad8359eea9d899f9774405264599333502",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "docs/evidence/regional-ridges05/support.log",
+      "sha256": "49c8d2e6e9204d13a7fb94b7bb9cf040f80476bfd9c5eee976d45075e97d4a24",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "scripts/field/authored_landform_profile.gd",
+      "sha256": "011b1563b379e73ae4ca488f7d9bfaed2904183bb975e79d3c6f468b05c55478",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "scripts/field/authored_ridge_profile.gd",
+      "sha256": "2527c9ca53356d280755b050a66643f12dacf79cadf59344a672bc1a991271d0",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "scripts/field/experimental_regional_environment.gd",
+      "sha256": "ef8cd35659860cc5623dc8055cc216acfca68eaa3984a7ed6be419b7c7a16ef6",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "shaders/experimental/regional_panorama.gdshader",
+      "sha256": "a3980210552d44d67f3b74b0ddbb61ee674706edbea5486bb01a6507acbca173",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tests/art_reset/continuous_landform_contract.gd",
+      "sha256": "3da196e7b3de999e3d8b76970c6da002c4aad12dd39442165ac5c2ec67631dae",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tests/art_reset/regional_ridges.gd",
+      "sha256": "2067672284bbec888875c3e92b0d401684beb380cebd1632e63c176cbaa797b9",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tests/art_reset/regional_sky.gd",
+      "sha256": "09e68174b6091d48f4f79d3126196ba2872b29d38c4e45827f115a0a34afc595",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tests/test_regional_sky_decode.py",
+      "sha256": "9219ab4e8bf39862832c185431a3a842d10eec31490cb1f0b5900b57340287ac",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tools/art/regional_sky/build_sky.gd",
+      "sha256": "d9ad6f014244555d4d578e19a14b77c70538bc23e2333f6c174afa19171ef821",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tools/art/regional_sky/decode_radiance.py",
+      "sha256": "19dd8fa9be05de1de20a0726b7707e1852133794c6153541414a375f20bf1116",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tools/art/regional_sky/restore_source.py",
+      "sha256": "ecc57123e11e5138453203fc9ffc9bc3a301e4749cb82169679c078b081b26df",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "tools/art/regional_sky/source.json",
+      "sha256": "17887e159321a6a4a868ca569bc74802a8f4dcf0b34d4f169765301837185388",
+      "source": "8feab2dbf2c1b9356ef132e3466327a9d84f54c4"
+    },
+    {
+      "path": "scripts/review/author_dynamic_review.gd",
+      "sha256": "b268f4b52f9a8c8dc1f5750a9a428ebc5772d84ccd7df4a8921ebf6433ce8c02",
+      "source": "6c53d390e44a7d67bce21b3e4a8b3cf5d0fdfcf5"
+    },
+    {
+      "path": "scripts/field/experimental/controlled_author_actor.gd",
+      "sha256": "02ffcf5c59a18ea8ddf5d8f33bcd7b430e2d234782a6c5dd6e1403ee1bd80ccb",
+      "source": "6c53d390e44a7d67bce21b3e4a8b3cf5d0fdfcf5"
+    },
+    {
+      "path": "tests/author_pointer_coordinates.gd",
+      "sha256": "14a7a0b47129d42cca3f9b4ba204a5d4a1c83325a62e5e868a5e193afedc5e4d",
+      "source": "6c53d390e44a7d67bce21b3e4a8b3cf5d0fdfcf5"
+    },
+    {
+      "path": "docs/AUTHOR_INPUT_NATIVE_COORDINATE_RECOVERY.md",
+      "sha256": "aa22fd9c5d9bd036701362dd73b58323daabeb18a379141f64faefa93210a1d4",
+      "source": "6c53d390e44a7d67bce21b3e4a8b3cf5d0fdfcf5"
+    }
+  ],
+  "art": "NOT_ACCEPTED",
+  "scope": "31 exact upstream files; no merge of mutable experimental branches; frozen portal07 and original tree unchanged"
+}

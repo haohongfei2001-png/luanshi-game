@@ -27,7 +27,20 @@ def validate_rows(rows):
     if len(ticks)<2 or max(ticks)<=min(ticks):problems.append('REAL_SIMULATION_DID_NOT_ADVANCE')
     if len(positions)<2:problems.append('NO_ACTUAL_MOVEMENT')
     if not any(r.get('type')=='InputEventAction' and r.get('action')=='move_right' and r.get('pressed') is True for r in inputs):problems.append('NO_REAL_MOVE_INPUT')
-    return {'input_camera_integrity':'PASS' if not problems else 'FAIL','problems':problems,'frames':len(frames),'post_draw_samples':len(camera),'actual_input_events':len(inputs),'actual_attack_keydowns':result.get('actual_attack_keydown_events',0),'release_transitions_observed':result.get('observed_release_transitions',0),'hero_impacts_delta':result.get('hero_impacts_delta',0),'hit_status':result.get('hit_status','NOT_OBSERVED'),'scope':'ONE_HERO_MIXED_FALLBACK_DIAGNOSTIC; no shield/riding/full army action claim; geometry projection not visible pixel mask','art':'NOT_ACCEPTED','performance':'NOT_MEASURED','M5':'DEVICE_NOT_RUN'}
+    # Native attachment comes from the actual readback, NOT texture metadata.
+    by_draw={f.get('engine_drawn'):f for f in frames if isinstance(f.get('engine_drawn'),int)}
+    body_pixels=[]
+    for sample in camera:
+        body=sample.get('body',{})
+        if body.get('valid') is not True:continue
+        frame=by_draw.get(sample.get('engine_drawn'))
+        fraction=body.get('height_fraction',float('nan'))
+        if frame is None or not math.isfinite(fraction) or not 0<fraction<1:
+            problems.append('BODY_WITHOUT_MATCHED_ACTUAL_ATTACHMENT');continue
+        body_pixels.append({'engine_drawn':sample['engine_drawn'],'pixels':frame['pixels'],
+                            'height_fraction':fraction,'native_height_px':fraction*frame['pixels'][1],
+                            'scope':'same engine_drawn actual JPEG attachment; projected geometry NOT visible silhouette'})
+    return {'joined_actual_body_pixels':body_pixels,'input_camera_integrity':'PASS' if not problems else 'FAIL','problems':problems,'frames':len(frames),'post_draw_samples':len(camera),'actual_input_events':len(inputs),'actual_attack_keydowns':result.get('actual_attack_keydown_events',0),'release_transitions_observed':result.get('observed_release_transitions',0),'hero_impacts_delta':result.get('hero_impacts_delta',0),'hit_status':result.get('hit_status','NOT_OBSERVED'),'scope':'ONE_HERO_MIXED_FALLBACK_DIAGNOSTIC; no shield/riding/full army action claim; geometry projection not visible pixel mask','art':'NOT_ACCEPTED','performance':'NOT_MEASURED','M5':'DEVICE_NOT_RUN'}
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('journal',type=Path);a=p.parse_args()
     result=validate_rows([json.loads(line) for line in a.journal.read_text().splitlines() if line.strip()]);print(json.dumps(result,indent=2));raise SystemExit(0 if result['input_camera_integrity']=='PASS' else 1)

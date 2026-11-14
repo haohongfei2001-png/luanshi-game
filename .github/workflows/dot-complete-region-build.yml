@@ -1,4 +1,4 @@
-name: Dot complete stone timber road04 runtime build
+name: Dot complete stone timber regional05 runtime build
 on:
   push:
     branches: ['dot/complete-region-runtime-build']
@@ -13,6 +13,7 @@ jobs:
     env:
       LUANSHI_AUTHORED_LANDFORM: '1'
       LUANSHI_NATIVE_WOODLAND: '1'
+      LUANSHI_REGIONAL_SKY: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Prepare bounded logs
@@ -65,7 +66,7 @@ jobs:
           $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/audit_portal_interfaces.py -- /tmp/complete-gate/source/architecture.blend /tmp/complete-gate/portal-interface.json >artifacts/complete-study/portal-interface.log 2>&1
           cp /tmp/complete-gate/architecture.glb assets/river_authored/architecture/
           LUANSHI_GATE_CONTRACT_GLB="$PWD/assets/river_authored/architecture/architecture.glb" python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/gate-occlusion-import.log 150 -- godot --headless --path . --script tests/gate_occlusion_import.gd
-      - name: Rebuild profile-matched road04 and shared instances, no source rebake
+      - name: Rebuild profile-matched regional05 and shared instances, no source rebake
         run: |
           set -euo pipefail
           python tools/art/continuous_landform/fetch_earth.py /tmp/earth-source >artifacts/complete-study/earth-source.log 2>&1
@@ -74,11 +75,17 @@ jobs:
           godot --headless --path . --script tools/art/continuous_landform/build_grass_shoulders.gd -- /tmp/basin-restored/editable-sources/low-grass/realtime/derived.glb assets/river_authored/grass/region.scn >artifacts/complete-study/grass-build.log 2>&1
           python3 tools/art/native_woodland/restore_original_tree.py /tmp/original-tree >artifacts/complete-study/original-tree-source.log 2>&1
           godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/original-tree/island_tree_01_2k.gltf /tmp/legacy-restored/bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn --complete-tree-intake >artifacts/complete-study/woodland-build.log 2>&1
+          python -m pip install 'numpy==2.2.6'
+          mkdir -p assets/river_authored/sky
+          SKY_SOURCE=$(python3 tools/art/regional_sky/restore_source.py /tmp/regional-sky)
+          python3 tools/art/regional_sky/decode_radiance.py "$SKY_SOURCE" /tmp/regional-sky/linear.f32 >artifacts/complete-study/sky-decode.log 2>&1
+          godot --headless --path . --script tools/art/regional_sky/build_sky.gd -- /tmp/regional-sky/linear.f32 assets/river_authored/sky/regional-sky.res >artifacts/complete-study/sky-build.log 2>&1
+          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/sky-contract.log 100 -- godot --headless --path . --script tests/art_reset/regional_sky.gd -- assets/river_authored/sky/regional-sky.res
           python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/original-tree-contract.log 150 -- godot --headless --path . --script tests/art_reset/original_tree_region.gd -- assets/river_authored/woodland/region.scn
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/*build.log; then exit 1; fi
           godot --headless --editor --path . --import >artifacts/complete-study/assembled-import.log 2>&1
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/assembled-import.log; then exit 1; fi
-          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/scene-setup.log 150 -- godot --headless --path . --script tests/authored_architecture_capture.gd -- --road-section-study --camera-study --validate-pairs
+          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/scene-setup.log 150 -- godot --headless --path . --script tests/authored_architecture_capture.gd -- --road-section-study --camera-study --regional-sky-study --validate-pairs
           python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/gate-gameplay.log 100 -- godot --headless --path . --script tests/authored_gate_gameplay_contract.gd
       - name: Preserve runtime separately from editable source
         run: python tools/art/gate_structure/preserve_complete_region.py

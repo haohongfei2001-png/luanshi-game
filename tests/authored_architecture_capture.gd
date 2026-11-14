@@ -47,6 +47,13 @@ func run() -> void:
 
  var identity_paths=['res://assets/river_authored/architecture/architecture.glb','res://assets/river_authored/ground/continuous-region.scn','res://assets/river_authored/woodland/region.scn']
  identity_paths.append_array(extra_assets.keys())
+ if '--regional-sky-study' in OS.get_cmdline_user_args():
+  var worlds=field.map.find_children('*','WorldEnvironment',true,false)
+  if not require_capture(worlds.size()==1,'Expected one actual river WorldEnvironment'):return
+  var sky_path='res://assets/river_authored/sky/regional-sky.res'
+  if not require_capture(preload('res://scripts/field/experimental_regional_environment.gd').apply(worlds[0],field.map.sun,sky_path),'Complete regional sky source failed live alignment'):return
+  identity_paths.append(sky_path)
+  print('REGIONAL_SKY_REAL_WORLD_APPLIED ',FileAccess.get_sha256(sky_path))
  var resource_identity=ResourceIdentity.collect(identity_paths)
  for identity in resource_identity.values():
   if not require_capture(not identity.has('error'),'Packed resource identity failed: '+str(identity)):return
@@ -92,6 +99,7 @@ func run() -> void:
  if '--destination-study' in OS.get_cmdline_user_args():
   if not require_capture(is_instance_valid(oracle_actor),'Destination camera calibration requires actual author body geometry'):return
   modes=['qhd-perspective-road65','qhd-perspective-destination26','qhd-perspective-destination28','uhd-perspective-destination26']
+ if '--destination-primary' in OS.get_cmdline_user_args():modes=['qhd-perspective-destination26','uhd-perspective-destination26']
  if '--shadow-diagnostic' in OS.get_cmdline_user_args():modes.append('qhd-after-no-shadow')
  for mode in modes:
   root.size=Vector2i(3840,2160) if mode.begins_with('uhd') else Vector2i(2560,1440)

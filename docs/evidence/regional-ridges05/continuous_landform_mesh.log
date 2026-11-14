@@ -1,0 +1,4 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SURFACE_SAMPLE_DIAGNOSTIC {"max_reachable_error":0.00935267950944286,"max_route_error":0.00743915936465919,"max_water_dry":0.00440470061659215,"worst_reachable":[-25.9166660308838,-17.875]}
+LANDFORM_MESH_PASS {"collision_shapes":266,"graphics":"NOT_RUN","max_reachable_interpolation_error_m":0.00935267950944286,"max_route_interpolation_error_m":0.00743915936465919,"max_water_contour_error_m":0.00440470061659215,"reachable_surface_samples":368982,"terrain_tiles":266,"water_triangles":163109,"worst_reachable_xz":[-25.9166660308838,-17.875]}

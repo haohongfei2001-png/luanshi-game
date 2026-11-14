@@ -18,4 +18,8 @@ class Gate(unittest.TestCase):
   r=fixture();r[-1]['tick']=135;self.assertIn('REAL_SIMULATION_DID_NOT_ADVANCE',validate_rows(r)['problems'])
  def test_unreleased_input(self):
   r=fixture();r[1]['inputs_released']=False;self.assertIn('INCOMPLETE_OR_INPUT_NOT_RELEASED',validate_rows(r)['problems'])
+ def test_body_join_uses_actual_frame_not_texture_metadata(self):
+  r=fixture();r[2]['engine_drawn']=42;r[4]['engine_drawn']=42;r[4]['body']={'valid':True,'height_fraction':.13289,'viewport_texture_reported_size':[4608,2592]}
+  result=validate_rows(r);self.assertEqual(result['input_camera_integrity'],'PASS');self.assertAlmostEqual(result['joined_actual_body_pixels'][0]['native_height_px'],191.3616)
+  r[4]['engine_drawn']=43;self.assertIn('BODY_WITHOUT_MATCHED_ACTUAL_ATTACHMENT',validate_rows(r)['problems'])
 if __name__=='__main__':unittest.main()

@@ -23,7 +23,7 @@ def restore_runtime(groups, project, recovered):
     if m.get('source')!=SOURCE or m.get('art')!='NOT_ACCEPTED':raise ValueError('Wrong complete-scene source')
     if m.get('profile_sha256')!=sha(project/'scripts/field/authored_landform_profile.gd'):
         raise ValueError('Runtime ground and game Ground profile differ')
-    if len(m['files'])!=4 or {r['path'] for r in m['files']}!=set(RUNTIME_FILES):raise ValueError('Incomplete runtime closure')
+    if len(m['files'])!=len(RUNTIME_FILES) or {r['path'] for r in m['files']}!=set(RUNTIME_FILES):raise ValueError('Incomplete runtime closure')
     rows=[]
     for row in m['files']:
         p=safe_relative(row['path']);src=recovered/str(p)

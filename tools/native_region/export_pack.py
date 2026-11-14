@@ -28,7 +28,7 @@ def transform_preset(data):
 
 def export(editor, project, patch, output, mode='baseline'):
     mode_arguments=arguments(mode)
-    resource_identities=collect(project,RUNTIME_FILES if mode in ('gate-context-study','destination-study','destination-action') else FILES)
+    resource_identities=collect(project,RUNTIME_FILES if mode in ('gate-context-study','destination-study','destination-action','destination-primary-action') else FILES)
     config = project/'export_presets.cfg'
     original = config.read_bytes()
     temporary = transform_preset(original)
@@ -62,13 +62,13 @@ def export(editor, project, patch, output, mode='baseline'):
     resource_lines=[line.split('RUNTIME_RESOURCE_IDENTITY ',1)[1] for line in setup_log.splitlines() if line.startswith('RUNTIME_RESOURCE_IDENTITY ')]
     if len(resource_lines)!=1:raise ValueError('Missing isolated packed-resource observation')
     verify_runtime_observation(json.loads(resource_lines[0]),resource_identities)
-    if collect(project,RUNTIME_FILES if mode in ('gate-context-study','destination-study','destination-action') else FILES)!=resource_identities:
+    if collect(project,RUNTIME_FILES if mode in ('gate-context-study','destination-study','destination-action','destination-primary-action') else FILES)!=resource_identities:
         raise ValueError('Source/imported resources changed during pack export')
     if 'NATIVE_REGION_FOCUS ' not in setup_log or 'ARCHITECTURE_GAME_SETUP_PASS tick=135 ordinary=[20, 20]' not in setup_log:
         raise ValueError('Isolated exported pack did not reach real intended setup')
-    if mode in ('gate-context-study','destination-study','destination-action') and 'REGION_SETUP_LOADING_ONE_REAL_UNIT_AUTHOR_ORACLE' not in setup_log:
+    if mode in ('gate-context-study','destination-study','destination-action','destination-primary-action') and 'REGION_SETUP_LOADING_ONE_REAL_UNIT_AUTHOR_ORACLE' not in setup_log:
         raise ValueError('Isolated pack did not load the requested real-unit author oracle')
-    if mode=='destination-action':
+    if mode in ('destination-action','destination-primary-action'):
         fixture_sha=hashlib.sha256((project/'tests/fixtures/author_thrust_peak.json').read_bytes()).hexdigest()
         if 'AUTHOR_DYNAMIC_FIXTURE_VALIDATED '+fixture_sha not in setup_log:raise ValueError('Exported exact live phase fixture was not verified in isolated pack')
     result={'resource_identities':resource_identities,'packed_resource_identity_verified_in_isolated_process':True,'pack':pack.name,'bytes':pack.stat().st_size,'sha256':hashlib.sha256(pack.read_bytes()).hexdigest(),

@@ -16,7 +16,8 @@ jobs:
     env:
       LUANSHI_AUTHORED_LANDFORM: '1'
       LUANSHI_NATIVE_WOODLAND: '1'
-      REGION_REVIEW_MODE: 'destination-action'
+      LUANSHI_REGIONAL_SKY: '1'
+      REGION_REVIEW_MODE: 'destination-primary-action'
       REGION_ASSET_SOURCE: '287e2ae375bc2f33cd03cbf37508faf388d7e85e'
       LUANSHI_AUTHOR_ORACLE_CACHE: ${{ github.workspace }}/.pipeline/actor-cache
     steps:
@@ -77,13 +78,16 @@ jobs:
           "$RUNNER_TEMP/region-python/bin/pip" install 'Pillow==11.1.0'
           "$RUNNER_TEMP/region-python/bin/python" tests/native_region_stills_test.py
           if ! command -v ffmpeg >/dev/null; then brew install ffmpeg; fi
+          "$RUNNER_TEMP/region-python/bin/python" tests/wall_clock_encoding_test.py
           { uname -a; sw_vers; system_profiler SPHardwareDataType SPDisplaysDataType; } >artifacts/native-region/host.txt
       - name: Import and validate source with exact official editor
         run: |
           set -euo pipefail
           python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/import.log 180 -- "$GODOT_EDITOR" --headless --editor --path . --import
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/pointer-roundtrip.log 45 -- "$GODOT_EDITOR" --headless --path . --script tests/author_pointer_coordinates.gd
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/input-boundaries.log 45 -- "$GODOT_EDITOR" --headless --path . --script tests/author_dynamic_review.gd
           python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/parse.log 45 -- "$GODOT_EDITOR" --headless --path . --check-only --script tests/native_region_capture.gd
-          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/setup.log 75 -- "$GODOT_EDITOR" --headless --path . --script tests/native_region_capture.gd -- --validate-setup --destination-study --road-section-study --author-oracle --author-dynamic-review --wall-clock-action
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/setup.log 75 -- "$GODOT_EDITOR" --headless --path . --script tests/native_region_capture.gd -- --validate-setup --destination-study --destination-primary --regional-sky-study --road-section-study --author-oracle --author-dynamic-review --wall-clock-action
         env:
           ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/native-region/setup
       - name: Restore already verified native Metal mutex-fix engine
@@ -120,7 +124,7 @@ jobs:
           set -uo pipefail
           case "$REGION_REVIEW_MODE" in
             baseline) RAW=artifacts/native-region/pixels/traversal-raw ;;
-            destination-action) RAW=artifacts/native-region/pixels/author-live-raw ;;
+            destination-action|destination-primary-action) RAW=artifacts/native-region/pixels/author-live-raw ;;
             *) echo 'STATIC_CAMERA_STUDY_ONLY_NO_ACTION_OR_PERFORMANCE_CLAIM'; exit 0 ;;
           esac
           if [ ! -f "$RAW/frames.jsonl" ]; then echo 'TRAVERSAL_NOT_RUN'; exit 1; fi
@@ -128,7 +132,7 @@ jobs:
           python3 tools/encode_wall_clock_capture.py "$RAW" "$RAW/live-input.mp4" >"$RAW/encode.log" 2>&1 || status=1
           "$RUNNER_TEMP/region-python/bin/python" tools/native_evidence_bundle.py "$RAW" artifacts/native-region-curated || status=1
           python3 -c "import sys;sys.path.insert(0,'tools');from bounded_artifact_groups import stage;stage('artifacts/native-region-curated','artifacts/native-region-groups',max_groups=4)" || status=1
-          if [ "$REGION_REVIEW_MODE" = destination-action ]; then
+          if [[ "$REGION_REVIEW_MODE" = destination-action* || "$REGION_REVIEW_MODE" = destination-primary-action ]]; then
             python3 tools/native_region/validate_author_live.py "$RAW/frames.jsonl" >artifacts/native-region/author-live-integrity.json || status=1
           else
             python3 tools/native_region/validate_route.py "$RAW/frames.jsonl" >artifacts/native-region/route-acceptance.json || status=1
