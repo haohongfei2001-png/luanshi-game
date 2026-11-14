@@ -5,6 +5,14 @@
 所有后续 Codex 执行窗口遵循 [长期自主开发与自动续接协议](CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)。**已授权持续开发、常规修复/测试、现有规则允许的 PR/合并与内部可玩候选交付，无需 Owner 每步中转**。应优先完成真实高质量角色/环境/战斗，而不是无限方案或对旧粗糙图做小修；每轮留真实 SHA、截图、录像、运行结果、当前 ARTREF 与真实 M5 状态、下一轮第一件工作。尝试 Codex Goal/Automations 跨会话续接；未实际启动则标记 AUTOMATION_UNAVAILABLE，不得假称 Codex 正在后台运行。当前此节仅新增执行约束，不宣称 Codex 已安装资源、跑出新美术、测试通过或真正设置定时工作。
 
 
+## 原生 1440p / 4K 河关候选
+
+[PR #58](https://github.com/haohongfei2001-png/luanshi-game/pull/58) 已接续旧代码、上次交付证据和最新 main。候选 `7481b60411540e8c6c23a4553a0a99cc2a3a5df2` 的可执行内容与 `d5ea3052449377f8d389a30fbacaa005cfec0869` 相同。当期优先[仓库批准的战场与动作两图](art-direction/river-gate/)在正常镜头和运动中的还原。Owner 已明确指出旧画面与设计差距过大。M5 真机未测试。
+
+[正常镜头 2560×1440 原帧](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aac32eb883aa05844e812bbd62cfafa3eee04058/docs/evidence/river-gate-v1-rc23/fitted-crossing/2560x1440/view-0050.png) · [持盾两侧对照](https://github.com/haohongfei2001-png/luanshi-game/tree/778815df32bb7b1dd3b4f5cd9f18b1bf88b211ee/docs/evidence/river-gate-v1-rc23/issued-board) · [马匹等速战场前后对照](https://github.com/haohongfei2001-png/luanshi-game/tree/f40f0acbe7a1e1f2441b964134f0d51a2a14348d/docs/evidence/river-gate-v1-rc23/loose-horses)。本轮原生宽屏改动暴露了一个旧场景测试的固定屏幕坐标；现检查七个实际按钮的中心、底栏与战场中心。第一次宽屏试验也保留了 2560×1440 桌面只渲染 2304×1440 的失败证据。[旧版失败记录](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43545167365)
+
+接续命令：`gh pr checks 58 --repo haohongfei2001-png/luanshi-game`，再读取 [宽屏/4K 实拍](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43546458665) 与 [正常速度原片](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43546643601)。门楼缩短后露出浅色台面，岸边柳冠仍像厚叶团，正面枪手腰腿分离度仍弱。树、桥板和普通兵衣型各以同机位取舍。检查通过才合入；保存真实失败日志。正式剧情留给 Owner。
+
 ## 河关 RC22 · 桥头攻门
 
 [1600 × 1000 等速原声回放](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/c6fc9d564244eaca4c9c40ba9b3bf3a7e207312d/docs/evidence/river-gate-v1-rc22/bridgehead/river-gate-bridgehead.mp4) · [托管 Mac 系统窗口原片](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/fd411e7e6e1209d5d3b1ea84e05005771735e35e/docs/evidence/river-gate-v1-rc22/native-bridgehead/hosted-bridgehead.mp4) · [可试玩的 macOS 包](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/9ed812d8dd8036ea92d54c3f77a17e58b771e22c/candidate/River-Gate-RC22-macOS.zip) · [逐项测量](evidence/river-gate-v1-rc22/PLAYTEST.md)。游戏与画面固定于 `dc9805fd2930344be9737cfc19074442618d7e5c`，PR #56 目前 `48ace1db4ee1d807de28b67eba9cd4c546c67053`，后一个提交只调整头像验收位置。桥头 22 米同机位的 Mac 全军样本 P95 为 30.663 毫秒。首次默认 Metal 在首帧前卡住。代码栈、失败样本、其余原生次数和逐帧间隔均已保留。M5 尚未测试。

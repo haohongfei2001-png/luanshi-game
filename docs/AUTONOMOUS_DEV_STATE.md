@@ -1,21 +1,14 @@
-# 《乱世》 Codex 自主开发续接状态
+# 《乱世》自主开发状态
 
-> OWNER-AUTONOMOUS-20261114：此文件为跨会话的**可更新状态表**，不是新的规划文档。每次实际开发运行都应更新并链接真实 SHA/PR/截图/日志。未知不得填 PASS。最高执行协议：[CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md](CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)。
-
-| 字段 | 初始已知状态（2026-11-14 指令创建时） |
+| 项目 | 已核对的状态 |
 |---|---|
-| 当前事实起点 | README 记载河关 RC13 为试玩候选；真实源码和分支以**每轮最新 main/PR/CI 为准**，请先读和同步 |
-| 艺术质量 | ART_REVIEW_REQUIRED；Owner 之前否定粗糙画面。旧 RC3/RC13 不能作为已认可的画质底座 |
-| 商业参考 | ARTREF-01～12 和八游戏对标规范已写入；对标实现仍待逐项实测 |
-| 当前 P0 | 真正高质量可玩角色/普通兵/持械动画 + 城门/河岸统一美术，替换近景粗糙程序化视觉基础 |
-| 素材状态 | Fab/Unity 付费素材只是候选，NOT_ACQUIRED；使用前须授权、格式、可移植性评估。已有原创/CC0 环境素材可以合法使用 |
-| 真实 M5 性能 | DEVICE_NOT_RUN，不能用托管 M1 Virtual 的数据标达标 |
-| Codex Goal | NOT_CONFIGURED_OR_UNVERIFIED；下一次 Codex 执行应设置或检查 |
-| Codex Automation | NOT_CONFIGURED_OR_UNVERIFIED；应设置现有订阅内的定时续接并验证；不可虚报已安排 |
-| 权威总任务 | [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12) |
-| 最新已验证游戏改动 SHA | 本文件创建不代表已改游戏；请 Codex 在实际下一轮后填写 |
-| 最新可检查正常镜头与视频 | [RC13 正常镜头](evidence/river-gate-v1-rc13/normal-native.jpg) · [RC13 PLAYTEST](evidence/river-gate-v1-rc13/PLAYTEST.md) |
-| 下一件具体工作 | 检查最新 main/未合并 PR，选一个真正可合法导入的高质量角色/装备/城门资源，**动手实现** Godot 近景模型/材质/动画替换及可复用导入路径；拍真实默认/近/中/远游戏画面，运行战斗与回归测试，并提交 PR |
-| 禁止阻塞循环 | 无付费资源/无 M5/无法启动 Automation 时，记录 blocker，继续合法免费资产与真实可运行代码开发；不要交纯调研报告后退出 |
-
-**Codex 更新纪律**：每轮保留此表的概括性字段，覆盖为实际最新的状态；实际测试用例链接放 docs/evidence/<candidate>/，真实代码/构建细节放 CODEX_CONTINUATION.md，不要在本文件堆积复制的长日志。提交时将本文的初始占位替换为本轮验证事实。不要把一次技术成功写成 Owner ART APPROVED。
+| 工程基线 | main `844f83191daf8223464a35711e5a428d09e5d92f`，候选工作在 [PR #58](https://github.com/haohongfei2001-png/luanshi-game/pull/58)。RC22 的代码、录像和兼容记录保存在祖先提交中。 |
+| 优先级 | Owner 要求按 [战场全图](art-direction/river-gate/battle-view.png) 和 [人物近图](art-direction/river-gate/pose-detail.png) 高还原。必须看正常可操作的 2560×1440、3840×2160 原始游戏帧。 |
+| 最近的游戏源码 | `d5ea3052449377f8d389a30fbacaa005cfec0869`。PR 头 `7481b60411540e8c6c23a4553a0a99cc2a3a5df2` 随后把旧战场 HUD 回归改为检查实际绘制的按钮、屏底和场地中心。 |
+| 实装 | 游戏内原生分辨率与宽屏设置、可通行门洞上的门楼比例、石基与土墙、2K 扫描岸石、4K 车辙路面、握在左掌的盾及落主马离开遗体。 |
+| 实机 | [2560×1440 第 50 步原帧](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aac32eb883aa05844e812bbd62cfafa3eee04058/docs/evidence/river-gate-v1-rc23/fitted-crossing/2560x1440/view-0050.png)；[512v512 宽屏和 UHD 运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43546458665)。 |
+| 试验取舍 | 拒收普通兵的第一版贴脸和闭筒战袍。正在同机位复查真实枝条柳冠、桥板以及第二版交领宽带，取舍以相同战斗输入的原帧为准。 |
+| 质量与设备 | Owner 已明确拒绝此前画面。全图视觉还原仍未通过；`ART_REVIEW_REQUIRED`。真实 MacBook Air M5 `DEVICE_NOT_RUN`。 |
+| Codex 长期 Goal | `ACTIVE`，所在对话 `01a1cbad-2467-7310-b9fc-81b5a5b96466`。 |
+| 自动续接 | 单项原生 heartbeat，`automation-2`，北京时间每天 10:00、22:00。状态和目标对话已核实。10:00 当期在本对话开发期间推迟，读回时尚无独立运行记录。 |
+| 接续与验收 | [本轮可执行入口与历史](CODEX_CONTINUATION.md) · [正式 CI](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43547163844) · [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。 |
