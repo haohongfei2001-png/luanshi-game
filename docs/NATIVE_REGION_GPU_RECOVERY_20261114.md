@@ -225,3 +225,29 @@ The exporter now requires this empty-cwd pack startup on every hosted build,
 records it in the pack receipt, and refuses native launch without it. This
 proves resource closure with the official editor, not native graphics or art.
 The Mac template execution remains a separate required gate.
+
+## First protected-template entry reached; window timing remains separate
+
+Run `43633827443`, source `46dbf614`, passed fresh Mac import and the isolated
+pack setup. The protected template then reached `NATIVE_REGION_FOCUS` with
+actual Mobile/Metal, Apple M1 Virtual and the exact 35e80 engine: the exported
+entry and missing-resource failures are resolved. It still produced no image.
+The external Cocoa helper requested activation during `_initialize`, sampled
+`game_active=0` after only 0.4 s, and our guard ended the run after 23.56 s.
+An earlier startup diagnostic had observed `game_active=1`; these are different
+times, not evidence of a permanent OS refusal. Artifact `14129915124` retains
+the original failure and logs (ZIP SHA-256
+`4479e10a32aa0755e5aeab9494b150d0aa94329000b0f0a9fd3a20acfaa45384`).
+
+The next run requests focus through the game's own root Window only after
+three real process frames, waits at most three seconds for its actual
+`has_focus()` state, and emits a PID-bound native-window-ready receipt. The
+external runner still fails if that event is absent, unfocused, from another
+PID, or not macOS. No global keyboard, Accessibility, OS security change or
+owner-computer access is used. Headless setup explicitly skips this graphical
+window step and cannot qualify it. This replaces a premature observer, not
+a requirement for actual native rendering.
+
+The canonical-runtime migration also passed the five existing authoring
+compatibility tests (surface seams, winding, water clipping, support and
+shader-time override/restore). Native images, action and M5 remain unverified.

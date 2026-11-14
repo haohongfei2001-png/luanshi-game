@@ -4,7 +4,7 @@ import hashlib, importlib.util, json, re, sys, tempfile, unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools/native_region'))
 from restore_inputs import verified_copy, FILES
-from run_native import validate_engine,validate_pack_receipt,ENTRY
+from run_native import validate_engine,validate_pack_receipt,window_ready,ENTRY
 from validate_route import validate
 from export_pack import transform_preset,transform_project
 
@@ -70,5 +70,10 @@ class NativeRegionInputs(unittest.TestCase):
         for name in ['tests/authored_architecture_capture.gd','scripts/review/traversal_review.gd','scripts/review/freeze_shader_clock.gd']:
             text=(ROOT/name).read_text()
             self.assertNotRegex(text,r'assert\([^\n]*(?:\.save_png|\.compile|recorder\.start)\(')
+    def test_native_window_readiness(self):
+        focus={'pid':123};row={'pid':123,'focused':True,'display':'macOS'}
+        self.assertTrue(window_ready(focus,row));self.assertFalse(window_ready(None,row))
+        for key,value in [('pid',124),('focused',False),('display','headless')]:
+            self.assertFalse(window_ready(focus,{**row,key:value}))
 
 if __name__=='__main__':unittest.main()

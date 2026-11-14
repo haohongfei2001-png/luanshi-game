@@ -4,6 +4,9 @@ from pathlib import Path
 
 ENTRY='application/run/main_loop_type=DotNativeRegionCapture; inert bootstrap scene; no CLI override'
 
+def window_ready(focus,row):
+    return focus is not None and row.get('pid')==focus['pid'] and row.get('focused') is True and row.get('display')=='macOS'
+
 def validate_pack_receipt(receipt):
     if receipt.get('entry')!=ENTRY or receipt.get('original_project_restored') is not True or receipt.get('original_export_config_restored') is not True or receipt.get('isolated_pack_setup_passed') is not True:
         raise ValueError('QA pack entry or original configuration restoration not verified')
@@ -72,11 +75,15 @@ def run(project, patch, output, helper, mode='baseline'):
                 child = subprocess.run(["/bin/ps", "-p", str(row["pid"]), "-o", "comm="], capture_output=True, text=True, check=True)
                 if os.path.realpath(child.stdout.strip()) != os.path.realpath(executable):
                     failure = "UNVERIFIED_PROCESS_FOR_FOCUS"; return
-                result = subprocess.run([str(helper), "foreground", str(row["pid"])], capture_output=True, text=True, timeout=8)
-                focus = {"pid":row["pid"],"exit":result.returncode,"stdout":result.stdout,"stderr":result.stderr}
+                focus = {"pid":row["pid"],"phase":"verified entry; awaiting native window event","window_ready":False}
                 (output / "focus.json").write_text(json.dumps(focus, indent=2))
-                if result.returncode: failure = "NATIVE_WINDOW_FOCUS_FAILED"
-            if value.startswith(("NATIVE_REGION_FOCUS", "REGION_SETUP_", "ARCHITECTURE_CAPTURE_")):
+            if value.startswith('NATIVE_WINDOW_READY '):
+                row=json.loads(value.partition(' ')[2])
+                if not window_ready(focus,row):
+                    failure='NATIVE_WINDOW_FOCUS_FAILED';return
+                focus.update(window_ready=True,phase='native SceneTree window focus observed after event pumping',window=row)
+                (output/'focus.json').write_text(json.dumps(focus,indent=2))
+            if value.startswith(("NATIVE_REGION_FOCUS", "NATIVE_WINDOW_READY", "REGION_SETUP_", "ARCHITECTURE_CAPTURE_")):
                 print(value, flush=True)
         try:
             while time.monotonic() - started < (120 if mode=='camera-study' else 240):
@@ -110,7 +117,7 @@ def run(project, patch, output, helper, mode='baseline'):
                "scope":"Real native Metal execution, readback-instrumented, not performance acceptance"}
     (output / "process.json").write_text(json.dumps(receipt, indent=2))
     if failure or process.returncode: raise RuntimeError(json.dumps(receipt))
-    if focus is None: raise RuntimeError("No verified actual native window")
+    if focus is None or not focus.get('window_ready'): raise RuntimeError("No verified actual native window")
     if not re.search(r'^Metal .*Forward Mobile.*Apple', (output/'actual-game.log').read_text(),re.MULTILINE):
         raise RuntimeError('No actual Metal/Apple adapter log; fallback forbidden')
     return receipt

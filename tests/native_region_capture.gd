@@ -8,3 +8,17 @@ func _initialize() -> void:
  file.store_string(JSON.stringify(host,'  '));file.close()
  print('NATIVE_REGION_FOCUS ',JSON.stringify(host))
  super._initialize()
+
+func run() -> void:
+ if DisplayServer.get_name()!='headless':
+  # Request only this game's native window after the main loop starts pumping
+  # events. A helper's 0.4s snapshot during _initialize is not a readiness test.
+  for frame in 3:await process_frame
+  root.grab_focus()
+  var deadline=Time.get_ticks_usec()+3000000
+  while not root.has_focus() and Time.get_ticks_usec()<deadline:await process_frame
+  var focused=root.has_focus()
+  print('NATIVE_WINDOW_READY ',JSON.stringify({'pid':OS.get_process_id(),'focused':focused,'native_window':root.get_window_id(),'display':DisplayServer.get_name()}))
+  if not focused:
+   push_error('Native game window did not become focused');quit(1);return
+ await super.run()
