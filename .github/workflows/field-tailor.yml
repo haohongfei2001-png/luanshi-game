@@ -1,0 +1,92 @@
+name: Compare River Gate field tailoring in playing and close windows
+on:
+  push:
+    branches: [codex/river-rc23-campaign-wrap]
+    paths: ['.github/workflows/field-tailor.yml','tools/art/tailor_field_coats.py','tests/bridgehead_clothing_window.gd']
+permissions:
+  contents: write
+concurrency:
+  group: costume-codex/river-rc23-campaign-wrap
+  cancel-in-progress: true
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned runtime and known upstream clothing tools
+        run: |
+          set -eu
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v xdotool >/dev/null || ! /usr/bin/python3 -c 'import PIL,numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool python3-numpy python3-pil; fi
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/field-coats
+          touch artifacts/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Keep evidence outside Godot's resource import
+        run: |
+          touch docs/evidence/river-gate-v1-rc23/field-coats/.gdignore
+      - name: Photograph both complete 2560 x 1600 windows on matching soldiers
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/field-coats
+          for side in before after; do
+            mkdir -p "$proof/$side"
+            if [ "$side" = after ]; then
+              /usr/bin/python3 tools/art/import_garrison_issues.py /tmp/han-field-issue | tee "$proof/bake.log"
+              # Keep the tested outfit and original body provenance separate.
+              git restore assets/river_gate/figures/garrison_bodies.glb
+            fi
+            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side/import.log" 2>&1
+            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/import.log"; then exit 1; fi
+            timeout 5m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/bridgehead_clothing_window.gd > "$proof/$side/window.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/window.log"; then exit 1; fi
+            grep ROBE_GAME_WINDOW "$proof/$side/window.log"
+            cp artifacts/bridge-window/line-*.jpg artifacts/bridge-window/reverse-*.jpg artifacts/bridge-window/kit*.jpg artifacts/bridge-window/field.json "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          import pathlib,json,numpy as np
+          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/field-coats")
+          assert json.loads((root/"before"/"field.json").read_bytes())==json.loads((root/"after"/"field.json").read_bytes())
+          out={}
+          for a in sorted((root/"before").glob("*.jpg")):
+              name=a.stem
+              pair=[]
+              for side in ("before","after"):
+                  path=root/side/a.name
+                  im=Image.open(path).convert("RGB")
+                  assert im.size==(2560,1600)
+                  pair.append(np.array(im,dtype=np.int16))
+                  im.thumbnail((1280,800));im.save(root/side/(name+"-window.jpg"),quality=91,subsampling=0)
+              delta=np.max(abs(pair[0]-pair[1]),axis=-1)
+              out[name]={"pixels_changed_12":int((delta>12).sum()),"pixels_changed_25":int((delta>25).sum())}
+          (root/"compare.json").write_text(json.dumps(out,indent=2))
+          PY
+          git add assets/third_party/wildfire_garments/field_issues.glb assets/third_party/wildfire_garments/field_colours.png
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the tied field coats on the established company bind'
+          git add "$proof"
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive matched normal and near actual 2K field windows'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Show the actual import and window errors
+        if: failure()
+        run: |
+          for f in docs/evidence/river-gate-v1-rc23/field-coats/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bridgehead-tailoring
+          path: |
+            docs/evidence/river-gate-v1-rc23/field-coats
+            artifacts/bridge-window
+          retention-days: 7
