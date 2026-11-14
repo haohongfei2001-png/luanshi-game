@@ -75,3 +75,21 @@ The normal source-scene closure check passed locally with all15 atlas pages; thi
 not yet an exported Mac PCK test. First synthetic color-noise test fixture was too flat
 for the nonempty-image gate, fixed to deterministic RGB coordinate pattern; gate not
 relaxed. Synthetic short-window, changed-state and magenta-image fixtures all fail.
+
+### First bounded smoke: retain failures, do not relabel resolution
+
+- `e09377fd` / run43648646005: original UBC/atlas restoration and8way pack
+  succeeded, but fresh checkout lacked the untracked Noto font. Strict import
+  gate stopped GPU launch. Existing pinned OFL font bootstrap fixed this.
+- `f62653ba` / run43649263016: all four actual Mobile Metal cases completed,
+  independent combat snapshots matched, raw no-readback windows had1861/2504
+  intervals over16.78/16.01s. **Overall FAIL**: macOS clamped the window to
+  1024x645; exported project dimensions alone did not create native2K output.
+  Artifact14135049005 ZIP SHA256
+  `4317be9d9f63c84fd52a8fbaefa0e2ac67c17271e891d2792724847510e392db`.
+  These images/statistics are not2K and do not select a representation winner.
+- Fix reuses the verified native-region startup: keep normal small project
+  window, pump three native event frames, verify own game focus, then set
+  root.size2560x1440 and await two resize frames before constructing the scene.
+  Capture hard-checks actual attachment dimensions. No SubViewport, screenshot
+  rescaling or altered sample/resolution gate. Native2K result remains pending.

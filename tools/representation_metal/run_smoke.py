@@ -22,8 +22,7 @@ shutil.copyfile(project/'assets/ubc_lab/ubc_animated.glb',opaque)
 env=dict(os.environ,COMPARE_VALIDATE_PACK='1',COMPARE_ASSETS=str(atlas),COMPARE_LOD_TIER='1')
 try:
  text=project_config(old.decode())
- for key,value in [('viewport_width',2560),('viewport_height',1440),('window_width_override',2560),('window_height_override',1440)]:
-  text=re.sub(r'(?m)^window/size/'+key+r'=\d+',f'window/size/{key}={value}',text)
+ # Keep normal startup size; GDScript resizes only after native events/focus.
  config.write_text(text)
  p=old_preset.decode().replace('exclude_filter="tests/*,tools/*,docs/*,artifacts/*,builds/*"','exclude_filter="tests/*,docs/*,artifacts/*,builds/*,.inputs/*,evidence/*"',1).replace('script_export_mode=2','script_export_mode=0',1)
  p=p.replace('include_filter="','include_filter="assets/ubc_lab/*.bin,assets/ubc_lab/NOTICE.md,assets/ubc_lab/source/*.txt,',1);preset.write_text(p)
