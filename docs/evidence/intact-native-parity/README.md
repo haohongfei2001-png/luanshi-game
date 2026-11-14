@@ -48,3 +48,17 @@ and full shadow/performance regression remains pending.
 
 Source UBC and UAL licenses remain attached to `assets/ubc_lab/source`.
 MakeHuman, costumes and future action libraries are NOT included here.
+
+## Hosted renderer reference correction
+
+Run 43611350338 passed CPU structure checks but failed raw bake comparison by
+77.161 micrometres. Godot 4.6.3 `scene/3d/mesh_instance_3d.cpp` CPU bake starts
+from source and accumulates `source.lerp(Tsource,w)-source`; GLES3
+`drivers/gles3/shaders/skeleton.glsl` sums weighted matrices directly. With
+source UNORM16 weights not summing exactly to one, these are distinct. The test
+now preserves raw bake error and checks the exact predicted CPU bake
+`palette_p + source_vertex*(1-sumWeights)` at the unchanged 2e-5 m threshold.
+No source weights, palette or shader are normalized or altered by this fix.
+The independent actual renderer 2-level/2-percent pixel gate remains mandatory.
+Source: https://github.com/godotengine/godot/blob/4.6.3-stable/scene/3d/mesh_instance_3d.cpp
+and https://github.com/godotengine/godot/blob/4.6.3-stable/drivers/gles3/shaders/skeleton.glsl

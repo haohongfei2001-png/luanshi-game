@@ -43,9 +43,12 @@ func run() -> void:
 			packed.mesh.surface_set_material(surface,shader);shaders.append(shader)
 		var batch:=MultiMeshInstance3D.new();batch.multimesh=MultiMesh.new()
 		batch.multimesh.transform_format=MultiMesh.TRANSFORM_3D;batch.multimesh.use_custom_data=true
+		batch.multimesh.use_colors=true
 		batch.multimesh.mesh=packed.mesh;batch.multimesh.instance_count=1
 		batch.multimesh.set_instance_transform(0,native.global_transform)
 		batch.multimesh.set_instance_custom_data(0,Color(0,0,0,0))
+		batch.multimesh.set_instance_color(0,Color.WHITE)
+		print("INTACT_INSTANCE_COLOR ",JSON.stringify({"mesh":native.name,"instance_color":batch.multimesh.get_instance_color(0),"source_vertex_color_first":native.mesh.surface_get_arrays(0)[Mesh.ARRAY_COLOR][0]}))
 		batch.multimesh.custom_aabb=AABB(Vector3(-4,-4,-4),Vector3(8,8,8))
 		batch_view.add_child(batch)
 		entries.append({"native":native,"shaders":shaders})

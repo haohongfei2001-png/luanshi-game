@@ -51,6 +51,7 @@ func run() -> void:
 		entries.append({"mesh":str(mesh.name),"vertices":packed.tables[0].vertices,"binds":mesh.skin.get_bind_count(),"lods":packed.source_lods,"influences":packed.tables[0].influences})
 	var samples := []
 	var worst := 0.0
+	var worst_raw_bake := 0.0
 	for clip: StringName in player.get_animation_list():
 		if clip=="RESET":continue
 		for phase: float in [0.0,0.25,0.5,0.75]:
@@ -58,6 +59,7 @@ func run() -> void:
 			player.seek(player.get_animation(clip).length*phase,true)
 			player.advance(0.0)
 			var error := 0.0
+			var raw_bake_error := 0.0
 			for mesh: MeshInstance3D in meshes:
 				var captured := Palette.capture(skeleton,mesh.skin)
 				check(not captured.has("error"),"unresolvable intact skin")
@@ -78,22 +80,32 @@ func run() -> void:
 					for vertex in vertices.size():
 						var p := Vector3.ZERO
 						var reference := Vector3.ZERO
+						var sum_weights := 0.0
 						for k in influences:
 							var index := vertex*influences+k
+							sum_weights+=weights[index]
 							p+=(Palette.unpack(texture.image,bones[index],0)*vertices[vertex])*weights[index]
 							var name: StringName=mesh.skin.get_bind_name(bones[index])
 							var bone: int=skeleton.find_bone(name) if not name.is_empty() else mesh.skin.get_bind_bone(bones[index])
 							reference+=(skeleton.get_bone_global_pose(bone)*mesh.skin.get_bind_pose(bones[index])*vertices[vertex])*weights[index]
-						error=maxf(error,p.distance_to(native[vertex] if baked else reference))
+						# Godot 4.6.3 CPU bake sums source + w*(Tsource-source).
+						# GLES3 instead sums w*T directly. Preserve source UNORM16
+						# weights, and account for the documented CPU-only residual.
+						if baked:
+							raw_bake_error=maxf(raw_bake_error,p.distance_to(native[vertex]))
+							var predicted_cpu_bake:=p+vertices[vertex]*(1.0-sum_weights)
+							error=maxf(error,predicted_cpu_bake.distance_to(native[vertex]))
+						else:error=maxf(error,p.distance_to(reference))
 			worst=maxf(worst,error)
+			worst_raw_bake=maxf(worst_raw_bake,raw_bake_error)
 			check(error<0.00002,"native Skeleton CPU deformation parity failed: "+String(clip)+" phase "+str(phase)+" error "+str(error))
-			samples.append({"clip":clip,"phase":phase,"max_position_error_m":error})
+			samples.append({"clip":clip,"phase":phase,"max_position_error_m":error,"raw_bake_error_m":raw_bake_error})
 	for i in meshes.size():
 		var signature := []
 		for surface in meshes[i].mesh.get_surface_count():signature.append(meshes[i].mesh.surface_get_arrays(surface))
 		check(var_to_bytes(signature)==native_signatures[i],"source mutated")
 	var report := {"checks":checks,"failures":failures,"native_bones":skeleton.get_bone_count(),"meshes":entries,"source_lods_preserved":total_lods,
-		"samples":samples,"worst_position_error_m":worst,"graphics":"NOT_RUN" if DisplayServer.get_name()=="headless" else RenderingServer.get_video_adapter_name(),"deformation_reference":"CPU linear blend roundtrip only; native RenderingServer skeleton unavailable in headless" if DisplayServer.get_name()=="headless" else "MeshInstance3D.bake_mesh_from_current_skeleton_pose","material_pixel_parity":"NOT_RUN","full_battle_performance":"NOT_RUN","shipping_enabled":false}
+		"samples":samples,"worst_position_error_m":worst,"worst_raw_bake_error_m":worst_raw_bake,"cpu_bake_formula":"palette_p + source_vertex*(1-sumWeights); source weights unchanged","graphics":"NOT_RUN" if DisplayServer.get_name()=="headless" else RenderingServer.get_video_adapter_name(),"deformation_reference":"CPU linear blend roundtrip only; native RenderingServer skeleton unavailable in headless" if DisplayServer.get_name()=="headless" else "MeshInstance3D.bake_mesh_from_current_skeleton_pose","material_pixel_parity":"NOT_RUN","full_battle_performance":"NOT_RUN","shipping_enabled":false}
 	DirAccess.make_dir_recursive_absolute("res://artifacts/native-character-parity")
 	var f:=FileAccess.open("res://artifacts/native-character-parity/cpu.json",FileAccess.WRITE)
 	f.store_string(JSON.stringify(report,"  "));f.close()
