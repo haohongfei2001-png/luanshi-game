@@ -8,6 +8,8 @@ const GARRISON := preload("res://assets/third_party/wildfire_garments/field_issu
 const SHIELD := preload("res://assets/third_party/wildfire_shields/garrison_shield.glb")
 const HEADWEAR := preload("res://assets/third_party/wildfire_headwear/headwear.glb")
 const ISSUE_COLOURS := preload("res://assets/third_party/wildfire_garments/field_colours.png")
+const EQUIPMENT := preload("res://assets/river_gate/equipment/field_equipment.glb")
+const EQUIPMENT_COLOURS := preload("res://assets/river_gate/equipment/native_iron_wood.png")
 const MASTER := preload("res://assets/river_gate/figures/field_company_master.glb")
 const FIELD_BODY := preload("res://assets/river_gate/figures/garrison_bodies.glb")
 const SKIN := preload("res://scripts/field/company_skin.gdshader")
@@ -18,7 +20,7 @@ static var assembled: Dictionary = {}
 
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
-	for asset: PackedScene in [LIBRARY, MASTER, SHIELD]:
+	for asset: PackedScene in [LIBRARY, MASTER, SHIELD, EQUIPMENT]:
 		pieces.merge(FieldMeshes.meshes(asset),true)
 
 static func costume(kit: int) -> String:
@@ -33,7 +35,7 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	if assembled.has(key): return assembled[key]
 	_load_pieces()
 	var body: ArrayMesh=pieces[look+lod+"Master"]
-	var arms: ArrayMesh=pieces["Arms"+str(kit)+lod]
+	var arms: ArrayMesh=pieces[("FieldArms" if kit in [0,1,3,7,8] else "Arms")+str(kit)+lod]
 	# Copy packed indexed arrays only. SurfaceTool would expand every triangle,
 	# and importer-generated tangents/lightmap data have no role in these materials.
 	var arrays:=body.surface_get_arrays(0)
@@ -63,6 +65,7 @@ static func material(colour: Color, kit: int, player: bool=false, shoulder: Colo
 	result.shader=SKIN
 	result.set_shader_parameter("cloth_atlas", FABRIC)
 	result.set_shader_parameter("issue_atlas", ISSUE_COLOURS)
+	result.set_shader_parameter("equipment_atlas", EQUIPMENT_COLOURS)
 	result.set_shader_parameter("motion_bank", MOTION)
 	result.set_shader_parameter("livery", colour)
 	result.set_shader_parameter("shoulder_dye", shoulder)

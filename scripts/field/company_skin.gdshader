@@ -3,6 +3,7 @@ render_mode cull_disabled, diffuse_lambert, specular_disabled;
 
 uniform sampler2D cloth_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D issue_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D equipment_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D motion_bank : filter_linear, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform vec4 shoulder_dye : source_color = vec4(0.0);
@@ -197,7 +198,7 @@ void vertex() {
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
 void fragment() {
-    vec4 swatch = cloth_panel>=34 ? vec4(field_person_pigment(cloth_panel,UV,bind_point,cloth_lot),0.) : (cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV));
+    vec4 swatch = cloth_panel==38 ? texture(equipment_atlas,vec2(fract(UV.x),UV.y)) : (cloth_panel>=34 ? vec4(field_person_pigment(cloth_panel,UV,bind_point,cloth_lot),0.) : (cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV)));
     vec3 ink = swatch.rgb;
     // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
     // their own values even where soldiers overlap in the default orthographic view.

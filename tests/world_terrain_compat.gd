@@ -17,6 +17,9 @@ func _initialize() -> void:
 	assert(restored.hero.hp==old.hero.hp and restored.losses==old.losses)
 	assert(restored.rng.state==old.rng.state)
 	assert(restored.ordinary_counts==old.ordinary_counts)
+	data["terrain_revision"]=2
+	var intermediate:=Store.restore(data)
+	assert(intermediate!=null and not Ground.moat_blocks(intermediate.hero.pos))
 	var current:=Store.snapshot(restored)
 	var round_trip:=Store.restore(current)
 	assert(round_trip!=null and round_trip.hero.pos==restored.hero.pos)
@@ -28,7 +31,7 @@ func _initialize() -> void:
 	previous.erase("terrain_revision")
 	var untouched:=Store.restore(previous)
 	assert(untouched!=null and untouched.hero.pos==field.hero.pos)
-	current["terrain_revision"]=3
+	current["terrain_revision"]=4
 	assert(Store.restore(current)==null)
 	print("WORLD_TERRAIN_COMPAT_PASS ",JSON.stringify({"ordinary":Array(restored.ordinary_counts),"old":Array([old.hero.pos.x,old.hero.pos.y]),"restored":[restored.hero.pos.x,restored.hero.pos.y],"losses":restored.losses}))
 	quit(0)

@@ -14,18 +14,20 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	field.pan_to(point)
 	field._process(Battle.DT)
 	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
 	var pic:=root.get_texture().get_image()
-	assert(pic.get_width()==2560 and pic.get_height()==1440)
+	assert(pic.get_size()==root.size)
+	assert(is_equal_approx(root.scaling_3d_scale,1.0))
 	pic.save_png(OUT+"/"+label+".png")
 	pic.save_jpg(OUT+"/"+label+".jpg",.94)
 	pic.resize(1440,810,Image.INTERPOLATE_LANCZOS)
 	pic.save_jpg(OUT+"/"+label+"-preview.jpg",.93)
 	var b=field.battle
-	var row:={"source_sha":source_sha,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
+	var row:={"source_sha":source_sha,"pixels":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _inventory() -> void:
-	for path:String in [field.map.BROADLEAF,field.map.SHRUB,field.map.FERN,field.map.PINE]:
+	for path:String in [field.map.WOODLAND]:
 		var packed:Node3D=(load(path) as PackedScene).instantiate()
 		var members:Array=[packed]
 		members.append_array(packed.find_children("*","MeshInstance3D",true,false))
@@ -64,7 +66,10 @@ func _run() -> void:
 	for tick in 85:field._physics_process(Battle.DT)
 	await _snap("bridgehead-0135",Ground.BRIDGE_VIEW,22.)
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
-	await _snap("grove-0135",Vector2(38.,-19.),18.)
+	await _snap("grove-0135",Vector2(38.,-10.),18.)
+	root.size=Vector2i(3840,2160)
+	await process_frame
+	await _snap("bridgehead-0135-uhd",Ground.BRIDGE_VIEW,22.)
 	var file:=FileAccess.open(OUT+"/frames.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(records,"  "))
 	print("WORLD_MASTER_STILLS ",field.theater.audit().is_empty())

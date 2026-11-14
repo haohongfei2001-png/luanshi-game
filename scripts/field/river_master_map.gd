@@ -5,6 +5,7 @@ const FORT := WORLD+"architecture/river_fort.glb"
 const PIER := WORLD+"masters/modular_wooden_pier/modular_wooden_pier.gltf"
 const CLIFF := WORLD+"masters/coastal_cliff_02/coastal_cliff_02.gltf"
 const BROADLEAF := WORLD+"masters/island_tree_01/island_tree_01.gltf"
+const WOODLAND := WORLD+"woodland/field_woodland.glb"
 const SHRUB := WORLD+"masters/shrub_03/shrub_03.gltf"
 const FERN := WORLD+"masters/fern_02/fern_02.gltf"
 const PINE := WORLD+"masters/pine_tree_01/pine_tree_01.gltf"
@@ -242,6 +243,10 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 			rock.material_override=material
 			rock.name="WholeRiverStone"
 			rock.visibility_range_end=175.
+		# Rooted undergrowth joins the bank outcrop to its landward shoulder.
+		for j in 3:
+			var p:=Vector2(center+station.x*(5.5+.28*j),station.y+(j-1)*.94)
+			_woodland("FieldBrushA" if (i+j)%2==0 else "FieldBrushB",p,.43+.16*((i+j)%3),i*1.43+j)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
@@ -263,22 +268,31 @@ func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 		node.lod_bias=.65
 	add_child(tree)
 
+func _woodland(part:String,at:Vector2,height:float,yaw:float) -> MeshInstance3D:
+	var mesh:Mesh=_library(WOODLAND)[part]
+	var scale_value:=height/maxf(mesh.get_aabb().size.y,.01)
+	var plant:=_plant(WOODLAND,part,at,scale_value,yaw)
+	plant.name=part
+	# Author-built leaf masses retain their actual silhouette through the overview.
+	plant.lod_bias=4.0
+	return plant
+
 func _banks_and_groves() -> void:
 	_bank_rocks(Ground.RIVER_X,false)
 	if bridgehead: _bank_rocks(Ground.MOAT_X,true)
 	var near_groves:Array[Vector3]=[
-		Vector3(40.,-17.,6.8),Vector3(36.,-21.,5.6),Vector3(44.,-23.,6.4),
+		Vector3(37.5,-8.5,6.7),Vector3(34.,-15.,5.7),Vector3(43.,-17.,6.4),
 		Vector3(34.,19.,6.2),Vector3(40.,24.,7.1),Vector3(29.,25.,5.8)]
 	for i in near_groves.size():
 		var entry:=near_groves[i]
 		var p:=Vector2(entry.x,entry.y)
-		_scene_plant(BROADLEAF,p,entry.z,i*2.1)
+		_woodland(["FieldOakA","FieldElmA","FieldOakB","FieldElmB"][i%4],p,entry.z,i*2.1)
 		for j in 3:
 			var q:=p+Vector2(cos(i+j*2.1),sin(i+j*2.1))*3.1
-			_scene_plant(SHRUB,q,.38+.10*(j%2),i+j*1.9)
+			_woodland("FieldBrushA" if j%2==0 else "FieldBrushB",q,.58+.17*(j%2),i+j*1.9)
 			_scene_plant(FERN,q+Vector2(.9,-.4),.35+.06*j,j+.8*i)
 	var willow_positions:Array[Vector3]=[
-		Vector3(17.5,-11.5,0.),Vector3(30.5,17.5,1.),
+		Vector3(17.5,-11.5,0.),Vector3(17.5,11.5,1.),
 		Vector3(30.5,-25.,1.),Vector3(17.3,23.,0.),
 		Vector3(-39.,-15.,0.),Vector3(-24.8,20.,1.),
 		Vector3(-40.,47.,1.),Vector3(-24.5,-49.,0.)]
@@ -293,11 +307,11 @@ func _banks_and_groves() -> void:
 		Vector2(79.,47.),Vector2(98.,48.),Vector2(112.,-41.)]
 	for i in wooded_slopes.size():
 		var p:=wooded_slopes[i]
-		_scene_plant(BROADLEAF,p,6.9+.65*(i%3),i*1.37)
+		_woodland("FieldOakA" if i%2==0 else "FieldElmB",p,6.9+.65*(i%3),i*1.37)
 		for j in 3:
 			var q:=p+Vector2(cos(i*.7+j*2.1),sin(i*.7+j*2.1))*5.4
-			_plant(PINE,"pine_tree_01_%s_LOD0"%["a","b","c"][(i+j)%3],q,.53+.05*j,i+j*1.1)
-			_scene_plant(SHRUB,q+Vector2(1.2,1.1),.45,i+j)
+			_woodland("FieldElmA" if j%2==0 else "FieldOakB",q,5.3+.7*j,i+j*1.1)
+			_woodland("FieldBrushA",q+Vector2(1.2,1.1),.85,i+j)
 	# A few complete outcrops form the skyline outside traversable ground.
 	for i in 10:
 		var p:=Vector2(-135.+i*29.,-75.-8.*sin(i*.8))

@@ -2,7 +2,7 @@ name: Integrate and play the whole replacement battlefield
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','tests/world_master_review.gd','scripts/field/company_art.gd','scripts/field/company_skin.gdshader','.github/workflows/whole-rebuild.yml']
+    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','tools/art/import_field_equipment.py','tools/art/import_field_woodland.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','tests/world_master_review.gd','scripts/field/company_art.gd','scripts/field/company_skin.gdshader','.github/workflows/whole-rebuild.yml']
 permissions:
   contents: write
   actions: read
@@ -26,6 +26,8 @@ jobs:
           touch artifacts/.gdignore
           python3 tools/art/import_ground_masters.py "$RUNNER_TEMP/art-sources"
           python3 tools/art/build_river_architecture.py "$RUNNER_TEMP/art-sources"
+          python3 tools/art/import_field_equipment.py "$RUNNER_TEMP/art-sources"
+          python3 tools/art/import_field_woodland.py "$RUNNER_TEMP/art-sources"
           blender --background --factory-startup --python-exit-code 1 --python tools/art/build_intact_bridge.py > artifacts/world-rebuild/bridge.log 2>&1 || { tail -n 60 artifacts/world-rebuild/bridge.log; exit 1; }
           for asset in island_tree_01 fern_02 shrub_03; do
             if [ ! -f "assets/river_gate/world/masters/$asset/SOURCE.json" ]; then
@@ -33,7 +35,7 @@ jobs:
             fi
           done
           blender --background --factory-startup --python-exit-code 1 --python tools/art/build_river_willows.py -- "$RUNNER_TEMP/canopies" > artifacts/world-rebuild/canopies.log 2>&1 || { tail -n 60 artifacts/world-rebuild/canopies.log; exit 1; }
-          git add assets/river_gate/world
+          git add assets/river_gate/world assets/river_gate/equipment
           git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete timber spans, full tree masters and fitted battlefield material sources' || test -z "$(git status --porcelain assets/river_gate/world)"
           git push origin HEAD:refs/heads/codex/river-whole-rebuild
       - name: Import the actual Godot game
@@ -66,7 +68,7 @@ jobs:
               pixels=image.width*image.height
               print("WORLD_NATIVE_ALPHA",json.dumps({"path":str(path),"size":image.size,"alpha_minmax":image.getchannel("A").getextrema(),"coverage_38":sum(histogram[97:])/pixels,"coverage_5":sum(histogram[13:])/pixels}))
           PY
-          timeout 600s xvfb-run -a -s "-screen 0 2560x1440x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --script tests/world_master_review.gd > artifacts/world-rebuild/stills.log 2>&1 || { cat artifacts/world-rebuild/stills.log; exit 1; }
+          timeout 720s xvfb-run -a -s "-screen 0 3840x2160x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --script tests/world_master_review.gd > artifacts/world-rebuild/stills.log 2>&1 || { cat artifacts/world-rebuild/stills.log; exit 1; }
           cat artifacts/world-rebuild/stills.log
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/world-rebuild/stills.log; then exit 1; fi
           git add docs/evidence/river-whole-rebuild/review

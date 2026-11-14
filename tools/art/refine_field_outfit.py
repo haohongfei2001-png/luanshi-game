@@ -126,6 +126,9 @@ def collar_boundary(source):
         mapping.append(lookup[key])
     edges = defaultdict(int)
     for face in source.faces:
+        # The original issued surface carries the neck opening. Separate
+        # project collar facings have open ends across the chest.
+        if not all(2.<=source.tex[i][0]<3. for i in face): continue
         ids = [mapping[i] for i in face]
         for a,b in zip(ids,ids[1:]+ids[:1]):
             if a!=b: edges[tuple(sorted((a,b)))] += 1

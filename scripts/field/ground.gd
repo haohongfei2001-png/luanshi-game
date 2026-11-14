@@ -16,9 +16,10 @@ const MOAT_DECK := 3.70
 const MOAT_END := 25.5
 # Authored outcrop centres are shared by the visible banks and their footprint.
 const BANK_OUTCROPS: Array[Vector3] = [
-	Vector3(1.,-8.5,3.3),Vector3(-1.,-12.,4.0),Vector3(1.,-17.2,3.5),
-	Vector3(-1.,-21.,3.2),Vector3(-1.,7.8,3.6),Vector3(1.,12.4,4.1),
-	Vector3(-1.,17.,3.4),Vector3(1.,22.,3.0)]
+	Vector3(1.,-6.2,2.7),Vector3(-1.,-8.8,3.4),Vector3(1.,-10.5,3.6),
+	Vector3(-1.,-14.,4.0),Vector3(1.,-16.,3.4),Vector3(-1.,-21.,3.5),Vector3(1.,-22.5,3.0),
+	Vector3(1.,6.5,3.0),Vector3(-1.,7.8,3.6),Vector3(1.,11.,3.8),
+	Vector3(-1.,13.5,3.8),Vector3(1.,16.3,3.4),Vector3(-1.,19.,3.6),Vector3(1.,22.,3.0)]
 const RIVER_OUTCROPS: Array[Vector3] = [
 	Vector3(1.,-55.,4.3),Vector3(-1.,-46.,4.2),Vector3(-1.,-29.,3.1),
 	Vector3(1.,28.,3.4),Vector3(-1.,43.,4.0),Vector3(1.,52.,3.6),Vector3(-1.,61.,4.4)]
