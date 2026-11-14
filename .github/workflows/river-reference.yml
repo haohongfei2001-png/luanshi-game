@@ -17,11 +17,8 @@ jobs:
         run: |
           set -eu
           sudo apt-get update -qq
-          sudo apt-get install -y -qq blender python3-numpy python3-pil xdotool
-          blender --background --python-exit-code 1 --python tools/art/fit_pendant_willow.py -- "$RUNNER_TEMP/trees"
-          git add assets/third_party/river_willow
-          git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Root the full willow silhouette at the riverbank; preserve the source fingerprint'
-          git push origin HEAD:refs/heads/codex/river-rc23-pendant-willows
+          sudo apt-get install -y -qq python3-pil xdotool
+          test -s assets/third_party/river_willow/pollard.glb
       - name: Prepare the pinned game runtime and real-input driver
         run: |
           set -eu
@@ -42,7 +39,7 @@ jobs:
             out="docs/evidence/river-gate-v1-rc23/pendant-willows/$dims"
             mkdir -p "$out"
             printf '[display]\nwindow/size/window_width_override=%s\nwindow/size/window_height_override=%s\n' "${dims%x*}" "${dims#*x}" > override.cfg
-            xvfb-run -a -s "-screen 0 ${dims}x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution "$dims" --audio-driver Dummy --disable-vsync --fixed-fps 24 --script tests/bridgehead_window.gd -- --bridge-stills --native-plates --crossing-composition > "$out/window.log" 2>&1 || { tail -c 5500 "$out/window.log"; exit 1; }
+            xvfb-run -a -s "-screen 0 ${dims}x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution "$dims" --audio-driver Dummy --disable-vsync --fixed-fps 24 --script tests/bridgehead_window.gd -- --bridge-stills --native-plates > "$out/window.log" 2>&1 || { tail -c 5500 "$out/window.log"; exit 1; }
             grep -F 'BRIDGE_WINDOW true' "$out/window.log"
             cp artifacts/bridge-window/input-and-camera.json artifacts/bridge-window/view-0050.png "$out/"
             DIM="$dims" DST="$out" /usr/bin/python3 - <<'PY'

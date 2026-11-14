@@ -178,7 +178,7 @@ func _run() -> void:
 				if "--native-plates" in OS.get_cmdline_user_args() and b.tick in [50,145]:
 					screenshot_ok=frame.save_png(OUT+"/view-%04d.png"%b.tick)==OK and screenshot_ok
 		await process_frame
-		if preview and (b.tick>=150 or (b.tick>=51 and "--crossing-composition" in OS.get_cmdline_user_args())): break
+		if preview and b.tick>=150: break
 	for key:Key in [KEY_W,KEY_S,KEY_A,KEY_D]: _key(key,false)
 	var fact:=_facts()
 	var clear_count:=0
