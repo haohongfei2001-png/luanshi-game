@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 from PIL import Image
+from segment_whole_battle import segment_movie
 
 capture = Path(sys.argv[1])
 directory = Path(sys.argv[2])
@@ -34,7 +35,7 @@ assert video["avg_frame_rate"] == "24/1", video
 frame_count = int(video["nb_frames"])
 duration = frame_count / fps
 battle_seconds = (facts["last"]["tick"] - facts["frames"][0]["tick"]) / 20.
-assert abs(battle_seconds - (frame_count - facts["first_game_frame"]) / fps) < .4, (
+assert abs(battle_seconds - (frame_count - facts["first_game_frame"] - facts.get("post_battle_frames", 0)) / fps) < .4, (
     battle_seconds, duration, facts["first_game_frame"])
 assert all(row["both_landmarks"] and abs(row["zoom"] - 22.) < .001 for row in facts["frames"])
 assert all(abs(row["center"][0] - 34.2) < .35 and abs(row["center"][1] - 1.) < .35 for row in facts["frames"])
@@ -104,6 +105,9 @@ receipt = {
     "seconds": duration,
     "simulated_battle_seconds": battle_seconds,
     "source_frame_count": frame_count,
+    "complete_battle": bool(facts.get("complete_battle_requested") and facts["last"]["result"]),
+    "post_battle_frames": facts.get("post_battle_frames", 0),
+    "viewable_parts": segment_movie(movie, directory / "parts"),
     "streams": streams,
     "max_signal_db": peak,
     "sha256": sha(movie),

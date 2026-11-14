@@ -7,6 +7,11 @@ const Ground:=preload("res://scripts/field/ground.gd")
 var out:=OS.get_environment("RIVER_CAPTURE_OUT")
 var real_time:="--real-time-profile" in OS.get_cmdline_user_args()
 var wall_started:=0
+var requested_side:=512
+var camera_tour:="--camera-tour" in OS.get_cmdline_user_args()
+var complete_battle:="--complete-battle" in OS.get_cmdline_user_args()
+var last_tour_tick:=-1000
+var post_battle_frames:=0
 var rendered_size:=Vector2i.ZERO
 var field: Field
 var snapshots:Array=[]
@@ -25,6 +30,9 @@ var progress_file:FileAccess
 var root:Window
 func _ready() -> void:
 	root=get_tree().root
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--field-size="):requested_side=argument.trim_prefix("--field-size=").to_int()
+	assert(requested_side in Battle.SCALES)
 	if out.is_empty():out=ProjectSettings.globalize_path("user://whole-battle-review")
 	if "--native-qhd" in OS.get_cmdline_user_args():
 		root.content_scale_size=Vector2i(2560,1440)
@@ -140,6 +148,15 @@ func _drive() -> void:
 		_key(KEY_1,true)
 		_key(KEY_1,false)
 
+func _tour(tick:int) -> void:
+	if tick<160 or tick-last_tour_tick<40:return
+	last_tour_tick=tick
+	var stops:=[Ground.BRIDGE_VIEW,Vector2(42.,-14.),Ground.COURT,Ground.GROVE,Vector2(-37.,0.),Ground.CAMP]
+	var stop:Vector2=stops[((tick-160)/40)%stops.size()]
+	var inset:=field.hud.inset
+	_click(inset.get_global_rect().position+inset._point(stop))
+	notes.append({"tick":tick,"minimap_click":[stop.x,stop.y]})
+
 func _facts() -> Dictionary:
 	var b:=field.battle
 	var in_frame:=0
@@ -167,7 +184,7 @@ func _facts() -> Dictionary:
 	var bridge:=field.camera.unproject_position(Vector3(Ground.MOAT_X,.13,0))
 	var arch:=field.camera.unproject_position(Vector3(Ground.WALL_X,3.7,0))
 	return {"tick":b.tick,"hero":[b.hero.pos.x,b.hero.pos.y],"hp":b.hero.hp,"hero_impacts":b.hero.impacts,
-		"hits":b.hits.duplicate(),"blocks":b.blocked_hits,"losses":b.losses.duplicate(),"gate_hp":b.gate_hp,
+		"hits":b.hits.duplicate(),"arrows_fired":b.arrow_count,"ram_strokes":b.objectives.strokes,"blocks":b.blocked_hits,"losses":b.losses.duplicate(),"gate_hp":b.gate_hp,
 		"visible_ordinary":in_frame,"visible_shields":shields,"guarding":guards,"feet_in_deep_water":feet_inside,
 		"crossed":crossed.size(),"soldier_shield_contacts":contacts.size(),"center":[field.camera_center.x,field.camera_center.y],"zoom":field.camera.size,"yaw":field.camera_yaw,
 		"pitch":field.camera_pitch,"deck_screen":[bridge.x,bridge.y],"arch_screen":[arch.x,arch.y],
@@ -208,11 +225,27 @@ func _run() -> void:
 	if "--menu-only" in OS.get_cmdline_user_args():
 		if "--light-study" in OS.get_cmdline_user_args():
 			var before:=field.map.sun.rotation_degrees
-			field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)
+			field.map.sun.rotation_degrees=Vector3(-48.,-31.,0.)
 			await RenderingServer.frame_post_draw
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_jpg(out+"/side-daylight-native.jpg",.95)
+			root.get_texture().get_image().save_jpg(out+"/previous-daylight-native.jpg",.95)
 			field.map.sun.rotation_degrees=before
+			var saved_center:=field.camera_center
+			var saved_zoom:=field.camera.size
+			var saved_follow:=field.follow
+			for shot in [
+					{"name":"whole-map-native","center":Vector2(9.,0.),"zoom":115.},
+					{"name":"near-company-native","center":Vector2(35.,-1.),"zoom":12.},
+					{"name":"grove-native","center":Vector2(38.,-10.),"zoom":18.}]:
+				field.camera.size=shot.zoom
+				field.pan_to(shot.center)
+				field._process(Battle.DT)
+				await RenderingServer.frame_post_draw
+				await RenderingServer.frame_post_draw
+				root.get_texture().get_image().save_jpg(out+"/"+shot.name+".jpg",.95)
+			field.camera.size=saved_zoom
+			field.pan_to(saved_center)
+			field.follow=saved_follow
 		print("BRIDGE_MENU_INPUT_PASS")
 		get_tree().quit(0)
 		return
@@ -227,12 +260,13 @@ func _run() -> void:
 	var preview:="--bridge-stills" in OS.get_cmdline_user_args()
 	var frames:=0
 	wall_started=Time.get_ticks_usec()
-	while frames<(100000 if real_time else 960) and b.result=="" and not field.paused:
+	while frames<(100000 if real_time else (4320 if complete_battle else 960)) and b.result=="" and not field.paused:
 		frames+=1
 		if real_time and Time.get_ticks_usec()-wall_started>45000000:break
 		if b.tick!=last_tick:
 			last_tick=b.tick
 			_drive()
+			if camera_tour:_tour(b.tick)
 			if not real_time or b.tick%25==0:
 				var m:=_facts()
 				snapshots.append(m)
@@ -250,6 +284,12 @@ func _run() -> void:
 		await get_tree().process_frame
 		if preview and b.tick>=150: break
 	for key:Key in [KEY_W,KEY_S,KEY_A,KEY_D]: _key(key,false)
+	if complete_battle and b.result!="":
+		for index in 72:
+			post_battle_frames+=1
+			await get_tree().process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_jpg(out+"/battle-result-native.jpg",.95)
 	var fact:=_facts()
 	var clear_count:=0
 	var entered_water:=false
@@ -261,7 +301,7 @@ func _run() -> void:
 		if not is_equal_approx(row.zoom,22.) or absf(row.yaw-deg_to_rad(-33.))>.0001: off_lens=true
 		if first_blow<0 and row.hero_impacts>0: first_blow=row.tick
 	var terminal:={"ordinary":Array(b.ordinary_counts),"officers":Array(b.command_counts),"seed":Battle.SEED,
-		"native_render_px":[rendered_size.x,rendered_size.y],"physical_window_px":[DisplayServer.window_get_size().x,DisplayServer.window_get_size().y],"wall_seconds":float(Time.get_ticks_usec()-wall_started)/1000000.,"real_time_profile":real_time,"game_source":OS.get_environment("RIVER_SOURCE_SHA"),"frames_of_play":frames,"sampled_ticks":snapshots.size(),"first_player_strike":first_blow,
+		"native_render_px":[rendered_size.x,rendered_size.y],"physical_window_px":[DisplayServer.window_get_size().x,DisplayServer.window_get_size().y],"post_battle_frames":post_battle_frames,"complete_battle_requested":complete_battle,"camera_tour":camera_tour,"wall_seconds":float(Time.get_ticks_usec()-wall_started)/1000000.,"real_time_profile":real_time,"game_source":OS.get_environment("RIVER_SOURCE_SHA"),"frames_of_play":frames,"sampled_ticks":snapshots.size(),"first_player_strike":first_blow,
 		"held_both":clear_count,"feet_in_deep_water":entered_water,"different_lens":off_lens,
 		"shield_contacts":contacts.values(),"rank_spear_contacts":troop_contacts,"resolution":[root.size.x,root.size.y],"internal":root.scaling_3d_scale,
 		"camera_start":[Ground.BRIDGE_VIEW.x,Ground.BRIDGE_VIEW.y],"software":RenderingServer.get_video_adapter_name(),
@@ -270,7 +310,8 @@ func _run() -> void:
 	var file:=FileAccess.open(out+"/input-and-camera.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(terminal,"  "))
 	file.close()
-	var ok:bool=screenshot_ok and b.ordinary_counts==PackedInt32Array([512,512]) and not entered_water and not off_lens and clear_count>=snapshots.size()*.98 and crossed.size()>0 and fact.hits[0]+fact.hits[1]>0
+	var ok:bool=screenshot_ok and b.ordinary_counts==PackedInt32Array([requested_side,requested_side]) and not entered_water and not off_lens and (camera_tour or clear_count>=snapshots.size()*.98) and (initial_west.is_empty() or crossed.size()>0) and fact.hits[0]+fact.hits[1]>0
 	if not preview and not real_time: ok=ok and frames>=240 and first_blow>0 and contacts.size()>0
+	if complete_battle:ok=ok and b.result!=""
 	print("BRIDGE_WINDOW ",ok," ",JSON.stringify(fact)," first_player_strike=",first_blow," contacts=",contacts.size()," frames=",frames)
 	get_tree().quit(0 if ok else 1)
