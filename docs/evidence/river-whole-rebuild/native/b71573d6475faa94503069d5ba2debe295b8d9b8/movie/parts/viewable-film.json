@@ -1,0 +1,153 @@
+{
+  "source_movie_sha256": "738080805ddcb2aadb003cb32dcd89a179675bd5e300e8d5cdf6e4a77dbc0b65",
+  "source_bytes": 307643088,
+  "source_frames": 2760,
+  "method": "FFmpeg stream copy at existing keyframes. No rescale, interpolation, speed change or re-encode.",
+  "video_packets_identical": true,
+  "parts": [
+    {
+      "file": "river-gate-part-00.mp4",
+      "first_source_frame": 0,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 45619619,
+      "sha256": "71811b9dd1a6139265af4179b4bcc2361c1494cfbd3cf94bae90f6af4118a473"
+    },
+    {
+      "file": "river-gate-part-01.mp4",
+      "first_source_frame": 250,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 54669836,
+      "sha256": "62a6ab6c7a8117e049a7ec71463afb1c23062444b3f95bcd512b6ee6837347a6"
+    },
+    {
+      "file": "river-gate-part-02.mp4",
+      "first_source_frame": 500,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 44089283,
+      "sha256": "14e1841f1050593b9c50ae0b36646af3a151cd8a91c04fd218c21bc9dbcee925"
+    },
+    {
+      "file": "river-gate-part-03.mp4",
+      "first_source_frame": 750,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 36109895,
+      "sha256": "be54a2f8b5bc35a49217561de15b0da68f1bcf6e46db77e7b5275507ffda2eff"
+    },
+    {
+      "file": "river-gate-part-04.mp4",
+      "first_source_frame": 1000,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 30071417,
+      "sha256": "6acbedacc7cb9b2554e7dd21d42f18506f1292b7411fb5de8540a37e33ce7067"
+    },
+    {
+      "file": "river-gate-part-05.mp4",
+      "first_source_frame": 1250,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 21165555,
+      "sha256": "6491e355fbddce35688a0ab0000aa651aa87b96d616e33930d30b3da187aedcb"
+    },
+    {
+      "file": "river-gate-part-06.mp4",
+      "first_source_frame": 1500,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 15898212,
+      "sha256": "348ff9cef755a59043cc20bfcc371465887e9576c5d04c29066c07d449601b41"
+    },
+    {
+      "file": "river-gate-part-07.mp4",
+      "first_source_frame": 1750,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 15306011,
+      "sha256": "5ab3411ba6e5b581bb12bde78827cae438dd6a4d102d6e54b67ed6df86b43c15"
+    },
+    {
+      "file": "river-gate-part-08.mp4",
+      "first_source_frame": 2000,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 15195618,
+      "sha256": "e84a15d1c73c21a113d71d2fce2bd7c1b8f3ba66104bd7b57f40b76ac615250b"
+    },
+    {
+      "file": "river-gate-part-09.mp4",
+      "first_source_frame": 2250,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 15384624,
+      "sha256": "b5f2ff59324783c3c558efbae8f577f79dd5cb9520cb119bce42c22a42cad9a9"
+    },
+    {
+      "file": "river-gate-part-10.mp4",
+      "first_source_frame": 2500,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 13185996,
+      "sha256": "aec1d8ed1402703be49759ac69cb76482c22db45de456d0d4f4b28fe78fd1435"
+    },
+    {
+      "file": "river-gate-part-11.mp4",
+      "first_source_frame": 2750,
+      "frame_count": 10,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 962834,
+      "sha256": "90add80c6264f957a17a41a79f088aa6c8f41c129a0203a2055105c9f1a6bb00"
+    }
+  ]
+}

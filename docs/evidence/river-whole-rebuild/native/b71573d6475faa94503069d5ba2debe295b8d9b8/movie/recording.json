@@ -1,0 +1,454 @@
+{
+  "game_source": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+  "capture_run": "43576958151",
+  "mode": "Godot Movie Maker, 24 successive frames per simulated second, normal mapped inputs",
+  "capture_container": "MJPEG AVI with stereo PCM, native dimensions and every frame retained",
+  "capture_sha256": "87a2eeaec99605262d5f5d31434db6b53cea42c37df8da187a30446c8d1d7205",
+  "fps": 24,
+  "native_capture_px": [
+    2560,
+    1440
+  ],
+  "physical_window_px": [
+    1024,
+    645
+  ],
+  "logical_root": [
+    1024,
+    645
+  ],
+  "art_acceptance": "ART_REBUILD_REQUIRED",
+  "seconds": 115.0,
+  "simulated_battle_seconds": 111.0,
+  "source_frame_count": 2760,
+  "complete_battle": true,
+  "post_battle_frames": 72,
+  "viewable_parts": {
+    "source_movie_sha256": "738080805ddcb2aadb003cb32dcd89a179675bd5e300e8d5cdf6e4a77dbc0b65",
+    "source_bytes": 307643088,
+    "source_frames": 2760,
+    "method": "FFmpeg stream copy at existing keyframes. No rescale, interpolation, speed change or re-encode.",
+    "video_packets_identical": true,
+    "parts": [
+      {
+        "file": "river-gate-part-00.mp4",
+        "first_source_frame": 0,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 45619619,
+        "sha256": "71811b9dd1a6139265af4179b4bcc2361c1494cfbd3cf94bae90f6af4118a473"
+      },
+      {
+        "file": "river-gate-part-01.mp4",
+        "first_source_frame": 250,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 54669836,
+        "sha256": "62a6ab6c7a8117e049a7ec71463afb1c23062444b3f95bcd512b6ee6837347a6"
+      },
+      {
+        "file": "river-gate-part-02.mp4",
+        "first_source_frame": 500,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 44089283,
+        "sha256": "14e1841f1050593b9c50ae0b36646af3a151cd8a91c04fd218c21bc9dbcee925"
+      },
+      {
+        "file": "river-gate-part-03.mp4",
+        "first_source_frame": 750,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 36109895,
+        "sha256": "be54a2f8b5bc35a49217561de15b0da68f1bcf6e46db77e7b5275507ffda2eff"
+      },
+      {
+        "file": "river-gate-part-04.mp4",
+        "first_source_frame": 1000,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 30071417,
+        "sha256": "6acbedacc7cb9b2554e7dd21d42f18506f1292b7411fb5de8540a37e33ce7067"
+      },
+      {
+        "file": "river-gate-part-05.mp4",
+        "first_source_frame": 1250,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 21165555,
+        "sha256": "6491e355fbddce35688a0ab0000aa651aa87b96d616e33930d30b3da187aedcb"
+      },
+      {
+        "file": "river-gate-part-06.mp4",
+        "first_source_frame": 1500,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 15898212,
+        "sha256": "348ff9cef755a59043cc20bfcc371465887e9576c5d04c29066c07d449601b41"
+      },
+      {
+        "file": "river-gate-part-07.mp4",
+        "first_source_frame": 1750,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 15306011,
+        "sha256": "5ab3411ba6e5b581bb12bde78827cae438dd6a4d102d6e54b67ed6df86b43c15"
+      },
+      {
+        "file": "river-gate-part-08.mp4",
+        "first_source_frame": 2000,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 15195618,
+        "sha256": "e84a15d1c73c21a113d71d2fce2bd7c1b8f3ba66104bd7b57f40b76ac615250b"
+      },
+      {
+        "file": "river-gate-part-09.mp4",
+        "first_source_frame": 2250,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 15384624,
+        "sha256": "b5f2ff59324783c3c558efbae8f577f79dd5cb9520cb119bce42c22a42cad9a9"
+      },
+      {
+        "file": "river-gate-part-10.mp4",
+        "first_source_frame": 2500,
+        "frame_count": 250,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 13185996,
+        "sha256": "aec1d8ed1402703be49759ac69cb76482c22db45de456d0d4f4b28fe78fd1435"
+      },
+      {
+        "file": "river-gate-part-11.mp4",
+        "first_source_frame": 2750,
+        "frame_count": 10,
+        "native_px": [
+          2560,
+          1440
+        ],
+        "fps": "24/1",
+        "bytes": 962834,
+        "sha256": "90add80c6264f957a17a41a79f088aa6c8f41c129a0203a2055105c9f1a6bb00"
+      }
+    ]
+  },
+  "streams": [
+    {
+      "codec_name": "h264",
+      "width": 2560,
+      "height": 1440,
+      "avg_frame_rate": "24/1",
+      "duration": "115.000000",
+      "nb_frames": "2760"
+    },
+    {
+      "codec_name": "aac",
+      "channels": 2,
+      "avg_frame_rate": "0/0",
+      "duration": "115.000000",
+      "nb_frames": "5392"
+    }
+  ],
+  "max_signal_db": -11.8,
+  "sha256": "738080805ddcb2aadb003cb32dcd89a179675bd5e300e8d5cdf6e4a77dbc0b65",
+  "bytes": 307643088,
+  "summary": {
+    "camera_start": [
+      34.2000007629395,
+      1.0
+    ],
+    "camera_tour": false,
+    "complete_battle_requested": true,
+    "different_lens": false,
+    "feet_in_deep_water": false,
+    "first_game_frame": 22,
+    "first_player_strike": 135,
+    "frames_of_play": 2664,
+    "game_source": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+    "held_both": 2220,
+    "inputs": [
+      {
+        "aimed_at": 737,
+        "cursor": [
+          1465.95349121094,
+          378.461761474609
+        ],
+        "direction": [
+          0.983457505702972,
+          0.181139335036278
+        ],
+        "hero": [
+          35.2785758972168,
+          -3.35905027389526
+        ],
+        "key": "E",
+        "mouse": "(1465.0, 377.5)",
+        "range": 4.66742486698137,
+        "target": [
+          39.8687896728516,
+          -2.51359605789185
+        ],
+        "tick": 128
+      },
+      {
+        "aimed_at": 737,
+        "cursor": [
+          1465.9306640625,
+          378.434417724609
+        ],
+        "direction": [
+          0.990560352802277,
+          0.137076944112778
+        ],
+        "hero": [
+          37.097957611084,
+          -2.89703273773193
+        ],
+        "key": "Space",
+        "mouse": "(1465.0, 377.5)",
+        "range": 2.79723684005512,
+        "target": [
+          39.8687896728516,
+          -2.51359605789185
+        ],
+        "tick": 146
+      }
+    ],
+    "internal": 1.0,
+    "last": {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 2740,
+      "blocks": 56,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999940395355
+      ],
+      "crossed": 394,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        27.007532119751,
+        -1.00424420833588
+      ],
+      "hero_impacts": 1,
+      "hits": [
+        1298,
+        1255
+      ],
+      "hp": 26.8338893246651,
+      "losses": [
+        312,
+        300
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "守城成功",
+      "soldier_shield_contacts": 8,
+      "tick": 2220,
+      "visible_ordinary": 361,
+      "visible_shields": 2,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    "native_render_px": [
+      2560,
+      1440
+    ],
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "physical_window_px": [
+      1024,
+      645
+    ],
+    "physics_fps": 60,
+    "post_battle_frames": 72,
+    "rank_spear_contacts": [
+      {
+        "blocked": false,
+        "spearman": 68,
+        "target": 583,
+        "tick": 7
+      },
+      {
+        "blocked": false,
+        "spearman": 580,
+        "target": 65,
+        "tick": 10
+      },
+      {
+        "blocked": false,
+        "spearman": 610,
+        "target": 71,
+        "tick": 10
+      },
+      {
+        "blocked": true,
+        "spearman": 65,
+        "target": 581,
+        "tick": 10
+      },
+      {
+        "blocked": false,
+        "spearman": 578,
+        "target": 72,
+        "tick": 12
+      },
+      {
+        "blocked": false,
+        "spearman": 33,
+        "target": 551,
+        "tick": 12
+      },
+      {
+        "blocked": false,
+        "spearman": 66,
+        "target": 582,
+        "tick": 12
+      },
+      {
+        "blocked": true,
+        "spearman": 577,
+        "target": 36,
+        "tick": 13
+      },
+      {
+        "blocked": false,
+        "spearman": 583,
+        "target": 68,
+        "tick": 17
+      },
+      {
+        "blocked": false,
+        "spearman": 548,
+        "target": 40,
+        "tick": 21
+      },
+      {
+        "blocked": false,
+        "spearman": 39,
+        "target": 588,
+        "tick": 21
+      },
+      {
+        "blocked": false,
+        "spearman": 581,
+        "target": 55,
+        "tick": 22
+      }
+    ],
+    "real_time_profile": false,
+    "resolution": [
+      1024,
+      645
+    ],
+    "sampled_ticks": 2220,
+    "seed": 61112,
+    "shield_contacts": [
+      {
+        "defender": 70,
+        "source": 633,
+        "tick": 14
+      },
+      {
+        "defender": 70,
+        "source": 618,
+        "tick": 16
+      },
+      {
+        "defender": 70,
+        "source": 617,
+        "tick": 17
+      },
+      {
+        "defender": 358,
+        "source": 784,
+        "tick": 369
+      },
+      {
+        "defender": 358,
+        "source": 633,
+        "tick": 371
+      },
+      {
+        "defender": 358,
+        "source": 634,
+        "tick": 393
+      },
+      {
+        "defender": 358,
+        "source": 892,
+        "tick": 395
+      },
+      {
+        "defender": 358,
+        "source": 890,
+        "tick": 397
+      }
+    ],
+    "software": "Apple Paravirtual device (Apple5)",
+    "wall_seconds": 269.599851,
+    "world_audit": true
+  },
+  "device_framerate_measurement": false,
+  "input_replay_pass": true
+}

@@ -1,0 +1,695 @@
+{
+  "source_sha": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+  "run": "43576958151",
+  "profiles": [
+    {
+      "scenario": "profile-qhd-100",
+      "source_sha": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+      "host": {
+        "adapter": "Apple Paravirtual device (Apple5)",
+        "build": "0.16.0-rc.23",
+        "cpu": "Apple M1 (Virtual)",
+        "driver": "macOS",
+        "file": "river-gate-1794646381-8849.jsonl",
+        "godot": "4.6.3-stable (custom_build)",
+        "kind": "host",
+        "platform": "macOS",
+        "renderer": "mobile",
+        "revision": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+        "vsync": 0
+      },
+      "ordinary": [
+        100,
+        100
+      ],
+      "render_px": [
+        2560,
+        1440
+      ],
+      "internal_scale": 1,
+      "sample_frames": 861,
+      "engaged_seconds": 29.955814029693602,
+      "elapsed_play_seconds": 30.227848,
+      "average_fps": 28.742333596627905,
+      "p50_ms": 34.0410003662109,
+      "p95_ms": 41.4939994812012,
+      "p99_ms": 48.9630012512207,
+      "max_ms": 230.914993286133,
+      "frames_over_16_67ms": 861,
+      "sim_cpu_ms": 1594.35,
+      "view_script_ms": 1393.189,
+      "step_phase_ms": {
+        "grid_and_input": 197.399,
+        "objectives": 13.502,
+        "officers_and_orders": 39.149,
+        "projectiles": 46.631,
+        "siege": 4.824,
+        "target_selection": 294.597,
+        "unit_actions_and_density": 987.9370000000001
+      },
+      "last_reported_render_counters": [
+        {
+          "draw_calls": 326,
+          "objects": 449,
+          "primitives_including_passes": 9359217,
+          "video_memory_bytes": 1034960896
+        },
+        {
+          "draw_calls": 326,
+          "objects": 438,
+          "primitives_including_passes": 8857188,
+          "video_memory_bytes": 1034960896
+        },
+        {
+          "draw_calls": 326,
+          "objects": 438,
+          "primitives_including_passes": 8810914,
+          "video_memory_bytes": 1034960896
+        },
+        {
+          "draw_calls": 325,
+          "objects": 437,
+          "primitives_including_passes": 8735105,
+          "video_memory_bytes": 1034960896
+        },
+        {
+          "draw_calls": 325,
+          "objects": 437,
+          "primitives_including_passes": 8499676,
+          "video_memory_bytes": 1034960896
+        }
+      ],
+      "gpu_timestamps_available": false,
+      "maximum_rss_bytes": 615809024,
+      "peak_memory_footprint_bytes": 1746570496,
+      "last_battle_state": {
+        "arch_screen": [
+          2001.8994140625,
+          143.221252441406
+        ],
+        "arrows_fired": 474,
+        "blocks": 16,
+        "both_landmarks": true,
+        "center": [
+          34.2000007629395,
+          0.999999940395355
+        ],
+        "crossed": 33,
+        "deck_screen": [
+          684.424072265625,
+          953.780578613281
+        ],
+        "feet_in_deep_water": 0,
+        "gate_hp": 0.0,
+        "guarding": 0,
+        "hero": [
+          26.9739952087402,
+          -1.11869168281555
+        ],
+        "hero_impacts": 0,
+        "hits": [
+          285,
+          158
+        ],
+        "hp": 50.8274485468864,
+        "losses": [
+          31,
+          66
+        ],
+        "orders_delivered": 1,
+        "pitch": 0.886197745392511,
+        "ram_strokes": 0,
+        "result": "夺取城内阵地",
+        "soldier_shield_contacts": 0,
+        "tick": 605,
+        "visible_ordinary": 110,
+        "visible_shields": 1,
+        "yaw": -0.575958653158129,
+        "zoom": 22.0
+      },
+      "camera_tour": false,
+      "status": "MEASURED_HOSTED_ONLY",
+      "real_M5": "DEVICE_NOT_RUN",
+      "note": "Raw frame intervals cover recent live contact. Monitor snapshots may lag by one second. These are instrumented real-time runs."
+    },
+    {
+      "scenario": "profile-qhd-20",
+      "source_sha": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+      "host": {
+        "adapter": "Apple Paravirtual device (Apple5)",
+        "build": "0.16.0-rc.23",
+        "cpu": "Apple M1 (Virtual)",
+        "driver": "macOS",
+        "file": "river-gate-1794646324-7602.jsonl",
+        "godot": "4.6.3-stable (custom_build)",
+        "kind": "host",
+        "platform": "macOS",
+        "renderer": "mobile",
+        "revision": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+        "vsync": 0
+      },
+      "ordinary": [
+        20,
+        20
+      ],
+      "render_px": [
+        2560,
+        1440
+      ],
+      "internal_scale": 1,
+      "sample_frames": 859,
+      "engaged_seconds": 30.033778015136715,
+      "elapsed_play_seconds": 34.904724,
+      "average_fps": 28.601130352867123,
+      "p50_ms": 32.4910011291504,
+      "p95_ms": 40.1259994506836,
+      "p99_ms": 57.3419990539551,
+      "max_ms": 625.484008789062,
+      "frames_over_16_67ms": 859,
+      "sim_cpu_ms": 571.266,
+      "view_script_ms": 465.825,
+      "step_phase_ms": {
+        "grid_and_input": 69.657,
+        "objectives": 6.394999999999999,
+        "officers_and_orders": 18.001,
+        "projectiles": 12.687999999999999,
+        "siege": 4.6899999999999995,
+        "target_selection": 97.045,
+        "unit_actions_and_density": 356.57399999999996
+      },
+      "last_reported_render_counters": [
+        {
+          "draw_calls": 304,
+          "objects": 426,
+          "primitives_including_passes": 7176907,
+          "video_memory_bytes": 1032192000
+        },
+        {
+          "draw_calls": 302,
+          "objects": 415,
+          "primitives_including_passes": 6955146,
+          "video_memory_bytes": 1032192000
+        },
+        {
+          "draw_calls": 302,
+          "objects": 415,
+          "primitives_including_passes": 6808744,
+          "video_memory_bytes": 1032192000
+        },
+        {
+          "draw_calls": 301,
+          "objects": 414,
+          "primitives_including_passes": 6744994,
+          "video_memory_bytes": 1032192000
+        },
+        {
+          "draw_calls": 301,
+          "objects": 414,
+          "primitives_including_passes": 6693323,
+          "video_memory_bytes": 1032192000
+        },
+        {
+          "draw_calls": 301,
+          "objects": 414,
+          "primitives_including_passes": 6626812,
+          "video_memory_bytes": 1032192000
+        }
+      ],
+      "gpu_timestamps_available": false,
+      "maximum_rss_bytes": 607191040,
+      "peak_memory_footprint_bytes": 1747569984,
+      "last_battle_state": {
+        "arch_screen": [
+          2001.8994140625,
+          143.221252441406
+        ],
+        "arrows_fired": 64,
+        "blocks": 0,
+        "both_landmarks": true,
+        "center": [
+          34.2000007629395,
+          1.0
+        ],
+        "crossed": 20,
+        "deck_screen": [
+          684.424072265625,
+          953.780578613281
+        ],
+        "feet_in_deep_water": 0,
+        "gate_hp": 0.0,
+        "guarding": 0,
+        "hero": [
+          37.7438812255859,
+          -2.82039928436279
+        ],
+        "hero_impacts": 0,
+        "hits": [
+          43,
+          0
+        ],
+        "hp": 100.0,
+        "losses": [
+          0,
+          10
+        ],
+        "orders_delivered": 1,
+        "pitch": 0.886197745392511,
+        "ram_strokes": 2,
+        "result": "夺取城内阵地",
+        "soldier_shield_contacts": 0,
+        "tick": 680,
+        "visible_ordinary": 4,
+        "visible_shields": 0,
+        "yaw": -0.575958653158129,
+        "zoom": 22.0
+      },
+      "camera_tour": false,
+      "status": "MEASURED_HOSTED_ONLY",
+      "real_M5": "DEVICE_NOT_RUN",
+      "note": "Raw frame intervals cover recent live contact. Monitor snapshots may lag by one second. These are instrumented real-time runs."
+    },
+    {
+      "scenario": "profile-qhd-250",
+      "source_sha": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+      "host": {
+        "adapter": "Apple Paravirtual device (Apple5)",
+        "build": "0.16.0-rc.23",
+        "cpu": "Apple M1 (Virtual)",
+        "driver": "macOS",
+        "file": "river-gate-1794646428-10234.jsonl",
+        "godot": "4.6.3-stable (custom_build)",
+        "kind": "host",
+        "platform": "macOS",
+        "renderer": "mobile",
+        "revision": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+        "vsync": 0
+      },
+      "ordinary": [
+        250,
+        250
+      ],
+      "render_px": [
+        2560,
+        1440
+      ],
+      "internal_scale": 1,
+      "sample_frames": 170,
+      "engaged_seconds": 6.458351997375488,
+      "elapsed_play_seconds": 6.712026,
+      "average_fps": 26.32250457532877,
+      "p50_ms": 35.9679985046387,
+      "p95_ms": 46.818000793457,
+      "p99_ms": 108.297996520996,
+      "max_ms": 191.449996948242,
+      "frames_over_16_67ms": 169,
+      "sim_cpu_ms": 1056.038,
+      "view_script_ms": 488.632,
+      "step_phase_ms": {
+        "grid_and_input": 123.98,
+        "objectives": 4.013,
+        "officers_and_orders": 12.947,
+        "projectiles": 19.096,
+        "siege": 2.428,
+        "target_selection": 245.344,
+        "unit_actions_and_density": 643.594
+      },
+      "last_reported_render_counters": [
+        {
+          "draw_calls": 339,
+          "objects": 460,
+          "primitives_including_passes": 11267185,
+          "video_memory_bytes": 1036451840
+        }
+      ],
+      "gpu_timestamps_available": false,
+      "maximum_rss_bytes": 613908480,
+      "peak_memory_footprint_bytes": 1748192448,
+      "last_battle_state": {
+        "arch_screen": [
+          2049.91357421875,
+          200.497100830078
+        ],
+        "arrows_fired": 334,
+        "blocks": 16,
+        "both_landmarks": true,
+        "center": [
+          34.2000007629395,
+          -0.346857190132141
+        ],
+        "crossed": 30,
+        "deck_screen": [
+          732.438354492188,
+          1011.05645751953
+        ],
+        "feet_in_deep_water": 0,
+        "gate_hp": 260.0,
+        "guarding": 0,
+        "hero": [
+          34.5621490478516,
+          -5.08313751220703
+        ],
+        "hero_impacts": 0,
+        "hits": [
+          159,
+          225
+        ],
+        "hp": 0.0,
+        "losses": [
+          55,
+          44
+        ],
+        "orders_delivered": 1,
+        "pitch": 0.886197745392511,
+        "ram_strokes": 0,
+        "result": "主将阵亡",
+        "soldier_shield_contacts": 0,
+        "tick": 136,
+        "visible_ordinary": 291,
+        "visible_shields": 18,
+        "yaw": -0.575958653158129,
+        "zoom": 22.0
+      },
+      "camera_tour": false,
+      "status": "MEASURED_HOSTED_ONLY",
+      "real_M5": "DEVICE_NOT_RUN",
+      "note": "Raw frame intervals cover recent live contact. Monitor snapshots may lag by one second. These are instrumented real-time runs."
+    },
+    {
+      "scenario": "profile-qhd-512",
+      "source_sha": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+      "host": {
+        "adapter": "Apple Paravirtual device (Apple5)",
+        "build": "0.16.0-rc.23",
+        "cpu": "Apple M1 (Virtual)",
+        "driver": "macOS",
+        "file": "river-gate-1794646451-10899.jsonl",
+        "godot": "4.6.3-stable (custom_build)",
+        "kind": "host",
+        "platform": "macOS",
+        "renderer": "mobile",
+        "revision": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+        "vsync": 0
+      },
+      "ordinary": [
+        512,
+        512
+      ],
+      "render_px": [
+        2560,
+        1440
+      ],
+      "internal_scale": 1,
+      "sample_frames": 1086,
+      "engaged_seconds": 44.7547739610672,
+      "elapsed_play_seconds": 45.037162,
+      "average_fps": 24.265567756966586,
+      "p50_ms": 41.1150016784668,
+      "p95_ms": 53.5909996032715,
+      "p99_ms": 57.7960014343262,
+      "max_ms": 205.391006469727,
+      "frames_over_16_67ms": 1085,
+      "sim_cpu_ms": 10183.767,
+      "view_script_ms": 4456.236,
+      "step_phase_ms": {
+        "grid_and_input": 1093.3799999999999,
+        "objectives": 38.888999999999996,
+        "officers_and_orders": 136.14600000000002,
+        "projectiles": 132.978,
+        "siege": 15.853000000000002,
+        "target_selection": 3025.8920000000003,
+        "unit_actions_and_density": 5734.302000000001
+      },
+      "last_reported_render_counters": [
+        {
+          "draw_calls": 338,
+          "objects": 455,
+          "primitives_including_passes": 14795036,
+          "video_memory_bytes": 1036484608
+        },
+        {
+          "draw_calls": 334,
+          "objects": 447,
+          "primitives_including_passes": 16264572,
+          "video_memory_bytes": 1036451840
+        },
+        {
+          "draw_calls": 333,
+          "objects": 445,
+          "primitives_including_passes": 15732534,
+          "video_memory_bytes": 1036451840
+        },
+        {
+          "draw_calls": 333,
+          "objects": 445,
+          "primitives_including_passes": 15141482,
+          "video_memory_bytes": 1036451840
+        },
+        {
+          "draw_calls": 333,
+          "objects": 445,
+          "primitives_including_passes": 15505374,
+          "video_memory_bytes": 1036451840
+        },
+        {
+          "draw_calls": 333,
+          "objects": 445,
+          "primitives_including_passes": 14185859,
+          "video_memory_bytes": 1036451840
+        },
+        {
+          "draw_calls": 333,
+          "objects": 445,
+          "primitives_including_passes": 14308692,
+          "video_memory_bytes": 1036451840
+        }
+      ],
+      "gpu_timestamps_available": false,
+      "maximum_rss_bytes": 616546304,
+      "peak_memory_footprint_bytes": 1751338240,
+      "last_battle_state": {
+        "arch_screen": [
+          2001.8994140625,
+          143.221252441406
+        ],
+        "arrows_fired": 2636,
+        "blocks": 55,
+        "both_landmarks": true,
+        "center": [
+          34.2000007629395,
+          0.999999940395355
+        ],
+        "crossed": 386,
+        "deck_screen": [
+          684.424072265625,
+          953.780578613281
+        ],
+        "feet_in_deep_water": 0,
+        "gate_hp": 0.0,
+        "guarding": 0,
+        "hero": [
+          27.007532119751,
+          -1.00424420833588
+        ],
+        "hero_impacts": 1,
+        "hits": [
+          1265,
+          1240
+        ],
+        "hp": 26.8338893246651,
+        "losses": [
+          307,
+          293
+        ],
+        "orders_delivered": 1,
+        "pitch": 0.886197745392511,
+        "ram_strokes": 0,
+        "result": "",
+        "soldier_shield_contacts": 0,
+        "tick": 902,
+        "visible_ordinary": 464,
+        "visible_shields": 9,
+        "yaw": -0.575958653158129,
+        "zoom": 22.0
+      },
+      "camera_tour": false,
+      "status": "MEASURED_HOSTED_ONLY",
+      "real_M5": "DEVICE_NOT_RUN",
+      "note": "Raw frame intervals cover recent live contact. Monitor snapshots may lag by one second. These are instrumented real-time runs."
+    },
+    {
+      "scenario": "profile-qhd-512-camera-tour",
+      "source_sha": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+      "host": {
+        "adapter": "Apple Paravirtual device (Apple5)",
+        "build": "0.16.0-rc.23",
+        "cpu": "Apple M1 (Virtual)",
+        "driver": "macOS",
+        "file": "river-gate-1794646511-12427.jsonl",
+        "godot": "4.6.3-stable (custom_build)",
+        "kind": "host",
+        "platform": "macOS",
+        "renderer": "mobile",
+        "revision": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+        "vsync": 0
+      },
+      "ordinary": [
+        512,
+        512
+      ],
+      "render_px": [
+        2560,
+        1440
+      ],
+      "internal_scale": 1,
+      "sample_frames": 2021,
+      "engaged_seconds": 44.76772201895714,
+      "elapsed_play_seconds": 45.041673,
+      "average_fps": 45.144133068557665,
+      "p50_ms": 15.2150001525879,
+      "p95_ms": 52.8860015869141,
+      "p99_ms": 106.962997436523,
+      "max_ms": 231.080993652344,
+      "frames_over_16_67ms": 901,
+      "sim_cpu_ms": 10293.127,
+      "view_script_ms": 4096.07,
+      "step_phase_ms": {
+        "grid_and_input": 1111.1580000000001,
+        "objectives": 40.89399999999999,
+        "officers_and_orders": 148.588,
+        "projectiles": 134.42999999999998,
+        "siege": 16.174000000000003,
+        "target_selection": 3003.239,
+        "unit_actions_and_density": 5831.976000000001
+      },
+      "last_reported_render_counters": [
+        {
+          "draw_calls": 340,
+          "objects": 465,
+          "primitives_including_passes": 14691082,
+          "video_memory_bytes": 1036484608
+        },
+        {
+          "draw_calls": 220,
+          "objects": 316,
+          "primitives_including_passes": 4405958,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 349,
+          "objects": 444,
+          "primitives_including_passes": 4912325,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 307,
+          "objects": 402,
+          "primitives_including_passes": 2547382,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 219,
+          "objects": 314,
+          "primitives_including_passes": 5256299,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 349,
+          "objects": 444,
+          "primitives_including_passes": 4910804,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 306,
+          "objects": 401,
+          "primitives_including_passes": 2546474,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 270,
+          "objects": 365,
+          "primitives_including_passes": 12102734,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 274,
+          "objects": 369,
+          "primitives_including_passes": 17442699,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 306,
+          "objects": 401,
+          "primitives_including_passes": 2542414,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 306,
+          "objects": 401,
+          "primitives_including_passes": 2543674,
+          "video_memory_bytes": 1036255232
+        },
+        {
+          "draw_calls": 333,
+          "objects": 445,
+          "primitives_including_passes": 14162448,
+          "video_memory_bytes": 1036451840
+        }
+      ],
+      "gpu_timestamps_available": false,
+      "maximum_rss_bytes": 618332160,
+      "peak_memory_footprint_bytes": 1751338368,
+      "last_battle_state": {
+        "arch_screen": [
+          2001.89514160156,
+          143.223388671875
+        ],
+        "arrows_fired": 2636,
+        "blocks": 55,
+        "both_landmarks": true,
+        "center": [
+          34.2000770568848,
+          1.0
+        ],
+        "crossed": 385,
+        "deck_screen": [
+          684.419860839844,
+          953.78271484375
+        ],
+        "feet_in_deep_water": 0,
+        "gate_hp": 0.0,
+        "guarding": 0,
+        "hero": [
+          27.007532119751,
+          -1.00424420833588
+        ],
+        "hero_impacts": 1,
+        "hits": [
+          1265,
+          1240
+        ],
+        "hp": 26.8338893246651,
+        "losses": [
+          307,
+          293
+        ],
+        "orders_delivered": 1,
+        "pitch": 0.886197745392511,
+        "ram_strokes": 0,
+        "result": "",
+        "soldier_shield_contacts": 0,
+        "tick": 902,
+        "visible_ordinary": 464,
+        "visible_shields": 9,
+        "yaw": -0.575958653158129,
+        "zoom": 22.0
+      },
+      "camera_tour": true,
+      "status": "MEASURED_HOSTED_ONLY",
+      "real_M5": "DEVICE_NOT_RUN",
+      "note": "Raw frame intervals cover recent live contact. Monitor snapshots may lag by one second. These are instrumented real-time runs."
+    }
+  ],
+  "movie_frame_cadence_used_for_fps": false,
+  "art_acceptance": "ART_REBUILD_REQUIRED",
+  "real_M5": "DEVICE_NOT_RUN"
+}
