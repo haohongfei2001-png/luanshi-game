@@ -46,6 +46,9 @@ jobs:
             INTACT_DIAGNOSTIC="$mode" timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >"artifacts/native-character-parity/diagnostic-$mode.log" 2>&1 || diagnostic_status=$?
             printf '%s exit=%s; diagnostic only, cannot satisfy full-feature gate\n' "$mode" "$diagnostic_status" >>artifacts/native-character-parity/diagnostic-status.txt
           done
+          probe_status=0
+          timeout 120s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/native_skin_tangent_probe.gd >artifacts/native-character-parity/tangent-probe.log 2>&1 || probe_status=$?
+          printf 'minimal_tangent_probe exit=%s; diagnosis only\n' "$probe_status" >>artifacts/native-character-parity/diagnostic-status.txt
           printf "bake_exit=%s pixel_exit=%s full_mesh_exit=%s\n" "$bake_status" "$pixel_status" "$full_status" >artifacts/native-character-parity/gate-status.txt
           if [ "$bake_status" != 0 ] || [ "$pixel_status" != 0 ] || [ "$full_status" != 0 ]; then exit 1; fi
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/native-character-parity/*.log; then exit 1; fi
