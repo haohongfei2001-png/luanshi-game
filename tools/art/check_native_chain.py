@@ -21,8 +21,8 @@ def main():
         assert original.crop((0,before*4,528,before*4+4)).tobytes()==current.crop((0,(417+index)*4,528,(418+index)*4)).tobytes()
     rows=[]
     for kit in (0,1):
-        a,b=pose(kit,2,1.),pose(kit,6,0.)
-        release=max(dist(trans(x,p),trans(y,p)) for x,y in zip(a,b) for p in ((0,0,0),(.3,1.,.5)))
+        windup_end,recovery_start=pose(kit,2,1.),pose(kit,6,0.)
+        release=max(dist(trans(x,p),trans(y,p)) for x,y in zip(windup_end,recovery_start) for p in ((0,0,0),(.3,1.,.5)))
         assert release<1.e-8
         gaps=[]
         for clip in (2,6):
@@ -56,7 +56,7 @@ def main():
         assert support<.012,support
         rows.append({"kit":kit,"source_contact_phase":NATIVE_CONTACT[kit],"source_contact_seconds":NATIVE_CONTACT[kit]*NATIVE_CUT["duration"],
                      "maximum_wrist_ankle_gap_m":max(gaps),"supporting_left_sole_span_m":support,
-                     "release_boundary_gap_m":release,"release_tip_m":blade_tip(kit,a),
+                     "release_boundary_gap_m":release,"release_tip_m":blade_tip(kit,windup_end),
                      "maximum_ready_to_cut_probe_gap_m":max(ready),"source_clip":"shield_cut_02","source_license":"CC BY-SA 3.0",
                      "old_world_grip_constraint":False})
     report={"preserved_strips":411,"candidate_strips":sorted(changed),"preserved_mounted_strips":4,
