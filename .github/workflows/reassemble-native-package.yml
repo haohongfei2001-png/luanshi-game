@@ -1,0 +1,43 @@
+name: Reassemble existing internal Mac package
+on:
+  push:
+    branches: ['dot/river-native-review-source']
+    paths: ['.github/workflows/reassemble-native-package.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  restore:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: caec14c18bb063210eae0a7098fe6870a5763870
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43612407649
+          artifact-ids: '14121697785,14121652836,14121877157,14121509913'
+          path: parts
+          merge-multiple: true
+      - name: Restore and verify original signed package bytes
+        run: |
+          set -euo pipefail
+          python tools/bounded_artifact_groups.py restore parts restored
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p=Path('restored/Luanshi-macOS-arm64-world-review.zip')
+          assert p.stat().st_size == 364124927
+          assert hashlib.sha256(p.read_bytes()).hexdigest() == '41e7b36915acbf685b4418462ef58483c1f2adaa0f55901b9aee9ce10290f956'
+          print('EXACT_EXISTING_SIGNED_PACKAGE_VERIFIED; source caec14; ART_REBUILD_REQUIRED; M5 NOT_RUN; not notarized')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Luanshi-internal-macOS-arm64-caec14-complete
+          path: restored/Luanshi-macOS-arm64-world-review.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30

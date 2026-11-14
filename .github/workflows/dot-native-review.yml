@@ -2,6 +2,7 @@ name: Dot bounded native Mac evidence baseline
 on:
   push:
     branches: ['dot/river-native-review-source']
+    paths-ignore: ['.github/workflows/reassemble-native-package.yml', '.github/workflows/dot-native-review.yml']
   workflow_dispatch:
 permissions:
   contents: read
