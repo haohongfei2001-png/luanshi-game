@@ -29,7 +29,12 @@ static func height(p: Vector2) -> float:
 	var hill := maxf(0.0, 1.0 - slope.length_squared())
 	var east := (p - EAST_HILL) / EAST_RADII
 	var bank := clampf((absf(p.x - RIVER_X) - 3.9) / 2.4, 0.0, 1.0)
-	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) - (1.0 - bank) * 0.92
+	var western_ridge:=(p-Vector2(-86.,-48.))/Vector2(46.,17.)
+	var northern_ridge:=(p-Vector2(-4.,58.))/Vector2(29.,11.)
+	var eastern_ridge:=(p-Vector2(112.,-45.))/Vector2(25.,17.)
+	var relief:=4.8*pow(maxf(0.,1.-western_ridge.length_squared()),2)+3.6*pow(maxf(0.,1.-northern_ridge.length_squared()),2)+5.4*pow(maxf(0.,1.-eastern_ridge.length_squared()),2)
+	relief*=smoothstep(6.3,14.,absf(p.x-RIVER_X))
+	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief - (1.0 - bank) * 0.92
 
 static func crossing(z: float) -> float:
 	var best := 0.0

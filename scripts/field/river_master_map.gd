@@ -39,12 +39,12 @@ func _daylight() -> void:
 	world.environment.background_color=Color("899b9b")
 	world.environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR
 	world.environment.ambient_light_color=Color("c0d0cf")
-	world.environment.ambient_light_energy=.43
+	world.environment.ambient_light_energy=.40
 	world.environment.tonemap_mode=Environment.TONE_MAPPER_FILMIC
 	add_child(world)
 	sun.rotation_degrees=Vector3(-48,-31,0)
 	sun.light_color=Color("fff1d7")
-	sun.light_energy=1.08
+	sun.light_energy=.91
 	sun.shadow_enabled=true
 	sun.shadow_opacity=.74
 	sun.directional_shadow_max_distance=100.
@@ -104,7 +104,7 @@ func _land_height(p:Vector2) -> float:
 		var ridge:=maxf(0.,sin(p.x*.035+p.y*.017)+.55*sin(p.y*.061-p.x*.011))
 		h+=smoothstep(8.,58.,outside)*ridge*14.
 	var parapet:=Ground.parapet(p)
-	return maxf(h,parapet)
+	return parapet if parapet>0. else h
 
 func _terrain() -> void:
 	for x0 in range(-192,192,32):
@@ -203,8 +203,8 @@ func _river() -> void:
 	add_child(boat)
 
 func _bank_cliff(x:float,z:float,side:float,index:int) -> void:
-	var node:=_piece(CLIFF,"coastal_cliff_02_LOD0",Vector3(x,-1.3,z),
-		Vector3(.19,.22,.135),side*PI*.5)
+	var node:=_piece(CLIFF,"coastal_cliff_02_LOD0",Vector3(x,-.94,z),
+		Vector3(.19,.27,.18),side*PI*.5)
 	node.lod_bias=.50
 	node.name="AuthoredBank_%d"%index
 
@@ -216,6 +216,16 @@ func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	for node in tree.find_children("*","GeometryInstance3D",true,false):
 		node.visibility_range_end=180.
 		node.lod_bias=.8
+	add_child(tree)
+
+func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
+	var tree:Node3D=(load(WORLD+"willows/river_maple_%d.glb"%variant) as PackedScene).instantiate()
+	tree.position=Vector3(at.x,_land_height(at),at.y)
+	tree.scale=Vector3.ONE*scale_value
+	tree.rotation.y=yaw
+	for node in tree.find_children("*","GeometryInstance3D",true,false):
+		node.visibility_range_end=180.
+		node.lod_bias=.65
 	add_child(tree)
 
 func _banks_and_groves() -> void:
@@ -246,19 +256,19 @@ func _banks_and_groves() -> void:
 		Vector3(91.,0.,38.),Vector3(98.,0.,47.),Vector3(76.,0.,53.)]
 	for i in clusters.size():
 		var p:=Vector2(clusters[i].x,clusters[i].z)
-		_plant(BROADLEAF,"island_tree_03_LOD0",p,2.0+.16*(i%4),i*2.13)
+		_maple(p,i%2,.88+.06*(i%4),i*2.13)
 		for j in 2:
 			var q:=p+Vector2(cos(i+j*2.1),sin(i+j*2.1))*3.2
-			_plant(BROADLEAF,"island_tree_03_LOD0",q,.36+.11*j,i+j*.9)
+			_maple(q,(i+j)%2,.19+.045*j,i+j*.9)
 	# A coherent tree line and rocky skyline surrounds the full playable map.
 	for i in 22:
-		var p:=Vector2(-125.+i*12.,-78.-12.*sin(i*.63))
+		var p:=Vector2(-125.+i*12.,-49.-7.*sin(i*.63))
 		var pine:="pine_tree_01_%s_LOD0"%["a","b","c"][i%3]
 		_plant(PINE,pine,p,.64+.07*(i%5),i*1.41)
 		if i%3==0:
 			_plant(CLIFF,"coastal_cliff_02_LOD0",p+Vector2(0.,-8.),.7,i*.16)
 	for i in 13:
-		var p:=Vector2(-120.+i*21.,91.+8.*sin(i*.74))
+		var p:=Vector2(-120.+i*21.,57.+5.*sin(i*.74))
 		_plant(PINE,"pine_tree_01_b_LOD0",p,.82,i*.71)
 
 func _field_quarters() -> void:

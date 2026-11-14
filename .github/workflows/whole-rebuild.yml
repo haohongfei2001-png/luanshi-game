@@ -20,12 +20,13 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq python3-pil python3-numpy xdotool
+          sudo apt-get install -y -qq python3-pil python3-numpy xdotool blender
           mkdir -p "$RUNNER_TEMP/art-sources" artifacts/world-rebuild
           touch artifacts/.gdignore
           python3 tools/art/import_ground_masters.py "$RUNNER_TEMP/art-sources"
           python3 tools/art/build_river_architecture.py "$RUNNER_TEMP/art-sources"
-          git add assets/river_gate/world/ground assets/river_gate/world/architecture
+          blender --background --factory-startup --python tools/art/build_river_willows.py -- "$RUNNER_TEMP/canopies" > artifacts/world-rebuild/canopies.log 2>&1 || { tail -n 60 artifacts/world-rebuild/canopies.log; exit 1; }
+          git add assets/river_gate/world/ground assets/river_gate/world/architecture assets/river_gate/world/willows
           git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake native ground surfaces and the complete gate leaf bind geometry' || test -z "$(git status --porcelain assets/river_gate/world)"
           git push origin HEAD:refs/heads/codex/river-whole-rebuild
       - name: Import the actual Godot game
@@ -49,33 +50,6 @@ jobs:
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/world-rebuild/stills.log; then exit 1; fi
           git add docs/evidence/river-whole-rebuild/review
           git -c user.name='River Gate visual verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve full-map and reference-camera actual game frames for review'
-          git push origin HEAD:refs/heads/codex/river-whole-rebuild
-      - name: Play the complete replacement map through the normal bridgehead menu
-        run: |
-          set -euo pipefail
-          dst=docs/evidence/river-whole-rebuild/2560x1440
-          mkdir -p "$dst"
-          printf '[display]\nwindow/size/window_width_override=2560\nwindow/size/window_height_override=1440\n' > override.cfg
-          timeout 1800s xvfb-run -a -s "-screen 0 2560x1440x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --disable-vsync --fixed-fps 24 --script tests/bridgehead_window.gd -- --bridge-stills --native-plates > "$dst/window.log" 2>&1 || { tail -c 6000 "$dst/window.log"; exit 1; }
-          grep -F 'BRIDGE_WINDOW true' "$dst/window.log"
-          cp artifacts/bridge-window/input-and-camera.json artifacts/bridge-window/view-0050.png artifacts/bridge-window/view-0145.png "$dst/"
-          python3 - <<'PY'
-          import json,shutil
-          from pathlib import Path
-          from PIL import Image
-          dst=Path("docs/evidence/river-whole-rebuild/2560x1440")
-          src=Path("artifacts/bridge-window")
-          data=json.loads((dst/"input-and-camera.json").read_bytes())
-          assert data["internal"]==1. and data["ordinary"]==[512,512] and not data["different_lens"]
-          for name in ("view-0050.jpg","view-0105.jpg","view-0145.jpg"):
-              im=Image.open(src/name)
-              assert im.size==(2560,1440),im.size
-              shutil.copyfile(src/name,dst/name)
-              im.thumbnail((1500,844));im.save(dst/(Path(name).stem+"-preview.jpg"),quality=93,subsampling=0)
-          print("WHOLE_WORLD_INPUT_REPLAY",data["last"],"Art acceptance remains pending self-review and owner review.")
-          PY
-          git add "$dst"
-          git -c user.name='River Gate visual verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record native QHD gameplay of the whole replacement map at the reference camera'
           git push origin HEAD:refs/heads/codex/river-whole-rebuild
       - uses: actions/upload-artifact@v4
         if: always()

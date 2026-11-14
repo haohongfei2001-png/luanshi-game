@@ -4,6 +4,8 @@ uniform sampler2D soil : source_color, repeat_enable, filter_linear_mipmap_aniso
 uniform sampler2D grass : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D leaves : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform bool bridgehead=false;
+uniform vec4 grass_colour : source_color=vec4(.28,.35,.16,1.);
+uniform vec4 soil_colour : source_color=vec4(.55,.43,.29,1.);
 varying vec3 world;
 void vertex() {
 	world=(MODEL_MATRIX*vec4(VERTEX,1.)).xyz;
@@ -34,9 +36,11 @@ void fragment() {
 	vec3 litter=ground_sample(leaves,p,3.4);
 	// Authored diffuse colour carries the surface. Large quiet areas support
 	// small figures; native-resolution scan detail remains in the actual ground.
-	dust=mix(dust,vec3(.43,.32,.20),.18);
-	turf=mix(turf,vec3(.13,.20,.075),.25);
-	vec3 verge=mix(turf,litter,.24+.23*variance);
+	float dust_value=dot(dust,vec3(.26,.62,.12));
+	float turf_value=dot(turf,vec3(.26,.62,.12));
+	dust=mix(dust,soil_colour.rgb,.56)*(.86+.24*dust_value);
+	turf=mix(turf,grass_colour.rgb,.68)*(.80+.38*turf_value);
+	vec3 verge=mix(turf,litter,.10+.13*variance);
 	float bare=clamp(lane+bank*.55+(variance-.5)*.31,0.,1.);
 	vec3 col=mix(verge,dust,bare);
 	float rut=0.;

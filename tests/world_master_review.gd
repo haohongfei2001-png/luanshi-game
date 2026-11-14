@@ -34,6 +34,8 @@ func _run() -> void:
 	field.set_physics_process(false)
 	field.hud.go.pressed.emit()
 	assert(field.battle.started and field.battle.bridgehead)
+	assert(field.map._land_height(Vector2(Ground.MOAT_X,12.))<-.38,"The actual moat bed must remain below its visible water")
+	assert(field.map._land_height(Vector2(Ground.RIVER_X,12.))<-.37,"The river bed must remain below its visible water")
 	for tick in 50:field._physics_process(Battle.DT)
 	await _snap("bridgehead-0050",Ground.BRIDGE_VIEW,22.)
 	for tick in 85:field._physics_process(Battle.DT)

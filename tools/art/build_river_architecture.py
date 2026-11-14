@@ -47,7 +47,12 @@ def main(cache):
     cache.mkdir(parents=True,exist_ok=True);OUT.mkdir(parents=True,exist_ok=True)
     manifest=json.loads((Path(__file__).with_name("source")/"river_architecture.json").read_text())
     base=source_file(cache,"textures/skins/structural/han_struct_02.png","5af91f43b3ea9fc73ebeda6f1517b98df0d3a57a")
-    Image.open(base).convert("RGB").save(OUT/"native_clay_tiles_timber.png")
+    original=np.asarray(Image.open(base).convert("RGB"),dtype=float)/255.
+    light=original@np.array([.26,.62,.12])
+    plaster=np.clip((light-.47)/.27,0.,1.)*np.clip(1.-np.ptp(original,axis=2)/.27,0.,1.)
+    clay=np.stack((light*.89,light*.68,light*.46),axis=-1)
+    painted=original*(1.-plaster[:,:,None]*.88)+clay*plaster[:,:,None]*.88
+    Image.fromarray(np.rint(np.clip(painted,0.,1.)*255).astype("uint8")).save(OUT/"native_clay_tiles_timber.png")
     lib=Library()
     lib.doc["images"]=[{"uri":"native_clay_tiles_timber.png"}]
     lib.doc["textures"]=[{"source":0}]
