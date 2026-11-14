@@ -1,0 +1,21 @@
+{
+  "game_source": "d1c1895221c33386d471922807ed590a6987dbe1",
+  "original_package_sha256": "4d851d1939a1ced87d49736a7032aec5c3caae1d599677b843f4d181041851e9",
+  "original_binary_sha256": "3853575ef94a7800018cc60ffaf230aeeebcf64edbbd7bed2247f5e8fafdb471",
+  "signed_binary_sha256": "bad5dc414d0f789146663582d6eee0878796d9f2f20a29e6335a6e5c68b6cd91",
+  "engine": {
+    "game_source": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+    "original_binary_sha256": "72f2c95b718ff3d22c864096e67dd9c4c09871e5e5d2750ef10456a2cd9a4d06",
+    "patched_binary_sha256": "9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3",
+    "engine_source": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+    "upstream_fix": "https://github.com/godotengine/godot/pull/123312",
+    "role": "complete arm64 template with Mobile mutex fix and static ANGLE",
+    "angle_release": "chromium/7578",
+    "angle_source": "aaebda1c5a40c15340d7a01a935a7c5398443272",
+    "angle_archive_sha256": "9eadd2055f66507e9d74655e7683e068e7e4a9dade5a84bc03d3f5affdfb7b9d"
+  },
+  "scope": "arm64 internal Mac candidate, upstream shader mutex backport and static ANGLE, actual M5 DEVICE_NOT_RUN",
+  "art_status": "ART_REBUILD_REQUIRED",
+  "codesign": "ad-hoc verified, not notarized",
+  "package_sha256": "b94b5394042ad2cff602df0ac088f66bd9aa4217f5e2d36af19979f1d1e24272"
+}

@@ -1,0 +1,1226 @@
+{
+  "camera_start": [
+    34.2000007629395,
+    1.0
+  ],
+  "camera_tour": false,
+  "complete_battle_requested": false,
+  "different_lens": false,
+  "feet_in_deep_water": false,
+  "first_game_frame": 22,
+  "first_player_strike": -1,
+  "frames": [
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 0,
+      "blocks": 0,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "crossed": 0,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 260.0,
+      "guarding": 0,
+      "hero": [
+        17.5,
+        -1.25
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        0,
+        0
+      ],
+      "hp": 100.0,
+      "losses": [
+        0,
+        0
+      ],
+      "orders_delivered": 0,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 0,
+      "visible_ordinary": 137,
+      "visible_shields": 13,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 36,
+      "blocks": 8,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "crossed": 0,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 260.0,
+      "guarding": 0,
+      "hero": [
+        17.5,
+        -1.25
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        37,
+        23
+      ],
+      "hp": 100.0,
+      "losses": [
+        5,
+        4
+      ],
+      "orders_delivered": 0,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 25,
+      "visible_ordinary": 138,
+      "visible_shields": 11,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 76,
+      "blocks": 12,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "crossed": 0,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 260.0,
+      "guarding": 0,
+      "hero": [
+        21.1850605010986,
+        -2.03328680992126
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        79,
+        58
+      ],
+      "hp": 100.0,
+      "losses": [
+        14,
+        18
+      ],
+      "orders_delivered": 0,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 50,
+      "visible_ordinary": 139,
+      "visible_shields": 10,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 99,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "crossed": 9,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 260.0,
+      "guarding": 0,
+      "hero": [
+        25.4473171234131,
+        -2.93925952911377
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        112,
+        83
+      ],
+      "hp": 100.0,
+      "losses": [
+        20,
+        28
+      ],
+      "orders_delivered": 0,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 75,
+      "visible_ordinary": 142,
+      "visible_shields": 11,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2002.20568847656,
+        143.586807250977
+      ],
+      "arrows_fired": 137,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.991406917572021
+      ],
+      "crossed": 14,
+      "deck_screen": [
+        684.73046875,
+        954.146118164062
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 260.0,
+      "guarding": 0,
+      "hero": [
+        29.8492603302002,
+        -3.87492203712463
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        133,
+        96
+      ],
+      "hp": 68.3038067817688,
+      "losses": [
+        22,
+        34
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 100,
+      "visible_ordinary": 143,
+      "visible_shields": 11,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.90356445312,
+        143.226135253906
+      ],
+      "arrows_fired": 166,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999886333942413
+      ],
+      "crossed": 22,
+      "deck_screen": [
+        684.42822265625,
+        953.785461425781
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 260.0,
+      "guarding": 0,
+      "hero": [
+        27.8651885986328,
+        -1.81212985515594
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        148,
+        108
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        25,
+        37
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 125,
+      "visible_ordinary": 143,
+      "visible_shields": 11,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 187,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 24,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 257.45,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        157,
+        114
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        26,
+        39
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 150,
+      "visible_ordinary": 143,
+      "visible_shields": 10,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 213,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 25,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 251.975,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        167,
+        122
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        28,
+        42
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 175,
+      "visible_ordinary": 143,
+      "visible_shields": 9,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 239,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 27,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 244.1,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        173,
+        129
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        29,
+        43
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 200,
+      "visible_ordinary": 142,
+      "visible_shields": 9,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 264,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 28,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 223.175,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        182,
+        133
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        30,
+        44
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 225,
+      "visible_ordinary": 139,
+      "visible_shields": 8,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 280,
+      "blocks": 13,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 28,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 198.275,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        190,
+        134
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        30,
+        49
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 250,
+      "visible_ordinary": 140,
+      "visible_shields": 8,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 302,
+      "blocks": 14,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 28,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 172.625,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        202,
+        139
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        30,
+        51
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 275,
+      "visible_ordinary": 139,
+      "visible_shields": 8,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 325,
+      "blocks": 14,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 29,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 143.825,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        213,
+        142
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        52
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 300,
+      "visible_ordinary": 139,
+      "visible_shields": 7,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 348,
+      "blocks": 14,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 31,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 116.075,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        219,
+        143
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        54
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 325,
+      "visible_ordinary": 138,
+      "visible_shields": 6,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 365,
+      "blocks": 14,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 31,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 84.6500000000002,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        224,
+        145
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        57
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 350,
+      "visible_ordinary": 137,
+      "visible_shields": 5,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 382,
+      "blocks": 14,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 31,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 56.9000000000003,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        228,
+        146
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        58
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 375,
+      "visible_ordinary": 137,
+      "visible_shields": 5,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 402,
+      "blocks": 14,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 32,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 20.3000000000002,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        233,
+        146
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        58
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 400,
+      "visible_ordinary": 137,
+      "visible_shields": 5,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 410,
+      "blocks": 15,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 32,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        235,
+        147
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        59
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 425,
+      "visible_ordinary": 136,
+      "visible_shields": 5,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 425,
+      "blocks": 15,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 32,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        238,
+        148
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        60
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 450,
+      "visible_ordinary": 136,
+      "visible_shields": 5,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 443,
+      "blocks": 15,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 32,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        246,
+        152
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        61
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 475,
+      "visible_ordinary": 136,
+      "visible_shields": 5,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 455,
+      "blocks": 15,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 32,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        259,
+        152
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        62
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 500,
+      "visible_ordinary": 131,
+      "visible_shields": 2,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 461,
+      "blocks": 15,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 32,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        266,
+        154
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        63
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 525,
+      "visible_ordinary": 129,
+      "visible_shields": 2,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 467,
+      "blocks": 16,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 32,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        278,
+        155
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        65
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 550,
+      "visible_ordinary": 122,
+      "visible_shields": 2,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 469,
+      "blocks": 16,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 33,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        283,
+        157
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        66
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 575,
+      "visible_ordinary": 121,
+      "visible_shields": 2,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    {
+      "arch_screen": [
+        2001.8994140625,
+        143.221252441406
+      ],
+      "arrows_fired": 473,
+      "blocks": 16,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        0.999999821186066
+      ],
+      "crossed": 33,
+      "deck_screen": [
+        684.424072265625,
+        953.780578613281
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        26.9739952087402,
+        -1.11869168281555
+      ],
+      "hero_impacts": 0,
+      "hits": [
+        285,
+        157
+      ],
+      "hp": 50.8274485468864,
+      "losses": [
+        31,
+        66
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "ram_strokes": 0,
+      "result": "",
+      "soldier_shield_contacts": 0,
+      "tick": 600,
+      "visible_ordinary": 113,
+      "visible_shields": 1,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    }
+  ],
+  "frames_of_play": 1460,
+  "game_source": "d1c1895221c33386d471922807ed590a6987dbe1",
+  "held_both": 25,
+  "inputs": [],
+  "internal": 1.0,
+  "last": {
+    "arch_screen": [
+      2001.8994140625,
+      143.221252441406
+    ],
+    "arrows_fired": 474,
+    "blocks": 16,
+    "both_landmarks": true,
+    "center": [
+      34.2000007629395,
+      0.999999821186066
+    ],
+    "crossed": 33,
+    "deck_screen": [
+      684.424072265625,
+      953.780578613281
+    ],
+    "feet_in_deep_water": 0,
+    "gate_hp": 0.0,
+    "guarding": 0,
+    "hero": [
+      26.9739952087402,
+      -1.11869168281555
+    ],
+    "hero_impacts": 0,
+    "hits": [
+      285,
+      158
+    ],
+    "hp": 50.8274485468864,
+    "losses": [
+      31,
+      66
+    ],
+    "orders_delivered": 1,
+    "pitch": 0.886197745392511,
+    "ram_strokes": 0,
+    "result": "夺取城内阵地",
+    "soldier_shield_contacts": 0,
+    "tick": 605,
+    "visible_ordinary": 110,
+    "visible_shields": 1,
+    "yaw": -0.575958653158129,
+    "zoom": 22.0
+  },
+  "native_render_px": [
+    2560,
+    1440
+  ],
+  "officers": [
+    4,
+    4
+  ],
+  "ordinary": [
+    100,
+    100
+  ],
+  "physical_window_px": [
+    1024,
+    645
+  ],
+  "physics_fps": 60,
+  "post_battle_frames": 0,
+  "rank_spear_contacts": [
+    {
+      "blocked": false,
+      "spearman": 37,
+      "target": 181,
+      "tick": 50
+    }
+  ],
+  "real_time_profile": true,
+  "resolution": [
+    1024,
+    645
+  ],
+  "sampled_ticks": 25,
+  "seed": 61112,
+  "shield_contacts": [],
+  "software": "Apple Paravirtual device (Apple5)",
+  "wall_seconds": 30.217198,
+  "world_audit": true
+}
