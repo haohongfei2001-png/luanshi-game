@@ -8,6 +8,7 @@ from pathlib import Path
 import json,math
 import bpy
 from mathutils import Matrix,Vector
+from mathutils.bvhtree import BVHTree
 
 ROOT=Path(__file__).resolve().parents[2]
 SOURCE=ROOT/"assets/river_gate/world/masters/modular_wooden_pier"
@@ -58,7 +59,7 @@ def main():
     for row in range(48):
         for bay in range(3):
             master=boards[(row*5+bay*3)%len(boards)]
-            obj=master.copy();obj.data=master.data
+            obj=master.copy();obj.data=master.data.copy()
             bpy.context.collection.objects.link(obj)
             obj.name="DeckBoard_%02d_%d"%(row,bay)
             obj.matrix_world=Matrix.Translation(Vector((-5.875+row*.25,-2.5+bay*2.5,.095)))
@@ -68,12 +69,29 @@ def main():
     bpy.ops.object.join()
     combined=bpy.context.view_layer.objects.active
     combined.name="IntactBridgeSpan"
+    combined.data=combined.data.copy()
     bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
     for face in combined.data.polygons:face.use_smooth=False
+    bpy.context.view_layer.update()
+    tree=BVHTree.FromObject(combined,bpy.context.evaluated_depsgraph_get())
+    samples=0;holes=0;longest_gap=0
+    for row in range(119):
+        run=0
+        for column in range(74):
+            start=Vector((-5.9+row*.1,-3.65+column*.1,1.))
+            hit=tree.ray_cast(start,Vector((0.,0.,-1.)),2.)[0]
+            samples+=1
+            if hit is None:
+                holes+=1;run+=1;longest_gap=max(longest_gap,run)
+            else:run=0
+    coverage=1.-holes/samples
+    print("BRIDGE_SURFACE_COVERAGE",coverage,"longest_gap_m",longest_gap*.1,flush=True)
+    assert coverage>.985 and longest_gap<=1,(coverage,longest_gap)
+
     OUT.mkdir(parents=True,exist_ok=True)
     bpy.ops.export_scene.gltf(filepath=str(OUT/"intact_bridge_span.glb"),export_format="GLB",use_selection=True,export_materials="EXPORT",export_yup=True,export_animations=False)
     receipt=json.loads((SOURCE/"SOURCE.json").read_text())
-    receipt.update(derived_component="Intact connected deck boards from modular_wooden_pier_planks",board_sources=receipts,rows=48,bays=3,deck_top_m=.13,nominal_span_m=[12.,7.5],triangles=sum(len(f.vertices)-2 for f in combined.data.polygons))
+    receipt.update(derived_component="Intact connected deck boards from modular_wooden_pier_planks",board_sources=receipts,rows=48,bays=3,deck_top_m=.13,nominal_span_m=[12.,7.5],coverage=coverage,largest_sampled_gap_m=longest_gap*.1,triangles=sum(len(f.vertices)-2 for f in combined.data.polygons))
     (OUT/"SOURCE.json").write_text(json.dumps(receipt,indent=2)+"\n")
     (OUT/"NOTICE.txt").write_text("Complete timber crossing assembled from original connected boards in Modular Wooden Pier by Rico Cilliers, Poly Haven, CC0-1.0. Original source, checksums and assembly coordinates are in SOURCE.json and tools/art/build_intact_bridge.py.\n")
     print("INTACT_BRIDGE",json.dumps(receipt),flush=True)

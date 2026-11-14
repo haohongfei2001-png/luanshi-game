@@ -2,7 +2,7 @@ name: Integrate and play the whole replacement battlefield
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','scripts/field/ground.gd','scripts/field/save.gd','tests/world_terrain_compat.gd','.github/workflows/whole-rebuild.yml']
+    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','.github/workflows/whole-rebuild.yml']
 permissions:
   contents: write
   actions: read
@@ -17,17 +17,6 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: whole-battlefield-first-play
-          path: previous
-          run-id: '43558497964'
-          github-token: ${{ github.token }}
-      - name: Read the prior failed source and terrain logs
-        run: |
-          for log in previous/artifacts/world-rebuild/bridge.log previous/artifacts/world-rebuild/bridgehead.log previous/artifacts/world-rebuild/terrain-save.log; do
-            if test -f "$log"; then tail -n 70 "$log"; fi
-          done
       - name: Prepare the ground and complete gate library
         run: |
           set -euo pipefail

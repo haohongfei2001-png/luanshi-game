@@ -388,6 +388,8 @@ func _committed_move(u: Unit) -> Arms.Move:
 	return stock_blow if u.stock_strike else moves[u.kit][u.move_slot]
 
 func _add(team: int, squad: int, pos: Vector2) -> Unit:
+	if bridgehead: pos=Ground.muster_ground(pos,companies[squad].home.x)
+	if dry_muster: pos=Ground.restore_bank_position(pos,bridgehead)
 	var u := Unit.new()
 	u.id = roster.size()
 	u.team = team
