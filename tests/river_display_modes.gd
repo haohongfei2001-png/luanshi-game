@@ -15,7 +15,9 @@ func _run() -> void:
 	if not f.hud.graphic_row.visible: ok=false
 	for probe in cases:
 		f.hud.display_mode.item_selected.emit(probe.x)
-		for i in 4: await process_frame
+		for i in 18:
+			await process_frame
+			if root.get_texture().get_size()==Vector2(probe.y,probe.z): break
 		await RenderingServer.frame_post_draw
 		var size:=root.get_texture().get_image().get_size()
 		var written:=ConfigFile.new()

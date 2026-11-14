@@ -13,16 +13,12 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
-      - name: Bake the registered four-thousand-pixel cartway
+      - name: Prepare the physical display and confirm the baked cartway
         run: |
           set -euo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y -qq python3-pil python3-numpy xdotool
-          mkdir -p "$RUNNER_TEMP/bank-scan"
-          /usr/bin/python3 tools/art/bake_gate_apron.py "$RUNNER_TEMP/bank-scan"
-          git add assets/third_party/polyhaven_bank
-          git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the source-registered 4K cartway with paired wheel ruts'
-          git push origin HEAD:refs/heads/codex/river-rc23-fitted-crossing
+          test -s assets/third_party/polyhaven_bank/forecourt.jpg
       - name: Prepare the pinned game runtime and real-input driver
         run: |
           set -eu

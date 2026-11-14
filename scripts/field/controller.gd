@@ -247,7 +247,11 @@ func _choose_display(index: int,remember: bool=true) -> void:
 	if win.mode==Window.MODE_WINDOWED and not win.borderless:
 		windowed_size=win.size
 		windowed_position=win.position
-	if index==DisplayChoice.SCREEN or wanted==screen:
+	if index==DisplayChoice.SCREEN:
+		# Size the drawable before requesting native fullscreen. A hosted X11
+		# display can have no window manager to deliver a configure event.
+		win.mode=Window.MODE_WINDOWED
+		win.size=screen
 		win.mode=Window.MODE_FULLSCREEN
 	elif index==DisplayChoice.WINDOW:
 		win.mode=Window.MODE_WINDOWED
@@ -259,7 +263,7 @@ func _choose_display(index: int,remember: bool=true) -> void:
 		win.mode=Window.MODE_WINDOWED
 		win.borderless=true
 		win.size=wanted
-		win.position=DisplayServer.screen_get_position(win.current_screen)+(screen-wanted)/2
+		win.position=DisplayServer.screen_get_position(win.current_screen)+Vector2i(Vector2(screen-wanted)*.5)
 	hud.display_mode.select(index)
 	if index>=DisplayChoice.QHD and not is_equal_approx(QUALITY_SCALES[detail_preset],1.0):
 		if view: set_quality(Quality.NATIVE_MSAA,remember)
