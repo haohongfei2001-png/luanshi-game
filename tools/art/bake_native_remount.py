@@ -52,7 +52,11 @@ def tracks(path):
     for animation in root.findall(".//animation"):
         channel=animation.find("channel")
         if channel is None: continue
-        name=id_names.get(channel.get("target").split("/")[0])
+        target = channel.get("target", "").split("/", 1)
+        # Blender also exports scalar B-bone ease controls. The authored
+        # evaluated transform already contains their effect.
+        if len(target) != 2 or target[1] != "transform": continue
+        name = id_names.get(target[0])
         if not name: continue
         sampler=animation.find("sampler")
         sources={n.get("semantic"):n.get("source")[1:] for n in sampler.findall("input")}
