@@ -1,0 +1,354 @@
+{
+  "status": "FULL163_SOURCE_PROTOTYPE",
+  "visual_pass": false,
+  "source_bones": 163,
+  "macro": {
+    "gender": 1,
+    "age": 0.5,
+    "asian": 1,
+    "muscle": 0.5,
+    "weight": 0.5,
+    "height": 0.5,
+    "proportions": 0.5
+  },
+  "source_points": 19158,
+  "source_render_body_faces": 13378,
+  "source_floor_y": -8.187700271606445,
+  "body_height_m": 1.6282999515533447,
+  "parts": [
+    {
+      "name": "Body_SourceFull",
+      "vertices": 13380,
+      "faces": 13378,
+      "max_weights": 9
+    },
+    {
+      "name": "Cross-front robe",
+      "vertices": 3546,
+      "faces": 3461,
+      "max_weights": 9
+    },
+    {
+      "name": "Wool trousers",
+      "vertices": 1372,
+      "faces": 1337,
+      "max_weights": 9
+    },
+    {
+      "name": "Medieval boots",
+      "vertices": 3632,
+      "faces": 3442,
+      "max_weights": 9
+    },
+    {
+      "name": "Eyes",
+      "vertices": 1064,
+      "faces": 1020,
+      "max_weights": 3
+    },
+    {
+      "name": "eyebrow001",
+      "vertices": 124,
+      "faces": 96,
+      "max_weights": 4
+    },
+    {
+      "name": "eyelashes01",
+      "vertices": 250,
+      "faces": 184,
+      "max_weights": 4
+    },
+    {
+      "name": "Body_AuthorGarmentOcclusion",
+      "vertices": 8363,
+      "faces": 8254,
+      "max_weights": 9
+    }
+  ],
+  "high_influence_vertices": [
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 575,
+      "influences": 9,
+      "beyond8_weight": 0.0009699321047526674
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 577,
+      "influences": 9,
+      "beyond8_weight": 0.001988071570576541
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 578,
+      "influences": 9,
+      "beyond8_weight": 0.002991026919242273
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 594,
+      "influences": 9,
+      "beyond8_weight": 0.004945598417408507
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 595,
+      "influences": 9,
+      "beyond8_weight": 0.0049751243781094535
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 611,
+      "influences": 9,
+      "beyond8_weight": 0.002979145978152929
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 628,
+      "influences": 9,
+      "beyond8_weight": 0.0009970089730807576
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 7314,
+      "influences": 9,
+      "beyond8_weight": 0.0009699321047526674
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 7316,
+      "influences": 9,
+      "beyond8_weight": 0.001988071570576541
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 7317,
+      "influences": 9,
+      "beyond8_weight": 0.002991026919242273
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 7331,
+      "influences": 9,
+      "beyond8_weight": 0.004945598417408507
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 7332,
+      "influences": 9,
+      "beyond8_weight": 0.0049751243781094535
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 7346,
+      "influences": 9,
+      "beyond8_weight": 0.002979145978152929
+    },
+    {
+      "part": "Body_SourceFull",
+      "source_vertex": 7361,
+      "influences": 9,
+      "beyond8_weight": 0.0009970089730807576
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 238,
+      "influences": 9,
+      "beyond8_weight": 0.0016990744466800806
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 239,
+      "influences": 9,
+      "beyond8_weight": 0.006008496993987976
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 240,
+      "influences": 9,
+      "beyond8_weight": 0.00518784736474962
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 1879,
+      "influences": 9,
+      "beyond8_weight": 0.00020312127236580518
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 1882,
+      "influences": 9,
+      "beyond8_weight": 8.03976143141153e-05
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 2097,
+      "influences": 9,
+      "beyond8_weight": 0.0007846628120545142
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 2104,
+      "influences": 9,
+      "beyond8_weight": 0.00024220433739996594
+    },
+    {
+      "part": "Cross-front robe",
+      "source_vertex": 3460,
+      "influences": 9,
+      "beyond8_weight": 0.00016979949484799393
+    },
+    {
+      "part": "Wool trousers",
+      "source_vertex": 498,
+      "influences": 9,
+      "beyond8_weight": 0.0014736036036036037
+    },
+    {
+      "part": "Wool trousers",
+      "source_vertex": 1350,
+      "influences": 9,
+      "beyond8_weight": 0.0013866666666666667
+    },
+    {
+      "part": "Wool trousers",
+      "source_vertex": 1365,
+      "influences": 9,
+      "beyond8_weight": 0.0008476608242605904
+    },
+    {
+      "part": "Wool trousers",
+      "source_vertex": 1366,
+      "influences": 9,
+      "beyond8_weight": 0.0004496903096903097
+    },
+    {
+      "part": "Wool trousers",
+      "source_vertex": 1369,
+      "influences": 9,
+      "beyond8_weight": 0.0008217100646176356
+    },
+    {
+      "part": "Wool trousers",
+      "source_vertex": 1370,
+      "influences": 9,
+      "beyond8_weight": 0.0004109931209202202
+    },
+    {
+      "part": "Medieval boots",
+      "source_vertex": 32,
+      "influences": 9,
+      "beyond8_weight": 0.00085008
+    },
+    {
+      "part": "Medieval boots",
+      "source_vertex": 1848,
+      "influences": 9,
+      "beyond8_weight": 0.00085008
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 575,
+      "influences": 9,
+      "beyond8_weight": 0.0009699321047526674
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 577,
+      "influences": 9,
+      "beyond8_weight": 0.001988071570576541
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 578,
+      "influences": 9,
+      "beyond8_weight": 0.002991026919242273
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 594,
+      "influences": 9,
+      "beyond8_weight": 0.004945598417408507
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 595,
+      "influences": 9,
+      "beyond8_weight": 0.0049751243781094535
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 611,
+      "influences": 9,
+      "beyond8_weight": 0.002979145978152929
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 628,
+      "influences": 9,
+      "beyond8_weight": 0.0009970089730807576
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 7314,
+      "influences": 9,
+      "beyond8_weight": 0.0009699321047526674
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 7316,
+      "influences": 9,
+      "beyond8_weight": 0.001988071570576541
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 7317,
+      "influences": 9,
+      "beyond8_weight": 0.002991026919242273
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 7331,
+      "influences": 9,
+      "beyond8_weight": 0.004945598417408507
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 7332,
+      "influences": 9,
+      "beyond8_weight": 0.0049751243781094535
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 7346,
+      "influences": 9,
+      "beyond8_weight": 0.002979145978152929
+    },
+    {
+      "part": "Body_AuthorGarmentOcclusion",
+      "source_vertex": 7361,
+      "influences": 9,
+      "beyond8_weight": 0.0009970089730807576
+    }
+  ],
+  "author_hidden_body_vertices": 5005,
+  "layer_fit": [
+    {
+      "collider": "Wool trousers",
+      "vertices_adjusted": 634,
+      "max_displacement_m": 0.026721043847438473
+    },
+    {
+      "collider": "Body_SourceFull",
+      "vertices_adjusted": 254,
+      "max_displacement_m": 0.01035535347960264
+    }
+  ],
+  "source_id_sidecar": {
+    "bytes": 7360452,
+    "sha256": "fbbfc47e569c5eeeeed1cdfd9a9044092d771bd30555a94445fe5abbfc40e876",
+    "channel": "TEXCOORD_1",
+    "weights_truncated": false
+  },
+  "source_id_sidecar_superseded_by": "weight-normalization-report.json (v2); original build report retained as historical evidence"
+}

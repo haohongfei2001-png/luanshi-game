@@ -1,0 +1,444 @@
+{
+  "status": "RETARGET_TECHNICAL_PROTOTYPE",
+  "visual_pass": false,
+  "combat_enabled": false,
+  "source_sha256": "69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997",
+  "master_blend_sha256": "91034e396e1ef1549b11421b56f0d39cd9fa21727342a0f2d1cd2f8fdcf13fae",
+  "master_runtime_glb_sha256": "6853fbca1b76eed03d764e32577f46e0354583a29405ae3a3a7088d69cc18539",
+  "target_bones": 163,
+  "mapped_bones": 74,
+  "unmapped_bones_keep_local_rest": [
+    "breast.L",
+    "breast.R",
+    "eye.L",
+    "eye.R",
+    "jaw",
+    "levator02.L",
+    "levator02.R",
+    "levator03.L",
+    "levator03.R",
+    "levator04.L",
+    "levator04.R",
+    "levator05.L",
+    "levator05.R",
+    "levator06.L",
+    "levator06.R",
+    "metacarpal1.L",
+    "metacarpal1.R",
+    "metacarpal2.L",
+    "metacarpal2.R",
+    "metacarpal3.L",
+    "metacarpal3.R",
+    "metacarpal4.L",
+    "metacarpal4.R",
+    "oculi01.L",
+    "oculi01.R",
+    "oculi02.L",
+    "oculi02.R",
+    "orbicularis03.L",
+    "orbicularis03.R",
+    "orbicularis04.L",
+    "orbicularis04.R",
+    "oris01",
+    "oris02",
+    "oris03.L",
+    "oris03.R",
+    "oris04.L",
+    "oris04.R",
+    "oris05",
+    "oris06",
+    "oris06.L",
+    "oris06.R",
+    "oris07.L",
+    "oris07.R",
+    "pelvis.L",
+    "pelvis.R",
+    "risorius02.L",
+    "risorius02.R",
+    "risorius03.L",
+    "risorius03.R",
+    "special01",
+    "special03",
+    "special04",
+    "special05.L",
+    "special05.R",
+    "special06.L",
+    "special06.R",
+    "temporalis01.L",
+    "temporalis01.R",
+    "temporalis02.L",
+    "temporalis02.R",
+    "toe1-2.L",
+    "toe1-2.R",
+    "toe2-2.L",
+    "toe2-2.R",
+    "toe2-3.L",
+    "toe2-3.R",
+    "toe3-2.L",
+    "toe3-2.R",
+    "toe3-3.L",
+    "toe3-3.R",
+    "toe4-2.L",
+    "toe4-2.R",
+    "toe4-3.L",
+    "toe4-3.R",
+    "toe5-2.L",
+    "toe5-2.R",
+    "toe5-3.L",
+    "toe5-3.R",
+    "tongue00",
+    "tongue01",
+    "tongue02",
+    "tongue03",
+    "tongue04",
+    "tongue05.L",
+    "tongue05.R",
+    "tongue06.L",
+    "tongue06.R",
+    "tongue07.L",
+    "tongue07.R"
+  ],
+  "leg_displacement_scale": 0.9654108044679797,
+  "calibrated_reference_axis_max_rad": 0.0,
+  "target_A_pose_to_source_T_reference_calibration": true,
+  "rejected_uncalibrated_idle_left_wrist_x_m": -0.1156730130314827,
+  "full_weights_preserved": true,
+  "godot_weight_limit_resolved": false,
+  "rest_and_geometry_preserved": true,
+  "clips": [
+    {
+      "name": "Idle_Loop",
+      "duration_seconds": 2.5,
+      "source_duration_seconds": 2.5,
+      "samples": 76,
+      "blender_frame_end": 300.0,
+      "max_pose_scale_error": 7.987022399902344e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.27875813841819763,
+          -0.07531385868787766,
+          0.776186466217041
+        ],
+        "wrist.R": [
+          -0.2981613576412201,
+          0.1014753133058548,
+          0.7964023351669312
+        ],
+        "foot.L": [
+          0.20200958847999573,
+          -0.11691161245107651,
+          0.05917993187904358
+        ],
+        "foot.R": [
+          -0.17671674489974976,
+          0.2736443877220154,
+          0.05806441605091095
+        ],
+        "head": [
+          -0.03617706149816513,
+          -0.06861855089664459,
+          1.4148297309875488
+        ]
+      }
+    },
+    {
+      "name": "Walk_Loop",
+      "duration_seconds": 1.3333333333333333,
+      "source_duration_seconds": 1.3333333333333333,
+      "samples": 41,
+      "blender_frame_end": 160.0,
+      "max_pose_scale_error": 7.867813110351562e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.24670198559761047,
+          0.01704818569123745,
+          0.7554844617843628
+        ],
+        "wrist.R": [
+          -0.27250373363494873,
+          -0.28577253222465515,
+          0.8364354372024536
+        ],
+        "foot.L": [
+          0.10170437395572662,
+          -0.24366724491119385,
+          0.05867774784564972
+        ],
+        "foot.R": [
+          -0.1090841293334961,
+          0.35306304693222046,
+          0.09655675292015076
+        ],
+        "head": [
+          0.0218680277466774,
+          -0.13858230412006378,
+          1.4004242420196533
+        ]
+      }
+    },
+    {
+      "name": "Jog_Fwd_Loop",
+      "duration_seconds": 0.9333333333333333,
+      "source_duration_seconds": 0.9333333333333333,
+      "samples": 29,
+      "blender_frame_end": 112.0,
+      "max_pose_scale_error": 7.867813110351562e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.40706726908683777,
+          0.18606260418891907,
+          0.972104549407959
+        ],
+        "wrist.R": [
+          -0.07075425982475281,
+          -0.46065986156463623,
+          0.8172465562820435
+        ],
+        "foot.L": [
+          0.1029088944196701,
+          -0.4358091652393341,
+          0.11959627270698547
+        ],
+        "foot.R": [
+          -0.10004790127277374,
+          0.6763282418251038,
+          0.44530701637268066
+        ],
+        "head": [
+          0.10403411835432053,
+          -0.27348092198371887,
+          1.2572976350784302
+        ]
+      }
+    },
+    {
+      "name": "Sprint_Loop",
+      "duration_seconds": 0.6666666666666666,
+      "source_duration_seconds": 0.6666666666666666,
+      "samples": 21,
+      "blender_frame_end": 80.0,
+      "max_pose_scale_error": 7.867813110351562e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.4361637234687805,
+          0.053605541586875916,
+          0.9860849976539612
+        ],
+        "wrist.R": [
+          -0.16738975048065186,
+          -0.45296213030815125,
+          0.7632432579994202
+        ],
+        "foot.L": [
+          0.10294012725353241,
+          -0.2835370898246765,
+          0.06406158208847046
+        ],
+        "foot.R": [
+          -0.10035846382379532,
+          0.4995908737182617,
+          0.3195354640483856
+        ],
+        "head": [
+          0.05493916571140289,
+          -0.37323567271232605,
+          1.2113237380981445
+        ]
+      }
+    },
+    {
+      "name": "Hit_Chest",
+      "duration_seconds": 0.3333333333333333,
+      "source_duration_seconds": 0.3333333333333333,
+      "samples": 11,
+      "blender_frame_end": 40.0,
+      "max_pose_scale_error": 7.867813110351562e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.2807862162590027,
+          -0.168415367603302,
+          0.8658502101898193
+        ],
+        "wrist.R": [
+          -0.29623904824256897,
+          -0.0038057714700698853,
+          0.7976954579353333
+        ],
+        "foot.L": [
+          0.2021498829126358,
+          -0.12099941819906235,
+          0.06122402846813202
+        ],
+        "foot.R": [
+          -0.1790280044078827,
+          0.27059122920036316,
+          0.05821286141872406
+        ],
+        "head": [
+          -0.03870789334177971,
+          0.1445184051990509,
+          1.4265987873077393
+        ]
+      }
+    },
+    {
+      "name": "Hit_Head",
+      "duration_seconds": 0.43333333333333335,
+      "source_duration_seconds": 0.43333333333333335,
+      "samples": 14,
+      "blender_frame_end": 52.0,
+      "max_pose_scale_error": 7.867813110351562e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.2810208201408386,
+          -0.10953395068645477,
+          0.8008116483688354
+        ],
+        "wrist.R": [
+          -0.2960045039653778,
+          0.06850618869066238,
+          0.7942423820495605
+        ],
+        "foot.L": [
+          0.20200999081134796,
+          -0.11691146343946457,
+          0.05917876958847046
+        ],
+        "foot.R": [
+          -0.17671990394592285,
+          0.2736443877220154,
+          0.05806243419647217
+        ],
+        "head": [
+          -0.038526684045791626,
+          -0.0029363781213760376,
+          1.4373241662979126
+        ]
+      }
+    },
+    {
+      "name": "Death01",
+      "duration_seconds": 2.4,
+      "source_duration_seconds": 2.4,
+      "samples": 73,
+      "blender_frame_end": 288.0,
+      "max_pose_scale_error": 7.987022399902344e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.2628823518753052,
+          -0.05981122702360153,
+          0.7707229852676392
+        ],
+        "wrist.R": [
+          -0.2903424799442291,
+          0.08441850543022156,
+          0.7951434850692749
+        ],
+        "foot.L": [
+          0.20198827981948853,
+          -0.11683540791273117,
+          0.05918268859386444
+        ],
+        "foot.R": [
+          -0.18579700589179993,
+          0.26542848348617554,
+          0.07083074748516083
+        ],
+        "head": [
+          -0.03542603924870491,
+          -0.05588401481509209,
+          1.4199286699295044
+        ]
+      }
+    },
+    {
+      "name": "Sword_Idle",
+      "duration_seconds": 1.6666666666666667,
+      "source_duration_seconds": 1.6666666666666667,
+      "samples": 51,
+      "blender_frame_end": 200.0,
+      "max_pose_scale_error": 7.987022399902344e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.25044870376586914,
+          -0.3498178720474243,
+          0.6939665079116821
+        ],
+        "wrist.R": [
+          -0.3216921389102936,
+          0.37654250860214233,
+          0.7261768579483032
+        ],
+        "foot.L": [
+          0.195824533700943,
+          -0.1352136880159378,
+          0.06394344568252563
+        ],
+        "foot.R": [
+          -0.19361749291419983,
+          0.2701738476753235,
+          0.06098249554634094
+        ],
+        "head": [
+          -0.0954698920249939,
+          -0.07915778458118439,
+          1.2159756422042847
+        ]
+      }
+    },
+    {
+      "name": "Sword_Attack",
+      "duration_seconds": 1.5333333333333334,
+      "source_duration_seconds": 1.5333333333333334,
+      "samples": 47,
+      "blender_frame_end": 184.0,
+      "max_pose_scale_error": 8.225440979003906e-06,
+      "first_pose_bone_heads_armature_space": {
+        "wrist.L": [
+          0.23654991388320923,
+          -0.3456704616546631,
+          0.701662540435791
+        ],
+        "wrist.R": [
+          -0.337714284658432,
+          0.3767410218715668,
+          0.7405750155448914
+        ],
+        "foot.L": [
+          0.19591736793518066,
+          -0.1341826468706131,
+          0.06354156136512756
+        ],
+        "foot.R": [
+          -0.1930340826511383,
+          0.2704606056213379,
+          0.060404300689697266
+        ],
+        "head": [
+          -0.11773844063282013,
+          -0.08506178855895996,
+          1.2238883972167969
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "No foot contact IK or hand-held weapon validation",
+    "No facial expressions authored; original facial bones/weights retained",
+    "Sword_Attack is not spear/archery/shield/riding",
+    "Original non-RM source clips; source pelvis displacement is retained",
+    "Full >8 influences remain in master/GLB; Godot native limit is not hidden"
+  ],
+  "calibrated_idle_left_wrist_x_m": 0.27875813841819763,
+  "geometry_sha256": "88d25d7f20ec3703379e662e662f9d50441109c58411eb2b874f10d7cadd813e",
+  "export_runtime_meshes": [
+    "Body_AuthorGarmentOcclusion",
+    "Cross-front robe",
+    "Eyes",
+    "Medieval boots",
+    "Wool trousers",
+    "eyebrow001",
+    "eyelashes01"
+  ],
+  "reference_body_retained_in_blend_not_exported": true
+}

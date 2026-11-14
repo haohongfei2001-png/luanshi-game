@@ -1,0 +1,427 @@
+{
+  "version": 1,
+  "raw": [
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/3dobjs/base.obj",
+      "destination": "core/makehuman_data_3dobjs_base.obj",
+      "bytes": 1749303,
+      "sha256": "8e761e6624b8f54536409135d1636da63b32486a90d4897f84e121d144f6fb4c",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/rigs/default.mhskel",
+      "destination": "core/makehuman_data_rigs_default.mhskel",
+      "bytes": 117790,
+      "sha256": "99f179bce0aa850b45d4191a1d0d234c5851f881c057439470ded3bddf729a24",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/rigs/default_weights.mhw",
+      "destination": "core/makehuman_data_rigs_default_weights.mhw",
+      "bytes": 897521,
+      "sha256": "0f3641d651ae3d00ad6b4ccee43142edb109d3bd909d27d9e4139ef1beed8625",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/macrodetails/asian-male-young.target",
+      "destination": "core/makehuman_data_targets_macrodetails_asian-male-young.target",
+      "bytes": 421040,
+      "sha256": "ed2e8c191cb6b87b4a2d97c80486acb2604fa549316c7aa2a738a5d5a14334dc",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/macrodetails/universal-male-young-averagemuscle-averageweight.target",
+      "destination": "core/makehuman_data_targets_macrodetails_universal-male-young-averagemuscle-averageweight.target",
+      "bytes": 604,
+      "sha256": "4ba5396ddabda448ece15650a566fbebfbb10239256ccb201e8f883429e12249",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/eyes/high-poly/high-poly.obj",
+      "destination": "core/makehuman_data_eyes_high-poly_high-poly.obj",
+      "bytes": 100882,
+      "sha256": "da2493215b708a344c33dc72f2a9a5b8fa985dcc5a70ad3b208995cf871da8e1",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/eyes/high-poly/high-poly.mhclo",
+      "destination": "core/makehuman_data_eyes_high-poly_high-poly.mhclo",
+      "bytes": 72490,
+      "sha256": "b183cfe37120ab726f9b3f2ea6cd3a64c44ce7b4bd91a77c841cf70c04f83a0d",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/eyes/materials/brown.mhmat",
+      "destination": "core/makehuman_data_eyes_materials_brown.mhmat",
+      "bytes": 1247,
+      "sha256": "4abad93ce50541c08127721e77bce035640c9f16bed16cd0f5524b1cd5908465",
+      "license": "CC0-1.0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/eyes/materials/brown_eye.png",
+      "destination": "core/makehuman_data_eyes_materials_brown_eye.png",
+      "bytes": 610817,
+      "sha256": "4659691c7295ad6206c78b003e5fd0e5f91dcd53032fa914a229bb48cabe424b",
+      "license": "CC0-1.0"
+    }
+  ],
+  "archives": [
+    {
+      "source_url": "https://files.makehumancommunity.org/asset_packs/shoes03/shoes03_ccby.zip",
+      "archive_bytes": 50300350,
+      "etag": "\"2ff85be-6160e77f9d8dc\"",
+      "members": [
+        {
+          "path": "clothes/punkduck_medieval_boots/medievalboots_norm.png",
+          "bytes": 977395,
+          "compressed_bytes": 976368,
+          "offset": 48228586,
+          "crc": 3527966754,
+          "type": 8,
+          "sha256": "ee3f1e4e510679dbd835732a456af33b43e3a6c87d26e1d4f77045d1cce02efd",
+          "destination": "selected/clothes/punkduck_medieval_boots/medievalboots_norm.png"
+        },
+        {
+          "path": "clothes/punkduck_medieval_boots/medievalboots.png",
+          "bytes": 895565,
+          "compressed_bytes": 890574,
+          "offset": 49205066,
+          "crc": 3331734599,
+          "type": 8,
+          "sha256": "5f02ab62d88f4800b2f12af4c0b56cf6581ede1fbb9ce210d7698616b4224ebe",
+          "destination": "selected/clothes/punkduck_medieval_boots/medievalboots.png"
+        },
+        {
+          "path": "clothes/punkduck_medieval_boots/medievalboots.mhmat",
+          "bytes": 863,
+          "compressed_bytes": 366,
+          "offset": 50095747,
+          "crc": 2624353522,
+          "type": 8,
+          "sha256": "9cbf2790caa2ef3432bf785c4404a916538cafb7d927bc94ac861cd6bfefa0a1",
+          "destination": "selected/clothes/punkduck_medieval_boots/medievalboots.mhmat"
+        },
+        {
+          "path": "clothes/punkduck_medieval_boots/punkduck_medieval_boots.mhclo",
+          "bytes": 246405,
+          "compressed_bytes": 78761,
+          "offset": 50096222,
+          "crc": 92827303,
+          "type": 8,
+          "sha256": "e5526e8f74447717663b7d70d1ee167b1a1890dff64fd6053a1df421c3115bcd",
+          "destination": "selected/clothes/punkduck_medieval_boots/punkduck_medieval_boots.mhclo"
+        },
+        {
+          "path": "clothes/punkduck_medieval_boots/medievalboots.obj",
+          "bytes": 295691,
+          "compressed_bytes": 80324,
+          "offset": 50175102,
+          "crc": 4148182427,
+          "type": 8,
+          "sha256": "60cc3f81d144dad47d7694003fd85da1fd873e7c4e76090832573e2146613c89",
+          "destination": "selected/clothes/punkduck_medieval_boots/medievalboots.obj"
+        },
+        {
+          "path": "clothes/punkduck_medieval_boots/punkduck_medieval_boots.thumb",
+          "bytes": 32995,
+          "compressed_bytes": 32058,
+          "offset": 50255533,
+          "crc": 4268663094,
+          "type": 8,
+          "sha256": "b3f757a36d33298a39a2c872c92d4b7a4b1cef376b78d50d450f8b236eafd8e4",
+          "destination": "selected/clothes/punkduck_medieval_boots/punkduck_medieval_boots.thumb"
+        }
+      ],
+      "license": "CC-BY-4.0"
+    },
+    {
+      "source_url": "https://files.makehumancommunity.org/asset_packs/pants01/pants01_cc0.zip",
+      "archive_bytes": 21908723,
+      "etag": "\"14e4cf3-6160e780978d0\"",
+      "members": [
+        {
+          "path": "clothes/toigo_wool_pants/Pants_wool.png",
+          "bytes": 1355120,
+          "compressed_bytes": 1280721,
+          "offset": 149,
+          "crc": 390458270,
+          "type": 8,
+          "sha256": "a820b0dc4f9f881956a068f26889ca677b696dbdccfdbf2a168e7b327b390ab6",
+          "destination": "selected/clothes/toigo_wool_pants/Pants_wool.png"
+        },
+        {
+          "path": "clothes/toigo_wool_pants/toigo_wool_pants.thumb",
+          "bytes": 36834,
+          "compressed_bytes": 36284,
+          "offset": 1280967,
+          "crc": 1002299431,
+          "type": 8,
+          "sha256": "23dfe8875ee2fbdaef1e705871d2054868198fc415188ec177bebf96a09b944c",
+          "destination": "selected/clothes/toigo_wool_pants/toigo_wool_pants.thumb"
+        },
+        {
+          "path": "clothes/toigo_wool_pants/toigo_wool_pants.mhclo",
+          "bytes": 93219,
+          "compressed_bytes": 35392,
+          "offset": 1317356,
+          "crc": 2358104773,
+          "type": 8,
+          "sha256": "ac1a57a817976d80ece8a88698873d54de7f252d01ba3dca5e361693621fcf22",
+          "destination": "selected/clothes/toigo_wool_pants/toigo_wool_pants.mhclo"
+        },
+        {
+          "path": "clothes/toigo_wool_pants/pants_wool.obj",
+          "bytes": 108902,
+          "compressed_bytes": 35032,
+          "offset": 1352853,
+          "crc": 3230286435,
+          "type": 8,
+          "sha256": "e02cd1e417ca3365e4dafc033f415c5186739df535d98810075cface0ce59c96",
+          "destination": "selected/clothes/toigo_wool_pants/pants_wool.obj"
+        },
+        {
+          "path": "clothes/toigo_wool_pants/pants_wool.mhmat",
+          "bytes": 473,
+          "compressed_bytes": 245,
+          "offset": 1387982,
+          "crc": 2738649544,
+          "type": 8,
+          "sha256": "fedf31e98ea92b57c8f45e10ec167d420f5eb11b9410feb075c321c3798fdb53",
+          "destination": "selected/clothes/toigo_wool_pants/pants_wool.mhmat"
+        }
+      ],
+      "license": "CC0-1.0"
+    },
+    {
+      "source_url": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+      "archive_bytes": 280737770,
+      "etag": "\"10bbb7ea-6160e7c0d7996\"",
+      "members": [
+        {
+          "path": "eyebrows/eyebrow001/eyebrow001.obj",
+          "bytes": 8227,
+          "compressed_bytes": 2873,
+          "offset": 271550171,
+          "crc": 132765174,
+          "type": 8,
+          "sha256": "88b13146395133f3901715e11706cdfd293e5d6087ad7c5e01efe1485a26b513",
+          "destination": "selected/eyebrows/eyebrow001/eyebrow001.obj"
+        },
+        {
+          "path": "eyebrows/eyebrow001/eyebrow001.png",
+          "bytes": 89619,
+          "compressed_bytes": 88049,
+          "offset": 271553136,
+          "crc": 3589177450,
+          "type": 8,
+          "sha256": "9940f7d0b1b223709a19b05156ba6f6e9e4dbdbced02d7574f4d51d72c58967b",
+          "destination": "selected/eyebrows/eyebrow001/eyebrow001.png"
+        },
+        {
+          "path": "eyebrows/eyebrow001/eyebrow001.mhclo",
+          "bytes": 9141,
+          "compressed_bytes": 3038,
+          "offset": 271641277,
+          "crc": 1496989710,
+          "type": 8,
+          "sha256": "54c8892c2ba577f4152d779ce1f20f7cd323beb8cbd9cb701796165c221b4f5b",
+          "destination": "selected/eyebrows/eyebrow001/eyebrow001.mhclo"
+        },
+        {
+          "path": "eyebrows/eyebrow001/eyebrow001.thumb",
+          "bytes": 137534,
+          "compressed_bytes": 137464,
+          "offset": 271644409,
+          "crc": 2614383907,
+          "type": 8,
+          "sha256": "98b68eccf50977ff00242a33eb1dc6e3eaf4cc262e1f6c4ceca5c1c564f6c745",
+          "destination": "selected/eyebrows/eyebrow001/eyebrow001.thumb"
+        },
+        {
+          "path": "eyebrows/eyebrow001/eyebrow001.mhmat",
+          "bytes": 1098,
+          "compressed_bytes": 555,
+          "offset": 271781967,
+          "crc": 1674605508,
+          "type": 8,
+          "sha256": "976e5f4f1d3922d7a11c6e2db233f8b4584b068d00619d5749687e81c92d61fc",
+          "destination": "selected/eyebrows/eyebrow001/eyebrow001.mhmat"
+        }
+      ],
+      "license": "CC0-1.0"
+    },
+    {
+      "source_url": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+      "archive_bytes": 280737770,
+      "etag": "\"10bbb7ea-6160e7c0d7996\"",
+      "members": [
+        {
+          "path": "eyelashes/eyelashes01/eyelashes01.obj",
+          "bytes": 18832,
+          "compressed_bytes": 6080,
+          "offset": 231546946,
+          "crc": 3313467970,
+          "type": 8,
+          "sha256": "f78f5b93fea1946fcae103d32c4f082dd9612a1ec2e7e2f90b03ebe59b0baf20",
+          "destination": "selected/eyelashes/eyelashes01/eyelashes01.obj"
+        },
+        {
+          "path": "eyelashes/eyelashes01/eyelashes01.mhclo",
+          "bytes": 2265,
+          "compressed_bytes": 952,
+          "offset": 231553121,
+          "crc": 1539840392,
+          "type": 8,
+          "sha256": "5a86b29c15649273d723084954b7fa7bf199112571d4f58539b46734d397ee6b",
+          "destination": "selected/eyelashes/eyelashes01/eyelashes01.mhclo"
+        },
+        {
+          "path": "eyelashes/eyelashes01/eyelashes01.png",
+          "bytes": 91600,
+          "compressed_bytes": 90109,
+          "offset": 231554170,
+          "crc": 3377491695,
+          "type": 8,
+          "sha256": "4b69c0fff2648874460e9caf80c31413c444218a5c50afebc425aeaa65484a35",
+          "destination": "selected/eyelashes/eyelashes01/eyelashes01.png"
+        },
+        {
+          "path": "eyelashes/eyelashes01/eyelashes01.mhmat",
+          "bytes": 1074,
+          "compressed_bytes": 553,
+          "offset": 231644374,
+          "crc": 2384260682,
+          "type": 8,
+          "sha256": "8029c99d94f3d87a1e81825fad6b90eec773ae6955a5b2592222ef237377e190",
+          "destination": "selected/eyelashes/eyelashes01/eyelashes01.mhmat"
+        },
+        {
+          "path": "eyelashes/eyelashes01/eyelashes01.thumb",
+          "bytes": 140641,
+          "compressed_bytes": 140570,
+          "offset": 231645024,
+          "crc": 358608292,
+          "type": 8,
+          "sha256": "34ab06601745c2b74fcfa6f63a374fcea58cb4501e728a3c6935a3a1ed794aa3",
+          "destination": "selected/eyelashes/eyelashes01/eyelashes01.thumb"
+        }
+      ],
+      "license": "CC0-1.0"
+    },
+    {
+      "source_url": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+      "archive_bytes": 280737770,
+      "etag": "\"10bbb7ea-6160e7c0d7996\"",
+      "members": [
+        {
+          "path": "skins/young_asian_male/young_asian_male.mhmat",
+          "bytes": 1452,
+          "compressed_bytes": 700,
+          "offset": 55014078,
+          "crc": 307453584,
+          "type": 8,
+          "sha256": "9fdfc9863cd15d1359311435f2da7de3906f81d6eea549fba6bf14cd82ceb6a0",
+          "destination": "selected/skins/young_asian_male/young_asian_male.mhmat"
+        },
+        {
+          "path": "skins/young_asian_male/young_asian_male.thumb",
+          "bytes": 79327,
+          "compressed_bytes": 79134,
+          "offset": 55014881,
+          "crc": 1171952585,
+          "type": 8,
+          "sha256": "21245c121a4efc96d18cb64a2fc7d95bfcc768f7b333d59b7a471708551ed13d",
+          "destination": "selected/skins/young_asian_male/young_asian_male.thumb"
+        },
+        {
+          "path": "skins/young_asian_male/young_lightskinned_male_diffuse3.png",
+          "bytes": 3593099,
+          "compressed_bytes": 3589718,
+          "offset": 55094118,
+          "crc": 4054467912,
+          "type": 8,
+          "sha256": "f50016a5507fc687dc8df06599c8ea48de950cd185de33a71cafc1319ddab4d5",
+          "destination": "selected/skins/young_asian_male/young_lightskinned_male_diffuse3.png"
+        }
+      ],
+      "license": "CC0-1.0"
+    },
+    {
+      "source_url": "https://files.makehumancommunity.org/asset_packs/dress01/dress01_cc0.zip",
+      "archive_bytes": 46598791,
+      "license": "CC0-1.0",
+      "members": [
+        {
+          "path": "clothes/mindfront_kimono/mindfront_kimono.thumb",
+          "destination": "selected/clothes/mindfront_kimono/mindfront_kimono.thumb",
+          "bytes": 37559,
+          "compressed_bytes": 37119,
+          "offset": 33457973,
+          "crc": 1055953145,
+          "type": 8,
+          "sha256": "29f8755204b90dd47218f3dd9ae2f58b81f5088ec87218839f43da4776950c23"
+        },
+        {
+          "path": "clothes/mindfront_kimono/F_Kimono_NRM.png",
+          "destination": "selected/clothes/mindfront_kimono/F_Kimono_NRM.png",
+          "bytes": 2933005,
+          "compressed_bytes": 2929504,
+          "offset": 33495197,
+          "crc": 3629230093,
+          "type": 8,
+          "sha256": "e925f39fb718658331dc917731c4a408f9013eff727c5cd63344d003007399ef"
+        },
+        {
+          "path": "clothes/mindfront_kimono/mindfront_kimono.mhclo",
+          "destination": "selected/clothes/mindfront_kimono/mindfront_kimono.mhclo",
+          "bytes": 240398,
+          "compressed_bytes": 85489,
+          "offset": 36424800,
+          "crc": 315475899,
+          "type": 8,
+          "sha256": "c1c736e8449f65d19e408b43fa5ab20106deedfa9d5563952dbbf1f9519c8f1f"
+        },
+        {
+          "path": "clothes/mindfront_kimono/F_Kimono_SPEC.png",
+          "destination": "selected/clothes/mindfront_kimono/F_Kimono_SPEC.png",
+          "bytes": 1437651,
+          "compressed_bytes": 1437580,
+          "offset": 36510394,
+          "crc": 1931418092,
+          "type": 8,
+          "sha256": "3ba0f09b2d947d33cc0a630e59d95ba76800321379081564e511a086475f825b"
+        },
+        {
+          "path": "clothes/mindfront_kimono/f_kimono.mhmat",
+          "destination": "selected/clothes/mindfront_kimono/f_kimono.mhmat",
+          "bytes": 594,
+          "compressed_bytes": 292,
+          "offset": 37948074,
+          "crc": 4162787312,
+          "type": 8,
+          "sha256": "3d9beb418e5a8dfc5f8d4b539591f2d5719a3ab9402499b969c9626b45b84b43"
+        },
+        {
+          "path": "clothes/mindfront_kimono/f_kimono.obj",
+          "destination": "selected/clothes/mindfront_kimono/f_kimono.obj",
+          "bytes": 292761,
+          "compressed_bytes": 91087,
+          "offset": 37948463,
+          "crc": 2810090374,
+          "type": 8,
+          "sha256": "db3c68dac67b15f46b187442570e67ed0d25496db8d7226cbcdd18e40546b5e2"
+        },
+        {
+          "path": "clothes/mindfront_kimono/F_Kimono_COL.png",
+          "destination": "selected/clothes/mindfront_kimono/F_Kimono_COL.png",
+          "bytes": 802227,
+          "compressed_bytes": 772415,
+          "offset": 38039645,
+          "crc": 801207069,
+          "type": 8,
+          "sha256": "dbb80df9187513e418c8d062c39e3da1743b096887f9a75bc1e3737814fad9eb"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "source_vertices": 18351,
+  "raw_nonunit_vertices": 122,
+  "max_export_normalization_error": 1.0673701766883426e-07,
+  "all_sidecar_influences_retained": true,
+  "gltf_has_all_source_influences": false,
+  "gltf_dropped_vertices": [
+    {
+      "node": "Cross-front robe",
+      "id": 129,
+      "raw_missing": [
+        [
+          "pelvis.R",
+          1.5260415011653095e-06
+        ],
+        [
+          "upperleg01.R",
+          1.5260415011653095e-06
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 136,
+      "raw_missing": [
+        [
+          "spine02",
+          8.130342030199245e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 225,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          9.115768625633791e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 528,
+      "raw_missing": [
+        [
+          "upperarm01.R",
+          3.400000059627928e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 1637,
+      "raw_missing": [
+        [
+          "upperleg02.L",
+          8.32799996715039e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 1753,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          8.109890040941536e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 1864,
+      "raw_missing": [
+        [
+          "neck03",
+          2.9098197046550922e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 1882,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          8.039761451072991e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 1906,
+      "raw_missing": [
+        [
+          "upperleg01.L",
+          5.398460416472517e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 2120,
+      "raw_missing": [
+        [
+          "upperleg01.L",
+          5.691642854799284e-06
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 2147,
+      "raw_missing": [
+        [
+          "upperleg02.L",
+          9.000000136438757e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 2188,
+      "raw_missing": [
+        [
+          "upperleg02.L",
+          7.5686275522457436e-06
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 2195,
+      "raw_missing": [
+        [
+          "upperleg01.L",
+          6.707442662445828e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 2289,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          7.725489922449924e-06
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 2883,
+      "raw_missing": [
+        [
+          "upperleg02.L",
+          7.987704884726554e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 3162,
+      "raw_missing": [
+        [
+          "pelvis.R",
+          3.298597221146338e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 3354,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          4.901960892311763e-06
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 3384,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          4.7882353101158515e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 3477,
+      "raw_missing": [
+        [
+          "spine02",
+          7.703922892687842e-05
+        ]
+      ]
+    },
+    {
+      "node": "Cross-front robe",
+      "id": 3478,
+      "raw_missing": [
+        [
+          "pelvis.L",
+          2.5025025024660863e-05
+        ],
+        [
+          "upperleg02.L",
+          4.424000144354068e-05
+        ],
+        [
+          "upperleg02.R",
+          4.424000144354068e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 26,
+      "raw_missing": [
+        [
+          "toe2-1.L",
+          5.890059037483297e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 192,
+      "raw_missing": [
+        [
+          "lowerleg02.L",
+          8.201917808037251e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 238,
+      "raw_missing": [
+        [
+          "toe1-1.L",
+          4.9959999159909785e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 352,
+      "raw_missing": [
+        [
+          "toe3-2.L",
+          3.7800377867824864e-06
+        ],
+        [
+          "toe3-3.L",
+          6.622066575801e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 1842,
+      "raw_missing": [
+        [
+          "toe2-1.R",
+          5.8900001022266224e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 2008,
+      "raw_missing": [
+        [
+          "lowerleg02.R",
+          8.201917808037251e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 2054,
+      "raw_missing": [
+        [
+          "toe1-1.R",
+          4.9959999159909785e-05
+        ]
+      ]
+    },
+    {
+      "node": "Medieval boots",
+      "id": 2168,
+      "raw_missing": [
+        [
+          "toe3-2.R",
+          3.7800377867824864e-06
+        ],
+        [
+          "toe3-3.R",
+          6.622066575801e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 166,
+      "raw_missing": [
+        [
+          "upperleg02.L",
+          6.76199997542426e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 332,
+      "raw_missing": [
+        [
+          "foot.L",
+          7.895896123955026e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 499,
+      "raw_missing": [
+        [
+          "spine04",
+          7.216350786620751e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 526,
+      "raw_missing": [
+        [
+          "upperleg02.L",
+          1.5040000107546803e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 637,
+      "raw_missing": [
+        [
+          "spine03",
+          2.4940249204519205e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 853,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          6.76199997542426e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 1019,
+      "raw_missing": [
+        [
+          "foot.R",
+          7.895816816017032e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 1198,
+      "raw_missing": [
+        [
+          "upperleg02.R",
+          1.4870000086375512e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 1296,
+      "raw_missing": [
+        [
+          "spine03",
+          4.872000135947019e-05
+        ]
+      ]
+    },
+    {
+      "node": "Wool trousers",
+      "id": 1351,
+      "raw_missing": [
+        [
+          "spine04",
+          7.216350786620751e-05
+        ]
+      ]
+    }
+  ],
+  "sha256": "8a580adf35abee5cc661d15a24f3f77d304c2f28ae78057edc50edc59d9093db",
+  "runtime_glb_sha256": "6853fbca1b76eed03d764e32577f46e0354583a29405ae3a3a7088d69cc18539"
+}
