@@ -1,20 +1,15 @@
 """Extract complete Wildfire armed joint chains for measured motion comparison."""
-import hashlib
 import json
 from pathlib import Path
 import sys
 import xml.etree.ElementTree as ET
 import numpy as np
-from import_company_combat import as_quaternion
 from import_company_march import quat_matrix, sample
 from import_garrison_issues import source_file, read_dae, UPSTREAM
 
 SOURCES=(
     ("shield_ready","animation/biped/infantry/swordsman/idle_ready_shield_01.dae","fbbb12bcef7b5cb1a409596d7db293de160c080c"),
-    ("shield_cut_01","animation/biped/infantry/swordsman/attack_melee_shield_01.dae","c4cae448aeb20d5945cb8f94f354729062815084"),
     ("shield_cut_02","animation/biped/infantry/swordsman/attack_melee_shield_02.dae","32ace1da919078a25f156a0fbb80131af477e1ff"),
-    ("shield_cut_03","animation/biped/infantry/swordsman/attack_melee_shield_03.dae","5eda4275dd86bb68eda2e4af934d4314fee5889c"),
-    ("spear_01","animation/biped/infantry/spearman/attack_melee_01.dae","85946cb89231cc8063a726eee75bfc29b5e1410f"),
 )
 JOINTS={"hips":"hip","spine.001":"spine","spine.002":"spine1","spine.003":"chest","head":"head"}
 for side in ("L","R"):
@@ -23,6 +18,17 @@ for side in ("L","R"):
                   "shin."+side:"leg_"+side,"foot."+side:"foot_"+side})
 JOINTS.update({"weapon.R":"weapon_R","shield":"shield","finger.L":"finger_L","finger.R":"finger_R"})
 AXES=np.array([[-1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
+
+def as_quaternion(matrix):
+    # Symmetric eigenvalue form remains stable for half turns.
+    m=matrix
+    k=np.array([[m[0,0]-m[1,1]-m[2,2],m[1,0]+m[0,1],m[2,0]+m[0,2],m[2,1]-m[1,2]],
+                [m[1,0]+m[0,1],m[1,1]-m[0,0]-m[2,2],m[2,1]+m[1,2],m[0,2]-m[2,0]],
+                [m[2,0]+m[0,2],m[2,1]+m[1,2],m[2,2]-m[0,0]-m[1,1],m[1,0]-m[0,1]],
+                [m[2,1]-m[1,2],m[0,2]-m[2,0],m[1,0]-m[0,1],np.trace(m)]])/3.
+    values,vectors=np.linalg.eigh(k)
+    q=vectors[:,np.argmax(values)]
+    return q if q[3]>=0. else -q
 
 def rotation(m):
     u,_,v=np.linalg.svd(m[:3,:3])
