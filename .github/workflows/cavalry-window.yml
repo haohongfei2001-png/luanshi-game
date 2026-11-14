@@ -52,7 +52,7 @@ jobs:
           root=pathlib.Path(os.environ["OUT"])
           report=json.loads((root/"input-and-camera.json").read_text())
           frames=report.pop("frames")
-          output={"product":"711ac1f594a26a5750be2e1e5ed4361c9eacf4d9","source_and_capture":os.environ["GITHUB_SHA"],"camera":report["camera_start"],"inputs":report["inputs"],"roster":report["ordinary"],"first_hit":report["first_player_strike"],"samples":[]}
+          output={"product":"aaa694176abdbf925193fc65dc7cc7dd74684ede","source_and_capture":os.environ["GITHUB_SHA"],"camera":report["camera_start"],"inputs":report["inputs"],"roster":report["ordinary"],"first_hit":report["first_player_strike"],"samples":[]}
           for r in frames:
               if "mounts" not in r: continue
               one=dict(r["mounts"]);one.pop("displaced_xz");output["samples"].append(dict(tick=r["tick"],losses=r["losses"],hits=r["hits"],**one))
