@@ -20,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri ffmpeg
           curl -fLsS --retry 2 https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
           echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum -c -
           tar -xJf /tmp/blender.tar.xz -C /tmp
@@ -36,6 +36,8 @@ jobs:
           /tmp/blender-4.3.2-linux-x64/blender -b --factory-startup --disable-autoexec --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx "$PWD/assets/river_authored/architecture" --no-preview >artifacts/gate-structure/build.log 2>&1
           sha256sum assets/river_authored/architecture/architecture.glb >artifacts/gate-structure/derived-sha256.txt
           godot --headless --editor --path . --import >artifacts/gate-structure/import.log 2>&1
+          timeout 30s godot --headless --path . --script tests/art_reset/surface_front_face.gd >artifacts/gate-structure/surface-front-face.log 2>&1
+          timeout 30s godot --headless --path . --script tests/authored_support_winding.gd >artifacts/gate-structure/support-winding.log 2>&1
           timeout 45s godot --headless --path . --script tests/authored_architecture.gd >artifacts/gate-structure/structure-test.log 2>&1
       - name: Fetch pinned professional woodland source and bake complete family
         run: |
@@ -47,9 +49,17 @@ jobs:
           $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_native_collection.py -- "$SOURCE_ROOT/lib/env/bushes.blend" EN-bush.01 /tmp/sprite-bush >artifacts/gate-structure/bush-bake.log 2>&1
           mkdir -p assets/river_authored/woodland
           godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/sprite-tree/derived.glb /tmp/sprite-bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn >artifacts/gate-structure/woodland-build.log 2>&1
+          timeout 60s godot --headless --path . --script tests/art_reset/woodland_region_lifecycle.gd -- assets/river_authored/woodland/region.scn >artifacts/gate-structure/woodland-lifecycle.log 2>&1
           cp /tmp/sprite-tree/complete.json artifacts/gate-structure/tree-bake.json
           cp /tmp/sprite-bush/complete.json artifacts/gate-structure/bush-bake.json
-          timeout 90s godot --headless --path . --script tests/authored_architecture_capture.gd -- --validate-pairs >artifacts/gate-structure/region-setup.log 2>&1
+          godot --headless --path . --script tools/art/sprite_source/export_ground_survey.gd -- /tmp/ground-survey.json >artifacts/gate-structure/ground-survey.log 2>&1
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_ground_base.py -- "$SOURCE_ROOT/lib/sets/mushroom_grove/mushroom_grove.blend" /tmp/ground-survey.json /tmp/sprite-ground --road-wear --safe-core >artifacts/gate-structure/ground-bake.log 2>&1
+          mkdir -p assets/river_authored/ground
+          cp /tmp/sprite-ground/ground-approach.glb assets/river_authored/ground/
+          cp /tmp/sprite-ground/complete.json artifacts/gate-structure/ground-bake.json
+          godot --headless --editor --path . --import >artifacts/gate-structure/region-import.log 2>&1
+          timeout 90s godot --headless --path . --script tests/art_reset/sprite_ground_intake.gd -- assets/river_authored/ground/ground-approach.glb /tmp/sprite-ground/complete.json >artifacts/gate-structure/ground-support.log 2>&1
+          timeout 160s godot --headless --path . --script tests/authored_architecture_capture.gd -- --validate-pairs >artifacts/gate-structure/region-setup.log 2>&1
           timeout 60s godot --headless --path . --script tests/authored_gate_gameplay_contract.gd >artifacts/gate-structure/gate-gameplay.log 2>&1
           if grep -E 'SCRIPT ERROR|ERROR:' artifacts/gate-structure/{woodland-build,region-setup,gate-gameplay}.log; then exit 1; fi
       - name: Capture actual game with new structures and unchanged battle systems
@@ -59,13 +69,28 @@ jobs:
         run: |
           set -euo pipefail
           export CONTROLLER_BLOB=$(git hash-object scripts/field/controller.gd)
-          python tools/art/gate_structure/run_capture_checked.py artifacts/gate-structure/actual-game.log 600 -- xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --rendering-method gl_compatibility --audio-driver Dummy --script tests/authored_architecture_capture.gd
+          export RIVER_SOURCE_SHA="$GITHUB_SHA"
+          python tools/art/gate_structure/run_capture_checked.py artifacts/gate-structure/actual-game.log 600 -- xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --rendering-method gl_compatibility --audio-driver Dummy --script tests/authored_architecture_capture.gd -- --wall-clock-action --traversal-review --shadow-diagnostic
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/gate-structure/actual-game.log; then exit 1; fi
+      - name: Preserve real-speed traversal movie and bounded review bundle
+        if: always()
+        run: |
+          set -uo pipefail
+          RAW=artifacts/gate-structure/pixels/traversal-raw
+          if [ ! -f "$RAW/frames.jsonl" ]; then echo 'TRAVERSAL_NOT_RUN'; exit 0; fi
+          status=0
+          python tools/encode_wall_clock_capture.py "$RAW" "$RAW/traversal.mp4" >"$RAW/encode.log" 2>&1 || status=1
+          python tools/native_evidence_bundle.py "$RAW" artifacts/traversal-curated || status=1
+          python -c "import sys;sys.path.insert(0,'tools');from bounded_artifact_groups import stage;stage('artifacts/traversal-curated','artifacts/traversal-groups',max_groups=4)" || status=1
+          exit "$status"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: new-architecture-real-game-evidence
-          path: artifacts/gate-structure
+          path: |
+            artifacts/gate-structure
+            !artifacts/gate-structure/pixels/traversal-raw/frame-*.jpg
+            !artifacts/gate-structure/pixels/traversal-raw/*.mp4
           if-no-files-found: error
           retention-days: 30
       - uses: actions/upload-artifact@v4
@@ -78,3 +103,31 @@ jobs:
             assets/river_authored/architecture/source/architecture.blend
           if-no-files-found: warn
           retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/traversal-groups/group-00/**') != '' }}
+        with:
+          name: new-region-traversal-00
+          path: artifacts/traversal-groups/group-00
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/traversal-groups/group-01/**') != '' }}
+        with:
+          name: new-region-traversal-01
+          path: artifacts/traversal-groups/group-01
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/traversal-groups/group-02/**') != '' }}
+        with:
+          name: new-region-traversal-02
+          path: artifacts/traversal-groups/group-02
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/traversal-groups/group-03/**') != '' }}
+        with:
+          name: new-region-traversal-03
+          path: artifacts/traversal-groups/group-03
+          retention-days: 30
+          if-no-files-found: error

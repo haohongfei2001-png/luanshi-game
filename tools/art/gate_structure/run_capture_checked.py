@@ -5,7 +5,7 @@ log=Path(sys.argv[1]);limit=float(sys.argv[2]);args=sys.argv[4:];assert sys.argv
 log.parent.mkdir(parents=True,exist_ok=True)
 p=subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,start_new_session=True)
 sel=selectors.DefaultSelector();sel.register(p.stdout,selectors.EVENT_READ)
-deadline=time.monotonic()+limit;pending=b'';failure=None
+started=time.monotonic();deadline=started+limit;pending=b'';failure=None
 with log.open('wb') as f:
  try:
   while sel.get_map():
@@ -20,6 +20,6 @@ with log.open('wb') as f:
   if failure and p.poll() is None:os.killpg(p.pid,signal.SIGTERM)
   try:p.wait(timeout=5)
   except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait()
-  f.write(('\nCAPTURE_PROCESS_RESULT '+str({'reason':failure,'exit':p.returncode})+'\n').encode());f.flush()
+  f.write(('\nCAPTURE_PROCESS_RESULT '+str({'reason':failure,'exit':p.returncode,'elapsed_seconds':time.monotonic()-started})+'\n').encode());f.flush()
 print('CAPTURE_PROCESS_RESULT',failure,p.returncode,flush=True)
 raise SystemExit(1 if failure else p.returncode)

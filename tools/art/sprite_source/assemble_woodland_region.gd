@@ -14,6 +14,21 @@ func load_native(path:String) -> Node3D:
 	var doc:=GLTFDocument.new();var state:=GLTFState.new()
 	assert(doc.append_from_file(path,state)==OK,"Native source missing")
 	var node:=doc.generate_scene(state) as Node3D;assert(node)
+	# GLTFDocument's runtime images arrive without mip levels even when the
+	# imported sampler requests them. Generate once per shared family, not per leaf.
+	for mesh:MeshInstance3D in node.find_children("*","MeshInstance3D",true,false):
+		for index in mesh.mesh.get_surface_count():
+			var material:=mesh.mesh.surface_get_material(index).duplicate() as StandardMaterial3D
+			for key:String in ["albedo_texture","normal_texture","roughness_texture"]:
+				var texture:=material.get(key) as Texture2D
+				if texture==null:continue
+				var pixels:=texture.get_image()
+				if pixels.is_compressed():assert(pixels.decompress()==OK)
+				assert(pixels.generate_mipmaps(key=="normal_texture")==OK)
+				assert(pixels.has_mipmaps())
+				material.set(key,ImageTexture.create_from_image(pixels))
+			material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+			mesh.mesh.surface_set_material(index,material)
 	return node
 func own(node:Node,scene:Node) -> void:
 	for child in node.get_children():child.owner=scene;own(child,scene)
@@ -32,7 +47,7 @@ func run() -> void:
 	var args:=OS.get_cmdline_user_args();assert(args.size()==3,"tree.glb bush.glb output.scn")
 	var tree:=load_native(args[0]);var bush:=load_native(args[1])
 	var region:=Node3D.new();region.name="SpriteFamilyWoodland_PRODUCTION_EXPERIMENT";root.add_child(region)
-	region.set_meta("composition","sprite-native-woodland-region-01")
+	region.set_meta("composition","sprite-native-woodland-region-02-mipmapped")
 	region.set_meta("art_status","NOT_ACCEPTED; GODOT_GRAPHICS_NOT_RUN")
 	region.set_meta("source_tree_sha256",FileAccess.get_sha256(args[0]))
 	region.set_meta("source_bush_sha256",FileAccess.get_sha256(args[1]))

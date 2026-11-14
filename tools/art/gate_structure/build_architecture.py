@@ -12,9 +12,9 @@ else:bpy.ops.wm.open_mainfile(filepath=str(source),load_ui=False)
 source_objects={o.name:o for o in bpy.data.objects if o.type=='MESH'}
 # Bake source world coordinates, normals and original per-corner UV before new scene.
 roof={}
-for name in [o for o in source_objects if o.startswith(('瓦面','垂脊','檐椽','飞椽','脑椽'))]:
+for name in source_objects:
  o=source_objects[name];uv=o.data.uv_layers.active
- roof[name]=[[(tuple(o.matrix_world@o.data.vertices[o.data.loops[i].vertex_index].co),tuple(uv.data[i].uv) if uv else (0.,0.)) for i in p.loop_indices] for p in o.data.polygons]
+ roof[name]=[[(tuple(o.matrix_world@o.data.vertices[o.data.loops[i].vertex_index].co),tuple(uv.data[i].uv) if uv else (0.,0.),tuple((o.matrix_world.to_3x3().inverted().transposed()@o.data.corner_normals[i].vector).normalized())) for i in p.loop_indices] for p in o.data.polygons]
 # Professional CC0 deck boards: preserve their actual worn silhouette and UV islands.
 pier_path=out/'source/wooden_pier/modular_wooden_pier.gltf'
 bpy.ops.import_scene.gltf(filepath=str(pier_path))
@@ -54,13 +54,16 @@ groups={}
 def group(name):
  o=bpy.data.objects.new(name,None);bpy.context.collection.objects.link(o);o.parent=root;groups[name]=o;return o
 gate=group('GateHall');door=group('GateDoor');walls=group('WallWalk');bridge=group('GateBridge');west=group('WestBridge')
-def mesh(name,verts,faces,mat,parent,uvs=None):
+def mesh(name,verts,faces,mat,parent,uvs=None,normals=None):
  d=bpy.data.meshes.new(name);d.from_pydata(verts,[],faces);d.materials.append(materials[mat]);d.update();o=bpy.data.objects.new(name,d);bpy.context.collection.objects.link(o);o.parent=parent
  # One shared active UV channel is required when source and authored surfaces join.
  layer=d.uv_layers.new(name='UVMap')
  for poly in d.polygons:
   for li in poly.loop_indices:
    v=d.vertices[d.loops[li].vertex_index].co;layer.data[li].uv=uvs[d.loops[li].vertex_index] if uvs else (v.x*.3,v.z*.3+v.y*.05)
+ if normals:
+  for poly in d.polygons:poly.use_smooth=True
+  d.normals_split_custom_set([normals[loop.vertex_index] for loop in d.loops])
  return o
 # All construction coordinates use metres in Godot (x,y,z), converted to Blender (x,-z,y).
 def pt(x,y,z):return (x,-z,y)
@@ -97,17 +100,6 @@ for sign in [-1,1]:
   else:
    for center,depth in [(47.95,2.35),(53.15,.6)]:box('GatePier_walk_jamb',(center,y,sign*(inner+width/2)),(depth,.584,width),'masonry',gate,.025)
  for center,depth in [(47.95,2.35),(53.15,.6)]:box('GatePier_coping',(center,4.43,sign*6.25),(depth,.32,4.42),'masonry',gate)
- # Raised side platforms support the upper gate frame rather than a garden seat.
- for x in [48.,52.95]:
-  beam('GateHall_column',(x,4.58,sign*5.9),(x,6.48,sign*5.9),.32,.32,'timber',gate)
-  box('GateHall_column_base',(x,4.62,sign*5.9),(.48,.22,.48),'masonry',gate)
- # Wall-walk corridor stays open through the gate pier; no fake solid infill.
- for x in [48.,52.95]:
-  beam('GateHall_bracket',(x,5.98,sign*5.9),(x,6.37,sign*6.6),.16,.18,'timber',gate)
-for x in [48.,52.95]:
- beam('GateHall_principal_tie',(x,6.25,-6.3),(x,6.25,6.3),.32,.42,'timber',gate)
- for z in [-5.9,0,5.9]:
-  beam('GateHall_cross_purlin',(47.3,6.37,z),(52.8,6.37,z),.22,.25,'timber',gate)
 # Functional replaceable door leaves, independently hideable; opening preserved as gameplay-controlled.
 for sign in [-1,1]:
  for i in range(11):box('GateDoor_board',(48.,2.05,sign*(.18+i*.35)),(.21,4.05,.34),'timber',door,.014)
@@ -122,18 +114,20 @@ def clip(poly,axis,value,keep_less):
   ip,iq=inside(p),inside(q)
   if ip:result.append(p)
   if ip!=iq:
-   t=(value-p[0][axis])/(q[0][axis]-p[0][axis]);v=tuple(p[0][j]+t*(q[0][j]-p[0][j]) for j in range(3));uv=tuple(p[1][j]+t*(q[1][j]-p[1][j]) for j in range(2));result.append((v,uv))
+   t=(value-p[0][axis])/(q[0][axis]-p[0][axis]);v=tuple(p[0][j]+t*(q[0][j]-p[0][j]) for j in range(3));uv=tuple(p[1][j]+t*(q[1][j]-p[1][j]) for j in range(2));normal=tuple((Vector(p[2]).lerp(Vector(q[2]),t)).normalized());result.append((v,uv,normal))
  return result
 S=.19;extension=5.;roof_pieces=[]
+# Full adult-height upper hall: floor5.72, column head7.92, original roof frame above.
+ROOF_BASE=7.92-20.36121940612793*S
 def roof_part(name,polys,offset=0,lo=None,hi=None,material='tile'):
- vs=[];fs=[];uv=[]
+ vs=[];fs=[];uv=[];normals=[]
  for poly in polys:
   if lo is not None:poly=clip(poly,1,lo,False)
   if hi is not None:poly=clip(poly,1,hi,True)
   if len(poly)<3:continue
   fs.append(tuple(range(len(vs),len(vs)+len(poly))))
-  for v,t in poly:vs.append((50.05+v[0]*S,v[1]*S+offset,2.4+v[2]*S));uv.append(t)
- o=mesh(name,vs,fs,material,gate,uv);o['source']='VVayToyek CC0 pavilion roof; polygon clipped, UV interpolated, ridge extended';roof_pieces.append(o)
+  for v,t,n in poly:vs.append((50.05+v[0]*S,v[1]*S+offset,ROOF_BASE+v[2]*S));uv.append(t);normals.append(n)
+ o=mesh(name,vs,fs,material,gate,uv,normals);o['source']='VVayToyek CC0 pavilion roof; polygon clipped, UV interpolated, ridge extended';roof_pieces.append(o)
 roof_part('Roof_HipNorth',roof['瓦面1'],-extension)
 roof_part('Roof_HipSouth',roof['瓦面3'],extension)
 for source_name,label in [('瓦面2','East'),('瓦面4','West')]:
@@ -154,11 +148,72 @@ for family in ['檐椽','飞椽','脑椽']:
   for k in range(12):
    step=2*extension/12
    roof_part('NativeRoofFrame_%s_%d_%02d'%(family,i,k),polys,-extension+step*(k+.5),lo=-step/S/2,hi=step/S/2,material='timber')
-for x,y in [(47.35,6.38),(50.05,7.7),(52.75,6.38)]:beam('RoofLongPurlin',(x,y,-4.9),(x,y,4.9),.16,.2,'timber',gate)
+for x,y in [(47.35,ROOF_BASE+3.98),(50.05,ROOF_BASE+5.3),(52.75,ROOF_BASE+3.98)]:beam('RoofLongPurlin',(x,y,-4.9),(x,y,4.9),.16,.2,'timber',gate)
 # Continuous low ridge cap; crown shape with real sides, not a flat giant strip.
 for i in range(40):
  z=-5+i*.25
- beam('RoofRidgeCap',(50.05,8.22,z),(50.05,8.22,z+.246),.34,.26,'tile',gate)
+ beam('RoofRidgeCap',(50.05,ROOF_BASE+5.82,z),(50.05,ROOF_BASE+5.82,z+.246),.34,.26,'tile',gate)
+# Complete upper timber hall, derived from the original load-bearing column,
+# architrave, eave-board, corner-block and inner-purlin systems. Not a pavilion
+# perched on walls: the square structural bays become a three-bay gate gallery.
+def native_member(label,source_name,scale,translation):
+ vs=[];fs=[];uvs=[];normals=[]
+ for poly in roof[source_name]:
+  fs.append(tuple(range(len(vs),len(vs)+len(poly))))
+  for v,uv,n in poly:
+   vs.append(tuple(v[i]*scale[i]+translation[i] for i in range(3)));uvs.append(uv)
+   # Diagonal affine deformation: exact inverse-transpose for source corner normals.
+   normals.append(tuple(Vector(tuple(n[i]/scale[i] for i in range(3))).normalized()))
+ ob=mesh(label,vs,fs,'timber',gate,uvs,normals);ob['source_member']=source_name
+ return ob
+column_head=7.92;floor=5.72;column_scale=(column_head-floor)/20.36121940612793
+# Cross frames are spaced as full bays, their inner longitudinal corners shared.
+lines=[-7.09,-2.363333333,2.363333333,7.09]
+for line in lines:
+ for source_name in ['檐柱1','檐柱2']:
+  native_member('HallNativeColumn',source_name,(S,S,column_scale),(50.05,line+11*S,floor))
+ # Complete transverse frame from the original front face; no decorative plaque/text.
+ for source_name in ['额枋1','檐檩垫板1','衬头木1']:
+  native_member('HallNativeTransverse_'+source_name,source_name,(S,S,S),(50.05,line+11*S,ROOF_BASE))
+ for source_name in ['角云1','角云4']:
+  native_member('HallNativeCornerBlock',source_name,(S,S,S),(50.05,line+11*S,ROOF_BASE))
+for first,last in zip(lines,lines[1:]):
+ middle=(first+last)/2;length=last-first;yscale=length/22
+ for source_name in ['额枋3','额枋4','檐檩垫板3','檐檩垫板4','衬头木2','衬头木4']:
+  native_member('HallNativeLongitudinal_'+source_name,source_name,(S,yscale,S),(50.05,middle,ROOF_BASE))
+# Inner purlins follow the roof's end caps and extended central ridge, not the
+# column bay length: stretching end bays to outer columns pierces the hips.
+for source_name in ['金檩金枋2','金檩金枋4']:
+ roof_part('HallNativeInnerPurlin_N',roof[source_name],-extension,hi=0,material='timber')
+ roof_part('HallNativeInnerPurlin_S',roof[source_name],extension,lo=0,material='timber')
+ native_member('HallNativeInnerPurlin_Center',source_name,(S,10/15.409034,S),(50.05,0,ROOF_BASE))
+# Native curved corner beams continue into the professional hip rafters at both ends.
+for family in ['老角梁','仔角梁由戗']:
+ for i in range(1,5):roof_part('HallNativeHip_'+family+str(i),roof[family+str(i)],-extension if i<=2 else extension,material='timber')
+# Visible floor, gallery rail and weather enclosure use restrained real boards,
+# rather than uniform huge boxes or ornamental garden seating.
+box('HallFloorJoists',(50.05,floor-.13,0),(4.65,.22,14.65),'timber',gate,.018)
+for i in range(61):
+ z=-7.2+(i+.5)*14.4/61
+ box('HallFloorBoard',(50.05,floor-.015,z),(4.52,.06,14.4/61-.012),'timber_cut',gate,.007)
+for x in [47.96,52.14]:
+ for first,last in zip(lines,lines[1:]):
+  # Lower plank screens plus open upper viewing slots establish military use.
+  for j in range(12):
+   z=first+(j+.5)*(last-first)/12
+   box('HallScreenBoard',(x,floor+.65,z),(.095,1.26,(last-first)/12-.025),'timber',gate,.012)
+  beam('HallSill',(x,floor+.05,first),(x,floor+.05,last),.17,.15,'timber_cut',gate)
+  beam('HallScreenRail',(x,floor+1.28,first),(x,floor+1.28,last),.15,.13,'timber_cut',gate)
+  for j in range(1,8):
+   z=first+j*(last-first)/8
+   beam('HallViewingMullion',(x,floor+1.3,z),(x,column_head-.3,z),.065,.065,'timber',gate)
+# End galleries retain the original connected shaped rail structure, no seats.
+for sign in [-1,1]:
+ z=sign*7.09
+ for x in [48.45,49.5,50.6,51.65]:
+  beam('HallEndGalleryBaluster',(x,floor+.1,z),(x,floor+1,z),.075,.075,'timber',gate)
+ beam('HallEndGalleryRail',(47.96,floor+1.05,z),(52.14,floor+1.05,z),.14,.14,'timber_cut',gate)
+
 # Curtain wall mass and parapet remain outside protected route, at matching adult scale.
 for sign in [-1,1]:
  for i in range(12):
@@ -212,7 +267,7 @@ scene=bpy.context.scene;scene.unit_settings.system='METRIC';scene.unit_settings.
 root['status']='ART_NOT_ACCEPTED';root['layout']='river-authored-reset-design-01';door['gameplay_hideable']=True
 objects=[o for o in bpy.data.objects if o.type=='MESH']
 for o in objects:o.data.calc_loop_triangles()
-report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False}
+report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':5.72,'upper_hall_column_head_m':7.92,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN'}
 (out/'architecture-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 # Door pivot is exactly the gameplay gate center, while child geometry stays put.
 for child in door.children:
