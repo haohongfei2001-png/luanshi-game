@@ -1,0 +1,78 @@
+name: Bridgehead loose-horse window
+on:
+  push:
+    branches: [codex/river-rc23-cavalry-window-after]
+    paths: ['.github/workflows/cavalry-window.yml','tests/bridgehead_remount_window.gd','tests/field_loose_horses.gd']
+concurrency:
+  group: cavalry-proof-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  record:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      OUT: docs/evidence/river-gate-v1-rc23/loose-horses/after
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified official Godot
+        run: |
+          set -eu
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool ffmpeg; fi
+          mkdir -p "$OUT" artifacts/movie
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path . >/tmp/loose-mounts-import.log 2>&1
+      - name: Trace actual bridgehead camera and input
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f tests/field_loose_horses.gd ]; then godot --headless --path . --script tests/field_loose_horses.gd 2>&1 | tee "$OUT/terrain-and-reload.log"; grep -q LOOSE_HORSE_PASS "$OUT/terrain-and-reload.log"; fi
+          test ! -e override.cfg
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=1600
+          window/size/window_height_override=1000
+          CFG
+          timeout 11m xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --display-driver x11 --resolution 1600x1000 --disable-vsync --fixed-fps 24 --write-movie artifacts/movie/horse.png --script tests/bridgehead_remount_window.gd 2>&1 | tee "$OUT/game.log"
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:|WARNING:.*freed' "$OUT/game.log"; then exit 1; fi
+          grep -q 'BRIDGE_WINDOW true' "$OUT/game.log"
+          cp artifacts/bridge-window/input-and-camera.json "$OUT/"
+          cp artifacts/bridge-window/view-0*.jpg "$OUT/"
+          ffmpeg -hide_banner -loglevel error -framerate 24 -pattern_type glob -i 'artifacts/movie/horse*.png' -i artifacts/movie/horse.wav -c:a aac -b:a 128k -c:v libx264 -preset veryfast -crf 22 -pix_fmt yuv420p -movflags +faststart "$OUT/bridgehead-original-speed.mp4"
+          ls -l "$OUT/bridgehead-original-speed.mp4"
+          python - <<'PY'
+          import json,os,pathlib,hashlib
+          root=pathlib.Path(os.environ["OUT"])
+          report=json.loads((root/"input-and-camera.json").read_text())
+          frames=report.pop("frames")
+          output={"product":"711ac1f594a26a5750be2e1e5ed4361c9eacf4d9","source_and_capture":os.environ["GITHUB_SHA"],"camera":report["camera_start"],"inputs":report["inputs"],"roster":report["ordinary"],"first_hit":report["first_player_strike"],"samples":[]}
+          for r in frames:
+              if "mounts" not in r: continue
+              one=dict(r["mounts"]);one.pop("displaced_xz");output["samples"].append(dict(tick=r["tick"],losses=r["losses"],hits=r["hits"],**one))
+          output["game_state_digest"]=hashlib.sha256(json.dumps([{k:v for k,v in r.items() if k!="mounts"} for r in frames],sort_keys=True).encode()).hexdigest()
+          output["video_sha256"]=hashlib.sha256((root/"bridgehead-original-speed.mp4").read_bytes()).hexdigest()
+          (root/"measurements.json").write_text(json.dumps(output,indent=2))
+          print("HORSE SAMPLES",*[r for r in output["samples"] if r["tick"] in (105,135,185,225)],sep="\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: loose-horses-after
+          path: |
+            docs/evidence/river-gate-v1-rc23/loose-horses/after
+            /tmp/loose-mounts-import.log
+          retention-days: 7
+      - name: Archive matched real-window frames
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUT"
+          git commit -m "Archive after bridgehead horse positions and original-speed play"
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
