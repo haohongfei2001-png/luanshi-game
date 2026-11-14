@@ -33,7 +33,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 50,
     "world_audit": [],
@@ -73,47 +73,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
-    "sun_degrees": "(-48.0, 58.0, 0.0)",
-    "tick": 135,
-    "world_audit": [],
-    "zoom": 22.0
-  },
-  {
-    "center": [
-      34.2000007629395,
-      1.0
-    ],
-    "frame": "bank-reverse-control",
-    "hits": [
-      189,
-      228
-    ],
-    "internal": 1.0,
-    "msaa": 2,
-    "native_window": [
-      2560,
-      1440
-    ],
-    "ordinary": [
-      512,
-      512
-    ],
-    "pixels": [
-      2560,
-      1440
-    ],
-    "preview_px": [
-      1440,
-      810
-    ],
-    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
-    "seed": 61112,
-    "shadow_distance": 97.479248046875,
-    "shadow_enabled": true,
-    "shadow_mode": 2,
-    "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -153,7 +113,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -193,7 +153,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -233,7 +193,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -273,7 +233,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -313,7 +273,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, -31.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -353,7 +313,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "991cc0d2173ef9ea9c9fbb1295dc8d9717fb58d8",
+    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
