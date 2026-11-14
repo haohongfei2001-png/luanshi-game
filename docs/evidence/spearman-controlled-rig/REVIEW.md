@@ -83,3 +83,20 @@ treat it as a better approved shoulder or a runtime replacement. The complete
 source rigs/garments remain untouched and the earlier trial3 oracle stays saved.
 A new ray projection over disconnected folded source surfaces is not a substitute
 for a coherent authored shoulder pattern. No detail/shine pass may hide this.
+
+## Complete boot surface diagnostic and first controlled CI failure
+Run 43631814340 / source 6737b2fb failed before source recovery: default curl
+request for official Blender4.3.2 returned HTTP403. Godot was SKIPPED. The
+empty artifact directory produced no artifact; the job log is the failure evidence.
+One explicit public LuanshiAssetRecovery/1.0 client request to the same URL
+returned200, length368852356, XZ magicfd377a58; no login/cookie/challenge.
+Installation now logs from its first request and uses that truthful client label.
+
+The original boots use MeshDeform and only vertex group `Group`; previous cache
+per-foot minima are null, not contact evidence. `boot_contact.py` matches the two
+2065-vertex complete boot islands once to original DEF-foot.L/R, then retains
+identities through all33walk/37thrust phases. On the old grip2 source, walk
+surface minima are -36.30mm(L), -32.79mm(R), maxima132.22/132.27mm. Thrust
+both boots remain about-2.00mm. This is a real flat-ground penetration FAIL,
+not terrain acceptance or proof of horizontal foot lock. No geometry/lift was
+changed to hide it. New grip3 CI will measure its own source hashes separately.

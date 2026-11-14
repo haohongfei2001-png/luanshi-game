@@ -1,0 +1,1733 @@
+{
+  "art_pass": false,
+  "contact_pass": false,
+  "ground_y": 0,
+  "method": "Connected boot islands matched once to original DEF-foot.L/R at first sample, then fixed topology identities throughout each clip; no position correction",
+  "limitations": [
+    "Flat source-space surface diagnostic, not actual map Ground.deck_height",
+    "Does not establish stance or horizontal foot lock",
+    "Original boots have MeshDeform and only Group, no foot vertex groups"
+  ],
+  "clips": [
+    {
+      "name": "walk",
+      "source_sha256": "957986f407c373dab9aa7f2b4d7ffd906627fa9ee9b0205ac5b6889bf8876b9c",
+      "island_vertices": {
+        "L": 2065,
+        "R": 2065
+      },
+      "samples": [
+        {
+          "phase": 0.0,
+          "source_frame": 0.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.03399128466844559,
+              "lowest_5mm_centroid_godot": [
+                0.17549391090869904,
+                0.0364094153046608,
+                0.3976522386074066
+              ],
+              "lowest_5mm_vertices": 9
+            },
+            "R": {
+              "surface_min_y": 0.009138907305896282,
+              "lowest_5mm_centroid_godot": [
+                -0.18446874618530273,
+                0.011613505892455578,
+                -0.06576915085315704
+              ],
+              "lowest_5mm_vertices": 17
+            }
+          }
+        },
+        {
+          "phase": 0.03125,
+          "source_frame": 1.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.021613772958517075,
+              "lowest_5mm_centroid_godot": [
+                0.17634126543998718,
+                0.023709546774625778,
+                0.3448697626590729
+              ],
+              "lowest_5mm_vertices": 9
+            },
+            "R": {
+              "surface_min_y": -0.005229271482676268,
+              "lowest_5mm_centroid_godot": [
+                -0.1854875385761261,
+                -0.00299407122656703,
+                -0.08062619715929031
+              ],
+              "lowest_5mm_vertices": 13
+            }
+          }
+        },
+        {
+          "phase": 0.0625,
+          "source_frame": 2.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.014353912323713303,
+              "lowest_5mm_centroid_godot": [
+                0.18599514663219452,
+                0.016845477744936943,
+                0.2845499813556671
+              ],
+              "lowest_5mm_vertices": 15
+            },
+            "R": {
+              "surface_min_y": -0.03260927274823189,
+              "lowest_5mm_centroid_godot": [
+                -0.18033279478549957,
+                -0.030255405232310295,
+                -0.12647782266139984
+              ],
+              "lowest_5mm_vertices": 11
+            }
+          }
+        },
+        {
+          "phase": 0.09375,
+          "source_frame": 3.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.011761991307139397,
+              "lowest_5mm_centroid_godot": [
+                0.18088002502918243,
+                0.014088491909205914,
+                0.23052498698234558
+              ],
+              "lowest_5mm_vertices": 27
+            },
+            "R": {
+              "surface_min_y": -0.03278994932770729,
+              "lowest_5mm_centroid_godot": [
+                -0.18096303939819336,
+                -0.030692031607031822,
+                -0.1871574968099594
+              ],
+              "lowest_5mm_vertices": 9
+            }
+          }
+        },
+        {
+          "phase": 0.125,
+          "source_frame": 4.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.008285601623356342,
+              "lowest_5mm_centroid_godot": [
+                0.18731561303138733,
+                0.010713601484894753,
+                0.2954755425453186
+              ],
+              "lowest_5mm_vertices": 82
+            },
+            "R": {
+              "surface_min_y": -0.005957144312560558,
+              "lowest_5mm_centroid_godot": [
+                -0.1743331402540207,
+                -0.004011271987110376,
+                -0.2579820156097412
+              ],
+              "lowest_5mm_vertices": 9
+            }
+          }
+        },
+        {
+          "phase": 0.15625,
+          "source_frame": 5.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.002467761281877756,
+              "lowest_5mm_centroid_godot": [
+                0.18766476213932037,
+                0.004894538316875696,
+                0.24968865513801575
+              ],
+              "lowest_5mm_vertices": 82
+            },
+            "R": {
+              "surface_min_y": 0.036827538162469864,
+              "lowest_5mm_centroid_godot": [
+                -0.17447923123836517,
+                0.03923324868083,
+                -0.29515567421913147
+              ],
+              "lowest_5mm_vertices": 10
+            }
+          }
+        },
+        {
+          "phase": 0.1875,
+          "source_frame": 6.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.0011596090625971556,
+              "lowest_5mm_centroid_godot": [
+                0.18788665533065796,
+                0.001265349448658526,
+                0.2031850665807724
+              ],
+              "lowest_5mm_vertices": 82
+            },
+            "R": {
+              "surface_min_y": 0.08169136196374893,
+              "lowest_5mm_centroid_godot": [
+                -0.17451372742652893,
+                0.08410688489675522,
+                -0.28572723269462585
+              ],
+              "lowest_5mm_vertices": 10
+            }
+          }
+        },
+        {
+          "phase": 0.21875,
+          "source_frame": 7.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.0014824478421360254,
+              "lowest_5mm_centroid_godot": [
+                0.19084452092647552,
+                0.0009614423615857959,
+                0.16626794636249542
+              ],
+              "lowest_5mm_vertices": 88
+            },
+            "R": {
+              "surface_min_y": 0.11679385602474213,
+              "lowest_5mm_centroid_godot": [
+                -0.17609749734401703,
+                0.11972932517528534,
+                -0.23468929529190063
+              ],
+              "lowest_5mm_vertices": 13
+            }
+          }
+        },
+        {
+          "phase": 0.25,
+          "source_frame": 8.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.0011158839333802462,
+              "lowest_5mm_centroid_godot": [
+                0.1978893280029297,
+                0.001212043804116547,
+                0.23746861517429352
+              ],
+              "lowest_5mm_vertices": 49
+            },
+            "R": {
+              "surface_min_y": 0.13226661086082458,
+              "lowest_5mm_centroid_godot": [
+                -0.17607304453849792,
+                0.1351267546415329,
+                -0.15394727885723114
+              ],
+              "lowest_5mm_vertices": 13
+            }
+          }
+        },
+        {
+          "phase": 0.28125,
+          "source_frame": 9.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002361447084695101,
+              "lowest_5mm_centroid_godot": [
+                0.19265665113925934,
+                -0.00029624043963849545,
+                0.2133457064628601
+              ],
+              "lowest_5mm_vertices": 52
+            },
+            "R": {
+              "surface_min_y": 0.10968533903360367,
+              "lowest_5mm_centroid_godot": [
+                -0.17436331510543823,
+                0.11233185976743698,
+                -0.021570151671767235
+              ],
+              "lowest_5mm_vertices": 11
+            }
+          }
+        },
+        {
+          "phase": 0.3125,
+          "source_frame": 10.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.006708716508001089,
+              "lowest_5mm_centroid_godot": [
+                0.1927042454481125,
+                -0.0045337313786149025,
+                0.18707455694675446
+              ],
+              "lowest_5mm_vertices": 37
+            },
+            "R": {
+              "surface_min_y": 0.07696811854839325,
+              "lowest_5mm_centroid_godot": [
+                -0.17439299821853638,
+                0.07899142056703568,
+                0.15975205600261688
+              ],
+              "lowest_5mm_vertices": 9
+            }
+          }
+        },
+        {
+          "phase": 0.34375,
+          "source_frame": 11.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.012153072282671928,
+              "lowest_5mm_centroid_godot": [
+                0.19002991914749146,
+                -0.00983909796923399,
+                0.15052038431167603
+              ],
+              "lowest_5mm_vertices": 27
+            },
+            "R": {
+              "surface_min_y": 0.06968939304351807,
+              "lowest_5mm_centroid_godot": [
+                -0.1797354370355606,
+                0.07159934192895889,
+                0.3559069037437439
+              ],
+              "lowest_5mm_vertices": 8
+            }
+          }
+        },
+        {
+          "phase": 0.375,
+          "source_frame": 12.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.01791035383939743,
+              "lowest_5mm_centroid_godot": [
+                0.1906314194202423,
+                -0.01582847721874714,
+                0.11127301305532455
+              ],
+              "lowest_5mm_vertices": 17
+            },
+            "R": {
+              "surface_min_y": 0.09534773975610733,
+              "lowest_5mm_centroid_godot": [
+                -0.17478126287460327,
+                0.09764658659696579,
+                0.5083073973655701
+              ],
+              "lowest_5mm_vertices": 21
+            }
+          }
+        },
+        {
+          "phase": 0.40625,
+          "source_frame": 13.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.023328308016061783,
+              "lowest_5mm_centroid_godot": [
+                0.1835712045431137,
+                -0.020959531888365746,
+                0.06281579285860062
+              ],
+              "lowest_5mm_vertices": 15
+            },
+            "R": {
+              "surface_min_y": 0.09514807164669037,
+              "lowest_5mm_centroid_godot": [
+                -0.17671093344688416,
+                0.09755273163318634,
+                0.30346331000328064
+              ],
+              "lowest_5mm_vertices": 34
+            }
+          }
+        },
+        {
+          "phase": 0.4375,
+          "source_frame": 14.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.02749444544315338,
+              "lowest_5mm_centroid_godot": [
+                0.1900210678577423,
+                -0.025117717683315277,
+                0.013000484555959702
+              ],
+              "lowest_5mm_vertices": 13
+            },
+            "R": {
+              "surface_min_y": 0.03544801473617554,
+              "lowest_5mm_centroid_godot": [
+                -0.18279874324798584,
+                0.03790486603975296,
+                0.3555757999420166
+              ],
+              "lowest_5mm_vertices": 13
+            }
+          }
+        },
+        {
+          "phase": 0.46875,
+          "source_frame": 15.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.030180539935827255,
+              "lowest_5mm_centroid_godot": [
+                0.18973402678966522,
+                -0.02757439576089382,
+                -0.03661416843533516
+              ],
+              "lowest_5mm_vertices": 13
+            },
+            "R": {
+              "surface_min_y": 0.03337211161851883,
+              "lowest_5mm_centroid_godot": [
+                -0.17395706474781036,
+                0.03553767129778862,
+                0.38631144165992737
+              ],
+              "lowest_5mm_vertices": 9
+            }
+          }
+        },
+        {
+          "phase": 0.5,
+          "source_frame": 16.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.027524031698703766,
+              "lowest_5mm_centroid_godot": [
+                0.18932706117630005,
+                -0.02482541836798191,
+                -0.08319877833127975
+              ],
+              "lowest_5mm_vertices": 13
+            },
+            "R": {
+              "surface_min_y": 0.03410232812166214,
+              "lowest_5mm_centroid_godot": [
+                -0.17285902798175812,
+                0.03647138178348541,
+                0.3977508246898651
+              ],
+              "lowest_5mm_vertices": 9
+            }
+          }
+        },
+        {
+          "phase": 0.53125,
+          "source_frame": 17.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.029830019921064377,
+              "lowest_5mm_centroid_godot": [
+                0.1827080100774765,
+                -0.027547180652618408,
+                -0.09229575842618942
+              ],
+              "lowest_5mm_vertices": 11
+            },
+            "R": {
+              "surface_min_y": 0.021858152002096176,
+              "lowest_5mm_centroid_godot": [
+                -0.1737278252840042,
+                0.023908548057079315,
+                0.3446797728538513
+              ],
+              "lowest_5mm_vertices": 9
+            }
+          }
+        },
+        {
+          "phase": 0.5625,
+          "source_frame": 18.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.03630470111966133,
+              "lowest_5mm_centroid_godot": [
+                0.1832277476787567,
+                -0.03364676609635353,
+                -0.12835417687892914
+              ],
+              "lowest_5mm_vertices": 12
+            },
+            "R": {
+              "surface_min_y": 0.015283327549695969,
+              "lowest_5mm_centroid_godot": [
+                -0.18225200474262238,
+                0.0177798792719841,
+                0.2851736545562744
+              ],
+              "lowest_5mm_vertices": 16
+            }
+          }
+        },
+        {
+          "phase": 0.59375,
+          "source_frame": 19.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.029960157349705696,
+              "lowest_5mm_centroid_godot": [
+                0.18230444192886353,
+                -0.028076158836483955,
+                -0.18260861933231354
+              ],
+              "lowest_5mm_vertices": 8
+            },
+            "R": {
+              "surface_min_y": 0.014051882550120354,
+              "lowest_5mm_centroid_godot": [
+                -0.17859609425067902,
+                0.01651342213153839,
+                0.2371891885995865
+              ],
+              "lowest_5mm_vertices": 34
+            }
+          }
+        },
+        {
+          "phase": 0.625,
+          "source_frame": 20.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.004320698324590921,
+              "lowest_5mm_centroid_godot": [
+                0.17707559466362,
+                -0.002367533277720213,
+                -0.2523238956928253
+              ],
+              "lowest_5mm_vertices": 9
+            },
+            "R": {
+              "surface_min_y": 0.001965002855286002,
+              "lowest_5mm_centroid_godot": [
+                -0.19596433639526367,
+                0.004333315882831812,
+                0.4329988360404968
+              ],
+              "lowest_5mm_vertices": 50
+            }
+          }
+        },
+        {
+          "phase": 0.65625,
+          "source_frame": 21.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.03675052896142006,
+              "lowest_5mm_centroid_godot": [
+                0.17712318897247314,
+                0.039166513830423355,
+                -0.29408830404281616
+              ],
+              "lowest_5mm_vertices": 10
+            },
+            "R": {
+              "surface_min_y": -0.0018646061653271317,
+              "lowest_5mm_centroid_godot": [
+                -0.1944655179977417,
+                0.00018714755424298346,
+                0.3973325788974762
+              ],
+              "lowest_5mm_vertices": 49
+            }
+          }
+        },
+        {
+          "phase": 0.6875,
+          "source_frame": 22.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.08164263516664505,
+              "lowest_5mm_centroid_godot": [
+                0.17713208496570587,
+                0.0840715542435646,
+                -0.2861453890800476
+              ],
+              "lowest_5mm_vertices": 10
+            },
+            "R": {
+              "surface_min_y": -0.003131980774924159,
+              "lowest_5mm_centroid_godot": [
+                -0.19340777397155762,
+                -0.0011186900082975626,
+                0.3600013256072998
+              ],
+              "lowest_5mm_vertices": 44
+            }
+          }
+        },
+        {
+          "phase": 0.71875,
+          "source_frame": 23.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.11673499643802643,
+              "lowest_5mm_centroid_godot": [
+                0.17709007859230042,
+                0.11951358616352081,
+                -0.2354103922843933
+              ],
+              "lowest_5mm_vertices": 12
+            },
+            "R": {
+              "surface_min_y": -0.00487512955442071,
+              "lowest_5mm_centroid_godot": [
+                -0.19257906079292297,
+                -0.002572143217548728,
+                0.321399062871933
+              ],
+              "lowest_5mm_vertices": 40
+            }
+          }
+        },
+        {
+          "phase": 0.75,
+          "source_frame": 24.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.13221657276153564,
+              "lowest_5mm_centroid_godot": [
+                0.1787121295928955,
+                0.13509199023246765,
+                -0.15397411584854126
+              ],
+              "lowest_5mm_vertices": 13
+            },
+            "R": {
+              "surface_min_y": -0.0066836015321314335,
+              "lowest_5mm_centroid_godot": [
+                -0.19312559068202972,
+                -0.004309751093387604,
+                0.28080835938453674
+              ],
+              "lowest_5mm_vertices": 35
+            }
+          }
+        },
+        {
+          "phase": 0.78125,
+          "source_frame": 25.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.1096152737736702,
+              "lowest_5mm_centroid_godot": [
+                0.17695553600788116,
+                0.1122741848230362,
+                -0.020530639216303825
+              ],
+              "lowest_5mm_vertices": 11
+            },
+            "R": {
+              "surface_min_y": -0.008887073956429958,
+              "lowest_5mm_centroid_godot": [
+                -0.19343696534633636,
+                -0.006751415319740772,
+                0.2431550770998001
+              ],
+              "lowest_5mm_vertices": 28
+            }
+          }
+        },
+        {
+          "phase": 0.8125,
+          "source_frame": 26.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.07690449059009552,
+              "lowest_5mm_centroid_godot": [
+                0.1769617199897766,
+                0.0789407268166542,
+                0.1617089956998825
+              ],
+              "lowest_5mm_vertices": 9
+            },
+            "R": {
+              "surface_min_y": -0.011178347282111645,
+              "lowest_5mm_centroid_godot": [
+                -0.19128690659999847,
+                -0.008828900754451752,
+                0.19795557856559753
+              ],
+              "lowest_5mm_vertices": 25
+            }
+          }
+        },
+        {
+          "phase": 0.84375,
+          "source_frame": 27.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.06966656446456909,
+              "lowest_5mm_centroid_godot": [
+                0.18232561647891998,
+                0.07158677279949188,
+                0.3578057289123535
+              ],
+              "lowest_5mm_vertices": 8
+            },
+            "R": {
+              "surface_min_y": -0.013186676427721977,
+              "lowest_5mm_centroid_godot": [
+                -0.19394247233867645,
+                -0.010755173861980438,
+                0.15276004374027252
+              ],
+              "lowest_5mm_vertices": 22
+            }
+          }
+        },
+        {
+          "phase": 0.875,
+          "source_frame": 28.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.0953366830945015,
+              "lowest_5mm_centroid_godot": [
+                0.17763061821460724,
+                0.09765747934579849,
+                0.508225679397583
+              ],
+              "lowest_5mm_vertices": 21
+            },
+            "R": {
+              "surface_min_y": -0.014900797978043556,
+              "lowest_5mm_centroid_godot": [
+                -0.1939360499382019,
+                -0.012557975016534328,
+                0.10887881368398666
+              ],
+              "lowest_5mm_vertices": 19
+            }
+          }
+        },
+        {
+          "phase": 0.90625,
+          "source_frame": 29.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.09520943462848663,
+              "lowest_5mm_centroid_godot": [
+                0.1793302744626999,
+                0.09761626273393631,
+                0.30003029108047485
+              ],
+              "lowest_5mm_vertices": 34
+            },
+            "R": {
+              "surface_min_y": -0.016535645350813866,
+              "lowest_5mm_centroid_godot": [
+                -0.19372032582759857,
+                -0.01400849036872387,
+                0.06077183410525322
+              ],
+              "lowest_5mm_vertices": 19
+            }
+          }
+        },
+        {
+          "phase": 0.9375,
+          "source_frame": 30.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.035428281873464584,
+              "lowest_5mm_centroid_godot": [
+                0.18214407563209534,
+                0.03769945353269577,
+                0.349890798330307
+              ],
+              "lowest_5mm_vertices": 12
+            },
+            "R": {
+              "surface_min_y": -0.017583386972546577,
+              "lowest_5mm_centroid_godot": [
+                -0.18682391941547394,
+                -0.015203770250082016,
+                0.01725856028497219
+              ],
+              "lowest_5mm_vertices": 17
+            }
+          }
+        },
+        {
+          "phase": 0.96875,
+          "source_frame": 31.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.03248751908540726,
+              "lowest_5mm_centroid_godot": [
+                0.17663753032684326,
+                0.0346950925886631,
+                0.3839198648929596
+              ],
+              "lowest_5mm_vertices": 9
+            },
+            "R": {
+              "surface_min_y": -0.005606319289654493,
+              "lowest_5mm_centroid_godot": [
+                -0.18570314347743988,
+                -0.0031582305673509836,
+                -0.025556763634085655
+              ],
+              "lowest_5mm_vertices": 17
+            }
+          }
+        },
+        {
+          "phase": 1.0,
+          "source_frame": 32.0,
+          "feet": {
+            "L": {
+              "surface_min_y": 0.03399128466844559,
+              "lowest_5mm_centroid_godot": [
+                0.17549391090869904,
+                0.0364094153046608,
+                0.3976522386074066
+              ],
+              "lowest_5mm_vertices": 9
+            },
+            "R": {
+              "surface_min_y": 0.009138907305896282,
+              "lowest_5mm_centroid_godot": [
+                -0.18446874618530273,
+                0.011613505892455578,
+                -0.06576915085315704
+              ],
+              "lowest_5mm_vertices": 17
+            }
+          }
+        }
+      ],
+      "surface_range": {
+        "L": [
+          -0.03630470111966133,
+          0.13221657276153564
+        ],
+        "R": [
+          -0.03278994932770729,
+          0.13226661086082458
+        ]
+      }
+    },
+    {
+      "name": "thrust",
+      "source_sha256": "ce822593c96aa138e0703fa468129b8fb130fc9c1ddbb25cc9f2db8522d52bb8",
+      "island_vertices": {
+        "L": 2065,
+        "R": 2065
+      },
+      "samples": [
+        {
+          "phase": 0.0,
+          "source_frame": 0.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.027777777777777776,
+          "source_frame": 1.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.05555555555555555,
+          "source_frame": 2.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.08333333333333333,
+          "source_frame": 3.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.1111111111111111,
+          "source_frame": 4.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.1388888888888889,
+          "source_frame": 5.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.16666666666666666,
+          "source_frame": 6.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.19444444444444445,
+          "source_frame": 7.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.2222222222222222,
+          "source_frame": 8.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.25,
+          "source_frame": 9.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.2777777777777778,
+          "source_frame": 10.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.3055555555555556,
+          "source_frame": 11.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.3333333333333333,
+          "source_frame": 12.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.3611111111111111,
+          "source_frame": 13.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.3888888888888889,
+          "source_frame": 14.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.4166666666666667,
+          "source_frame": 15.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.4444444444444444,
+          "source_frame": 16.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.4722222222222222,
+          "source_frame": 17.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.5,
+          "source_frame": 18.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.5277777777777778,
+          "source_frame": 19.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.5555555555555556,
+          "source_frame": 20.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.5833333333333334,
+          "source_frame": 21.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.6111111111111112,
+          "source_frame": 22.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.6388888888888888,
+          "source_frame": 23.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.6666666666666666,
+          "source_frame": 24.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.6944444444444444,
+          "source_frame": 25.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.7222222222222222,
+          "source_frame": 26.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.75,
+          "source_frame": 27.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.7777777777777778,
+          "source_frame": 28.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.8055555555555556,
+          "source_frame": 29.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.8333333333333334,
+          "source_frame": 30.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.8611111111111112,
+          "source_frame": 31.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.8888888888888888,
+          "source_frame": 32.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.9166666666666666,
+          "source_frame": 33.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.9444444444444444,
+          "source_frame": 34.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 0.9722222222222222,
+          "source_frame": 35.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        },
+        {
+          "phase": 1.0,
+          "source_frame": 36.0,
+          "feet": {
+            "L": {
+              "surface_min_y": -0.002003208501264453,
+              "lowest_5mm_centroid_godot": [
+                0.1875416487455368,
+                0.0004475651658140123,
+                0.13871318101882935
+              ],
+              "lowest_5mm_vertices": 83
+            },
+            "R": {
+              "surface_min_y": -0.002002791268751025,
+              "lowest_5mm_centroid_godot": [
+                -0.18461278080940247,
+                0.00044697560952045023,
+                0.13877733051776886
+              ],
+              "lowest_5mm_vertices": 83
+            }
+          }
+        }
+      ],
+      "surface_range": {
+        "L": [
+          -0.002003208501264453,
+          -0.002003208501264453
+        ],
+        "R": [
+          -0.002002791268751025,
+          -0.002002791268751025
+        ]
+      }
+    }
+  ]
+}

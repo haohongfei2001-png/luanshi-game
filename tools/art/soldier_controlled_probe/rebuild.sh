@@ -24,6 +24,7 @@ blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_gua
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/spearman_controlled_walk.py -- "$SOLDIER_WORK/grip/soldier-grip-editable.blend" assets/ubc_lab/source/UAL1_Standard.glb "$SOLDIER_WORK/walk" 2>&1 | tee evidence/walk.log
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/spearman_single_thrust.py -- "$SOLDIER_WORK/grip/soldier-grip-editable.blend" "$SOLDIER_WORK/thrust" 2>&1 | tee evidence/thrust.log
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/soldier_controlled_probe/export.py -- "$SOLDIER_WORK/walk/soldier-controlled-walk.blend" "$SOLDIER_WORK/thrust/soldier-single-thrust.blend" "$SOLDIER_WORK/cache" 2>&1 | tee evidence/cache-export.log
+blender -b --disable-autoexec --python-exit-code 1 --python tools/art/soldier_controlled_probe/boot_contact.py -- "$SOLDIER_WORK/walk/soldier-controlled-walk.blend" "$SOLDIER_WORK/thrust/soldier-single-thrust.blend" evidence/boot-contact.json 2>&1 | tee evidence/boot-contact.log
 cp "$SOLDIER_WORK/walk/report.json" evidence/author-walk.json
 cp "$SOLDIER_WORK/thrust/report.json" evidence/author-thrust.json
 python - "$SOLDIER_WORK/cache/character.json" <<'PY'

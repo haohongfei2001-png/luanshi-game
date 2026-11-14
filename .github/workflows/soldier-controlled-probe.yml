@@ -17,8 +17,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSL https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
-          curl -fsSL https://download.blender.org/release/Blender4.3/blender-4.3.2.sha256 -o /tmp/blender.sha256
+          exec > >(tee evidence/tool-install.log) 2>&1
+          UA='LuanshiAssetRecovery/1.0 (+https://github.com/haohongfei2001-png/luanshi-game)'
+          printf 'Explicit public client: %s\n' "$UA"
+          curl -A "$UA" -fsSL https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
+          curl -A "$UA" -fsSL https://download.blender.org/release/Blender4.3/blender-4.3.2.sha256 -o /tmp/blender.sha256
           EXPECTED=$(grep 'blender-4.3.2-linux-x64.tar.xz' /tmp/blender.sha256 | awk '{print $1}')
           test -n "$EXPECTED";echo "$EXPECTED  /tmp/blender.tar.xz" | sha256sum -c -
           tar -xf /tmp/blender.tar.xz -C /tmp;echo /tmp/blender-4.3.2-linux-x64 >> "$GITHUB_PATH"
