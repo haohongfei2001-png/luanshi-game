@@ -27,6 +27,8 @@ jobs:
           if grep -E 'ERROR:|SCRIPT ERROR|Parse Error|SHADER ERROR' artifacts/full-battle-preflight/import.log; then exit 1; fi
           timeout 150s /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/whole_input_calibration.gd > artifacts/full-battle-preflight/complete-battle.log 2>&1 || { cat artifacts/full-battle-preflight/complete-battle.log; exit 1; }
           cat artifacts/full-battle-preflight/complete-battle.log
+          timeout 150s /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/whole_input_calibration.gd -- --field-size=250 --real-time-profile > artifacts/full-battle-preflight/rear-guard-250.log 2>&1 || { cat artifacts/full-battle-preflight/rear-guard-250.log; exit 1; }
+          cat artifacts/full-battle-preflight/rear-guard-250.log
           python3 -m py_compile tools/whole_native_delivery.py tools/encode_whole_battle.py tools/segment_whole_battle.py tools/summarize_native_profiles.py
       - uses: actions/upload-artifact@v4
         if: always()

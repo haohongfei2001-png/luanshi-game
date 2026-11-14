@@ -119,11 +119,12 @@ func _drive() -> void:
 	var goal:=Vector2(38.0,-2.8)
 	if target!=null:
 		goal=target.pos+target.pos.direction_to(b.hero.pos)*2.15
-	if b.hero.hp<64. or b.hero.impacts>=3:goal=Vector2(26.8,-1.)
+	var rear_guard:=real_time and requested_side==250
+	if rear_guard or b.hero.hp<64. or b.hero.impacts>=3:goal=Vector2(26.8,-1.)
 	# A human can follow the cart ruts with eight directions and retire
 	# behind the other advancing soldiers. Send the same four mapped keys.
 	var walk:=Vector2.ZERO
-	if t>28 and b.hero.pos.distance_to(goal)>.28:
+	if (t>28 or rear_guard) and b.hero.pos.distance_to(goal)>.28:
 		var local:=b.hero.pos.direction_to(goal).rotated(field.camera_yaw)
 		walk=Vector2.from_angle(roundf(local.angle()/(PI/4.))*PI/4.)
 	_key(KEY_W,walk.y<-.25)
@@ -133,7 +134,7 @@ func _drive() -> void:
 	if target!=null:
 		var screen:=field.camera.unproject_position(Ground.unit_point(target.pos,true)+Vector3.UP*.86)
 		_point(screen)
-		if b.hero.state==Battle.State.MARCH:
+		if b.hero.state==Battle.State.MARCH and (not rear_guard or b.hero.pos.x<29.):
 			var key:Key=KEY_NONE
 			if b.hero.hp<69. and b.hero_cds[3]<=0.: key=KEY_SPACE
 			elif d2<9.75: key=KEY_Q if b.hero_cds[1]<=0. else KEY_J
