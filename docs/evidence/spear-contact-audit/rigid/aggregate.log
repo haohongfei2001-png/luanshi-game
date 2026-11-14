@@ -1,0 +1,388 @@
+4.6.3.stable.official.7d41c59c4
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (5 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (41 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bank-silt.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | compacted-loam.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | elm-bough.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | elm-crown-paint.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | elm-foliage.svg[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | elm-spray.svg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | field-margins.svg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | fieldbed.png[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | floodplain-paint.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | grazed-meadow.png[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | joinery.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | leaf-sprays.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | loess-wagonway.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | painted-elm.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | river-cartway.svg[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | river-shale.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | river-survey.svg[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | root-turf.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | soil-cover.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | trail-marks.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | valley-loess.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | valley-turf.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | verge-and-track.svg[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | willow-pendant.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | willow-sprays.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | campaign_colours.svg[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | cloth_and_iron.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | company_motion.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | surface_response.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | brown_mud_dry.jpg[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | brown_mud_dry_nor_gl.jpg[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | forest_ground_04.jpg[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | leafy_grass.jpg[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | leafy_grass_nor_gl.jpg[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | sandy_gravel_02.jpg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | sandy_gravel_02_nor_gl.jpg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | bound_timber.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | field_colours.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | native_pose_hi.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | native_pose_lo.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | native_pose_normal.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (41 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | valley-turf.png[39m[0m
+[   2% ] [90m[1mreimport[22m | verge-and-track.svg[39m[0m
+[   4% ] [90m[1mreimport[22m | willow-pendant.png[39m[0m
+[   7% ] [90m[1mreimport[22m | willow-sprays.png[39m[0m
+[   9% ] [90m[1mreimport[22m | campaign_colours.svg[39m[0m
+[  11% ] [90m[1mreimport[22m | cloth_and_iron.png[39m[0m
+[  14% ] [90m[1mreimport[22m | company_motion.png[39m[0m
+[  16% ] [90m[1mreimport[22m | surface_response.png[39m[0m
+[  19% ] [90m[1mreimport[22m | brown_mud_dry.jpg[39m[0m
+[  21% ] [90m[1mreimport[22m | brown_mud_dry_nor_gl.jpg[39m[0m
+[  23% ] [90m[1mreimport[22m | forest_ground_04.jpg[39m[0m
+[  26% ] [90m[1mreimport[22m | leafy_grass.jpg[39m[0m
+[  28% ] [90m[1mreimport[22m | leafy_grass_nor_gl.jpg[39m[0m
+[  30% ] [90m[1mreimport[22m | sandy_gravel_02.jpg[39m[0m
+[  33% ] [90m[1mreimport[22m | sandy_gravel_02_nor_gl.jpg[39m[0m
+[  35% ] [90m[1mreimport[22m | bound_timber.png[39m[0m
+[  38% ] [90m[1mreimport[22m | field_colours.png[39m[0m
+[  40% ] [90m[1mreimport[22m | native_pose_hi.png[39m[0m
+[  42% ] [90m[1mreimport[22m | native_pose_lo.png[39m[0m
+[  45% ] [90m[1mreimport[22m | native_pose_normal.png[39m[0m
+[  47% ] [90m[1mreimport[22m | bank-silt.png[39m[0m
+[  50% ] [90m[1mreimport[22m | compacted-loam.png[39m[0m
+[  52% ] [90m[1mreimport[22m | elm-bough.png[39m[0m
+[  54% ] [90m[1mreimport[22m | elm-crown-paint.png[39m[0m
+[  57% ] [90m[1mreimport[22m | elm-foliage.svg[39m[0m
+[  59% ] [90m[1mreimport[22m | elm-spray.svg[39m[0m
+[  61% ] [90m[1mreimport[22m | field-margins.svg[39m[0m
+[  64% ] [90m[1mreimport[22m | fieldbed.png[39m[0m
+[  66% ] [90m[1mreimport[22m | floodplain-paint.png[39m[0m
+[  69% ] [90m[1mreimport[22m | grazed-meadow.png[39m[0m
+[  71% ] [90m[1mreimport[22m | joinery.png[39m[0m
+[  73% ] [90m[1mreimport[22m | leaf-sprays.png[39m[0m
+[  76% ] [90m[1mreimport[22m | loess-wagonway.png[39m[0m
+[  78% ] [90m[1mreimport[22m | painted-elm.png[39m[0m
+[  80% ] [90m[1mreimport[22m | river-cartway.svg[39m[0m
+[  83% ] [90m[1mreimport[22m | river-shale.png[39m[0m
+[  85% ] [90m[1mreimport[22m | river-survey.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | root-turf.png[39m[0m
+[  90% ] [90m[1mreimport[22m | soil-cover.png[39m[0m
+[  92% ] [90m[1mreimport[22m | trail-marks.png[39m[0m
+[  95% ] [90m[1mreimport[22m | valley-loess.png[39m[0m
+[  97% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (41 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+MESH_LIBRARY_PARITY 167
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+GATEHOUSE_SIGHTLINE {"hero_under_roof_revealed":true,"restored_after_pan":true,"survey_full_roof":true}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_HISTORY_CREATED tick=235
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_HISTORY_PASS {"different_keys":[],"expected_tick":235,"hits":[273,266],"resumed_tick":235,"source_version":3,"start_tick":161}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_HISTORY_CREATED tick=746
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_HISTORY_PASS {"different_keys":[],"expected_tick":746,"hits":[1121,870],"resumed_tick":746,"source_version":4,"start_tick":629}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_OFFICER_MANIFEST {"existing_billets":128,"officers":[16,16],"ordinary":[512,512]}
+FIELD_OFFICER_CONTACT {"dead":[1,1],"kills":[1,1],"skills":[2,2],"ticks":230}
+FIELD_OFFICER_DUEL {"blocked":7.88665494918823,"exposed":35.8484315872192,"out_of_reach":0.0}
+FIELD_OFFICER_CHALLENGE {"challenger":206,"player_distance":15.9600105285645,"seen_tick":10}
+FIELD_OFFICER_SUCCESSION {"active_commands":[1,1],"captives":[[],[]],"commanders":[40,41],"evacuated":[[],[]],"fallen":[[40],[41]],"kills":[0,0],"ranked":true,"rescued":[[],[]],"skills":[0,0],"successions":[1,1],"wounded":[[],[]]}
+FIELD_OFFICER_RESCUE {"guard":0,"largest_step":0.158789128065109,"rescued":[[40],[]],"ticks":57}
+FIELD_OFFICER_WORLD {"ordinary_dead":[0,0],"outcome":"主将阵亡","prisoners":[[40],[]],"ticks":89}
+FIELD_OFFICER_CUSTODY {"fatal":[[40],[]],"holder":37,"prisoner":40}
+FIELD_OFFICERS_PASS []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_PATROL_ROUTE {"convoys":3,"garrison":[15,15,576],"hours":3,"relief":[60,30,102]}
+FIELD_PATROL_ENCOUNTER {"army":34,"end":"成功撤离","officers":[1,1],"ordinary":[27,14],"rearguard":26,"seconds":10819.1,"uncommitted":31,"unused_weapons":1,"weapons":30}
+FIELD_PATROL_REJECT {"quickload_button":true,"retained_world":true}
+FIELD_PATROL_PASS []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_CROWD {"original":80,"peak_half_metre_cell":4,"remaining_at_origin":0,"span_m":[6.68933296203613,6.38235855102539]}
+FIELD_ASYMMETRIC {"companies":[21,13],"counts":[641,389],"hits":[427,259],"roster":1065}
+FIELD_ESCORT {"attacks":3207,"blocked_hits":17,"capture_sec":0.0,"crew_replacements":0,"dead":[174,232],"decision":"城门先由先锋攻开，役兵护送冲车抵达门洞。","dropped_weapons":[174,232],"escaped":[4,93],"gate_hp":0.0,"hero_hp":100.0,"hits":[1008,715],"mission":"护送冲车","officer_corps":{"active_commands":[13,6],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[1024,1028],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049]],"kills":[4,4],"ranked":true,"rescued":[[],[]],"skills":[23,15],"successions":[1,2],"wounded":[[1025],[]]},"officers":32,"orders_delivered":0,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":2074,"ram_hp":150.0,"ram_strokes":1,"result":"护送冲车成功","routing":[12,9],"seed":61112,"soldiers_per_side":512,"tick":724}
+FIELD_MISSIONS_PASS []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_TRAFFIC_AB {"after":{"after_breach_6s":{"crowded_pairs":213,"exit_files":{"-4":1,"-3":5,"-2":13,"-1":10,"0":13,"1":15,"2":14,"3":6},"gate_crossers":61,"hull_occupant_samples":0,"low_motion_passage_samples":30,"mouth_crossers":74,"overlapping_person_samples":305,"peak_3m_square":14,"peak_half_metre_cell":3,"peak_same_coordinate":1,"rear_steps":46,"samples":12},"breach":629,"bridge_crossers":32,"bridge_file_metres":[-4,-3,-2,-1,0,1,2,3,4],"crowded_pairs":742,"dead":[270,298],"dropped_weapons":[270,298],"end":"夺取城内阵地","escaped":[7,103],"escort_formation":[{"depth_m":19.74,"frontage_m":14.53,"occupied_1m_cells":49,"ordinary":53,"tick":200},{"depth_m":25.82,"frontage_m":15.89,"occupied_1m_cells":47,"ordinary":47,"tick":400},{"depth_m":13.91,"frontage_m":16.26,"occupied_1m_cells":43,"ordinary":45,"tick":600}],"gate_contact":517,"gate_crossers":176,"gate_hp":0.0,"hits":[1357,1087],"hull_occupant_samples":0,"low_motion_passage_samples":16,"ordinary":[512,512],"overlapping_person_samples":1010,"peak_3m_square":19,"peak_half_metre_cell":3,"peak_same_coordinate":1,"ram_farthest_x":38.0927200317383,"ram_hp":150.0,"ram_strikes":0,"samples":53,"service":[[200,6.0,260.0,0,[[76,0,2.2],[77,0,1.3],[78,0,1.8],[79,2,1.5]]],[400,21.0,260.0,0,[[76,0,2.2],[77,0,2.2],[79,0,1.8]]],[600,36.0,79.6,22,[[76,0,2.2],[77,0,2.2],[79,0,1.8]]],[800,38.1,0.0,25,[[76,0,17.0],[77,4,19.0],[79,4,18.8]]],[1000,38.1,0.0,26,[]]],"sim_tick_ms":{"p50":9.746,"p95":12.78,"p99":20.06,"samples":521},"soft_crowd":true,"tick":1000,"traffic_lanes":true,"wall_defenders":192},"before":{"after_breach_6s":{"crowded_pairs":1125,"exit_files":{"-3":24,"-2":27,"-1":26,"0":24,"1":27,"2":26},"gate_crossers":144,"hull_occupant_samples":16,"low_motion_passage_samples":49,"mouth_crossers":154,"overlapping_person_samples":1180,"peak_3m_square":34,"peak_half_metre_cell":4,"peak_same_coordinate":1,"rear_steps":796,"samples":12},"breach":654,"bridge_crossers":32,"bridge_file_metres":[-4,-3,-2,-1,0,1,2,3,4],"crowded_pairs":1897,"dead":[266,322],"dropped_weapons":[266,322],"end":"夺取城内阵地","escaped":[16,100],"escort_formation":[{"depth_m":19.53,"frontage_m":7.06,"occupied_1m_cells":50,"ordinary":59,"tick":200},{"depth_m":19.02,"frontage_m":8.47,"occupied_1m_cells":47,"ordinary":56,"tick":400},{"depth_m":10.79,"frontage_m":7.54,"occupied_1m_cells":43,"ordinary":55,"tick":600}],"gate_contact":514,"gate_crossers":194,"gate_hp":0.0,"hits":[1444,1144],"hull_occupant_samples":394,"low_motion_passage_samples":37,"ordinary":[512,512],"overlapping_person_samples":1929,"peak_3m_square":42,"peak_half_metre_cell":7,"peak_same_coordinate":2,"ram_farthest_x":39.8924407958984,"ram_hp":146.32,"ram_strikes":0,"samples":53,"service":[[200,6.0,260.0,0,[[76,0,1.3],[77,0,0.8],[78,0,1.8],[79,0,1.1]]],[400,21.0,260.0,0,[[77,0,1.1],[78,0,1.3],[79,0,1.6]]],[600,36.0,138.8,39,[[77,0,1.1],[78,0,1.1],[79,0,1.6]]],[800,39.9,0.0,7,[[77,0,14.5],[78,4,15.6],[79,0,12.1]]],[1000,39.9,0.0,25,[[77,5,11.7]]]],"sim_tick_ms":{"p50":7.919,"p95":11.491,"p99":14.569,"samples":521},"soft_crowd":false,"tick":1025,"traffic_lanes":false,"wall_defenders":192},"every_ticks":10,"overlap_m":0.52,"seed":61112,"window_ticks":[100,620]}
+FIELD_TRAFFIC_PASS []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_PACKAGE_PASS {"attacks":915,"blocked_hits":10,"capture_sec":0.0,"crew_replacements":0,"dead":[42,96],"decision":"","device":"","display":"headless","dropped_weapons":[42,96],"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[398,209],"mission":"夺取河关","officer_corps":{"active_commands":[16,12],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[],[1041,1042,1043,1044]],"kills":[0,1],"ranked":true,"rescued":[[],[]],"skills":[1,5],"successions":[0,0],"wounded":[[],[]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":516,"ram_hp":150.0,"ram_strokes":0,"result":"","resume_equal":true,"routing":[0,18],"seed":61112,"soldiers_per_side":512,"tick":100,"visible":339}
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_SCALE {"attacks":123,"blocked_hits":5,"capture_sec":0.0,"crew_replacements":0,"damaged_soldiers":[18,17],"dead":[14,14],"decision":"","dropped_weapons":[14,14],"engaged_lanes":2,"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[53,54],"mission":"夺取河关","officer_corps":{"active_commands":[1,0],"captives":[[],[]],"commanders":[40,41],"evacuated":[[],[]],"fallen":[[],[]],"kills":[2,0],"ranked":true,"rescued":[[],[]],"skills":[2,3],"successions":[0,0],"wounded":[[],[41]]},"officers":2,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[20,20],"projectiles":39,"ram_hp":119.92,"ram_strokes":0,"result":"","routing":[1,1],"seed":61112,"sim_p95_ms":0.618,"soldiers_per_side":20,"tick":360}
+FIELD_SCALE {"attacks":708,"blocked_hits":11,"capture_sec":0.0,"crew_replacements":0,"damaged_soldiers":[79,96],"dead":[62,76],"decision":"守军失去关前阵地，存留战力 3 对 18，可指挥部队 1 支。","dropped_weapons":[62,76],"engaged_lanes":5,"escaped":[0,0],"gate_hp":260.0,"hero_hp":80.8853604793549,"hits":[307,261],"mission":"夺取河关","officer_corps":{"active_commands":[1,1],"captives":[[],[]],"commanders":[200,204],"evacuated":[[],[]],"fallen":[[201,202,203],[204,205,206]],"kills":[1,3],"ranked":true,"rescued":[[],[]],"skills":[10,7],"successions":[0,0],"wounded":[[],[]]},"officers":8,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[100,100],"projectiles":364,"ram_hp":150.0,"ram_strokes":0,"result":"守军溃退","routing":[10,20],"seed":61112,"sim_p95_ms":2.781,"soldiers_per_side":100,"tick":340}
+FIELD_SCALE {"attacks":1324,"blocked_hits":32,"capture_sec":0.0,"crew_replacements":0,"damaged_soldiers":[140,160],"dead":[93,133],"decision":"","dropped_weapons":[93,133],"engaged_lanes":8,"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[540,397],"mission":"夺取河关","officer_corps":{"active_commands":[6,3],"captives":[[],[]],"commanders":[500,508],"evacuated":[[],[]],"fallen":[[504],[508,509,510,511,512]],"kills":[1,3],"ranked":true,"rescued":[[],[]],"skills":[14,10],"successions":[0,0],"wounded":[[503],[]]},"officers":16,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[250,250],"projectiles":739,"ram_hp":150.0,"ram_strokes":0,"result":"","routing":[11,27],"seed":61112,"sim_p95_ms":6.731,"soldiers_per_side":250,"tick":360}
+FIELD_SCALE {"attacks":2626,"blocked_hits":25,"capture_sec":0.0,"crew_replacements":0,"damaged_soldiers":[238,320],"dead":[163,215],"decision":"","dropped_weapons":[163,215],"engaged_lanes":8,"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[979,663],"mission":"夺取河关","officer_corps":{"active_commands":[15,6],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049]],"kills":[3,4],"ranked":true,"rescued":[[],[]],"skills":[35,12],"successions":[0,4],"wounded":[[1029],[]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":1444,"ram_hp":150.0,"ram_strokes":0,"result":"","routing":[9,104],"seed":61112,"sim_p95_ms":16.965,"soldiers_per_side":512,"tick":360}
+FIELD_TARGET_LOOKUP {"all_pairs_us":223163,"grid_with_separation_us":16957,"units":1057}
+FIELD_MOVE_WINDOWS 36
+FIELD_PARAPET_RETREAT {"continuous":true,"escaped":true,"front_breached":false,"postern":true,"ramp":true,"side":-1.0,"steps":386}
+FIELD_PARAPET_RETREAT {"continuous":true,"escaped":true,"front_breached":false,"postern":true,"ramp":true,"side":1.0,"steps":386}
+FIELD_PARAPET_RETREAT {"continuous":true,"escaped":true,"front_breached":true,"postern":true,"ramp":true,"side":-1.0,"steps":386}
+FIELD_PARAPET_RETREAT {"continuous":true,"escaped":true,"front_breached":true,"postern":true,"ramp":true,"side":1.0,"steps":386}
+FIELD_NATURAL_SIEGE {"attacks":4225,"blocked_hits":52,"capture_sec":6.0,"crew_replacements":1,"dead":[270,298],"decision":"城门已开，内庭由我军持续占据；守军余部沿粮道撤出。","dropped_weapons":[270,298],"escaped":[7,103],"farthest_ram_x":38.0927200317383,"first_gate_damage_tick":517,"gate_breach_tick":629,"gate_hp":0.0,"hero_hp":100.0,"hits":[1357,1087],"mission":"夺取河关","officer_corps":{"active_commands":[10,2],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[1024,1028,1030,1032,1033,1038],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055]],"kills":[7,6],"ranked":true,"rescued":[[],[]],"skills":[51,24],"successions":[6,4],"wounded":[[1025,1027,1035,1037,1039],[]]},"officers":32,"orders_delivered":0,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"ordinary_surviving":[242,214],"projectiles":2371,"ram_hp":150.0,"ram_strokes":0,"result":"夺取城内阵地","routing":[18,34],"seed":61112,"soldiers_per_side":512,"tick":1000,"world_receipt":true}
+FIELD_SIM_PASS []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+BRIDGEHEAD_SIM {"blocks":19,"crossed":300,"deaths":[135,144],"hero":[28.2393531799316,-1.25],"hits":[522,558],"pass":true,"result":"","tick":400}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+BATTLE_REPORT {"ended":true,"mean_step_ms":0.390677376171352,"report":{"elapsed_seconds":37.35,"enemy_casualties":15,"enemy_survivors":5,"friendly_casualties":20,"friendly_survivors":0,"player_alive":false,"player_damage":0.0,"player_hp":0.0,"result":"The commander has fallen","seed":184},"steps":2241}
+TEST_SUMMARY {"assertions":33,"failures":0,"messages":[],"profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SCENARIO timely: hour=6 owner=sheng outcome=relieved relief=53 food=84
+SCENARIO late: fall=15 arrival=16 owner=bei prisoners=40
+SCENARIO interception: capture=3 retreat=10 owner=sheng relief=56 enemy_food=0
+World tests: 526 assertions, 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+ECONOMY_90_DAYS {"events":14007,"final_food":500,"food_consumed":13828,"food_produced":12960,"hour":2160,"population":50,"weapons_produced":269}
+Economy tests: 527 assertions, 0 failures
+ECONOMY_TEST_SUMMARY {"assertions":527,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+HUNGER_STAGES {"first_death_hour":3,"first_warning_hour":1,"survivors":59,"weakened_hour":2}
+Hunger tests: 337 assertions, 0 failures
+HUNGER_TEST_SUMMARY {"assertions":337,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+INDEPENDENT_HUNGER_AUDIT 2689 checks / 0 failures
+[]
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+INDEPENDENT_ECO_REVIEW 52194 assertions / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Battle transaction tests: 293 assertions, 0 failures
+TRANSACTION_TEST_SUMMARY {"assertions":293,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Campaign save tests: 1467 assertions, 0 failures
+SAVE_TEST_SUMMARY {"assertions":1467,"failures":0,"isolated_directory":"test_saves_5c25ac6b4c6e6a49","messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PROFILE_SAVE_TESTS {"checks":3066,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_HISTORY_METRICS {"days":90,"disk_bytes":112387,"events":14007,"load_ms":6966,"save_ms":3326,"uncompressed_bytes":9070476.0}
+Save history tests: 98 assertions, 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1773 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1876 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SAVE_INVALID_TYPES 1823 cases / 0 failures
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (ff)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (fe)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (ff)
+Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (fe)
+BOUNDARY_AUDIT 107 checks 0 failures []
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1551 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1551,"failures":0,"messages":[],"phase":"prepare","profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 1223 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1223,"failures":0,"messages":[],"phase":"resume","profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1519 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1519,"failures":0,"messages":[],"phase":"prepare","profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 1191 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1191,"failures":0,"messages":[],"phase":"resume","profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart prepare: 1630 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1630,"failures":0,"messages":[],"phase":"prepare","profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+Save restart resume: 1302 assertions, 0 failures
+SAVE_RESTART_SUMMARY {"assertions":1302,"failures":0,"messages":[],"phase":"resume","profile":"legacy_test_v0"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+SCENE_TEST_SUMMARY {"assertions":44,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+STRATEGY_TEST_SUMMARY {"assertions":96,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SCENE_TEST_SUMMARY {"assertions":64,"failures":0,"messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SAVE_SCENE_SUMMARY {"assertions":70,"failures":0,"isolated_campaign":"scene_saves_2771641547cec771","messages":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+PROFILE_SCENE_TESTS {"checks":21,"failures":[],"training_profile":"early_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=late_v1
+PROFILE_SCENE_TESTS {"checks":21,"failures":[],"training_profile":"late_v1"}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":872,"wall_mean_ms":1.75563876146789,"wall_p50_ms":1.88,"wall_p95_ms":2.241},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":0.801691275167785,"report":{"elapsed_seconds":14.9,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":10,"friendly_survivors":10,"player_alive":true,"player_damage":395.91,"player_hp":54.15,"result":"Victory at the border","seed":184},"steps":894}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=gl_compatibility profile=early_v1
+CAMPAIGN_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"army":{"condition":{"activity":"rest","activity_flags":{"battle":true},"attrition_at":3000,"fatigue":6,"food_hours":17.0,"food_needed_per_hour":6,"hunger":0,"last_activity":"march","last_eaten":6,"last_needed":6,"low_food":false,"modifiers":{"damage_percent":100,"speed_percent":100},"morale":100,"ration_scale":1000,"stage":"fed","weakened_at":2000},"food":102,"location":"hequ","march":{},"owner":"sheng","soldiers":57,"starving_hours":0,"weapons":45},"frame_timing":{"device":"","display":"headless","sample_count":839,"wall_mean_ms":1.68037067938021,"wall_p50_ms":1.689,"wall_p95_ms":1.996},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":0.680225844004657,"report":{"elapsed_seconds":14.32,"enemy_casualties":15,"enemy_survivors":0,"friendly_casualties":3,"friendly_survivors":16,"player_alive":true,"player_damage":413.59,"player_hp":24.67,"result":"Victory at the border","seed":8103},"settlement":{"already_committed":false,"battle_id":"1:1","campaign_ended":false,"depot_captured":true,"elapsed_world_time":14.316666666667,"ok":true,"result":"victory","spoils":{"weapons":15}},"steps":859,"world_time_seconds":10814.3166666667}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RUNTIME_PREPARE_PASS {"checks":46,"envelope_version":1,"errors":[],"events":284,"hero_hp":100.0,"ok":true,"phase":"prepare","stage":"endpoint","world_time":72023.8479166667,"world_version":7}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RUNTIME_RESUME_PASS {"checks":45,"envelope_version":1,"errors":[],"events":284,"hero_hp":100.0,"ok":true,"phase":"resume","stage":"endpoint","world_time":72023.8479166667,"world_version":7}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_COMBAT_PROOFS [{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_lin","recruit_wu","recruit_tian"],"elapsed":11.6666666666668,"enemy_dead":6,"phase":"dangerous","player_hp":93.321736395359,"policy":"tactical","result":"victory","seed":184},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_lin","recruit_wu","recruit_tian"],"elapsed":11.6666666666668,"enemy_dead":6,"phase":"dangerous","player_hp":93.321736395359,"policy":"tactical","result":"victory","seed":184},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_lin","recruit_wu","recruit_tian"],"elapsed":11.6666666666668,"enemy_dead":6,"phase":"dangerous","player_hp":93.321736395359,"policy":"tactical","result":"victory","seed":184},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["recruit_zhou","recruit_wu","recruit_tian"],"elapsed":15.016666666667,"enemy_dead":0,"phase":"dangerous","player_hp":100.0,"policy":"delayed_retreat","result":"retreat","seed":184},{"ally_dead":[],"elapsed":4.18333333333332,"enemy_dead":0,"phase":"first","player_hp":100.0,"policy":"retreat","result":"retreat","seed":185},{"ally_dead":["recruit_lin"],"elapsed":15.3833333333337,"enemy_dead":4,"phase":"first","player_hp":7.79254126548767,"policy":"reckless","result":"victory","seed":185},{"ally_dead":[],"elapsed":8.80000000000002,"enemy_dead":3,"phase":"first","player_hp":100.0,"policy":"fight","result":"victory","seed":184},{"ally_dead":["commander","recruit_lin","recruit_zhou","recruit_wu","recruit_tian","replacement_accept_appointment_0"],"elapsed":12.9333333333336,"enemy_dead":1,"phase":"dangerous","player_hp":0.0,"policy":"reckless","result":"commander_dead","seed":184}]
+YOUTH_CAREER_TESTS {"checks":536,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_WORLD6_MIGRATION_TESTS {"checks":40,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_VALIDATION_TESTS {"checks":2201,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RESTART_PREPARE {"checks":13,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_RESTART_RESUME {"checks":14,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_ATTRITION_PREPARE {"checks":65,"failures":[]}
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+YOUTH_ATTRITION_RESUME {"checks":24,"failures":[]}

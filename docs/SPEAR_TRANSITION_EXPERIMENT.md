@@ -100,3 +100,114 @@ Measure knee/hip continuity, actual sole trajectories, limb lengths and grip
 seams at transitions/interruption, not just a zero first-frame jump. Do not
 correct the current failure by stretching bones or locking all feet. Only then
 consider bulk GPU history and production activation after real visual review.
+
+## Second iteration: rigid hierarchy plus source-supported clearance
+
+`SPEAR_RIGID=1` explicitly selects the next isolated prototype, still requiring
+`SPEAR_PROBE=1 SPEAR_TRANSITION=1`. No normal game scene references it.
+
+Quaternion rotation residuals and the pelvis-pivot translation are separated.
+The incoming animation continues advancing; children attach to their parent's
+animated joint while each bone keeps its original rigid basis length. Source
+boot soles within 18 mm of the actor's ground plane mark a support phase.
+Only then may the whole pose move upward to preserve that source clearance;
+neither foot's XZ coordinate is frozen and swing timing is unchanged. This is
+not a terrain query/contact IK solution. It adds quaternion work per bone on
+CPU; GPU uniform/storage/sampling and draw overhead remain as above.
+
+Actual Godot numeric replay of the same native bank:
+
+- Boot basis distortion **9.9565% -> 0.0000117%**.
+- Lowest sole Y **-15.919 mm -> +4.596 mm**.
+- Tick 32 boundary left/right residual jumps **0.000075 / 0.000958 mm**.
+- Maximum support lift **35.820 mm**. This is disclosed pose translation, not
+  hidden character teleportation in the simulation.
+- **New failure**: support-hand distance from right-hand shaft axis grows from
+  **0.119 mm in the source palette to 102.088 mm** during the rigid transition.
+  Hierarchical rotation blending does not preserve the two-arm closed chain.
+- The baseline bank similarly grows from 0.132 mm to 15.815 mm axis error.
+
+Each bank passes 1972 diagnostic assertions, including 480 synthetic direction/
+interruption samples, finite transforms, rigid axis lengths, decoding parity,
+continued incoming motion and exact expiry. This is a **math/regression pass,
+not an activation pass**. Reports explicitly retain `activation_allowed:false`
+and list >2 mm shaft error as a rejection. Source poses, first affine failure
+reports and all game defaults are preserved. GUI is still NOT_RUN.
+
+```bash
+SPEAR_RIGID=1 SPEAR_TEST_PALETTE=/tmp/spear-rejected.png \
+ godot --headless --path . --script tests/spear_transition_math.gd
+# Use the previous graphical B command plus SPEAR_RIGID=1 for this third view.
+```
+
+Next smallest correction is a shared rigid shaft target and reach-constrained
+arm solution that preserves each elbow plane, not independent hand interpolation.
+Keep the failed rigid version for A/B and do not activate it pending that repair
+and real Godot capture. Full contact/path stability across repeated strikes and
+actual performance remain unproven even after these two numeric improvements.
+
+Final verification for this isolated iteration: complete `./tools/test.sh`
+returned exit 0; nine Python transition-audit tests and capture-driver parse
+also passed. The aggregate exercises the unchanged shipping game, while the
+separate 1972-assertion runs exercise the opt-in prototype. Existing ObjectDB
+exit warnings remain in aggregate.log; no SCRIPT ERROR / Parse Error / ERROR:
+markers. This does not replace a real graphical run of the generated shader.
+
+## Third iteration: shared shaft with rigid, reach-constrained arms
+
+Explicit opt-in `SPEAR_SHAFT=1` selects this iteration (still requires
+SPEAR_PROBE=1 SPEAR_TRANSITION=1). The prior failed affine and rigid versions
+remain selectable and their original evidence remains unchanged.
+
+`experimental/spear_shaft_transition.gd` keeps one rigid shaft rotation. It
+preserves the original sliding-hand span, with a decaying outgoing span offset
+at a transition. The two palms share that axis. Twenty-four alternating
+reachable-sphere projections place the common shaft anchor; two-link upper/
+forearm chains reach the wrists while retaining each incoming elbow plane.
+Each bone's length remains fixed. Only the basic spear/idle/movement path is
+solved, not guard/hit/death or unrelated weapons. It does not alter feet, hips,
+author curves, attack timing or simulation. The extra CPU work is two analytic
+arm solves and 48 sphere projections during the 150 ms transition. Shader
+uniforms, texture reads and isolated-probe draw overhead are unchanged.
+
+On the identical old RC25 capture with the isolated native spear palette:
+
+| Measure | Rigid-only failure | Shared shaft iteration |
+|---|---:|---:|
+| Maximum hand/shaft axis error | 102.088 mm | **0.119 mm** |
+| Maximum arm axis length distortion | not gated previously | **0.0000234%** |
+| Maximum wrist seam | not gated previously | **0.698 mm** |
+| Reach-sphere excess | not applicable | **0 m** |
+| Lowest old-plane boot sole | +4.596 mm | **+4.596 mm, unchanged** |
+| Maximum support lift | 35.820 mm | **35.820 mm, unchanged** |
+
+Each palette passes 3366 assertions. The 480 synthetic direction samples now
+also interrupt through windup, recovery and guard. Added tests check both wrist
+seams, shared shaft grip, rigid arm lengths, and every actual captured ankle
+against the prior rigid result (unchanged within 1 micrometre). Source bank
+sampling, natural incoming movement and exact expiry remain tested. These are
+real headless Godot math results, not graphics, motion attractiveness or FPS.
+
+```bash
+SPEAR_SHAFT=1 SPEAR_TEST_PALETTE=/tmp/spear-rejected.png \
+ godot --headless --path . --script tests/spear_transition_math.gd
+# Use graphical B command plus SPEAR_SHAFT=1 for this fourth view.
+```
+
+### New map and outstanding acceptance
+
+The fixture is the **old RC25 planar terrain**, not the parent's 141031aaaa
+road/shoulder terrain. A positive absolute Y does not prove contact on new
+slopes. The live probe now records both ankle positions and all four modeled
+boot-sole corners with **Ground.deck_height at each actual world XZ**, rather
+than sampling only the actor origin. `terrain_contact_acceptance:false` remains
+explicit. These modeled corners do not replace inspection of rendered boot
+mesh pixels. The transition's support lift still uses the original actor-base
+plane, so new-terrain penetration/hover is a possible failure for live capture.
+
+No current numeric gate fails on this small old fixture, but activation stays
+**false**: post-skin cloth/torso lean, new-terrain contact, broader natural actor
+sequences, numerical stability across LOD/culling, visual grip/orientation,
+real graphical shader compilation, actual performance and owner art review
+are all still unverified. Do not label it a production-ready natural full-body
+chain. Default shipping files and game behavior remain unchanged.

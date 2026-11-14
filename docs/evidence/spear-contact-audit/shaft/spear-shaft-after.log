@@ -1,0 +1,3 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SPEAR_TRANSITION_MATH {"checks":3366,"lowest_boot_sole_y":0.00459610763937235,"maximum_arm_basis_strain":0.000000234433223722519,"maximum_grip_axis_error_m":0.000118669864605181,"maximum_reach_error_m":0.0,"maximum_support_lift_m":0.0358202904462814,"maximum_wrist_gap_m":0.000697582145221531,"original_grip_axis_error_m":0.000118669864605181,"rigid":true,"shaft_mode":true,"shin_boot_gap_m":0.000607813824899495,"synthetic_samples":480,"worst_boot_basis_strain":0.000000117216611861259}

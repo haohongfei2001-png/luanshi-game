@@ -1,0 +1,89 @@
+name: Dot isolated spear contact experiment
+on:
+  push:
+    branches: ['dot/spear-contact-experiment']
+    paths: ['scripts/field/experimental/**', 'tests/spear_contact_film.gd', '.github/workflows/dot-spear-contact.yml']
+permissions:
+  contents: read
+concurrency:
+  group: dot-spear-contact-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  film:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        view: [normal-qhd, close-uhd]
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare the same verified engine and isolated licensed source
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xdotool ffmpeg python3-pil python3-numpy
+          curl -fLsS --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          git fetch --depth=1 origin 7aaf21be288a607132ec96e1c9a1f5cdbf2f16f3
+          git show FETCH_HEAD:assets/river_gate/figures/company_motion.png >/tmp/native-spear.png
+          git show FETCH_HEAD:scripts/field/company_skin.gdshader >/tmp/native-spear.gdshader
+          mkdir -p artifacts/spear-contact-review
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import >artifacts/spear-contact-review/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/spear-contact-review/import.log; then exit 1; fi
+          { uname -a; lscpu; free -m; godot --version; git rev-parse HEAD; sha256sum /tmp/native-spear.png /tmp/native-spear.gdshader; } >artifacts/spear-contact-review/host-and-source.txt
+      - name: Capture unchanged-source control and rigid shaft treatment in the real game
+        run: |
+          set -euo pipefail
+          if [ '${{ matrix.view }}' = normal-qhd ]; then
+            width=2560; height=1440; export SPEAR_SIZE=22 SPEAR_YAW=-0.5759586532
+          else
+            width=3840; height=2160; export SPEAR_SIZE=6.3 SPEAR_YAW=2.35619449
+          fi
+          printf '[display]\nwindow/size/window_width_override=%s\nwindow/size/window_height_override=%s\n' "$width" "$height" >override.cfg
+          export SPEAR_PROBE=1 SPEAR_ACTOR=548 SPEAR_START=10 SPEAR_FRAMES=41
+          export SPEAR_PALETTE=/tmp/native-spear.png SPEAR_SHADER=/tmp/native-spear.gdshader
+          for mode in control rigid-shaft; do
+            rm -rf artifacts/spear-contact-film artifacts/bridge-window
+            if [ "$mode" = control ]; then
+              export SPEAR_TRANSITION=0 SPEAR_RIGID=0 SPEAR_SHAFT=0
+            else
+              export SPEAR_TRANSITION=1 SPEAR_RIGID=1 SPEAR_SHAFT=1
+            fi
+            timeout 1050s xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --resolution "${width}x${height}" --audio-driver Dummy --script tests/spear_contact_film.gd >"artifacts/spear-contact-review/$mode.log" 2>&1 || { cat "artifacts/spear-contact-review/$mode.log"; exit 1; }
+            if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' "artifacts/spear-contact-review/$mode.log"; then exit 1; fi
+            mv artifacts/spear-contact-film "artifacts/spear-contact-review/$mode"
+            ffmpeg -nostdin -loglevel error -y -framerate 20 -i "artifacts/spear-contact-review/$mode/frames/frame-%03d.png" -c:v libx264 -preset fast -crf 16 -pix_fmt yuv420p "artifacts/spear-contact-review/$mode/diagnostic.mp4"
+          done
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('artifacts/spear-contact-review')
+          a=json.loads((p/'control/sequence.json').read_text())
+          b=json.loads((p/'rigid-shaft/sequence.json').read_text())
+          assert a['size']==b['size'] and a['scale']==b['scale']==1
+          assert a['frames']==b['frames']==41
+          for old,new in zip(a['index'],b['index']):
+              for k in ('tick','actor','kit','state','position','hp','hits','losses','ordinary','facing','camera'):
+                  assert old[k]==new[k],(k,old,new)
+              assert new['ordinary']==[512,512]
+          print('SPEAR_SAME_SIMULATION_AND_CAMERA_PASS; visual, terrain contact and realtime FPS still require review')
+          PY
+      - name: Keep the full native diagnostic and failed evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spear-contact-${{ matrix.view }}-${{ github.sha }}
+          path: |
+            artifacts/spear-contact-review/
+            artifacts/spear-contact-film/
+            artifacts/bridge-window/
+          retention-days: 30
+          compression-level: 1
+          if-no-files-found: error
