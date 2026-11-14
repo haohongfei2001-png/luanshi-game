@@ -78,3 +78,30 @@ full atlas/combat result. Engine revision distinction is retained, no rebuild.
 No default scene, main branch, RC24/Mac candidate or art acceptance changed.
 All generated failures remain internal; they are not unsolicited owner-facing
 "finished" screenshots or candidate releases.
+
+## Local validator failure injection
+
+`python tools/representation_compare/test_matrix_validator.py` checks a synthetic
+complete matrix is accepted, then independently removes one result, duplicates
+one result, changes a simulation hash, and substitutes a wrong native resolution.
+All four malformed matrices must fail. These are validator unit tests, NOT
+actual graphics/performance evidence. No art/FPS threshold is inferred.
+
+Riot's official [Clarity in League](https://www.leagueoflegends.com/en-us/news/dev/clarity-in-league/)
+explains silhouette recognition, readable facing, visual importance hierarchy,
+and avoiding noise. Those are useful review criteria, not a source for our
+candidate camera numeric parameters. The owner's newer matte, restrained,
+slightly rough material direction does not mean glossy plastic or blurred detail.
+
+## Explicit same-source LOD preparation (not yet rendered)
+
+The importer provides 18 original LOD index buffers. A version-scoped helper
+selects those indices without deleting vertices, truncating weights, editing
+materials or re-encoding packed UV/normal/tangent attributes. Actual headless
+checks of tiers 0/1/2/3 passed 168 invariants, including byte-equal decoded
+non-index arrays and identical material resources. Total triangles are
+14318 / 7158 / 3578 / 1818 respectively. This does not establish screen-space
+quality or vertex-shader speed: unchanged vertex buffers and weight tables
+remain allocated. The first arrays-to-mesh implementation was rejected because
+normal re-encoding was not byte identical; direct 4.6.3 packed surface
+serialization preserves the source instead. No LOD is enabled by this evidence.
