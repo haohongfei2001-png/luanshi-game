@@ -1,5 +1,10 @@
 # Luanshi (working title)
 
+## OWNER-AUTONOMOUS-20261114｜长期自主开发与自动续接
+
+**[给 Codex 的正式长期执行协议](docs/CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)**：从最新 GitHub main 和已有 PR 接续，不等待用户逐阶段发令；优先用合法成熟资产重做真实可玩的国风 3D 人物、军阵和河关场景，持续运行、截图/录屏、测试修复、对标商业品质、提交版本并更新状态。支持时建立 Codex Goal + Automations 定期自主续接；无法创建时必须明确标为未运行，而不是假称一直在开发。继续遵守 ARTREF-01～12、M5 性能实测与 public 仓库第三方素材许可边界。
+
+
 ## OWNER-ASSET-FIRST-20261114｜采用成熟资产底座、先高品质再创新
 
 **最新 Codex 美术生产方式：[真实高品质合法资产先行 → Godot 实机高保真还原 → 精修创新](docs/ASSET_FIRST_HIGH_FIDELITY_PRODUCTION_20261114.md)。** 不再把“自己生成低质积木兵，再多轮微调”作为主方案。已经找到具体唐式甲士、可组合甲衣、三国军营、中国城墙/城市、马匹动画等**尚未获得许可和资源文件的候选**；须先检查价格与授权、FBX/Blender/GLB 格式、材质/骨骼/动作导入、正常可玩战场效果及 512v512 性能。不照搬商业游戏独创角色/场景，不将付费商业原始模型上传公共 GitHub。此前 [八作参考和 ARTREF 验收](docs/ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md) 继续适用，M5 真实持续性能与 Owner 美术通过仍未确认。
