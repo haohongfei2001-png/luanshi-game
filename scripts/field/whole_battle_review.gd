@@ -45,7 +45,14 @@ func _point(at:Vector2) -> void:
 	var motion:=InputEventMouseMotion.new()
 	motion.position=at
 	motion.global_position=at
-	root.push_input(motion,true)
+	if DisplayServer.get_name()=="headless":
+		# A headless root reads Input's emulated global mouse coordinate.
+		motion.position=root.get_screen_transform()*at
+		motion.global_position=motion.position
+		Input.parse_input_event(motion)
+		Input.flush_buffered_events()
+	else:
+		root.push_input(motion,true)
 
 func _click(here:Vector2) -> void:
 	_point(here)
@@ -126,7 +133,7 @@ func _drive() -> void:
 			if key!=KEY_NONE:
 				_key(key,true)
 				_key(key,false)
-				notes.append({"tick":t,"key":OS.get_keycode_string(key),"aimed_at":target.id,"range":sqrt(d2),"cursor":[screen.x,screen.y],"direction":[b.hero.locked.x,b.hero.locked.y]})
+				notes.append({"tick":t,"key":OS.get_keycode_string(key),"aimed_at":target.id,"range":sqrt(d2),"target":[target.pos.x,target.pos.y],"hero":[b.hero.pos.x,b.hero.pos.y],"cursor":[screen.x,screen.y],"mouse":str(root.get_mouse_position()),"direction":[b.hero.locked.x,b.hero.locked.y]})
 	elif walk!=Vector2.ZERO:
 		_point(field.camera.unproject_position(Ground.unit_point(b.hero.pos+Vector2(3.,0.),true)+Vector3.UP*.65))
 	if t==90:
