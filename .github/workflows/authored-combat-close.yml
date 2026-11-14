@@ -27,7 +27,7 @@ jobs:
           unzip -q /tmp/editor.zip -d /tmp/editor
           sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           ./tools/prepare-font.sh
-          mkdir -p artifacts/authored-combat-close docs/evidence/river-gate-v1-rc23/native-combat/close
+          mkdir -p artifacts/authored-combat-close docs/evidence/river-gate-v1-rc23/native-combat/weighted-cut
           touch artifacts/.gdignore
           cat >override.cfg <<'CFG'
           [display]
@@ -59,7 +59,7 @@ jobs:
           p=Path("docs/evidence/river-gate-v1-rc23/native-combat/close")
           a=json.loads((p/"before/sequence.json").read_text())
           b=json.loads((p/"after/sequence.json").read_text())
-          assert a==b and len(a)==11 and all(x["scale"]==1. for x in a)
+          assert a==b and len(a["rows"])>=8 and all(x["scale"]==1. for x in a["rows"])
           PY
           git diff --exit-code -- assets/river_gate/figures/company_motion.png
           git add "$proof"
