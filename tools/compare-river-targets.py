@@ -34,7 +34,8 @@ def main():
     # The original target implementation must run with its own field, save and
     # officer contracts. The current field additionally supports the bridgehead.
     sources = [BATTLE, Path("scripts/field/save.gd"), Path("scripts/field/officer_corps.gd"),
-               Path("scripts/field/formation_traffic.gd"), Path("scripts/field/ground.gd")]
+               Path("scripts/field/formation_traffic.gd"), Path("scripts/field/ground.gd"),
+               Path("scripts/field/field_objectives.gd")]
     before = {path: subprocess.check_output(["git", "show", f"{BASE}:{path.as_posix()}"], cwd=ROOT) for path in sources}
     with tempfile.TemporaryDirectory() as temp:
         previous = Path(temp) / "previous"

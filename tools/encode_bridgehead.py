@@ -34,12 +34,16 @@ run(["ffmpeg","-nostdin","-loglevel","error","-y","-framerate",str(fps),"-start_
 streams = json.loads(run(["ffprobe","-v","error","-show_entries","stream=codec_name,width,height,avg_frame_rate,channels,duration,nb_frames",
                           "-of","json",str(movie)],capture_output=True,text=True).stdout)["streams"]
 assert streams[0]["codec_name"]=="h264" and streams[0]["avg_frame_rate"]=="24/1" and int(streams[0]["nb_frames"])==len(frames)
-assert [streams[0]["width"],streams[0]["height"]]==facts["resolution"] and facts["internal"]==1
+# Canvas stretch reports its logical size through Window.size. The image read
+# from this same viewport is in actual capture pixels, as is the video stream.
+from PIL import Image
+with Image.open(next(directory.glob("view-*.jpg"))) as source_still:
+    physical=list(source_still.size)
+assert [streams[0]["width"],streams[0]["height"]]==physical==[1600,1000] and facts["internal"]==1,(physical,streams[0],facts["resolution"])
 assert streams[1]["channels"]==2 and abs(float(streams[1]["duration"])-duration)<.12
 vol=run(["ffmpeg","-hide_banner","-i",str(movie),"-vn","-af","volumedetect","-f","null","-"],capture_output=True,text=True).stderr
 peak=float(re.search(r"max_volume: ([-.0-9]+) dB",vol)[1])
 assert -60<peak<=0,vol[-500:]
-from PIL import Image
 for name,i in [("approach",max(3,int(fps*2))),("gate",min(len(frames)-1,int(fps*12))),
                ("first-contact" if facts["first_player_strike"]>=0 else "east-bank",min(len(frames)-1,facts["first_game_frame"]+round((facts["first_player_strike"] if facts["first_player_strike"]>=0 else facts["last"]["tick"]*.78)*fps/20)))]:
     with Image.open(frames[i]) as image:
@@ -53,7 +57,7 @@ for slot,frac in enumerate((.08,.17,.24,.34,.62,.89)):
         tile.paste(image.convert("RGB").resize((320,200),Image.Resampling.LANCZOS),(320*(slot%3),210*(slot//3)))
 tile.save(directory/"sequence.jpg",quality=93,subsampling=0)
 receipt={"game_source":game_sha,"capture_source":os.environ.get("GITHUB_SHA"),"capture_run":os.environ.get("GITHUB_RUN_ID"),"mode":"Godot Movie Maker 24 successive game frames per simulated second; physical keyboard and pointer input; no game-state writes",
-         "fps":fps,"seconds":duration,"simulated_battle_seconds":battle_seconds,"source_frame_count":len(frames),"streams":streams,
+         "fps":fps,"physical_capture_px":physical,"logical_root":facts["resolution"],"seconds":duration,"simulated_battle_seconds":battle_seconds,"source_frame_count":len(frames),"streams":streams,
          "source_frame_range":[first,first+len(frames)-1],"max_signal_db":peak,"sha256":sha(movie),"bytes":movie.stat().st_size,
          "summary":{k:v for k,v in facts.items() if k!="frames"},"device_framerate_measurement":False,"gameplay_review_pass":bool(facts["sampled_ticks"]>200 and facts["last"]["hero_impacts"]>0 and facts["last"]["soldier_shield_contacts"]>0 and duration>=30)}
 (directory/"recording.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
