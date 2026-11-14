@@ -1,9 +1,9 @@
 {
-  "seed_commit": "bf475571c49c562c8d4647e9fd5b9aebec172c6e",
-  "local_reference_commit": "bd9bf144e66c97bae3ddbea5dc2ab6811e7dcf45",
-  "local_reference_tree": "9818d385f52d9baa612d919e3d6275dc4b9c8be5",
-  "identical_files": 171,
-  "total_files": 173,
+  "seed_commit": "cd7993104b467557c6e40d7ce2664350a38142b2",
+  "local_reference_commit": "ecf0bc46476c393fce5882a49da40cf958548bd3",
+  "local_reference_tree": "132539a9a63b0cdd17b09877a1188dadabc0ff5c",
+  "identical_files": 172,
+  "total_files": 178,
   "files": [
     {
       "path": ".github/workflows/dot-art-review.yml",
@@ -665,9 +665,9 @@
     },
     {
       "path": "assets/river_pass/master/river_pass.scn",
-      "expected_sha256": "ee40d63424b4c63fd333662da9c45a0f7a3d4e0ebd81eb0f82ecedb9a4128b45",
-      "actual_sha256": "dd2f4dffeb47d3f04a82ed04a43e91bc4bd80c324abbafe2a8af9436b55436c9",
-      "bytes": 8728844,
+      "expected_sha256": "024e72106507b5adc53974b5cb5aa9b8d052c519d70558db92e4694d07f74bc1",
+      "actual_sha256": "3a27333c58cb42d83832f97eb888336a4c411004e2ba9c9f3541b5b80303bf1a",
+      "bytes": 8233602,
       "identical": false
     },
     {
@@ -987,10 +987,10 @@
     },
     {
       "path": "assets/river_pass/nature/SOURCE.json",
-      "expected_sha256": "e365bab5df7443229b5a800d461f2c374a72e3121930c940374c7108d8f7a79c",
-      "actual_sha256": "e365bab5df7443229b5a800d461f2c374a72e3121930c940374c7108d8f7a79c",
-      "bytes": 4847,
-      "identical": true
+      "expected_sha256": "4bb5d810faad9b11207741dbb458d8930b7095de1faa05cab956fbe968577eea",
+      "actual_sha256": "bc811e12fa4378a2cd1214c72410e34329b4af5c3bc66f2166d4564a7640a9e9",
+      "bytes": 5585,
+      "identical": false
     },
     {
       "path": "assets/river_pass/nature/TwistedTree_1.bin",
@@ -1043,17 +1043,17 @@
     },
     {
       "path": "docs/AUTONOMOUS_DEV_STATE.md",
-      "expected_sha256": "885869e159f0eb620894791010d841cb3419479dc96468b160eed5aa794864c0",
+      "expected_sha256": "a5c0689413c0055154888d812d7153c261aa09b1d2056c9c2e2ae986bcc68ca5",
       "actual_sha256": "885869e159f0eb620894791010d841cb3419479dc96468b160eed5aa794864c0",
       "bytes": 1784,
-      "identical": true
+      "identical": false
     },
     {
       "path": "docs/CODEX_CONTINUATION.md",
-      "expected_sha256": "92b81c243ea210ab19a9e085a9bdced5d456241ff8cb8a2958e9cf57a917d648",
+      "expected_sha256": "bc70921a0f096494c4aae18e626d734228a04653f7200977bc859d5b880d646a",
       "actual_sha256": "92b81c243ea210ab19a9e085a9bdced5d456241ff8cb8a2958e9cf57a917d648",
       "bytes": 80548,
-      "identical": true
+      "identical": false
     },
     {
       "path": "docs/evidence/river-pass-master/README.md",
@@ -1155,9 +1155,9 @@
     },
     {
       "path": "scripts/field/river_pass_master.gd",
-      "expected_sha256": "3123c3914d78b4eb3cb92c400227b25be287ab4f9bc781d3294ad504d045d4a1",
-      "actual_sha256": "3123c3914d78b4eb3cb92c400227b25be287ab4f9bc781d3294ad504d045d4a1",
-      "bytes": 2569,
+      "expected_sha256": "6b904cc6f2aa6bf9d19a3a31a16db586af554093bf097726e4abb302e5a7984a",
+      "actual_sha256": "6b904cc6f2aa6bf9d19a3a31a16db586af554093bf097726e4abb302e5a7984a",
+      "bytes": 2563,
       "identical": true
     },
     {
@@ -1183,37 +1183,72 @@
     },
     {
       "path": "tests/river_pass_lifecycle.gd",
-      "expected_sha256": "6a10dff91f8c985690b3cb8939b72629c1f14b4c42d932031ab292c0911e1153",
-      "actual_sha256": "6a10dff91f8c985690b3cb8939b72629c1f14b4c42d932031ab292c0911e1153",
+      "expected_sha256": "0351a0b8b28746a36abcce8ee87715b056d6e852335d42f21bba01452ce90596",
+      "actual_sha256": "0351a0b8b28746a36abcce8ee87715b056d6e852335d42f21bba01452ce90596",
       "bytes": 1079,
       "identical": true
     },
     {
       "path": "tests/river_pass_master.gd",
-      "expected_sha256": "31a58b20972045aabfb2abb852682117aa3da27ca31db2dc1944ff2651a8c98c",
-      "actual_sha256": "31a58b20972045aabfb2abb852682117aa3da27ca31db2dc1944ff2651a8c98c",
-      "bytes": 1659,
+      "expected_sha256": "f46d699f40dbf5cd284ee600aceee3e635d142e3f6c8f59c4165e27866f16676",
+      "actual_sha256": "f46d699f40dbf5cd284ee600aceee3e635d142e3f6c8f59c4165e27866f16676",
+      "bytes": 2091,
       "identical": true
     },
     {
       "path": "tests/world_master_review.gd",
-      "expected_sha256": "0c109fae752947df08768a326576550ce3ec6658fd0dc2e8b74294de06da8f9b",
-      "actual_sha256": "0c109fae752947df08768a326576550ce3ec6658fd0dc2e8b74294de06da8f9b",
-      "bytes": 5137,
+      "expected_sha256": "03b9833c586e43e1d57804c0879e2beeef2ceb25c8912c3411eddc3063a1620f",
+      "actual_sha256": "03b9833c586e43e1d57804c0879e2beeef2ceb25c8912c3411eddc3063a1620f",
+      "bytes": 6131,
       "identical": true
     },
     {
       "path": "tools/art/build_river_pass_master.gd",
-      "expected_sha256": "5e7204253c0689b8484e9ae6a51a2de36fd8e7a779cc984e8d2207cf45b7275c",
-      "actual_sha256": "5e7204253c0689b8484e9ae6a51a2de36fd8e7a779cc984e8d2207cf45b7275c",
-      "bytes": 12203,
+      "expected_sha256": "4d43296d46b7f7e33ce62c8043afb04408c95e1096c2868e8e740d31395effe4",
+      "actual_sha256": "4d43296d46b7f7e33ce62c8043afb04408c95e1096c2868e8e740d31395effe4",
+      "bytes": 13281,
       "identical": true
     },
     {
       "path": "tools/test.sh",
-      "expected_sha256": "5e6364b6d9c2a35765882c8eebeafaa3b48d7c46fd1ff5156102f0947c0f8275",
+      "expected_sha256": "bddb664bebad8742e9f03c2cbdd8497ef1e00b716cd15efee199757650b7a090",
       "actual_sha256": "5e6364b6d9c2a35765882c8eebeafaa3b48d7c46fd1ff5156102f0947c0f8275",
       "bytes": 10792,
+      "identical": false
+    },
+    {
+      "path": "docs/evidence/river-pass-master/735143a-rejection/README.md",
+      "expected_sha256": "45d000500bdc1aa4a08c6b8105721ab867650a4cc891b38c3ef2ce13b7e2d146",
+      "actual_sha256": "45d000500bdc1aa4a08c6b8105721ab867650a4cc891b38c3ef2ce13b7e2d146",
+      "bytes": 1979,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/round2-preflight/README.md",
+      "expected_sha256": "b588c32f3da0005a8e0be151b7ca3dd0a6559645e8647389f17cea35f145d54e",
+      "actual_sha256": "b588c32f3da0005a8e0be151b7ca3dd0a6559645e8647389f17cea35f145d54e",
+      "bytes": 3342,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bush_Common_Flowers.gltf",
+      "expected_sha256": "08768c680e3abeafd25858c9d3f369bcb7eed014661d3b6825a397f2a6a3deea",
+      "actual_sha256": "08768c680e3abeafd25858c9d3f369bcb7eed014661d3b6825a397f2a6a3deea",
+      "bytes": 3654,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bush_Common_Flowers.bin",
+      "expected_sha256": "15f56a013afe0eecaded0eb97fd8f323305af11e1f0f7bb9b68472ec4cdc20d5",
+      "actual_sha256": "15f56a013afe0eecaded0eb97fd8f323305af11e1f0f7bb9b68472ec4cdc20d5",
+      "bytes": 128928,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Flowers.png",
+      "expected_sha256": "5c531f2329c241c625aafd6cb769de29f33b480ef2a16491c2489f3c68e62a6a",
+      "actual_sha256": "5c531f2329c241c625aafd6cb769de29f33b480ef2a16491c2489f3c68e62a6a",
+      "bytes": 444609,
       "identical": true
     }
   ],
