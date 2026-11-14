@@ -1,5 +1,5 @@
 extends SceneTree
-const FreezeClock:=preload('res://tools/art/gate_structure/freeze_shader_clock.gd')
+const FreezeClock:=preload('res://scripts/review/freeze_shader_clock.gd')
 const Store:=preload('res://scripts/field/save.gd')
 func _initialize()->void:run.call_deferred()
 func run()->void:
@@ -19,6 +19,8 @@ func run()->void:
  field.hud.go.pressed.emit();for tick in 135:field._physics_process(.05)
  field.camera_center=Vector2(50,0);field.camera.size=18.;field._process(.05)
  var clock=FreezeClock.new();var frozen_shaders=clock.freeze(scene,field.battle.tick*field.Battle.DT)
+ if clock.failed:
+  push_error('Roof shader clock freeze failed');quit(1);return
  var frozen=var_to_bytes(Store.snapshot(field.battle));var hash=HashingContext.new();hash.start(HashingContext.HASH_SHA256);hash.update(frozen);var snapshot_sha=hash.finish().hex_encode()
  var saved=[];var rows=[]
  for mode in ['original-lit','native-band-lit','original-normal-diagnostic','native-band-normal-diagnostic']:
