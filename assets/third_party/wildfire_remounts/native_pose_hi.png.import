@@ -1,0 +1,17 @@
+[remap]
+importer="texture"
+type="CompressedTexture2D"
+path="res://.godot/imported/native_pose_hi.png-9283356d752939696c1461de984b0692.ctex"
+
+[deps]
+source_file="res://assets/third_party/wildfire_remounts/native_pose_hi.png"
+dest_files=["res://.godot/imported/native_pose_hi.png-9283356d752939696c1461de984b0692.ctex"]
+
+[params]
+compress/mode=0
+mipmaps/generate=false
+mipmaps/limit=-1
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/normal_map_invert_y=false
+detect_3d/compress_to=0
