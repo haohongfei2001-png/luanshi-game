@@ -1,3 +1,4 @@
+class_name MetalCharacterOracleGPU
 extends SceneTree
 ## Actual source StandardMaterial/Skin versus full-weight batched shader. Isolated
 ## technical A/B, never Chinese art, locomotion/contact or battlefield acceptance.

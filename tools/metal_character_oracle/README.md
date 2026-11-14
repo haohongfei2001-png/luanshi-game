@@ -22,7 +22,7 @@ source remains preserved in the repository; the test does not alter it.
 The native oracle came from reviewed `dot/godot-native-tangent-fix`5c59b736 and
 local matching0fce27c. Original test SHA256:
 `4ac902992d22e900c820bd0dc024b9986784e0b2c44bbd29c91753b53998eb48`.
-Only output paths, runtime backend guard and engine/driver telemetry changed.
+Only normal-export entry class names, output paths, runtime backend guard and engine/driver telemetry changed.
 Common source hashes:
 - native_rig_palette.gd:7f359343afd1b291e139b49aef48b971b382251dd886e958b4481f72f3cb75c0
 - native_rig_material.gd:d6a52f9e32804dde3dbd8eaeeb294ef863076abacb7120e956b73e4bd3259da9
@@ -34,20 +34,27 @@ Common source hashes:
 1. `python tools/metal_character_oracle/prepare.py /path/to/small-project`
 2. Use the runner's already-verified official Godot editor to import that project.
 3. Preserve editor version/hash, actual Mac model/OS, and packaged resource SHA.
-4. Through the existing actual Mac GUI launch/PCK path, run:
+4. The generated project sets `application/run/main_loop_type=MetalCharacterOracleGPU`
+   and a minimal empty-Node main scene (required by startup validation). Import/export normally so the global class cache is
+   packaged. Use the existing normal adjacent-PCK/bundle launch, with:
 
 ```sh
 INTACT_REQUIRE_METAL=1 INTACT_PARITY_FULL_MESH=1 \
 INTACT_OUTPUT=/absolute/writable/evidence/metal-gpu \
-GODOT --path /path/to/small-project --rendering-method mobile \
-  --rendering-driver metal --script res://tools/metal_character_oracle/gpu.gd
+GODOT --rendering-method mobile --rendering-driver metal
 ```
 
-If using adjacent main.pck, these res:// entry/dependency paths must be included;
-keep `INTACT_OUTPUT` outside the PCK. Do not use `--headless` for GPU evidence.
+**Do not rely on `--script`, `--path`, or CLI main-loop overrides in the native
+release template.** Without OVERRIDE_PATH_ENABLED they are silently cleared by
+35e80 main/main.cpp. This oracle is a normal exported MainLoop, not a bypass of
+that engine protection. Parent's verified adjacent-PCK placement still applies.
+No gameplay resources are included in the minimal project.
+
+Keep `INTACT_OUTPUT` outside the PCK. Do not use `--headless` for GPU evidence.
 The entry rejects silent non-Metal/non-Mobile fallback. It saves eight512²
 native/batch images plus parity.json and exits nonzero on original gate failure.
-Also run cpu.gd and weights.gd with the same imported fixture; CPU JSON goes to
+`prepare.py --entry cpu` or `--entry weights` creates the matching normal-export
+MainLoop configuration for a separate diagnostic PCK. CPU JSON goes to
 INTACT_OUTPUT/cpu.json. Headless CPU success is not Metal graphics success.
 
 The earlier tangent patch affected only GLES3 `storage/mesh_storage.cpp` and
@@ -57,3 +64,21 @@ same-tag source35e80 are distinct revisions; record actual engine, never spoof.
 
 Local minimal-project import, CPU and weight tests are checked separately. The
 actual Metal images/gate remain NOT_RUN until the native Mac job produces them.
+
+## Release-template assertion safety
+
+Do not trust GDScript `assert` or exit0 alone in template_release. After actual
+Mac graphics, run the external Python/Pillow gate (without `python -O`):
+
+```sh
+python tools/metal_character_oracle/check_gpu_result.py /evidence/metal-gpu \
+  --log /evidence/metal-gpu.log --fixture-manifest /small-project/fixture-manifest.json \
+  --cpu-json /evidence/metal-cpu/cpu.json
+```
+
+It requires real Mobile/Metal telemetry, no diagnostic substitutions, exact
+source model/shared adapter hashes, all four unique poses and eight valid512²
+PNGs. It independently recomputes the original2-level/2% and MAE threshold from
+PNG pixels, checks the optional complete68047 CPU assertions, and rejects any
+actual SCRIPT/SHADER/ERROR marker. PNG/global-mode metadata alone is not a pass.
+Pillow is the only external checker dependency; no original asset rewriting.

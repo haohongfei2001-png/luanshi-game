@@ -10,5 +10,14 @@
   "gpu": "NOT_RUN",
   "Metal": "NOT_RUN",
   "M5": "NOT_TESTED",
-  "fresh_checkout_inputs": "single original GLB plus tracked text importer templates; seven PNGs extracted byte-identically from original embedded bufferViews"
+  "fresh_checkout_inputs": "single original GLB plus tracked text importer templates; seven PNGs extracted byte-identically from original embedded bufferViews",
+  "normal_export_entry_local": {
+    "engine": "official 4.6.3 7d41c59c4 Linux headless",
+    "cli_script_override": false,
+    "global_class": "MetalCharacterOracleGPU",
+    "main_scene": "minimal empty Node",
+    "result": "entered GPU oracle and correctly rejected dummy renderer",
+    "exit_code": 1,
+    "Metal": "NOT_RUN"
+  }
 }

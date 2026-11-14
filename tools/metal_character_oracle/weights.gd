@@ -1,3 +1,4 @@
+class_name MetalCharacterOracleWEIGHTS
 extends SceneTree
 const Palette=preload("res://scripts/field/experimental/native_rig_palette.gd")
 const MaterialAdapter=preload("res://scripts/field/experimental/native_rig_material.gd")

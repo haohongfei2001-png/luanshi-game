@@ -1,8 +1,9 @@
 """Copy a small explicit source-only oracle project, not the whole battlefield.
 No compiled engine, no code execution from source assets, no source rewriting.
 """
-import pathlib,sys,shutil,json,hashlib,struct
-repo=pathlib.Path(__file__).resolve().parents[2];out=pathlib.Path(sys.argv[1]).resolve();out.mkdir(parents=True,exist_ok=True)
+import pathlib,sys,shutil,json,hashlib,struct,argparse
+parser=argparse.ArgumentParser();parser.add_argument('output');parser.add_argument('--entry',choices=['gpu','cpu','weights'],default='gpu');args=parser.parse_args()
+repo=pathlib.Path(__file__).resolve().parents[2];out=pathlib.Path(args.output).resolve();out.mkdir(parents=True,exist_ok=True)
 files=['assets/ubc_lab/ubc_animated.glb','assets/ubc_lab/NOTICE.md','assets/ubc_lab/source/universal-base-characters-standard-LICENSE.txt','assets/ubc_lab/source/ual-standard-current-LICENSE.txt']
 files += ['scripts/field/experimental/'+name for name in ['native_rig_palette.gd','native_rig_material.gd','textured_native_rig.gdshader','full_weight_reference.gd']]
 files += ['tools/metal_character_oracle/'+name for name in ['gpu.gd','cpu.gd','weights.gd']]
@@ -23,6 +24,7 @@ for template in sorted((repo/'tools/metal_character_oracle/import_settings').glo
  name='assets/ubc_lab/'+template.name.removesuffix('.txt');dest=out/name;shutil.copyfile(template,dest)
  receipts.append({'path':name,'bytes':dest.stat().st_size,'sha256':hashlib.sha256(dest.read_bytes()).hexdigest(),'origin':'explicit matched importer settings'})
 assert next(r['sha256'] for r in receipts if r['path'].endswith('/ubc_animated.glb'))=='64705ebc4a20650b79f863bae4b6ec47df06dfefe0ed451fe73a04ebc46295c0'
-(out/'project.godot').write_text('config_version=5\n[application]\nconfig/name="Isolated native Metal character oracle"\n[display]\nwindow/size/viewport_width=1280\nwindow/size/viewport_height=720\n[rendering]\nrenderer/rendering_method="mobile"\nrenderer/rendering_method.macos="mobile"\nrendering_device/driver.macos="metal"\n')
+(out/'project.godot').write_text('config_version=5\n[application]\nconfig/name="Isolated native Metal character oracle"\nrun/main_loop_type="MetalCharacterOracle'+args.entry.upper()+'"\nrun/main_scene="res://oracle_entry.tscn"\n[display]\nwindow/size/viewport_width=1280\nwindow/size/viewport_height=720\n[rendering]\nrenderer/rendering_method="mobile"\nrenderer/rendering_method.macos="mobile"\nrendering_device/driver.macos="metal"\n')
+(out/'oracle_entry.tscn').write_text('[gd_scene format=3]\n[node name="OracleEntry" type="Node"]\n')
 (out/'fixture-manifest.json').write_text(json.dumps({'source_glb':'bf520c13aa393c2fdc4b5c2596cfe5cbdb0bd7d9','files':receipts,'total_source_bytes':sum(x['bytes'] for x in receipts),'Mac_run':'NOT_YET_RUN','engine_patch':'GLES3 tangent patch deliberately NOT required or applied to Metal'},indent=2)+'\n')
 print(out, sum(x['bytes'] for x in receipts),'source bytes')

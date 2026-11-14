@@ -1,3 +1,4 @@
+class_name MetalCharacterOracleCPU
 extends SceneTree
 ## Exact authored-source geometry/LOD audit. Not a visual or battle pass.
 const Palette = preload("res://scripts/field/experimental/native_rig_palette.gd")
