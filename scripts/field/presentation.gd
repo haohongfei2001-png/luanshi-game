@@ -4,6 +4,7 @@ const Arms := preload("res://scripts/field/arms.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Figures := preload("res://scripts/field/figures.gd")
 const CompanyArt := preload("res://scripts/field/company_art.gd")
+const LooseMount:=preload("res://scripts/field/loose_mount.gd")
 const MountArt := preload("res://scripts/field/mount_art.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const FieldStandard := preload("res://scripts/field/field_standard.gd")
@@ -36,6 +37,7 @@ var grounded_at:=PackedVector2Array()
 var floor_y:=PackedFloat32Array()
 var high_detail_soldiers := 0
 var horse: Batch
+var loose_mounts: Dictionary[int,LooseMount]={}
 var horse_rank: Batch
 var cart_rank: Batch
 var cart: Batch
@@ -72,6 +74,7 @@ func _batch(geometry: Mesh,mat: Material,capacity: int,custom_data: bool=true) -
 
 func configure(model: Battle) -> void:
 	battle = model
+	loose_mounts.clear()
 	lod_by_id.resize(battle.roster.size())
 	lod_by_id.fill(255)
 	grounded_at.resize(battle.roster.size())
@@ -207,6 +210,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	var portrait_radius_sq:=portrait_radius*portrait_radius
 	for u in battle.roster:
 		if u.state == Battle.State.ESCAPED: continue
+		var loose:=battle.bridgehead and u.mounted and u.state==Battle.State.DEAD and u.mount_hp>0. and u.lost_tick>=0
+		if loose and not loose_mounts.has(u.id):
+			loose_mounts[u.id]=LooseMount.new(u.pos,u.facing,u.id)
 		var p := u.before.lerp(u.pos,alpha)
 		if absf(p.x-center.x)>half_extent.x or absf(p.y-center.y)>half_extent.y: continue
 		var offset:=p-center
@@ -253,8 +259,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if u.mounted:
 			var unhorsed:=u.state==Battle.State.DEAD and u.mount_hp>0
 			var horse_pose:=Battle.State.MARCH if unhorsed else u.state
-			var mounts:=horse if zoom<36 and distance_sq<185.0 else horse_rank
-			_put(mounts,base,orientation,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a,u.id))
+			if not loose:
+				var mounts:=horse if zoom<36 and distance_sq<185.0 else horse_rank
+				_put(mounts,base,orientation,MountArt.pose(horse_pose,progress,u.stride,0.0 if unhorsed else travelled,alpha,data.a,u.id))
 			var fall:=smoothstep(0.0,0.9,progress) if unhorsed else 0.0
 			var gait:=clampf(travelled/(Battle.DT*4.0),0,1)
 			var hoof_phase:=fposmod(u.stride-(1.0-alpha)*travelled*.68,1.)
@@ -336,6 +343,25 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			if u.state>=Battle.State.WINDUP and u.state<=Battle.State.STAGGER:
 				visible_fighting += 1
 			if u.hp<=0: shown_fallen += 1
+	# Submit an unseated horse at its own feet, including when its rider is offscreen.
+	for id:int in loose_mounts:
+		var rider:=battle.roster[id]
+		if not rider.mounted or rider.mount_hp<=0. or rider.state!=Battle.State.DEAD: continue
+		var path:=loose_mounts[id]
+		var age:=(float(battle.tick-rider.lost_tick-1)+alpha)*Battle.DT
+		var distance:=path.distance_at(age)
+		var transform_xz:=path.sample(distance)
+		var at:=transform_xz.origin
+		var offset:=at-center
+		if absf(offset.x)>half_extent.x or absf(offset.y)>half_extent.y: continue
+		if cam and absf(offset.dot(right))>horizontal_limit: continue
+		var ground:=Ground.unit_point(at,true)
+		if cam and absf(offset.dot(vertical_xz)+(ground.y-center_height+1.)*vertical_y)>vertical_limit: continue
+		var turn:=Basis(Vector3.UP,transform_xz.get_rotation())
+		var mounts:=horse if zoom<36 and offset.length_squared()<185. else horse_rank
+		var stride:=rider.stride+distance*.68
+		var travelled:=distance-path.distance_at(age-Battle.DT)
+		_put(mounts,ground,turn,MountArt.pose(Battle.State.MARCH,0.,stride,travelled,1.,0.,id))
 	# A standard follows the current officer, including a successor drawn from the ranks.
 	for company in battle.companies:
 		if not battle.corps.can_command(battle,company): continue
