@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/articulated_cuirass.py", line 80, in <module>
+    exec(compile(code,str(p),'exec'))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/soldier_whole_layer_system.py", line 142, in <module>
+    add_plate(c,n,(0,0,1),.043,.079,w)
+                                   ^^^
+  File "/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/soldier_whole_layer_system.py", line 136, in shoulder
+    for row in range(4):
+    
+RuntimeError: Missing actual source-arm sleeve support
+
+Error: script failed, file: 'tools/art/sintel_guard/articulated_cuirass.py', exiting.
+Blender 4.3.2
+Read blend: "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/whole-cloth-lower4/whole-shoe-puttee-editable.blend"
+scripts disabled for "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/whole-cloth-lower4/whole-shoe-puttee-editable.blend", skipping 'lao_tseu_rig_props.py'
+
+Blender quit
