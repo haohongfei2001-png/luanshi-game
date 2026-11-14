@@ -66,4 +66,20 @@ func go():
    mesh.material=pipeline
    var candidate:Image=await capture(viewport,out.path_join("pipe-array"+str(array_sampler)+"-scissor"+str(scissor)+".png"))
    var result=compare(reference,candidate);result["sampler_array"]=array_sampler;result["alpha_scissor"]=scissor;report.sampler_and_pass_probe.append(result)
+ var sun:DirectionalLight3D=stage.find_children("*","DirectionalLight3D",true,false)[0]
+ sun.shadow_enabled=true;sun.shadow_opacity=.74;sun.directional_shadow_max_distance=100.;sun.directional_shadow_mode=DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS;sun.shadow_bias=.07;sun.shadow_normal_bias=.8
+ quad.visible=false
+ for node in batches:node.visible=true
+ world.environment.tonemap_mode=Environment.TONE_MAPPER_FILMIC;world.environment.tonemap_exposure=1.
+ var native_shadow:Image=await capture(viewport,out.path_join("native-field-shadow.png"))
+ world.environment.tonemap_mode=Environment.TONE_MAPPER_LINEAR
+ var baked_shadow:Image=await capture(viewport,out.path_join("bake-field-shadow.png"))
+ for node in batches:node.visible=false
+ quad.visible=true;mesh.material=material;material.set_shader_parameter("reconstruction_gain",1.)
+ world.environment.tonemap_mode=Environment.TONE_MAPPER_FILMIC
+ material.set_shader_parameter("pigment",ImageTexture.create_from_image(original_bake))
+ var unmatched:Image=await capture(viewport,out.path_join("sprite-unmatched-shadow.png"))
+ material.set_shader_parameter("pigment",ImageTexture.create_from_image(baked_shadow))
+ var matched:Image=await capture(viewport,out.path_join("sprite-matched-shadow.png"))
+ report["field_shadow_match_probe"]={"same_native_without_vs_with_field_shadow":compare(native_shadow,reference),"unmatched_bake":compare(native_shadow,unmatched),"matched_bake":compare(native_shadow,matched),"scene_light_parameters_changed":false,"bake_matches_existing_field_shadow_parameters":true}
  FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"  "));print("TONEMAP_PROBE ",JSON.stringify(report));quit()
