@@ -1,0 +1,116 @@
+name: Inspect prone equipment and preserved mounted cuts in the real battle
+on:
+  push:
+    branches: [codex/river-rc23-authored-combat]
+    paths: ['tests/grounded_equipment_film.gd','.github/workflows/grounded-equipment-film.yml']
+permissions:
+  contents: write
+concurrency:
+  group: grounded-equipment-film
+  cancel-in-progress: true
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    env:
+      LIBGL_ALWAYS_SOFTWARE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Godot and recording tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xdotool ffmpeg python3-pil
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/grounded-equipment-film docs/evidence/river-gate-v1-rc23/native-combat/grounded-equipment
+          touch artifacts/.gdignore docs/evidence/river-gate-v1-rc23/native-combat/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Record actual death and settled equipment at the original simulation rate
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/native-combat/grounded-equipment
+          cp assets/river_gate/figures/company_motion.png /tmp/authored-motion.png
+          cp scripts/field/company_skin.gdshader /tmp/current-skin.gdshader
+          for side in before after; do
+            if [ "$side" = before ]; then
+              curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aa6623fab538de37cfb92ff18f0c37bb5e443e93/assets/river_gate/figures/company_motion.png -o assets/river_gate/figures/company_motion.png
+              curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aa6623fab538de37cfb92ff18f0c37bb5e443e93/scripts/field/company_skin.gdshader -o scripts/field/company_skin.gdshader
+            else
+              cp /tmp/current-skin.gdshader scripts/field/company_skin.gdshader
+              cp /tmp/authored-motion.png assets/river_gate/figures/company_motion.png
+            fi
+            sha256sum assets/river_gate/figures/company_motion.png > "$proof/$side-palette-sha256.txt"
+            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side-import.log" 2>&1
+            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side-import.log"; then exit 1; fi
+            timeout 9m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 20 --script tests/grounded_equipment_film.gd > "$proof/$side.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side.log"; then exit 1; fi
+            grep GROUNDED_EQUIPMENT_MOTION "$proof/$side.log"
+            cp artifacts/grounded-equipment-film/sequence.json "$proof/$side.json"
+            mkdir -p "$proof/$side"
+            cp artifacts/grounded-equipment-film/side-*.jpg artifacts/grounded-equipment-film/back-*.jpg artifacts/grounded-equipment-film/seated-*.jpg "$proof/$side/"
+            mkdir -p "artifacts/grounded-raw/$side"
+            cp -R artifacts/grounded-equipment-film/. "artifacts/grounded-raw/$side/"
+            for view in normal; do
+              ffmpeg -v error -y -framerate 20 -i "artifacts/grounded-equipment-film/$view/frame-%03d.jpg" -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p -movflags +faststart "$proof/$side-$view.mp4"
+              ffprobe -v error -count_frames -show_entries stream=width,height,r_frame_rate,nb_read_frames,duration -of json "$proof/$side-$view.mp4" > "$proof/$side-$view-stream.json"
+            done
+            SIDE="$side" /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import os
+          out=Path("docs/evidence/river-gate-v1-rc23/native-combat/grounded-equipment")
+          frames=(0,4,8,12,18,31)
+          sheet=Image.new("RGB",(1280,1200))
+          for n,k in enumerate(frames):
+              im=Image.open(Path("artifacts/grounded-equipment-film/normal")/f"frame-{k:03d}.jpg").convert("RGB")
+              assert im.size==(2560,1600)
+              im.save(out/f"{os.environ['SIDE']}-normal-{k:03d}-native.jpg",quality=78,subsampling=2)
+              sheet.paste(im.resize((640,400),Image.Resampling.LANCZOS),((n%2)*640,(n//2)*400))
+          sheet.save(out/f"{os.environ['SIDE']}-normal-times.jpg",quality=86)
+          PY
+          done
+          /usr/bin/python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("docs/evidence/river-gate-v1-rc23/native-combat/grounded-equipment")
+          a=json.loads((p/"before.json").read_text())
+          b=json.loads((p/"after.json").read_text())
+          assert a==b
+          ticks=[x["tick"] for x in a["index"]]
+          assert ticks==list(range(44,76)) and a["index"][0]["hp"]>0
+          assert a["index"][-1]["hp"]==0 and a["index"][-1]["timer"]==0
+          assert all(x["scale"]==1. and x["ordinary"]==[512,512] for x in a["index"])
+          assert any(x["state"]==7 and x["timer"]>0 for x in a["index"])
+          for path in p.glob("*-stream.json"):
+              stream=json.loads(path.read_text())["streams"][0]
+              assert (stream["width"],stream["height"],int(stream["nb_read_frames"]))==(2560,1600,32)
+              assert stream["r_frame_rate"]=="20/1"
+          (p/"verification.json").write_text(json.dumps({"physics_sequences_equal":True,"consecutive_steps":32,"fps":20,"duration":1.6,"dimensions":[2560,1600],"realtime_performance_measurement":False,"casualty":80,"death_tick":48,"mounted_sample":a["mounted"],"mounted_officers_in_this_roster":a["mounted_officers_in_this_roster"]},indent=2)+"\n")
+          PY
+          git diff --exit-code -- assets/river_gate/figures/company_motion.png scripts/field/company_skin.gdshader
+          sha256sum "$proof"/*.mp4 > "$proof/video-sha256.txt"
+          git add "$proof"
+          git -c user.name='River Gate authored combat proof' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive complete casualty motion and the preserved seated attack'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Preserve actual errors
+        if: failure()
+        run: find docs/evidence/river-gate-v1-rc23/native-combat/grounded-equipment -name '*.log' -exec tail -n 100 '{}' +
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grounded-equipment-original-speed
+          path: |
+            docs/evidence/river-gate-v1-rc23/native-combat/grounded-equipment
+            artifacts/grounded-raw
+            artifacts/grounded-equipment-film
+          retention-days: 7
