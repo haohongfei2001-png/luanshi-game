@@ -1,0 +1,37 @@
+name: Bake and verify the complete field clothing and shield sheet
+on:
+  push:
+    branches: ['codex/river-rc23-sewn-crossing']
+    paths: ['.github/workflows/sew-crossing.yml','tools/art/import_garrison_issues.py']
+permissions:
+  contents: write
+jobs:
+  tailor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bake the two pinned artists' inputs together
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-pil python3-numpy
+          git fetch --quiet --depth=1 origin c175b8bbbf5d12ba26f441c3db3cb7bfad1d52b1
+          git show FETCH_HEAD:assets/third_party/wildfire_garments/field_colours.png > /tmp/approved-cloth.png
+          cp assets/third_party/wildfire_garments/field_colours.png /tmp/approved-shield.png
+          /usr/bin/python3 tools/art/import_garrison_issues.py "$RUNNER_TEMP/uniform"
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          import numpy as np
+          path='assets/third_party/wildfire_garments/field_colours.png'
+          cloth, shield, sewn = [np.array(Image.open(p).convert('RGBA')) for p in ('/tmp/approved-cloth.png','/tmp/approved-shield.png',path)]
+          assert cloth.shape == shield.shape == sewn.shape == (528,528,4)
+          for y,x in ((0,0),(0,264),(264,0),(264,264)):
+              baseline = shield if (x,y)==(264,264) else cloth
+              assert np.array_equal(sewn[y:y+264,x:x+264],baseline[y:y+264,x:x+264]),(x,y)
+          print('FIELD_COLOURS original four RGBA tiles verified exactly')
+          PY
+          git diff --exit-code -- assets/river_gate/figures/garrison_bodies.glb assets/third_party/wildfire_garments/field_issues.glb
+          git add assets/third_party/wildfire_garments/field_colours.png
+          git -c user.name='River Gate art build' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the tailored coats and intact fitted shield into the shared field atlas'
+          git push origin HEAD:refs/heads/codex/river-rc23-sewn-crossing

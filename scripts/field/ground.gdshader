@@ -3,6 +3,7 @@ render_mode diffuse_lambert, cull_disabled;
 uniform bool gate_crossing = false;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D bridge_oak : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D forecourt : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
@@ -230,6 +231,13 @@ void fragment() {
 			float traffic=.66+.34*smoothstep(.30,.72,texture(fieldbed,p*vec2(.10,.22)).g);
 			color*=.78+.31*grain+.19*worn*traffic*(.48+.52*weather)-.16*peg;
 			if(moat_tread) {
+				float course=floor((p.x-24.)/.335+.5);
+				float strip=mod(course*3.+step(.87*sin((course+17.)*1.29),p.y)*5.,8.);
+				float across=clamp(board,.017,.983);
+				vec2 timber_uv=vec2(p.y*.127+fract(course*.61803),(strip+.04+.92*across)/8.);
+				vec3 timber=texture(bridge_oak,timber_uv).rgb;
+				color=mix(color,timber,.90);
+				color*=1.+.115*worn*traffic-.13*peg;
 				float wet_end=smoothstep(2.75,3.84,cross_distance);
 				color*=1.-wet_end*(.11+.11*(1.-weather));
 			}
