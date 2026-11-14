@@ -1,0 +1,61 @@
+name: Preserve existing spear review without resimulation
+on:
+  push:
+    branches: ['dot/spear-contact-experiment']
+    paths: ['.github/workflows/dot-preserve-spear-review.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        view: [normal-qhd, close-uhd]
+    steps:
+      - name: Wait for the original native job artifact, without resimulation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          name='spear-contact-${{ matrix.view }}-1d496bfb08b8a6079fdc1a4dc4608570e311f083'
+          found=0
+          for attempt in $(seq 1 36); do
+            if gh api repos/${{ github.repository }}/actions/runs/43603906190/artifacts --jq '.artifacts[].name' | grep -Fxq "$name"; then found=1; break; fi
+            sleep 20
+          done
+          test "$found" = 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: spear-contact-${{ matrix.view }}-1d496bfb08b8a6079fdc1a4dc4608570e311f083
+          run-id: 43603906190
+          github-token: ${{ github.token }}
+          path: original
+      - name: Preserve byte-identical movies, logs, contacts and key original frames
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json,shutil
+          source=Path('original'); dest=Path('review'); manifest=[]
+          for p in source.rglob('*'):
+              if not p.is_file(): continue
+              if p.suffix=='.png' and p.name not in {'frame-000.png','frame-006.png','frame-022.png','frame-023.png','frame-040.png'}: continue
+              q=dest/p.relative_to(source);q.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copy2(p,q)
+              before=hashlib.sha256(p.read_bytes()).hexdigest();after=hashlib.sha256(q.read_bytes()).hexdigest()
+              assert before==after
+              manifest.append({'path':str(p.relative_to(source)),'sha256':before,'bytes':p.stat().st_size})
+          assert len(list(dest.rglob('diagnostic.mp4')))==2
+          (dest/'UNCHANGED-BYTES.json').write_text(json.dumps({'source_run':43603906190,'source_sha':'1d496bfb08b8a6079fdc1a4dc4608570e311f083','resimulated':False,'files':manifest},indent=2)+'\n')
+          print(sum(x['bytes'] for x in manifest),len(manifest))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spear-viewable-${{ matrix.view }}-1d496bfb08b8
+          path: review/
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
