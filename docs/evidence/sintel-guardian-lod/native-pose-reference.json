@@ -1,0 +1,50 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "source_unchanged": true,
+  "rig_bones": 308,
+  "deform_bones": 79,
+  "poses": [
+    {
+      "name": "rest",
+      "upper_arm_local_z": 0,
+      "forearm_local_z": 0,
+      "vertex_count": 5412,
+      "index_uv_sha256": "3e5b13dd9dcb7f191c51fd1c92c5a11ec7ed1fb19474cd2b83f67bec05ce3c7b",
+      "max_displacement_m": 0.0,
+      "rms_displacement_m": 0.0
+    },
+    {
+      "name": "elbow",
+      "upper_arm_local_z": -0.25,
+      "forearm_local_z": 0.9,
+      "vertex_count": 5412,
+      "index_uv_sha256": "3e5b13dd9dcb7f191c51fd1c92c5a11ec7ed1fb19474cd2b83f67bec05ce3c7b",
+      "max_displacement_m": 0.07737875639310479,
+      "rms_displacement_m": 0.028640208444943645
+    },
+    {
+      "name": "shoulder",
+      "upper_arm_local_z": -0.8,
+      "forearm_local_z": 0.3,
+      "vertex_count": 5412,
+      "index_uv_sha256": "3e5b13dd9dcb7f191c51fd1c92c5a11ec7ed1fb19474cd2b83f67bec05ce3c7b",
+      "max_displacement_m": 0.2697826814182044,
+      "rms_displacement_m": 0.10607738088444417
+    },
+    {
+      "name": "combined",
+      "upper_arm_local_z": -0.55,
+      "forearm_local_z": 1.2,
+      "vertex_count": 5412,
+      "index_uv_sha256": "3e5b13dd9dcb7f191c51fd1c92c5a11ec7ed1fb19474cd2b83f67bec05ce3c7b",
+      "max_displacement_m": 0.16118601199714602,
+      "rms_displacement_m": 0.06656482763675015
+    }
+  ],
+  "same_vertex_polygon_loop_uv_order": true,
+  "triangulation_note": "Geometry-dependent quad diagonal can change with pose; compare original polygon loops, not tessellator triangle order. First strict triangle hash failure retained.",
+  "source": "original bound MeshDeform and level1 native Multires evaluated after native FK controls",
+  "runtime_armature_fit": "NOT_IMPLEMENTED",
+  "runtime_error": "NOT_MEASURED",
+  "art_pass": false
+}

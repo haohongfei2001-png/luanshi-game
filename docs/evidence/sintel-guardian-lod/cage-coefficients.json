@@ -1,0 +1,38 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "source_unchanged": true,
+  "matrix_shape": [
+    1373,
+    566
+  ],
+  "finite_difference_step_m": 0.05,
+  "coefficient_min": 0.0,
+  "coefficient_max": 0.6302420794963837,
+  "row_sum_min": 0.9999322891235352,
+  "row_sum_max": 1.00006103515625,
+  "validation": [
+    {
+      "name": "elbow",
+      "max_m": 2.55328484630319e-06,
+      "rms_m": 4.949033438687102e-07
+    },
+    {
+      "name": "shoulder",
+      "max_m": 1.702681520047575e-05,
+      "rms_m": 3.3148878642659627e-06
+    },
+    {
+      "name": "combined",
+      "max_m": 6.92397196342118e-06,
+      "rms_m": 1.4282008390057445e-06
+    },
+    {
+      "name": "heldout",
+      "max_m": 1.6898005901206485e-05,
+      "rms_m": 3.3359470262607915e-06
+    }
+  ],
+  "scope": "original1373-point top cage only; no Multires or normals preservation claim",
+  "runtime": "OFF",
+  "accepted_numerical_reconstruction": true
+}

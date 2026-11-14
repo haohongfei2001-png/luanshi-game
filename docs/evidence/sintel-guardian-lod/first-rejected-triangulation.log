@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/native_pose_reference.py", line 19, in <module>
+    assert signature==index_hash and points.shape==baseline.shape and np.isfinite(points).all()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+Error: script failed, file: 'tools/art/sintel_guard/native_pose_reference.py', exiting.
+Blender 4.3.2
+Read blend: "/workspace/scratch/24e34dc252d3/asset-research-storage/sintel-character/guardians_r854/guardian_lao_tseu.blend"
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 4 missing in space type "Info" (id: 7) - removing region
+Warning: region type 5 missing in space type "Text" (id: 9) - removing region
+Warning: region type 5 missing in space type "Outliner" (id: 3) - removing region
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 5 missing in space type "Buttons" (id: 4) - removing region
+Warning: region type 5 missing in space type "Console" (id: 18) - removing region
+Warning: region type 5 missing in space type "Text" (id: 9) - removing region
+Warning: region type 5 missing in space type "Console" (id: 18) - removing region
+Warning: region type 5 missing in space type "Outliner" (id: 3) - removing region
+scripts disabled for "/workspace/scratch/24e34dc252d3/asset-research-storage/sintel-character/guardians_r854/guardian_lao_tseu.blend", skipping 'lao_tseu_rig_props.py'
+
+Blender quit

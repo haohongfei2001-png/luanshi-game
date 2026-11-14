@@ -1,0 +1,104 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "source_unchanged": true,
+  "cage_vertices": 566,
+  "cage_modifiers": [
+    "ARMATURE"
+  ],
+  "bound": true,
+  "dynamic_bind": false,
+  "tests": [
+    {
+      "multires_level": 0,
+      "pose": "elbow",
+      "vertices": 1373,
+      "cage_replay_error": {
+        "max_m": 0.0,
+        "rms_m": 0.0,
+        "p95_m": 0.0
+      },
+      "midpoint_affine_error": {
+        "max_m": 1.0848209096909341e-07,
+        "rms_m": 2.1948292885068362e-08,
+        "p95_m": 4.8342678092753246e-08
+      }
+    },
+    {
+      "multires_level": 0,
+      "pose": "shoulder",
+      "vertices": 1373,
+      "cage_replay_error": {
+        "max_m": 0.0,
+        "rms_m": 0.0,
+        "p95_m": 0.0
+      },
+      "midpoint_affine_error": {
+        "max_m": 7.11715712194994e-08,
+        "rms_m": 1.8425446251350566e-08,
+        "p95_m": 3.960037906741593e-08
+      }
+    },
+    {
+      "multires_level": 0,
+      "pose": "combined",
+      "vertices": 1373,
+      "cage_replay_error": {
+        "max_m": 0.0,
+        "rms_m": 0.0,
+        "p95_m": 0.0
+      },
+      "midpoint_affine_error": {
+        "max_m": 8.796439088969211e-08,
+        "rms_m": 2.0694419749494037e-08,
+        "p95_m": 4.280032699210963e-08
+      }
+    },
+    {
+      "multires_level": 1,
+      "pose": "elbow",
+      "vertices": 5412,
+      "cage_replay_error": {
+        "max_m": 0.0,
+        "rms_m": 0.0,
+        "p95_m": 0.0
+      },
+      "midpoint_affine_error": {
+        "max_m": 0.0008202409387907325,
+        "rms_m": 3.939291093552195e-05,
+        "p95_m": 4.6049563327262495e-05
+      }
+    },
+    {
+      "multires_level": 1,
+      "pose": "shoulder",
+      "vertices": 5412,
+      "cage_replay_error": {
+        "max_m": 0.0,
+        "rms_m": 0.0,
+        "p95_m": 0.0
+      },
+      "midpoint_affine_error": {
+        "max_m": 0.00206281231094052,
+        "rms_m": 0.00019352658967903798,
+        "p95_m": 0.0003382849171212383
+      }
+    },
+    {
+      "multires_level": 1,
+      "pose": "combined",
+      "vertices": 5412,
+      "cage_replay_error": {
+        "max_m": 0.0,
+        "rms_m": 0.0,
+        "p95_m": 0.0
+      },
+      "midpoint_affine_error": {
+        "max_m": 0.0028890829407743368,
+        "rms_m": 0.00013797530786978412,
+        "p95_m": 0.00021398564562243635
+      }
+    }
+  ],
+  "claim": "Measured cage replay and midpoint linearity only, not runtime LBS fitting or normals validation",
+  "runtime_enabled": false
+}

@@ -1,0 +1,22 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "source_unchanged": true,
+  "source_modifiers_restored": true,
+  "high_triangles": 681984,
+  "low_triangles": 10656,
+  "uv_layers": [
+    "UVTex"
+  ],
+  "method": "complete original top subdiv level1 vs native Multires render4, tangent normal bake selected-to-active",
+  "normal_resolution": [
+    1024,
+    1024
+  ],
+  "cage_extrusion_m": 0.04,
+  "ray_distance_m": 0.08,
+  "pose": "source rest only",
+  "animated_skin": "NOT_IMPLEMENTED",
+  "rig_changed": false,
+  "godot_test": "NOT_RUN",
+  "art_pass": false
+}

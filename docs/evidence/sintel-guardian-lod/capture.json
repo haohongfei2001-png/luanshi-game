@@ -1,0 +1,38 @@
+[
+  {
+    "file": "high-3m-native-3840x2160-blender.png",
+    "distance_m": 3,
+    "width": 3840,
+    "height": 2160,
+    "internal_render_percentage": 100,
+    "horizontal_fov_degrees": 50,
+    "source": "Blender static garment-only diagnostic"
+  },
+  {
+    "file": "low-3m-native-3840x2160-blender.png",
+    "distance_m": 3,
+    "width": 3840,
+    "height": 2160,
+    "internal_render_percentage": 100,
+    "horizontal_fov_degrees": 50,
+    "source": "Blender static garment-only diagnostic"
+  },
+  {
+    "file": "high-22m-native-2560x1440-blender.png",
+    "distance_m": 22,
+    "width": 2560,
+    "height": 1440,
+    "internal_render_percentage": 100,
+    "horizontal_fov_degrees": 50,
+    "source": "Blender static garment-only diagnostic"
+  },
+  {
+    "file": "low-22m-native-2560x1440-blender.png",
+    "distance_m": 22,
+    "width": 2560,
+    "height": 1440,
+    "internal_render_percentage": 100,
+    "horizontal_fov_degrees": 50,
+    "source": "Blender static garment-only diagnostic"
+  }
+]
