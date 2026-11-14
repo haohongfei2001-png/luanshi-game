@@ -41,7 +41,7 @@ jobs:
           cp artifacts/native-character-parity/cpu.json artifacts/native-character-parity/graphics-bake.json
           timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu.log 2>&1 || pixel_status=$?
           INTACT_PARITY_FULL_MESH=1 timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu-full.log 2>&1 || full_status=$?
-          for mode in no_normal unshaded; do
+          for mode in no_normal unshaded normal_flat normal_x normal_y; do
             diagnostic_status=0
             INTACT_DIAGNOSTIC="$mode" timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >"artifacts/native-character-parity/diagnostic-$mode.log" 2>&1 || diagnostic_status=$?
             printf '%s exit=%s; diagnostic only, cannot satisfy full-feature gate\n' "$mode" "$diagnostic_status" >>artifacts/native-character-parity/diagnostic-status.txt

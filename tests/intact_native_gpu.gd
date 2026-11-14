@@ -48,6 +48,14 @@ func run() -> void:
 			if diagnostic=="no_normal":
 				chosen=original.duplicate();chosen.normal_enabled=false
 				native.set_surface_override_material(surface,chosen)
+			if diagnostic.begins_with("normal_"):
+				chosen=original.duplicate()
+				var normal_image:=Image.create(4,4,false,Image.FORMAT_RGB8)
+				var value:=Color(.5,.5,1)
+				if diagnostic=="normal_x":value=Color(.85,.5,1)
+				if diagnostic=="normal_y":value=Color(.5,.85,1)
+				normal_image.fill(value);chosen.normal_texture=ImageTexture.create_from_image(normal_image)
+				native.set_surface_override_material(surface,chosen)
 			var material:=MaterialAdapter.adapt(chosen)
 			if material.has("error"):abort(str(material));return
 			var shader:ShaderMaterial=material.material
