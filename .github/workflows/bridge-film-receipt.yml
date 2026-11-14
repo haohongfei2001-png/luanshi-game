@@ -1,0 +1,33 @@
+name: Verify the archived native bridgehead take without re-encoding it
+on:
+  push:
+    branches: ['codex/river-rc22-first-crossing-cut']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: river-bridgehead-normal-speed
+          path: /tmp/take
+          run-id: 43532283406
+          github-token: ${{ github.token }}
+      - name: Verify original time base, contacts, native pixels and stereo before indexing the take
+        run: |
+          set -euo pipefail
+          if ! command -v ffprobe >/dev/null || ! /usr/bin/python3 -c 'from PIL import Image'; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg python3-pil; fi
+          /usr/bin/python3 tools/index_bridgehead_take.py /tmp/take a0dffd422fa222a88a79791dd9f9d3c69c681249 43532283406 788e4325e62e72c0a15129bdb734925780d91f8e
+          dst=docs/evidence/river-gate-v1-rc22/bridgehead
+          mkdir -p "$dst"
+          cp -R /tmp/take/. "$dst"
+          git add -- "$dst"
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive original bridgehead footage with verified game clock, audio and physical image dimensions'
+          git push origin HEAD:refs/heads/codex/river-rc22-first-crossing-cut
