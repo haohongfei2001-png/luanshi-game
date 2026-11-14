@@ -68,8 +68,7 @@ def main():
                     row[key][metric] = {"median":statistics.median(values), "p95":values[(len(values)*95+99)//100-1], "samples":len(values)}
             result.append(row)
             print("FIELD_TARGET_PAIR", json.dumps(row, separators=(",", ":")), flush=True)
-        (ROOT / "artifacts/field-target-pair.json").write_text(json.dumps(result, indent=2) + "
-")
+        (ROOT / "artifacts/field-target-pair.json").write_text(json.dumps(result, indent=2) + "\n")
 
 
 if __name__ == "__main__":
