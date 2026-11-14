@@ -1,19 +1,20 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
-## 2026-11-14 当前 P0 · 整套地图与人物视觉重建
+## 2026-11-14 当前 P0 · 完整世界与整人母版重建
 
-Owner 再次否定局部修饰，要求地图、背景、人物全部更换视觉母版，效果图是最低门槛。当前状态 **ART_REBUILD_REQUIRED / OWNER_REJECTED**。旧画面及下方历史记录保留用于对照，未进入下一版美术交付候选。
+Owner 要求地图、背景、人物整套重建，效果图是最低门槛。当前 **ART_REBUILD_REQUIRED / OWNER_REJECTED**。根开发线负责完整世界、整合和原窗验证，uniform_master 独占完整人物源与人体 shader。两条工作线保持文件归属。
 
-- 整地图正常入口已接入 `codex/river-whole-rebuild`。代码 `0ee9367016fd84418491de9a564d4cfaabb0a682`，地面与门扇烘焙 `0ac8b112e3e9403c58bdbfe06670d31ff014c6c5`。替换 controller 的地图装配，包含完整城墙/城楼/城内房舍/营舍、原生地表、木桥、岩岸、整株垂柳、阔叶林和背景松林。保留原 Ground 与真实军队模拟接口。[当前原生 QHD 实玩运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43553508581)
-- 全部源资产云端烘焙完成。CC0 Poly Haven 完整结构在 `09cddac79638275c6e02ed42cc8d6498c5ec86da`，0AD CC BY-SA 建筑原生 UV2/AO 和 Sapling 连接完整枝条的柳树在 `22ad3946dcbb58d9a228f80fc52093794b549cf3`。每个资源保留原作者、来源哈希与制作代码，输出可编辑 glTF/GLB。
-- 完整人物母版由当前 `uniform_master` 工作线独占，分支 `codex/river-rc23-hm08-body`。已可运行的源提交 `cc6ae7e59b5f49d3d3e93bfc73970cb5d67f61b7` 使用真实 HM08 人体与 0AD 整衣，修复足轴非有限值，六种身份均有三档模型。本人实拍自审仍发现颈口、胸区和低模观感，正在继续改整套衣甲结构。未经该工作线确认固定 head，不覆盖其公司装配文件。
-- 前一工程基线是 PR #58 的 `7481b60411540e8c6c23a4553a0a99cc2a3a5df2`。已有真实 2560×1440 与 3840×2160、内部 1.0 帧证据；分辨率验证通过未代表视觉质量通过。RC23 整段 33.25 秒 QHD 原速回放在 run43546643601，sha256 `d98cb829146721b92b4f406cb1af8a913773892a83fc994156cb205cd800e3e6`，使用 llvmpipe 离线 MovieMaker，不能用回放帧率证明实时性能。
-- 原 macOS 首次 Metal 卡住的样本已定位至上游 shader singleton 锁等待。独立移植 Godot PR123312 后，run43550761384 的默认 Metal 首次及后续窗口可运行，兼容后端因自编译模板缺少 EGL 动态库失败。该模板仍隔离，尚未采用为产品。六次空应用数据冷启动与三次焦点中断复验分支 `codex/river-rc23-mobile-cold`，初始提交 `df11f1ac8c19099f59d042aa1479ee6e62aa915e`。真实 M5 为 **DEVICE_NOT_RUN**。
-- Goal 仍为 active。原生 automation-2 已更新为整套重建方向，每天上海时间 10 点与 22 点。设置存在，独立定时执行记录尚未证实。
+- 主工程基线仍为 PR #58 的 `7481b60411540e8c6c23a4553a0a99cc2a3a5df2`，本次核对 main 为 `844f83191daf8223464a35711e5a428d09e5d92f`。
+- 完整世界分支 `codex/river-whole-rebuild` 已经替换正常战役入口的地图类。包括完整城防/军营、原生地表、地形脊线、河床、真实整株垂柳、CC0 完整树木/灌木/蕨类、完整木桥源与扫描石岸。战斗、世界结算和九武器接口继承原工程。
+- 最近一次成功的 **QHD 真实窗口静帧**为 `0f10701c898c73d01b980965cbb6af1dddcd48de`，run43557380427。同机位 22 米、yaw -33、seed61112、512+512，内部比例1.0。它只证明已渲染、模拟在推进。本人判退桥面空隙、孤立岸岩、黑水、空旷背景及旧人物。这些帧没有达到参考图质量。[原窗证据](https://github.com/haohongfei2001-png/luanshi-game/tree/0f10701c898c73d01b980965cbb6af1dddcd48de/docs/evidence/river-whole-rebuild/review)
+- 当前桥梁与河岸修正源为 `508092c2af3466dbc4bf623159b1e7992e66c941`。已把原生连接完整的木板重组为全桥，使用真实几何射线检查落脚覆盖，保留正常细木缝。前次覆盖99.27%，未完成实机复核。修复 Blender 共享网格变换错误并统一 `--python-exit-code 1`，不得沿用旧 GLB 当新烘焙成功。32dfbce 运行因过度严格的细缝长度条件失败，508092c 改为检查脚掌大小的缺口，待实际结果。
+- 新石岸 footprint 与 Ground 使用同一布置数据。新募兵位置走同一安全落点逻辑。存档新增可选 terrain_revision=2，仅把旧地形存档中落入新岸岩/河床的位置投回原岸，兵力/伤亡/生命/随机状态保留。新存档保留精确位置往返。增加 `tests/world_terrain_compat.gd`，当前整批回归待读取运行结果。
+- 完整人物可用于整幅组合审核的固定版本 `2234b23d865c848f44ccc3637cb5351ef5dd86fa`。完整 HM08 人体、真实整衣、统一源图集和人体专用 pigment/light 已联动，旧逐面皮肤碎色在修复。**颈底仍穿出衣领，明确判退**。必须一起取 field_company_master.glb、field_colours.png、company_art.gd、company_skin.gdshader、field_person_pigment.gdshaderinc、field_person_light.gdshaderinc 与对应三个源脚本/manifest/NOTICE。人物工作线继续修复真实领口配准。
+- 原 RC23 有 33.25 秒2560×1440 原速离线回放，SHA256 d98cb829146721b92b4f406cb1af8a913773892a83fc994156cb205cd800e3e6，run43546643601。新整套尚无完整连续影片或4K验证。MovieMaker回放帧率不能代表实时性能。
+- macOS 官方模板首次 Metal 卡住保留失败样本。上游 Godot PR123312 锁修复的隔离模板通过 run43553745945 六次空应用数据进程冷启动和三次焦点中断，第一轮首帧53.067秒，其余约8–12.7秒。系统驱动缓存保留。兼容后端缺少 EGL 动态库，模板仍隔离。真实 M5 **DEVICE_NOT_RUN**。
+- Goal active。automation-2 ACTIVE，每日上海10/22点，提示词已更新完整重建方向。独立定时执行仍未证实。
 
-下一步先检查上述整地图运行的实际结果与 `docs/evidence/river-whole-rebuild/2560x1440/view-0145.png`。修复运行失败后，整合人物母版固定资源，按参考图的 22 米镜头自审全幅构图和连续动作，继续制作达到门槛的完整场景。后续原速驾驶脚本需持续接敌，移除一次命中就自动回退的旧规则。再录完整 2K 原片与 4K 原帧，完成九兵器/512v512/战后存档回归。托管设备实测与 M5 分别记录。
-
-可恢复的云端入口命令为 `git fetch origin codex/river-whole-rebuild codex/river-rc23-hm08-body`；先核对写入者和运行状态，再建立独立整合 checkout，执行 `godot --headless --editor --import` 与 `godot --headless --path . --script tests/field_bridgehead.gd`。当前整地图 workflow 自动完成真实 X11 QHD 窗口的正常菜单、移动与攻击回放。
+下一条可执行入口是 `git fetch origin codex/river-whole-rebuild codex/river-rc23-hm08-body`。先读508092c后的 hosted run 和共享源 head，修复并复核整桥/岸线，再复制人物完整固定版本做整幅2K自审。随后采用修复后的人物源，持续正常输入接敌，录原速影片与4K原帧，跑完整功能/旧存档/行军/千人回归和实际帧时间。录影脚本需移除第一次命中就回退的旧输入规则。新候选包与美术验收仍待完成。
 
 
 ## OWNER-AUTONOMOUS-20261114｜自动续接入口（真实进展仍以本文件最新 commit 为准）
