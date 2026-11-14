@@ -1,0 +1,49 @@
+name: Dot intact character native skin parity
+on:
+  push:
+    branches: [dot/native-character-parity]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-parity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified Godot and recording tools
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb ffmpeg libgl1-mesa-dri libxi6 libxrender1 libxfixes3 libxkbcommon0 libsm6
+          curl -fLsS --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/native-character-parity
+          { uname -a; lscpu; free -m; godot --version; } >artifacts/native-character-parity/host.txt
+      - name: Import and validate complete influence and source CPU invariants
+        run: |
+          set -euo pipefail
+          timeout 240s godot --headless --editor --path . --import >artifacts/native-character-parity/import.log 2>&1
+          timeout 90s godot --headless --path . --script tests/intact_weight_texture.gd >artifacts/native-character-parity/weights.log 2>&1
+          timeout 180s godot --headless --path . --script tests/intact_native_palette.gd >artifacts/native-character-parity/cpu.log 2>&1
+          cp artifacts/native-character-parity/cpu.json artifacts/native-character-parity/headless.json
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/native-character-parity/*.log; then exit 1; fi
+      - name: Compare actual renderer skin bake and complete material pixels
+        run: |
+          set -euo pipefail
+          timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_palette.gd >artifacts/native-character-parity/graphics-bake.log 2>&1
+          cp artifacts/native-character-parity/cpu.json artifacts/native-character-parity/graphics-bake.json
+          timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/native-character-parity/*.log; then exit 1; fi
+          git rev-parse HEAD >artifacts/native-character-parity/ACTUAL_SOURCE_SHA
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: intact-native-skin-parity-${{ github.sha }}
+          path: artifacts/native-character-parity/
+          retention-days: 30

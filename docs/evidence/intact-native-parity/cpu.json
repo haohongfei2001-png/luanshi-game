@@ -1,0 +1,217 @@
+{
+  "checks": 68047,
+  "deformation_reference": "CPU linear blend roundtrip only; native RenderingServer skeleton unavailable in headless",
+  "failures": 0,
+  "full_battle_performance": "NOT_RUN",
+  "graphics": "NOT_RUN",
+  "material_pixel_parity": "NOT_RUN",
+  "meshes": [
+    {
+      "binds": 65,
+      "influences": 4,
+      "lods": 3,
+      "mesh": "Eyebrows",
+      "vertices": 646
+    },
+    {
+      "binds": 65,
+      "influences": 4,
+      "lods": 7,
+      "mesh": "Eyes",
+      "vertices": 556
+    },
+    {
+      "binds": 65,
+      "influences": 4,
+      "lods": 8,
+      "mesh": "SuperHero_Male",
+      "vertices": 7281
+    }
+  ],
+  "native_bones": 65,
+  "samples": [
+    {
+      "clip": "Death01",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Death01",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Death01",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Death01",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Hit_Chest",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Hit_Chest",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Hit_Chest",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Hit_Chest",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Hit_Head",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Hit_Head",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Hit_Head",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Hit_Head",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Jog_Fwd",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Jog_Fwd",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Jog_Fwd",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Jog_Fwd",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Sprint",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Sprint",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Sprint",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Sprint",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Sword_Attack",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Sword_Attack",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Sword_Attack",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Sword_Attack",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Sword_Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Sword_Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Sword_Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Sword_Idle",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    },
+    {
+      "clip": "Walk",
+      "max_position_error_m": 0.0,
+      "phase": 0.0
+    },
+    {
+      "clip": "Walk",
+      "max_position_error_m": 0.0,
+      "phase": 0.25
+    },
+    {
+      "clip": "Walk",
+      "max_position_error_m": 0.0,
+      "phase": 0.5
+    },
+    {
+      "clip": "Walk",
+      "max_position_error_m": 0.0,
+      "phase": 0.75
+    }
+  ],
+  "shipping_enabled": false,
+  "source_lods_preserved": 18,
+  "worst_position_error_m": 0.0
+}
