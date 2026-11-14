@@ -10,6 +10,8 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+      - name: Prepare evidence even for early failures
+        run: mkdir -p evidence
       - name: Install headless software-render capture dependencies
         run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri mesa-utils ffmpeg
       - name: Install pinned official Blender and Godot
@@ -27,9 +29,11 @@ jobs:
           unzip /tmp/godot.zip -d /tmp/godot
           chmod +x /tmp/godot/Godot_v4.6.3-stable_linux.x86_64
       - name: Recover exact official source and export complete native cache
+        shell: bash
         run: |
-          python tools/art/sintel_guard/fetch_source.py --output "$RUNNER_TEMP/guardian-source"
-          blender --background --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/export_native_cache.py -- "$RUNNER_TEMP/guardian-source/guardians_r854/guardian_lao_tseu.blend" "$RUNNER_TEMP/guardian-cache"
+          set -euo pipefail
+          python tools/art/sintel_guard/fetch_source.py --output "$RUNNER_TEMP/guardian-source" 2>&1 | tee evidence/source-fetch.log
+          blender --background --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/export_native_cache.py -- "$RUNNER_TEMP/guardian-source/guardians_r854/guardian_lao_tseu.blend" "$RUNNER_TEMP/guardian-cache" 2>&1 | tee evidence/source-export.log
       - name: Actual Godot full-body native-resolution captures
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
@@ -50,6 +54,7 @@ jobs:
           done
           GUARDIAN_DISTANCE=22 GUARDIAN_DURATION=4 GUARDIAN_RECORD=1 GUARDIAN_OUTPUT="$PWD/evidence/motion22m" xvfb-run -a -s '-screen 0 2560x1440x24' "$GODOT" --path "$PROJECT" --resolution 2560x1440 --rendering-method gl_compatibility > evidence/motion22m.log 2>&1
           python tools/art/sintel_guard/encode_monotonic.py evidence/motion22m
+          ! grep -E "SCRIPT ERROR|SHADER ERROR|ERROR:" evidence/*.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:

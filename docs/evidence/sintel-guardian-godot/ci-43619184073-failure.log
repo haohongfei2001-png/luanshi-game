@@ -1,0 +1,58 @@
+2026-11-14T17:06:36.8467607Z ##[group]Run python tools/art/sintel_guard/fetch_source.py --output "$RUNNER_TEMP/guardian-source"
+2026-11-14T17:06:36.8468398Z [36;1mpython tools/art/sintel_guard/fetch_source.py --output "$RUNNER_TEMP/guardian-source"[0m
+2026-11-14T17:06:36.8469636Z [36;1mblender --background --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/export_native_cache.py -- "$RUNNER_TEMP/guardian-source/guardians_r854/guardian_lao_tseu.blend" "$RUNNER_TEMP/guardian-cache"[0m
+2026-11-14T17:06:36.8487702Z shell: /usr/bin/bash -e {0}
+2026-11-14T17:06:36.8487964Z ##[endgroup]
+2026-11-14T17:06:37.0490025Z Traceback (most recent call last):
+2026-11-14T17:06:37.0491193Z   File "/home/runner/work/luanshi-game/luanshi-game/tools/art/sintel_guard/fetch_source.py", line 10, in <module>
+2026-11-14T17:06:37.0492583Z     with urllib.request.urlopen(meta['url'],timeout=120) as response, tmp.open('wb') as f:
+2026-11-14T17:06:37.0493336Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-14T17:06:37.0493770Z   File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+2026-11-14T17:06:37.0494484Z     return opener.open(url, data, timeout)
+2026-11-14T17:06:37.0495030Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-14T17:06:37.0495763Z   File "/usr/lib/python3.12/urllib/request.py", line 521, in open
+2026-11-14T17:06:37.0496467Z     response = meth(req, response)
+2026-11-14T17:06:37.0496987Z                ^^^^^^^^^^^^^^^^^^^
+2026-11-14T17:06:37.0497686Z   File "/usr/lib/python3.12/urllib/request.py", line 630, in http_response
+2026-11-14T17:06:37.0498521Z     response = self.parent.error(
+2026-11-14T17:06:37.0499012Z                ^^^^^^^^^^^^^^^^^^
+2026-11-14T17:06:37.0499636Z   File "/usr/lib/python3.12/urllib/request.py", line 559, in error
+2026-11-14T17:06:37.0500341Z     return self._call_chain(*args)
+2026-11-14T17:06:37.0500831Z            ^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-14T17:06:37.0501497Z   File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+2026-11-14T17:06:37.0502244Z     result = func(*args)
+2026-11-14T17:06:37.0502708Z              ^^^^^^^^^^^
+2026-11-14T17:06:37.0503396Z   File "/usr/lib/python3.12/urllib/request.py", line 639, in http_error_default
+2026-11-14T17:06:37.0504270Z     raise HTTPError(req.full_url, code, msg, hdrs, fp)
+2026-11-14T17:06:37.0504963Z urllib.error.HTTPError: HTTP Error 403: Forbidden
+2026-11-14T17:06:37.0679692Z ##[error]Process completed with exit code 1.
+2026-11-14T17:06:37.0790684Z ##[group]Run actions/upload-artifact@v4
+2026-11-14T17:06:37.0790971Z with:
+2026-11-14T17:06:37.0791241Z   name: guardian-actual-godot-software-render-diagnostic
+2026-11-14T17:06:37.0791579Z   path: evidence/
+2026-11-14T17:06:37.0791790Z   retention-days: 14
+2026-11-14T17:06:37.0792007Z   if-no-files-found: warn
+2026-11-14T17:06:37.0792236Z   compression-level: 6
+2026-11-14T17:06:37.0792447Z   overwrite: false
+2026-11-14T17:06:37.0792660Z   include-hidden-files: false
+2026-11-14T17:06:37.0792895Z ##[endgroup]
+2026-11-14T17:06:37.2411146Z (node:3757) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T17:06:37.2411889Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T17:06:37.2444143Z ##[warning]No files were found with the provided path: evidence/. No artifacts will be uploaded.
+2026-11-14T17:06:37.2613003Z Post job cleanup.
+2026-11-14T17:06:37.3537096Z [command]/usr/bin/git version
+2026-11-14T17:06:37.3567493Z git version 2.56.1
+2026-11-14T17:06:37.3605023Z Temporarily overriding HOME='/home/runner/work/_temp/145cf1fa-c7e5-44a4-9324-840cd85209e1' before making global git config changes
+2026-11-14T17:06:37.3606716Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T17:06:37.3609538Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/luanshi-game/luanshi-game
+2026-11-14T17:06:37.3649509Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T17:06:37.3682714Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T17:06:37.3896200Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T17:06:37.3921316Z http.https://github.com/.extraheader
+2026-11-14T17:06:37.3932749Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-14T17:06:37.3976324Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T17:06:37.4192673Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T17:06:37.4225593Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T17:06:37.4602313Z Cleaning up orphan processes
+2026-11-14T17:06:37.4923570Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
