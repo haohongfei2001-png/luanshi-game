@@ -1,7 +1,7 @@
-name: Build and play the sculpted bridge approach at 1440p and UHD
+name: Play the rebuilt gate silhouette and surveyed approach at true 1440p and UHD
 on:
   push:
-    branches: [codex/river-rc23-scenic-workshop]
+    branches: [codex/river-rc23-fitted-crossing]
     paths: ['.github/workflows/river-reference.yml','tools/art/fit_scanned_banks.py','scripts/field/scanned_banks.gd','scripts/field/river_gatehouse.gd']
 permissions:
   contents: write
@@ -13,15 +13,16 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
-      - name: Fit real surface scans in Blender
+      - name: Bake the registered four-thousand-pixel cartway
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq blender python3-pil python3-numpy xdotool
-          blender --background --python-exit-code 1 --python tools/art/fit_scanned_banks.py -- "$RUNNER_TEMP/bank-scan"
+          sudo apt-get install -y -qq python3-pil python3-numpy xdotool
+          mkdir -p "$RUNNER_TEMP/bank-scan"
+          /usr/bin/python3 tools/art/bake_gate_apron.py "$RUNNER_TEMP/bank-scan"
           git add assets/third_party/polyhaven_bank
-          git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Fit six CC0 scanned river blocks and their 2K registered colour to the playable banks'
-          git push origin HEAD:refs/heads/codex/river-rc23-scenic-workshop
+          git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the source-registered 4K cartway with paired wheel ruts'
+          git push origin HEAD:refs/heads/codex/river-rc23-fitted-crossing
       - name: Prepare the pinned game runtime and real-input driver
         run: |
           set -eu
@@ -35,16 +36,24 @@ jobs:
           ./tools/prepare-font.sh
           /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --import > /tmp/import.log 2>&1
           if grep -E 'ERROR:|Parse Error|SHADER ERROR' /tmp/import.log; then exit 1; fi
+      - name: Exercise the shipping window options through a 4K physical X display
+        run: |
+          set -eu
+          dst=docs/evidence/river-gate-v1-rc23/fitted-crossing
+          mkdir -p "$dst"
+          xvfb-run -a -s "-screen 0 3840x2160x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --audio-driver Dummy --script tests/river_display_modes.gd > "$dst/display-options.log" 2>&1 || { cat "$dst/display-options.log"; exit 1; }
+          cat "$dst/display-options.log"
+          grep 'RIVER_DISPLAY_PASS true' "$dst/display-options.log"
       - name: Play the same bridge charge at physical 1440p and 2160p
         run: |
           set -eu
           for dims in 2560x1440 3840x2160; do
-            out="docs/evidence/river-gate-v1-rc23/scanned-crossing/$dims"
+            out="docs/evidence/river-gate-v1-rc23/fitted-crossing/$dims"
             mkdir -p "$out"
             printf '[display]\nwindow/size/window_width_override=%s\nwindow/size/window_height_override=%s\n' "${dims%x*}" "${dims#*x}" > override.cfg
-            xvfb-run -a -s "-screen 0 ${dims}x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution "$dims" --audio-driver Dummy --disable-vsync --fixed-fps 24 --script tests/bridgehead_window.gd -- --bridge-stills > "$out/window.log" 2>&1
+            xvfb-run -a -s "-screen 0 ${dims}x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution "$dims" --audio-driver Dummy --disable-vsync --fixed-fps 24 --script tests/bridgehead_window.gd -- --bridge-stills --native-plates > "$out/window.log" 2>&1 || { tail -c 5500 "$out/window.log"; exit 1; }
             grep -F 'BRIDGE_WINDOW true' "$out/window.log"
-            cp artifacts/bridge-window/input-and-camera.json "$out/"
+            cp artifacts/bridge-window/input-and-camera.json artifacts/bridge-window/view-0050.png artifacts/bridge-window/view-0145.png "$out/"
             DIM="$dims" DST="$out" /usr/bin/python3 - <<'PY'
           import json,os,shutil
           from pathlib import Path
@@ -65,10 +74,10 @@ jobs:
           PY
             git add "$out"
             git -c user.name='River Gate verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Archive the physical $dims window and the corresponding battle inputs"
-            git push origin HEAD:refs/heads/codex/river-rc23-scenic-workshop
+            git push origin HEAD:refs/heads/codex/river-rc23-fitted-crossing
           done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: river-native-reference-frames
-          path: docs/evidence/river-gate-v1-rc23/scanned-crossing/
+          path: docs/evidence/river-gate-v1-rc23/fitted-crossing/

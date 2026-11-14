@@ -39,12 +39,20 @@ static func mount(parent: Node3D, wall_x: float, roofs: Array[Dictionary]) -> vo
 		gate_foundation.set_shader_parameter("earth",preload("res://assets/third_party/polyhaven_bank/rammed_earth.jpg"))
 	_place(parent,meshes["Piers"],gate_foundation,wall_x)
 	var full:=_place(parent,meshes["WatchHall"],surface,wall_x)
+	# The gallery rests on the original 4 m lintel. Shorten its two wings and
+	# tall attic while leaving the original walk, gate clearance and piers intact.
+	var gallery_scale:=Vector3(.79,.72,.72)
+	var seat:=3.88*(1.0-gallery_scale.y)
+	full.scale=gallery_scale
+	full.position.y=seat
 	var halves: Array[Dictionary]=[]
 	for side: int in [-1,1]:
 		var half:=_place(parent,meshes["WestPitch" if side<0 else "EastPitch"],surface,wall_x)
+		half.scale=gallery_scale
+		half.position.y=seat
 		half.visible=false
-		halves.append({"node":half,"normal":Vector3.RIGHT*side,"center":Vector3(wall_x+side*1.67,5.7,0),"w":1.62,"d":9.85})
-	roofs.append({"node":full,"center":Vector3(wall_x,5.65,0),"w":3.30,"d":10.55,"pieces":halves})
+		halves.append({"node":half,"normal":Vector3.RIGHT*side,"center":Vector3(wall_x+side*1.67*gallery_scale.x,seat+5.7*gallery_scale.y,0),"w":1.62*gallery_scale.x,"d":9.85*gallery_scale.z})
+	roofs.append({"node":full,"center":Vector3(wall_x,seat+5.65*gallery_scale.y,0),"w":3.30*gallery_scale.x,"d":10.55*gallery_scale.z,"pieces":halves})
 
 static func _place(parent: Node3D,body: Mesh,surface: Material,wall_x: float) -> MeshInstance3D:
 	var node:=MeshInstance3D.new()
