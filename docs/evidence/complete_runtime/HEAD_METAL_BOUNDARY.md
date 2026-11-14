@@ -1,0 +1,11 @@
+# Complete authored head: real Metal boundary
+
+Source workflow 43638079556 at 635cfd468576de56f63d823115a2da81b4ed4af1 actually reconstructed pinned 945b author pipeline and preserved the full editable walk mother. Its new SHA256 is d6be3ff2afcab7a61822f49a8ac6fb57bf2630df4f22c0fded24bb5ca38fc823, NOT historical b0a4 cache source bytes. Source artifact 14130907434 includes mothers, licenses and small fixture. Whole-source ZIP SHA256 21d1d3012d5478d9ea503283e9659d3e27e0c1c98551f7767b85bfb87c397503. Minimal project tar SHA256 27e1fedf6d2ddc860dfcb2529b7ede4e1ad8119f98690c3329989cc246ad4e49.
+
+Actual Apple Metal Mobile with existing engine 35e80 and binary SHA256 9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3 produced all 14 PNGs, without runtime ERROR. Artifact 14131186449 ZIP SHA256 df27f3b9f1afab74b36ae27181d611123f6c669cb409b35fbe0b5a84fdaf5ffd. Original strict gate FAIL is retained in metal-original, not relabelled.
+
+Six actual Walk phases passed original 2 RGB levels / 2% visible-pixel gate; synthetic ninth-influence stress failed at 10.1898%. Numerical position remains below 0.472 micrometres. Blender recomputes normals from deformed topology: weighted rest normals differ by up to 128.61 degrees in stress (959 face vertices >1 degree), whereas ordinary walk is below .03 degrees. Native eight-slot Skin is never the full-nine reference.
+
+Next isolated derivative: retain original complete bone skinning for positions and add one shared RGBA16F normal texture for the seven explicitly sampled source-evaluated poses. This is an animation-sample representation, NOT an arbitrary-pose skinning correction. No bank pixels are copied into positions. No interpolation/generalized facial animation pass is implied. It uses a shared per-template bank rather than per-actor vertex caches. Exact sample GPU cost/bytes will be recorded by actual next run; not an army benchmark. The old uncorrected gate remains failed.
+
+All source 163 bones, face nine influences, original UVs/RGBA and explicit reduced material mapping retained. Existing scissor .25 is not an assertion of Blender DITHERED/SSS/transmission equivalence. Four head parts only: cloth, hands, full soldier, armor quality, battle performance and M5 are NOT TESTED/PASSED here. Default game unchanged.

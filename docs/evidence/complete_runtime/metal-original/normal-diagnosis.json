@@ -1,0 +1,226 @@
+[
+  {
+    "pose": "walk-0",
+    "mesh": "Eyes",
+    "max_position_m": 4.720514583391638e-07,
+    "max_normal_degrees": 0.026158066941208733,
+    "p95_normal_degrees": 0.01921148184016662,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-0",
+    "mesh": "Young complete author face module",
+    "max_position_m": 3.359941529665333e-07,
+    "max_normal_degrees": 0.02815293915838485,
+    "p95_normal_degrees": 0.019487099420693734,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-0",
+    "mesh": "eyebrow001",
+    "max_position_m": 3.246308080730605e-07,
+    "max_normal_degrees": 0.024082205557095174,
+    "p95_normal_degrees": 0.019829554719786147,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-0",
+    "mesh": "eyelashes01",
+    "max_position_m": 2.972236855397708e-07,
+    "max_normal_degrees": 0.023281771647259187,
+    "p95_normal_degrees": 0.018952891414618603,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-13",
+    "mesh": "Eyes",
+    "max_position_m": 3.474798456013541e-07,
+    "max_normal_degrees": 0.025438481558564912,
+    "p95_normal_degrees": 0.017884685364073914,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-13",
+    "mesh": "Young complete author face module",
+    "max_position_m": 3.2743456038887535e-07,
+    "max_normal_degrees": 0.02785883694877926,
+    "p95_normal_degrees": 0.018820681870954016,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-13",
+    "mesh": "eyebrow001",
+    "max_position_m": 3.1264547788953657e-07,
+    "max_normal_degrees": 0.020342447613421254,
+    "p95_normal_degrees": 0.016450995852192018,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-13",
+    "mesh": "eyelashes01",
+    "max_position_m": 3.0452781350901936e-07,
+    "max_normal_degrees": 0.02495157712054531,
+    "p95_normal_degrees": 0.01897459435865109,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-47",
+    "mesh": "Eyes",
+    "max_position_m": 3.6382108153487684e-07,
+    "max_normal_degrees": 0.027209847358933465,
+    "p95_normal_degrees": 0.02196544535016602,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-47",
+    "mesh": "Young complete author face module",
+    "max_position_m": 4.104405940780588e-07,
+    "max_normal_degrees": 0.02707682622994451,
+    "p95_normal_degrees": 0.02211835178594082,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-47",
+    "mesh": "eyebrow001",
+    "max_position_m": 4.188792215305695e-07,
+    "max_normal_degrees": 0.025207649599646186,
+    "p95_normal_degrees": 0.02304351307117068,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-47",
+    "mesh": "eyelashes01",
+    "max_position_m": 3.756369995710415e-07,
+    "max_normal_degrees": 0.026387116131872716,
+    "p95_normal_degrees": 0.022642382407292775,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-83",
+    "mesh": "Eyes",
+    "max_position_m": 3.37278399652779e-07,
+    "max_normal_degrees": 0.022987355946047578,
+    "p95_normal_degrees": 0.018660689598787097,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-83",
+    "mesh": "Young complete author face module",
+    "max_position_m": 3.858763606304804e-07,
+    "max_normal_degrees": 0.02633308776259636,
+    "p95_normal_degrees": 0.018126790440713074,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-83",
+    "mesh": "eyebrow001",
+    "max_position_m": 2.496352628334901e-07,
+    "max_normal_degrees": 0.022589508867698588,
+    "p95_normal_degrees": 0.01781426859116749,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-83",
+    "mesh": "eyelashes01",
+    "max_position_m": 3.07733826744854e-07,
+    "max_normal_degrees": 0.020693895693434505,
+    "p95_normal_degrees": 0.018361234153610198,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-50",
+    "mesh": "Eyes",
+    "max_position_m": 3.6609442663009074e-07,
+    "max_normal_degrees": 0.025716138574088387,
+    "p95_normal_degrees": 0.018259279892913777,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-50",
+    "mesh": "Young complete author face module",
+    "max_position_m": 3.8916155817163774e-07,
+    "max_normal_degrees": 0.025776626519093963,
+    "p95_normal_degrees": 0.01807203731292062,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-50",
+    "mesh": "eyebrow001",
+    "max_position_m": 2.599789204731459e-07,
+    "max_normal_degrees": 0.026231825821504417,
+    "p95_normal_degrees": 0.018142402187255022,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-50",
+    "mesh": "eyelashes01",
+    "max_position_m": 2.6766639050003287e-07,
+    "max_normal_degrees": 0.02405791862589061,
+    "p95_normal_degrees": 0.02058233516930937,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-100",
+    "mesh": "Eyes",
+    "max_position_m": 3.729644780007705e-07,
+    "max_normal_degrees": 0.025250861786982923,
+    "p95_normal_degrees": 0.018394474246247128,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-100",
+    "mesh": "Young complete author face module",
+    "max_position_m": 4.2477126688530613e-07,
+    "max_normal_degrees": 0.028676767928903904,
+    "p95_normal_degrees": 0.01850729841623792,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-100",
+    "mesh": "eyebrow001",
+    "max_position_m": 2.1607215838526073e-07,
+    "max_normal_degrees": 0.020326191620070228,
+    "p95_normal_degrees": 0.01835723370062083,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "walk-100",
+    "mesh": "eyelashes01",
+    "max_position_m": 2.3272022000384875e-07,
+    "max_normal_degrees": 0.021684255843105602,
+    "p95_normal_degrees": 0.018212607834249737,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "tail-stress",
+    "mesh": "Eyes",
+    "max_position_m": 3.6609442663009074e-07,
+    "max_normal_degrees": 0.025716138574088387,
+    "p95_normal_degrees": 0.018259279892913777,
+    "vertices_over_one_degree": 0
+  },
+  {
+    "pose": "tail-stress",
+    "mesh": "Young complete author face module",
+    "max_position_m": 3.8916155817163774e-07,
+    "max_normal_degrees": 128.6086952569099,
+    "p95_normal_degrees": 9.695884123335649,
+    "vertices_over_one_degree": 959
+  },
+  {
+    "pose": "tail-stress",
+    "mesh": "eyebrow001",
+    "max_position_m": 2.599789204731459e-07,
+    "max_normal_degrees": 7.275654125527697,
+    "p95_normal_degrees": 4.590514021279575,
+    "vertices_over_one_degree": 30
+  },
+  {
+    "pose": "tail-stress",
+    "mesh": "eyelashes01",
+    "max_position_m": 2.6766639050003287e-07,
+    "max_normal_degrees": 0.02405791862589061,
+    "p95_normal_degrees": 0.02058233516930937,
+    "vertices_over_one_degree": 0
+  }
+]

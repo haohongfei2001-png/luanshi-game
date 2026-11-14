@@ -1,0 +1,84 @@
+{
+  "rows": [
+    {
+      "authored_motion": true,
+      "name": "walk-0",
+      "synthetic_bones": [],
+      "visible": 25714,
+      "mean_canvas_max_rgb_error": 1.0950425091911765e-05,
+      "pixels_over_two_levels": 16,
+      "fraction_over_two_levels": 0.0006222291358792875,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-13",
+      "synthetic_bones": [],
+      "visible": 25736,
+      "mean_canvas_max_rgb_error": 1.0860667509191177e-05,
+      "pixels_over_two_levels": 15,
+      "fraction_over_two_levels": 0.0005828411563568542,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-47",
+      "synthetic_bones": [],
+      "visible": 26636,
+      "mean_canvas_max_rgb_error": 1.7293294270833333e-05,
+      "pixels_over_two_levels": 22,
+      "fraction_over_two_levels": 0.0008259498423186665,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-83",
+      "synthetic_bones": [],
+      "visible": 26228,
+      "mean_canvas_max_rgb_error": 1.2221990847120099e-05,
+      "pixels_over_two_levels": 20,
+      "fraction_over_two_levels": 0.0007625438462711606,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-50",
+      "synthetic_bones": [],
+      "visible": 26686,
+      "mean_canvas_max_rgb_error": 7.584515739889706e-06,
+      "pixels_over_two_levels": 12,
+      "fraction_over_two_levels": 0.0004496739863598891,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-100",
+      "synthetic_bones": [],
+      "visible": 25767,
+      "mean_canvas_max_rgb_error": 1.250622319240196e-05,
+      "pixels_over_two_levels": 18,
+      "fraction_over_two_levels": 0.0006985679357317499,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": false,
+      "name": "tail-stress",
+      "synthetic_bones": [
+        "risorius03.R",
+        "risorius03.L"
+      ],
+      "visible": 27184,
+      "mean_canvas_max_rgb_error": 0.0005711723776424632,
+      "pixels_over_two_levels": 2770,
+      "fraction_over_two_levels": 0.10189817539729253,
+      "strict_pass": false
+    }
+  ],
+  "failures": [
+    "tail-stress"
+  ],
+  "original_two_levels_two_percent_gate": true,
+  "reference": "Blender complete source 9 influences and evaluated corner normals, not native8",
+  "art_pass": false,
+  "M5": "NOT_TESTED"
+}

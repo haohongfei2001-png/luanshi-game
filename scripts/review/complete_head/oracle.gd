@@ -5,6 +5,8 @@ const Adapter=preload("res://scripts/field/experimental/native_rig_material.gd")
 var out:String
 var views:Array=[]
 var entries:Array=[]
+var normal_bank_enabled:bool=OS.get_environment("HEAD_NORMAL_BANK")=="1"
+var normal_bank_bytes:int=0
 func _initialize()->void:run.call_deferred()
 func stop(message:String)->void:push_error(message);quit(1)
 func v3(values:Array)->PackedVector3Array:
@@ -57,24 +59,43 @@ func run()->void:
   var shader:ShaderMaterial=result.material
   if part.material.alpha_linked:
    var variant=Shader.new();variant.code=shader.shader.code.replace("ALBEDO=pigment.rgb;","ALBEDO=pigment.rgb; ALPHA=pigment.a; ALPHA_SCISSOR_THRESHOLD=.25;");shader.shader=variant
+  if normal_bank_enabled:
+   var variant=Shader.new()
+   variant.code=shader.shader.code.replace("void vertex() {", "uniform sampler2D authored_normal_bank : filter_nearest, repeat_disable;\nuniform int authored_normal_frame = 0;\nvoid vertex() {")
+   variant.code=variant.code.replace("NORMAL=normalize(mat3(pose)*NORMAL);", "NORMAL=normalize(texelFetch(authored_normal_bank,ivec2(VERTEX_ID,authored_normal_frame),0).xyz);")
+   shader.shader=variant
+   var bank_image=Image.create(part.position.size(),data.poses.size(),false,Image.FORMAT_RGBAH)
+   for frame in data.poses.size():
+    var frame_part=data.poses[frame].parts[entries.size()]
+    var object_basis=transform(frame_part.object_transform).basis
+    for vi in part.position.size():
+     var n:Array=frame_part.reference_normals[vi]
+     # World oracle normals -> local, before Godot applies inverse transpose.
+     var local_normal=(object_basis.transposed()*Vector3(n[0],n[1],n[2])).normalized()
+     bank_image.set_pixel(vi,frame,Color(local_normal.x,local_normal.y,local_normal.z,1.))
+   normal_bank_bytes+=bank_image.get_data().size()
+   shader.set_shader_parameter("authored_normal_bank",ImageTexture.create_from_image(bank_image))
   shader.set_shader_parameter("influence_table",ImageTexture.create_from_image(packed.tables[0].image));shader.set_shader_parameter("influence_groups",packed.tables[0].groups);packed.mesh.surface_set_material(0,shader)
   var batch=MultiMeshInstance3D.new();var mm=MultiMesh.new();mm.transform_format=MultiMesh.TRANSFORM_3D;mm.use_colors=true;mm.use_custom_data=true;mm.mesh=packed.mesh;mm.instance_count=1;mm.set_instance_color(0,Color.WHITE);mm.set_instance_custom_data(0,Color(0,0,0,0));mm.custom_aabb=AABB(Vector3(-5,-5,-5),Vector3(10,10,10));batch.multimesh=mm;views[1].add_child(batch)
   var reference=MeshInstance3D.new();views[0].add_child(reference)
   entries.append({"part":part,"arrays":arrays,"reference":reference,"batch":batch,"shader":shader,"material":material})
   inventory.append({"name":part.name,"vertices":part.position.size(),"bones":part.bones.size(),"slots":part.slots,"original_over8_vertices":part.over8_original_vertices,"alpha_preserved":part.material.alpha_linked,"all_source_uv_layers":part.all_uv_layers.keys()})
  var rows=[]
+ var pose_index:int=0
  for pose in data.poses:
   for i in entries.size():
    var e=entries[i];var p=pose.parts[i];if p.name!=e.part.name:stop("Source mesh order changed");return
    var matrices=[];for row in p.palette:matrices.append(transform(row))
    var bank=Palette.encode([matrices]);if bank.has("error"):stop(str(bank));return
+   if normal_bank_enabled:e.shader.set_shader_parameter("authored_normal_frame",pose_index)
    e.shader.set_shader_parameter("palette",ImageTexture.create_from_image(bank.image));e.batch.multimesh.set_instance_transform(0,transform(p.object_transform))
    var a:Array=e.arrays.duplicate();a[Mesh.ARRAY_VERTEX]=v3(p.reference_positions);a[Mesh.ARRAY_NORMAL]=v3(p.reference_normals);var mesh=ArrayMesh.new();mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,a);mesh.surface_set_material(0,e.material);e.reference.mesh=mesh
   for frame in 4:await process_frame
   await RenderingServer.frame_post_draw
   for i in 2:
    var status=views[i].get_texture().get_image().save_png(out+"/"+pose.name+("-author.png" if i==0 else "-shared.png"));if status!=OK:stop("Actual PNG save failed");return
+  pose_index+=1
   rows.append({"name":pose.name,"authored_motion":pose.authored_motion,"synthetic_bones":pose.synthetic_bones});print("COMPLETE_HEAD_CAPTURE ",pose.name)
- var report={"source_sha256":data.source_sha256,"fixture_sha256":FileAccess.get_sha256("res://assets/head/head-source.json"),"engine":Engine.get_version_info(),"driver":RenderingServer.get_current_rendering_driver_name(),"method":RenderingServer.get_current_rendering_method(),"renderer":RenderingServer.get_video_adapter_name(),"rows":rows,"inventory":inventory,"reference":"Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin","materials":"source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence","art_pass":false,"M5":"NOT_TESTED","army_performance":"NOT_TESTED"}
+ var report={"normal_mode":("shared_authored_RGBA16F_exact_samples" if normal_bank_enabled else "weighted_bind_normal"),"normal_bank_bytes":normal_bank_bytes,"normal_bank_limit":"Only seven exact sampled poses, no interpolation or arbitrary facial deformation claim; shared per template, not per actor","source_sha256":data.source_sha256,"fixture_sha256":FileAccess.get_sha256("res://assets/head/head-source.json"),"engine":Engine.get_version_info(),"driver":RenderingServer.get_current_rendering_driver_name(),"method":RenderingServer.get_current_rendering_method(),"renderer":RenderingServer.get_video_adapter_name(),"rows":rows,"inventory":inventory,"reference":"Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin","materials":"source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence","art_pass":false,"M5":"NOT_TESTED","army_performance":"NOT_TESTED"}
  var f=FileAccess.open(out+"/report.json",FileAccess.WRITE);if f==null:stop("Report creation failed");return
  f.store_string(JSON.stringify(report,"  "));f.close();quit(0)

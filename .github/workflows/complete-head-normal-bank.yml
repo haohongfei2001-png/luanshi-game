@@ -1,0 +1,68 @@
+name: Shared sampled head normals actual Metal (not generic skin parity)
+on:
+  push:
+    branches: ['dot/head-normal-bank']
+    paths: ['tools/art/soldier_runtime/**', 'scripts/review/complete_head/**', '.github/workflows/complete-head-normal-bank.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  metal:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          name: complete-head-editable-source-635cfd468576de56f63d823115a2da81b4ed4af1
+          run-id: '43638079556'
+          github-token: ${{ github.token }}
+          path: .inputs/source
+      - uses: actions/download-artifact@v4
+        with:
+          name: mobile-mutex-angle-template
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+          path: .inputs/engine
+      - name: Restore own verified source and fixed existing Metal engine
+        run: |
+          set -euo pipefail
+          mkdir -p evidence "$RUNNER_TEMP/head-project"
+          python3 - <<'PY'
+          import pathlib,hashlib
+          p=pathlib.Path('.inputs/source/head-project.tar.gz');expected='27e1fedf6d2ddc860dfcb2529b7ede4e1ad8119f98690c3329989cc246ad4e49'
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==expected
+          PY
+          tar -xzf .inputs/source/head-project.tar.gz -C "$RUNNER_TEMP/head-project"
+          cp scripts/review/complete_head/oracle.gd "$RUNNER_TEMP/head-project/scripts/review/complete_head/oracle.gd"
+          echo "$GITHUB_SHA" > evidence/runtime-overlay-sha.txt
+          shasum -a 256 "$RUNNER_TEMP/head-project/scripts/review/complete_head/oracle.gd" > evidence/runtime-overlay-file.sha256
+          echo '9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3  .inputs/engine/godot.macos.template_release.arm64' | shasum -a 256 -c -
+          { uname -a; sw_vers; system_profiler SPHardwareDataType SPDisplaysDataType; } > evidence/host.txt
+      - name: Pinned official importer and strict checker
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "0155bbc8dcf179edab4ef08e3dbbd4480d7434ab1990cb3fb25517d453b1b65787c7fe6dfc8824b15ff25e1fdcec59e8584f765054106894fee00311868c3964  $RUNNER_TEMP/editor.zip" | shasum -a 512 -c -
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/editor"
+          echo "GODOT_EDITOR=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+          python3 -m venv "$RUNNER_TEMP/head-python"
+          "$RUNNER_TEMP/head-python/bin/pip" install 'Pillow==11.1.0'
+          clang -fobjc-arc -framework AppKit -o "$RUNNER_TEMP/head-focus" tools/metal_character_oracle/focus.m
+      - name: Actual full-source reference and shared normal bank, original strict pixel gate
+        env:
+          HEAD_NORMAL_BANK: '1'
+        run: |
+          set -euo pipefail
+          "$GODOT_EDITOR" --headless --editor --path "$RUNNER_TEMP/head-project" --import > evidence/import.log 2>&1
+          python3 tools/representation_compare/assert_clean_logs.py evidence/import.log
+          python3 tools/art/soldier_runtime/run_mac.py "$GODOT_EDITOR" "$RUNNER_TEMP/head-project" "$PWD/.inputs/engine" "$PWD/evidence" "$RUNNER_TEMP/head-focus"
+          "$RUNNER_TEMP/head-python/bin/python" tools/art/soldier_runtime/check_gpu.py evidence/gpu evidence/actual-metal.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: complete-head-normal-bank-${{ github.sha }}
+          path: evidence/
+          retention-days: 30

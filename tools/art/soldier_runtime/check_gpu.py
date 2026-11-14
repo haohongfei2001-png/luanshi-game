@@ -20,5 +20,5 @@ for row in r['rows']:
  rows.append(dict(row,visible=visible,mean_canvas_max_rgb_error=mae,pixels_over_two_levels=over,fraction_over_two_levels=over/max(visible,1),strict_pass=passed))
  if not passed:failures.append(name)
 assert seen==expected
-result={'rows':rows,'failures':failures,'original_two_levels_two_percent_gate':True,'reference':'Blender complete source 9 influences and evaluated corner normals, not native8','art_pass':False,'M5':'NOT_TESTED'}
+result={'normal_mode':r.get('normal_mode','weighted_bind_normal'),'normal_bank_bytes':r.get('normal_bank_bytes',0),'rows':rows,'failures':failures,'original_two_levels_two_percent_gate':True,'reference':'Blender complete source 9 influences and evaluated corner normals, not native8','art_pass':False,'M5':'NOT_TESTED'}
 (p/'external-pixel-gate.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result));sys.exit(1 if failures else 0)
