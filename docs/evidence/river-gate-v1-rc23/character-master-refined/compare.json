@@ -1,0 +1,34 @@
+{
+  "line-055": {
+    "pixels_changed_12": 295464,
+    "pixels_changed_25": 171896
+  },
+  "line-105": {
+    "pixels_changed_12": 376153,
+    "pixels_changed_25": 223908
+  },
+  "line-135": {
+    "pixels_changed_12": 435535,
+    "pixels_changed_25": 261697
+  },
+  "line-185": {
+    "pixels_changed_12": 473923,
+    "pixels_changed_25": 283478
+  },
+  "reverse-135": {
+    "pixels_changed_12": 316441,
+    "pixels_changed_25": 167080
+  },
+  "kit3-135": {
+    "pixels_changed_12": 750790,
+    "pixels_changed_25": 455765
+  },
+  "kit5-135": {
+    "pixels_changed_12": 587125,
+    "pixels_changed_25": 270167
+  },
+  "kit7-135": {
+    "pixels_changed_12": 858362,
+    "pixels_changed_25": 547728
+  }
+}
