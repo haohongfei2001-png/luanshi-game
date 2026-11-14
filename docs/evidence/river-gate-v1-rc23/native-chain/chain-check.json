@@ -1,0 +1,50 @@
+{
+  "preserved_strips": 413,
+  "candidate_strips": [
+    2,
+    6,
+    33,
+    37
+  ],
+  "preserved_mounted_strips": 4,
+  "palette": [
+    528,
+    1684
+  ],
+  "runtime_bones": 16,
+  "new_runtime_samples": 0,
+  "rows": [
+    {
+      "kit": 0,
+      "source_contact_phase": 0.49098963034790344,
+      "source_contact_seconds": 0.49098963034790344,
+      "maximum_wrist_ankle_gap_m": 6.661338147750939e-16,
+      "supporting_right_sole_span_m": 0.001671139491305722,
+      "release_boundary_gap_m": 0.0,
+      "release_tip_m": [
+        3.433618621428991e-06,
+        0.9796940347925346,
+        1.8130066127125901
+      ],
+      "source_clip": "shield_cut_01",
+      "source_license": "CC BY-SA 3.0",
+      "old_world_grip_constraint": false
+    },
+    {
+      "kit": 1,
+      "source_contact_phase": 0.490628126805832,
+      "source_contact_seconds": 0.490628126805832,
+      "maximum_wrist_ankle_gap_m": 7.021666937153402e-16,
+      "supporting_right_sole_span_m": 0.001671139491305722,
+      "release_boundary_gap_m": 0.0,
+      "release_tip_m": [
+        7.820764634791644e-06,
+        0.9746975054543286,
+        1.8473411215142228
+      ],
+      "source_clip": "shield_cut_01",
+      "source_license": "CC BY-SA 3.0",
+      "old_world_grip_constraint": false
+    }
+  ]
+}
