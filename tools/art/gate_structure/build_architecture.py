@@ -60,7 +60,14 @@ def mesh(name,verts,faces,mat,parent,uvs=None,normals=None):
  layer=d.uv_layers.new(name='UVMap')
  for poly in d.polygons:
   for li in poly.loop_indices:
-   v=d.vertices[d.loops[li].vertex_index].co;layer.data[li].uv=uvs[d.loops[li].vertex_index] if uvs else (v.x*.3,v.z*.3+v.y*.05)
+   v=d.vertices[d.loops[li].vertex_index].co
+   if uvs:layer.data[li].uv=uvs[d.loops[li].vertex_index]
+   elif '--complete-gate-masonry' in args:
+    # World-metre box projection keeps vertical facade UVs non-degenerate.
+    # The old mixed X/(Z+Y) plane collapsed front walls into narrow strips.
+    axis=max(range(3),key=lambda k:abs(poly.normal[k]))
+    layer.data[li].uv=(v.y,v.z) if axis==0 else (v.x,v.z) if axis==1 else (v.x,v.y)
+   else:layer.data[li].uv=(v.x*.3,v.z*.3+v.y*.05)
  if normals:
   for poly in d.polygons:poly.use_smooth=True
   d.normals_split_custom_set([normals[loop.vertex_index] for loop in d.loops])
@@ -100,6 +107,30 @@ for sign in [-1,1]:
   else:
    for center,depth in [(47.95,2.35),(53.15,.6)]:box('GatePier_walk_jamb',(center,y,sign*(inner+width/2)),(depth,.584,width),'masonry',gate,.025)
  for center,depth in [(47.95,2.35),(53.15,.6)]:box('GatePier_coping',(center,4.43,sign*6.25),(depth,.32,4.42),'masonry',gate)
+# Complete load-bearing gateway enclosure. Keep the real wall-walk corridor
+# x49.4..52.6 clear to y5.45; the gallery sits on continuous facade spandrels
+# and a high bearing course, not on isolated piers beneath a floating floor.
+if '--complete-gate-masonry' in args:
+ def arch_outer(z):
+  return cz+math.sqrt(max(0.,(R+.55)**2-z*z))
+ for front,back,label in [(46.65,49.12,'Front'),(52.85,53.45,'Rear')]:
+  intervals=[-8.15,-4.25]+[-4.25+i*8.5/34 for i in range(1,34)]+[4.25,8.15]
+  vs=[];faces=[]
+  for za,zb in zip(intervals,intervals[1:]):
+   # The arch's native voussoir outer edge is the exact underside of infill.
+   ya=arch_outer(za) if abs(za)<4.25 else 4.59
+   yb=arch_outer(zb) if abs(zb)<4.25 else 4.59
+   start=len(vs)
+   for x in [front,back]:
+    for z,y in [(za,ya),(zb,yb),(zb,5.69),(za,5.69)]:vs.append(pt(x,y,z))
+   faces.extend([tuple(start+j for j in face) for face in [(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)]])
+  ob=mesh('GateContinuousSpandrel_'+label,vs,faces,'masonry',gate)
+  ob['structural_role']='continuous arch shoulder to timber-gallery bearing; full depth facade; clear historic gameplay passage'
+ # Header above the interior wall-walk. No masonry is placed in its adult
+ # headroom; floor bearing continues over the passage at 2.20m clear height.
+ for sign in [-1,1]:
+  box('GateGalleryBearing',(50.05,5.62,sign*6.15),(6.8,.14,4.0),'masonry',gate,.012)
+
 # Functional replaceable door leaves, independently hideable; opening preserved as gameplay-controlled.
 for sign in [-1,1]:
  for i in range(11):box('GateDoor_board',(48.,2.05,sign*(.18+i*.35)),(.21,4.05,.34),'timber',door,.014)
@@ -278,7 +309,7 @@ scene=bpy.context.scene;scene.unit_settings.system='METRIC';scene.unit_settings.
 root['status']='ART_NOT_ACCEPTED';root['layout']='river-authored-reset-design-01';door['gameplay_hideable']=True
 objects=[o for o in bpy.data.objects if o.type=='MESH']
 for o in objects:o.data.calc_loop_triangles()
-report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':5.72,'upper_hall_column_head_m':7.92,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN'}
+report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':5.72,'upper_hall_column_head_m':7.92,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN','complete_gate_masonry':('--complete-gate-masonry' in args),'protected_walkway_clear_height_m':2.20}
 (out/'architecture-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 # Door pivot is exactly the gameplay gate center, while child geometry stays put.
 for child in door.children:
