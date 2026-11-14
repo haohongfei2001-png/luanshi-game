@@ -1,0 +1,28 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "source_unchanged": true,
+  "autoexec": false,
+  "kind": "Blender native source clay geometry review",
+  "material_override": true,
+  "mesh_modifiers_changed": false,
+  "pose_changed": true,
+  "synthetic_fk_diagnostic": [
+    {
+      "bone": "upper_arm.L",
+      "local_z_radians": -0.45
+    },
+    {
+      "bone": "forearm.L",
+      "local_z_radians": 0.65
+    },
+    {
+      "bone": "upper_arm.R",
+      "local_z_radians": 0.45
+    },
+    {
+      "bone": "forearm.R",
+      "local_z_radians": -0.65
+    }
+  ],
+  "game_art_pass": false
+}

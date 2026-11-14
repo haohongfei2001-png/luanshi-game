@@ -1,0 +1,333 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "legacy_mapping_sha256": "1a3c893277a76712596f19406cf9a73f70129693218b0c4028a65d74d89469e8",
+  "kind": "Blender diffuse-only migration diagnostic, NOT original shader reconstruction",
+  "autoexec": false,
+  "game_pass": false,
+  "assignments": [
+    {
+      "object": "GEO-HandsJA.001",
+      "source_material": "SkinJackHands",
+      "diagnostic_material": "DIAGNOSTIC_SkinJackHands",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-headLT",
+      "source_material": "SkinLaoFace",
+      "diagnostic_material": "DIAGNOSTIC_SkinLaoFace",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-cornea",
+      "source_material": "cornea",
+      "diagnostic_material": "DIAGNOSTIC_cornea",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-cornea.001",
+      "source_material": "cornea",
+      "diagnostic_material": "DIAGNOSTIC_cornea",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-eyeballs_new",
+      "source_material": "eye_white",
+      "diagnostic_material": "DIAGNOSTIC_eye_white",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-eyeballs_new.001",
+      "source_material": "eye_white",
+      "diagnostic_material": "DIAGNOSTIC_eye_white",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-pant_detailsL_S",
+      "source_material": "Guardian_cloth3.005",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_cloth3.005",
+      "texture": "textures/cloth_02_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "f3adbbfa9b02813d8b53e3932fc45c92f9ec1d6ff0bcf3d90b450439d9f2a52d"
+    },
+    {
+      "object": "GEO-pant_detailsL_S",
+      "source_material": "GuardianMetal.005",
+      "diagnostic_material": "DIAGNOSTIC_GuardianMetal.005",
+      "texture": "textures/metal1_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "a331a381575b1ad53817bb639004a97bc488dfba1435c81e45d0cba0b59edbb8"
+    },
+    {
+      "object": "GEO-pant_detailsR_S",
+      "source_material": "Guardian_cloth3.005",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_cloth3.005",
+      "texture": "textures/cloth_02_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "f3adbbfa9b02813d8b53e3932fc45c92f9ec1d6ff0bcf3d90b450439d9f2a52d"
+    },
+    {
+      "object": "GEO-pant_detailsR_S",
+      "source_material": "GuardianMetal.005",
+      "diagnostic_material": "DIAGNOSTIC_GuardianMetal.005",
+      "texture": "textures/metal1_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "a331a381575b1ad53817bb639004a97bc488dfba1435c81e45d0cba0b59edbb8"
+    },
+    {
+      "object": "GEO-belt2JA.003",
+      "source_material": "Guardian_Leather2.001",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_Leather2.001",
+      "texture": "textures/leather_01_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "58233e0f041b6727d68b6ef5a8b3a1fb1c10eaee0e5a8665bce066d51332248e"
+    },
+    {
+      "object": "GEO-belt2JA.003",
+      "source_material": "GuardianMetal.001",
+      "diagnostic_material": "DIAGNOSTIC_GuardianMetal.001",
+      "texture": "textures/metal1_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "a331a381575b1ad53817bb639004a97bc488dfba1435c81e45d0cba0b59edbb8"
+    },
+    {
+      "object": "GEO-bootsLT.001",
+      "source_material": "Guardian_Boots",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_Boots",
+      "texture": "textures/jack_boots_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "d7153a9a7297bf255121db394faf7e30996fc0a94dbc815d38c416b40c4851da"
+    },
+    {
+      "object": "GEO-gauntletsDG",
+      "source_material": "Guardian_Leather2.001",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_Leather2.001",
+      "texture": "textures/leather_01_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "58233e0f041b6727d68b6ef5a8b3a1fb1c10eaee0e5a8665bce066d51332248e"
+    },
+    {
+      "object": "GEO-gauntletsDG",
+      "source_material": "Guardian_Leather.001",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_Leather.001",
+      "texture": "textures/leather_01_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "58233e0f041b6727d68b6ef5a8b3a1fb1c10eaee0e5a8665bce066d51332248e"
+    },
+    {
+      "object": "GEO-pantsLT.001",
+      "source_material": "Guardian_Pants",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_Pants",
+      "texture": "textures/jack_pants_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "e7e473f13a635ef9d6390c58adbebe3e64ec2913b7e28dfc1a95832ca7b1a161"
+    },
+    {
+      "object": "GEO-sashDG.001",
+      "source_material": "Guardian_cloth2.001",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_cloth2.001",
+      "texture": "textures/cloth_02_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "f3adbbfa9b02813d8b53e3932fc45c92f9ec1d6ff0bcf3d90b450439d9f2a52d"
+    },
+    {
+      "object": "GEO-toplaceLT.001",
+      "source_material": "GuardianMetal.001",
+      "diagnostic_material": "DIAGNOSTIC_GuardianMetal.001",
+      "texture": "textures/metal1_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "a331a381575b1ad53817bb639004a97bc488dfba1435c81e45d0cba0b59edbb8"
+    },
+    {
+      "object": "GEO-toplaceLT.001",
+      "source_material": "Flat_Material4.001",
+      "diagnostic_material": "DIAGNOSTIC_Flat_Material4.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-topLT",
+      "source_material": "GuardianTop",
+      "diagnostic_material": "DIAGNOSTIC_GuardianTop",
+      "texture": "textures/jack_top_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "1b59bf8abf360f1de2ac6b1f88b2401d571386a192661239b6b1a615ce76af6b"
+    },
+    {
+      "object": "GEO-torso-beltsLT.001",
+      "source_material": "Guardian_TorsoBelts",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_TorsoBelts",
+      "texture": "textures/jack_torso_belts_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "f77219f065e9f111f19606fda53cc00c69854b1d5a6fd1177509f9e68863ecf6"
+    },
+    {
+      "object": "GEO-symbolLT.001",
+      "source_material": "DragonBloodTree_lo",
+      "diagnostic_material": "DIAGNOSTIC_DragonBloodTree_lo",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-headLT.002",
+      "source_material": "LTHair",
+      "diagnostic_material": "DIAGNOSTIC_LTHair",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-headLT.003",
+      "source_material": "LTHair",
+      "diagnostic_material": "DIAGNOSTIC_LTHair",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-lao_tseu_proxy",
+      "source_material": "grey_matte",
+      "diagnostic_material": "DIAGNOSTIC_grey_matte",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-lao_tseu_proxy",
+      "source_material": "Material.001",
+      "diagnostic_material": "DIAGNOSTIC_Material.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-lao_tseu_proxy",
+      "source_material": "Colorful",
+      "diagnostic_material": "DIAGNOSTIC_Colorful",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-lao_tseu_proxy",
+      "source_material": "brown.001",
+      "diagnostic_material": "DIAGNOSTIC_brown.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-lao_tseu_proxy",
+      "source_material": "Flat_Material2.001",
+      "diagnostic_material": "DIAGNOSTIC_Flat_Material2.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-lao_tseu_proxy",
+      "source_material": "Flat_Material3.001",
+      "diagnostic_material": "DIAGNOSTIC_Flat_Material3.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-lao_tseu_proxy",
+      "source_material": "Flat_Material3",
+      "diagnostic_material": "DIAGNOSTIC_Flat_Material3",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-deformation_cage",
+      "source_material": "mdef_cage_transp",
+      "diagnostic_material": "DIAGNOSTIC_mdef_cage_transp",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-staffLT.001",
+      "source_material": "OtherStaff",
+      "diagnostic_material": "DIAGNOSTIC_OtherStaff",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-staffLT.001",
+      "source_material": "OtherStaffGrip",
+      "diagnostic_material": "DIAGNOSTIC_OtherStaffGrip",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-symbolJA.005",
+      "source_material": "SilverDBTree_logo.001",
+      "diagnostic_material": "DIAGNOSTIC_SilverDBTree_logo.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-symbolJA.006",
+      "source_material": "SilverDBTree_logo.001",
+      "diagnostic_material": "DIAGNOSTIC_SilverDBTree_logo.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-body_mouth.003",
+      "source_material": "red.001",
+      "diagnostic_material": "DIAGNOSTIC_red.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-body_mouth.003",
+      "source_material": "YellowyTeeth.001",
+      "diagnostic_material": "DIAGNOSTIC_YellowyTeeth.001",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-body_mouth.003",
+      "source_material": "Material.00",
+      "diagnostic_material": "DIAGNOSTIC_Material.00",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-body_mouth.003",
+      "source_material": "SkinLaoFace",
+      "diagnostic_material": "DIAGNOSTIC_SkinLaoFace",
+      "texture": null,
+      "mode": "neutral unresolved"
+    },
+    {
+      "object": "GEO-hoodLT",
+      "source_material": "Guardian_cloth3.001",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_cloth3.001",
+      "texture": "textures/cloth_02_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "f3adbbfa9b02813d8b53e3932fc45c92f9ec1d6ff0bcf3d90b450439d9f2a52d"
+    },
+    {
+      "object": "GEO-hoodLT",
+      "source_material": "GuardianMetal.001",
+      "diagnostic_material": "DIAGNOSTIC_GuardianMetal.001",
+      "texture": "textures/metal1_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "a331a381575b1ad53817bb639004a97bc488dfba1435c81e45d0cba0b59edbb8"
+    },
+    {
+      "object": "GEO-capeLT.001",
+      "source_material": "Guardian_cloak.001",
+      "diagnostic_material": "DIAGNOSTIC_Guardian_cloak.001",
+      "texture": "textures/jack_cloak_diff.png",
+      "mode": "source diffuse only",
+      "sha256": "030621d67817388da89a9782de3b9da49ee36a1efab9510ca04bbd5c39b3cc1c"
+    }
+  ],
+  "limitations": [
+    "Old multi-layer skin and specular shaders are not reconstructed.",
+    "GuardianTop secondary leather slot is not mixed: original influence/coordinates pending.",
+    "Constant roughness is diagnostic, not authored PBR."
+  ],
+  "source_unchanged": true
+}

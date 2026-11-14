@@ -1,0 +1,1569 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "autoexec": false,
+  "objects": [
+    {
+      "name": "GEO-belt2JA.003",
+      "type": "MESH",
+      "vertices": 1475,
+      "polygons": 1460,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_Leather2.001",
+        "GuardianMetal.001"
+      ]
+    },
+    {
+      "name": "GEO-body_mouth.003",
+      "type": "MESH",
+      "vertices": 1322,
+      "polygons": 1272,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Mirror",
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "red.001",
+        "YellowyTeeth.001",
+        "Material.00",
+        "SkinLaoFace"
+      ]
+    },
+    {
+      "name": "GEO-bootsLT.001",
+      "type": "MESH",
+      "vertices": 1040,
+      "polygons": 1026,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Multires",
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_Boots"
+      ]
+    },
+    {
+      "name": "GEO-capeLT.001",
+      "type": "MESH",
+      "vertices": 1486,
+      "polygons": 1484,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "ParticleSystem 1",
+          "type": "PARTICLE_SYSTEM",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_cloak.001"
+      ]
+    },
+    {
+      "name": "GEO-cornea",
+      "type": "MESH",
+      "vertices": 290,
+      "polygons": 296,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Mirror",
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "cornea"
+      ]
+    },
+    {
+      "name": "GEO-cornea.001",
+      "type": "MESH",
+      "vertices": 290,
+      "polygons": 296,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Mirror",
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "cornea"
+      ]
+    },
+    {
+      "name": "GEO-deformation_cage",
+      "type": "MESH",
+      "vertices": 566,
+      "polygons": 568,
+      "uv": [],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Armature",
+          "type": "ARMATURE",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "mdef_cage_transp"
+      ]
+    },
+    {
+      "name": "GEO-eyeballs_new",
+      "type": "MESH",
+      "vertices": 338,
+      "polygons": 344,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Mirror",
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "eye_white",
+        null,
+        null
+      ]
+    },
+    {
+      "name": "GEO-eyeballs_new.001",
+      "type": "MESH",
+      "vertices": 338,
+      "polygons": 344,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Mirror",
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "eye_white",
+        null,
+        null
+      ]
+    },
+    {
+      "name": "GEO-gauntletsDG",
+      "type": "MESH",
+      "vertices": 2248,
+      "polygons": 2226,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_Leather2.001",
+        "Guardian_Leather.001",
+        null
+      ]
+    },
+    {
+      "name": "GEO-HandsJA.001",
+      "type": "MESH",
+      "vertices": 2406,
+      "polygons": 2394,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Armature",
+          "type": "ARMATURE",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "SkinJackHands"
+      ]
+    },
+    {
+      "name": "GEO-headLT",
+      "type": "MESH",
+      "vertices": 2740,
+      "polygons": 2686,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Armature",
+          "type": "ARMATURE",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": false,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "SkinLaoFace"
+      ]
+    },
+    {
+      "name": "GEO-headLT.002",
+      "type": "MESH",
+      "vertices": 32,
+      "polygons": 14,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "ParticleSystem 1",
+          "type": "PARTICLE_SYSTEM",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "LTHair"
+      ]
+    },
+    {
+      "name": "GEO-headLT.003",
+      "type": "MESH",
+      "vertices": 70,
+      "polygons": 42,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "ParticleSystem 1",
+          "type": "PARTICLE_SYSTEM",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "LTHair"
+      ]
+    },
+    {
+      "name": "GEO-hoodLT",
+      "type": "MESH",
+      "vertices": 198,
+      "polygons": 172,
+      "uv": [],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Mirror",
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_cloth3.001",
+        "GuardianMetal.001"
+      ]
+    },
+    {
+      "name": "GEO-lao_tseu_proxy",
+      "type": "MESH",
+      "vertices": 764,
+      "polygons": 595,
+      "uv": [],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Mirror",
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Armature",
+          "type": "ARMATURE",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "grey_matte",
+        "Material.001",
+        "Colorful",
+        "brown.001",
+        "Flat_Material2.001",
+        "Flat_Material3.001",
+        "Flat_Material3"
+      ]
+    },
+    {
+      "name": "GEO-pant_detailsL_S",
+      "type": "MESH",
+      "vertices": 592,
+      "polygons": 592,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_cloth3.005",
+        "GuardianMetal.005"
+      ]
+    },
+    {
+      "name": "GEO-pant_detailsR_S",
+      "type": "MESH",
+      "vertices": 592,
+      "polygons": 592,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_cloth3.005",
+        "GuardianMetal.005"
+      ]
+    },
+    {
+      "name": "GEO-pantsLT.001",
+      "type": "MESH",
+      "vertices": 652,
+      "polygons": 614,
+      "uv": [
+        "UVTex",
+        "UVTex.001"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Multires",
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_Pants"
+      ]
+    },
+    {
+      "name": "GEO-sashDG.001",
+      "type": "MESH",
+      "vertices": 576,
+      "polygons": 512,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Multires",
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_cloth2.001"
+      ]
+    },
+    {
+      "name": "GEO-staffLT",
+      "type": "MESH",
+      "vertices": 1322,
+      "polygons": 1500,
+      "uv": [],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": []
+    },
+    {
+      "name": "GEO-staffLT.001",
+      "type": "MESH",
+      "vertices": 9148,
+      "polygons": 9016,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "OtherStaff",
+        "OtherStaffGrip"
+      ]
+    },
+    {
+      "name": "GEO-symbolJA.005",
+      "type": "MESH",
+      "vertices": 337,
+      "polygons": 328,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "SilverDBTree_logo.001"
+      ]
+    },
+    {
+      "name": "GEO-symbolJA.006",
+      "type": "MESH",
+      "vertices": 337,
+      "polygons": 328,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "SilverDBTree_logo.001"
+      ]
+    },
+    {
+      "name": "GEO-symbolLT.001",
+      "type": "MESH",
+      "vertices": 337,
+      "polygons": 328,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "DragonBloodTree_lo"
+      ]
+    },
+    {
+      "name": "GEO-toplaceLT.001",
+      "type": "MESH",
+      "vertices": 960,
+      "polygons": 912,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "GuardianMetal.001",
+        "Flat_Material4.001"
+      ]
+    },
+    {
+      "name": "GEO-topLT",
+      "type": "MESH",
+      "vertices": 1373,
+      "polygons": 1332,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Multires",
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "GuardianTop"
+      ]
+    },
+    {
+      "name": "GEO-torso-beltsLT.001",
+      "type": "MESH",
+      "vertices": 735,
+      "polygons": 735,
+      "uv": [
+        "UVTex"
+      ],
+      "hidden_render": false,
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "material_slots": [
+        "Guardian_TorsoBelts"
+      ]
+    },
+    {
+      "name": "meta_rig",
+      "type": "ARMATURE",
+      "bones": 69,
+      "deform_bones": 68,
+      "pose_mode": "POSE",
+      "constraints": 0
+    },
+    {
+      "name": "rig",
+      "type": "ARMATURE",
+      "bones": 308,
+      "deform_bones": 79,
+      "pose_mode": "POSE",
+      "constraints": 246
+    },
+    {
+      "name": "rig_weapon",
+      "type": "ARMATURE",
+      "bones": 2,
+      "deform_bones": 2,
+      "pose_mode": "POSE",
+      "constraints": 0
+    }
+  ],
+  "drivers": [
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-torso_hinge\"].constraints[\"hinge\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"torso\"][\"bend_tot\"]",
+      "expression": "0.000",
+      "type": "SUM",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-rot_spine.02\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "bend/bend_tot",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-rot_spine.03\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "bend/bend_tot",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-rot_spine.04\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "bend/bend_tot",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-spine.01\"].constraints[\"slide_1\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-spine.01\"].constraints[\"slide_2\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-spine.01\"].constraints[\"slide_3\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-spine.01\"].constraints[\"slide_4\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-thigh.L_hinge\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-thigh.L\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-shin.L\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-foot.L\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-toe.L\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-thigh.R_hinge\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-thigh.R\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-shin.R\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-foot.R\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-toe.R\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-head_hinge\"].constraints[\"hinge\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"head\"][\"bend_tot\"]",
+      "expression": "0.000",
+      "type": "SUM",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-rot_neck.01\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "bend/bend_tot",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-rot_neck.02\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "bend/bend_tot",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-rot_neck.03\"].constraints[\"Copy Rotation\"].influence",
+      "expression": "bend/bend_tot",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.L\"].rotation_euler",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.L\"].rotation_euler",
+      "expression": "-0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.L\"].rotation_euler",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.L\"].location",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.L\"].location",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.L\"].location",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.R\"].rotation_euler",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.R\"].rotation_euler",
+      "expression": "-0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.R\"].rotation_euler",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.R\"].location",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.R\"].location",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-DLT-upper_arm.R\"].location",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-upper_arm.L_hinge\"].constraints[\"hinge\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-upper_arm.L\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-forearm.L\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-hand.L\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-upper_arm.R_hinge\"].constraints[\"hinge\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-upper_arm.R\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-forearm.R\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-hand.R\"].constraints[\"Copy Transforms.001\"].influence",
+      "expression": "1.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-palm.04.L\"].rotation_euler",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-palm.04.L\"].rotation_euler",
+      "expression": "-x/4.0",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-palm.04.L\"].rotation_euler",
+      "expression": "(1.0-cos(x))-s",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-palm.04.R\"].rotation_euler",
+      "expression": "0.000",
+      "type": "AVERAGE",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-palm.04.R\"].rotation_euler",
+      "expression": "-x/4.0",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"ORG-palm.04.R\"].rotation_euler",
+      "expression": "-((1.0-cos(x))-s)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-thumb.02.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-thumb.03.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-thumb.02.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-thumb.03.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_index.02.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_index.03.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_index.02.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_index.03.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_middle.02.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_middle.03.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_middle.02.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_middle.03.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_pinky.02.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_pinky.03.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_pinky.02.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_pinky.03.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_ring.02.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_ring.03.L\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_ring.02.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*(1.0-br)",
+      "type": "SCRIPTED",
+      "valid": true
+    },
+    {
+      "owner": "rig",
+      "path": "pose.bones[\"MCH-finger_ring.03.R\"].rotation_euler",
+      "expression": "(-scale+1.0)*pi*2.0*br",
+      "type": "SCRIPTED",
+      "valid": true
+    }
+  ],
+  "collections": {
+    "Collection 1": [
+      "GEO-HandsJA.001",
+      "GEO-headLT",
+      "GEO-cornea",
+      "GEO-cornea.001",
+      "GEO-eyeballs_new",
+      "GEO-eyeballs_new.001",
+      "GEO-pant_detailsL_S",
+      "GEO-pant_detailsR_S",
+      "GEO-belt2JA.003",
+      "GEO-bootsLT.001",
+      "GEO-gauntletsDG",
+      "GEO-pantsLT.001",
+      "GEO-sashDG.001",
+      "GEO-toplaceLT.001",
+      "GEO-topLT",
+      "GEO-torso-beltsLT.001",
+      "GEO-symbolLT.001",
+      "GEO-headLT.002",
+      "GEO-headLT.003",
+      "Camera",
+      "Lamp"
+    ],
+    "Collection 11": [
+      "GEO-body_mouth.003",
+      "GEO-hoodLT",
+      "GEO-capeLT.001"
+    ],
+    "Collection 12": [
+      "rig",
+      "Camera",
+      "Lamp"
+    ],
+    "Collection 13": [
+      "meta_rig"
+    ],
+    "Collection 19": [
+      "rig_weapon"
+    ],
+    "Collection 2": [
+      "GEO-lao_tseu_proxy",
+      "Camera",
+      "Lamp"
+    ],
+    "Collection 20": [
+      "WGT-elbow_target.L",
+      "WGT-elbow_target.R",
+      "WGT-finger",
+      "WGT-finger_index.L",
+      "WGT-finger_index.R",
+      "WGT-finger_middle.L",
+      "WGT-finger_middle.R",
+      "WGT-finger_pinky.L",
+      "WGT-finger_pinky.R",
+      "WGT-finger_ring.L",
+      "WGT-finger_ring.R",
+      "WGT-foot",
+      "WGT-foot.L",
+      "WGT-foot.R",
+      "WGT-foot_ik.L",
+      "WGT-foot_ik.R",
+      "WGT-forearm.L",
+      "WGT-forearm.R",
+      "WGT-hand",
+      "WGT-hand.L",
+      "WGT-hand.R",
+      "WGT-hand_ik.L",
+      "WGT-hand_ik.R",
+      "WGT-head",
+      "WGT-knee_target.L",
+      "WGT-knee_target.R",
+      "WGT-limb",
+      "WGT-line",
+      "WGT-palm.L",
+      "WGT-palm.R",
+      "WGT-pelvis",
+      "WGT-pivot",
+      "WGT-root",
+      "WGT-shin.L",
+      "WGT-shin.R",
+      "WGT-shoulder.L",
+      "WGT-shoulder.R",
+      "WGT-sphere",
+      "WGT-thigh.L",
+      "WGT-thigh.R",
+      "WGT-thumb.L",
+      "WGT-thumb.R",
+      "WGT-toe",
+      "WGT-toe.L",
+      "WGT-toe.R",
+      "WGT-toe_ik.L",
+      "WGT-toe_ik.R",
+      "WGT-torso",
+      "WGT-upper_arm.L",
+      "WGT-upper_arm.R",
+      "WGT-slide",
+      "WGT-weapon"
+    ],
+    "Collection 3": [
+      "GEO-deformation_cage"
+    ],
+    "Collection 8": [
+      "GEO-staffLT.001",
+      "GEO-symbolJA.005",
+      "GEO-symbolJA.006"
+    ],
+    "Collection 9": [
+      "GEO-staffLT"
+    ],
+    "Hidden 11": [
+      "GEO-hoodLT"
+    ],
+    "Hidden 12": [
+      "rig"
+    ],
+    "Hidden 12.001": [
+      "rig"
+    ],
+    "Hidden 19": [
+      "rig_weapon"
+    ],
+    "Hidden 19.001": [
+      "rig_weapon"
+    ],
+    "Hidden 20": [
+      "WGT-elbow_target.L",
+      "WGT-elbow_target.R",
+      "WGT-finger",
+      "WGT-finger_index.L",
+      "WGT-finger_index.R",
+      "WGT-finger_middle.L",
+      "WGT-finger_middle.R",
+      "WGT-finger_pinky.L",
+      "WGT-finger_pinky.R",
+      "WGT-finger_ring.L",
+      "WGT-finger_ring.R",
+      "WGT-foot",
+      "WGT-foot.L",
+      "WGT-foot.R",
+      "WGT-foot_ik.L",
+      "WGT-foot_ik.R",
+      "WGT-forearm.L",
+      "WGT-forearm.R",
+      "WGT-hand",
+      "WGT-hand.L",
+      "WGT-hand.R",
+      "WGT-hand_ik.L",
+      "WGT-hand_ik.R",
+      "WGT-head",
+      "WGT-knee_target.L",
+      "WGT-knee_target.R",
+      "WGT-limb",
+      "WGT-line",
+      "WGT-palm.L",
+      "WGT-palm.R",
+      "WGT-pelvis",
+      "WGT-pivot",
+      "WGT-root",
+      "WGT-shin.L",
+      "WGT-shin.R",
+      "WGT-shoulder.L",
+      "WGT-shoulder.R",
+      "WGT-sphere",
+      "WGT-thigh.L",
+      "WGT-thigh.R",
+      "WGT-thumb.L",
+      "WGT-thumb.R",
+      "WGT-toe",
+      "WGT-toe.L",
+      "WGT-toe.R",
+      "WGT-toe_ik.L",
+      "WGT-toe_ik.R",
+      "WGT-torso",
+      "WGT-upper_arm.L",
+      "WGT-upper_arm.R"
+    ],
+    "Hidden 20.001": [
+      "WGT-slide",
+      "WGT-weapon"
+    ],
+    "Hidden 3": [
+      "GEO-deformation_cage"
+    ],
+    "lao_tseu": [
+      "GEO-HandsJA.001",
+      "GEO-headLT",
+      "GEO-cornea",
+      "GEO-cornea.001",
+      "GEO-eyeballs_new",
+      "GEO-eyeballs_new.001",
+      "GEO-pant_detailsL_S",
+      "GEO-pant_detailsR_S",
+      "GEO-belt2JA.003",
+      "GEO-bootsLT.001",
+      "GEO-gauntletsDG",
+      "GEO-pantsLT.001",
+      "GEO-sashDG.001",
+      "GEO-toplaceLT.001",
+      "GEO-topLT",
+      "GEO-torso-beltsLT.001",
+      "GEO-symbolLT.001",
+      "GEO-headLT.002",
+      "GEO-headLT.003"
+    ],
+    "lao_tseu_simple": [
+      "GEO-lao_tseu_proxy"
+    ],
+    "lao_weapon": [
+      "GEO-staffLT.001",
+      "GEO-symbolJA.005",
+      "GEO-symbolJA.006"
+    ],
+    "lao_weapon_simple": [
+      "GEO-staffLT"
+    ],
+    "staff": [
+      "GEO-staffLT"
+    ]
+  },
+  "embedded_texts": [
+    {
+      "name": "lao_tseu_rig_props.py",
+      "sha256": "670545b3b9a2910a1fef3c38945e69d3fcb8a547cbaa98e2ade290753294d5ff",
+      "executed": false
+    },
+    {
+      "name": "Text",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executed": false
+    }
+  ],
+  "evaluation": [
+    {
+      "name": "GEO-topLT",
+      "vertices": 1373,
+      "finite": true,
+      "world_min": [
+        -0.6371336579322815,
+        -0.26858311891555786,
+        1.2003076076507568
+      ],
+      "world_max": [
+        0.6371220350265503,
+        0.08775698393583298,
+        1.8285048007965088
+      ]
+    },
+    {
+      "name": "GEO-pantsLT.001",
+      "vertices": 652,
+      "finite": true,
+      "world_min": [
+        -0.2764485478401184,
+        -0.23648393154144287,
+        0.5441538691520691
+      ],
+      "world_max": [
+        0.27592551708221436,
+        0.06960126757621765,
+        1.2442026138305664
+      ]
+    },
+    {
+      "name": "GEO-bootsLT.001",
+      "vertices": 1040,
+      "finite": true,
+      "world_min": [
+        -0.26981836557388306,
+        -0.3609377145767212,
+        -0.0024073950480669737
+      ],
+      "world_max": [
+        0.2724601924419403,
+        0.03126565366983414,
+        0.5918189883232117
+      ]
+    },
+    {
+      "name": "GEO-headLT",
+      "vertices": 2740,
+      "finite": true,
+      "world_min": [
+        -0.11146245151758194,
+        -0.2421342432498932,
+        1.7047046422958374
+      ],
+      "world_max": [
+        0.11145716160535812,
+        0.02167068049311638,
+        2.059047222137451
+      ]
+    },
+    {
+      "name": "GEO-torso-beltsLT.001",
+      "vertices": 735,
+      "finite": true,
+      "world_min": [
+        -0.2818739116191864,
+        -0.2980870306491852,
+        1.2180185317993164
+      ],
+      "world_max": [
+        0.2839045226573944,
+        0.10381338745355606,
+        1.7780413627624512
+      ]
+    }
+  ]
+}

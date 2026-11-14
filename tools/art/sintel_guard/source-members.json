@@ -1,0 +1,218 @@
+[
+  {
+    "file": "guardian_dark.blend",
+    "bytes": 36426930,
+    "crc32": "8c161ddc",
+    "sha256": "e5317c1a1b994154581d2c027274cf8b4f96dbb83d50cd1c5f27694338484bba"
+  },
+  {
+    "file": "guardian_jack.blend",
+    "bytes": 53808832,
+    "crc32": "9c0b3140",
+    "sha256": "aaca866651170661f2348323cb7cfc6de84fb9a19d27d15315e349985bbe4a73"
+  },
+  {
+    "file": "guardian_lao_tseu.blend",
+    "bytes": 47667512,
+    "crc32": "97140d30",
+    "sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3"
+  },
+  {
+    "file": "guardian_smith.blend",
+    "bytes": 50474172,
+    "crc32": "13df5009",
+    "sha256": "f1271e2e94700e35b6e69025d59622bcb452f23c7f951720fa0c88c5ac389fba"
+  },
+  {
+    "file": "textures/cloth_02_diff.png",
+    "bytes": 8462035,
+    "crc32": "717ca701",
+    "sha256": "f3adbbfa9b02813d8b53e3932fc45c92f9ec1d6ff0bcf3d90b450439d9f2a52d"
+  },
+  {
+    "file": "textures/dark_face_diff.png",
+    "bytes": 6817695,
+    "crc32": "3f15a992",
+    "sha256": "1f58c8987217584d8869474cbc94f4820f8093f4370206c0125643b5baa3cdfc"
+  },
+  {
+    "file": "textures/dark_face_epid.png",
+    "bytes": 6312660,
+    "crc32": "9f14b748",
+    "sha256": "b514022fe4529746a4832b36ebfa4079ddecc563fe2ea58dc50975949164004b"
+  },
+  {
+    "file": "textures/dark_face_subd.png",
+    "bytes": 7700506,
+    "crc32": "572b44ad",
+    "sha256": "305f116e6e70e642943595cc161b6a266a6667010a7de782f8292f5d00abc05e"
+  },
+  {
+    "file": "textures/dragon_blood_tree_metal_diff.png",
+    "bytes": 10781470,
+    "crc32": "b49c526a",
+    "sha256": "8aeb957009f23fbe447c367b6e9d01e72e27db1946d4da76fb7e7d9599833598"
+  },
+  {
+    "file": "textures/grey_dragon_blood_tree_metal_diff.png",
+    "bytes": 5237164,
+    "crc32": "20690a41",
+    "sha256": "e21a221f9010aeef6081b0b853080f426feee437cc1f9e0f7897bf7367b6d903"
+  },
+  {
+    "file": "textures/jack_boots_diff.png",
+    "bytes": 3535252,
+    "crc32": "82d228bc",
+    "sha256": "d7153a9a7297bf255121db394faf7e30996fc0a94dbc815d38c416b40c4851da"
+  },
+  {
+    "file": "textures/jack_cloak_diff.png",
+    "bytes": 6598985,
+    "crc32": "296e4685",
+    "sha256": "030621d67817388da89a9782de3b9da49ee36a1efab9510ca04bbd5c39b3cc1c"
+  },
+  {
+    "file": "textures/jack_face_bump.png",
+    "bytes": 3468155,
+    "crc32": "2e8167b9",
+    "sha256": "06d513ecf39a062ac535ed3cbcaa53a575d623dbef91805b89569418538b3635"
+  },
+  {
+    "file": "textures/jack_face_diff.png",
+    "bytes": 6717576,
+    "crc32": "e3d7e1a7",
+    "sha256": "e5c12b1b43aca1c1373c50ead7bd848ae332cbe4297ad1bb3edc28be661d827b"
+  },
+  {
+    "file": "textures/jack_face_epid.png",
+    "bytes": 6191203,
+    "crc32": "0a7a8d15",
+    "sha256": "54eefab3c765542184a904fb36ce4457024c3be40e41696fce042f0ec2d8e324"
+  },
+  {
+    "file": "textures/jack_face_spec.png",
+    "bytes": 3069351,
+    "crc32": "10afde87",
+    "sha256": "502fe969311d9cf2273e63bba45cc30009be3cb2b4cad00487e3a137bd3e48e8"
+  },
+  {
+    "file": "textures/jack_face_subd.png",
+    "bytes": 7598759,
+    "crc32": "ab3b977d",
+    "sha256": "12a2b11b0d35d321aed98465ef521ff1fa048a20a261a11507a6fe5cd2378bf0"
+  },
+  {
+    "file": "textures/jack_hands_bump.png",
+    "bytes": 2720353,
+    "crc32": "07877ca7",
+    "sha256": "d20d99ea306a1d5762605bb6bc9047c3e5b1b34f5d753560a6f493d522535895"
+  },
+  {
+    "file": "textures/jack_hands_epidermal.png",
+    "bytes": 6031778,
+    "crc32": "250e5cf3",
+    "sha256": "92052e311ae48a060fce07309a693cbfdf1073df34d318c7be3251e52c3d2412"
+  },
+  {
+    "file": "textures/jack_hands_subdermal.png",
+    "bytes": 6379686,
+    "crc32": "32787cec",
+    "sha256": "66e8d61bf57c2771fb6af8436bfead07f0289d9d5f8a738be430f5b628c6a516"
+  },
+  {
+    "file": "textures/jack_hands_unscattered.png",
+    "bytes": 6939027,
+    "crc32": "c3add038",
+    "sha256": "2e15a60b26bba2afcfda0a6195ed5b1e7827b6811c6a28975b7140c6b99fb555"
+  },
+  {
+    "file": "textures/jack_pants_diff.png",
+    "bytes": 4192265,
+    "crc32": "9f8cdb1e",
+    "sha256": "e7e473f13a635ef9d6390c58adbebe3e64ec2913b7e28dfc1a95832ca7b1a161"
+  },
+  {
+    "file": "textures/jack_staff_diff.png",
+    "bytes": 4108534,
+    "crc32": "e41db23d",
+    "sha256": "8a1261476bba582f578c293201c683df4d99a66818005cb5d5e422438f4b6f1a"
+  },
+  {
+    "file": "textures/jack_top_diff.png",
+    "bytes": 6755087,
+    "crc32": "7ad3c052",
+    "sha256": "1b59bf8abf360f1de2ac6b1f88b2401d571386a192661239b6b1a615ce76af6b"
+  },
+  {
+    "file": "textures/jack_torso_belts_diff.png",
+    "bytes": 3992872,
+    "crc32": "beae7a20",
+    "sha256": "f77219f065e9f111f19606fda53cc00c69854b1d5a6fd1177509f9e68863ecf6"
+  },
+  {
+    "file": "textures/lao_face_diff.png",
+    "bytes": 6926152,
+    "crc32": "7e7cb751",
+    "sha256": "fd3d88104a25600a97db79bbef0fe64b850c979c2c3460ac694f91213f140c64"
+  },
+  {
+    "file": "textures/lao_face_epid.png",
+    "bytes": 6448265,
+    "crc32": "c6d85d94",
+    "sha256": "7fe741ffdbd7a7d7990142067cef84e01f7e5078cfde7d5cdad5211abca7e21b"
+  },
+  {
+    "file": "textures/lao_face_subd.png",
+    "bytes": 7838373,
+    "crc32": "b75f365b",
+    "sha256": "bb40d69c30d17cc7ebd0e9ffe8283059ea5c50014fad2fea56cdc621faad2e69"
+  },
+  {
+    "file": "textures/leather_01_diff.png",
+    "bytes": 7506767,
+    "crc32": "4314da81",
+    "sha256": "58233e0f041b6727d68b6ef5a8b3a1fb1c10eaee0e5a8665bce066d51332248e"
+  },
+  {
+    "file": "textures/metal1_diff.png",
+    "bytes": 9072587,
+    "crc32": "1d0397fb",
+    "sha256": "a331a381575b1ad53817bb639004a97bc488dfba1435c81e45d0cba0b59edbb8"
+  },
+  {
+    "file": "textures/other_staffs_diff.png",
+    "bytes": 4486871,
+    "crc32": "e08f4779",
+    "sha256": "5fb0c219f7183964f4aba199aa851292c2dc8cb396ab1b451d33437994b3f8e1"
+  },
+  {
+    "file": "textures/sintel_eyeball_bmp.png",
+    "bytes": 210811,
+    "crc32": "d7bb7793",
+    "sha256": "6d78d9e40a3ab2f1e509d79ecd7701230a6a85ead3d29eeb15d091278684567f"
+  },
+  {
+    "file": "textures/sintel_eyeball_colour.png",
+    "bytes": 685007,
+    "crc32": "5c69be64",
+    "sha256": "8463f4db270499ca0c330bb72533b1963b7eceebedb6b7b735aca50b04377019"
+  },
+  {
+    "file": "textures/smith_face_diff.png",
+    "bytes": 6576736,
+    "crc32": "b1627ecc",
+    "sha256": "f4e6d2addbaf95c78ccf856fd40863936297671862bcd35916f0b10a073249cb"
+  },
+  {
+    "file": "textures/smith_face_epid.png",
+    "bytes": 6113791,
+    "crc32": "798d5b82",
+    "sha256": "afa8c99cf89d3c55e71fbd0ecf574bb68e01d5ff7f856e2a3cda6ce01a65f745"
+  },
+  {
+    "file": "textures/smith_face_subd.png",
+    "bytes": 7501639,
+    "crc32": "8b4798ad",
+    "sha256": "a6f701fd3935a60b50e5f71bc6856dbb6e91474d85a9a89bcac60d41f89fff1b"
+  }
+]

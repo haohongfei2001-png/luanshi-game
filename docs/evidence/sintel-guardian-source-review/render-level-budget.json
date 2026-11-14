@@ -1,0 +1,670 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "source_unchanged": true,
+  "mode": "actual depsgraph with render-level modifiers in memory; particles excluded",
+  "meshes": [
+    {
+      "name": "GEO-HandsJA.001",
+      "base_vertices": 2406,
+      "base_faces": 2394,
+      "evaluated_vertices": 38346,
+      "evaluated_triangles": 76608,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "SkinJackHands"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "ARMATURE",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "rig"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-headLT",
+      "base_vertices": 2740,
+      "base_faces": 2686,
+      "evaluated_vertices": 43194,
+      "evaluated_triangles": 85936,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "SkinLaoFace"
+      ],
+      "shape_keys": 23,
+      "native_modifiers": [
+        {
+          "type": "ARMATURE",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "rig"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-cornea",
+      "base_vertices": 290,
+      "base_faces": 296,
+      "evaluated_vertices": 36994,
+      "evaluated_triangles": 74604,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "cornea"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 3,
+          "render_levels": 3,
+          "total_levels": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-cornea.001",
+      "base_vertices": 290,
+      "base_faces": 296,
+      "evaluated_vertices": 36994,
+      "evaluated_triangles": 74604,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "cornea"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 3,
+          "render_levels": 3,
+          "total_levels": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-eyeballs_new",
+      "base_vertices": 338,
+      "base_faces": 344,
+      "evaluated_vertices": 43040,
+      "evaluated_triangles": 86792,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "eye_white",
+        null,
+        null
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 3,
+          "render_levels": 3,
+          "total_levels": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-eyeballs_new.001",
+      "base_vertices": 338,
+      "base_faces": 344,
+      "evaluated_vertices": 43040,
+      "evaluated_triangles": 86792,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "eye_white",
+        null,
+        null
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 3,
+          "render_levels": 3,
+          "total_levels": null,
+          "cage": null
+        },
+        {
+          "type": "MIRROR",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-pant_detailsL_S",
+      "base_vertices": 592,
+      "base_faces": 592,
+      "evaluated_vertices": 9408,
+      "evaluated_triangles": 18688,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "Guardian_cloth3.005",
+        "GuardianMetal.005"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-pant_detailsR_S",
+      "base_vertices": 592,
+      "base_faces": 592,
+      "evaluated_vertices": 9408,
+      "evaluated_triangles": 18688,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "Guardian_cloth3.005",
+        "GuardianMetal.005"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-belt2JA.003",
+      "base_vertices": 1475,
+      "base_faces": 1460,
+      "evaluated_vertices": 23429,
+      "evaluated_triangles": 46720,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "Guardian_Leather2.001",
+        "GuardianMetal.001"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-bootsLT.001",
+      "base_vertices": 1040,
+      "base_faces": 1026,
+      "evaluated_vertices": 65762,
+      "evaluated_triangles": 131328,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "Guardian_Boots"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true,
+          "levels": 3,
+          "render_levels": 3,
+          "total_levels": 3,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-gauntletsDG",
+      "base_vertices": 2248,
+      "base_faces": 2226,
+      "evaluated_vertices": 35704,
+      "evaluated_triangles": 71232,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "Guardian_Leather2.001",
+        "Guardian_Leather.001",
+        null
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-pantsLT.001",
+      "base_vertices": 652,
+      "base_faces": 614,
+      "evaluated_vertices": 157807,
+      "evaluated_triangles": 314368,
+      "original_uv_layers": [
+        "UVTex",
+        "UVTex.001"
+      ],
+      "materials": [
+        "Guardian_Pants"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true,
+          "levels": 4,
+          "render_levels": 4,
+          "total_levels": 4,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-sashDG.001",
+      "base_vertices": 576,
+      "base_faces": 512,
+      "evaluated_vertices": 33280,
+      "evaluated_triangles": 65536,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "Guardian_cloth2.001"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true,
+          "levels": 3,
+          "render_levels": 3,
+          "total_levels": 3,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-toplaceLT.001",
+      "base_vertices": 960,
+      "base_faces": 912,
+      "evaluated_vertices": 14784,
+      "evaluated_triangles": 29184,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "GuardianMetal.001",
+        "Flat_Material4.001"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-topLT",
+      "base_vertices": 1373,
+      "base_faces": 1332,
+      "evaluated_vertices": 341678,
+      "evaluated_triangles": 681984,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "GuardianTop"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "MULTIRES",
+          "viewport": true,
+          "render": true,
+          "levels": 4,
+          "render_levels": 4,
+          "total_levels": 4,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-torso-beltsLT.001",
+      "base_vertices": 735,
+      "base_faces": 735,
+      "evaluated_vertices": 11760,
+      "evaluated_triangles": 23520,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "Guardian_TorsoBelts"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-deformation_cage"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-symbolLT.001",
+      "base_vertices": 337,
+      "base_faces": 328,
+      "evaluated_vertices": 1329,
+      "evaluated_triangles": 2624,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "DragonBloodTree_lo"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 1,
+          "render_levels": 1,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-headLT.002",
+      "base_vertices": 32,
+      "base_faces": 14,
+      "evaluated_vertices": 290,
+      "evaluated_triangles": 448,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "LTHair"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-headLT"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        },
+        {
+          "type": "PARTICLE_SYSTEM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    },
+    {
+      "name": "GEO-headLT.003",
+      "base_vertices": 70,
+      "base_faces": 42,
+      "evaluated_vertices": 775,
+      "evaluated_triangles": 1344,
+      "original_uv_layers": [
+        "UVTex"
+      ],
+      "materials": [
+        "LTHair"
+      ],
+      "shape_keys": 0,
+      "native_modifiers": [
+        {
+          "type": "MESH_DEFORM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": "GEO-headLT"
+        },
+        {
+          "type": "SUBSURF",
+          "viewport": true,
+          "render": true,
+          "levels": 2,
+          "render_levels": 2,
+          "total_levels": null,
+          "cage": null
+        },
+        {
+          "type": "PARTICLE_SYSTEM",
+          "viewport": true,
+          "render": true,
+          "levels": null,
+          "render_levels": null,
+          "total_levels": null,
+          "cage": null
+        }
+      ]
+    }
+  ],
+  "total_evaluated_triangles": 1891000,
+  "total_evaluated_vertices": 947022,
+  "no_decimation": true,
+  "no_rebind": true,
+  "runtime_export": "NOT_IMPLEMENTED",
+  "gpu_performance": "NOT_TESTED"
+}

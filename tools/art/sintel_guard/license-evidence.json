@@ -1,0 +1,49 @@
+{
+  "recorded_at_utc": "2026-11-14T16:44:02.395311+00:00",
+  "license": "CC BY 3.0 Unported",
+  "license_url": "https://creativecommons.org/licenses/by/3.0/",
+  "scope_basis": "Rights-holder project sharing page explicitly includes all data published online and on the DVDs; the same project author post directly links this exact package. No package-specific exception found.",
+  "author_post_date": "2010-02-07",
+  "original_package": {
+    "url": "https://durian.blender.org/wp-content/content/guardians_r854.zip",
+    "bytes": 333249534,
+    "sha256": "dd0796eba8f2b08a239470488559f3a1b2ccd7b1140fdb93360bbb177d4776b9",
+    "seconds": 18.66
+  },
+  "download_last_modified_header_observed": "Tue, 30 Mar 2021 15:36:40 GMT",
+  "package_contains_standalone_license": false,
+  "sources": [
+    {
+      "url": "https://durian.blender.org/news/guardians-community-help/",
+      "local_file": "SOURCE-2010-02-07-author-post.html",
+      "page_publication_date": "2010-02-07",
+      "bytes": 112741,
+      "sha256": "f8f8338594cffe25b0fc3ceb81d422601225998215b26fb884e44af15ea78d34"
+    },
+    {
+      "url": "https://durian.blender.org/sharing/",
+      "local_file": "LICENSE-official-sharing.html",
+      "page_publication_date": null,
+      "bytes": 8824,
+      "sha256": "c1d6336bc71643d70ff05a6dd52c62b1e01663c5ee6bc86a9f34061597d5465c"
+    },
+    {
+      "url": "https://durian.blender.org/news/guardians/",
+      "local_file": "SOURCE-2010-02-05-render-post.html",
+      "page_publication_date": "2010-02-05",
+      "bytes": 68670,
+      "sha256": "8152b6494ce960f26fa049860c9e9d54b6b4d8e537fa2de64fefc946608d74bb"
+    }
+  ],
+  "scope_exclusions": "Website logos, associated trademarks and content clearly outside the Durian project are excluded by the official sharing page.",
+  "original_package_conflict_search": {
+    "original_files": 36,
+    "blends": 4,
+    "png_textures": 32,
+    "standalone_license_files": 0,
+    "zip_comments": 0,
+    "embedded_text_blocks_checked": "all four nonempty rig property scripts; no license/copyright notice found",
+    "png_text_metadata_checked": "32 PNGs; only Created with GIMP comments in 6 PNGs; no third-party attribution/restrictive license metadata found",
+    "third_party_reference": "One missing external face reference image is a BGpic reference only, is not shipped in the package, and is not a material texture. Pixel authorship of all textures was not independently proven."
+  }
+}
