@@ -1,3 +1,7 @@
+## Dot 2026-11-14 18:02 UTC · Owner MOBA camera / no premature art release
+
+最新权威以 Wild Rift 角色屏幕比例与 MOBA 清晰质感为主，旧正交size22仅历史基线；不为千军同屏缩小人物。512每方是总战斗验证，屏内数量随自然镜头，屏外真实推进不变。枪兵方向认可、白袍白马方向大致认可、双方兵种图片未批准；概念均不是实机验收。普通兵枪无红缨。所有当前美术仍ART FAIL，失败试验不当合格RC/可用成品推送，继续内部自审重建。完整要求、原始AI参考及哈希：[Owner最新权威](OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md)。Codex PAUSED / Dot接续、RC24/RC25、默认游戏/引擎、正式剧情空白与M5 DEVICE_NOT_RUN保持。
+
 ## Dot 2026-11-14 17:46 UTC · Owner pixel-first update
 
 Owner prioritizes clear, natural, modern whole-frame quality at actual normal-camera pixel size and real thousand-soldier performance. Full3D is NOT mandatory: compare shared3D, multidirectional animated sprites and near/mid/far hybrid fairly from the same professional source. No final representation selected. Hands/weapons/armor/actions must remain readable; muddy smearing, oily darkness and dirty noise are failures, not detail. Read [current pixel-first acceptance](PIXEL_FIRST_VISUAL_ACCEPTANCE_20261114.md). Core battle/saves remain intact; Codex PAUSED / Dot continuation, ART FAIL and M5 DEVICE_NOT_RUN unchanged.

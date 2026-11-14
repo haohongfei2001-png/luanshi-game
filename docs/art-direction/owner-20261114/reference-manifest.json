@@ -1,0 +1,35 @@
+{
+  "recorded_utc": "2026-11-14T18:02:26Z",
+  "source_type": "Dot-generated AI design images shown to project owner; owner-authorized project use",
+  "not_actual_gameplay": true,
+  "not_a_third_party_asset_license": "No CC0 or commercial-game asset rights claimed",
+  "references": [
+    {
+      "path": "spearman-direction.png",
+      "sha256": "fef54505bf0adb82646cd5c9e955170b255b3cbb8c5d6cfe1dc49c623167a932",
+      "bytes": 2238417,
+      "width": 1199,
+      "height": 1312,
+      "format": "PNG",
+      "status": "DIRECTION_ACCEPTED_NOT_GAMEPLAY_ACCEPTED"
+    },
+    {
+      "path": "white-hero-direction.png",
+      "sha256": "96a70f5e106636ece2808c182def24eea04367632779b8384fced84fbd596d07",
+      "bytes": 2125443,
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "status": "DIRECTION_ROUGHLY_ACCEPTED_FINAL_IDENTITY_NOT_APPROVED"
+    },
+    {
+      "path": "opposing-troops-candidate.png",
+      "sha256": "6c0cb45a900799d90657360e81ab4661615e6920199d793337392e203f9b3890",
+      "bytes": 2466230,
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "status": "CANDIDATE_NOT_APPROVED"
+    }
+  ]
+}
