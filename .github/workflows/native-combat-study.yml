@@ -1,0 +1,32 @@
+name: Inspect the licensed humanoid combat source
+on:
+  push:
+    branches: [codex/river-rc23-authored-combat]
+    paths: ['tools/art/import_company_combat.py','.github/workflows/native-combat-study.yml']
+permissions:
+  contents: write
+concurrency:
+  group: native-combat-study
+  cancel-in-progress: true
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the exact already verified free Standard source
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/python3 -c 'import numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy; fi
+          curl -fsSL --retry 2 'https://store.godotengine.org/asset/quaternius/universal-animation-library/download/44/?study=rc23-authored-combat-20261114' -o /tmp/standard.zip
+          /usr/bin/python3 tools/art/import_company_combat.py /tmp/standard.zip
+          git add docs/evidence/river-gate-v1-rc23/native-combat
+          git -c user.name='River Gate authored combat source' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record the exact free CC0 attack and guard animation source inventory'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: licensed-combat-source-survey
+          path: docs/evidence/river-gate-v1-rc23/native-combat
+          retention-days: 7
