@@ -190,7 +190,19 @@ def main():
                 # First record the untouched author's support path. Surface
                 # contact and foot travel are reviewed before accepting a clip.
                 track=posed[:,:,hoof].mean(axis=2)
-                metrics.setdefault("hooves",{})[tier+str(group)]={"low_y":float(track[:,:,1].min()),"high_y":float(track[:,:,1].max()),"fore_aft":float(np.ptp(track[:,:,2]))}
+                details={"low_y":float(track[:,:,1].min()),"high_y":float(track[:,:,1].max()),"fore_aft":float(np.ptp(track[:,:,2]))}
+                for clip_index,(label,_,_) in enumerate(ANIMATIONS):
+                    path=track[clip_index]
+                    support=path[:,1] <= float(path[:,1].min())+.030
+                    supported=support[:-1]&support[1:]
+                    velocity=np.diff(path[:,2])*KEYS
+                    supported &= velocity<0.
+                    steps=velocity[supported]
+                    details[label]={"supported_samples":int(supported.sum()),
+                                    "local_support_metres_per_cycle":float(-np.median(steps)) if len(steps) else None,
+                                    "world_drift_at_four_metres_per_second":float(np.sqrt(np.mean((steps+1./.68)**2))*4.*.68) if len(steps) else None,
+                                    "lowest_surface_y":float(posed[clip_index,:,hoof,1].min())}
+                metrics.setdefault("hooves",{})[tier+str(group)]=details
             norm=np.asarray([[normals(frame,faces) for frame in clip] for clip in posed])
             base=len(all_groups)
             all_positions.extend(posed.transpose(2,0,1,3))
