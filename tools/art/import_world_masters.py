@@ -18,6 +18,7 @@ CACHE=Path(sys.argv[sys.argv.index("--")+1])
 ASSETS=[
     ("coastal_cliff_02",90000,"Rob Tuytel"),
     ("coast_rocks_03",65000,"Rico Cilliers and Rob Tuytel"),
+    ("rock_moss_set_01",90000,"Kless Gyzen"),
     ("modular_wooden_pier",85000,"Rico Cilliers"),
     ("island_tree_03",180000,"Rico Cilliers and Rob Tuytel"),
     ("pine_tree_01",120000,"Rico Cilliers and Rob Tuytel"),
@@ -144,6 +145,13 @@ def import_master(asset,budget,author):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(cache/"albedo-master.gltf"))
     objects=[o for o in bpy.context.scene.objects if o.type=="MESH"]
+    if asset=="rock_moss_set_01" and len(objects)==1:
+        bpy.context.view_layer.objects.active=objects[0]
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.separate(type="LOOSE")
+        bpy.ops.object.mode_set(mode="OBJECT")
+        objects=[o for o in bpy.context.scene.objects if o.type=="MESH"]
     original=[(o.name,len(o.data.polygons),list(o.dimensions)) for o in objects]
     print("MASTER_SOURCE",asset,json.dumps(original),flush=True)
     keep=[]
@@ -151,6 +159,11 @@ def import_master(asset,budget,author):
         lod=re.search(r"lod[_ -]?([0-9]+)",obj.name,re.I)
         if lod and int(lod.group(1))>0:continue
         keep.append(obj)
+    if asset=="rock_moss_set_01":
+        keep=sorted((obj for obj in keep if len(obj.data.polygons)>150),
+                    key=lambda obj:(-len(obj.data.polygons),obj.name))[:6]
+        assert len(keep)>=3, "The authored rock set needs separate complete stone volumes"
+        for index,obj in enumerate(keep):obj.name="RockVolume%02d"%index
     assert keep,asset
     # Dense native crowns consist of many disconnected leaves. A global collapse
     # modifier deletes entire leaves before it preserves the tree's silhouette.

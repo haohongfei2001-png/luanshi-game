@@ -4,7 +4,7 @@ const WORLD := "res://assets/river_gate/world/"
 const FORT := WORLD+"architecture/river_fort.glb"
 const PIER := WORLD+"masters/modular_wooden_pier/modular_wooden_pier.gltf"
 const CLIFF := WORLD+"masters/coastal_cliff_02/coastal_cliff_02.gltf"
-const SHORE := WORLD+"masters/coast_rocks_03/coast_rocks_03.gltf"
+const BOULDERS := WORLD+"masters/rock_moss_set_01/rock_moss_set_01.gltf"
 const BROADLEAF := WORLD+"masters/island_tree_01/island_tree_01.gltf"
 const WOODLAND := WORLD+"woodland/field_woodland.glb"
 const SHRUB := WORLD+"masters/shrub_03/shrub_03.gltf"
@@ -267,33 +267,34 @@ func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
 	return plant
 
 func _bank_rocks(channel:float,moat:bool) -> void:
-	var mesh:Mesh=_library(CLIFF)["coastal_cliff_02_LOD0"]
-	var bounds:=mesh.get_aabb()
-	var anchor:=bounds.get_center()
-	anchor.y=bounds.position.y
-	var reaches:Array[Vector2]=[Vector2(-15.,17.4),Vector2(15.,17.4)]
-	if not moat:
-		reaches=[Vector2(-52.,24.),Vector2(-17.5,25.),Vector2(17.5,25.),Vector2(52.,24.)]
-	for side:float in [-1.,1.]:
-		for i in reaches.size():
-			var reach:=reaches[i]
-			var center:=Ground.river_center(reach.x) if bridgehead and not moat else channel
-			var shoulder:=3.1 if moat else 3.8
-			# Preserve a complete continuous geological face through each bank
-			# reach. Its narrow waterward footprint keeps the retained crossing.
-			var stone:=_piece(CLIFF,"coastal_cliff_02_LOD0",
-				Vector3(center+side*shoulder,-.72,reach.x),
-				Vector3(reach.y/bounds.size.x,3.1/bounds.size.y,1.8/bounds.size.z),
-				PI*.5 if side>0. else -PI*.5,anchor)
-			stone.name="WholeCliffBank"
-			stone.lod_bias=1.15
-			stone.visibility_range_end=210.
-			for j in 4:
-				var z:=reach.x+(j-1.5)*reach.y*.21
-				var bank:=Ground.river_center(z) if bridgehead and not moat else channel
-				var p:=Vector2(bank+side*(6.1+.25*(j%2)),z)
-				_native_understory(THICKET,p,1.25+.18*((i+j)%3),i*1.43+j,i+j)
-				_native_understory(FERN,p+Vector2(side*.75,.48),.45,i*.8+j,i+j)
+	var parts:=_library(BOULDERS)
+	var names:=parts.keys()
+	names.sort()
+	assert(names.size()>=3)
+	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
+	if not moat:stations.append_array(Ground.RIVER_OUTCROPS)
+	for i in stations.size():
+		var entry:=stations[i]
+		var center:=Ground.river_center(entry.y) if bridgehead and not moat else channel
+		var shoulder:=3.85 if moat else (4.8 if bridgehead else 3.5)
+		for j in 2:
+			var part:String=names[(i*5+j*3)%names.size()]
+			var mesh:Mesh=parts[part]
+			var box:=mesh.get_aabb()
+			var anchor:=box.get_center()
+			anchor.y=box.position.y
+			var width:=entry.z*(.97 if j==0 else .55)
+			var size:=width/maxf(box.size.x,box.size.z)
+			var at:=Vector3(center+entry.x*(shoulder-.75*j),
+				-.48-box.size.y*size*.12,entry.y+j*entry.z*.31)
+			var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,i*1.83+j*2.1,anchor)
+			rock.name="WholeErodedBoulder"
+			rock.lod_bias=1.3
+			rock.visibility_range_end=210.
+		for j in 2:
+			var p:=Vector2(center+entry.x*(6.0+.48*j),entry.y+(j-.5)*1.55)
+			_native_understory(THICKET,p,1.12+.17*((i+j)%3),i*1.43+j,i+j)
+			_native_understory(FERN,p+Vector2(entry.x*.75,.48),.45,i*.8+j,i+j)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
