@@ -518,10 +518,7 @@ func build(parent: Node3D,tiles: Dictionary,bridgehead: bool=false) -> void:
 				Vector4(18.2,10.7,5.8,.28),Vector4(30.3,15.0,5.0,2.94)]:
 			var p:=Vector2(planting.x,planting.y)
 			_plant(_cell(p),p,planting.z,0,0,planting.w)
-		for stone:Vector4 in [Vector4(29.1,-6.6,1.40,.82),Vector4(30.3,-7.4,1.03,.62),
-				Vector4(18.8,6.8,1.34,.68),Vector4(18.5,-12.1,1.69,.78),Vector4(29.3,10.2,1.30,.61)]:
-			var p:=Vector2(stone.x,stone.y)
-			_river_bed(_cell(p).stone,p,stone.z,stone.z*.66,stone.w,.87+stone.x*.21,stone.y*.49)
+		preload("res://scripts/field/scanned_banks.gd").build(parent)
 		# Sedge roots follow the wet ledge. Leave gaps between clumps, both
 		# bridge mouths and the road completely open at boot height.
 		var reed_beds: Array[Vector3]=[Vector3(-1.,-5.7,1.35),Vector3(1.,-7.1,1.35),

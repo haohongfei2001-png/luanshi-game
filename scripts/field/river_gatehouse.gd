@@ -9,6 +9,7 @@ const ATLAS := preload("res://assets/third_party/wildfire_gate/gate_clay_and_tim
 static var atlas_material: StandardMaterial3D
 
 static var corner_material: StandardMaterial3D
+static var gate_foundation: ShaderMaterial
 
 static func _postern_masonry() -> StandardMaterial3D:
 	if corner_material: return corner_material
@@ -31,7 +32,12 @@ static func _stone_and_tiles() -> StandardMaterial3D:
 static func mount(parent: Node3D, wall_x: float, roofs: Array[Dictionary]) -> void:
 	var meshes:=FieldMeshes.meshes(GATE)
 	var surface:=_stone_and_tiles()
-	_place(parent,meshes["Piers"],surface,wall_x)
+	if not gate_foundation:
+		gate_foundation=ShaderMaterial.new()
+		gate_foundation.shader=preload("res://scripts/field/gate_foundation.gdshader")
+		gate_foundation.set_shader_parameter("ashlar",preload("res://assets/third_party/polyhaven_bank/foundation.jpg"))
+		gate_foundation.set_shader_parameter("earth",preload("res://assets/third_party/polyhaven_bank/rammed_earth.jpg"))
+	_place(parent,meshes["Piers"],gate_foundation,wall_x)
 	var full:=_place(parent,meshes["WatchHall"],surface,wall_x)
 	var halves: Array[Dictionary]=[]
 	for side: int in [-1,1]:
