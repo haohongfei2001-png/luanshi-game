@@ -91,7 +91,7 @@ def main():
     for name in ("head","forearms","legs","feet"):
         def wanted(i):
             x,y,z=chart[i]
-            if name=="head": return y>5.04 and abs(x)<1.4
+            if name=="head": return y>4.30 and abs(x)<1.65
             weights=bone_weights[i]
             if name=="forearms": return sum(weights.get(k,0) for k in (4,7))>.15
             if name=="feet": return sum(weights.get(k,0) for k in (11,14))>.15 or y<-7.35

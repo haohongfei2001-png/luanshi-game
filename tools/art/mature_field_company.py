@@ -65,9 +65,6 @@ def anatomical_body(look,tier,data):
                 if key not in used:
                     p=list(mesh["p"][i]);sx,sy,sz=mesh["chart"][i]
                     if part=="head":
-                        neck=max(0.,min(1.,(1.525-p[1])/.090))
-                        p[0]*=1.-.21*neck
-                        p[2]=.012+(p[2]-.012)*(1.-.16*neck)
                         jaw=max(0,min(1,(7.1-sy)/1.37))
                         if look in ("Guard","Officer"): p[0]*=1.+.09*jaw
                         elif look=="Levy": p[0]*=1.-.08*jaw
@@ -83,8 +80,6 @@ def anatomical_body(look,tier,data):
                     used[key]=target.vertex(tuple(p),coord,tuple(mesh["w"][i]))
                     normal=np.asarray(mesh["n"][i],dtype=float)
                     if part=="head":
-                        normal[0]/=1.-.21*neck
-                        normal[2]/=1.-.16*neck
                         if look in ("Guard","Officer"): normal[0]/=1.+.09*jaw
                         elif look=="Levy": normal[0]/=1.-.08*jaw
                     normal/=max(1.e-12,np.linalg.norm(normal))

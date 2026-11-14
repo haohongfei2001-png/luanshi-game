@@ -11,15 +11,15 @@ concurrency:
 jobs:
   compare:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 24
     env:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Preserve the actual previous full-person windows
         run: |
-          mkdir -p docs/evidence/river-gate-v1-rc23/character-master-refined
-          cp -a docs/evidence/river-gate-v1-rc23/character-master/after docs/evidence/river-gate-v1-rc23/character-master-refined/before
+          mkdir -p docs/evidence/river-gate-v1-rc23/character-master-sewn
+          cp -a docs/evidence/river-gate-v1-rc23/character-master-refined/after docs/evidence/river-gate-v1-rc23/character-master-sewn/before
       - name: Install the pinned runtime and known upstream clothing tools
         run: |
           set -eu
@@ -29,7 +29,7 @@ jobs:
           sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           if ! command -v blender >/dev/null || ! command -v xdotool >/dev/null || ! /usr/bin/python3 -c 'import PIL,numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool python3-numpy python3-pil blender ffmpeg; fi
           ./tools/prepare-font.sh
-          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/character-master-refined
+          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/character-master-sewn
           touch artifacts/.gdignore
           cat >override.cfg <<'CFG'
           [display]
@@ -38,12 +38,12 @@ jobs:
           CFG
       - name: Keep evidence outside Godot's resource import
         run: |
-          touch docs/evidence/river-gate-v1-rc23/character-master-refined/.gdignore
+          touch docs/evidence/river-gate-v1-rc23/character-master-sewn/.gdignore
       - name: Photograph both complete 2560 x 1600 windows on matching soldiers
         shell: bash
         run: |
           set -euo pipefail
-          proof=docs/evidence/river-gate-v1-rc23/character-master-refined
+          proof=docs/evidence/river-gate-v1-rc23/character-master-sewn
           cp scripts/field/company_art.gd /tmp/complete-company.gd
           for side in after; do
             mkdir -p "$proof/$side"
@@ -67,7 +67,7 @@ jobs:
           /usr/bin/python3 - <<'PY'
           from PIL import Image
           import pathlib,json,numpy as np
-          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master-refined")
+          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master-sewn")
           assert json.loads((root/"before"/"field.json").read_bytes())==json.loads((root/"after"/"field.json").read_bytes())
           out={}
           for name in ("line-055","line-105","line-135","line-185","reverse-135","kit3-135","kit5-135","kit7-135"):
@@ -88,16 +88,79 @@ jobs:
           git add "$proof"
           git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive matched 2K windows after complete person continuity correction'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Verify the new neckline and record the original battle speed
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/character-master-sewn
+          mkdir -p "$proof/diagnostic" "$proof/motion" /tmp/person-after
+          timeout 4m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/person_surface_diagnostic.gd >"$proof/diagnostic/window.log" 2>&1
+          grep PERSON_DIAGNOSTIC "$proof/diagnostic/window.log"
+          cp artifacts/person-diagnostic/* "$proof/diagnostic/"
+          files=(scripts/field/company_art.gd scripts/field/company_skin.gdshader assets/river_gate/figures/field_company_master.glb assets/third_party/wildfire_garments/field_colours.png)
+          for file in "${files[@]}"; do mkdir -p "/tmp/person-after/$(dirname "$file")"; cp "$file" "/tmp/person-after/$file"; done
+          for take in before-normal after-normal after-reverse after-close; do
+            if [ "$take" = before-normal ]; then
+              for file in "${files[@]}"; do curl -fsSL --retry 2 "https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/b3bc20d7efc51e41fed8b34927d94014caafe18b/$file" -o "$file"; done
+              godot --headless --audio-driver Dummy --editor --path . --import >"$proof/motion/before-import.log" 2>&1
+            elif [ "$take" = after-normal ]; then
+              for file in "${files[@]}"; do cp "/tmp/person-after/$file" "$file"; done
+              godot --headless --audio-driver Dummy --editor --path . --import >"$proof/motion/after-import.log" 2>&1
+            fi
+            args=()
+            if [ "$take" = after-close ]; then args=(--close-dress); fi
+            if [ "$take" = after-reverse ]; then args=(--reverse-dress); fi
+            timeout 5m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 20 --script tests/person_master_motion.gd -- "${args[@]}" >"$proof/motion/$take.log" 2>&1
+            grep FIELD_COAT_MOTION_PASS "$proof/motion/$take.log"
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/motion/$take.log"; then exit 1; fi
+            ffmpeg -y -hide_banner -loglevel error -framerate 20 -start_number 0 -i artifacts/bridge-window/frame-%03d.jpg -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -movflags +faststart "$proof/motion/$take.mp4"
+            ffprobe -v error -show_entries stream=codec_name,width,height,avg_frame_rate,nb_frames,duration -of json "$proof/motion/$take.mp4" >"$proof/motion/$take-stream.json"
+            cp artifacts/bridge-window/recording.json "$proof/motion/$take.json"
+            /usr/bin/python3 - "$take" "$proof" <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import sys
+          proof=Path(sys.argv[2])/"motion"
+          strip=Image.new("RGB",(1280,800))
+          for i,frame in enumerate((0,14,32,59)):
+              im=Image.open(Path("artifacts/bridge-window")/f"frame-{frame:03d}.jpg")
+              im.save(proof/f"{sys.argv[1]}-{frame:03d}-native-preview.jpg",quality=78,subsampling=2)
+              im.thumbnail((640,400));strip.paste(im,((i%2)*640,(i//2)*400))
+          strip.save(proof/(sys.argv[1]+"-four-times.jpg"),quality=88,subsampling=2)
+          PY
+          done
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+          proof=Path("docs/evidence/river-gate-v1-rc23/character-master-sewn")
+          records=[]
+          for take in ("before-normal","after-normal","after-reverse","after-close"):
+              doc=json.loads((proof/"motion"/(take+".json")).read_text())
+              assert doc["frames"]==60 and doc["fps"]==20 and doc["size"]==[2560,1600]
+              records.append([{k:v for k,v in r.items() if k!="view"} for r in doc["index"]])
+              stream=json.loads((proof/"motion"/(take+"-stream.json")).read_text())["streams"][0]
+              assert stream["nb_frames"]=="60" and stream["avg_frame_rate"]=="20/1"
+          assert all(r==records[0] for r in records)
+          for path in (proof/"diagnostic").glob("*.jpg"):
+              im=Image.open(path)
+              im.save(path.with_stem(path.stem+"-native-preview"),quality=78,subsampling=2)
+          (proof/"motion"/"verification.json").write_text(json.dumps({"all_four_gameplay_sequences_equal":True,"frames":60,"duration":3,"playback_fps":20,"measurement_kind":"deterministic original-speed capture, not a realtime FPS benchmark"},indent=2))
+          PY
+          git diff --exit-code -- "${files[@]}" assets/river_gate/figures/company_motion.png
+          git add "$proof"
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Verify neck continuity in the live pose and archive equal-speed real field action'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
       - name: Show the actual import and window errors
         if: failure()
         run: |
-          for f in docs/evidence/river-gate-v1-rc23/character-master-refined/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
+          for f in docs/evidence/river-gate-v1-rc23/character-master-sewn/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: complete-character-master-2k
           path: |
-            docs/evidence/river-gate-v1-rc23/character-master-refined
+            docs/evidence/river-gate-v1-rc23/character-master-sewn
             artifacts/bridge-window
             assets/river_gate/figures/field_company_master.glb
             tools/art/source/field_anatomy.json
