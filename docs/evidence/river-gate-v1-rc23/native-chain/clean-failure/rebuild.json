@@ -1,0 +1,14 @@
+{
+  "pixel_identical": true,
+  "source_curves_identical": true,
+  "dimensions": [
+    528,
+    1684
+  ],
+  "decoded_pixel_sha256": "ac8f1e00e9dc3849a2520eb4c9054502a221536e5cb80614f88cea54fd7cb406",
+  "selected_curves": [
+    "shield_ready",
+    "shield_cut_02"
+  ],
+  "research_importer_present": false
+}

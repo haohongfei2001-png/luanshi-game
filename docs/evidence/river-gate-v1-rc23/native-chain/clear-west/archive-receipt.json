@@ -1,0 +1,12 @@
+{
+  "render_run": 43585505869,
+  "artifact": 14110451155,
+  "archive_failure": "Concurrent source audit advanced the same research ref before capture push",
+  "regenerated_images": false,
+  "render_source": "76d08342ddfef33b889cb4bc7476b7660329bee5",
+  "artifact_sha256": "8a3c9ab6e7cf5c2374b35f30b48a0d36df1e69ce8bf94181cfd2962544bf2a56",
+  "movies": {
+    "before": "fa712b9ef7b2b2b4c9fbd91909f9cb342f68ab20b817d718d9c268027d8c265f",
+    "after": "7c6d43586235af16384cb4c84202b3d8f4d91eac563aee582fa1f51d48e1e9ad"
+  }
+}
