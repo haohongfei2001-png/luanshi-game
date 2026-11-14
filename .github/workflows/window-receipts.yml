@@ -1,0 +1,33 @@
+name: Inspect the two delivered videos and the partial native preparation log
+on:
+  push:
+    branches: ['codex/river-rc22-final-receipts']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  receipt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: metal-baker-result
+          path: body
+          run-id: '43538470616'
+          github-token: ${{ github.token }}
+      - name: Identify the last completed native export stage
+        run: |
+          set -euo pipefail
+          find body -type f -printf '%p %s bytes\n'
+          for f in body/artifacts/baker*.log body/baker*.log; do if test -f "$f"; then tail -n 18 "$f"; fi; done
+      - name: Verify the system window movie through its public immutable URL
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/fd411e7e6e1209d5d3b1ea84e05005771735e35e/docs/evidence/river-gate-v1-rc22/native-bridgehead/hosted-bridgehead.mp4 -o /tmp/hosted.mp4
+          sha256sum /tmp/hosted.mp4
+          if ! command -v ffprobe >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,channels,avg_frame_rate -of json /tmp/hosted.mp4
+          ffmpeg -hide_banner -i /tmp/hosted.mp4 -vn -af volumedetect -f null - 2>&1 | grep -E 'mean_volume|max_volume'
+          curl -fLsS --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/c6fc9d564244eaca4c9c40ba9b3bf3a7e207312d/docs/evidence/river-gate-v1-rc22/bridgehead/river-gate-bridgehead.mp4 -o /tmp/game.mp4
+          echo "7a05ad133b6a1184a305b852af39ac6af01d219b822c8e91a08a406a265463ba  /tmp/game.mp4" | sha256sum -c
