@@ -19,6 +19,7 @@ from figure_mesh import Library, Surface
 from figure_atlas import NAMES as MATERIALS
 from company_figures import costume as close_costume
 from company_line import costume as line_costume
+from tailor_field_coats import refit_issue
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "assets" / "third_party" / "wildfire_garments"
@@ -239,7 +240,7 @@ def fit_garment(path, role, slot):
     bounds=np.array(s.positions)
     if not .42<bounds[:,1].min()<.83 or not 1.44<bounds[:,1].max()<1.55:
         raise ValueError((role,bounds.min(axis=0),bounds.max(axis=0)))
-    return s
+    return refit_issue(s,role)
 
 def cloth(source,role):
     # Upstream alpha carries the player's dye, not transparency. Preserve the
