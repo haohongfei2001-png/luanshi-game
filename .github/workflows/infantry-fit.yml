@@ -1,0 +1,63 @@
+name: Compare fitted infantry heads in the playable formation
+on:
+  push:
+    branches: [codex/river-rc23-face-workshop]
+    paths: ['.github/workflows/infantry-fit.yml','tools/art/fit_field_faces.py','tests/issued_shield_views.gd']
+permissions:
+  contents: write
+jobs:
+  field:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 21
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+      - name: Prepare Godot and the pinned editable assets
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-pil python3-numpy ffmpeg
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/g.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/g.zip' | sha512sum -c -
+          unzip -q /tmp/g.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          /usr/bin/python3 tools/art/fit_field_faces.py "$RUNNER_TEMP/field-sources"
+          /usr/bin/python3 tools/art/import_garrison_issues.py "$RUNNER_TEMP/field-sources"
+          /usr/bin/python3 tools/art/bake_river_company.py --geometry-only
+          git add -- assets/third_party/wildfire_faces/field_heads.glb assets/third_party/wildfire_faces/field_visages.png assets/river_gate/figures/garrison_bodies.glb assets/river_gate/figures/river_company.glb
+          git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the fitted faces and remove the former shell from every infantry LOD'
+          git push origin HEAD:refs/heads/codex/river-rc23-face-workshop
+      - name: Compare both facings of infantry from close, play and army lenses
+        run: |
+          set -euo pipefail
+          p=docs/evidence/river-gate-v1-rc23/infantry-faces
+          g=/tmp/g/Godot_v4.6.3-stable_linux.x86_64
+          for side in before after; do
+            rev=HEAD
+            if test "$side" = before; then rev=83c0afc2b193a5fb11bfced8fd821e908517a371; fi
+            dir="$RUNNER_TEMP/field-$side"
+            mkdir -p "$dir/artifacts/shield-views" "$p/$side"
+            git archive "$rev" | tar -x -C "$dir"
+            cp -a assets/fonts/. "$dir/assets/fonts/"
+            touch "$dir/artifacts/.gdignore"
+            cp tests/issued_shield_views.gd "$dir/tests/"
+            "$g" --headless --editor --path "$dir" --import > "$p/$side/import.log" 2>&1
+            if grep -E 'ERROR:|Parse Error|SHADER ERROR' "$p/$side/import.log"; then exit 1; fi
+            "$g" --headless --path "$dir" --script tests/model_library_parity.gd | tee "$p/$side/parity.log"
+            xvfb-run -a -s '-screen 0 1920x1200x24' "$g" --path "$dir" --resolution 1600x1000 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/issued_shield_views.gd -- --field-size=512 > "$p/$side/window.log" 2>&1
+            grep 'ISSUED_SHIELD_WINDOW true' "$p/$side/window.log"
+            cp -a "$dir/artifacts/shield-views/." "$p/$side/"
+          done
+          /usr/bin/python3 tools/compare_issued_shields.py "$p"
+          git add -- "$p"
+          git -c user.name='River Gate verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive identical blocks, all three lenses and both sides of the front rank'
+          git push origin HEAD:refs/heads/codex/river-rc23-face-workshop
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: infantry-faces-originals
+          path: docs/evidence/river-gate-v1-rc23/infantry-faces
