@@ -1,5 +1,9 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## Dot 实际接管与全面重建检查点 · 2026-11-14
+
+Dot 已按 Owner 新授权实际编码、测试和发布隔离源码。Codex Goal/Automation 继续 PAUSED，不得恢复旧 Codex 自动执行指令。最新实际源码、原生画面失败、保护版本、许可证边界和恢复命令见 [Dot 重建检查点](DOT_REBUILD_CHECKPOINT_20261114.md)。下面的原交接状态保留为历史快照，不代表当前在途 CI。正式美术仍未通过，真实 M5 未测。
+
 ## OWNER-DOT-HANDOFF-20261114 · Codex 已暂停，Dot 接续
 
 Owner 最新要求暂停 Codex 开发并交给 Dot。Codex Goal 和 automation-2 均为 PAUSED，子代理已停止。后续负责人读取 [Dot 开发交接](DOT_DEVELOPMENT_HANDOFF_20261114.md) 和 [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)。本节覆盖后文旧的 Codex 自动续接指令。
