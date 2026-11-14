@@ -39,3 +39,14 @@ rerunning the initial-create workflow. Continue as a separate ordinary source
 revision for fixes. Do not enable this diagnostic in the normal game before
 proper historical garment, real combat movement/contact, visual and performance
 review. Preserve RC24/RC25 and owner acceptance boundaries.
+
+## Recovery from the first hosted tool download failure
+
+Run 43609572840 stopped before asset construction: official Blender 4.3.2
+archive returned HTTP 403. No source branch or native image was created.
+The editor mirror also refused the current client. Recovery uses the signed
+Ubuntu distribution Blender package only to produce the editable `.blend`; its
+actual version is retained in host/provenance records. It is not claimed to be
+Blender 4.3.2 or a byte-identical `.blend`. The frozen pure-Python runtime GLB
+builder, Godot 4.6.3 checksum, complete rig, source packages, textures and all
+verification gates are unchanged. No payment, new account or user computer.

@@ -20,31 +20,28 @@ jobs:
         run: |
           set -euo pipefail
           if git ls-remote --exit-code --heads origin refs/heads/dot/character-native-source; then exit 1; else r=$?; test "$r" = 2 || exit "$r"; fi
-      - name: Install checksum-pinned official tools
+      - name: Install pinned Godot and signed-distribution Blender
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb ffmpeg libgl1-mesa-dri libxi6 libxrender1 libxfixes3 libxkbcommon0 libsm6
+          sudo apt-get install -y -qq xvfb ffmpeg libgl1-mesa-dri libxi6 libxrender1 libxfixes3 libxkbcommon0 libsm6 blender
           mkdir -p artifacts/intact-native
           touch artifacts/.gdignore
           curl -fLsS --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
           echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
           unzip -q /tmp/editor.zip -d /tmp/godot
           sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
-          curl -fLsS --retry 3 https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
-          echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum -c -
-          tar -xJf /tmp/blender.tar.xz -C /tmp
           python3 -m venv /tmp/character-python
           /tmp/character-python/bin/pip install numpy scipy Pillow
           ./tools/prepare-font.sh
-          { uname -a; lscpu; free -m; godot --version; } >artifacts/intact-native/host.txt
+          { uname -a; lscpu; free -m; godot --version; blender --version; dpkg-query -W blender; } >artifacts/intact-native/host.txt
       - name: Reconstruct exact CC0 source and preserve original structures
         run: |
           set -euo pipefail
           /tmp/character-python/bin/python tools/art/ubc_character/fetch_verified.py /tmp/ubc-cache /tmp/ubc-extract >artifacts/intact-native/source-download.log 2>&1
           /tmp/character-python/bin/python tools/art/ubc_character/preserve_sources.py /tmp/ubc-extract assets/ubc_lab/source
           /tmp/character-python/bin/python tools/art/ubc_character/build.py /tmp/ubc-extract assets/ubc_lab >artifacts/intact-native/retarget.log 2>&1
-          /tmp/blender-4.3.2-linux-x64/blender --background --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/ubc_character/editable.py -- "$PWD/assets/ubc_lab" >artifacts/intact-native/editable.log 2>&1
+          blender --background --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/ubc_character/editable.py -- "$PWD/assets/ubc_lab" >artifacts/intact-native/editable.log 2>&1
           timeout 240s godot --headless --editor --path . --import >artifacts/intact-native/import.log 2>&1
           UBC_TEST=1 timeout 60s godot --headless --path . --script tests/ubc_character_lab.gd >artifacts/intact-native/import-test.log 2>&1
           timeout 180s godot --headless --path . --script tests/intact_character_state_adapter.gd >artifacts/intact-native/state-test.log 2>&1
