@@ -290,43 +290,54 @@ for source_name in ['金檩金枋2','金檩金枋4']:
 # Native curved corner beams continue into the professional hip rafters at both ends.
 for family in ['老角梁','仔角梁由戗']:
  for i in range(1,5):roof_part('HallNativeHip_'+family+str(i),roof[family+str(i)],-extension if i<=2 else extension,material='timber')
+fort_report={};fort_hall_report={}
 # Visible floor, gallery rail and weather enclosure use restrained real boards,
 # rather than uniform huge boxes or ornamental garden seating.
 box('HallFloorJoists',(50.05,floor-.13,0),(4.65,.22,14.65),'timber',gate,.018)
 for i in range(61):
  z=-7.2+(i+.5)*14.4/61
  box('HallFloorBoard',(50.05,floor-.015,z),(4.52,.06,14.4/61-.012),'timber_cut',gate,.007)
-for x in [47.96,52.14]:
- for first,last in zip(lines,lines[1:]):
-  # Lower plank screens plus open upper viewing slots establish military use.
-  for j in range(12):
-   z=first+(j+.5)*(last-first)/12
-   box('HallScreenBoard',(x,floor+.65,z),(.095,1.26,(last-first)/12-.025),'timber',gate,.012)
-  beam('HallSill',(x,floor+.05,first),(x,floor+.05,last),.17,.15,'timber_cut',gate)
-  beam('HallScreenRail',(x,floor+1.28,first),(x,floor+1.28,last),.15,.13,'timber_cut',gate)
-  for j in range(1,8):
-   z=first+j*(last-first)/8
-   beam('HallViewingMullion',(x,floor+1.3,z),(x,column_head-.3,z),.065,.065,'timber',gate)
-# End galleries retain the original connected shaped rail structure, no seats.
-for sign in [-1,1]:
- z=sign*7.09
- for x in [48.45,49.5,50.6,51.65]:
-  beam('HallEndGalleryBaluster',(x,floor+.1,z),(x,floor+1,z),.075,.075,'timber',gate)
- beam('HallEndGalleryRail',(47.96,floor+1.05,z),(52.14,floor+1.05,z),.14,.14,'timber_cut',gate)
+if '--fort-enclosure' in args:
+ from author_fortified_enclosure import build_upper_hall
+ fort_hall_report=build_upper_hall(box,beam,gate,floor,column_head,lines)
+else:
+ for x in [47.96,52.14]:
+  for first,last in zip(lines,lines[1:]):
+   # Lower plank screens plus open upper viewing slots establish military use.
+   for j in range(12):
+    z=first+(j+.5)*(last-first)/12
+    box('HallScreenBoard',(x,floor+.65,z),(.095,1.26,(last-first)/12-.025),'timber',gate,.012)
+   beam('HallSill',(x,floor+.05,first),(x,floor+.05,last),.17,.15,'timber_cut',gate)
+   beam('HallScreenRail',(x,floor+1.28,first),(x,floor+1.28,last),.15,.13,'timber_cut',gate)
+   for j in range(1,8):
+    z=first+j*(last-first)/8
+    beam('HallViewingMullion',(x,floor+1.3,z),(x,column_head-.3,z),.065,.065,'timber',gate)
+ # End galleries retain the original connected shaped rail structure, no seats.
+ for sign in [-1,1]:
+  z=sign*7.09
+  for x in [48.45,49.5,50.6,51.65]:
+   beam('HallEndGalleryBaluster',(x,floor+.1,z),(x,floor+1,z),.075,.075,'timber',gate)
+  beam('HallEndGalleryRail',(47.96,floor+1.05,z),(52.14,floor+1.05,z),.14,.14,'timber_cut',gate)
 
 # Curtain wall mass and parapet remain outside protected route, at matching adult scale.
-for sign in [-1,1]:
- for i in range(12):
-  z=sign*(8.5+(i+.5)*14.5/12)
-  box('WallBody',(47.95,1.58,z),(2.7,3.16,14.5/12-.018),'masonry',walls,.035)
+if '--fort-enclosure' in args:
+ if '--complete-portal' not in args or '--complete-gate-masonry' not in args:raise ValueError('Complete enclosure requires complete portal and source bearing')
+ from author_fortified_enclosure import build as build_enclosure
+ fort_report=build_enclosure(mesh,box,beam,pt,walls)
+else:
+ for sign in [-1,1]:
+  for i in range(12):
+   z=sign*(8.5+(i+.5)*14.5/12)
+   box('WallBody',(47.95,1.58,z),(2.7,3.16,14.5/12-.018),'masonry',walls,.035)
 
-  box('WallParapet',(47.25,3.79,z),(.65,1.12,14.5/12-.018),'masonry',walls,.025)
-  if i%2==0:box('WallMerlon',(47.25,4.56,z),(.72,.42,14.5/12-.12),'masonry',walls,.025)
-# Ramp surface matches Ground.parapet, including the full lower approach through piers.
-for sign in [-1,1]:
- for i in range(35):
-  a=5.5+i*.5;b=a+.5;ya=min(3.25,(a-5.5)*.43);yb=min(3.25,(b-5.5)*.43)
-  mesh('WallWalk_ramp',[pt(49.4,ya,sign*a),pt(52.6,ya,sign*a),pt(52.6,yb,sign*b),pt(49.4,yb,sign*b)],[(0,1,2,3)] if sign>0 else [(3,2,1,0)],'masonry',walls)
+   box('WallParapet',(47.25,3.79,z),(.65,1.12,14.5/12-.018),'masonry',walls,.025)
+   if i%2==0:box('WallMerlon',(47.25,4.56,z),(.72,.42,14.5/12-.12),'masonry',walls,.025)
+ # Ramp surface matches Ground.parapet, including the full lower approach through piers.
+ for sign in [-1,1]:
+  for i in range(35):
+   a=5.5+i*.5;b=a+.5;ya=min(3.25,(a-5.5)*.43);yb=min(3.25,(b-5.5)*.43)
+   mesh('WallWalk_ramp',[pt(49.4,ya,sign*a),pt(52.6,ya,sign*a),pt(52.6,yb,sign*b),pt(49.4,yb,sign*b)],[(0,1,2,3)] if sign>0 else [(3,2,1,0)],'masonry',walls)
+
 # Timber bridge: continuous transverse deck, longitudinal stringers, pile bents,
 # wedged crossheads/knee braces, rails completely outside 7.4m roadway.
 def make_bridge(parent,cx,length):
@@ -369,6 +380,8 @@ objects=[o for o in bpy.data.objects if o.type=='MESH']
 for o in objects:o.data.calc_loop_triangles()
 report={'status':'ART_NOT_ACCEPTED','source':'VVayToyek CC0 roof + Rico Cilliers Poly Haven CC0 native deck boards; authored military mass and structural bridge','mesh_objects':len(objects),'triangles':sum(len(o.data.loop_triangles) for o in objects),'roof_source_uv_preserved':True,'door_net_width':8,'bridge_clear_width':7.4,'bridge_deck_top':.13,'legacy_meshes':False,'upper_hall_floor_m':floor,'upper_hall_column_head_m':column_head,'height_variant':'approximately10m; original8.2m tentative target exceeded; same-camera acceptance REQUIRED','source_corner_normals':'original world inverse-transpose; uniform roof clip interpolation; diagonal member inverse-transpose','normal_status':'actual-shadow-on/off comparison NOT_RUN','complete_gate_masonry':('--complete-gate-masonry' in args),'protected_walkway_clear_height_m':2.20}
 report['portal']=portal_report
+report['fortified_enclosure']=fort_report
+report['sheltered_upper_hall']=fort_hall_report
 report['runtime_uv_layout']='MaterialUV_Metre promoted to TEXCOORD_0 for Godot4.6; original UV preserved in TEXCOORD_1 and unchanged editable mother'
 report['source_ngon_triangulation']='original mesh-local loop triangles before world transform/clip; original corner UV and normal indices preserved'
 report['material_projection_axis']='lowest axis within 1e-5 of largest absolute normal component; source UV unchanged'
