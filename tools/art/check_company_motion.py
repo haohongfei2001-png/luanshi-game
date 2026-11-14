@@ -46,7 +46,7 @@ def measure():
     bank=Image.open(Path(__file__).resolve().parents[2]/"assets/river_gate/figures/company_motion.png").convert("RGBA")
     rows=[]
     for kit in range(9):
-        gaps=[]; nocks=[]; baked=[]; bow_release=[]; carry_spacing=[]
+        gaps=[]; nocks=[]; baked=[]; bow_release=[]; carry_spacing=[]; fallen_brace=[]
         for clip in range(CLIPS):
             for frame in range(FRAMES):
                 phase=frame/(FRAMES if clip in (0,1,12,15) or clip>=16 else FRAMES-1)
@@ -61,10 +61,12 @@ def measure():
                     # At the instant the missile leaves, the string recoils but
                     # a loose hand must finish behind the cheek. During the set
                     # and the pull the nock still meets the fingers exactly.
-                    if clip<2 or clip>=10 or (clip<=5 and phase<.92):
+                    if clip<2 or (clip>=10 and clip!=14) or (clip<=5 and phase<.92):
                         nocks.append(dist(string,fingers))
                     if clip==2 and frame==FRAMES-1:
                         bow_release.append(dist(string,trans(bones[RH],add(grip(1),(0,0,-.159)))))
+                    if clip==14 and frame==FRAMES-1:
+                        fallen_brace.append(dist(string,trans(bones[RH],add(grip(1),(0,0,-.159)))))
                     if clip==1:
                         other=trans(bones[RH],grip(1))
                         carry_spacing.append(dist(fingers,other))
@@ -72,6 +74,7 @@ def measure():
         rows.append(dict(kit=kit,measurements=len(gaps),p95_m=round(gaps[int(.95*len(gaps))-1],6),
                          worst_wrist_m=round(gaps[-1],6),baked_wrist_m=round(max(baked),6),worst_nock_m=round(max(nocks,default=0.),6),
                          released_brace_m=round(max(bow_release,default=0.),6),
+                         fallen_brace_m=round(max(fallen_brace,default=0.),6),
                          gripping_span_m=round(min(carry_spacing,default=0.),6)))
     return rows
 
@@ -85,7 +88,7 @@ if __name__=="__main__":
     drift=planted_drift(bank)
     print("PLANTED_GAIT_METRES",round(drift,6))
     bow=rows[5]
-    if not args.report_only and (bow["released_brace_m"]>.0001 or bow["gripping_span_m"]<.18):
+    if not args.report_only and (bow["released_brace_m"]>.0001 or bow["fallen_brace_m"]>.0001 or bow["gripping_span_m"]<.18):
         raise SystemExit("The released bow or travelling hand spacing is wrong")
     if not args.report_only and drift>.0022: raise SystemExit("A planted shoe slid during its weight-bearing phase")
     if not args.report_only and any(r["worst_wrist_m"]>.008 or r["worst_nock_m"]>.0001 or r["baked_wrist_m"]>.0022 for r in rows):

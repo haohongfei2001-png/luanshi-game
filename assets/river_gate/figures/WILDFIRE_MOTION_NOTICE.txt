@@ -1,0 +1,29 @@
+Wildfire Games complete armed animation
+Copyright Wildfire Games and contributors
+https://www.wildfiregames.com/
+Original editable source from 0 A.D.
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+
+Selected source files
+animation/biped/infantry/swordsman/idle_ready_shield_01.dae
+Git blob fbbb12bcef7b5cb1a409596d7db293de160c080c
+animation/biped/infantry/swordsman/attack_melee_shield_02.dae
+Git blob 32ace1da919078a25f156a0fbb80131af477e1ff
+
+Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+https://creativecommons.org/licenses/by-sa/3.0/legalcode
+
+Luanshi modifications retain and retarget the authored parent chain, support-leg
+motion and weapon attachment. Source phases are aligned to existing game hit
+times. The sampled curves in tools/art/source/wildfire_combat_curves.json and
+the derived assets/river_gate/figures/company_motion.png animation palette are
+distributed under the same CC BY-SA 3.0 license. Other independently authored
+code, meshes, textures and source animations retain their recorded licenses.
+
+Editable source retrieval and derived-asset regeneration
+tools/art/import_wildfire_combat.py
+tools/art/company_motion.py
+
+The attribution and this license notice must accompany distribution of these
+animation derivatives. Wildfire Games has not endorsed Luanshi.

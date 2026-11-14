@@ -11,6 +11,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   playable:
+    # Frozen packages run the full native delivery and formal PR comparisons.
+    if: "!startsWith(github.event.head_commit.message, 'Package ')"
     runs-on: ubuntu-24.04
     timeout-minutes: 48
     env:

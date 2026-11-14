@@ -35,6 +35,8 @@ jobs:
       - name: Verify simulation, old saves, officers, world and scene lifecycle
         run: |
           set -euo pipefail
+          python3 -m py_compile tools/whole_native_delivery.py tools/rc3_native_probe.py tools/backport_mobile_mutex.py
+          bash -n tools/build_macos_engine.sh
           ./tools/prepare-font.sh
           timeout 90s godot --headless --editor --path . --import
           timeout 120s godot --headless --path . --script tests/whole_input_calibration.gd

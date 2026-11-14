@@ -1,0 +1,18 @@
+{
+  "version": "0.16.0-rc.24",
+  "freeze_commit": "containing Git commit",
+  "world_source": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+  "world_evidence": "1fb7c94daa43ab4616566e2ed2c68a6b9366d412",
+  "human_source": "c617a1fb4383200a00df197086a338e61dfbb776",
+  "previous_played_package_source": "b71573d6475faa94503069d5ba2debe295b8d9b8",
+  "art": "ART_REBUILD_REQUIRED",
+  "M5": "DEVICE_NOT_RUN",
+  "requested": [
+    "native 2560x1440 internal 1.0 complete 512v512 battle film",
+    "20/100/250/512 sustained realtime and rapid camera tour",
+    "both renderer initialization and telemetry checks",
+    "nine cold user-data starts with recorded driver cache scope",
+    "nine weapons, officers, orders, mounted/chariot, old saves, postbattle march",
+    "source, tested package SHA-256, licenses and raw logs"
+  ]
+}

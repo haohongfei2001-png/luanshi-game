@@ -35,7 +35,10 @@ jobs:
       - name: Test simulation and real scene lifecycle
         env:
           XDG_DATA_HOME: /home/runner/.local/share
-        run: timeout 5m ./tools/test.sh
+        run: |
+          python3 -m py_compile tools/whole_native_delivery.py tools/rc3_native_probe.py tools/backport_mobile_mutex.py
+          bash -n tools/build_macos_engine.sh
+          timeout 5m ./tools/test.sh
       - name: Compare exact target selection and full fixed steps on this runner
         run: python3 tools/compare-river-targets.py
       - name: Measure field reservations and casualties at four army sizes
@@ -250,7 +253,7 @@ jobs:
       - name: Rebuild the pinned source if its original artifact has expired
         if: steps.engine-cache.outputs.cache-hit != 'true' && steps.engine-artifact.outcome == 'failure'
         run: bash tools/build_macos_engine.sh patch
-      - name: Assemble the complete validated arm64 engine and license notices
+      - name: Assemble the pinned arm64 renderer and license notices
         run: python3 tools/whole_native_delivery.py package/Luanshi-macOS.zip patch mac-evidence --package-only
       - name: Verify bundle and run native macOS headless smoke
         run: |
@@ -352,6 +355,9 @@ jobs:
           python3 tools/art/check_company_motion.py
           python3 tools/art/check_field_carries.py
           python3 tools/art/check_contact_motion.py
+          git show 3d15051d76eb49a81804cbc5346390a2a42d317c:assets/river_gate/figures/company_motion.png > /tmp/river-motion-before.png
+          python3 tools/art/check_native_chain.py /tmp/river-motion-before.png
+          python3 tools/art/check_native_entry.py
           node tools/art/bake_mounts.mjs --check
           node tools/art/bake_field_garments.mjs --check
           node tools/env_assets.mjs --check-ram
