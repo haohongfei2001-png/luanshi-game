@@ -475,3 +475,30 @@ files. A cold fixture without `.godot` passes; a referenced missing exact
 scripts. This does not bypass import/setup or the stricter actual packed-byte
 identity checks. Seven dependency-mode tests pass. Earlier successful native
 images and the original post-capture metadata failure remain preserved.
+
+
+### Resume after 05e5793: optional own-child sampling cannot abort capture
+
+Run **43642048386** ended **FAIL**, not pending. Native Metal initialized but
+no destination image was captured. The optional `/usr/bin/sample` of this
+workflow's own game child exceeded its 10-second diagnostic budget and raised
+through the capture wrapper. Artifact **14132483450** (33,769 bytes, SHA256
+`08f819ba83018883ff9b7ac75c1155bd44411b38d1ce408a809c7a42a0128417`)
+preserves the original failure. All restored inputs, the 670,068,048-byte QA
+PCK and its isolated empty-directory resource identity check passed first.
+
+The interrupted local fix is retained and audited: optional child diagnostics
+record timeout/OS errors without retry or elevation; wrapper exceptions and
+bounded child cleanup remain explicit failures in `process.json`. All modes
+must match the pack's validated capture mode. Final exit/window/Metal checks
+now also write their failure into the receipt before raising. Actual Godot
+errors, native capture timeout, nonzero/uncompleted exit, absent focused native
+window and non-Metal output cannot be converted to success by this fix.
+
+Local verification: 38 native-region input/still tests, 6 exact resource
+identity tests and 6 complete-source restore tests PASS. No new local GPU
+execution, no M5 test, no art approval. Next command on the existing ephemeral
+Mac workflow remains `tools/native_region/run_native.py ... --mode destination-study`,
+then strict still validation and independent original-resolution visual review.
+The four requested same-body-scale destination frames remain NOT_RUN until
+the new exact source CI completes. Default game, RC24/RC25 and main unchanged.

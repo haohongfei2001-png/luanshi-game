@@ -8,9 +8,11 @@ ENTRY='application/run/main_loop_type=DotNativeRegionCapture; inert bootstrap sc
 def window_ready(focus,row):
     return focus is not None and row.get('pid')==focus['pid'] and row.get('focused') is True and row.get('display')=='macOS'
 
-def validate_pack_receipt(receipt):
+def validate_pack_receipt(receipt, mode=None):
     if receipt.get('entry')!=ENTRY or receipt.get('original_project_restored') is not True or receipt.get('original_export_config_restored') is not True or receipt.get('isolated_pack_setup_passed') is not True:
         raise ValueError('QA pack entry or original configuration restoration not verified')
+    if mode is not None and receipt.get('validated_capture_mode')!=mode:
+        raise ValueError('Pack never validated the requested runtime closure')
 
 def validate_engine(patch):
     receipt = json.loads((patch / "provenance.json").read_text())
@@ -23,6 +25,26 @@ def validate_engine(patch):
         raise ValueError("Native engine checksum mismatch")
     return executable, receipt
 
+def diagnostic_command(args, timeout):
+    """Optional own-child diagnostics cannot abort capture; never retry or elevate."""
+    def text(value):return value.decode(errors='replace') if isinstance(value,bytes) else value or ''
+    try:
+        r=subprocess.run(args,capture_output=True,text=True,timeout=timeout)
+        return {'status':'EXITED','exit':r.returncode,'stdout':r.stdout,'stderr':r.stderr}
+    except subprocess.TimeoutExpired as error:
+        return {'status':'TIMEOUT','exit':None,'timeout_seconds':timeout,'stdout':text(error.stdout),'stderr':text(error.stderr)}
+    except OSError as error:
+        return {'status':'OS_ERROR','exit':None,'error':str(error),'stdout':'','stderr':''}
+
+def capture_failure(failure, exit_code, focus, log_text):
+    """Capture truth is independent of optional diagnostics; retain first failure."""
+    if failure:return failure
+    if exit_code != 0:return 'PROCESS_EXIT_NOT_ZERO'
+    if focus is None or not focus.get('window_ready'):return 'NATIVE_WINDOW_NOT_VERIFIED'
+    if not re.search(r'^Metal .*Forward Mobile.*Apple',log_text,re.MULTILINE):
+        return 'NATIVE_METAL_NOT_VERIFIED'
+    return None
+
 def run(project, patch, output, helper, mode='baseline'):
     mode_arguments=arguments(mode)
     if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("RUNNER_OS") != "macOS" or sys.platform != "darwin":
@@ -30,9 +52,7 @@ def run(project, patch, output, helper, mode='baseline'):
     executable, engine_receipt = validate_engine(patch)
     pack = executable.with_suffix('.pck')
     pack_receipt = json.loads((output/'pack-integrity.json').read_text())
-    validate_pack_receipt(pack_receipt)
-    if mode=='gate-context-study' and pack_receipt.get('validated_capture_mode')!=mode:
-        raise ValueError('Pack never validated complete road/gate/author runtime closure')
+    validate_pack_receipt(pack_receipt,mode)
     if not pack.is_file() or pack.stat().st_size != pack_receipt['bytes'] or hashlib.sha256(pack.read_bytes()).hexdigest() != pack_receipt['sha256']:
         raise ValueError('Adjacent resource pack integrity mismatch')
     output.mkdir(parents=True, exist_ok=True)
@@ -48,22 +68,28 @@ def run(project, patch, output, helper, mode='baseline'):
                                stdin=subprocess.DEVNULL, start_new_session=True)
     os.close(slave)
     started = time.monotonic(); pending = b""; failure = None; focus = None
-    startup_probes=[]; probe_times=set()
+    startup_probes=[]; probe_times=set(); wrapper_exception=None; cleanup_error=None
     def sample_own_child(label, request_focus=False):
-        children=subprocess.run(['/usr/bin/pgrep','-P',str(process.pid)],capture_output=True,text=True)
-        for child in children.stdout.split():
-            if not child.isdecimal():continue
-            command=subprocess.run(['/bin/ps','-p',child,'-o','comm='],capture_output=True,text=True)
-            if os.path.realpath(command.stdout.strip())!=os.path.realpath(executable):continue
-            sample=output/(label+'.sample.txt')
-            sampled=subprocess.run(['/usr/bin/sample',child,'1','10','-file',str(sample)],capture_output=True,text=True,timeout=10)
-            row={'label':label,'pid':int(child),'elapsed_seconds':time.monotonic()-started,'sample_exit':sampled.returncode}
-            if request_focus:
-                activated=subprocess.run([str(helper),'foreground',child],capture_output=True,text=True,timeout=8)
-                row['early_focus']={'exit':activated.returncode,'stdout':activated.stdout,'stderr':activated.stderr}
+        row={'label':label,'elapsed_seconds':time.monotonic()-started,'optional_diagnostic':True}
+        try:
+            children=diagnostic_command(['/usr/bin/pgrep','-P',str(process.pid)],5)
+            row['child_lookup']=children
+            if children['status']!='EXITED' or children['exit']!=0:return
+            for child in children['stdout'].split():
+                if not child.isdecimal():continue
+                command=diagnostic_command(['/bin/ps','-p',child,'-o','comm='],5)
+                if command['status']!='EXITED' or command['exit']!=0:row['identity_lookup']=command;continue
+                if os.path.realpath(command['stdout'].strip())!=os.path.realpath(executable):continue
+                row['pid']=int(child)
+                sample=output/(label+'.sample.txt')
+                sampled=diagnostic_command(['/usr/bin/sample',child,'1','10','-file',str(sample)],10)
+                row['sample']=sampled;row['sample_exit']=sampled['exit']
+                if request_focus:row['early_focus']=diagnostic_command([str(helper),'foreground',child],8)
+                return
+            row['status']='NO_VERIFIED_OWN_GAME_CHILD'
+        finally:
             startup_probes.append(row)
             (output/'startup-probes.json').write_text(json.dumps(startup_probes,indent=2))
-            return
     with (output / "actual-game.log").open("w") as log:
         def line(raw):
             nonlocal failure, focus
@@ -76,7 +102,7 @@ def run(project, patch, output, helper, mode='baseline'):
                 if row.get('platform')!='macOS' or row.get('display')!='macOS' or row.get('renderer')!='mobile':
                     failure='UNEXPECTED_NATIVE_RENDERER'; return
                 # Only this probe's child; no global keyboard or accessibility input.
-                child = subprocess.run(["/bin/ps", "-p", str(row["pid"]), "-o", "comm="], capture_output=True, text=True, check=True)
+                child = subprocess.run(["/bin/ps", "-p", str(row["pid"]), "-o", "comm="], capture_output=True, text=True, check=True, timeout=5)
                 if os.path.realpath(child.stdout.strip()) != os.path.realpath(executable):
                     failure = "UNVERIFIED_PROCESS_FOR_FOCUS"; return
                 focus = {"pid":row["pid"],"phase":"verified entry; awaiting native window event","window_ready":False}
@@ -109,21 +135,34 @@ def run(project, patch, output, helper, mode='baseline'):
                 elif process.poll() is not None: break
             else: failure = "NATIVE_CAPTURE_TIMEOUT"
             if pending: line(pending)
+        except Exception as error:
+            wrapper_exception={'type':type(error).__name__,'message':str(error)}
+            failure=failure or 'WRAPPER_EXCEPTION'
         finally:
             os.close(master)
-            if process.poll() is None and failure: os.killpg(process.pid, signal.SIGTERM)
-            try: process.wait(timeout=5)
+            if process.poll() is None and failure:
+                try:os.killpg(process.pid, signal.SIGTERM)
+                except ProcessLookupError:pass
+                except OSError as error:cleanup_error=str(error)
+            try:process.wait(timeout=5)
             except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL); process.wait(); failure = failure or "EXIT_TIMEOUT"
+                failure=failure or "EXIT_TIMEOUT"
+                # No retry/alternate signal after an explicit cleanup denial.
+                if cleanup_error is None:
+                    try:os.killpg(process.pid,signal.SIGKILL)
+                    except ProcessLookupError:pass
+                    except OSError as error:cleanup_error=str(error)
+                if cleanup_error is None:
+                    try:process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:cleanup_error='Own process did not exit after bounded cleanup'
+
+    failure=capture_failure(failure,process.returncode,focus,(output/"actual-game.log").read_text())
     receipt = {"source":env["GITHUB_SHA"],"mode":mode,"command":args,"exit":process.returncode,"failure":failure,
-               "elapsed_seconds":time.monotonic()-started,"capture_budget_seconds":capture_budget(mode),"focus":focus,"startup_probes":startup_probes,"engine":engine_receipt,"pack":pack_receipt,
+               "wrapper_exception":wrapper_exception,"cleanup_error":cleanup_error,"elapsed_seconds":time.monotonic()-started,"capture_budget_seconds":capture_budget(mode),"focus":focus,"startup_probes":startup_probes,"engine":engine_receipt,"pack":pack_receipt,
                "M5":"DEVICE_NOT_RUN","art_status":"NOT_ACCEPTED",
                "scope":"Real native Metal execution, readback-instrumented, not performance acceptance"}
     (output / "process.json").write_text(json.dumps(receipt, indent=2))
-    if failure or process.returncode: raise RuntimeError(json.dumps(receipt))
-    if focus is None or not focus.get('window_ready'): raise RuntimeError("No verified actual native window")
-    if not re.search(r'^Metal .*Forward Mobile.*Apple', (output/'actual-game.log').read_text(),re.MULTILINE):
-        raise RuntimeError('No actual Metal/Apple adapter log; fallback forbidden')
+    if failure: raise RuntimeError(json.dumps(receipt))
     return receipt
 
 if __name__ == "__main__":

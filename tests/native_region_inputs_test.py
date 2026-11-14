@@ -1,10 +1,11 @@
 from pathlib import Path
-import hashlib, importlib.util, json, re, sys, tempfile, unittest
+import hashlib, importlib.util, json, re, sys, tempfile, unittest, subprocess
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools/native_region'))
 from restore_inputs import verified_copy, FILES
-from run_native import validate_engine,validate_pack_receipt,window_ready,ENTRY
+from run_native import validate_engine,validate_pack_receipt,window_ready,diagnostic_command,capture_failure,ENTRY
 from validate_route import validate
 from export_pack import transform_preset,transform_project
 from capture_mode import arguments,capture_budget
@@ -86,4 +87,29 @@ class NativeRegionInputs(unittest.TestCase):
         with self.assertRaises(ValueError):arguments('unexpected')
         with self.assertRaises(ValueError):capture_budget('unexpected')
 
+    def test_destination_pack_mode_must_match(self):
+        r={'entry':ENTRY,'original_project_restored':True,'original_export_config_restored':True,'isolated_pack_setup_passed':True,'validated_capture_mode':'destination-study'}
+        validate_pack_receipt(r,'destination-study')
+        with self.assertRaises(ValueError):validate_pack_receipt(r,'gate-context-study')
+    def test_optional_diagnostic_timeout_is_recorded_not_raised(self):
+        with patch('run_native.subprocess.run',side_effect=subprocess.TimeoutExpired(['sample'],10,output=b'partial')) as run:
+            r=diagnostic_command(['sample'],10)
+        self.assertEqual(r['status'],'TIMEOUT');self.assertEqual(r['stdout'],'partial');self.assertIsNone(r['exit']);self.assertEqual(run.call_count,1)
+    def test_optional_diagnostic_denial_is_recorded_without_retry(self):
+        with patch('run_native.subprocess.run',side_effect=PermissionError('denied')) as run:
+            r=diagnostic_command(['sample'],10)
+        self.assertEqual(r['status'],'OS_ERROR');self.assertIn('denied',r['error']);self.assertEqual(run.call_count,1)
+    def test_optional_diagnostic_exit_is_not_capture_status(self):
+        with patch('run_native.subprocess.run',return_value=subprocess.CompletedProcess(['sample'],1,'','error')):
+            r=diagnostic_command(['sample'],10)
+        self.assertEqual(r['status'],'EXITED');self.assertEqual(r['exit'],1)
+    def test_capture_failure_not_hidden_by_optional_diagnostic(self):
+        focus={'window_ready':True};metal='Metal 4.0 - Forward Mobile - Apple Paravirtual'
+        self.assertIsNone(capture_failure(None,0,focus,metal))
+        self.assertEqual(capture_failure('GODOT_ERROR',0,focus,metal),'GODOT_ERROR')
+        self.assertEqual(capture_failure('NATIVE_CAPTURE_TIMEOUT',0,focus,metal),'NATIVE_CAPTURE_TIMEOUT')
+        self.assertEqual(capture_failure(None,1,focus,metal),'PROCESS_EXIT_NOT_ZERO')
+        self.assertEqual(capture_failure(None,None,focus,metal),'PROCESS_EXIT_NOT_ZERO')
+        self.assertEqual(capture_failure(None,0,None,metal),'NATIVE_WINDOW_NOT_VERIFIED')
+        self.assertEqual(capture_failure(None,0,focus,'llvmpipe'),'NATIVE_METAL_NOT_VERIFIED')
 if __name__=='__main__':unittest.main()
