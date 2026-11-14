@@ -100,7 +100,7 @@ def subdivide(source):
 def align_neckline(source):
     """Align Wildfire's actual collar with the HM08 throat and nape.
 
-    The native opening was centred 55 mm behind the game's head bind.
+    The native opening was centred behind the game's throat and nape.
     Move the existing upper garment continuously, with ease around the throat.
     Shoulder, elbow, wrist, belt and weapon anchors remain at their original bind.
     """
@@ -111,7 +111,7 @@ def align_neckline(source):
     for x,y,z in source.positions:
         follow = transition(1.36,1.485,y)*(1.-transition(.078,.18,abs(x)))
         side = float(np.tanh(x/.02))
-        points.append((x+.007*side*follow,y,z+.055*follow))
+        points.append((x+.020*side*follow,y,z+(.066+.20*(z+.053))*follow))
     source.positions = points
     return source
 

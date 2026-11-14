@@ -1,4 +1,4 @@
-name: Rebuild continuous field people and inspect actual 2K battle
+name: Verify the complete person and anatomically registered clothing
 on:
   push:
     branches: [codex/river-rc23-hm08-body]
