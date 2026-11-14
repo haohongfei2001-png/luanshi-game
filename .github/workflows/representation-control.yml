@@ -44,7 +44,10 @@ jobs:
           set -euo pipefail
           mkdir -p "$COMPARE_ASSETS"
           timeout 1500s xvfb-run -a -s '-screen 0 2560x1440x24' /tmp/engine/bin/godot-patched --path . --resolution 2560x1440 --disable-vsync --rendering-method gl_compatibility --audio-driver Dummy --script tools/representation_compare/bake_control.gd > evidence/bake.log 2>&1
+          cp "$COMPARE_ASSETS/atlas.json" evidence/baked-atlas.json
+          timeout 600s /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tools/representation_compare/pack_control_atlas.gd > evidence/pack-atlas.log 2>&1
           cp "$COMPARE_ASSETS/atlas.json" evidence/atlas.json
+          ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/pack-atlas.log
           ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/bake.log
       - name: Independent native-resolution captures and real combat timings
         env:
@@ -79,3 +82,11 @@ jobs:
           name: representation-control-${{ github.sha }}
           path: evidence/
           retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: representation-control-source-atlas-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/control-atlas/*.png
+            ${{ runner.temp }}/control-atlas/atlas.json
+          retention-days: 3

@@ -31,6 +31,7 @@ var capture=false
 var camera_size=22.
 var presentation_sha:String
 var expected_end_sha:String
+var controlled_time_shaders:Array=[]
 func _initialize()->void:setup.call_deferred()
 func quantile(values:Array,q:float)->float:
  if values.is_empty():return 0.
@@ -48,7 +49,8 @@ func setup()->void:
  DirAccess.make_dir_recursive_absolute(out)
  root.add_child(scene)
  root.msaa_3d=Viewport.MSAA_4X;root.scaling_3d_scale=1.
- var map=Landscape.new();map.bridgehead=true;scene.add_child(map)
+ RenderingServer.global_shader_parameter_add("representation_clock",RenderingServer.GLOBAL_VAR_TYPE_FLOAT,0.)
+ var map=Landscape.new();map.bridgehead=true;scene.add_child(map);lock_environment_clock(map)
  if OS.has_environment("COMPARE_CAMERA_SIZE"):camera_size=float(OS.get_environment("COMPARE_CAMERA_SIZE"))
  scene.add_child(camera);camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=camera_size;camera.far=360.
  var pitch=lerpf(deg_to_rad(31.),deg_to_rad(51.),smoothstep(7.,23.,22.));var yaw=deg_to_rad(-33.)
@@ -62,11 +64,13 @@ func setup()->void:
   battle.step()
   for u in battle.roster:distance[u.id]+=u.before.distance_to(u.pos)
  presentation_sha=var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text()
- asset.prepare(scene)
- if mode in ["shared3d","hybrid"]:batches=asset.batches(scene,battle.roster.size())
+ if mode in ["shared3d","hybrid"]:
+  asset.prepare(scene);batches=asset.batches(scene,battle.roster.size())
  if mode.begins_with("sprite") or mode=="hybrid":
   direction_count=16 if mode=="sprite16" else 8
   var path=OS.get_environment("COMPARE_ASSETS");atlas_meta=JSON.parse_string(FileAccess.get_file_as_string(path.path_join("atlas.json")))
+  if mode!="hybrid":asset.clips=atlas_meta.clips
+  assert(atlas_meta.source_sha256==FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb"))
   for clip:String in asset.clips:
    var data=atlas_meta.clips[clip];var texture:Texture2DArray=load(path.path_join(clip+"-"+str(direction_count)+".res"))
    var mat=ShaderMaterial.new();mat.shader=load("res://tools/representation_compare/sprite.gdshader");mat.set_shader_parameter("atlas",texture);mat.set_shader_parameter("tile_pixels",Vector2(data.tile[0],data.tile[1]));mat.set_shader_parameter("atlas_pixels",Vector2(texture.get_width(),texture.get_height()));mat.set_shader_parameter("columns",int(data["columns"+str(direction_count)]));mat.set_shader_parameter("directions",direction_count);mat.set_shader_parameter("page_rows",int(data.page_rows));mat.set_shader_parameter("projected_center",Vector2(data.center_projected[0],data.center_projected[1]))
@@ -92,6 +96,7 @@ func state(u)->Dictionary:
   clip="Walk";phase=fposmod(distance[u.id]/1.345947387,1.)
  var count=int(asset.clips[clip].count);return {"clip":clip,"local":mini(count-1,int(phase*count)),"yaw":atan2(u.facing.x,u.facing.y)}
 func update_view()->void:
+ RenderingServer.global_shader_parameter_set("representation_clock",float(battle.tick)*Battle.DT)
  var before=var_to_bytes(Save.snapshot(battle)) if start_us==0 else PackedByteArray()
  var used={};var count3=0;visible_units=0
  for clip in sprites:used[clip]=0
@@ -126,6 +131,31 @@ func _process(delta:float)->bool:
 func finish()->void:
  assert(var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text()==expected_end_sha,"Renderer/full-chain differs from independent simulation-only oracle")
  var wall=(Time.get_ticks_usec()-start_us)/1000000. if start_us>0 else 0.
- var report={"control_only":"unclothed UBC, no armor or held weapon quality claim","mode":mode,"per_side":size,"seed":Battle.SEED,"start_tick":start_tick,"end_tick":battle.tick,"start_snapshot_sha":presentation_sha,"end_snapshot_sha":var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text(),"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate(),"roster":battle.roster.size(),"visible_units_conservative_cull":visible_units,"state_keys":observed_states.keys(),"battle_unchanged_by_renderer":true,"independent_simulation_oracle_sha":expected_end_sha,"invariant_guard_policy":"startup before-after; final independent simulation oracle, no per-frame serialization in timings","capture_run_not_performance":capture,"frames":timings.size(),"wall_seconds":wall,"average_fps":timings.size()/wall if wall>0 else 0.,"frame_time":summary(timings),"simulation_cpu":summary(sim_cost),"presentation_cpu":summary(view_cost),"palette_bytes":asset.palette_bytes,"atlas_compressed_mip_bytes":atlas_memory,"texture_memory":Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED),"video_memory":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"process_static_memory":OS.get_static_memory_usage(),"process_static_peak":OS.get_static_memory_peak_usage(),"render_primitives":Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),"renderer":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info(),"viewport":root.get_visible_rect().size,"internal_scale":root.scaling_3d_scale,"camera_ortho_size":camera_size,"camera_pitch_policy":"fixed Field22 pitch while comparing new MOBA screen scale; atlas uses identical elevation","camera_transform":str(camera.transform),"shadow_note":"sprite casts alpha plane shadow, not body-depth-correct; quality pending","missing_visuals":["all weapons","riding","full unit class costumes"],"art_pass":false,"M5":"NOT_TESTED"}
+ var report={"control_only":"unclothed UBC, no armor or held weapon quality claim","mode":mode,"per_side":size,"seed":Battle.SEED,"start_tick":start_tick,"end_tick":battle.tick,"start_snapshot_sha":presentation_sha,"end_snapshot_sha":var_to_bytes(Save.snapshot(battle)).hex_encode().sha256_text(),"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate(),"roster":battle.roster.size(),"visible_units_conservative_cull":visible_units,"state_keys":observed_states.keys(),"battle_unchanged_by_renderer":true,"independent_simulation_oracle_sha":expected_end_sha,"invariant_guard_policy":"startup before-after; final independent simulation oracle, no per-frame serialization in timings","capture_run_not_performance":capture,"frames":timings.size(),"wall_seconds":wall,"average_fps":timings.size()/wall if wall>0 else 0.,"frame_time":summary(timings),"simulation_cpu":summary(sim_cost),"presentation_cpu":summary(view_cost),"palette_bytes":asset.palette_bytes,"unnecessary_3d_source_loaded":mode in ["shared3d","hybrid"],"controlled_shader_clock":controlled_time_shaders,"clock_seconds":float(battle.tick)*Battle.DT,"atlas_compressed_mip_bytes":atlas_memory,"texture_memory":Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED),"video_memory":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),"process_static_memory":OS.get_static_memory_usage(),"process_static_peak":OS.get_static_memory_peak_usage(),"render_primitives":Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),"renderer":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info(),"viewport":[root.size.x,root.size.y],"logical_viewport":[root.get_visible_rect().size.x,root.get_visible_rect().size.y],"internal_scale":root.scaling_3d_scale,"camera_ortho_size":camera_size,"camera_pitch_policy":"fixed Field22 pitch while comparing new MOBA screen scale; atlas uses identical elevation","camera_transform":str(camera.transform),"shadow_note":"sprite casts alpha plane shadow, not body-depth-correct; quality pending","missing_visuals":["all weapons","riding","full unit class costumes"],"resident_process_memory":resident_memory(),"gpu_memory_scope":"Godot allocation counters; driver residency and software-render RAM duplication not measured","lighting_note":"same sun/ambient; atlas LDR linear-tonemap bake followed by final scene FILMIC, HDR clipping needs image review","sprite_quality_gaps":["direction quantization","LDR bake","no normal/depth atlas","alpha threshold/mipmap/compression edges","flat-plane shadow"],"art_pass":false,"M5":"NOT_TESTED"}
  FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
  print("REPRESENTATION_CONTROL ",JSON.stringify(report));quit()
+
+func resident_memory()->Dictionary:
+ var result={"scope":"Linux /proc/self/status process RSS/HWM, not total system memory"}
+ if not FileAccess.file_exists("/proc/self/status"):return {"available":false}
+ for line in FileAccess.get_file_as_string("/proc/self/status").split("\n"):
+  if line.begins_with("VmRSS:") or line.begins_with("VmHWM:"):result[line.get_slice(":",0)]=line.get_slice(":",1).strip_edges()
+ return result
+func lock_environment_clock(map:Node)->void:
+ var seen={}
+ for node in map.find_children("*","GeometryInstance3D",true,false):
+  var mesh:Mesh
+  if node is MeshInstance3D:mesh=node.mesh
+  elif node is MultiMeshInstance3D and node.multimesh:mesh=node.multimesh.mesh
+  if mesh==null:continue
+  for surface in mesh.get_surface_count():
+   var material=node.get_active_material(surface) if node is MeshInstance3D else mesh.surface_get_material(surface)
+   if not material is ShaderMaterial or material.shader==null:continue
+   var shader:Shader=material.shader
+   if not shader.code.contains("TIME"):continue
+   var id=shader.get_instance_id()
+   if not seen.has(id):
+    var controlled=Shader.new();var regex=RegEx.new();regex.compile("\\bTIME\\b")
+    controlled.code=regex.sub(shader.code,"representation_clock",true).replace("shader_type spatial;","shader_type spatial;\nglobal uniform float representation_clock;")
+    seen[id]=controlled;controlled_time_shaders.append(shader.resource_path)
+   material.shader=seen[id]
