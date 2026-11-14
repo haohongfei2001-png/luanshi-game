@@ -1,7 +1,7 @@
 """Complete four-part head: original nine weights plus Blender evaluated oracle.
 No native Skin/eight-slot export is used as reference. No garment support claim.
 """
-import bpy,sys,pathlib,json,hashlib,shutil,numpy as np
+import bpy,sys,pathlib,json,hashlib,shutil,os,numpy as np
 from mathutils import Matrix
 src,expected,out=sys.argv[sys.argv.index('--')+1:];src=pathlib.Path(src);out=pathlib.Path(out);out.mkdir(parents=True,exist_ok=True)
 assert hashlib.sha256(src.read_bytes()).hexdigest()==expected
@@ -31,9 +31,11 @@ for k,name in enumerate(names):
  part={'name':name,'bones':[b.name for b in bones],'rest_matrices':[list(map(list,b.matrix_local)) for b in bones],'slots':slots,'weights':weights,'joints':joints,'source_vertex_ids':ids,'over8_original_vertices':sum(len(gs)>8 for gs in groups),'position':[list(C@o.data.vertices[vi].co) for vi in ids],'normal':[list((C.to_3x3()@o.data.corner_normals[li].vector).normalized()) for li in reps],'active_uv':uv.name,'uv':[list(uv.data[li].uv) for li in reps],'all_uv_layers':{layer.name:[list(layer.data[li].uv) for li in reps] for layer in o.data.uv_layers},'indices':[remap[li] for tri in o.data.loop_triangles for li in [tri.loops[0],tri.loops[2],tri.loops[1]]],'material':material}
  meshes.append(part);internal.append((o,arm,bones,reps,ids,groups))
 poses=[]
-for pi,phase in enumerate([0.,.13,.47,.83,.5,1.,.5]):
+cycle=os.environ.get('HEAD_WALK_CYCLE')=='1'
+phases=([0.,.13,.47,.83,.5,1.]+[(i+.37)/24 for i in range(24)]) if cycle else [0.,.13,.47,.83,.5,1.,.5]
+for pi,phase in enumerate(phases):
  f=first+(last-first)*phase;scene.frame_set(int(f),subframe=f%1);stress=[]
- if pi==6:
+ if pi==6 and not cycle:
   for o,arm,bones,reps,ids,groups in internal:
    for gs in groups:
     if len(gs)>8:
@@ -44,6 +46,6 @@ for pi,phase in enumerate([0.,.13,.47,.83,.5,1.,.5]):
   ev=o.evaluated_get(dg);ae=arm.evaluated_get(dg);M=ae.matrix_world.inverted()@ev.matrix_world;me=ev.to_mesh();assert len(me.vertices)==len(o.data.vertices)
   normalworld=(C@ev.matrix_world).to_3x3().inverted().transposed()
   parts.append({'name':o.name,'object_transform':list(map(list,C@ev.matrix_world@Ci)),'palette':[list(map(list,C@M.inverted()@ae.pose.bones[b.name].matrix@b.matrix_local.inverted()@M@Ci)) for b in bones],'reference_positions':[list(C@ev.matrix_world@me.vertices[vi].co) for vi in ids],'reference_normals':[list((normalworld@me.corner_normals[li].vector).normalized()) for li in reps]});ev.to_mesh_clear()
- poses.append({'name':('tail-stress' if pi==6 else 'walk-'+str(int(round(phase*100)))),'phase':phase,'source_frame':f,'authored_motion':pi!=6,'synthetic_bones':stress,'parts':parts})
-report={'source_sha256':expected,'blender':bpy.app.version_string,'meshes':meshes,'poses':poses,'default_enabled':False,'art_pass':False,'source_weights_truncated':False,'native8_reference_used':False,'reference':'Actual evaluated Blender full-nine source positions and corner normals; rest mesh/UV/weights retained','material_limitations':['Current source diffuse/roughness/metal values and original RGBA images preserved','No source SSS/transmission match claimed','Alpha reference uses existing whole-actor Godot scissor .25; not claiming exact Blender DITHERED coverage'],'runtime_scope':'Only four plain-LBS head parts, no clothing, complete actor or army performance'}
+ poses.append({'name':('cycle-%02d'%(pi-6) if cycle and pi>=6 else ('tail-stress' if pi==6 else 'walk-'+str(int(round(phase*100))))),'phase':phase,'source_frame':f,'authored_motion':cycle or pi!=6,'synthetic_bones':stress,'parts':parts})
+report={'walk_cycle':cycle,'normal_bank_source_indices':([0,1,2,4,3,5] if cycle else list(range(len(poses)))),'source_sha256':expected,'blender':bpy.app.version_string,'meshes':meshes,'poses':poses,'default_enabled':False,'art_pass':False,'source_weights_truncated':False,'native8_reference_used':False,'reference':'Actual evaluated Blender full-nine source positions and corner normals; rest mesh/UV/weights retained','material_limitations':['Current source diffuse/roughness/metal values and original RGBA images preserved','No source SSS/transmission match claimed','Alpha reference uses existing whole-actor Godot scissor .25; not claiming exact Blender DITHERED coverage'],'runtime_scope':'Only four plain-LBS head parts, no clothing, complete actor or army performance'}
 (out/'head-source.json').write_text(json.dumps(report,separators=(',',':'))+'\n');print('HEAD_ORACLE_EXPORTED',[(m['name'],len(m['position']),m['slots'],m['over8_original_vertices']) for m in meshes],flush=True)

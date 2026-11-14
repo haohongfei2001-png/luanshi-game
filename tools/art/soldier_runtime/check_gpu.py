@@ -5,6 +5,7 @@ p=pathlib.Path(sys.argv[1]);r=json.loads((p/'report.json').read_text());log=path
 assert log.strip() and not re.search(r'SCRIPT ERROR|SHADER ERROR|ERROR:',log)
 assert r['driver']=='metal' and r['method']=='mobile'
 expected={'walk-0','walk-13','walk-47','walk-83','walk-50','walk-100','tail-stress'};seen=set();rows=[];failures=[]
+if r.get('walk_cycle',False):expected.remove('tail-stress');expected.update('cycle-%02d'%i for i in range(24))
 assert len(r['inventory'])==4 and all(m['bones']==163 for m in r['inventory'])
 face=next(m for m in r['inventory'] if m['name']=='Young complete author face module');assert face['slots']==9 and face['original_over8_vertices']==14
 for row in r['rows']:

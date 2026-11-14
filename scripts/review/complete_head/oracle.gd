@@ -7,6 +7,7 @@ var views:Array=[]
 var entries:Array=[]
 var normal_bank_enabled:bool=OS.get_environment("HEAD_NORMAL_BANK")=="1"
 var normal_bank_bytes:int=0
+var cycle_mode:bool=false
 func _initialize()->void:run.call_deferred()
 func stop(message:String)->void:push_error(message);quit(1)
 func v3(values:Array)->PackedVector3Array:
@@ -20,7 +21,10 @@ func transform(r:Array)->Transform3D:
 func viewport(target:Vector3)->SubViewport:
  var v=SubViewport.new();v.size=Vector2i(512,512);v.own_world_3d=true;v.render_target_update_mode=SubViewport.UPDATE_ALWAYS;v.msaa_3d=Viewport.MSAA_4X;v.mesh_lod_threshold=0.;root.add_child(v)
  var world=WorldEnvironment.new();world.environment=Environment.new();world.environment.background_mode=Environment.BG_COLOR;world.environment.background_color=Color(.035,.045,.055);world.environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;world.environment.ambient_light_color=Color.WHITE;world.environment.ambient_light_energy=.45;v.add_child(world)
- var sun=DirectionalLight3D.new();sun.rotation_degrees=Vector3(-35,-25,0);v.add_child(sun)
+ var sun=DirectionalLight3D.new();sun.rotation_degrees=Vector3(-35,-25,0);sun.shadow_enabled=cycle_mode;v.add_child(sun)
+ if cycle_mode:
+  var ground=MeshInstance3D.new();ground.mesh=PlaneMesh.new();ground.mesh.size=Vector2(2,2);ground.position=target-Vector3(0,.31,0)
+  var ground_material=StandardMaterial3D.new();ground_material.albedo_color=Color(.27,.29,.25);ground_material.roughness=1.;ground.material_override=ground_material;v.add_child(ground)
  var camera=Camera3D.new();camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=.7;v.add_child(camera);camera.position=target+Vector3(1,.35,2);camera.look_at(target);camera.current=true
  return v
 func run()->void:
@@ -35,6 +39,8 @@ func run()->void:
   print("COMPLETE_HEAD_PACK_CLOSURE_PASS");quit(0);return
  if DisplayServer.get_name()=="headless":stop("Actual graphics required");return
  if OS.get_environment("HEAD_REQUIRE_METAL")=="1" and (RenderingServer.get_current_rendering_driver_name()!="metal" or RenderingServer.get_current_rendering_method()!="mobile"):stop("Actual Metal Mobile required");return
+ cycle_mode=data.get("walk_cycle",false)
+ var source_indices:Array=data.get("normal_bank_source_indices",range(data.poses.size()))
  var box=AABB();var first=true
  for part in data.poses[0].parts:
   for p in v3(part.reference_positions):
@@ -61,12 +67,12 @@ func run()->void:
    var variant=Shader.new();variant.code=shader.shader.code.replace("ALBEDO=pigment.rgb;","ALBEDO=pigment.rgb; ALPHA=pigment.a; ALPHA_SCISSOR_THRESHOLD=.25;");shader.shader=variant
   if normal_bank_enabled:
    var variant=Shader.new()
-   variant.code=shader.shader.code.replace("void vertex() {", "uniform sampler2D authored_normal_bank : filter_nearest, repeat_disable;\nuniform int authored_normal_frame = 0;\nvoid vertex() {")
-   variant.code=variant.code.replace("NORMAL=normalize(mat3(pose)*NORMAL);", "NORMAL=normalize(texelFetch(authored_normal_bank,ivec2(VERTEX_ID,authored_normal_frame),0).xyz);")
+   variant.code=shader.shader.code.replace("void vertex() {", "uniform sampler2D authored_normal_bank : filter_nearest, repeat_disable;\nuniform int authored_normal_frame = 0;\nuniform int authored_normal_frame_b = 0;\nuniform float authored_normal_blend = 0.0;\nvoid vertex() {")
+   variant.code=variant.code.replace("NORMAL=normalize(mat3(pose)*NORMAL);", "NORMAL=normalize(mix(texelFetch(authored_normal_bank,ivec2(VERTEX_ID,authored_normal_frame),0).xyz,texelFetch(authored_normal_bank,ivec2(VERTEX_ID,authored_normal_frame_b),0).xyz,authored_normal_blend));")
    shader.shader=variant
-   var bank_image=Image.create(part.position.size(),data.poses.size(),false,Image.FORMAT_RGBAH)
-   for frame in data.poses.size():
-    var frame_part=data.poses[frame].parts[entries.size()]
+   var bank_image=Image.create(part.position.size(),source_indices.size(),false,Image.FORMAT_RGBAH)
+   for frame in source_indices.size():
+    var frame_part=data.poses[source_indices[frame]].parts[entries.size()]
     var object_basis=transform(frame_part.object_transform).basis
     for vi in part.position.size():
      var n:Array=frame_part.reference_normals[vi]
@@ -83,19 +89,30 @@ func run()->void:
  var rows=[]
  var pose_index:int=0
  for pose in data.poses:
+  var turn=Transform3D.IDENTITY
+  if cycle_mode:
+   var heading=Basis(Vector3.UP,float(pose.phase)*TAU)
+   turn=Transform3D(heading,box.get_center()-heading*box.get_center())
+  var na:int=pose_index;var nb:int=pose_index;var blend:float=0.
+  if cycle_mode:
+   for j in source_indices.size()-1:
+    var left:float=data.poses[source_indices[j]].phase;var right:float=data.poses[source_indices[j+1]].phase
+    if pose.phase>=left and pose.phase<=right:
+     na=j;nb=j+1;blend=(pose.phase-left)/(right-left);break
   for i in entries.size():
    var e=entries[i];var p=pose.parts[i];if p.name!=e.part.name:stop("Source mesh order changed");return
    var matrices=[];for row in p.palette:matrices.append(transform(row))
    var bank=Palette.encode([matrices]);if bank.has("error"):stop(str(bank));return
-   if normal_bank_enabled:e.shader.set_shader_parameter("authored_normal_frame",pose_index)
-   e.shader.set_shader_parameter("palette",ImageTexture.create_from_image(bank.image));e.batch.multimesh.set_instance_transform(0,transform(p.object_transform))
-   var a:Array=e.arrays.duplicate();a[Mesh.ARRAY_VERTEX]=v3(p.reference_positions);a[Mesh.ARRAY_NORMAL]=v3(p.reference_normals);var mesh=ArrayMesh.new();mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,a);mesh.surface_set_material(0,e.material);e.reference.mesh=mesh
+   if normal_bank_enabled:
+    e.shader.set_shader_parameter("authored_normal_frame",na);e.shader.set_shader_parameter("authored_normal_frame_b",nb);e.shader.set_shader_parameter("authored_normal_blend",blend)
+   e.shader.set_shader_parameter("palette",ImageTexture.create_from_image(bank.image));e.batch.multimesh.set_instance_transform(0,turn*transform(p.object_transform))
+   var a:Array=e.arrays.duplicate();a[Mesh.ARRAY_VERTEX]=v3(p.reference_positions);a[Mesh.ARRAY_NORMAL]=v3(p.reference_normals);var mesh=ArrayMesh.new();mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,a);mesh.surface_set_material(0,e.material);e.reference.mesh=mesh;e.reference.transform=turn
   for frame in 4:await process_frame
   await RenderingServer.frame_post_draw
   for i in 2:
    var status=views[i].get_texture().get_image().save_png(out+"/"+pose.name+("-author.png" if i==0 else "-shared.png"));if status!=OK:stop("Actual PNG save failed");return
   pose_index+=1
-  rows.append({"name":pose.name,"authored_motion":pose.authored_motion,"synthetic_bones":pose.synthetic_bones});print("COMPLETE_HEAD_CAPTURE ",pose.name)
- var report={"normal_mode":("shared_authored_RGBA16F_exact_samples" if normal_bank_enabled else "weighted_bind_normal"),"normal_bank_bytes":normal_bank_bytes,"normal_bank_limit":"Only seven exact sampled poses, no interpolation or arbitrary facial deformation claim; shared per template, not per actor","source_sha256":data.source_sha256,"fixture_sha256":FileAccess.get_sha256("res://assets/head/head-source.json"),"engine":Engine.get_version_info(),"driver":RenderingServer.get_current_rendering_driver_name(),"method":RenderingServer.get_current_rendering_method(),"renderer":RenderingServer.get_video_adapter_name(),"rows":rows,"inventory":inventory,"reference":"Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin","materials":"source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence","art_pass":false,"M5":"NOT_TESTED","army_performance":"NOT_TESTED"}
+  rows.append({"name":pose.name,"authored_motion":pose.authored_motion,"synthetic_bones":pose.synthetic_bones,"phase":pose.phase,"normal_bank_indices":[na,nb],"normal_bank_blend":blend,"world_turn_degrees":float(pose.phase)*360. if cycle_mode else 0.});print("COMPLETE_HEAD_CAPTURE ",pose.name)
+ var report={"walk_cycle":cycle_mode,"ground_and_directional_shadow":cycle_mode,"normal_mode":(("shared_authored_RGBA16F_interpolated_walk" if cycle_mode else "shared_authored_RGBA16F_exact_samples") if normal_bank_enabled else "weighted_bind_normal"),"normal_bank_bytes":normal_bank_bytes,"normal_bank_limit":"Six sparse samples interpolated for held-out Walk only; no arbitrary facial deformation or whole-actor claim" if cycle_mode else "Only seven exact sampled poses, no interpolation or arbitrary facial deformation claim; shared per template, not per actor","source_sha256":data.source_sha256,"fixture_sha256":FileAccess.get_sha256("res://assets/head/head-source.json"),"engine":Engine.get_version_info(),"driver":RenderingServer.get_current_rendering_driver_name(),"method":RenderingServer.get_current_rendering_method(),"renderer":RenderingServer.get_video_adapter_name(),"rows":rows,"inventory":inventory,"reference":"Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin","materials":"source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence","art_pass":false,"M5":"NOT_TESTED","army_performance":"NOT_TESTED"}
  var f=FileAccess.open(out+"/report.json",FileAccess.WRITE);if f==null:stop("Report creation failed");return
  f.store_string(JSON.stringify(report,"  "));f.close();quit(0)

@@ -1,0 +1,100 @@
+name: Held-out full Walk head normals and turning shadow on Metal
+on:
+  push:
+    branches: ['dot/head-walk-cycle']
+    paths: ['tools/art/soldier_runtime/**', 'scripts/review/complete_head/**', '.github/workflows/complete-head-walk-cycle.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          name: complete-head-editable-source-635cfd468576de56f63d823115a2da81b4ed4af1
+          run-id: '43638079556'
+          github-token: ${{ github.token }}
+          path: .inputs/source
+      - name: Evaluate held-out Walk from retained exact editable mother, no rebuild
+        run: |
+          set -euo pipefail
+          mkdir -p evidence "$RUNNER_TEMP/mother" "$RUNNER_TEMP/fixture" "$RUNNER_TEMP/head-project"
+          echo 'bdfa0acd71a245ec7f3beb0764a5b33a4fc1ab31559f6c6bd7c40fa62969f314  .inputs/source/head-editable-mothers.tar.gz' | sha256sum -c -
+          tar -xzf .inputs/source/head-editable-mothers.tar.gz -C "$RUNNER_TEMP/mother"
+          curl -A 'LuanshiAssetRecovery/1.0 (+https://github.com/haohongfei2001-png/luanshi-game)' -fsSL https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o "$RUNNER_TEMP/blender.tar.xz"
+          echo "4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  $RUNNER_TEMP/blender.tar.xz" | sha256sum -c -
+          tar -xf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          HEAD_WALK_CYCLE=1 "$RUNNER_TEMP/blender-4.3.2-linux-x64/blender" --background --disable-autoexec --python-exit-code 1 --python tools/art/soldier_runtime/export_head_oracle.py -- "$RUNNER_TEMP/mother/walk/soldier-controlled-walk.blend" d6be3ff2afcab7a61822f49a8ac6fb57bf2630df4f22c0fded24bb5ca38fc823 "$RUNNER_TEMP/fixture" > evidence/source-evaluation.log 2>&1
+          python3 tools/art/soldier_runtime/prepare.py "$RUNNER_TEMP/fixture" "$RUNNER_TEMP/head-project"
+          cp -r "$RUNNER_TEMP/mother/attribution" "$RUNNER_TEMP/head-project/attribution"
+          tar -czf evidence/head-project.tar.gz -C "$RUNNER_TEMP/head-project" .
+          sha256sum evidence/head-project.tar.gz > evidence/head-project.sha256
+          echo "$GITHUB_SHA" > evidence/source-sha.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: complete-head-cycle-source-${{ github.sha }}
+          path: evidence/
+          retention-days: 30
+  metal:
+    needs: source
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          name: complete-head-cycle-source-${{ github.sha }}
+          path: .inputs/source
+      - uses: actions/download-artifact@v4
+        with:
+          name: mobile-mutex-angle-template
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+          path: .inputs/engine
+      - name: Restore own verified source and fixed existing Metal engine
+        run: |
+          set -euo pipefail
+          mkdir -p evidence "$RUNNER_TEMP/head-project"
+          python3 - <<'PY'
+          import pathlib,hashlib
+          p=pathlib.Path('.inputs/source/head-project.tar.gz');expected=pathlib.Path('.inputs/source/head-project.sha256').read_text().split()[0]
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==expected
+          PY
+          tar -xzf .inputs/source/head-project.tar.gz -C "$RUNNER_TEMP/head-project"
+          cp scripts/review/complete_head/oracle.gd "$RUNNER_TEMP/head-project/scripts/review/complete_head/oracle.gd"
+          echo "$GITHUB_SHA" > evidence/runtime-overlay-sha.txt
+          shasum -a 256 "$RUNNER_TEMP/head-project/scripts/review/complete_head/oracle.gd" > evidence/runtime-overlay-file.sha256
+          echo '9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3  .inputs/engine/godot.macos.template_release.arm64' | shasum -a 256 -c -
+          { uname -a; sw_vers; system_profiler SPHardwareDataType SPDisplaysDataType; } > evidence/host.txt
+      - name: Pinned official importer and strict checker
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "0155bbc8dcf179edab4ef08e3dbbd4480d7434ab1990cb3fb25517d453b1b65787c7fe6dfc8824b15ff25e1fdcec59e8584f765054106894fee00311868c3964  $RUNNER_TEMP/editor.zip" | shasum -a 512 -c -
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/editor"
+          echo "GODOT_EDITOR=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+          python3 -m venv "$RUNNER_TEMP/head-python"
+          "$RUNNER_TEMP/head-python/bin/pip" install 'Pillow==11.1.0'
+          clang -fobjc-arc -framework AppKit -o "$RUNNER_TEMP/head-focus" tools/metal_character_oracle/focus.m
+      - name: Actual full-source reference and shared normal bank, original strict pixel gate
+        env:
+          HEAD_NORMAL_BANK: '1'
+        run: |
+          set -euo pipefail
+          "$GODOT_EDITOR" --headless --editor --path "$RUNNER_TEMP/head-project" --import > evidence/import.log 2>&1
+          python3 tools/representation_compare/assert_clean_logs.py evidence/import.log
+          python3 tools/art/soldier_runtime/run_mac.py "$GODOT_EDITOR" "$RUNNER_TEMP/head-project" "$PWD/.inputs/engine" "$PWD/evidence" "$RUNNER_TEMP/head-focus"
+          "$RUNNER_TEMP/head-python/bin/python" tools/art/soldier_runtime/check_gpu.py evidence/gpu evidence/actual-metal.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: complete-head-cycle-metal-${{ github.sha }}
+          path: evidence/
+          retention-days: 30
