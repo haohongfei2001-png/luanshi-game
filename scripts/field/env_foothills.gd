@@ -514,10 +514,7 @@ func build(parent: Node3D,tiles: Dictionary,bridgehead: bool=false) -> void:
 	if bridgehead:
 		# Frame the outer bridge with two mature willow stools and a pair of
 		# smaller alternating banks. None stands on the seven-metre tread.
-		for planting:Vector4 in [Vector4(18.4,-9.9,6.1,-.2),Vector4(30.5,-14.2,6.5,3.10),
-				Vector4(18.2,10.7,5.8,.28),Vector4(30.3,15.0,5.0,2.94)]:
-			var p:=Vector2(planting.x,planting.y)
-			_plant(_cell(p),p,planting.z,0,0,planting.w)
+		preload("res://scripts/field/bridge_willows.gd").plant(parent)
 		preload("res://scripts/field/scanned_banks.gd").build(parent)
 		# Sedge roots follow the wet ledge. Leave gaps between clumps, both
 		# bridge mouths and the road completely open at boot height.
