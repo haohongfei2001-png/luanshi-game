@@ -22,9 +22,9 @@ static func encode(frames: Array, max_texture_size: int = 8192) -> Dictionary:
 	if frames.is_empty() or frames[0].is_empty():
 		return {"error":"empty palette"}
 	var binds: int = frames[0].size()
-	# Six RGBA float texels per bind: affine rows plus normal-transform rows.
+	# Three RGBA float texels per bind: complete affine rows.
 	# Linear float matrices keep authored scale/shear, unlike quaternion-only rigs.
-	if binds * 6 > max_texture_size or frames.size() > max_texture_size:
+	if binds * 3 > max_texture_size or frames.size() > max_texture_size:
 		return {"error":"palette exceeds explicit texture limit"}
 	var data := PackedFloat32Array()
 	for frame: Array in frames:
@@ -35,18 +35,14 @@ static func encode(frames: Array, max_texture_size: int = 8192) -> Dictionary:
 				return {"error":"invalid palette pose"}
 			for row in 3:
 				data.append_array(PackedFloat32Array([pose.basis.x[row],pose.basis.y[row],pose.basis.z[row],pose.origin[row]]))
-			# Match engine CPU bake's normal convention. The real GPU A/B must
-			# separately establish the shader's result for authored scaled bones.
-			var normal_basis := pose.basis.orthonormalized()
-			for row in 3:
-				data.append_array(PackedFloat32Array([normal_basis.x[row],normal_basis.y[row],normal_basis.z[row],0.0]))
-	return {"image":Image.create_from_data(binds*6,frames.size(),false,Image.FORMAT_RGBAF,data.to_byte_array()),
+
+	return {"image":Image.create_from_data(binds*3,frames.size(),false,Image.FORMAT_RGBAF,data.to_byte_array()),
 		"binds":binds,"frames":frames.size(),"bytes":data.size()*4}
 
 static func unpack(image: Image, bind: int, frame: int) -> Transform3D:
-	var a := image.get_pixel(bind*6,frame)
-	var b := image.get_pixel(bind*6+1,frame)
-	var c := image.get_pixel(bind*6+2,frame)
+	var a := image.get_pixel(bind*3,frame)
+	var b := image.get_pixel(bind*3+1,frame)
+	var c := image.get_pixel(bind*3+2,frame)
 	return Transform3D(Basis(Vector3(a.r,b.r,c.r),Vector3(a.g,b.g,c.g),Vector3(a.b,b.b,c.b)),Vector3(a.a,b.a,c.a))
 
 static func pack_mesh(source: ArrayMesh, bind_count: int) -> Dictionary:

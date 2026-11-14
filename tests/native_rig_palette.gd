@@ -53,8 +53,8 @@ func run() -> void:
 	expect(not actual.has("error"),"preserve hierarchical translation rotation scale")
 	var bank := Palette.encode([rest.transforms,actual.transforms])
 	expect(not bank.has("error"),"float palette built")
-	expect(bank.binds==300 and bank.image.get_size()==Vector2i(1800,2),"not truncated to 16 or 256 bones")
-	expect(bank.bytes==300*6*4*4*2,"precise palette memory")
+	expect(bank.binds==300 and bank.image.get_size()==Vector2i(900,2),"not truncated to 16 or 256 bones")
+	expect(bank.bytes==300*3*4*4*2,"precise palette memory")
 	for row in 2:
 		for bone in 300:
 			var reconstructed: Transform3D = Palette.unpack(bank.image,bone,row)
@@ -95,7 +95,7 @@ func run() -> void:
 	unknown.add_named_bind("not_present",Transform3D.IDENTITY)
 	expect(Palette.capture(skeleton,unknown).has("error"),"missing source joint rejected")
 	expect(Palette.encode([]).has("error"),"empty bank rejected")
-	expect(Palette.encode([actual.transforms],1024).has("error"),"texture capacity checked")
+	expect(Palette.encode([actual.transforms],512).has("error"),"texture capacity checked")
 	var shaped := triangle(false)
 	# Explicit empty source with blend shapes still must fail before geometry.
 	shaped=ArrayMesh.new()

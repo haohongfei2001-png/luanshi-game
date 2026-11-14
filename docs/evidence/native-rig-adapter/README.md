@@ -9,9 +9,9 @@ editable character source, not another edit of the old 16-bone cut-up body.
   normalizes, truncates, or maps anatomy to the old 16 joints / two influences.
 - 300-joint fixture (including indices 255 and 299), named binds in reverse order,
   hierarchical poses, rotations and scale: 995 Godot 4.6.3 assertions passed.
-- Six float RGBA texels per bind per sample, explicit hardware texture bounds;
+- Three float RGBA texels per bind per sample, explicit hardware texture bounds;
   original positions use the full affine transform, not a rigid approximation.
-- Current texture footprint is 96 bytes per bind per frame. No realtime cost
+- Current texture footprint is 48 bytes per bind per frame. No realtime cost
   measured. Dynamic batching, clip sampling, state transitions, attachments and
   blend-shape animation are NOT implemented by this proof.
 - A source with blend shapes is explicitly rejected unless a separately documented
@@ -40,3 +40,17 @@ Run:
 godot --headless --path . --script tests/native_rig_palette.gd
 xvfb-run -a godot --path . --rendering-method gl_compatibility --script tests/native_rig_gpu.gd
 ```
+
+## Actual GPU failure and correction
+
+Hosted run43604814592 reached real Godot, compiled the shader, and passed rest,
+rotated and eighth-weight-tail fixtures. The nonuniform scale case FAILED: 1,919
+pixels exceeded two color levels, 4.8% of visible pixels. Source and treatment
+PNGs and JSON are preserved in artifact14118166362, ZIP SHA256
+`4ab35c07ccebfd4e2e1064a61d1109555dadedf96a89f42857a349cf3c713825`.
+
+Cause verified in official 4.6 GLES3 `skeleton.glsl`: native GPU uses the full
+weighted affine basis for normals, unlike MeshInstance3D's CPU bake helper,
+which orthonormalizes each bone. The adapter now matches the actual renderer,
+shares three matrix rows for positions/normals/tangents, and halves the palette.
+No tolerances were changed; rerun outcome is still pending.

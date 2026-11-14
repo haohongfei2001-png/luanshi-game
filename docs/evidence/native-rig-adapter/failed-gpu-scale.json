@@ -1,0 +1,60 @@
+{
+  "art_pass": false,
+  "game_enabled": false,
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "reports": [
+    {
+      "internal": 1.0,
+      "mae": 0.0000000448788455287286,
+      "max": 0.00392158329486847,
+      "native_size": [
+        512,
+        512
+      ],
+      "pass": true,
+      "pixels_over_2_levels": 0,
+      "stage": "rest",
+      "visible": 41654
+    },
+    {
+      "internal": 1.0,
+      "mae": 0.0000000448787886853097,
+      "max": 0.00392156839370728,
+      "native_size": [
+        512,
+        512
+      ],
+      "pass": true,
+      "pixels_over_2_levels": 0,
+      "stage": "rotated",
+      "visible": 40127
+    },
+    {
+      "internal": 1.0,
+      "mae": 0.000504976167917448,
+      "max": 0.0156862735748291,
+      "native_size": [
+        512,
+        512
+      ],
+      "pass": false,
+      "pixels_over_2_levels": 1919,
+      "stage": "scaled",
+      "visible": 40061
+    },
+    {
+      "internal": 1.0,
+      "mae": 0.0000000299191924568731,
+      "max": 0.00392156839370728,
+      "native_size": [
+        512,
+        512
+      ],
+      "pass": true,
+      "pixels_over_2_levels": 0,
+      "stage": "eight_weight_tail",
+      "visible": 39109
+    }
+  ],
+  "source": "d3872e312db8cabdd4fab49c3d2683e33766dd4c"
+}
