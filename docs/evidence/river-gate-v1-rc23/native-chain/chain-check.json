@@ -1,8 +1,10 @@
 {
-  "preserved_strips": 413,
+  "preserved_strips": 411,
   "candidate_strips": [
+    1,
     2,
     6,
+    32,
     33,
     37
   ],
@@ -26,6 +28,7 @@
         0.7898748164111735,
         1.5839718183187734
       ],
+      "maximum_ready_to_cut_probe_gap_m": 0.026211328649838935,
       "source_clip": "shield_cut_02",
       "source_license": "CC BY-SA 3.0",
       "old_world_grip_constraint": false
@@ -42,6 +45,7 @@
         0.797309932508045,
         1.6182898346990886
       ],
+      "maximum_ready_to_cut_probe_gap_m": 0.026211328649838935,
       "source_clip": "shield_cut_02",
       "source_license": "CC BY-SA 3.0",
       "old_world_grip_constraint": false
