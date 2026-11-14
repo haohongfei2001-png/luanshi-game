@@ -9,6 +9,7 @@ func _initialize() -> void:run.call_deferred()
 func view() -> SubViewport:
 	var viewport:=SubViewport.new();viewport.size=Vector2i(512,512);viewport.own_world_3d=true
 	viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS;viewport.msaa_3d=Viewport.MSAA_4X
+	if OS.has_environment("INTACT_PARITY_FULL_MESH"):viewport.mesh_lod_threshold=0.0
 	root.add_child(viewport)
 	var world:=WorldEnvironment.new();world.environment=Environment.new()
 	world.environment.background_mode=Environment.BG_COLOR;world.environment.background_color=Color(.035,.045,.055)
@@ -22,7 +23,7 @@ func abort(detail:String) -> void:
 	push_error(detail);quit(1)
 func run() -> void:
 	if DisplayServer.get_name()=="headless":abort("GPU parity requires an actual graphics renderer");return
-	var folder:="res://artifacts/native-character-parity/gpu"
+	var folder:="res://artifacts/native-character-parity/gpu_full" if OS.has_environment("INTACT_PARITY_FULL_MESH") else "res://artifacts/native-character-parity/gpu"
 	DirAccess.make_dir_recursive_absolute(folder)
 	var native_view:=view();var batch_view:=view()
 	var actor:Node3D=load("res://assets/ubc_lab/ubc_animated.glb").instantiate();native_view.add_child(actor)
@@ -77,5 +78,5 @@ func run() -> void:
 		var row:={"clip":sample[0],"phase":sample[1],"mae":error_sum/(512*512),"max":error_max,"visible":visible,"pixels_over_2_levels":different,"pass":pass_value}
 		reports.append(row);print("INTACT_NATIVE_GPU ",JSON.stringify(row))
 	var f:=FileAccess.open(folder+"/parity.json",FileAccess.WRITE)
-	f.store_string(JSON.stringify({"source":OS.get_environment("GITHUB_SHA"),"renderer":RenderingServer.get_video_adapter_name(),"native_size":[512,512],"internal":1.,"reports":reports,"art_pass":false,"shipping_enabled":false,"full_battle_performance":"NOT_RUN","source_weights":"UBC four-slot import; explicit >8 source tested separately on CPU only"},"  "));f.close()
+	f.store_string(JSON.stringify({"source":OS.get_environment("GITHUB_SHA"),"renderer":RenderingServer.get_video_adapter_name(),"lod_threshold":native_view.mesh_lod_threshold,"native_size":[512,512],"internal":1.,"reports":reports,"art_pass":false,"shipping_enabled":false,"full_battle_performance":"NOT_RUN","source_weights":"UBC four-slot import; explicit >8 source tested separately on CPU only"},"  "));f.close()
 	quit(0 if failures==0 else 1)

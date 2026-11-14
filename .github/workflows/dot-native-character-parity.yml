@@ -36,12 +36,13 @@ jobs:
       - name: Compare actual renderer skin bake and complete material pixels
         run: |
           set -euo pipefail
-          bake_status=0; pixel_status=0
+          bake_status=0; pixel_status=0; full_status=0
           timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_palette.gd >artifacts/native-character-parity/graphics-bake.log 2>&1 || bake_status=$?
           cp artifacts/native-character-parity/cpu.json artifacts/native-character-parity/graphics-bake.json
           timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu.log 2>&1 || pixel_status=$?
-          printf "bake_exit=%s pixel_exit=%s\n" "$bake_status" "$pixel_status" >artifacts/native-character-parity/gate-status.txt
-          test "$bake_status" = 0 && test "$pixel_status" = 0
+          INTACT_PARITY_FULL_MESH=1 timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu-full.log 2>&1 || full_status=$?
+          printf "bake_exit=%s pixel_exit=%s full_mesh_exit=%s\n" "$bake_status" "$pixel_status" "$full_status" >artifacts/native-character-parity/gate-status.txt
+          test "$bake_status" = 0 && test "$pixel_status" = 0 && test "$full_status" = 0
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/native-character-parity/*.log; then exit 1; fi
           git rev-parse HEAD >artifacts/native-character-parity/ACTUAL_SOURCE_SHA
       - uses: actions/upload-artifact@v4
