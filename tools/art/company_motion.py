@@ -783,14 +783,17 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     native_finish_q=hit_rotations if clip==2 else end_rotations
     settling=1.-ramp(t,.78,1.) if clip==6 else 1.
     result=list(base)
+    loaded=ramp(t,0.,.60) if clip==2 else 1.-ramp(t,.48,1.)
+    joined=ramp(t,0.,.22) if clip==2 else 1.-ramp(t,.75,1.)
     # The animator's hip/shoulder counter-turn remains continuous across
     # release. Register all joint pivots on the game's existing sewn skeleton.
-    body_names=((HIPS,"hips",.70),(CHEST,"spine.003",.62),(HEAD,"head",.68))
+    body_names=((HIPS,"hips",.64),(CHEST,"spine.003",.50),(HEAD,"head",.60))
     for bone,name,strength in body_names:
         delta=qm(rotations[name],inverse_rotation(start_rotations[name]))
         result[bone]=(qm(rotation_mix(IDENT,delta,strength*settling),ready[bone][0]),(0.,0.,0.))
+    result[CHEST]=(qm(euler(8.*loaded,0.),result[CHEST][0]),(0.,0.,0.))
     waist=(0.,.86,0.)
-    hip_shift=mul(sub(points["hips"],start_points["hips"]),.60*settling)
+    hip_shift=add(mul(sub(points["hips"],start_points["hips"]),.60*settling),(0.,-.075*loaded,0.))
     result[HIPS]=placed(waist,add(trans(ready[HIPS],waist),hip_shift),result[HIPS][0])
     feet={}
     lower_hips=0.
@@ -832,7 +835,8 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         if side>0:
             palm,rotation=anchor,aim
         elif kit==7:
-            palm,rotation=trans(base[LH],grip(-1)),base[LH][0]
+            palm=lerp(trans(ready[LH],grip(-1)),trans(base[LH],grip(-1)),joined)
+            rotation=rotation_mix(ready[LH][0],base[LH][0],joined)
         else:
             travel=mul(sub(points["hand.L"],start_points["hand.L"]),.56*settling)
             palm=add(trans(ready[LH],grip(-1)),travel)
@@ -845,7 +849,9 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         toward_palm=sub(palm,center)
         palm=add(center,mul(unit(toward_palm),max(folded_reach,sqrt(dot(toward_palm,toward_palm)))))
         hand_pose=placed(grip(side),palm,rotation)
-        elbow=unit(sub(points["forearm."+suffix],points["upper_arm."+suffix]))
+        native_elbow=unit(sub(points["forearm."+suffix],points["upper_arm."+suffix]))
+        ready_elbow=unit(sub(trans(ready[upper],binds[1]),trans(ready[CHEST],binds[0])))
+        elbow=unit(lerp(ready_elbow,native_elbow,joined))
         result[upper],result[fore]=two_link(binds,trans(result[CHEST],binds[0]),trans(hand_pose,binds[2]),elbow)
         result[hand]=hand_pose
     for side in (-1,1):
@@ -853,7 +859,9 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         suffix="L" if side<0 else "R"
         binds=leg_nodes(side)
         foot,rotation=feet[side]
-        knee=unit(sub(points["shin."+suffix],points["thigh."+suffix]))
+        native_knee=unit(sub(points["shin."+suffix],points["thigh."+suffix]))
+        ready_knee=unit(sub(trans(ready[thigh],binds[1]),trans(ready[HIPS],binds[0])))
+        knee=unit(lerp(ready_knee,native_knee,joined))
         result[thigh],result[shin]=two_link(binds,trans(result[HIPS],binds[0]),foot,knee)
         result[boot]=placed(binds[2],foot,rotation)
     return result
