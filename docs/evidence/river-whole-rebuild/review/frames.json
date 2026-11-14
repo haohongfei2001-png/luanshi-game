@@ -33,7 +33,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 50,
     "world_audit": [],
@@ -73,7 +73,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -113,7 +113,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -153,7 +153,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -193,11 +193,91 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
     "zoom": 18.0
+  },
+  {
+    "center": [
+      89.0,
+      2.0
+    ],
+    "frame": "settled-fort",
+    "hits": [
+      189,
+      228
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 107.934814453125,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 48.0
+  },
+  {
+    "center": [
+      -83.0,
+      -33.0
+    ],
+    "frame": "western-woodland",
+    "hits": [
+      189,
+      228
+    ],
+    "internal": 1.0,
+    "msaa": 2,
+    "native_window": [
+      2560,
+      1440
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
+      1440,
+      810
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "shadow_distance": 105.505462646484,
+    "shadow_enabled": true,
+    "shadow_mode": 2,
+    "shadow_pancake": 20.0,
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
+    "sun_degrees": "(-48.0, 58.0, 0.0)",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 42.0
   },
   {
     "center": [
@@ -233,7 +313,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -273,7 +353,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, -31.0, 0.0)",
     "tick": 135,
     "world_audit": [],
@@ -313,7 +393,7 @@
     "shadow_enabled": true,
     "shadow_mode": 2,
     "shadow_pancake": 20.0,
-    "source_sha": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+    "source_sha": "5babe5c1983952c1f44b7776d254155858417740",
     "sun_degrees": "(-48.0, 58.0, 0.0)",
     "tick": 135,
     "world_audit": [],
