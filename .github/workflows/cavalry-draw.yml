@@ -1,0 +1,49 @@
+name: Compare all submitted horse matrices and hoof phases
+on:
+  push:
+    branches: [codex/river-rc23-cavalry-draw-equivalence]
+    paths: ['.github/workflows/cavalry-draw.yml','tests/field_remount_draw_equivalence.gd']
+concurrency:
+  group: cavalry-proof-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  record:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      OUT: docs/evidence/river-gate-v1-rc23/loose-horses/SIDE
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install verified official Godot
+        run: |
+          set -eu
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          mkdir -p artifacts/horse-cpu
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --import --path . >/tmp/loose-mounts-import.log 2>&1
+      - name: Check every emitted horse, phase and LOD on two cameras
+        shell: bash
+        run: |
+          set -euo pipefail
+          for side in filmed sparse; do
+            if [ "$side" = filmed ]; then ref=aaa694176abdbf925193fc65dc7cc7dd74684ede; else ref=a21dea9948b9ad7f18210c27ac2097c2e522e04f; fi
+            git show "$ref:scripts/field/presentation.gd" > scripts/field/presentation.gd
+            godot --headless --path . --script tests/field_remount_draw_equivalence.gd > "artifacts/horse-cpu/$side.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "artifacts/horse-cpu/$side.log"; then exit 1; fi
+            grep '^HORSE_DRAW' "artifacts/horse-cpu/$side.log" | tee "artifacts/horse-cpu/$side.sig"
+          done
+          diff -u artifacts/horse-cpu/filmed.sig artifacts/horse-cpu/sparse.sig
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drawing-fingerprint
+          path: artifacts/horse-cpu
+          retention-days: 7
