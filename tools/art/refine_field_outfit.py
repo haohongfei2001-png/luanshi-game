@@ -115,6 +115,76 @@ def align_neckline(source):
     source.positions = points
     return source
 
+def collar_boundary(source):
+    """Recover the actual sewn neck opening from the licensed garment surface."""
+    points, lookup, mapping = [], {}, []
+    for point in source.positions:
+        key = tuple(round(float(v),6) for v in point)
+        if key not in lookup:
+            lookup[key] = len(points)
+            points.append(np.asarray(point,dtype=float))
+        mapping.append(lookup[key])
+    edges = defaultdict(int)
+    for face in source.faces:
+        ids = [mapping[i] for i in face]
+        for a,b in zip(ids,ids[1:]+ids[:1]):
+            if a!=b: edges[tuple(sorted((a,b)))] += 1
+    candidates = set()
+    for (a,b), count in edges.items():
+        if count==1 and all(points[i][1]>1.435 and abs(points[i][0])<.16 for i in (a,b)):
+            candidates.update((a,b))
+    assert len(candidates)>=6, ("missing native neck boundary",len(candidates))
+    # An opening is convex in the transverse section. The original eight-sided
+    # contour survives UV splits and the one sewn subdivision step.
+    section = sorted(set((float(points[i][0]),float(points[i][2])) for i in candidates))
+    def cross(o,a,b):
+        return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0])
+    lower,upper = [],[]
+    for point in section:
+        while len(lower)>=2 and cross(lower[-2],lower[-1],point)<=0.: lower.pop()
+        lower.append(point)
+    for point in reversed(section):
+        while len(upper)>=2 and cross(upper[-2],upper[-1],point)<=0.: upper.pop()
+        upper.append(point)
+    polygon = np.asarray(lower[:-1]+upper[:-1])
+    assert len(polygon)>=6
+    return polygon, max(points[i][1] for i in candidates)
+
+def fit_under_collar(points, boundary):
+    """Tailor the original lower neck inside the shirt's actual opening.
+
+    The HM08 selection includes the roots of the trapezius. Hide that covered
+    continuation inside the sewn collar, leaving the face and upper throat at
+    their source shape. Both surfaces follow CHEST at the seam.
+    """
+    polygon,top = boundary
+    center = polygon.mean(axis=0)
+    out = []
+    for original in points:
+        p = np.asarray(original,dtype=float).copy()
+        t = float(np.clip((p[1]-top)/.030,0.,1.))
+        follow = 1.-t*t*(3.-2.*t)
+        if follow>0.:
+            direction = p[[0,2]]-center
+            distance = float(np.linalg.norm(direction))
+            if distance>1.e-8:
+                direction /= distance
+                radius = float("inf")
+                for a,b in zip(polygon,np.roll(polygon,-1,axis=0)):
+                    edge = b-a
+                    denominator = direction[0]*edge[1]-direction[1]*edge[0]
+                    if abs(denominator)<1.e-10: continue
+                    relative = a-center
+                    ray = (relative[0]*edge[1]-relative[1]*edge[0])/denominator
+                    segment = (relative[0]*direction[1]-relative[1]*direction[0])/denominator
+                    if ray>0. and -.00001<=segment<=1.00001: radius=min(radius,ray)
+                assert np.isfinite(radius), ("open neckline",p.tolist())
+                inset = max(.01,radius-.006)
+                if distance>inset:
+                    p[[0,2]] -= direction*(distance-inset)*follow
+        out.append(tuple(p))
+    return out
+
 def palette(cache, destination):
     """Retain native cloth/lacing regions and the untouched fourth shield tile."""
     atlas = Image.open(destination).convert("RGBA")

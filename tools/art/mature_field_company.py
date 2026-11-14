@@ -11,7 +11,7 @@ import math
 import numpy as np
 from figure_atlas import NAMES, uv
 from figure_mesh import Library, Surface
-from refine_field_outfit import FieldSurface, subdivide, palette, align_neckline
+from refine_field_outfit import FieldSurface, subdivide, palette, align_neckline, collar_boundary, fit_under_collar
 from import_garrison_issues import source_file, fit_garment
 from fit_field_headwear import bake as helmet, FITS
 from field_dress import player_half_mantle
@@ -31,11 +31,12 @@ def append(target,source):
     target.faces.extend(tuple(i+offset for i in f) for f in source.faces)
     for i,normal in enumerate(source.normals()): target.reference_normals[i+offset]=normal
 
-def anatomical_body(look,tier,data):
+def anatomical_body(look,tier,data,boundary):
     target=FieldSurface(tier=="Close")
     heavy=look in ("Regular","Guard","Officer","Player")
     for part in ("head","forearms","legs","feet"):
         mesh=data[part+tier];used={}
+        positions=fit_under_collar(mesh["p"],boundary) if part=="head" else mesh["p"]
         for face in mesh["f"]:
             pp=[mesh["p"][i] for i in face]
             x,y,z=(sum(p[k] for p in pp)/3 for k in range(3))
@@ -62,7 +63,7 @@ def anatomical_body(look,tier,data):
             for i in face:
                 key=(i,material)
                 if key not in used:
-                    p=list(mesh["p"][i]);sx,sy,sz=mesh["chart"][i]
+                    p=list(positions[i]);sx,sy,sz=mesh["chart"][i]
                     if part=="head":
                         jaw=max(0,min(1,(7.1-sy)/1.37))
                         if look in ("Guard","Officer"): p[0]*=1.+.09*jaw
@@ -85,6 +86,15 @@ def anatomical_body(look,tier,data):
                     target.reference_normals[used[key]]=tuple(normal)
                 ids.append(used[key])
             target.faces.append(tuple(ids))
+    # Recompute only the fitted lower-neck normal field. The full original face
+    # and ears retain their dense, smooth source normals.
+    authored=target.reference_normals.copy()
+    target.reference_normals={}
+    fitted=target.normals()
+    for i,p in enumerate(target.positions):
+        if 4.<=target.tex[i][0]<5. and p[1]<1.525:
+            authored[i]=fitted[i]
+    target.reference_normals=authored
     return target
 
 def main():
@@ -105,12 +115,14 @@ def main():
         headgear=helmet(hat,FITS[hat],cache)
         headgear.positions=[(x*.86,1.725+(y-1.725)*.86,.015+(z-.015)*.89) for x,y,z in headgear.positions]
         for tier in ("Close","Line","Rank"):
-            body=anatomical_body(look,tier,data)
-            append(body,cloth if tier=="Rank" else rounded);append(body,headgear)
+            garment=cloth if tier=="Rank" else rounded
+            boundary=collar_boundary(garment)
+            body=anatomical_body(look,tier,data,boundary)
+            append(body,garment);append(body,headgear)
             if look=="Player": player_half_mantle(body,rank=tier=="Rank")
             assert np.isfinite(body.positions).all(), (look,tier)
             library.insert(look+tier+"Master",body,check_tiles=False)
-            record[look+tier]={"triangles":len(body.faces),"vertices":len(body.positions)}
+            record[look+tier]={"triangles":len(body.faces),"vertices":len(body.positions),"neckline":{"xz":boundary[0].tolist(),"top":boundary[1]}}
             print("COMPLETE_FIELD_PERSON",look,tier,record[look+tier],flush=True)
     dest=ROOT/"assets/river_gate/figures/field_company_master.glb"
     library.save(dest)
