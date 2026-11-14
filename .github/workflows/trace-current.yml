@@ -1,0 +1,45 @@
+name: Retain native startup failure traces and verification data
+on:
+  push:
+    branches: ['codex/river-rc23-trace-window']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-verification-88bd036da5927c4699f176bf2f72633a6e45bbdb
+          path: /tmp/native
+          run-id: '43547163844'
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: field-verification-footage-88bd036da5927c4699f176bf2f72633a6e45bbdb
+          path: /tmp/field
+          run-id: '43547163844'
+          github-token: ${{ github.token }}
+      - name: Preserve individual samples and all failure logs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,shutil
+          from pathlib import Path
+          dest=Path('docs/evidence/river-gate-v1-rc23/first-native')
+          for category in ('native','field'):
+              source=Path('/tmp')/category
+              for p in source.rglob('*'):
+                  if p.is_file() and p.suffix in ('.txt','.log','.json'):
+                      target=dest/category/p.relative_to(source)
+                      target.parent.mkdir(parents=True,exist_ok=True)
+                      shutil.copyfile(p,target)
+              print(category,[(str(p.relative_to(source)),p.stat().st_size) for p in source.rglob('*') if p.is_file()])
+          (dest/'source.json').write_text(json.dumps({'source':'7481b60411540e8c6c23a4553a0a99cc2a3a5df2','ci_export':'88bd036da5927c4699f176bf2f72633a6e45bbdb','run':43547163844,'macOS':'FAIL_FIRST_FRAME','field':'PARTIAL_WEAPON_SUITE_TIMEOUT','M5':'DEVICE_NOT_RUN'},indent=2)+'\n')
+          PY
+          git add docs/evidence/river-gate-v1-rc23/first-native
+          git -c user.name='River Gate verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Retain unsuccessful cold Metal startup samples and completed software render samples'
+          git push origin HEAD:refs/heads/codex/river-rc23-trace-window
