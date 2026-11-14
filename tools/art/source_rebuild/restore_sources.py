@@ -12,7 +12,10 @@ def checked(data,sha,label,size=None):
 nature=ROOT/'assets/river_pass/nature'; metadata=json.loads((nature/'SOURCE.json').read_text())
 archive=CACHE/'nature.zip'
 if not archive.exists():
-    archive.write_bytes(urllib.request.urlopen(metadata['url'],timeout=120).read())
+    # Same author-published archive, byte-identical to the pinned Godot Store revision.
+    # Store currently rejects hosted requests (403); OGA is a public official mirror.
+    url='https://opengameart.org/sites/default/files/stylized_nature_megakitstandard.zip'
+    archive.write_bytes(urllib.request.urlopen(url,timeout=120).read())
 checked(archive.read_bytes(),metadata['archive_sha256'],'nature CC0 Standard revision',104088529)
 with zipfile.ZipFile(archive) as z:
     for name,sha in metadata['members'].items():

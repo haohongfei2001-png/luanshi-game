@@ -26,3 +26,9 @@ Lifecycle and real menu-entry tests precede publication. Actual game 2K/4K
 pictures are delivered before the slower full regression suite. Still images
 are not a normal-speed action movie, realtime performance evidence, M5 test or
 owner art acceptance. Formal plot remains blank.
+
+## Verified official mirror recovery
+
+The Godot Store endpoint returned HTTP 403 in hosted CI. The original author also published the exact same free Standard archive at https://opengameart.org/content/stylized-nature-megakit . Its fixed download https://opengameart.org/sites/default/files/stylized_nature_megakitstandard.zip was actually downloaded: 104,088,529 bytes, SHA256 `298f6732b872e4cf7b30e6e7abf9641c7f6dc6b326df37ac089533ed7e3d58c9`. Restore now uses that author mirror and retains all archive/member hash gates. No access-control bypass or new account.
+
+Failed seed runs before capture are not visual evidence. In particular artifact 14118716348 contains old tracked frames after an early download failure; it must not be presented as new scene pixels. The upload step now requires successful capture and source-metadata validation.
