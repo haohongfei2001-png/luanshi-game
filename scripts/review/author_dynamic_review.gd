@@ -91,7 +91,8 @@ func _process(_delta: float) -> void:
 	var direction:=Vector2.RIGHT.rotated(-field.camera_yaw)
 	var point: Vector2 = field.battle.hero.pos+direction*8.0
 	var screen: Vector2 = field.camera.unproject_position(Contract.Battle.Ground.unit_point(point,field.battle.bridgehead))
-	var pointer:=InputEventMouseMotion.new();pointer.position=screen;pointer.global_position=screen
+	var native_screen:=native_pointer_coordinates(field.get_viewport(),screen)
+	var pointer:=InputEventMouseMotion.new();pointer.position=native_screen;pointer.global_position=native_screen
 	Input.parse_input_event(pointer);Input.flush_buffered_events()
 	recorder.write({"kind":"author_pointer_input","position":[screen.x,screen.y],"monotonic_us":Time.get_ticks_usec(),"tick":field.battle.tick})
 	set_inputs(wanted.move,wanted.attack)
@@ -101,6 +102,11 @@ func _process(_delta: float) -> void:
 	# The pre-draw field process updates camera after this harness. Observe AFTER draw.
 	if not RenderingServer.frame_post_draw.is_connected(observe_camera):RenderingServer.frame_post_draw.connect(observe_camera)
 	recorder.write({"kind":"author_render_observation","monotonic_us":Time.get_ticks_usec(),"engine_process_frame":Engine.get_process_frames(),"engine_drawn":Engine.get_frames_drawn(),"tick":b.tick,"stage":wanted.stage,"mapping":sample,"pos":[u.pos.x,u.pos.y],"before":[u.before.x,u.before.y],"facing":[u.facing.x,u.facing.y],"state":u.state,"timer":u.timer,"duration":u.duration,"move_slot":u.move_slot,"hero_hp":u.hp,"hero_impacts":u.impacts,"battle_attacks":b.attacks,"battle_hits":b.hits.duplicate(),"camera_size":field.camera.size,"follow":field.follow,"input_vector":str(Input.get_vector("move_left","move_right","move_up","move_down")),"scope":"pre_draw_controller_observation; join captured JPEGs by monotonic timestamp, not one row per JPEG"})
+
+static func native_pointer_coordinates(viewport:Viewport, logical_position:Vector2)->Vector2:
+	# Input.parse_input_event routes native window coordinates through stretch.
+	# Sending Camera3D.unproject_position directly scales it a second time.
+	return viewport.get_final_transform()*logical_position
 
 func set_inputs(move: bool, attack: bool) -> void:
 	if move != held_action:
