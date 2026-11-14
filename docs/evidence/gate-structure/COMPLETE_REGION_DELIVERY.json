@@ -1,0 +1,76 @@
+{
+  "source": "4bbc88b38aea59a5a1e2c4cbc5b93fa21dcf62bd",
+  "run": 43637786209,
+  "conclusion": "success",
+  "runtime_artifacts": [
+    14130681650,
+    14131275730,
+    14130641702,
+    14130721517,
+    14131190917
+  ],
+  "editable_artifacts": [
+    14130502017,
+    14131115975
+  ],
+  "logs_artifact": 14131076049,
+  "runtime_files": [
+    {
+      "path": "assets/river_authored/architecture/architecture.glb",
+      "bytes": 104863096,
+      "sha256": "cd8c420e6ff964c9fe1ee23ad1b5fc9e9100da2df791a243600d24541b2c76aa"
+    },
+    {
+      "path": "assets/river_authored/grass/region.scn",
+      "bytes": 4234645,
+      "sha256": "a78423520b3c62d1833df2c3364a10ccea42373841bfa4cad282e0297a2ddefc"
+    },
+    {
+      "path": "assets/river_authored/ground/continuous-region.scn",
+      "bytes": 167106046,
+      "sha256": "4ec003b444f34a07df38639cae72f3e37b4044a2b119a0274f44f05ee97e848f"
+    },
+    {
+      "path": "assets/river_authored/woodland/region.scn",
+      "bytes": 89878918,
+      "sha256": "c47e120a666ba4001178e89d3b4a089c48d619c6ea2e632a5df05665a9b9a417"
+    },
+    {
+      "path": "provenance/COMPLETE_REGION_RECOVERY.md",
+      "bytes": 3098,
+      "sha256": "4d9f13515f529781d43d41eea09f8cb5ac276ce84041efd17c8df00d360201cf"
+    },
+    {
+      "path": "provenance/SOURCE.json",
+      "bytes": 1057,
+      "sha256": "afc3919458e28fc9381ef102b11aaab5c16f9e720568aa0c0b1e83d4c4f15420"
+    },
+    {
+      "path": "provenance/earth_source.json",
+      "bytes": 1491,
+      "sha256": "9af559d08070d2e39b613dc5f1d31747b602a5439596f387a6555074e679c5fb"
+    },
+    {
+      "path": "provenance/road_material_sources.json",
+      "bytes": 1110,
+      "sha256": "950d9c484778d1e8cce5e1d87479e0106f0be1fa0ba996bf07c5b99826ebe87c"
+    },
+    {
+      "path": "provenance/surface-sources.json",
+      "bytes": 6454,
+      "sha256": "50b4a653c481f87494c17dfe66a9f1fdc34986ed76b0e6dc4df1acaa5bbd729f"
+    },
+    {
+      "path": "runtime-manifest.json",
+      "bytes": 926,
+      "sha256": "4e29ef042957ebd5ba21390113524e3b746f5734768f4af8373c1fece9ff6c7d"
+    }
+  ],
+  "art": "NOT_ACCEPTED",
+  "graphics": "NOT_RUN",
+  "ci_setup_snapshot": "4303b3778d8b40a9a38786c7ffdf648c535d8bb5ddad281d203ddaa5b2d97eb3",
+  "local_author_setup_snapshot": "91488d0e247f461f2535651867035cbdc8b34bdb302a2373a0a7cbf607cb2b5e",
+  "snapshot_scope": "Each batch is internally matched; no cross-host or cross-batch equality claim",
+  "regression": "local full tools/test.sh exit0; 0 SCRIPT/SHADER/ERROR; one ObjectDB cleanup warning retained",
+  "resume": "Restore only complete-region-runtime-* with tools/bounded_artifact_groups.py; retain provenance. Use external verified author cache from run43635849360. Native capture --road-section-study --author-oracle --gate-context-study. Reimport exact runtime then validate package in empty cwd. No .blend needed for playback; no terrain/tree/character rebake."
+}
