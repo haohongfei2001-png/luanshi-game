@@ -74,7 +74,9 @@ func _process(_delta:float)->void:
  Input.parse_input_event(pointer);Input.flush_buffered_events()
  if attack_possible and now>=next_attack_us:
   attack_until_us=now+600000;next_attack_us=now+800000
- if distance<=6.0 and not attack_possible and b.hero_cds[3]<=0.0 and not held_guard:guard_until_us=now+200000
+ # Do not auto-brace at6m: actual spear slot3 locks GUARD for1.12s and
+ # consumed the only approach attack window before a real stagger/death.
+ # Leave defensive helper available for future explicitly timed real inputs.
  set_guard(now<guard_until_us)
  var attack:=attack_possible and now<attack_until_us
  set_inputs(false,attack) # inherited method owns only J; held_action stays false

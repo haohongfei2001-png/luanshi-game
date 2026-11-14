@@ -46,3 +46,16 @@ shared-army production runtime, and its materials are incomplete.
 Next: review genuine state interruption and legal operation, then integrate a
 bounded actual native scene capture. No additional CI is launched by this file.
 Art NOT ACCEPTED. MacBook Air M5 NOT TESTED.
+
+## Follow-up: genuine attack reached, not survival/art acceptance
+Independent state audit showed early6m Space starts spear slot3 and holds GUARD
+for1.12s. J was correctly mapped but the remaining GUARD and subsequent STAGGER
+consumed its buffer; the old plan was a poor operation sequence, not proof that
+native pointer delivery failed. Disable only that automatic early brace.
+The same authored-ground45deg CPU Controller now entered ordinary WINDUP at353
+(timer0.22), RECOVER at358 and actual hero.impacts0→1. It still died naturally
+at360.1J/7held physics ticks/1release,107walk_only and11ordinary_thrust mappings.
+All inputs released; clean exit. No HP/AI/position/damage changes. The controller
+run uses a geometry-free actor probe; real Metal new-character render NOT RUN.
+Exact raw logs: author-contact-profile45-noearlybrace-rows.json and matching.log.
+Keep prior death failures; do not claim survival, full authored clips or art pass.
