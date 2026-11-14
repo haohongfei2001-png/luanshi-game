@@ -1,0 +1,86 @@
+name: Archive the tested bridgehead macOS candidate and its exact checksums
+on:
+  push:
+    branches: ['codex/river-rc22-delivery-worker']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dc9805fd2930344be9737cfc19074442618d7e5c
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-34b5af8db16793566df89139ccdd783ad7d6b723
+          path: /tmp/mac
+          run-id: '43535370706'
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: verification-34b5af8db16793566df89139ccdd783ad7d6b723
+          path: /tmp/verification
+          run-id: '43535370706'
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-verification-34b5af8db16793566df89139ccdd783ad7d6b723
+          path: /tmp/native
+          run-id: '43535370706'
+          github-token: ${{ github.token }}
+      - name: Verify archive, signing evidence, complete provenance and publish the original bytes
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, plistlib, shutil, subprocess, zipfile
+          from pathlib import Path
+          source=next(Path("/tmp/mac").rglob("Luanshi-macOS.zip"))
+          
+          digest=hashlib.sha256(source.read_bytes()).hexdigest()
+          native=Path("/tmp/native")
+          record=json.loads(next(native.rglob("renderer-comparison.json")).read_bytes())
+          assert digest==record["archive_sha256"]
+          print('native startup verdicts', [(v['label'],v['validated']) for v in record['samples']])
+          sums=next(Path("/tmp/verification").rglob("SHA256SUMS")).read_text().splitlines()
+          assert any(x.startswith(digest) and x.rstrip().endswith("Luanshi-macOS.zip") for x in sums)
+          with zipfile.ZipFile(source) as app:
+              ns=app.namelist()
+              info=plistlib.loads(app.read(next(k for k in ns if k.endswith(".app/Contents/Info.plist"))))
+              assert str(info["CFBundleVersion"])=="16022" and info["CFBundleIdentifier"]=="com.luanshi.prototype"
+              assert len(app.read(next(k for k in ns if k.endswith(".app/Contents/MacOS/"+info["CFBundleExecutable"]))))>1000000
+              notes=app.read("THIRD_PARTY_NOTICES.txt")
+              assert all(k in notes.lower() for k in (b"wildfire games",b"bridge_edge_wooden",b"creativecommons.org/licenses/by-sa/3.0",b"quaternius",b"makehuman"))
+          out=Path("candidate")
+          out.mkdir(exist_ok=True)
+          app=out/"River-Gate-RC22-macOS.zip"
+          # GitHub Actions retains the original ZIP even when a future candidate
+          # crosses GitHub's per-blob Git limit.
+          attached=source.stat().st_size<100*1024**2
+          if attached: shutil.copyfile(source,app)
+          (out/"RC22-SHA256SUMS").write_text(digest+"  "+app.name+"\n")
+          proof=Path("docs/evidence/river-gate-v1-rc22/mac")
+          proof.mkdir(parents=True,exist_ok=True)
+          for p in native.rglob("*"):
+              if p.is_file() and (p.suffix in {".log",".json",".txt"} or p.name=="shipping-metal.png"):
+                  shutil.copyfile(p,proof/p.name)
+          for name in ("field-target-pair.json","field-cohort-muster.log","bridgehead-simulation.log","field-officers.log","field-traffic.log","field-history.log","exported-field.log"):
+              original=next(Path("/tmp/verification").rglob(name),None)
+              if original: shutil.copyfile(original,proof/name)
+          receipt={"source":"dc9805fd2930344be9737cfc19074442618d7e5c","export":"34b5af8db16793566df89139ccdd783ad7d6b723","workflow":"43535370706","sha256":digest,"bytes":source.stat().st_size,
+                   "identifier":info["CFBundleIdentifier"],"bundle_version":str(info["CFBundleVersion"]),"notices_sha256":hashlib.sha256(notes).hexdigest(),
+                   "platform":"hosted macOS only","git_archive":attached,"samples":[{"label":x["label"],"passed":x["validated"]} for x in [*record["samples"],record["focus_control"],record["shipping_window"]]],
+                   "real_m5":"NOT_RUN"}
+          (proof/"BUILD.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+"\n")
+          print("EXACT_RC22",json.dumps(receipt))
+          PY
+          git add -- docs/evidence/river-gate-v1-rc22/mac
+          git add -f -- candidate/RC22-SHA256SUMS
+          if test -f candidate/River-Gate-RC22-macOS.zip; then git add -f -- candidate/River-Gate-RC22-macOS.zip; fi
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive the exact tested macOS bridgehead candidate and its original native receipts'
+          git push origin HEAD:refs/heads/codex/river-rc22-delivery
