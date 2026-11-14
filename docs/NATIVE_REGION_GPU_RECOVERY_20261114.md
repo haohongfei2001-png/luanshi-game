@@ -341,3 +341,20 @@ and traversal guards pass, and native input/restoration/still unit tests pass.
 The source-closed exported pack and actual new-scene native frames are still
 **NOT_RUN** at this checkpoint. They are the next CI steps, with ordinary
 capture failures preserved, not converted into art acceptance.
+
+### First complete-scene attempt stopped by obsolete-mode dependency
+
+Run43638485073/source8b29d7cd verified all four runtime files and all91 actor
+members on the actual hosted Mac. It stopped **before editor, export or GPU
+execution**, because the static source scanner took the union of every capture
+mode and still required `assets/river_authored/shore/region.scn`. Road03 had
+explicitly retired those two isolated rock strips; its runtime code never
+loads them under `--road-section-study`. No image was produced.
+
+The scanner now selects the explicit `road-section` dependency mode and the
+actual native workflow. Only that retired resource is non-required for this
+mode; older basin checks still require it, and missing active grass still
+fails. Python3 workflow entry references are now scanned too. Five focused
+negative/positive tests pass. This corrects a false source dependency, not an
+art gate or a missing resource hidden from real execution. The empty-cwd pack
+and actual native setup checks remain mandatory and unchanged.

@@ -60,8 +60,9 @@ jobs:
           cp .pipeline/actor-groups/ATTRIBUTION.md artifacts/native-region/author-attribution.md
           python3 tests/native_region_inputs_test.py
           python3 tests/native_complete_restore_test.py
+          python3 tests/evidence_scene_mode_test.py
           ./tools/prepare-font.sh
-          python3 tools/art/gate_structure/check_evidence_dependencies.py --require-generated >artifacts/native-region/dependency-closure.json
+          python3 tools/art/gate_structure/check_evidence_dependencies.py --require-generated --workflow .github/workflows/dot-native-region-review.yml --scene-mode road-section >artifacts/native-region/dependency-closure.json
       - name: Install exact official import editor
         run: |
           set -euo pipefail
