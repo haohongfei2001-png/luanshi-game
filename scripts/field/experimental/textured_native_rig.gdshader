@@ -44,9 +44,14 @@ void vertex() {
         }
     }
     VERTEX=(pose*vec4(VERTEX,1.0)).xyz;
+    // Native GLES3 skins normal/tangent, then rebuilds binormal from their
+    // cross product and authored handedness, not a separately skinned vector.
+    float handedness=sign(dot(cross(NORMAL,TANGENT),BINORMAL));
     NORMAL=normalize(mat3(pose)*NORMAL);
-    if(length(TANGENT)>0.00001) {TANGENT=normalize(mat3(pose)*TANGENT);}
-    if(length(BINORMAL)>0.00001) {BINORMAL=normalize(mat3(pose)*BINORMAL);}
+    if(length(TANGENT)>0.00001) {
+        TANGENT=normalize(mat3(pose)*TANGENT);
+        BINORMAL=normalize(cross(NORMAL,TANGENT))*handedness;
+    }
 }
 void fragment() {
     vec4 pigment=albedo;
