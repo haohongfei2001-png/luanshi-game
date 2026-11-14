@@ -25,6 +25,17 @@ func _initialize() -> void:
 			quit(1);return
 		if b.tick%500==0:
 			print("BRIDGE_PROGRESS ",b.tick," gate=",b.gate_hp," ram=",b.ram," crew positions=",b.ram_crew," hits=",b.hits," hp=",b.hero.hp)
+	var vv:=b.objectives.strength(b)
+	print("BRIDGE_LINES ",JSON.stringify(vv)," capture=",b.capture," withdrawals=",b.escaped," retiring=",b.objectives.garrison_retiring," quiet=",b.objectives.quiet)
+	for i in b.companies.size():
+		var c:=b.companies[i]
+		var num:=0
+		var avg:=Vector2.ZERO
+		for u in b.roster:
+			if u.squad==i and not u.officer and not u.hero and b.active(u) and u.state!=Battle.State.ROUT:
+				num+=1; avg+=u.pos
+		if num>0: avg/=num
+		print("BRIDGE_COMPANY ",i," side=",c.team," ready=",num," formed=",c.standing," regroup=",c.regrouping," mission=",c.mission," home=",c.home," aim=",c.aim," avg=",avg," lead=",b.corps.can_command(b,c))
 	var ledger:=campaign.settle()
 	var camp:=campaign.enter_camp()
 	var waited:=campaign.wait_at_camp() if camp else false
