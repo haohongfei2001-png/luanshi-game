@@ -17,7 +17,7 @@ jobs:
         run: |
           mkdir -p evidence
           echo '${{ github.sha }}' > evidence/source-sha.txt
-          sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri fonts-noto-cjk python3-pil
+          sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri fonts-noto-cjk python3-pil ffmpeg
           cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc assets/fonts/NotoSansSC-Regular.otf
           sha256sum assets/fonts/NotoSansSC-Regular.otf > evidence/import-font-sha.txt
       - name: Verify retained fixed engine and official importer
@@ -44,15 +44,23 @@ jobs:
       - name: Actual full source and LOD2 same pose depth captures
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
+          LOD_MOTION_VIDEO: '1'
           LOD_MOTION_OUTPUT: ${{ github.workspace }}/evidence/lod-motion
         run: |
           set -euo pipefail
           timeout 900s xvfb-run -a -s '-screen 0 1280x720x24' /tmp/engine/bin/godot-patched --path /tmp/lod-project --resolution 1280x720 --disable-vsync --rendering-method gl_compatibility --audio-driver Dummy --script tools/representation_lod_motion/probe.gd > evidence/lod-motion.log 2>&1
           python tools/representation_compare/assert_clean_logs.py evidence/lod-motion.log
           python tools/representation_lod_motion/check.py evidence/lod-motion
+          ffmpeg -y -framerate 24 -i evidence/lod-motion/motion-frames/%06d.jpg -c:v libx264 -crf 18 -pix_fmt yuv420p evidence/lod-motion/all-original-clips-lod2.mp4
+          ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=width,height,nb_read_frames,r_frame_rate -of json evidence/lod-motion/all-original-clips-lod2.mp4 > evidence/lod-motion/movie-probe.json
+          python tools/representation_lod_motion/check_movie.py evidence/lod-motion
+          tar --exclude=.godot -czf evidence/metal-oracle-source.tar.gz -C /tmp/lod-project .
+          sha256sum evidence/metal-oracle-source.tar.gz > evidence/metal-oracle-source.sha256
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: representation-lod-motion-${{ github.sha }}
-          path: evidence/
+          path: |
+            evidence/
+            !evidence/lod-motion/motion-frames/**
           retention-days: 30

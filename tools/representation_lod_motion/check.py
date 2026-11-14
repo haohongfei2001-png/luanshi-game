@@ -16,6 +16,8 @@ for row in r['rows']:
  ma,mb=mask(a),mask(b);union=ImageChops.lighter(ma,mb);intersection=ImageChops.darker(ma,mb)
  visible=union.histogram()[255];overlap=intersection.histogram()[255];assert visible>500,'empty/trivial rendered actor'
  metrics.append(dict(row,visible_union=visible,silhouette_iou=overlap/visible,full_bounds=ma.getbbox(),lod_bounds=mb.getbbox(),mask_scope='actor only' if row['mode']=='clear' else 'actor plus obstacle; not isolated',changed_pixels=sum(h[1:]),over_two_levels=sum(h[3:]),mean_canvas_max_error_levels=sum(i*n for i,n in enumerate(h))/(2560*1440),difference_bbox=d.getbbox()))
+for suffix in ['full','lod2']:
+ im=Image.open(p/('walk-normal-4k-'+suffix+'.png'));assert im.size==(3840,2160) and len(set(im.convert('RGB').resize((64,36)).getdata()))>5
 assert seen==expected,(len(seen),len(expected))
 assert r['source_sha256']=='64705ebc4a20650b79f863bae4b6ec47df06dfefe0ed451fe73a04ebc46295c0'
 assert r['resolution']==[2560,1440] and r['internal']==1

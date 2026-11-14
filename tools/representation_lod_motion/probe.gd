@@ -62,6 +62,14 @@ func run()->void:
     for index in 2:
      var result=views[index].get_texture().get_image().save_png(folder+"/"+label+("-full.png" if index==0 else "-lod2.png"))
      if result!=OK:fail("PNG save failed "+str(result));return
+    if clip=="Walk" and is_equal_approx(phase,.47) and mode=="clear":
+     for v in views:v.size=Vector2i(3840,2160)
+     for frame in 3:await process_frame
+     await RenderingServer.frame_post_draw
+     for index in 2:
+      var result=views[index].get_texture().get_image().save_png(folder+"/walk-normal-4k"+("-full.png" if index==0 else "-lod2.png"))
+      if result!=OK:fail("4K PNG save failed");return
+     for v in views:v.size=Vector2i(2560,1440)
     rows.append({"clip":clip,"phase":phase,"mode":mode,"prefix":label});print("LOD_MOTION_CAPTURE ",label)
  var report={"engine":Engine.get_version_info(),"renderer":RenderingServer.get_video_adapter_name(),"driver":RenderingServer.get_current_rendering_driver_name(),"resolution":[2560,1440],"internal":1.,"camera":{"yaw":-65,"pitch":32,"fov":55,"nominal_body_fraction":.10,"target":[4,.8,0]},"source_sha256":FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb"),"inventory":inventory,"rows":rows,"all_original_weights":true,"full_source_materials":true,"art_pass":false,"performance":"NOT_MEASURED","M5":"NOT_TESTED","scope":"UBC unarmored, no held weapon. Original 9 authored clips sampled at non-keyframe phases, not full-cycle motion acceptance. Opaque wall and procedural alpha-scissor cutout only; no real foliage or blend transparency acceptance."}
  if OS.get_environment("LOD_MOTION_VIDEO")=="1":
