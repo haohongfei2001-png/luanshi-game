@@ -1,0 +1,611 @@
+{
+  "author": "Quaternius",
+  "license": "CC0",
+  "archive_sha256": "18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2",
+  "source_glb_sha256": "1b7bf67866360665426bb99e4c71bd619f19b408453c24e30f0c3071601eee5c",
+  "source_file": "Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb",
+  "clips": [
+    {
+      "name": "A_TPose",
+      "seconds": 0.1666666716337204,
+      "channels": 159
+    },
+    {
+      "name": "Crouch_Fwd_Loop",
+      "seconds": 2.0,
+      "channels": 159
+    },
+    {
+      "name": "Crouch_Idle_Loop",
+      "seconds": 2.933333396911621,
+      "channels": 159
+    },
+    {
+      "name": "Dance_Loop",
+      "seconds": 1.0,
+      "channels": 159
+    },
+    {
+      "name": "Death01",
+      "seconds": 2.4000000953674316,
+      "channels": 159
+    },
+    {
+      "name": "Driving_Loop",
+      "seconds": 1.6666666269302368,
+      "channels": 159
+    },
+    {
+      "name": "Fixing_Kneeling",
+      "seconds": 5.199999809265137,
+      "channels": 159
+    },
+    {
+      "name": "Hit_Chest",
+      "seconds": 0.3333333432674408,
+      "channels": 159
+    },
+    {
+      "name": "Hit_Head",
+      "seconds": 0.4333333373069763,
+      "channels": 159
+    },
+    {
+      "name": "Idle_Loop",
+      "seconds": 2.5,
+      "channels": 159
+    },
+    {
+      "name": "Idle_Talking_Loop",
+      "seconds": 2.933333396911621,
+      "channels": 159
+    },
+    {
+      "name": "Idle_Torch_Loop",
+      "seconds": 1.2666666507720947,
+      "channels": 159
+    },
+    {
+      "name": "Interact",
+      "seconds": 2.0,
+      "channels": 159
+    },
+    {
+      "name": "Jog_Fwd_Loop",
+      "seconds": 0.9333333373069763,
+      "channels": 159
+    },
+    {
+      "name": "Jump_Land",
+      "seconds": 1.2666666507720947,
+      "channels": 159
+    },
+    {
+      "name": "Jump_Loop",
+      "seconds": 2.5,
+      "channels": 159
+    },
+    {
+      "name": "Jump_Start",
+      "seconds": 1.3333333730697632,
+      "channels": 159
+    },
+    {
+      "name": "PickUp_Table",
+      "seconds": 0.8333333134651184,
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Aim_Down",
+      "seconds": 0.1666666716337204,
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Aim_Neutral",
+      "seconds": 0.1666666716337204,
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Aim_Up",
+      "seconds": 0.1666666716337204,
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Idle_Loop",
+      "seconds": 1.6666666269302368,
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Reload",
+      "seconds": 1.6666666269302368,
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Shoot",
+      "seconds": 0.6333333253860474,
+      "channels": 159
+    },
+    {
+      "name": "Punch_Cross",
+      "seconds": 1.0,
+      "channels": 159
+    },
+    {
+      "name": "Punch_Enter",
+      "seconds": 0.8666666746139526,
+      "channels": 159
+    },
+    {
+      "name": "Punch_Jab",
+      "seconds": 0.8666666746139526,
+      "channels": 159
+    },
+    {
+      "name": "Push_Loop",
+      "seconds": 2.6666667461395264,
+      "channels": 159
+    },
+    {
+      "name": "Roll",
+      "seconds": 1.4666666984558105,
+      "channels": 159
+    },
+    {
+      "name": "Roll_RM",
+      "seconds": 1.4666666984558105,
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Enter",
+      "seconds": 1.2999999523162842,
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Exit",
+      "seconds": 1.0333333015441895,
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Idle_Loop",
+      "seconds": 1.6666666269302368,
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Talking_Loop",
+      "seconds": 2.933333396911621,
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Enter",
+      "seconds": 0.5333333611488342,
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Exit",
+      "seconds": 0.4333333373069763,
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Idle_Loop",
+      "seconds": 2.0999999046325684,
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Shoot",
+      "seconds": 0.5,
+      "channels": 159
+    },
+    {
+      "name": "Sprint_Loop",
+      "seconds": 0.6666666865348816,
+      "channels": 159
+    },
+    {
+      "name": "Swim_Fwd_Loop",
+      "seconds": 1.3333333730697632,
+      "channels": 159
+    },
+    {
+      "name": "Swim_Idle_Loop",
+      "seconds": 3.3333332538604736,
+      "channels": 159
+    },
+    {
+      "name": "Sword_Attack",
+      "seconds": 1.5333333015441895,
+      "channels": 159
+    },
+    {
+      "name": "Sword_Attack_RM",
+      "seconds": 1.5333333015441895,
+      "channels": 159
+    },
+    {
+      "name": "Sword_Idle",
+      "seconds": 1.6666666269302368,
+      "channels": 159
+    },
+    {
+      "name": "Walk_Formal_Loop",
+      "seconds": 1.3333333730697632,
+      "channels": 159
+    },
+    {
+      "name": "Walk_Loop",
+      "seconds": 1.3333333730697632,
+      "channels": 159
+    }
+  ],
+  "nodes": [
+    {
+      "index": 0,
+      "name": "DEF-head",
+      "children": []
+    },
+    {
+      "index": 1,
+      "name": "DEF-neck",
+      "children": [
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "name": "DEF-f_index.03.L",
+      "children": []
+    },
+    {
+      "index": 3,
+      "name": "DEF-f_index.02.L",
+      "children": [
+        2
+      ]
+    },
+    {
+      "index": 4,
+      "name": "DEF-f_index.01.L",
+      "children": [
+        3
+      ]
+    },
+    {
+      "index": 5,
+      "name": "DEF-f_middle.03.L",
+      "children": []
+    },
+    {
+      "index": 6,
+      "name": "DEF-f_middle.02.L",
+      "children": [
+        5
+      ]
+    },
+    {
+      "index": 7,
+      "name": "DEF-f_middle.01.L",
+      "children": [
+        6
+      ]
+    },
+    {
+      "index": 8,
+      "name": "DEF-f_pinky.03.L",
+      "children": []
+    },
+    {
+      "index": 9,
+      "name": "DEF-f_pinky.02.L",
+      "children": [
+        8
+      ]
+    },
+    {
+      "index": 10,
+      "name": "DEF-f_pinky.01.L",
+      "children": [
+        9
+      ]
+    },
+    {
+      "index": 11,
+      "name": "DEF-f_ring.03.L",
+      "children": []
+    },
+    {
+      "index": 12,
+      "name": "DEF-f_ring.02.L",
+      "children": [
+        11
+      ]
+    },
+    {
+      "index": 13,
+      "name": "DEF-f_ring.01.L",
+      "children": [
+        12
+      ]
+    },
+    {
+      "index": 14,
+      "name": "DEF-thumb.03.L",
+      "children": []
+    },
+    {
+      "index": 15,
+      "name": "DEF-thumb.02.L",
+      "children": [
+        14
+      ]
+    },
+    {
+      "index": 16,
+      "name": "DEF-thumb.01.L",
+      "children": [
+        15
+      ]
+    },
+    {
+      "index": 17,
+      "name": "DEF-hand.L",
+      "children": [
+        4,
+        7,
+        10,
+        13,
+        16
+      ]
+    },
+    {
+      "index": 18,
+      "name": "DEF-forearm.L",
+      "children": [
+        17
+      ]
+    },
+    {
+      "index": 19,
+      "name": "DEF-upper_arm.L",
+      "children": [
+        18
+      ]
+    },
+    {
+      "index": 20,
+      "name": "DEF-shoulder.L",
+      "children": [
+        19
+      ]
+    },
+    {
+      "index": 21,
+      "name": "DEF-f_index.03.R",
+      "children": []
+    },
+    {
+      "index": 22,
+      "name": "DEF-f_index.02.R",
+      "children": [
+        21
+      ]
+    },
+    {
+      "index": 23,
+      "name": "DEF-f_index.01.R",
+      "children": [
+        22
+      ]
+    },
+    {
+      "index": 24,
+      "name": "DEF-f_middle.03.R",
+      "children": []
+    },
+    {
+      "index": 25,
+      "name": "DEF-f_middle.02.R",
+      "children": [
+        24
+      ]
+    },
+    {
+      "index": 26,
+      "name": "DEF-f_middle.01.R",
+      "children": [
+        25
+      ]
+    },
+    {
+      "index": 27,
+      "name": "DEF-f_pinky.03.R",
+      "children": []
+    },
+    {
+      "index": 28,
+      "name": "DEF-f_pinky.02.R",
+      "children": [
+        27
+      ]
+    },
+    {
+      "index": 29,
+      "name": "DEF-f_pinky.01.R",
+      "children": [
+        28
+      ]
+    },
+    {
+      "index": 30,
+      "name": "DEF-f_ring.03.R",
+      "children": []
+    },
+    {
+      "index": 31,
+      "name": "DEF-f_ring.02.R",
+      "children": [
+        30
+      ]
+    },
+    {
+      "index": 32,
+      "name": "DEF-f_ring.01.R",
+      "children": [
+        31
+      ]
+    },
+    {
+      "index": 33,
+      "name": "DEF-thumb.03.R",
+      "children": []
+    },
+    {
+      "index": 34,
+      "name": "DEF-thumb.02.R",
+      "children": [
+        33
+      ]
+    },
+    {
+      "index": 35,
+      "name": "DEF-thumb.01.R",
+      "children": [
+        34
+      ]
+    },
+    {
+      "index": 36,
+      "name": "DEF-hand.R",
+      "children": [
+        23,
+        26,
+        29,
+        32,
+        35
+      ]
+    },
+    {
+      "index": 37,
+      "name": "DEF-forearm.R",
+      "children": [
+        36
+      ]
+    },
+    {
+      "index": 38,
+      "name": "DEF-upper_arm.R",
+      "children": [
+        37
+      ]
+    },
+    {
+      "index": 39,
+      "name": "DEF-shoulder.R",
+      "children": [
+        38
+      ]
+    },
+    {
+      "index": 40,
+      "name": "DEF-spine.003",
+      "children": [
+        1,
+        20,
+        39
+      ]
+    },
+    {
+      "index": 41,
+      "name": "DEF-spine.002",
+      "children": [
+        40
+      ]
+    },
+    {
+      "index": 42,
+      "name": "DEF-spine.001",
+      "children": [
+        41
+      ]
+    },
+    {
+      "index": 43,
+      "name": "DEF-toe.L",
+      "children": []
+    },
+    {
+      "index": 44,
+      "name": "DEF-foot.L",
+      "children": [
+        43
+      ]
+    },
+    {
+      "index": 45,
+      "name": "DEF-shin.L",
+      "children": [
+        44
+      ]
+    },
+    {
+      "index": 46,
+      "name": "DEF-thigh.L",
+      "children": [
+        45
+      ]
+    },
+    {
+      "index": 47,
+      "name": "DEF-toe.R",
+      "children": []
+    },
+    {
+      "index": 48,
+      "name": "DEF-foot.R",
+      "children": [
+        47
+      ]
+    },
+    {
+      "index": 49,
+      "name": "DEF-shin.R",
+      "children": [
+        48
+      ]
+    },
+    {
+      "index": 50,
+      "name": "DEF-thigh.R",
+      "children": [
+        49
+      ]
+    },
+    {
+      "index": 51,
+      "name": "DEF-hips",
+      "children": [
+        42,
+        46,
+        50
+      ]
+    },
+    {
+      "index": 52,
+      "name": "root",
+      "children": [
+        51
+      ]
+    },
+    {
+      "index": 53,
+      "name": "Mannequin",
+      "children": []
+    },
+    {
+      "index": 54,
+      "name": "Rig",
+      "children": [
+        53,
+        52
+      ]
+    }
+  ]
+}
