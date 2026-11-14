@@ -1,0 +1,75 @@
+name: Dot cached whole-region camera study
+on:
+  push:
+    branches: ['dot/region-camera-pixel-study']
+    paths: ['.github/workflows/dot-pixel-camera-review.yml', 'tests/authored_architecture_capture.gd']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native-stills:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      LUANSHI_AUTHORED_LANDFORM: '1'
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43627776697
+          name: new-architecture-editable-source
+          path: /tmp/verified-architecture
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43627776697
+          pattern: reusable-region-derivatives-*
+          merge-multiple: true
+          path: /tmp/derivative-groups
+          github-token: ${{ github.token }}
+      - name: Restore only the exact verified runtime assets
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/camera-study assets/river_authored/architecture
+          touch artifacts/.gdignore
+          python tools/bounded_artifact_groups.py restore /tmp/derivative-groups /tmp/restored
+          cp -a /tmp/restored/assets/river_authored/. assets/river_authored/
+          cp /tmp/verified-architecture/architecture.glb assets/river_authored/architecture/
+          echo '9590b664efb4316d1374c79f517d4f52e6b1a17d5a04a5eaa220fd4a021f4692  assets/river_authored/architecture/architecture.glb' | sha256sum -c -
+          echo '8a87880eadd3448bbc4c5fdd5c9a29e9304ba098db83c32f14eb1d34dade1513  assets/river_authored/ground/continuous-region.scn' | sha256sum -c -
+          echo '9ba916f6270af9264aa5ca24c5b4da28cb6057be568585464ac3be0b85b5e10f  assets/river_authored/woodland/region.scn' | sha256sum -c -
+          cp /tmp/restored/recovery-source.json artifacts/camera-study/
+      - name: Install unchanged official Godot and display
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          { uname -a; lscpu; free -m; godot --version; } >artifacts/camera-study/host.txt
+          godot --headless --editor --path . --import >artifacts/camera-study/import.log 2>&1
+      - name: Verify the actual new camera scene before graphics
+        run: |
+          set -euo pipefail
+          python tools/art/gate_structure/check_evidence_dependencies.py --require-generated >artifacts/camera-study/dependencies.json
+          python tools/art/gate_structure/run_capture_checked.py artifacts/camera-study/setup.log 100 -- godot --headless --path . --script tests/authored_architecture_capture.gd -- --camera-study --validate-pairs
+          python tools/art/gate_structure/run_capture_checked.py artifacts/camera-study/camera-contract.log 90 -- godot --headless --path . --script tests/review_camera_contract.gd
+      - name: Capture three real images without rebaking any assets
+        env:
+          ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/camera-study/pixels
+        run: |
+          set -euo pipefail
+          export CONTROLLER_BLOB=$(git hash-object scripts/field/controller.gd)
+          python tools/art/gate_structure/run_capture_checked.py artifacts/camera-study/graphics.log 300 -- xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --rendering-method gl_compatibility --audio-driver Dummy --script tests/authored_architecture_capture.gd -- --camera-study
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cached-whole-region-camera-study
+          path: artifacts/camera-study
+          retention-days: 30
+          if-no-files-found: error
