@@ -1,5 +1,4 @@
 extends SceneTree
-extends SceneTree
 ## Actual draw transforms including near/rank horses form a camera-order independent signature.
 const Field:=preload("res://scripts/field/battle.gd")
 const View:=preload("res://scripts/field/presentation.gd")
