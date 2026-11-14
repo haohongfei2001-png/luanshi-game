@@ -1,0 +1,1804 @@
+{
+  "source": "041ac7dca6f88e6365625c92d7dc5b03ea22e45c",
+  "units": "one assembled fighter, one geometry submission, excludes multipass/shadows",
+  "files": [
+    {
+      "path": "assets/river_gate/figures/field_company_master.glb",
+      "sha256": "aa4103c34537e03191e46adb27f4bfd5e66095fc192e679a556b190b4c7e69a5",
+      "git_blob": "55e468e7f4efe7cd0b3a360620e891ae0256626e"
+    },
+    {
+      "path": "assets/river_gate/figures/river_company.glb",
+      "sha256": "ea8af42bc8aa3887097e28094ee1ffac1b60171a2179a62bbf8f17cb8c12919c",
+      "git_blob": "ce802e0588661186429d036b8895ccc1b177be0a"
+    },
+    {
+      "path": "assets/river_gate/equipment/field_equipment.glb",
+      "sha256": "667b2c867fed97417111c1a57bcaaa24cec16572189a42a1517c669f37fd1714",
+      "git_blob": "907c5515f2877612efa18e1ed089b9826fe52dcd"
+    },
+    {
+      "path": "assets/third_party/wildfire_shields/garrison_shield.glb",
+      "sha256": "369de99fb78c63a13818a3002af9cd08da201c43d010257dab9d39f328219ef9",
+      "git_blob": "a3a2ff4ffa124faa49ae33ab70f045d8ef71ca4c"
+    }
+  ],
+  "parts": {
+    "LevyCloseMaster": {
+      "triangles": 12057,
+      "vertices": 6588
+    },
+    "LevyLineMaster": {
+      "triangles": 6894,
+      "vertices": 3970
+    },
+    "LevyRankMaster": {
+      "triangles": 1959,
+      "vertices": 1272
+    },
+    "ArcherCloseMaster": {
+      "triangles": 12057,
+      "vertices": 6588
+    },
+    "ArcherLineMaster": {
+      "triangles": 6894,
+      "vertices": 3970
+    },
+    "ArcherRankMaster": {
+      "triangles": 1959,
+      "vertices": 1272
+    },
+    "RegularCloseMaster": {
+      "triangles": 12267,
+      "vertices": 6741
+    },
+    "RegularLineMaster": {
+      "triangles": 7111,
+      "vertices": 4123
+    },
+    "RegularRankMaster": {
+      "triangles": 2044,
+      "vertices": 1339
+    },
+    "GuardCloseMaster": {
+      "triangles": 12407,
+      "vertices": 6802
+    },
+    "GuardLineMaster": {
+      "triangles": 7251,
+      "vertices": 4184
+    },
+    "GuardRankMaster": {
+      "triangles": 2184,
+      "vertices": 1400
+    },
+    "OfficerCloseMaster": {
+      "triangles": 12515,
+      "vertices": 6892
+    },
+    "OfficerLineMaster": {
+      "triangles": 7359,
+      "vertices": 4274
+    },
+    "OfficerRankMaster": {
+      "triangles": 2292,
+      "vertices": 1490
+    },
+    "PlayerCloseMaster": {
+      "triangles": 12669,
+      "vertices": 6996
+    },
+    "PlayerLineMaster": {
+      "triangles": 7457,
+      "vertices": 4346
+    },
+    "PlayerRankMaster": {
+      "triangles": 2324,
+      "vertices": 1520
+    },
+    "LevyClose": {
+      "triangles": 3832,
+      "vertices": 2696
+    },
+    "ArcherClose": {
+      "triangles": 3184,
+      "vertices": 2283
+    },
+    "RegularClose": {
+      "triangles": 3557,
+      "vertices": 2510
+    },
+    "GuardClose": {
+      "triangles": 3761,
+      "vertices": 2658
+    },
+    "OfficerClose": {
+      "triangles": 4183,
+      "vertices": 2945
+    },
+    "PlayerClose": {
+      "triangles": 4738,
+      "vertices": 3282
+    },
+    "Arms0Close": {
+      "triangles": 1756,
+      "vertices": 1032
+    },
+    "Arms1Close": {
+      "triangles": 1756,
+      "vertices": 1032
+    },
+    "Arms2Close": {
+      "triangles": 1790,
+      "vertices": 1036
+    },
+    "Arms3Close": {
+      "triangles": 1928,
+      "vertices": 1211
+    },
+    "Arms4Close": {
+      "triangles": 1848,
+      "vertices": 1136
+    },
+    "Arms5Close": {
+      "triangles": 1920,
+      "vertices": 1098
+    },
+    "Arms6Close": {
+      "triangles": 1876,
+      "vertices": 1058
+    },
+    "Arms7Close": {
+      "triangles": 1756,
+      "vertices": 1032
+    },
+    "Arms8Close": {
+      "triangles": 1942,
+      "vertices": 1256
+    },
+    "LevyLine": {
+      "triangles": 1424,
+      "vertices": 1156
+    },
+    "ArcherLine": {
+      "triangles": 1280,
+      "vertices": 1055
+    },
+    "RegularLine": {
+      "triangles": 1485,
+      "vertices": 1185
+    },
+    "GuardLine": {
+      "triangles": 1617,
+      "vertices": 1285
+    },
+    "OfficerLine": {
+      "triangles": 1791,
+      "vertices": 1427
+    },
+    "PlayerLine": {
+      "triangles": 2014,
+      "vertices": 1567
+    },
+    "Arms0Line": {
+      "triangles": 457,
+      "vertices": 277
+    },
+    "Arms1Line": {
+      "triangles": 457,
+      "vertices": 277
+    },
+    "Arms2Line": {
+      "triangles": 432,
+      "vertices": 234
+    },
+    "Arms3Line": {
+      "triangles": 450,
+      "vertices": 270
+    },
+    "Arms4Line": {
+      "triangles": 448,
+      "vertices": 266
+    },
+    "Arms5Line": {
+      "triangles": 512,
+      "vertices": 314
+    },
+    "Arms6Line": {
+      "triangles": 456,
+      "vertices": 266
+    },
+    "Arms7Line": {
+      "triangles": 457,
+      "vertices": 277
+    },
+    "Arms8Line": {
+      "triangles": 486,
+      "vertices": 326
+    },
+    "LevyRank": {
+      "triangles": 452,
+      "vertices": 393
+    },
+    "ArcherRank": {
+      "triangles": 368,
+      "vertices": 308
+    },
+    "RegularRank": {
+      "triangles": 480,
+      "vertices": 436
+    },
+    "GuardRank": {
+      "triangles": 508,
+      "vertices": 468
+    },
+    "OfficerRank": {
+      "triangles": 520,
+      "vertices": 480
+    },
+    "PlayerRank": {
+      "triangles": 632,
+      "vertices": 573
+    },
+    "Arms0Rank": {
+      "triangles": 142,
+      "vertices": 112
+    },
+    "Arms1Rank": {
+      "triangles": 142,
+      "vertices": 112
+    },
+    "Arms2Rank": {
+      "triangles": 118,
+      "vertices": 70
+    },
+    "Arms3Rank": {
+      "triangles": 136,
+      "vertices": 106
+    },
+    "Arms4Rank": {
+      "triangles": 134,
+      "vertices": 102
+    },
+    "Arms5Rank": {
+      "triangles": 195,
+      "vertices": 148
+    },
+    "Arms6Rank": {
+      "triangles": 142,
+      "vertices": 102
+    },
+    "Arms7Rank": {
+      "triangles": 142,
+      "vertices": 112
+    },
+    "Arms8Rank": {
+      "triangles": 172,
+      "vertices": 162
+    },
+    "FieldArms0Close": {
+      "triangles": 1738,
+      "vertices": 1312
+    },
+    "FieldArms0Line": {
+      "triangles": 595,
+      "vertices": 731
+    },
+    "FieldArms0Rank": {
+      "triangles": 280,
+      "vertices": 566
+    },
+    "FieldArms1Close": {
+      "triangles": 1628,
+      "vertices": 982
+    },
+    "FieldArms1Line": {
+      "triangles": 485,
+      "vertices": 401
+    },
+    "FieldArms1Rank": {
+      "triangles": 170,
+      "vertices": 236
+    },
+    "FieldArms3Close": {
+      "triangles": 1652,
+      "vertices": 1054
+    },
+    "FieldArms3Line": {
+      "triangles": 508,
+      "vertices": 472
+    },
+    "FieldArms3Rank": {
+      "triangles": 194,
+      "vertices": 308
+    },
+    "FieldArms7Close": {
+      "triangles": 1738,
+      "vertices": 1312
+    },
+    "FieldArms7Line": {
+      "triangles": 595,
+      "vertices": 731
+    },
+    "FieldArms7Rank": {
+      "triangles": 280,
+      "vertices": 566
+    },
+    "FieldArms8Close": {
+      "triangles": 1906,
+      "vertices": 1816
+    },
+    "FieldArms8Line": {
+      "triangles": 762,
+      "vertices": 1234
+    },
+    "FieldArms8Rank": {
+      "triangles": 448,
+      "vertices": 1070
+    },
+    "GarrisonShield": {
+      "triangles": 129,
+      "vertices": 387
+    }
+  },
+  "assembled": [
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 0,
+      "body_triangles": 12057,
+      "held_triangles": 1738,
+      "total_triangles": 13795,
+      "total_vertices": 7900
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 1,
+      "body_triangles": 12057,
+      "held_triangles": 1628,
+      "total_triangles": 13685,
+      "total_vertices": 7570
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 2,
+      "body_triangles": 12057,
+      "held_triangles": 1790,
+      "total_triangles": 13847,
+      "total_vertices": 7624
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 3,
+      "body_triangles": 12057,
+      "held_triangles": 1652,
+      "total_triangles": 13709,
+      "total_vertices": 7642
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 4,
+      "body_triangles": 12057,
+      "held_triangles": 1848,
+      "total_triangles": 13905,
+      "total_vertices": 7724
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 5,
+      "body_triangles": 12057,
+      "held_triangles": 1920,
+      "total_triangles": 13977,
+      "total_vertices": 7686
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 6,
+      "body_triangles": 12057,
+      "held_triangles": 1876,
+      "total_triangles": 13933,
+      "total_vertices": 7646
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 7,
+      "body_triangles": 12057,
+      "held_triangles": 1867,
+      "total_triangles": 13924,
+      "total_vertices": 8287
+    },
+    {
+      "role": "Levy",
+      "tier": "Close",
+      "kit": 8,
+      "body_triangles": 12057,
+      "held_triangles": 1906,
+      "total_triangles": 13963,
+      "total_vertices": 8404
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 0,
+      "body_triangles": 6894,
+      "held_triangles": 595,
+      "total_triangles": 7489,
+      "total_vertices": 4701
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 1,
+      "body_triangles": 6894,
+      "held_triangles": 485,
+      "total_triangles": 7379,
+      "total_vertices": 4371
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 2,
+      "body_triangles": 6894,
+      "held_triangles": 432,
+      "total_triangles": 7326,
+      "total_vertices": 4204
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 3,
+      "body_triangles": 6894,
+      "held_triangles": 508,
+      "total_triangles": 7402,
+      "total_vertices": 4442
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 4,
+      "body_triangles": 6894,
+      "held_triangles": 448,
+      "total_triangles": 7342,
+      "total_vertices": 4236
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 5,
+      "body_triangles": 6894,
+      "held_triangles": 512,
+      "total_triangles": 7406,
+      "total_vertices": 4284
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 6,
+      "body_triangles": 6894,
+      "held_triangles": 456,
+      "total_triangles": 7350,
+      "total_vertices": 4236
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 7,
+      "body_triangles": 6894,
+      "held_triangles": 724,
+      "total_triangles": 7618,
+      "total_vertices": 5088
+    },
+    {
+      "role": "Levy",
+      "tier": "Line",
+      "kit": 8,
+      "body_triangles": 6894,
+      "held_triangles": 762,
+      "total_triangles": 7656,
+      "total_vertices": 5204
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 0,
+      "body_triangles": 1959,
+      "held_triangles": 280,
+      "total_triangles": 2239,
+      "total_vertices": 1838
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 1,
+      "body_triangles": 1959,
+      "held_triangles": 170,
+      "total_triangles": 2129,
+      "total_vertices": 1508
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 2,
+      "body_triangles": 1959,
+      "held_triangles": 118,
+      "total_triangles": 2077,
+      "total_vertices": 1342
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 3,
+      "body_triangles": 1959,
+      "held_triangles": 194,
+      "total_triangles": 2153,
+      "total_vertices": 1580
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 4,
+      "body_triangles": 1959,
+      "held_triangles": 134,
+      "total_triangles": 2093,
+      "total_vertices": 1374
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 5,
+      "body_triangles": 1959,
+      "held_triangles": 195,
+      "total_triangles": 2154,
+      "total_vertices": 1420
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 6,
+      "body_triangles": 1959,
+      "held_triangles": 142,
+      "total_triangles": 2101,
+      "total_vertices": 1374
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 7,
+      "body_triangles": 1959,
+      "held_triangles": 409,
+      "total_triangles": 2368,
+      "total_vertices": 2225
+    },
+    {
+      "role": "Levy",
+      "tier": "Rank",
+      "kit": 8,
+      "body_triangles": 1959,
+      "held_triangles": 448,
+      "total_triangles": 2407,
+      "total_vertices": 2342
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 0,
+      "body_triangles": 12267,
+      "held_triangles": 1738,
+      "total_triangles": 14005,
+      "total_vertices": 8053
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 1,
+      "body_triangles": 12267,
+      "held_triangles": 1628,
+      "total_triangles": 13895,
+      "total_vertices": 7723
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 2,
+      "body_triangles": 12267,
+      "held_triangles": 1790,
+      "total_triangles": 14057,
+      "total_vertices": 7777
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 3,
+      "body_triangles": 12267,
+      "held_triangles": 1652,
+      "total_triangles": 13919,
+      "total_vertices": 7795
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 4,
+      "body_triangles": 12267,
+      "held_triangles": 1848,
+      "total_triangles": 14115,
+      "total_vertices": 7877
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 5,
+      "body_triangles": 12267,
+      "held_triangles": 1920,
+      "total_triangles": 14187,
+      "total_vertices": 7839
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 6,
+      "body_triangles": 12267,
+      "held_triangles": 1876,
+      "total_triangles": 14143,
+      "total_vertices": 7799
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 7,
+      "body_triangles": 12267,
+      "held_triangles": 1867,
+      "total_triangles": 14134,
+      "total_vertices": 8440
+    },
+    {
+      "role": "Regular",
+      "tier": "Close",
+      "kit": 8,
+      "body_triangles": 12267,
+      "held_triangles": 1906,
+      "total_triangles": 14173,
+      "total_vertices": 8557
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 0,
+      "body_triangles": 7111,
+      "held_triangles": 595,
+      "total_triangles": 7706,
+      "total_vertices": 4854
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 1,
+      "body_triangles": 7111,
+      "held_triangles": 485,
+      "total_triangles": 7596,
+      "total_vertices": 4524
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 2,
+      "body_triangles": 7111,
+      "held_triangles": 432,
+      "total_triangles": 7543,
+      "total_vertices": 4357
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 3,
+      "body_triangles": 7111,
+      "held_triangles": 508,
+      "total_triangles": 7619,
+      "total_vertices": 4595
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 4,
+      "body_triangles": 7111,
+      "held_triangles": 448,
+      "total_triangles": 7559,
+      "total_vertices": 4389
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 5,
+      "body_triangles": 7111,
+      "held_triangles": 512,
+      "total_triangles": 7623,
+      "total_vertices": 4437
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 6,
+      "body_triangles": 7111,
+      "held_triangles": 456,
+      "total_triangles": 7567,
+      "total_vertices": 4389
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 7,
+      "body_triangles": 7111,
+      "held_triangles": 724,
+      "total_triangles": 7835,
+      "total_vertices": 5241
+    },
+    {
+      "role": "Regular",
+      "tier": "Line",
+      "kit": 8,
+      "body_triangles": 7111,
+      "held_triangles": 762,
+      "total_triangles": 7873,
+      "total_vertices": 5357
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 0,
+      "body_triangles": 2044,
+      "held_triangles": 280,
+      "total_triangles": 2324,
+      "total_vertices": 1905
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 1,
+      "body_triangles": 2044,
+      "held_triangles": 170,
+      "total_triangles": 2214,
+      "total_vertices": 1575
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 2,
+      "body_triangles": 2044,
+      "held_triangles": 118,
+      "total_triangles": 2162,
+      "total_vertices": 1409
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 3,
+      "body_triangles": 2044,
+      "held_triangles": 194,
+      "total_triangles": 2238,
+      "total_vertices": 1647
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 4,
+      "body_triangles": 2044,
+      "held_triangles": 134,
+      "total_triangles": 2178,
+      "total_vertices": 1441
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 5,
+      "body_triangles": 2044,
+      "held_triangles": 195,
+      "total_triangles": 2239,
+      "total_vertices": 1487
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 6,
+      "body_triangles": 2044,
+      "held_triangles": 142,
+      "total_triangles": 2186,
+      "total_vertices": 1441
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 7,
+      "body_triangles": 2044,
+      "held_triangles": 409,
+      "total_triangles": 2453,
+      "total_vertices": 2292
+    },
+    {
+      "role": "Regular",
+      "tier": "Rank",
+      "kit": 8,
+      "body_triangles": 2044,
+      "held_triangles": 448,
+      "total_triangles": 2492,
+      "total_vertices": 2409
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 0,
+      "body_triangles": 12057,
+      "held_triangles": 1738,
+      "total_triangles": 13795,
+      "total_vertices": 7900
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 1,
+      "body_triangles": 12057,
+      "held_triangles": 1628,
+      "total_triangles": 13685,
+      "total_vertices": 7570
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 2,
+      "body_triangles": 12057,
+      "held_triangles": 1790,
+      "total_triangles": 13847,
+      "total_vertices": 7624
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 3,
+      "body_triangles": 12057,
+      "held_triangles": 1652,
+      "total_triangles": 13709,
+      "total_vertices": 7642
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 4,
+      "body_triangles": 12057,
+      "held_triangles": 1848,
+      "total_triangles": 13905,
+      "total_vertices": 7724
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 5,
+      "body_triangles": 12057,
+      "held_triangles": 1920,
+      "total_triangles": 13977,
+      "total_vertices": 7686
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 6,
+      "body_triangles": 12057,
+      "held_triangles": 1876,
+      "total_triangles": 13933,
+      "total_vertices": 7646
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 7,
+      "body_triangles": 12057,
+      "held_triangles": 1867,
+      "total_triangles": 13924,
+      "total_vertices": 8287
+    },
+    {
+      "role": "Archer",
+      "tier": "Close",
+      "kit": 8,
+      "body_triangles": 12057,
+      "held_triangles": 1906,
+      "total_triangles": 13963,
+      "total_vertices": 8404
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 0,
+      "body_triangles": 6894,
+      "held_triangles": 595,
+      "total_triangles": 7489,
+      "total_vertices": 4701
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 1,
+      "body_triangles": 6894,
+      "held_triangles": 485,
+      "total_triangles": 7379,
+      "total_vertices": 4371
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 2,
+      "body_triangles": 6894,
+      "held_triangles": 432,
+      "total_triangles": 7326,
+      "total_vertices": 4204
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 3,
+      "body_triangles": 6894,
+      "held_triangles": 508,
+      "total_triangles": 7402,
+      "total_vertices": 4442
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 4,
+      "body_triangles": 6894,
+      "held_triangles": 448,
+      "total_triangles": 7342,
+      "total_vertices": 4236
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 5,
+      "body_triangles": 6894,
+      "held_triangles": 512,
+      "total_triangles": 7406,
+      "total_vertices": 4284
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 6,
+      "body_triangles": 6894,
+      "held_triangles": 456,
+      "total_triangles": 7350,
+      "total_vertices": 4236
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 7,
+      "body_triangles": 6894,
+      "held_triangles": 724,
+      "total_triangles": 7618,
+      "total_vertices": 5088
+    },
+    {
+      "role": "Archer",
+      "tier": "Line",
+      "kit": 8,
+      "body_triangles": 6894,
+      "held_triangles": 762,
+      "total_triangles": 7656,
+      "total_vertices": 5204
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 0,
+      "body_triangles": 1959,
+      "held_triangles": 280,
+      "total_triangles": 2239,
+      "total_vertices": 1838
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 1,
+      "body_triangles": 1959,
+      "held_triangles": 170,
+      "total_triangles": 2129,
+      "total_vertices": 1508
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 2,
+      "body_triangles": 1959,
+      "held_triangles": 118,
+      "total_triangles": 2077,
+      "total_vertices": 1342
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 3,
+      "body_triangles": 1959,
+      "held_triangles": 194,
+      "total_triangles": 2153,
+      "total_vertices": 1580
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 4,
+      "body_triangles": 1959,
+      "held_triangles": 134,
+      "total_triangles": 2093,
+      "total_vertices": 1374
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 5,
+      "body_triangles": 1959,
+      "held_triangles": 195,
+      "total_triangles": 2154,
+      "total_vertices": 1420
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 6,
+      "body_triangles": 1959,
+      "held_triangles": 142,
+      "total_triangles": 2101,
+      "total_vertices": 1374
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 7,
+      "body_triangles": 1959,
+      "held_triangles": 409,
+      "total_triangles": 2368,
+      "total_vertices": 2225
+    },
+    {
+      "role": "Archer",
+      "tier": "Rank",
+      "kit": 8,
+      "body_triangles": 1959,
+      "held_triangles": 448,
+      "total_triangles": 2407,
+      "total_vertices": 2342
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 0,
+      "body_triangles": 12407,
+      "held_triangles": 1738,
+      "total_triangles": 14145,
+      "total_vertices": 8114
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 1,
+      "body_triangles": 12407,
+      "held_triangles": 1628,
+      "total_triangles": 14035,
+      "total_vertices": 7784
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 2,
+      "body_triangles": 12407,
+      "held_triangles": 1790,
+      "total_triangles": 14197,
+      "total_vertices": 7838
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 3,
+      "body_triangles": 12407,
+      "held_triangles": 1652,
+      "total_triangles": 14059,
+      "total_vertices": 7856
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 4,
+      "body_triangles": 12407,
+      "held_triangles": 1848,
+      "total_triangles": 14255,
+      "total_vertices": 7938
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 5,
+      "body_triangles": 12407,
+      "held_triangles": 1920,
+      "total_triangles": 14327,
+      "total_vertices": 7900
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 6,
+      "body_triangles": 12407,
+      "held_triangles": 1876,
+      "total_triangles": 14283,
+      "total_vertices": 7860
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 7,
+      "body_triangles": 12407,
+      "held_triangles": 1867,
+      "total_triangles": 14274,
+      "total_vertices": 8501
+    },
+    {
+      "role": "Guard",
+      "tier": "Close",
+      "kit": 8,
+      "body_triangles": 12407,
+      "held_triangles": 1906,
+      "total_triangles": 14313,
+      "total_vertices": 8618
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 0,
+      "body_triangles": 7251,
+      "held_triangles": 595,
+      "total_triangles": 7846,
+      "total_vertices": 4915
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 1,
+      "body_triangles": 7251,
+      "held_triangles": 485,
+      "total_triangles": 7736,
+      "total_vertices": 4585
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 2,
+      "body_triangles": 7251,
+      "held_triangles": 432,
+      "total_triangles": 7683,
+      "total_vertices": 4418
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 3,
+      "body_triangles": 7251,
+      "held_triangles": 508,
+      "total_triangles": 7759,
+      "total_vertices": 4656
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 4,
+      "body_triangles": 7251,
+      "held_triangles": 448,
+      "total_triangles": 7699,
+      "total_vertices": 4450
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 5,
+      "body_triangles": 7251,
+      "held_triangles": 512,
+      "total_triangles": 7763,
+      "total_vertices": 4498
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 6,
+      "body_triangles": 7251,
+      "held_triangles": 456,
+      "total_triangles": 7707,
+      "total_vertices": 4450
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 7,
+      "body_triangles": 7251,
+      "held_triangles": 724,
+      "total_triangles": 7975,
+      "total_vertices": 5302
+    },
+    {
+      "role": "Guard",
+      "tier": "Line",
+      "kit": 8,
+      "body_triangles": 7251,
+      "held_triangles": 762,
+      "total_triangles": 8013,
+      "total_vertices": 5418
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 0,
+      "body_triangles": 2184,
+      "held_triangles": 280,
+      "total_triangles": 2464,
+      "total_vertices": 1966
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 1,
+      "body_triangles": 2184,
+      "held_triangles": 170,
+      "total_triangles": 2354,
+      "total_vertices": 1636
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 2,
+      "body_triangles": 2184,
+      "held_triangles": 118,
+      "total_triangles": 2302,
+      "total_vertices": 1470
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 3,
+      "body_triangles": 2184,
+      "held_triangles": 194,
+      "total_triangles": 2378,
+      "total_vertices": 1708
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 4,
+      "body_triangles": 2184,
+      "held_triangles": 134,
+      "total_triangles": 2318,
+      "total_vertices": 1502
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 5,
+      "body_triangles": 2184,
+      "held_triangles": 195,
+      "total_triangles": 2379,
+      "total_vertices": 1548
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 6,
+      "body_triangles": 2184,
+      "held_triangles": 142,
+      "total_triangles": 2326,
+      "total_vertices": 1502
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 7,
+      "body_triangles": 2184,
+      "held_triangles": 409,
+      "total_triangles": 2593,
+      "total_vertices": 2353
+    },
+    {
+      "role": "Guard",
+      "tier": "Rank",
+      "kit": 8,
+      "body_triangles": 2184,
+      "held_triangles": 448,
+      "total_triangles": 2632,
+      "total_vertices": 2470
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 0,
+      "body_triangles": 12515,
+      "held_triangles": 1738,
+      "total_triangles": 14253,
+      "total_vertices": 8204
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 1,
+      "body_triangles": 12515,
+      "held_triangles": 1628,
+      "total_triangles": 14143,
+      "total_vertices": 7874
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 2,
+      "body_triangles": 12515,
+      "held_triangles": 1790,
+      "total_triangles": 14305,
+      "total_vertices": 7928
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 3,
+      "body_triangles": 12515,
+      "held_triangles": 1652,
+      "total_triangles": 14167,
+      "total_vertices": 7946
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 4,
+      "body_triangles": 12515,
+      "held_triangles": 1848,
+      "total_triangles": 14363,
+      "total_vertices": 8028
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 5,
+      "body_triangles": 12515,
+      "held_triangles": 1920,
+      "total_triangles": 14435,
+      "total_vertices": 7990
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 6,
+      "body_triangles": 12515,
+      "held_triangles": 1876,
+      "total_triangles": 14391,
+      "total_vertices": 7950
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 7,
+      "body_triangles": 12515,
+      "held_triangles": 1867,
+      "total_triangles": 14382,
+      "total_vertices": 8591
+    },
+    {
+      "role": "Officer",
+      "tier": "Close",
+      "kit": 8,
+      "body_triangles": 12515,
+      "held_triangles": 1906,
+      "total_triangles": 14421,
+      "total_vertices": 8708
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 0,
+      "body_triangles": 7359,
+      "held_triangles": 595,
+      "total_triangles": 7954,
+      "total_vertices": 5005
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 1,
+      "body_triangles": 7359,
+      "held_triangles": 485,
+      "total_triangles": 7844,
+      "total_vertices": 4675
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 2,
+      "body_triangles": 7359,
+      "held_triangles": 432,
+      "total_triangles": 7791,
+      "total_vertices": 4508
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 3,
+      "body_triangles": 7359,
+      "held_triangles": 508,
+      "total_triangles": 7867,
+      "total_vertices": 4746
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 4,
+      "body_triangles": 7359,
+      "held_triangles": 448,
+      "total_triangles": 7807,
+      "total_vertices": 4540
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 5,
+      "body_triangles": 7359,
+      "held_triangles": 512,
+      "total_triangles": 7871,
+      "total_vertices": 4588
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 6,
+      "body_triangles": 7359,
+      "held_triangles": 456,
+      "total_triangles": 7815,
+      "total_vertices": 4540
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 7,
+      "body_triangles": 7359,
+      "held_triangles": 724,
+      "total_triangles": 8083,
+      "total_vertices": 5392
+    },
+    {
+      "role": "Officer",
+      "tier": "Line",
+      "kit": 8,
+      "body_triangles": 7359,
+      "held_triangles": 762,
+      "total_triangles": 8121,
+      "total_vertices": 5508
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 0,
+      "body_triangles": 2292,
+      "held_triangles": 280,
+      "total_triangles": 2572,
+      "total_vertices": 2056
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 1,
+      "body_triangles": 2292,
+      "held_triangles": 170,
+      "total_triangles": 2462,
+      "total_vertices": 1726
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 2,
+      "body_triangles": 2292,
+      "held_triangles": 118,
+      "total_triangles": 2410,
+      "total_vertices": 1560
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 3,
+      "body_triangles": 2292,
+      "held_triangles": 194,
+      "total_triangles": 2486,
+      "total_vertices": 1798
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 4,
+      "body_triangles": 2292,
+      "held_triangles": 134,
+      "total_triangles": 2426,
+      "total_vertices": 1592
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 5,
+      "body_triangles": 2292,
+      "held_triangles": 195,
+      "total_triangles": 2487,
+      "total_vertices": 1638
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 6,
+      "body_triangles": 2292,
+      "held_triangles": 142,
+      "total_triangles": 2434,
+      "total_vertices": 1592
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 7,
+      "body_triangles": 2292,
+      "held_triangles": 409,
+      "total_triangles": 2701,
+      "total_vertices": 2443
+    },
+    {
+      "role": "Officer",
+      "tier": "Rank",
+      "kit": 8,
+      "body_triangles": 2292,
+      "held_triangles": 448,
+      "total_triangles": 2740,
+      "total_vertices": 2560
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 0,
+      "body_triangles": 12669,
+      "held_triangles": 1738,
+      "total_triangles": 14407,
+      "total_vertices": 8308
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 1,
+      "body_triangles": 12669,
+      "held_triangles": 1628,
+      "total_triangles": 14297,
+      "total_vertices": 7978
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 2,
+      "body_triangles": 12669,
+      "held_triangles": 1790,
+      "total_triangles": 14459,
+      "total_vertices": 8032
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 3,
+      "body_triangles": 12669,
+      "held_triangles": 1652,
+      "total_triangles": 14321,
+      "total_vertices": 8050
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 4,
+      "body_triangles": 12669,
+      "held_triangles": 1848,
+      "total_triangles": 14517,
+      "total_vertices": 8132
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 5,
+      "body_triangles": 12669,
+      "held_triangles": 1920,
+      "total_triangles": 14589,
+      "total_vertices": 8094
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 6,
+      "body_triangles": 12669,
+      "held_triangles": 1876,
+      "total_triangles": 14545,
+      "total_vertices": 8054
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 7,
+      "body_triangles": 12669,
+      "held_triangles": 1867,
+      "total_triangles": 14536,
+      "total_vertices": 8695
+    },
+    {
+      "role": "Player",
+      "tier": "Close",
+      "kit": 8,
+      "body_triangles": 12669,
+      "held_triangles": 1906,
+      "total_triangles": 14575,
+      "total_vertices": 8812
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 0,
+      "body_triangles": 7457,
+      "held_triangles": 595,
+      "total_triangles": 8052,
+      "total_vertices": 5077
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 1,
+      "body_triangles": 7457,
+      "held_triangles": 485,
+      "total_triangles": 7942,
+      "total_vertices": 4747
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 2,
+      "body_triangles": 7457,
+      "held_triangles": 432,
+      "total_triangles": 7889,
+      "total_vertices": 4580
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 3,
+      "body_triangles": 7457,
+      "held_triangles": 508,
+      "total_triangles": 7965,
+      "total_vertices": 4818
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 4,
+      "body_triangles": 7457,
+      "held_triangles": 448,
+      "total_triangles": 7905,
+      "total_vertices": 4612
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 5,
+      "body_triangles": 7457,
+      "held_triangles": 512,
+      "total_triangles": 7969,
+      "total_vertices": 4660
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 6,
+      "body_triangles": 7457,
+      "held_triangles": 456,
+      "total_triangles": 7913,
+      "total_vertices": 4612
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 7,
+      "body_triangles": 7457,
+      "held_triangles": 724,
+      "total_triangles": 8181,
+      "total_vertices": 5464
+    },
+    {
+      "role": "Player",
+      "tier": "Line",
+      "kit": 8,
+      "body_triangles": 7457,
+      "held_triangles": 762,
+      "total_triangles": 8219,
+      "total_vertices": 5580
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 0,
+      "body_triangles": 2324,
+      "held_triangles": 280,
+      "total_triangles": 2604,
+      "total_vertices": 2086
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 1,
+      "body_triangles": 2324,
+      "held_triangles": 170,
+      "total_triangles": 2494,
+      "total_vertices": 1756
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 2,
+      "body_triangles": 2324,
+      "held_triangles": 118,
+      "total_triangles": 2442,
+      "total_vertices": 1590
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 3,
+      "body_triangles": 2324,
+      "held_triangles": 194,
+      "total_triangles": 2518,
+      "total_vertices": 1828
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 4,
+      "body_triangles": 2324,
+      "held_triangles": 134,
+      "total_triangles": 2458,
+      "total_vertices": 1622
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 5,
+      "body_triangles": 2324,
+      "held_triangles": 195,
+      "total_triangles": 2519,
+      "total_vertices": 1668
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 6,
+      "body_triangles": 2324,
+      "held_triangles": 142,
+      "total_triangles": 2466,
+      "total_vertices": 1622
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 7,
+      "body_triangles": 2324,
+      "held_triangles": 409,
+      "total_triangles": 2733,
+      "total_vertices": 2473
+    },
+    {
+      "role": "Player",
+      "tier": "Rank",
+      "kit": 8,
+      "body_triangles": 2324,
+      "held_triangles": 448,
+      "total_triangles": 2772,
+      "total_vertices": 2590
+    }
+  ]
+}
