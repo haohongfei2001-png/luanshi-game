@@ -1,0 +1,41 @@
+{
+  "source": "/tmp/luanshi_asset_research/whole-environment/sprite-fright/030_0020_A/lib/env/bushes.blend",
+  "collection": "EN-bush.01",
+  "evaluated_triangles": 90484,
+  "evaluated_mesh_instances": 291,
+  "bounds_min": [
+    5.206343173980713,
+    -0.4628925919532776,
+    -0.033544283360242844
+  ],
+  "bounds_max": [
+    6.530125141143799,
+    0.4935971796512604,
+    1.1541693210601807
+  ],
+  "subdivision_render_cap": 1,
+  "geometry_nodes": "RETAINED",
+  "source_materials": "RETAINED",
+  "game_visual": "NOT_RUN",
+  "film_lighting": "NOT_USED",
+  "bake": "DIFFUSE_COLOR_SELECTED_TO_ACTIVE_1024",
+  "bake_samples": 8,
+  "bake_cage_m": 0.002,
+  "bake_max_ray_m": 0.01,
+  "original_uv_layers": [
+    "UVMap"
+  ],
+  "derived_uv_layer": "Luanshi_BakeAtlas",
+  "normal_bake": "NOT_DONE",
+  "transmission_conversion": "NOT_DONE",
+  "runtime_acceptance": "NOT_ACCEPTED",
+  "object_info_random": "realized source identities differ; must review",
+  "material_surfaces": 1,
+  "peak_rss_kib_linux": 690764,
+  "source_blend_sha256": "796571c4ec766c6d27cbb5ef745cb6a2d3970e8420e650a7d29cfac2ff240d91",
+  "outputs_sha256": {
+    "derived-bush01-NOT-GAME.png": "a878bf3bceb488ad97d2ac4f736043d96f4f85a7a441f82e585e5f543e6f88ab",
+    "derived-bush01.glb": "17291da6b4c1b499d319c4bf6365855548a0bbf915b8da99f0decec97edc49cd",
+    "source-diffuse-atlas.png": "303848875cd11bc84dfa608f524b13641751a219300bce61dadc6bcab2d05155"
+  }
+}

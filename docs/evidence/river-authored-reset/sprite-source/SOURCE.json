@@ -1,0 +1,21 @@
+{
+  "source_url": "https://download.blender.org/demo/sprite_fright_030_0020_A.zip",
+  "archive_bytes": 254374945,
+  "archive_sha256": "21ee25dfffc76030770b644de5fe897559aead064b384fba77166b71a9337791",
+  "license": "CC-BY-4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "Sprite Fright production environment assets, Blender Studio / Blender Foundation. No endorsement implied.",
+  "native_source_mutated": false,
+  "source_files": {
+    "readme.txt": "bb9ec06665f09eb7b6c3a86b02d3ac9f8ae16e6d8e5ce681e561fc3cb273d8cd",
+    "lib/env/bushes.blend": "796571c4ec766c6d27cbb5ef745cb6a2d3970e8420e650a7d29cfac2ff240d91",
+    "lib/sets/sprite_village/sprite_village.blend": "870b477e87abcf0b28ac11c766097ff5e64575477475354410c5d71469dc6f6c"
+  },
+  "actual_modifications": [
+    "isolated original author collection",
+    "derivative evaluation with explicit subdivision cap 1",
+    "selected-to-active diffuse atlas conversion experiment",
+    "new bake UV layer; source UVs preserved"
+  ],
+  "acceptance": "NOT_ACCEPTED"
+}
