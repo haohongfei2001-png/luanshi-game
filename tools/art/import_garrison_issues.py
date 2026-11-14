@@ -333,6 +333,8 @@ def main():
         atlas.paste(cloth(texture,look),(264*(slot%2),264*(slot//2)))
         print("WILDFIRE_GARMENT",look,len(s.faces),len(s.positions))
     library.save(OUTPUT/"field_issues.glb")
+    from fit_field_shield import lacquer_tile
+    atlas.paste(lacquer_tile(cache),(264,264))
     atlas.save(OUTPUT/"field_colours.png")
     bodies.save(ROOT/"assets/river_gate/figures/garrison_bodies.glb")
 if __name__=="__main__":

@@ -17,6 +17,7 @@ func _initialize() -> void:
 	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_willow/NOTICE.txt") + "\n\n"
 	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_headwear/NOTICE.txt") + "\n\n"
 	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_bridge/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_shields/NOTICE.txt") + "\n\n"
 	text += "Terrain textures adapted from Poly Haven scans under CC0 1.0 Universal.\n"
 	text += "Sparse Grass by Amal Kumar. https://polyhaven.com/a/sparse_grass\n"
 	text += "Brown Mud Dry by Rob Tuytel. https://polyhaven.com/a/brown_mud_dry\n"

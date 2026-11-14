@@ -16,7 +16,6 @@ varying flat float cloth_lot;
 varying flat float fallen;
 varying float sewn_shadow;
 varying flat int cloth_panel;
-varying vec2 shield_face;
 varying vec3 bind_point;
 
 vec3 rotated(vec4 q, vec3 v) {
@@ -154,9 +153,6 @@ void vertex() {
         nrm=mix(nrm,step_nrm,leg_weight);
     }
 
-    // Shield panels have separate UV islands. A single bind-space band crosses their seams
-    // and follows the left hand through a block or bash.
-    shield_face=(VERTEX.xy-vec2(-.273,.976))/vec2(.568,1.005);
     bool cape=swatch.y==2 && (swatch.x==3 || swatch.x==7);
     if (cape) {
         // Folded at the shoulder fastening, free at the two tails. The hem lags
@@ -193,17 +189,17 @@ void vertex() {
         if (cloth_lot>.72) UV+=vec2(.125,.25);
         else if (cloth_lot>.31) UV.y+=.25;
     }
-    cloth_panel=UV.x>=2.0 ? 32 : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0));
+    cloth_panel=UV.x>=3.0 ? 33 : (UV.x>=2.0 ? 32 : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0)));
     flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
 void fragment() {
-    vec4 swatch = cloth_panel==32 ? texture(issue_atlas, UV-vec2(2.0,0.0)) : texture(cloth_atlas, UV);
+    vec4 swatch = cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV);
     vec3 ink = swatch.rgb;
     // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
     // their own values even where soldiers overlap in the default orthographic view.
     float dye = 0.0;
-    if (cloth_panel==32) dye=swatch.a;
+    if (cloth_panel>=32) dye=swatch.a;
     else if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = .96;
     else if (cloth_panel == 22) dye = .82;
     else if (cloth_panel == 26) dye = .66;
@@ -307,15 +303,6 @@ void fragment() {
         float tuck=abs(cloth_uv.x-.20-.44*cloth_uv.y);
         float crease=(1.-smoothstep(.018,.12,tuck))*smoothstep(.12,.56,cloth_uv.y);
         colour*=1.-crease*.15;
-    }
-    if (cloth_panel == 13) {
-        // Lacquer sits in two broad fields on either side of an exposed timber rib.
-        // Bind-space coordinates run continuously over the curved planks.
-        float panel_edge=abs(shield_face.x)+.22*shield_face.y;
-        float width=clamp(fwidth(panel_edge),.006,.044);
-        float paint=smoothstep(.10-width,.10+width,panel_edge)*
-                    (1.-smoothstep(.40-width,.40+width,panel_edge));
-        colour=mix(colour,bolt*.88,.83*paint);
     }
     float silhouette = 1.0 - smoothstep(.045, .30, abs(dot(normalize(NORMAL), normalize(VIEW))));
     colour *= (1.0 - .105 * silhouette) * (1.0 - .42 * sewn_shadow);
