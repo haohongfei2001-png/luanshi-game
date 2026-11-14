@@ -13,22 +13,38 @@
   },
   "bounds_blender": [
     [
-      -2.3448076248168945,
-      -2.2349395751953125,
-      -0.020327899605035782
+      -2.3444457054138184,
+      -2.2341415882110596,
+      -0.019878048449754715
     ],
     [
-      2.410985231399536,
-      2.5837721824645996,
-      5.007343292236328
+      2.4107038974761963,
+      2.583538055419922,
+      5.0071187019348145
     ]
   ],
+  "foliage": [
+    {
+      "object": "island_tree_01_LOD0.002",
+      "source_triangles": 1060032,
+      "game_triangles": 1018918,
+      "policy": "Planar internal edges only. Native leaf boundaries and UV seams retained."
+    }
+  ],
   "source_triangles": 1599403,
-  "game_triangles": 220000,
+  "game_triangles": 1093107,
   "objects": [
     {
       "name": "island_tree_01_LOD0",
-      "triangles": 220000
+      "triangles": 69406
+    },
+    {
+      "name": "island_tree_01_LOD0.001",
+      "triangles": 4783
+    },
+    {
+      "name": "island_tree_01_LOD0.002",
+      "triangles": 1018918
     }
   ]
 }
