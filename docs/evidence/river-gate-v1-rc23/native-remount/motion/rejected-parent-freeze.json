@@ -1,0 +1,157 @@
+{
+  "bind_residual": 2.4495430750448577e-06,
+  "authored_joint_count": 51,
+  "clips": [
+    "walk",
+    "trot"
+  ],
+  "meshes": {
+    "Close": {
+      "triangles": 7084,
+      "vertices": 3965
+    },
+    "Rank": {
+      "triangles": 1942,
+      "vertices": 1222
+    }
+  },
+  "hooves": {
+    "Close1": {
+      "low_y": 0.058696483703545105,
+      "high_y": 0.23581667382452734,
+      "fore_aft": 0.7168774500940446,
+      "walk": {
+        "supported_samples": 11,
+        "local_support_metres_per_cycle": 0.8598942831184857,
+        "world_drift_at_four_metres_per_second": 2.058833273966682,
+        "lowest_surface_y": 0.01566295870328554
+      },
+      "trot": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 1.3344610804960269,
+        "world_drift_at_four_metres_per_second": 1.5957631583298673,
+        "lowest_surface_y": 0.031266495568284695
+      }
+    },
+    "Close2": {
+      "low_y": 0.05803231491408702,
+      "high_y": 0.23550872494052455,
+      "fore_aft": 0.6787367032885359,
+      "walk": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 0.5354468867796065,
+        "world_drift_at_four_metres_per_second": 2.4724020823098414,
+        "lowest_surface_y": 0.014847700526881918
+      },
+      "trot": {
+        "supported_samples": 9,
+        "local_support_metres_per_cycle": 1.2425674932641524,
+        "world_drift_at_four_metres_per_second": 1.03922118863549,
+        "lowest_surface_y": 0.03121654271874254
+      }
+    },
+    "Close3": {
+      "low_y": 0.067861678689888,
+      "high_y": 0.25641700080625773,
+      "fore_aft": 0.9095398171668724,
+      "walk": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 1.6488112629081506,
+        "world_drift_at_four_metres_per_second": 1.1481238756432317,
+        "lowest_surface_y": 0.04279722338817171
+      },
+      "trot": {
+        "supported_samples": 5,
+        "local_support_metres_per_cycle": 1.8880156783476174,
+        "world_drift_at_four_metres_per_second": 2.7195951994596457,
+        "lowest_surface_y": 0.028412665354836157
+      }
+    },
+    "Close4": {
+      "low_y": 0.06809809010680999,
+      "high_y": 0.25641741302351795,
+      "fore_aft": 0.9017053116807132,
+      "walk": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 1.5849706204090053,
+        "world_drift_at_four_metres_per_second": 0.947621892002512,
+        "lowest_surface_y": 0.04285905094851317
+      },
+      "trot": {
+        "supported_samples": 5,
+        "local_support_metres_per_cycle": 2.045968620924522,
+        "world_drift_at_four_metres_per_second": 3.1860820715830567,
+        "lowest_surface_y": 0.028678332420092177
+      }
+    },
+    "Rank1": {
+      "low_y": 0.05688563632933447,
+      "high_y": 0.2368082845634721,
+      "fore_aft": 0.7196759396290096,
+      "walk": {
+        "supported_samples": 11,
+        "local_support_metres_per_cycle": 0.8630873717342737,
+        "world_drift_at_four_metres_per_second": 2.0533188421775512,
+        "lowest_surface_y": 0.013010055384456133
+      },
+      "trot": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 1.343029000571267,
+        "world_drift_at_four_metres_per_second": 1.6001905784164814,
+        "lowest_surface_y": 0.017204121576799764
+      }
+    },
+    "Rank2": {
+      "low_y": 0.05621539625335379,
+      "high_y": 0.23650028016388117,
+      "fore_aft": 0.6815270018604932,
+      "walk": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 0.5353206986644921,
+        "world_drift_at_four_metres_per_second": 2.466987377780377,
+        "lowest_surface_y": 0.012
+      },
+      "trot": {
+        "supported_samples": 9,
+        "local_support_metres_per_cycle": 1.2306302413391261,
+        "world_drift_at_four_metres_per_second": 1.0526060310701706,
+        "lowest_surface_y": 0.01714809731150644
+      }
+    },
+    "Rank3": {
+      "low_y": 0.06694223667477077,
+      "high_y": 0.2574352292786914,
+      "fore_aft": 0.9101360415394041,
+      "walk": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 1.6533812181576057,
+        "world_drift_at_four_metres_per_second": 1.149063357718443,
+        "lowest_surface_y": 0.025318553798587842
+      },
+      "trot": {
+        "supported_samples": 5,
+        "local_support_metres_per_cycle": 1.8881171197640274,
+        "world_drift_at_four_metres_per_second": 2.7185907063551285,
+        "lowest_surface_y": 0.027486163316113484
+      }
+    },
+    "Rank4": {
+      "low_y": 0.0671793868977482,
+      "high_y": 0.25743565026475296,
+      "fore_aft": 0.9023588858091329,
+      "walk": {
+        "supported_samples": 12,
+        "local_support_metres_per_cycle": 1.584960742214335,
+        "world_drift_at_four_metres_per_second": 0.9505717179365075,
+        "lowest_surface_y": 0.025286695817585216
+      },
+      "trot": {
+        "supported_samples": 5,
+        "local_support_metres_per_cycle": 2.0460862352036857,
+        "world_drift_at_four_metres_per_second": 3.185221369675006,
+        "lowest_surface_y": 0.027751686553021022
+      }
+    }
+  },
+  "vertex_rows": 4645
+}

@@ -1,0 +1,2 @@
+8ed594627bb136a0e01d66f1197e0c5dfc9f499a97384066792b472366b51223  docs/evidence/river-gate-v1-rc23/native-remount/motion/before-close.mp4
+b1206d84820402767c22775697c770a3eaea1ab56f25828b7b9c5e12abaafe23  docs/evidence/river-gate-v1-rc23/native-remount/motion/before-normal.mp4

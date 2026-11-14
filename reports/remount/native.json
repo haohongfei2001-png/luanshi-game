@@ -1,6 +1,7 @@
 {
   "bind_residual": 2.4495430750448577e-06,
   "authored_joint_count": 51,
+  "saddle_registration": "full native parent hierarchy registered to bind prop_saddle",
   "clips": [
     "walk",
     "trot"
@@ -17,44 +18,140 @@
   },
   "hooves": {
     "Close1": {
-      "low_y": 0.058696483703545105,
-      "high_y": 0.23581667382452734,
-      "fore_aft": 0.7168774500940446
+      "low_y": 0.056513173325052235,
+      "high_y": 0.25441137123971064,
+      "fore_aft": 0.7437709095018121,
+      "walk": {
+        "supported_samples": 6,
+        "local_support_metres_per_cycle": 0.9165638623532084,
+        "world_drift_at_four_metres_per_second": 1.5304949395697531,
+        "lowest_surface_y": 0.01914205350985797
+      },
+      "trot": {
+        "supported_samples": 13,
+        "local_support_metres_per_cycle": 1.1306090229856274,
+        "world_drift_at_four_metres_per_second": 1.7274698529867034,
+        "lowest_surface_y": 0.014883876167850245
+      }
     },
     "Close2": {
-      "low_y": 0.05803231491408702,
-      "high_y": 0.23550872494052455,
-      "fore_aft": 0.6787367032885359
+      "low_y": 0.06071378003622099,
+      "high_y": 0.2543364951690022,
+      "fore_aft": 0.7456233412372719,
+      "walk": {
+        "supported_samples": 6,
+        "local_support_metres_per_cycle": 0.5435858158808857,
+        "world_drift_at_four_metres_per_second": 2.446979455029871,
+        "lowest_surface_y": 0.018056328486157354
+      },
+      "trot": {
+        "supported_samples": 14,
+        "local_support_metres_per_cycle": 0.9739647567329026,
+        "world_drift_at_four_metres_per_second": 1.6295193005661759,
+        "lowest_surface_y": 0.02211144881744103
+      }
     },
     "Close3": {
-      "low_y": 0.067861678689888,
-      "high_y": 0.25641700080625773,
-      "fore_aft": 0.9095398171668724
+      "low_y": 0.06837680335486468,
+      "high_y": 0.29018259349624886,
+      "fore_aft": 0.9342806071555554,
+      "walk": {
+        "supported_samples": 19,
+        "local_support_metres_per_cycle": 1.4067158542530578,
+        "world_drift_at_four_metres_per_second": 1.8782096284186607,
+        "lowest_surface_y": 0.04506098974390524
+      },
+      "trot": {
+        "supported_samples": 4,
+        "local_support_metres_per_cycle": 1.8874050740548256,
+        "world_drift_at_four_metres_per_second": 2.910760039839679,
+        "lowest_surface_y": 0.0282933463965904
+      }
     },
     "Close4": {
-      "low_y": 0.06809809010680999,
-      "high_y": 0.25641741302351795,
-      "fore_aft": 0.9017053116807132
+      "low_y": 0.06864349995171178,
+      "high_y": 0.2928403055976376,
+      "fore_aft": 0.9236923163476705,
+      "walk": {
+        "supported_samples": 18,
+        "local_support_metres_per_cycle": 1.3085133194824667,
+        "world_drift_at_four_metres_per_second": 1.9124521688479865,
+        "lowest_surface_y": 0.045660814630502616
+      },
+      "trot": {
+        "supported_samples": 4,
+        "local_support_metres_per_cycle": 2.001194867080539,
+        "world_drift_at_four_metres_per_second": 3.3356469733649585,
+        "lowest_surface_y": 0.028589550645792446
+      }
     },
     "Rank1": {
-      "low_y": 0.05688563632933447,
-      "high_y": 0.2368082845634721,
-      "fore_aft": 0.7196759396290096
+      "low_y": 0.05466795993387152,
+      "high_y": 0.25542762731938584,
+      "fore_aft": 0.7447992252049618,
+      "walk": {
+        "supported_samples": 6,
+        "local_support_metres_per_cycle": 0.937827643919694,
+        "world_drift_at_four_metres_per_second": 1.518139634353497,
+        "lowest_surface_y": 0.017248509921076106
+      },
+      "trot": {
+        "supported_samples": 13,
+        "local_support_metres_per_cycle": 1.1315658669512203,
+        "world_drift_at_four_metres_per_second": 1.7116013319284513,
+        "lowest_surface_y": 0.012
+      }
     },
     "Rank2": {
-      "low_y": 0.05621539625335379,
-      "high_y": 0.23650028016388117,
-      "fore_aft": 0.6815270018604932
+      "low_y": 0.05888474368701541,
+      "high_y": 0.25534834687772706,
+      "fore_aft": 0.7465545324835696,
+      "walk": {
+        "supported_samples": 6,
+        "local_support_metres_per_cycle": 0.5518332076636172,
+        "world_drift_at_four_metres_per_second": 2.4357831083932484,
+        "lowest_surface_y": 0.01613356113839476
+      },
+      "trot": {
+        "supported_samples": 14,
+        "local_support_metres_per_cycle": 0.9740689140151968,
+        "world_drift_at_four_metres_per_second": 1.6304801297387885,
+        "lowest_surface_y": 0.012
+      }
     },
     "Rank3": {
-      "low_y": 0.06694223667477077,
-      "high_y": 0.2574352292786914,
-      "fore_aft": 0.9101360415394041
+      "low_y": 0.067481324059484,
+      "high_y": 0.2911025438261929,
+      "fore_aft": 0.934849458057643,
+      "walk": {
+        "supported_samples": 19,
+        "local_support_metres_per_cycle": 1.4154712747276115,
+        "world_drift_at_four_metres_per_second": 1.880177998150457,
+        "lowest_surface_y": 0.030453034891135957
+      },
+      "trot": {
+        "supported_samples": 4,
+        "local_support_metres_per_cycle": 1.888178096043772,
+        "world_drift_at_four_metres_per_second": 2.910412876899175,
+        "lowest_surface_y": 0.026909241265196844
+      }
     },
     "Rank4": {
-      "low_y": 0.0671793868977482,
-      "high_y": 0.25743565026475296,
-      "fore_aft": 0.9023588858091329
+      "low_y": 0.06774874143947618,
+      "high_y": 0.29381048414907635,
+      "fore_aft": 0.9243100855584694,
+      "walk": {
+        "supported_samples": 18,
+        "local_support_metres_per_cycle": 1.3086796688386473,
+        "world_drift_at_four_metres_per_second": 1.91463944040851,
+        "lowest_surface_y": 0.030818568570952054
+      },
+      "trot": {
+        "supported_samples": 4,
+        "local_support_metres_per_cycle": 2.0019550383885547,
+        "world_drift_at_four_metres_per_second": 3.3354347251508547,
+        "lowest_surface_y": 0.027205906239443783
+      }
     }
   },
   "vertex_rows": 4645
