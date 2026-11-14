@@ -146,10 +146,9 @@ func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: fl
 		if not inland_stands.has(key): inland_stands[key]=[]
 		inland_stands[key].append(placement)
 		return
-	if height>=5.45 and variant==0:
-		# Fit the hanging sprays to the old river-marking trunk and root flares.
-		# Every existing branch, bank and troop landing keeps its position.
-		patch.leaves.append_from(trees[0].wood,0,Transform3D(Basis(Vector3.UP,yaw).scaled(Vector3.ONE*(height/5.63)),ground_point(p)))
+	if variant==0 and height>=4.9:
+		# Plant the complete authored crown and its own connected boughs together.
+		# The original landing, bank route and tree base stay at their surveyed positions.
 		var footing:=ground_point(p)
 		var planted:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*height)
 		patch.leaves.append_from(ford_willow,0,Transform3D(planted,footing))

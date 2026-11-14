@@ -45,21 +45,17 @@ void vertex() {
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>=15.5) {
+	if(crown>=17.9) {
+		vec3 bark=texture(ford_ink,UV).rgb;
+		tone=bark*.73;
+	} else if(crown>=15.5) {
 		vec4 painted=texture(ford_ink,UV);
 		float height=clamp(crown-16.,0.,1.);
-		float y=dot(painted.rgb,vec3(.26,.59,.15));
-		float pigment=OUTPUT_IS_SRGB ? y : sqrt(max(y,0.));
 		vec3 outward=normalize(crown_normal_world);
 		NORMAL=normalize(mat3(VIEW_MATRIX)*outward);
-		float face=clamp(.53+.47*dot(outward,normalize(vec3(-.68,.36,.64))),0.,1.);
-		float grade=.43*height+.49*face+.08*smoothstep(.20,.50,pigment);
-		vec3 low=OUTPUT_IS_SRGB ? vec3(.103,.178,.151) : vec3(.011,.027,.020);
-		vec3 body=OUTPUT_IS_SRGB ? vec3(.190,.280,.194) : vec3(.030,.064,.031);
-		vec3 aged=OUTPUT_IS_SRGB ? vec3(.323,.378,.226) : vec3(.085,.118,.042);
-		tone=mix(low,body,smoothstep(.30,.59,grade));
-		tone=mix(tone,aged,smoothstep(.62,.88,grade)*.84);
-		tone*=.94+.08*smoothstep(.21,.53,pigment);
+		// The artist's actual sprays retain their structure and light gaps.
+		// A broad height envelope gives the connected crown its overall volume.
+		tone=painted.rgb*(.68+.27*smoothstep(.20,.93,height));
 		opacity=painted.a;
 	} else if(crown>=13.5) {
 		vec3 bark=texture(grove_bark,UV).rgb;
@@ -142,5 +138,5 @@ void fragment() {
 	ALBEDO=tone;
 	ROUGHNESS=.97;
 	ALPHA=opacity;
-	ALPHA_SCISSOR_THRESHOLD=crown>=15.5 ? .36 : (crown>=11.9 && crown<13.5 ? .35 : .44);
+	ALPHA_SCISSOR_THRESHOLD=crown>=15.5 ? .42 : (crown>=11.9 && crown<13.5 ? .35 : .44);
 }
