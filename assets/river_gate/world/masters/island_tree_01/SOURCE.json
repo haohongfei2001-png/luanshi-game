@@ -1,0 +1,34 @@
+{
+  "asset": "island_tree_01",
+  "author": "Rico Cilliers and Rob Tuytel",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/island_tree_01",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/island_tree_01/island_tree_01_2k.gltf",
+  "gltf_md5": "5facbb0c10b6bce8956bba1c179bfdad",
+  "inputs": {
+    "island_tree_01.bin": "8271f2d12c2727bd647ce0c242acdcec",
+    "textures/island_tree_01_diff_2k.jpg": "06808aa5ccbfbc2a7e2f99a23f412c17",
+    "textures/island_tree_01_leaves_diff_2k.jpg": "9898a7bf79fe6214f7ca8c3b139c4116",
+    "textures/island_tree_01_branches_diff_2k.jpg": "3210126439a8423b3caba28de0f3c25f"
+  },
+  "bounds_blender": [
+    [
+      -2.3448076248168945,
+      -2.2349395751953125,
+      -0.020327899605035782
+    ],
+    [
+      2.410985231399536,
+      2.5837721824645996,
+      5.007343292236328
+    ]
+  ],
+  "source_triangles": 1599403,
+  "game_triangles": 220000,
+  "objects": [
+    {
+      "name": "island_tree_01_LOD0",
+      "triangles": 220000
+    }
+  ]
+}

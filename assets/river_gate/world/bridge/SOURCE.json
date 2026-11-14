@@ -1,0 +1,60 @@
+{
+  "asset": "modular_wooden_pier",
+  "author": "Rico Cilliers",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/modular_wooden_pier",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/modular_wooden_pier/modular_wooden_pier_2k.gltf",
+  "gltf_md5": "90a45abef7245cd0b54dc8cada94d3a3",
+  "inputs": {
+    "modular_wooden_pier.bin": "dbdbeca4676a3012a64b4daa75d1f97c",
+    "textures/modular_wooden_pier_poles_diff_2k.jpg": "1a73fa4ad5d6bf82931a4c3b387b76f4",
+    "textures/modular_wooden_pier_planks_diff_2k.jpg": "636da8df2fc13ca85e3f96fe2fa0d527"
+  },
+  "bounds_blender": [
+    [
+      -0.3415340185165405,
+      -3.222659111022949,
+      -1.005767583847046
+    ],
+    [
+      2.760028839111328,
+      2.9872384071350098,
+      6.509909152984619
+    ]
+  ],
+  "source_triangles": 84780,
+  "game_triangles": 84780,
+  "objects": [
+    {
+      "name": "modular_wooden_pier_poles",
+      "triangles": 2460
+    },
+    {
+      "name": "modular_wooden_pier_planks",
+      "triangles": 5512
+    },
+    {
+      "name": "modular_wooden_pier_section_01",
+      "triangles": 23280
+    },
+    {
+      "name": "modular_wooden_pier_section_02",
+      "triangles": 11758
+    },
+    {
+      "name": "modular_wooden_pier_section_03",
+      "triangles": 14162
+    },
+    {
+      "name": "modular_wooden_pier_section_05",
+      "triangles": 13010
+    },
+    {
+      "name": "modular_wooden_pier_section_04",
+      "triangles": 14598
+    }
+  ],
+  "derived_component": "modular_wooden_pier_section_02",
+  "selection": "Complete deck and its actual side thickness, source height 2.48 to 2.73 metres",
+  "triangles": 8044
+}

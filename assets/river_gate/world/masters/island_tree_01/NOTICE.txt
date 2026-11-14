@@ -1,0 +1,4 @@
+island_tree_01 by Rico Cilliers and Rob Tuytel
+CC0-1.0. https://polyhaven.com/license
+https://polyhaven.com/a/island_tree_01
+Derived game geometry and original matched albedo/AO; see SOURCE.json for exact source and checksums.
