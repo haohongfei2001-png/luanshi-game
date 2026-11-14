@@ -7,7 +7,7 @@ a.output.mkdir(parents=True,exist_ok=True);archive=a.archive or a.output/'guardi
 if not archive.exists():
  if a.archive:raise FileNotFoundError(archive)
  tmp=archive.with_suffix('.part')
- request=urllib.request.Request(meta['url'],headers={'User-Agent':'Mozilla/5.0 (compatible; LuanshiAssetRecovery/1.0; +https://github.com/haohongfei2001-png/luanshi-game)'})
+ request=urllib.request.Request(meta['url'],headers={'User-Agent':'LuanshiAssetRecovery/1.0 (+https://github.com/haohongfei2001-png/luanshi-game)'})
  with urllib.request.urlopen(request,timeout=120) as response, tmp.open('wb') as f:
   print(json.dumps({'status':response.status,'final_url':response.url,'content_length':response.headers.get('Content-Length'),'etag':response.headers.get('ETag')}),flush=True)
   while chunk:=response.read(1024*1024):f.write(chunk)
