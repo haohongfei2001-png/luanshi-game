@@ -46,3 +46,5 @@ blender -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 \
 ```
 
 **Do not replace the frozen scene being captured or mark art passed.** A separate next full-scene Godot capture must establish root contact, crown scale/readability, materials, shadows and genuine runtime performance before accepting this prototype.
+
+Metric clarification: converter `derived_world_bounds_error=0` verifies flattening against its **already LOD-evaluated instance geometry**, not fidelity to original high-resolution source. The receipt now states this explicitly; original-to-LOD geometric error is NOT_QUANTIFIED. It must not be cited as lossless source reconstruction. The two 158k/55k derivative bounds match each other; native high-resolution bounds differ.
