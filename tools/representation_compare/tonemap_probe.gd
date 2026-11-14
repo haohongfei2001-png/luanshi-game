@@ -50,4 +50,20 @@ func go():
   quad.visible=true;world.environment.tonemap_mode=Environment.TONE_MAPPER_FILMIC;world.environment.tonemap_exposure=1.
   var candidate:Image=await capture(viewport,out.path_join("sprite-"+str(exposure)+".png"))
   var result=compare(reference,candidate);result["bake_exposure"]=exposure;result["runtime_gain"]=1./exposure;report.samples.append(result)
+ report["sampler_and_pass_probe"]=[]
+ var original_bake=Image.load_from_file(out.path_join("bake-1.0.png"))
+ for array_sampler in [false,true]:
+  for scissor in [false,true]:
+   var pipeline=ShaderMaterial.new();var variant=Shader.new()
+   var sampler="sampler2DArray" if array_sampler else "sampler2D"
+   var coordinates="vec3(UV,0.)" if array_sampler else "UV"
+   var cut="ALPHA_SCISSOR_THRESHOLD=.35;" if scissor else ""
+   variant.code='shader_type spatial; render_mode unshaded,cull_disabled,depth_prepass_alpha; uniform '+sampler+' pigment:source_color,filter_linear,repeat_disable; void vertex(){MODELVIEW_MATRIX=VIEW_MATRIX*mat4(INV_VIEW_MATRIX[0],INV_VIEW_MATRIX[1],INV_VIEW_MATRIX[2],MODEL_MATRIX[3]);} void fragment(){vec4 p=texture(pigment,'+coordinates+');ALBEDO=p.rgb;ALPHA=p.a;'+cut+'}'
+   pipeline.shader=variant
+   if array_sampler:
+    var array=Texture2DArray.new();var images:Array[Image]=[original_bake];assert(array.create_from_images(images)==OK);pipeline.set_shader_parameter("pigment",array)
+   else:pipeline.set_shader_parameter("pigment",ImageTexture.create_from_image(original_bake))
+   mesh.material=pipeline
+   var candidate:Image=await capture(viewport,out.path_join("pipe-array"+str(array_sampler)+"-scissor"+str(scissor)+".png"))
+   var result=compare(reference,candidate);result["sampler_array"]=array_sampler;result["alpha_scissor"]=scissor;report.sampler_and_pass_probe.append(result)
  FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"  "));print("TONEMAP_PROBE ",JSON.stringify(report));quit()

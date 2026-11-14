@@ -174,3 +174,16 @@ This is a texture-load recovery, NOT full appearance parity or art acceptance.
 At2K:3D texture counter700693485B, sprite8 1092778640B, sprite16 1522305936B.
 Those counters are not driver-resident physical VRAM. No performance was tested
 in this smoke. No default game/Mac engine/art verdict changed.
+
+## One-pose color diagnostic: do not apply guessed exposure compensation
+
+Run43629677031 / source206538ea / artifact14126514900 ZIP SHA256
+`922fc51bc9c960ee59fdfb861a1e9e5189fb63e0576ec3e491632ca17f8fbd32`.
+Actual512-square original Idle, original full source materials, uncompressed
+Texture2D and no alpha-scissor: unity bake exposure already has1.41/255 mean
+maximum RGB error over17218 interior pixels,12.64% exceed2levels,alpha IoU1.
+Baking lower exposure and multiplying shader color by inverse exposure makes
+this control much brighter, not equivalent. That proposed correction is REJECTED.
+It does not justify changing field lighting. The full atlas color difference
+remains unresolved; a bounded next probe isolates sampler-array and scissor
+render-pass differences on the exact same frozen image. No S3TC/motion/art pass.

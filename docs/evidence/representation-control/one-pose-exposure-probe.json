@@ -1,0 +1,68 @@
+{
+  "art_pass": false,
+  "engine": {
+    "build": "custom_build",
+    "hash": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+    "hex": 263683,
+    "major": 4,
+    "minor": 6,
+    "patch": 3,
+    "status": "stable",
+    "string": "4.6.3-stable (custom_build)",
+    "timestamp": 1779284873
+  },
+  "format": "uncompressed RGBA8 isolates tone response, NOT S3TC quality test",
+  "pose": "Idle frame0 only",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "resolution": [
+    512,
+    512
+  ],
+  "samples": [
+    {
+      "art_pass": false,
+      "bake_exposure": 1.0,
+      "interior_pixels": 17218,
+      "max_alpha_error": 0.0,
+      "max_rgb_error_levels": 7.99999952316284,
+      "mean_max_rgb_error_levels": 1.41154603173794,
+      "over_two_levels_fraction": 0.126379370426298,
+      "runtime_gain": 1.0,
+      "silhouette_iou_alpha035": 1.0
+    },
+    {
+      "art_pass": false,
+      "bake_exposure": 0.5,
+      "interior_pixels": 17218,
+      "max_alpha_error": 0.0,
+      "max_rgb_error_levels": 59.9999964237213,
+      "mean_max_rgb_error_levels": 44.2567081534182,
+      "over_two_levels_fraction": 0.996457195957719,
+      "runtime_gain": 2.0,
+      "silhouette_iou_alpha035": 1.0
+    },
+    {
+      "art_pass": false,
+      "bake_exposure": 0.25,
+      "interior_pixels": 17218,
+      "max_alpha_error": 0.0,
+      "max_rgb_error_levels": 105.999993681908,
+      "mean_max_rgb_error_levels": 85.1163304963145,
+      "over_two_levels_fraction": 0.998780346149379,
+      "runtime_gain": 4.0,
+      "silhouette_iou_alpha035": 1.0
+    },
+    {
+      "art_pass": false,
+      "bake_exposure": 0.125,
+      "interior_pixels": 17218,
+      "max_alpha_error": 0.0,
+      "max_rgb_error_levels": 135.999999493361,
+      "mean_max_rgb_error_levels": 115.156056986571,
+      "over_two_levels_fraction": 0.998606109885004,
+      "runtime_gain": 8.0,
+      "silhouette_iou_alpha035": 1.0
+    }
+  ],
+  "source_sha256": "64705ebc4a20650b79f863bae4b6ec47df06dfefe0ed451fe73a04ebc46295c0"
+}
