@@ -1,0 +1,133 @@
+name: Compare a full original two-handed thrust in the unchanged RC24 battle
+on:
+  push:
+    branches: [codex/river-rc25-native-spear]
+    paths: ['tests/native_pike_film.gd','.github/workflows/native-pike-film.yml','tools/art/company_motion.py','tools/art/check_native_pike.py']
+permissions:
+  contents: write
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    env:
+      LIBGL_ALWAYS_SOFTWARE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Godot and capture tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xdotool ffmpeg python3-pil python3-numpy
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/native-pike-film docs/evidence/river-gate-v1-rc25/native-spear/draft
+          touch artifacts/.gdignore docs/evidence/river-gate-v1-rc25/native-spear/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Bake and check the isolated full spear chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc25/native-spear/draft
+          /usr/bin/python3 tools/art/import_wildfire_pike.py /tmp/wildfire-pike > "$proof/source-rebuild.log"
+          /usr/bin/python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,"tools/art")
+          from company_motion import bake_motion
+          bake_motion(Path("assets/river_gate/figures"))
+          PY
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/4f3c0819cf44a89c24bd825c90f241d8974fbbb6/assets/river_gate/figures/company_motion.png -o /tmp/original-motion.png
+          for check in check_company_motion check_field_carries check_contact_motion; do
+            /usr/bin/python3 "tools/art/$check.py" > "$proof/$check.log"
+          done
+          /usr/bin/python3 tools/art/check_native_pike.py /tmp/original-motion.png > "$proof/check_native_pike.log"
+          git add assets/river_gate/figures/company_motion.png tools/art/source/wildfire_pike_curves.json
+          git -c user.name='River Gate native pike draft bake' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake isolated author-driven spear test palette'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Record the same natural spear advance, thrust, recovery and retreat
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc25/native-spear/draft
+          cp assets/river_gate/figures/company_motion.png /tmp/after-motion.png
+          cp scripts/field/company_skin.gdshader /tmp/after-skin.gdshader
+          git rev-parse HEAD > "$proof/candidate-source.txt"
+          for side in before after; do
+            if [ "$side" = before ]; then
+              curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/4f3c0819cf44a89c24bd825c90f241d8974fbbb6/assets/river_gate/figures/company_motion.png -o assets/river_gate/figures/company_motion.png
+              cp assets/river_gate/figures/company_motion.png /tmp/before-motion.png
+              curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/4f3c0819cf44a89c24bd825c90f241d8974fbbb6/scripts/field/company_skin.gdshader -o scripts/field/company_skin.gdshader
+            else
+              cp /tmp/after-motion.png assets/river_gate/figures/company_motion.png
+              cp /tmp/after-skin.gdshader scripts/field/company_skin.gdshader
+            fi
+            sha256sum assets/river_gate/figures/company_motion.png > "$proof/$side-palette-sha256.txt"
+            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side-import.log" 2>&1
+            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side-import.log"; then exit 1; fi
+            timeout 7m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 20 --script tests/native_pike_film.gd > "$proof/$side.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side.log"; then exit 1; fi
+            grep NATIVE_PIKE_FILM "$proof/$side.log"
+            cp artifacts/native-pike-film/sequence.json "$proof/$side.json"
+            mkdir -p "artifacts/native-pike-raw/$side"
+            cp -R artifacts/native-pike-film/. "artifacts/native-pike-raw/$side/"
+            ffmpeg -v error -y -framerate 20 -i "artifacts/native-pike-film/frames/frame-%03d.jpg" -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p -movflags +faststart "$proof/$side.mp4"
+            ffprobe -v error -count_frames -show_entries stream=width,height,r_frame_rate,nb_read_frames,duration -of json "$proof/$side.mp4" > "$proof/$side-stream.json"
+            SIDE="$side" /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import os
+          root=Path("artifacts/native-pike-film")
+          out=Path("docs/evidence/river-gate-v1-rc25/native-spear/draft")
+          side=os.environ["SIDE"]
+          frames=(0,5,6,8,10,11,13,18,21,22)
+          sheet=Image.new("RGB",(1280,2000))
+          for n,k in enumerate(frames):
+              im=Image.open(root/"frames"/f"frame-{k:03d}.jpg").convert("RGB")
+              assert im.size==(2560,1600)
+              im.save(out/f"{side}-{k:03d}-native.jpg",quality=78,subsampling=2)
+              sheet.paste(im.resize((640,400),Image.Resampling.LANCZOS),((n%2)*640,(n//2)*400))
+          sheet.save(out/f"{side}-times.jpg",quality=86)
+          for p in list(root.glob("normal-*.jpg"))+list(root.glob("reverse-*.jpg")):
+              Image.open(p).save(out/f"{side}-{p.name}",quality=78,subsampling=2)
+          PY
+          done
+          /usr/bin/python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("docs/evidence/river-gate-v1-rc25/native-spear/draft")
+          a=json.loads((p/"before.json").read_text());b=json.loads((p/"after.json").read_text())
+          assert a==b
+          assert a["scale"]==1. and all(x["ordinary"]==[512,512] for x in a["index"])
+          assert [x["tick"] for x in a["index"]]==list(range(10,33))
+          assert a["index"][-1]["impacts"]>a["index"][0]["impacts"]
+          for label in ("before","after"):
+              stream=json.loads((p/(label+"-stream.json")).read_text())["streams"][0]
+              assert stream["width"]==2560 and stream["height"]==1600 and int(stream["nb_read_frames"])==23
+              assert stream["r_frame_rate"]=="20/1"
+          (p/"verification.json").write_text(json.dumps({"equal_simulation_and_render_instance_inputs":True,"fps":20,"duration":1.15,"dimensions":[2560,1600],"realtime_performance_measurement":False},indent=2)+"\n")
+          PY
+          git diff --exit-code -- assets/river_gate/figures/company_motion.png scripts/field/company_skin.gdshader
+          sha256sum "$proof"/*.mp4 > "$proof/video-sha256.txt"
+          git add "$proof"
+          git -c user.name='River Gate clear native chain proof' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive full original pike thrust before and after in the same battle'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Preserve failure logs
+        if: failure()
+        run: find docs/evidence/river-gate-v1-rc25/native-spear/draft -name '*.log' -exec tail -n 100 '{}' +
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-pike-original-speed
+          path: |
+            docs/evidence/river-gate-v1-rc25/native-spear/draft
+            artifacts/native-pike-raw
+            artifacts/native-pike-film
+          retention-days: 7

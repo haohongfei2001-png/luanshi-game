@@ -1,0 +1,23 @@
+Wildfire Games complete two-handed pike animation
+Copyright Wildfire Games and contributors
+https://www.wildfiregames.com/
+Original editable COLLADA source from 0 A.D.
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/animation/biped/infantry/pikeman/attack_melee_02.dae
+Git blob 1f319000b3e49a12bf85262a553442472feca293
+
+Creative Commons Attribution-ShareAlike 3.0 Unported
+https://creativecommons.org/licenses/by-sa/3.0/
+https://creativecommons.org/licenses/by-sa/3.0/legalcode
+
+Luanshi modifications sample the complete authored chain, retarget its hips,
+supporting legs, shoulder and elbow planes, and fit two palms to one unchanged
+rigid spear. The original loaded beginning is the ready stance. The source
+maximum extension aligns to the existing simulation release; timing, damage
+and mounted spear poses retain existing game behavior.
+
+Derived curves tools/art/source/wildfire_pike_curves.json and any animation
+palette containing them are distributed under CC BY-SA 3.0. Other independent
+code, meshes, textures and animations retain their recorded licenses.
+Editable extraction: tools/art/import_wildfire_pike.py
+Offline retarget and bake: tools/art/company_motion.py
+This notice must accompany redistribution. Wildfire Games does not endorse Luanshi.

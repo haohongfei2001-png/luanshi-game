@@ -758,7 +758,11 @@ NATIVE_READY=COMBAT_SOURCE['curves']['shield_ready']
 NATIVE_REST=NATIVE_CUT['rest_points']
 SOURCE_GROUND={curve['source_path']:{side:min(p[1] for frame in curve['frames'] for p in frame['sole'][side])
                                    for side in ('L','R')} for curve in (NATIVE_CUT,NATIVE_READY)}
-MOUNTED_BASIC=((0,2),(0,6),(1,2),(1,6))
+MOUNTED_BASIC=((0,2),(0,6),(1,2),(1,6),(3,2),(3,6))
+PIKE_SOURCE=json.loads((Path(__file__).parent/'source'/'wildfire_pike_curves.json').read_text())
+NATIVE_PIKE=PIKE_SOURCE['curves']['pike_02']
+PIKE_REST=NATIVE_PIKE['rest_points']
+SOURCE_GROUND[NATIVE_PIKE['source_path']]={side:min(p[1] for frame in NATIVE_PIKE['frames'] for p in frame['sole'][side]) for side in ('L','R')}
 
 def native_sample(phase,curve=NATIVE_CUT):
     rows=curve['frames']
@@ -779,8 +783,8 @@ def native_sample(phase,curve=NATIVE_CUT):
                weight*min(p[1] for p in last['sole'][side])-SOURCE_GROUND[curve['source_path']][side] for side in ('L','R')}
     return points,quats,weapon,sole
 
-def source_limb_rotation(q,name,child,binds):
-    source_axis=sub(NATIVE_REST[child],NATIVE_REST[name])
+def source_limb_rotation(q,name,child,binds,rest=NATIVE_REST):
+    source_axis=sub(rest[child],rest[name])
     return qm(q[name],towards(sub(binds[1],binds[0]),source_axis))
 
 def fit_leg(binds,root,foot,pole,upper_q,lower_q):
@@ -795,16 +799,16 @@ def fit_leg(binds,root,foot,pole,upper_q,lower_q):
         result.append(placed(base,origin,q))
     return result
 
-def native_chain_pose(phase,curve=NATIVE_CUT):
+def native_chain_pose(phase,curve=NATIVE_CUT,rest=NATIVE_REST):
     points,q,weapon,sole=native_sample(phase,curve)
     waist=(0.,.86,0.)
-    at=add(points['hips'],sub(waist,NATIVE_REST['hips']))
+    at=add(points['hips'],sub(waist,rest['hips']))
     feet={}
     for side,label in ((-1,'L'),(1,'R')):
         ankle=leg_nodes(side)[2]
         foot_q=q['foot.'+label]
         minimum=min(rot(foot_q,(dx,-.117,dz))[1] for dx in (-.05,.05) for dz in (-.072,.187))
-        desired=add(points['foot.'+label],sub(ankle,NATIVE_REST['foot.'+label]))
+        desired=add(points['foot.'+label],sub(ankle,rest['foot.'+label]))
         desired=(desired[0],.006+max(0.,sole[label])-minimum,desired[2])
         feet[side]=(desired,foot_q)
         # Fit the shorter target leg through its original support, lowering
@@ -822,8 +826,8 @@ def native_chain_pose(phase,curve=NATIVE_CUT):
     for side,label in ((-1,'L'),(1,'R')):
         upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
         a,b,c=arm_nodes(side)
-        upper_q=source_limb_rotation(q,'upper_arm.'+label,'forearm.'+label,(a,b))
-        fore_q=source_limb_rotation(q,'forearm.'+label,'hand.'+label,(b,c))
+        upper_q=source_limb_rotation(q,'upper_arm.'+label,'forearm.'+label,(a,b),rest)
+        fore_q=source_limb_rotation(q,'forearm.'+label,'hand.'+label,(b,c),rest)
         shoulder=trans(ms[CHEST],a)
         elbow=add(shoulder,rot(upper_q,sub(b,a)))
         wrist=add(elbow,rot(fore_q,sub(c,b)))
@@ -831,7 +835,7 @@ def native_chain_pose(phase,curve=NATIVE_CUT):
         ms[fore]=placed(b,elbow,fore_q)
         # Source weapon_R is the author's actual attachment orientation.
         # The target hand and blade keep their existing relative registration.
-        fingers=sub(NATIVE_REST['finger.'+label],NATIVE_REST['hand.'+label])
+        fingers=sub(rest['finger.'+label],rest['hand.'+label])
         hand_q=weapon if side>0 else qm(q['hand.'+label],towards((0.,-1.,0.),fingers))
         ms[hand]=placed(c,wrist,hand_q)
         thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
@@ -839,8 +843,8 @@ def native_chain_pose(phase,curve=NATIVE_CUT):
         hip=trans(ms[HIPS],binds[0])
         foot,foot_q=feet[side]
         pole=sub(points['shin.'+label],points['thigh.'+label])
-        thigh_q=source_limb_rotation(q,'thigh.'+label,'shin.'+label,binds[:2])
-        shin_q=source_limb_rotation(q,'shin.'+label,'foot.'+label,binds[1:])
+        thigh_q=source_limb_rotation(q,'thigh.'+label,'shin.'+label,binds[:2],rest)
+        shin_q=source_limb_rotation(q,'shin.'+label,'foot.'+label,binds[1:],rest)
         ms[thigh],ms[shin]=fit_leg(binds,hip,foot,pole,thigh_q,shin_q)
         ms[boot]=placed(binds[2],foot,foot_q)
     ms[NOCK]=ms[LH]
@@ -862,7 +866,61 @@ def authored_contact(kit):
 
 NATIVE_CONTACT={kit:authored_contact(kit) for kit in (0,1)}
 
+
+def native_pike_pose(phase):
+    """Retain the author's hips, support legs and elbow planes on one shaft.
+
+    The original has a sliding lead hand. Retargeting the wider target
+    shoulders independently would pull that hand off the rigid spear, so fit
+    only the common shaft translation and the two arm reaches offline.
+    """
+    ms=native_chain_pose(phase,NATIVE_PIKE,PIKE_REST)
+    points,q,weapon,_=native_sample(phase,NATIVE_PIKE)
+    axis=rot(weapon,(0.,0.,1.))
+    span=dot(sub(points['finger.L'],points['finger.R']),axis)
+    right=trans(ms[RH],grip(1))
+    left=trans(ms[LH],grip(-1))
+    support=mul(axis,span)
+    anchor=mul(add(right,sub(left,support)),.5)
+    right_center,right_radius=reachable(ms[CHEST],1,weapon)
+    left_center,left_radius=reachable(ms[CHEST],-1,weapon)
+    for _ in range(24):
+        anchor=limit_grip(limit_grip(anchor,sub(left_center,support),left_radius),right_center,right_radius)
+    for side,label,end in ((1,'R',anchor),(-1,'L',add(anchor,support))):
+        upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
+        binds=arm_nodes(side)
+        shoulder=trans(ms[CHEST],binds[0])
+        authored_elbow=trans(ms[fore],binds[1])
+        upper_q,fore_q=ms[upper][0],ms[fore][0]
+        hand_m=placed(grip(side),end,weapon)
+        wrist=trans(hand_m,binds[2])
+        ms[upper],ms[fore]=fit_leg(binds,shoulder,wrist,sub(authored_elbow,shoulder),upper_q,fore_q)
+        ms[hand]=hand_m
+    ms[NOCK]=ms[LH]
+    return ms
+
+def pike_tip(bones):
+    # Complete licensed Han spear, measured from the unchanged mesh bounds.
+    return trans(bones[RH],(.273,.943,2.109))
+
+def pike_contact():
+    # The original thrust's maximum extension is its release instant.
+    # Compress that complete preparation into the unchanged .22 s windup;
+    # its recovery occupies the existing .48 s. No simulation time changes.
+    tips=[pike_tip(native_pike_pose(i/256.)) for i in range(257)]
+    return max(range(len(tips)),key=lambda i:tips[i][2])/256.
+
+PIKE_CONTACT=pike_contact()
+
 def pose(kit,clip,t,loadout=0,side_hit=0):
+    if kit==3 and clip in (1,2,6) and not side_hit:
+        # The author's attack begins and ends in the same low guard. Its
+        # separately published upright-pike idle is a different carry, so
+        # use this true loaded starting posture as the ready state.
+        if clip==1: return native_pike_pose(0.)
+        phase=PIKE_CONTACT*t if clip==2 else PIKE_CONTACT+(1.-PIKE_CONTACT)*t
+        return native_pike_pose(phase)
+
     if kit not in (0,1) or clip not in (1,2,6) or side_hit:
         return legacy_pose(kit,clip,t,loadout,side_hit)
     if clip==1:

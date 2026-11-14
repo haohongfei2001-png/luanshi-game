@@ -89,8 +89,8 @@ void vertex() {
     }
     // Keep the established seated upper-body attacks when the on-foot
     // sword or dao uses its complete authored weight-bearing chain.
-    if (code>=64 && sample_kit<2 && (clip==2 || clip==6)) {
-        int seated=sample_kit*2+(clip==6 ? 1 : 0);
+    if (code>=64 && (sample_kit<2 || sample_kit==3) && (clip==2 || clip==6)) {
+        int seated=(sample_kit==3 ? 4 : sample_kit*2)+(clip==6 ? 1 : 0);
         tile.y=float(4*(417+seated))+.5;
     }
     // Legacy heads deform only their skin tiles. The continuous anatomical master
@@ -125,7 +125,8 @@ void vertex() {
     // and the shield all undergo one rigid change about the waist. Flexible
     // cloth carries the transition to the original leg and planted-foot pose.
     // The bound is twenty degrees; the half-angle approximation is normalized.
-    if (field_carries && code<64 && (kit==3 || kit==7)) {
+    bool native_pike=sample_kit==3 && (clip==1 || clip==2 || clip==6);
+    if (field_carries && code<64 && (kit==3 || kit==7) && !native_pike) {
         float ready=0.;
         if (state==0 && slot==3) {
             ready=float(int(floor(INSTANCE_CUSTOM.g*1024.0))%32)/31.;
