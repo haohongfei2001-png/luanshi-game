@@ -211,3 +211,12 @@ sequences, numerical stability across LOD/culling, visual grip/orientation,
 real graphical shader compilation, actual performance and owner art review
 are all still unverified. Do not label it a production-ready natural full-body
 chain. Default shipping files and game behavior remain unchanged.
+
+## Actual terrain decision (2026-11-14)
+
+Both native Godot captures completed at source1d496bfb08b8. The old-chain patch
+is **REJECTED**: 8.6cm modeled sole penetration still occurs on the actual shared
+terrain despite the flat-fixture continuity improvement. It remains disabled.
+[Raw experiment, matched inputs and the explicit rejection](evidence/spear-contact-audit/actual-terrain/README.md).
+Owner now requires whole-character/whole-scene production, not further patches
+on the rejected geometry. Complete editable rig and costume work is separate.

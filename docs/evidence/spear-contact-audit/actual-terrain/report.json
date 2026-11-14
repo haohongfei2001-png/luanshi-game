@@ -1,0 +1,368 @@
+{
+  "qhd": {
+    "control": {
+      "minimum_modeled_sole_clearance_m": [
+        -0.0871793611530636,
+        17,
+        11
+      ],
+      "corners_below_ground": 121,
+      "total_corners": 328,
+      "frames": 41,
+      "seconds": 2.05,
+      "size": [
+        2560,
+        1440
+      ],
+      "scale": 1.0,
+      "clip_switches": [
+        {
+          "tick": 16,
+          "from_clip": 0,
+          "clip": 2,
+          "ankle_step_m": [
+            0.3819540503720122,
+            0.289262338967064
+          ]
+        },
+        {
+          "tick": 21,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            9.34710301560099e-05,
+            0.015076579235571009
+          ]
+        },
+        {
+          "tick": 31,
+          "from_clip": 6,
+          "clip": 1,
+          "ankle_step_m": [
+            0.04855550656477011,
+            0.0049836565272248275
+          ]
+        },
+        {
+          "tick": 32,
+          "from_clip": 1,
+          "clip": 22,
+          "ankle_step_m": [
+            0.43870083461881204,
+            0.7307942736834321
+          ]
+        },
+        {
+          "tick": 34,
+          "from_clip": 22,
+          "clip": 11,
+          "ankle_step_m": [
+            0.5388615017076244,
+            0.614741504092637
+          ]
+        },
+        {
+          "tick": 39,
+          "from_clip": 11,
+          "clip": 22,
+          "ankle_step_m": [
+            0.527890964017128,
+            0.7063683575252178
+          ]
+        },
+        {
+          "tick": 42,
+          "from_clip": 22,
+          "clip": 2,
+          "ankle_step_m": [
+            0.5849446221490768,
+            0.44234880569311885
+          ]
+        },
+        {
+          "tick": 47,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            9.329572161027562e-05,
+            0.015076276039021265
+          ]
+        }
+      ]
+    },
+    "rigid-shaft": {
+      "minimum_modeled_sole_clearance_m": [
+        -0.0860399837639498,
+        18,
+        11
+      ],
+      "corners_below_ground": 116,
+      "total_corners": 328,
+      "frames": 41,
+      "seconds": 2.05,
+      "size": [
+        2560,
+        1440
+      ],
+      "scale": 1.0,
+      "clip_switches": [
+        {
+          "tick": 16,
+          "from_clip": 0,
+          "clip": 2,
+          "ankle_step_m": [
+            0.00016672960865899775,
+            0.0007133765967303096
+          ]
+        },
+        {
+          "tick": 21,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            4.189676586667368e-05,
+            1.1162471678962907e-05
+          ]
+        },
+        {
+          "tick": 31,
+          "from_clip": 6,
+          "clip": 1,
+          "ankle_step_m": [
+            9.665219843102816e-05,
+            2.5665181439126082e-05
+          ]
+        },
+        {
+          "tick": 32,
+          "from_clip": 1,
+          "clip": 22,
+          "ankle_step_m": [
+            1.1920928999487046e-07,
+            9.536742986426816e-07
+          ]
+        },
+        {
+          "tick": 34,
+          "from_clip": 22,
+          "clip": 11,
+          "ankle_step_m": [
+            0.004733085728398185,
+            0.004733324050900212
+          ]
+        },
+        {
+          "tick": 39,
+          "from_clip": 11,
+          "clip": 22,
+          "ankle_step_m": [
+            0.028596986709860748,
+            0.02834647677726627
+          ]
+        },
+        {
+          "tick": 42,
+          "from_clip": 22,
+          "clip": 2,
+          "ankle_step_m": [
+            2.384185799897409e-07,
+            0.0
+          ]
+        },
+        {
+          "tick": 47,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            4.1961669882633664e-05,
+            1.0956883696064985e-05
+          ]
+        }
+      ]
+    },
+    "verdict": "REJECT_ACTUAL_TERRAIN_CONTACT; defaults remain OFF; replaced by complete new character production path"
+  },
+  "uhd": {
+    "control": {
+      "minimum_modeled_sole_clearance_m": [
+        -0.0871793611530636,
+        17,
+        11
+      ],
+      "corners_below_ground": 121,
+      "total_corners": 328,
+      "frames": 41,
+      "seconds": 2.05,
+      "size": [
+        3840,
+        2160
+      ],
+      "scale": 1.0,
+      "clip_switches": [
+        {
+          "tick": 16,
+          "from_clip": 0,
+          "clip": 2,
+          "ankle_step_m": [
+            0.3819540503720122,
+            0.289262338967064
+          ]
+        },
+        {
+          "tick": 21,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            9.34710301560099e-05,
+            0.015076579235571009
+          ]
+        },
+        {
+          "tick": 31,
+          "from_clip": 6,
+          "clip": 1,
+          "ankle_step_m": [
+            0.04855550656477011,
+            0.0049836565272248275
+          ]
+        },
+        {
+          "tick": 32,
+          "from_clip": 1,
+          "clip": 22,
+          "ankle_step_m": [
+            0.43870083461881204,
+            0.7307942736834321
+          ]
+        },
+        {
+          "tick": 34,
+          "from_clip": 22,
+          "clip": 11,
+          "ankle_step_m": [
+            0.5388615017076244,
+            0.614741504092637
+          ]
+        },
+        {
+          "tick": 39,
+          "from_clip": 11,
+          "clip": 22,
+          "ankle_step_m": [
+            0.527890964017128,
+            0.7063683575252178
+          ]
+        },
+        {
+          "tick": 42,
+          "from_clip": 22,
+          "clip": 2,
+          "ankle_step_m": [
+            0.5849446221490768,
+            0.44234880569311885
+          ]
+        },
+        {
+          "tick": 47,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            9.329572161027562e-05,
+            0.015076276039021265
+          ]
+        }
+      ]
+    },
+    "rigid-shaft": {
+      "minimum_modeled_sole_clearance_m": [
+        -0.0860399837639498,
+        18,
+        11
+      ],
+      "corners_below_ground": 116,
+      "total_corners": 328,
+      "frames": 41,
+      "seconds": 2.05,
+      "size": [
+        3840,
+        2160
+      ],
+      "scale": 1.0,
+      "clip_switches": [
+        {
+          "tick": 16,
+          "from_clip": 0,
+          "clip": 2,
+          "ankle_step_m": [
+            0.00016672960865899775,
+            0.0007133765967303096
+          ]
+        },
+        {
+          "tick": 21,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            4.189676586667368e-05,
+            1.1162471678962907e-05
+          ]
+        },
+        {
+          "tick": 31,
+          "from_clip": 6,
+          "clip": 1,
+          "ankle_step_m": [
+            9.665219843102816e-05,
+            2.5665181439126082e-05
+          ]
+        },
+        {
+          "tick": 32,
+          "from_clip": 1,
+          "clip": 22,
+          "ankle_step_m": [
+            1.1920928999487046e-07,
+            9.536742986426816e-07
+          ]
+        },
+        {
+          "tick": 34,
+          "from_clip": 22,
+          "clip": 11,
+          "ankle_step_m": [
+            0.004733085728398185,
+            0.004733324050900212
+          ]
+        },
+        {
+          "tick": 39,
+          "from_clip": 11,
+          "clip": 22,
+          "ankle_step_m": [
+            0.028596986709860748,
+            0.02834647677726627
+          ]
+        },
+        {
+          "tick": 42,
+          "from_clip": 22,
+          "clip": 2,
+          "ankle_step_m": [
+            2.384185799897409e-07,
+            0.0
+          ]
+        },
+        {
+          "tick": 47,
+          "from_clip": 2,
+          "clip": 6,
+          "ankle_step_m": [
+            4.1961669882633664e-05,
+            1.0956883696064985e-05
+          ]
+        }
+      ]
+    },
+    "verdict": "REJECT_ACTUAL_TERRAIN_CONTACT; defaults remain OFF; replaced by complete new character production path"
+  }
+}
