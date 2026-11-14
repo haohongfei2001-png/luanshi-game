@@ -2,7 +2,7 @@ name: Rebuild the isolated authored chain on the integrated world
 on:
   push:
     branches: [codex/river-rc23-native-chain-clean]
-    paths: ['.github/workflows/native-chain-clean.yml']
+    paths: ['.github/workflows/native-chain-clean.yml','tools/art/check_company_motion.py']
 permissions:
   contents: write
 jobs:
@@ -52,6 +52,9 @@ jobs:
           git add "$proof"
           git -c user.name='River Gate clean motion verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Verify authored motion rebuild on a clean integrated-world checkout'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Print measured failure detail
+        if: failure()
+        run: cat docs/evidence/river-gate-v1-rc23/native-chain/clean/*.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
