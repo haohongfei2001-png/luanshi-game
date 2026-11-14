@@ -7,6 +7,10 @@
 
 ## 河关 RC22 · 桥头攻门
 
+[1600 × 1000 等速原声回放](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/c6fc9d564244eaca4c9c40ba9b3bf3a7e207312d/docs/evidence/river-gate-v1-rc22/bridgehead/river-gate-bridgehead.mp4) · [托管 Mac 系统窗口原片](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/fd411e7e6e1209d5d3b1ea84e05005771735e35e/docs/evidence/river-gate-v1-rc22/native-bridgehead/hosted-bridgehead.mp4) · [可试玩的 macOS 包](https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/9ed812d8dd8036ea92d54c3f77a17e58b771e22c/candidate/River-Gate-RC22-macOS.zip) · [逐项测量](evidence/river-gate-v1-rc22/PLAYTEST.md)。游戏与画面固定于 `dc9805fd2930344be9737cfc19074442618d7e5c`，PR #56 目前 `48ace1db4ee1d807de28b67eba9cd4c546c67053`，后一个提交只调整头像验收位置。桥头 22 米同机位的 Mac 全军样本 P95 为 30.663 毫秒。首次默认 Metal 在首帧前卡住。代码栈、失败样本、其余原生次数和逐帧间隔均已保留。M5 尚未测试。
+
+下一项具体工作是用第 135 步的真实碰撞重放观察骑兵肩部与前后排长枪交叠，再比较保持桥宽、在编兵力和交战结果可追溯的两种骑兵出口路线。先运行 `godot --headless --path . --script tests/field_bridgehead_outcome.gd`，同镜头原片与输入见上述链接。Metal 预烘焙对照在准备阶段超时，尚未产生第二个已验证包。[对照运行](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43538470616)。
+
 军议的「全军 → 桥头攻门」使用完整两军，把先锋部署在外壕桥头，守军守在门前。7.4 米宽的桥面、桥外水域、绕行、冲车与援队使用同一套地形规则。木桥的绑扎木架、城楼和岗楼、衣甲、马、柳树均有可再分发的来源和包内署名。盾兵新增左右承击，持械步态和种子 61112 的实机回放可回看。[盾牌承击原片](https://github.com/haohongfei2001-png/luanshi-game/tree/bff9e6be588f16c086e7dffc6856a678ef767cb9/docs/evidence/river-gate-v1-rc22/shield-brace) · [持械步态原片](https://github.com/haohongfei2001-png/luanshi-game/tree/703ce4e31b82c2ee130631d324cd6387fac280ae/docs/evidence/river-gate-v1-rc21/loaded-advance)
 
 首轮桥头部署中，先过桥的主角在第 71 步阵亡，渡过桥面的后队仅两人。调整为两支在编先锋先据东岸，西岸纵队再跟进，保留原有兵力、伤害、箭矢和永久伤亡。在军议即可选择、交战、存档和重新部署，同镜头原速片与本版本原生包仍以对应证据为准。
