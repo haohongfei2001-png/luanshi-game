@@ -16,5 +16,15 @@
     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/patterned_clay_wall/patterned_clay_wall_diff_2k.jpg",
     "md5": "757972207f1b5faf97b5c75899c1f801",
     "license": "CC0-1.0"
+  },
+  "brown_mud_dry": {
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_dry/brown_mud_dry_diff_2k.jpg",
+    "md5": "7c062619553df423ce2085c48b2ef3c8",
+    "license": "CC0-1.0"
+  },
+  "sandy_gravel_02": {
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/sandy_gravel_02/sandy_gravel_02_diff_2k.jpg",
+    "md5": "0ae7373189752d85642f589c12093ec2",
+    "license": "CC0-1.0"
   }
 }
