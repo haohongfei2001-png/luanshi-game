@@ -41,75 +41,75 @@
   "cost": {
     "LevyClose": {
       "triangles": 12057,
-      "vertices": 6798
+      "vertices": 6588
     },
     "LevyLine": {
       "triangles": 6894,
-      "vertices": 4125
+      "vertices": 3970
     },
     "LevyRank": {
       "triangles": 1959,
-      "vertices": 1347
+      "vertices": 1272
     },
     "ArcherClose": {
       "triangles": 12057,
-      "vertices": 6798
+      "vertices": 6588
     },
     "ArcherLine": {
       "triangles": 6894,
-      "vertices": 4125
+      "vertices": 3970
     },
     "ArcherRank": {
       "triangles": 1959,
-      "vertices": 1347
+      "vertices": 1272
     },
     "RegularClose": {
       "triangles": 12267,
-      "vertices": 6955
+      "vertices": 6741
     },
     "RegularLine": {
       "triangles": 7111,
-      "vertices": 4280
+      "vertices": 4123
     },
     "RegularRank": {
       "triangles": 2044,
-      "vertices": 1413
+      "vertices": 1339
     },
     "GuardClose": {
       "triangles": 12407,
-      "vertices": 7016
+      "vertices": 6802
     },
     "GuardLine": {
       "triangles": 7251,
-      "vertices": 4341
+      "vertices": 4184
     },
     "GuardRank": {
       "triangles": 2184,
-      "vertices": 1474
+      "vertices": 1400
     },
     "OfficerClose": {
       "triangles": 12515,
-      "vertices": 7106
+      "vertices": 6892
     },
     "OfficerLine": {
       "triangles": 7359,
-      "vertices": 4431
+      "vertices": 4274
     },
     "OfficerRank": {
       "triangles": 2292,
-      "vertices": 1564
+      "vertices": 1490
     },
     "PlayerClose": {
       "triangles": 12669,
-      "vertices": 7210
+      "vertices": 6996
     },
     "PlayerLine": {
       "triangles": 7457,
-      "vertices": 4503
+      "vertices": 4346
     },
     "PlayerRank": {
       "triangles": 2324,
-      "vertices": 1594
+      "vertices": 1520
     }
   },
   "palette": {
