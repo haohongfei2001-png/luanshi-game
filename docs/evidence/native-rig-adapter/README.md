@@ -54,3 +54,17 @@ weighted affine basis for normals, unlike MeshInstance3D's CPU bake helper,
 which orthonormalizes each bone. The adapter now matches the actual renderer,
 shares three matrix rows for positions/normals/tangents, and halves the palette.
 No tolerances were changed; rerun outcome is still pending.
+
+## Verified GPU result
+
+Run43605092161 caught unsupported `mix(mat4,mat4,float)` in the real shader
+compiler; no result was promoted. Explicit scalar-weighted matrix arithmetic
+fixed the compilation. Run43605340752 at source8caba22786c717eb001529bb0eccd8a5530a78c0
+then PASSED all four unchanged pixel gates: rest, rotation, nonuniform scale and
+eighth-weight-tail motion. Each original 512x512 viewport has 39,109–41,654
+visible pixels; zero pixels differ by more than two 8-bit levels. Maximum
+per-channel difference was one level. These are actual llvmpipe Godot renders,
+not a CPU prediction. Native files, metadata and logs are in artifact14117927860;
+ZIP SHA256 cc65ed5d2bfbc9cc0cceac84014e848da8cef4c7193c33c590cf4c9c50979ca7.
+`passed-gpu.json` retains full figures. This is a synthetic preservation proof,
+NOT final character art, a naturally moving soldier, production FPS, or M5.
