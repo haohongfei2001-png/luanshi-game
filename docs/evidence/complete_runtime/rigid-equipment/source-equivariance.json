@@ -1,0 +1,2178 @@
+{
+  "source_sha256": "d6be3ff2afcab7a61822f49a8ac6fb57bf2630df4f22c0fded24bb5ca38fc823",
+  "source_unchanged": true,
+  "parts": [
+    {
+      "name": "Helmet dome gore 0",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.60534557119392e-07,
+          "max_normal_degrees": 2.9976601909923044,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.5497207641601562e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2785953857371184
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.1601032749114616e-06,
+          "max_normal_degrees": 7.47246307355167,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.1457672119140625e-06,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.20176117886103132
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 8.983165822411676e-07,
+          "max_normal_degrees": 10.337814566215329,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2586930260860072
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 8.682495233586358e-07,
+          "max_normal_degrees": 4.726916925110275,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.5497207641601562e-06,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.22821886063774366
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 7.976265679945842e-07,
+          "max_normal_degrees": 5.033297361876194,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.26097578509193836
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 1.2343266799396078e-06,
+          "max_normal_degrees": 5.563563952672525,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.6689300537109375e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2279105000556836
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 7.556092968161902e-07,
+          "max_normal_degrees": 8.100388743422492,
+          "UV_identical": false,
+          "max_UV_abs_error": 9.5367431640625e-07,
+          "normal_corners_over_one_degree": 12,
+          "p95_normal_degrees": 0.2739956418204152
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 0",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.578744511102138e-07,
+          "max_normal_degrees": 79.42173860172979,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 114,
+          "p95_normal_degrees": 9.307556656761033
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.0016035932232983e-06,
+          "max_normal_degrees": 49.27776310229327,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.364418029785156e-07,
+          "normal_corners_over_one_degree": 152,
+          "p95_normal_degrees": 8.156342370024635
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 7.131164342057183e-07,
+          "max_normal_degrees": 47.69763077488148,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 146,
+          "p95_normal_degrees": 3.746420424287632
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 4.53943218048093e-07,
+          "max_normal_degrees": 43.82041130934797,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 125,
+          "p95_normal_degrees": 12.386122773482693
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 1.0171311092984985e-06,
+          "max_normal_degrees": 33.94336817427787,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 153,
+          "p95_normal_degrees": 13.547396018042042
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 1.0839523383273232e-06,
+          "max_normal_degrees": 32.497189588889626,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 156,
+          "p95_normal_degrees": 7.1032372940262
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 6.238677886694153e-07,
+          "max_normal_degrees": 48.5302819097811,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 162,
+          "p95_normal_degrees": 9.674620756832748
+        }
+      ]
+    },
+    {
+      "name": "Helmet dome gore 1",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.183505934349475e-07,
+          "max_normal_degrees": 45.40981118053573,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.18285545933022437
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.0592606642779852e-06,
+          "max_normal_degrees": 52.26109944013535,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.1712367075965409
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 7.222774760671358e-07,
+          "max_normal_degrees": 8.399168835036633,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.18805386338449115
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 6.918503856576862e-07,
+          "max_normal_degrees": 17.95968738274581,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.24419857220303948
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.939787621763423e-07,
+          "max_normal_degrees": 12.518731987371961,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.20241516959978045
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 1.0161709510105037e-06,
+          "max_normal_degrees": 10.337699116975596,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.1773448628950993
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 1.1208044263327646e-06,
+          "max_normal_degrees": 24.72179954933472,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.3709068298339844e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.1877707669499983
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 1",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 1.0944762992445939e-06,
+          "max_normal_degrees": 19.277817771723367,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 127,
+          "p95_normal_degrees": 3.0855790644229506
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 9.860940230900404e-07,
+          "max_normal_degrees": 16.65055548362597,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 85,
+          "p95_normal_degrees": 5.204427808720611
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 7.379969528500428e-07,
+          "max_normal_degrees": 12.673832909535614,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 85,
+          "p95_normal_degrees": 4.97690267902886
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 8.9867881467103e-07,
+          "max_normal_degrees": 55.76004142652757,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 146,
+          "p95_normal_degrees": 15.965374074566048
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 8.394814429688492e-07,
+          "max_normal_degrees": 37.4972091261409,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 100,
+          "p95_normal_degrees": 6.419694811175492
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 8.190851040189479e-07,
+          "max_normal_degrees": 13.39635624074827,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.364418029785156e-07,
+          "normal_corners_over_one_degree": 87,
+          "p95_normal_degrees": 5.448742950136686
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 8.980666709916014e-07,
+          "max_normal_degrees": 47.94413558527275,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 131,
+          "p95_normal_degrees": 13.419583808788468
+        }
+      ]
+    },
+    {
+      "name": "Helmet dome gore 2",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 8.431963307392376e-07,
+          "max_normal_degrees": 4.4932085696257245,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1324882507324219e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2139030746898041
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 9.130638063288084e-07,
+          "max_normal_degrees": 1.1152206383905743,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 8,
+          "p95_normal_degrees": 0.2082797651569614
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 8.80849469382305e-07,
+          "max_normal_degrees": 2.2509956488637726,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.2516975402832031e-06,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.2473150031927446
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 7.332525655707151e-07,
+          "max_normal_degrees": 6.048846441391569,
+          "UV_identical": false,
+          "max_UV_abs_error": 9.5367431640625e-07,
+          "normal_corners_over_one_degree": 12,
+          "p95_normal_degrees": 0.17760832511122132
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 9.792583501312962e-07,
+          "max_normal_degrees": 1.2756665339784838,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 4,
+          "p95_normal_degrees": 0.19204488602927808
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 9.152930651747908e-07,
+          "max_normal_degrees": 3.3732537370606757,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.18801002497034566
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 8.632159223143737e-07,
+          "max_normal_degrees": 3.6056760373344137,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.19677556735828133
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 2",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.518730271605731e-07,
+          "max_normal_degrees": 103.99478723997488,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.364418029785156e-07,
+          "normal_corners_over_one_degree": 62,
+          "p95_normal_degrees": 6.422707607651743
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 9.406104506784626e-07,
+          "max_normal_degrees": 100.5020266518237,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 82,
+          "p95_normal_degrees": 12.670670572220859
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 7.70841944457938e-07,
+          "max_normal_degrees": 16.140754152749487,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 87,
+          "p95_normal_degrees": 4.256256968363588
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 5.610050989370979e-07,
+          "max_normal_degrees": 31.047342038569838,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 82,
+          "p95_normal_degrees": 8.459600835068441
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 7.159242286446052e-07,
+          "max_normal_degrees": 27.29246148330853,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 66,
+          "p95_normal_degrees": 4.95252268792824
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 9.453059190658671e-07,
+          "max_normal_degrees": 116.03496187901148,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.364418029785156e-07,
+          "normal_corners_over_one_degree": 94,
+          "p95_normal_degrees": 7.064065627593736
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 7.695512154704383e-07,
+          "max_normal_degrees": 40.17844247953327,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 87,
+          "p95_normal_degrees": 10.979428548649272
+        }
+      ]
+    },
+    {
+      "name": "Helmet dome gore 3",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 8.481197169486456e-07,
+          "max_normal_degrees": 5.080804740766279,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.470348358154297e-06,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.2651185494229338
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.1598930998133458e-06,
+          "max_normal_degrees": 3.602194089377351,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.8014183044433594e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2548161027151354
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 8.85092596596728e-07,
+          "max_normal_degrees": 7.299600633572047,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.854534149169922e-06,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.2431961183214463
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 6.368206193652167e-07,
+          "max_normal_degrees": 1.466570309050475,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.9604644775390625e-06,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.21167126232551692
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.222167799725146e-07,
+          "max_normal_degrees": 7.842761744570036,
+          "UV_identical": false,
+          "max_UV_abs_error": 3.159046173095703e-06,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.23951021520768218
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 8.363275596992603e-07,
+          "max_normal_degrees": 0.6539841731263523,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.8014183044433594e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.21605269889289458
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 9.810086319489586e-07,
+          "max_normal_degrees": 1.4267935074543285,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.4960765838623047e-05,
+          "normal_corners_over_one_degree": 8,
+          "p95_normal_degrees": 0.26250297736801276
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 3",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.32720158479758e-07,
+          "max_normal_degrees": 14.026823899954431,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 136,
+          "p95_normal_degrees": 2.2173054180320264
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.1115028718050578e-06,
+          "max_normal_degrees": 26.444212136273904,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 105,
+          "p95_normal_degrees": 4.7544118051545095
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 8.332483150061125e-07,
+          "max_normal_degrees": 28.4873793178019,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 85,
+          "p95_normal_degrees": 5.0323570470514545
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 9.889642379926408e-07,
+          "max_normal_degrees": 36.82750982165386,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 112,
+          "p95_normal_degrees": 2.9234552500802136
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 7.244188883229974e-07,
+          "max_normal_degrees": 11.938417114079673,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 96,
+          "p95_normal_degrees": 2.146971845258007
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 8.13366779553754e-07,
+          "max_normal_degrees": 24.71536084308961,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 113,
+          "p95_normal_degrees": 2.444726771195976
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 9.671372538750102e-07,
+          "max_normal_degrees": 37.053352398000186,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 136,
+          "p95_normal_degrees": 4.918651080316717
+        }
+      ]
+    },
+    {
+      "name": "Helmet dome gore 4",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 8.034661397854203e-07,
+          "max_normal_degrees": 5.122919812307539,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.3543834686279297e-05,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.3257258032757651
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 9.666341083754254e-07,
+          "max_normal_degrees": 4.4080977380290625,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.5854835510253906e-05,
+          "normal_corners_over_one_degree": 8,
+          "p95_normal_degrees": 0.28577138446455064
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 6.74783304673503e-07,
+          "max_normal_degrees": 17.501323695728665,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.867813110351562e-06,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.2113706394394251
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 7.215694138989117e-07,
+          "max_normal_degrees": 8.718409377081555,
+          "UV_identical": false,
+          "max_UV_abs_error": 3.6656856536865234e-05,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.3351714089414403
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 7.087434730918454e-07,
+          "max_normal_degrees": 7.398287164416862,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.3589859008789062e-05,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.2662701082951058
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 8.953473571571882e-07,
+          "max_normal_degrees": 12.262757637772577,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.8848648071289062e-05,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2721734717425524
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 7.539932013076954e-07,
+          "max_normal_degrees": 5.597030770077095,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.4497509002685547e-05,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2495207273777472
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 4",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.335898462334627e-07,
+          "max_normal_degrees": 37.939261301019734,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.424022674560547e-06,
+          "normal_corners_over_one_degree": 196,
+          "p95_normal_degrees": 2.7596992311279456
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.114160285611313e-06,
+          "max_normal_degrees": 63.56549341002427,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.9802322387695312e-06,
+          "normal_corners_over_one_degree": 246,
+          "p95_normal_degrees": 19.92285721530586
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 9.120020471599209e-07,
+          "max_normal_degrees": 63.245651984569776,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.112720489501953e-06,
+          "normal_corners_over_one_degree": 191,
+          "p95_normal_degrees": 19.5420606015777
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 7.562223872643765e-07,
+          "max_normal_degrees": 25.97709448044599,
+          "UV_identical": false,
+          "max_UV_abs_error": 3.516674041748047e-06,
+          "normal_corners_over_one_degree": 195,
+          "p95_normal_degrees": 5.602172460749357
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.577513779108626e-07,
+          "max_normal_degrees": 54.399232297286645,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.589557647705078e-06,
+          "normal_corners_over_one_degree": 137,
+          "p95_normal_degrees": 10.477105940780275
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 1.0174522880311845e-06,
+          "max_normal_degrees": 49.189885248451226,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.1792948246002197e-06,
+          "normal_corners_over_one_degree": 144,
+          "p95_normal_degrees": 3.0322562861670685
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 8.14186665061019e-07,
+          "max_normal_degrees": 60.9945374921137,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.900859832763672e-06,
+          "normal_corners_over_one_degree": 162,
+          "p95_normal_degrees": 15.305903765444297
+        }
+      ]
+    },
+    {
+      "name": "Helmet dome gore 5",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 8.344097917433654e-07,
+          "max_normal_degrees": 22.32710141428286,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0728836059570312e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.17496694201118518
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 9.84302306031881e-07,
+          "max_normal_degrees": 17.638293929378907,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.24891303880764148
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 7.834796098708554e-07,
+          "max_normal_degrees": 5.162473922235699,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.473592758178711e-06,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.2169451737845218
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 6.388002654734959e-07,
+          "max_normal_degrees": 11.570905154366605,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.16215474290912393
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.673995299327533e-07,
+          "max_normal_degrees": 26.706534377525934,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.20728302657602088
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 8.962348771644175e-07,
+          "max_normal_degrees": 16.66000636715528,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.8775463104248047e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.2178909554174415
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 8.990812364366805e-07,
+          "max_normal_degrees": 20.483255038440554,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.9371509552001953e-06,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.22621869376223722
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 5",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 9.525891368250683e-07,
+          "max_normal_degrees": 35.477923194653336,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 86,
+          "p95_normal_degrees": 2.4364359604000856
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 8.393980679370198e-07,
+          "max_normal_degrees": 19.469335852406598,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 104,
+          "p95_normal_degrees": 2.571173169034145
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 5.850903176651832e-07,
+          "max_normal_degrees": 9.033405821652215,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 122,
+          "p95_normal_degrees": 1.921023590657593
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 6.281212837976122e-07,
+          "max_normal_degrees": 19.610455277544116,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 102,
+          "p95_normal_degrees": 2.8020835927140637
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.381108915373708e-07,
+          "max_normal_degrees": 41.166630521733985,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 156,
+          "p95_normal_degrees": 8.164387576135546
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 7.233375131812663e-07,
+          "max_normal_degrees": 22.290930566114955,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 105,
+          "p95_normal_degrees": 6.02901527550776
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 1.0242846503966421e-06,
+          "max_normal_degrees": 32.2017397492887,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 82,
+          "p95_normal_degrees": 2.516452958528569
+        }
+      ]
+    },
+    {
+      "name": "Helmet dome gore 6",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 6.562160082580927e-07,
+          "max_normal_degrees": 1.4110396557523963,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 12,
+          "p95_normal_degrees": 0.2279306489103987
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.0926752456264902e-06,
+          "max_normal_degrees": 0.8873480841720744,
+          "UV_identical": false,
+          "max_UV_abs_error": 9.5367431640625e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.20422663078069486
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 7.238273182786678e-07,
+          "max_normal_degrees": 3.1848261628539687,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1324882507324219e-06,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.18412102279627512
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 5.997974157448241e-07,
+          "max_normal_degrees": 2.592724972598396,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1324882507324219e-06,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.23764569175961606
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 7.835325588112929e-07,
+          "max_normal_degrees": 0.7421499692106597,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.364418029785156e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.19014365185692267
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 7.50069805120406e-07,
+          "max_normal_degrees": 8.493852200269366,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 24,
+          "p95_normal_degrees": 0.23381781110638628
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 1.0246078067936335e-06,
+          "max_normal_degrees": 1.1726205216977046,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 8,
+          "p95_normal_degrees": 0.17201024481879393
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 6",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.584755710504526e-07,
+          "max_normal_degrees": 77.80647353179046,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 81,
+          "p95_normal_degrees": 13.855472840124145
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.005983082611491e-06,
+          "max_normal_degrees": 98.7653915399132,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 75,
+          "p95_normal_degrees": 9.906252293874587
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 7.335727986319021e-07,
+          "max_normal_degrees": 41.99989817980685,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 86,
+          "p95_normal_degrees": 15.455687814998718
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 7.795652423157654e-07,
+          "max_normal_degrees": 28.873668991354307,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 103,
+          "p95_normal_degrees": 4.53504052441862
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.867350861923506e-07,
+          "max_normal_degrees": 17.649667048372663,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 94,
+          "p95_normal_degrees": 4.70238740305122
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 8.480546790416089e-07,
+          "max_normal_degrees": 114.58535415903386,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 83,
+          "p95_normal_degrees": 11.715565844610552
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 6.585475365302939e-07,
+          "max_normal_degrees": 31.526835603366695,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 82,
+          "p95_normal_degrees": 5.170019233883197
+        }
+      ]
+    },
+    {
+      "name": "Helmet dome gore 7",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 117,
+      "post_modifier_vertices": 426,
+      "post_modifier_corners": 1696,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.540893650363564e-07,
+          "max_normal_degrees": 1.3209164352327945,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 4,
+          "p95_normal_degrees": 0.22779759292806023
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 1.1073118658324444e-06,
+          "max_normal_degrees": 0.7361628559490221,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.2218952178955078e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.2993378396362052
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 8.008080839325984e-07,
+          "max_normal_degrees": 1.8106118843286585,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 16,
+          "p95_normal_degrees": 0.22756167616785314
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 7.604337461598637e-07,
+          "max_normal_degrees": 2.051390366565155,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1622905731201172e-06,
+          "normal_corners_over_one_degree": 20,
+          "p95_normal_degrees": 0.24166875271540564
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 8.553182458798742e-07,
+          "max_normal_degrees": 1.7777039456317016,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1622905731201172e-06,
+          "normal_corners_over_one_degree": 12,
+          "p95_normal_degrees": 0.25262470662746866
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 9.130045997297168e-07,
+          "max_normal_degrees": 1.334099467401729,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 12,
+          "p95_normal_degrees": 0.252083158152473
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 1.1719633244661507e-06,
+          "max_normal_degrees": 3.4555899857691097,
+          "UV_identical": false,
+          "max_UV_abs_error": 2.5033950805664062e-06,
+          "normal_corners_over_one_degree": 28,
+          "p95_normal_degrees": 0.2593637992846465
+        }
+      ]
+    },
+    {
+      "name": "Helmet gore seam 7",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 26,
+      "post_modifier_vertices": 188,
+      "post_modifier_corners": 744,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 6.763283132515298e-07,
+          "max_normal_degrees": 19.417125083532735,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 106,
+          "p95_normal_degrees": 4.818895088701755
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 9.755840941779639e-07,
+          "max_normal_degrees": 16.28951710707373,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.748603820800781e-07,
+          "normal_corners_over_one_degree": 100,
+          "p95_normal_degrees": 3.335978916483767
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 6.35662300398731e-07,
+          "max_normal_degrees": 20.548061155027483,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.960464477539062e-07,
+          "normal_corners_over_one_degree": 82,
+          "p95_normal_degrees": 5.394992442670117
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 7.325643386105905e-07,
+          "max_normal_degrees": 21.59633306645978,
+          "UV_identical": false,
+          "max_UV_abs_error": 9.5367431640625e-07,
+          "normal_corners_over_one_degree": 115,
+          "p95_normal_degrees": 2.8927214168916424
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 8.183554765880801e-07,
+          "max_normal_degrees": 32.68559105729264,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 95,
+          "p95_normal_degrees": 3.0596712314014036
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 9.431076419028374e-07,
+          "max_normal_degrees": 5.904197688741184,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 104,
+          "p95_normal_degrees": 2.8904302030867686
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 7.86319960872342e-07,
+          "max_normal_degrees": 38.895922199359575,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 88,
+          "p95_normal_degrees": 5.993683532564267
+        }
+      ]
+    },
+    {
+      "name": "Helmet brow band",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 192,
+      "post_modifier_vertices": 1152,
+      "post_modifier_corners": 4608,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 7.071821509853109e-07,
+          "max_normal_degrees": 0.018874929160980294,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.76837158203125e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008354611696507438
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 7.298812198307308e-07,
+          "max_normal_degrees": 0.015797664913561632,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008793970188367068
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 5.813152985407117e-07,
+          "max_normal_degrees": 0.016530140685805418,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.556510925292969e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008418023202153398
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 5.804465615784909e-07,
+          "max_normal_degrees": 0.01581937601806239,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.631016731262207e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.00842486409688471
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.158305478468359e-07,
+          "max_normal_degrees": 0.020439628945017243,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.364418029785156e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008757040970917703
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 5.445265945891344e-07,
+          "max_normal_degrees": 0.01660844964781074,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.76837158203125e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008264127319629467
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 7.470715518872836e-07,
+          "max_normal_degrees": 0.01651980460349383,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.364418029785156e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008131525685955527
+        }
+      ]
+    },
+    {
+      "name": "Helmet articulated left guard",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 189,
+      "post_modifier_vertices": 634,
+      "post_modifier_corners": 2528,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 4.3303236457457697e-07,
+          "max_normal_degrees": 0.019259968204662414,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0728836059570312e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008820436040133937
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 7.292501845955903e-07,
+          "max_normal_degrees": 0.014695530682206038,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.599592208862305e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.009169698213295276
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 5.108772648294677e-07,
+          "max_normal_degrees": 0.021307744760787888,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008892897414803012
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 5.244716615203844e-07,
+          "max_normal_degrees": 0.02027503528102065,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.009522006660991643
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 4.388847813431991e-07,
+          "max_normal_degrees": 0.016226791001643207,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008258879673965661
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 6.231553697689927e-07,
+          "max_normal_degrees": 0.019340354590082407,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.450580596923828e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.00855971257758973
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 5.62058912792641e-07,
+          "max_normal_degrees": 0.016961779082312726,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.450580596923828e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.009301424920918433
+        }
+      ]
+    },
+    {
+      "name": "Helmet articulated back guard",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 189,
+      "post_modifier_vertices": 634,
+      "post_modifier_corners": 2528,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 4.34471164990377e-07,
+          "max_normal_degrees": 0.018273259148240125,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.00653582627567283
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 7.63275645791835e-07,
+          "max_normal_degrees": 0.021230692493157146,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.599592208862305e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.0073894398657193185
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 5.605304097738165e-07,
+          "max_normal_degrees": 0.019849655569841796,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.642673492431641e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.007173986737305004
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 4.0929009531100377e-07,
+          "max_normal_degrees": 0.01863425045572651,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.419156074523926e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.007487452007987825
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 3.3656249886543384e-07,
+          "max_normal_degrees": 0.01686836673426633,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.344650268554688e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.007289917862800258
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 6.814819209466914e-07,
+          "max_normal_degrees": 0.01612656424664623,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.0066704143353522784
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 5.803742358066578e-07,
+          "max_normal_degrees": 0.010468424829490772,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.227063179016113e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.006380902440493823
+        }
+      ]
+    },
+    {
+      "name": "Helmet articulated right guard",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 189,
+      "post_modifier_vertices": 634,
+      "post_modifier_corners": 2528,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 4.140911362379992e-07,
+          "max_normal_degrees": 0.018187200795596523,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.007685479606489789
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 7.354355345406455e-07,
+          "max_normal_degrees": 0.019547809831927658,
+          "UV_identical": false,
+          "max_UV_abs_error": 9.685754776000977e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.00846713725436207
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 4.507376710878129e-07,
+          "max_normal_degrees": 0.01811705081726863,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0132789611816406e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008929256822188803
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 3.4265410313738204e-07,
+          "max_normal_degrees": 0.017933758758318114,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.003545761108398e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008759428113457797
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 4.687915343856547e-07,
+          "max_normal_degrees": 0.01899593314112981,
+          "UV_identical": false,
+          "max_UV_abs_error": 7.152557373046875e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.009634729161258767
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 5.254142616705047e-07,
+          "max_normal_degrees": 0.02051301526249363,
+          "UV_identical": false,
+          "max_UV_abs_error": 8.940696716308594e-07,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.009330365919869691
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 6.345476286702451e-07,
+          "max_normal_degrees": 0.026481630192777657,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0728836059570312e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.009156229711213413
+        }
+      ]
+    },
+    {
+      "name": "Helmet crown fitting",
+      "bone": "DEF-neck.03",
+      "source_bones": 308,
+      "source_vertices": 48,
+      "post_modifier_vertices": 288,
+      "post_modifier_corners": 1152,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 6.876010228293296e-07,
+          "max_normal_degrees": 0.02033166341527575,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1324882507324219e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.012717404740000816
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 8.732438308342736e-07,
+          "max_normal_degrees": 0.033178573454391416,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.0728836059570312e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.0143252867742797
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 8.783483004655491e-07,
+          "max_normal_degrees": 0.024828450679853967,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1324882507324219e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014495942391543237
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 6.717459425205208e-07,
+          "max_normal_degrees": 0.022840953437714445,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.3113021850585938e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.011694387137753262
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 6.9431645141208e-07,
+          "max_normal_degrees": 0.018520754910691117,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1920928955078125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.013209050471266966
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 8.799268622016121e-07,
+          "max_normal_degrees": 0.022119905507983702,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1920928955078125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014361869370789903
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 9.126565939337023e-07,
+          "max_normal_degrees": 0.0201653602292512,
+          "UV_identical": false,
+          "max_UV_abs_error": 1.1920928955078125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014003620105836617
+        }
+      ]
+    },
+    {
+      "name": "REBUILD short curved split tasset 0",
+      "bone": "DEF-spine.01",
+      "source_bones": 308,
+      "source_vertices": 216,
+      "post_modifier_vertices": 3024,
+      "post_modifier_corners": 11664,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 3.422726493160679e-07,
+          "max_normal_degrees": 0.019816432900636817,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.291534423828125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008710535455138868
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 3.422726493160679e-07,
+          "max_normal_degrees": 0.019816432900636817,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.291534423828125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008710535455138868
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 3.422726493160679e-07,
+          "max_normal_degrees": 0.019816432900636817,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.291534423828125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008710535455138868
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 3.422726493160679e-07,
+          "max_normal_degrees": 0.019816432900636817,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.291534423828125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008710535455138868
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 3.422726493160679e-07,
+          "max_normal_degrees": 0.019816432900636817,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.291534423828125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008710535455138868
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 3.422726493160679e-07,
+          "max_normal_degrees": 0.019816432900636817,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.291534423828125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008710535455138868
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 3.422726493160679e-07,
+          "max_normal_degrees": 0.019816432900636817,
+          "UV_identical": false,
+          "max_UV_abs_error": 4.291534423828125e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008710535455138868
+        }
+      ]
+    },
+    {
+      "name": "REBUILD short curved split tasset 1",
+      "bone": "DEF-spine.01",
+      "source_bones": 308,
+      "source_vertices": 216,
+      "post_modifier_vertices": 3024,
+      "post_modifier_corners": 11664,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 3.286037845392579e-07,
+          "max_normal_degrees": 0.04119060451419618,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.794929504394531e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014778650964245492
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 3.286037845392579e-07,
+          "max_normal_degrees": 0.04119060451419618,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.794929504394531e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014778650964245492
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 3.286037845392579e-07,
+          "max_normal_degrees": 0.04119060451419618,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.794929504394531e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014778650964245492
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 3.286037845392579e-07,
+          "max_normal_degrees": 0.04119060451419618,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.794929504394531e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014778650964245492
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 3.286037845392579e-07,
+          "max_normal_degrees": 0.04119060451419618,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.794929504394531e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014778650964245492
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 3.286037845392579e-07,
+          "max_normal_degrees": 0.04119060451419618,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.794929504394531e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014778650964245492
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 3.286037845392579e-07,
+          "max_normal_degrees": 0.04119060451419618,
+          "UV_identical": false,
+          "max_UV_abs_error": 6.794929504394531e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.014778650964245492
+        }
+      ]
+    },
+    {
+      "name": "REBUILD short curved split tasset 2",
+      "bone": "DEF-spine.01",
+      "source_bones": 308,
+      "source_vertices": 216,
+      "post_modifier_vertices": 3024,
+      "post_modifier_corners": 11664,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 3.443012280595878e-07,
+          "max_normal_degrees": 0.023138677710046435,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.029141902923584e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008923323663385293
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 3.443012280595878e-07,
+          "max_normal_degrees": 0.023138677710046435,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.029141902923584e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008923323663385293
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 3.443012280595878e-07,
+          "max_normal_degrees": 0.023138677710046435,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.029141902923584e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008923323663385293
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 3.443012280595878e-07,
+          "max_normal_degrees": 0.023138677710046435,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.029141902923584e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008923323663385293
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 3.443012280595878e-07,
+          "max_normal_degrees": 0.023138677710046435,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.029141902923584e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008923323663385293
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 3.443012280595878e-07,
+          "max_normal_degrees": 0.023138677710046435,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.029141902923584e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008923323663385293
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 3.443012280595878e-07,
+          "max_normal_degrees": 0.023138677710046435,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.029141902923584e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.008923323663385293
+        }
+      ]
+    },
+    {
+      "name": "REBUILD short curved split tasset 3",
+      "bone": "DEF-spine.01",
+      "source_bones": 308,
+      "source_vertices": 216,
+      "post_modifier_vertices": 3024,
+      "post_modifier_corners": 11664,
+      "all_original_weights_one": true,
+      "modifiers": [
+        "ARMATURE",
+        "SOLIDIFY",
+        "BEVEL"
+      ],
+      "rows": [
+        {
+          "phase": 0.013,
+          "identical_topology": true,
+          "max_position_m": 3.385857941422102e-07,
+          "max_normal_degrees": 0.04349389697817638,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.066394805908203e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.01550751371673609
+        },
+        {
+          "phase": 0.13,
+          "identical_topology": true,
+          "max_position_m": 3.385857941422102e-07,
+          "max_normal_degrees": 0.04349389697817638,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.066394805908203e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.01550751371673609
+        },
+        {
+          "phase": 0.317,
+          "identical_topology": true,
+          "max_position_m": 3.385857941422102e-07,
+          "max_normal_degrees": 0.04349389697817638,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.066394805908203e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.01550751371673609
+        },
+        {
+          "phase": 0.47,
+          "identical_topology": true,
+          "max_position_m": 3.385857941422102e-07,
+          "max_normal_degrees": 0.04349389697817638,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.066394805908203e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.01550751371673609
+        },
+        {
+          "phase": 0.683,
+          "identical_topology": true,
+          "max_position_m": 3.385857941422102e-07,
+          "max_normal_degrees": 0.04349389697817638,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.066394805908203e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.01550751371673609
+        },
+        {
+          "phase": 0.83,
+          "identical_topology": true,
+          "max_position_m": 3.385857941422102e-07,
+          "max_normal_degrees": 0.04349389697817638,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.066394805908203e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.01550751371673609
+        },
+        {
+          "phase": 0.987,
+          "identical_topology": true,
+          "max_position_m": 3.385857941422102e-07,
+          "max_normal_degrees": 0.04349389697817638,
+          "UV_identical": false,
+          "max_UV_abs_error": 5.066394805908203e-06,
+          "normal_corners_over_one_degree": 0,
+          "p95_normal_degrees": 0.01550751371673609
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    "GEO-topLT-recut",
+    "Eyes",
+    "eyebrow001",
+    "eyelashes01",
+    "Young complete author face module",
+    "REBUILD whole contoured breast back and side carrier",
+    "REBUILD overlapping circumferential lamellar",
+    "REBUILD graded shoulder yoke L",
+    "REBUILD shoulder overlapping rows L",
+    "REBUILD graded shoulder yoke R",
+    "REBUILD shoulder overlapping rows R",
+    "SPEAR whole unbroken wood shaft no tassel",
+    "SPEAR forged leaf point",
+    "GEO-HandsJA.001",
+    "GEO-bootsLT.001",
+    "GEO-gauntletsDG",
+    "GEO-pantsLT.001",
+    "GEO-sashDG.001"
+  ],
+  "scope": "Only whole-object single-original-bone final Solidify/Bevel geometry; no mixed-weight equipment, cloth, hands or artistic acceptance",
+  "gpu_tested": false
+}

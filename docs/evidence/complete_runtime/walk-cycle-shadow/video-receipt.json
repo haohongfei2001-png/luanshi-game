@@ -1,0 +1,11 @@
+{
+  "file": "walk-turn-samples-18hz-lossless.mkv",
+  "bytes": 654997,
+  "sha256": "e7511863ca0c2854809fe8b845578dca07c736f7f5ce4ffe711e607ab1f33214",
+  "frames": 24,
+  "source_sample_hz": 18,
+  "duration_seconds": 1.3333333333333333,
+  "codec": "FFV1 lossless, actual Godot PNG sequence",
+  "wall_clock_FPS_measurement": false,
+  "whole_body_or_gameplay": false
+}

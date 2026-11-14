@@ -1,0 +1,581 @@
+{
+  "normal_mode": "shared_authored_RGBA16F_interpolated_walk",
+  "normal_bank_bytes": 278208,
+  "rows": [
+    {
+      "authored_motion": true,
+      "name": "walk-0",
+      "normal_bank_blend": 0.0,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.0,
+      "synthetic_bones": [],
+      "world_turn_degrees": 0.0,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 4,
+      "visible": 25714,
+      "mean_canvas_max_rgb_error": 1.0007970473345588e-05,
+      "pixels_over_two_levels": 4,
+      "fraction_over_two_levels": 0.00015555728396982187,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-13",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.13,
+      "synthetic_bones": [],
+      "world_turn_degrees": 46.8,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 7,
+      "visible": 25914,
+      "mean_canvas_max_rgb_error": 1.0486677581188726e-05,
+      "pixels_over_two_levels": 7,
+      "fraction_over_two_levels": 0.0002701242571582928,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-47",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.47,
+      "synthetic_bones": [],
+      "world_turn_degrees": 169.2,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 2,
+      "visible": 27310,
+      "mean_canvas_max_rgb_error": 1.0755950329350491e-05,
+      "pixels_over_two_levels": 2,
+      "fraction_over_two_levels": 7.323324789454412e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-83",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.83,
+      "synthetic_bones": [],
+      "world_turn_degrees": 298.8,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 3,
+      "visible": 28954,
+      "mean_canvas_max_rgb_error": 9.274950214460784e-06,
+      "pixels_over_two_levels": 3,
+      "fraction_over_two_levels": 0.00010361262692546798,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-50",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        2,
+        3
+      ],
+      "phase": 0.5,
+      "synthetic_bones": [],
+      "world_turn_degrees": 180.0,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 1,
+      "visible": 26308,
+      "mean_canvas_max_rgb_error": 6.971172257965686e-06,
+      "pixels_over_two_levels": 1,
+      "fraction_over_two_levels": 3.80112513303938e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-100",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 1.0,
+      "synthetic_bones": [],
+      "world_turn_degrees": 360.0,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 10,
+      "visible": 25767,
+      "mean_canvas_max_rgb_error": 1.282037473192402e-05,
+      "pixels_over_two_levels": 10,
+      "fraction_over_two_levels": 0.00038809329762874993,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-00",
+      "normal_bank_blend": 0.118589743589744,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.0154166666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 5.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 13,
+      "visible": 24997,
+      "mean_canvas_max_rgb_error": 1.198263729319853e-05,
+      "pixels_over_two_levels": 13,
+      "fraction_over_two_levels": 0.0005200624074888987,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-01",
+      "normal_bank_blend": 0.439102564102564,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.0570833333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 20.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 9,
+      "visible": 24007,
+      "mean_canvas_max_rgb_error": 1.2102314070159313e-05,
+      "pixels_over_two_levels": 9,
+      "fraction_over_two_levels": 0.0003748906568917399,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-02",
+      "normal_bank_blend": 0.759615384615385,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.09875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 35.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 10,
+      "visible": 24576,
+      "mean_canvas_max_rgb_error": 1.2730617149203432e-05,
+      "pixels_over_two_levels": 10,
+      "fraction_over_two_levels": 0.0004069010416666667,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-03",
+      "normal_bank_blend": 0.0306372549019608,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.140416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 50.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 5,
+      "visible": 26328,
+      "mean_canvas_max_rgb_error": 9.589101753982843e-06,
+      "pixels_over_two_levels": 5,
+      "fraction_over_two_levels": 0.0001899118808872683,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-04",
+      "normal_bank_blend": 0.153186274509804,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.182083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 65.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 8,
+      "visible": 27769,
+      "mean_canvas_max_rgb_error": 1.1653526156556372e-05,
+      "pixels_over_two_levels": 8,
+      "fraction_over_two_levels": 0.00028809103676761855,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-05",
+      "normal_bank_blend": 0.275735294117647,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.22375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 80.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 4,
+      "visible": 28747,
+      "mean_canvas_max_rgb_error": 1.0411879595588236e-05,
+      "pixels_over_two_levels": 4,
+      "fraction_over_two_levels": 0.0001391449542560963,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-06",
+      "normal_bank_blend": 0.39828431372549,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.265416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 95.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 5,
+      "visible": 29235,
+      "mean_canvas_max_rgb_error": 1.1818081724877451e-05,
+      "pixels_over_two_levels": 5,
+      "fraction_over_two_levels": 0.0001710278775440397,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-07",
+      "normal_bank_blend": 0.520833333333333,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.307083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 110.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 3,
+      "visible": 29103,
+      "mean_canvas_max_rgb_error": 1.0755950329350491e-05,
+      "pixels_over_two_levels": 3,
+      "fraction_over_two_levels": 0.00010308215647871353,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-08",
+      "normal_bank_blend": 0.643382352941176,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.34875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 125.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 0,
+      "visible": 28747,
+      "mean_canvas_max_rgb_error": 6.163354013480392e-06,
+      "pixels_over_two_levels": 0,
+      "fraction_over_two_levels": 0.0,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-09",
+      "normal_bank_blend": 0.76593137254902,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.390416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 140.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 1,
+      "visible": 28780,
+      "mean_canvas_max_rgb_error": 7.973465265012255e-06,
+      "pixels_over_two_levels": 1,
+      "fraction_over_two_levels": 3.4746351633078526e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-10",
+      "normal_bank_blend": 0.888480392156863,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.432083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 155.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 4,
+      "visible": 28300,
+      "mean_canvas_max_rgb_error": 7.360121783088235e-06,
+      "pixels_over_two_levels": 4,
+      "fraction_over_two_levels": 0.0001413427561837456,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-11",
+      "normal_bank_blend": 0.124999999999997,
+      "normal_bank_indices": [
+        2,
+        3
+      ],
+      "phase": 0.47375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 170.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 1,
+      "visible": 27196,
+      "mean_canvas_max_rgb_error": 6.193273207720588e-06,
+      "pixels_over_two_levels": 1,
+      "fraction_over_two_levels": 3.6770113251948816e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-12",
+      "normal_bank_blend": 0.0467171717171716,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.515416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 185.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 4,
+      "visible": 25798,
+      "mean_canvas_max_rgb_error": 9.963091681985294e-06,
+      "pixels_over_two_levels": 4,
+      "fraction_over_two_levels": 0.00015505077913016512,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-13",
+      "normal_bank_blend": 0.172979797979798,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.557083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 200.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 1,
+      "visible": 24476,
+      "mean_canvas_max_rgb_error": 7.85378848805147e-06,
+      "pixels_over_two_levels": 1,
+      "fraction_over_two_levels": 4.085634907664651e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-14",
+      "normal_bank_blend": 0.299242424242424,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.59875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 215.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 5,
+      "visible": 24307,
+      "mean_canvas_max_rgb_error": 9.274950214460784e-06,
+      "pixels_over_two_levels": 5,
+      "fraction_over_two_levels": 0.00020570206113465256,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-15",
+      "normal_bank_blend": 0.42550505050505,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.640416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 230.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 1,
+      "visible": 25359,
+      "mean_canvas_max_rgb_error": 7.749071308210784e-06,
+      "pixels_over_two_levels": 1,
+      "fraction_over_two_levels": 3.943373161402263e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-16",
+      "normal_bank_blend": 0.551767676767677,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.682083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 245.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 2,
+      "visible": 26963,
+      "mean_canvas_max_rgb_error": 7.719152113970588e-06,
+      "pixels_over_two_levels": 2,
+      "fraction_over_two_levels": 7.417572228609576e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-17",
+      "normal_bank_blend": 0.678030303030303,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.72375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 260.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 2,
+      "visible": 28304,
+      "mean_canvas_max_rgb_error": 1.0007970473345588e-05,
+      "pixels_over_two_levels": 2,
+      "fraction_over_two_levels": 7.066139061616732e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-18",
+      "normal_bank_blend": 0.80429292929293,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.765416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 275.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 1,
+      "visible": 28846,
+      "mean_canvas_max_rgb_error": 7.434919768688725e-06,
+      "pixels_over_two_levels": 1,
+      "fraction_over_two_levels": 3.4666851556541634e-05,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-19",
+      "normal_bank_blend": 0.930555555555556,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.807083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 290.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 6,
+      "visible": 28762,
+      "mean_canvas_max_rgb_error": 9.648940142463235e-06,
+      "pixels_over_two_levels": 6,
+      "fraction_over_two_levels": 0.00020860858076628887,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-20",
+      "normal_bank_blend": 0.110294117647059,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.84875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 305.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 4,
+      "visible": 29201,
+      "mean_canvas_max_rgb_error": 1.1040182674632353e-05,
+      "pixels_over_two_levels": 4,
+      "fraction_over_two_levels": 0.00013698161021882813,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-21",
+      "normal_bank_blend": 0.355392156862746,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.890416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 320.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 0,
+      "visible": 29152,
+      "mean_canvas_max_rgb_error": 9.529263365502451e-06,
+      "pixels_over_two_levels": 0,
+      "fraction_over_two_levels": 0.0,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-22",
+      "normal_bank_blend": 0.600490196078432,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.932083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 335.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 8,
+      "visible": 28316,
+      "mean_canvas_max_rgb_error": 1.0860667509191177e-05,
+      "pixels_over_two_levels": 8,
+      "fraction_over_two_levels": 0.00028252578047746857,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-23",
+      "normal_bank_blend": 0.845588235294118,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.97375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 350.55,
+      "actor_only_denominator": true,
+      "shadow_scene_pixels_over_two_levels": 7,
+      "visible": 26919,
+      "mean_canvas_max_rgb_error": 7.734111711090686e-06,
+      "pixels_over_two_levels": 7,
+      "fraction_over_two_levels": 0.0002600393773914336,
+      "strict_pass": true
+    }
+  ],
+  "failures": [],
+  "original_two_levels_two_percent_gate": true,
+  "reference": "Blender complete source 9 influences and evaluated corner normals, not native8",
+  "art_pass": false,
+  "M5": "NOT_TESTED"
+}

@@ -1,0 +1,584 @@
+{
+  "rows": [
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-00",
+      "max_angle_degrees": 0.019489226025203144,
+      "p95_angle_degrees": 0.01412087493360736
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-01",
+      "max_angle_degrees": 0.019474930149101073,
+      "p95_angle_degrees": 0.014010322370444882
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-02",
+      "max_angle_degrees": 0.019471890068594913,
+      "p95_angle_degrees": 0.013946119573630678
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-03",
+      "max_angle_degrees": 0.019465624151183563,
+      "p95_angle_degrees": 0.014052533738888635
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-04",
+      "max_angle_degrees": 0.01946636672998273,
+      "p95_angle_degrees": 0.013988519169075987
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-05",
+      "max_angle_degrees": 0.019469051711409772,
+      "p95_angle_degrees": 0.013880836174677795
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-06",
+      "max_angle_degrees": 0.01946658226556583,
+      "p95_angle_degrees": 0.013860302114900514
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-07",
+      "max_angle_degrees": 0.019466368283974366,
+      "p95_angle_degrees": 0.01385818139947782
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-08",
+      "max_angle_degrees": 0.019463449125959237,
+      "p95_angle_degrees": 0.013858647006098597
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-09",
+      "max_angle_degrees": 0.019465852482997523,
+      "p95_angle_degrees": 0.013888979132492584
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-10",
+      "max_angle_degrees": 0.019447230213621592,
+      "p95_angle_degrees": 0.014050662049566233
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-11",
+      "max_angle_degrees": 0.019465750965075208,
+      "p95_angle_degrees": 0.014097200681595076
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-12",
+      "max_angle_degrees": 0.01946319910016712,
+      "p95_angle_degrees": 0.014093750035972363
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-13",
+      "max_angle_degrees": 0.019463903590920012,
+      "p95_angle_degrees": 0.01409563358458368
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-14",
+      "max_angle_degrees": 0.019464609778827358,
+      "p95_angle_degrees": 0.014050473864879238
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-15",
+      "max_angle_degrees": 0.019467859721741695,
+      "p95_angle_degrees": 0.014050990172387484
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-16",
+      "max_angle_degrees": 0.019488990935635962,
+      "p95_angle_degrees": 0.01405440026076416
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-17",
+      "max_angle_degrees": 0.019463998901755646,
+      "p95_angle_degrees": 0.014042307240619988
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-18",
+      "max_angle_degrees": 0.019483384805457672,
+      "p95_angle_degrees": 0.014105068208030671
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-19",
+      "max_angle_degrees": 0.019432545856464666,
+      "p95_angle_degrees": 0.014104170807319492
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-20",
+      "max_angle_degrees": 0.019478755908739608,
+      "p95_angle_degrees": 0.014051958803939765
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-21",
+      "max_angle_degrees": 0.01944958156922475,
+      "p95_angle_degrees": 0.014092261753647861
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-22",
+      "max_angle_degrees": 0.019465456481467077,
+      "p95_angle_degrees": 0.014104228737093591
+    },
+    {
+      "mesh": "Eyes",
+      "pose": "cycle-23",
+      "max_angle_degrees": 0.019466370661768557,
+      "p95_angle_degrees": 0.014104384253254302
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-00",
+      "max_angle_degrees": 0.019373774803623095,
+      "p95_angle_degrees": 0.013135393919330312
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-01",
+      "max_angle_degrees": 0.019331683463293833,
+      "p95_angle_degrees": 0.013086999475941517
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-02",
+      "max_angle_degrees": 0.019345996666866806,
+      "p95_angle_degrees": 0.013199956035136027
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-03",
+      "max_angle_degrees": 0.021213090072148767,
+      "p95_angle_degrees": 0.013433010149677212
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-04",
+      "max_angle_degrees": 0.01934753259156435,
+      "p95_angle_degrees": 0.013278403604522534
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-05",
+      "max_angle_degrees": 0.019345630220482184,
+      "p95_angle_degrees": 0.013199268076657642
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-06",
+      "max_angle_degrees": 0.019346609141135413,
+      "p95_angle_degrees": 0.01316524100045628
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-07",
+      "max_angle_degrees": 0.01934884627549559,
+      "p95_angle_degrees": 0.013152160422596273
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-08",
+      "max_angle_degrees": 0.019349936257089067,
+      "p95_angle_degrees": 0.013165844742636462
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-09",
+      "max_angle_degrees": 0.021134945623048556,
+      "p95_angle_degrees": 0.013439154520731723
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-10",
+      "max_angle_degrees": 0.019332430413942028,
+      "p95_angle_degrees": 0.01319606078506575
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-11",
+      "max_angle_degrees": 0.019226939592819216,
+      "p95_angle_degrees": 0.013319303610536144
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-12",
+      "max_angle_degrees": 0.019227993192002368,
+      "p95_angle_degrees": 0.013272329316217716
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-13",
+      "max_angle_degrees": 0.019352223140934214,
+      "p95_angle_degrees": 0.013266516482550852
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-14",
+      "max_angle_degrees": 0.019349604298298514,
+      "p95_angle_degrees": 0.0132767674895935
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-15",
+      "max_angle_degrees": 0.019344720658916403,
+      "p95_angle_degrees": 0.013277769871312257
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-16",
+      "max_angle_degrees": 0.019371399608651658,
+      "p95_angle_degrees": 0.01323036242555263
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-17",
+      "max_angle_degrees": 0.019332086993674464,
+      "p95_angle_degrees": 0.013295388663001884
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-18",
+      "max_angle_degrees": 0.021567839246112355,
+      "p95_angle_degrees": 0.013515094281592192
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-19",
+      "max_angle_degrees": 0.02173028293426763,
+      "p95_angle_degrees": 0.01351464562414412
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-20",
+      "max_angle_degrees": 0.019382824948289332,
+      "p95_angle_degrees": 0.01321878828197059
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-21",
+      "max_angle_degrees": 0.021493373887087712,
+      "p95_angle_degrees": 0.013509748660391318
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-22",
+      "max_angle_degrees": 0.02121988892782124,
+      "p95_angle_degrees": 0.013509887857723144
+    },
+    {
+      "mesh": "Young complete author face module",
+      "pose": "cycle-23",
+      "max_angle_degrees": 0.021218301669503843,
+      "p95_angle_degrees": 0.013508438006742184
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-00",
+      "max_angle_degrees": 0.015497507818123224,
+      "p95_angle_degrees": 0.013448587342413908
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-01",
+      "max_angle_degrees": 0.015998607623401544,
+      "p95_angle_degrees": 0.013414145710742778
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-02",
+      "max_angle_degrees": 0.01596288926732084,
+      "p95_angle_degrees": 0.013907435803221676
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-03",
+      "max_angle_degrees": 0.02064321436162343,
+      "p95_angle_degrees": 0.014995290383241253
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-04",
+      "max_angle_degrees": 0.016938254660180882,
+      "p95_angle_degrees": 0.0147100260140234
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-05",
+      "max_angle_degrees": 0.017364303757759162,
+      "p95_angle_degrees": 0.013406327899438795
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-06",
+      "max_angle_degrees": 0.015972055009053004,
+      "p95_angle_degrees": 0.013421574730231905
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-07",
+      "max_angle_degrees": 0.015971424305026426,
+      "p95_angle_degrees": 0.013420459750452115
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-08",
+      "max_angle_degrees": 0.015971115299111927,
+      "p95_angle_degrees": 0.013423679751355186
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-09",
+      "max_angle_degrees": 0.017364283524054166,
+      "p95_angle_degrees": 0.013657681290838494
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-10",
+      "max_angle_degrees": 0.015970554139490247,
+      "p95_angle_degrees": 0.01341956040639758
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-11",
+      "max_angle_degrees": 0.015966621452418825,
+      "p95_angle_degrees": 0.013446955336082637
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-12",
+      "max_angle_degrees": 0.015964309377526194,
+      "p95_angle_degrees": 0.013448404404152677
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-13",
+      "max_angle_degrees": 0.015967008040142658,
+      "p95_angle_degrees": 0.013446303251786793
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-14",
+      "max_angle_degrees": 0.015968919133359374,
+      "p95_angle_degrees": 0.013426285157509817
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-15",
+      "max_angle_degrees": 0.015970863589853567,
+      "p95_angle_degrees": 0.013430074706985692
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-16",
+      "max_angle_degrees": 0.015628783816913874,
+      "p95_angle_degrees": 0.013488651209738233
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-17",
+      "max_angle_degrees": 0.015973540176559407,
+      "p95_angle_degrees": 0.013396982199245757
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-18",
+      "max_angle_degrees": 0.01822171192097621,
+      "p95_angle_degrees": 0.015283997314429558
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-19",
+      "max_angle_degrees": 0.018221282760023758,
+      "p95_angle_degrees": 0.015287947613939425
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-20",
+      "max_angle_degrees": 0.017247569233035893,
+      "p95_angle_degrees": 0.013458790432626795
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-21",
+      "max_angle_degrees": 0.018276262476604896,
+      "p95_angle_degrees": 0.015152358653697467
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-22",
+      "max_angle_degrees": 0.018277358634025048,
+      "p95_angle_degrees": 0.01515252161363699
+    },
+    {
+      "mesh": "eyebrow001",
+      "pose": "cycle-23",
+      "max_angle_degrees": 0.018278855626524697,
+      "p95_angle_degrees": 0.015149727563781083
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-00",
+      "max_angle_degrees": 0.017746079884095167,
+      "p95_angle_degrees": 0.012070500328951853
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-01",
+      "max_angle_degrees": 0.0177328052672246,
+      "p95_angle_degrees": 0.012299133702431098
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-02",
+      "max_angle_degrees": 0.01767676471282437,
+      "p95_angle_degrees": 0.012055805208229388
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-03",
+      "max_angle_degrees": 0.01773130716820864,
+      "p95_angle_degrees": 0.012060388597228447
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-04",
+      "max_angle_degrees": 0.01770916172475373,
+      "p95_angle_degrees": 0.012060157496014686
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-05",
+      "max_angle_degrees": 0.017704018859667218,
+      "p95_angle_degrees": 0.01207106208244799
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-06",
+      "max_angle_degrees": 0.01770075017498078,
+      "p95_angle_degrees": 0.012018625783866832
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-07",
+      "max_angle_degrees": 0.01770199512699951,
+      "p95_angle_degrees": 0.012018216821380597
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-08",
+      "max_angle_degrees": 0.017705317144211672,
+      "p95_angle_degrees": 0.012022394803515454
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-09",
+      "max_angle_degrees": 0.017718209412507294,
+      "p95_angle_degrees": 0.01241914817850518
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-10",
+      "max_angle_degrees": 0.017730171516346833,
+      "p95_angle_degrees": 0.012017756968957266
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-11",
+      "max_angle_degrees": 0.017736118862767505,
+      "p95_angle_degrees": 0.012017378503041227
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-12",
+      "max_angle_degrees": 0.017736270166575682,
+      "p95_angle_degrees": 0.012016970893306514
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-13",
+      "max_angle_degrees": 0.017727990905247175,
+      "p95_angle_degrees": 0.01201922163144014
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-14",
+      "max_angle_degrees": 0.017725872038497858,
+      "p95_angle_degrees": 0.012019840355923012
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-15",
+      "max_angle_degrees": 0.017723690055305732,
+      "p95_angle_degrees": 0.012016730872426601
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-16",
+      "max_angle_degrees": 0.017724688024917185,
+      "p95_angle_degrees": 0.012078746464564378
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-17",
+      "max_angle_degrees": 0.017736875615482487,
+      "p95_angle_degrees": 0.012021540180190277
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-18",
+      "max_angle_degrees": 0.017735482069805707,
+      "p95_angle_degrees": 0.012402866562731284
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-19",
+      "max_angle_degrees": 0.01771351850809919,
+      "p95_angle_degrees": 0.012403738380219251
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-20",
+      "max_angle_degrees": 0.01776487344291289,
+      "p95_angle_degrees": 0.012072950453933083
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-21",
+      "max_angle_degrees": 0.01775579686236961,
+      "p95_angle_degrees": 0.012456281725869106
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-22",
+      "max_angle_degrees": 0.017740787910925725,
+      "p95_angle_degrees": 0.012451606631963034
+    },
+    {
+      "mesh": "eyelashes01",
+      "pose": "cycle-23",
+      "max_angle_degrees": 0.017741765341554437,
+      "p95_angle_degrees": 0.012452066526433414
+    }
+  ],
+  "max_interpolated_normal_angle_degrees": 0.02173028293426763,
+  "bank_bytes": 278208,
+  "held_out": 24,
+  "original_blend_sha": "d6be3ff2afcab7a61822f49a8ac6fb57bf2630df4f22c0fded24bb5ca38fc823"
+}

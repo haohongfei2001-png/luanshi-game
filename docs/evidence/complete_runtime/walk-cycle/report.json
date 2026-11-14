@@ -1,0 +1,440 @@
+{
+  "M5": "NOT_TESTED",
+  "actor_isolation_mask": true,
+  "army_performance": "NOT_TESTED",
+  "art_pass": false,
+  "driver": "metal",
+  "engine": {
+    "build": "custom_build",
+    "hash": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+    "hex": 263683,
+    "major": 4,
+    "minor": 6,
+    "patch": 3,
+    "status": "stable",
+    "string": "4.6.3-stable (custom_build)",
+    "timestamp": 1779284873
+  },
+  "fixture_sha256": "45519f02a87adbbe3d20fcd1219948e57a35a2e7586d8c1e3c69c4f05fddc2ed",
+  "ground_and_directional_shadow": true,
+  "inventory": [
+    {
+      "all_source_uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "alpha_preserved": true,
+      "bones": 163,
+      "name": "Eyes",
+      "original_over8_vertices": 0.0,
+      "slots": 3.0,
+      "vertices": 1076
+    },
+    {
+      "all_source_uv_layers": [
+        "Original source UV"
+      ],
+      "alpha_preserved": false,
+      "bones": 163,
+      "name": "Young complete author face module",
+      "original_over8_vertices": 14.0,
+      "slots": 9.0,
+      "vertices": 4346
+    },
+    {
+      "all_source_uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "alpha_preserved": true,
+      "bones": 163,
+      "name": "eyebrow001",
+      "original_over8_vertices": 0.0,
+      "slots": 4.0,
+      "vertices": 124
+    },
+    {
+      "all_source_uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "alpha_preserved": true,
+      "bones": 163,
+      "name": "eyelashes01",
+      "original_over8_vertices": 0.0,
+      "slots": 4.0,
+      "vertices": 250
+    }
+  ],
+  "materials": "source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence",
+  "method": "mobile",
+  "normal_bank_bytes": 278208,
+  "normal_bank_limit": "Six sparse samples interpolated for held-out Walk only; no arbitrary facial deformation or whole-actor claim",
+  "normal_mode": "shared_authored_RGBA16F_interpolated_walk",
+  "reference": "Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin",
+  "renderer": "Apple Paravirtual device (Apple5)",
+  "rows": [
+    {
+      "authored_motion": true,
+      "name": "walk-0",
+      "normal_bank_blend": 0.0,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.0,
+      "synthetic_bones": [],
+      "world_turn_degrees": 0.0
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-13",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.13,
+      "synthetic_bones": [],
+      "world_turn_degrees": 46.8
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-47",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.47,
+      "synthetic_bones": [],
+      "world_turn_degrees": 169.2
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-83",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.83,
+      "synthetic_bones": [],
+      "world_turn_degrees": 298.8
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-50",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        2,
+        3
+      ],
+      "phase": 0.5,
+      "synthetic_bones": [],
+      "world_turn_degrees": 180.0
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-100",
+      "normal_bank_blend": 1.0,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 1.0,
+      "synthetic_bones": [],
+      "world_turn_degrees": 360.0
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-00",
+      "normal_bank_blend": 0.118589743589744,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.0154166666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 5.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-01",
+      "normal_bank_blend": 0.439102564102564,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.0570833333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 20.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-02",
+      "normal_bank_blend": 0.759615384615385,
+      "normal_bank_indices": [
+        0,
+        1
+      ],
+      "phase": 0.09875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 35.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-03",
+      "normal_bank_blend": 0.0306372549019608,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.140416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 50.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-04",
+      "normal_bank_blend": 0.153186274509804,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.182083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 65.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-05",
+      "normal_bank_blend": 0.275735294117647,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.22375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 80.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-06",
+      "normal_bank_blend": 0.39828431372549,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.265416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 95.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-07",
+      "normal_bank_blend": 0.520833333333333,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.307083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 110.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-08",
+      "normal_bank_blend": 0.643382352941176,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.34875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 125.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-09",
+      "normal_bank_blend": 0.76593137254902,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.390416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 140.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-10",
+      "normal_bank_blend": 0.888480392156863,
+      "normal_bank_indices": [
+        1,
+        2
+      ],
+      "phase": 0.432083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 155.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-11",
+      "normal_bank_blend": 0.124999999999997,
+      "normal_bank_indices": [
+        2,
+        3
+      ],
+      "phase": 0.47375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 170.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-12",
+      "normal_bank_blend": 0.0467171717171716,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.515416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 185.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-13",
+      "normal_bank_blend": 0.172979797979798,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.557083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 200.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-14",
+      "normal_bank_blend": 0.299242424242424,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.59875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 215.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-15",
+      "normal_bank_blend": 0.42550505050505,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.640416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 230.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-16",
+      "normal_bank_blend": 0.551767676767677,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.682083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 245.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-17",
+      "normal_bank_blend": 0.678030303030303,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.72375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 260.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-18",
+      "normal_bank_blend": 0.80429292929293,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.765416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 275.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-19",
+      "normal_bank_blend": 0.930555555555556,
+      "normal_bank_indices": [
+        3,
+        4
+      ],
+      "phase": 0.807083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 290.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-20",
+      "normal_bank_blend": 0.110294117647059,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.84875,
+      "synthetic_bones": [],
+      "world_turn_degrees": 305.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-21",
+      "normal_bank_blend": 0.355392156862746,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.890416666666667,
+      "synthetic_bones": [],
+      "world_turn_degrees": 320.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-22",
+      "normal_bank_blend": 0.600490196078432,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.932083333333333,
+      "synthetic_bones": [],
+      "world_turn_degrees": 335.55
+    },
+    {
+      "authored_motion": true,
+      "name": "cycle-23",
+      "normal_bank_blend": 0.845588235294118,
+      "normal_bank_indices": [
+        4,
+        5
+      ],
+      "phase": 0.97375,
+      "synthetic_bones": [],
+      "world_turn_degrees": 350.55
+    }
+  ],
+  "source_sha256": "d6be3ff2afcab7a61822f49a8ac6fb57bf2630df4f22c0fded24bb5ca38fc823",
+  "walk_cycle": true
+}
