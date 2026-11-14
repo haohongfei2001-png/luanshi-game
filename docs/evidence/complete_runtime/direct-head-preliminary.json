@@ -1,0 +1,316 @@
+{
+  "status": "PRELIMINARY_OLD_SOURCE_CPU_ONLY",
+  "source_sha256": "957986f407c373dab9aa7f2b4d7ffd906627fa9ee9b0205ac5b6889bf8876b9c",
+  "source": "controlled-walk2, not latest layered8 or current final material source",
+  "blender": "4.3.2",
+  "source_nodes": 4,
+  "vertices": 5615,
+  "max_complete_source_position_error_m": 3.2685253764925487e-07,
+  "synthetic_tail_stress_max_error_if_drop_ninth_m": 0.006356658059210938,
+  "meshes": [
+    {
+      "name": "Eyes",
+      "vertices": 1064,
+      "bones": 163,
+      "max_influences": 3,
+      "over8_vertices": 0,
+      "weight_sum_range": [
+        0.9999999701976776,
+        1.0000000298023224
+      ],
+      "data": "direct-0.npz",
+      "data_sha256": "8fc855ca43f8c4b8249764d27428ee6c8a154902434531cd2601f4ca9bc943ab",
+      "rows": [
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.7835205534980396e-07,
+          "phase": 0.13,
+          "frame": 4.16,
+          "vertices": 1064,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 2.205821813248097e-07,
+            "residual_full_weights": 1.7835205534980396e-07,
+            "normalized_full_weights": 1.7835205534980396e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.3574783951198314e-07,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 1064,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 1.7883793260716605e-07,
+            "residual_full_weights": 1.3574783926400689e-07,
+            "normalized_full_weights": 1.3574783951198314e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.9042909713356614e-07,
+          "phase": 0.83,
+          "frame": 26.56,
+          "vertices": 1064,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 2.3252864715583807e-07,
+            "residual_full_weights": 1.9042909713356614e-07,
+            "normalized_full_weights": 1.9042909713356614e-07
+          }
+        },
+        {
+          "probe": "synthetic_tail_rotation_translation",
+          "synthetic_bones": [
+            "risorius03.R",
+            "risorius03.L"
+          ],
+          "dropped_tail_normalized_max_error_m": 1.3574783951198314e-07,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 1064,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 1.7883793260716605e-07,
+            "residual_full_weights": 1.3574783926400689e-07,
+            "normalized_full_weights": 1.3574783951198314e-07
+          }
+        }
+      ]
+    },
+    {
+      "name": "Young complete author face module",
+      "vertices": 4177,
+      "bones": 163,
+      "max_influences": 9,
+      "over8_vertices": 14,
+      "weight_sum_range": [
+        0.999999956227839,
+        1.0000000447034836
+      ],
+      "data": "direct-1.npz",
+      "data_sha256": "f29e0fce60806b1763ddbe5fff778a248f32e38d6eea4ca3c733ebd583a99c23",
+      "rows": [
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 2.5075268434618484e-07,
+          "phase": 0.13,
+          "frame": 4.16,
+          "vertices": 4177,
+          "over8_points": 14,
+          "max_position_error_m": {
+            "raw_full_weights": 2.8397942560401296e-07,
+            "residual_full_weights": 2.5075268434618484e-07,
+            "normalized_full_weights": 2.5075268434618484e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 2.8801414842079025e-07,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 4177,
+          "over8_points": 14,
+          "max_position_error_m": {
+            "raw_full_weights": 3.2685253764925487e-07,
+            "residual_full_weights": 2.8801414642075573e-07,
+            "normalized_full_weights": 2.8801414842079025e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 2.5882901913512053e-07,
+          "phase": 0.83,
+          "frame": 26.56,
+          "vertices": 4177,
+          "over8_points": 14,
+          "max_position_error_m": {
+            "raw_full_weights": 2.892704103700167e-07,
+            "residual_full_weights": 2.5882901913512053e-07,
+            "normalized_full_weights": 2.5882901913512053e-07
+          }
+        },
+        {
+          "probe": "synthetic_tail_rotation_translation",
+          "synthetic_bones": [
+            "risorius03.R",
+            "risorius03.L"
+          ],
+          "dropped_tail_normalized_max_error_m": 0.006356658059210938,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 4177,
+          "over8_points": 14,
+          "max_position_error_m": {
+            "raw_full_weights": 3.2685253764925487e-07,
+            "residual_full_weights": 2.8801414642075573e-07,
+            "normalized_full_weights": 2.8801414842079025e-07
+          }
+        }
+      ]
+    },
+    {
+      "name": "eyebrow001",
+      "vertices": 124,
+      "bones": 163,
+      "max_influences": 4,
+      "over8_vertices": 0,
+      "weight_sum_range": [
+        0.9999999664723873,
+        1.0000000381842256
+      ],
+      "data": "direct-2.npz",
+      "data_sha256": "71632be660de2a6ca8ed124456636a2133e027dd7eb86e99dd6d521ffcb9921a",
+      "rows": [
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.4339401650678476e-07,
+          "phase": 0.13,
+          "frame": 4.16,
+          "vertices": 124,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 1.6634573929284357e-07,
+            "residual_full_weights": 1.4339401866847645e-07,
+            "normalized_full_weights": 1.4339401650678476e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.9988757219687487e-07,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 124,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 2.3701712519907716e-07,
+            "residual_full_weights": 1.9988757260315075e-07,
+            "normalized_full_weights": 1.9988757219687487e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.575399808810798e-07,
+          "phase": 0.83,
+          "frame": 26.56,
+          "vertices": 124,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 1.8023938170223275e-07,
+            "residual_full_weights": 1.5753998300555914e-07,
+            "normalized_full_weights": 1.575399808810798e-07
+          }
+        },
+        {
+          "probe": "synthetic_tail_rotation_translation",
+          "synthetic_bones": [
+            "risorius03.R",
+            "risorius03.L"
+          ],
+          "dropped_tail_normalized_max_error_m": 2.329684131300679e-07,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 124,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 2.686033106599868e-07,
+            "residual_full_weights": 2.3296818021015254e-07,
+            "normalized_full_weights": 2.329684131300679e-07
+          }
+        }
+      ]
+    },
+    {
+      "name": "eyelashes01",
+      "vertices": 250,
+      "bones": 163,
+      "max_influences": 4,
+      "over8_vertices": 0,
+      "weight_sum_range": [
+        0.9999999701976776,
+        1.000000030733645
+      ],
+      "data": "direct-3.npz",
+      "data_sha256": "a8e759d16d02a967c65e39d11f9ad541be7ef7cbb26bd204bda50b8f65207591",
+      "rows": [
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.75918637687411e-07,
+          "phase": 0.13,
+          "frame": 4.16,
+          "vertices": 250,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 2.1296248583842218e-07,
+            "residual_full_weights": 1.75918637687411e-07,
+            "normalized_full_weights": 1.75918637687411e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 2.9412031597888926e-07,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 250,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 3.199467708250034e-07,
+            "residual_full_weights": 2.9412031597888926e-07,
+            "normalized_full_weights": 2.9412031597888926e-07
+          }
+        },
+        {
+          "probe": "authored_walk",
+          "synthetic_bones": [],
+          "dropped_tail_normalized_max_error_m": 1.6721287381679813e-07,
+          "phase": 0.83,
+          "frame": 26.56,
+          "vertices": 250,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 1.9639407025199455e-07,
+            "residual_full_weights": 1.6721287381679813e-07,
+            "normalized_full_weights": 1.6721287381679813e-07
+          }
+        },
+        {
+          "probe": "synthetic_tail_rotation_translation",
+          "synthetic_bones": [
+            "risorius03.R",
+            "risorius03.L"
+          ],
+          "dropped_tail_normalized_max_error_m": 2.9412031597888926e-07,
+          "phase": 0.47,
+          "frame": 15.04,
+          "vertices": 250,
+          "over8_points": 0,
+          "max_position_error_m": {
+            "raw_full_weights": 3.199467708250034e-07,
+            "residual_full_weights": 2.9412031597888926e-07,
+            "normalized_full_weights": 2.9412031597888926e-07
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Four plain-LBS head/eye/brow/lash parts only",
+    "No source mesh, weight, UV or rest edited",
+    "No cloth MeshDeform, DQ, Solidify, Bevel or Multires support claimed",
+    "Normals/materials/GPU/latest source/army performance not yet tested",
+    "Synthetic mouth-corner rotation/translation is mathematical stress, not authored gameplay animation"
+  ],
+  "art_pass": false
+}
