@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import sys
+import subprocess
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools' / 'art'))
 from check_spear_transitions import address, regressions, world
@@ -58,6 +59,12 @@ class SpearTransitionTests(unittest.TestCase):
 
     def test_world_uses_basis_and_translation(self):
         self.assertEqual(world([[0,0,2],[0,3,0],[-4,0,0],[10,20,30]], [1,2,3]), [-2,26,32])
+
+    def test_fixture_audit_has_no_image_authoring_dependency(self):
+        art = str(Path(__file__).resolve().parents[1] / "tools" / "art")
+        code = "import sys; sys.path.insert(0, " + repr(art) + "); import check_spear_transitions; assert 'PIL' not in sys.modules"
+        result = subprocess.run([sys.executable, "-S", "-c", code], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_input_identity_preserved(self):
         self.assertEqual(json.loads((FIXTURE/'before.json').read_text()), self.sequence)

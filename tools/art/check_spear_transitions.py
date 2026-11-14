@@ -10,9 +10,6 @@ import hashlib
 import json
 from math import dist, floor
 from pathlib import Path
-from PIL import Image
-from check_company_motion import decoded
-from company_motion import LB, RB, LS, RS, leg_nodes, trans
 
 LAYOUT_HEIGHT = {"rc25": 1684, "rejected-native-pike": 1756}
 
@@ -60,6 +57,10 @@ def world(matrix, p):
 
 
 def replay(sequence, palette, layout):
+    # Palette replay needs authoring dependencies; address/fixture audits do not.
+    from PIL import Image
+    from check_company_motion import decoded
+    from company_motion import LB, RB, LS, RS, leg_nodes, trans
     bank = Image.open(palette).convert("RGBA")
     if bank.size != (528, LAYOUT_HEIGHT[layout]):
         raise ValueError(f"Palette {bank.size} does not match explicit layout {layout}")

@@ -1,5 +1,16 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## DOT-FULL-REBUILD-20261114 · Owner 拒绝旧几何补丁主线
+
+最新 Owner 要求整个地图、背景、人物重建，效果图仅为及格线。Dot 已停止把 R1/R2 旧布局修饰当美术主路线；不将被拒的 R2 冻结为新候选。保留 RC24 / RC25 与 PR61 可恢复代码，Codex 继续 PAUSED。
+
+R2 `141031aaaa` 真正 Godot 原生2K/4K run43602701915成功、已亲自审图并交付，但仍拒绝。[实图与失败记录](evidence/river-environment-slice/round2/VISUAL_REVIEW.md)。本地全回归 exit0；正式run43602706015在新审计顶层Pillow导入失败。本提交将纯数学审计与图像回放依赖隔离，标准Python和无site-packages各10测试通过，正式CI结论等待。
+
+下一动作：核实成熟完整可编辑且允许公共仓库再分发的场景/人物资产，完整重建桥至城门场景结构和人物骨架/权重/衣甲/动作。不可把已有Han城门/衣物/HM08部件再次导入或换色说成全面重建；新资源未授权的步骤保留阻塞，继续独立开发。不得购买/新增账号/访问Owner电脑。
+
+`dot/spear-contact-experiment` 源1d496bfb08b8、run43603906190正在实际A/B验证，只有单演员探针且默认关闭；这不是人物美术主路线。远端结果未读前不能声称实机通过。继续恢复：`git fetch origin && git switch dot/river-terrain-rebuild && git pull --ff-only`，先读本节、当前PR61与最新真实运行。
+
+
 ## DOT-RC26-R2 · 当前第二轮重建，实际画面待复核
 
 本提交继续 PR61。第一轮源 `70cdb716` 已在 run `43601296024` 真正运行原生2K/4K，8组同条件元数据一致，但自审仍不满足参考，不能作为美术PASS。[第一轮真实审图](evidence/river-environment-slice/VISUAL_REVIEW.md)。
