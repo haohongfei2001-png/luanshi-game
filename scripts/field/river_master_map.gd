@@ -7,6 +7,7 @@ const CLIFF := WORLD+"masters/coastal_cliff_02/coastal_cliff_02.gltf"
 const BROADLEAF := WORLD+"masters/island_tree_01/island_tree_01.gltf"
 const WOODLAND := WORLD+"woodland/field_woodland.glb"
 const SHRUB := WORLD+"masters/shrub_03/shrub_03.gltf"
+const THICKET := WORLD+"masters/shrub_01/shrub_01.gltf"
 const FERN := WORLD+"masters/fern_02/fern_02.gltf"
 const PINE := WORLD+"masters/pine_tree_01/pine_tree_01.gltf"
 var libraries:Dictionary={}
@@ -76,9 +77,9 @@ func _library(path:String) -> Dictionary:
 				material.alpha_scissor_threshold=.38
 				material.alpha_antialiasing_mode=BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
 
-			if path==BROADLEAF or path==FERN or path==SHRUB:
+			if path==BROADLEAF or path==FERN or path==SHRUB or path==THICKET:
 				var kind:=1 if "leaves" in material.resource_name else 0
-				if path==FERN or path==SHRUB: kind=3
+				if path==FERN or path==SHRUB or path==THICKET: kind=3
 				mesh.surface_set_material(surface,_botanical_material(material,kind))
 		parts[String(model.name)]=mesh
 	root.free()
@@ -268,15 +269,17 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 		cliff.name="EmbeddedRockBank"
 		cliff.lod_bias=1.15
 		cliff.visibility_range_end=210.
-		var accent:=_piece(STONE_PATH,"RiverStone%02d"%[i%6],
-			Vector3(center+entry.x*(shoulder+.5),-.55,entry.y+entry.z*.25),
-			Vector3(entry.z*.63,entry.z*.48,entry.z*.59),i*1.83)
-		accent.material_override=stone
-		accent.name="BankShoulderStone"
-		for j in 4:
-			var p:=Vector2(center+entry.x*(5.45+.24*(j%2)),entry.y+(j-1.5)*.84)
-			_native_understory(SHRUB,p,.64+.14*((i+j)%3),i*1.43+j,i+j)
-			if j%2==0:_native_understory(FERN,p+Vector2(entry.x*.65,.48),.45,i*.8+j,i+j)
+		for j in 3:
+			var width:=entry.z*(.84 if j==0 else .58)
+			var accent:=_piece(STONE_PATH,"RiverStone%02d"%[(i*5+j)%6],
+				Vector3(center+entry.x*(shoulder+.15+.28*j),-.57,entry.y+(j-1)*entry.z*.43),
+				Vector3(width,width*(.81 if j==0 else .73),width*.82),i*1.83+j*1.37)
+			accent.material_override=stone
+			accent.name="BankShoulderStone"
+		for j in 6:
+			var p:=Vector2(center+entry.x*(5.65+.34*(j%2)),entry.y+(j-2.5)*.67)
+			_native_understory(THICKET,p,.72+.18*((i+j)%3),i*1.43+j,i+j)
+			if j%2==0:_native_understory(FERN,p+Vector2(entry.x*.75,.48),.45,i*.8+j,i+j)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
@@ -326,10 +329,10 @@ func _banks_and_groves() -> void:
 		var entry:=near_groves[i]
 		var p:=Vector2(entry.x,entry.y)
 		_scene_plant(BROADLEAF,p,entry.z,i*2.1)
-		for j in 3:
-			var q:=p+Vector2(cos(i+j*2.1),sin(i+j*2.1))*3.1
-			_native_understory(SHRUB,q,.72+.17*(j%2),i+j*1.9,i+j)
-			_native_understory(FERN,q+Vector2(.9,-.4),.42+.06*j,j+.8*i,i+j)
+		for j in 9:
+			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.6+.18*j)
+			_native_understory(THICKET,q,.82+.14*(j%3),i+j*1.9,i+j)
+			if j%3==0:_native_understory(FERN,q+Vector2(.9,-.4),.42+.06*(j%3),j+.8*i,i+j)
 	var willow_positions:Array[Vector3]=[
 		Vector3(17.5,-11.5,0.),Vector3(17.5,11.5,1.),
 		Vector3(30.5,-25.,1.),Vector3(17.3,23.,0.),

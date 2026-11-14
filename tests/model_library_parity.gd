@@ -7,6 +7,7 @@ func _initialize() -> void:
 			preload("res://assets/river_gate/figures/field_company_master.glb"),
 			preload("res://assets/river_gate/equipment/field_equipment.glb"),
 			preload("res://assets/river_gate/world/architecture/river_fort.glb"),
+			preload("res://assets/river_gate/world/masters/shrub_01/shrub_01.gltf"),
 			preload("res://assets/river_gate/world/woodland/field_woodland.glb"),
 			preload("res://assets/river_gate/figures/field_garments.gltf"),
 			preload("res://assets/third_party/wildfire_garments/field_issues.glb"),

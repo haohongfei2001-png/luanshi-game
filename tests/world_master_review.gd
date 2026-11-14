@@ -24,7 +24,7 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	pic.resize(1440,810,Image.INTERPOLATE_LANCZOS)
 	pic.save_jpg(OUT+"/"+label+"-preview.jpg",.93)
 	var b=field.battle
-	var row:={"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"shadow_mode":field.map.sun.directional_shadow_mode,"shadow_pancake":field.map.sun.directional_shadow_pancake_size,"shadow_enabled":field.map.sun.shadow_enabled,"shadow_distance":field.map.sun.directional_shadow_max_distance,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
+	var row:={"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"shadow_mode":field.map.sun.directional_shadow_mode,"shadow_pancake":field.map.sun.directional_shadow_pancake_size,"shadow_enabled":field.map.sun.shadow_enabled,"sun_degrees":str(field.map.sun.rotation_degrees),"shadow_distance":field.map.sun.directional_shadow_max_distance,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _inventory() -> void:
@@ -71,13 +71,9 @@ func _run() -> void:
 	await _snap("bridgehead-0135",Ground.BRIDGE_VIEW,22.)
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
 	await _snap("grove-0135",Vector2(38.,-10.),18.)
-	await _snap("shadow-split",Ground.BRIDGE_VIEW,22.)
-	field.map.sun.directional_shadow_mode=DirectionalLight3D.SHADOW_ORTHOGONAL
-	await _snap("shadow-orthogonal",Ground.BRIDGE_VIEW,22.)
-	field.map.sun.directional_shadow_pancake_size=0.
-	await _snap("shadow-unclipped",Ground.BRIDGE_VIEW,22.)
-	field.map.sun.directional_shadow_pancake_size=20.
-	field.map.sun.directional_shadow_mode=DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)
+	await _snap("side-daylight",Ground.BRIDGE_VIEW,22.)
+	field.map.sun.rotation_degrees=Vector3(-48.,-31.,0.)
 	root.size=Vector2i(3840,2160)
 	await process_frame
 	await _snap("bridgehead-0135-uhd",Ground.BRIDGE_VIEW,22.)

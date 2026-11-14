@@ -22,6 +22,7 @@ ASSETS=[
     ("island_tree_01",220000,"Rico Cilliers and Rob Tuytel"),
     ("fern_02",6000,"Rico Cilliers and Rob Tuytel"),
     ("shrub_03",22000,"Rico Cilliers"),
+    ("shrub_01",42000,"Rico Cilliers"),
 ]
 HEADERS={"User-Agent":"Luanshi-River-Art/1.0 (github.com/haohongfei2001-png/luanshi-game)"}
 def read(url):

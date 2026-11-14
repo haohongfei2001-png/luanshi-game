@@ -29,7 +29,7 @@ jobs:
           python3 tools/art/import_field_equipment.py "$RUNNER_TEMP/art-sources"
           python3 tools/art/import_field_woodland.py "$RUNNER_TEMP/art-sources"
           blender --background --factory-startup --python-exit-code 1 --python tools/art/build_intact_bridge.py > artifacts/world-rebuild/bridge.log 2>&1 || { tail -n 60 artifacts/world-rebuild/bridge.log; exit 1; }
-          for asset in island_tree_01 fern_02 shrub_03; do
+          for asset in island_tree_01 fern_02 shrub_03 shrub_01; do
             if [ ! -f "assets/river_gate/world/masters/$asset/SOURCE.json" ]; then
               blender --background --factory-startup --python-exit-code 1 --python tools/art/import_world_masters.py -- "$RUNNER_TEMP/whole-plants" "$asset" > "artifacts/world-rebuild/$asset.log" 2>&1 || { tail -n 60 "artifacts/world-rebuild/$asset.log"; exit 1; }
             fi
