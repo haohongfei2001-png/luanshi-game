@@ -1,0 +1,26 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+FIELD_FILM_PROGRESS frame=0 tick=0
+FIELD_FILM_PROGRESS frame=10 tick=14
+FIELD_FILM_PROGRESS frame=20 tick=27
+FIELD_FILM_PROGRESS frame=30 tick=40
+FIELD_FILM_PROGRESS frame=40 tick=54
+FIELD_FILM_PROGRESS frame=50 tick=67
+FIELD_FILM_PROGRESS frame=60 tick=80
+FIELD_FILM_PROGRESS frame=70 tick=94
+FIELD_FILM_PROGRESS frame=80 tick=107
+FIELD_FILM_PROGRESS frame=90 tick=120
+FIELD_FILM_PROGRESS frame=100 tick=134
+FIELD_FILM_PROGRESS frame=110 tick=147
+FIELD_FILM_PROGRESS frame=120 tick=160
+FIELD_FILM_PROGRESS frame=130 tick=174
+FIELD_FILM_PROGRESS frame=140 tick=187
+FIELD_FILM_PROGRESS frame=150 tick=200
+FIELD_FILM_PROGRESS frame=160 tick=214
+FIELD_FILM_PROGRESS frame=170 tick=227
+FIELD_FILM_PROGRESS frame=179 tick=239
+FIELD_FILM_FACTS {"attacks":2260,"blocked_hits":21,"capture_sec":0.0,"crew_replacements":0,"dead":[145,186],"decision":"","dropped_weapons":[145,186],"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[852,601],"mission":"夺取河关","officer_corps":{"active_commands":[15,6],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[1028],[1040,1041,1042,1043,1044,1045,1046,1047,1048,1049]],"kills":[0,7],"ranked":true,"rescued":[[],[]],"skills":[16,13],"successions":[0,2],"wounded":[[],[]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":1225,"ram_hp":150.0,"ram_strokes":0,"result":"","routing":[10,84],"seed":61112,"soldiers_per_side":512,"tick":240}
+FIELD_FILM_PASS []

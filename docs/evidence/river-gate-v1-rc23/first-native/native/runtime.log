@@ -1,0 +1,4 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LUANSHI_READY engine=4.6.3-stable (official) soldiers=20+20 renderer=mobile profile=early_v1
+SCENE_SMOKE_PASS {"actions":{"attack":true,"guard":true,"lunge":true,"order_attack":true,"order_follow":true,"sweep":true},"frame_timing":{"device":"","display":"headless","sample_count":872,"wall_mean_ms":2.14410894495413,"wall_p50_ms":1.589,"wall_p95_ms":5.161},"hero_profile":{"id":"early_v1","revision":1},"mean_simulation_ms":1.0673389261745,"report":{"elapsed_seconds":14.9,"enemy_casualties":20,"enemy_survivors":0,"friendly_casualties":10,"friendly_survivors":10,"player_alive":true,"player_damage":395.91,"player_hp":54.15,"result":"Victory at the border","seed":184},"steps":894}

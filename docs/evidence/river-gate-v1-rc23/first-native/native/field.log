@@ -1,0 +1,5 @@
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_PACKAGE_PASS {"attacks":915,"blocked_hits":10,"capture_sec":0.0,"crew_replacements":0,"dead":[42,96],"decision":"","device":"","display":"headless","dropped_weapons":[42,96],"escaped":[0,0],"gate_hp":260.0,"hero_hp":100.0,"hits":[398,209],"mission":"夺取河关","officer_corps":{"active_commands":[16,12],"captives":[[],[]],"commanders":[1024,1040],"evacuated":[[],[]],"fallen":[[],[1041,1042,1043,1044]],"kills":[0,1],"ranked":true,"rescued":[[],[]],"skills":[1,5],"successions":[0,0],"wounded":[[],[]]},"officers":32,"orders_delivered":1,"orders_lost":0,"orders_refused":0,"ordinary_rosters":[512,512],"projectiles":516,"ram_hp":150.0,"ram_strokes":0,"result":"","resume_equal":true,"routing":[0,18],"seed":61112,"soldiers_per_side":512,"tick":100,"visible":339}
