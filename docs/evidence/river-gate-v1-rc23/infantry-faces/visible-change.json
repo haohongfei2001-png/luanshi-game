@@ -1,0 +1,202 @@
+[
+  {
+    "tag": "79-hand-front",
+    "delta": 501,
+    "crop": [
+      585,
+      164,
+      1015,
+      524
+    ]
+  },
+  {
+    "tag": "79-normal-front",
+    "delta": 54,
+    "crop": [
+      691,
+      389,
+      909,
+      553
+    ]
+  },
+  {
+    "tag": "79-ranks-front",
+    "delta": 80,
+    "crop": [
+      716,
+      416,
+      884,
+      554
+    ]
+  },
+  {
+    "tag": "79-officer-front",
+    "delta": 8,
+    "crop": [
+      590,
+      225,
+      1010,
+      557
+    ]
+  },
+  {
+    "tag": "79-profile-front",
+    "delta": 247,
+    "crop": [
+      710,
+      66,
+      890,
+      196
+    ]
+  },
+  {
+    "tag": "79-hand-rear",
+    "delta": 840,
+    "crop": [
+      585,
+      164,
+      1015,
+      524
+    ]
+  },
+  {
+    "tag": "79-normal-rear",
+    "delta": 54,
+    "crop": [
+      691,
+      389,
+      909,
+      553
+    ]
+  },
+  {
+    "tag": "79-ranks-rear",
+    "delta": 56,
+    "crop": [
+      716,
+      416,
+      884,
+      554
+    ]
+  },
+  {
+    "tag": "79-officer-rear",
+    "delta": 641,
+    "crop": [
+      590,
+      225,
+      1010,
+      557
+    ]
+  },
+  {
+    "tag": "79-profile-rear",
+    "delta": 899,
+    "crop": [
+      710,
+      66,
+      890,
+      196
+    ]
+  },
+  {
+    "tag": "188-hand-front",
+    "delta": 2608,
+    "crop": [
+      585,
+      164,
+      1015,
+      524
+    ]
+  },
+  {
+    "tag": "188-normal-front",
+    "delta": 324,
+    "crop": [
+      691,
+      389,
+      909,
+      553
+    ]
+  },
+  {
+    "tag": "188-ranks-front",
+    "delta": 124,
+    "crop": [
+      716,
+      416,
+      884,
+      554
+    ]
+  },
+  {
+    "tag": "188-officer-front",
+    "delta": 1387,
+    "crop": [
+      590,
+      225,
+      1010,
+      557
+    ]
+  },
+  {
+    "tag": "188-profile-front",
+    "delta": 753,
+    "crop": [
+      710,
+      66,
+      890,
+      196
+    ]
+  },
+  {
+    "tag": "188-hand-rear",
+    "delta": 973,
+    "crop": [
+      585,
+      164,
+      1015,
+      524
+    ]
+  },
+  {
+    "tag": "188-normal-rear",
+    "delta": 304,
+    "crop": [
+      691,
+      389,
+      909,
+      553
+    ]
+  },
+  {
+    "tag": "188-ranks-rear",
+    "delta": 134,
+    "crop": [
+      716,
+      416,
+      884,
+      554
+    ]
+  },
+  {
+    "tag": "188-officer-rear",
+    "delta": 1983,
+    "crop": [
+      590,
+      225,
+      1010,
+      557
+    ]
+  },
+  {
+    "tag": "188-profile-rear",
+    "delta": 192,
+    "crop": [
+      710,
+      66,
+      890,
+      196
+    ]
+  }
+]
