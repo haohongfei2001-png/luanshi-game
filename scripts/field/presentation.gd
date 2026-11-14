@@ -23,6 +23,8 @@ class Batch:
 	var used := 0
 	var submitted_count := 0
 
+## One explicit static authoring oracle can replace one presentation instance only.
+var review_hidden_actor_id:int=-1
 var battle: Battle
 var batches: Array[Batch] = []
 var groups: Dictionary = {}
@@ -222,6 +224,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float,cul
 			if rider.state==Battle.State.DEAD and rider.mounted and rider.mount_hp>0. and rider.lost_tick>=0 and not loose_mounts.has(id):
 				loose_mounts[id]=LooseMount.new(rider.pos,rider.facing,id)
 	for u in battle.roster:
+		if u.id==review_hidden_actor_id:continue
 		if u.state == Battle.State.ESCAPED: continue
 		var p := u.before.lerp(u.pos,alpha)
 		if absf(p.x-cull_center.x)>half_extent.x or absf(p.y-cull_center.y)>half_extent.y: continue

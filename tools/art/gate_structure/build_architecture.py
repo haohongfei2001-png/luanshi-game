@@ -49,6 +49,11 @@ for name,color,rough in [('masonry','897e6a',.92),('mortar','716a59',1),('timber
  m=bpy.data.materials.new(name);m.diffuse_color=tuple((int(color[i:i+2],16)/255)**2.2 for i in (0,2,4))+(1,);m.use_nodes=True;p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Base Color'].default_value=m.diffuse_color;p.inputs['Roughness'].default_value=rough;materials[name]=m
 m=bpy.data.materials.new('ProfessionalDeckWood_CC0');m.use_nodes=True;p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Roughness'].default_value=.92
 tex=m.node_tree.nodes.new('ShaderNodeTexImage');tex.image=bpy.data.images.load(str(out/'source/wooden_pier/modular_wooden_pier_planks_diff_2k.jpg'));m.node_tree.links.new(tex.outputs['Color'],p.inputs['Base Color']);materials['deck_wood']=m
+surface_scales={}
+if '--surface-root' in args:
+ sys.path.insert(0,str(Path(__file__).resolve().parent))
+ from apply_surface_materials import apply
+ surface_scales=apply(materials,args[args.index('--surface-root')+1])
 root=bpy.data.objects.new('AuthoredArchitecture',None);bpy.context.collection.objects.link(root)
 groups={}
 def group(name):
@@ -68,6 +73,22 @@ def mesh(name,verts,faces,mat,parent,uvs=None,normals=None):
     axis=max(range(3),key=lambda k:abs(poly.normal[k]))
     layer.data[li].uv=(v.y,v.z) if axis==0 else (v.x,v.z) if axis==1 else (v.x,v.y)
    else:layer.data[li].uv=(v.x*.3,v.z*.3+v.y*.05)
+ if mat in surface_scales:
+  # Preserve the author's original UVMap; a separate explicitly named material
+  # layer has metre-scale coordinates with timber grain along the member axis.
+  material_uv=d.uv_layers.new(name='MaterialUV_Metre');tile=surface_scales[mat]
+  lo=[min(v.co[k] for v in d.vertices) for k in range(3)];hi=[max(v.co[k] for v in d.vertices) for k in range(3)]
+  grain=max(range(3),key=lambda k:hi[k]-lo[k])
+  for poly in d.polygons:
+   normal_axis=max(range(3),key=lambda k:abs(poly.normal[k]));plane=[k for k in range(3) if k!=normal_axis]
+   if mat in ['timber','timber_cut'] and grain in plane:plane=[k for k in plane if k!=grain]+[grain]
+   for li in poly.loop_indices:
+    v=d.vertices[d.loops[li].vertex_index].co
+    if mat=='masonry' and name.startswith('GateVault_') and normal_axis==0:
+     # Radial voussoirs are individual cut stones: use a stone interior island,
+     # never print the wall's horizontal mortar courses over an arch block.
+     material_uv.data[li].uv=(.17+.28*(v.y-lo[1])/max(hi[1]-lo[1],.001),.03+.15*(v.z-lo[2])/max(hi[2]-lo[2],.001))
+    else:material_uv.data[li].uv=(v[plane[0]]/tile,v[plane[1]]/tile)
  if normals:
   for poly in d.polygons:poly.use_smooth=True
   d.normals_split_custom_set([normals[loop.vertex_index] for loop in d.loops])

@@ -1,0 +1,142 @@
+name: Dot complete stone timber road03 runtime build
+on:
+  push:
+    branches: ['dot/complete-region-runtime-build']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verified-runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      LUANSHI_AUTHORED_LANDFORM: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare bounded logs
+        run: mkdir -p artifacts/complete-study && touch artifacts/.gdignore
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43632863687
+          pattern: basin-recovery-*
+          merge-multiple: true
+          path: /tmp/basin-groups
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43627776697
+          pattern: reusable-region-derivatives-*
+          merge-multiple: true
+          path: /tmp/legacy-groups
+          github-token: ${{ github.token }}
+      - name: Restore verified reusable source derivatives, not old scene instances
+        run: |
+          set -euo pipefail
+          python tools/bounded_artifact_groups.py restore /tmp/basin-groups /tmp/basin-restored
+          python tools/bounded_artifact_groups.py restore /tmp/legacy-groups /tmp/legacy-restored
+          cp /tmp/basin-restored/source-manifest.json artifacts/complete-study/input-recovery.json
+      - name: Install unchanged official Godot and display
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/godot.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/godot.zip' | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          curl -fLsS --retry 2 https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz || curl -fLsS --retry 2 https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
+          echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum -c -
+          tar -xJf /tmp/blender.tar.xz -C /tmp
+          ./tools/prepare-font.sh
+          { uname -a; lscpu; free -m; godot --version; } >artifacts/complete-study/host.txt
+          godot --headless --editor --path . --import >artifacts/complete-study/import.log 2>&1
+          if grep -E "SCRIPT ERROR|SHADER ERROR|ERROR:" artifacts/complete-study/import.log; then exit 1; fi
+      - name: Build complete gate with verified professional surfaces
+        run: |
+          set -euo pipefail
+          python tools/art/gate_structure/fetch_surface_materials.py /tmp/gate-surfaces >artifacts/complete-study/surfaces.log 2>&1
+          mkdir -p /tmp/complete-gate/source assets/river_authored/architecture
+          ln -s "$PWD/assets/river_gate/world/masters/modular_wooden_pier" /tmp/complete-gate/source/wooden_pier
+          BLENDER=/tmp/blender-4.3.2-linux-x64/blender
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx /tmp/complete-gate --no-preview --native-roof-band --complete-gate-masonry --surface-root /tmp/gate-surfaces >artifacts/complete-study/gate-build.log 2>&1
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/audit_gate_bearing.py -- /tmp/complete-gate/source/architecture.blend /tmp/complete-gate/bearing-audit.json >artifacts/complete-study/gate-bearing.log 2>&1
+          cp /tmp/complete-gate/architecture.glb assets/river_authored/architecture/
+      - name: Rebuild profile-matched road03 and shared instances, no source rebake
+        run: |
+          set -euo pipefail
+          python tools/art/continuous_landform/fetch_earth.py /tmp/earth-source >artifacts/complete-study/earth-source.log 2>&1
+          mkdir -p assets/river_authored/{ground,woodland,grass}
+          godot --headless --path . --script tools/art/continuous_landform/build_region.gd -- assets/river_authored/ground/continuous-region.scn /tmp/earth-source >artifacts/complete-study/terrain-build.log 2>&1
+          godot --headless --path . --script tools/art/continuous_landform/build_grass_shoulders.gd -- /tmp/basin-restored/editable-sources/low-grass/realtime/derived.glb assets/river_authored/grass/region.scn >artifacts/complete-study/grass-build.log 2>&1
+          godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/basin-restored/editable-sources/field-oak/realtime/derived.glb /tmp/legacy-restored/bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn >artifacts/complete-study/woodland-build.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/*build.log; then exit 1; fi
+          godot --headless --editor --path . --import >artifacts/complete-study/assembled-import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/assembled-import.log; then exit 1; fi
+          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/scene-setup.log 150 -- godot --headless --path . --script tests/authored_architecture_capture.gd -- --road-section-study --camera-study --validate-pairs
+          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/gate-gameplay.log 100 -- godot --headless --path . --script tests/authored_gate_gameplay_contract.gd
+      - name: Preserve runtime separately from editable source
+        run: python tools/art/gate_structure/preserve_complete_region.py
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-00/**') != '' }}
+        with:
+          name: complete-region-runtime-00
+          path: artifacts/complete-runtime-groups/group-00
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-01/**') != '' }}
+        with:
+          name: complete-region-runtime-01
+          path: artifacts/complete-runtime-groups/group-01
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-02/**') != '' }}
+        with:
+          name: complete-region-runtime-02
+          path: artifacts/complete-runtime-groups/group-02
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-03/**') != '' }}
+        with:
+          name: complete-region-runtime-03
+          path: artifacts/complete-runtime-groups/group-03
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-04/**') != '' }}
+        with:
+          name: complete-region-runtime-04
+          path: artifacts/complete-runtime-groups/group-04
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-editable-groups/group-00/**') != '' }}
+        with:
+          name: complete-region-editable-00
+          path: artifacts/complete-editable-groups/group-00
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-editable-groups/group-01/**') != '' }}
+        with:
+          name: complete-region-editable-01
+          path: artifacts/complete-editable-groups/group-01
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-editable-groups/group-02/**') != '' }}
+        with:
+          name: complete-region-editable-02
+          path: artifacts/complete-editable-groups/group-02
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: complete-region-build-logs
+          path: artifacts/complete-study
+          retention-days: 30
+          if-no-files-found: error
