@@ -28,7 +28,18 @@ float noise(vec2 p) {
 	return mix(mix(hash(a),hash(a+vec2(1.,0.)),f.x),
 		mix(hash(a+vec2(0.,1.)),hash(a+vec2(1.)),f.x),f.y);
 }
+vec3 linear_color(vec3 color) {
+	if (!OUTPUT_IS_SRGB) return color;
+	return mix(color/12.92,pow((color+vec3(.055))/1.055,vec3(2.4)),step(vec3(.04045),color));
+}
+vec3 render_color(vec3 color) {
+	if (!OUTPUT_IS_SRGB) return color;
+	color = max(color,vec3(0.));
+	return mix(color*12.92,1.055*pow(color,vec3(1./2.4))-vec3(.055),step(vec3(.0031308),color));
+}
 vec3 surface_color(vec3 sample_color,vec3 pigment,float median) {
+	sample_color = linear_color(sample_color);
+	pigment = linear_color(pigment);
 	float value = dot(sample_color,vec3(.2126,.7152,.0722));
 	float pigment_value = dot(pigment,vec3(.2126,.7152,.0722));
 	vec3 native_chroma = sample_color/max(value,.012);
@@ -76,7 +87,7 @@ void fragment() {
 		rut += exp(-d*d);
 	}
 	col *= 1.-.12*rut*lane;
-	ALBEDO = col*mix(.84,1.12,noise(p*.08));
+	ALBEDO = render_color(col*mix(.84,1.12,noise(p*.08)));
 	vec2 dust_slope = texture(soil_normal,dust_uv).xy*2.-1.;
 	vec2 turf_slope = texture(grass_normal,turf_uv).xy*2.-1.;
 	turf_slope = mat2(vec2(.8,.6),vec2(-.6,.8))*turf_slope;

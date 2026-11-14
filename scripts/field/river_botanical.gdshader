@@ -21,15 +21,27 @@ void vertex() {
 		VERTEX.x += sin(world.x*.63+world.z*.42+TIME*.75)*.018*tip;
 	}
 }
+vec3 linear_color(vec3 color) {
+	if (!OUTPUT_IS_SRGB) return color;
+	return mix(color/12.92,pow((color+vec3(.055))/1.055,vec3(2.4)),step(vec3(.04045),color));
+}
+vec3 render_color(vec3 color) {
+	if (!OUTPUT_IS_SRGB) return color;
+	color = max(color,vec3(0.));
+	return mix(color*12.92,1.055*pow(color,vec3(1./2.4))-vec3(.055),step(vec3(.0031308),color));
+}
 void fragment() {
 	vec2 coordinates = UV*uv_scale.xy+uv_offset.xy;
 	vec4 source = vec4(.5,.5,.5,1.);
 	if (has_atlas) source = texture(native_atlas,coordinates);
 	if (source.a<.40) discard;
-	float value = dot(source.rgb,vec3(.2126,.7152,.0722));
+	vec3 native_color = linear_color(source.rgb);
+	vec3 paint = linear_color(pigment);
+	float value = dot(native_color,vec3(.2126,.7152,.0722));
 	float detail = smoothstep(.025,.60,value);
-	ALBEDO = pigment*mix(.78,1.16,detail);
-	if (botanical_part == 0) ALBEDO = mix(source.rgb*pigment*1.6,pigment,.48);
+	vec3 color = paint*mix(.78,1.16,detail);
+	if (botanical_part == 0) color = mix(native_color*paint*1.6,paint,.48);
+	ALBEDO = render_color(color);
 	float crown_depth = smoothstep(crown_center.y-crown_extent.y,crown_center.y+crown_extent.y,local_position.y);
 	AO = botanical_part>0 ? mix(.48,1.,crown_depth) : .94;
 	AO_LIGHT_AFFECT = .35;
