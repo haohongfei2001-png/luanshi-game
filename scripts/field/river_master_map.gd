@@ -176,15 +176,7 @@ func _water(at:Vector3,size:Vector2) -> void:
 	add_child(node)
 
 func _bridge(x:float,z:float) -> void:
-	var deck_path:=WORLD+"bridge/intact_bridge_span.glb"
-	var plank:Mesh=_library(deck_path)["IntactBridgeSpan"]
-	var bounds:=plank.get_aabb()
-	var anchor:=bounds.get_center()
-	anchor.y=bounds.end.y
-	for along in 4:
-		for across in 3:
-			_piece(deck_path,"IntactBridgeSpan",Vector3(x-4.5+along*3.,.13,z-2.49+across*2.49),
-				Vector3(2.50/bounds.size.x,1.,3.01/bounds.size.z),PI*.5,anchor)
+	_piece(WORLD+"bridge/intact_bridge_span.glb","IntactBridgeSpan",Vector3(x,0.,z))
 	# The mature tied-timber edge includes its braces, knots and driven supports.
 	var rail_material:=StandardMaterial3D.new()
 	rail_material.albedo_texture=preload("res://assets/third_party/wildfire_bridge/bound_timber.png")
@@ -222,7 +214,7 @@ func _scene_plant(path:String,at:Vector2,height:float,yaw:float=0.) -> Node3D:
 	for part:String in parts:
 		var child:=_piece(path,part,group.position,Vector3.ONE*scale_value,yaw,anchor)
 		child.reparent(group,true)
-		child.visibility_range_end=140. if height>3. else 75.
+		child.visibility_range_end=250. if height>3. else 150.
 	return group
 
 func _bank_rocks(channel:float,moat:bool) -> void:
@@ -232,14 +224,8 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 	material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	material.roughness=.96
 	material.metallic_specular=.08
-	var stations:Array[Vector3]=[
-		Vector3(1.,-8.5,3.3),Vector3(-1.,-12.,4.0),Vector3(1.,-17.2,3.5),
-		Vector3(-1.,-21.,3.2),Vector3(-1.,7.8,3.6),Vector3(1.,12.4,4.1),
-		Vector3(-1.,17.,3.4),Vector3(1.,22.,3.0)]
-	if not moat:
-		stations.append_array([Vector3(1.,-55.,4.3),Vector3(-1.,-46.,4.2),
-			Vector3(-1.,-29.,3.1),Vector3(1.,28.,3.4),Vector3(-1.,43.,4.0),
-			Vector3(1.,52.,3.6),Vector3(-1.,61.,4.4)])
+	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
+	if not moat: stations.append_array(Ground.RIVER_OUTCROPS)
 	var shapes:Array[Vector4]=[Vector4(0.,0.,1.,.82),Vector4(.8,.7,.63,.74),
 		Vector4(-1.,.6,.57,.71),Vector4(.4,1.2,.38,.49)]
 	for i in stations.size():
@@ -249,7 +235,7 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 			var shape:=shapes[j]
 			var width:=station.z*shape.z
 			var along:=station.y+shape.x*1.2
-			var inset:=2.35+shape.y*.72
+			var inset:=(3.9 if moat else 4.8)+shape.y*.32
 			var at:=Vector3(center+station.x*inset,-.67+shape.y*.13,along)
 			var rock:=_piece(STONE_PATH,"RiverStone%02d"%[(i*5+j*7)%6],at,
 				Vector3(width,width*shape.w,width*.84),i*1.83+j*2.14)

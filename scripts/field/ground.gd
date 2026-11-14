@@ -14,6 +14,14 @@ const MOAT_BANK := 5.85
 const MOAT_WATER := 4.10
 const MOAT_DECK := 3.70
 const MOAT_END := 25.5
+# Authored outcrop centres are shared by the visible banks and their footprint.
+const BANK_OUTCROPS: Array[Vector3] = [
+	Vector3(1.,-8.5,3.3),Vector3(-1.,-12.,4.0),Vector3(1.,-17.2,3.5),
+	Vector3(-1.,-21.,3.2),Vector3(-1.,7.8,3.6),Vector3(1.,12.4,4.1),
+	Vector3(-1.,17.,3.4),Vector3(1.,22.,3.0)]
+const RIVER_OUTCROPS: Array[Vector3] = [
+	Vector3(1.,-55.,4.3),Vector3(-1.,-46.,4.2),Vector3(-1.,-29.,3.1),
+	Vector3(1.,28.,3.4),Vector3(-1.,43.,4.0),Vector3(1.,52.,3.6),Vector3(-1.,61.,4.4)]
 const BRIDGE_VIEW := Vector2(34.2,1.0)
 const GATE := Vector2(WALL_X, 0)
 const COURT := Vector2(66, 0)
@@ -57,17 +65,41 @@ static func parapet(p: Vector2) -> float:
 
 static func moat_depth(p: Vector2) -> float:
 	var edge:=smoothstep(MOAT_DECK+1.,MOAT_DECK+4.,absf(p.y))*(.48*sin(p.y*.71)+.25*sin(p.y*1.33))
-	return (1.0-smoothstep(MOAT_WATER,MOAT_BANK+.6+edge,absf(p.x-MOAT_X))) * (1.0-smoothstep(MOAT_END-2.2,MOAT_END+1.5,absf(p.y)))
+	return (1.0-smoothstep(2.7,MOAT_BANK+edge*.5,absf(p.x-MOAT_X))) * (1.0-smoothstep(MOAT_END-2.2,MOAT_END+1.5,absf(p.y)))
 
 static func moat_blocks(p: Vector2) -> bool:
-	return absf(p.x-MOAT_X)<MOAT_WATER and absf(p.y)>MOAT_DECK and absf(p.y)<MOAT_END
+	if absf(p.y)<=MOAT_DECK: return false
+	return moat_depth(p)>.43 or bank_outcrop_blocks(p,MOAT_X,true)
+
+static func bank_outcrop_blocks(p:Vector2,channel:float,moat:bool) -> bool:
+	if absf(p.x-channel)>8.: return false
+	for station:Vector3 in BANK_OUTCROPS:
+		var x:=channel if moat else river_center(station.y)
+		var centre:=Vector2(x+station.x*(3.9 if moat else 4.8),station.y)
+		if p.distance_squared_to(centre)<pow(station.z*.53,2): return true
+	if not moat:
+		for station:Vector3 in RIVER_OUTCROPS:
+			var centre:=Vector2(river_center(station.y)+station.x*4.8,station.y)
+			if p.distance_squared_to(centre)<pow(station.z*.53,2): return true
+	return false
 
 # At the bridgehead a change from a column to a line can put the outside
 # files into the moat. Keep their frontage and dress them back onto their bank.
 static func muster_ground(station: Vector2,company_x: float) -> Vector2:
 	if moat_blocks(station):
-		station.x=MOAT_X+signf(company_x-MOAT_X)*(MOAT_WATER+.24)
+		station.x=MOAT_X+signf(company_x-MOAT_X)*(MOAT_BANK+.44)
 	return station
+
+static func restore_bank_position(p:Vector2,bridgehead:bool) -> Vector2:
+	# Revision-one saves may place a living actor inside the new bank outcrops.
+	# Reproject only those positions, keeping their side of the crossing.
+	var restored:=p
+	if bridgehead and moat_blocks(p):
+		restored.x=MOAT_X+(-1. if p.x<MOAT_X else 1.)*(MOAT_BANK+.6)
+	elif absf(p.y-crossing(p.y))>3.8 and absf(p.x-RIVER_X)<9. and blocked(p,true,false):
+		var centre:=river_center(p.y)
+		restored.x=centre+(-1. if p.x<centre else 1.)*8.5
+	return restored
 
 static func deck_height(p: Vector2, bridgehead: bool=false) -> float:
 	if bridgehead and absf(p.x-MOAT_X)<5.95 and absf(p.y)<=MOAT_DECK+.18: return .13
@@ -93,7 +125,7 @@ static func pace(p: Vector2, mounted: bool, bridgehead: bool=false) -> float:
 
 static func blocked(p: Vector2, open: bool, bridgehead: bool=false) -> bool:
 	if bridgehead and moat_blocks(p): return true
-	if absf(p.x-river_center(p.y))<4.8+river_shore_variation(p.y) and absf(p.y-crossing(p.y))>3.8:
+	if (absf(p.x-river_center(p.y))<5.65+river_shore_variation(p.y) or bank_outcrop_blocks(p,RIVER_X,false)) and absf(p.y-crossing(p.y))>3.8:
 		return true
 	if absf(p.x - WALL_X) < 1.4 and absf(p.y) <= WALL_Z + 1.0:
 		return not (open and absf(p.y) < GATE_HALF - 0.3)

@@ -17,8 +17,8 @@ void fragment(){
 	float streak=smoothstep(.73,.91,flowing*.7+fine*.3);
 	float deep=abs(p.x+32.)<12.?abs(p.x+32.):abs(p.x-24.);
 	float shallows=smoothstep(3.25,5.4,deep);
-	vec3 bed=mix(vec3(.016,.052,.059),vec3(.047,.094,.082),shallows*.68);
-	ALBEDO=bed+vec3(.085,.12,.115)*streak;
+	vec3 bed=mix(vec3(.064,.155,.174),vec3(.105,.195,.17),shallows*.68);
+	ALBEDO=bed+vec3(.045,.075,.07)*streak;
 	ROUGHNESS=.38;
 	SPECULAR=.28;
 	NORMAL=normalize(NORMAL+vec3((fine-.5)*.05,0.,(flowing-.5)*.05));

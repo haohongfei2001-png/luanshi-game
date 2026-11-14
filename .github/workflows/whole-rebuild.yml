@@ -2,7 +2,7 @@ name: Integrate and play the whole replacement battlefield
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','scripts/field/ground.gd','.github/workflows/whole-rebuild.yml']
+    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','scripts/field/ground.gd','scripts/field/save.gd','tests/world_terrain_compat.gd','.github/workflows/whole-rebuild.yml']
 permissions:
   contents: write
 concurrency:
@@ -25,7 +25,7 @@ jobs:
           touch artifacts/.gdignore
           python3 tools/art/import_ground_masters.py "$RUNNER_TEMP/art-sources"
           python3 tools/art/build_river_architecture.py "$RUNNER_TEMP/art-sources"
-          python3 tools/art/build_intact_bridge.py
+          blender --background --factory-startup --python tools/art/build_intact_bridge.py > artifacts/world-rebuild/bridge.log 2>&1 || { tail -n 60 artifacts/world-rebuild/bridge.log; exit 1; }
           for asset in island_tree_01 fern_02 shrub_03; do
             if [ ! -f "assets/river_gate/world/masters/$asset/SOURCE.json" ]; then
               blender --background --factory-startup --python tools/art/import_world_masters.py -- "$RUNNER_TEMP/whole-plants" "$asset" > "artifacts/world-rebuild/$asset.log" 2>&1 || { tail -n 60 "artifacts/world-rebuild/$asset.log"; exit 1; }
@@ -47,6 +47,8 @@ jobs:
           if grep -E 'ERROR:|Parse Error|SHADER ERROR' artifacts/world-rebuild/import.log; then exit 1; fi
           /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/field_bridgehead.gd > artifacts/world-rebuild/bridgehead.log 2>&1
           cat artifacts/world-rebuild/bridgehead.log
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/world_terrain_compat.gd > artifacts/world-rebuild/terrain-save.log 2>&1
+          cat artifacts/world-rebuild/terrain-save.log
       - name: Render the rebuilt full scene before its continuous-input run
         run: |
           set -euo pipefail
