@@ -28,3 +28,16 @@ neck and legs are retargeted while hands remain braced to the existing spear car
 label hit_braced, never full source-arm equivalence or accepted battle hit. Current
 pinned UAL GLB actually contains43 clips including T-pose, not a claimed45 complete
 retargets. Original donor bytes/actions remain untouched and recoverable.
+
+## Explicit new shoulder/soft-sleeve failure
+The exact local pattern14 source SHA is `31ee5e1b18981be043e2ed38ffd3ca273342d41bbcb04d51a9f3c9b2df3e813e` (75,097,324 bytes).
+`shoulder_surface_probe.py` actually evaluated original complete modifiers at source,
+half-raised and raised FK poses. Hard shoulder lamellae/outer leaves versus the new
+sewn coat have respectively 6,974 / 4,380 / 3,075 intersecting triangle pairs.
+These are triangle-pair counts, **not penetration depths or unique collision points**.
+The outer leaves and crown boundary pieces dominate. This is an additional FAIL,
+not proof that a pleasing still image establishes functional garment clearance.
+Keep the running Godot diagnostic for actual pixel/phase review; do not promote it.
+Original sources and 945 fallback remain unchanged. A revised full crown/leaf
+clearance and articulation design is required; do not shrink/hide sleeves to make
+an ill-fitting hard shell appear to pass.

@@ -23,3 +23,14 @@ mkdir -p "$SOLDIER_WORK/layered-cache/editable"
 cp "$SOLDIER_WORK/layered-walk/soldier-controlled-walk.blend" "$SOLDIER_WORK/layered-cache/editable/walk.blend"
 cp "$SOLDIER_WORK/layered-thrust/soldier-single-thrust.blend" "$SOLDIER_WORK/layered-cache/editable/thrust.blend"
 cp "$SOLDIER_WORK/layered-hit/soldier-controlled-walk.blend" "$SOLDIER_WORK/layered-cache/editable/hit-braced.blend"
+
+# These are NEW-source contact measurements, separate from baseline boot-contact.
+"${B[@]}" tools/art/soldier_controlled_probe/boot_contact.py -- "$SOLDIER_WORK/layered-walk/soldier-controlled-walk.blend" "$SOLDIER_WORK/layered-thrust/soldier-single-thrust.blend" evidence/layered-boot-contact.json 2>&1 | tee evidence/layered-boot-contact.log
+cp "$SOLDIER_WORK/layered-walk/report.json" evidence/layered-author-walk.json
+cp "$SOLDIER_WORK/layered-thrust/report.json" evidence/layered-author-thrust.json
+cp "$SOLDIER_WORK/layered-hit/report.json" evidence/layered-author-hit-braced.json
+python - "$SOLDIER_WORK/layered-cache/character.json" <<'JSONSUMMARY'
+import json,sys,pathlib
+r=json.load(open(sys.argv[1]));r['meshes']=[{k:v for k,v in m.items() if k not in ['uv','surfaces']} for m in r['meshes']]
+pathlib.Path('evidence/layered-source-cache-summary.json').write_text(json.dumps(r,indent=2))
+JSONSUMMARY

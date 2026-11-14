@@ -1,0 +1,335 @@
+{
+  "source_sha256": "31ee5e1b18981be043e2ed38ffd3ca273342d41bbcb04d51a9f3c9b2df3e813e",
+  "hard_parts_tested": 50,
+  "sampled_poses": [
+    {
+      "pose": "source",
+      "cloth_triangles": 100416,
+      "intersections": [
+        {
+          "part": "PATTERN bearing lamella L 0 1",
+          "intersecting_triangle_pairs": 16,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 6
+        },
+        {
+          "part": "PATTERN bearing lamella L 1 1",
+          "intersecting_triangle_pairs": 182,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 88
+        },
+        {
+          "part": "PATTERN bearing lamella L 1 2",
+          "intersecting_triangle_pairs": 38,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 20
+        },
+        {
+          "part": "PATTERN bearing lamella L 2 1",
+          "intersecting_triangle_pairs": 415,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 285
+        },
+        {
+          "part": "PATTERN bearing lamella L 2 2",
+          "intersecting_triangle_pairs": 188,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 141
+        },
+        {
+          "part": "PATTERN crown lamella L 0 0",
+          "intersecting_triangle_pairs": 348,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 131
+        },
+        {
+          "part": "PATTERN crown lamella L 0 1",
+          "intersecting_triangle_pairs": 161,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 119
+        },
+        {
+          "part": "PATTERN crown lamella L 0 2",
+          "intersecting_triangle_pairs": 432,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 168
+        },
+        {
+          "part": "PATTERN crown lamella L 1 0",
+          "intersecting_triangle_pairs": 170,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 113
+        },
+        {
+          "part": "PATTERN crown lamella L 1 1",
+          "intersecting_triangle_pairs": 574,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 365
+        },
+        {
+          "part": "PATTERN crown lamella L 2 0",
+          "intersecting_triangle_pairs": 346,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 155
+        },
+        {
+          "part": "PATTERN crown lamella L 2 1",
+          "intersecting_triangle_pairs": 88,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 61
+        },
+        {
+          "part": "PATTERN crown lamella L 2 2",
+          "intersecting_triangle_pairs": 276,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 135
+        },
+        {
+          "part": "PATTERN articulated shoulder leaf L",
+          "intersecting_triangle_pairs": 628,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 198
+        },
+        {
+          "part": "PATTERN bearing lamella R 1 1",
+          "intersecting_triangle_pairs": 70,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 32
+        },
+        {
+          "part": "PATTERN bearing lamella R 2 1",
+          "intersecting_triangle_pairs": 202,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 137
+        },
+        {
+          "part": "PATTERN bearing lamella R 2 2",
+          "intersecting_triangle_pairs": 38,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 29
+        },
+        {
+          "part": "PATTERN crown lamella R 0 0",
+          "intersecting_triangle_pairs": 340,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 138
+        },
+        {
+          "part": "PATTERN crown lamella R 0 1",
+          "intersecting_triangle_pairs": 206,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 144
+        },
+        {
+          "part": "PATTERN crown lamella R 0 2",
+          "intersecting_triangle_pairs": 441,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 165
+        },
+        {
+          "part": "PATTERN crown lamella R 1 0",
+          "intersecting_triangle_pairs": 150,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 81
+        },
+        {
+          "part": "PATTERN crown lamella R 1 1",
+          "intersecting_triangle_pairs": 292,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 183
+        },
+        {
+          "part": "PATTERN crown lamella R 1 2",
+          "intersecting_triangle_pairs": 174,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 103
+        },
+        {
+          "part": "PATTERN crown lamella R 2 0",
+          "intersecting_triangle_pairs": 331,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 157
+        },
+        {
+          "part": "PATTERN crown lamella R 2 1",
+          "intersecting_triangle_pairs": 10,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 7
+        },
+        {
+          "part": "PATTERN crown lamella R 2 2",
+          "intersecting_triangle_pairs": 288,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 145
+        },
+        {
+          "part": "PATTERN articulated shoulder leaf R",
+          "intersecting_triangle_pairs": 570,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 193
+        }
+      ],
+      "total_pairs": 6974
+    },
+    {
+      "pose": "half_raise",
+      "cloth_triangles": 100416,
+      "intersections": [
+        {
+          "part": "PATTERN bearing lamella L 2 1",
+          "intersecting_triangle_pairs": 12,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 4
+        },
+        {
+          "part": "PATTERN crown lamella L 0 0",
+          "intersecting_triangle_pairs": 306,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 124
+        },
+        {
+          "part": "PATTERN crown lamella L 0 1",
+          "intersecting_triangle_pairs": 216,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 130
+        },
+        {
+          "part": "PATTERN crown lamella L 0 2",
+          "intersecting_triangle_pairs": 426,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 142
+        },
+        {
+          "part": "PATTERN crown lamella L 2 0",
+          "intersecting_triangle_pairs": 210,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 97
+        },
+        {
+          "part": "PATTERN crown lamella L 2 1",
+          "intersecting_triangle_pairs": 232,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 127
+        },
+        {
+          "part": "PATTERN crown lamella L 2 2",
+          "intersecting_triangle_pairs": 29,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 23
+        },
+        {
+          "part": "PATTERN articulated shoulder leaf L",
+          "intersecting_triangle_pairs": 644,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 200
+        },
+        {
+          "part": "PATTERN crown lamella R 0 0",
+          "intersecting_triangle_pairs": 304,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 106
+        },
+        {
+          "part": "PATTERN crown lamella R 0 1",
+          "intersecting_triangle_pairs": 208,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 118
+        },
+        {
+          "part": "PATTERN crown lamella R 0 2",
+          "intersecting_triangle_pairs": 425,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 138
+        },
+        {
+          "part": "PATTERN crown lamella R 2 0",
+          "intersecting_triangle_pairs": 248,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 138
+        },
+        {
+          "part": "PATTERN crown lamella R 2 1",
+          "intersecting_triangle_pairs": 212,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 101
+        },
+        {
+          "part": "PATTERN crown lamella R 2 2",
+          "intersecting_triangle_pairs": 276,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 141
+        },
+        {
+          "part": "PATTERN articulated shoulder leaf R",
+          "intersecting_triangle_pairs": 632,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 234
+        }
+      ],
+      "total_pairs": 4380
+    },
+    {
+      "pose": "raised",
+      "cloth_triangles": 100416,
+      "intersections": [
+        {
+          "part": "PATTERN crown lamella L 0 0",
+          "intersecting_triangle_pairs": 272,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 101
+        },
+        {
+          "part": "PATTERN crown lamella L 0 1",
+          "intersecting_triangle_pairs": 214,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 110
+        },
+        {
+          "part": "PATTERN crown lamella L 0 2",
+          "intersecting_triangle_pairs": 395,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 139
+        },
+        {
+          "part": "PATTERN articulated shoulder leaf L",
+          "intersecting_triangle_pairs": 678,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 202
+        },
+        {
+          "part": "PATTERN crown lamella R 0 0",
+          "intersecting_triangle_pairs": 280,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 93
+        },
+        {
+          "part": "PATTERN crown lamella R 0 1",
+          "intersecting_triangle_pairs": 210,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 105
+        },
+        {
+          "part": "PATTERN crown lamella R 0 2",
+          "intersecting_triangle_pairs": 382,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 134
+        },
+        {
+          "part": "PATTERN articulated shoulder leaf R",
+          "intersecting_triangle_pairs": 644,
+          "armor_triangle_count": 1120,
+          "distinct_armor_triangles": 226
+        }
+      ],
+      "total_pairs": 3075
+    }
+  ],
+  "art_pass": false,
+  "contact_pass": false,
+  "limitations": [
+    "Triangle intersection candidates only; no enclosed-volume test or penetration depth",
+    "No interpolated full walk/thrust evidence",
+    "Original author modifier evaluation, not Godot runtime collision",
+    "Armor-to-armor overlaps are intentional and excluded here"
+  ]
+}
