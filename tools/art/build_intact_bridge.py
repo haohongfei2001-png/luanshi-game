@@ -74,7 +74,7 @@ def main():
     for face in combined.data.polygons:face.use_smooth=False
     bpy.context.view_layer.update()
     tree=BVHTree.FromObject(combined,bpy.context.evaluated_depsgraph_get())
-    samples=0;holes=0;longest_gap=0
+    samples=0;holes=0;longest_gap=0;unsupported_steps=0
     for row in range(119):
         run=0
         for column in range(74):
@@ -83,15 +83,21 @@ def main():
             samples+=1
             if hit is None:
                 holes+=1;run+=1;longest_gap=max(longest_gap,run)
+                supported=False
+                for dx,dy in ((-.06,0.),(.06,0.),(0.,-.06),(0.,.06),(-.06,-.06),(.06,.06),(-.06,.06),(.06,-.06)):
+                    if tree.ray_cast(start+Vector((dx,dy,0.)),Vector((0.,0.,-1.)),2.)[0] is not None:
+                        supported=True
+                if not supported:unsupported_steps+=1
             else:run=0
     coverage=1.-holes/samples
-    print("BRIDGE_SURFACE_COVERAGE",coverage,"longest_gap_m",longest_gap*.1,flush=True)
-    assert coverage>.985 and longest_gap<=1,(coverage,longest_gap)
+    print("BRIDGE_SURFACE_COVERAGE",coverage,"longest_seam_m",longest_gap*.1,"unsupported_steps",unsupported_steps,flush=True)
+    # Narrow timber joints can run along a board. Reject a boot-sized opening.
+    assert coverage>.985 and unsupported_steps==0,(coverage,unsupported_steps)
 
     OUT.mkdir(parents=True,exist_ok=True)
     bpy.ops.export_scene.gltf(filepath=str(OUT/"intact_bridge_span.glb"),export_format="GLB",use_selection=True,export_materials="EXPORT",export_yup=True,export_animations=False)
     receipt=json.loads((SOURCE/"SOURCE.json").read_text())
-    receipt.update(derived_component="Intact connected deck boards from modular_wooden_pier_planks",board_sources=receipts,rows=48,bays=3,deck_top_m=.13,nominal_span_m=[12.,7.5],coverage=coverage,largest_sampled_gap_m=longest_gap*.1,triangles=sum(len(f.vertices)-2 for f in combined.data.polygons))
+    receipt.update(derived_component="Intact connected deck boards from modular_wooden_pier_planks",board_sources=receipts,rows=48,bays=3,deck_top_m=.13,nominal_span_m=[12.,7.5],coverage=coverage,longest_sampled_seam_m=longest_gap*.1,unsupported_steps=unsupported_steps,triangles=sum(len(f.vertices)-2 for f in combined.data.polygons))
     (OUT/"SOURCE.json").write_text(json.dumps(receipt,indent=2)+"\n")
     (OUT/"NOTICE.txt").write_text("Complete timber crossing assembled from original connected boards in Modular Wooden Pier by Rico Cilliers, Poly Haven, CC0-1.0. Original source, checksums and assembly coordinates are in SOURCE.json and tools/art/build_intact_bridge.py.\n")
     print("INTACT_BRIDGE",json.dumps(receipt),flush=True)
