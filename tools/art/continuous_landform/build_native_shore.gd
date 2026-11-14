@@ -9,6 +9,7 @@ func own(node:Node,scene:Node) -> void:
 	for child in node.get_children():child.owner=scene;own(child,scene)
 func run() -> void:
 	assert(Ground.authored_landform_enabled,"Requires new shared terrain support")
+	assert(Ground.AuthoredProfile.VERSION=="continuous-causeway-native-shore-support-02","Retired scan-shelf study: do not attach it to road-section03; restore its frozen source to reproduce")
 	var args:=OS.get_cmdline_user_args();assert(args.size()==1)
 	var manifest:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tools/art/continuous_landform/shore_source.json"))
 	for entry:Dictionary in manifest.files:

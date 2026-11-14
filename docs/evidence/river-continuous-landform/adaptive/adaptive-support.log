@@ -1,0 +1,3 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+LANDFORM_MESH_PASS {"collision_shapes":266,"graphics":"NOT_RUN","max_reachable_interpolation_error_m":0.00975079957693471,"max_route_interpolation_error_m":0.00728087376726361,"max_water_contour_error_m":0.00440470061659215,"reachable_surface_samples":357829,"terrain_tiles":266,"water_triangles":105079,"worst_reachable_xz":[29.5833339691162,19.625]}

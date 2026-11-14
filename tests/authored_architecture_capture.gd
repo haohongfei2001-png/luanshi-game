@@ -33,8 +33,10 @@ func run() -> void:
  var support=(load('res://assets/river_authored/ground/continuous-region.scn') as PackedScene).instantiate();field.add_child(support)
  if not require_capture(support.transform==Transform3D.IDENTITY,'Continuous ground must remain world-space'):return
  var extra_assets={}
- if '--basin-study' in OS.get_cmdline_user_args():
-  for path in ['res://assets/river_authored/shore/region.scn','res://assets/river_authored/grass/region.scn']:
+ if '--basin-study' in OS.get_cmdline_user_args() or '--road-section-study' in OS.get_cmdline_user_args():
+  var part_paths=['res://assets/river_authored/grass/region.scn']
+  if '--road-section-study' not in OS.get_cmdline_user_args():part_paths.append('res://assets/river_authored/shore/region.scn')
+  for path in part_paths:
    var part=(load(path) as PackedScene).instantiate();support.add_child(part)
    if not require_capture(part.transform==Transform3D.IDENTITY,'Basin part transform changed'):return
    extra_assets[path]=FileAccess.get_sha256(path)

@@ -1,0 +1,23 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/river_gate/world/ground/leafy_grass.jpg'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] attach (res://tools/art/continuous_landform/earth_material.gd:19)
+         [1] run (res://tools/art/continuous_landform/build_region.gd:40)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/river_gate/world/ground/leafy_grass_nor_gl.jpg'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] attach (res://tools/art/continuous_landform/earth_material.gd:19)
+         [1] run (res://tools/art/continuous_landform/build_region.gd:40)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/river_gate/world/ground/brown_mud_dry.jpg'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] attach (res://tools/art/continuous_landform/earth_material.gd:19)
+         [1] run (res://tools/art/continuous_landform/build_region.gd:40)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/river_gate/world/ground/brown_mud_dry_nor_gl.jpg'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] attach (res://tools/art/continuous_landform/earth_material.gd:19)
+         [1] run (res://tools/art/continuous_landform/build_region.gd:40)
+CONTINUOUS_LANDFORM_BUILT {"cell_resolution_distribution":{"1":264917,"2":3856,"4":4864,"8":859},"collision":"same sampled mesh","default":"OFF","graphics":"NOT_RUN","terrain_triangles":855202,"tiles":266,"water_height":-1.48,"water_triangles":145622}

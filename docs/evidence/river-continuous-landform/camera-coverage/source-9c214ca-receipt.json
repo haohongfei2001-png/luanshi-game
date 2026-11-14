@@ -1,0 +1,383 @@
+[
+  {
+    "attachment_size": [
+      2560,
+      1440
+    ],
+    "battle_snapshot_sha256": "71262f36c7bfe3cffed4e80e1ca4b498f87f7bc796db92aabd406bbd47056f44",
+    "camera_center": "(21.5, -1.25)",
+    "camera_profile_scope": "INTERNAL_CANDIDATE_NOT_OFFICIAL_RIOT_PARAMETERS; nominal adult box at look target, actual hero offset must be measured",
+    "camera_projection": [
+      [
+        1.08072125911713,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.92098212242126,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.00050020217896,
+        -1.0
+      ],
+      [
+        0.0,
+        0.0,
+        -0.200050011277199,
+        0.0
+      ]
+    ],
+    "camera_review_profile": {
+      "fov_degrees": 55.0,
+      "nominal_body_fraction": 0.1,
+      "pitch_degrees": 32.0,
+      "projection": "perspective"
+    },
+    "camera_size": 18.6901874542236,
+    "camera_transform": {
+      "basis": [
+        [
+          0.422618240118027,
+          0.0,
+          0.906307816505432
+        ],
+        [
+          0.480269968509674,
+          0.848048090934753,
+          -0.223953545093536
+        ],
+        [
+          -0.768592596054077,
+          0.529919266700745,
+          0.358400583267212
+        ]
+      ],
+      "origin": [
+        7.70241069793701,
+        10.4429836273193,
+        5.18392133712769
+      ]
+    },
+    "camera_yaw": -1.13446401379631,
+    "comparison_role": "NEW_TERRAIN_SAME_STATE_RESOLUTION_COMPARISON_NOT_OLD_TERRAIN_PAIR",
+    "composition": "new-architecture-and-sprite-woodland; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR",
+    "controller_git_blob": "0003b6d3cacee79898ed7282c10170b16fbc3541",
+    "controller_sha256": "3447108ce61672dd9c1cd94c1c9037ae2ccacf8800ca70e11e464bad3abddc20",
+    "hits": [
+      3,
+      0
+    ],
+    "internal_pixels": [
+      2560,
+      1440
+    ],
+    "internal_scale": 1.0,
+    "logical_viewport_size": [
+      1422.0,
+      800.0
+    ],
+    "ordinary": [
+      20,
+      20
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "seed": "61112",
+    "shader_clock": {
+      "fixed_seconds": 6.75,
+      "include_audit": [
+        {
+          "TIME_present": false,
+          "resource": "res://scripts/field/field_person_pigment.gdshaderinc",
+          "sha256": "02a664dd149a86328a50d95e9d3bc152b70ab2829cb7fe9e9de3c65036d3f166"
+        },
+        {
+          "TIME_present": false,
+          "resource": "res://scripts/field/field_person_light.gdshaderinc",
+          "sha256": "4b3b6f913f2188d5a363c5e7cd015876843e526ee6bb92ffb00e4f3b0fadc8cf"
+        }
+      ],
+      "overrides": [
+        {
+          "fixed_time_seconds": 6.75,
+          "method": "transient builtin TIME token override; original code restored before realtime input",
+          "original_code_sha256": "ab08dfbee793973b7b1ba1664f4b2146d6756af66670a6bfe5d2cb72710d7e01",
+          "source_resource": "res://scripts/field/river_master_water.gdshader",
+          "static_code_sha256": "b4a3552306a39b681a7d53b618b9ff689f4897944ad7359d2a7c0f951d20f2a0"
+        }
+      ]
+    },
+    "shadow_enabled": true,
+    "source": "9c214ca46836dbd8f22eb75e25f12fdeecda98d4",
+    "stage": "MATCHED_REAL_GAME_REGION_EXPERIMENT; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR; old characters; ART_NOT_ACCEPTED; REALTIME_INPUT_SEPARATE_RECEIPT",
+    "tick": 135,
+    "view": "qhd-perspective-road65",
+    "viewport": [
+      2560,
+      1440
+    ],
+    "woodland_composition": "sprite-native-woodland-region-02-mipmapped"
+  },
+  {
+    "attachment_size": [
+      2560,
+      1440
+    ],
+    "battle_snapshot_sha256": "71262f36c7bfe3cffed4e80e1ca4b498f87f7bc796db92aabd406bbd47056f44",
+    "camera_center": "(21.5, -1.25)",
+    "camera_profile_scope": "INTERNAL_CANDIDATE_NOT_OFFICIAL_RIOT_PARAMETERS; nominal adult box at look target, actual hero offset must be measured",
+    "camera_projection": [
+      [
+        1.08072125911713,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.92098212242126,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.00050020217896,
+        -1.0
+      ],
+      [
+        0.0,
+        0.0,
+        -0.200050011277199,
+        0.0
+      ]
+    ],
+    "camera_review_profile": {
+      "fov_degrees": 55.0,
+      "nominal_body_fraction": 0.1,
+      "pitch_degrees": 32.0,
+      "projection": "perspective"
+    },
+    "camera_size": 18.5601463317871,
+    "camera_transform": {
+      "basis": [
+        [
+          0.258819073438644,
+          0.0,
+          0.965925812721252
+        ],
+        [
+          0.511862695217133,
+          0.848048090934753,
+          -0.137153208255768
+        ],
+        [
+          -0.819151520729065,
+          0.529919266700745,
+          0.219491019845009
+        ]
+      ],
+      "origin": [
+        6.89710426330566,
+        10.3767938613892,
+        2.66283416748047
+      ]
+    },
+    "camera_yaw": -1.30899693899575,
+    "comparison_role": "NEW_TERRAIN_SAME_STATE_RESOLUTION_COMPARISON_NOT_OLD_TERRAIN_PAIR",
+    "composition": "new-architecture-and-sprite-woodland; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR",
+    "controller_git_blob": "0003b6d3cacee79898ed7282c10170b16fbc3541",
+    "controller_sha256": "3447108ce61672dd9c1cd94c1c9037ae2ccacf8800ca70e11e464bad3abddc20",
+    "hits": [
+      3,
+      0
+    ],
+    "internal_pixels": [
+      2560,
+      1440
+    ],
+    "internal_scale": 1.0,
+    "logical_viewport_size": [
+      1422.0,
+      800.0
+    ],
+    "ordinary": [
+      20,
+      20
+    ],
+    "pixels": [
+      2560,
+      1440
+    ],
+    "seed": "61112",
+    "shader_clock": {
+      "fixed_seconds": 6.75,
+      "include_audit": [
+        {
+          "TIME_present": false,
+          "resource": "res://scripts/field/field_person_pigment.gdshaderinc",
+          "sha256": "02a664dd149a86328a50d95e9d3bc152b70ab2829cb7fe9e9de3c65036d3f166"
+        },
+        {
+          "TIME_present": false,
+          "resource": "res://scripts/field/field_person_light.gdshaderinc",
+          "sha256": "4b3b6f913f2188d5a363c5e7cd015876843e526ee6bb92ffb00e4f3b0fadc8cf"
+        }
+      ],
+      "overrides": [
+        {
+          "fixed_time_seconds": 6.75,
+          "method": "transient builtin TIME token override; original code restored before realtime input",
+          "original_code_sha256": "ab08dfbee793973b7b1ba1664f4b2146d6756af66670a6bfe5d2cb72710d7e01",
+          "source_resource": "res://scripts/field/river_master_water.gdshader",
+          "static_code_sha256": "b4a3552306a39b681a7d53b618b9ff689f4897944ad7359d2a7c0f951d20f2a0"
+        }
+      ]
+    },
+    "shadow_enabled": true,
+    "source": "9c214ca46836dbd8f22eb75e25f12fdeecda98d4",
+    "stage": "MATCHED_REAL_GAME_REGION_EXPERIMENT; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR; old characters; ART_NOT_ACCEPTED; REALTIME_INPUT_SEPARATE_RECEIPT",
+    "tick": 135,
+    "view": "qhd-perspective-road75",
+    "viewport": [
+      2560,
+      1440
+    ],
+    "woodland_composition": "sprite-native-woodland-region-02-mipmapped"
+  },
+  {
+    "attachment_size": [
+      3840,
+      2160
+    ],
+    "battle_snapshot_sha256": "71262f36c7bfe3cffed4e80e1ca4b498f87f7bc796db92aabd406bbd47056f44",
+    "camera_center": "(21.5, -1.25)",
+    "camera_profile_scope": "INTERNAL_CANDIDATE_NOT_OFFICIAL_RIOT_PARAMETERS; nominal adult box at look target, actual hero offset must be measured",
+    "camera_projection": [
+      [
+        1.08072125911713,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.92098212242126,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.00050020217896,
+        -1.0
+      ],
+      [
+        0.0,
+        0.0,
+        -0.200050011277199,
+        0.0
+      ]
+    ],
+    "camera_review_profile": {
+      "fov_degrees": 55.0,
+      "nominal_body_fraction": 0.1,
+      "pitch_degrees": 32.0,
+      "projection": "perspective"
+    },
+    "camera_size": 18.6901874542236,
+    "camera_transform": {
+      "basis": [
+        [
+          0.422618240118027,
+          0.0,
+          0.906307816505432
+        ],
+        [
+          0.480269968509674,
+          0.848048090934753,
+          -0.223953545093536
+        ],
+        [
+          -0.768592596054077,
+          0.529919266700745,
+          0.358400583267212
+        ]
+      ],
+      "origin": [
+        7.70241069793701,
+        10.4429836273193,
+        5.18392133712769
+      ]
+    },
+    "camera_yaw": -1.13446401379631,
+    "comparison_role": "NEW_TERRAIN_SAME_STATE_RESOLUTION_COMPARISON_NOT_OLD_TERRAIN_PAIR",
+    "composition": "new-architecture-and-sprite-woodland; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR",
+    "controller_git_blob": "0003b6d3cacee79898ed7282c10170b16fbc3541",
+    "controller_sha256": "3447108ce61672dd9c1cd94c1c9037ae2ccacf8800ca70e11e464bad3abddc20",
+    "hits": [
+      3,
+      0
+    ],
+    "internal_pixels": [
+      3840,
+      2160
+    ],
+    "internal_scale": 1.0,
+    "logical_viewport_size": [
+      1422.0,
+      800.0
+    ],
+    "ordinary": [
+      20,
+      20
+    ],
+    "pixels": [
+      3840,
+      2160
+    ],
+    "seed": "61112",
+    "shader_clock": {
+      "fixed_seconds": 6.75,
+      "include_audit": [
+        {
+          "TIME_present": false,
+          "resource": "res://scripts/field/field_person_pigment.gdshaderinc",
+          "sha256": "02a664dd149a86328a50d95e9d3bc152b70ab2829cb7fe9e9de3c65036d3f166"
+        },
+        {
+          "TIME_present": false,
+          "resource": "res://scripts/field/field_person_light.gdshaderinc",
+          "sha256": "4b3b6f913f2188d5a363c5e7cd015876843e526ee6bb92ffb00e4f3b0fadc8cf"
+        }
+      ],
+      "overrides": [
+        {
+          "fixed_time_seconds": 6.75,
+          "method": "transient builtin TIME token override; original code restored before realtime input",
+          "original_code_sha256": "ab08dfbee793973b7b1ba1664f4b2146d6756af66670a6bfe5d2cb72710d7e01",
+          "source_resource": "res://scripts/field/river_master_water.gdshader",
+          "static_code_sha256": "b4a3552306a39b681a7d53b618b9ff689f4897944ad7359d2a7c0f951d20f2a0"
+        }
+      ]
+    },
+    "shadow_enabled": true,
+    "source": "9c214ca46836dbd8f22eb75e25f12fdeecda98d4",
+    "stage": "MATCHED_REAL_GAME_REGION_EXPERIMENT; continuous 112x96m terrain with matching Ground and collision; CC0 dry-earth PBR; old characters; ART_NOT_ACCEPTED; REALTIME_INPUT_SEPARATE_RECEIPT",
+    "tick": 135,
+    "view": "uhd-perspective-road65",
+    "viewport": [
+      3840,
+      2160
+    ],
+    "woodland_composition": "sprite-native-woodland-region-02-mipmapped"
+  }
+]
