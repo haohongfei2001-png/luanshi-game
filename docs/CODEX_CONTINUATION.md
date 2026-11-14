@@ -1,5 +1,10 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## OWNER-AUTONOMOUS-20261114｜自动续接入口（真实进展仍以本文件最新 commit 为准）
+
+所有后续 Codex 执行窗口遵循 [长期自主开发与自动续接协议](CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)。**已授权持续开发、常规修复/测试、现有规则允许的 PR/合并与内部可玩候选交付，无需 Owner 每步中转**。应优先完成真实高质量角色/环境/战斗，而不是无限方案或对旧粗糙图做小修；每轮留真实 SHA、截图、录像、运行结果、当前 ARTREF 与真实 M5 状态、下一轮第一件工作。尝试 Codex Goal/Automations 跨会话续接；未实际启动则标记 AUTOMATION_UNAVAILABLE，不得假称 Codex 正在后台运行。当前此节仅新增执行约束，不宣称 Codex 已安装资源、跑出新美术、测试通过或真正设置定时工作。
+
+
 ## 河关 RC22 · 桥头攻门
 
 军议的「全军 → 桥头攻门」使用完整两军，把先锋部署在外壕桥头，守军守在门前。7.4 米宽的桥面、桥外水域、绕行、冲车与援队使用同一套地形规则。木桥的绑扎木架、城楼和岗楼、衣甲、马、柳树均有可再分发的来源和包内署名。盾兵新增左右承击，持械步态和种子 61112 的实机回放可回看。[盾牌承击原片](https://github.com/haohongfei2001-png/luanshi-game/tree/bff9e6be588f16c086e7dffc6856a678ef767cb9/docs/evidence/river-gate-v1-rc22/shield-brace) · [持械步态原片](https://github.com/haohongfei2001-png/luanshi-game/tree/703ce4e31b82c2ee130631d324cd6387fac280ae/docs/evidence/river-gate-v1-rc21/loaded-advance)
