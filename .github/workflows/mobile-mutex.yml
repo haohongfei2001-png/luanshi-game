@@ -27,7 +27,7 @@ jobs:
           python3 tools/backport_mobile_mutex.py "$RUNNER_TEMP/engine" > artifacts/mobile-mutex/actual.patch
           python3 -m venv "$RUNNER_TEMP/compiler"
           "$RUNNER_TEMP/compiler/bin/python" -m pip install 'scons==4.9.1'
-          "$RUNNER_TEMP/compiler/bin/scons" -C "$RUNNER_TEMP/engine" platform=macos arch=arm64 target=template_release production=yes debug_symbols=no lto=none module_mono_enabled=no -j3 > artifacts/mobile-mutex/build.log 2>&1 || { tail -n 60 artifacts/mobile-mutex/build.log; exit 1; }
+          "$RUNNER_TEMP/compiler/bin/scons" -C "$RUNNER_TEMP/engine" platform=macos arch=arm64 target=template_release production=yes debug_symbols=no lto=none module_mono_enabled=no vulkan=no metal=yes -j3 > artifacts/mobile-mutex/build.log 2>&1 || { tail -n 60 artifacts/mobile-mutex/build.log; exit 1; }
           cp "$RUNNER_TEMP/engine/LICENSE.txt" artifacts/mobile-mutex/GODOT-MIT-LICENSE.txt
           cp "$RUNNER_TEMP/engine/bin/godot.macos.template_release.arm64" artifacts/mobile-mutex/godot.macos.template_release.arm64
           artifacts/mobile-mutex/godot.macos.template_release.arm64 --version | tee artifacts/mobile-mutex/engine-version.txt
