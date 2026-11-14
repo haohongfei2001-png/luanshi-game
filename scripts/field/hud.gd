@@ -24,6 +24,8 @@ var inset := preload("res://scripts/field/map_inset.gd").new()
 var objective := Label.new()
 var own := Label.new()
 var condition := Label.new()
+var refresh_tick := -1
+var refresh_us := 0
 var feedback := Label.new()
 var order_panel := PanelContainer.new()
 var weapon := OptionButton.new()
@@ -292,6 +294,8 @@ func select_company(b: Battle,index: int) -> void:
 
 
 func update_model(b: Battle,paused: bool) -> void:
+	refresh_tick=b.tick
+	refresh_us=Time.get_ticks_usec()
 	var now:=0 if not b.started else (1 if b.result=="" else 2)
 	if now!=phase:
 		phase=now

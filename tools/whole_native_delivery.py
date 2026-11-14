@@ -59,6 +59,18 @@ def run_game(executable,output,helper,user_args,movie=None):
     assert not any(marker in text for marker in ("SCRIPT ERROR","SHADER ERROR","ERROR:")),text[-2200:]
     return text
 
+def preserve_profile(executable,destination,helper,data,user_args):
+    """Keep partial journals even if the game crashes, before temporary data cleanup."""
+    with empty_game_data(data):
+        try:
+            text=run_game(executable,destination,helper,user_args)
+            assert "BRIDGE_WINDOW true" in text
+        finally:
+            profile=destination/"frame-times"
+            profile.mkdir(parents=True,exist_ok=True)
+            for path in (data/"frame-times").glob("*.jsonl"):
+                (profile/path.name).write_bytes(path.read_bytes())
+
 def prepare_package(package,patch,out):
     unpacked=out/"unpacked"
     subprocess.run(["ditto","-x","-k",str(package),str(unpacked)],check=True)
@@ -113,21 +125,21 @@ def main():
     if "--profile-uhd" in sys.argv[4:]:
         profiles.extend(("uhd", str(count), count, []) for count in (20, 100, 250, 512))
     require_master = ["--require-river-pass-master"] if "--require-river-pass-master" in sys.argv[4:] else []
-    for resolution, label, count, extra in profiles:
-        destination = out / ("profile-" + resolution + "-" + label)
-        with empty_game_data(data):
-            text = run_game(executable, destination, helper,
-                            ["--native-" + resolution, "--real-time-profile", "--field-profile",
-                             "--field-size=" + str(count), *extra, *require_master])
-            assert "BRIDGE_WINDOW true" in text
-            profile = destination / "frame-times"
-            profile.mkdir(parents=True, exist_ok=True)
-            for path in (data / "frame-times").glob("*.jsonl"):
-                (profile / path.name).write_bytes(path.read_bytes())
-    subprocess.run([sys.executable, str(workspace / "tools/summarize_native_profiles.py"),
-                    str(out)], check=True)
     evidence_failures=[]
     evidence_status=out/"evidence-status.json"
+    (out/"expected-profiles.json").write_text(json.dumps(["profile-"+r+"-"+label for r,label,_,_ in profiles]))
+    for resolution, label, count, extra in profiles:
+        destination = out / ("profile-" + resolution + "-" + label)
+        destination.mkdir(parents=True,exist_ok=True)
+        def capture_profile():
+            preserve_profile(executable,destination,helper,data,
+                             ["--native-" + resolution, "--real-time-profile", "--field-profile",
+                              "--field-size=" + str(count), *extra, *require_master])
+        ok=attempt(destination.name,capture_profile,evidence_failures,evidence_status)
+        (destination/"attempt.json").write_text(json.dumps({"status":"COMPLETE" if ok else "FAILED"}))
+    attempt("profile-summary",lambda: subprocess.run(
+        [sys.executable, str(workspace / "tools/summarize_native_profiles.py"),str(out)],check=True),
+        evidence_failures,evidence_status)
     # Separate readback-instrumented process; never pollute the profiles above.
     if "--wall-clock-video" in sys.argv[4:]:
         modes = ["qhd", "uhd"] if "--wall-clock-uhd" in sys.argv[4:] else ["qhd"]
@@ -149,13 +161,13 @@ def main():
             assert "BRIDGE_WINDOW true" in text
             subprocess.run([sys.executable,str(workspace/"tools/encode_whole_battle.py"),
                             str(capture),str(out/"movie"),os.environ["GITHUB_SHA"]],check=True)
-    except BaseException:
+    except Exception as exc:
+        evidence_failures.append({"step":"fixed-camera-movie","error_type":type(exc).__name__,"error":str(exc)})
         if capture.is_file() and capture.stat().st_size>4096:
-            subprocess.run(["ffmpeg","-nostdin","-loglevel","error","-y","-i",str(capture),
+            attempt("failed-movie-preservation",lambda: subprocess.run(["ffmpeg","-nostdin","-loglevel","error","-y","-i",str(capture),
                             "-c:v","libx264","-preset","veryfast","-crf","22","-c:a","aac",
                             "-movflags","+faststart",str(out/"movie/incomplete-attempt.mp4")],
-                           timeout=180,check=False)
-        raise
+                           timeout=180,check=True),evidence_failures,evidence_status)
     evidence_status.write_text(json.dumps({"status":"NOT_PASSED" if evidence_failures else "COMPLETE", "failures":evidence_failures,
         "raw_policy":"Transient raw JPEG sequence is not automatically a persistent artifact; curate with native_evidence_bundle.py."},indent=2)+"\n")
     if evidence_failures:

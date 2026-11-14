@@ -78,6 +78,7 @@ func capture() -> void:
 	if is_instance_valid(field):
 		var b=field.battle
 		state={"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"blocks":b.blocked_hits,"losses":b.losses.duplicate(),"hero_hp":b.hero.hp,"hero_impacts":b.hero.impacts,"hero_state":b.hero.state,"hero_kit":b.hero.kit,"vehicle":b.vehicle,"hero_pos":str(b.hero.pos),"camera_size":field.camera.size,"hero_in_frame":viewport.get_visible_rect().has_point(field.camera.unproject_position(field.Ground.unit_point(b.hero.pos,true)))}
+		state["hud"]={"condition_text":field.hud.condition.text,"health_value":field.hud.health.value,"refresh_tick":field.hud.refresh_tick,"refresh_us":field.hud.refresh_us,"sample_tick":b.tick,"sample_us":Time.get_ticks_usec(),"association":"CPU widget state at post-draw capture, not OCR proof of rendered text"}
 	write({"state":state,"kind":"frame","file":filename,"monotonic_us":now,"image_readback_us":image_done-now,"jpeg_encode_us":encode_done-image_done,"disk_write_us":Time.get_ticks_usec()-encode_done,"readback_encode_write_us":elapsed,"pixels":[image.get_width(),image.get_height()],"scale":viewport.scaling_3d_scale,"bytes":data.size(),"engine_drawn":Engine.get_frames_drawn()})
 	frames+=1
 func stop(reason:String) -> void:

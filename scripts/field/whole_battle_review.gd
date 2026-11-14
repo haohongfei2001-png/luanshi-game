@@ -130,7 +130,9 @@ func _drive() -> void:
 	# The older fallback (26.8,-1) remained inside the crowded east bridgehead.
 	# Withdraw by ordinary movement after a real strike or early injury, before
 	# overlapping enemy attacks become lethal; no simulation state is changed.
-	if rear_guard or b.hero.hp<92. or b.hero.impacts>=1:goal=Vector2(14.,-1.)
+	# Stay inside the normal bridge watch deadzone (x>=17.2), so standard
+	# fixed-camera evidence does not move its center while withdrawing.
+	if rear_guard or b.hero.hp<92. or b.hero.impacts>=1:goal=Vector2(18.5,-1.)
 	if wall_capture_enabled and b.vehicle==1:
 		# Show actual riding along the friendly approach, then dismount before
 		# the horse's higher speed outruns the supporting infantry into spears.
