@@ -2,7 +2,12 @@ extends SceneTree
 ## Exact ID/position/UV bridge only. Native Godot's8 weights are not full-source rendering.
 func _initialize() -> void:call_deferred("run")
 func run() -> void:
-	var actor:Node3D=load("res://assets/mh_lab/mh_natural_fullweights.glb").instantiate();root.add_child(actor)
+	var packed := load("res://assets/mh_lab/mh_natural_fullweights.glb") as PackedScene
+	if packed == null:
+		push_error("MH source GLB not imported; run seed import first")
+		quit(1)
+		return
+	var actor:Node3D=packed.instantiate();root.add_child(actor)
 	var skeleton:Skeleton3D=actor.find_children("*","Skeleton3D",true,false)[0]
 	var sidecar:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/mh_lab/full-influences.json"))
 	var by_name:Dictionary={}

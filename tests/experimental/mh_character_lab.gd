@@ -18,7 +18,12 @@ func setup() -> void:
 	test_mode = OS.has_environment("MH_TEST")
 	var stage := Node3D.new();root.add_child(stage)
 	var model_path := "res://assets/mh_lab/mh_natural_animated_full.glb"
-	actor = load(model_path).instantiate();stage.add_child(actor)
+	var packed := load(model_path) as PackedScene
+	if packed == null:
+		push_error("MH animated GLB not imported; run seed import first")
+		quit(1)
+		return
+	actor = packed.instantiate();stage.add_child(actor)
 	player = actor.find_children("*", "AnimationPlayer", true, false)[0]
 	skeleton = actor.find_children("*", "Skeleton3D", true, false)[0]
 	for clip in player.get_animation_list():

@@ -6,7 +6,7 @@ import bpy,json,pathlib,sys,math,hashlib,gzip
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 args=sys.argv[sys.argv.index('--')+1:]
-out,core,selected,robe=map(lambda p:pathlib.Path(p).resolve(),args[:4]);out.mkdir(parents=True,exist_ok=True);(out/'source').mkdir(exist_ok=True)
+out,core,selected,robe=map(lambda p:pathlib.Path(p).resolve(),args[:4]);out.mkdir(parents=True,exist_ok=True);(out/'source').mkdir(exist_ok=True);(out/'source/.gdignore').write_text('# Editable source only; import explicit GLB outputs.\n')
 bpy.ops.wm.read_factory_settings(use_empty=True);bpy.context.scene.render.fps=120
 
 def obj_data(path,group=None):
