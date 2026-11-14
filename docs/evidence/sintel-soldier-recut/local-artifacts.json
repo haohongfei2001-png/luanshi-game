@@ -1,0 +1,172 @@
+[
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front/report.json",
+    "bytes": 1306,
+    "sha256": "024ac745c35a5dc690ef1b5644e8a02e1a59cdddb3d26c2614f338648958c1f3"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front/recut-fullbody-blender-not-game.png",
+    "bytes": 349462,
+    "sha256": "fc04d42dc7cbc445a23759a018007f2298157ec500a28af09307602bd77b5180"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front/rejected-first.py",
+    "bytes": 7679,
+    "sha256": "6a70ff1f305d9863603091964cc21ed9330bee36c13ef06240160a8d3cefdfbd"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front/recut-editable.blend",
+    "bytes": 25223024,
+    "sha256": "6c307c20321813895f5a49b206ee0843e97f124b73f2aa7458cefd6ae52e8cc9"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front2/report.json",
+    "bytes": 2231,
+    "sha256": "fe172a9cabbf597587a8d8ae8a38bdc089266c35766c1da2de58f4e5e127252a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front2/recut-fullbody-blender-not-game.png",
+    "bytes": 346594,
+    "sha256": "1e60f41e05376783aee6024eb92cb0d717da9d1f3b7f9860f2ab1d4c2bb59167"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front2/rejected-second.py",
+    "bytes": 7666,
+    "sha256": "2a6830641efca0ce407290155f962d799412ea6ec69f54fe369269313c19734e"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front2/recut-editable.blend",
+    "bytes": 47887376,
+    "sha256": "903fce8a7cda75b8303bc77f413c40757360d0e9409e30c09dd8516ba1f0f9dc"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front3/recut-fk-blender-not-game.png",
+    "bytes": 360092,
+    "sha256": "2652eb379e27fa87afc6e3a9c3cf668c3122a41b0a44da388c41cd2d36bab41a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front3/rejected-third.py",
+    "bytes": 8134,
+    "sha256": "15b9a991340be388579a3dd475ee9e7a5170a22549d2f80c4f780dad2c6e1edc"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front3/report.json",
+    "bytes": 2231,
+    "sha256": "3af0df2bff4dddfe697f6ae45b1ce98cea8cadde51965c3b90c1c9df1946956a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front3/recut-fullbody-blender-not-game.png",
+    "bytes": 347065,
+    "sha256": "16e32f43e9d3904a9ad35e4e1e2391f09690bddc5a9596f05e821da9cadb86f8"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front3/recut-editable.blend",
+    "bytes": 55659956,
+    "sha256": "119e336d3fd0f287f384699ccbfc3e728685d2d505cac3dbe80b50a67a5a0285"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front3/small.png",
+    "bytes": 207156,
+    "sha256": "795e036609002863d38d80d4f63b41e64dabeb29bcd14aa8a2caddfa865b467f"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front4/rejected-fourth.py",
+    "bytes": 9065,
+    "sha256": "e01c522ef60a0a4823618cdc8a048f178774b22457234e1a613566926b92a60a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front4/recut-fk-blender-not-game.png",
+    "bytes": 360092,
+    "sha256": "ed3905b46e9a8a129ea3be59220adf881899f71e6124c77f71bef0994753fa9f"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front4/report.json",
+    "bytes": 2231,
+    "sha256": "3af0df2bff4dddfe697f6ae45b1ce98cea8cadde51965c3b90c1c9df1946956a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front4/recut-fullbody-blender-not-game.png",
+    "bytes": 347065,
+    "sha256": "2b84cb1945f5977d0e0ae89f3d3e92b75d960caa034ff29763a3f373152d96d4"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front4/recut-editable.blend",
+    "bytes": 55659956,
+    "sha256": "c066578684001539f25aaae9d5a1bda8ad9c29a21699b3c98fca1501532fcf43"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front4/small.png",
+    "bytes": 207156,
+    "sha256": "795e036609002863d38d80d4f63b41e64dabeb29bcd14aa8a2caddfa865b467f"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front5/recut-fk-blender-not-game.png",
+    "bytes": 346163,
+    "sha256": "c58e32cbf9944280703f6280aec1a9968b08aaea6c7c5988b21aeb7c0530071b"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front5/report.json",
+    "bytes": 2231,
+    "sha256": "3af0df2bff4dddfe697f6ae45b1ce98cea8cadde51965c3b90c1c9df1946956a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front5/working-fifth.py",
+    "bytes": 9495,
+    "sha256": "fb68ffdeec8effd984b2ba0f8d6f4ce43dc9e775a17ab560f2bc5eecfd6a13a7"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front5/recut-fullbody-blender-not-game.png",
+    "bytes": 347065,
+    "sha256": "28500be5ebb48a2eddadaf549434b96642c6679cc125d669081c403a377934a2"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front5/recut-editable.blend",
+    "bytes": 65264064,
+    "sha256": "78c0682a3d5e8ebb154f61141a9e9e5dd5d4b2698b3c9f5ee682d8d329405db9"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front6/recut-fk-blender-not-game.png",
+    "bytes": 321826,
+    "sha256": "e7a6d2db2626176d744dbac088a45f50370b92c903f611fa3ca02cfaa3055872"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front6/report.json",
+    "bytes": 2231,
+    "sha256": "3af0df2bff4dddfe697f6ae45b1ce98cea8cadde51965c3b90c1c9df1946956a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front6/recut-fullbody-blender-not-game.png",
+    "bytes": 322489,
+    "sha256": "c42ba69ede3297bf70ce022978f809e3f65667a760fed0a082ef1a89c9ccb5d7"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front6/recut-editable.blend",
+    "bytes": 64780248,
+    "sha256": "052252705ff18195524dd3a9cf34fcfeaa844703de55639b3260c7293bb0ad64"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front7/field-camera-native-2k-BLENDER-NOT-GODOT.png",
+    "bytes": 24978,
+    "sha256": "9a845ad1d41a0199d3f1bc1ff11a4da0bbdfc111317032d81c2d32f7e77822f4"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front7/recut-fk-blender-not-game.png",
+    "bytes": 321826,
+    "sha256": "ac8163a48dbe8b9dd31daff55f166ea3fd75d8901ac21e01699ad033f153ee19"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front7/report.json",
+    "bytes": 2231,
+    "sha256": "3af0df2bff4dddfe697f6ae45b1ce98cea8cadde51965c3b90c1c9df1946956a"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front7/recut-fullbody-blender-not-game.png",
+    "bytes": 322489,
+    "sha256": "62bee02edb5a60205e0c2dac01562f662c29dc3e64d259cd09706d0153cdf541"
+  },
+  {
+    "path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/recut-front7/recut-editable.blend",
+    "bytes": 64780248,
+    "sha256": "ad9fc77f449951b5d6763a7b0df8c159a79f05526eee8b6abe7d2b926cfa9f80"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study/soldier-tailoring-study.blend",
+    "bytes": 23997340,
+    "sha256": "89b89acdec1cc470a738aa337d499569f4cc7aa098d6c68cfc6d58f1ee6ee054"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study/tailoring-fullbody-blender-not-game.png",
+    "bytes": 333623,
+    "sha256": "3e7daf845a3b4ae17ab3c902efebcb98d7cbf433b0d9640e5239ea9e14e1584b"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study/report.json",
+    "bytes": 3851,
+    "sha256": "e4af21f2cb626f3e4a265ebbf0461ba2c530f9332a370fe9ea1668c87ceffbfc"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study2/soldier-tailoring-study.blend",
+    "bytes": 24359476,
+    "sha256": "ea793b1d28c832a0616f025b21352298b61af4ce3e7c2ea150db8222b5b6617b"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study2/tailoring-fullbody-blender-not-game.png",
+    "bytes": 326208,
+    "sha256": "9424f219c9a1f9f03552d934a42a2c4484b5550189922386279e07a6313ebe2c"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study2/report.json",
+    "bytes": 3984,
+    "sha256": "650c8b144ca493f8a742eb59f5d157bb8de100806613052337e28701a0b50180"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study3/soldier-tailoring-study.blend",
+    "bytes": 24461732,
+    "sha256": "e1cf3668c04f9c8681d06177590c54005851746f0f72a06f2257afb75a88e7f5"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study3/tailoring-fullbody-blender-not-game.png",
+    "bytes": 335255,
+    "sha256": "45d3413ab52ff12c7658b2ebb6533335fe57f0dd6e7b4de63e4bdcd057131140"
+  },
+  {
+    "local_path": "/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/tailoring-study3/report.json",
+    "bytes": 4128,
+    "sha256": "d369eb3ceefdb6391e348a6b0510626c5acd0b07cfc064ca95ba2d80ad725677"
+  }
+]
