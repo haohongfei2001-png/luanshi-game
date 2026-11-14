@@ -2,7 +2,7 @@ name: Package and play the complete replacement world on hosted macOS
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py']
+    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py','tests/field_history_probe.gd','scripts/field/save.gd','scripts/field/ground.gd','scripts/field/battle.gd']
 permissions:
   contents: read
   actions: read
