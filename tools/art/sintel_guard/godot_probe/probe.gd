@@ -11,6 +11,7 @@ var vertices:int=0
 var triangles:int=0
 var distance:float=22.0
 var capturing:bool=false
+var camera_record:Dictionary={}
 func transform(values:Array)->Transform3D:
  return Transform3D(Basis(Vector3(values[0],values[1],values[2]),Vector3(values[3],values[4],values[5]),Vector3(values[6],values[7],values[8])),Vector3(values[9],values[10],values[11]))
 func texture(path:String)->ImageTexture:
@@ -45,11 +46,27 @@ func _ready():
   var arrays=[];arrays.resize(Mesh.ARRAY_MAX);arrays[Mesh.ARRAY_VERTEX]=points;arrays[Mesh.ARRAY_NORMAL]=normals;arrays[Mesh.ARRAY_TEX_UV]=uv;arrays[Mesh.ARRAY_INDEX]=PackedInt32Array(m.indices)
   var mesh=ArrayMesh.new();mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
   var mat=ShaderMaterial.new();mat.shader=load("res://cache.gdshader");mat.set_shader_parameter("position_cache",texture(source.path_join(m.positions_file)));mat.set_shader_parameter("normal_cache",texture(source.path_join(m.normals_file)));mat.set_shader_parameter("vertex_count",count);materials.append(mat)
+  if m.has("detail_normal_file"):
+   var detail=Image.load_from_file(source.path_join(m.detail_normal_file));detail.generate_mipmaps()
+   mat.set_shader_parameter("detail_normal",ImageTexture.create_from_image(detail));mat.set_shader_parameter("has_detail_normal",true)
   var instance=MeshInstance3D.new();instance.name=m.name;instance.mesh=mesh;instance.material_override=mat;instance.custom_aabb=AABB(Vector3(-3,-1,-3),Vector3(6,5,6));add_child(instance)
   vertices+=count;triangles+=int(m.indices.size()/3)
  var light=DirectionalLight3D.new();light.rotation_degrees=Vector3(-45,-30,0);light.light_energy=1.8;add_child(light)
  var environment=WorldEnvironment.new();environment.environment=Environment.new();environment.environment.background_mode=Environment.BG_COLOR;environment.environment.background_color=Color(.055,.055,.055);environment.environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;environment.environment.ambient_light_color=Color(.6,.6,.6);environment.environment.ambient_light_energy=.6;add_child(environment)
- var camera=Camera3D.new();add_child(camera);camera.position=Vector3(2,0.5,3).normalized()*distance+Vector3(0,1,0);camera.look_at(Vector3(0,1,0));camera.fov=35;camera.current=true
+ var camera=Camera3D.new();add_child(camera)
+ if distance>=4:
+  # Exact Field normal-zoom projection contract, not a perspective distance labelled22.
+  camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=22.0;camera.far=360.0
+  var pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size));var yaw=deg_to_rad(-33.0)
+  camera.position=Vector3(sin(yaw)*cos(pitch),sin(pitch),cos(yaw)*cos(pitch))*77.5;camera.look_at(Vector3.ZERO)
+  camera.near=maxf(.1,77.5-camera.size*.5/tan(pitch)-17.0)
+  camera_record={"projection":"orthogonal","size":22.0,"pitch_degrees":rad_to_deg(pitch),"yaw_degrees":-33.0,"target":[0,0,0],"camera_distance_m":77.5,"field_controller_blob":"e3180c8c12d88d98a799d4011d7e7cefd1557fb3"}
+ else:
+  camera.position=Vector3(2,0.5,3).normalized()*distance+Vector3(0,1,0);camera.look_at(Vector3(0,1,0));camera.fov=50
+  camera_record={"projection":"perspective","vertical_fov_degrees":50,"camera_distance_m":distance,"target":[0,1,0]}
+ camera.current=true
+ camera_record["transform"]=str(camera.transform);camera_record["near"]=camera.near;camera_record["far"]=camera.far
+ camera_record["source_units"]="metres, author whole-character scale unchanged"
  var ground=MeshInstance3D.new();var plane=PlaneMesh.new();plane.size=Vector2(8,8);ground.mesh=plane;add_child(ground)
  start=Time.get_ticks_usec()
  print("GUARDIAN_CACHE_READY bones=",skeleton.get_bone_count()," meshes=",materials.size()," vertices=",vertices," triangles=",triangles," cache_texture_payload_bytes=",bytes_uploaded)
@@ -78,7 +95,7 @@ func _process(_delta):
   capturing=false
  if elapsed>=duration:
   set_process(false)
-  var report={"kind":"actual Godot source-cache diagnostic; not combat/general skinning","display":DisplayServer.get_name(),"bones":skeleton.get_bone_count(),"meshes":materials.size(),"vertices":vertices,"triangles":triangles,"cache_texture_payload_bytes":bytes_uploaded,"cache_created_once":true,"gpu_allocation_measured":false,"cpu_vertex_upload_per_frame_bytes":0,"frames":frames,"viewport":str(get_viewport().get_visible_rect().size),"render_scale":get_viewport().scaling_3d_scale,"camera_distance_m":distance,"art_pass":false}
+  var report={"kind":"actual Godot source-cache diagnostic; not combat/general skinning","display":DisplayServer.get_name(),"bones":skeleton.get_bone_count(),"meshes":materials.size(),"vertices":vertices,"triangles":triangles,"cache_texture_payload_bytes":bytes_uploaded,"cache_created_once":true,"gpu_allocation_measured":false,"cpu_vertex_upload_per_frame_bytes":0,"frames":frames,"viewport":str(get_viewport().get_visible_rect().size),"render_scale":get_viewport().scaling_3d_scale,"camera":camera_record,"art_pass":false}
   if DisplayServer.get_name()!="headless":
    await RenderingServer.frame_post_draw
    get_viewport().get_texture().get_image().save_png(out.path_join("actual-godot.png"))

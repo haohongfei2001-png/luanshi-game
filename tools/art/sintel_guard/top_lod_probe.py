@@ -5,7 +5,7 @@ import bpy,sys,pathlib,json,hashlib
 from mathutils import Vector
 args=sys.argv[sys.argv.index('--')+1:];src,out=map(pathlib.Path,args[:2]);out.mkdir(parents=True,exist_ok=True);sha=hashlib.sha256(src.read_bytes()).hexdigest()
 bpy.ops.wm.open_mainfile(filepath=str(src),use_scripts=False,load_ui=False)
-source=bpy.data.objects['GEO-topLT'];mr=next(m for m in source.modifiers if m.type=='MULTIRES');original=mr.levels
+source=bpy.data.objects[args[2] if len(args)>2 else 'GEO-topLT'];mr=next(m for m in source.modifiers if m.type=='MULTIRES');original=mr.levels
 copies=[]
 for label,level in [('high',mr.render_levels),('low',1)]:
  mr.levels=level;bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get();ev=source.evaluated_get(dg)
@@ -23,6 +23,9 @@ for ob in bpy.context.selected_objects:ob.select_set(False)
 high.select_set(True);low.select_set(True);bpy.context.view_layer.objects.active=low
 scene.render.bake.use_selected_to_active=True;scene.render.bake.cage_extrusion=.04;scene.render.bake.max_ray_distance=.08;scene.render.bake.margin=12
 bpy.ops.object.bake(type='NORMAL');image.save()
+if '--bake-only' in args:
+ (out/'bake-only.json').write_text(json.dumps({'source_sha256':sha,'object':source.name,'high_triangles':len(high.data.loop_triangles),'low_triangles':len(low.data.loop_triangles),'original_uv_preserved':True,'source_unchanged':hashlib.sha256(src.read_bytes()).hexdigest()==sha},indent=2)+'\n')
+ sys.exit(0)
 n=nodes.new('ShaderNodeNormalMap');mat.node_tree.links.new(tex.outputs['Color'],n.inputs['Color']);mat.node_tree.links.new(n.outputs['Normal'],bs.inputs['Normal'])
 highmat=bpy.data.materials.new('Source detail clay');highmat.use_nodes=True;h=highmat.node_tree.nodes.get('Principled BSDF');h.inputs['Base Color'].default_value=(.28,.34,.38,1);h.inputs['Roughness'].default_value=.8;high.data.materials.append(highmat)
 scene.use_nodes=False;scene.world=bpy.data.worlds.new('LOD review world');scene.world.use_nodes=True;scene.world.node_tree.nodes['Background'].inputs['Strength'].default_value=.3

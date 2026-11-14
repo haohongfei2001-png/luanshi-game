@@ -33,7 +33,10 @@ jobs:
         run: |
           set -euo pipefail
           python tools/art/sintel_guard/fetch_source.py --output "$RUNNER_TEMP/guardian-source" 2>&1 | tee evidence/source-fetch.log
-          blender --background --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/export_native_cache.py -- "$RUNNER_TEMP/guardian-source/guardians_r854/guardian_lao_tseu.blend" "$RUNNER_TEMP/guardian-cache" 2>&1 | tee evidence/source-export.log
+          for PART in GEO-topLT GEO-pantsLT.001 GEO-bootsLT.001 GEO-sashDG.001; do
+            blender --background --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/top_lod_probe.py -- "$RUNNER_TEMP/guardian-source/guardians_r854/guardian_lao_tseu.blend" "$RUNNER_TEMP/guardian-bakes/$PART" "$PART" --bake-only 2>&1 | tee "evidence/bake-$PART.log"
+          done
+          blender --background --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/export_native_cache.py -- "$RUNNER_TEMP/guardian-source/guardians_r854/guardian_lao_tseu.blend" "$RUNNER_TEMP/guardian-cache" "$RUNNER_TEMP/guardian-bakes" 2>&1 | tee evidence/source-export.log
       - name: Actual Godot full-body native-resolution captures
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
@@ -48,11 +51,11 @@ jobs:
           PROJECT=tools/art/sintel_guard/godot_probe
           for SPEC in '22 2560x1440' '3 3840x2160'; do
             read -r DIST SIZE <<< "$SPEC"
-            for POSE in 0 24; do
-              GUARDIAN_DISTANCE=$DIST GUARDIAN_POSE_FRAME=$POSE GUARDIAN_DURATION=1 GUARDIAN_OUTPUT="$PWD/evidence/${DIST}m-pose${POSE}" xvfb-run -a -s '-screen 0 3840x2160x24' "$GODOT" --path "$PROJECT" --resolution "$SIZE" --rendering-method gl_compatibility > "evidence/${DIST}m-pose${POSE}.log" 2>&1
+            for POSE in 0 12; do
+              GUARDIAN_DISTANCE=$DIST GUARDIAN_POSE_FRAME=$POSE GUARDIAN_DURATION=1 GUARDIAN_OUTPUT="$PWD/evidence/${DIST}m-pose${POSE}" xvfb-run -a -s '-screen 0 3840x2160x24' "$GODOT" --path "$PROJECT" --resolution "$SIZE" --rendering-method gl_compatibility --audio-driver Dummy > "evidence/${DIST}m-pose${POSE}.log" 2>&1
             done
           done
-          GUARDIAN_DISTANCE=22 GUARDIAN_DURATION=4 GUARDIAN_RECORD=1 GUARDIAN_OUTPUT="$PWD/evidence/motion22m" xvfb-run -a -s '-screen 0 2560x1440x24' "$GODOT" --path "$PROJECT" --resolution 2560x1440 --rendering-method gl_compatibility > evidence/motion22m.log 2>&1
+          GUARDIAN_DISTANCE=22 GUARDIAN_DURATION=4 GUARDIAN_RECORD=1 GUARDIAN_OUTPUT="$PWD/evidence/motion22m" xvfb-run -a -s '-screen 0 2560x1440x24' "$GODOT" --path "$PROJECT" --resolution 2560x1440 --rendering-method gl_compatibility --audio-driver Dummy > evidence/motion22m.log 2>&1
           python tools/art/sintel_guard/encode_monotonic.py evidence/motion22m
           ! grep -E "SCRIPT ERROR|SHADER ERROR|ERROR:" evidence/*.log
       - uses: actions/upload-artifact@v4

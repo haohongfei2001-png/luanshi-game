@@ -3,6 +3,8 @@ render_mode cull_disabled;
 uniform sampler2D position_cache : filter_nearest, repeat_disable;
 uniform sampler2D normal_cache : filter_nearest, repeat_disable;
 uniform int vertex_count;
+uniform bool has_detail_normal=false;
+uniform sampler2D detail_normal : filter_linear_mipmap, repeat_disable;
 uniform float sample_frame=0.0;
 vec3 read_cache(sampler2D cache, int frame, int id) {
  int offset=frame*vertex_count+id;
@@ -13,4 +15,20 @@ void vertex(){
  VERTEX=mix(read_cache(position_cache,first,VERTEX_ID),read_cache(position_cache,second,VERTEX_ID),weight);
  NORMAL=normalize(mix(read_cache(normal_cache,first,VERTEX_ID),read_cache(normal_cache,second,VERTEX_ID),weight));
 }
-void fragment(){ALBEDO=vec3(.28,.34,.38);ROUGHNESS=.85;}
+void fragment(){
+ ALBEDO=vec3(.28,.34,.38);ROUGHNESS=.85;
+ if(has_detail_normal){
+  vec3 dp1=dFdx(VERTEX);vec3 dp2=dFdy(VERTEX);
+  vec2 author_uv=vec2(UV.x,1.0-UV.y);
+  vec2 duv1=dFdx(author_uv);vec2 duv2=dFdy(author_uv);
+  float det=duv1.x*duv2.y-duv1.y*duv2.x;
+  if(abs(det)>0.0000000001){
+   vec3 n=normalize(NORMAL);
+   vec3 t=(dp1*duv2.y-dp2*duv1.y)/det;
+   vec3 raw_b=(-dp1*duv2.x+dp2*duv1.x)/det;
+   t=normalize(t-n*dot(n,t));vec3 b=cross(n,t)*sign(dot(cross(n,t),raw_b));
+   vec3 sample_normal=texture(detail_normal,UV).rgb*2.0-1.0;
+   NORMAL=normalize(mat3(t,b,n)*sample_normal);
+  }
+ }
+}

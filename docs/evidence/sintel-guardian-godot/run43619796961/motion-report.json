@@ -1,0 +1,270 @@
+{
+  "art_pass": false,
+  "bones": 308,
+  "cache_created_once": true,
+  "cache_texture_payload_bytes": 178618368,
+  "camera_distance_m": 22.0,
+  "cpu_vertex_upload_per_frame_bytes": 0,
+  "display": "X11",
+  "frames": [
+    {
+      "elapsed_seconds": 0.00086,
+      "image": "frame-000001.png",
+      "monotonic_usec": 533544,
+      "rendered_monotonic_usec": 577375,
+      "source_frame": 0.02064
+    },
+    {
+      "elapsed_seconds": 0.136217,
+      "image": "frame-000002.png",
+      "monotonic_usec": 668934,
+      "rendered_monotonic_usec": 689790,
+      "source_frame": 3.269208
+    },
+    {
+      "elapsed_seconds": 0.249667,
+      "image": "frame-000003.png",
+      "monotonic_usec": 782382,
+      "rendered_monotonic_usec": 804011,
+      "source_frame": 5.992008
+    },
+    {
+      "elapsed_seconds": 0.363313,
+      "image": "frame-000004.png",
+      "monotonic_usec": 896024,
+      "rendered_monotonic_usec": 916463,
+      "source_frame": 8.719512
+    },
+    {
+      "elapsed_seconds": 0.476021,
+      "image": "frame-000005.png",
+      "monotonic_usec": 1008735,
+      "rendered_monotonic_usec": 1030847,
+      "source_frame": 11.424504
+    },
+    {
+      "elapsed_seconds": 0.590535,
+      "image": "frame-000006.png",
+      "monotonic_usec": 1123251,
+      "rendered_monotonic_usec": 1145538,
+      "source_frame": 14.17284
+    },
+    {
+      "elapsed_seconds": 0.705435,
+      "image": "frame-000007.png",
+      "monotonic_usec": 1238165,
+      "rendered_monotonic_usec": 1260279,
+      "source_frame": 16.93044
+    },
+    {
+      "elapsed_seconds": 0.820936,
+      "image": "frame-000008.png",
+      "monotonic_usec": 1353627,
+      "rendered_monotonic_usec": 1380910,
+      "source_frame": 19.702464
+    },
+    {
+      "elapsed_seconds": 0.94353,
+      "image": "frame-000009.png",
+      "monotonic_usec": 1476243,
+      "rendered_monotonic_usec": 1499366,
+      "source_frame": 22.64472
+    },
+    {
+      "elapsed_seconds": 1.060177,
+      "image": "frame-000010.png",
+      "monotonic_usec": 1592921,
+      "rendered_monotonic_usec": 1616035,
+      "source_frame": 25.444248
+    },
+    {
+      "elapsed_seconds": 1.175972,
+      "image": "frame-000011.png",
+      "monotonic_usec": 1708698,
+      "rendered_monotonic_usec": 1730584,
+      "source_frame": 28.223328
+    },
+    {
+      "elapsed_seconds": 1.314703,
+      "image": "frame-000012.png",
+      "monotonic_usec": 1847466,
+      "rendered_monotonic_usec": 1871994,
+      "source_frame": 31.552872
+    },
+    {
+      "elapsed_seconds": 1.431458,
+      "image": "frame-000013.png",
+      "monotonic_usec": 1964183,
+      "rendered_monotonic_usec": 1985884,
+      "source_frame": 34.354992
+    },
+    {
+      "elapsed_seconds": 1.544695,
+      "image": "frame-000014.png",
+      "monotonic_usec": 2077411,
+      "rendered_monotonic_usec": 2099859,
+      "source_frame": 37.07268
+    },
+    {
+      "elapsed_seconds": 1.657499,
+      "image": "frame-000015.png",
+      "monotonic_usec": 2190203,
+      "rendered_monotonic_usec": 2213073,
+      "source_frame": 39.779976
+    },
+    {
+      "elapsed_seconds": 1.807145,
+      "image": "frame-000016.png",
+      "monotonic_usec": 2339888,
+      "rendered_monotonic_usec": 2363294,
+      "source_frame": 43.37148
+    },
+    {
+      "elapsed_seconds": 1.92177,
+      "image": "frame-000017.png",
+      "monotonic_usec": 2454504,
+      "rendered_monotonic_usec": 2477843,
+      "source_frame": 46.12248
+    },
+    {
+      "elapsed_seconds": 2.03725,
+      "image": "frame-000018.png",
+      "monotonic_usec": 2569978,
+      "rendered_monotonic_usec": 2591660,
+      "source_frame": 0.893999999999995
+    },
+    {
+      "elapsed_seconds": 2.151384,
+      "image": "frame-000019.png",
+      "monotonic_usec": 2684102,
+      "rendered_monotonic_usec": 2704776,
+      "source_frame": 3.633216
+    },
+    {
+      "elapsed_seconds": 2.264811,
+      "image": "frame-000020.png",
+      "monotonic_usec": 2797497,
+      "rendered_monotonic_usec": 2817886,
+      "source_frame": 6.355464
+    },
+    {
+      "elapsed_seconds": 2.37683,
+      "image": "frame-000021.png",
+      "monotonic_usec": 2909514,
+      "rendered_monotonic_usec": 2930901,
+      "source_frame": 9.04392
+    },
+    {
+      "elapsed_seconds": 2.491299,
+      "image": "frame-000022.png",
+      "monotonic_usec": 3024023,
+      "rendered_monotonic_usec": 3045638,
+      "source_frame": 11.791176
+    },
+    {
+      "elapsed_seconds": 2.605412,
+      "image": "frame-000023.png",
+      "monotonic_usec": 3138119,
+      "rendered_monotonic_usec": 3159082,
+      "source_frame": 14.529888
+    },
+    {
+      "elapsed_seconds": 2.717844,
+      "image": "frame-000024.png",
+      "monotonic_usec": 3250558,
+      "rendered_monotonic_usec": 3270766,
+      "source_frame": 17.228256
+    },
+    {
+      "elapsed_seconds": 2.830619,
+      "image": "frame-000025.png",
+      "monotonic_usec": 3363324,
+      "rendered_monotonic_usec": 3383653,
+      "source_frame": 19.934856
+    },
+    {
+      "elapsed_seconds": 2.943226,
+      "image": "frame-000026.png",
+      "monotonic_usec": 3475931,
+      "rendered_monotonic_usec": 3496059,
+      "source_frame": 22.637424
+    },
+    {
+      "elapsed_seconds": 3.055419,
+      "image": "frame-000027.png",
+      "monotonic_usec": 3588113,
+      "rendered_monotonic_usec": 3610558,
+      "source_frame": 25.330056
+    },
+    {
+      "elapsed_seconds": 3.169726,
+      "image": "frame-000028.png",
+      "monotonic_usec": 3702427,
+      "rendered_monotonic_usec": 3724425,
+      "source_frame": 28.073424
+    },
+    {
+      "elapsed_seconds": 3.284723,
+      "image": "frame-000029.png",
+      "monotonic_usec": 3817409,
+      "rendered_monotonic_usec": 3838585,
+      "source_frame": 30.833352
+    },
+    {
+      "elapsed_seconds": 3.398466,
+      "image": "frame-000030.png",
+      "monotonic_usec": 3931159,
+      "rendered_monotonic_usec": 3952158,
+      "source_frame": 33.563184
+    },
+    {
+      "elapsed_seconds": 3.511785,
+      "image": "frame-000031.png",
+      "monotonic_usec": 4044477,
+      "rendered_monotonic_usec": 4065267,
+      "source_frame": 36.28284
+    },
+    {
+      "elapsed_seconds": 3.625077,
+      "image": "frame-000032.png",
+      "monotonic_usec": 4157789,
+      "rendered_monotonic_usec": 4178565,
+      "source_frame": 39.001848
+    },
+    {
+      "elapsed_seconds": 3.741313,
+      "image": "frame-000033.png",
+      "monotonic_usec": 4274159,
+      "rendered_monotonic_usec": 4295471,
+      "source_frame": 41.791512
+    },
+    {
+      "elapsed_seconds": 3.853932,
+      "image": "frame-000034.png",
+      "monotonic_usec": 4386653,
+      "rendered_monotonic_usec": 4406533,
+      "source_frame": 44.494368
+    },
+    {
+      "elapsed_seconds": 3.964918,
+      "image": "frame-000035.png",
+      "monotonic_usec": 4497598,
+      "rendered_monotonic_usec": 4517590,
+      "source_frame": 47.158032
+    },
+    {
+      "elapsed_seconds": 4.076428,
+      "image": "frame-000036.png",
+      "monotonic_usec": 4609129,
+      "rendered_monotonic_usec": 4630331,
+      "source_frame": 1.834272
+    }
+  ],
+  "gpu_allocation_measured": false,
+  "kind": "actual Godot source-cache diagnostic; not combat/general skinning",
+  "meshes": 19,
+  "render_scale": 1.0,
+  "triangles": 56760,
+  "vertices": 113714,
+  "viewport": "(2560.0, 1440.0)"
+}

@@ -1,7 +1,7 @@
 """Single-actor source-deformation playback oracle, NOT general runtime skinning.
 Keeps full rig names/rest/pose records and original loop UVs. All source files unchanged.
 """
-import bpy,pathlib,sys,json,hashlib,numpy as np,math
+import bpy,pathlib,sys,json,hashlib,numpy as np,math,shutil
 from mathutils import Matrix
 args=sys.argv[sys.argv.index('--')+1:];src,out=map(pathlib.Path,args[:2]);out.mkdir(parents=True,exist_ok=True)
 sha=hashlib.sha256(src.read_bytes()).hexdigest();bpy.ops.wm.open_mainfile(filepath=str(src),use_scripts=False,load_ui=False)
@@ -35,6 +35,10 @@ for frame in range(49):
    uv=np.array([tuple(l.uv) for l in me.uv_layers.active.data],dtype=np.float32) if me.uv_layers.active else np.zeros((len(loop_ids),2),dtype=np.float32)
    indices=np.array([i for tr in me.loop_triangles for i in tr.loops],dtype=np.int32).reshape(-1,3)[:,[0,2,1]].reshape(-1)
    entry={'name':ob.name,'vertices':len(pos),'indices':indices.tolist(),'uv':uv.tolist(),'positions_file':f'mesh-{k}-positions.rgba32f','normals_file':f'mesh-{k}-normals.rgba32f'}
+   if len(args)>2:
+    normalpath=pathlib.Path(args[2])/ob.name/'whole-top-normal.png'
+    if normalpath.is_file():
+     entry['detail_normal_file']=f'mesh-{k}-detail-normal.png';shutil.copy2(normalpath,out/entry['detail_normal_file'])
    meta['meshes'].append(entry);records[k]={'ids':loop_ids,'pos':[],'normal':[]}
   assert np.array_equal(records[k]['ids'],loop_ids) and np.isfinite(pos).all() and np.isfinite(normal).all()
   records[k]['pos'].append(np.column_stack((pos,np.ones(len(pos),dtype=np.float32))).astype('<f4'))
