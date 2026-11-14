@@ -9,6 +9,7 @@ uniform vec4 shoulder_dye : source_color = vec4(0.0);
 uniform int kit = 0;
 uniform int travelling_attack_legs = -1;
 uniform bool player_costume = false;
+uniform bool anatomical_master = false;
 uniform bool field_carries = false;
 uniform float travelling_leg_phase = 0.0;
 varying flat float flash;
@@ -17,6 +18,8 @@ varying flat float fallen;
 varying float sewn_shadow;
 varying flat int cloth_panel;
 varying vec3 bind_point;
+
+#include "res://scripts/field/field_person_pigment.gdshaderinc"
 
 vec3 rotated(vec4 q, vec3 v) {
     return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
@@ -83,10 +86,10 @@ void vertex() {
         int reaction=(clip==10 ? 0 : 2)+slot-1;
         tile.y=float(4*(381+kit*4+reaction))+.5;
     }
-    // Preserve ordinary soldiers' identities across LODs without extra mesh
-    // instances. Only first-joint head skin changes below the skull/helmet seam.
+    // Legacy heads deform only their skin tiles. The continuous anatomical master
+    // keeps coincident hair/skin UV seams together and has authored role variants.
     ivec2 swatch=ivec2(UV*vec2(8.,4.));
-    if (first==2 && !player_costume &&
+    if (first==2 && !player_costume && !anatomical_master &&
             (swatch==ivec2(0,2) || swatch==ivec2(0,1)) && VERTEX.y>1.447) {
         float lot=floor(INSTANCE_CUSTOM.a*8.0);
         float shape=lot<2.5 ? 0.0 : (lot<5.5 ? -1.0 : 1.0);
@@ -189,17 +192,17 @@ void vertex() {
         if (cloth_lot>.72) UV+=vec2(.125,.25);
         else if (cloth_lot>.31) UV.y+=.25;
     }
-    cloth_panel=UV.x>=3.0 ? 33 : (UV.x>=2.0 ? 32 : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0)));
+    cloth_panel=UV.x>=2.0 ? 30+int(floor(UV.x)) : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0));
     flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
 void fragment() {
-    vec4 swatch = cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV);
+    vec4 swatch = cloth_panel>=34 ? vec4(field_person_pigment(cloth_panel,UV,bind_point,cloth_lot),0.) : (cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV));
     vec3 ink = swatch.rgb;
     // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
     // their own values even where soldiers overlap in the default orthographic view.
     float dye = 0.0;
-    if (cloth_panel>=32) dye=swatch.a;
+    if (cloth_panel==32 || cloth_panel==33) dye=swatch.a;
     else if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = .96;
     else if (cloth_panel == 22) dye = .82;
     else if (cloth_panel == 26) dye = .66;
@@ -222,7 +225,7 @@ void fragment() {
     // The upper part of an issued garment is sewn from a deeper bolt of
     // indigo or madder. The officer's iron and an archer's leather belt stay
     // in their original material; only woven cloth has coverage in this mask.
-    if (shoulder_dye.a>.5) {
+    if (shoulder_dye.a>.5 && !anatomical_master) {
         float yoke=0.;
         if (cloth_panel==32) {
             if (kit==5 || kit==6) {
@@ -312,4 +315,4 @@ void fragment() {
     SPECULAR = 0.0;
 }
 
-#include "res://scripts/field/cloth_light.gdshaderinc"
+#include "res://scripts/field/field_person_light.gdshaderinc"

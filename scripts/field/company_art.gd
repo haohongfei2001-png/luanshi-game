@@ -68,4 +68,5 @@ static func material(colour: Color, kit: int, player: bool=false, shoulder: Colo
 	result.set_shader_parameter("shoulder_dye", shoulder)
 	result.set_shader_parameter("kit", kit)
 	result.set_shader_parameter("player_costume",player)
+	result.set_shader_parameter("anatomical_master",true)
 	return result
