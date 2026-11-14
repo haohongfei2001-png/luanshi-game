@@ -1,0 +1,71 @@
+{
+  "local_headless_only": true,
+  "graphics": "NOT_RUN",
+  "script": "tests/native_region_capture.gd -- --validate-pairs --destination-study --road-section-study --author-oracle",
+  "log_sha256": "acbaf8339b7e1b7f339bc46214dc1ea7bb9d1555d3129d3c0127c34e18bdea16",
+  "actual_view_count": 4,
+  "actor_projection_records": [
+    {
+      "boot_bottom_y": 538.010070800781,
+      "boot_min_world_y": 0.0281464979052544,
+      "coordinate_space": "logical_viewport_units",
+      "display_backend": "headless",
+      "height_fraction": 0.123642387390137,
+      "height_px": 98.9139099121094,
+      "projection_viewport": [
+        1422.0,
+        800.0
+      ],
+      "scope": "actual selected author frame0 helmet/face and boot vertices; excludes spear/horse/ring/shadow; not valid for other cached phases",
+      "top_y": 439.096160888672,
+      "vertices_checked": 13242
+    },
+    {
+      "boot_bottom_y": 528.273559570312,
+      "boot_min_world_y": 0.0281464979052544,
+      "coordinate_space": "logical_viewport_units",
+      "display_backend": "headless",
+      "height_fraction": 0.123642387390137,
+      "height_px": 98.9139099121094,
+      "projection_viewport": [
+        1422.0,
+        800.0
+      ],
+      "scope": "actual selected author frame0 helmet/face and boot vertices; excludes spear/horse/ring/shadow; not valid for other cached phases",
+      "top_y": 429.359649658203,
+      "vertices_checked": 13242
+    },
+    {
+      "boot_bottom_y": 557.06103515625,
+      "boot_min_world_y": 0.0281464979052544,
+      "coordinate_space": "logical_viewport_units",
+      "display_backend": "headless",
+      "height_fraction": 0.123642349243164,
+      "height_px": 98.9138793945312,
+      "projection_viewport": [
+        1422.0,
+        800.0
+      ],
+      "scope": "actual selected author frame0 helmet/face and boot vertices; excludes spear/horse/ring/shadow; not valid for other cached phases",
+      "top_y": 458.147155761719,
+      "vertices_checked": 13242
+    },
+    {
+      "boot_bottom_y": 528.273559570312,
+      "boot_min_world_y": 0.0281464979052544,
+      "coordinate_space": "logical_viewport_units",
+      "display_backend": "headless",
+      "height_fraction": 0.123642387390137,
+      "height_px": 98.9139099121094,
+      "projection_viewport": [
+        1422.0,
+        800.0
+      ],
+      "scope": "actual selected author frame0 helmet/face and boot vertices; excludes spear/horse/ring/shadow; not valid for other cached phases",
+      "top_y": 429.359649658203,
+      "vertices_checked": 13242
+    }
+  ],
+  "art": "NOT_ACCEPTED",
+  "asset_scope": "explicit local derivation, not exact CI runtime bytes"
+}

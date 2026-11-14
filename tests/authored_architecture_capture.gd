@@ -1,4 +1,7 @@
 extends SceneTree
+const LiveSequence:=preload("res://scripts/review/author_live_sequence.gd")
+const Destination:=preload("res://scripts/review/destination_camera.gd")
+const ResourceIdentity:=preload("res://scripts/review/resource_identity.gd")
 const AuthorOracle:=preload("res://scripts/review/author_unit_oracle.gd")
 const Traversal:=preload('res://scripts/review/traversal_review.gd')
 const FreezeClock:=preload('res://scripts/review/freeze_shader_clock.gd')
@@ -42,6 +45,13 @@ func run() -> void:
    if not require_capture(part.transform==Transform3D.IDENTITY,'Basin part transform changed'):return
    extra_assets[path]=FileAccess.get_sha256(path)
 
+ var identity_paths=['res://assets/river_authored/architecture/architecture.glb','res://assets/river_authored/ground/continuous-region.scn','res://assets/river_authored/woodland/region.scn']
+ identity_paths.append_array(extra_assets.keys())
+ var resource_identity=ResourceIdentity.collect(identity_paths)
+ for identity in resource_identity.values():
+  if not require_capture(not identity.has('error'),'Packed resource identity failed: '+str(identity)):return
+ print('RUNTIME_RESOURCE_IDENTITY ',JSON.stringify(resource_identity))
+
  print('REGION_SETUP_STARTING_REAL_BATTLE')
  field.hud.go.pressed.emit()
  for tick in 135:field._physics_process(.05)
@@ -54,6 +64,11 @@ func run() -> void:
   if not require_capture(bound.error==OK,'Single real-unit author oracle failed: '+str(bound.error)):return
   oracle_actor=bound.actor;oracle_receipt=bound.receipt
  field.camera_center=Vector2(34.2,1.0);field.camera.size=22.;field._process(.05)
+ if '--author-dynamic-review' in OS.get_cmdline_user_args():
+  if not require_capture(is_instance_valid(oracle_actor),'Dynamic fixture requires exact complete actor'):return
+  var fixture_check=LiveSequence.fixture_for(oracle_actor)
+  if not require_capture(not fixture_check.has('error'),'Live phase fixture unavailable: '+str(fixture_check)):return
+  print('AUTHOR_DYNAMIC_FIXTURE_VALIDATED ',fixture_check.sha256)
  if '--validate-setup' in OS.get_cmdline_user_args():
   if not require_capture(field.map.gate is MeshInstance3D and not old.visible,'Wrong authored scene setup'):return
   if not require_capture(Array(field.battle.ordinary_counts)==[20,20],'Wrong real battle fixture'):return
@@ -74,6 +89,9 @@ func run() -> void:
  if '--gate-context-study' in OS.get_cmdline_user_args():
   if not require_capture(is_instance_valid(oracle_actor),'Gate-context camera calibration requires actual author body geometry'):return
   modes=['qhd-perspective-road65','qhd-perspective-context65','uhd-perspective-context65']
+ if '--destination-study' in OS.get_cmdline_user_args():
+  if not require_capture(is_instance_valid(oracle_actor),'Destination camera calibration requires actual author body geometry'):return
+  modes=['qhd-perspective-road65','qhd-perspective-destination26','qhd-perspective-destination28','uhd-perspective-destination26']
  if '--shadow-diagnostic' in OS.get_cmdline_user_args():modes.append('qhd-after-no-shadow')
  for mode in modes:
   root.size=Vector2i(3840,2160) if mode.begins_with('uhd') else Vector2i(2560,1440)
@@ -83,7 +101,7 @@ func run() -> void:
   field.map.sun.shadow_enabled=reference_shadow and not mode.ends_with('no-shadow')
   old.visible=not after;model.visible=after;support.visible=after;woodland.visible=after
   field.camera_center=Vector2(34.2,1);field.camera.size=22.
-  if '--camera-study' in OS.get_cmdline_user_args() or '--gate-context-study' in OS.get_cmdline_user_args():
+  if '--camera-study' in OS.get_cmdline_user_args() or '--gate-context-study' in OS.get_cmdline_user_args() or '--destination-study' in OS.get_cmdline_user_args():
    field.camera_yaw=deg_to_rad(-75. if mode.ends_with('road75') else -65.)
    field.camera_center=field.battle.hero.pos+Vector2(4.,0.)
    field.review_camera_profile={'projection':'perspective','nominal_body_fraction':.10,'pitch_degrees':32.,'fov_degrees':55.}
@@ -101,6 +119,13 @@ func run() -> void:
     else:high=field.review_camera_profile.nominal_body_fraction
    var matched=AuthorOracle.projected_body(oracle_actor,field.camera)
    if not require_capture(absf(matched.height_px-target_body.height_px)<.2,'Candidate shrank or enlarged body instead of preserving projected scale'):return
+  var destination_fit:Dictionary={}
+  if mode.contains('destination'):
+   destination_fit=Destination.apply(field,oracle_actor,'destination26' if mode.ends_with('destination26') else 'destination28')
+   if not require_capture(destination_fit.error==OK,'Destination framing/body fit failed'):return
+  var gate_projection=Destination.projected_gate(model,field.camera) if '--destination-study' in OS.get_cmdline_user_args() else {}
+  if mode.contains('destination'):
+   if not require_capture(not gate_projection.has('error') and gate_projection.all_bounds_inside,'Complete destination gate bounds clipped'):return
   field._draw_field();root.scaling_3d_scale=1.
   for frame in 8:await process_frame
   if not require_capture(var_to_bytes(Store.snapshot(field.battle))==frozen,'Battle state changed between matched views'):return
@@ -116,14 +141,21 @@ func run() -> void:
   if image_save_error!=OK:
    push_error('Native image write failed: '+mode+' error='+str(image_save_error));quit(1);return
   if not require_capture(var_to_bytes(Store.snapshot(field.battle))==frozen,'Battle state changed during readback'):return
+  if not body_projection.is_empty():
+   var sy=float(img.get_height())/float(body_projection.projection_viewport[1])
+   body_projection.attachment_projection={'attachment_size':[img.get_width(),img.get_height()],'scale_xy':[float(img.get_width())/float(body_projection.projection_viewport[0]),sy],'top_y':body_projection.top_y*sy,'boot_bottom_y':body_projection.boot_bottom_y*sy,'height_px':body_projection.height_px*sy,'method':'logical_camera_projection_scaled_to_native_attachment; NOT manual visible-silhouette measurement'}
   var camera=field.camera
   var projection=camera.get_camera_projection()
   var transform=camera.global_transform
-  receipts.append({'single_real_unit_author_oracle':oracle_receipt,'actual_author_body_projection':body_projection,'runtime_architecture_sha256':FileAccess.get_sha256('res://assets/river_authored/architecture/architecture.glb'),'additional_runtime_asset_sha256':extra_assets,'runtime_ground_sha256':FileAccess.get_sha256('res://assets/river_authored/ground/continuous-region.scn'),'runtime_woodland_sha256':FileAccess.get_sha256('res://assets/river_authored/woodland/region.scn'),'camera_review_profile':field.review_camera_profile.duplicate(),'camera_profile_scope':'INTERNAL_CANDIDATE_NOT_OFFICIAL_RIOT_PARAMETERS; nominal adult box at look target, actual hero offset must be measured','shader_clock':{'fixed_seconds':field.battle.tick*field.Battle.DT,'overrides':clock_report,'include_audit':clock.include_audit},'logical_viewport_size':[root.get_visible_rect().size.x,root.get_visible_rect().size.y],'attachment_size':[img.get_width(),img.get_height()],'shadow_enabled':field.map.sun.shadow_enabled,'comparison_role':'SHADOW_ONLY_DIAGNOSTIC_NOT_STANDARD_LIGHTING' if mode.ends_with('no-shadow') else 'NEW_TERRAIN_SAME_STATE_RESOLUTION_COMPARISON_NOT_OLD_TERRAIN_PAIR','woodland_composition':woodland.get_meta('composition','MISSING'),'battle_snapshot_sha256':frozen_hash,'controller_git_blob':OS.get_environment('CONTROLLER_BLOB'),'controller_sha256':FileAccess.get_sha256('res://scripts/field/controller.gd'),'camera_transform':{'origin':vec(transform.origin),'basis':[vec(transform.basis.x),vec(transform.basis.y),vec(transform.basis.z)]},'camera_projection':[vec4(projection.x),vec4(projection.y),vec4(projection.z),vec4(projection.w)],'camera_yaw':field.camera_yaw,'viewport':[root.size.x,root.size.y],'internal_pixels':[root.size.x,root.size.y],'seed':str(field.battle.rng.seed),'composition':'original-master' if not after else 'new-architecture-and-sprite-woodland; continuous terrain with matching versioned Ground and collision; actual extents in source manifest; CC0 dry-earth PBR','view':mode,'pixels':[img.get_width(),img.get_height()],'internal_scale':root.scaling_3d_scale,'camera_center':str(field.camera_center),'camera_size':field.camera.size,'tick':field.battle.tick,'ordinary':Array(field.battle.ordinary_counts),'hits':field.battle.hits.duplicate(),'source':OS.get_environment('GITHUB_SHA'),'stage':'MATCHED_REAL_GAME_REGION_EXPERIMENT; continuous terrain with matching versioned Ground and collision; actual extents in source manifest; CC0 dry-earth PBR; legacy crowd with optional explicitly recorded single author oracle; ART_NOT_ACCEPTED; REALTIME_INPUT_SEPARATE_RECEIPT'})
+  receipts.append({'destination_fit':destination_fit,'actual_gate_projection':gate_projection,'runtime_resource_identities':resource_identity,'single_real_unit_author_oracle':oracle_receipt,'actual_author_body_projection':body_projection,'runtime_architecture_sha256':resource_identity['res://assets/river_authored/architecture/architecture.glb'].packed_resource_sha256,'additional_runtime_asset_sha256':extra_assets,'runtime_ground_sha256':FileAccess.get_sha256('res://assets/river_authored/ground/continuous-region.scn'),'runtime_woodland_sha256':FileAccess.get_sha256('res://assets/river_authored/woodland/region.scn'),'camera_review_profile':field.review_camera_profile.duplicate(),'camera_profile_scope':'INTERNAL_CANDIDATE_NOT_OFFICIAL_RIOT_PARAMETERS; nominal adult box at look target, actual hero offset must be measured','shader_clock':{'fixed_seconds':field.battle.tick*field.Battle.DT,'overrides':clock_report,'include_audit':clock.include_audit},'logical_viewport_size':[root.get_visible_rect().size.x,root.get_visible_rect().size.y],'attachment_size':[img.get_width(),img.get_height()],'shadow_enabled':field.map.sun.shadow_enabled,'comparison_role':'SHADOW_ONLY_DIAGNOSTIC_NOT_STANDARD_LIGHTING' if mode.ends_with('no-shadow') else 'NEW_TERRAIN_SAME_STATE_RESOLUTION_COMPARISON_NOT_OLD_TERRAIN_PAIR','woodland_composition':woodland.get_meta('composition','MISSING'),'battle_snapshot_sha256':frozen_hash,'controller_git_blob':OS.get_environment('CONTROLLER_BLOB'),'controller_sha256':FileAccess.get_sha256('res://scripts/field/controller.gd'),'camera_transform':{'origin':vec(transform.origin),'basis':[vec(transform.basis.x),vec(transform.basis.y),vec(transform.basis.z)]},'camera_projection':[vec4(projection.x),vec4(projection.y),vec4(projection.z),vec4(projection.w)],'camera_yaw':field.camera_yaw,'viewport':[root.size.x,root.size.y],'internal_pixels':[root.size.x,root.size.y],'seed':str(field.battle.rng.seed),'composition':'original-master' if not after else 'new-architecture-and-sprite-woodland; continuous terrain with matching versioned Ground and collision; actual extents in source manifest; CC0 dry-earth PBR','view':mode,'pixels':[img.get_width(),img.get_height()],'internal_scale':root.scaling_3d_scale,'camera_center':str(field.camera_center),'camera_size':field.camera.size,'tick':field.battle.tick,'ordinary':Array(field.battle.ordinary_counts),'hits':field.battle.hits.duplicate(),'source':OS.get_environment('GITHUB_SHA'),'stage':'MATCHED_REAL_GAME_REGION_EXPERIMENT; continuous terrain with matching versioned Ground and collision; actual extents in source manifest; CC0 dry-earth PBR; legacy crowd with optional explicitly recorded single author oracle; ART_NOT_ACCEPTED; REALTIME_INPUT_SEPARATE_RECEIPT'})
   var partial=FileAccess.open(out+'/receipt.json',FileAccess.WRITE);partial.store_string(JSON.stringify(receipts,'  '));partial.close()
   print('ARCHITECTURE_CAPTURE_SAVED ',mode)
  print('MATCHED_REGION_HEADLESS_SETUP_COMPLETE' if '--validate-pairs' in OS.get_cmdline_user_args() else 'AUTHORED_ARCHITECTURE_ACTUAL_GAME_CAPTURE '+JSON.stringify(receipts))
  field.map.sun.shadow_enabled=reference_shadow
  clock.restore()
+ if '--author-dynamic-review' in OS.get_cmdline_user_args() and '--validate-pairs' not in OS.get_cmdline_user_args():
+  if not require_capture(is_instance_valid(oracle_actor),'Missing complete actor for explicit live diagnostic'):return
+  if not await LiveSequence.run(self,field,oracle_actor,out+'/author-live-raw'):
+   push_error('Author live sequence failed; partial receipt retained');quit(1);return
  if '--traversal-review' in OS.get_cmdline_user_args():await Traversal.run(self,field,out+'/traversal-raw')
  scene.queue_free();await process_frame;await process_frame;await create_timer(.15).timeout;quit()

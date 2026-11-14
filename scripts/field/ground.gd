@@ -1,6 +1,9 @@
 extends RefCounted
 const AuthoredProfile:=preload("res://scripts/field/authored_landform_profile.gd")
+# Experimental opt-in only. Missing variable leaves all existing games unchanged.
 static var authored_landform_enabled:bool=OS.get_environment("LUANSHI_AUTHORED_LANDFORM")=="1"
+const NativeWoodland:=preload("res://scripts/field/native_woodland_navigation.gd")
+static var native_woodland_enabled:bool=OS.get_environment("LUANSHI_NATIVE_WOODLAND")=="1"
 const PassProfile:=preload("res://scripts/field/river_pass_profile.gd")
 ## All planar coordinates are (x,z). Geometry and simulated movement share these landmarks.
 const LIMIT := Vector2(118, 64)
@@ -67,10 +70,13 @@ static func parapet(p: Vector2) -> float:
 	return clampf((z-5.5)*0.43,0.0,3.25)
 
 static func moat_depth(p: Vector2) -> float:
-	return PassProfile.moat_depth(p)
+	return AuthoredProfile.moat_depth(p) if authored_landform_enabled else PassProfile.moat_depth(p)
 
 static func moat_blocks(p: Vector2) -> bool:
 	if absf(p.y)<=MOAT_DECK: return false
+	if authored_landform_enabled:
+		var depth:=moat_depth(p)
+		return depth>0. and height(p,true)-MOAT_BED_DEPTH*depth<BATTLE_WATER_LEVEL+.12
 	return moat_depth(p)>.43 or bank_outcrop_blocks(p,MOAT_X,true)
 
 static func bank_outcrop_blocks(p:Vector2,channel:float,moat:bool) -> bool:
@@ -127,6 +133,7 @@ static func pace(p: Vector2, mounted: bool, bridgehead: bool=false) -> float:
 
 static func blocked(p: Vector2, open: bool, bridgehead: bool=false) -> bool:
 	if bridgehead and moat_blocks(p): return true
+	if bridgehead and authored_landform_enabled and native_woodland_enabled and NativeWoodland.blocked(p):return true
 	var river_blocked:=absf(p.x-RIVER_X)<4.8
 	if bridgehead:
 		river_blocked=absf(p.x-river_center(p.y))<5.65+river_shore_variation(p.y) or bank_outcrop_blocks(p,RIVER_X,false)
@@ -164,6 +171,10 @@ static func moat_waypoint(p: Vector2,goal: Vector2,file: float=0.) -> Vector2:
 	return Vector2(MOAT_X+direction*(MOAT_BANK+.8),file)
 
 static func waypoint(p: Vector2, goal: Vector2, bridgehead: bool=false) -> Vector2:
+	var base:=_waypoint_without_woodland(p,goal,bridgehead)
+	return NativeWoodland.detour(p,base) if bridgehead and authored_landform_enabled and native_woodland_enabled else base
+
+static func _waypoint_without_woodland(p: Vector2, goal: Vector2, bridgehead: bool=false) -> Vector2:
 	if bridgehead and needs_moat_crossing(p,goal): return moat_waypoint(p,goal)
 	if (p.x < RIVER_X - 5.0 and goal.x > RIVER_X - 5.0) or (p.x > RIVER_X + 5.0 and goal.x < RIVER_X + 5.0):
 		var z := crossing(p.y)

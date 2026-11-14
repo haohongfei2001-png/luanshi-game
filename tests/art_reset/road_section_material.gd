@@ -4,7 +4,7 @@ func run() -> void:
 	var args:=OS.get_cmdline_user_args();assert(args.size()==1)
 	var packed:=load(args[0]) as PackedScene;assert(packed)
 	var scene:=packed.instantiate();root.add_child(scene)
-	assert(str(scene.get_meta("expected_profile_version"))=="continuous-military-road-and-eroded-moat-03")
+	assert(str(scene.get_meta("expected_profile_version"))=="asymmetric-military-watercourse-and-causeway-04")
 	var bins:={"road":0,"cover":0,"wet":0,"drain":0};var tiles:=0
 	for mesh:MeshInstance3D in scene.find_children("Survey_*","MeshInstance3D",true,false):
 		tiles+=1;var material:=mesh.material_override as ShaderMaterial;assert(material)

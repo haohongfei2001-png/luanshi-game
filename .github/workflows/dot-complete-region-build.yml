@@ -1,4 +1,4 @@
-name: Dot complete stone timber road03 runtime build
+name: Dot complete stone timber road04 runtime build
 on:
   push:
     branches: ['dot/complete-region-runtime-build']
@@ -12,6 +12,7 @@ jobs:
     timeout-minutes: 35
     env:
       LUANSHI_AUTHORED_LANDFORM: '1'
+      LUANSHI_NATIVE_WOODLAND: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Prepare bounded logs
@@ -59,17 +60,21 @@ jobs:
           mkdir -p /tmp/complete-gate/source assets/river_authored/architecture
           ln -s "$PWD/assets/river_gate/world/masters/modular_wooden_pier" /tmp/complete-gate/source/wooden_pier
           BLENDER=/tmp/blender-4.3.2-linux-x64/blender
-          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx /tmp/complete-gate --no-preview --native-roof-band --complete-gate-masonry --surface-root /tmp/gate-surfaces >artifacts/complete-study/gate-build.log 2>&1
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx /tmp/complete-gate --no-preview --native-roof-band --complete-gate-masonry --complete-portal --surface-root /tmp/gate-surfaces >artifacts/complete-study/gate-build.log 2>&1
           $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/audit_gate_bearing.py -- /tmp/complete-gate/source/architecture.blend /tmp/complete-gate/bearing-audit.json >artifacts/complete-study/gate-bearing.log 2>&1
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/audit_portal_interfaces.py -- /tmp/complete-gate/source/architecture.blend /tmp/complete-gate/portal-interface.json >artifacts/complete-study/portal-interface.log 2>&1
           cp /tmp/complete-gate/architecture.glb assets/river_authored/architecture/
-      - name: Rebuild profile-matched road03 and shared instances, no source rebake
+          LUANSHI_GATE_CONTRACT_GLB="$PWD/assets/river_authored/architecture/architecture.glb" python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/gate-occlusion-import.log 150 -- godot --headless --path . --script tests/gate_occlusion_import.gd
+      - name: Rebuild profile-matched road04 and shared instances, no source rebake
         run: |
           set -euo pipefail
           python tools/art/continuous_landform/fetch_earth.py /tmp/earth-source >artifacts/complete-study/earth-source.log 2>&1
           mkdir -p assets/river_authored/{ground,woodland,grass}
           godot --headless --path . --script tools/art/continuous_landform/build_region.gd -- assets/river_authored/ground/continuous-region.scn /tmp/earth-source >artifacts/complete-study/terrain-build.log 2>&1
           godot --headless --path . --script tools/art/continuous_landform/build_grass_shoulders.gd -- /tmp/basin-restored/editable-sources/low-grass/realtime/derived.glb assets/river_authored/grass/region.scn >artifacts/complete-study/grass-build.log 2>&1
-          godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/basin-restored/editable-sources/field-oak/realtime/derived.glb /tmp/legacy-restored/bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn >artifacts/complete-study/woodland-build.log 2>&1
+          python3 tools/art/native_woodland/restore_original_tree.py /tmp/original-tree >artifacts/complete-study/original-tree-source.log 2>&1
+          godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/original-tree/island_tree_01_2k.gltf /tmp/legacy-restored/bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn --complete-tree-intake >artifacts/complete-study/woodland-build.log 2>&1
+          python tools/art/gate_structure/run_capture_checked.py artifacts/complete-study/original-tree-contract.log 150 -- godot --headless --path . --script tests/art_reset/original_tree_region.gd -- assets/river_authored/woodland/region.scn
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/*build.log; then exit 1; fi
           godot --headless --editor --path . --import >artifacts/complete-study/assembled-import.log 2>&1
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/complete-study/assembled-import.log; then exit 1; fi
@@ -110,6 +115,27 @@ jobs:
         with:
           name: complete-region-runtime-04
           path: artifacts/complete-runtime-groups/group-04
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-05/**') != '' }}
+        with:
+          name: complete-region-runtime-05
+          path: artifacts/complete-runtime-groups/group-05
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-06/**') != '' }}
+        with:
+          name: complete-region-runtime-06
+          path: artifacts/complete-runtime-groups/group-06
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/complete-runtime-groups/group-07/**') != '' }}
+        with:
+          name: complete-region-runtime-07
+          path: artifacts/complete-runtime-groups/group-07
           retention-days: 30
           if-no-files-found: error
       - uses: actions/upload-artifact@v4

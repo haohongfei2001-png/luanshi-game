@@ -1,0 +1,9 @@
+# Complete destination camera candidates, not art acceptance
+
+The original actual frame crops the gate roof. The rejected 38-degree candidate worsens composition. Keep the fixed 4bbc CI runtime unchanged; these candidates move only the real camera and preserve the actual author helmet/boot projected body fraction. They are not official Wild Rift parameters.
+
+Call `Destination.apply(field, actor, "destination26")` after initializing the original baseline camera (yaw -65, pitch32, FOV55, lead4m, implicit look height0.8m). Candidate26 uses pitch26/FOV65/lead3m/look height1.5m above actual Ground. Candidate28 uses pitch28/FOV70/lead4m/look height1.5m. Execute the call outside assert; require returned error==OK. Keep the returned `before`, `after`, `profile`, `lead_metres`, and `look_height_above_ground_m` in receipt. `projected_gate(model,camera)` records normalized actual gate-hall mesh bounds, not a guessed proxy. Baseline must be reset before each candidate. Wait for actual viewport resize before solving.
+
+Real-game headless test at wide viewport: both preserve actual body fraction12.36424%; complete hall bounds inside, candidate26 Y6.01%-33.10%, candidate28 Y6.54%-33.22%. Hero boot position66.03% and69.63%. Battle unchanged. This logical viewport result is not native2K/4K evidence. First diagnostic ran an unintended square viewport and correctly failed horizontal clipping; it was retained, then the fixture was corrected to intended 16:9 rather than weakening the gate requirement. One existing ObjectDB cleanup warning remains; test exit0 is not zero-warning or resource-performance acceptance.
+
+No units, buildings, bridge geometry or Ground moved. No character scale or texture changed. Controller default branch untouched; omitted optional look_height retains0.8. New actual GPU comparison and whole-frame review still required. Do not use this static author oracle as a movement/attack mapping.

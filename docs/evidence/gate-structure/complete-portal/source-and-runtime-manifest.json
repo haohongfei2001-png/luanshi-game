@@ -1,0 +1,30 @@
+{
+  "state": "LOCAL_SOURCE_HEADLESS_PASS_GPU_NOT_RUN_ART_NOT_ACCEPTED",
+  "files": [
+    {
+      "path": "architecture.glb",
+      "bytes": 107517652,
+      "sha256": "b30919a4c4f0e1303b2e11d094622d3d5089bb3b92b47cd87b2e4cf13a58a19c"
+    },
+    {
+      "path": "source/architecture.blend",
+      "bytes": 116329356,
+      "sha256": "72a8d78ac2f9eed59b5d28a4dc8024a1175bca358e1d2e5a7967e969b6714bb3"
+    },
+    {
+      "path": "architecture-manifest.json",
+      "bytes": 12080,
+      "sha256": "6ad3b2cec9037f0c7178c26622f59fa54b21d8bb9b4d7fff7be903e16f463d27"
+    },
+    {
+      "path": "solid-orientation-audit.json",
+      "bytes": 198958,
+      "sha256": "8d422cdeeb239fc19cf71383274e31fb326ef6bd610d888ce5ba76f89c6b9324"
+    },
+    {
+      "path": "audit_authored_solids.json",
+      "bytes": 117778,
+      "sha256": "3bbdf7bf84484b4d7ae50b2a78cc6bd2426f0df9eace81da31530b4808ad638f"
+    }
+  ]
+}

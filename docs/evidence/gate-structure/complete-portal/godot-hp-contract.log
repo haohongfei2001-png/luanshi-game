@@ -1,0 +1,4 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+GATE_CONTRACT_EXTERNAL_SOURCE b30919a4c4f0e1303b2e11d094622d3d5089bb3b92b47cd87b2e4cf13a58a19c
+AUTHORED_GATE_GAMEPLAY_CONTRACT_PASS {"counts":[20,20],"renderer":"headless","samples":[{"door_visible":true,"door_y":0.0,"gate_hp":260.0},{"door_visible":true,"door_y":-0.224999994039536,"gate_hp":130.0},{"door_visible":false,"door_y":-0.449999988079071,"gate_hp":0.0},{"door_visible":true,"door_y":0.0,"gate_hp":260.0}],"scope":"HEADLESS_VISUAL_BINDING_ONLY_NOT_FULL_SIEGE_OR_ART","tick":0}

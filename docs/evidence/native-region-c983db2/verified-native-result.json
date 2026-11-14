@@ -1,0 +1,18 @@
+{
+  "source": "c983db2dcc7c633116fa4eeae5e0784ebc052f1c",
+  "run": 43634640376,
+  "artifact": 14129183206,
+  "zip_sha256": "c64318763aed53bc8a0a496244887457cfa720babe56116856d7b8769e46a8c2",
+  "actual_adapter": "Apple Paravirtual device (Apple5)",
+  "actual_processor": "Apple M1 (Virtual)",
+  "engine_source": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+  "art": "NOT_ACCEPTED",
+  "action": "NOT_RUN",
+  "performance": "NOT_MEASURED",
+  "M5": "DEVICE_NOT_RUN",
+  "all_returned_logs_error_scan": "PASS",
+  "native_window_ready": true,
+  "max_rss_bytes": 695009280,
+  "peak_memory_footprint_bytes": 2171768576,
+  "scope": "Native frame integrity, frozen ee5 assets with newcamera; not new03 complete scene"
+}

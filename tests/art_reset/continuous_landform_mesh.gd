@@ -33,6 +33,7 @@ func run() -> void:
 	for collision:CollisionShape3D in scene.find_children("*","CollisionShape3D",true,false):
 		assert(collision.shape is ConcavePolygonShape3D);shapes+=1
 	assert(terrains==266 and shapes==266 and water_triangles>1000)
+	print("SURFACE_SAMPLE_DIAGNOSTIC ",JSON.stringify({"max_water_dry":max_water_dry,"max_route_error":max_support_error,"max_reachable_error":max_reachable_error,"worst_reachable":[worst_reachable.x,worst_reachable.y]}))
 	assert(max_water_dry<.05 and max_support_error<.02,"Surface sampling insufficient")
 	if scene.has_meta("adaptive_cell_distribution"):
 		assert(max_reachable_error<.012,"Adaptive reachable terrain error exceeds 1.2cm")

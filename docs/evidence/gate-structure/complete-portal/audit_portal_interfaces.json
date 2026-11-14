@@ -1,0 +1,67 @@
+{
+  "masonry_pairs": [
+    {
+      "bearing": "GateGalleryBearing",
+      "wall": "GateContinuousSpandrel_Front",
+      "overlap_axes_m": [
+        0.0,
+        3.999999523162842,
+        0.1399998664855957
+      ]
+    },
+    {
+      "bearing": "GateGalleryBearing",
+      "wall": "GateContinuousSpandrel_Rear",
+      "overlap_axes_m": [
+        0.0,
+        3.999999523162842,
+        0.1399998664855957
+      ]
+    },
+    {
+      "bearing": "GateGalleryBearing.001",
+      "wall": "GateContinuousSpandrel_Front",
+      "overlap_axes_m": [
+        0.0,
+        3.999999523162842,
+        0.1399998664855957
+      ]
+    },
+    {
+      "bearing": "GateGalleryBearing.001",
+      "wall": "GateContinuousSpandrel_Rear",
+      "overlap_axes_m": [
+        0.0,
+        3.999999523162842,
+        0.1399998664855957
+      ]
+    }
+  ],
+  "timber_bearing_contacts": [
+    {
+      "stone": "GateGalleryBearing",
+      "stone_top_m": 5.690000057220459,
+      "timber_bottom_m": 5.690000057220459,
+      "contact_gap_m": 0.0
+    },
+    {
+      "stone": "GateGalleryBearing.001",
+      "stone_top_m": 5.690000057220459,
+      "timber_bottom_m": 5.690000057220459,
+      "contact_gap_m": 0.0
+    },
+    {
+      "stone": "GateContinuousSpandrel_Front",
+      "stone_top_m": 5.690000057220459,
+      "timber_bottom_m": 5.690000057220459,
+      "contact_gap_m": 0.0
+    },
+    {
+      "stone": "GateContinuousSpandrel_Rear",
+      "stone_top_m": 5.690000057220459,
+      "timber_bottom_m": 5.690000057220459,
+      "contact_gap_m": 0.0
+    }
+  ],
+  "scope": "specific source solid interface contract, not global intersection absence or graphical acceptance"
+}
