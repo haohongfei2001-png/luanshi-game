@@ -22,7 +22,9 @@ def main():
     output.mkdir(parents=True,exist_ok=True)
     records=[]
     for label,path,blob in SOURCES:
-        original=source_file(cache,path,blob)
+        source_cache=cache/label
+        source_cache.mkdir(parents=True,exist_ok=True)
+        original=source_file(source_cache,path,blob)
         curve=extract(original)
         curve.update(source_path=path,source_blob=blob,upstream=UPSTREAM,authors="Wildfire Games and contributors",license="CC BY-SA 3.0")
         (output/(label+".json")).write_text(json.dumps(curve,separators=(",",":"))+"\n")

@@ -2,7 +2,7 @@ name: Audit complete original two-handed pike actions
 on:
   push:
     branches: [codex/river-rc25-native-spear]
-    paths: ['tools/art/inspect_native_spear.py','.github/workflows/native-spear-source.yml']
+    paths: ['tools/art/inspect_native_spear.py','.github/workflows/native-spear-source.yml','tests/native_spear_scout.gd']
 permissions:
   contents: write
 jobs:
@@ -16,7 +16,12 @@ jobs:
           set -euo pipefail
           python3 -m pip install pillow numpy
           python3 tools/art/inspect_native_spear.py /tmp/luanshi-pike
-          git add docs/evidence/river-gate-v1-rc25/native-spear/source
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/native_spear_scout.gd > docs/evidence/river-gate-v1-rc25/native-spear/scout.log 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' docs/evidence/river-gate-v1-rc25/native-spear/scout.log; then exit 1; fi
+          git add docs/evidence/river-gate-v1-rc25/native-spear
           git -c user.name='River Gate authored pike source audit' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive measured complete original pike and spear sources'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
