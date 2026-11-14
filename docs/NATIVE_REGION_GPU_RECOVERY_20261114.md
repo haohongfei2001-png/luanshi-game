@@ -1,0 +1,76 @@
+# Native region graphics recovery, not an art release
+
+## Why this isolated branch exists
+
+The real `ee5d1389944a4e3a3a13487856066e0631f8ca25` Linux scene capture
+ran successfully, but its actual traversal produced only 21 frames over
+43.476887 seconds on llvmpipe. Its route result was **NOT_COMPLETED**, reaching
+one of two targets. The encoder's `capture_complete` means a recording was
+closed, not that the route, actions, frame rate, or art passed.
+
+This branch reuses the already-produced architecture, continuous 112×96 m
+ground, and woodland on the repository's existing GitHub-hosted macOS runner.
+It avoids re-baking Blender assets and does not access the owner's computer,
+start Codex work, buy assets, create accounts, or publish a release.
+
+## Immutable input and recovery
+
+- Existing asset run: `43627776697`, source `ee5d1389944a4e3a3a13487856066e0631f8ca25`.
+- Architecture artifact: `14127177778`, self-contained GLB SHA256
+  `9590b664efb4316d1374c79f517d4f52e6b1a17d5a04a5eaa220fd4a021f4692`.
+- Derivative artifacts: index `14126604039`, payloads `14126978235` and
+  `14126364620`. `bounded_artifact_groups.py` verifies every chunk and complete
+  file before restoring. Original sources, attribution, and recipes remain
+  preserved; no source license is changed.
+- Ground SCN SHA256: `8a87880eadd3448bbc4c5fdd5c9a29e9304ba098db83c32f14eb1d34dade1513`.
+- Woodland SCN SHA256: `9ba916f6270af9264aa5ca24c5b4da28cb6057be568585464ac3be0b85b5e10f`.
+- Import: official Godot 4.6.3 editor, verified original SHA512.
+- Actual Mac runtime: existing `35e80b3a8822a9df9be390814b62f44c0a9c69e8`
+  engine with the already-used Mobile mutex fix and static ANGLE. The exact
+  binary/provenance hashes are checked. This is **not** the later character
+  tangent patch, and no engine default is changed.
+
+## Scope and honest gates
+
+The first native run uses the exact old camera/old-character capture as a
+**pipeline baseline**, not as the new visual direction. Size 22 is obsolete
+as a mandatory artistic gate. New Wild Rift-inspired adult screen occupancy
+and perspective candidates are being implemented separately and will be
+reviewed with the new scene and characters. No output in this branch is
+automatically accepted as a playable or art-qualified release.
+
+The new actual capture preserves native 2560×1440 and 3840×2160/internal 1.0,
+the same frozen Battle state within the run, real wall-clock timestamps, and
+mapped movement input. Metal and Linux OpenGL are different renderer/engine
+conditions; do not label them a strictly identical renderer comparison.
+
+The wrapper accepts only disposable GitHub macOS runners. It verifies the
+direct game process before using the repository's existing Cocoa focus
+helper. It does not inject global keys or use Accessibility. A 240-second
+timeout and all script/shader errors fail the actual capture. Video encoding
+preserves real intervals without interpolating missing frames or speeding up
+the game. A separate route validator rejects missing, duplicate, or incomplete
+results. Even a completed route does not pass attack, hit, shield, riding,
+thousand-soldier performance, or art acceptance.
+
+Initial local validation: nine integrity/gate tests pass; exact three runtime
+assets restore with matching hashes; 176-file static dependency closure has no
+missing files. A fresh official 4.6.3 Linux import passed in 34.15 s, entry
+parse in 0.35 s, and genuine full-scene headless setup in 9.51 s at tick 135,
+20 ordinary soldiers per side. These are not graphical performance results.
+Actual hosted Mac execution is **NOT_RUN** at this commit. Results must
+be appended only after inspecting its exact run and returned evidence.
+
+All actual art remains **ART_NOT_ACCEPTED**. M5 is **DEVICE_NOT_RUN**. RC24 and
+RC25 remain untouched. No failed screenshots are sent as qualified work.
+Owner's latest accepted whole-scene direction and matte/rustic correction are
+preserved in draft PR #67; that PR remains draft following an explicit merge
+denial and must not be merged, marked ready, or bypassed by this branch.
+
+## Next recovery command
+
+Push only the isolated `dot/native-region-review` branch after local checks;
+its dedicated workflow runs without creating a release or changing main.
+Read the final `native-region-evidence-<SHA>` process/host/route receipts and
+movie groups. If native execution works, reuse it for the new camera and
+rebuilt region rather than repeating the rejected old framing.

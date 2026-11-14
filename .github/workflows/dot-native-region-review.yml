@@ -1,0 +1,146 @@
+name: Dot reused region native Mac graphics (not art acceptance)
+on:
+  push:
+    branches: ['dot/native-region-review']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: dot-native-region-review
+  cancel-in-progress: false
+jobs:
+  native-region:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    env:
+      LUANSHI_AUTHORED_LANDFORM: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify exact existing derivative run and repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = (await github.rest.actions.getWorkflowRun({...context.repo,run_id:43627776697})).data;
+            if (run.head_sha !== 'ee5d1389944a4e3a3a13487856066e0631f8ca25' || run.status !== 'completed' || run.conclusion !== 'success' || run.repository.full_name !== `${context.repo.owner}/${context.repo.repo}`) throw new Error('Unexpected source run');
+            const all = (await github.rest.actions.listWorkflowRunArtifacts({...context.repo,run_id:43627776697,per_page:100})).data.artifacts;
+            const expected = {'new-architecture-editable-source':14127177778,'reusable-region-derivatives-00':14126604039,'reusable-region-derivatives-01':14126978235,'reusable-region-derivatives-02':14126364620};
+            for (const [name,id] of Object.entries(expected)) {
+              const found = all.filter(a => a.name === name && a.id === id && !a.expired);
+              if(found.length !== 1) throw new Error(`Missing exact source artifact ${name}`);
+            }
+            // Success here is source integrity, never visual acceptance.
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: reusable-region-derivatives-*
+          merge-multiple: true
+          path: .pipeline/groups
+          run-id: '43627776697'
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: new-architecture-editable-source
+          path: .pipeline/architecture
+          run-id: '43627776697'
+          github-token: ${{ github.token }}
+      - name: Verify and restore exact three runtime assets
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/native-region
+          touch artifacts/.gdignore .pipeline/.gdignore
+          python3 tools/native_region/restore_inputs.py .pipeline/groups .pipeline/architecture "$PWD" .pipeline/restored >artifacts/native-region/asset-integrity.json
+          python3 tests/native_region_inputs_test.py
+          ./tools/prepare-font.sh
+          python3 tools/art/gate_structure/check_evidence_dependencies.py --require-generated >artifacts/native-region/dependency-closure.json
+      - name: Install exact official import editor
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "0155bbc8dcf179edab4ef08e3dbbd4480d7434ab1990cb3fb25517d453b1b65787c7fe6dfc8824b15ff25e1fdcec59e8584f765054106894fee00311868c3964  $RUNNER_TEMP/editor.zip" | shasum -a 512 -c -
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/editor"
+          echo "GODOT_EDITOR=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+          python3 -m venv "$RUNNER_TEMP/region-python"
+          "$RUNNER_TEMP/region-python/bin/pip" install 'Pillow==11.1.0'
+          if ! command -v ffmpeg >/dev/null; then brew install ffmpeg; fi
+          { uname -a; sw_vers; system_profiler SPHardwareDataType SPDisplaysDataType; } >artifacts/native-region/host.txt
+      - name: Import and validate source with exact official editor
+        run: |
+          set -euo pipefail
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/import.log 180 -- "$GODOT_EDITOR" --headless --editor --path . --import
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/parse.log 45 -- "$GODOT_EDITOR" --headless --path . --check-only --script tests/native_region_capture.gd
+          python3 tools/art/gate_structure/run_capture_checked.py artifacts/native-region/setup.log 75 -- "$GODOT_EDITOR" --headless --path . --script tests/native_region_capture.gd -- --validate-setup
+        env:
+          ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/native-region/setup
+      - name: Restore already verified native Metal mutex-fix engine
+        id: engine-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: patch
+          key: macos-arm64-godot-35e80b3-angle-7578-mobile-mutex-v1
+      - uses: actions/download-artifact@v4
+        id: engine-artifact
+        if: steps.engine-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        with:
+          name: mobile-mutex-angle-template
+          path: patch
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+      - name: Rebuild pinned source only if existing cache and artifact are absent
+        if: steps.engine-cache.outputs.cache-hit != 'true' && steps.engine-artifact.outcome == 'failure'
+        run: bash tools/build_macos_engine.sh patch
+      - name: Run genuine native 2K and 4K frame plus real-speed traversal
+        run: |
+          set -euo pipefail
+          export CONTROLLER_BLOB=$(git hash-object scripts/field/controller.gd)
+          clang -fobjc-arc -framework AppKit -o "$RUNNER_TEMP/region-focus" tools/macos_probe_focus.m
+          chmod +x patch/godot.macos.template_release.arm64
+          python3 tools/native_region/run_native.py "$PWD" "$PWD/patch" "$PWD/artifacts/native-region" "$RUNNER_TEMP/region-focus"
+      - name: Preserve wall-clock recording before separately judging route completion
+        if: always()
+        run: |
+          set -uo pipefail
+          RAW=artifacts/native-region/pixels/traversal-raw
+          if [ ! -f "$RAW/frames.jsonl" ]; then echo 'TRAVERSAL_NOT_RUN'; exit 1; fi
+          status=0
+          python3 tools/encode_wall_clock_capture.py "$RAW" "$RAW/traversal.mp4" >"$RAW/encode.log" 2>&1 || status=1
+          "$RUNNER_TEMP/region-python/bin/python" tools/native_evidence_bundle.py "$RAW" artifacts/native-region-curated || status=1
+          python3 -c "import sys;sys.path.insert(0,'tools');from bounded_artifact_groups import stage;stage('artifacts/native-region-curated','artifacts/native-region-groups',max_groups=4)" || status=1
+          python3 tools/native_region/validate_route.py "$RAW/frames.jsonl" >artifacts/native-region/route-acceptance.json || status=1
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-region-evidence-${{ github.sha }}
+          path: |
+            artifacts/native-region/
+            !artifacts/native-region/pixels/traversal-raw/frame-*.jpg
+            !artifacts/native-region/pixels/traversal-raw/*.mp4
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/native-region-groups/group-00/**') != '' }}
+        with:
+          name: native-region-movie-00
+          path: artifacts/native-region-groups/group-00
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/native-region-groups/group-01/**') != '' }}
+        with:
+          name: native-region-movie-01
+          path: artifacts/native-region-groups/group-01
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/native-region-groups/group-02/**') != '' }}
+        with:
+          name: native-region-movie-02
+          path: artifacts/native-region-groups/group-02
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('artifacts/native-region-groups/group-03/**') != '' }}
+        with:
+          name: native-region-movie-03
+          path: artifacts/native-region-groups/group-03
+          retention-days: 30
