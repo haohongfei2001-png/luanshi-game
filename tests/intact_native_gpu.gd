@@ -64,6 +64,17 @@ func run() -> void:
 				native.set_surface_override_material(surface,plain)
 				var plain_shader:=Shader.new();plain_shader.code=shader.shader.code.replace("render_mode blend_mix,", "render_mode unshaded, blend_mix,")
 				shader.shader=plain_shader
+			if diagnostic.begins_with("tbn_"):
+				var axis:="NORMAL"
+				if diagnostic=="tbn_t":axis="TANGENT"
+				if diagnostic=="tbn_b":axis="BINORMAL"
+				var fragment:="void fragment(){ALBEDO=normalize("+axis+")*.5+vec3(.5); }"
+				var native_debug:=ShaderMaterial.new();native_debug.shader=Shader.new()
+				native_debug.shader.code="shader_type spatial; render_mode unshaded,cull_disabled; "+fragment
+				native.set_surface_override_material(surface,native_debug)
+				var batch_debug:=Shader.new()
+				batch_debug.code=shader.shader.code.split("void fragment()")[0].replace("render_mode blend_mix,", "render_mode unshaded, blend_mix,")+fragment
+				shader.shader=batch_debug
 			shader.set_shader_parameter("influence_table",ImageTexture.create_from_image(packed.tables[surface].image))
 			shader.set_shader_parameter("influence_groups",packed.tables[surface].groups)
 			packed.mesh.surface_set_material(surface,shader);shaders.append(shader)
