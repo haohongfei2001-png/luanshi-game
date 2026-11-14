@@ -39,7 +39,7 @@ func _initialize() -> void:
 	var expected: Dictionary=bytes_to_var(FileAccess.get_file_as_bytes(after))
 	var resumed:=Save.restore(original)
 	if resumed==null: push_error("Rejected the archived battle"); quit(1); return
-	var restored_units:=Save.snapshot(resumed).units
+	var restored_units:Array=Save.snapshot(resumed).units
 	if restored_units!=original.units:
 		print("FIELD_HISTORY_RESTORE_DIFF "+JSON.stringify(_unit_diff(original.units,restored_units)))
 	for i in 117: resumed.step()
