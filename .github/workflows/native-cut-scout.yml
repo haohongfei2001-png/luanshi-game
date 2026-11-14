@@ -1,0 +1,26 @@
+name: Find a clear natural full-chain cut
+on:
+  push:
+    branches: [codex/river-rc23-native-chain]
+    paths: ['tests/native_cut_scout.gd','.github/workflows/native-cut-scout.yml']
+permissions:
+  contents: write
+jobs:
+  scout:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the actual battle without rendering or changing actors
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/native_cut_scout.gd > /tmp/scout.log 2>&1
+          cat /tmp/scout.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/scout.log; then exit 1; fi
+          git add docs/evidence/river-gate-v1-rc23/native-chain/clear-sequences.json
+          git -c user.name='River Gate actual actor scout' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Locate naturally clear complete foot-soldier cuts in the unchanged battle'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
