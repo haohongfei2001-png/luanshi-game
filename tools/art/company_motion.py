@@ -770,6 +770,10 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     hit_points,hit_rotations=source_sword(contact)
     end_points,end_rotations=source_sword(1.)
     ready=procedural_pose(kit,1,0.,loadout)
+    if loadout:
+        standard=procedural_pose(kit,1,0.)
+        carry=1.-ramp(t,0.,.48) if clip==2 else ramp(t,.55,1.)
+        ready=[blend_rigid(a,b,carry) for a,b in zip(standard,ready)]
     impact=procedural_pose(kit,2,1.,loadout)
     origin=ready if clip==2 else impact
     finish=impact if clip==2 else ready
