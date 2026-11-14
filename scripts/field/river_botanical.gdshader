@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode cull_disabled, diffuse_lambert, specular_disabled;
+render_mode cull_disabled, diffuse_lambert, specular_disabled, alpha_to_coverage;
 uniform sampler2D native_atlas : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform bool has_atlas = true;
 uniform int botanical_part = 0;
@@ -34,7 +34,10 @@ void fragment() {
 	vec2 coordinates = UV*uv_scale.xy+uv_offset.xy;
 	vec4 source = vec4(.5,.5,.5,1.);
 	if (has_atlas) source = texture(native_atlas,coordinates);
-	if (source.a<.40) discard;
+	ALPHA = source.a;
+	ALPHA_SCISSOR_THRESHOLD = .40;
+	ALPHA_ANTIALIASING_EDGE = .30;
+	ALPHA_TEXTURE_COORDINATE = coordinates*vec2(textureSize(native_atlas,0));
 	vec3 native_color = linear_color(source.rgb);
 	vec3 paint = linear_color(pigment);
 	float value = dot(native_color,vec3(.2126,.7152,.0722));

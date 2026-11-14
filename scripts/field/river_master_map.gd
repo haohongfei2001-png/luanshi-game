@@ -84,8 +84,9 @@ func _library(path:String) -> Dictionary:
 				material.alpha_scissor_threshold=.38
 				material.alpha_antialiasing_mode=BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
 
-			if path==BROADLEAF or path==FERN or path==SHRUB or path==THICKET:
+			if path==BROADLEAF or path==WOODLAND or path==FERN or path==SHRUB or path==THICKET:
 				var kind:=1 if "leaves" in material.resource_name else 0
+				if path==WOODLAND:kind=0 if "dead" in material.resource_name else 1
 				if path==FERN or path==SHRUB:kind=3
 				if path==THICKET:
 					var label:=material.resource_name.to_lower()
