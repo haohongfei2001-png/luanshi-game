@@ -1,5 +1,10 @@
 # 《乱世》Codex 可恢复工程状态｜统一记录
 
+## OWNER-AUTONOMOUS-20261114｜自动续接入口（真实进展仍以本文件最新 commit 为准）
+
+所有后续 Codex 执行窗口遵循 [长期自主开发与自动续接协议](CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)。**已授权持续开发、常规修复/测试、现有规则允许的 PR/合并与内部可玩候选交付，无需 Owner 每步中转**。应优先完成真实高质量角色/环境/战斗，而不是无限方案或对旧粗糙图做小修；每轮留真实 SHA、截图、录像、运行结果、当前 ARTREF 与真实 M5 状态、下一轮第一件工作。尝试 Codex Goal/Automations 跨会话续接；未实际启动则标记 AUTOMATION_UNAVAILABLE，不得假称 Codex 正在后台运行。当前此节仅新增执行约束，不宣称 Codex 已安装资源、跑出新美术、测试通过或真正设置定时工作。
+
+
 ## OWNER-ARTREF-20261114｜最新 Owner 强制视觉任务与可恢复入口
 
 **优先级 P0：**立即沿用 [八作真实视觉对标与 ARTREF-01..12 可玩游戏验收](ART_REFERENCE_GAMES_AND_VISUAL_ACCEPTANCE_20261114.md)；不要将此前 RC3/RC13 的“技术视觉纵切片”和局部修补当作 Owner 认可的画面基础。Codex 应完成实际模型/骨架/甲衣/动画/河关环境的商业质量重建，在正式 Godot 512v512 战役中验证远中近景、军阵、正常速度交战和操作，并将证据按新文档归档。主任务仍 [#12](https://github.com/haohongfei2001-png/luanshi-game/issues/12)，既有生效工程与存档/战场逻辑必须保留。**当前状态：规范已写入；新美术效果未通过 Owner 验收，M5 真实 20 分钟压力测试未通过/未完成，不能标 DONE。** 继续开发时以 RC13 真实代码/实拍为问题基线而非已经合格的美术目标。
