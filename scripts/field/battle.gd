@@ -593,6 +593,11 @@ func _objective(c: Company) -> Vector2:
 	if not corps.can_command(self,c):
 		return c.home
 	if c.regrouping:
+		if bridgehead and c.team==0:
+			# Regroup behind this crossing, on this army's approach. A rear
+			# column need not walk past two rivers to reform at an old landmark.
+			var west_bank:=Ground.MOAT_X-Ground.MOAT_BANK-3.2
+			return Vector2(minf(west_bank,c.home.x),clampf(c.home.y,-Ground.MOAT_END,Ground.MOAT_END))
 		return Vector2(43.5,clampf(c.home.y,-16,16)) if c.team==1 else Vector2(-36,Ground.crossing(c.home.y))
 	match c.mission:
 		Mission.WITHDRAW: return Vector2(-92 if c.team == 0 else 96, c.home.y)
