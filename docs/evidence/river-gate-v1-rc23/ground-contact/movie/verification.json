@@ -1,0 +1,60 @@
+{
+  "physics_sequences_equal": true,
+  "consecutive_steps": 32,
+  "fps": 20,
+  "duration": 1.6,
+  "dimensions": [
+    2560,
+    1600
+  ],
+  "realtime_performance_measurement": false,
+  "casualty": 80,
+  "death_tick": 48,
+  "before_source": "aa6623fab538de37cfb92ff18f0c37bb5e443e93",
+  "before_run": 43575555706,
+  "before_artifact": 14106546372,
+  "after_source": "f1c93719503968f90d8475b68f70e152d806a4c2",
+  "mounted_sample": [
+    {
+      "actor": 23,
+      "duration": 0.28,
+      "facing": [
+        0.897144973278046,
+        0.441736251115799
+      ],
+      "floor_pixel": [
+        2814.6845703125,
+        1834.8994140625
+      ],
+      "hits": [
+        160,
+        206
+      ],
+      "hp": 15.5589788913727,
+      "impacts": 0,
+      "kit": 1,
+      "losses": [
+        48,
+        45
+      ],
+      "lost_tick": -1,
+      "mounted": true,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "scale": 1.0,
+      "state": 1,
+      "team": 0,
+      "tick": 112,
+      "timer": 0.0300000000000001,
+      "view": "seated",
+      "xz": [
+        34.5330810546875,
+        3.70198941230774
+      ]
+    }
+  ],
+  "mounted_officers_in_this_roster": 0
+}

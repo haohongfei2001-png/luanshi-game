@@ -1,0 +1,1342 @@
+{
+  "duration": 1.6,
+  "fps": 20,
+  "frames": 32,
+  "index": [
+    {
+      "actor": 80,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        65,
+        83
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        17,
+        9
+      ],
+      "lost_tick": -1,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "scale": 1.0,
+      "state": 4,
+      "team": 0,
+      "tick": 44,
+      "timer": 0.17,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        68,
+        91
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        20,
+        9
+      ],
+      "lost_tick": -1,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "scale": 1.0,
+      "state": 4,
+      "team": 0,
+      "tick": 45,
+      "timer": 0.12,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        71,
+        94
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        22,
+        11
+      ],
+      "lost_tick": -1,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "scale": 1.0,
+      "state": 4,
+      "team": 0,
+      "tick": 46,
+      "timer": 0.07,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.17,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        72,
+        97
+      ],
+      "hp": 9.37615362405777,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        22,
+        12
+      ],
+      "lost_tick": -1,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "scale": 1.0,
+      "state": 4,
+      "team": 0,
+      "tick": 47,
+      "timer": 0.02,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        77,
+        100
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        15
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 48,
+      "timer": 0.7,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        80,
+        101
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        18
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 49,
+      "timer": 0.65,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        82,
+        104
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        19
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 50,
+      "timer": 0.6,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        84,
+        104
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        19
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 51,
+      "timer": 0.55,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        85,
+        106
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        23,
+        19
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 52,
+      "timer": 0.5,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        89,
+        109
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        24,
+        20
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 53,
+      "timer": 0.45,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        90,
+        113
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        27,
+        20
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 54,
+      "timer": 0.4,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        91,
+        117
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        27,
+        21
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 55,
+      "timer": 0.35,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        97,
+        120
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        28,
+        22
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 56,
+      "timer": 0.3,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        98,
+        127
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        30,
+        22
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 57,
+      "timer": 0.25,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        99,
+        130
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        32,
+        23
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 58,
+      "timer": 0.2,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        100,
+        131
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        32,
+        24
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 59,
+      "timer": 0.15,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        100,
+        133
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        33,
+        24
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 60,
+      "timer": 0.0999999999999999,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        100,
+        135
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        24
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 61,
+      "timer": 0.0499999999999999,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        101,
+        136
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        25
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 62,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        104,
+        136
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        26
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 63,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        104,
+        136
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        26
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 64,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        107,
+        137
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        27
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 65,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        112,
+        137
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        28
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 66,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        114,
+        139
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        28
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 67,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        117,
+        140
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        30
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 68,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        119,
+        141
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        34,
+        32
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 69,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        121,
+        145
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        35,
+        32
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 70,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        122,
+        146
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        35,
+        32
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 71,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        123,
+        148
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        36,
+        33
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 72,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        123,
+        150
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        37,
+        33
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 73,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        126,
+        150
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        37,
+        34
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 74,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    },
+    {
+      "actor": 80,
+      "duration": 0.7,
+      "facing": [
+        0.966645300388336,
+        0.256118416786194
+      ],
+      "floor_pixel": [
+        2837.67163085938,
+        1421.34069824219
+      ],
+      "hits": [
+        127,
+        150
+      ],
+      "hp": 0.0,
+      "impacts": 1,
+      "kit": 0,
+      "losses": [
+        37,
+        34
+      ],
+      "lost_tick": 48,
+      "mounted": false,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 3,
+      "scale": 1.0,
+      "state": 7,
+      "team": 0,
+      "tick": 75,
+      "timer": 0.0,
+      "view": "normal",
+      "xz": [
+        36.6645622253418,
+        0.709959626197815
+      ]
+    }
+  ],
+  "kind": "real consecutive game steps at original speed; no realtime FPS measurement",
+  "mounted": [
+    {
+      "actor": 23,
+      "duration": 0.28,
+      "facing": [
+        0.897144973278046,
+        0.441736251115799
+      ],
+      "floor_pixel": [
+        2814.6845703125,
+        1834.8994140625
+      ],
+      "hits": [
+        160,
+        206
+      ],
+      "hp": 15.5589788913727,
+      "impacts": 0,
+      "kit": 1,
+      "losses": [
+        48,
+        45
+      ],
+      "lost_tick": -1,
+      "mounted": true,
+      "ordinary": [
+        512,
+        512
+      ],
+      "received": 2,
+      "scale": 1.0,
+      "state": 1,
+      "team": 0,
+      "tick": 112,
+      "timer": 0.0300000000000001,
+      "view": "seated",
+      "xz": [
+        34.5330810546875,
+        3.70198941230774
+      ]
+    }
+  ],
+  "mounted_officers_in_this_roster": 0,
+  "normal_camera": [
+    34.2000007629395,
+    1.0,
+    22.0,
+    -0.575958653158129
+  ],
+  "seed": 61112,
+  "size": [
+    2560,
+    1600
+  ]
+}

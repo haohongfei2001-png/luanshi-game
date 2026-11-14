@@ -1,0 +1,2 @@
+6cad7323366b3321238970a744554f08356145df546a2e13c7781381f35e66df  assets/river_gate/figures/company_motion.png
+8201a71a80a5751a1f6214ec5ef3614ec30aeb3697395daae2e9f5b507b2f0d9  scripts/field/company_skin.gdshader
