@@ -1,0 +1,58 @@
+{
+  "geometry_and_weight_accessor_comparisons": 65,
+  "skin_binds_exact": true,
+  "joints": 163,
+  "full_extra_weight_set_preserved": true,
+  "moving_channels_across_clips": 311,
+  "clips": [
+    {
+      "name": "Death01",
+      "duration": 2.4000000953674316,
+      "moving_channels": 55
+    },
+    {
+      "name": "Hit_Chest",
+      "duration": 0.3333333432674408,
+      "moving_channels": 46
+    },
+    {
+      "name": "Hit_Head",
+      "duration": 0.4333333373069763,
+      "moving_channels": 45
+    },
+    {
+      "name": "Idle_Loop",
+      "duration": 2.5,
+      "moving_channels": 18
+    },
+    {
+      "name": "Jog_Fwd_Loop",
+      "duration": 0.9333333373069763,
+      "moving_channels": 28
+    },
+    {
+      "name": "Sprint_Loop",
+      "duration": 0.6666666865348816,
+      "moving_channels": 28
+    },
+    {
+      "name": "Sword_Attack",
+      "duration": 1.5333333015441895,
+      "moving_channels": 30
+    },
+    {
+      "name": "Sword_Idle",
+      "duration": 1.6666666269302368,
+      "moving_channels": 31
+    },
+    {
+      "name": "Walk_Loop",
+      "duration": 1.3333333730697632,
+      "moving_channels": 30
+    }
+  ],
+  "output_sha256": "83cfe09699c23176943de03037093f0b571a834afa3b340cf86586269c78bc92",
+  "visual_pass": false,
+  "contact_pass": false,
+  "godot_8_weight_limit_resolved": false
+}

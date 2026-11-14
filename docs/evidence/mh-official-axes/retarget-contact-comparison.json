@@ -1,0 +1,52 @@
+{
+  "contact_pass": false,
+  "axis_correction_is_not_contact_fix": true,
+  "clips": {
+    "Idle_Loop": {
+      "old_minimum_sole_z_m": -0.01561034470796585,
+      "official_axes_minimum_sole_z_m": -0.015610258094966412,
+      "difference_m": 8.66129994392395e-08
+    },
+    "Walk_Loop": {
+      "old_minimum_sole_z_m": -0.019433554261922836,
+      "official_axes_minimum_sole_z_m": -0.019434580579400063,
+      "difference_m": -1.0263174772262573e-06
+    },
+    "Jog_Fwd_Loop": {
+      "old_minimum_sole_z_m": -0.01927485316991806,
+      "official_axes_minimum_sole_z_m": -0.019276268780231476,
+      "difference_m": -1.4156103134155273e-06
+    },
+    "Sprint_Loop": {
+      "old_minimum_sole_z_m": -0.016116071492433548,
+      "official_axes_minimum_sole_z_m": -0.016117271035909653,
+      "difference_m": -1.1995434761047363e-06
+    },
+    "Hit_Chest": {
+      "old_minimum_sole_z_m": -0.01521224807947874,
+      "official_axes_minimum_sole_z_m": -0.01521217543631792,
+      "difference_m": 7.264316082000732e-08
+    },
+    "Hit_Head": {
+      "old_minimum_sole_z_m": -0.015230407007038593,
+      "official_axes_minimum_sole_z_m": -0.01523041445761919,
+      "difference_m": -7.450580596923828e-09
+    },
+    "Death01": {
+      "old_minimum_sole_z_m": -0.023098662495613098,
+      "official_axes_minimum_sole_z_m": -0.023104004561901093,
+      "difference_m": -5.342066287994385e-06
+    },
+    "Sword_Idle": {
+      "old_minimum_sole_z_m": -0.014021750539541245,
+      "official_axes_minimum_sole_z_m": -0.014022380113601685,
+      "difference_m": -6.295740604400635e-07
+    },
+    "Sword_Attack": {
+      "old_minimum_sole_z_m": -0.024895653128623962,
+      "official_axes_minimum_sole_z_m": -0.02489680051803589,
+      "difference_m": -1.1473894119262695e-06
+    }
+  },
+  "new_animated_glb_sha256": "83cfe09699c23176943de03037093f0b571a834afa3b340cf86586269c78bc92"
+}

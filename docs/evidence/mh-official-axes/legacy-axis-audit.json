@@ -1,0 +1,1316 @@
+{
+  "source_blend_sha256": "91034e396e1ef1549b11421b56f0d39cd9fa21727342a0f2d1cd2f8fdcf13fae",
+  "official_reference": "https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/shared/skeleton.py",
+  "basis": "official plane normal maps to local X, local Y=head-to-tail; independent reconstruction",
+  "frozen_source_changed": false,
+  "bones": [
+    {
+      "axis_component_max_error": 1.0194021109491587,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "breast.L",
+      "plane": "breast.L____plane",
+      "rotation_error_degrees": 90.00019374977492,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0193992890417576,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "breast.R",
+      "plane": "breast.R____plane",
+      "rotation_error_degrees": 89.99979076861389,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.1479168087244034,
+      "endpoint_max_error_m": 7.508562643358995e-09,
+      "bone": "clavicle.L",
+      "plane": "clavicle.L____plane",
+      "rotation_error_degrees": 89.99979076861389,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.147919699549675,
+      "endpoint_max_error_m": 7.508562643358995e-09,
+      "bone": "clavicle.R",
+      "plane": "clavicle.R____plane",
+      "rotation_error_degrees": 90.00021424034244,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.008221447467804,
+      "endpoint_max_error_m": 3.725290298461914e-09,
+      "bone": "eye.L",
+      "plane": "eye.L____plane",
+      "rotation_error_degrees": 90.00005031580235,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0082278363406658,
+      "endpoint_max_error_m": 3.725290298461914e-09,
+      "bone": "eye.R",
+      "plane": "eye.R____plane",
+      "rotation_error_degrees": 89.9999446752413,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0157825872302055,
+      "endpoint_max_error_m": 6.664001874625056e-08,
+      "bone": "finger1-1.L",
+      "plane": "finger1-1.L____plane",
+      "rotation_error_degrees": 89.99969514596552,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0157890319824219,
+      "endpoint_max_error_m": 6.664001874625056e-08,
+      "bone": "finger1-1.R",
+      "plane": "finger1-1.R____plane",
+      "rotation_error_degrees": 90.00029984507813,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.1572486758232117,
+      "endpoint_max_error_m": 4.2146848510894035e-08,
+      "bone": "finger1-2.L",
+      "plane": "finger1-2.L____plane",
+      "rotation_error_degrees": 89.99967465539801,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.1572500467300415,
+      "endpoint_max_error_m": 4.2146848510894035e-08,
+      "bone": "finger1-2.R",
+      "plane": "finger1-2.R____plane",
+      "rotation_error_degrees": 90.0003544865915,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.243155062198639,
+      "endpoint_max_error_m": 5.960464477539063e-08,
+      "bone": "finger1-3.L",
+      "plane": "finger1-3.L____plane",
+      "rotation_error_degrees": 89.99967465539801,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2431581020355225,
+      "endpoint_max_error_m": 5.960464477539063e-08,
+      "bone": "finger1-3.R",
+      "plane": "finger1-3.R____plane",
+      "rotation_error_degrees": 90.00037133469334,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3988555073738098,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger2-1.L",
+      "plane": "finger2-1.L____plane",
+      "rotation_error_degrees": 89.9999273723973,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.398858904838562,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger2-1.R",
+      "plane": "finger2-1.R____plane",
+      "rotation_error_degrees": 90.00009812712655,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.4111592769622803,
+      "endpoint_max_error_m": 6.664001874625056e-08,
+      "bone": "finger2-2.L",
+      "plane": "finger2-2.L____plane",
+      "rotation_error_degrees": 89.99991371201895,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.411162257194519,
+      "endpoint_max_error_m": 6.664001874625056e-08,
+      "bone": "finger2-2.R",
+      "plane": "finger2-2.R____plane",
+      "rotation_error_degrees": 90.00009129693737,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.398220717906952,
+      "endpoint_max_error_m": 5.960464477539063e-08,
+      "bone": "finger2-3.L",
+      "plane": "finger2-3.L____plane",
+      "rotation_error_degrees": 89.99990688182979,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3982234001159668,
+      "endpoint_max_error_m": 5.960464477539063e-08,
+      "bone": "finger2-3.R",
+      "plane": "finger2-3.R____plane",
+      "rotation_error_degrees": 90.00010495731571,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3606826066970825,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger3-1.L",
+      "plane": "finger3-1.L____plane",
+      "rotation_error_degrees": 90.00023473090995,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3606761693954468,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger3-1.R",
+      "plane": "finger3-1.R____plane",
+      "rotation_error_degrees": 89.99974295728971,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3905744552612305,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "finger3-2.L",
+      "plane": "finger3-2.L____plane",
+      "rotation_error_degrees": 90.00022107053161,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3905675411224365,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "finger3-2.R",
+      "plane": "finger3-2.R____plane",
+      "rotation_error_degrees": 89.99974978747888,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3965173363685608,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "finger3-3.L",
+      "plane": "finger3-3.L____plane",
+      "rotation_error_degrees": 90.00022107053161,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3965104818344116,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "finger3-3.R",
+      "plane": "finger3-3.R____plane",
+      "rotation_error_degrees": 89.99977710823556,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2866348028182983,
+      "endpoint_max_error_m": 8.940696716308594e-08,
+      "bone": "finger4-1.L",
+      "plane": "finger4-1.L____plane",
+      "rotation_error_degrees": 90.00005395826804,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2866322696208954,
+      "endpoint_max_error_m": 8.940696716308594e-08,
+      "bone": "finger4-1.R",
+      "plane": "finger4-1.R____plane",
+      "rotation_error_degrees": 89.9999273723973,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3467275202274323,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger4-2.L",
+      "plane": "finger4-2.L____plane",
+      "rotation_error_degrees": 90.00002982523485,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3467245399951935,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger4-2.R",
+      "plane": "finger4-2.R____plane",
+      "rotation_error_degrees": 89.99994103277564,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.356800228357315,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger4-3.L",
+      "plane": "finger4-3.L____plane",
+      "rotation_error_degrees": 90.00002299504568,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3567969799041748,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "finger4-3.R",
+      "plane": "finger4-3.R____plane",
+      "rotation_error_degrees": 89.99994103277564,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.1943490505218506,
+      "endpoint_max_error_m": 8.560065398421926e-08,
+      "bone": "finger5-1.L",
+      "plane": "finger5-1.L____plane",
+      "rotation_error_degrees": 90.00049109037491,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.1943344473838806,
+      "endpoint_max_error_m": 8.560065398421926e-08,
+      "bone": "finger5-1.R",
+      "plane": "finger5-1.R____plane",
+      "rotation_error_degrees": 89.99944242896622,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2373805344104767,
+      "endpoint_max_error_m": 8.560065398421926e-08,
+      "bone": "finger5-2.L",
+      "plane": "finger5-2.L____plane",
+      "rotation_error_degrees": 90.00043963658504,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2373662292957306,
+      "endpoint_max_error_m": 8.560065398421926e-08,
+      "bone": "finger5-2.R",
+      "plane": "finger5-2.R____plane",
+      "rotation_error_degrees": 89.99951073085792,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2286812663078308,
+      "endpoint_max_error_m": 6.664001874625056e-08,
+      "bone": "finger5-3.L",
+      "plane": "finger5-3.L____plane",
+      "rotation_error_degrees": 90.0004737875309,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2286665737628937,
+      "endpoint_max_error_m": 6.664001874625056e-08,
+      "bone": "finger5-3.R",
+      "plane": "finger5-3.R____plane",
+      "rotation_error_degrees": 89.99949024029041,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0865726470947266,
+      "endpoint_max_error_m": 3.332000937312528e-08,
+      "bone": "foot.L",
+      "plane": "foot.L____plane",
+      "rotation_error_degrees": 89.99998201391065,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0865670666098595,
+      "endpoint_max_error_m": 3.332000937312528e-08,
+      "bone": "foot.R",
+      "plane": "foot.R____plane",
+      "rotation_error_degrees": 90.00005031580235,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076294440379,
+      "endpoint_max_error_m": 2.3841857938577954e-07,
+      "bone": "head",
+      "plane": "head____plane",
+      "rotation_error_degrees": 89.99996152334315,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "jaw",
+      "plane": "jaw____plane",
+      "rotation_error_degrees": 90.00004348561319,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.231734424829483,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "levator02.L",
+      "plane": "levator02.L____plane",
+      "rotation_error_degrees": 89.99986590069477,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2317303121089935,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "levator02.R",
+      "plane": "levator02.R____plane",
+      "rotation_error_degrees": 90.0000812790247,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.4130035042762756,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "levator03.L",
+      "plane": "levator03.L____plane",
+      "rotation_error_degrees": 90.00005395826804,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.4130055904388428,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "levator03.R",
+      "plane": "levator03.R____plane",
+      "rotation_error_degrees": 89.99991371201895,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3966070413589478,
+      "endpoint_max_error_m": 0.0,
+      "bone": "levator04.L",
+      "plane": "levator04.L____plane",
+      "rotation_error_degrees": 89.99980807145789,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.396612286567688,
+      "endpoint_max_error_m": 0.0,
+      "bone": "levator04.R",
+      "plane": "levator04.R____plane",
+      "rotation_error_degrees": 90.00017325920741,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0454919934272766,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "levator05.L",
+      "plane": "levator05.L____plane",
+      "rotation_error_degrees": 89.9998795610731,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.045497503131628,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "levator05.R",
+      "plane": "levator05.R____plane",
+      "rotation_error_degrees": 90.00011861769406,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2236824035644531,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "levator06.L",
+      "plane": "levator06.L____plane",
+      "rotation_error_degrees": 90.00012544788322,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.223678171634674,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "levator06.R",
+      "plane": "levator06.R____plane",
+      "rotation_error_degrees": 89.99986271297126,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2375054955482483,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "lowerarm01.L",
+      "plane": "lowerarm01.L____plane",
+      "rotation_error_degrees": 89.9998795610731,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2375083565711975,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "lowerarm01.R",
+      "plane": "lowerarm01.R____plane",
+      "rotation_error_degrees": 90.00016324129473,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2375052571296692,
+      "endpoint_max_error_m": 6.828569911354542e-08,
+      "bone": "lowerarm02.L",
+      "plane": "lowerarm02.L____plane",
+      "rotation_error_degrees": 89.9998795610731,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.237508237361908,
+      "endpoint_max_error_m": 6.828569911354542e-08,
+      "bone": "lowerarm02.R",
+      "plane": "lowerarm02.R____plane",
+      "rotation_error_degrees": 90.00016324129473,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0179340727627277,
+      "endpoint_max_error_m": 4.218798746506171e-08,
+      "bone": "lowerleg01.L",
+      "plane": "lowerleg01.L____plane",
+      "rotation_error_degrees": 90.00002299504568,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0179331712424755,
+      "endpoint_max_error_m": 4.218798746506171e-08,
+      "bone": "lowerleg01.R",
+      "plane": "lowerleg01.R____plane",
+      "rotation_error_degrees": 90.00002299504568,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.017934076488018,
+      "endpoint_max_error_m": 1.666000468656264e-08,
+      "bone": "lowerleg02.L",
+      "plane": "lowerleg02.L____plane",
+      "rotation_error_degrees": 90.00002299504568,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0179332476109266,
+      "endpoint_max_error_m": 1.666000468656264e-08,
+      "bone": "lowerleg02.R",
+      "plane": "lowerleg02.R____plane",
+      "rotation_error_degrees": 90.00004348561319,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.365733802318573,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "metacarpal1.L",
+      "plane": "metacarpal1.L____plane",
+      "rotation_error_degrees": 89.99953486389109,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3657463192939758,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "metacarpal1.R",
+      "plane": "metacarpal1.R____plane",
+      "rotation_error_degrees": 90.00046695734173,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2411000728607178,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "metacarpal2.L",
+      "plane": "metacarpal2.L____plane",
+      "rotation_error_degrees": 89.99989003372792,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2411029934883118,
+      "endpoint_max_error_m": 8.429369702178807e-08,
+      "bone": "metacarpal2.R",
+      "plane": "metacarpal2.R____plane",
+      "rotation_error_degrees": 90.00014593845074,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.233761340379715,
+      "endpoint_max_error_m": 8.940696716308594e-08,
+      "bone": "metacarpal3.L",
+      "plane": "metacarpal3.L____plane",
+      "rotation_error_degrees": 89.9996987884312,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2337669134140015,
+      "endpoint_max_error_m": 8.940696716308594e-08,
+      "bone": "metacarpal3.R",
+      "plane": "metacarpal3.R____plane",
+      "rotation_error_degrees": 90.00035084412583,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.060496747493744,
+      "endpoint_max_error_m": 3.332000937312528e-08,
+      "bone": "metacarpal4.L",
+      "plane": "metacarpal4.L____plane",
+      "rotation_error_degrees": 90.00032716583485,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0604886710643768,
+      "endpoint_max_error_m": 3.332000937312528e-08,
+      "bone": "metacarpal4.R",
+      "plane": "metacarpal4.R____plane",
+      "rotation_error_degrees": 89.99970197615468,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 2.384190338484797e-07,
+      "bone": "neck01",
+      "plane": "neck01____plane",
+      "rotation_error_degrees": 89.99996152334315,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076375302616,
+      "endpoint_max_error_m": 4.151210802997274e-09,
+      "bone": "neck02",
+      "plane": "neck02____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076841803995,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "neck03",
+      "plane": "neck03____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3024030327796936,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "oculi01.L",
+      "plane": "oculi01.L____plane",
+      "rotation_error_degrees": 89.99961682616117,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3024121820926666,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "oculi01.R",
+      "plane": "oculi01.R____plane",
+      "rotation_error_degrees": 90.00037133469334,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2394506335258484,
+      "endpoint_max_error_m": 1.1944189326376765e-07,
+      "bone": "oculi02.L",
+      "plane": "oculi02.L____plane",
+      "rotation_error_degrees": 89.99979076861389,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2394553422927856,
+      "endpoint_max_error_m": 1.1944189326376765e-07,
+      "bone": "oculi02.R",
+      "plane": "oculi02.R____plane",
+      "rotation_error_degrees": 90.00016642901825,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.018979649990797,
+      "endpoint_max_error_m": 1.201947465904182e-07,
+      "bone": "orbicularis03.L",
+      "plane": "orbicularis03.L____plane",
+      "rotation_error_degrees": 90.00002663751133,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0189716815948486,
+      "endpoint_max_error_m": 1.201947465904182e-07,
+      "bone": "orbicularis03.R",
+      "plane": "orbicularis03.R____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0431908071041107,
+      "endpoint_max_error_m": 1.1926748300777466e-07,
+      "bone": "orbicularis04.L",
+      "plane": "orbicularis04.L____plane",
+      "rotation_error_degrees": 90.00009129693737,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0431960970163345,
+      "endpoint_max_error_m": 1.1926748300777466e-07,
+      "bone": "orbicularis04.R",
+      "plane": "orbicularis04.R____plane",
+      "rotation_error_degrees": 89.99991735448464,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "oris01",
+      "plane": "oris01____plane",
+      "rotation_error_degrees": 89.99996152334315,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "oris02",
+      "plane": "oris02____plane",
+      "rotation_error_degrees": 89.99995469315398,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2356953620910645,
+      "endpoint_max_error_m": 1.1921292747407888e-07,
+      "bone": "oris03.L",
+      "plane": "oris03.L____plane",
+      "rotation_error_degrees": 89.9998353922146,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2357013523578644,
+      "endpoint_max_error_m": 1.1921292747407888e-07,
+      "bone": "oris03.R",
+      "plane": "oris03.R____plane",
+      "rotation_error_degrees": 90.00007763655904,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2725793719291687,
+      "endpoint_max_error_m": 1.1921292747407888e-07,
+      "bone": "oris04.L",
+      "plane": "oris04.L____plane",
+      "rotation_error_degrees": 90.00010859978141,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2725814282894135,
+      "endpoint_max_error_m": 1.1921292747407888e-07,
+      "bone": "oris04.R",
+      "plane": "oris04.R____plane",
+      "rotation_error_degrees": 89.99990688182979,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "oris05",
+      "plane": "oris05____plane",
+      "rotation_error_degrees": 90.00005395826804,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "oris06",
+      "plane": "oris06____plane",
+      "rotation_error_degrees": 90.00005395826804,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2622087001800537,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "oris06.L",
+      "plane": "oris06.L____plane",
+      "rotation_error_degrees": 89.99999931675467,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2622076272964478,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "oris06.R",
+      "plane": "oris06.R____plane",
+      "rotation_error_degrees": 90.00000250447816,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0942533314228058,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "oris07.L",
+      "plane": "oris07.L____plane",
+      "rotation_error_degrees": 89.99989003372792,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0942518264055252,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "oris07.R",
+      "plane": "oris07.R____plane",
+      "rotation_error_degrees": 90.00002982523485,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2525694668293,
+      "endpoint_max_error_m": 1.862645149230957e-09,
+      "bone": "pelvis.L",
+      "plane": "pelvis.L____plane",
+      "rotation_error_degrees": 89.99990688182979,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2525697350502014,
+      "endpoint_max_error_m": 1.862645149230957e-09,
+      "bone": "pelvis.R",
+      "plane": "pelvis.R____plane",
+      "rotation_error_degrees": 90.00002663751133,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.367591917514801,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "risorius02.L",
+      "plane": "risorius02.L____plane",
+      "rotation_error_degrees": 89.99975342994458,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3675942420959473,
+      "endpoint_max_error_m": 1.4901161193847656e-08,
+      "bone": "risorius02.R",
+      "plane": "risorius02.R____plane",
+      "rotation_error_degrees": 90.00024156109912,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2256889343261719,
+      "endpoint_max_error_m": 1.1926748300777466e-07,
+      "bone": "risorius03.L",
+      "plane": "risorius03.L____plane",
+      "rotation_error_degrees": 89.99978075070123,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2256883680820465,
+      "endpoint_max_error_m": 1.1926748300777466e-07,
+      "bone": "risorius03.R",
+      "plane": "risorius03.R____plane",
+      "rotation_error_degrees": 90.00023473090995,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076284790274,
+      "endpoint_max_error_m": 7.56699551309234e-11,
+      "bone": "root",
+      "plane": "root____plane",
+      "rotation_error_degrees": 89.999995674289,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.074058637022972,
+      "endpoint_max_error_m": 7.508562643358995e-09,
+      "bone": "shoulder01.L",
+      "plane": "shoulder01.L____plane",
+      "rotation_error_degrees": 89.99977027804638,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0740596503019333,
+      "endpoint_max_error_m": 7.508562643358995e-09,
+      "bone": "shoulder01.R",
+      "plane": "shoulder01.R____plane",
+      "rotation_error_degrees": 90.0002178828081,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.079303428530693,
+      "endpoint_max_error_m": 2.3888560196770133e-07,
+      "bone": "upperarm01.L",
+      "plane": "upperarm01.L____plane",
+      "rotation_error_degrees": 89.99974978747888,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0793042331933975,
+      "endpoint_max_error_m": 2.3888560196770133e-07,
+      "bone": "upperarm01.R",
+      "plane": "upperarm01.R____plane",
+      "rotation_error_degrees": 90.00027252432147,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076290994269,
+      "endpoint_max_error_m": 0.0,
+      "bone": "special01",
+      "plane": "special01____plane",
+      "rotation_error_degrees": 89.999995674289,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076290799356,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "special03",
+      "plane": "special03____plane",
+      "rotation_error_degrees": 90.00000933466734,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 1.2013700229374393e-07,
+      "bone": "special04",
+      "plane": "special04____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2283204197883606,
+      "endpoint_max_error_m": 3.725290298461914e-09,
+      "bone": "special05.L",
+      "plane": "special05.L____plane",
+      "rotation_error_degrees": 90.00007763655904,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.2283222377300262,
+      "endpoint_max_error_m": 3.725290298461914e-09,
+      "bone": "special05.R",
+      "plane": "special05.R____plane",
+      "rotation_error_degrees": 89.99996152334315,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0661567747592926,
+      "endpoint_max_error_m": 2.3841857938577954e-07,
+      "bone": "special06.L",
+      "plane": "special06.L____plane",
+      "rotation_error_degrees": 90.00016324129473,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0661606341600418,
+      "endpoint_max_error_m": 2.3841857938577954e-07,
+      "bone": "special06.R",
+      "plane": "special06.R____plane",
+      "rotation_error_degrees": 89.99984541012725,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.00000762836443,
+      "endpoint_max_error_m": 2.384190338484797e-07,
+      "bone": "spine01",
+      "plane": "spine01____plane",
+      "rotation_error_degrees": 89.99994103277564,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076286978303,
+      "endpoint_max_error_m": 3.73756643841507e-09,
+      "bone": "spine02",
+      "plane": "spine02____plane",
+      "rotation_error_degrees": 89.99998201391065,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076287061996,
+      "endpoint_max_error_m": 3.729944004913437e-09,
+      "bone": "spine03",
+      "plane": "spine03____plane",
+      "rotation_error_degrees": 89.99995469315398,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076284757924,
+      "endpoint_max_error_m": 3.725581325419284e-09,
+      "bone": "spine04",
+      "plane": "spine04____plane",
+      "rotation_error_degrees": 89.99998201391065,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076288851043,
+      "endpoint_max_error_m": 3.725581325419284e-09,
+      "bone": "spine05",
+      "plane": "spine05____plane",
+      "rotation_error_degrees": 89.99995469315398,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.4042182564735413,
+      "endpoint_max_error_m": 1.1944189326376765e-07,
+      "bone": "temporalis01.L",
+      "plane": "temporalis01.L____plane",
+      "rotation_error_degrees": 89.99961318369547,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.4042275547981262,
+      "endpoint_max_error_m": 1.1944189326376765e-07,
+      "bone": "temporalis01.R",
+      "plane": "temporalis01.R____plane",
+      "rotation_error_degrees": 90.0003371837475,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0050329342484474,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "temporalis02.L",
+      "plane": "temporalis02.L____plane",
+      "rotation_error_degrees": 89.9998795610731,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0050349980592728,
+      "endpoint_max_error_m": 1.1920928955078125e-07,
+      "bone": "temporalis02.R",
+      "plane": "temporalis02.R____plane",
+      "rotation_error_degrees": 90.00005031580235,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.08631681650877,
+      "endpoint_max_error_m": 2.1400163496054816e-08,
+      "bone": "toe1-1.L",
+      "plane": "toe1-1.L____plane",
+      "rotation_error_degrees": 89.99998201391065,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0863111838698387,
+      "endpoint_max_error_m": 2.1400163496054816e-08,
+      "bone": "toe1-1.R",
+      "plane": "toe1-1.R____plane",
+      "rotation_error_degrees": 90.00005031580235,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0797345489263535,
+      "endpoint_max_error_m": 6.322027276634104e-08,
+      "bone": "toe1-2.L",
+      "plane": "toe1-2.L____plane",
+      "rotation_error_degrees": 89.999995674289,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0797290354967117,
+      "endpoint_max_error_m": 6.322027276634104e-08,
+      "bone": "toe1-2.R",
+      "plane": "toe1-2.R____plane",
+      "rotation_error_degrees": 90.00005031580235,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.087914451956749,
+      "endpoint_max_error_m": 1.9800189533707965e-08,
+      "bone": "toe2-1.L",
+      "plane": "toe2-1.L____plane",
+      "rotation_error_degrees": 89.99995469315398,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.087908796966076,
+      "endpoint_max_error_m": 1.9800189533707965e-08,
+      "bone": "toe2-1.R",
+      "plane": "toe2-1.R____plane",
+      "rotation_error_degrees": 90.00005714599153,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0876064002513885,
+      "endpoint_max_error_m": 7.233205377663523e-08,
+      "bone": "toe2-2.L",
+      "plane": "toe2-2.L____plane",
+      "rotation_error_degrees": 89.99998201391065,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0876008719205856,
+      "endpoint_max_error_m": 7.233205377663523e-08,
+      "bone": "toe2-2.R",
+      "plane": "toe2-2.R____plane",
+      "rotation_error_degrees": 90.00005714599153,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0861400216817856,
+      "endpoint_max_error_m": 7.233205377663523e-08,
+      "bone": "toe2-3.L",
+      "plane": "toe2-3.L____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.086134448647499,
+      "endpoint_max_error_m": 7.233205377663523e-08,
+      "bone": "toe2-3.R",
+      "plane": "toe2-3.R____plane",
+      "rotation_error_degrees": 90.00005031580235,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.089752547442913,
+      "endpoint_max_error_m": 6.322027276634104e-08,
+      "bone": "toe3-1.L",
+      "plane": "toe3-1.L____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0897467285394669,
+      "endpoint_max_error_m": 6.322027276634104e-08,
+      "bone": "toe3-1.R",
+      "plane": "toe3-1.R____plane",
+      "rotation_error_degrees": 90.00005031580235,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0886779874563217,
+      "endpoint_max_error_m": 2.478088195556788e-08,
+      "bone": "toe3-2.L",
+      "plane": "toe3-2.L____plane",
+      "rotation_error_degrees": 89.99996152334315,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0886725336313248,
+      "endpoint_max_error_m": 2.478088195556788e-08,
+      "bone": "toe3-2.R",
+      "plane": "toe3-2.R____plane",
+      "rotation_error_degrees": 90.00007080636986,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0889396890997887,
+      "endpoint_max_error_m": 4.1189313656643e-08,
+      "bone": "toe3-3.L",
+      "plane": "toe3-3.L____plane",
+      "rotation_error_degrees": 89.99996152334315,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0889342576265335,
+      "endpoint_max_error_m": 4.1189313656643e-08,
+      "bone": "toe3-3.R",
+      "plane": "toe3-3.R____plane",
+      "rotation_error_degrees": 90.00007080636986,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0900078639388084,
+      "endpoint_max_error_m": 3.332000937312528e-08,
+      "bone": "toe4-1.L",
+      "plane": "toe4-1.L____plane",
+      "rotation_error_degrees": 89.99995469315398,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0900020897388458,
+      "endpoint_max_error_m": 3.332000937312528e-08,
+      "bone": "toe4-1.R",
+      "plane": "toe4-1.R____plane",
+      "rotation_error_degrees": 90.00004348561319,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0856137499213219,
+      "endpoint_max_error_m": 2.1073424255447017e-08,
+      "bone": "toe4-2.L",
+      "plane": "toe4-2.L____plane",
+      "rotation_error_degrees": 89.99995469315398,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0856083258986473,
+      "endpoint_max_error_m": 2.1073424255447017e-08,
+      "bone": "toe4-2.R",
+      "plane": "toe4-2.R____plane",
+      "rotation_error_degrees": 90.00007763655904,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0851289555430412,
+      "endpoint_max_error_m": 6.409908386904659e-08,
+      "bone": "toe4-3.L",
+      "plane": "toe4-3.L____plane",
+      "rotation_error_degrees": 89.99998201391065,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0851236283779144,
+      "endpoint_max_error_m": 6.409908386904659e-08,
+      "bone": "toe4-3.R",
+      "plane": "toe4-3.R____plane",
+      "rotation_error_degrees": 90.00007080636986,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0901960879564285,
+      "endpoint_max_error_m": 4.360340502381185e-08,
+      "bone": "toe5-1.L",
+      "plane": "toe5-1.L____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.090190164744854,
+      "endpoint_max_error_m": 4.360340502381185e-08,
+      "bone": "toe5-1.R",
+      "plane": "toe5-1.R____plane",
+      "rotation_error_degrees": 90.00005714599153,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0772411674261093,
+      "endpoint_max_error_m": 3.514431838712321e-08,
+      "bone": "toe5-2.L",
+      "plane": "toe5-2.L____plane",
+      "rotation_error_degrees": 89.99994103277564,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0772355198860168,
+      "endpoint_max_error_m": 3.514431838712321e-08,
+      "bone": "toe5-2.R",
+      "plane": "toe5-2.R____plane",
+      "rotation_error_degrees": 90.00007763655904,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0846810787916183,
+      "endpoint_max_error_m": 3.514431838712321e-08,
+      "bone": "toe5-3.L",
+      "plane": "toe5-3.L____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0846755653619766,
+      "endpoint_max_error_m": 3.514431838712321e-08,
+      "bone": "toe5-3.R",
+      "plane": "toe5-3.R____plane",
+      "rotation_error_degrees": 90.00007763655904,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 3.725290298461914e-09,
+      "bone": "tongue00",
+      "plane": "tongue00____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 7.450580596923828e-09,
+      "bone": "tongue01",
+      "plane": "tongue01____plane",
+      "rotation_error_degrees": 89.999995674289,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 2.384185791015625e-07,
+      "bone": "tongue02",
+      "plane": "tongue02____plane",
+      "rotation_error_degrees": 90.00002663751133,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 2.385349660155493e-07,
+      "bone": "tongue03",
+      "plane": "tongue03____plane",
+      "rotation_error_degrees": 90.00005395826804,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0000076293945312,
+      "endpoint_max_error_m": 2.384185791015625e-07,
+      "bone": "tongue04",
+      "plane": "tongue04____plane",
+      "rotation_error_degrees": 90.00002663751133,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.039126269519329,
+      "endpoint_max_error_m": 7.450580596923828e-09,
+      "bone": "tongue05.L",
+      "plane": "tongue05.L____plane",
+      "rotation_error_degrees": 89.99997518372149,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0391272902488708,
+      "endpoint_max_error_m": 7.450580596923828e-09,
+      "bone": "tongue05.R",
+      "plane": "tongue05.R____plane",
+      "rotation_error_degrees": 89.99999931675467,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0756693482398987,
+      "endpoint_max_error_m": 2.384185791015625e-07,
+      "bone": "tongue06.L",
+      "plane": "tongue06.L____plane",
+      "rotation_error_degrees": 89.99942193839871,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0756767392158508,
+      "endpoint_max_error_m": 2.384185791015625e-07,
+      "bone": "tongue06.R",
+      "plane": "tongue06.R____plane",
+      "rotation_error_degrees": 90.00054573188828,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3792555332183838,
+      "endpoint_max_error_m": 2.385349660155493e-07,
+      "bone": "tongue07.L",
+      "plane": "tongue07.L____plane",
+      "rotation_error_degrees": 90.00030303280165,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3792521357536316,
+      "endpoint_max_error_m": 2.385349660155493e-07,
+      "bone": "tongue07.R",
+      "plane": "tongue07.R____plane",
+      "rotation_error_degrees": 89.9996987884312,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0784077644348145,
+      "endpoint_max_error_m": 2.3888560196770133e-07,
+      "bone": "upperarm02.L",
+      "plane": "upperarm02.L____plane",
+      "rotation_error_degrees": 89.99972929691137,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0784088671207428,
+      "endpoint_max_error_m": 2.3888560196770133e-07,
+      "bone": "upperarm02.R",
+      "plane": "upperarm02.R____plane",
+      "rotation_error_degrees": 90.00027252432147,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0476339012384415,
+      "endpoint_max_error_m": 6.007572048481605e-08,
+      "bone": "upperleg01.L",
+      "plane": "upperleg01.L____plane",
+      "rotation_error_degrees": 89.99986590069477,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0476281270384789,
+      "endpoint_max_error_m": 6.007572048481605e-08,
+      "bone": "upperleg01.R",
+      "plane": "upperleg01.R____plane",
+      "rotation_error_degrees": 90.00005714599153,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0201238878071308,
+      "endpoint_max_error_m": 6.007572048481605e-08,
+      "bone": "upperleg02.L",
+      "plane": "upperleg02.L____plane",
+      "rotation_error_degrees": 90.00004348561319,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.0201245285570621,
+      "endpoint_max_error_m": 6.007572048481605e-08,
+      "bone": "upperleg02.R",
+      "plane": "upperleg02.R____plane",
+      "rotation_error_degrees": 90.00000250447816,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.320552110671997,
+      "endpoint_max_error_m": 6.828569911354542e-08,
+      "bone": "wrist.L",
+      "plane": "wrist.L____plane",
+      "rotation_error_degrees": 89.99990688182979,
+      "head_tail_preserved": true
+    },
+    {
+      "axis_component_max_error": 1.3205538392066956,
+      "endpoint_max_error_m": 6.828569911354542e-08,
+      "bone": "wrist.R",
+      "plane": "wrist.R____plane",
+      "rotation_error_degrees": 90.00013592053807,
+      "head_tail_preserved": true
+    }
+  ],
+  "over_1_degree": 163,
+  "max_rotation_error_degrees": 90.00054573188828,
+  "max_axis_component_error": 1.4130055904388428,
+  "max_endpoint_error_m": 2.3888560196770133e-07
+}

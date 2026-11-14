@@ -17,7 +17,8 @@ func _initialize() -> void: call_deferred("setup")
 func setup() -> void:
 	test_mode = OS.has_environment("MH_TEST")
 	var stage := Node3D.new();root.add_child(stage)
-	var model_path := "res://assets/mh_lab/mh_natural_animated_full.glb"
+	var model_path := OS.get_environment("MH_MODEL_PATH")
+	if model_path.is_empty(): model_path = "res://assets/mh_lab/mh_natural_animated_full.glb"
 	var packed := load(model_path) as PackedScene
 	if packed == null:
 		push_error("MH animated GLB not imported; run seed import first")

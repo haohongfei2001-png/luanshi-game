@@ -1,0 +1,10 @@
+{
+  "mesh_attribute_index_byte_comparisons": 65,
+  "bone_order_equal": true,
+  "bone_count": 163,
+  "geometry_uv_and_all_exported_weights_exact": true,
+  "inverse_bind_expected_changed": true,
+  "old_glb_sha256": "6853fbca1b76eed03d764e32577f46e0354583a29405ae3a3a7088d69cc18539",
+  "official_axes_glb_sha256": "ddfd066205a7439195435bbf25558b38627260dc25fda8465993d2f6783a7de4",
+  "visual_pass": false
+}

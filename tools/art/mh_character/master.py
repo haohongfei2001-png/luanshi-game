@@ -6,6 +6,7 @@ import bpy,json,pathlib,sys,math,hashlib,gzip
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 args=sys.argv[sys.argv.index('--')+1:]
+official_axes='--official-axes' in args
 out,core,selected,robe=map(lambda p:pathlib.Path(p).resolve(),args[:4]);out.mkdir(parents=True,exist_ok=True);(out/'source').mkdir(exist_ok=True);(out/'source/.gdignore').write_text('# Editable source only; import explicit GLB outputs.\n')
 bpy.ops.wm.read_factory_settings(use_empty=True);bpy.context.scene.render.fps=120
 
@@ -49,7 +50,11 @@ for name,spec in r['bones'].items():
  plane=r['planes'].get(spec.get('rotation_plane'))
  if plane:
   a,b,c=[joint(n) for n in plane];normal=(b-a).cross(c-a)
-  if normal.length>1e-8:bone.align_roll(normal.normalized())
+  if normal.length>1e-8:
+   # MH plane normal has opposite winding and specifies local X. Blender
+   # align_roll aligns local Z, so construct the official Z explicitly.
+   alignment=(bone.tail-bone.head).normalized().cross(normal).normalized() if official_axes else normal.normalized()
+   bone.align_roll(alignment)
 for name,spec in r['bones'].items():
  if spec.get('parent'):arm.edit_bones[name].parent=arm.edit_bones[spec['parent']]
 bpy.ops.object.mode_set(mode='OBJECT');assert len(arm.bones)==163
@@ -61,7 +66,7 @@ def material(name,image,rough=.85,alpha=False):
   mat.node_tree.links.new(texture.outputs['Alpha'],shader.inputs['Alpha']);mat.surface_render_method='DITHERED'
  return mat
 skin=material('Original CC0 young Asian male diffuse',selected/'skins/young_asian_male/young_lightskinned_male_diffuse3.png',.72)
-report={'status':'FULL163_SOURCE_PROTOTYPE','visual_pass':False,'source_bones':163,'macro':{'gender':1,'age':.5,'asian':1,'muscle':.5,'weight':.5,'height':.5,'proportions':.5},'source_points':len(points),'source_render_body_faces':len(body_faces),'source_floor_y':floor,'body_height_m':max(world[i].z for i in body_ids),'parts':[],'high_influence_vertices':[]}
+report={'source_axis_convention':'official_plane_normal_local_X' if official_axes else 'legacy_local_Z_ROLL_MISMATCH_NOT_AUTHOR_AXES','status':'FULL163_SOURCE_PROTOTYPE','visual_pass':False,'source_bones':163,'macro':{'gender':1,'age':.5,'asian':1,'muscle':.5,'weight':.5,'height':.5,'proportions':.5},'source_points':len(points),'source_render_body_faces':len(body_faces),'source_floor_y':floor,'body_height_m':max(world[i].z for i in body_ids),'parts':[],'high_influence_vertices':[]}
 runtime=[];source_ids_by_name={}
 def mesh(name,positions,faces,uv,uvfaces,vertex_weights,mat):
  used=sorted({i for f in faces for i in f});mapping={old:i for i,old in enumerate(used)};m=bpy.data.meshes.new(name);m.from_pydata([positions[i] for i in used],[],[[mapping[i] for i in f] for f in faces]);m.update()

@@ -2,17 +2,21 @@ extends SceneTree
 ## Exact ID/position/UV bridge only. Native Godot's8 weights are not full-source rendering.
 func _initialize() -> void:call_deferred("run")
 func run() -> void:
-	var packed := load("res://assets/mh_lab/mh_natural_fullweights.glb") as PackedScene
+	var model_path := OS.get_environment("MH_STATIC_PATH")
+	if model_path.is_empty(): model_path = "res://assets/mh_lab/mh_natural_fullweights.glb"
+	var sidecar_path := OS.get_environment("MH_SIDECAR_PATH")
+	if sidecar_path.is_empty(): sidecar_path = "res://assets/mh_lab/full-influences.json"
+	var packed := load(model_path) as PackedScene
 	if packed == null:
 		push_error("MH source GLB not imported; run seed import first")
 		quit(1)
 		return
 	var actor:Node3D=packed.instantiate();root.add_child(actor)
 	var skeleton:Skeleton3D=actor.find_children("*","Skeleton3D",true,false)[0]
-	var sidecar:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/mh_lab/full-influences.json"))
+	var sidecar:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(sidecar_path))
 	var by_name:Dictionary={}
 	for part:Dictionary in sidecar.parts:by_name[part.node]=part
-	var report:Dictionary={"bones":skeleton.get_bone_count(),"parts":[],"source_full_weights_preserved":true,"native8_is_full_weight_renderer":false,"visual_pass":false}
+	var report:Dictionary={"model_path":model_path,"sidecar_path":sidecar_path,"bones":skeleton.get_bone_count(),"parts":[],"source_full_weights_preserved":true,"native8_is_full_weight_renderer":false,"visual_pass":false}
 	assert(skeleton.get_bone_count()==163)
 	for instance:MeshInstance3D in actor.find_children("*","MeshInstance3D",true,false):
 		assert(by_name.has(instance.name),str(instance.name))
