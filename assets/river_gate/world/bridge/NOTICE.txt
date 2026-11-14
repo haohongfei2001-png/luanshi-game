@@ -1,1 +1,1 @@
-Complete editable timber deck derived from Modular Wooden Pier by Rico Cilliers, Poly Haven, CC0-1.0. Original source and hashes in SOURCE.json.
+Complete timber crossing assembled from original connected boards in Modular Wooden Pier by Rico Cilliers, Poly Haven, CC0-1.0. Original source, checksums and assembly coordinates are in SOURCE.json and tools/art/build_intact_bridge.py.

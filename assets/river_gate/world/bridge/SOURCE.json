@@ -54,7 +54,114 @@
       "triangles": 14598
     }
   ],
-  "derived_component": "modular_wooden_pier_section_02",
-  "selection": "Complete deck and its actual side thickness, source height 2.48 to 2.73 metres",
-  "triangles": 8044
+  "derived_component": "Intact connected deck boards from modular_wooden_pier_planks",
+  "board_sources": [
+    {
+      "source_component": "modular_wooden_pier_planks.001",
+      "triangles": 744,
+      "bounds": [
+        [
+          -1.2113544940948486,
+          -3.292395830154419,
+          2.600484848022461
+        ],
+        [
+          1.0452909469604492,
+          -3.051051139831543,
+          2.6409237384796143
+        ]
+      ]
+    },
+    {
+      "source_component": "modular_wooden_pier_planks.002",
+      "triangles": 692,
+      "bounds": [
+        [
+          -1.2174837589263916,
+          -3.0531790256500244,
+          2.5938990116119385
+        ],
+        [
+          1.0593442916870117,
+          -2.812875270843506,
+          2.6553258895874023
+        ]
+      ]
+    },
+    {
+      "source_component": "modular_wooden_pier_planks.006",
+      "triangles": 620,
+      "bounds": [
+        [
+          -1.214418888092041,
+          -1.9889730215072632,
+          2.619246482849121
+        ],
+        [
+          1.0842509269714355,
+          -1.730595350265503,
+          2.6653475761413574
+        ]
+      ]
+    },
+    {
+      "source_component": "modular_wooden_pier_planks.004",
+      "triangles": 540,
+      "bounds": [
+        [
+          -1.2169471979141235,
+          -2.6023876667022705,
+          2.6249172687530518
+        ],
+        [
+          1.2878847122192383,
+          -2.3900742530822754,
+          2.6736738681793213
+        ]
+      ]
+    },
+    {
+      "source_component": "modular_wooden_pier_planks.007",
+      "triangles": 540,
+      "bounds": [
+        [
+          -1.2113561630249023,
+          -1.7303107976913452,
+          2.627622127532959
+        ],
+        [
+          1.055894374847412,
+          -1.5128029584884644,
+          2.664703130722046
+        ]
+      ]
+    },
+    {
+      "source_component": "modular_wooden_pier_planks.005",
+      "triangles": 512,
+      "bounds": [
+        [
+          -1.2120178937911987,
+          -2.139734983444214,
+          2.6264374256134033
+        ],
+        [
+          1.2851629257202148,
+          -1.9850084781646729,
+          2.6653780937194824
+        ]
+      ]
+    }
+  ],
+  "rows": 48,
+  "bays": 3,
+  "deck_top_m": 0.13,
+  "nominal_span_m": [
+    12.0,
+    7.5
+  ],
+  "coverage": 0.9927322280263456,
+  "longest_sampled_seam_m": 0.6000000000000001,
+  "unsupported_steps": 0,
+  "triangles": 87552
 }
