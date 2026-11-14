@@ -14,8 +14,6 @@ var libraries:Dictionary={}
 var ground_material:ShaderMaterial
 var water_material:ShaderMaterial
 var botanical_materials:Dictionary={}
-var crown_pairs:Array[Dictionary]=[]
-var detailed_crowns:=true
 
 func _ready() -> void:
 	name="RiverMasterMap"
@@ -115,7 +113,7 @@ func _botanical_material(source:StandardMaterial3D,kind:int,bounds:AABB=AABB()) 
 	material.set_shader_parameter("uv_offset",source.uv1_offset)
 	material.set_shader_parameter("botanical_part",kind)
 	var pigment:=Color("544635")
-	if kind==1:pigment=Color("617343")
+	if kind==1:pigment=Color("536447")
 	elif kind==2:pigment=Color("96904b")
 	elif kind==3:pigment=Color("697444")
 	material.set_shader_parameter("pigment",pigment)
@@ -255,92 +253,53 @@ func _river() -> void:
 	boat.rotation.y=.12
 	add_child(boat)
 
-func _scene_plant(path:String,at:Vector2,height:float,yaw:float=0.) -> Node3D:
-	var parts:=_library(path)
-	var bounds:=AABB()
-	var first:=true
-	for mesh:Mesh in parts.values():
-		bounds=mesh.get_aabb() if first else bounds.merge(mesh.get_aabb())
-		first=false
-	var anchor:=bounds.get_center()
-	anchor.y=bounds.position.y
-	var scale_value:=height/maxf(bounds.size.y,.01)
-	var group:=Node3D.new()
-	group.name=path.get_file().get_basename()
-	group.position=Vector3(at.x,_land_height(at),at.y)
-	add_child(group)
-	var close_parts:Array[MeshInstance3D]=[]
-	for part:String in parts:
-		var child:=_piece(path,part,group.position,Vector3.ONE*scale_value,yaw,anchor)
-		child.reparent(group,true)
-		child.visibility_range_end=260. if height>3. else 150.
-		close_parts.append(child)
-		child.lod_bias=4. if path==BROADLEAF else 1.2
-	if path==BROADLEAF:
-		# A complete authored crown retains its area at army overview distances.
-		# Close meshes preserve each native leaf instead of collapsing the crown.
-		var distant_part:="FieldOakA"
-		var distant_mesh:Mesh=_library(WOODLAND)[distant_part]
-		var distant:=_plant(WOODLAND,distant_part,at,height/distant_mesh.get_aabb().size.y,yaw)
-		distant.scale.x*=1.12
-		distant.scale.z*=1.12
-		distant.visible=false
-		distant.visibility_range_end=300.
-		distant.lod_bias=2.
-		distant.reparent(group,true)
-		crown_pairs.append({"close":close_parts,"overview":distant})
-	return group
+func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
+	# Retain the complete artist-built bark, branch and leaf-card assembly.
+	# The 22 m game comparison selected a coherent crown over isolated tiny leaves.
+	var variant:=posmod(roundi(at.x*3.+at.y*5.),2)
+	var part:="FieldOakA" if variant==0 else "FieldOakB"
+	var mesh:Mesh=_library(WOODLAND)[part]
+	var plant:=_plant(WOODLAND,part,at,height/maxf(mesh.get_aabb().size.y,.01),yaw)
+	plant.name="WholeBroadleaf"
+	plant.visibility_range_end=300.
+	plant.lod_bias=2.
+	return plant
 
 func _bank_rocks(channel:float,moat:bool) -> void:
 	const STONE_PATH:="res://assets/third_party/polyhaven_bank/bank_stones.glb"
 	var stone:=StandardMaterial3D.new()
 	stone.albedo_texture=preload("res://assets/third_party/polyhaven_bank/lichen_and_stone.jpg")
-	stone.albedo_color=Color("a8b0a5")
+	stone.albedo_color=Color("b0b2aa")
 	stone.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	stone.roughness=.96
-	stone.metallic_specular=.0
+	stone.metallic_specular=.06
 	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
 	if not moat:stations.append_array(Ground.RIVER_OUTCROPS)
-	var cliff_mesh:Mesh=_library(CLIFF)["coastal_cliff_02_LOD0"]
-	var native_bounds:=cliff_mesh.get_aabb()
-	var anchor:=native_bounds.get_center()
-	anchor.y=native_bounds.position.y
 	for i in stations.size():
 		var entry:=stations[i]
 		var center:=Ground.river_center(entry.y) if bridgehead and not moat else channel
 		var shoulder:=3.85 if moat else (4.8 if bridgehead else 3.5)
-		var yaw:=entry.x*PI*.5+.11*sin(i*1.71)
-		var at:=Vector2(center+entry.x*(shoulder-.25),entry.y)
-		# The complete scanned strata face the water. Large low shelves alternate
-		# with earth coves, keeping every solid mass within the existing bank footprint.
-		if i%3!=1:
-			var reach:=entry.z*(1.48+.15*sin(i*2.3))
-			var scale_value:=reach/native_bounds.size.x
-			var footing:=Vector3(at.x,-.48-.14*(i%2),at.y)
-			var cliff:=_piece(CLIFF,"coastal_cliff_02_LOD0",footing,
-				Vector3(scale_value,scale_value*1.28,scale_value*1.45),yaw,anchor)
-			cliff.name="EmbeddedRockShelf"
-			cliff.lod_bias=1.15
-			cliff.visibility_range_end=210.
-		if i%3!=0:
-			var part:="RiverStone%02d"%[(i*5+2)%6]
-			var mesh:Mesh=_library(STONE_PATH)[part]
-			var bounds:=mesh.get_aabb()
-			var origin:=bounds.get_center()
-			origin.y=bounds.position.y
-			var width:=entry.z*(.68 if i%3==1 else .50)
-			var scale_value:=width/maxf(bounds.size.x,.01)
-			var position:=Vector3(at.x+entry.x*.25,-.18-bounds.size.y*scale_value*.42,at.y+.24*entry.z)
-			var accent:=_piece(STONE_PATH,part,position,Vector3.ONE*scale_value,i*1.83,origin)
+		# Complete scanned strata overlap below ground, forming an embedded bank.
+		var reach:=entry.z*1.68
+		var at:=Vector2(center+entry.x*shoulder,entry.y)
+		var scale_value:=reach/40.93
+		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",at,scale_value,
+			PI*.5 if entry.x>0. else -PI*.5)
+		cliff.position.y=-.66
+		cliff.name="EmbeddedRockBank"
+		cliff.lod_bias=1.15
+		cliff.visibility_range_end=210.
+		for j in 3:
+			var width:=entry.z*(.84 if j==0 else .58)
+			var accent:=_piece(STONE_PATH,"RiverStone%02d"%[(i*5+j)%6],
+				Vector3(center+entry.x*(shoulder+.15+.28*j),-.57,entry.y+(j-1)*entry.z*.43),
+				Vector3(width,width*(.81 if j==0 else .73),width*.82),i*1.83+j*1.37)
 			accent.material_override=stone
-			accent.name="BuriedBankCrown"
-		# Ferns emerge above the shelf, shrubs sit on the earthen shoulder.
-		# Their roots use the same visible terrain height as nearby combatants.
-		var p:=Vector2(center+entry.x*(5.8+.35*(i%2)),entry.y-.35*entry.z)
-		_native_understory(THICKET,p,1.28+.19*(i%3),i*1.43,i)
-		_native_understory(FERN,p+Vector2(-entry.x*.48,.65),.64+.09*(i%2),i*.8,i)
-		if i%2==0:
-			_native_understory(FERN,p+Vector2(entry.x*.38,-.62),.47,i*.8+1.,i+1)
+			accent.name="BankShoulderStone"
+		for j in 2:
+			var p:=Vector2(center+entry.x*(6.0+.48*j),entry.y+(j-.5)*1.55)
+			_native_understory(THICKET,p,1.12+.17*((i+j)%3),i*1.43+j,i+j)
+			_native_understory(FERN,p+Vector2(entry.x*.75,.48),.45,i*.8+j,i+j)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
@@ -389,7 +348,7 @@ func _banks_and_groves() -> void:
 	for i in near_groves.size():
 		var entry:=near_groves[i]
 		var p:=Vector2(entry.x,entry.y)
-		_scene_plant(BROADLEAF,p,entry.z,i*2.1)
+		_broadleaf_tree(p,entry.z,i*2.1)
 		for j in 3:
 			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.7+.22*j)
 			_native_understory(THICKET,q,1.15+.16*(j%3),i+j*1.9,i+j)
@@ -418,7 +377,7 @@ func _banks_and_groves() -> void:
 			var q:=p+Vector2(cos(angle),sin(angle))*radius
 			if absf(q.y)<24.:continue
 			var height:=6.8+.65*((i+j)%4)
-			_scene_plant(BROADLEAF,q,height,i+j*1.1)
+			_broadleaf_tree(q,height,i+j*1.1)
 			if j%3==0:
 				_native_understory(THICKET,q+Vector2(1.2,1.1),1.4,i+j,i+j)
 	# Complete scanned outcrops sit partly within the background ridge.
@@ -502,13 +461,3 @@ func _field_quarters() -> void:
 		cart.rotation.y=.25
 		add_child(cart)
 
-func reveal_sightline(focus:Vector2,hero:Vector2,eye:Vector3,zoom:float,live:bool,assault_near:bool=false) -> void:
-	super.reveal_sightline(focus,hero,eye,zoom,live,assault_near)
-	# Orthographic zoom changes projected size while eye distance remains 77.5 m.
-	# Select the whole crown by its on-screen size rather than that eye distance.
-	var detailed:=zoom<56. if detailed_crowns else zoom<48.
-	if detailed==detailed_crowns:return
-	detailed_crowns=detailed
-	for pair:Dictionary in crown_pairs:
-		for node:MeshInstance3D in pair.close:node.visible=detailed
-		pair.overview.visible=not detailed

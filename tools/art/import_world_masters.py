@@ -17,6 +17,7 @@ OUT=ROOT/"assets/river_gate/world/masters"
 CACHE=Path(sys.argv[sys.argv.index("--")+1])
 ASSETS=[
     ("coastal_cliff_02",90000,"Rob Tuytel"),
+    ("coast_rocks_03",65000,"Rico Cilliers and Rob Tuytel"),
     ("modular_wooden_pier",85000,"Rico Cilliers"),
     ("island_tree_03",180000,"Rico Cilliers and Rob Tuytel"),
     ("pine_tree_01",120000,"Rico Cilliers and Rob Tuytel"),
@@ -197,6 +198,7 @@ def import_master(asset,budget,author):
     selected=[o for o in keep if len(o.data.polygons)>0]
     for obj in keep:
         obj.select_set(obj in selected)
+    bpy.context.view_layer.update()
     points=[obj.matrix_world@Vector(corner) for obj in selected for corner in obj.bound_box]
     receipt["bounds_blender"]=[[min(v[i] for v in points) for i in range(3)],[max(v[i] for v in points) for i in range(3)]]
     receipt["foliage"]=foliage
