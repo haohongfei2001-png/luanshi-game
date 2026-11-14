@@ -17,7 +17,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq blender python3-pil xdotool
+          sudo apt-get install -y -qq blender python3-pil python3-numpy xdotool
           blender --background --python-exit-code 1 --python tools/art/fit_scanned_banks.py -- "$RUNNER_TEMP/bank-scan"
           git add assets/third_party/polyhaven_bank
           git -c user.name='River Gate art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Fit six CC0 scanned river blocks and their 2K registered colour to the playable banks'

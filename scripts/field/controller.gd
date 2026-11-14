@@ -39,6 +39,10 @@ var frame_log: RefCounted
 enum Quality { NATIVE_MSAA, BALANCED, PERFORMANCE, NATIVE_SINGLE_SAMPLE }
 const QUALITY_SCALES := [1.0, 0.85, 0.70, 1.0]
 var detail_preset:=Quality.NATIVE_MSAA
+enum DisplayChoice { WINDOW, SCREEN, QHD, UHD }
+const DISPLAY_PIXELS:=[Vector2i.ZERO,Vector2i.ZERO,Vector2i(2560,1440),Vector2i(3840,2160)]
+var windowed_size:=Vector2i.ZERO
+var windowed_position:=Vector2i.ZERO
 var last_hero_hit:=-100
 var step_distance:=0.0
 const QUALITY_FILE:="user://river-gate-graphics.cfg"
@@ -61,6 +65,15 @@ func _ready() -> void:
 	hud.quality.set_item_text(Quality.NATIVE_MSAA,"清晰 100% · 4× 抗锯齿")
 	hud.quality.add_item("原生 100% · 无抗锯齿")
 	add_child(audio)
+	if DisplayServer.get_name()!="headless":
+		windowed_size=get_window().size
+		windowed_position=get_window().position
+		hud.display_mode.item_selected.connect(_choose_display)
+		get_window().size_changed.connect(_refresh_display)
+		hud.display_mode.get_popup().about_to_popup.connect(_refresh_display)
+		var mode:=int(cfg.get_value("display","mode",DisplayChoice.WINDOW))
+		if mode>DisplayChoice.WINDOW and mode<DISPLAY_PIXELS.size(): _choose_display(mode,false)
+		_refresh_display()
 	hud.deploy.connect(deploy)
 	hud.pause.connect(toggle_pause)
 	hud.terrain_chosen.connect(pan_to)
@@ -205,10 +218,58 @@ func set_quality(which: int,remember: bool=false) -> void:
 	shadow_zoom=-1.0
 	view.contact_for_all=not map.sun.shadow_enabled
 	hud.quality.select(which)
+	if DisplayServer.get_name()!="headless": _refresh_display.call_deferred()
 	if remember:
 		var cfg:=ConfigFile.new()
+		cfg.load(QUALITY_FILE)
 		cfg.set_value("display","preset",which)
 		cfg.save(QUALITY_FILE)
+
+func _refresh_display() -> void:
+	var win:=get_window()
+	var screen:=DisplayServer.screen_get_size(win.current_screen)
+	for i in range(DisplayChoice.QHD,DISPLAY_PIXELS.size()):
+		var wanted:Vector2i=DISPLAY_PIXELS[i]
+		hud.display_mode.set_item_disabled(i,wanted.x>screen.x or wanted.y>screen.y)
+	var pixels:=win.get_texture().get_size()
+	if pixels.x>0 and pixels.y>0:
+		var rendered:=Vector2i((Vector2(pixels)*win.scaling_3d_scale).round())
+		hud.physical_size.text="3D  %d × %d"%[rendered.x,rendered.y]
+
+func _choose_display(index: int,remember: bool=true) -> void:
+	if index<0 or index>=DISPLAY_PIXELS.size(): return
+	var win:=get_window()
+	var screen:=DisplayServer.screen_get_size(win.current_screen)
+	var wanted:Vector2i=DISPLAY_PIXELS[index]
+	if wanted.x>screen.x or wanted.y>screen.y:
+		_refresh_display()
+		return
+	if win.mode==Window.MODE_WINDOWED and not win.borderless:
+		windowed_size=win.size
+		windowed_position=win.position
+	if index==DisplayChoice.SCREEN or wanted==screen:
+		win.mode=Window.MODE_FULLSCREEN
+	elif index==DisplayChoice.WINDOW:
+		win.mode=Window.MODE_WINDOWED
+		win.borderless=false
+		if windowed_size.x>0:
+			win.size=windowed_size
+			win.position=windowed_position
+	else:
+		win.mode=Window.MODE_WINDOWED
+		win.borderless=true
+		win.size=wanted
+		win.position=DisplayServer.screen_get_position(win.current_screen)+(screen-wanted)/2
+	hud.display_mode.select(index)
+	if index>=DisplayChoice.QHD and not is_equal_approx(QUALITY_SCALES[detail_preset],1.0):
+		if view: set_quality(Quality.NATIVE_MSAA,remember)
+		else: detail_preset=Quality.NATIVE_MSAA
+	if remember:
+		var cfg:=ConfigFile.new()
+		cfg.load(QUALITY_FILE)
+		cfg.set_value("display","mode",index)
+		cfg.save(QUALITY_FILE)
+	_refresh_display.call_deferred()
 
 func deploy() -> void:
 	if battle.result!="" or battle.started: return
