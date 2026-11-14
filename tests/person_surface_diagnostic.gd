@@ -27,11 +27,7 @@ func _run() -> void:
 			altered=altered.replace("ALBEDO = mix(colour, vec3(.65,.35,.19), flash * .24);","ALBEDO = .5+.5*normalize(NORMAL);")
 		elif mode=="unlit":
 			altered=altered.replace("render_mode cull_disabled, diffuse_lambert, specular_disabled;","render_mode cull_disabled, unshaded;")
-		var shader:=Shader.new()
-		shader.code=altered
-		for key in field.view.groups:
-			var material:ShaderMaterial=field.view.groups[key].material_override
-			if material!=null: material.shader=shader
+		original.code=altered
 		_set_view(focus.pos,2.4,2.697)
 		await RenderingServer.frame_post_draw
 		var image:=root.get_texture().get_image()

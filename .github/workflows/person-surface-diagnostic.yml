@@ -40,7 +40,7 @@ jobs:
           mkdir -p "$proof" artifacts/person-diagnostic
           touch "$proof/.gdignore"
           godot --headless --audio-driver Dummy --editor --path . --import >"$proof/import.log" 2>&1
-          xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/person_surface_diagnostic.gd >"$proof/diagnostic.log" 2>&1
+          timeout 5m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/person_surface_diagnostic.gd >"$proof/diagnostic.log" 2>&1
           grep PERSON_DIAGNOSTIC "$proof/diagnostic.log"
           if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/diagnostic.log"; then exit 1; fi
           cp artifacts/person-diagnostic/* "$proof/"
