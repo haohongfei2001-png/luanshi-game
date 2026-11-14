@@ -1,22 +1,96 @@
-name: Inspect original licensed HM08 anatomy
+name: Compare River Gate field tailoring in playing and close windows
 on:
   push:
     branches: [codex/river-rc23-hm08-body]
-    paths: ['.github/workflows/hm08-field-figure.yml','tests/inspect_hm08_body.py']
+    paths: ['.github/workflows/hm08-field-figure.yml','tools/art/bake_field_anatomy.py','tests/bridgehead_clothing_window.gd']
 permissions:
   contents: write
+concurrency:
+  group: costume-codex/river-rc23-hm08-body
+  cancel-in-progress: true
 jobs:
-  source:
+  compare:
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 20
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy
-      - run: /usr/bin/python3 tests/inspect_hm08_body.py
-      - name: Save exact master dimensions
+      - name: Install the pinned runtime and known upstream clothing tools
         run: |
-          git config user.name "Luanshi art source worker"
-          git config user.email "actions@users.noreply.github.com"
-          git add reports/hm08/bind.json
-          git commit -m "Record original HM08 body and bind measurements"
-          git push origin HEAD
+          set -eu
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v blender >/dev/null || ! command -v xdotool >/dev/null || ! /usr/bin/python3 -c 'import PIL,numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool python3-numpy python3-pil blender ffmpeg; fi
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/character-master
+          touch artifacts/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Keep evidence outside Godot's resource import
+        run: |
+          touch docs/evidence/river-gate-v1-rc23/character-master/.gdignore
+      - name: Photograph both complete 2560 x 1600 windows on matching soldiers
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/character-master
+          cp scripts/field/company_art.gd /tmp/complete-company.gd
+          git show 0315c9fc4665d33e7c2fc7d1e793b2c6cb82f725:scripts/field/company_art.gd > scripts/field/company_art.gd
+          for side in before after; do
+            mkdir -p "$proof/$side"
+            if [ "$side" = after ]; then
+              /usr/bin/python3 tools/art/fetch_hand_source.py /tmp/river-hm08
+              blender -b -t 1 --python-exit-code 1 --python tools/art/bake_field_anatomy.py -- /tmp/river-hm08 | tee "$proof/body-bake.log"
+              /usr/bin/python3 tools/art/mature_field_company.py /tmp/complete-issue | tee "$proof/coat-bake.log"
+              cp /tmp/complete-company.gd scripts/field/company_art.gd
+            fi
+            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side/import.log" 2>&1
+            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/import.log"; then exit 1; fi
+            timeout 5m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/bridgehead_clothing_window.gd > "$proof/$side/window.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/window.log"; then exit 1; fi
+            grep ROBE_GAME_WINDOW "$proof/$side/window.log"
+            cp artifacts/bridge-window/line-*.jpg artifacts/bridge-window/reverse-*.jpg artifacts/bridge-window/kit*.jpg artifacts/bridge-window/field.json "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          import pathlib,json,numpy as np
+          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master")
+          assert json.loads((root/"before"/"field.json").read_bytes())==json.loads((root/"after"/"field.json").read_bytes())
+          out={}
+          for a in sorted((root/"before").glob("*.jpg")):
+              name=a.stem
+              pair=[]
+              for side in ("before","after"):
+                  path=root/side/a.name
+                  im=Image.open(path).convert("RGB")
+                  assert im.size==(2560,1600)
+                  pair.append(np.array(im,dtype=np.int16))
+                  im.thumbnail((1280,800));im.save(root/side/(name+"-window.jpg"),quality=91,subsampling=0)
+              delta=np.max(abs(pair[0]-pair[1]),axis=-1)
+              out[name]={"pixels_changed_12":int((delta>12).sum()),"pixels_changed_25":int((delta>25).sum())}
+          (root/"compare.json").write_text(json.dumps(out,indent=2))
+          PY
+          git add assets/river_gate/figures/field_company_master.glb tools/art/source/field_anatomy.json reports/hm08
+          git diff --exit-code -- assets/river_gate/figures/company_motion.png assets/third_party/wildfire_garments/field_colours.png assets/river_gate/figures/river_company.glb
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete licensed field people on the existing weapon and motion bind'
+          git add "$proof"
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive matched normal and near actual 2K field windows'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Show the actual import and window errors
+        if: failure()
+        run: |
+          for f in docs/evidence/river-gate-v1-rc23/character-master/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: complete-character-master-2k
+          path: |
+            docs/evidence/river-gate-v1-rc23/character-master
+            artifacts/bridge-window
+          retention-days: 7

@@ -8,6 +8,7 @@ const GARRISON := preload("res://assets/third_party/wildfire_garments/field_issu
 const SHIELD := preload("res://assets/third_party/wildfire_shields/garrison_shield.glb")
 const HEADWEAR := preload("res://assets/third_party/wildfire_headwear/headwear.glb")
 const ISSUE_COLOURS := preload("res://assets/third_party/wildfire_garments/field_colours.png")
+const MASTER := preload("res://assets/river_gate/figures/field_company_master.glb")
 const FIELD_BODY := preload("res://assets/river_gate/figures/garrison_bodies.glb")
 const SKIN := preload("res://scripts/field/company_skin.gdshader")
 const FABRIC := preload("res://assets/river_gate/figures/campaign_colours.svg")
@@ -17,7 +18,7 @@ static var assembled: Dictionary = {}
 
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
-	for asset: PackedScene in [LIBRARY, GARMENTS, GARRISON, FIELD_BODY, HEADWEAR, SHIELD]:
+	for asset: PackedScene in [LIBRARY, MASTER, SHIELD]:
 		pieces.merge(FieldMeshes.meshes(asset),true)
 
 static func costume(kit: int) -> String:
@@ -31,17 +32,13 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	var key := "%s-%d-%s" % [look,kit,lod]
 	if assembled.has(key): return assembled[key]
 	_load_pieces()
-	var fitted:=pieces.has(look+"Issue")
-	var body: ArrayMesh=pieces[(look+lod+"Body") if fitted else (look+lod)]
+	var body: ArrayMesh=pieces[look+lod+"Master"]
 	var arms: ArrayMesh=pieces["Arms"+str(kit)+lod]
 	# Copy packed indexed arrays only. SurfaceTool would expand every triangle,
 	# and importer-generated tangents/lightmap data have no role in these materials.
 	var arrays:=body.surface_get_arrays(0)
-	var garment: ArrayMesh=pieces[look+lod+"Trim"]
-	var attachments: Array[ArrayMesh]=[arms,garment]
+	var attachments: Array[ArrayMesh]=[arms]
 	if kit==7: attachments.append(pieces["GarrisonShield"])
-	if fitted: attachments.append(pieces[look+"Issue"])
-	if pieces.has(look+"Headwear"): attachments.append(pieces[look+"Headwear"])
 	for attachment: ArrayMesh in attachments:
 		var gear:=attachment.surface_get_arrays(0)
 		var vertex_offset: int=arrays[Mesh.ARRAY_VERTEX].size()
