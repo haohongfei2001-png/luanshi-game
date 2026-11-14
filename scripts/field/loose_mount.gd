@@ -39,6 +39,11 @@ func _init(start:Vector2,facing:Vector2,lot:int) -> void:
 	# A mount on the deck first reaches its own bank on the bridge boards.
 	if absf(start.x-Ground.MOAT_X)<Ground.MOAT_BANK+1. and absf(start.y)<Ground.MOAT_DECK+.4:
 		waypoints.append(Vector2(Ground.MOAT_X+bank*(Ground.MOAT_BANK+1.45),clampf(start.y,-Ground.MOAT_DECK+.75,Ground.MOAT_DECK-.75)))
+	if absf(start.x-Ground.RIVER_X)<6.6 and absf(start.y-Ground.crossing(start.y))<3.95:
+		var river_bank:=signf(start.x-Ground.RIVER_X)
+		if absf(start.x-Ground.RIVER_X)<.6: river_bank=1. if heading.x>=0. else -1.
+		waypoints.append(Vector2(Ground.RIVER_X+river_bank*7.25,Ground.crossing(start.y)))
+		goal.x=Ground.RIVER_X+river_bank*(8.5+lot%6)
 	if clear_gate:
 		waypoints.append(Vector2(Ground.WALL_X+(3.3 if inside else -3.3),clampf(start.y,-2.5,2.5)))
 	elif Ground.parapet(start)>.1:
@@ -57,11 +62,11 @@ func _init(start:Vector2,facing:Vector2,lot:int) -> void:
 			# A real horse turns through its neck and shoulders over several strides.
 			var radians:=wrapf(aim.angle()-heading.angle(),-PI,PI)
 			heading=heading.rotated(clampf(radians,-.29,.29)).normalized()
-			var next:=Ground.travel(p,heading*STEP,clear_gate,true)
+			var next:=_safe_step(p,heading*STEP,clear_gate)
 			if on_deck and absf(next.y)>Ground.MOAT_DECK-.12 and absf(next.x-Ground.MOAT_X)<Ground.MOAT_WATER+.3:
-				next=Ground.travel(p,aim.normalized()*STEP,clear_gate,true)
+				next=_safe_step(p,aim.normalized()*STEP,clear_gate)
 			if p.distance_squared_to(next)<.015:
-				next=Ground.travel(p,aim*STEP,clear_gate,true)
+				next=_safe_step(p,aim*STEP,clear_gate)
 			if p.distance_squared_to(next)<.015: break
 			heading=p.direction_to(next)
 			length+=p.distance_to(next)
@@ -72,6 +77,19 @@ func _init(start:Vector2,facing:Vector2,lot:int) -> void:
 	speed=minf(3.55+.12*float(lot%5),length/(.5*(GATHER+SETTLE)+.15))
 	if speed>.01: duration=length/speed+.5*(GATHER+SETTLE)
 	rest_pose=start_pose if points.size()==1 else Transform2D(atan2(heading.x,heading.y),p)
+
+## Water and wall masks have square corners. Two dry endpoints can still
+## straddle one corner; take the legal axis first so interpolation stays dry.
+static func _safe_step(p:Vector2,offset:Vector2,gate:bool) -> Vector2:
+	var q:=Ground.travel(p,offset,gate,true)
+	if q.x==p.x or q.y==p.y: return q
+	var along_x:=Vector2(q.x,p.y)
+	var along_z:=Vector2(p.x,q.y)
+	var x_clear:=Ground.can_step(p,along_x,gate,true)
+	var z_clear:=Ground.can_step(p,along_z,gate,true)
+	if x_clear and z_clear: return q
+	if x_clear: return along_x
+	return along_z if z_clear else p
 
 func distance_at(age:float) -> float:
 	var t:=age-wait
