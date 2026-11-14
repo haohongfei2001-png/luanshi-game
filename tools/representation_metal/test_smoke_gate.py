@@ -1,4 +1,4 @@
-import tempfile,json,subprocess,sys,pathlib,unittest,shutil
+import tempfile,json,subprocess,sys,pathlib,unittest,shutil,os
 from PIL import Image
 ROOT=pathlib.Path(__file__).resolve().parent
 class SmokeGate(unittest.TestCase):
@@ -18,4 +18,20 @@ class SmokeGate(unittest.TestCase):
    f=p/'profile-sprite8/raw-intervals.json';original=f.read_text();d=json.loads(original);d['frame_ms']=[60]*119;f.write_text(json.dumps(d));self.assertNotEqual(self.run_gate(p),0);f.write_text(original)
    f=p/'profile-sprite8/report.json';original=f.read_text();d=json.loads(original);d['end_snapshot_sha']='wrong';f.write_text(json.dumps(d));self.assertNotEqual(self.run_gate(p),0);f.write_text(original)
    f=p/'capture-sprite8/same-tick-native.png';Image.new('RGB',(2560,1440),(255,0,255)).save(f);self.assertNotEqual(self.run_gate(p),0)
+ def test_scale_gate(self):
+  with tempfile.TemporaryDirectory() as t:
+   p=pathlib.Path(t);base=p/'base';base.mkdir();self.fixture(base)
+   for count in [100,250,512]:
+    for old in base.iterdir():
+     if not old.is_dir():continue
+     d=p/(old.name+f'-{count}');shutil.copytree(old,d)
+     r=json.loads((d/'report.json').read_text());capture=r['capture_run_not_performance']
+     start=250 if count==512 else 50
+     r.update(per_side=count,start_tick=start,end_tick=start if capture else start+320,camera_tracking='actual_contact_fixed_lens',camera_track_sha256='same',alive_screen_centers_summary={'min':2})
+     (d/'report.json').write_text(json.dumps(r))
+     f=d/'raw-intervals.json';raw=json.loads(f.read_text());raw.update(visibility_and_camera=[{}]*r['frames'],fixed_tick_contact_camera=[{}]*321);f.write_text(json.dumps(raw))
+   env=dict(os.environ,COMPARE_SCALE_MATRIX='1')
+   run=lambda:subprocess.run([sys.executable,str(ROOT/'check_smoke.py'),str(p)],env=env,capture_output=True).returncode
+   self.assertEqual(run(),0)
+   f=p/'profile-sprite8-250/report.json';r=json.loads(f.read_text());r['camera_track_sha256']='wrong';f.write_text(json.dumps(r));self.assertNotEqual(run(),0)
 if __name__=='__main__':unittest.main()

@@ -1,0 +1,160 @@
+{
+  "source": "b827e247ae8b1f003850a44ec71785bd3e54c12d",
+  "run": 43650283795,
+  "artifact": 14135288613,
+  "artifact_zip_sha256": "1fe71c038dca42fc77486724bd6b4b7bd81ee2f5e8c6b00c01eb76b7f536595d",
+  "hardware": "GitHub macOS26.7.2 AppleM1 Virtual 3cores7GB",
+  "technical_gates_passed": true,
+  "art_pass": false,
+  "M5": "DEVICE_NOT_RUN",
+  "route_winner": null,
+  "readback_during_profile": false,
+  "capture_and_profile_separate": true,
+  "cases": [
+    {
+      "mode": "shared3d",
+      "per_side": 20,
+      "roster": 43,
+      "visible_units_conservative_cull": 5,
+      "start_tick": 300,
+      "end_tick": 620,
+      "hits": [
+        45,
+        0
+      ],
+      "losses": [
+        0,
+        10
+      ],
+      "viewport": [
+        2560,
+        1440
+      ],
+      "logical_viewport": [
+        1422.0,
+        800.0
+      ],
+      "internal_scale": 1.0,
+      "driver": "metal",
+      "method": "mobile",
+      "source_model_sha256": "64705ebc4a20650b79f863bae4b6ec47df06dfefe0ed451fe73a04ebc46295c0",
+      "explicit_lod_inventory": [
+        {
+          "mesh": "Eyebrows",
+          "surfaces": [
+            {
+              "edge_length": 0.00153538910672069,
+              "selected_tier": 1,
+              "selected_triangles": 492,
+              "source_triangles": 984,
+              "source_vertices": 646
+            }
+          ],
+          "tier": 1
+        },
+        {
+          "mesh": "Eyes",
+          "surfaces": [
+            {
+              "edge_length": 0.00118663592729717,
+              "selected_tier": 1,
+              "selected_triangles": 384,
+              "source_triangles": 768,
+              "source_vertices": 556
+            }
+          ],
+          "tier": 1
+        },
+        {
+          "mesh": "SuperHero_Male",
+          "surfaces": [
+            {
+              "edge_length": 0.00811209995299578,
+              "selected_tier": 1,
+              "selected_triangles": 6282,
+              "source_triangles": 12566,
+              "source_vertices": 7281
+            }
+          ],
+          "tier": 1
+        }
+      ],
+      "palette_bytes": 349440,
+      "atlas_compressed_mip_bytes": 0,
+      "texture_memory": 862044160.0,
+      "video_memory": 1033617408.0,
+      "render_primitives": 1089730.0,
+      "draw_calls": 97.0,
+      "maximum_rss_bytes": 419741696,
+      "independently_measured": {
+        "average_fps": 77.32697511551731,
+        "p50_ms": 12.655,
+        "p95_ms": 14.796,
+        "p99_ms": 17.237,
+        "samples": 1238,
+        "wall_seconds": 16.009937,
+        "stable_p99_or_device_qualification": false
+      },
+      "start_snapshot_sha": "28f46b191868d1f7529309cc25b57c60c57be97ceeb2a1d5472e969292c0b14e",
+      "end_snapshot_sha": "df2e20f011f41fde3b5eb2af74f50892c2bb6b8e28c04139f535d852a5c4f3ac",
+      "independent_simulation_oracle_sha": "df2e20f011f41fde3b5eb2af74f50892c2bb6b8e28c04139f535d852a5c4f3ac"
+    },
+    {
+      "mode": "sprite8",
+      "per_side": 20,
+      "roster": 43,
+      "visible_units_conservative_cull": 5,
+      "start_tick": 300,
+      "end_tick": 620,
+      "hits": [
+        45,
+        0
+      ],
+      "losses": [
+        0,
+        10
+      ],
+      "viewport": [
+        2560,
+        1440
+      ],
+      "logical_viewport": [
+        1422.0,
+        800.0
+      ],
+      "internal_scale": 1.0,
+      "driver": "metal",
+      "method": "mobile",
+      "source_model_sha256": "64705ebc4a20650b79f863bae4b6ec47df06dfefe0ed451fe73a04ebc46295c0",
+      "explicit_lod_inventory": [],
+      "palette_bytes": 0,
+      "atlas_compressed_mip_bytes": 308134592,
+      "texture_memory": 1056931840.0,
+      "video_memory": 1293139968.0,
+      "render_primitives": 910830.0,
+      "draw_calls": 101.0,
+      "maximum_rss_bytes": 464896000,
+      "independently_measured": {
+        "average_fps": 80.7293383349699,
+        "p50_ms": 12.265,
+        "p95_ms": 13.85,
+        "p99_ms": 15.273,
+        "samples": 1292,
+        "wall_seconds": 16.004095,
+        "stable_p99_or_device_qualification": false
+      },
+      "start_snapshot_sha": "28f46b191868d1f7529309cc25b57c60c57be97ceeb2a1d5472e969292c0b14e",
+      "end_snapshot_sha": "df2e20f011f41fde3b5eb2af74f50892c2bb6b8e28c04139f535d852a5c4f3ac",
+      "independent_simulation_oracle_sha": "df2e20f011f41fde3b5eb2af74f50892c2bb6b8e28c04139f535d852a5c4f3ac"
+    }
+  ],
+  "image_review": "Native PNGs2560x1440, full preview and1:1 crops inspected. No blank/magenta atlas. Sprite has visible dark stair-step fringe, quantized direction and flat shadow; not accepted as close-view replacement. Shared3D also only unclothed UBC technical control, not final Chinese soldier.",
+  "scope_limits": [
+    "20ordinary per side only; not whole force all visible",
+    "No weapons/mounts/costumes or authored Chinese soldier",
+    "Short16s windows, not thermal/stableP99 proof",
+    "Same source materials but sprite bakes LDR/fixedlighting, lacks normal/depth; not equivalent relighting",
+    "No final 3D/sprite/hybrid army winner",
+    "100/250/512 require review before new run"
+  ]
+}

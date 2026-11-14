@@ -93,3 +93,41 @@ relaxed. Synthetic short-window, changed-state and magenta-image fixtures all fa
   root.size2560x1440 and await two resize frames before constructing the scene.
   Capture hard-checks actual attachment dimensions. No SubViewport, screenshot
   rescaling or altered sample/resolution gate. Native2K result remains pending.
+
+### Bounded scaling follow-up (100/250/512 per side)
+
+Separate `dot/representation-metal-scale`,12cases total (capture and no-readback
+profile for shared3D and8way at each population),180s per case,50min job cap.
+Same native2K/fixedsize12/yaw/pitch/source/LOD1/materials per route; no4K/16way.
+Actual20 smoke sourceb827e247 and its raw results remain unchanged.
+
+Pure simulation preflight found100-side battle ends normally at tick610, so
+never profile frozen aftermath at620. Candidate live320tick windows were
+compared for melee contact density before looking at FPS:100/250 use50→370,
+512 uses250→570. Capture is at window start. Each route uses identical seed,
+start/end snapshots and deterministic camera path. This is a NEW contact-follow
+control, not directly comparable to old20 static-bridge FPS.
+
+Camera only translates to a real opposing melee-pair midpoint nearest the
+live-contact centroid, with closest-target-pair fallback. Normal lens, body
+scale and attack/defense/death simulation remain intact. No Battle writes,
+no zoom-out to fit all troops. Every fixed tick saves contact count, actual
+camera/army positions; every render sample saves conservative body-cull count
+(including dead) AND alive center points inside the real screen. Summaries give
+min/median/max, and paired routes must match full fixed-tick camera hash.
+Visibility describes what was actually drawn, not total simulated population.
+
+Independent statistics use inverse-mean raw frame interval for FPS and
+nearest-rank P50/P95/P99. Process wall time and Godot's floor(N−1) quantiles
+are separate.10s/120frame minimum remains; a16s run is not stableP99/thermal
+certification. Maximum RSS is process memory, Godot texture/video allocation
+counters are not measured GPU-driver residency. Sprite atlas is shared308MB,
+not308MB per troop. UBC is not Chinese soldier art. Alpha-border repair is a
+separate future derivative; current paired baseline pixels/mips/depth unchanged.
+
+The camera path is generated once from the already-required independent Battle
+oracle BEFORE timing, then replayed O(1) by actual fixed tick. No per-render or
+per-tick combat-pair scans in measured runs. Final actual Battle SHA must equal
+the independent oracle; camera rows/path hashes must match paired routes.
+Replay CPU time is separately recorded and excluded from simulation_cpu.
+Visibility reuses the existing actor projection/cull, no second roster scan.

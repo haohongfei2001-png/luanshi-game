@@ -1,0 +1,814 @@
+{
+  "policy": "Pure simulation preflight selected before GPU/performance results; maximize melee density among common320tick live windows per population, never freeze or extend ended battle",
+  "windows": {
+    "100": [
+      50,
+      370
+    ],
+    "250": [
+      50,
+      370
+    ],
+    "512": [
+      250,
+      570
+    ]
+  },
+  "all_candidates": [
+    {
+      "count": 100,
+      "end": 370,
+      "endrow": {
+        "alive": 119,
+        "alive_centroid": [
+          38.5732544971113,
+          -8.46934034844407
+        ],
+        "center": [
+          44.9095687866211,
+          -11.6040420532227
+        ],
+        "hits": [
+          220,
+          148
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          30,
+          57
+        ],
+        "nearest_target_pair_distance": 7.6688380241394,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 370
+      },
+      "mean_contact_pairs": 2.1214953271028,
+      "start": 50,
+      "startrow": {
+        "alive": 177,
+        "alive_centroid": [
+          35.2802927480579,
+          -6.96093543101165
+        ],
+        "center": [
+          37.9476089477539,
+          -1.87601709365845
+        ],
+        "hits": [
+          79,
+          58
+        ],
+        "live_contact_pairs": 11,
+        "losses": [
+          14,
+          18
+        ],
+        "nearest_target_pair_distance": 1.96657121181488,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 50
+      },
+      "ticks_with_melee": 178
+    },
+    {
+      "count": 100,
+      "end": 420,
+      "endrow": {
+        "alive": 117,
+        "alive_centroid": [
+          38.818593082265,
+          -8.46498251368857
+        ],
+        "center": [
+          35.7371635437012,
+          -15.7289552688599
+        ],
+        "hits": [
+          230,
+          151
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          30,
+          59
+        ],
+        "nearest_target_pair_distance": 15.3786096572876,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 420
+      },
+      "mean_contact_pairs": 0.956386292834891,
+      "start": 100,
+      "startrow": {
+        "alive": 153,
+        "alive_centroid": [
+          36.1788449754902,
+          -7.57636016646242
+        ],
+        "center": [
+          42.9177398681641,
+          3.78737092018127
+        ],
+        "hits": [
+          133,
+          96
+        ],
+        "live_contact_pairs": 4,
+        "losses": [
+          22,
+          34
+        ],
+        "nearest_target_pair_distance": 2.35745000839233,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 100
+      },
+      "ticks_with_melee": 128
+    },
+    {
+      "count": 100,
+      "end": 470,
+      "endrow": {
+        "alive": 113,
+        "alive_centroid": [
+          40.82763671875,
+          -8.35287340552406
+        ],
+        "center": [
+          54.0045738220215,
+          -6.68027067184448
+        ],
+        "hits": [
+          240,
+          151
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          30,
+          62
+        ],
+        "nearest_target_pair_distance": 10.687183380127,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 470
+      },
+      "mean_contact_pairs": 0.426791277258567,
+      "start": 150,
+      "startrow": {
+        "alive": 141,
+        "alive_centroid": [
+          37.4980330230496,
+          -7.87818335134087
+        ],
+        "center": [
+          44.0032997131348,
+          7.35160541534424
+        ],
+        "hits": [
+          159,
+          114
+        ],
+        "live_contact_pairs": 1,
+        "losses": [
+          26,
+          41
+        ],
+        "nearest_target_pair_distance": 2.22190642356873,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 150
+      },
+      "ticks_with_melee": 80
+    },
+    {
+      "count": 100,
+      "end": 520,
+      "endrow": {
+        "alive": 110,
+        "alive_centroid": [
+          42.8314808238636,
+          -8.3988486550071
+        ],
+        "center": [
+          53.7853317260742,
+          -5.25956249237061
+        ],
+        "hits": [
+          253,
+          153
+        ],
+        "live_contact_pairs": 5,
+        "losses": [
+          30,
+          64
+        ],
+        "nearest_target_pair_distance": 2.24418783187866,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 520
+      },
+      "mean_contact_pairs": 0.46417445482866,
+      "start": 200,
+      "startrow": {
+        "alive": 136,
+        "alive_centroid": [
+          38.206101361443,
+          -7.50635573443244
+        ],
+        "center": [
+          44.7320861816406,
+          17.1480884552002
+        ],
+        "hits": [
+          174,
+          128
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          27,
+          44
+        ],
+        "nearest_target_pair_distance": 2.63060235977173,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 200
+      },
+      "ticks_with_melee": 59
+    },
+    {
+      "count": 100,
+      "end": 570,
+      "endrow": {
+        "alive": 105,
+        "alive_centroid": [
+          44.5514694940476,
+          -8.74125511532738
+        ],
+        "center": [
+          55.4468955993652,
+          -10.4364166259766
+        ],
+        "hits": [
+          270,
+          154
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          30,
+          68
+        ],
+        "nearest_target_pair_distance": 6.44604349136353,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 570
+      },
+      "mean_contact_pairs": 0.806853582554517,
+      "start": 250,
+      "startrow": {
+        "alive": 127,
+        "alive_centroid": [
+          38.4847786970965,
+          -7.67344076802411
+        ],
+        "center": [
+          42.4565277099609,
+          -6.26159000396729
+        ],
+        "hits": [
+          194,
+          137
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          29,
+          51
+        ],
+        "nearest_target_pair_distance": 11.205659866333,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 250
+      },
+      "ticks_with_melee": 58
+    },
+    {
+      "count": 250,
+      "end": 370,
+      "endrow": {
+        "alive": 327,
+        "alive_centroid": [
+          40.2330072152141,
+          -0.580421331096498
+        ],
+        "center": [
+          42.3912353515625,
+          -11.9810409545898
+        ],
+        "hits": [
+          259,
+          463
+        ],
+        "live_contact_pairs": 3,
+        "losses": [
+          116,
+          71
+        ],
+        "nearest_target_pair_distance": 2.06357502937317,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 370
+      },
+      "mean_contact_pairs": 4.3613707165109,
+      "start": 50,
+      "startrow": {
+        "alive": 474,
+        "alive_centroid": [
+          31.6365312664821,
+          -2.4937530388812
+        ],
+        "center": [
+          37.5969619750977,
+          -1.99623203277588
+        ],
+        "hits": [
+          83,
+          99
+        ],
+        "live_contact_pairs": 9,
+        "losses": [
+          23,
+          20
+        ],
+        "nearest_target_pair_distance": 1.97378540039062,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 50
+      },
+      "ticks_with_melee": 268
+    },
+    {
+      "count": 250,
+      "end": 420,
+      "endrow": {
+        "alive": 312,
+        "alive_centroid": [
+          40.303473056891,
+          -0.338150880275629
+        ],
+        "center": [
+          44.9388008117676,
+          -9.57128524780273
+        ],
+        "hits": [
+          278,
+          510
+        ],
+        "live_contact_pairs": 5,
+        "losses": [
+          125,
+          76
+        ],
+        "nearest_target_pair_distance": 2.11823892593384,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 420
+      },
+      "mean_contact_pairs": 3.70093457943925,
+      "start": 100,
+      "startrow": {
+        "alive": 437,
+        "alive_centroid": [
+          33.0953612163902,
+          -1.54043097245066
+        ],
+        "center": [
+          37.9386138916016,
+          0.0897185206413269
+        ],
+        "hits": [
+          129,
+          191
+        ],
+        "live_contact_pairs": 5,
+        "losses": [
+          45,
+          34
+        ],
+        "nearest_target_pair_distance": 2.02974462509155,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 100
+      },
+      "ticks_with_melee": 256
+    },
+    {
+      "count": 250,
+      "end": 470,
+      "endrow": {
+        "alive": 303,
+        "alive_centroid": [
+          40.5310179455446,
+          -0.82692559874884
+        ],
+        "center": [
+          38.8563652038574,
+          -18.1660003662109
+        ],
+        "hits": [
+          292,
+          533
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          129,
+          79
+        ],
+        "nearest_target_pair_distance": 4.32665729522705,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 470
+      },
+      "mean_contact_pairs": 2.56386292834891,
+      "start": 150,
+      "startrow": {
+        "alive": 407,
+        "alive_centroid": [
+          34.5904436041155,
+          -1.04568436456254
+        ],
+        "center": [
+          35.3418655395508,
+          5.53501176834106
+        ],
+        "hits": [
+          167,
+          238
+        ],
+        "live_contact_pairs": 2,
+        "losses": [
+          59,
+          49
+        ],
+        "nearest_target_pair_distance": 1.85717058181763,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 150
+      },
+      "ticks_with_melee": 214
+    },
+    {
+      "count": 250,
+      "end": 520,
+      "endrow": {
+        "alive": 289,
+        "alive_centroid": [
+          40.8701678741349,
+          -0.287504176367525
+        ],
+        "center": [
+          36.9101104736328,
+          -20.3723754882812
+        ],
+        "hits": [
+          321,
+          551
+        ],
+        "live_contact_pairs": 3,
+        "losses": [
+          136,
+          86
+        ],
+        "nearest_target_pair_distance": 2.50591015815735,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 520
+      },
+      "mean_contact_pairs": 2.80373831775701,
+      "start": 200,
+      "startrow": {
+        "alive": 389,
+        "alive_centroid": [
+          36.4531827401992,
+          -0.583687985770807
+        ],
+        "center": [
+          41.6212310791016,
+          4.09640073776245
+        ],
+        "hits": [
+          184,
+          284
+        ],
+        "live_contact_pairs": 0,
+        "losses": [
+          71,
+          55
+        ],
+        "nearest_target_pair_distance": 5.1185450553894,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 200
+      },
+      "ticks_with_melee": 241
+    },
+    {
+      "count": 250,
+      "end": 570,
+      "endrow": {
+        "alive": 279,
+        "alive_centroid": [
+          41.036370827733,
+          0.239601736854909
+        ],
+        "center": [
+          39.068172454834,
+          -18.8704719543457
+        ],
+        "hits": [
+          345,
+          567
+        ],
+        "live_contact_pairs": 1,
+        "losses": [
+          140,
+          91
+        ],
+        "nearest_target_pair_distance": 3.1545090675354,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 570
+      },
+      "mean_contact_pairs": 2.75700934579439,
+      "start": 250,
+      "startrow": {
+        "alive": 373,
+        "alive_centroid": [
+          38.0803451742627,
+          -0.316546340410575
+        ],
+        "center": [
+          43.2378005981445,
+          2.60659790039062
+        ],
+        "hits": [
+          206,
+          333
+        ],
+        "live_contact_pairs": 3,
+        "losses": [
+          82,
+          60
+        ],
+        "nearest_target_pair_distance": 2.84403944015503,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 250
+      },
+      "ticks_with_melee": 244
+    },
+    {
+      "count": 512,
+      "end": 370,
+      "endrow": {
+        "alive": 795,
+        "alive_centroid": [
+          40.4899469339623,
+          1.29084549430031
+        ],
+        "center": [
+          45.9027061462402,
+          -4.83795928955078
+        ],
+        "hits": [
+          464,
+          528
+        ],
+        "live_contact_pairs": 6,
+        "losses": [
+          130,
+          128
+        ],
+        "nearest_target_pair_distance": 2.15589308738708,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 370
+      },
+      "mean_contact_pairs": 8.62305295950156,
+      "start": 50,
+      "startrow": {
+        "alive": 1015,
+        "alive_centroid": [
+          31.0582050492611,
+          2.55423337438424
+        ],
+        "center": [
+          37.9192657470703,
+          -0.428369969129562
+        ],
+        "hits": [
+          82,
+          104
+        ],
+        "live_contact_pairs": 12,
+        "losses": [
+          23,
+          19
+        ],
+        "nearest_target_pair_distance": 1.78928673267365,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 50
+      },
+      "ticks_with_melee": 307
+    },
+    {
+      "count": 512,
+      "end": 420,
+      "endrow": {
+        "alive": 764,
+        "alive_centroid": [
+          41.1739022619437,
+          1.4539125452491
+        ],
+        "center": [
+          46.5481872558594,
+          9.0797700881958
+        ],
+        "hits": [
+          526,
+          583
+        ],
+        "live_contact_pairs": 7,
+        "losses": [
+          144,
+          145
+        ],
+        "nearest_target_pair_distance": 2.3729305267334,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 420
+      },
+      "mean_contact_pairs": 8.58255451713396,
+      "start": 100,
+      "startrow": {
+        "alive": 970,
+        "alive_centroid": [
+          32.8732804445876,
+          2.24115430694265
+        ],
+        "center": [
+          37.707275390625,
+          -0.642121195793152
+        ],
+        "hits": [
+          151,
+          196
+        ],
+        "live_contact_pairs": 4,
+        "losses": [
+          45,
+          41
+        ],
+        "nearest_target_pair_distance": 2.71000957489014,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 100
+      },
+      "ticks_with_melee": 307
+    },
+    {
+      "count": 512,
+      "end": 470,
+      "endrow": {
+        "alive": 741,
+        "alive_centroid": [
+          41.7512256452429,
+          1.49535819811699
+        ],
+        "center": [
+          47.3097343444824,
+          1.7853581905365
+        ],
+        "hits": [
+          575,
+          621
+        ],
+        "live_contact_pairs": 9,
+        "losses": [
+          155,
+          155
+        ],
+        "nearest_target_pair_distance": 2.2043719291687,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 470
+      },
+      "mean_contact_pairs": 9.14018691588785,
+      "start": 150,
+      "startrow": {
+        "alive": 939,
+        "alive_centroid": [
+          34.6740694056177,
+          1.76334635416667
+        ],
+        "center": [
+          36.9360313415527,
+          0.224281951785088
+        ],
+        "hits": [
+          202,
+          251
+        ],
+        "live_contact_pairs": 5,
+        "losses": [
+          60,
+          56
+        ],
+        "nearest_target_pair_distance": 2.14412641525269,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 150
+      },
+      "ticks_with_melee": 308
+    },
+    {
+      "count": 512,
+      "end": 520,
+      "endrow": {
+        "alive": 715,
+        "alive_centroid": [
+          43.0295973557692,
+          1.19623545399913
+        ],
+        "center": [
+          49.0501518249512,
+          -3.64435601234436
+        ],
+        "hits": [
+          659,
+          662
+        ],
+        "live_contact_pairs": 11,
+        "losses": [
+          164,
+          169
+        ],
+        "nearest_target_pair_distance": 2.29928946495056,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 520
+      },
+      "mean_contact_pairs": 10.9844236760125,
+      "start": 200,
+      "startrow": {
+        "alive": 919,
+        "alive_centroid": [
+          36.4819904447769,
+          1.31596937376734
+        ],
+        "center": [
+          42.3336753845215,
+          1.5170214176178
+        ],
+        "hits": [
+          234,
+          295
+        ],
+        "live_contact_pairs": 9,
+        "losses": [
+          71,
+          65
+        ],
+        "nearest_target_pair_distance": 1.91163623332977,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 200
+      },
+      "ticks_with_melee": 320
+    },
+    {
+      "count": 512,
+      "end": 570,
+      "endrow": {
+        "alive": 686,
+        "alive_centroid": [
+          44.4649633290816,
+          1.01943409199617
+        ],
+        "center": [
+          52.8122138977051,
+          -1.18380427360535
+        ],
+        "hits": [
+          743,
+          704
+        ],
+        "live_contact_pairs": 37,
+        "losses": [
+          174,
+          185
+        ],
+        "nearest_target_pair_distance": 1.67534160614014,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 570
+      },
+      "mean_contact_pairs": 12.6230529595016,
+      "start": 250,
+      "startrow": {
+        "alive": 887,
+        "alive_centroid": [
+          38.0872938979707,
+          1.19138849682039
+        ],
+        "center": [
+          43.0799293518066,
+          0.341834902763367
+        ],
+        "hits": [
+          281,
+          362
+        ],
+        "live_contact_pairs": 5,
+        "losses": [
+          90,
+          78
+        ],
+        "nearest_target_pair_distance": 2.41499209403992,
+        "policy": "actual melee contact nearest contact centroid; closest target pair fallback, no simulation writes",
+        "tick": 250
+      },
+      "ticks_with_melee": 321
+    }
+  ]
+}
