@@ -19,7 +19,7 @@ def run_game(executable,output,helper,user_args,movie=None):
     process=subprocess.Popen(args,stdin=subprocess.DEVNULL,stdout=slave,stderr=slave,env=env,
                              cwd=output,start_new_session=True)
     os.close(slave)
-    pending=b"";deadline=time.monotonic()+600;promoted=False
+    pending=b"";deadline=time.monotonic()+(900 if movie else 600);promoted=False
     with (output/"window.log").open("w") as log:
         def line(raw):
             nonlocal promoted
@@ -96,17 +96,25 @@ def main():
     with empty_game_data(data):
         text=run_game(executable,out/"input-smoke",helper,["--native-qhd","--menu-only","--light-study"])
         assert "BRIDGE_MENU_INPUT_PASS" in text
-    with empty_game_data(data):
-        text=run_game(executable,out/"profile-qhd",helper,
-                      ["--native-qhd","--real-time-profile","--field-profile"])
-        assert "BRIDGE_WINDOW true" in text
-        profile=out/"profile-qhd/frame-times";profile.mkdir(parents=True,exist_ok=True)
-        for path in (data/"frame-times").glob("*.jsonl"):
-            (profile/path.name).write_bytes(path.read_bytes())
+    profiles = [(str(count), count, []) for count in (20, 100, 250, 512)]
+    profiles.append(("512-camera-tour", 512, ["--camera-tour"]))
+    for label, count, extra in profiles:
+        destination = out / ("profile-qhd-" + label)
+        with empty_game_data(data):
+            text = run_game(executable, destination, helper,
+                            ["--native-qhd", "--real-time-profile", "--field-profile",
+                             "--field-size=" + str(count), *extra])
+            assert "BRIDGE_WINDOW true" in text
+            profile = destination / "frame-times"
+            profile.mkdir(parents=True, exist_ok=True)
+            for path in (data / "frame-times").glob("*.jsonl"):
+                (profile / path.name).write_bytes(path.read_bytes())
+    subprocess.run([sys.executable, str(workspace / "tools/summarize_native_profiles.py"),
+                    str(out)], check=True)
     capture=out/"take/native-window.avi"
     try:
         with empty_game_data(data):
-            text=run_game(executable,out/"movie",helper,["--native-qhd"],capture)
+            text=run_game(executable,out/"movie",helper,["--native-qhd","--complete-battle"],capture)
             assert "BRIDGE_WINDOW true" in text
             subprocess.run([sys.executable,str(workspace/"tools/encode_whole_battle.py"),
                             str(capture),str(out/"movie"),os.environ["GITHUB_SHA"]],check=True)

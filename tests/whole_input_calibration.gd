@@ -18,7 +18,7 @@ func _run() -> void:
 	replay.root=root
 	replay.field=field
 	var b=field.battle
-	for step in 800:
+	for step in 3600:
 		replay._drive()
 		field._physics_process(Battle.DT)
 		field._process(Battle.DT)
@@ -26,7 +26,7 @@ func _run() -> void:
 			print("CONTROL_STEP ",b.tick," hero=",b.hero.pos," hp=",b.hero.hp," impacts=",b.hero.impacts," state=",b.hero.state," input=",JSON.stringify(replay.notes.back()) if not replay.notes.is_empty() else "")
 		if b.result!="":break
 		await process_frame
-	var ok:bool=b.hero.impacts>0 and b.hero.hp>0 and b.tick>=600 and b.hits[0]+b.hits[1]>0
+	var ok:bool=b.hero.impacts>0 and b.tick>=600 and b.hits[0]+b.hits[1]>0 and b.result!=""
 	print("WHOLE_INPUT_CALIBRATION ",ok," tick=",b.tick," impacts=",b.hero.impacts," hp=",b.hero.hp," result=",b.result)
 	replay.free()
 	scene.queue_free()

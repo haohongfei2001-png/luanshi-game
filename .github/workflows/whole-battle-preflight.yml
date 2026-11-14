@@ -1,0 +1,35 @@
+name: Check the full battle delivery inputs before native capture
+on:
+  push:
+    branches: ['codex/river-delivery-preflight']
+permissions:
+  contents: read
+concurrency:
+  group: full-battle-input-preflight
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import the normal game and complete its mapped-input battle
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/g
+          mkdir -p artifacts/full-battle-preflight
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --path . --import > artifacts/full-battle-preflight/import.log 2>&1
+          if grep -E 'ERROR:|SCRIPT ERROR|Parse Error|SHADER ERROR' artifacts/full-battle-preflight/import.log; then exit 1; fi
+          timeout 150s /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/whole_input_calibration.gd > artifacts/full-battle-preflight/complete-battle.log 2>&1 || { cat artifacts/full-battle-preflight/complete-battle.log; exit 1; }
+          cat artifacts/full-battle-preflight/complete-battle.log
+          python3 -m py_compile tools/whole_native_delivery.py tools/encode_whole_battle.py tools/segment_whole_battle.py tools/summarize_native_profiles.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-battle-input-preflight
+          path: artifacts/full-battle-preflight/
