@@ -1,0 +1,27 @@
+name: Audit complete original two-handed pike actions
+on:
+  push:
+    branches: [codex/river-rc25-native-spear]
+    paths: ['tools/art/inspect_native_spear.py','.github/workflows/native-spear-source.yml']
+permissions:
+  contents: write
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract pinned editable chains and examine both hands and support
+        run: |
+          set -euo pipefail
+          python3 -m pip install pillow numpy
+          python3 tools/art/inspect_native_spear.py /tmp/luanshi-pike
+          git add docs/evidence/river-gate-v1-rc25/native-spear/source
+          git -c user.name='River Gate authored pike source audit' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive measured complete original pike and spear sources'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-pike-source-audit
+          path: docs/evidence/river-gate-v1-rc25/native-spear/source
+          retention-days: 7
