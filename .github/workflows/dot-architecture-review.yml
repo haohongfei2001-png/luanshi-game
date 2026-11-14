@@ -8,7 +8,7 @@ permissions:
 jobs:
   actual-game:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Verify fixed existing source bytes before building
@@ -37,14 +37,28 @@ jobs:
           sha256sum assets/river_authored/architecture/architecture.glb >artifacts/gate-structure/derived-sha256.txt
           godot --headless --editor --path . --import >artifacts/gate-structure/import.log 2>&1
           timeout 45s godot --headless --path . --script tests/authored_architecture.gd >artifacts/gate-structure/structure-test.log 2>&1
-          timeout 75s godot --headless --path . --script tests/authored_architecture_capture.gd -- --validate-setup >artifacts/gate-structure/setup-test.log 2>&1
-          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/gate-structure/setup-test.log; then exit 1; fi
+      - name: Fetch pinned professional woodland source and bake complete family
+        run: |
+          set -euo pipefail
+          python tools/art/gate_structure/fetch_sprite_source.py /tmp/luanshi-sprite >artifacts/gate-structure/sprite-source.log 2>&1
+          SOURCE_ROOT=$(cat /tmp/luanshi-sprite/source-root.txt)
+          BLENDER=/tmp/blender-4.3.2-linux-x64/blender
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_reusable_collection.py -- "$SOURCE_ROOT/lib/env/trees.blend" EN-tree.1 /tmp/sprite-tree >artifacts/gate-structure/tree-bake.log 2>&1
+          $BLENDER -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_native_collection.py -- "$SOURCE_ROOT/lib/env/bushes.blend" EN-bush.01 /tmp/sprite-bush >artifacts/gate-structure/bush-bake.log 2>&1
+          mkdir -p assets/river_authored/woodland
+          godot --headless --path . --script tools/art/sprite_source/assemble_woodland_region.gd -- /tmp/sprite-tree/derived.glb /tmp/sprite-bush/derived-EN-bush.01.glb assets/river_authored/woodland/region.scn >artifacts/gate-structure/woodland-build.log 2>&1
+          cp /tmp/sprite-tree/complete.json artifacts/gate-structure/tree-bake.json
+          cp /tmp/sprite-bush/complete.json artifacts/gate-structure/bush-bake.json
+          timeout 90s godot --headless --path . --script tests/authored_architecture_capture.gd -- --validate-pairs >artifacts/gate-structure/region-setup.log 2>&1
+          timeout 60s godot --headless --path . --script tests/authored_gate_gameplay_contract.gd >artifacts/gate-structure/gate-gameplay.log 2>&1
+          if grep -E 'SCRIPT ERROR|ERROR:' artifacts/gate-structure/{woodland-build,region-setup,gate-gameplay}.log; then exit 1; fi
       - name: Capture actual game with new structures and unchanged battle systems
         env:
           ARCHITECTURE_CAPTURE_OUT: ${{ github.workspace }}/artifacts/gate-structure/pixels
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
+          export CONTROLLER_BLOB=$(git hash-object scripts/field/controller.gd)
           python tools/art/gate_structure/run_capture_checked.py artifacts/gate-structure/actual-game.log 600 -- xvfb-run -a -s '-screen 0 3840x2160x24' godot --path . --rendering-method gl_compatibility --audio-driver Dummy --script tests/authored_architecture_capture.gd
           if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/gate-structure/actual-game.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
