@@ -58,9 +58,11 @@ jobs:
           cp -a assets/river_authored/architecture/source/wooden_pier assets/river_authored/roof-native-band/source/
           /tmp/blender-4.3.2-linux-x64/blender -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/gate_structure/build_architecture.py -- assets/river_pass/pavilion/pavilion-source.fbx "$PWD/assets/river_authored/roof-native-band" --no-preview --native-roof-band >artifacts/roof-isolation/build.log 2>&1
           /tmp/blender-4.3.2-linux-x64/blender -b --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/gate_structure/audit_roof_band.py -- "$PWD/assets/river_authored/roof-native-band/source/architecture.blend" "$PWD/artifacts/roof-isolation/band-seams.json" >artifacts/roof-isolation/seam-audit.log 2>&1
+          find assets/river_authored -type d -name source -exec touch {}/.gdignore \;
           ./tools/prepare-font.sh
           { uname -a; lscpu; free -m; godot --version; } >artifacts/roof-isolation/host.txt
           godot --headless --editor --path . --import >artifacts/roof-isolation/import.log 2>&1
+          if grep -E "SCRIPT ERROR|SHADER ERROR|ERROR:" artifacts/roof-isolation/import.log; then exit 1; fi
       - name: Verify real-game roof isolation before graphics
         env:
           ROOF_CAPTURE_OUT: ${{ github.workspace }}/artifacts/roof-isolation/setup
