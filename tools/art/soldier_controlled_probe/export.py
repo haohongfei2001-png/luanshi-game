@@ -1,11 +1,13 @@
 """Evaluated full-actor authoring oracle for one Godot visual probe, not crowd skinning."""
-import bpy,numpy as np,json,sys,pathlib,hashlib,shutil
+import bpy,numpy as np,json,sys,pathlib,hashlib,shutil,os
 from mathutils import Matrix
 walk,thrust,out=map(pathlib.Path,sys.argv[sys.argv.index('--')+1:][:3]);out.mkdir(parents=True,exist_ok=True)
 C=Matrix(((1,0,0,0),(0,0,1,0),(0,-1,0,0),(0,0,0,1)))
 meta={'kind':'single-actor evaluated source cache, NOT runtime crowd architecture','default_enabled':False,'art_pass':False,'materials_equivalent_to_blender':False,'clips':[],'meshes':[],'frames':[],'source_files':{},'limitations':['Diffuse/roughness/metal only; no source SSS/transmission equivalence','No claim of foot contact, exact grip, terrain clearance or art acceptance','All mesh positions evaluated from author rig, not 471 CPU skeletons per crowd actor','No normal maps in this probe; no false rest-tangent lighting','Indexed seam-preserving vertices: exact UV/position, all70 poses assert corner normal merge error below2e-5','Derived Multires1/Subsurf0/no post-skin Bevel LOD, complete masters retained; new thin plate caps use explicit flat normals instead of smoothing across sidewalls']}
 records={};names=None;frame_index=0
-for clip,source,samples in [('walk',walk,33),('thrust',thrust,37)]:
+clips=[('walk',walk,33),('thrust',thrust,37)]
+if os.getenv('SOLDIER_HIT_SOURCE'):clips.append(('hit_braced',pathlib.Path(os.environ['SOLDIER_HIT_SOURCE']),33))
+for clip,source,samples in clips:
  meta['source_files'][clip]={'sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'bytes':source.stat().st_size}
  bpy.ops.wm.open_mainfile(filepath=str(source),load_ui=False,use_scripts=False);scene=bpy.context.scene
  meshes=sorted([o for o in scene.objects if o.type=='MESH' and o.visible_get() and not o.hide_render],key=lambda o:o.name)

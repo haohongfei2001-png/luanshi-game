@@ -77,4 +77,9 @@ edit("a=o.modifiers.new('Complete source rig, new weighted armor','ARMATURE');a.
   cage.hide_set(hidden);bpy.data.meshes.remove(snapshot);bpy.context.view_layer.update()
  else:
   a=o.modifiers.new('Complete source rig, new weighted armor','ARMATURE');a.object=rig;a.use_deform_preserve_volume=False""")
+import sys
+if '--no-shoulders' in sys.argv:
+ start=code.index('# Complete shoulder panels fitted')
+ end=code.index('# Entire defined waist band',start)
+ code=code[:start]+code[end:]
 exec(compile(code,str(p),'exec'))

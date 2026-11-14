@@ -1,6 +1,7 @@
 extends Node3D
 var meta:Dictionary
 var mats:Array[ShaderMaterial]=[]
+var actor_nodes:Array[MeshInstance3D]=[]
 var clip:Dictionary
 var start:int
 var output:String
@@ -36,7 +37,7 @@ func _ready():
    if s.has("texture"):
     var image=Image.load_from_file(folder.path_join(s.texture));image.generate_mipmaps();mat.set_shader_parameter("diffuse_texture",ImageTexture.create_from_image(image));mat.set_shader_parameter("has_diffuse",true)
    mesh.surface_set_material(mesh.get_surface_count()-1,mat);mats.append(mat)
-  var instance=MeshInstance3D.new();instance.name=m.name;instance.mesh=mesh;instance.custom_aabb=AABB(Vector3(-3,-1,-3),Vector3(6,5,6));add_child(instance)
+  var instance=MeshInstance3D.new();instance.name=m.name;instance.mesh=mesh;instance.custom_aabb=AABB(Vector3(-3,-1,-3),Vector3(6,5,6));add_child(instance);actor_nodes.append(instance)
  var camera=Camera3D.new();add_child(camera);camera.current=true
  if OS.get_environment("SOLDIER_CAMERA")=="near":
   camera.position=Vector3(2.5,2.0,4.0);camera.look_at(Vector3(0,1.1,0));camera.fov=50
@@ -60,6 +61,8 @@ func _ready():
 func _process(_dt):
  if start==0 or capturing:return
  var elapsed=float(Time.get_ticks_usec()-start)/1e6
+ if OS.get_environment("SOLDIER_TURN")=="1":
+  for actor_node in actor_nodes:actor_node.rotation.y=elapsed*PI*.5
  var phase=fmod(elapsed,float(clip.duration_seconds))/float(clip.duration_seconds)
  if not OS.get_environment("SOLDIER_PHASE").is_empty():phase=float(OS.get_environment("SOLDIER_PHASE"))
  var frame=float(clip.first_frame)+phase*float(clip.frames-1)
@@ -70,7 +73,7 @@ func _process(_dt):
    await RenderingServer.frame_post_draw
    get_viewport().get_texture().get_image().save_png(output.path_join("actual-godot.png"))
   var size=get_viewport().get_visible_rect().size
-  var report={"engine":"Godot4.6.3 actual graphical run only when display is not headless","display":DisplayServer.get_name(),"source_files":meta.source_files,"source_limitations":meta.limitations,"capture_overhead_not_performance_benchmark":true,"clip":clip,"actual_viewport":[size.x,size.y],"render_scale":get_viewport().scaling_3d_scale,"camera":OS.get_environment("SOLDIER_CAMERA"),"camera_profile":camera_record,"cache_bytes":payload_bytes,"vertices":meta.vertices,"triangles":meta.triangles,"source_author_rigs":meta.source_author_rigs,"base_color_semantics":"Blender linear BSDF encoded to sRGB for source_color uniform; image textures unchanged","runtime_cpu_skeletons":0,"single_actor_cache_not_army_architecture":true,"frames":captures,"art_pass":false,"gpu":RenderingServer.get_video_adapter_name()}
+  var report={"root_yaw_diagnostic_not_turn_clip":OS.get_environment("SOLDIER_TURN")=="1","hit_braced_not_full_source_arm_equivalence":clip.name=="hit_braced","engine":"Godot4.6.3 actual graphical run only when display is not headless","display":DisplayServer.get_name(),"source_files":meta.source_files,"source_limitations":meta.limitations,"capture_overhead_not_performance_benchmark":true,"clip":clip,"actual_viewport":[size.x,size.y],"render_scale":get_viewport().scaling_3d_scale,"camera":OS.get_environment("SOLDIER_CAMERA"),"camera_profile":camera_record,"cache_bytes":payload_bytes,"vertices":meta.vertices,"triangles":meta.triangles,"source_author_rigs":meta.source_author_rigs,"base_color_semantics":"Blender linear BSDF encoded to sRGB for source_color uniform; image textures unchanged","runtime_cpu_skeletons":0,"single_actor_cache_not_army_architecture":true,"frames":captures,"art_pass":false,"gpu":RenderingServer.get_video_adapter_name()}
   FileAccess.open(output.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"  "));get_tree().quit()
  elif OS.get_environment("SOLDIER_RECORD")=="1" and DisplayServer.get_name()!="headless":
   capturing=true;await RenderingServer.frame_post_draw
