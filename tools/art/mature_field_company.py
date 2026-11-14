@@ -1,0 +1,103 @@
+"""Build a complete field-person library from the verified, editable body and clothes.
+
+HM08 forms the face, neck, forearm and leg surfaces. Wildfire's actual long
+sleeve garments provide the complete dressed upper body. Previous tube bodies
+and broad shoulder trim are absent from this library.
+"""
+import json
+from pathlib import Path
+import sys
+import math
+import numpy as np
+from figure_atlas import NAMES, uv
+from figure_mesh import Library, Surface
+from import_garrison_issues import source_file, fit_garment
+from fit_field_headwear import bake as helmet, FITS
+from field_dress import player_half_mantle
+
+ROOT=Path(__file__).resolve().parents[2]
+MODELS={
+    "cloth":("m_dress_sleeves","d5b93fcba83f3d2c2f96da0f323a67949452c9e0"),
+    "armour":("m_armor_tunic_long_sleeves","25923b832db6b0e1d74d500997f0c3a857cbf370"),
+}
+ROLES={"Levy":("cloth","Archer",2,"Archer"),"Archer":("cloth","Archer",2,"Archer"),
+       "Regular":("armour","Regular",0,"Regular"),"Guard":("armour","Guard",1,"Guard"),
+       "Officer":("armour","Guard",1,"Officer"),"Player":("armour","Guard",1,"Officer")}
+
+def append(target,source):
+    offset=len(target.positions)
+    target.positions.extend(source.positions);target.tex.extend(source.tex);target.joints.extend(source.joints)
+    target.faces.extend(tuple(i+offset for i in f) for f in source.faces)
+
+def anatomical_body(look,tier,data):
+    target=Surface(tier=="Close")
+    heavy=look in ("Regular","Guard","Officer","Player")
+    for part in ("head","forearms","legs","feet"):
+        mesh=data[part+tier];used={}
+        for face in mesh["f"]:
+            pp=[mesh["p"][i] for i in face]
+            x,y,z=(sum(p[k] for p in pp)/3 for k in range(3))
+            chart=[mesh["chart"][i] for i in face]
+            sx,sy,sz=(sum(p[k] for p in chart)/3 for k in range(3))
+            if part=="head":
+                angle=math.atan2(sx,sz-.35)
+                brow=7.+.44*math.cos(angle)+.07*math.sin(angle+.4)
+                if heavy and sy>brow+.10: continue
+                if not heavy and sy>7.13+.33*math.cos(angle): continue
+                hairline=6.62+.86*max(0,min(1,(sz+.32)/1.66))-.12*abs(sx)
+                material="hair" if sy>hairline else ("visage" if sz>.60 and abs(sx)<.745 else "skin")
+            elif part=="forearms":
+                # The new native long sleeve covers the upper forearm. Only
+                # the hand transition can show; accurate held hands are separate.
+                if not .935<y<1.12: continue
+                material="skin" if y<.965 else "binding"
+            elif part=="feet":
+                if y>.16: continue
+                material="boots"
+            else:
+                if not .135<y<.863: continue
+                material="felt" if y>.35 else "binding"
+            ids=[]
+            for i in face:
+                key=(i,material)
+                if key not in used:
+                    p=list(mesh["p"][i]);sx,sy,sz=mesh["chart"][i]
+                    if part=="head":
+                        neck=max(0.,min(1.,(1.525-p[1])/.090))
+                        p[0]*=1.-.21*neck
+                        p[2]=.012+(p[2]-.012)*(1.-.16*neck)
+                        jaw=max(0,min(1,(7.1-sy)/1.37))
+                        if look in ("Guard","Officer"): p[0]*=1.+.09*jaw
+                        elif look=="Levy": p[0]*=1.-.08*jaw
+                        if material=="visage":
+                            coord=(max(.012,min(.988,.5+sx/1.90))/8.,
+                                   (2.+max(.012,min(.988,(8.13-sy)/2.63)))/4.)
+                        else: coord=uv(material,max(.01,min(.99,.5+sx/1.90)),max(.01,min(.99,(8.13-sy)/2.63)))
+                    else: coord=uv(material,max(.08,min(.92,.5+(p[2]-.015)*4)),max(.08,min(.92,(p[1]*2)%1)))
+                    used[key]=target.vertex(tuple(p),coord,tuple(mesh["w"][i]))
+                ids.append(used[key])
+            target.faces.append(tuple(ids))
+    return target
+
+def main():
+    cache=Path(sys.argv[1]);cache.mkdir(parents=True,exist_ok=True)
+    data=json.loads(Path(__file__).with_name("source").joinpath("field_anatomy.json").read_text())
+    library=Library()
+    record={}
+    for look,(style,cut,slot,hat) in ROLES.items():
+        model,sha=MODELS[style]
+        cloth=fit_garment(source_file(cache,"meshes/skeletal/new/"+model+".dae",sha),cut,slot)
+        headgear=helmet(hat,FITS[hat],cache)
+        headgear.positions=[(x*.86,1.725+(y-1.725)*.86,.015+(z-.015)*.89) for x,y,z in headgear.positions]
+        for tier in ("Close","Line","Rank"):
+            body=anatomical_body(look,tier,data)
+            append(body,cloth);append(body,headgear)
+            if look=="Player": player_half_mantle(body,rank=tier=="Rank")
+            assert np.isfinite(body.positions).all(), (look,tier)
+            library.insert(look+tier+"Master",body,check_tiles=False)
+            record[look+tier]={"triangles":len(body.faces),"vertices":len(body.positions)}
+            print("COMPLETE_FIELD_PERSON",look,tier,record[look+tier],flush=True)
+    dest=ROOT/"assets/river_gate/figures/field_company_master.glb"
+    library.save(dest)
+    (ROOT/"reports/hm08/master.json").write_text(json.dumps({"source":"MakeHuman HM08 and Wildfire long sleeve issues","roles":ROLES,"cost":record},indent=2)+"\n")
+if __name__=="__main__": main()

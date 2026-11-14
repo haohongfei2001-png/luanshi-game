@@ -1,0 +1,41 @@
+River Gate complete character master — source and adaptation
+
+The anatomical foundation is MakeHuman Community HM08 base.obj, default.mhskel
+and default_weights.mhw at revision a8bc2d54ff0ac92e78ff71431b1023eda42bf482.
+The upstream asset files identify CC0 1.0. The original author was Manuel Bastioni. The named upstream rights holders
+are Data Collection AB, Joel Palmius and Jonas Hauquier.
+https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Morph inputs from the same release are asian-male-young.target,
+male-young-averagemuscle-averageweight-idealproportions.target and
+universal-male-young-maxmuscle-averageweight.target.
+Exact source blob IDs and weights are checked by tools/art/bake_field_anatomy.py.
+The game adaptation fits the original surface to its field animation joints,
+closes the eye/mouth apertures for the battle camera, and derives three
+reductions. Feet use the source anatomical last under closed leather.
+Hands remain the existing separately licensed HM08 fitted grips.
+
+The garments are Wildfire Games 0 A.D. m_dress_sleeves.dae and
+m_armor_tunic_long_sleeves.dae, and the existing attributed Han headwear.
+These are publicly editable game art from revision
+61a3b9507d974084e6badb88a0826bd89a6d5b8b, distributed CC BY-SA 3.0.
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/LICENSE.txt
+https://creativecommons.org/licenses/by-sa/3.0/
+Wildfire Games — https://www.wildfiregames.com/
+The COLLADA files identify their authoring tool as Blender 2.80 and the author
+field as Blender User. Attribution is to Wildfire Games and its contributors.
+No more specific personal authorship is asserted.
+The derivative garments retain their original surfaces, UVs and skin weights,
+with retargeted joints, fitted hems and existing Han cloth/lamellar colour maps.
+Their source blob IDs are recorded in tools/art/mature_field_company.py.
+Existing garment and headwear notices continue to identify the maps and helms.
+
+The combined field_company_master.glb contains these CC BY-SA 3.0 garment
+adaptations, CC0 anatomical components and the project's original mantle.
+The combined master is provided under CC BY-SA 3.0. The separate original
+assets retain their respective licenses. No gameplay license is changed.
+
+Editable source, exact regeneration scripts and revision history are public
+in haohongfei2001-png/luanshi-game. This candidate is subject to actual-game
+visual acceptance and does not constitute approval of its quality.
