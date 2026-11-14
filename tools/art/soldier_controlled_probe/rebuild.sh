@@ -15,11 +15,9 @@ blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_gua
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/approved_spearman_kit.py -- "$SOLDIER_WORK/recut/recut-editable.blend" "$SOLDIER_WORK/kit-intermediate" 2>&1 | tee evidence/intermediate.log
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/young_head_module.py -- "$SOLDIER_WORK/kit-intermediate/spearman-kit-editable.blend" "$SOLDIER_WORK/mh/source/mh_natural_editable.blend" "$SOLDIER_WORK/face" 2>&1 | tee evidence/face.log
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/spearman_helmet.py -- "$SOLDIER_WORK/face/young-face-kit-editable.blend" "$SOLDIER_WORK/helmet" 2>&1 | tee evidence/helmet.log
-# Latest ray-projected shoulders are rejected. Stable earlier source is selected
-# EXPLICITLY, not misrepresented as the latest failed geometry or art acceptance.
-git fetch --depth=1 origin 53c08673c47191650315fddb7dfe0ef2a34f2c83
-git show 53c08673c47191650315fddb7dfe0ef2a34f2c83:tools/art/sintel_guard/spearman_carrier_rebuild.py > "$SOLDIER_WORK/carrier-baseline.py"
-blender -b --disable-autoexec --python-exit-code 1 --python "$SOLDIER_WORK/carrier-baseline.py" -- "$SOLDIER_WORK/helmet/helmet-kit-editable.blend" "$SOLDIER_WORK/carrier" 2>&1 | tee evidence/carrier.log
+# Explicit physical lamellar-layer derivative. Source carrier3 shoulders are
+# retained; failed ray-projected shoulders4-7 are NOT used.
+blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/spearman_layered_carrier.py -- "$SOLDIER_WORK/helmet/helmet-kit-editable.blend" "$SOLDIER_WORK/carrier" 2>&1 | tee evidence/carrier.log
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/spearman_grip_study.py -- "$SOLDIER_WORK/carrier/soldier-carrier-editable.blend" "$SOLDIER_WORK/grip" 2>&1 | tee evidence/grip.log
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/spearman_controlled_walk.py -- "$SOLDIER_WORK/grip/soldier-grip-editable.blend" assets/ubc_lab/source/UAL1_Standard.glb "$SOLDIER_WORK/walk" 2>&1 | tee evidence/walk.log
 blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/spearman_single_thrust.py -- "$SOLDIER_WORK/grip/soldier-grip-editable.blend" "$SOLDIER_WORK/thrust" 2>&1 | tee evidence/thrust.log

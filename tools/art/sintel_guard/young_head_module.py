@@ -9,6 +9,16 @@ with bpy.data.libraries.load(str(mhsrc),link=False) as (a,b):b.objects=['MH163',
 loaded=b.objects
 for o in loaded:
  if o and o.name not in bpy.context.scene.objects:bpy.context.collection.objects.link(o)
+# Restore official brown.mhmat transparency. The supplied RGBA eye image has
+# a deliberately transparent blue RGB region; rendering it opaque creates blue
+# corneal artifacts. This is author alpha, not an invented geometry mask.
+for eye in [o for o in loaded if o and o.name.startswith('Eyes')]:
+ for mat in eye.data.materials:
+  bs=next(n for n in mat.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+  tex=bs.inputs['Base Color'].links[0].from_node
+  assert tex.type=='TEX_IMAGE' and tex.image.channels==4
+  mat.node_tree.links.new(tex.outputs['Alpha'],bs.inputs['Alpha'])
+  mat.surface_render_method='DITHERED'
 r=next(o for o in loaded if o.type=='ARMATURE');r.animation_data_clear()
 sourcebody=next(o for o in loaded if o.name.startswith('Body_SourceFull'));head=sourcebody.copy();head.data=sourcebody.data.copy();head.name='Young complete author face module';head.hide_render=False;head.hide_set(False);bpy.context.collection.objects.link(head)
 sourcebody.hide_render=True;sourcebody.hide_set(True)

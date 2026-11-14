@@ -1,0 +1,87 @@
+{
+  "run_id": 43632177734,
+  "source_commit": "2df44c5228f11e961d9a401727f960540b9f4d1a",
+  "artifact_id": 14128981177,
+  "artifact_sha256": "475edb1a0d2e21c6fd27f0b134ea016bb30f969ca7308fdc23d5ef89e493d605",
+  "graphical_engine_ran": true,
+  "art_pass": false,
+  "self_rejected": [
+    "Lamellar coplanar overlaps and LOD aliasing",
+    "Dark normal-view material read",
+    "Hand/face color mismatch and unaccepted grip",
+    "Walk boot surfaces penetrate plane",
+    "Single-actor author cache not crowd runtime"
+  ],
+  "images": [
+    {
+      "path": "thrust-motion/actual-godot.png",
+      "sha256": "d44cccf375c19cf3a9aa8d4232a915872dd5c88c00a1a90f05082cdf29f9b805"
+    },
+    {
+      "path": "thrust-near/actual-godot.png",
+      "sha256": "49455cb57ad021977ec539c0d381e806ccf7bc777d90a6af44903c67cf8263e2"
+    },
+    {
+      "path": "thrust-normal/actual-godot.png",
+      "sha256": "20bfa27d68be5a0e26264452dc93b82c86b83538ce77533421f3a1084066c168"
+    },
+    {
+      "path": "walk-motion/actual-godot.png",
+      "sha256": "5cdb60f9bb2e43714d73b9350532ab3008ffdf578058674118f7f9fc019b38fa"
+    },
+    {
+      "path": "walk-near/actual-godot.png",
+      "sha256": "803c28f6f9a438df9e4739d630bbccec9ae3ab40ca1d6541676180798e79ed73"
+    },
+    {
+      "path": "walk-normal/actual-godot.png",
+      "sha256": "30473ddb2e3432014d90ad6d81876af544d1e90b900cfafbf67dbc51b0894ade"
+    }
+  ],
+  "motion": [
+    {
+      "clip": "walk",
+      "actual_viewport": [
+        2560.0,
+        1440.0
+      ],
+      "render_scale": 1.0,
+      "frames": 16,
+      "monotonic_duration_seconds": 3.834845,
+      "gpu": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "source_files": {
+        "thrust": {
+          "bytes": 71236448.0,
+          "sha256": "1b6483b0b6425112b57e22d62d0fe7efe8294e111be627ba9e0831b31bb5ce18"
+        },
+        "walk": {
+          "bytes": 175481968.0,
+          "sha256": "3a8d34de797f349a756e9545fed35d4dbc0ac64a53bc7f674955d7acff755e1f"
+        }
+      },
+      "capture_overhead_not_fps_benchmark": true
+    },
+    {
+      "clip": "thrust",
+      "actual_viewport": [
+        2560.0,
+        1440.0
+      ],
+      "render_scale": 1.0,
+      "frames": 16,
+      "monotonic_duration_seconds": 3.915508,
+      "gpu": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "source_files": {
+        "thrust": {
+          "bytes": 71236448.0,
+          "sha256": "1b6483b0b6425112b57e22d62d0fe7efe8294e111be627ba9e0831b31bb5ce18"
+        },
+        "walk": {
+          "bytes": 175481968.0,
+          "sha256": "3a8d34de797f349a756e9545fed35d4dbc0ac64a53bc7f674955d7acff755e1f"
+        }
+      },
+      "capture_overhead_not_fps_benchmark": true
+    }
+  ]
+}

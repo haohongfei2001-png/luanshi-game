@@ -100,3 +100,42 @@ surface minima are -36.30mm(L), -32.79mm(R), maxima132.22/132.27mm. Thrust
 both boots remain about-2.00mm. This is a real flat-ground penetration FAIL,
 not terrain acceptance or proof of horizontal foot lock. No geometry/lift was
 changed to hide it. New grip3 CI will measure its own source hashes separately.
+
+## Actual complete controlled actor Godot, internally rejected
+Run43632177734, source2df44c52 actually completed all six graphical Godot
+invocations on llvmpipe LLVM20.1.2. Four native2K/4K stills and two monotonic
+motion sequences were recovered in artifact14128981177. Actual motion PNG
+sampling has16frames over3.83/3.92seconds; this is not a smoothness/performance
+PASS. Full original graphical logs were independently scanned and contain no
+SCRIPT/SHADER/ERROR entries. The negated-grep CI gate is nevertheless replaced
+in the next pipeline revision with explicit fail-closed branches.
+
+Personal review of normal2K and both near4K frames rejects the appearance:
+armor is dark and exhibits triangular overlap patterns, shoulder connections
+remain disconnected, hand/face color differs, and spear grip/boot contact are
+unaccepted. These are not owner-ready screenshots or a battle implementation.
+`actual-godot-first.json` pins original pixels/artifact/source/durations.
+
+A source-geometry diagnosis reveals that the donor UAL mannequin itself reaches
+-26.56mm(L), -26.21mm(R) below sourceZ0 over the33walk phases. The target cannot
+be corrected by assuming all donor foot height is ground-valid or globally
+lifting the actor. `source_stance.py` measures source surfaces before any
+correction. Coplanar armor is separate: projected corners discarded per-row
+radial offsets, and constant-width neighboring columns overlapped on the same
+surface. A new isolated physical-layer trial must remove that construction
+error rather than hiding it with light, blur or Bevel.
+
+## Independent physical-layer8 and original eye-alpha correction
+`carrier-layered8` creates circumferential columns with explicit angular gaps
+and2.2mm row separation for1.5mm thick lamellae. This removes the construction
+error of projecting overlapping plates to an identical radial surface. Actual
+Blender full-body stressed-arm render was personally inspected: chest layers
+are now separated, but shoulder connection, sleeve/boot silhouette and full
+appearance remain unaccepted. Failed shoulder4–7 projection is not reused.
+
+Official `brown.mhmat` declares transparent/alphaToCoverage/shader transparency
+true. Original brown_eye.png includes13238 alpha0 pixels whose RGB contains
+blue. Earlier Eyes alpha=False caused those transparent source regions to
+render blue. The face-module derivative now links the original image alpha,
+keeping all source UV/vertices/weights. No invented mask or hidden garment
+geometry is introduced; full original RGBA is preserved.
