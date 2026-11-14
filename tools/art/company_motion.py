@@ -16,6 +16,7 @@ FRAMES=32
 CLIPS=31
 IDENT=(0.,0.,0.,1.)
 MARCH_BANK=json.loads((Path(__file__).parent/'source'/'march_curves.json').read_text())['curves']
+SWORD_SOURCE=json.loads((Path(__file__).parent/'source'/'combat_curves.json').read_text())['curves']['Sword_Attack']
 def qm(q,r):
     a,b=q[:3],r[:3]
     return (*add(add(mul(b,q[3]),mul(a,r[3])),cross(a,b)), q[3]*r[3]-dot(a,b))
@@ -144,7 +145,7 @@ def grounded_rest(kit):
     return ms
 
 
-def pose(kit,clip,t,loadout=0,side_hit=0):
+def procedural_pose(kit,clip,t,loadout=0,side_hit=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
     running=clip>=23
@@ -735,6 +736,103 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             if kit==5:
                 ms[NOCK]=placed(add(grip(1),(0.,0.,-.159)),trans(ms[LH],grip(-1)),ms[RH][0])
     return ms
+
+
+def source_sword(phase):
+    frames=SWORD_SOURCE["frames"]
+    location=max(0.,min(1.,phase))*(len(frames)-1)
+    index=min(int(location),len(frames)-2)
+    amount=location-index
+    first,last=frames[index],frames[index+1]
+    positions={name:lerp(value,last["p"][name],amount) for name,value in first["p"].items()}
+    rotations={name:blend_rigid((value,(0.,0.,0.)),(last["q"][name],(0.,0.,0.)),amount)[0]
+               for name,value in first["q"].items()}
+    return positions,rotations
+
+def inverse_rotation(q):
+    return (-q[0],-q[1],-q[2],q[3])
+
+def rotation_mix(a,b,amount):
+    return blend_rigid((a,(0.,0.,0.)),(b,(0.,0.,0.)),amount)[0]
+
+def pose(kit,clip,t,loadout=0,side_hit=0):
+    base=procedural_pose(kit,clip,t,loadout,side_hit)
+    if kit not in (0,1,7) or clip not in (2,6) or side_hit:
+        return base
+    # The published Sword_Attack is a large step-through cut. Transfer its
+    # complete joint timing into the existing attack window, with the foot
+    # travel shortened for close formation fighting. The original release
+    # socket is an exact constraint, shared by the last windup/first recovery.
+    contact=SWORD_SOURCE["forward_hand_phase"]
+    phase=t*contact if clip==2 else contact+(1.-contact)*t
+    points,rotations=source_sword(phase)
+    start_points,start_rotations=source_sword(0.)
+    hit_points,hit_rotations=source_sword(contact)
+    end_points,end_rotations=source_sword(1.)
+    ready=procedural_pose(kit,1,0.,loadout)
+    impact=procedural_pose(kit,2,1.,loadout)
+    origin=ready if clip==2 else impact
+    finish=impact if clip==2 else ready
+    native_start=start_points if clip==2 else hit_points
+    native_finish=hit_points if clip==2 else end_points
+    native_start_q=start_rotations if clip==2 else hit_rotations
+    native_finish_q=hit_rotations if clip==2 else end_rotations
+    settling=1.-ramp(t,.78,1.) if clip==6 else 1.
+    result=list(base)
+    # The animator's hip/shoulder counter-turn remains continuous across
+    # release. Register all joint pivots on the game's existing sewn skeleton.
+    body_names=((HIPS,"hips",.70),(CHEST,"spine.003",.62),(HEAD,"head",.68))
+    for bone,name,strength in body_names:
+        delta=qm(rotations[name],inverse_rotation(start_rotations[name]))
+        result[bone]=(qm(rotation_mix(IDENT,delta,strength*settling),ready[bone][0]),(0.,0.,0.))
+    waist=(0.,.86,0.)
+    hip_shift=mul(sub(points["hips"],start_points["hips"]),.60*settling)
+    result[HIPS]=placed(waist,add(trans(ready[HIPS],waist),hip_shift),result[HIPS][0])
+    result[CHEST]=placed((0.,1.008,0.),trans(result[HIPS],(0.,1.008,0.)),result[CHEST][0])
+    result[HEAD]=placed((0.,1.427,.015),trans(result[CHEST],(0.,1.427,.015)),result[HEAD][0])
+    # Motion warping preserves the exact grip at both endpoints while keeping
+    # the authored chamber, accelerating cut and follow-through between them.
+    first=trans(origin[RH],grip(1))
+    last=trans(finish[RH],grip(1))
+    residual=sub(points["hand.R"],lerp(native_start["hand.R"],native_finish["hand.R"],t))
+    anchor=add(lerp(first,last,t),mul(residual,.56))
+    source_line=rotation_mix(native_start_q["hand.R"],native_finish_q["hand.R"],t)
+    extra=qm(inverse_rotation(source_line),rotations["hand.R"])
+    aim=qm(rotation_mix(origin[RH][0],finish[RH][0],t),rotation_mix(IDENT,extra,.72))
+    for side in (-1,1):
+        upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
+        suffix="L" if side<0 else "R"
+        binds=arm_nodes(side)
+        if side>0:
+            palm,rotation=anchor,aim
+        elif kit==7:
+            palm,rotation=trans(base[LH],grip(-1)),base[LH][0]
+        else:
+            travel=mul(sub(points["hand.L"],start_points["hand.L"]),.56*settling)
+            palm=add(trans(ready[LH],grip(-1)),travel)
+            delta=qm(rotations["hand.L"],inverse_rotation(start_rotations["hand.L"]))
+            rotation=qm(rotation_mix(IDENT,delta,.65*settling),ready[LH][0])
+        center,radius=reachable(result[CHEST],side,rotation)
+        palm=limit_grip(palm,center,radius)
+        hand_pose=placed(grip(side),palm,rotation)
+        elbow=unit(sub(points["forearm."+suffix],points["upper_arm."+suffix]))
+        result[upper],result[fore]=two_link(binds,trans(result[CHEST],binds[0]),trans(hand_pose,binds[2]),elbow)
+        result[hand]=hand_pose
+    for side in (-1,1):
+        thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
+        suffix="L" if side<0 else "R"
+        name="foot."+suffix
+        binds=leg_nodes(side)
+        delta=qm(rotations[name],inverse_rotation(start_rotations[name]))
+        rotation=qm(rotation_mix(IDENT,delta,.50*settling),ready[boot][0])
+        offset=mul(sub(points[name],start_points[name]),.40*settling)
+        foot=add(trans(ready[boot],binds[2]),offset)
+        lowest=min(rot(rotation,(x,-.117,z))[1] for x in (-.05,.05) for z in (-.072,.187))
+        foot=(foot[0],max(foot[1],.006-lowest),foot[2])
+        knee=unit(sub(points["shin."+suffix],points["thigh."+suffix]))
+        result[thigh],result[shin]=two_link(binds,trans(result[HIPS],binds[0]),foot,knee)
+        result[boot]=placed(binds[2],foot,rotation)
+    return result
 
 def cycling(clip):
     return clip in (0,1,12,15) or clip>=16
