@@ -1,0 +1,198 @@
+{
+  "cases": [
+    {
+      "source": [
+        1,
+        0,
+        0
+      ],
+      "handedness": -1,
+      "encoded": [
+        1.0,
+        0.2500038147554742
+      ],
+      "original_error": 1.7013000122588995,
+      "original_w": 1.0,
+      "corrected_error": 1.5259254736666152e-05,
+      "corrected_w": -1.0
+    },
+    {
+      "source": [
+        1,
+        0,
+        0
+      ],
+      "handedness": 1,
+      "encoded": [
+        1.0,
+        0.7499961852445258
+      ],
+      "original_error": 1.5259254736666152e-05,
+      "original_w": 1.0,
+      "corrected_error": 1.5259254736666152e-05,
+      "corrected_w": 1.0
+    },
+    {
+      "source": [
+        -1,
+        0,
+        0
+      ],
+      "handedness": -1,
+      "encoded": [
+        0.0,
+        0.2500038147554742
+      ],
+      "original_error": 1.7013000122588995,
+      "original_w": 1.0,
+      "corrected_error": 1.5259254736666152e-05,
+      "corrected_w": -1.0
+    },
+    {
+      "source": [
+        -1,
+        0,
+        0
+      ],
+      "handedness": 1,
+      "encoded": [
+        0.0,
+        0.7499961852445258
+      ],
+      "original_error": 1.5259254736666152e-05,
+      "original_w": 1.0,
+      "corrected_error": 1.5259254736666152e-05,
+      "corrected_w": 1.0
+    },
+    {
+      "source": [
+        0,
+        1,
+        0
+      ],
+      "handedness": -1,
+      "encoded": [
+        0.5000076295109483,
+        0.0
+      ],
+      "original_error": 1.6329897010362187,
+      "original_w": 1.0,
+      "corrected_error": 1.5259254736666152e-05,
+      "corrected_w": -1.0
+    },
+    {
+      "source": [
+        0,
+        1,
+        0
+      ],
+      "handedness": 1,
+      "encoded": [
+        0.5000076295109483,
+        1.0
+      ],
+      "original_error": 1.5259254736666152e-05,
+      "original_w": 1.0,
+      "corrected_error": 1.5259254736666152e-05,
+      "corrected_w": 1.0
+    },
+    {
+      "source": [
+        0,
+        -1,
+        0
+      ],
+      "handedness": -1,
+      "encoded": [
+        0.5000076295109483,
+        0.49997711146715496
+      ],
+      "original_error": 0.00014068337639799253,
+      "original_w": 1.0,
+      "corrected_error": 7.781317435051681e-05,
+      "corrected_w": -1.0
+    },
+    {
+      "source": [
+        0,
+        -1,
+        0
+      ],
+      "handedness": 1,
+      "encoded": [
+        0.5000076295109483,
+        0.500022888532845
+      ],
+      "original_error": 7.781317435051681e-05,
+      "original_w": 1.0,
+      "corrected_error": 7.781317435051681e-05,
+      "corrected_w": 1.0
+    },
+    {
+      "source": [
+        0,
+        0,
+        1
+      ],
+      "handedness": -1,
+      "encoded": [
+        0.5000076295109483,
+        0.2500038147554742
+      ],
+      "original_error": 1.7761509746835724,
+      "original_w": 1.0,
+      "corrected_error": 2.1580174295791636e-05,
+      "corrected_w": -1.0
+    },
+    {
+      "source": [
+        0,
+        0,
+        1
+      ],
+      "handedness": 1,
+      "encoded": [
+        0.5000076295109483,
+        0.7499961852445258
+      ],
+      "original_error": 2.1580174295791636e-05,
+      "original_w": 1.0,
+      "corrected_error": 2.1580174295791636e-05,
+      "corrected_w": 1.0
+    },
+    {
+      "source": [
+        0,
+        0,
+        -1
+      ],
+      "handedness": -1,
+      "encoded": [
+        1.0,
+        0.0
+      ],
+      "original_error": 0.5795682973768602,
+      "original_w": 1.0,
+      "corrected_error": 0.0,
+      "corrected_w": -1.0
+    },
+    {
+      "source": [
+        0,
+        0,
+        -1
+      ],
+      "handedness": 1,
+      "encoded": [
+        1.0,
+        1.0
+      ],
+      "original_error": 0.0,
+      "original_w": 1.0,
+      "corrected_error": 0.0,
+      "corrected_w": 1.0
+    }
+  ],
+  "corrected_pass": true,
+  "scope": "algebra only; real native renderer gates still required"
+}

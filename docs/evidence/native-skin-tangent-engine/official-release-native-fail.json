@@ -1,0 +1,54 @@
+{
+  "art_pass": false,
+  "diagnostic": "",
+  "diagnostic_only": false,
+  "full_battle_performance": "NOT_RUN",
+  "internal": 1.0,
+  "lod_threshold": 1.0,
+  "native_size": [
+    512,
+    512
+  ],
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "reports": [
+    {
+      "clip": "Idle",
+      "mae": 0.000757314668078379,
+      "max": 0.258823543787003,
+      "pass": false,
+      "phase": 0.0,
+      "pixels_over_2_levels": 4204,
+      "visible": 12004
+    },
+    {
+      "clip": "Walk",
+      "mae": 0.000894344571037209,
+      "max": 0.266666680574417,
+      "pass": false,
+      "phase": 0.45,
+      "pixels_over_2_levels": 4646,
+      "visible": 12248
+    },
+    {
+      "clip": "Sword_Attack",
+      "mae": 0.000610486237803798,
+      "max": 0.254901975393295,
+      "pass": false,
+      "phase": 0.5,
+      "pixels_over_2_levels": 3276,
+      "visible": 10018
+    },
+    {
+      "clip": "Death01",
+      "mae": 0.000488445827471651,
+      "max": 0.294117659330368,
+      "pass": false,
+      "phase": 0.75,
+      "pixels_over_2_levels": 3149,
+      "visible": 8716
+    }
+  ],
+  "shipping_enabled": false,
+  "source": "a3665f4d8d9e5f27060e44763d923226b261aed5",
+  "source_weights": "UBC four-slot import; explicit >8 source tested separately on CPU only"
+}

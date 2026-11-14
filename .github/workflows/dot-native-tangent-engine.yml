@@ -1,0 +1,74 @@
+name: Dot isolated native tangent engine source comparison
+on:
+  push:
+    branches: [dot/godot-native-tangent-fix]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      ENGINE_SHA: 35e80b3a8822a9df9be390814b62f44c0a9c69e8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: godotengine/godot
+          ref: 35e80b3a8822a9df9be390814b62f44c0a9c69e8
+          path: .engine
+      - name: Prepare official source tools and original asset import
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/engine-compare
+          touch .engine/.gdignore
+          test "$(git -C .engine rev-parse HEAD)" = "$ENGINE_SHA"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq build-essential scons pkg-config xvfb libx11-dev libxcursor-dev libxinerama-dev libxrandr-dev libxi-dev libgl1-mesa-dev libxkbcommon-dev libudev-dev
+          curl -fLsS --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          ./tools/prepare-font.sh
+          timeout 240s /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --path . --import >artifacts/engine-compare/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/engine-compare/import.log; then exit 1; fi
+          python3 tools/engine/test_tangent_encoding.py >artifacts/engine-compare/encoding-unit.json
+          { uname -a; lscpu; free -m; scons --version; git -C .engine rev-parse HEAD; } >artifacts/engine-compare/host.txt
+          cp tools/engine/godot-4.6.3-gles3-native-tangent.patch artifacts/engine-compare/
+          cp .engine/LICENSE.txt .engine/AUTHORS.md artifacts/engine-compare/
+          sha256sum tools/engine/godot-4.6.3-gles3-native-tangent.patch >artifacts/engine-compare/PATCH_SHA256
+      - name: Compile original and patched engines with identical options
+        run: |
+          set -euo pipefail
+          args='platform=linuxbsd target=template_debug arch=x86_64 vulkan=no wayland=no alsa=no pulseaudio=no speechd=no use_static_cpp=no debug_symbols=no lto=none'
+          echo "scons -j2 $args" >artifacts/engine-compare/BUILD_COMMAND
+          (cd .engine && timeout 5400s scons -j2 $args) >artifacts/engine-compare/build-original.log 2>&1
+          cp .engine/bin/godot.linuxbsd.template_debug.x86_64 /tmp/godot-original
+          /tmp/godot-original --version >artifacts/engine-compare/original-version.txt
+          git -C .engine apply --check "$PWD/tools/engine/godot-4.6.3-gles3-native-tangent.patch"
+          git -C .engine apply "$PWD/tools/engine/godot-4.6.3-gles3-native-tangent.patch"
+          (cd .engine && timeout 1500s scons -j2 $args) >artifacts/engine-compare/build-patched.log 2>&1
+          cp .engine/bin/godot.linuxbsd.template_debug.x86_64 /tmp/godot-patched
+          /tmp/godot-patched --version >artifacts/engine-compare/patched-version.txt
+          sha256sum /tmp/godot-original /tmp/godot-patched >artifacts/engine-compare/BINARY_SHA256
+      - name: Same-renderer actual source material and minimal identity probe
+        run: |
+          set -euo pipefail
+          for variant in original patched; do
+            bin="/tmp/godot-$variant"
+            mkdir -p artifacts/native-character-parity
+            probe=0; pixels=0
+            timeout 120s xvfb-run -a -s '-screen 0 1280x800x24' "$bin" --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/native_skin_tangent_probe.gd >artifacts/native-character-parity/probe.log 2>&1 || probe=$?
+            timeout 240s xvfb-run -a -s '-screen 0 1280x800x24' "$bin" --path . --display-driver x11 --rendering-method gl_compatibility --audio-driver Dummy --script tests/intact_native_gpu.gd >artifacts/native-character-parity/gpu.log 2>&1 || pixels=$?
+            printf 'probe_exit=%s full_native_pixels_exit=%s\n' "$probe" "$pixels" >artifacts/native-character-parity/gates.txt
+            mv artifacts/native-character-parity "artifacts/engine-compare/$variant"
+            if [ "$probe" != 0 ]; then exit 1; fi
+          done
+          python3 tools/engine/verify_engine_comparison.py artifacts/engine-compare
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-engine-tangent-${{ github.sha }}
+          path: artifacts/engine-compare/
+          retention-days: 30
