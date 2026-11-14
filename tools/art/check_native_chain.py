@@ -33,11 +33,17 @@ def main():
                     gaps.append(dist(trans(bones[fore],wrist),trans(bones[hand],wrist)))
                     ankle=leg_nodes(side)[2]
                     gaps.append(dist(trans(bones[shin],ankle),trans(bones[boot],ankle)))
+        probes={HIPS:[(0.,.86,0.)],CHEST:[(0.,1.24,0.)],HEAD:[(0.,1.57,.02)],NOCK:[grip(-1)]}
+        for side,ids in ((-1,(LU,LF,LH,LT,LS,LB)),(1,(RU,RF,RH,RT,RS,RB))):
+            a,b,c=arm_nodes(side)
+            d,e,f=leg_nodes(side)
+            for bone,points in zip(ids,((a,b),(b,c),(c,grip(side)),(d,e),(e,f),(f,add(f,(0.,-.117,.187))))):
+                probes[bone]=points
         ready=[]
         for n in range(33):
             idle=pose(kit,1,n/32.)
             first=pose(kit,2,0.)
-            ready.append(max(dist(trans(a,p),trans(b,p)) for a,b in zip(idle,first) for p in ((0.,.86,0.),(.2,1.4,0.))))
+            ready.append(max(dist(trans(idle[bone],p),trans(first[bone],p)) for bone,points in probes.items() for p in points))
         assert max(ready)<.055,max(ready)
         feet=[]
         for n in range(65):
