@@ -36,7 +36,16 @@ def anatomical_body(look,tier,data,boundary):
     heavy=look in ("Regular","Guard","Officer","Player")
     for part in ("head","forearms","legs","feet"):
         mesh=data[part+tier];used={}
-        positions=fit_under_collar(mesh["p"],boundary) if part=="head" else mesh["p"]
+        positions=mesh["p"]
+        if part=="head":
+            positions=[]
+            for point, chart in zip(mesh["p"],mesh["chart"]):
+                p=list(point)
+                jaw=max(0,min(1,(7.1-chart[1])/1.37))
+                if look in ("Guard","Officer"): p[0]*=1.+.09*jaw
+                elif look=="Levy": p[0]*=1.-.08*jaw
+                positions.append(p)
+            positions=fit_under_collar(positions,boundary)
         for face in mesh["f"]:
             pp=[mesh["p"][i] for i in face]
             x,y,z=(sum(p[k] for p in pp)/3 for k in range(3))
@@ -66,8 +75,6 @@ def anatomical_body(look,tier,data,boundary):
                     p=list(positions[i]);sx,sy,sz=mesh["chart"][i]
                     if part=="head":
                         jaw=max(0,min(1,(7.1-sy)/1.37))
-                        if look in ("Guard","Officer"): p[0]*=1.+.09*jaw
-                        elif look=="Levy": p[0]*=1.-.08*jaw
                         coord=(4.+max(.012,min(.988,.5+sx/1.90))/8.,
                                (2.+max(.012,min(.988,(8.13-sy)/2.63)))/4.)
                     else:
