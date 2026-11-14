@@ -1,0 +1,84 @@
+{
+  "source_blend_sha256": "d933796827a251d99753c7c002df51e0d7be7bdd005ec6952535724e436d71e3",
+  "collection": "EN-tree.1",
+  "triangles": 185676,
+  "source_instances": 2690,
+  "unique_source_geometry": 12,
+  "atlas_size": 2048,
+  "atlas_grid": 4,
+  "original_uv_values_preserved": true,
+  "material_surfaces": 1,
+  "lod_edits": [
+    {
+      "name": "GEO-branch.1",
+      "ratio": 0.2
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.1",
+      "ratio": 0.15
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.2",
+      "ratio": 0.15
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.3",
+      "ratio": 0.15
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.4",
+      "ratio": 0.15
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.5",
+      "ratio": 0.15
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.6",
+      "ratio": 0.15
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.8",
+      "ratio": 0.15
+    },
+    {
+      "name": "GEO-leaves-oak.1",
+      "ratio": 0.04
+    },
+    {
+      "name": "GEO-leaves-oak.2",
+      "ratio": 0.04
+    },
+    {
+      "name": "GEO-leaves-oak.3",
+      "ratio": 0.04
+    },
+    {
+      "name": "GEO-tree",
+      "ratio": 0.3
+    },
+    {
+      "name": "HLP-treetops",
+      "ratio": 0.15
+    }
+  ],
+  "author_origin_offset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "peak_rss_kib_linux": 1266560,
+  "outputs_sha256": {
+    "diffuse.png": "f8a10050259b976a265e7017a01b948767a171c81c266014b78d43cfa8ce0518",
+    "derived-NOT-GAME.png": "983643b68df605c99157fa46a116d4d877fabdd653e0c8c425f5bd27250ed826",
+    "normal.png": "bd5f45082e37ac24f7b59b51317f5635fc3d92ef1a3f63a406cb4dd76a4751dc",
+    "roughness.png": "ec51819bbd200c7b3135059f96770563547d00186d3999bc67fd2f914a3275ef",
+    "derived.glb": "4c2d42c37a3df11d9982180cfdf1c2020f77e15d2b673dbb258a38b5616c4760"
+  },
+  "limits": [
+    "Source per-instance object/random variation is canonicalized by source type",
+    "Realtime transmission not implemented",
+    "Godot graphics and draw calls NOT_RUN",
+    "Not battlefield or art acceptance"
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "source": "/tmp/luanshi_asset_research/whole-environment/sprite-fright/030_0020_A/lib/env/trees.blend",
+  "collection": "EN-tree.1",
+  "subdivision_cap": 1,
+  "rows": [
+    {
+      "name": "GEO-leaves-oak.1",
+      "source_data": "clover_4",
+      "triangles_each": 808,
+      "instances": 1140,
+      "materials": [
+        "leaves-oak.front",
+        "leaves-oak.back"
+      ]
+    },
+    {
+      "name": "GEO-leaves-oak.3",
+      "source_data": "clover_4.003",
+      "triangles_each": 808,
+      "instances": 798,
+      "materials": [
+        "leaves-oak.front",
+        "leaves-oak.back"
+      ]
+    },
+    {
+      "name": "GEO-leaves-oak.2",
+      "source_data": "clover_4.002",
+      "triangles_each": 808,
+      "instances": 684,
+      "materials": [
+        "leaves-oak.front",
+        "leaves-oak.back"
+      ]
+    },
+    {
+      "name": "GEO-branch.1",
+      "source_data": "Plane.001",
+      "triangles_each": 5084,
+      "instances": 57,
+      "materials": [
+        "Bark_isotropic"
+      ]
+    },
+    {
+      "name": "GEO-tree",
+      "source_data": "Cube.010",
+      "triangles_each": 123200,
+      "instances": 1,
+      "materials": [
+        "Bark_isotropic-displacement"
+      ]
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.1",
+      "source_data": "Cylinder.006",
+      "triangles_each": 4608,
+      "instances": 3,
+      "materials": [
+        "fungus-hoof_bracket.base"
+      ]
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.6",
+      "source_data": "Cylinder.012",
+      "triangles_each": 4608,
+      "instances": 2,
+      "materials": [
+        "fungus-hoof_bracket.base"
+      ]
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.2",
+      "source_data": "Cylinder.007",
+      "triangles_each": 4608,
+      "instances": 1,
+      "materials": [
+        "fungus-hoof_bracket.base"
+      ]
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.3",
+      "source_data": "Cylinder.008",
+      "triangles_each": 4608,
+      "instances": 1,
+      "materials": [
+        "fungus-hoof_bracket.base"
+      ]
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.4",
+      "source_data": "Cylinder.009",
+      "triangles_each": 4608,
+      "instances": 1,
+      "materials": [
+        "fungus-hoof_bracket.base"
+      ]
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.8",
+      "source_data": "Cylinder.001",
+      "triangles_each": 4608,
+      "instances": 1,
+      "materials": [
+        "fungus-hoof_bracket.base"
+      ]
+    },
+    {
+      "name": "GEO-fungus-hoof_bracket.5",
+      "source_data": "Cylinder.010",
+      "triangles_each": 4608,
+      "instances": 1,
+      "materials": [
+        "fungus-hoof_bracket.base"
+      ]
+    }
+  ],
+  "triangles": 2577644,
+  "peak_rss_kib_linux": 457800
+}

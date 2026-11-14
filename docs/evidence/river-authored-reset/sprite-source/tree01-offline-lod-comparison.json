@@ -1,0 +1,9 @@
+{
+  "reference_triangles": 2577644,
+  "derivative_triangles": 185676,
+  "triangle_reduction_percent": 92.79667789655981,
+  "same_camera": true,
+  "offline_rgb_mean_abs_difference": 0.004908700359845907,
+  "offline_rgb_p95_abs_difference": 0.03137254901960784,
+  "caveats": "8 sample Cycles / native materials / full-frame metric dominated by background; NOT Godot / NOT art acceptance"
+}
