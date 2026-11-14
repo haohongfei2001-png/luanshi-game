@@ -26,5 +26,10 @@
     "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/sandy_gravel_02/sandy_gravel_02_diff_2k.jpg",
     "md5": "0ae7373189752d85642f589c12093ec2",
     "license": "CC0-1.0"
+  },
+  "wood_planks": {
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/wood_planks/wood_planks_diff_2k.jpg",
+    "md5": "29f2d08d585433fb54034a0e8fa79adc",
+    "license": "CC0-1.0"
   }
 }
