@@ -8,6 +8,7 @@ var out:=OS.get_environment("RIVER_CAPTURE_OUT")
 var wall_capture_enabled:="--wall-clock-capture" in OS.get_cmdline_user_args()
 var wall_capture:Node
 var mounted_attempt_tick:=-100
+var mounted_review_done:=false
 var real_time:="--real-time-profile" in OS.get_cmdline_user_args() or "--wall-clock-capture" in OS.get_cmdline_user_args()
 var wall_started:=0
 var requested_side:=512
@@ -126,15 +127,22 @@ func _drive() -> void:
 	if target!=null:
 		goal=target.pos+target.pos.direction_to(b.hero.pos)*2.15
 	var rear_guard:=real_time and requested_side==250
-	if rear_guard or b.hero.hp<64. or b.hero.impacts>=3:goal=Vector2(26.8,-1.)
-	if wall_capture_enabled and t<150 and b.vehicle==0:
+	# The older fallback (26.8,-1) remained inside the crowded east bridgehead.
+	# Withdraw by ordinary movement after a real strike or early injury, before
+	# overlapping enemy attacks become lethal; no simulation state is changed.
+	if rear_guard or b.hero.hp<92. or b.hero.impacts>=1:goal=Vector2(14.,-1.)
+	if wall_capture_enabled and b.vehicle==1:
+		# Show actual riding along the friendly approach, then dismount before
+		# the horse's higher speed outruns the supporting infantry into spears.
+		goal=Vector2(24.,-1.)
+		if b.hero.pos.x>=23. or t>=80 or b.hero.hp<92.:
+			_key(KEY_F,true);_key(KEY_F,false);mounted_review_done=true
+			notes.append({"tick":t,"key":"F","purpose":"dismount_before_enemy_front","vehicle_after":b.vehicle})
+	elif wall_capture_enabled and not mounted_review_done and t<45 and b.hero.hp>=92.:
 		goal=b.vehicle_pos[1]
 		if b.hero.pos.distance_to(goal)<2.6 and t-mounted_attempt_tick>=20:
 			_key(KEY_F,true);_key(KEY_F,false);mounted_attempt_tick=t
 			notes.append({"tick":t,"key":"F","purpose":"attempt_nearby_horse","vehicle_after":b.vehicle})
-	elif wall_capture_enabled and t>=200 and b.vehicle==1:
-		_key(KEY_F,true);_key(KEY_F,false)
-		notes.append({"tick":t,"key":"F","purpose":"dismount","vehicle_after":b.vehicle})
 	# A human can follow the cart ruts with eight directions and retire
 	# behind the other advancing soldiers. Send the same four mapped keys.
 	var walk:=Vector2.ZERO

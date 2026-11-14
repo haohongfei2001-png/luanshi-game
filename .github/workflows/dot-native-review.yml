@@ -42,6 +42,8 @@ jobs:
           for test in tests/*_test.py; do python3 "$test"; done >artifacts/native-export/python.log 2>&1
           timeout 1200s ./tools/test.sh >artifacts/native-export/aggregate.log 2>&1
           timeout 120s godot --headless --path . --script tests/whole_input_calibration.gd >artifacts/native-export/input.log 2>&1
+          timeout 120s godot --headless --path . --script tests/whole_input_calibration.gd -- --real-time-profile >artifacts/native-export/input-profile.log 2>&1
+          timeout 120s godot --headless --path . --script tests/whole_input_calibration.gd -- --wall-clock-capture --wall-clock-action >artifacts/native-export/input-wall-clock.log 2>&1
           if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' artifacts/native-export/*.log; then exit 1; fi
       - name: Export the actual complete package and legal notices
         run: ./tools/export.sh >artifacts/native-export/export.log 2>&1

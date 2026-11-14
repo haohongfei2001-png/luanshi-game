@@ -31,7 +31,10 @@ func _run() -> void:
 	if replay.real_time:
 		ok=b.hero.hp>0 and b.hits[0]+b.hits[1]>0 and (b.tick>=900 or b.result!="")
 	print("WHOLE_INPUT_CALIBRATION ",ok," tick=",b.tick," impacts=",b.hero.impacts," hp=",b.hero.hp," result=",b.result)
+	for key:Key in [KEY_W,KEY_S,KEY_A,KEY_D]:replay._key(key,false)
 	replay.free()
 	scene.queue_free()
 	await process_frame
+	await process_frame
+	await create_timer(.15).timeout
 	quit(0 if ok else 1)
