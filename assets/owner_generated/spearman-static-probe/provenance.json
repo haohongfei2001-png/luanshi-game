@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "kind": "AI-generated RGBA game texture, not a Godot screenshot",
+  "status": "STATIC_SINGLE_DIRECTION_PROBE_ONLY_NOT_APPROVED",
+  "source_reference": {
+    "sha256": "fef54505bf0adb82646cd5c9e955170b255b3cbb8c5d6cfe1dc49c623167a932",
+    "owner_authorization": "Owner accepted spearman visual direction and authorized project use, not actual gameplay acceptance",
+    "repository_path": "docs/art-direction/owner-20261114/spearman-direction.png"
+  },
+  "asset": {
+    "file": "spearman-elevated.png",
+    "sha256": "44c7980606caad27e1120aa34e355456372a0b51d0d9a14c50918e522ae77271",
+    "bytes": 955162,
+    "size": [
+      1199,
+      1312
+    ],
+    "mode": "RGBA",
+    "alpha_gt_16_bbox": [
+      126,
+      95,
+      992,
+      1244
+    ],
+    "edge_alpha_max": 1,
+    "post_generation_image_edit": false
+  },
+  "generator": "Built-in image generation tool; no external source license asserted",
+  "requested_camera": {
+    "projection": "orthographic",
+    "elevation_degrees": 32,
+    "orientation": "front-right three-quarter",
+    "measurement_status": "Prompt requested, not geometrically calibrated or proven"
+  },
+  "constraints": {
+    "spear_red_tassel": false,
+    "full_weapon_and_feet_inside": true,
+    "background": false,
+    "baked_floor_shadow": false,
+    "animation_frames": 0,
+    "direction_count": 1
+  },
+  "review": {
+    "image_personally_inspected": true,
+    "readable_parts": [
+      "hands gripping shaft",
+      "lamellar plates and binding",
+      "natural cloth layers",
+      "puttees and shoes",
+      "whole spear silhouette"
+    ],
+    "not_verified": [
+      "actual Godot appearance",
+      "camera elevation calibration",
+      "depth/occlusion",
+      "dynamic lighting/shadows",
+      "turning and animation",
+      "Battle binding",
+      "army performance",
+      "M5"
+    ],
+    "no_final_route_selection": true
+  },
+  "first_atlas_rejected": {
+    "sha256": "725384869310334afc894dad9cd5739c6c9c9f9acbac626e3c73ee791052b4d8",
+    "reason": "Eight-view requested atlas has insufficient elevated camera and inconsistent spear pose; not accepted as coherent multi-direction source"
+  },
+  "runtime_contract": {
+    "script": "scripts/field/experimental/owner_static_spearman.gd",
+    "foot_anchor_pixels": [
+      590,
+      1244
+    ],
+    "helmet_top_y": 174,
+    "manual_landmarks_not_depth_reconstruction": true,
+    "source_png_unmodified": true,
+    "import_fix_alpha_border": true,
+    "mipmaps": true,
+    "premultiplied_alpha": false,
+    "headless_checks": 45,
+    "actual_graphics": "NOT_RUN",
+    "shadow_casting": "OFF_NOT_EQUIVALENT"
+  },
+  "generated_file_timestamp_utc": "2026-11-14T22:19:49.484784+00:00",
+  "prompt_file": "GENERATION_PROMPT.txt"
+}
