@@ -1,0 +1,61 @@
+{
+  "source_movie_sha256": "440f476306de5c1886cbd3435913fe981b268479c3dd0ea77b824582795e7273",
+  "source_bytes": 179060718,
+  "source_frames": 985,
+  "method": "FFmpeg stream copy at existing keyframes. No rescale, interpolation, speed change or re-encode.",
+  "video_packets_identical": true,
+  "parts": [
+    {
+      "file": "river-gate-part-00.mp4",
+      "first_source_frame": 0,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 44070943,
+      "sha256": "d74e0850671f38ae95626ff67dcb881db8f8e2dac38bf7e0ea513981d0d62940"
+    },
+    {
+      "file": "river-gate-part-01.mp4",
+      "first_source_frame": 250,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 55891287,
+      "sha256": "1f4b1345c3900d8bae7ee05f029b91551fdc2c805e4c630532d1b1e7c82c1783"
+    },
+    {
+      "file": "river-gate-part-02.mp4",
+      "first_source_frame": 500,
+      "frame_count": 250,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 45276387,
+      "sha256": "02c5dc4233ef5f8486c26f697b16f549510ec2b141034c489bf41845f186477d"
+    },
+    {
+      "file": "river-gate-part-03.mp4",
+      "first_source_frame": 750,
+      "frame_count": 235,
+      "native_px": [
+        2560,
+        1440
+      ],
+      "fps": "24/1",
+      "bytes": 33826429,
+      "sha256": "a8901eb4d905430d95688103181959f9ce2c3799a073b9727801cf7b45ed4cad"
+    }
+  ],
+  "game_source": "5d6aa17716d0b7206a10288405957b13e4764357",
+  "capture_run": "43570498673",
+  "archive_run": "43573454659",
+  "art_acceptance": "ART_REBUILD_REQUIRED"
+}
