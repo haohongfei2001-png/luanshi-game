@@ -29,6 +29,7 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _reverse_bank_faces() -> void:
 	for node:Node in field.map.get_children():
+		if not node is MeshInstance3D:continue
 		if not String(node.name).begins_with("EmbeddedRockBank"):continue
 		var bounds:AABB=node.mesh.get_aabb()
 		var anchor:=bounds.get_center()
