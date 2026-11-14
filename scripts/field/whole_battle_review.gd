@@ -20,6 +20,7 @@ var clicked:=false
 var noted_contacts:={}
 var troop_contacts:Array=[]
 var screenshot_ok:=true
+var progress_file:FileAccess
 
 var root:Window
 func _ready() -> void:
@@ -40,7 +41,7 @@ func _key(k:Key, pressed:bool) -> void:
 	Input.flush_buffered_events()
 
 func _point(at:Vector2) -> void:
-	root.warp_mouse(at)
+	if DisplayServer.get_name()!="headless":root.warp_mouse(at)
 	var motion:=InputEventMouseMotion.new()
 	motion.position=at
 	motion.global_position=at
@@ -100,8 +101,10 @@ func _drive() -> void:
 		if dist<d2 and Ground.clear_shot(b.hero.pos,other.pos,b.gate_hp<=0):
 			target=other
 			d2=dist
-	var goal:=Vector2(34.0,-2.8)
-	if b.hero.hp<48.: goal=Vector2(26.8,-1.)
+	var goal:=Vector2(38.0,-2.8)
+	if target!=null:
+		goal=target.pos+target.pos.direction_to(b.hero.pos)*2.15
+	if b.hero.hp<64. or b.hero.impacts>=3:goal=Vector2(26.8,-1.)
 	# A human can follow the cart ruts with eight directions and retire
 	# behind the other advancing soldiers. Send the same four mapped keys.
 	var walk:=Vector2.ZERO
@@ -166,6 +169,7 @@ func _facts() -> Dictionary:
 func _run() -> void:
 	if DisplayServer.get_name()=="headless": get_tree().quit(1);return
 	DirAccess.make_dir_recursive_absolute(out)
+	progress_file=FileAccess.open(out+"/progress.jsonl",FileAccess.WRITE)
 	var scene=get_parent()
 	field=scene.field
 	for i in 5: await get_tree().process_frame
@@ -225,7 +229,10 @@ func _run() -> void:
 			if not real_time or b.tick%25==0:
 				var m:=_facts()
 				snapshots.append(m)
-				if b.tick%25==0:print("BRIDGE_TICK ",JSON.stringify(m))
+				if b.tick%25==0:
+					print("BRIDGE_TICK ",JSON.stringify(m))
+					progress_file.store_line(JSON.stringify({"facts":m,"last_input":notes.back() if not notes.is_empty() else {}}))
+					progress_file.flush()
 			if not real_time and (b.tick in [15,50,75,105,145,185,245,355,460] or (b.hero.impacts>0 and not clicked)):
 				if b.hero.impacts>0: clicked=true
 				await RenderingServer.frame_post_draw

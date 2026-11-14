@@ -2,7 +2,7 @@ name: Package and play the complete replacement world on hosted macOS
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py','tests/field_history_probe.gd','scripts/field/save.gd','scripts/field/ground.gd','scripts/field/battle.gd','scripts/game.gd','scripts/field/whole_battle_review.gd','tools/archive_native_world.py']
+    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py','tests/field_history_probe.gd','scripts/field/save.gd','scripts/field/ground.gd','scripts/field/battle.gd','scripts/game.gd','scripts/field/whole_battle_review.gd','tools/archive_native_world.py','tests/whole_input_calibration.gd']
 permissions:
   contents: write
   actions: read
@@ -36,12 +36,13 @@ jobs:
           timeout 30s godot --headless --path . --script tests/world_terrain_compat.gd
           godot --headless --path . --check-only --script tests/whole_battle_replay.gd
           godot --headless --path . --check-only --script scripts/field/whole_battle_review.gd
+          timeout 120s godot --headless --path . --script tests/whole_input_calibration.gd
       - name: Verify the real deployment menu through embedded-window input
         run: |
           set -euo pipefail
           mkdir -p artifacts/native-menu-routing
           export RIVER_CAPTURE_OUT="$PWD/artifacts/native-menu-routing"
-          timeout 150s xvfb-run -a -s "-screen 0 2560x1440x24" godot --path . --display-driver x11 --audio-driver Dummy -- --whole-battle-review --native-qhd --menu-only > artifacts/native-menu-routing/window.log 2>&1 || { cat artifacts/native-menu-routing/window.log; exit 1; }
+          timeout 150s xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --display-driver x11 --resolution 1280x800 --audio-driver Dummy -- --whole-battle-review --menu-only > artifacts/native-menu-routing/window.log 2>&1 || { cat artifacts/native-menu-routing/window.log; exit 1; }
           cat artifacts/native-menu-routing/window.log
           grep -q BRIDGE_MENU_INPUT_PASS artifacts/native-menu-routing/window.log
       - name: Export the complete game with full license notices

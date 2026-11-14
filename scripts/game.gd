@@ -10,6 +10,7 @@ func _init() -> void:
 		ProjectSettings.set_setting("display/window/size/viewport_height",1440)
 		ProjectSettings.set_setting("display/window/stretch/mode","viewport")
 		ProjectSettings.set_setting("display/window/stretch/aspect","keep")
+		ProjectSettings.set_setting("editor/movie_writer/mjpeg_quality",0.90)
 
 func _ready() -> void:
 	var legacy := false

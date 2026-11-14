@@ -97,16 +97,25 @@ def main():
         text=run_game(executable,out/"input-smoke",helper,["--native-qhd","--menu-only","--light-study"])
         assert "BRIDGE_MENU_INPUT_PASS" in text
     with empty_game_data(data):
-        text=run_game(executable,out/"movie",helper,["--native-qhd"],out/"take/frame.png")
-        assert "BRIDGE_WINDOW true" in text
-        subprocess.run([sys.executable,str(workspace/"tools/encode_whole_battle.py"),
-                        str(out/"take"),str(out/"movie"),os.environ["GITHUB_SHA"]],check=True)
-    with empty_game_data(data):
         text=run_game(executable,out/"profile-qhd",helper,
                       ["--native-qhd","--real-time-profile","--field-profile"])
         assert "BRIDGE_WINDOW true" in text
         profile=out/"profile-qhd/frame-times";profile.mkdir(parents=True,exist_ok=True)
         for path in (data/"frame-times").glob("*.jsonl"):
             (profile/path.name).write_bytes(path.read_bytes())
+    capture=out/"take/native-window.avi"
+    try:
+        with empty_game_data(data):
+            text=run_game(executable,out/"movie",helper,["--native-qhd"],capture)
+            assert "BRIDGE_WINDOW true" in text
+            subprocess.run([sys.executable,str(workspace/"tools/encode_whole_battle.py"),
+                            str(capture),str(out/"movie"),os.environ["GITHUB_SHA"]],check=True)
+    except BaseException:
+        if capture.is_file() and capture.stat().st_size>4096:
+            subprocess.run(["ffmpeg","-nostdin","-loglevel","error","-y","-i",str(capture),
+                            "-c:v","libx264","-preset","veryfast","-crf","22","-c:a","aac",
+                            "-movflags","+faststart",str(out/"movie/incomplete-attempt.mp4")],
+                           timeout=180,check=False)
+        raise
     print("WHOLE_NATIVE_INPUT_MOVIE_PROFILE_PASS",flush=True)
 if __name__=="__main__":main()
