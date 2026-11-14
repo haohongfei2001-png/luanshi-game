@@ -8,10 +8,16 @@ one authoring oracle, not the shared3D LOD2 production architecture.
 ```gdscript
 var actor = load("res://scripts/field/experimental/controlled_author_actor.gd").new()
 field.add_child(actor)
-assert(actor.configure_author_oracle(cache_directory) == OK)
+var configure_error = actor.configure_author_oracle(cache_directory)
+if configure_error != OK:
+    push_error("Oracle cache configuration failed: %s" % configure_error)
+    return
 # Caller supplies the actual field/unit transform and actual existing camera.
 actor.global_transform = verified_actor_transform
-assert(actor.apply_author_phase("walk", phase_0_to_1) == OK)
+var phase_error = actor.apply_author_phase("walk", phase_0_to_1)
+if phase_error != OK:
+    push_error("Oracle phase failed: %s" % phase_error)
+    return
 print(actor.receipt())
 ```
 
@@ -35,3 +41,12 @@ parent transform and created only mesh children. It used the explicitly recorded
 older197.5MB local fixture, not latest flat-normal geometry; it is API validation,
 not actual-field graphics acceptance. The standalone whole-actor captures are
 actual Godot but still do not constitute this field integration.
+
+Cache directory must be an external absolute path or user:// raw data, not res:// imported PNGs. PNG bytes are explicitly decoded, independent of import remapping. The runtime shader is in scripts/field/experimental so tools/art/.gdignore cannot remove it. Empty-cwd exported-PCK validation remains required before packaging.
+
+Actual Linux Godot 4.6.3 headless PCK check: explicitly packed only project,
+loader, exportable shader and test; launched with --main-pack from empty cwd.
+43 meshes and both clips at 0/.5/1 loaded; raw external PNG decoding succeeded.
+See actor-adapter-empty-cwd-pck.log. This proves runtime resource isolation for
+this PCK, not a macOS export preset, actual GPU rendering or latest cache geometry.
+All test operations now execute outside assertions, including negative cases.

@@ -12,6 +12,7 @@ func cache_texture(path:String)->ImageTexture:
  return ImageTexture.create_from_image(Image.create_from_data(1024,height,false,Image.FORMAT_RGBAF,bytes))
 func configure_author_oracle(folder:String)->Error:
  if _loaded:return ERR_ALREADY_IN_USE
+ if folder.begins_with("res://"):return ERR_INVALID_PARAMETER
  var path=folder.path_join("character.json")
  if not FileAccess.file_exists(path):return ERR_FILE_NOT_FOUND
  var parsed=JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -30,9 +31,13 @@ func configure_author_oracle(folder:String)->Error:
   var pt=cache_texture(folder.path_join(m.positions));var nt=cache_texture(folder.path_join(m.normals));var mesh=ArrayMesh.new()
   for s in m.surfaces:
    var a=[];a.resize(Mesh.ARRAY_MAX);a[Mesh.ARRAY_VERTEX]=positions;a[Mesh.ARRAY_NORMAL]=normals;a[Mesh.ARRAY_TEX_UV]=uv;a[Mesh.ARRAY_INDEX]=PackedInt32Array(s.indices);mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,a)
-   var mat=ShaderMaterial.new();mat.shader=load("res://tools/art/soldier_controlled_probe/cache.gdshader");mat.set_shader_parameter("position_cache",pt);mat.set_shader_parameter("normal_cache",nt);mat.set_shader_parameter("vertex_count",count);mat.set_shader_parameter("frame_limit",int(clip.first_frame+clip.frames-1));mat.set_shader_parameter("base_color",Color(s.color[0],s.color[1],s.color[2],s.color[3]).linear_to_srgb());mat.set_shader_parameter("roughness_value",s.roughness);mat.set_shader_parameter("metal_value",s.metallic);mat.set_shader_parameter("uses_alpha",s.alpha_texture)
+   var mat=ShaderMaterial.new();mat.shader=load("res://scripts/field/experimental/controlled_author_cache.gdshader");mat.set_shader_parameter("position_cache",pt);mat.set_shader_parameter("normal_cache",nt);mat.set_shader_parameter("vertex_count",count);mat.set_shader_parameter("frame_limit",int(clip.first_frame+clip.frames-1));mat.set_shader_parameter("base_color",Color(s.color[0],s.color[1],s.color[2],s.color[3]).linear_to_srgb());mat.set_shader_parameter("roughness_value",s.roughness);mat.set_shader_parameter("metal_value",s.metallic);mat.set_shader_parameter("uses_alpha",s.alpha_texture)
    if s.has("texture"):
-    var image=Image.load_from_file(folder.path_join(s.texture));image.generate_mipmaps();mat.set_shader_parameter("diffuse_texture",ImageTexture.create_from_image(image));mat.set_shader_parameter("has_diffuse",true)
+    # Cache is an external raw-data delivery, never an imported res:// PNG.
+    var image=Image.new()
+    var image_error=image.load_png_from_buffer(FileAccess.get_file_as_bytes(folder.path_join(s.texture)))
+    if image_error!=OK:return image_error
+    image.generate_mipmaps();mat.set_shader_parameter("diffuse_texture",ImageTexture.create_from_image(image));mat.set_shader_parameter("has_diffuse",true)
    mesh.surface_set_material(mesh.get_surface_count()-1,mat);mats.append(mat)
   var instance=MeshInstance3D.new();instance.name=m.name;instance.mesh=mesh;instance.custom_aabb=AABB(Vector3(-3,-1,-3),Vector3(6,5,6));add_child(instance)
  _loaded=true
