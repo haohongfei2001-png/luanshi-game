@@ -2,8 +2,10 @@ shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 
 uniform sampler2D cloth_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D issue_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D motion_bank : filter_linear, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
+uniform vec4 shoulder_dye : source_color = vec4(0.0);
 uniform int kit = 0;
 uniform int travelling_attack_legs = -1;
 uniform bool player_costume = false;
@@ -14,7 +16,6 @@ varying flat float cloth_lot;
 varying flat float fallen;
 varying float sewn_shadow;
 varying flat int cloth_panel;
-varying vec2 shield_face;
 varying vec3 bind_point;
 
 vec3 rotated(vec4 q, vec3 v) {
@@ -82,6 +83,19 @@ void vertex() {
         int reaction=(clip==10 ? 0 : 2)+slot-1;
         tile.y=float(4*(381+kit*4+reaction))+.5;
     }
+    // Preserve ordinary soldiers' identities across LODs without extra mesh
+    // instances. Only first-joint head skin changes below the skull/helmet seam.
+    ivec2 swatch=ivec2(UV*vec2(8.,4.));
+    if (first==2 && !player_costume &&
+            (swatch==ivec2(0,2) || swatch==ivec2(0,1)) && VERTEX.y>1.447) {
+        float lot=floor(INSTANCE_CUSTOM.a*8.0);
+        float shape=lot<2.5 ? 0.0 : (lot<5.5 ? -1.0 : 1.0);
+        float cheek=1.-smoothstep(1.547,1.646,VERTEX.y);
+        float jaw=smoothstep(1.447,1.475,VERTEX.y)*(1.-smoothstep(1.492,1.584,VERTEX.y));
+        VERTEX.x*=1.0+.115*shape*cheek;
+        VERTEX.y+=.005*shape*jaw;
+        VERTEX.z+=.0065*shape*jaw*smoothstep(.025,.091,VERTEX.z);
+    }
     vec3 pos,nrm;
     skin(first,tile,VERTEX,NORMAL,pos,nrm);
     if(first!=second && blend<.999) {
@@ -89,6 +103,13 @@ void vertex() {
         skin(second,tile,VERTEX,NORMAL,other_pos,other_nrm);
         pos=mix(other_pos,pos,blend);
         nrm=mix(other_nrm,nrm,blend);
+    }
+    // The nocked arrow alone is rigidly attached to joint 15 (the bowstring
+    // endpoints blend this joint with the stave). Keep it on the string through
+    // the release tick. The live projectile becomes visible in RECOVER.
+    if (kit==5 && first==15 && second==15 &&
+            (state!=1 || slot==3 || sample_kit!=kit)) {
+        pos=vec3(0.);
     }
     // Lean into the actual opponent. Hands, both ends of a shaft, the blade
     // and the shield all undergo one rigid change about the waist. Flexible
@@ -131,10 +152,7 @@ void vertex() {
         pos=mix(pos,step_pos,leg_weight);
         nrm=mix(nrm,step_nrm,leg_weight);
     }
-    ivec2 swatch=ivec2(UV*vec2(8.,4.));
-    // Shield panels have separate UV islands. A single bind-space band crosses their seams
-    // and follows the left hand through a block or bash.
-    shield_face=(VERTEX.xy-vec2(-.273,.976))/vec2(.568,1.005);
+
     bool cape=swatch.y==2 && (swatch.x==3 || swatch.x==7);
     if (cape) {
         // Folded at the shoulder fastening, free at the two tails. The hem lags
@@ -171,20 +189,25 @@ void vertex() {
         if (cloth_lot>.72) UV+=vec2(.125,.25);
         else if (cloth_lot>.31) UV.y+=.25;
     }
-    cloth_panel=int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0));
+    cloth_panel=UV.x>=3.0 ? 33 : (UV.x>=2.0 ? 32 : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0)));
     flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
 void fragment() {
-    vec3 ink = texture(cloth_atlas, UV).rgb;
+    vec4 swatch = cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV);
+    vec3 ink = swatch.rgb;
     // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
     // their own values even where soldiers overlap in the default orthographic view.
     float dye = 0.0;
-    if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = .96;
+    if (cloth_panel>=32) dye=swatch.a;
+    else if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = .96;
     else if (cloth_panel == 22) dye = .82;
     else if (cloth_panel == 26) dye = .66;
-    else if (cloth_panel == 11) dye = .35;
-    vec3 bolt = livery.rgb * mix(.84, 1.10, cloth_lot);
+    else if (cloth_panel == 11) dye = .54;
+    // Diluting indigo or madder in a common grey-brown ground keeps the
+    // troop colours legible without painting armour and entire bodies bright.
+    vec3 wool_ground=OUTPUT_IS_SRGB ? vec3(.245,.250,.230) : vec3(.049,.051,.043);
+    vec3 bolt=mix(livery.rgb,wool_ground,.25+.15*cloth_lot)*mix(.84,1.04,cloth_lot);
     // Common coats were cut from several dye lots. Keep a coloured collar or
     // overskirt even on the pale archer's body; hands/iron never inherit dye.
     if (!player_costume && (cloth_panel==27 || cloth_panel==1)) {
@@ -195,24 +218,84 @@ void fragment() {
             bolt*=.85;
         }
     }
+    float dyed_shoulder=0.;
+    // The upper part of an issued garment is sewn from a deeper bolt of
+    // indigo or madder. The officer's iron and an archer's leather belt stay
+    // in their original material; only woven cloth has coverage in this mask.
+    if (shoulder_dye.a>.5) {
+        float yoke=0.;
+        if (cloth_panel==32) {
+            if (kit==5 || kit==6) {
+                // One crossed panel of a short robe continues over the back.
+                // Below the girdle the working shirt keeps the lighter flax.
+                float overlap=mix(-.16,.44,smoothstep(-.08,.09,bind_point.z));
+                float shoulder_line=bind_point.y+overlap*bind_point.x;
+                float outer_sleeve=smoothstep(.15,.22,abs(bind_point.x))*smoothstep(1.026,1.105,bind_point.y);
+                yoke=max(smoothstep(1.104,1.142,shoulder_line),outer_sleeve);
+            } else {
+                // The iron courses have zero paint coverage. Only the tunic
+                // between the shoulder straps and the edge below the armhole
+                // picks up colour, including the turn towards the shield arm.
+                yoke=smoothstep(1.015,1.113,bind_point.y);
+            }
+            dye=mix(dye,max(dye,smoothstep(.24,.76,dye)),.82*yoke);
+        } else if (cloth_panel==1 || cloth_panel==19 || cloth_panel==27 || cloth_panel==11) {
+            yoke=smoothstep(1.035,1.173,bind_point.y);
+            if (cloth_panel==19) yoke=1.;
+            dye=mix(dye,.97,yoke);
+        }
+        if (player_costume && cloth_panel!=19) yoke=0.;
+        dyed_shoulder=yoke;
+        bolt=mix(bolt,shoulder_dye.rgb*mix(.87,1.015,cloth_lot),yoke);
+    }
     float fold = dot(ink, vec3(.28, .56, .16));
     float mid = OUTPUT_IS_SRGB ? .73 : .52;
-    vec3 colour = mix(ink, bolt * clamp(fold / mid, .64, 1.24), dye);
+    // White yarn highlights on dyed wool turn softly. Keep iron, skin and the
+    // lacquer rim on the existing albedo response.
+    float cloth_value=clamp(fold/mid,.64,mix(1.24,1.09,dyed_shoulder));
+    vec3 colour=mix(ink,bolt*cloth_value,dye);
+    // The cuff is lined on its underside. Leave the warm skin on the wrist
+    // and the edge of the hand separate when it crosses the coat at 22 m.
+    if (!player_costume && cloth_panel==32) {
+        float opening=smoothstep(.204,.251,abs(bind_point.x))*
+                      (1.-smoothstep(1.13,1.20,bind_point.y));
+        colour*=1.-.18*opening*dye;
+    }
+    if (cloth_panel==32 && (kit==5 || kit==6)) {
+        // The original cross-collar already forms a woven facing. Preserve its
+        // darker value where the front crosses and where the back cuffs the
+        // neck; without the facing, sun on madder can read as another skin area.
+        float top=smoothstep(1.19,1.345,bind_point.y);
+        float turn=1.-smoothstep(.12,.235,abs(bind_point.x));
+        float facing=(1.-smoothstep(mid*.28,mid*.84,fold))*top*turn*dye;
+        colour*=1.-.24*facing;
+    }
     if (!player_costume && cloth_panel==0) {
         // The undyed coat is slightly warmer than its sleeves. Light from above
         // falls off under the folded shoulder, leaving the waist legible from above.
-        colour*=mix(vec3(.74,.81,.82),vec3(.92,.91,.85),cloth_lot);
+        // A few lots have grey over-dyed sleeves. The same soldier keeps
+        // his issued blouse in every camera and pose.
+        vec3 worn=mix(vec3(.72,.79,.80),vec3(.86,.86,.80),cloth_lot);
+        float overdye=.14+.27*smoothstep(.31,.87,cloth_lot);
+        colour=mix(colour*worn,bolt*.91,overdye);
     }
-    if (cloth_panel==3 || cloth_panel==30) {
-        // A troop's dyed sleeve remains visible between the iron straps. Two broad
-        // facing panels keep the side identifiable at marching distance, even
-        // when the shield is edge-on or the wearer turns their back.
-        float shoulder=smoothstep(.15,.225,abs(bind_point.x))*smoothstep(1.18,1.32,bind_point.y);
-        float skirt=(1.-smoothstep(.77,.89,bind_point.y))*
-                    smoothstep(.075,.18,abs(bind_point.z))*(1.-smoothstep(.07,.17,abs(bind_point.x)));
-        colour=mix(colour,bolt*.86,min(.80,shoulder*.68+skirt*.51));
+    if (cloth_panel==3 || cloth_panel==30 || cloth_panel==28) {
+        // The visible hauberk follows the ribs in one warm, dark iron mass.
+        // A broad value turn over the back survives mip levels at 22 metres.
+        float ridge=1.-smoothstep(.035,.225,abs(bind_point.x));
+        float reflected=smoothstep(.11,.22,abs(bind_point.x));
+        colour*=.91+.095*ridge+.045*reflected;
     }
-    if (cloth_panel==15 || cloth_panel==12) colour*=.78;
+    if (cloth_panel==15 || cloth_panel==12) colour*=.82;
+    // The fold runs down the fabric on the sloped upper arm. Its inner
+    // valley continues through different triangles on the raised sleeves.
+    if (cloth_panel==0 || cloth_panel==1 || cloth_panel==11 || cloth_panel==27) {
+        float sleeve=smoothstep(.183,.238,abs(bind_point.x))*
+                     smoothstep(1.07,1.12,bind_point.y)*(1.-smoothstep(1.35,1.41,bind_point.y));
+        float diagonal=bind_point.y-1.196+.51*bind_point.z+.32*(abs(bind_point.x)-.248);
+        float sleeve_fold=smoothstep(-.043,-.006,diagonal)*(1.-smoothstep(-.004,.018,diagonal));
+        colour*=1.-.28*sleeve*sleeve_fold;
+    }
     // A coarse underfold survives mipmapping; irregular fine weave does not.
     // At the edge of a dark sleeve it stays subordinate to the hand and weapon.
     if (cloth_panel==1 || cloth_panel==22 || cloth_panel==27) {
@@ -220,15 +303,6 @@ void fragment() {
         float tuck=abs(cloth_uv.x-.20-.44*cloth_uv.y);
         float crease=(1.-smoothstep(.018,.12,tuck))*smoothstep(.12,.56,cloth_uv.y);
         colour*=1.-crease*.15;
-    }
-    if (cloth_panel == 13) {
-        // Lacquer sits in two broad fields on either side of an exposed timber rib.
-        // Bind-space coordinates run continuously over the curved planks.
-        float panel_edge=abs(shield_face.x)+.22*shield_face.y;
-        float width=clamp(fwidth(panel_edge),.006,.044);
-        float paint=smoothstep(.10-width,.10+width,panel_edge)*
-                    (1.-smoothstep(.40-width,.40+width,panel_edge));
-        colour=mix(colour,bolt*.76,.76*paint);
     }
     float silhouette = 1.0 - smoothstep(.045, .30, abs(dot(normalize(NORMAL), normalize(VIEW))));
     colour *= (1.0 - .105 * silhouette) * (1.0 - .42 * sewn_shadow);

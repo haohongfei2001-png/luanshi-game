@@ -308,13 +308,13 @@ func _exit(u) -> Vector2:
 	return Vector2(-98.0 if u.team == 0 else 100.0, -32.0 if u.station.y < 0.0 else 32.0)
 
 func _walk(b, u, goal: Vector2, speed: float, retreat: bool = false) -> void:
-	var next := Ground.retreat_waypoint(u.pos, goal, b.gate_hp <= 0) if retreat else Ground.waypoint(u.pos, goal)
+	var next := Ground.retreat_waypoint(u.pos, goal, b.gate_hp <= 0,b.bridgehead) if retreat else Ground.waypoint(u.pos, goal,b.bridgehead)
 	var dist: float = u.pos.distance_to(next)
 	if dist <= 0.10:
 		return
 	var direction: Vector2 = u.pos.direction_to(next)
 	u.facing = direction
-	var stride := minf(dist, speed * Ground.pace(u.pos, false) * b.DT)
+	var stride := minf(dist, speed * Ground.pace(u.pos,false,b.bridgehead) * b.DT)
 	b._move(u, direction * stride + u.separation.limit_length(0.9) * b.DT)
 
 func _retire(b, u, r: Command) -> void:

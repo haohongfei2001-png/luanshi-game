@@ -1,7 +1,6 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
-from field_armour import field_helmet, skirts
-from company_weapons import field_shield
+from company_weapons import nocked_arrow
 from figure_mesh import Surface, add, lerp
 
 def costume(look,rank=False):
@@ -20,15 +19,14 @@ def costume(look,rank=False):
             s.rings([(1.27,.207,.134,0,-.012),(1.346,.169,.108,0,-.009),
                      (1.43,.078,.069,0,0)],"dyed",body,8)
         else:
-            hem=.58 if look=="archer" else .53
-            width=.293 if look=="guard" else .255
-            s.rings([(hem,width,.183,0,-.015),(.953,.18,.135,0,-.013),(1.31,.243,.147,0,-.014),
-                     (1.447,.083,.07,0,0)],"dyed",body,6)
+            hem=.475 if look=="archer" else .516
+            width=.228 if look in ("guard","archer") else .207
+            s.rings([(hem,width,.150,0,-.017),(.744,width*.92,.141,0,-.015),
+                     (.953,.161,.119,0,-.013),(1.31,.216,.143,0,-.014),
+                     (1.447,.070,.069,0,0)],"coat",body,8)
         if heavy:
-            rib=.286 if look=="guard" else .251
-            s.rings([(1.01,rib*.79,.154,0,-.014),(1.28,rib,.177,0,-.009),
-                     (1.385,rib*.83,.128,0,-.01)],"lamellar",CHEST,8)
-            skirts(s,look,HIPS,(LT,RT),rank=True)
+            issue_vest(s,look,rank=True)
+            wrapping(s,look,rank=True)
         if look=="levy":
             for front in (True,False):
                 def sling(u,v):
@@ -39,17 +37,16 @@ def costume(look,rank=False):
                     p=(width*sin(angle),.947+.432*v,-.012+depth*cos(angle))
                     return p,body(p)
                 s.grid(1,3,sling,"leather")
-        if look in ("player","officer"):
-            # The same oblique drape and split tail as the close uniform.
-            hero=look=="player"
-            pairs=([(-.11,1.428,-.075),(-.283,1.309,-.144),(-.341,1.017,-.233),(-.431,.600,-.360)],
-                   [(.072,1.451,-.097),(.042,1.302,-.206),(-.091,1.074,-.312),(-.298,.739,-.440)]) if hero else (
+        if look=="player":
+            player_half_mantle(s,rank=True)
+        elif look=="officer":
+            pairs=(
                   [(-.14,1.421,-.084),(-.247,1.297,-.13),(-.262,.943,-.209),(-.241,.572,-.221)],
                   [(.131,1.428,-.082),(.12,1.236,-.197),(.134,1.024,-.236),(.104,.792,-.245)])
             def mantle(u,v):
                 row=round(v*3)
                 return lerp(pairs[0][row],pairs[1][row],u),(CHEST,HIPS,.99-.56*v)
-            s.grid(2,3,mantle,"hero_mantle" if hero else "mantle")
+            s.grid(2,3,mantle,"mantle")
     else:
         coat(s,look)
         equipment(s,look)
@@ -57,10 +54,8 @@ def costume(look,rank=False):
         ns=6
         s.rings([(1.426,.050,.057,0,.026),(1.495,.060,.071,0,.044),(1.550,.081,.083,0,.051),
                  (1.635,.085,.099,0,.034),(1.703,.065,.077,0,.018)],"skin",HEAD,ns)
-        if heavy and look!="player":
-            field_helmet(s,look,HEAD,rank=True)
-        else:
-            s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"facing" if look=="archer" else "hair",HEAD,ns)
+        if look in ("levy","player"):
+            s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"hair",HEAD,ns)
             s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"leather" if look=="player" else "headcloth",HEAD,ns)
             if look=="player":
                 s.oval((-.016,1.750,-.054),(.057,.058,.067),"hair",HEAD,7,4)
@@ -73,11 +68,11 @@ def costume(look,rank=False):
         a,b,c=arm_nodes(side)
         if rank:
             if heavy:
-                hem=lerp(a,b,.59 if look=="regular" else .79)
-                shoulder=lerp(a,hem,.37)
-                s.tube([a,shoulder],[.081,.100],"dyed" if look in ("regular","guard") else "lames",upper,5)
-                s.tube([shoulder,hem],[.100,.082],"lames",upper,5)
-                s.tube([hem,b],[.070,.067],"dyed",upper,4)
+                shoulder=lerp(a,b,.28)
+                hem=lerp(a,b,.74)
+                s.tube([a,shoulder,hem],[.051,.064,.079],
+                       "quilt" if look=="guard" else "dyed",upper,5)
+                s.tube([hem,b],[.079,.059],"quilt" if look=="guard" else "linen",upper,5)
             elif look=="levy":
                 shoulder=lerp(a,b,.40)
                 s.tube([a,shoulder],[.078,.083],"dyed",upper,5)
@@ -85,8 +80,6 @@ def costume(look,rank=False):
             else:
                 s.tube([a,lerp(a,b,.68),b],[.078,.082,.060],"dyed",upper,5)
         forearm(s,look,side,n,rank)
-        p=grip(side)
-        s.tube([add(p,(0,0,-.050)),p,add(p,(0,-.005,.049))],[.032,.040,.029],"skin",hand,n)
         a,b,c=leg_nodes(side)
         # Shape the calf and cloth at the knee; a straight triangle tube at the
         # everyday distance made boots read like pegs beside an otherwise curved tunic.
@@ -97,8 +90,6 @@ def costume(look,rank=False):
         s.tube([b,lerp(b,c,.19),lerp(b,c,.59),c],[(.079,.093),(.078,.085),(.053,.068),(.047,.056)],"binding",shin,leg_sides)
         s.rings([(.007,.065,.136,c[0],.052),(.062,.064,.120,c[0],.054),
                  (.101,.058,.090,c[0],.032),(.145,.050,.061,c[0],0)],"boots",boot,leg_sides)
-    if rank and look=="archer":
-        s.tube([(-.16,.797,-.168),(.123,1.373,-.196),(.17,1.505,-.201)],[.048,.067,.022],"quiver",CHEST,4)
     return s
 
 def arms(kit):
@@ -122,14 +113,13 @@ def arms(kit):
             s.tube([add(c,(0,0,-.146)),add(c,(0,0,.13))],[.034,.033],"binding",bone,4)
             s.tube([add(c,(-.078,0,.15)),add(c,(.078,0,.15))],[.02,.02],"brass",bone,3)
             blade(c,.71 if kit==8 else .91,.048 if kit==1 else .036,.141 if kit==1 else .015,bone)
-        if kit==7:
-            field_shield(s,False)
     elif kit in (2,3,4):
         stick((0,0,-.697),(0,0,1.69),.031,.026,"timber")
         if kit!=2: blade(add(g,(0,0,1.56)),.343 if kit==3 else .614,.06 if kit==3 else .089,0 if kit==3 else .143,RH)
         if kit==3:
             s.ribbon([add(g,(0,.008,1.56)),add(g,(.052,-.08,1.405))],.049,"dyed",RH)
     elif kit==5:
+        nocked_arrow(s,False)
         for side in (-1,1):
             p=[add(g,(0,y*side,z)) for y,z in ((0,0),(.35,.095),(.53,.053),(.69,-.122))]
             s.tube(p,[.031,.025,.018,.01],"timber",RH,3)

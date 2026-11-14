@@ -31,13 +31,19 @@ def run(root):
 
 
 def main():
-    before = subprocess.check_output(["git", "show", f"{BASE}:{BATTLE.as_posix()}"], cwd=ROOT)
+    # The original target implementation must run with its own field, save and
+    # officer contracts. The current field additionally supports the bridgehead.
+    sources = [BATTLE, Path("scripts/field/save.gd"), Path("scripts/field/officer_corps.gd"),
+               Path("scripts/field/formation_traffic.gd"), Path("scripts/field/ground.gd"),
+               Path("scripts/field/field_objectives.gd")]
+    before = {path: subprocess.check_output(["git", "show", f"{BASE}:{path.as_posix()}"], cwd=ROOT) for path in sources}
     with tempfile.TemporaryDirectory() as temp:
         previous = Path(temp) / "previous"
         # The imported asset files are read-only in these headless game processes.
         # Only script source differs. Each project resolves its own res:// paths.
         shutil.copytree(ROOT / "scripts", previous / "scripts")
-        (previous / BATTLE).write_bytes(before)
+        for path, content in before.items():
+            (previous / path).write_bytes(content)
         (previous / "tests").mkdir()
         shutil.copy2(ROOT / DRIVER, previous / DRIVER)
         for entry in (".godot", "assets", "scenes", "project.godot"):

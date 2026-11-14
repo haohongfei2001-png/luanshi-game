@@ -1,0 +1,9 @@
+River Gate timber bridge · Wildfire Games
+Copyright (C) 2009 Wildfire Games and contributors. https://www.wildfiregames.com/
+The original 0 A.D. bridge_edge_wooden.dae and bridge_edge_wooden.png and this game's fitted bridge_edge.glb and bound_timber.png are distributed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+The art license, original mesh and painted skin:
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/meshes/props/special/bridge_edge_wooden.dae
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/textures/skins/props/bridge_edge_wooden.png
+Luanshi contributors resized the timber truss and its lashings for the usable Chinese outwork crossing and regrouped the original diffuse colors into matte wood and hemp. The tread, landings, creek and planting are fitted to the playable geography.

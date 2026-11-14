@@ -1,8 +1,10 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
+uniform sampler2D ford_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D ink : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D willow_pendant : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
-uniform sampler2D elm_spray : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D grove_leaf : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D grove_bark : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D elm_bough : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D willow_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D leaf_marks : filter_linear_mipmap, repeat_enable;
@@ -11,29 +13,73 @@ uniform vec4 deep_leaf : source_color = vec4(.15,.238,.216,1.0);
 uniform vec4 elm : source_color = vec4(.31,.401,.284,1.0);
 uniform vec4 sun_elm : source_color = vec4(.495,.565,.355,1.0);
 uniform vec4 sun_ash : source_color = vec4(.54,.52,.32,1.0);
+uniform vec4 elm_under : source_color = vec4(.113,.178,.154,1.);
+uniform vec4 elm_body : source_color = vec4(.218,.334,.231,1.);
+uniform vec4 elm_light : source_color = vec4(.353,.426,.281,1.);
+varying float facing_sky;
+varying vec3 crown_normal_world;
 varying vec3 paint;
 varying float crown;
 varying vec2 bark_uv;
 
 void vertex() {
-	float breeze=sin(TIME*1.22+VERTEX.x*.83+VERTEX.z*.44)*.025;
-	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+VERTEX.x*.58- VERTEX.z*.44);
-	VERTEX.x+=breeze*UV2.x;
-	VERTEX.z+=breeze*.53*UV2.x;
+	// Instanced inland trees retain world-space wind frequency and amplitude.
+	bool inland=UV2.y>=11.9 && UV2.y<15.;
+	vec3 at=inland ? (MODEL_MATRIX*vec4(VERTEX,1.)).xyz : VERTEX;
+	float breeze=sin(TIME*1.22+at.x*.83+at.z*.44)*.025;
+	if(UV2.y>2.1) breeze+=.049*sin(TIME*.89+at.x*.58-at.z*.44);
+	vec3 drift=vec3(breeze,0.,breeze*.53)*UV2.x;
+	if(inland) {
+		mat3 basis=mat3(MODEL_MATRIX);
+		// All grove placements have uniform scale. Undo their basis for a
+		// metre of wind while letting the renderer rotate the actual normals.
+		drift=transpose(basis)*drift/dot(basis[0],basis[0]);
+	}
+	VERTEX+=drift;
 	crown=UV2.y;
+	facing_sky=NORMAL.y;
+	crown_normal_world=MODEL_NORMAL_MATRIX*NORMAL;
 	bark_uv=UV;
 	paint=crown>.5?vec3(UV2.x,(UV2.y-1.0)*2.0,0.0):COLOR.rgb;
 }
 void fragment() {
 	float opacity=1.0;
 	vec3 tone;
-	if(crown>=8.0) {
-		// The edge and gaps of a tuft are authored on the same folded branch
-		// surface as its veins. Sky is visible between actual branch tips.
-		vec4 brush=texture(elm_spray,UV);
-		float sun=clamp((crown-8.1)/.7,0.0,1.0);
-		tone=brush.rgb*mix(vec3(.50,.63,.69),vec3(.84,.86,.77),sun);
-		opacity=brush.a;
+	if(crown>=15.5) {
+		vec4 painted=texture(ford_ink,UV);
+		float height=clamp(crown-16.,0.,1.);
+		float y=dot(painted.rgb,vec3(.26,.59,.15));
+		float pigment=OUTPUT_IS_SRGB ? y : sqrt(max(y,0.));
+		vec3 outward=normalize(crown_normal_world);
+		NORMAL=normalize(mat3(VIEW_MATRIX)*outward);
+		float face=clamp(.53+.47*dot(outward,normalize(vec3(-.68,.36,.64))),0.,1.);
+		float grade=.43*height+.49*face+.08*smoothstep(.20,.50,pigment);
+		vec3 low=OUTPUT_IS_SRGB ? vec3(.103,.178,.151) : vec3(.011,.027,.020);
+		vec3 body=OUTPUT_IS_SRGB ? vec3(.190,.280,.194) : vec3(.030,.064,.031);
+		vec3 aged=OUTPUT_IS_SRGB ? vec3(.323,.378,.226) : vec3(.085,.118,.042);
+		tone=mix(low,body,smoothstep(.30,.59,grade));
+		tone=mix(tone,aged,smoothstep(.62,.88,grade)*.84);
+		tone*=.94+.08*smoothstep(.21,.53,pigment);
+		opacity=painted.a;
+	} else if(crown>=13.5) {
+		vec3 bark=texture(grove_bark,UV).rgb;
+		float lum=dot(bark,vec3(.27,.57,.16));
+		float band=smoothstep(.14,.55,OUTPUT_IS_SRGB?lum:sqrt(max(lum,0.)));
+		tone=mix(vec3(.100,.085,.054),vec3(.29,.233,.157),band);
+	} else if(crown>=11.9) {
+		vec4 leaf=texture(grove_leaf,UV);
+		float height=clamp((crown-12.1)/.85,0.,1.);
+		float color_value=dot(leaf.rgb,vec3(.25,.58,.17));
+		float value=OUTPUT_IS_SRGB?color_value:sqrt(max(color_value,0.));
+		// The folded cards carry crown-envelope normals from the artist's master.
+		// Both sides of the same leaf surface share that outward sun direction.
+		NORMAL=normalize(mat3(VIEW_MATRIX)*crown_normal_world);
+		float light=.16*value+.55*height+.23*clamp(facing_sky,0.,1.);
+		vec3 shade=mix(elm_under.rgb,elm_body.rgb,.69);
+		vec3 sun=mix(elm_light.rgb,sun_elm.rgb,.58);
+		tone=mix(shade,elm_body.rgb,smoothstep(.31,.53,light));
+		tone=mix(tone,sun,smoothstep(.50,.80,light)*.90);
+		opacity=leaf.a;
 	} else if(crown>6.0) {
 		vec4 brush=texture(elm_bough,UV);
 		float sun=clamp((crown-6.1)*1.42,0.0,1.0);
@@ -96,5 +142,5 @@ void fragment() {
 	ALBEDO=tone;
 	ROUGHNESS=.97;
 	ALPHA=opacity;
-	ALPHA_SCISSOR_THRESHOLD=.44;
+	ALPHA_SCISSOR_THRESHOLD=crown>=15.5 ? .36 : (crown>=11.9 && crown<13.5 ? .35 : .44);
 }

@@ -39,12 +39,21 @@ var frame_log: RefCounted
 enum Quality { NATIVE_MSAA, BALANCED, PERFORMANCE, NATIVE_SINGLE_SAMPLE }
 const QUALITY_SCALES := [1.0, 0.85, 0.70, 1.0]
 var detail_preset:=Quality.NATIVE_MSAA
+enum DisplayChoice { WINDOW, SCREEN, QHD, UHD }
+const DISPLAY_PIXELS:=[Vector2i.ZERO,Vector2i.ZERO,Vector2i(2560,1440),Vector2i(3840,2160)]
+var windowed_size:=Vector2i.ZERO
+var windowed_position:=Vector2i.ZERO
 var last_hero_hit:=-100
 var step_distance:=0.0
 const QUALITY_FILE:="user://river-gate-graphics.cfg"
 
 func _ready() -> void:
 	Actions.install()
+	var cfg:=ConfigFile.new()
+	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,QUALITY_SCALES.size()-1)
+	# Register the saved viewport format before the first terrain meshes and
+	# soldier batches enter the renderer. Their first pipelines then use it.
+	_apply_viewport_quality(detail_preset)
 	add_child(map)
 	add_child(camera)
 	camera.projection=Camera3D.PROJECTION_ORTHOGONAL
@@ -56,6 +65,15 @@ func _ready() -> void:
 	hud.quality.set_item_text(Quality.NATIVE_MSAA,"清晰 100% · 4× 抗锯齿")
 	hud.quality.add_item("原生 100% · 无抗锯齿")
 	add_child(audio)
+	if DisplayServer.get_name()!="headless":
+		windowed_size=get_window().size
+		windowed_position=get_window().position
+		hud.display_mode.item_selected.connect(_choose_display)
+		get_window().size_changed.connect(_refresh_display)
+		hud.display_mode.get_popup().about_to_popup.connect(_refresh_display)
+		var mode:=int(cfg.get_value("display","mode",DisplayChoice.WINDOW))
+		if mode>DisplayChoice.WINDOW and mode<DISPLAY_PIXELS.size(): _choose_display(mode,false)
+		_refresh_display()
 	hud.deploy.connect(deploy)
 	hud.pause.connect(toggle_pause)
 	hud.terrain_chosen.connect(pan_to)
@@ -63,11 +81,17 @@ func _ready() -> void:
 	hud.campaign.connect(func(): campaign_requested.emit())
 	hud.plan_requested.connect(func(style: int):
 		if battle.started: return
+		if style==5:
+			new_muster(selections,opposing_selection,true,battle.hero.kit)
+			return
 		if style==4:
 			patrol_muster()
 			return
 		if battle.world_patrol and style==0:
 			new_muster(512)
+			return
+		if battle.bridgehead and style==0:
+			new_muster(selections,opposing_selection,false,battle.hero.kit)
 			return
 		battle.objectives.task=Battle.Objectives.Task.ESCORT if style==3 else Battle.Objectives.Task.COURT
 		if style==0:
@@ -103,7 +127,7 @@ func _ready() -> void:
 		_refresh_hud())
 	hud.retry.connect(func():
 		if battle.world_patrol: patrol_muster()
-		else: new_muster(selections,opposing_selection))
+		else: new_muster(selections,opposing_selection,battle.bridgehead))
 	hud.weapon_changed.connect(func(i: int):
 		battle.equip_hero(i))
 	hud.order_requested.connect(_order)
@@ -113,16 +137,14 @@ func _ready() -> void:
 		if arg.begins_with("--field-size="):
 			var count := arg.trim_prefix("--field-size=").to_int()
 			if count in Battle.SCALES: selections=count
-	var cfg:=ConfigFile.new()
-	if cfg.load(QUALITY_FILE)==OK: detail_preset=clampi(int(cfg.get_value("display","preset",0)),0,QUALITY_SCALES.size()-1)
 	new_muster(selections)
 	if "--field-profile" in OS.get_cmdline_user_args():
 		frame_log = preload("res://scripts/field/frame_log.gd").new()
 		frame_log.open(get_viewport())
 
-func new_muster(count: int,defenders: int=-1) -> void:
+func new_muster(count: int,defenders: int=-1,at_moat: bool=false,weapon: int=Battle.Arms.Kit.SPEAR) -> void:
 	var fresh := Battle.new()
-	fresh.setup(count,Battle.SEED,Battle.Arms.Kit.SPEAR,true,true,defenders)
+	fresh.setup(count,Battle.SEED,weapon,true,true,defenders,at_moat)
 	if not _adopt(fresh): return
 	paused=false
 	hud.order_panel.show()
@@ -149,6 +171,12 @@ func _adopt(fresh: Battle) -> bool:
 	if view:
 		remove_child(view)
 		view.free()
+	if map.bridgehead!=fresh.bridgehead:
+		remove_child(map)
+		map.free()
+		map=Landscape.new()
+		map.bridgehead=fresh.bridgehead
+		add_child(map)
 	battle=fresh
 	theater=candidate
 	selections=battle.side_size
@@ -157,8 +185,11 @@ func _adopt(fresh: Battle) -> bool:
 	add_child(view)
 	view.configure(battle)
 	set_quality(detail_preset)
-	camera_center=battle.hero.pos
+	camera_center=Ground.BRIDGE_VIEW if battle.bridgehead else battle.hero.pos
 	follow=true
+	if battle.bridgehead:
+		camera.size=22.
+		camera_yaw=deg_to_rad(-33.)
 	last_hero_hit=-100
 	step_distance=0
 	carry=0
@@ -169,22 +200,80 @@ func _adopt(fresh: Battle) -> bool:
 	_draw_field()
 	return true
 
+func _apply_viewport_quality(which: int) -> void:
+	var vp:=get_viewport()
+	var samples:=Viewport.MSAA_4X if which==Quality.NATIVE_MSAA else Viewport.MSAA_DISABLED
+	if vp.msaa_3d!=samples: vp.msaa_3d=samples
+	if vp.scaling_3d_mode!=Viewport.SCALING_3D_MODE_BILINEAR:
+		vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
+	if not is_equal_approx(vp.scaling_3d_scale,QUALITY_SCALES[which]):
+		vp.scaling_3d_scale=QUALITY_SCALES[which]
+
 func set_quality(which: int,remember: bool=false) -> void:
 	if which<0 or which>=QUALITY_SCALES.size(): return
 	if frame_log and which!=detail_preset: frame_log.interrupt("changed_graphics",self)
 	detail_preset=which
-	var vp:=get_viewport()
-	vp.scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
-	vp.scaling_3d_scale=QUALITY_SCALES[which]
-	vp.msaa_3d=Viewport.MSAA_4X if which==Quality.NATIVE_MSAA else Viewport.MSAA_DISABLED
+	_apply_viewport_quality(which)
 	map.sun.shadow_enabled=which!=Quality.PERFORMANCE
 	shadow_zoom=-1.0
 	view.contact_for_all=not map.sun.shadow_enabled
 	hud.quality.select(which)
+	if DisplayServer.get_name()!="headless": _refresh_display.call_deferred()
 	if remember:
 		var cfg:=ConfigFile.new()
+		cfg.load(QUALITY_FILE)
 		cfg.set_value("display","preset",which)
 		cfg.save(QUALITY_FILE)
+
+func _refresh_display() -> void:
+	var win:=get_window()
+	var screen:=DisplayServer.screen_get_size(win.current_screen)
+	for i in range(DisplayChoice.QHD,DISPLAY_PIXELS.size()):
+		var wanted:Vector2i=DISPLAY_PIXELS[i]
+		hud.display_mode.set_item_disabled(i,wanted.x>screen.x or wanted.y>screen.y)
+	var pixels:=win.get_texture().get_size()
+	if pixels.x>0 and pixels.y>0:
+		var rendered:=Vector2i((Vector2(pixels)*win.scaling_3d_scale).round())
+		hud.physical_size.text="3D  %d × %d"%[rendered.x,rendered.y]
+
+func _choose_display(index: int,remember: bool=true) -> void:
+	if index<0 or index>=DISPLAY_PIXELS.size(): return
+	var win:=get_window()
+	var screen:=DisplayServer.screen_get_size(win.current_screen)
+	var wanted:Vector2i=DISPLAY_PIXELS[index]
+	if wanted.x>screen.x or wanted.y>screen.y:
+		_refresh_display()
+		return
+	if win.mode==Window.MODE_WINDOWED and not win.borderless:
+		windowed_size=win.size
+		windowed_position=win.position
+	if index==DisplayChoice.SCREEN:
+		# Size the drawable before requesting native fullscreen. A hosted X11
+		# display can have no window manager to deliver a configure event.
+		win.mode=Window.MODE_WINDOWED
+		win.size=screen
+		win.mode=Window.MODE_FULLSCREEN
+	elif index==DisplayChoice.WINDOW:
+		win.mode=Window.MODE_WINDOWED
+		win.borderless=false
+		if windowed_size.x>0:
+			win.size=windowed_size
+			win.position=windowed_position
+	else:
+		win.mode=Window.MODE_WINDOWED
+		win.borderless=true
+		win.size=wanted
+		win.position=DisplayServer.screen_get_position(win.current_screen)+Vector2i(Vector2(screen-wanted)*.5)
+	hud.display_mode.select(index)
+	if index>=DisplayChoice.QHD and not is_equal_approx(QUALITY_SCALES[detail_preset],1.0):
+		if view: set_quality(Quality.NATIVE_MSAA,remember)
+		else: detail_preset=Quality.NATIVE_MSAA
+	if remember:
+		var cfg:=ConfigFile.new()
+		cfg.load(QUALITY_FILE)
+		cfg.set_value("display","mode",index)
+		cfg.save(QUALITY_FILE)
+	_refresh_display.call_deferred()
 
 func deploy() -> void:
 	if battle.result!="" or battle.started: return
@@ -227,7 +316,7 @@ func _load() -> void:
 	_refresh_hud()
 
 func _camera() -> void:
-	var p := Ground.unit_point(camera_center)
+	var p := Ground.unit_point(camera_center,battle.bridgehead)
 	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
 	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*CAMERA_DISTANCE
 	camera.look_at(p)
@@ -257,13 +346,13 @@ func _screen_ground(point: Vector2) -> Vector2:
 	for sample in range(1,13):
 		var at:=lerpf(top,bottom,sample/12.0)
 		var p:=origin+dir*at
-		if p.y<=Ground.deck_height(Vector2(p.x,p.z)):
+		if p.y<=Ground.deck_height(Vector2(p.x,p.z),battle.bridgehead):
 			var lo:=previous
 			var hi:=at
 			for i in 10:
 				var mid: float=(lo+hi)*0.5
 				var q:=origin+dir*mid
-				if q.y>Ground.deck_height(Vector2(q.x,q.z)): lo=mid
+				if q.y>Ground.deck_height(Vector2(q.x,q.z),battle.bridgehead): lo=mid
 				else: hi=mid
 			p=origin+dir*((lo+hi)*0.5)
 			return Vector2(p.x,p.z)
@@ -278,7 +367,7 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 	var best_score:=INF
 	# In the orthographic player camera a shoulder spans the same number of pixels
 	# everywhere. Measure across the screen so orbiting preserves that width.
-	var base:=Ground.unit_point(floor_point)
+	var base:=Ground.unit_point(floor_point,battle.bridgehead)
 	var shoulder:=camera.global_transform.basis.x.normalized()*0.32
 	var radius:=maxf(2.0,camera.unproject_position(base+shoulder).distance_to(camera.unproject_position(base)))
 	# A cursor resting on a visible torso selects that ground direction at the
@@ -286,7 +375,7 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 	for id in battle._near(floor_point,4.8,1):
 		var u:=battle.roster[id]
 		if battle.hero.pos.distance_squared_to(u.pos)>34.0*34.0: continue
-		var foot:=Ground.unit_point(u.pos)
+		var foot:=Ground.unit_point(u.pos,battle.bridgehead)
 		var head:=foot+Vector3.UP*(2.45 if u.mounted else 1.70)
 		var low:=camera.unproject_position(foot)
 		var high:=camera.unproject_position(head)
@@ -425,23 +514,30 @@ func _draw_field() -> void:
 	var si:=absf(sin(camera_yaw))
 	var half_extent:=Vector2(co*hw+si*hd+4,si*hw+co*hd+6)
 	var hero:=battle.hero
-	hud.marker.visible=battle.result=="" and camera.is_position_in_frustum(Ground.unit_point(hero.pos))
+	hud.marker.visible=battle.result=="" and camera.is_position_in_frustum(Ground.unit_point(hero.pos,battle.bridgehead))
 	if hud.marker.visible:
-		var hp:=Ground.unit_point(hero.before.lerp(hero.pos,clampf(carry/Battle.DT,0,1)))
+		var hp:=Ground.unit_point(hero.before.lerp(hero.pos,clampf(carry/Battle.DT,0,1)),battle.bridgehead)
 		var at:=camera.unproject_position(hp)
 		var ahead:=camera.unproject_position(hp+Vector3(hero.facing.x,0,hero.facing.y))
-		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1))
+		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1),battle.bridgehead)
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	if frame_log: frame_log.pose_submitted(battle)
 	map.update_battle(battle)
 	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="",battle.gate_hp<260.0 or battle.ram.x>Ground.WALL_X-12.0)
-	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,half_extent-Vector2(4,6))
+	hud.inset.locate(camera_center,battle.hero.pos,battle.hero.facing,Vector2(hw,hd),camera_yaw)
 	view_us+=Time.get_ticks_usec()-t
 
 func _process(delta: float) -> void:
 	if not battle: return
-	if follow: camera_center=camera_center.lerp(battle.hero.pos,1.0-exp(-delta*7.5))
+	if follow:
+		# The gate watch keeps the crossing and arch in view while the player
+		# advances. Follow again when they actually leave the approach.
+		var focus:=battle.hero.pos
+		if battle.bridgehead:
+			var offset:=focus-Ground.BRIDGE_VIEW
+			focus=Ground.BRIDGE_VIEW+offset-offset.clamp(Vector2(-17.,-4.8),Vector2(12.,4.8))
+		camera_center=camera_center.lerp(focus,1.0-exp(-delta*7.5))
 	_camera()
 	_draw_field()
 	if frame_log: frame_log.sample(self)
