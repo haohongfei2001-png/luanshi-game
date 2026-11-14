@@ -22,7 +22,8 @@ func run() -> void:
 		if delta>.00001:changed+=1
 		var in_approach:=p.x>0. and p.x<46.6 and absf(p.y)<38.
 		var in_shore_shelves:=false # Old isolated scan-support shelves removed
-		if not in_approach and not in_shore_shelves:assert(delta==0.,"Landform escaped explicit approach/shore domains")
+		var in_regional_ridges:=Ground.AuthoredProfile.RegionalRidges.weight(p)>0.
+		if not in_approach and not in_shore_shelves and not in_regional_ridges:assert(delta==0.,"Landform escaped explicit approach/shore/regional watershed domains")
 	for bridge_x:float in [-32.,24.]:
 		for z:float in ([-35.,0.,35.] if bridge_x<0 else [0.]):
 			assert(is_equal_approx(Ground.deck_height(Vector2(bridge_x,z),true),.13))

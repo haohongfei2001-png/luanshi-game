@@ -1,5 +1,6 @@
 extends RefCounted
-const VERSION:="asymmetric-military-watercourse-and-causeway-04"
+const VERSION:="connected-regional-ridges-and-causeway-05"
+const RegionalRidges:=preload("res://scripts/field/authored_ridge_profile.gd")
 ## Default-OFF: one road/shoulder/wet-bank cross-section, shared support+collision.
 const Existing:=preload("res://scripts/field/river_pass_profile.gd")
 static func rebuild_weight(p:Vector2) -> float:
@@ -33,7 +34,8 @@ static func moat_depth(p:Vector2) -> float:
 	depth*=1.-smoothstep(21.8,25.5,absf(p.y))
 	return lerpf(old,depth,smoothstep(5.3,8.5,absf(p.y)))
 static func height(p:Vector2) -> float:
-	var original:=Existing.height(p);var weight:=rebuild_weight(p)
+	var original:=lerpf(Existing.height(p),RegionalRidges.height(p),RegionalRidges.weight(p))
+	var weight:=rebuild_weight(p)
 	if weight<=0.:return original
 	# Preserve the existing bridge's ground footprint exactly. Its deck remains
 	# the same Ground.deck_height override; no visual bridge relocation.

@@ -1,0 +1,3 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+REGIONAL_SKY_RESOURCE_BUILT {"art":"NOT_ACCEPTED","graphics":"NOT_RUN","image_format":16,"output_sha256":"9b87cba886aa31191c293bd72b4482a59a305a2c4bddd0b74ce0d10ed4aea117","peak_luminance":65408.0,"peak_pixel":"(1218, 239)","radiance_size":256,"solar_angular_mismatch_degrees":0.0996122525878329,"source_colors":"original unclamped HDR; no exposure correction or baked terrain","source_dimensions":"(2048, 1024)","source_sha256":"5244534e9cf5b606f2ff513aa00ddb161b0a4826ffd88a0d3bd03ac29247d198","source_sun_elevation_degrees":47.900390625,"world_sun_rotation_degrees":[-48,58,0]}
