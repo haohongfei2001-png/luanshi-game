@@ -4,6 +4,16 @@ const Ground:=preload("res://scripts/field/ground.gd")
 const Store:=preload("res://scripts/field/save.gd")
 
 func _initialize() -> void:
+	# The playable bridge deck and actor height use the same new river section.
+	assert(Ground.height(Vector2(Ground.RIVER_X,15.),true)<Ground.BATTLE_WATER_LEVEL)
+	assert(Ground.deck_height(Vector2(Ground.MOAT_X,14.),true)<Ground.BATTLE_WATER_LEVEL)
+	assert(is_equal_approx(Ground.deck_height(Vector2(Ground.MOAT_X,0.),true),.13))
+	assert(is_equal_approx(Ground.height(Vector2(Ground.RIVER_X,15.),false),-.92))
+	for x in range(17,33):
+		for z in range(-26,27):
+			var p:=Vector2(x,z)
+			if not Ground.blocked(p,true,true):
+				assert(Ground.deck_height(p,true)>Ground.BATTLE_WATER_LEVEL,"A walkable foot position is underwater")
 	var old:=Battle.new()
 	old.setup(20,Battle.SEED,3,true,true,20,true)
 	old.hero.pos=Vector2(Ground.MOAT_X+4.6,12.4)

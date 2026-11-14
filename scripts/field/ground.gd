@@ -14,6 +14,9 @@ const MOAT_BANK := 5.85
 const MOAT_WATER := 4.10
 const MOAT_DECK := 3.70
 const MOAT_END := 25.5
+const RIVER_BED_DEPTH := 3.8
+const MOAT_BED_DEPTH := 3.4
+const BATTLE_WATER_LEVEL := -1.48
 # Authored outcrop centres are shared by the visible banks and their footprint.
 const BANK_OUTCROPS: Array[Vector3] = [
 	Vector3(1.,-6.2,2.7),Vector3(-1.,-8.8,3.4),Vector3(1.,-10.5,3.6),
@@ -50,7 +53,7 @@ static func height(p: Vector2,bridgehead:bool=false) -> float:
 	var eastern_ridge:=(p-Vector2(112.,-45.))/Vector2(25.,17.)
 	var relief:=4.8*pow(maxf(0.,1.-western_ridge.length_squared()),2)+3.6*pow(maxf(0.,1.-northern_ridge.length_squared()),2)+5.4*pow(maxf(0.,1.-eastern_ridge.length_squared()),2)
 	relief*=smoothstep(6.3,14.,absf(p.x-RIVER_X))
-	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief - (1.0 - bank) * 0.92
+	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief - (1.0 - bank) * RIVER_BED_DEPTH
 
 static func river_center(z: float) -> float:
 	var approach:=smoothstep(4.2,12.,absf(z-crossing(z)))
@@ -115,7 +118,7 @@ static func deck_height(p: Vector2, bridgehead: bool=false) -> float:
 	if ledge>0: return ledge
 	if absf(p.x - RIVER_X) < 6.6 and absf(p.y - crossing(p.y)) < 3.95:
 		return 0.13
-	return height(p,bridgehead)-(.87*moat_depth(p) if bridgehead else 0.0)
+	return height(p,bridgehead)-(MOAT_BED_DEPTH*moat_depth(p) if bridgehead else 0.0)
 
 static func unit_point(p: Vector2, bridgehead: bool=false) -> Vector3:
 	return Vector3(p.x, deck_height(p,bridgehead), p.y)

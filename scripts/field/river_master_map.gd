@@ -83,6 +83,8 @@ func _library(path:String) -> Dictionary:
 				material.alpha_scissor_threshold=.38
 				material.alpha_antialiasing_mode=BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
 
+			if path==BOULDERS:
+				material.albedo_color=Color("a6b1b5")
 			if path==BROADLEAF or path==WOODLAND or path==FERN or path==SHRUB or path==THICKET:
 				var kind:=1 if "leaves" in material.resource_name else 0
 				if path==WOODLAND:kind=0 if "dead" in material.resource_name else 1
@@ -145,7 +147,7 @@ func _plant(path:String,part:String,at:Vector2,size:float,yaw:float=0.) -> MeshI
 	return _piece(path,part,Vector3(at.x,_land_height(at),at.y),Vector3.ONE*size,yaw,origin)
 
 func _land_height(p:Vector2) -> float:
-	var h:=Ground.height(p,bridgehead)-(.87*Ground.moat_depth(p) if bridgehead else 0.)
+	var h:=Ground.height(p,bridgehead)-(Ground.MOAT_BED_DEPTH*Ground.moat_depth(p) if bridgehead else 0.)
 	# The distant ridge begins outside every playable coordinate.
 	var outside:=maxf(absf(p.x)-Ground.LIMIT.x,absf(p.y)-Ground.LIMIT.y)
 	if outside>8.:
@@ -160,7 +162,7 @@ func _terrain() -> void:
 			var vertices:=PackedVector3Array()
 			var normals:=PackedVector3Array()
 			var indices:=PackedInt32Array()
-			var step:=1. if x0>=0 and x0<96 and abs(z0)<=32 else 2.
+			var step:=.5
 			var count:=int(32./step)+1
 			for ix in count:
 				for iz in count:
@@ -242,15 +244,23 @@ func _bridge(x:float,z:float) -> void:
 	for side:float in [-1.,1.]:
 		var rail:=_piece("res://assets/third_party/wildfire_bridge/bridge_edge.glb","BoundTimber",Vector3(x,0.,z+side*3.78),Vector3.ONE,PI if side>0. else 0.)
 		rail.material_override=rail_material
+	if bridgehead:
+		var poles:Mesh=_library(PIER)["modular_wooden_pier_poles"]
+		var bounds:=poles.get_aabb()
+		var anchor:=bounds.get_center()
+		anchor.y=bounds.end.y
+		for along:float in [-3.8,3.8]:
+			for across:float in [-2.15,2.15]:
+				_piece(PIER,"modular_wooden_pier_poles",Vector3(x+along,.05,z+across),Vector3.ONE,0.,anchor)
 
 func _river() -> void:
-	_water(Vector3(Ground.RIVER_X,-.37,0.),Vector2(20.,256.))
+	_water(Vector3(Ground.RIVER_X,Ground.BATTLE_WATER_LEVEL if bridgehead else -.37,0.),Vector2(20.,256.))
 	for z:float in Ground.CROSSINGS: _bridge(Ground.RIVER_X,z)
 	if bridgehead:
-		_water(Vector3(Ground.MOAT_X,-.38,0.),Vector2(16.,58.))
+		_water(Vector3(Ground.MOAT_X,Ground.BATTLE_WATER_LEVEL,0.),Vector2(16.,58.))
 		_bridge(Ground.MOAT_X,0.)
 	var boat:=preload("res://assets/environment/river_skiff.gltf").instantiate() as Node3D
-	boat.position=Vector3(Ground.RIVER_X+1.8,-.35,-11.5)
+	boat.position=Vector3(Ground.RIVER_X+1.8,Ground.BATTLE_WATER_LEVEL+.02 if bridgehead else -.35,-11.5)
 	boat.rotation.y=.12
 	add_child(boat)
 
@@ -265,6 +275,23 @@ func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
 	plant.visibility_range_end=300.
 	plant.lod_bias=2.
 	return plant
+
+func _bank_foundation(channel:float,moat:bool) -> void:
+	# Place the complete scanned cliff within an excavated bank. Its open back
+	# terminates below the soil, while the original eroded face reaches the water.
+	var mesh:Mesh=_library(CLIFF)["coastal_cliff_02_LOD0"]
+	var bounds:=mesh.get_aabb()
+	var anchor:=bounds.get_center()
+	anchor.y=bounds.end.y
+	var reaches:Array[float]=[-14.1,14.1] if moat else [-55.,-17.5,17.5,55.]
+	for side:float in [-1.,1.]:
+		for z:float in reaches:
+			var center:=channel if moat else Ground.river_center(z)
+			var face:=_piece(CLIFF,"coastal_cliff_02_LOD0",
+				Vector3(center+side*(5.0 if moat else 5.8),.10,z),Vector3.ONE*.40,
+				PI*.5 if side>0. else -PI*.5,anchor)
+			face.name="EmbeddedRockBank"
+			face.lod_bias=.9
 
 func _bank_rocks(channel:float,moat:bool) -> void:
 	var parts:=_library(BOULDERS)
@@ -286,7 +313,7 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 			var width:=entry.z*(.97 if j==0 else .55)
 			var size:=width/maxf(box.size.x,box.size.z)
 			var at:=Vector3(center+entry.x*(shoulder-.75*j),
-				-.48-box.size.y*size*.12,entry.y+j*entry.z*.31)
+				(Ground.BATTLE_WATER_LEVEL-.25 if bridgehead and j==1 else -.48)-box.size.y*size*.12,entry.y+j*entry.z*.31)
 			var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,i*1.83+j*2.1,anchor)
 			rock.name="WholeErodedBoulder"
 			rock.lod_bias=1.3
@@ -335,6 +362,9 @@ func _native_understory(path:String,at:Vector2,height:float,yaw:float,variant:in
 	return plant
 
 func _banks_and_groves() -> void:
+	if bridgehead:
+		_bank_foundation(Ground.RIVER_X,false)
+		_bank_foundation(Ground.MOAT_X,true)
 	_bank_rocks(Ground.RIVER_X,false)
 	if bridgehead: _bank_rocks(Ground.MOAT_X,true)
 	var near_groves:Array[Vector3]=[
