@@ -4,6 +4,9 @@ uniform sampler2D soil : source_color, repeat_enable, filter_linear_mipmap_aniso
 uniform sampler2D grass : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D leaves : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform bool bridgehead=false;
+uniform vec3 road_pigment : source_color = vec3(.61,.50,.36);
+uniform vec3 grass_pigment : source_color = vec3(.38,.41,.25);
+uniform vec3 litter_pigment : source_color = vec3(.43,.38,.25);
 varying vec3 world;
 void vertex() { world=(MODEL_MATRIX*vec4(VERTEX,1.)).xyz; }
 float hash(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
@@ -34,10 +37,11 @@ void fragment() {
 	vec3 dust=ground_sample(soil,p,4.6);
 	vec3 turf=ground_sample(grass,p,3.1);
 	vec3 litter=ground_sample(leaves,p,3.8);
-	// Keep the source scans' connected soil, plant and leaf forms.
-	dust*=vec3(.79,.75,.66);
-	turf*=vec3(.58,.62,.53);
-	litter*=vec3(.62,.65,.54);
+	// Native scan relief remains subordinate to broad terrain materials.
+	vec3 luminance=vec3(.2126,.7152,.0722);
+	dust=road_pigment*mix(.83,1.14,smoothstep(.025,.55,dot(dust,luminance)));
+	turf=grass_pigment*mix(.79,1.13,smoothstep(.025,.55,dot(turf,luminance)));
+	litter=litter_pigment*mix(.80,1.12,smoothstep(.025,.55,dot(litter,luminance)));
 	float undergrowth=smoothstep(.45,.71,patches);
 	vec3 verge=mix(turf,litter,.17+.36*undergrowth);
 	float bare=clamp(lane+bank*.60+(patches-.55)*.5,0.,1.);

@@ -33,7 +33,14 @@ const RIDGE_RADII := Vector2(34, 16)
 const EAST_HILL := Vector2(77, 43)
 const EAST_RADII := Vector2(30, 13)
 
-static func height(p: Vector2) -> float:
+static func height(p: Vector2,bridgehead:bool=false) -> float:
+	if not bridgehead:
+		# Existing open-field saves retain their original terrain and routes.
+		var legacy_slope := (p-RIDGE)/RIDGE_RADII
+		var legacy_hill := maxf(0.0,1.0-legacy_slope.length_squared())
+		var legacy_east := (p-EAST_HILL)/EAST_RADII
+		var legacy_bank := clampf((absf(p.x-RIVER_X)-3.9)/2.4,0.0,1.0)
+		return 3.9*legacy_hill*legacy_hill+1.8*pow(maxf(0.0,1.0-legacy_east.length_squared()),2)-(1.0-legacy_bank)*.92
 	var slope := (p - RIDGE) / RIDGE_RADII
 	var hill := maxf(0.0, 1.0 - slope.length_squared())
 	var east := (p - EAST_HILL) / EAST_RADII
@@ -97,7 +104,7 @@ static func restore_bank_position(p:Vector2,bridgehead:bool) -> Vector2:
 	var restored:=p
 	if bridgehead and moat_blocks(p):
 		restored.x=MOAT_X+(-1. if p.x<MOAT_X else 1.)*(MOAT_BANK+.6)
-	elif absf(p.y-crossing(p.y))>3.8 and absf(p.x-RIVER_X)<9. and blocked(p,true,false):
+	elif bridgehead and absf(p.y-crossing(p.y))>3.8 and absf(p.x-RIVER_X)<9. and blocked(p,true,true):
 		var centre:=river_center(p.y)
 		restored.x=centre+(-1. if p.x<centre else 1.)*8.5
 	return restored
@@ -108,7 +115,7 @@ static func deck_height(p: Vector2, bridgehead: bool=false) -> float:
 	if ledge>0: return ledge
 	if absf(p.x - RIVER_X) < 6.6 and absf(p.y - crossing(p.y)) < 3.95:
 		return 0.13
-	return height(p)-(.87*moat_depth(p) if bridgehead else 0.0)
+	return height(p,bridgehead)-(.87*moat_depth(p) if bridgehead else 0.0)
 
 static func unit_point(p: Vector2, bridgehead: bool=false) -> Vector3:
 	return Vector3(p.x, deck_height(p,bridgehead), p.y)
@@ -122,12 +129,14 @@ static func pace(p: Vector2, mounted: bool, bridgehead: bool=false) -> float:
 	# The central approach lies between the extents of both hills. All land here is level.
 	if p.y >= RIDGE.y + RIDGE_RADII.y and p.y <= EAST_HILL.y - EAST_RADII.y:
 		return 1.0
-	return 0.87 if height(p) > 1.2 else 1.0
+	return 0.87 if height(p,bridgehead) > 1.2 else 1.0
 
 static func blocked(p: Vector2, open: bool, bridgehead: bool=false) -> bool:
 	if bridgehead and moat_blocks(p): return true
-	if (absf(p.x-river_center(p.y))<5.65+river_shore_variation(p.y) or bank_outcrop_blocks(p,RIVER_X,false)) and absf(p.y-crossing(p.y))>3.8:
-		return true
+	var river_blocked:=absf(p.x-RIVER_X)<4.8
+	if bridgehead:
+		river_blocked=absf(p.x-river_center(p.y))<5.65+river_shore_variation(p.y) or bank_outcrop_blocks(p,RIVER_X,false)
+	if river_blocked and absf(p.y-crossing(p.y))>3.8:return true
 	if absf(p.x - WALL_X) < 1.4 and absf(p.y) <= WALL_Z + 1.0:
 		return not (open and absf(p.y) < GATE_HALF - 0.3)
 	if absf(p.x - BACK_X) < 1.2 and absf(p.y) <= WALL_Z + 1.0:

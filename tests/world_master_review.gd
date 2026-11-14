@@ -24,11 +24,11 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	pic.resize(1440,810,Image.INTERPOLATE_LANCZOS)
 	pic.save_jpg(OUT+"/"+label+"-preview.jpg",.93)
 	var b=field.battle
-	var row:={"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
+	var row:={"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"shadow_mode":field.map.sun.directional_shadow_mode,"shadow_pancake":field.map.sun.directional_shadow_pancake_size,"shadow_enabled":field.map.sun.shadow_enabled,"shadow_distance":field.map.sun.directional_shadow_max_distance,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _inventory() -> void:
-	for path:String in [field.map.WOODLAND]:
+	for path:String in [field.map.BROADLEAF]:
 		var packed:Node3D=(load(path) as PackedScene).instantiate()
 		var members:Array=[packed]
 		members.append_array(packed.find_children("*","MeshInstance3D",true,false))
@@ -38,8 +38,11 @@ func _inventory() -> void:
 			var mesh:Mesh=node.mesh
 			var materials:Array=[]
 			for i in mesh.get_surface_count():
-				var m:=mesh.surface_get_material(i) as StandardMaterial3D
-				materials.append({"name":m.resource_name,"transparency":m.transparency,"color":str(m.albedo_color),"scissor":m.alpha_scissor_threshold,"texture":m.albedo_texture.resource_path if m.albedo_texture else ""})
+				var m:=mesh.surface_get_material(i)
+				if m is StandardMaterial3D:
+					materials.append({"name":m.resource_name,"transparency":m.transparency,"color":str(m.albedo_color),"scissor":m.alpha_scissor_threshold,"texture":m.albedo_texture.resource_path if m.albedo_texture else ""})
+				elif m is ShaderMaterial:
+					materials.append({"shader":m.shader.resource_path,"botanical_part":m.get_shader_parameter("botanical_part")})
 			parts.append({"name":node.name,"aabb":str(mesh.get_aabb()),"surfaces":mesh.get_surface_count(),"materials":materials})
 		print("WORLD_PLANT_SOURCE ",JSON.stringify({"path":path,"root_type":packed.get_class(),"parts":parts}))
 		packed.free()
@@ -68,6 +71,13 @@ func _run() -> void:
 	await _snap("bridgehead-0135",Ground.BRIDGE_VIEW,22.)
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
 	await _snap("grove-0135",Vector2(38.,-10.),18.)
+	await _snap("shadow-split",Ground.BRIDGE_VIEW,22.)
+	field.map.sun.directional_shadow_mode=DirectionalLight3D.SHADOW_ORTHOGONAL
+	await _snap("shadow-orthogonal",Ground.BRIDGE_VIEW,22.)
+	field.map.sun.directional_shadow_pancake_size=0.
+	await _snap("shadow-unclipped",Ground.BRIDGE_VIEW,22.)
+	field.map.sun.directional_shadow_pancake_size=20.
+	field.map.sun.directional_shadow_mode=DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
 	root.size=Vector2i(3840,2160)
 	await process_frame
 	await _snap("bridgehead-0135-uhd",Ground.BRIDGE_VIEW,22.)

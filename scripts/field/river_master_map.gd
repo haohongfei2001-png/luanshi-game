@@ -12,6 +12,7 @@ const PINE := WORLD+"masters/pine_tree_01/pine_tree_01.gltf"
 var libraries:Dictionary={}
 var ground_material:ShaderMaterial
 var water_material:ShaderMaterial
+var botanical_materials:Dictionary={}
 
 func _ready() -> void:
 	name="RiverMasterMap"
@@ -74,10 +75,34 @@ func _library(path:String) -> Dictionary:
 				material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 				material.alpha_scissor_threshold=.38
 				material.alpha_antialiasing_mode=BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
+
+			if path==BROADLEAF or path==FERN or path==SHRUB:
+				var kind:=1 if "leaves" in material.resource_name else 0
+				if path==FERN or path==SHRUB: kind=3
+				mesh.surface_set_material(surface,_botanical_material(material,kind))
 		parts[String(model.name)]=mesh
 	root.free()
 	libraries[path]=parts
 	return parts
+
+func _botanical_material(source:StandardMaterial3D,kind:int) -> ShaderMaterial:
+	var key:=str(source.get_instance_id())+"_"+str(kind)
+	if botanical_materials.has(key):return botanical_materials[key]
+	var material:=ShaderMaterial.new()
+	material.shader=preload("res://scripts/field/river_botanical.gdshader")
+	material.set_shader_parameter("has_atlas",source.albedo_texture!=null)
+	if source.albedo_texture:material.set_shader_parameter("native_atlas",source.albedo_texture)
+	material.set_shader_parameter("uv_scale",source.uv1_scale)
+	material.set_shader_parameter("uv_offset",source.uv1_offset)
+	material.set_shader_parameter("botanical_part",kind)
+	var pigment:=Color("544635")
+	if kind==1:pigment=Color("617343")
+	elif kind==2:pigment=Color("96904b")
+	elif kind==3:pigment=Color("697444")
+	material.set_shader_parameter("pigment",pigment)
+	if kind==2:material.set_shader_parameter("crown_center",Vector3(0.,4.6,0.))
+	botanical_materials[key]=material
+	return material
 
 func _piece(path:String,part:String,at:Vector3,size:Vector3=Vector3.ONE,yaw:float=0.,anchor:Vector3=Vector3.ZERO) -> MeshInstance3D:
 	var parts:=_library(path)
@@ -100,7 +125,7 @@ func _plant(path:String,part:String,at:Vector2,size:float,yaw:float=0.) -> MeshI
 	return _piece(path,part,Vector3(at.x,_land_height(at),at.y),Vector3.ONE*size,yaw,origin)
 
 func _land_height(p:Vector2) -> float:
-	var h:=Ground.height(p)-(.87*Ground.moat_depth(p) if bridgehead else 0.)
+	var h:=Ground.height(p,bridgehead)-(.87*Ground.moat_depth(p) if bridgehead else 0.)
 	# The distant ridge begins outside every playable coordinate.
 	var outside:=maxf(absf(p.x)-Ground.LIMIT.x,absf(p.y)-Ground.LIMIT.y)
 	if outside>8.:
@@ -216,37 +241,42 @@ func _scene_plant(path:String,at:Vector2,height:float,yaw:float=0.) -> Node3D:
 		var child:=_piece(path,part,group.position,Vector3.ONE*scale_value,yaw,anchor)
 		child.reparent(group,true)
 		child.visibility_range_end=250. if height>3. else 150.
+		child.lod_bias=1.2
 	return group
 
 func _bank_rocks(channel:float,moat:bool) -> void:
 	const STONE_PATH:="res://assets/third_party/polyhaven_bank/bank_stones.glb"
-	var material:=StandardMaterial3D.new()
-	material.albedo_texture=preload("res://assets/third_party/polyhaven_bank/lichen_and_stone.jpg")
-	material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-	material.roughness=.96
-	material.metallic_specular=.08
+	var stone:=StandardMaterial3D.new()
+	stone.albedo_texture=preload("res://assets/third_party/polyhaven_bank/lichen_and_stone.jpg")
+	stone.albedo_color=Color("969b88")
+	stone.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	stone.roughness=.96
+	stone.metallic_specular=.06
 	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
-	if not moat: stations.append_array(Ground.RIVER_OUTCROPS)
-	var shapes:Array[Vector4]=[Vector4(0.,0.,1.,.82),Vector4(.8,.7,.63,.74),
-		Vector4(-1.,.6,.57,.71),Vector4(.4,1.2,.38,.49)]
+	if not moat:stations.append_array(Ground.RIVER_OUTCROPS)
 	for i in stations.size():
-		var station:=stations[i]
-		var center:=channel if moat else Ground.river_center(station.y)
-		for j in shapes.size():
-			var shape:=shapes[j]
-			var width:=station.z*shape.z
-			var along:=station.y+shape.x*1.2
-			var inset:=(3.9 if moat else 4.8)+shape.y*.32
-			var at:=Vector3(center+station.x*inset,-.67+shape.y*.13,along)
-			var rock:=_piece(STONE_PATH,"RiverStone%02d"%[(i*5+j*7)%6],at,
-				Vector3(width,width*shape.w,width*.84),i*1.83+j*2.14)
-			rock.material_override=material
-			rock.name="WholeRiverStone"
-			rock.visibility_range_end=175.
-		# Rooted undergrowth joins the bank outcrop to its landward shoulder.
-		for j in 3:
-			var p:=Vector2(center+station.x*(5.5+.28*j),station.y+(j-1)*.94)
-			_woodland("FieldBrushA" if (i+j)%2==0 else "FieldBrushB",p,.43+.16*((i+j)%3),i*1.43+j)
+		var entry:=stations[i]
+		var center:=Ground.river_center(entry.y) if bridgehead and not moat else channel
+		var shoulder:=3.85 if moat else (4.8 if bridgehead else 3.5)
+		# Complete scanned strata overlap below ground, forming an embedded bank.
+		var reach:=entry.z*1.68
+		var at:=Vector2(center+entry.x*shoulder,entry.y)
+		var scale_value:=reach/40.93
+		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",at,scale_value,
+			PI*.5 if entry.x>0. else -PI*.5)
+		cliff.position.y=-.66
+		cliff.name="EmbeddedRockBank"
+		cliff.lod_bias=1.15
+		cliff.visibility_range_end=210.
+		var accent:=_piece(STONE_PATH,"RiverStone%02d"%[i%6],
+			Vector3(center+entry.x*(shoulder+.5),-.55,entry.y+entry.z*.25),
+			Vector3(entry.z*.63,entry.z*.48,entry.z*.59),i*1.83)
+		accent.material_override=stone
+		accent.name="BankShoulderStone"
+		for j in 4:
+			var p:=Vector2(center+entry.x*(5.45+.24*(j%2)),entry.y+(j-1.5)*.84)
+			_native_understory(SHRUB,p,.64+.14*((i+j)%3),i*1.43+j,i+j)
+			if j%2==0:_native_understory(FERN,p+Vector2(entry.x*.65,.48),.45,i*.8+j,i+j)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
@@ -255,7 +285,14 @@ func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	tree.rotation.y=yaw
 	for node in tree.find_children("*","GeometryInstance3D",true,false):
 		node.visibility_range_end=180.
-		node.lod_bias=.8
+
+		node.lod_bias=1.2
+		if node is MeshInstance3D:
+			for surface in node.mesh.get_surface_count():
+				var source:=node.mesh.surface_get_material(surface) as StandardMaterial3D
+				if source:
+					var kind:=2 if String(node.name).begins_with("PendantLeaves") else 0
+					node.set_surface_override_material(surface,_botanical_material(source,kind))
 	add_child(tree)
 
 func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
@@ -268,13 +305,15 @@ func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 		node.lod_bias=.65
 	add_child(tree)
 
-func _woodland(part:String,at:Vector2,height:float,yaw:float) -> MeshInstance3D:
-	var mesh:Mesh=_library(WOODLAND)[part]
-	var scale_value:=height/maxf(mesh.get_aabb().size.y,.01)
-	var plant:=_plant(WOODLAND,part,at,scale_value,yaw)
-	plant.name=part
-	# Author-built leaf masses retain their actual silhouette through the overview.
-	plant.lod_bias=4.0
+func _native_understory(path:String,at:Vector2,height:float,yaw:float,variant:int) -> MeshInstance3D:
+	var parts:=_library(path)
+	var names:=parts.keys()
+	names.sort()
+	var part:String=names[posmod(variant,names.size())]
+	var mesh:Mesh=parts[part]
+	var plant:=_plant(path,part,at,height/maxf(mesh.get_aabb().size.y,.01),yaw)
+	plant.visibility_range_end=135.
+	plant.lod_bias=1.3
 	return plant
 
 func _banks_and_groves() -> void:
@@ -286,11 +325,11 @@ func _banks_and_groves() -> void:
 	for i in near_groves.size():
 		var entry:=near_groves[i]
 		var p:=Vector2(entry.x,entry.y)
-		_woodland(["FieldOakA","FieldElmA","FieldOakB","FieldElmB"][i%4],p,entry.z,i*2.1)
+		_scene_plant(BROADLEAF,p,entry.z,i*2.1)
 		for j in 3:
 			var q:=p+Vector2(cos(i+j*2.1),sin(i+j*2.1))*3.1
-			_woodland("FieldBrushA" if j%2==0 else "FieldBrushB",q,.58+.17*(j%2),i+j*1.9)
-			_scene_plant(FERN,q+Vector2(.9,-.4),.35+.06*j,j+.8*i)
+			_native_understory(SHRUB,q,.72+.17*(j%2),i+j*1.9,i+j)
+			_native_understory(FERN,q+Vector2(.9,-.4),.42+.06*j,j+.8*i,i+j)
 	var willow_positions:Array[Vector3]=[
 		Vector3(17.5,-11.5,0.),Vector3(17.5,11.5,1.),
 		Vector3(30.5,-25.,1.),Vector3(17.3,23.,0.),
@@ -307,11 +346,11 @@ func _banks_and_groves() -> void:
 		Vector2(79.,47.),Vector2(98.,48.),Vector2(112.,-41.)]
 	for i in wooded_slopes.size():
 		var p:=wooded_slopes[i]
-		_woodland("FieldOakA" if i%2==0 else "FieldElmB",p,6.9+.65*(i%3),i*1.37)
+		_scene_plant(BROADLEAF,p,6.9+.65*(i%3),i*1.37)
 		for j in 3:
 			var q:=p+Vector2(cos(i*.7+j*2.1),sin(i*.7+j*2.1))*5.4
-			_woodland("FieldElmA" if j%2==0 else "FieldOakB",q,5.3+.7*j,i+j*1.1)
-			_woodland("FieldBrushA",q+Vector2(1.2,1.1),.85,i+j)
+			_scene_plant(BROADLEAF,q,5.3+.7*j,i+j*1.1)
+			_native_understory(SHRUB,q+Vector2(1.2,1.1),.85,i+j,i+j)
 	# A few complete outcrops form the skyline outside traversable ground.
 	for i in 10:
 		var p:=Vector2(-135.+i*29.,-75.-8.*sin(i*.8))
