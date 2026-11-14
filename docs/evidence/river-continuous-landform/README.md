@@ -161,3 +161,52 @@ The optional second builder argument uses the original diffuse/OpenGL normal/rou
 Verified locally: build 86,016 terrain triangles / 14,124 contour-water triangles; 3 packed-scene instantiate/free cycles, 137,214 normal/tangent pairs, maximum orthogonality error 0.000130677; all three texture images retained native resolution and full mip chains. Physical mesh regression remains unchanged. **Real graphics/shader compilation, normal-pixel repetition/noise review, whole scene integration and runtime cost NOT_RUN for this material.** No whole-terrain art pass, release or M5 claim. Existing failed game captures remain failures.
 
 Additional shared-height regression: `LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tests/field_bridgehead.gd` exited 0. Original 512-per-side scenario at tick 400 reported 299 crossings, hits [514,558], deaths [135,139], pass=true. These are actual normal battle rules, not forced losses or fewer soldiers. This is not a graphics/performance sample, and does not prove bank art/collision readability.
+
+## Actual ee5d138 full-scene review: FAIL, new shore work isolated
+
+The actual native QHD frame and an unscaled crop of its 3840×2160 counterpart were inspected from source `ee5d1389944a4e3a3a13487856066e0631f8ca25`, run 43627776697. Support/foot shadows are present but art remains **FAIL**: bare uniformly granular earth, weak road/shoulder hierarchy, smooth cut bank, flat cyan water, old fluorescent fairy foliage/root claws, huge plain architecture and old characters. Size22 is a historical technical view, not the new owner MOBA camera gate. Failed images are internal evidence, not a qualified release.
+
+Next isolated production combines actual bank backing, complete scan ledges, and surveyed water depth, rather than changing earth color/exposure:
+- Reuse **the complete already licensed** Rob Tuytel / Poly Haven `coastal_cliff_02` derivative, not a new source claim. Existing SOURCE/NOTICE and original matched UV/albedo stay intact. Two whole uniformly quarter-scale scan units, each about10.2m long, form two shore sections; not normalized stones scattered in water. Source original943,284tri, existing derivative89,999tri; pair179,998tri. This remains a candidate requiring full-scene graphics review.
+- `authored_landform_profile.gd` adds real backing soil only in x26..33, abs(z)7.4..19.4. Bridge lane, gate sill, open-field saves and nav-blocking functions stay unchanged. Profile VERSION and packed-scene metadata guard against mixing new native shelves with the wrong support profile.
+- Native shelf placement tests rejected early floating/unbacked placements and several reachable visual-only edges. Final tested anchors (27.4,-1.65,+/-13.7), uniformscale.25, Yrotation−90°. All102,956 vertices and179,998 face centroids were sampled: zero reachable exposed vertices/centroids;5,954 vertices lie in backing soil. Complete scan meshes generate their own matching static collision. This is sampled support consistency, not mathematical proof for every point or art acceptance.
+- Water stays at physical level−1.48m. Vertex color encodes actual bed depth, with a full measured range0..2.32m; shader provides depth absorption and small metre-scale normal slopes. No vertex displacement, SSR, foam, screen blur or fluid-simulation claim. TIME must be frozen/recorded by matched-capture tooling. This layer needs actual graphics verification and is not a claimed visual pass.
+
+```sh
+# Rebuild BOTH with the same updated profile, never reuse an old ground scene.
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tools/art/continuous_landform/build_region.gd -- /tmp/new-ground.scn /tmp/earth-source
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tools/art/continuous_landform/build_native_shore.gd -- /tmp/new-shore.scn
+# Instantiate both at identity. New shore is additional to new terrain,
+# not an additional flat support plane or replacement for bridge geometry.
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tests/art_reset/surveyed_water_depth.gd -- /tmp/new-ground.scn
+```
+
+New terrain still86,016tri/42matching collision tiles, water13,980tri. Water test41,940 vertices,3,549 shallow vertices, encoded-depth maximum quantization error.015685m, no water-level shift. Updated default-OFF/open-field/nav-domain test7,735samples passes,291 changed support samples confined to explicit approach+backing domains. Existing route interpolation error remains.01694m. Graphics/render cost and whole scene quality remain NOT_RUN for this new bank/water variant.
+
+### Lower-view geometry revision and real low-grass source
+
+Actual `camera-9c214ca` perspective road65 view was inspected. It makes the old3m grove platforms look like oversized bare mounds. The new isolated geometry therefore lowers the northern/southern approach terraces to1.45/1.15m while retaining bridge/gate support and the native shelf backing. This is a support-mesh change, not an exposure/color adjustment. All packed terrain/shore/vegetation must be regenerated together under the same versioned Ground flag.
+
+One complete five-blade `GEO-leaf.grass.007` source tuft from Sprite Fright plants.blend was isolated with original mesh/UV/material/modifiers intact, removing only the library inventory translation. SourceSHA256 `3ade1b32e300a35a5d0f9aa0599d21b5f5dfe7b711dab88cbe3f706017bd3320`, CC BY4.0 via the existing package. The empty `EN-grass.short` and broken legacy grass-generator GN are not used or described as acquired ground cover.
+
+Original-material and derived offline tuft previews were inspected. The91-triangle/512PBR derivative is visibly more faceted and lighter than the native source; source random material variation/two-sided transmission are not exactly reproduced. It is an explicit tiny-grass rendering candidate, not faithful film-material or artistic acceptance. It must be judged at actual game pixels. Fixed runtime GLB SHA256 `7ad7169680865f2bfbf921327a5256751cc42f283b487d8963d8bc4fd81e4fae`.
+
+```sh
+blender -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/author_low_grass_source.py -- "$SPRITE_ROOT" /tmp/low-grass
+blender -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 --python tools/art/sprite_source/bake_reusable_collection.py -- /tmp/low-grass/low-grass-source.blend FIELD-five-blade-low-grass /tmp/low-grass/realtime tools/art/sprite_source/low_grass_lod_study.json
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tools/art/continuous_landform/build_grass_shoulders.gd -- /tmp/low-grass/realtime/derived.glb /tmp/road-shoulders.scn
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . --script tests/art_reset/grass_shoulder_support.gd -- /tmp/road-shoulders.scn
+```
+
+Eight explicit connected road-shoulder/shore-back density fields, not arbitrary whole-map scatter, generate591 clumps/53,781 nominal triangles in one MultiMesh resource. Grass remains outside abs(z)4.25m, outside blocked/wet/steep ground, with native roots and tilt attached to the shared survey. Explicit metric scale gives maximumheight.173m; author BU was not silently assumed to equal metres. Game draw calls and final full-scene readability NOT_MEASURED/NOT_RUN. Actual authored distribution belongs to this project, not the original film. This does not complete the missing mature forest, bridge abutment and city-wall material work.
+
+Final lower-terrace build generates598 grass clumps/54,418 triangles (the prior591 result was the taller support revision). A real persistence bug was caught: setting MultiMesh transforms in the dummy headless server and saving the resource produced identity/zero placement on reload. The failed root/net-lane test is retained locally. Grass now explicitly serializes authored Transform3D values plus the mesh on CPU and reconstructs the MultiMesh in `_ready`; it does not trust dummy GPU-state serialization. Three packed-scene reloads now verify all598 roots/tilts, protected lane and mip textures. `tests/art_reset/grass_gpu_layout.gd` separately verifies actual RenderingServer placement on a real display and exits77/NOT_RUN under headless. That GPU test has not yet run locally. No fake graphics PASS is inferred from CPU metadata.
+
+
+### Continuous basin closure for the new perspective view
+
+The real road65 frame exposed missing land beyond x64. The new single survey extends to x[-144,160], z[-112,112], at the same .5m sampling: 266 nonoverlapping tiles and matching collision shapes, 544,768 terrain triangles and 29,532 contour-water triangles. This replaces the earlier 42-tile terrain; it is not a second overlapping background plane, fog wall or camera crop. Rear forest composition remains incomplete and this extension alone is not an art pass.
+
+Actual full-basin build: exit0,16.175s,307,496KiB Linux peak RSS, **offline builder only, not game performance**. Full mesh test passed266 tiles/shapes, route interpolation maximum.0169378m and water contour error.00756647m. Water depth test passed88,596 vertices with6,862 shallow vertices, maximum encoded-depth quantization error.01568475m. Exact vertex/collision height is shared; interpolated triangle interior is not falsely described as analytically identical at every point. Latest original512-per-side tick400 battle passed299 crossings, hits[512,559], deaths[135,138]. No battle results were forced. Real graphics, new water shader compilation, actual grass RenderingServer poses, total draw calls/performance and art quality remain NOT_RUN for this new full closure.
+
+The first full-basin timing attempt never invoked Godot because /usr/bin/time was absent; its exit127 and subsequent missing-scene test log are retained locally. A Python subprocess/resource wrapper performed the successful build above. No failed execution is counted as evidence.

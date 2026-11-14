@@ -10,7 +10,7 @@ const BUSH_LAYOUT:=[
 	[31.5,-11.2,.70,12.0],[35.9,-12.9,.85,37.0],[40.8,-10.2,.62,-22.0],
 	[33.8,12.3,.72,-20.0],[38.8,16.4,.8,55.0]]
 func _initialize() -> void: run.call_deferred()
-func load_native(path:String) -> Node3D:
+static func load_native(path:String) -> Node3D:
 	var doc:=GLTFDocument.new();var state:=GLTFState.new()
 	assert(doc.append_from_file(path,state)==OK,"Native source missing")
 	var node:=doc.generate_scene(state) as Node3D;assert(node)
@@ -59,6 +59,9 @@ func run() -> void:
 	var tree:=load_native(args[0]);var bush:=load_native(args[1])
 	var tree_cost:=template_cost(tree);var bush_cost:=template_cost(bush)
 	var region:=Node3D.new();region.name="SpriteFamilyWoodland_PRODUCTION_EXPERIMENT";root.add_child(region)
+	if Ground.authored_landform_enabled:
+		region.set_script(load("res://scripts/field/experimental_landform_guard.gd"))
+		region.set_meta("expected_profile_version",Ground.AuthoredProfile.VERSION)
 	region.set_meta("composition","sprite-native-woodland-region-02-mipmapped")
 	region.set_meta("art_status","NOT_ACCEPTED; GODOT_GRAPHICS_NOT_RUN")
 	region.set_meta("tree_resource_cost",tree_cost);region.set_meta("bush_resource_cost",bush_cost)

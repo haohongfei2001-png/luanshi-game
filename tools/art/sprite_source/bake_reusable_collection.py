@@ -7,6 +7,8 @@ from mathutils import Vector
 args=sys.argv[sys.argv.index('--')+1:];source,collection_name,out=args[:3]
 out=pathlib.Path(out);out.mkdir(parents=True,exist_ok=True)
 lod_policy=json.loads(pathlib.Path(args[3]).read_text()) if len(args)>3 else None
+atlas_size=int(lod_policy.get('atlas_size',2048)) if lod_policy else 2048
+assert atlas_size in (256,512,1024,2048,4096)
 if lod_policy:
  assert 0<float(lod_policy['default_ratio'])<=1
  assert all(0<float(rule['ratio'])<=1 for rule in lod_policy['rules'])
@@ -101,7 +103,7 @@ s.render.bake.use_selected_to_active=False;s.render.bake.margin=4
 s.render.bake.use_pass_direct=False;s.render.bake.use_pass_indirect=False;s.render.bake.use_pass_color=True
 images={}
 for kind in ['DIFFUSE','NORMAL','ROUGHNESS']:
- image=bpy.data.images.new('Shared_'+kind,width=2048,height=2048,alpha=False)
+ image=bpy.data.images.new('Shared_'+kind,width=atlas_size,height=atlas_size,alpha=False)
  if kind!='DIFFUSE':image.colorspace_settings.name='Non-Color'
  for slot in baker.material_slots:
   if slot.material:slot.material.node_tree.nodes.active.image=image
@@ -147,5 +149,5 @@ world=bpy.data.worlds.new('Review_world');world.use_nodes=True;world.node_tree.n
 bpy.ops.object.select_all(action='DESELECT');target.select_set(True);bpy.context.view_layer.objects.active=target
 bpy.ops.export_scene.gltf(filepath=str(out/'derived.glb'),export_format='GLB',use_selection=True,export_apply=False,export_texcoords=True,export_normals=True)
 s.render.image_settings.file_format='PNG';s.render.filepath=str(out/'derived-NOT-GAME.png');bpy.ops.render.render(write_still=True)
-report={'source_blend_sha256':hashlib.sha256(pathlib.Path(source).read_bytes()).hexdigest(),'collection':collection_name,'triangles':triangles,'geometry_costs':geometry_costs,'source_instances':len(instances),'unique_source_geometry':len(unique),'geometry_signature_policy':'vertices/topology/smoothing/UV/attributes/material identity','same_name_geometry_variants':{k:len(v) for k,v in name_signatures.items() if len(v)>1},'atlas_size':2048,'atlas_grid':n,'original_uv_values_preserved':True,'material_surfaces':1,'lod_edits':lod_edits,'lod_policy':lod_policy,'author_origin_offset':list(shift),'source_world_min':list(lo),'source_world_max':list(hi),'derived_world_bounds_error':max((actual_lo-lo).length,(actual_hi-hi).length),'bounds_error_definition':'flattened mesh vs evaluated LOD instances; NOT original high-resolution fidelity','source_to_lod_geometric_error':'NOT_QUANTIFIED','peak_rss_kib_linux':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'outputs_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.suffix in ('.png','.glb')},'limits':['Source per-instance object/random variation is canonicalized by source type','Realtime transmission not implemented','Godot graphics and draw calls NOT_RUN','Not battlefield or art acceptance']}
+report={'source_blend_sha256':hashlib.sha256(pathlib.Path(source).read_bytes()).hexdigest(),'collection':collection_name,'triangles':triangles,'geometry_costs':geometry_costs,'source_instances':len(instances),'unique_source_geometry':len(unique),'geometry_signature_policy':'vertices/topology/smoothing/UV/attributes/material identity','same_name_geometry_variants':{k:len(v) for k,v in name_signatures.items() if len(v)>1},'atlas_size':atlas_size,'atlas_grid':n,'original_uv_values_preserved':True,'material_surfaces':1,'lod_edits':lod_edits,'lod_policy':lod_policy,'author_origin_offset':list(shift),'source_world_min':list(lo),'source_world_max':list(hi),'derived_world_bounds_error':max((actual_lo-lo).length,(actual_hi-hi).length),'bounds_error_definition':'flattened mesh vs evaluated LOD instances; NOT original high-resolution fidelity','source_to_lod_geometric_error':'NOT_QUANTIFIED','peak_rss_kib_linux':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'outputs_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.suffix in ('.png','.glb')},'limits':['Source per-instance object/random variation is canonicalized by source type','Realtime transmission not implemented','Godot graphics and draw calls NOT_RUN','Not battlefield or art acceptance']}
 (out/'complete.json').write_text(json.dumps(report,indent=2));print('REUSABLE_ATLAS_COMPLETE',json.dumps(report))
