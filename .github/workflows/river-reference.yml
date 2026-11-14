@@ -16,6 +16,8 @@ jobs:
       - name: Register the source plates at a viewable size
         run: |
           set -eu
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-pil xdotool
           dst=docs/evidence/river-gate-v1-rc23/reference
           mkdir -p "$dst"
           /usr/bin/python3 - <<'PY'
