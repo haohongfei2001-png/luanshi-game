@@ -1,0 +1,1223 @@
+{
+  "seed_commit": "bf475571c49c562c8d4647e9fd5b9aebec172c6e",
+  "local_reference_commit": "bd9bf144e66c97bae3ddbea5dc2ab6811e7dcf45",
+  "local_reference_tree": "9818d385f52d9baa612d919e3d6275dc4b9c8be5",
+  "identical_files": 171,
+  "total_files": 173,
+  "files": [
+    {
+      "path": ".github/workflows/dot-art-review.yml",
+      "expected_sha256": "f4386d9b1c2aac6e04e0883ff662314f43c79bace0b4de519ad04bdab4d2a90f",
+      "actual_sha256": "f4386d9b1c2aac6e04e0883ff662314f43c79bace0b4de519ad04bdab4d2a90f",
+      "bytes": 5610,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_GateEastPitch.res",
+      "expected_sha256": "1a0cc31d3e90264c5dd07d643b2cb501d5e90ede67d0da1e33e662110f1ec6d1",
+      "actual_sha256": "1a0cc31d3e90264c5dd07d643b2cb501d5e90ede67d0da1e33e662110f1ec6d1",
+      "bytes": 225459,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_GatePiers.res",
+      "expected_sha256": "5e8b06b5041545b6fdef89d20a8ec88db03764c32871957fe98633fc4302a809",
+      "actual_sha256": "5e8b06b5041545b6fdef89d20a8ec88db03764c32871957fe98633fc4302a809",
+      "bytes": 38789,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_GateWatchHall.res",
+      "expected_sha256": "6fbad2fccaa3692e2f05cc81aadc62b82d9c2ef5d61cb3a37622d92256336471",
+      "actual_sha256": "6fbad2fccaa3692e2f05cc81aadc62b82d9c2ef5d61cb3a37622d92256336471",
+      "bytes": 379316,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_GateWestPitch.res",
+      "expected_sha256": "cfbaacfa220a56b3f785fac4800b59f25ab959e180bc392f11151dc22661770a",
+      "actual_sha256": "cfbaacfa220a56b3f785fac4800b59f25ab959e180bc392f11151dc22661770a",
+      "bytes": 237994,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_barracks.res",
+      "expected_sha256": "5a1192c6e554ad802b191fa8fc71f6498ff807529ef09d7575eb941bfb903276",
+      "actual_sha256": "5a1192c6e554ad802b191fa8fc71f6498ff807529ef09d7575eb941bfb903276",
+      "bytes": 732721,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_fortress.res",
+      "expected_sha256": "909e14d1155059d151ce95495cc9efd2fad4b69d5743241fee074ca2d8d5f488",
+      "actual_sha256": "909e14d1155059d151ce95495cc9efd2fad4b69d5743241fee074ca2d8d5f488",
+      "bytes": 845678,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_house_a.res",
+      "expected_sha256": "6643297fbf3d795f3f0261fc4fe2cc48beb5ee8948c8fc5359a091e88677228d",
+      "actual_sha256": "6643297fbf3d795f3f0261fc4fe2cc48beb5ee8948c8fc5359a091e88677228d",
+      "bytes": 58468,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_house_b.res",
+      "expected_sha256": "0060fbaada8fc124911a45879ade3334cde358e37d79ad359d8fba5ddc9f601a",
+      "actual_sha256": "0060fbaada8fc124911a45879ade3334cde358e37d79ad359d8fba5ddc9f601a",
+      "bytes": 88867,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_storehouse.res",
+      "expected_sha256": "b4ba2b1bcebc3ed30ea6016c9728e3adba687bc0bb0a2050845f65267460ac64",
+      "actual_sha256": "b4ba2b1bcebc3ed30ea6016c9728e3adba687bc0bb0a2050845f65267460ac64",
+      "bytes": 457344,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_wall_gate.res",
+      "expected_sha256": "b2cfad38dbcff05cf471c014587ddcda19f33d94c131a46d5e6f1c94b5d267a9",
+      "actual_sha256": "b2cfad38dbcff05cf471c014587ddcda19f33d94c131a46d5e6f1c94b5d267a9",
+      "bytes": 4529,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_wall_gate_struct.res",
+      "expected_sha256": "e6d8cb995fdc9c1149e43bed0146b75cabe84431e80e609895a219a711a39691",
+      "actual_sha256": "e6d8cb995fdc9c1149e43bed0146b75cabe84431e80e609895a219a711a39691",
+      "bytes": 601641,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_wall_long.res",
+      "expected_sha256": "c15c9e2bf3a7c2027c20974a50ddf0dcb4e6b35894af6c34750a0cad9870f0e0",
+      "actual_sha256": "c15c9e2bf3a7c2027c20974a50ddf0dcb4e6b35894af6c34750a0cad9870f0e0",
+      "bytes": 53361,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/fort_han_wall_tower.res",
+      "expected_sha256": "8d0ca1218e1acc1a1e81815254f40beda7dac3f2eefd0c9580b6a9ad9ab7e2c2",
+      "actual_sha256": "8d0ca1218e1acc1a1e81815254f40beda7dac3f2eefd0c9580b6a9ad9ab7e2c2",
+      "bytes": 107972,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_-128.res",
+      "expected_sha256": "4b99ab6e56ecf1d3bdd2bcbe56650655e89d6aa2b8801310583407cbc1300bb7",
+      "actual_sha256": "4b99ab6e56ecf1d3bdd2bcbe56650655e89d6aa2b8801310583407cbc1300bb7",
+      "bytes": 49860,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_-32.res",
+      "expected_sha256": "7de91f0205c91ba0068a5947eb5e65ca335ab58fe6e00c5b22037fd4154b8227",
+      "actual_sha256": "7de91f0205c91ba0068a5947eb5e65ca335ab58fe6e00c5b22037fd4154b8227",
+      "bytes": 80853,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_-64.res",
+      "expected_sha256": "122a119e7b1bd7f699797c3084e3dcc2e1469664cc474705f9f8325ee742f1e9",
+      "actual_sha256": "122a119e7b1bd7f699797c3084e3dcc2e1469664cc474705f9f8325ee742f1e9",
+      "bytes": 79069,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_-96.res",
+      "expected_sha256": "15a83c98b601e601d8880e6908f4a4dc6c4df5abf4d0925d618697fe8ab58c16",
+      "actual_sha256": "15a83c98b601e601d8880e6908f4a4dc6c4df5abf4d0925d618697fe8ab58c16",
+      "bytes": 57081,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_0.res",
+      "expected_sha256": "f4896cf7d9d13c8d5cbdca55cbd8bcf9f5c133d33d893b0fc57a3bfcee559408",
+      "actual_sha256": "f4896cf7d9d13c8d5cbdca55cbd8bcf9f5c133d33d893b0fc57a3bfcee559408",
+      "bytes": 79419,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_32.res",
+      "expected_sha256": "717a37e6be623c1a14cbaa7b1445a1f906421420226a92a23ba5e205c1fb3065",
+      "actual_sha256": "717a37e6be623c1a14cbaa7b1445a1f906421420226a92a23ba5e205c1fb3065",
+      "bytes": 79689,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_64.res",
+      "expected_sha256": "7c94ded95bfab9a0b59320ec52fb0249d5e6610ab1ecc6907f43ee9f43f8da4a",
+      "actual_sha256": "7c94ded95bfab9a0b59320ec52fb0249d5e6610ab1ecc6907f43ee9f43f8da4a",
+      "bytes": 69293,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-128_96.res",
+      "expected_sha256": "f03e4adfae56f89126beb69a30122e2cdc7ca6f29255a5b6baaee2be0dc5f421",
+      "actual_sha256": "f03e4adfae56f89126beb69a30122e2cdc7ca6f29255a5b6baaee2be0dc5f421",
+      "bytes": 43478,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_-128.res",
+      "expected_sha256": "c4cea643fbee5a03db74d6b508b96405f9676dd2c30e77cb3b5abe8421409f1a",
+      "actual_sha256": "c4cea643fbee5a03db74d6b508b96405f9676dd2c30e77cb3b5abe8421409f1a",
+      "bytes": 40816,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_-32.res",
+      "expected_sha256": "f9248d5174d3f459eb1dafdb5fad6e591e08ad9cf066ca989adb1497afef7fe7",
+      "actual_sha256": "f9248d5174d3f459eb1dafdb5fad6e591e08ad9cf066ca989adb1497afef7fe7",
+      "bytes": 90293,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_-64.res",
+      "expected_sha256": "fa73e59890e45c63183cba6a261d7479fa082a88328fd8b6c152c48637a46a2d",
+      "actual_sha256": "fa73e59890e45c63183cba6a261d7479fa082a88328fd8b6c152c48637a46a2d",
+      "bytes": 69559,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_-96.res",
+      "expected_sha256": "463151381a8a5b1ff60793df91b17766db42e497c2db946f1888e54bd030471e",
+      "actual_sha256": "463151381a8a5b1ff60793df91b17766db42e497c2db946f1888e54bd030471e",
+      "bytes": 40779,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_0.res",
+      "expected_sha256": "d63c38438c9f4dadb549013f943d13ac0e3403770e619dcaa9629e43147f8140",
+      "actual_sha256": "d63c38438c9f4dadb549013f943d13ac0e3403770e619dcaa9629e43147f8140",
+      "bytes": 88430,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_32.res",
+      "expected_sha256": "dadd23bff62611ca5b926771e2676291711a50e3334a1a1339067b3dc3764380",
+      "actual_sha256": "dadd23bff62611ca5b926771e2676291711a50e3334a1a1339067b3dc3764380",
+      "bytes": 90237,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_64.res",
+      "expected_sha256": "281a4d7938aae8c28535a6ff933025309a14f8e9ddb4ceeb496ed0d620db183f",
+      "actual_sha256": "281a4d7938aae8c28535a6ff933025309a14f8e9ddb4ceeb496ed0d620db183f",
+      "bytes": 85596,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-160_96.res",
+      "expected_sha256": "0973bbbadcf7c9b1f74fb1bcbd128ee208d29a8843f559ad3713bcc2e1fd91bf",
+      "actual_sha256": "0973bbbadcf7c9b1f74fb1bcbd128ee208d29a8843f559ad3713bcc2e1fd91bf",
+      "bytes": 49644,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_-128.res",
+      "expected_sha256": "2d4adbb75c940826c9f76300edd541c2e32aa376b9556ae9839d97181396d906",
+      "actual_sha256": "2d4adbb75c940826c9f76300edd541c2e32aa376b9556ae9839d97181396d906",
+      "bytes": 82335,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_-32.res",
+      "expected_sha256": "5cf94cdc49fb2c5728939896d89f08ca5781b26feb2bb58b55183956b7055be8",
+      "actual_sha256": "5cf94cdc49fb2c5728939896d89f08ca5781b26feb2bb58b55183956b7055be8",
+      "bytes": 74615,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_-64.res",
+      "expected_sha256": "3ec0d107f0e5b34a2ea0fa348d69d7eb24e18058781a1b2e564c40aba1b18274",
+      "actual_sha256": "3ec0d107f0e5b34a2ea0fa348d69d7eb24e18058781a1b2e564c40aba1b18274",
+      "bytes": 76447,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_-96.res",
+      "expected_sha256": "7abb9cadccb3805cd99397cbf0d7bf7e3cd848a3ba041a04fa94572941d35870",
+      "actual_sha256": "7abb9cadccb3805cd99397cbf0d7bf7e3cd848a3ba041a04fa94572941d35870",
+      "bytes": 82464,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_0.res",
+      "expected_sha256": "a407c70dd107615952df39f16d5db68642d9a51f31b45918658a471bffeffbf2",
+      "actual_sha256": "a407c70dd107615952df39f16d5db68642d9a51f31b45918658a471bffeffbf2",
+      "bytes": 68371,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_32.res",
+      "expected_sha256": "9f1f9c49c33efde8f6fe2b434f6b9997fcca991c6e90c2e47835e6d79a568555",
+      "actual_sha256": "9f1f9c49c33efde8f6fe2b434f6b9997fcca991c6e90c2e47835e6d79a568555",
+      "bytes": 71152,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_64.res",
+      "expected_sha256": "f45bf634f7787a188b9fb878be992208c937a915fb90df5951c6bc1ef64cce50",
+      "actual_sha256": "f45bf634f7787a188b9fb878be992208c937a915fb90df5951c6bc1ef64cce50",
+      "bytes": 46070,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-32_96.res",
+      "expected_sha256": "84b326da9cc85cc7ad5159f54a895101511c3286b3ddc58a07d2f6de8d487403",
+      "actual_sha256": "84b326da9cc85cc7ad5159f54a895101511c3286b3ddc58a07d2f6de8d487403",
+      "bytes": 45782,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_-128.res",
+      "expected_sha256": "a0c6fb7350cb4b4e22c6866b3ee9d2d1bbb38babac548aea6d59df5c5de1f279",
+      "actual_sha256": "a0c6fb7350cb4b4e22c6866b3ee9d2d1bbb38babac548aea6d59df5c5de1f279",
+      "bytes": 80585,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_-32.res",
+      "expected_sha256": "7bdbfa7fa7460d45b51b63b446b3f373eeb5823b90ac8f183ef774642451f004",
+      "actual_sha256": "7bdbfa7fa7460d45b51b63b446b3f373eeb5823b90ac8f183ef774642451f004",
+      "bytes": 49916,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_-64.res",
+      "expected_sha256": "1c59a1a3d91d3fdcf332441c794008f1eabb7b875872dacb0dfb021a1c9b27d8",
+      "actual_sha256": "1c59a1a3d91d3fdcf332441c794008f1eabb7b875872dacb0dfb021a1c9b27d8",
+      "bytes": 76269,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_-96.res",
+      "expected_sha256": "bcb0981b9678c588d0f76a1f4b09a1557d53f1c06db8ca4be7c5b556b429caba",
+      "actual_sha256": "bcb0981b9678c588d0f76a1f4b09a1557d53f1c06db8ca4be7c5b556b429caba",
+      "bytes": 82824,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_0.res",
+      "expected_sha256": "c392cbc25fc4e05aa740e05e82b693736f499db9381bda288b1a13e201a19426",
+      "actual_sha256": "c392cbc25fc4e05aa740e05e82b693736f499db9381bda288b1a13e201a19426",
+      "bytes": 44814,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_32.res",
+      "expected_sha256": "f736cceba7cd753405c0796061dc95b04447bd9c12009cf2ff56fb26aa26bcb9",
+      "actual_sha256": "f736cceba7cd753405c0796061dc95b04447bd9c12009cf2ff56fb26aa26bcb9",
+      "bytes": 44859,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_64.res",
+      "expected_sha256": "4fcc37137faf7f20c914fb0fcd2028d21baebb7d445f7acb7d34c7e6864d1d80",
+      "actual_sha256": "4fcc37137faf7f20c914fb0fcd2028d21baebb7d445f7acb7d34c7e6864d1d80",
+      "bytes": 46218,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-64_96.res",
+      "expected_sha256": "b333cfa8da8b198f7cea4bdb5aeb4c6f52843430052593459232dc1c31feb107",
+      "actual_sha256": "b333cfa8da8b198f7cea4bdb5aeb4c6f52843430052593459232dc1c31feb107",
+      "bytes": 45954,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_-128.res",
+      "expected_sha256": "96073a0b33538761a7e02eeda3790fa5fde3047c92734e172a43070be6bca78d",
+      "actual_sha256": "96073a0b33538761a7e02eeda3790fa5fde3047c92734e172a43070be6bca78d",
+      "bytes": 81145,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_-32.res",
+      "expected_sha256": "c6fd1a5231fa1b0d1e26f8737c547de0b4651eb4dc3eb9b28f5ca225bcd0090f",
+      "actual_sha256": "c6fd1a5231fa1b0d1e26f8737c547de0b4651eb4dc3eb9b28f5ca225bcd0090f",
+      "bytes": 58265,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_-64.res",
+      "expected_sha256": "0e654a2367b58a25d3c891136a30aef34100abbc10498be60831e11aca527ca9",
+      "actual_sha256": "0e654a2367b58a25d3c891136a30aef34100abbc10498be60831e11aca527ca9",
+      "bytes": 88648,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_-96.res",
+      "expected_sha256": "fcbd6f308f7f6a7af3d30f16501d9d3f84dc7b1d14d8dd276911c1ed3bfd3729",
+      "actual_sha256": "fcbd6f308f7f6a7af3d30f16501d9d3f84dc7b1d14d8dd276911c1ed3bfd3729",
+      "bytes": 89036,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_0.res",
+      "expected_sha256": "ecb124f4c484d682d589122a4e37848b623076f96c914a4753dedb4502e5690a",
+      "actual_sha256": "ecb124f4c484d682d589122a4e37848b623076f96c914a4753dedb4502e5690a",
+      "bytes": 39810,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_32.res",
+      "expected_sha256": "58781eb92fbaafa5d1b5f716ca247e6e00e4d62c157db9520a038925ccea6590",
+      "actual_sha256": "58781eb92fbaafa5d1b5f716ca247e6e00e4d62c157db9520a038925ccea6590",
+      "bytes": 39956,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_64.res",
+      "expected_sha256": "dfd2f44ce70a054a78a61db4b3467e16118969b4cafa561b3448ebe6565a97d6",
+      "actual_sha256": "dfd2f44ce70a054a78a61db4b3467e16118969b4cafa561b3448ebe6565a97d6",
+      "bytes": 39987,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_-96_96.res",
+      "expected_sha256": "9bb19f8b4d58588f23ee94d775b53db449a530f3fa0c1c8eb74d142f4e7a0b1a",
+      "actual_sha256": "9bb19f8b4d58588f23ee94d775b53db449a530f3fa0c1c8eb74d142f4e7a0b1a",
+      "bytes": 39810,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_-128.res",
+      "expected_sha256": "ad7ebc7ebdcdc4a10f5c5041578427dbc9e1403a5c7a80e7da7f55ad57d64ce0",
+      "actual_sha256": "ad7ebc7ebdcdc4a10f5c5041578427dbc9e1403a5c7a80e7da7f55ad57d64ce0",
+      "bytes": 88243,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_-32.res",
+      "expected_sha256": "09819fb0d14cffb1f6f42ef2df76b69e4f09af2f91f08668c8532c26c9ca13f4",
+      "actual_sha256": "09819fb0d14cffb1f6f42ef2df76b69e4f09af2f91f08668c8532c26c9ca13f4",
+      "bytes": 76477,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_-64.res",
+      "expected_sha256": "68ef66419f6682b08b697453978d87868d5213970e79555630152c53439794d4",
+      "actual_sha256": "68ef66419f6682b08b697453978d87868d5213970e79555630152c53439794d4",
+      "bytes": 85494,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_-96.res",
+      "expected_sha256": "f500f925154e091fce9fc2a63b6fd062e5fc11a31562f0222e1413faf7e1c358",
+      "actual_sha256": "f500f925154e091fce9fc2a63b6fd062e5fc11a31562f0222e1413faf7e1c358",
+      "bytes": 90262,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_0.res",
+      "expected_sha256": "1998a6aa8e4cd6f606d242223d563ca3656a3bcb92574fbbe9ca120f990fc129",
+      "actual_sha256": "1998a6aa8e4cd6f606d242223d563ca3656a3bcb92574fbbe9ca120f990fc129",
+      "bytes": 67133,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_32.res",
+      "expected_sha256": "8b2b45a428dc5bccc19c5ed161e08bd866ec780a984b1c6a8a97045bc22c94c2",
+      "actual_sha256": "8b2b45a428dc5bccc19c5ed161e08bd866ec780a984b1c6a8a97045bc22c94c2",
+      "bytes": 58289,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_64.res",
+      "expected_sha256": "155e9b851970beefa9cc3ee7d960bcab2a847e0835ee684070ae3263fc7f836c",
+      "actual_sha256": "155e9b851970beefa9cc3ee7d960bcab2a847e0835ee684070ae3263fc7f836c",
+      "bytes": 39989,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_0_96.res",
+      "expected_sha256": "e8fdacde008cea326040dd642fdb070ce4e737f8b8e52f2c3cc58048372eb902",
+      "actual_sha256": "e8fdacde008cea326040dd642fdb070ce4e737f8b8e52f2c3cc58048372eb902",
+      "bytes": 39838,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_-128.res",
+      "expected_sha256": "9bcb6f31e58d4edc76452e2c21661756a993a5c4a136c4dd97af6649372b2206",
+      "actual_sha256": "9bcb6f31e58d4edc76452e2c21661756a993a5c4a136c4dd97af6649372b2206",
+      "bytes": 55580,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_-32.res",
+      "expected_sha256": "8bcd8fcb9a7a89a2d43be4f2ac8324c5bab2e5b2f69a2dd852c0a9ef2f8936e4",
+      "actual_sha256": "8bcd8fcb9a7a89a2d43be4f2ac8324c5bab2e5b2f69a2dd852c0a9ef2f8936e4",
+      "bytes": 64148,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_-64.res",
+      "expected_sha256": "72b6bcb51880169e79a8d3d78d4588011b936deb24e71c14d7bad37f709a0aee",
+      "actual_sha256": "72b6bcb51880169e79a8d3d78d4588011b936deb24e71c14d7bad37f709a0aee",
+      "bytes": 70425,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_-96.res",
+      "expected_sha256": "86ddaa033a32bc860021220c54bf6e4898e9fd0c160f8baba93bac1f35cc9640",
+      "actual_sha256": "86ddaa033a32bc860021220c54bf6e4898e9fd0c160f8baba93bac1f35cc9640",
+      "bytes": 48134,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_0.res",
+      "expected_sha256": "36c5b0dd8e6a775f08b967a05c661d88ab28d0644f08ea47de075c39af0978b0",
+      "actual_sha256": "36c5b0dd8e6a775f08b967a05c661d88ab28d0644f08ea47de075c39af0978b0",
+      "bytes": 40708,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_32.res",
+      "expected_sha256": "9962e2112b4cf6770a0455fd09a8c40fb8884dcda5195864fb561a069a68af75",
+      "actual_sha256": "9962e2112b4cf6770a0455fd09a8c40fb8884dcda5195864fb561a069a68af75",
+      "bytes": 69895,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_64.res",
+      "expected_sha256": "db6c3b334b83dc532bf39b41870ce28b12ff42a1a0f5627dc0058df92260804c",
+      "actual_sha256": "db6c3b334b83dc532bf39b41870ce28b12ff42a1a0f5627dc0058df92260804c",
+      "bytes": 48969,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_128_96.res",
+      "expected_sha256": "94ff860ec69c87caaf329b24b09a00cbb5b637b3a11ca4b8b58bec1f88d666d4",
+      "actual_sha256": "94ff860ec69c87caaf329b24b09a00cbb5b637b3a11ca4b8b58bec1f88d666d4",
+      "bytes": 40777,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_-128.res",
+      "expected_sha256": "8897e112801b9cb53a6df7e0aabbfe425697029f819c61f24428906739f7199a",
+      "actual_sha256": "8897e112801b9cb53a6df7e0aabbfe425697029f819c61f24428906739f7199a",
+      "bytes": 89490,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_-32.res",
+      "expected_sha256": "557e9f930880bf638883bb766de667c6d3089ba9f7da083b517f884b773983ac",
+      "actual_sha256": "557e9f930880bf638883bb766de667c6d3089ba9f7da083b517f884b773983ac",
+      "bytes": 63616,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_-64.res",
+      "expected_sha256": "4f7945bc37e47a9454b70eb36ed58aaa414b3a9fa7b988c0f61f9cc99da9e2d7",
+      "actual_sha256": "4f7945bc37e47a9454b70eb36ed58aaa414b3a9fa7b988c0f61f9cc99da9e2d7",
+      "bytes": 88773,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_-96.res",
+      "expected_sha256": "a20ef638165aa8e666d285078fb484b57fa8cf85a841f809cac1c37f3acb49f3",
+      "actual_sha256": "a20ef638165aa8e666d285078fb484b57fa8cf85a841f809cac1c37f3acb49f3",
+      "bytes": 90707,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_0.res",
+      "expected_sha256": "030c6fd646319f8d74159cf9ea96209534b064ac04d1b1455e7e5b7a364f571e",
+      "actual_sha256": "030c6fd646319f8d74159cf9ea96209534b064ac04d1b1455e7e5b7a364f571e",
+      "bytes": 55142,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_32.res",
+      "expected_sha256": "67a85c17ab4114e989d7ff74b5e1e16b98ae2854e4deee6a2e4d86a26120ea4d",
+      "actual_sha256": "67a85c17ab4114e989d7ff74b5e1e16b98ae2854e4deee6a2e4d86a26120ea4d",
+      "bytes": 56642,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_64.res",
+      "expected_sha256": "df8cccb9d48c08122877f53f6922dea747c7771fc8928f762309b79e23fc95b8",
+      "actual_sha256": "df8cccb9d48c08122877f53f6922dea747c7771fc8928f762309b79e23fc95b8",
+      "bytes": 40205,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_32_96.res",
+      "expected_sha256": "1c36209001117dbdee45d33ba2afbf82b339460b76dd72972aa3de8a9849db7f",
+      "actual_sha256": "1c36209001117dbdee45d33ba2afbf82b339460b76dd72972aa3de8a9849db7f",
+      "bytes": 39805,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_-128.res",
+      "expected_sha256": "5db71e786cfd86b854dd181be58d209cebf6cfc82c03881f4e2e06d5a5af506f",
+      "actual_sha256": "5db71e786cfd86b854dd181be58d209cebf6cfc82c03881f4e2e06d5a5af506f",
+      "bytes": 88766,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_-32.res",
+      "expected_sha256": "ffed0b75acdc281b858b2913cff648cb0502b58d33c53818d093c72beba477e1",
+      "actual_sha256": "ffed0b75acdc281b858b2913cff648cb0502b58d33c53818d093c72beba477e1",
+      "bytes": 41357,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_-64.res",
+      "expected_sha256": "3e74c59a0abb019563e2a9793dd144088701762eff3e114c2a926b1eed8b4657",
+      "actual_sha256": "3e74c59a0abb019563e2a9793dd144088701762eff3e114c2a926b1eed8b4657",
+      "bytes": 65445,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_-96.res",
+      "expected_sha256": "40bc267982766fa2230c5e3ceeefed3aca1fb27fce4a82623f3c19e681501aa0",
+      "actual_sha256": "40bc267982766fa2230c5e3ceeefed3aca1fb27fce4a82623f3c19e681501aa0",
+      "bytes": 88915,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_0.res",
+      "expected_sha256": "42be57e693ba07d2db8856d510977ef5bed1019b17a28fa42e43a41514edb1ff",
+      "actual_sha256": "42be57e693ba07d2db8856d510977ef5bed1019b17a28fa42e43a41514edb1ff",
+      "bytes": 45828,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_32.res",
+      "expected_sha256": "76d2cfc50e9a0b392b8289f65f90480cfad8721726f7bf80313173e5b97808aa",
+      "actual_sha256": "76d2cfc50e9a0b392b8289f65f90480cfad8721726f7bf80313173e5b97808aa",
+      "bytes": 89179,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_64.res",
+      "expected_sha256": "3b8974797ffb5414e072f0acfb5e97d389634bb74330c665bbee9a29b68013d5",
+      "actual_sha256": "3b8974797ffb5414e072f0acfb5e97d389634bb74330c665bbee9a29b68013d5",
+      "bytes": 46745,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_64_96.res",
+      "expected_sha256": "9ebc9df61d65aedeb502f5d90e596fa7cb6b2fd4e1b639febfb0265e6df91dd2",
+      "actual_sha256": "9ebc9df61d65aedeb502f5d90e596fa7cb6b2fd4e1b639febfb0265e6df91dd2",
+      "bytes": 39811,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_-128.res",
+      "expected_sha256": "6ffa9103c87de489d7dadd20924a091652e8172f1a9edb37ecd60d33631d81c3",
+      "actual_sha256": "6ffa9103c87de489d7dadd20924a091652e8172f1a9edb37ecd60d33631d81c3",
+      "bytes": 88980,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_-32.res",
+      "expected_sha256": "2fe4f4030f65df387b87409cb77c506a3ace3c86cbc58291c7f9234b7f8033a4",
+      "actual_sha256": "2fe4f4030f65df387b87409cb77c506a3ace3c86cbc58291c7f9234b7f8033a4",
+      "bytes": 74071,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_-64.res",
+      "expected_sha256": "2c0b2f9bf58cf17e94e7999705d0e9293e2404a8f5601fb28f6a76bf5b6f41da",
+      "actual_sha256": "2c0b2f9bf58cf17e94e7999705d0e9293e2404a8f5601fb28f6a76bf5b6f41da",
+      "bytes": 83403,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_-96.res",
+      "expected_sha256": "9524a7a84da82ed872bb1db2d0dd9ba52be9b7cbb079a8881f803581b24c9411",
+      "actual_sha256": "9524a7a84da82ed872bb1db2d0dd9ba52be9b7cbb079a8881f803581b24c9411",
+      "bytes": 85145,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_0.res",
+      "expected_sha256": "19d066e4b8593121e798818a98531fdce6d18846d135b91f099ded8d4f58b72c",
+      "actual_sha256": "19d066e4b8593121e798818a98531fdce6d18846d135b91f099ded8d4f58b72c",
+      "bytes": 39806,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_32.res",
+      "expected_sha256": "7b06fc3908fa592f67561c0d99d4c8cc0603b124546d2c1bf68d00c7c607475e",
+      "actual_sha256": "7b06fc3908fa592f67561c0d99d4c8cc0603b124546d2c1bf68d00c7c607475e",
+      "bytes": 87321,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_64.res",
+      "expected_sha256": "7dc76d1df4b72a21328b69647c4f8133f66338da8ff2f0261d8b749b14b2a035",
+      "actual_sha256": "7dc76d1df4b72a21328b69647c4f8133f66338da8ff2f0261d8b749b14b2a035",
+      "bytes": 57239,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/land_96_96.res",
+      "expected_sha256": "82da9198e4d7cadef70b28c521b10950ab7fae4032ab6143d4e15fc5107e6bc9",
+      "actual_sha256": "82da9198e4d7cadef70b28c521b10950ab7fae4032ab6143d4e15fc5107e6bc9",
+      "bytes": 39857,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/master/river_pass.scn",
+      "expected_sha256": "ee40d63424b4c63fd333662da9c45a0f7a3d4e0ebd81eb0f82ecedb9a4128b45",
+      "actual_sha256": "dd2f4dffeb47d3f04a82ed04a43e91bc4bd80c324abbafe2a8af9436b55436c9",
+      "bytes": 8728844,
+      "identical": false
+    },
+    {
+      "path": "assets/river_pass/master/terrain_material.tres",
+      "expected_sha256": "1323bab979d2150d267ed60aee5cc6b9ef41142f01942acf7b41c3f503d0faff",
+      "actual_sha256": "1323bab979d2150d267ed60aee5cc6b9ef41142f01942acf7b41c3f503d0faff",
+      "bytes": 1488,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bark_NormalTree.png",
+      "expected_sha256": "f36e94fdd73255347325b998e02a0b2575fdf714b0315bfe5e8ff34bc8e13603",
+      "actual_sha256": "f36e94fdd73255347325b998e02a0b2575fdf714b0315bfe5e8ff34bc8e13603",
+      "bytes": 3894788,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bark_NormalTree_Normal.png",
+      "expected_sha256": "852f6155404b8c39e100e41e26970e02a6a5c81b482d3726618dab28e3ad03a2",
+      "actual_sha256": "852f6155404b8c39e100e41e26970e02a6a5c81b482d3726618dab28e3ad03a2",
+      "bytes": 4384496,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bark_TwistedTree.png",
+      "expected_sha256": "01608a96c42954eb725b32824530b51e67a2f3d85432d21a8d8adff958d2084a",
+      "actual_sha256": "01608a96c42954eb725b32824530b51e67a2f3d85432d21a8d8adff958d2084a",
+      "bytes": 4630805,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bark_TwistedTree_Normal.png",
+      "expected_sha256": "692da2f58909263f074cb17b36defd09f56bf89ab7efda567a9a3e59261747b3",
+      "actual_sha256": "692da2f58909263f074cb17b36defd09f56bf89ab7efda567a9a3e59261747b3",
+      "bytes": 5728199,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bush_Common.bin",
+      "expected_sha256": "a5e1a773c8ba78fd9c05a8b342131eba4879302a8fddd2c5186cab9ee1ef4966",
+      "actual_sha256": "a5e1a773c8ba78fd9c05a8b342131eba4879302a8fddd2c5186cab9ee1ef4966",
+      "bytes": 91800,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Bush_Common.gltf",
+      "expected_sha256": "77811fca92610cb254713d3d49d5029ab6cf13050c3afb61aa942786a7b2ca90",
+      "actual_sha256": "77811fca92610cb254713d3d49d5029ab6cf13050c3afb61aa942786a7b2ca90",
+      "bytes": 2101,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/CommonTree_1.bin",
+      "expected_sha256": "9dd689e84e1aa2f5b08db8def591254d582783c73737af54ba0d89b3e549c3ae",
+      "actual_sha256": "9dd689e84e1aa2f5b08db8def591254d582783c73737af54ba0d89b3e549c3ae",
+      "bytes": 491576,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/CommonTree_1.gltf",
+      "expected_sha256": "b51cdea6545edb51d102dd6c27caafe62aa75e3c328ac8f9039f4e7bfd690bfa",
+      "actual_sha256": "b51cdea6545edb51d102dd6c27caafe62aa75e3c328ac8f9039f4e7bfd690bfa",
+      "bytes": 3869,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/CommonTree_2.bin",
+      "expected_sha256": "a273d69de31a675a9d7e3eb3c43f804aef2d1b031692111b9e76eb3b0b686d0c",
+      "actual_sha256": "a273d69de31a675a9d7e3eb3c43f804aef2d1b031692111b9e76eb3b0b686d0c",
+      "bytes": 423024,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/CommonTree_2.gltf",
+      "expected_sha256": "67160975f0ac991b4a2ffb2add4ab4037b5e9c1bef9f66dac5235fcf0ba9bd52",
+      "actual_sha256": "67160975f0ac991b4a2ffb2add4ab4037b5e9c1bef9f66dac5235fcf0ba9bd52",
+      "bytes": 3866,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/CommonTree_4.bin",
+      "expected_sha256": "4fa52cc5bb9aa42d5ce1eee6cffca0f0a7f25dd07fe4431e371548e89bc30233",
+      "actual_sha256": "4fa52cc5bb9aa42d5ce1eee6cffca0f0a7f25dd07fe4431e371548e89bc30233",
+      "bytes": 307596,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/CommonTree_4.gltf",
+      "expected_sha256": "ddf0e8837705702871d3f03de8cf7aeed61ad4bf8ee92052b6f95bdd771297b6",
+      "actual_sha256": "ddf0e8837705702871d3f03de8cf7aeed61ad4bf8ee92052b6f95bdd771297b6",
+      "bytes": 3865,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Fern_1.bin",
+      "expected_sha256": "5e92b87a27f81a69fe15347a533df3c77d567b48298dceeef43168ccb7c22853",
+      "actual_sha256": "5e92b87a27f81a69fe15347a533df3c77d567b48298dceeef43168ccb7c22853",
+      "bytes": 11448,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Fern_1.gltf",
+      "expected_sha256": "d41915cffe9dbbde1ae88be381eb9c60f7caa2274511436cc78fe4de627468ab",
+      "actual_sha256": "d41915cffe9dbbde1ae88be381eb9c60f7caa2274511436cc78fe4de627468ab",
+      "bytes": 2058,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Grass.png",
+      "expected_sha256": "5d69048193b246a73c996b892607fb36c75d0c60afcb2dab8aa12de3c0b2d9bd",
+      "actual_sha256": "5d69048193b246a73c996b892607fb36c75d0c60afcb2dab8aa12de3c0b2d9bd",
+      "bytes": 33605,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Grass_Common_Short.bin",
+      "expected_sha256": "7a0f0f7a9ac39cfa4b303bac03a6594f43e48d873b73553fa06a79e4df1271e9",
+      "actual_sha256": "7a0f0f7a9ac39cfa4b303bac03a6594f43e48d873b73553fa06a79e4df1271e9",
+      "bytes": 7052,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Grass_Common_Short.gltf",
+      "expected_sha256": "6957b50622c9e26e7296c1b47ea8653bc0d957e0a547de444e2ed96f0075a21a",
+      "actual_sha256": "6957b50622c9e26e7296c1b47ea8653bc0d957e0a547de444e2ed96f0075a21a",
+      "bytes": 2023,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Grass_Wispy_Tall.bin",
+      "expected_sha256": "a46e091f39958242a96722ea331efa8d7fb055c6e24d21aea6b0ac091a7b1b66",
+      "actual_sha256": "a46e091f39958242a96722ea331efa8d7fb055c6e24d21aea6b0ac091a7b1b66",
+      "bytes": 29492,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Grass_Wispy_Tall.gltf",
+      "expected_sha256": "a05e3ac05e43abbdb89c5b61134e367c7d33e285ff8d2a6e0a40180cb335af0b",
+      "actual_sha256": "a05e3ac05e43abbdb89c5b61134e367c7d33e285ff8d2a6e0a40180cb335af0b",
+      "bytes": 2023,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Leaf_Pine_C.png",
+      "expected_sha256": "86f7ff7a214f5424de48d269568f36a15485e61c80677e426c7be9f45181eef9",
+      "actual_sha256": "86f7ff7a214f5424de48d269568f36a15485e61c80677e426c7be9f45181eef9",
+      "bytes": 70055,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Leaves.png",
+      "expected_sha256": "23248cebe28a24e78add32db3c2ee2f4d7b9219e9d2467279722f0197a7b6bd5",
+      "actual_sha256": "23248cebe28a24e78add32db3c2ee2f4d7b9219e9d2467279722f0197a7b6bd5",
+      "bytes": 2586432,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Leaves_NormalTree_C.png",
+      "expected_sha256": "998612bdf0b76a22f5f54d65cd7a457815d2842d89653fa4348a4ebb42933ad3",
+      "actual_sha256": "998612bdf0b76a22f5f54d65cd7a457815d2842d89653fa4348a4ebb42933ad3",
+      "bytes": 158796,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Leaves_TwistedTree_C.png",
+      "expected_sha256": "0e459b56b14c0e81b1b7cf3d1e8c6f0bb71790eb6c46bb02a76a922d8df646ea",
+      "actual_sha256": "0e459b56b14c0e81b1b7cf3d1e8c6f0bb71790eb6c46bb02a76a922d8df646ea",
+      "bytes": 70353,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/License_Standard.txt",
+      "expected_sha256": "120710e542c3ebaf83856c4eb55b4a1e680593b39302eba7fdc5d942dfe78c58",
+      "actual_sha256": "120710e542c3ebaf83856c4eb55b4a1e680593b39302eba7fdc5d942dfe78c58",
+      "bytes": 852,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/PathRocks_Diffuse.png",
+      "expected_sha256": "85a04abb2c136fee53b376daf3b7d7f96fdf3966de0258dff6fe2b24da792b23",
+      "actual_sha256": "85a04abb2c136fee53b376daf3b7d7f96fdf3966de0258dff6fe2b24da792b23",
+      "bytes": 811732,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pebble_Round_1.bin",
+      "expected_sha256": "f3dacef3243ccaaad7df2beb5c72574a38fb3eae45357e1b5e2b40200d51c375",
+      "actual_sha256": "f3dacef3243ccaaad7df2beb5c72574a38fb3eae45357e1b5e2b40200d51c375",
+      "bytes": 10160,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pebble_Round_1.gltf",
+      "expected_sha256": "9f6261c81134915e73cf35eb4e37076238fd1e79434515ac686d15cbd1f779ab",
+      "actual_sha256": "9f6261c81134915e73cf35eb4e37076238fd1e79434515ac686d15cbd1f779ab",
+      "bytes": 1850,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pebble_Round_3.bin",
+      "expected_sha256": "a7367e78163d396ea032c77042eb5d6a04f68594bd9242c860e34406c5f6a8ca",
+      "actual_sha256": "a7367e78163d396ea032c77042eb5d6a04f68594bd9242c860e34406c5f6a8ca",
+      "bytes": 8576,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pebble_Round_3.gltf",
+      "expected_sha256": "d50c99d98abd4db9bc37a454a764b8c19256c889dc90f902ac3d923ca07fe9a3",
+      "actual_sha256": "d50c99d98abd4db9bc37a454a764b8c19256c889dc90f902ac3d923ca07fe9a3",
+      "bytes": 1848,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pine_1.bin",
+      "expected_sha256": "0cc0900d156359cab7028d87cd5d8897fbcb0479ddf1ddf524d5462c11e17af2",
+      "actual_sha256": "0cc0900d156359cab7028d87cd5d8897fbcb0479ddf1ddf524d5462c11e17af2",
+      "bytes": 275492,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pine_1.gltf",
+      "expected_sha256": "adc85a72e6f46f71317ca5f7630876bfb207f687427bc9e37cd97ec4af5f2cbc",
+      "actual_sha256": "adc85a72e6f46f71317ca5f7630876bfb207f687427bc9e37cd97ec4af5f2cbc",
+      "bytes": 3832,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pine_3.bin",
+      "expected_sha256": "73edd69d7e789b12bfa32ab202c62d74ae98f0bba67975205211bf51906d8c82",
+      "actual_sha256": "73edd69d7e789b12bfa32ab202c62d74ae98f0bba67975205211bf51906d8c82",
+      "bytes": 345288,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Pine_3.gltf",
+      "expected_sha256": "54c72a4d614f053dd4b3d4404076a361de6085ec6a34560e42a76d7e79d89830",
+      "actual_sha256": "54c72a4d614f053dd4b3d4404076a361de6085ec6a34560e42a76d7e79d89830",
+      "bytes": 3827,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/RockPath_Round_Wide.bin",
+      "expected_sha256": "d88fa064e1c11fadf5c6a1cf15bc3e81a54174e12cc79285de9ec5bbe1f2cb88",
+      "actual_sha256": "d88fa064e1c11fadf5c6a1cf15bc3e81a54174e12cc79285de9ec5bbe1f2cb88",
+      "bytes": 247688,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/RockPath_Round_Wide.gltf",
+      "expected_sha256": "47d4f9d79f2500a595822f9eb0e1a46c28c82ea17d8b2167733f15627210dedd",
+      "actual_sha256": "47d4f9d79f2500a595822f9eb0e1a46c28c82ea17d8b2167733f15627210dedd",
+      "bytes": 1868,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/RockPath_Square_Wide.bin",
+      "expected_sha256": "8be8dde582b42e2c58438ede663a4f2432bccb2bae5af6df2018961644879e57",
+      "actual_sha256": "8be8dde582b42e2c58438ede663a4f2432bccb2bae5af6df2018961644879e57",
+      "bytes": 164320,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/RockPath_Square_Wide.gltf",
+      "expected_sha256": "f3ab0c835b516c08ef6e42d7fc435fa08efb8fd14a03245ce97e900020ad5c8f",
+      "actual_sha256": "f3ab0c835b516c08ef6e42d7fc435fa08efb8fd14a03245ce97e900020ad5c8f",
+      "bytes": 1872,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Rock_Medium_1.bin",
+      "expected_sha256": "ea79527d4c2b3bdb7a28bf589bf0c1fd96d192a4d0738636753911dd58681e99",
+      "actual_sha256": "ea79527d4c2b3bdb7a28bf589bf0c1fd96d192a4d0738636753911dd58681e99",
+      "bytes": 13284,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Rock_Medium_1.gltf",
+      "expected_sha256": "5d1ab1fa03218f4a908728ed0eabe6486344a7e4f510b0d3d6f837fd1d011bd8",
+      "actual_sha256": "5d1ab1fa03218f4a908728ed0eabe6486344a7e4f510b0d3d6f837fd1d011bd8",
+      "bytes": 1831,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Rock_Medium_2.bin",
+      "expected_sha256": "76b60bf8349f71abdb0ed462b3223d93c2dcabdfb5754bc132e18b021cc6c805",
+      "actual_sha256": "76b60bf8349f71abdb0ed462b3223d93c2dcabdfb5754bc132e18b021cc6c805",
+      "bytes": 9432,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Rock_Medium_2.gltf",
+      "expected_sha256": "fac2d05a05f2d0d2098de59c09b58f42cc875c9caca4fd4c4bd57f3d36e7b12e",
+      "actual_sha256": "fac2d05a05f2d0d2098de59c09b58f42cc875c9caca4fd4c4bd57f3d36e7b12e",
+      "bytes": 1825,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Rock_Medium_3.bin",
+      "expected_sha256": "63f94bce2d3fb3fe25b2d6c843a828b1bec76855dbaac93fcf5d43582309caad",
+      "actual_sha256": "63f94bce2d3fb3fe25b2d6c843a828b1bec76855dbaac93fcf5d43582309caad",
+      "bytes": 20124,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Rock_Medium_3.gltf",
+      "expected_sha256": "9a575b911372cf91693aa3a56aea8137ec2251c2b99fb34a31272ee64503047f",
+      "actual_sha256": "9a575b911372cf91693aa3a56aea8137ec2251c2b99fb34a31272ee64503047f",
+      "bytes": 1832,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/Rocks_Diffuse.png",
+      "expected_sha256": "b813696df6081f469a127092eb0ce45cc39d56f3ccc0699152bfcd3804810b48",
+      "actual_sha256": "b813696df6081f469a127092eb0ce45cc39d56f3ccc0699152bfcd3804810b48",
+      "bytes": 2517398,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/SOURCE.json",
+      "expected_sha256": "e365bab5df7443229b5a800d461f2c374a72e3121930c940374c7108d8f7a79c",
+      "actual_sha256": "e365bab5df7443229b5a800d461f2c374a72e3121930c940374c7108d8f7a79c",
+      "bytes": 4847,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/TwistedTree_1.bin",
+      "expected_sha256": "58e4c16c16e0a71051af76a37be0641ea8f7089652687f957383d3c4bd24723b",
+      "actual_sha256": "58e4c16c16e0a71051af76a37be0641ea8f7089652687f957383d3c4bd24723b",
+      "bytes": 732456,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/nature/TwistedTree_1.gltf",
+      "expected_sha256": "8544b084e1fadfbec981e964ce27463f50c39c460513e0d3442160880c5908a7",
+      "actual_sha256": "8544b084e1fadfbec981e964ce27463f50c39c460513e0d3442160880c5908a7",
+      "bytes": 3819,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/pavilion/LICENSE-EVIDENCE.md",
+      "expected_sha256": "f14fc29e3afdcba13669a2e6f415cbae0d2676b3da2efb44a8adc8bf63d5d5d2",
+      "actual_sha256": "f14fc29e3afdcba13669a2e6f415cbae0d2676b3da2efb44a8adc8bf63d5d5d2",
+      "bytes": 2379,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/pavilion/SOURCE.json",
+      "expected_sha256": "3d20b3bd457203a7a9728cb4e223a973bacfd23efd814bc8c42c78bd7e2ccb9d",
+      "actual_sha256": "3d20b3bd457203a7a9728cb4e223a973bacfd23efd814bc8c42c78bd7e2ccb9d",
+      "bytes": 730,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/pavilion/author-license-page.html",
+      "expected_sha256": "efc261aad684435640e3f9ce4823199f271722577fa18477bd924793b2eb50a3",
+      "actual_sha256": "efc261aad684435640e3f9ce4823199f271722577fa18477bd924793b2eb50a3",
+      "bytes": 23919,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/pavilion/pavilion-source.fbx",
+      "expected_sha256": "e5a745fceef8eb0e4b45230e4d964f618c64ab0981f098e1e329c982c159e89c",
+      "actual_sha256": "e5a745fceef8eb0e4b45230e4d964f618c64ab0981f098e1e329c982c159e89c",
+      "bytes": 2040044,
+      "identical": true
+    },
+    {
+      "path": "assets/river_pass/pavilion/pavilion.glb",
+      "expected_sha256": "a479fabe231183d8ad4651726181ce8e903566d37e642090150461db066a32f5",
+      "actual_sha256": "c61cdeee78789c132791b94888b1356c83373b9fb43bf2f8da6061796134db95",
+      "bytes": 4147460,
+      "identical": false
+    },
+    {
+      "path": "docs/AUTONOMOUS_DEV_STATE.md",
+      "expected_sha256": "885869e159f0eb620894791010d841cb3419479dc96468b160eed5aa794864c0",
+      "actual_sha256": "885869e159f0eb620894791010d841cb3419479dc96468b160eed5aa794864c0",
+      "bytes": 1784,
+      "identical": true
+    },
+    {
+      "path": "docs/CODEX_CONTINUATION.md",
+      "expected_sha256": "92b81c243ea210ab19a9e085a9bdced5d456241ff8cb8a2958e9cf57a917d648",
+      "actual_sha256": "92b81c243ea210ab19a9e085a9bdced5d456241ff8cb8a2958e9cf57a917d648",
+      "bytes": 80548,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/README.md",
+      "expected_sha256": "8f572b92ce57e31e841892aae97c0d62e6ffd4abab20514a7ec0b424096ce71d",
+      "actual_sha256": "8f572b92ce57e31e841892aae97c0d62e6ffd4abab20514a7ec0b424096ce71d",
+      "bytes": 3670,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/build.log",
+      "expected_sha256": "b659374f540513ef9532169dcfba4f1d1a6e586f13c014bcd7e079f3061f10ce",
+      "actual_sha256": "b659374f540513ef9532169dcfba4f1d1a6e586f13c014bcd7e079f3061f10ce",
+      "bytes": 165,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/entry.log",
+      "expected_sha256": "da0682f412772460c81a8c980568c37a8193a7be3a1f1b7032b969941a6c6092",
+      "actual_sha256": "da0682f412772460c81a8c980568c37a8193a7be3a1f1b7032b969941a6c6092",
+      "bytes": 15110,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/field_bridgehead.log",
+      "expected_sha256": "c47ecc7ca38cf5ab4f23d312a8fd88c69d20b666ac3c53b30717914c1bb2b4b6",
+      "actual_sha256": "c47ecc7ca38cf5ab4f23d312a8fd88c69d20b666ac3c53b30717914c1bb2b4b6",
+      "bytes": 219,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/field_bridgehead_outcome.log",
+      "expected_sha256": "bb8567055baa40d8bacc9c7a23fd5a3bbb5a4b9601d67dc2a7fd53b1fc45888c",
+      "actual_sha256": "bb8567055baa40d8bacc9c7a23fd5a3bbb5a4b9601d67dc2a7fd53b1fc45888c",
+      "bytes": 377,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/lifecycle/README.md",
+      "expected_sha256": "1c820f56e873edd92e111d9a841a2380216a8062ce5c844c5b291fbceac8ed30",
+      "actual_sha256": "1c820f56e873edd92e111d9a841a2380216a8062ce5c844c5b291fbceac8ed30",
+      "bytes": 1810,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/lifecycle/river_pass_entry.log",
+      "expected_sha256": "1b485f2ae34cfce3d89c807a6259c9b2690de446755364d1491c2f168c681517",
+      "actual_sha256": "1b485f2ae34cfce3d89c807a6259c9b2690de446755364d1491c2f168c681517",
+      "bytes": 310,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/lifecycle/river_pass_lifecycle.log",
+      "expected_sha256": "51843db1c39c46fd3c3c69e6812f5f38cc063be7e877cd620cdad89603aad4b6",
+      "actual_sha256": "51843db1c39c46fd3c3c69e6812f5f38cc063be7e877cd620cdad89603aad4b6",
+      "bytes": 345,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/lifecycle/river_pass_master.log",
+      "expected_sha256": "00fde540917defa6b4bf94d24093b90e70f4fcc521101d4e06fe5a2e87709f67",
+      "actual_sha256": "00fde540917defa6b4bf94d24093b90e70f4fcc521101d4e06fe5a2e87709f67",
+      "bytes": 349,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/lifecycle/serialization.json",
+      "expected_sha256": "0eead234351aa9deb7759c852b28d8894d5b5962af887361a60f52a8c104229a",
+      "actual_sha256": "0eead234351aa9deb7759c852b28d8894d5b5962af887361a60f52a8c104229a",
+      "bytes": 381,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/river_pass_master.log",
+      "expected_sha256": "de4491420f3dffb45550efd9e07127fb1417d70aca312aaf5b4fa6dd38e7891f",
+      "actual_sha256": "de4491420f3dffb45550efd9e07127fb1417d70aca312aaf5b4fa6dd38e7891f",
+      "bytes": 15149,
+      "identical": true
+    },
+    {
+      "path": "docs/evidence/river-pass-master/world_terrain_compat.log",
+      "expected_sha256": "b40d9dd013b1c542be5d61988ef9039ed86abb6ed04e78b39f285a4eef59d83e",
+      "actual_sha256": "b40d9dd013b1c542be5d61988ef9039ed86abb6ed04e78b39f285a4eef59d83e",
+      "bytes": 224,
+      "identical": true
+    },
+    {
+      "path": "scripts/field/controller.gd",
+      "expected_sha256": "37649428971b765d450942af58510a034f28da6b68d190503b0725c20bd42f1d",
+      "actual_sha256": "37649428971b765d450942af58510a034f28da6b68d190503b0725c20bd42f1d",
+      "bytes": 23534,
+      "identical": true
+    },
+    {
+      "path": "scripts/field/ground.gd",
+      "expected_sha256": "3629e30d6a1f75f8771752adc394f3046b660a1217ec740dfb2707fe2d3218b5",
+      "actual_sha256": "3629e30d6a1f75f8771752adc394f3046b660a1217ec740dfb2707fe2d3218b5",
+      "bytes": 9606,
+      "identical": true
+    },
+    {
+      "path": "scripts/field/river_pass_master.gd",
+      "expected_sha256": "3123c3914d78b4eb3cb92c400227b25be287ab4f9bc781d3294ad504d045d4a1",
+      "actual_sha256": "3123c3914d78b4eb3cb92c400227b25be287ab4f9bc781d3294ad504d045d4a1",
+      "bytes": 2569,
+      "identical": true
+    },
+    {
+      "path": "scripts/field/river_pass_profile.gd",
+      "expected_sha256": "e304060f06e86c65ade69a1bff21ebaba7f49d9625a3508a911f14cbc474536d",
+      "actual_sha256": "e304060f06e86c65ade69a1bff21ebaba7f49d9625a3508a911f14cbc474536d",
+      "bytes": 2821,
+      "identical": true
+    },
+    {
+      "path": "scripts/field/sound.gd",
+      "expected_sha256": "ff13e40a367ef15d6926273a44e2bb3afbcef89c6304f10a232f360f6d638327",
+      "actual_sha256": "ff13e40a367ef15d6926273a44e2bb3afbcef89c6304f10a232f360f6d638327",
+      "bytes": 3044,
+      "identical": true
+    },
+    {
+      "path": "tests/river_pass_entry.gd",
+      "expected_sha256": "b1c768e838093d58fc065101d437700bfa15bb1b5ad6a3460a2f32b88b9759c7",
+      "actual_sha256": "b1c768e838093d58fc065101d437700bfa15bb1b5ad6a3460a2f32b88b9759c7",
+      "bytes": 1028,
+      "identical": true
+    },
+    {
+      "path": "tests/river_pass_lifecycle.gd",
+      "expected_sha256": "6a10dff91f8c985690b3cb8939b72629c1f14b4c42d932031ab292c0911e1153",
+      "actual_sha256": "6a10dff91f8c985690b3cb8939b72629c1f14b4c42d932031ab292c0911e1153",
+      "bytes": 1079,
+      "identical": true
+    },
+    {
+      "path": "tests/river_pass_master.gd",
+      "expected_sha256": "31a58b20972045aabfb2abb852682117aa3da27ca31db2dc1944ff2651a8c98c",
+      "actual_sha256": "31a58b20972045aabfb2abb852682117aa3da27ca31db2dc1944ff2651a8c98c",
+      "bytes": 1659,
+      "identical": true
+    },
+    {
+      "path": "tests/world_master_review.gd",
+      "expected_sha256": "0c109fae752947df08768a326576550ce3ec6658fd0dc2e8b74294de06da8f9b",
+      "actual_sha256": "0c109fae752947df08768a326576550ce3ec6658fd0dc2e8b74294de06da8f9b",
+      "bytes": 5137,
+      "identical": true
+    },
+    {
+      "path": "tools/art/build_river_pass_master.gd",
+      "expected_sha256": "5e7204253c0689b8484e9ae6a51a2de36fd8e7a779cc984e8d2207cf45b7275c",
+      "actual_sha256": "5e7204253c0689b8484e9ae6a51a2de36fd8e7a779cc984e8d2207cf45b7275c",
+      "bytes": 12203,
+      "identical": true
+    },
+    {
+      "path": "tools/test.sh",
+      "expected_sha256": "5e6364b6d9c2a35765882c8eebeafaa3b48d7c46fd1ff5156102f0947c0f8275",
+      "actual_sha256": "5e6364b6d9c2a35765882c8eebeafaa3b48d7c46fd1ff5156102f0947c0f8275",
+      "bytes": 10792,
+      "identical": true
+    }
+  ],
+  "art": "NOT_REVIEWED",
+  "M5": "DEVICE_NOT_RUN",
+  "note": "Godot resource UIDs and Blender output can differ. This records the actual generated source; it is not a claim of tree equality."
+}
