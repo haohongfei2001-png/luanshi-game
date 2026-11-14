@@ -4,6 +4,7 @@ const WORLD := "res://assets/river_gate/world/"
 const FORT := WORLD+"architecture/river_fort.glb"
 const PIER := WORLD+"masters/modular_wooden_pier/modular_wooden_pier.gltf"
 const CLIFF := WORLD+"masters/coastal_cliff_02/coastal_cliff_02.gltf"
+const SHORE := WORLD+"masters/coast_rocks_03/coast_rocks_03.gltf"
 const BROADLEAF := WORLD+"masters/island_tree_01/island_tree_01.gltf"
 const WOODLAND := WORLD+"woodland/field_woodland.glb"
 const SHRUB := WORLD+"masters/shrub_03/shrub_03.gltf"
@@ -266,36 +267,27 @@ func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
 	return plant
 
 func _bank_rocks(channel:float,moat:bool) -> void:
-	const STONE_PATH:="res://assets/third_party/polyhaven_bank/bank_stones.glb"
-	var stone:=StandardMaterial3D.new()
-	stone.albedo_texture=preload("res://assets/third_party/polyhaven_bank/lichen_and_stone.jpg")
-	stone.albedo_color=Color("b0b2aa")
-	stone.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-	stone.roughness=.96
-	stone.metallic_specular=.06
 	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
 	if not moat:stations.append_array(Ground.RIVER_OUTCROPS)
+	var mesh:Mesh=_library(SHORE)["coast_rocks_03"]
+	var box:=mesh.get_aabb()
+	var anchor:=box.get_center()
+	anchor.y=box.position.y
 	for i in stations.size():
 		var entry:=stations[i]
 		var center:=Ground.river_center(entry.y) if bridgehead and not moat else channel
-		var shoulder:=3.85 if moat else (4.8 if bridgehead else 3.5)
-		# Complete scanned strata overlap below ground, forming an embedded bank.
-		var reach:=entry.z*1.68
+		var shoulder:=3.75 if moat else (4.65 if bridgehead else 3.5)
 		var at:=Vector2(center+entry.x*shoulder,entry.y)
-		var scale_value:=reach/40.93
-		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",at,scale_value,
-			PI*.5 if entry.x>0. else -PI*.5)
-		cliff.position.y=-.66
-		cliff.name="EmbeddedRockBank"
-		cliff.lod_bias=1.15
-		cliff.visibility_range_end=210.
-		for j in 3:
-			var width:=entry.z*(.84 if j==0 else .58)
-			var accent:=_piece(STONE_PATH,"RiverStone%02d"%[(i*5+j)%6],
-				Vector3(center+entry.x*(shoulder+.15+.28*j),-.57,entry.y+(j-1)*entry.z*.43),
-				Vector3(width,width*(.81 if j==0 else .73),width*.82),i*1.83+j*1.37)
-			accent.material_override=stone
-			accent.name="BankShoulderStone"
+		# A complete authored landform contains its weathered rock faces and
+		# connected ground. Its lower mass continues beneath the water line.
+		var reach:=entry.z*1.52
+		var scale_value:=reach/box.size.z
+		var rock:=_piece(SHORE,"coast_rocks_03",
+			Vector3(at.x,-.42,at.y),Vector3(scale_value*.76,scale_value*1.65,scale_value),
+			PI if entry.x<0. else 0.,anchor)
+		rock.name="WholeShoreFormation"
+		rock.lod_bias=1.15
+		rock.visibility_range_end=210.
 		for j in 2:
 			var p:=Vector2(center+entry.x*(6.0+.48*j),entry.y+(j-.5)*1.55)
 			_native_understory(THICKET,p,1.12+.17*((i+j)%3),i*1.43+j,i+j)
