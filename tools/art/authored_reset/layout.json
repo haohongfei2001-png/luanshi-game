@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "id": "river-authored-reset-design-01",
+  "status": "DESIGN_ONLY_NOT_ART_CANDIDATE",
+  "rejected_foundations": ["river-pass-master-v1", "Quaternius canopy + legacy fort + legacy ground mixed presentation"],
+  "benchmark": "https://www.ageofempires.com/games/age-of-empires-iv/civilizations/chinese/",
+  "reference_usage": "Observation of proportion and coherent material hierarchy only. No extracted assets or copied scene.",
+  "units": "metres, Godot x/y/z",
+  "camera": {"center": [34.2, 0.6, 1.0], "orthographic_vertical": 22, "yaw_degrees": -33, "pitch_degrees": 50.775, "resolution": [2560, 1440]},
+  "material_families": {
+    "earth": {"base": "#8f7957", "roughness": 0.95, "role": "continuous warm road and bank mineral ground; no photographic noise collage"},
+    "masonry": {"base": "#897e6a", "roughness": 0.92, "role": "one stone scale across wall plinth, abutment, drainage; not isolated white boulders"},
+    "timber": {"base": "#574635", "roughness": 0.88, "role": "common structural timber in bridge and gate; visible support topology"},
+    "tile": {"base": "#515c60", "roughness": 0.86, "role": "quiet slate roof mass, subordinate to gateway silhouette"},
+    "foliage": {"base": "#536247", "roughness": 0.96, "role": "one broadleaf family, layered crown interior; no bright toy globes"},
+    "water": {"base": "#355c5c", "roughness": 0.3, "role": "continuous negative space, not a prop-filled trench"}
+  },
+  "protected_routes": [
+    {"id": "west-main", "bounds_xz": [-40, -3.7, 48, 3.7]},
+    {"id": "north-crossing", "bounds_xz": [-40, -38.7, -24, -31.3]},
+    {"id": "south-crossing", "bounds_xz": [-40, 31.3, -24, 38.7]},
+    {"id": "gate-opening", "bounds_xz": [46.6, -3.7, 53, 3.7]}
+  ],
+  "assemblies": [
+    {"id": "main-river", "kind": "hydrology", "bounds_xz": [-39, -64, -25, 64], "family": "water", "production": "one continuous surveyed bank surface; three existing crossings preserved"},
+    {"id": "moat", "kind": "hydrology", "bounds_xz": [18.15, -25.5, 29.85, 25.5], "family": "water", "production": "whole watercourse with terminal wetland shelves, not rectangular puddle"},
+    {"id": "west-bridge", "kind": "bridge", "bounds_xz": [-38.6, -3.95, -25.4, 3.95], "height": 0.13, "family": "timber", "production": "complete beam/pile/brace/deck/rail assembly; 7.4m unobstructed deck"},
+    {"id": "gate-bridge", "kind": "bridge", "bounds_xz": [18.05, -3.88, 29.95, 3.88], "height": 0.13, "family": "timber", "production": "same construction family as river bridge; no floating board plane"},
+    {"id": "approach-road", "kind": "ground", "bounds_xz": [29.95, -6.4, 46.6, 6.4], "family": "earth", "production": "continuous crown, worn wheel lanes, two drainage shoulders authored together"},
+    {"id": "gate", "kind": "gateway", "bounds_xz": [46.6, -8.5, 53.5, 8.5], "height": 8.2, "opening_width": 8, "opening_height": 4.2, "family": "masonry", "production": "single military gate silhouette, restrained one-storey roof, structural load carried by piers, no garden pavilion substitution"},
+    {"id": "north-curtain", "kind": "wall", "bounds_xz": [46.6, -23, 51.5, -8.5], "height": 4.8, "family": "masonry", "production": "continuous battered base and walkable parapet envelope"},
+    {"id": "south-curtain", "kind": "wall", "bounds_xz": [46.6, 8.5, 51.5, 23], "height": 4.8, "family": "masonry", "production": "same stone and timber scale as north curtain"},
+    {"id": "north-bank-wood", "kind": "canopy_mass", "bounds_xz": [30.5, -20, 43, -10], "height": 6.8, "family": "foliage", "production": "coherent edge canopy, visible trunk-to-root transitions, open crown gaps; no random scatter"},
+    {"id": "south-bank-wood", "kind": "canopy_mass", "bounds_xz": [32, 11, 45, 24], "height": 7.4, "family": "foliage", "production": "foreground frame outside action lane; common authored broadleaf structure"},
+    {"id": "north-valley-wood", "kind": "canopy_mass", "bounds_xz": [-15, -52, 20, -23], "height": 11, "family": "foliage", "production": "continuous middle-distance ridge forest, not isolated conifers"},
+    {"id": "south-valley-wood", "kind": "canopy_mass", "bounds_xz": [-10, 24, 18, 54], "height": 10, "family": "foliage", "production": "whole slope and understory connected to bank shelves"},
+    {"id": "rear-ridge", "kind": "background", "bounds_xz": [99, -70, 150, 75], "height": 22, "family": "foliage", "production": "continuous landform silhouette behind fort; no disconnected mountain cones"}
+  ],
+  "release_gates": ["No graybox mesh may ship as final art", "No failed R1/R2 assets are automatically selected", "Whole-scene source license audit", "Same-camera actual Godot 2K/4K review", "Movement attack defense hit riding and offscreen-war recording", "Separate no-readback performance process", "Owner art acceptance remains required"]
+}
