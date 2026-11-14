@@ -1,0 +1,89 @@
+{
+  "source_commit": "c617a1fb4383200a00df197086a338e61dfbb776",
+  "base_commit": "3d15051d76eb49a81804cbc5346390a2a42d317c",
+  "product_commits": [
+    "0e65f9e25a2e66e2cb9ff3cbc74b92d39838690f",
+    "c617a1fb4383200a00df197086a338e61dfbb776"
+  ],
+  "decision": "ACCEPT_LIMITED_GROUND_BASIC_CHAIN",
+  "whole_game_art": "ART_REBUILD_REQUIRED",
+  "M5": "NOT_RUN",
+  "files": [
+    {
+      "path": "assets/river_gate/figures/company_motion.png",
+      "git_blob": "7f9e25d1b14012c928c391f4a7deec93219e65ee",
+      "bytes": 1596489
+    },
+    {
+      "path": "scripts/field/company_skin.gdshader",
+      "git_blob": "7c0163d72b19788ecfb43561a8966982c8347802",
+      "bytes": 17614
+    },
+    {
+      "path": "tools/art/company_motion.py",
+      "git_blob": "ad553bc6a739fbc0a09a332917aab1632f6cd665",
+      "bytes": 46023
+    },
+    {
+      "path": "tools/art/import_wildfire_combat.py",
+      "git_blob": "b16e13e943a6eae20e2053390b289e413e90d2d6",
+      "bytes": 7842
+    },
+    {
+      "path": "tools/art/source/wildfire_combat_curves.json",
+      "git_blob": "af72831bc71e501d3883d977a51493ec315a02a0",
+      "bytes": 413323
+    },
+    {
+      "path": "tools/art/source/WILDFIRE_COMBAT.md",
+      "git_blob": "0022a48ae97d5965ae7ceadb39517d2b1536e5b6",
+      "bytes": 1885
+    },
+    {
+      "path": "assets/river_gate/figures/WILDFIRE_MOTION_NOTICE.txt",
+      "git_blob": "8c1ce411ca8c1d8ca90725d841aa1bbc26c40b6c",
+      "bytes": 1408
+    },
+    {
+      "path": "tools/art/check_field_carries.py",
+      "git_blob": "0b752f488c45d325d2c80a4730daf410268a5ec7",
+      "bytes": 2368
+    },
+    {
+      "path": "tools/art/check_native_chain.py",
+      "git_blob": "bbe5795210af4a554cd1916485fec544ae13b481",
+      "bytes": 3648
+    },
+    {
+      "path": "tools/art/check_native_entry.py",
+      "git_blob": "68a3960e44083345a55c6e39e2ee87dc343e45bc",
+      "bytes": 1342
+    },
+    {
+      "path": "tools/art/check_company_motion.py",
+      "git_blob": "e66777655076b30ba520bcefde745e8a6202166a",
+      "bytes": 5028
+    }
+  ],
+  "evidence": {
+    "normal_and_dao_commit": "3b3a7c2e4d88dbfa22385c161f77f60753da323e",
+    "clear_normal_commit": "b1dc52d77a25eeb2bf8946175b097d7a1d6d470e",
+    "clear_west_commit": "fa58a352f73b2389268aea2a11080f718767dd1f",
+    "clean_commit": "f4cc351756dad2c290e03d30628de0498b6c1ecb",
+    "render_run": 43585505869,
+    "render_artifact": 14110451155,
+    "archive_run": 43586202454,
+    "clean_run": 43586258519
+  },
+  "runtime": {
+    "bones": 16,
+    "palette": [
+      528,
+      1684
+    ],
+    "preserved_strips": 411,
+    "mounted_preserved_strips": 4,
+    "new_texture_samples": 0
+  },
+  "attribution_notice": "assets/river_gate/figures/WILDFIRE_MOTION_NOTICE.txt"
+}
