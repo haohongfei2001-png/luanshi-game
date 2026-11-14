@@ -16,6 +16,7 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
+    "source_sha": "faf4b588128dd6c8c3082fc2affe532f4857f4ab",
     "tick": 50,
     "world_audit": [],
     "zoom": 22.0
@@ -37,6 +38,7 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
+    "source_sha": "faf4b588128dd6c8c3082fc2affe532f4857f4ab",
     "tick": 135,
     "world_audit": [],
     "zoom": 22.0
@@ -58,8 +60,31 @@
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
+    "source_sha": "faf4b588128dd6c8c3082fc2affe532f4857f4ab",
     "tick": 135,
     "world_audit": [],
     "zoom": 115.0
+  },
+  {
+    "center": [
+      38.0,
+      -19.0
+    ],
+    "frame": "grove-0135",
+    "hits": [
+      192,
+      227
+    ],
+    "internal": 1.0,
+    "ordinary": [
+      512,
+      512
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "source_sha": "faf4b588128dd6c8c3082fc2affe532f4857f4ab",
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 18.0
   }
 ]
