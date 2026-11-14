@@ -1,0 +1,65 @@
+[
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "bridgehead-0050",
+    "hits": [
+      85,
+      112
+    ],
+    "internal": 1.0,
+    "ordinary": [
+      512,
+      512
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "tick": 50,
+    "world_audit": [],
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      34.2000007629395,
+      1.0
+    ],
+    "frame": "bridgehead-0135",
+    "hits": [
+      181,
+      241
+    ],
+    "internal": 1.0,
+    "ordinary": [
+      512,
+      512
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 22.0
+  },
+  {
+    "center": [
+      9.0,
+      0.0
+    ],
+    "frame": "whole-war-0135",
+    "hits": [
+      181,
+      241
+    ],
+    "internal": 1.0,
+    "ordinary": [
+      512,
+      512
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 61112,
+    "tick": 135,
+    "world_audit": [],
+    "zoom": 115.0
+  }
+]
