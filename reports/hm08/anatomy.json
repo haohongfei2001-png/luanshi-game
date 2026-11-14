@@ -18,17 +18,17 @@
   ],
   "crown": 8.0953,
   "surface_counts": {
-    "headClose": 1097,
-    "headLine": 359,
-    "headRank": 99,
-    "forearmsClose": 359,
-    "forearmsLine": 150,
-    "forearmsRank": 60,
-    "legsClose": 559,
-    "legsLine": 239,
-    "legsRank": 100,
-    "feetClose": 220,
-    "feetLine": 100,
-    "feetRank": 38
+    "headClose": 6792,
+    "headLine": 3196,
+    "headRank": 898,
+    "forearmsClose": 1364,
+    "forearmsLine": 700,
+    "forearmsRank": 179,
+    "legsClose": 2480,
+    "legsLine": 1199,
+    "legsRank": 399,
+    "feetClose": 552,
+    "feetLine": 320,
+    "feetRank": 110
   }
 }

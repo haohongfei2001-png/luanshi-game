@@ -15,7 +15,7 @@
     ],
     "Regular": [
       "armour",
-      "Regular",
+      "Guard",
       0,
       "Regular"
     ],
@@ -40,76 +40,85 @@
   },
   "cost": {
     "LevyClose": {
-      "triangles": 2460,
-      "vertices": 1649
+      "triangles": 12040,
+      "vertices": 6769
     },
     "LevyLine": {
-      "triangles": 1298,
-      "vertices": 961
+      "triangles": 6871,
+      "vertices": 4098
     },
     "LevyRank": {
-      "triangles": 859,
-      "vertices": 672
+      "triangles": 1951,
+      "vertices": 1343
     },
     "ArcherClose": {
-      "triangles": 2460,
-      "vertices": 1649
+      "triangles": 12040,
+      "vertices": 6769
     },
     "ArcherLine": {
-      "triangles": 1298,
-      "vertices": 961
+      "triangles": 6871,
+      "vertices": 4098
     },
     "ArcherRank": {
-      "triangles": 859,
-      "vertices": 672
+      "triangles": 1951,
+      "vertices": 1343
     },
     "RegularClose": {
-      "triangles": 2490,
-      "vertices": 1684
+      "triangles": 12256,
+      "vertices": 6931
     },
     "RegularLine": {
-      "triangles": 1340,
-      "vertices": 1002
+      "triangles": 7083,
+      "vertices": 4249
     },
     "RegularRank": {
-      "triangles": 901,
-      "vertices": 710
+      "triangles": 2035,
+      "vertices": 1407
     },
     "GuardClose": {
-      "triangles": 2678,
-      "vertices": 1776
+      "triangles": 12396,
+      "vertices": 6992
     },
     "GuardLine": {
-      "triangles": 1528,
-      "vertices": 1094
+      "triangles": 7223,
+      "vertices": 4310
     },
     "GuardRank": {
-      "triangles": 1089,
-      "vertices": 802
+      "triangles": 2175,
+      "vertices": 1468
     },
     "OfficerClose": {
-      "triangles": 2786,
-      "vertices": 1866
+      "triangles": 12504,
+      "vertices": 7082
     },
     "OfficerLine": {
-      "triangles": 1636,
-      "vertices": 1184
+      "triangles": 7331,
+      "vertices": 4400
     },
     "OfficerRank": {
-      "triangles": 1197,
-      "vertices": 892
+      "triangles": 2283,
+      "vertices": 1558
     },
     "PlayerClose": {
-      "triangles": 2940,
-      "vertices": 1970
+      "triangles": 12658,
+      "vertices": 7186
     },
     "PlayerLine": {
-      "triangles": 1734,
-      "vertices": 1256
+      "triangles": 7429,
+      "vertices": 4472
     },
     "PlayerRank": {
-      "triangles": 1229,
-      "vertices": 922
+      "triangles": 2315,
+      "vertices": 1588
     }
+  },
+  "palette": {
+    "shield_rgba_sha256": "25ca10e01a4b04c14de4762aca6c66fa610027bc4ab747d717819a7529f90ea1",
+    "shield_pixels_unchanged": true,
+    "cloth_tiles": [
+      0,
+      1,
+      2
+    ]
   }
 }
