@@ -1,0 +1,115 @@
+{
+  "M5": "NOT_TESTED",
+  "army_performance": "NOT_TESTED",
+  "art_pass": false,
+  "driver": "metal",
+  "engine": {
+    "build": "custom_build",
+    "hash": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+    "hex": 263683,
+    "major": 4,
+    "minor": 6,
+    "patch": 3,
+    "status": "stable",
+    "string": "4.6.3-stable (custom_build)",
+    "timestamp": 1779284873
+  },
+  "fixture_sha256": "f975e77848551b2f08d562e7a861d939e4b02a655e04109c6046faac4a747a4a",
+  "inventory": [
+    {
+      "all_source_uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "alpha_preserved": true,
+      "bones": 163,
+      "name": "Eyes",
+      "original_over8_vertices": 0.0,
+      "slots": 3.0,
+      "vertices": 1076
+    },
+    {
+      "all_source_uv_layers": [
+        "Original source UV"
+      ],
+      "alpha_preserved": false,
+      "bones": 163,
+      "name": "Young complete author face module",
+      "original_over8_vertices": 14.0,
+      "slots": 9.0,
+      "vertices": 4346
+    },
+    {
+      "all_source_uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "alpha_preserved": true,
+      "bones": 163,
+      "name": "eyebrow001",
+      "original_over8_vertices": 0.0,
+      "slots": 4.0,
+      "vertices": 124
+    },
+    {
+      "all_source_uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "alpha_preserved": true,
+      "bones": 163,
+      "name": "eyelashes01",
+      "original_over8_vertices": 0.0,
+      "slots": 4.0,
+      "vertices": 250
+    }
+  ],
+  "materials": "source RGBA/UV and calibrated reduced diffuse PBR; same alpha scissor .25 on both; no SSS/transmission equivalence",
+  "method": "mobile",
+  "normal_bank_bytes": 324576,
+  "normal_bank_limit": "Only seven exact sampled poses, no interpolation or arbitrary facial deformation claim; shared per template, not per actor",
+  "normal_mode": "shared_authored_RGBA16F_exact_samples",
+  "reference": "Actual Blender complete nine-influence evaluated positions and corner normals, not native8 Skin",
+  "renderer": "Apple Paravirtual device (Apple5)",
+  "rows": [
+    {
+      "authored_motion": true,
+      "name": "walk-0",
+      "synthetic_bones": []
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-13",
+      "synthetic_bones": []
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-47",
+      "synthetic_bones": []
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-83",
+      "synthetic_bones": []
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-50",
+      "synthetic_bones": []
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-100",
+      "synthetic_bones": []
+    },
+    {
+      "authored_motion": false,
+      "name": "tail-stress",
+      "synthetic_bones": [
+        "risorius03.R",
+        "risorius03.L"
+      ]
+    }
+  ],
+  "source_sha256": "d6be3ff2afcab7a61822f49a8ac6fb57bf2630df4f22c0fded24bb5ca38fc823"
+}

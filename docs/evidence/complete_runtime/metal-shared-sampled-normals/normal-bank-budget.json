@@ -1,0 +1,41 @@
+{
+  "rows": [
+    {
+      "mesh": "Eyes",
+      "render_vertices": 1076,
+      "poses": 7,
+      "RGBA16F_bytes": 60256,
+      "max_half_quantization_angle_degrees": 0.019528063943017728,
+      "original_slots": 3
+    },
+    {
+      "mesh": "Young complete author face module",
+      "render_vertices": 4346,
+      "poses": 7,
+      "RGBA16F_bytes": 243376,
+      "max_half_quantization_angle_degrees": 0.019347920420066358,
+      "original_slots": 9
+    },
+    {
+      "mesh": "eyebrow001",
+      "render_vertices": 124,
+      "poses": 7,
+      "RGBA16F_bytes": 6944,
+      "max_half_quantization_angle_degrees": 0.018593451539666756,
+      "original_slots": 4
+    },
+    {
+      "mesh": "eyelashes01",
+      "render_vertices": 250,
+      "poses": 7,
+      "RGBA16F_bytes": 14000,
+      "max_half_quantization_angle_degrees": 0.017726053962824877,
+      "original_slots": 4
+    }
+  ],
+  "shared_template_bytes": 324576,
+  "per_actor_bank_bytes": 0,
+  "scope": "seven exact samples only; no interpolation/generalization/performance claim",
+  "cpu_positions_still_all_original_weights": true,
+  "frame_index": "current one-actor probe uses one shader int per part; independent crowd instance phase not implemented"
+}

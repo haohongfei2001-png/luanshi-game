@@ -1,0 +1,84 @@
+{
+  "normal_mode": "shared_authored_RGBA16F_exact_samples",
+  "normal_bank_bytes": 324576,
+  "rows": [
+    {
+      "authored_motion": true,
+      "name": "walk-0",
+      "synthetic_bones": [],
+      "visible": 25714,
+      "mean_canvas_max_rgb_error": 1.0007970473345588e-05,
+      "pixels_over_two_levels": 4,
+      "fraction_over_two_levels": 0.00015555728396982187,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-13",
+      "synthetic_bones": [],
+      "visible": 25736,
+      "mean_canvas_max_rgb_error": 1.1414172602634804e-05,
+      "pixels_over_two_levels": 6,
+      "fraction_over_two_levels": 0.00023313646254274168,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-47",
+      "synthetic_bones": [],
+      "visible": 26636,
+      "mean_canvas_max_rgb_error": 1.7338173062193627e-05,
+      "pixels_over_two_levels": 12,
+      "fraction_over_two_levels": 0.0004505180958101817,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-83",
+      "synthetic_bones": [],
+      "visible": 26228,
+      "mean_canvas_max_rgb_error": 1.1234657437193628e-05,
+      "pixels_over_two_levels": 9,
+      "fraction_over_two_levels": 0.0003431447308220223,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-50",
+      "synthetic_bones": [],
+      "visible": 26686,
+      "mean_canvas_max_rgb_error": 9.170233034620098e-06,
+      "pixels_over_two_levels": 5,
+      "fraction_over_two_levels": 0.00018736416098328712,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": true,
+      "name": "walk-100",
+      "synthetic_bones": [],
+      "visible": 25767,
+      "mean_canvas_max_rgb_error": 1.2805415134803922e-05,
+      "pixels_over_two_levels": 10,
+      "fraction_over_two_levels": 0.00038809329762874993,
+      "strict_pass": true
+    },
+    {
+      "authored_motion": false,
+      "name": "tail-stress",
+      "synthetic_bones": [
+        "risorius03.R",
+        "risorius03.L"
+      ],
+      "visible": 27184,
+      "mean_canvas_max_rgb_error": 8.751364315257352e-06,
+      "pixels_over_two_levels": 4,
+      "fraction_over_two_levels": 0.00014714537963507945,
+      "strict_pass": true
+    }
+  ],
+  "failures": [],
+  "original_two_levels_two_percent_gate": true,
+  "reference": "Blender complete source 9 influences and evaluated corner normals, not native8",
+  "art_pass": false,
+  "M5": "NOT_TESTED"
+}
