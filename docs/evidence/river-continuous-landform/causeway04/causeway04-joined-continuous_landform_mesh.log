@@ -1,0 +1,7 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SURFACE_SAMPLE_DIAGNOSTIC {"max_reachable_error":0.0231069488911819,"max_route_error":0.00743915936465919,"max_water_dry":0.00440470061659215,"worst_reachable":[24.4166660308838,-24.2083339691162]}
+SCRIPT ERROR: Assertion failed: Adaptive reachable terrain error exceeds 1.2cm
+          at: run (res://tests/art_reset/continuous_landform_mesh.gd:39)
+          GDScript backtrace (most recent call first):
+              [0] run (res://tests/art_reset/continuous_landform_mesh.gd:39)

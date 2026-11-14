@@ -68,10 +68,13 @@ static func parapet(p: Vector2) -> float:
 	return clampf((z-5.5)*0.43,0.0,3.25)
 
 static func moat_depth(p: Vector2) -> float:
-	return PassProfile.moat_depth(p)
+	return AuthoredProfile.moat_depth(p) if authored_landform_enabled else PassProfile.moat_depth(p)
 
 static func moat_blocks(p: Vector2) -> bool:
 	if absf(p.y)<=MOAT_DECK: return false
+	if authored_landform_enabled:
+		var depth:=moat_depth(p)
+		return depth>0. and height(p,true)-MOAT_BED_DEPTH*depth<BATTLE_WATER_LEVEL+.12
 	return moat_depth(p)>.43 or bank_outcrop_blocks(p,MOAT_X,true)
 
 static func bank_outcrop_blocks(p:Vector2,channel:float,moat:bool) -> bool:

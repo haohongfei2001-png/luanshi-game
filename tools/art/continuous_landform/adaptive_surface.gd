@@ -21,7 +21,8 @@ func resolution(cell:Vector2i) -> int:
 	# Background-only terrain retains the existing grid. Playable border cells
 	# are included so adjacent visible/collision edges remain conforming.
 	if absf(origin.x)<=Ground.LIMIT.x+STEP and absf(origin.y)<=Ground.LIMIT.y+STEP:
-		while n<8:
+		var limit:=16 if origin.x>=14.5 and origin.x<=33. and absf(origin.y)>=21.3 and absf(origin.y)<=26. else 8
+		while n<limit:
 			var error:=0.;var s:=STEP/float(n)
 			for j in n:
 				for i in n:

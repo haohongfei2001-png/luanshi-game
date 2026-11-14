@@ -9,11 +9,13 @@ func run() -> void:
 		for x in range(-118,119,2):
 			var p:=Vector2(x,z);samples.append(p);old_height.append(Ground.height(p,true));old_open.append(Ground.height(p,false));old_blocked.append(Ground.blocked(p,true,true))
 			assert(Ground.height(p,true)==Existing.height(p),"Default changed existing saves")
-	Ground.authored_landform_enabled=true;var changed:=0;var max_delta:=0.
+	Ground.authored_landform_enabled=true;var changed:=0;var max_delta:=0.;var blocked_changes:=0
 	for i in samples.size():
 		var p:Vector2=samples[i]
 		assert(Ground.height(p,false)==old_open[i],"Open-field save support changed")
-		assert(Ground.blocked(p,true,true)==old_blocked[i],"Military routes changed")
+		if Ground.blocked(p,true,true)!=old_blocked[i]:
+			blocked_changes+=1
+			assert(p.x>15. and p.x<33. and absf(p.y)>3.7 and absf(p.y)<26.,"Navigation change escaped authored moat")
 		var delta:float=absf(Ground.height(p,true)-old_height[i]);max_delta=maxf(max_delta,delta)
 		if delta>.00001:changed+=1
 		var in_approach:=p.x>0. and p.x<46.6 and absf(p.y)<38.
@@ -25,5 +27,5 @@ func run() -> void:
 	for z in range(-23,24):
 		assert(Ground.height(Vector2(48,z),true)==Existing.height(Vector2(48,z)))
 	assert(changed>100 and max_delta>.3,"No actual terrain reconstruction")
-	print("LANDFORM_CONTRACT_PASS ",JSON.stringify({"sample_count":samples.size(),"changed_support_samples":changed,"max_delta_m":max_delta,"old_open_field":"EXACT","default":"OFF","blocked_routes":"EXACT","graphics":"NOT_RUN"}))
+	print("LANDFORM_CONTRACT_PASS ",JSON.stringify({"sample_count":samples.size(),"changed_support_samples":changed,"max_delta_m":max_delta,"old_open_field":"EXACT","default":"OFF","blocked_route_samples_changed_inside_moat":blocked_changes,"graphics":"NOT_RUN"}))
 	Ground.authored_landform_enabled=false;quit()

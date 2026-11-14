@@ -1,0 +1,7 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+SURFACE_SAMPLE_DIAGNOSTIC {"max_reachable_error":1.78805312156677,"max_route_error":0.00743915936465919,"max_water_dry":2.12276916344724}
+SCRIPT ERROR: Assertion failed: Surface sampling insufficient
+          at: run (res://tests/art_reset/continuous_landform_mesh.gd:37)
+          GDScript backtrace (most recent call first):
+              [0] run (res://tests/art_reset/continuous_landform_mesh.gd:37)

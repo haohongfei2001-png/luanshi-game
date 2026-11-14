@@ -1,11 +1,37 @@
 extends RefCounted
-const VERSION:="continuous-military-road-and-eroded-moat-03"
+const VERSION:="asymmetric-military-watercourse-and-causeway-04"
 ## Default-OFF: one road/shoulder/wet-bank cross-section, shared support+collision.
 const Existing:=preload("res://scripts/field/river_pass_profile.gd")
 static func rebuild_weight(p:Vector2) -> float:
 	return smoothstep(0.,8.,p.x)*(1.-smoothstep(44.,46.6,p.x))*(1.-smoothstep(27.,38.,absf(p.y)))
 static func road_half_width(x:float) -> float:
 	return 3.7+.4*smoothstep(34.,44.,x)
+# Authored survey stations (z, channel centre x, west/east bank widths).
+# Full metres, not texture noise or independent visual-only water geometry.
+const WATER_STATIONS:=[
+ Vector4(-25.5,23.2,0.,0.),Vector4(-22.,23.8,3.1,4.4),
+ Vector4(-17.,24.8,6.8,5.3),Vector4(-10.,24.1,4.9,6.2),
+ Vector4(-6.,24.,5.85,5.85),Vector4(6.,24.,5.85,5.85),
+ Vector4(11.,23.4,6.4,4.8),Vector4(17.,24.5,5.2,6.4),
+ Vector4(22.,24.7,4.1,2.7),Vector4(25.5,24.4,0.,0.)]
+static func water_station(z:float) -> Vector3:
+	for i in WATER_STATIONS.size()-1:
+		var a:Vector4=WATER_STATIONS[i];var b:Vector4=WATER_STATIONS[i+1]
+		if z>=a.x and z<=b.x:
+			var t:=smoothstep(a.x,b.x,z)
+			return Vector3(lerpf(a.y,b.y,t),lerpf(a.z,b.z,t),lerpf(a.w,b.w,t))
+	return Vector3(24.,0.,0.)
+static func moat_depth(p:Vector2) -> float:
+	var old:=Existing.moat_depth(p)
+	if absf(p.y)<=5.3:return old # Exact crossing and bridge foundations.
+	var station:=water_station(p.y)
+	var width:=station.y if p.x<station.x else station.z
+	if width<=.001:return 0.
+	var depth:=1.-smoothstep(.34,1.,absf(p.x-station.x)/width)
+	# Vanishing width must also reach zero depth, otherwise its tip is a
+	# discontinuous needle pit and clipped water can bridge dry triangles.
+	depth*=1.-smoothstep(21.8,25.5,absf(p.y))
+	return lerpf(old,depth,smoothstep(5.3,8.5,absf(p.y)))
 static func height(p:Vector2) -> float:
 	var original:=Existing.height(p);var weight:=rebuild_weight(p)
 	if weight<=0.:return original
@@ -23,13 +49,15 @@ static func height(p:Vector2) -> float:
 	# Low elongated banks instead of the old collection of 2–3m round hummocks.
 	var outer_rise:=.62*smoothstep(12.,25.,side)
 	var land:=road+ruts+drainage+shoulder+outer_rise
-	var depth:=Existing.moat_depth(p)
+	var depth:=moat_depth(p)
 	if depth>0.:
-		# Broad upper bench, erosion face and submerged toe are continuous along
-		# the entire moat, not two scan slices glued to a vertical dirt mound.
-		var bench:=-.55-.10*sin(p.y*.31)
-		var surface:=lerpf(land,bench,smoothstep(0.,.28,depth))
-		surface=lerpf(surface,-2.45,smoothstep(.28,.72,depth))
-		surface=lerpf(surface,-3.4,smoothstep(.72,1.,depth))
-		land=surface+3.4*depth # Ground subtracts the SAME moat depth once.
+		# An accretion bank has one broad shallow ramp; the opposite erosion
+		# bank is shorter. No concentric intermediate shelf around the whole moat.
+		var station:=water_station(p.y)
+		var ramp_end:=lerpf(.88,.64,smoothstep(station.x-.6,station.x+.6,p.x))
+		var side_slope:=smoothstep(0.,ramp_end,depth)
+		var surface:=lerpf(land,-2.55,side_slope)
+		surface=lerpf(surface,-3.4,smoothstep(ramp_end,1.,depth))
+		land=surface+3.4*depth # Ground subtracts the SAME new depth once.
+
 	return lerpf(original,land,weight)
