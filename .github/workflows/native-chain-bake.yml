@@ -16,7 +16,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m pip install pillow numpy
-          cp assets/river_gate/figures/company_motion.png /tmp/original-motion.png
+          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/e10b336005497a26de914ac0f0ddc5630bb758d3/assets/river_gate/figures/company_motion.png -o /tmp/original-motion.png
           python3 - <<'PY'
           import sys
           from pathlib import Path

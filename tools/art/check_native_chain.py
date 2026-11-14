@@ -37,15 +37,15 @@ def main():
         for n in range(65):
             phase=n/64.
             bones=native_chain_pose(phase)
-            # The original right foot is the persistent supporting leg.
-            feet.append(trans(bones[RB],add(leg_nodes(1)[2],(0.,-.117,0.))))
+            # The original left foot is the persistent supporting leg.
+            feet.append(trans(bones[LB],add(leg_nodes(-1)[2],(0.,-.117,0.))))
         support=max(dist(feet[0],p) for p in feet)
         assert max(gaps)<.0015, max(gaps)
         assert support<.012,support
         rows.append({"kit":kit,"source_contact_phase":NATIVE_CONTACT[kit],"source_contact_seconds":NATIVE_CONTACT[kit]*NATIVE_CUT["duration"],
-                     "maximum_wrist_ankle_gap_m":max(gaps),"supporting_right_sole_span_m":support,
+                     "maximum_wrist_ankle_gap_m":max(gaps),"supporting_left_sole_span_m":support,
                      "release_boundary_gap_m":release,"release_tip_m":blade_tip(kit,a),
-                     "source_clip":"shield_cut_01","source_license":"CC BY-SA 3.0",
+                     "source_clip":"shield_cut_02","source_license":"CC BY-SA 3.0",
                      "old_world_grip_constraint":False})
     report={"preserved_strips":413,"candidate_strips":sorted(changed),"preserved_mounted_strips":4,
             "palette":[528,1684],"runtime_bones":16,"new_runtime_samples":0,"rows":rows}

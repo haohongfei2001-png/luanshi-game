@@ -753,7 +753,7 @@ def legacy_pose(kit,clip,t,loadout=0,side_hit=0):
 
 # Full authored Wildfire chain, with the original bind axes retained.
 COMBAT_SOURCE=json.loads((Path(__file__).parent/'source'/'wildfire_combat_curves.json').read_text())
-NATIVE_CUT=COMBAT_SOURCE['curves']['shield_cut_01']
+NATIVE_CUT=COMBAT_SOURCE['curves']['shield_cut_02']
 NATIVE_REST=NATIVE_CUT['rest_points']
 SOURCE_GROUND={side:min(p[1] for frame in NATIVE_CUT['frames'] for p in frame['sole'][side]) for side in ('L','R')}
 MOUNTED_BASIC=((0,2),(0,6),(1,2),(1,6))
