@@ -62,7 +62,7 @@ func run() -> void:
 	if Ground.authored_landform_enabled:
 		region.set_script(load("res://scripts/field/experimental_landform_guard.gd"))
 		region.set_meta("expected_profile_version",Ground.AuthoredProfile.VERSION)
-	region.set_meta("composition","sprite-native-woodland-region-02-mipmapped")
+	region.set_meta("composition","native-tree-and-shrub-source-identified; tree-sha256="+FileAccess.get_sha256(args[0]))
 	region.set_meta("art_status","NOT_ACCEPTED; GODOT_GRAPHICS_NOT_RUN")
 	region.set_meta("tree_resource_cost",tree_cost);region.set_meta("bush_resource_cost",bush_cost)
 	region.set_meta("source_tree_sha256",FileAccess.get_sha256(args[0]))
