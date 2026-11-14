@@ -1,0 +1,5 @@
+2026-11-14T12:42:10.1778026Z Traceback (most recent call last):
+2026-11-14T12:42:10.1778691Z   File "/home/runner/work/luanshi-game/luanshi-game/tools/art/check_native_pike.py", line 67, in <module>
+2026-11-14T12:42:10.1779813Z   File "/home/runner/work/luanshi-game/luanshi-game/tools/art/check_native_pike.py", line 27, in main
+2026-11-14T12:42:10.1780250Z     gap=sub(hands[0],hands[1]);along=dot(gap,axis)
+2026-11-14T12:42:10.1780848Z UnboundLocalError: cannot access local variable 'sub' where it is not associated with a value

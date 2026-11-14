@@ -41,10 +41,10 @@ def main():
                 lane=3*31+clip
                 at=phase*32.
             else:
-                sub=phase*PIKE_SEGMENTS
-                segment=min(int(sub),PIKE_SEGMENTS-1)
+                key_progress=phase*PIKE_SEGMENTS
+                segment=min(int(key_progress),PIKE_SEGMENTS-1)
                 lane=PIKE_DENSE_BASE+(PIKE_SEGMENTS if clip==6 else 0)+segment
-                at=(sub-segment)*31.
+                at=(key_progress-segment)*31.
             for side,fore,hand in ((-1,LF,LH),(1,RF,RH)):
                 w=arm_nodes(side)[2]
                 baked.append(dist(trans(decoded(now,fore,0,lane,at),w),trans(decoded(now,hand,0,lane,at),w)))
