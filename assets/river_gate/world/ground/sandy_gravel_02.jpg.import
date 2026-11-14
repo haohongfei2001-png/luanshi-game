@@ -1,0 +1,12 @@
+[remap]
+importer="texture"
+type="CompressedTexture2D"
+path="res://.godot/imported/sandy_gravel_02.jpg-1fefd2261657aa2b1b2f4124a76c16be.ctex"
+metadata={"vram_texture": false}
+[deps]
+source_file="res://assets/river_gate/world/ground/sandy_gravel_02.jpg"
+dest_files=["res://.godot/imported/sandy_gravel_02.jpg-1fefd2261657aa2b1b2f4124a76c16be.ctex"]
+[params]
+compress/mode=0
+mipmaps/generate=true
+detect_3d/compress_to=0

@@ -1,1 +1,3 @@
-Poly Haven CC0 1.0 diffuse scan masters. Original sources and authors are recorded in SOURCE.json. No normal-map or roughness-map dependency.
+Poly Haven CC0 1.0 colour and matched OpenGL normal masters.
+Original source URLs, authors and checksums are recorded in SOURCE.json.
+https://polyhaven.com/license

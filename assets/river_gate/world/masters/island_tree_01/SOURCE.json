@@ -27,12 +27,17 @@
     {
       "object": "island_tree_01_LOD0.002",
       "source_triangles": 1060032,
-      "game_triangles": 1018918,
-      "policy": "Planar internal edges only. Native leaf boundaries and UV seams retained."
+      "game_triangles": 353352,
+      "source_leaf_islands": 44168,
+      "retained_whole_leaves": 14723,
+      "native_leaf_scale": 2.1,
+      "attachment": "Nearest original woody surface vertex remains anchored",
+      "policy": "Every third complete source leaf, original curved contour and matched UV retained"
     }
   ],
+  "canopy_revision": 2,
   "source_triangles": 1599403,
-  "game_triangles": 1093107,
+  "game_triangles": 427541,
   "objects": [
     {
       "name": "island_tree_01_LOD0",
@@ -44,7 +49,7 @@
     },
     {
       "name": "island_tree_01_LOD0.002",
-      "triangles": 1018918
+      "triangles": 353352
     }
   ]
 }

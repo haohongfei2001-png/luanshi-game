@@ -132,7 +132,7 @@
 			]
 		},
 		{
-			"name":"island_trees_01_blockout_cleaned.005",
+			"name":"island_trees_01_blockout_cleaned.005_readable_native_leaves",
 			"primitives":[
 				{
 					"attributes":{
@@ -249,35 +249,35 @@
 		{
 			"bufferView":8,
 			"componentType":5126,
-			"count":902056,
+			"count":309183,
 			"max":[
-				2.4107038974761963,
-				5.0071187019348145,
-				2.2341415882110596
+				2.414177894592285,
+				5.003355503082275,
+				2.218724250793457
 			],
 			"min":[
-				-2.3444457054138184,
-				0.6301747560501099,
-				-2.583538055419922
+				-2.3851447105407715,
+				0.6041626334190369,
+				-2.5826709270477295
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":9,
 			"componentType":5126,
-			"count":902056,
+			"count":309183,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":10,
 			"componentType":5126,
-			"count":902056,
+			"count":309183,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":11,
 			"componentType":5125,
-			"count":3056754,
+			"count":1060056,
 			"type":"SCALAR"
 		}
 	],
@@ -332,26 +332,26 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":10824672,
+			"byteLength":3710196,
 			"byteOffset":3475076,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":10824672,
-			"byteOffset":14299748,
+			"byteLength":3710196,
+			"byteOffset":7185272,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":7216448,
-			"byteOffset":25124420,
+			"byteLength":2473464,
+			"byteOffset":10895468,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":12227016,
-			"byteOffset":32340868,
+			"byteLength":4240224,
+			"byteOffset":13368932,
 			"target":34963
 		}
 	],
@@ -363,7 +363,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":44567884,
+			"byteLength":17609156,
 			"uri":"island_tree_01.bin"
 		}
 	]
