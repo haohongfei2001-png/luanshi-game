@@ -2,7 +2,7 @@ name: Integrate and play the whole replacement battlefield
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['scripts/field/river_master*','scripts/field/river_botanical.gdshader','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','tools/art/import_field_equipment.py','tools/art/import_field_woodland.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','tests/world_master_review.gd','tests/model_library_parity.gd','scripts/field/company_art.gd','scripts/field/company_skin.gdshader','.github/workflows/whole-rebuild.yml']
+    paths: ['scripts/field/river_master*','scripts/field/river_botanical.gdshader','scripts/field/controller.gd','tools/art/audit_world_sources.py','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','tools/art/import_field_equipment.py','tools/art/import_field_woodland.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','tests/world_master_review.gd','tests/model_library_parity.gd','scripts/field/company_art.gd','scripts/field/company_skin.gdshader','.github/workflows/whole-rebuild.yml']
 permissions:
   contents: write
   actions: read
@@ -35,6 +35,7 @@ jobs:
             fi
           done
           blender --background --factory-startup --python-exit-code 1 --python tools/art/build_river_willows.py -- "$RUNNER_TEMP/canopies" > artifacts/world-rebuild/canopies.log 2>&1 || { tail -n 60 artifacts/world-rebuild/canopies.log; exit 1; }
+          python3 tools/art/audit_world_sources.py
           git add assets/river_gate/world assets/river_gate/equipment
           git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete timber spans, full tree masters and fitted battlefield material sources' || test -z "$(git status --porcelain assets/river_gate/world)"
           git push origin HEAD:refs/heads/codex/river-whole-rebuild
