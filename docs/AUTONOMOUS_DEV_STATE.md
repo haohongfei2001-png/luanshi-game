@@ -1,3 +1,7 @@
+## Dot 2026-11-14 17:46 UTC · Owner pixel-first update
+
+Owner prioritizes clear, natural, modern whole-frame quality at actual normal-camera pixel size and real thousand-soldier performance. Full3D is NOT mandatory: compare shared3D, multidirectional animated sprites and near/mid/far hybrid fairly from the same professional source. No final representation selected. Hands/weapons/armor/actions must remain readable; muddy smearing, oily darkness and dirty noise are failures, not detail. Read [current pixel-first acceptance](PIXEL_FIRST_VISUAL_ACCEPTANCE_20261114.md). Core battle/saves remain intact; Codex PAUSED / Dot continuation, ART FAIL and M5 DEVICE_NOT_RUN unchanged.
+
 ## Dot 2026-11-14 17:28 UTC continuation update
 
 Codex PAUSED / Dot owner-authorized continuation remains in force. Whole-frame ART FAIL; default game/engine and RC24/RC25 remain unchanged. New full source-character actual Godot run43620541977 succeeded, but this is a gray source diagnostic, not a Chinese soldier or battle art pass. Same-source engine tangent run43618127716 now passed all four pose gates and twelve blend/Skin cases; original failures and both binaries preserved, no Mac engine switch. New coherent forest/ground and whole gate/bridge scene integration continue; architecture run43620505673 is pending at this snapshot. Read [Dot checkpoint](DOT_REBUILD_CHECKPOINT_20261114.md) for exact SHA/results and recovery. M5 DEVICE_NOT_RUN.
