@@ -6,7 +6,7 @@ uniform sampler2D palette : filter_nearest, repeat_disable;
 uniform sampler2D influence_table : filter_nearest, repeat_disable;
 uniform int influence_groups = 1;
 uniform sampler2D albedo_texture : source_color, filter_linear_mipmap, repeat_enable;
-uniform sampler2D normal_texture : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform sampler2D normal_texture : hint_roughness_normal, filter_linear_mipmap, repeat_enable;
 uniform sampler2D roughness_texture : hint_default_white, filter_linear_mipmap, repeat_enable;
 uniform sampler2D metallic_texture : hint_default_white, filter_linear_mipmap, repeat_enable;
 uniform vec4 albedo : source_color = vec4(1.0);
