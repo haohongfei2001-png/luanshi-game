@@ -1,0 +1,1880 @@
+[
+  {
+    "clip": "walk",
+    "registration": "original_root",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0,
+    "source_bind_differences": {
+      "Horse_ear_R": 0.38014279999999995,
+      "Horse_ear_2_R": 0.45050626030999996,
+      "Horse_ear_L": 0.3801422,
+      "Horse_ear_2_L": 0.45050615169999997,
+      "Horse_Tail_base": 0.030340199999999984,
+      "Horse_Tail": 0.1308681,
+      "Horse_Tail_2": 0.13295469999999998,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.0034338317981471127,
+        "maximum_y": 0.12512516256404735,
+        "support_fraction": 0.625,
+        "negative_support_samples": 50,
+        "metres_per_cycle_median": 1.2474314641519313,
+        "metres_per_cycle_std": 0.5247210726465582
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.011986965706754085,
+        "maximum_y": 0.12510942174099748,
+        "support_fraction": 0.7,
+        "negative_support_samples": 56,
+        "metres_per_cycle_median": 1.0816779679323818,
+        "metres_per_cycle_std": 0.5346496616572884
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": -0.02119185059830925,
+        "maximum_y": 0.09770989378325856,
+        "support_fraction": 0.725,
+        "negative_support_samples": 50,
+        "metres_per_cycle_median": 1.6641265330033717,
+        "metres_per_cycle_std": 0.6839122674782642
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": -0.01982076511624063,
+        "maximum_y": 0.11109817834096032,
+        "support_fraction": 0.7,
+        "negative_support_samples": 45,
+        "metres_per_cycle_median": 1.8185455373211568,
+        "metres_per_cycle_std": 0.7204384995903889
+      }
+    }
+  },
+  {
+    "clip": "walk",
+    "registration": "saddle_translation",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0,
+    "source_bind_differences": {
+      "Horse_ear_R": 0.38014279999999995,
+      "Horse_ear_2_R": 0.45050626030999996,
+      "Horse_ear_L": 0.3801422,
+      "Horse_ear_2_L": 0.45050615169999997,
+      "Horse_Tail_base": 0.030340199999999984,
+      "Horse_Tail": 0.1308681,
+      "Horse_Tail_2": 0.13295469999999998,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.03577630603413293,
+        "maximum_y": 0.17784703149929462,
+        "support_fraction": 0.1,
+        "negative_support_samples": 8,
+        "metres_per_cycle_median": 1.3381862983076442,
+        "metres_per_cycle_std": 0.10288606982721692
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.037248314696577564,
+        "maximum_y": 0.17784632728598818,
+        "support_fraction": 0.075,
+        "negative_support_samples": 6,
+        "metres_per_cycle_median": 0.9298451400950225,
+        "metres_per_cycle_std": 0.08687874553647164
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.035872152734517465,
+        "maximum_y": 0.12361920273609443,
+        "support_fraction": 0.1,
+        "negative_support_samples": 8,
+        "metres_per_cycle_median": 2.191770304636811,
+        "metres_per_cycle_std": 0.10201432444040318
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.035737444333479945,
+        "maximum_y": 0.13554042260850577,
+        "support_fraction": 0.1,
+        "negative_support_samples": 8,
+        "metres_per_cycle_median": 1.9548354064272688,
+        "metres_per_cycle_std": 0.15266204687587714
+      }
+    }
+  },
+  {
+    "clip": "walk",
+    "registration": "saddle_full_frame",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0,
+    "source_bind_differences": {
+      "Horse_ear_R": 0.38014279999999995,
+      "Horse_ear_2_R": 0.45050626030999996,
+      "Horse_ear_L": 0.3801422,
+      "Horse_ear_2_L": 0.45050615169999997,
+      "Horse_Tail_base": 0.030340199999999984,
+      "Horse_Tail": 0.1308681,
+      "Horse_Tail_2": 0.13295469999999998,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.014335912402778168,
+        "maximum_y": 0.18187822315091756,
+        "support_fraction": 0.1625,
+        "negative_support_samples": 13,
+        "metres_per_cycle_median": 1.4449442436821203,
+        "metres_per_cycle_std": 0.5043243138877644
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.013140532171456547,
+        "maximum_y": 0.18187768490858908,
+        "support_fraction": 0.175,
+        "negative_support_samples": 14,
+        "metres_per_cycle_median": 0.8908270804223206,
+        "metres_per_cycle_std": 0.20696579515972316
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.02859853400948698,
+        "maximum_y": 0.17334203006228321,
+        "support_fraction": 0.05,
+        "negative_support_samples": 4,
+        "metres_per_cycle_median": 3.090956241052787,
+        "metres_per_cycle_std": 0.2589210876714307
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.028543765573822964,
+        "maximum_y": 0.18883568100937925,
+        "support_fraction": 0.0375,
+        "negative_support_samples": 3,
+        "metres_per_cycle_median": 3.6623703094446647,
+        "metres_per_cycle_std": 0.3378298843514974
+      }
+    }
+  },
+  {
+    "clip": "trot",
+    "registration": "original_root",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.006750100088365906,
+        "maximum_y": 0.13623093629482763,
+        "support_fraction": 0.425,
+        "negative_support_samples": 34,
+        "metres_per_cycle_median": 1.7904973639766508,
+        "metres_per_cycle_std": 1.0359575963452672
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.006603087787023019,
+        "maximum_y": 0.1362306694621371,
+        "support_fraction": 0.275,
+        "negative_support_samples": 22,
+        "metres_per_cycle_median": 2.0875978796171712,
+        "metres_per_cycle_std": 0.8177912069165103
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": -0.003145886908746719,
+        "maximum_y": 0.14795675334032893,
+        "support_fraction": 0.4125,
+        "negative_support_samples": 33,
+        "metres_per_cycle_median": 1.42646691140218,
+        "metres_per_cycle_std": 1.0238458697233062
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": -0.003133657711281275,
+        "maximum_y": 0.14795707480556197,
+        "support_fraction": 0.4125,
+        "negative_support_samples": 33,
+        "metres_per_cycle_median": 1.4293323190555007,
+        "metres_per_cycle_std": 1.210491651783239
+      }
+    }
+  },
+  {
+    "clip": "trot",
+    "registration": "saddle_translation",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.001960304537865453,
+        "maximum_y": 0.1638276624244842,
+        "support_fraction": 0.15,
+        "negative_support_samples": 11,
+        "metres_per_cycle_median": 1.8069572728268746,
+        "metres_per_cycle_std": 1.076585942959332
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.0018785737753730623,
+        "maximum_y": 0.1638273360010486,
+        "support_fraction": 0.1,
+        "negative_support_samples": 7,
+        "metres_per_cycle_median": 3.1145125019314723,
+        "metres_per_cycle_std": 1.3325665593376501
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.0073133295863042165,
+        "maximum_y": 0.1547504848412992,
+        "support_fraction": 0.3,
+        "negative_support_samples": 24,
+        "metres_per_cycle_median": 1.4968941965785287,
+        "metres_per_cycle_std": 1.0244459994344042
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.007313426394141024,
+        "maximum_y": 0.15475082816578753,
+        "support_fraction": 0.3,
+        "negative_support_samples": 24,
+        "metres_per_cycle_median": 1.7825035243855325,
+        "metres_per_cycle_std": 1.0973522839699514
+      }
+    }
+  },
+  {
+    "clip": "trot",
+    "registration": "saddle_full_frame",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.0005758160564379444,
+        "maximum_y": 0.15356700316504862,
+        "support_fraction": 0.5125,
+        "negative_support_samples": 37,
+        "metres_per_cycle_median": 1.9728268804549653,
+        "metres_per_cycle_std": 0.8696344979716271
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.0004951730570355965,
+        "maximum_y": 0.15356673734196313,
+        "support_fraction": 0.5125,
+        "negative_support_samples": 37,
+        "metres_per_cycle_median": 1.6514019243844125,
+        "metres_per_cycle_std": 0.6807114194173597
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.015257188818676165,
+        "maximum_y": 0.20871009921659717,
+        "support_fraction": 0.075,
+        "negative_support_samples": 6,
+        "metres_per_cycle_median": 2.5382886564076457,
+        "metres_per_cycle_std": 0.8089591759219215
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.015257498455517746,
+        "maximum_y": 0.21126612836151548,
+        "support_fraction": 0.075,
+        "negative_support_samples": 6,
+        "metres_per_cycle_median": 2.7118098531478863,
+        "metres_per_cycle_std": 0.8961250174239764
+      }
+    }
+  },
+  {
+    "clip": "gallop",
+    "registration": "original_root",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.010551739074152218,
+        "maximum_y": 0.6463489865086802,
+        "support_fraction": 0.2125,
+        "negative_support_samples": 17,
+        "metres_per_cycle_median": 3.5317853821933576,
+        "metres_per_cycle_std": 1.1614580539128578
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.0058935668941617735,
+        "maximum_y": 0.6462502992292066,
+        "support_fraction": 0.2,
+        "negative_support_samples": 16,
+        "metres_per_cycle_median": 3.4577568304736594,
+        "metres_per_cycle_std": 1.4761716468123154
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.008126330874678313,
+        "maximum_y": 0.5025704350719822,
+        "support_fraction": 0.3,
+        "negative_support_samples": 24,
+        "metres_per_cycle_median": 3.197129746839704,
+        "metres_per_cycle_std": 1.508645530771355
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.008126808343140779,
+        "maximum_y": 0.501797692231263,
+        "support_fraction": 0.3,
+        "negative_support_samples": 20,
+        "metres_per_cycle_median": 3.932517664867885,
+        "metres_per_cycle_std": 1.1596271938255758
+      }
+    }
+  },
+  {
+    "clip": "gallop",
+    "registration": "saddle_translation",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.06562647860455982,
+        "maximum_y": 0.6485412844506562,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.020706173913991512,
+        "maximum_y": 0.6434539813678346,
+        "support_fraction": 0.1375,
+        "negative_support_samples": 11,
+        "metres_per_cycle_median": 4.122734492579223,
+        "metres_per_cycle_std": 1.4164781878888666
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.011077736154078607,
+        "maximum_y": 0.5492773841082753,
+        "support_fraction": 0.0625,
+        "negative_support_samples": 4,
+        "metres_per_cycle_median": 0.39431727108347747,
+        "metres_per_cycle_std": 0.579990614434373
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.0701739211323654,
+        "maximum_y": 0.5087836773987435,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      }
+    }
+  },
+  {
+    "clip": "gallop",
+    "registration": "saddle_full_frame",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": -0.014207993848809743,
+        "maximum_y": 0.6546064495895032,
+        "support_fraction": 0.1625,
+        "negative_support_samples": 13,
+        "metres_per_cycle_median": 1.7980266530864775,
+        "metres_per_cycle_std": 1.7495919144173315
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": -0.03873322109741012,
+        "maximum_y": 0.6646467752906203,
+        "support_fraction": 0.25,
+        "negative_support_samples": 20,
+        "metres_per_cycle_median": 2.5807233268272722,
+        "metres_per_cycle_std": 1.4789470474077935
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.03553669973385129,
+        "maximum_y": 0.7263923551474063,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.11681000470513668,
+        "maximum_y": 0.586694118672592,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      }
+    }
+  },
+  {
+    "clip": "pace",
+    "registration": "original_root",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.006704274975167488,
+        "maximum_y": 0.40678347407540716,
+        "support_fraction": 0.175,
+        "negative_support_samples": 14,
+        "metres_per_cycle_median": 4.210254495041147,
+        "metres_per_cycle_std": 0.32755766440172784
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": -0.0008862568487516074,
+        "maximum_y": 0.30868527375311483,
+        "support_fraction": 0.225,
+        "negative_support_samples": 18,
+        "metres_per_cycle_median": 3.3745961157912263,
+        "metres_per_cycle_std": 0.799792695703047
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.008125348362898875,
+        "maximum_y": 0.29574282410447494,
+        "support_fraction": 0.4125,
+        "negative_support_samples": 32,
+        "metres_per_cycle_median": 2.6016413801715776,
+        "metres_per_cycle_std": 1.4931522410917486
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.007917563561431938,
+        "maximum_y": 0.3311304716866131,
+        "support_fraction": 0.3625,
+        "negative_support_samples": 28,
+        "metres_per_cycle_median": 2.282948731478509,
+        "metres_per_cycle_std": 1.3347208484272226
+      }
+    }
+  },
+  {
+    "clip": "pace",
+    "registration": "saddle_translation",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.08564564096121452,
+        "maximum_y": 0.4464917994237015,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.06380140881905187,
+        "maximum_y": 0.3148523182985385,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.021573054719335624,
+        "maximum_y": 0.2964723059758022,
+        "support_fraction": 0.025,
+        "negative_support_samples": 1,
+        "metres_per_cycle_median": 0.20709269300196453,
+        "metres_per_cycle_std": 0.0
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.029417761456034402,
+        "maximum_y": 0.30191177425747984,
+        "support_fraction": 0.0125,
+        "negative_support_samples": 1,
+        "metres_per_cycle_median": 4.628961263189755,
+        "metres_per_cycle_std": 0.0
+      }
+    }
+  },
+  {
+    "clip": "pace",
+    "registration": "saddle_full_frame",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 0.0,
+    "source_bind_differences": {},
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": -0.008891604246654146,
+        "maximum_y": 0.47389806511164884,
+        "support_fraction": 0.125,
+        "negative_support_samples": 10,
+        "metres_per_cycle_median": 4.092097067091236,
+        "metres_per_cycle_std": 0.9766685127799888
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": -0.023809562617882873,
+        "maximum_y": 0.2871313071398858,
+        "support_fraction": 0.2125,
+        "negative_support_samples": 17,
+        "metres_per_cycle_median": 3.127667460487329,
+        "metres_per_cycle_std": 0.9060879702428164
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.04399460083660792,
+        "maximum_y": 0.45938122214936644,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.1309948821388619,
+        "maximum_y": 0.41345695353463785,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      }
+    }
+  },
+  {
+    "clip": "relaxed_walk",
+    "registration": "original_root",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0,
+    "source_bind_differences": {
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.01198242239749488,
+        "maximum_y": 0.12510951191901992,
+        "support_fraction": 0.7,
+        "negative_support_samples": 56,
+        "metres_per_cycle_median": 1.2041795835820657,
+        "metres_per_cycle_std": 0.4725334760286517
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.011987019977544817,
+        "maximum_y": 0.12510873445481063,
+        "support_fraction": 0.7,
+        "negative_support_samples": 56,
+        "metres_per_cycle_median": 1.0816807276313045,
+        "metres_per_cycle_std": 0.5344478975783887
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": -0.021192077376510837,
+        "maximum_y": 0.09770927859258766,
+        "support_fraction": 0.725,
+        "negative_support_samples": 50,
+        "metres_per_cycle_median": 1.664125252676385,
+        "metres_per_cycle_std": 0.684212877028995
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": -0.019820947902087997,
+        "maximum_y": 0.11107215138053222,
+        "support_fraction": 0.7,
+        "negative_support_samples": 45,
+        "metres_per_cycle_median": 1.822783393526688,
+        "metres_per_cycle_std": 0.7199855319558853
+      }
+    }
+  },
+  {
+    "clip": "relaxed_walk",
+    "registration": "saddle_translation",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0,
+    "source_bind_differences": {
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.03781546694579194,
+        "maximum_y": 0.17784734445553124,
+        "support_fraction": 0.05,
+        "negative_support_samples": 4,
+        "metres_per_cycle_median": 1.3679121353154233,
+        "metres_per_cycle_std": 0.02849714598792188
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.03724757068756268,
+        "maximum_y": 0.17784698996609216,
+        "support_fraction": 0.075,
+        "negative_support_samples": 6,
+        "metres_per_cycle_median": 0.9347998759030252,
+        "metres_per_cycle_std": 0.08842749715921744
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.03587407599505706,
+        "maximum_y": 0.12361850166271042,
+        "support_fraction": 0.1,
+        "negative_support_samples": 8,
+        "metres_per_cycle_median": 2.1917721229600318,
+        "metres_per_cycle_std": 0.1029816656899789
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.03574030426927353,
+        "maximum_y": 0.1355143393334996,
+        "support_fraction": 0.1,
+        "negative_support_samples": 8,
+        "metres_per_cycle_median": 1.9548425445595674,
+        "metres_per_cycle_std": 0.1511528878010376
+      }
+    }
+  },
+  {
+    "clip": "relaxed_walk",
+    "registration": "saddle_full_frame",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0,
+    "source_bind_differences": {
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.014093366669968799,
+        "maximum_y": 0.181878544522272,
+        "support_fraction": 0.15,
+        "negative_support_samples": 12,
+        "metres_per_cycle_median": 1.2737802744379634,
+        "metres_per_cycle_std": 0.3588727557379971
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.013165428002740313,
+        "maximum_y": 0.18187829343053658,
+        "support_fraction": 0.175,
+        "negative_support_samples": 14,
+        "metres_per_cycle_median": 0.8908254959454376,
+        "metres_per_cycle_std": 0.2065987978010748
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.028598248922840602,
+        "maximum_y": 0.17334139304975849,
+        "support_fraction": 0.05,
+        "negative_support_samples": 4,
+        "metres_per_cycle_median": 3.0909597030391733,
+        "metres_per_cycle_std": 0.2589411057247486
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.028543413787979706,
+        "maximum_y": 0.18880671084737635,
+        "support_fraction": 0.0375,
+        "negative_support_samples": 3,
+        "metres_per_cycle_median": 3.6623757636380283,
+        "metres_per_cycle_std": 0.33780823831966844
+      }
+    }
+  },
+  {
+    "clip": "breed_walk",
+    "registration": "original_root",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0572739999999996,
+    "source_bind_differences": {
+      "Horse_root": 0.06855359999999999,
+      "Horse_Hand_IK_R": 0.31336300000000006,
+      "Hoof_F_R": 0.0819282,
+      "Horse_Hand_IK_L": 0.31336300000000006,
+      "Hoof_F_L": 0.0819282,
+      "Horse_HeadNub": 1.0572739999999996,
+      "Horse_leg_IK_L": 0.355885,
+      "Hoof_B_L": 0.06825820000000005,
+      "Horse_leg_IK_R": 0.355885,
+      "Hoof_B_R": 0.06825820000000005,
+      "Horse_Spine": 0.752764,
+      "Horse_Spine_1": 0.15767390000000003,
+      "Horse_Spine_2": 0.19917340000000006,
+      "Horse_Neck": 0.20363109999999995,
+      "Horse_Neck_1": 0.07646920000000007,
+      "Horse_Neck_2": 0.2777865,
+      "Horse_Head": 0.18538269999999996,
+      "prop_head": 0.3154812,
+      "Horse_ear_R": 0.38014289999999995,
+      "Horse_ear_2_R": 0.45050636462,
+      "Horse_ear_L": 0.3801427,
+      "Horse_ear_2_L": 0.45050676265,
+      "Horse_shoulder_R": 0.20363109999999995,
+      "Horse_upperarm_R": 0.12420810000000004,
+      "Horse_Arm_R": 0.1542477,
+      "Horse_Forearm_R": 0.22798970000000007,
+      "Horse_Hand_R": 0.14397910000000003,
+      "Horse_Hoof_R": 0.0819282,
+      "Knee_Stretch_R": 0.22798970000000007,
+      "Horse_shoulder_L": 0.20363109999999995,
+      "Horse_upperarm_L": 0.12420809999999999,
+      "Horse_Arm_L": 0.15424709999999997,
+      "Horse_Forearm_L": 0.22798960000000001,
+      "Horse_Hand_L": 0.14397939999999998,
+      "Horse_Hoof_L": 0.08192840000000001,
+      "Knee_Stretch_L": 0.22798960000000001,
+      "prop_chest": 0.286581,
+      "prop_shield": 0.14477450000000003,
+      "prop_rider": 0.1854114,
+      "prop_saddle": 0.1854114,
+      "Horse_Belly": 0.1580395,
+      "prop_wings": 0.1828672,
+      "Horse_Thigh_L": 0.07454109999999997,
+      "Horse_Leg_L": 0.1790889,
+      "Horse_Shin_L": 0.23586249999999997,
+      "Horse_Foot_L": 0.20354549999999993,
+      "Horse_Hoof_back_L": 0.06825509999999996,
+      "Knee_Stretch_B_L": 0.23586249999999997,
+      "Leg_Stretch_L": 0.1790889,
+      "Horse_Thigh_R": 0.07454109999999997,
+      "Horse_Leg_R": 0.1790889,
+      "Horse_Shin_R": 0.23586229999999997,
+      "Horse_Foot_R": 0.2035454,
+      "Horse_Hoof_back_R": 0.06825490000000001,
+      "Knee_Stretch_B_R": 0.23586229999999997,
+      "Leg_Stretch_R": 0.1790889,
+      "Horse_Tail_base": 0.1582135,
+      "Horse_Tail": 0.1308688,
+      "Horse_Tail_2": 0.1329533,
+      "Horse_Tail_3": 0.028956499999999996,
+      "Horse_Tail_4": 0.0561412,
+      "Horse_Tail_5": 0.06522560000000002,
+      "Horse_Tail_6": 0.11035050000000002,
+      "Horse_Tail_7": 0.09188810000000003,
+      "Horse_Tail_8": 0.06337080000000003,
+      "Horse_Tail_9": 0.08490809999999999,
+      "Horse_Tail_10": 0.07724900000000001,
+      "Leg_target_L": 0.587205,
+      "Leg_target_R": 0.587205,
+      "Knee_F_L": 0.4824630000000001,
+      "Knee_F_R": 0.4824630000000001,
+      "Shoulder_Target_R": 0.555739,
+      "Shoulder_Target_L": 0.555739,
+      "Knee_B_L": 0.51054,
+      "Knee_B_R": 0.51054,
+      "prop_decals": 0.06855359999999999,
+      "prop_rider_R": 0.29725,
+      "prop_rider_L": 0.29725,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": -0.034901908372317075,
+        "maximum_y": 0.15987024521765922,
+        "support_fraction": 0.6375,
+        "negative_support_samples": 43,
+        "metres_per_cycle_median": 0.9769762143951954,
+        "metres_per_cycle_std": 0.9200825660467962
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": -0.019124503407539274,
+        "maximum_y": 0.1780331120971203,
+        "support_fraction": 0.725,
+        "negative_support_samples": 48,
+        "metres_per_cycle_median": 1.020032857927392,
+        "metres_per_cycle_std": 0.5299083857437705
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": -0.06327084875390798,
+        "maximum_y": 0.047767751535704894,
+        "support_fraction": 0.925,
+        "negative_support_samples": 53,
+        "metres_per_cycle_median": 1.5651429819029605,
+        "metres_per_cycle_std": 0.671329718793845
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": -0.062012019118473,
+        "maximum_y": 0.06016340508723064,
+        "support_fraction": 0.8375,
+        "negative_support_samples": 48,
+        "metres_per_cycle_median": 1.7636085908566046,
+        "metres_per_cycle_std": 0.6700801935906208
+      }
+    }
+  },
+  {
+    "clip": "breed_walk",
+    "registration": "saddle_translation",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0572739999999996,
+    "source_bind_differences": {
+      "Horse_root": 0.06855359999999999,
+      "Horse_Hand_IK_R": 0.31336300000000006,
+      "Hoof_F_R": 0.0819282,
+      "Horse_Hand_IK_L": 0.31336300000000006,
+      "Hoof_F_L": 0.0819282,
+      "Horse_HeadNub": 1.0572739999999996,
+      "Horse_leg_IK_L": 0.355885,
+      "Hoof_B_L": 0.06825820000000005,
+      "Horse_leg_IK_R": 0.355885,
+      "Hoof_B_R": 0.06825820000000005,
+      "Horse_Spine": 0.752764,
+      "Horse_Spine_1": 0.15767390000000003,
+      "Horse_Spine_2": 0.19917340000000006,
+      "Horse_Neck": 0.20363109999999995,
+      "Horse_Neck_1": 0.07646920000000007,
+      "Horse_Neck_2": 0.2777865,
+      "Horse_Head": 0.18538269999999996,
+      "prop_head": 0.3154812,
+      "Horse_ear_R": 0.38014289999999995,
+      "Horse_ear_2_R": 0.45050636462,
+      "Horse_ear_L": 0.3801427,
+      "Horse_ear_2_L": 0.45050676265,
+      "Horse_shoulder_R": 0.20363109999999995,
+      "Horse_upperarm_R": 0.12420810000000004,
+      "Horse_Arm_R": 0.1542477,
+      "Horse_Forearm_R": 0.22798970000000007,
+      "Horse_Hand_R": 0.14397910000000003,
+      "Horse_Hoof_R": 0.0819282,
+      "Knee_Stretch_R": 0.22798970000000007,
+      "Horse_shoulder_L": 0.20363109999999995,
+      "Horse_upperarm_L": 0.12420809999999999,
+      "Horse_Arm_L": 0.15424709999999997,
+      "Horse_Forearm_L": 0.22798960000000001,
+      "Horse_Hand_L": 0.14397939999999998,
+      "Horse_Hoof_L": 0.08192840000000001,
+      "Knee_Stretch_L": 0.22798960000000001,
+      "prop_chest": 0.286581,
+      "prop_shield": 0.14477450000000003,
+      "prop_rider": 0.1854114,
+      "prop_saddle": 0.1854114,
+      "Horse_Belly": 0.1580395,
+      "prop_wings": 0.1828672,
+      "Horse_Thigh_L": 0.07454109999999997,
+      "Horse_Leg_L": 0.1790889,
+      "Horse_Shin_L": 0.23586249999999997,
+      "Horse_Foot_L": 0.20354549999999993,
+      "Horse_Hoof_back_L": 0.06825509999999996,
+      "Knee_Stretch_B_L": 0.23586249999999997,
+      "Leg_Stretch_L": 0.1790889,
+      "Horse_Thigh_R": 0.07454109999999997,
+      "Horse_Leg_R": 0.1790889,
+      "Horse_Shin_R": 0.23586229999999997,
+      "Horse_Foot_R": 0.2035454,
+      "Horse_Hoof_back_R": 0.06825490000000001,
+      "Knee_Stretch_B_R": 0.23586229999999997,
+      "Leg_Stretch_R": 0.1790889,
+      "Horse_Tail_base": 0.1582135,
+      "Horse_Tail": 0.1308688,
+      "Horse_Tail_2": 0.1329533,
+      "Horse_Tail_3": 0.028956499999999996,
+      "Horse_Tail_4": 0.0561412,
+      "Horse_Tail_5": 0.06522560000000002,
+      "Horse_Tail_6": 0.11035050000000002,
+      "Horse_Tail_7": 0.09188810000000003,
+      "Horse_Tail_8": 0.06337080000000003,
+      "Horse_Tail_9": 0.08490809999999999,
+      "Horse_Tail_10": 0.07724900000000001,
+      "Leg_target_L": 0.587205,
+      "Leg_target_R": 0.587205,
+      "Knee_F_L": 0.4824630000000001,
+      "Knee_F_R": 0.4824630000000001,
+      "Shoulder_Target_R": 0.555739,
+      "Shoulder_Target_L": 0.555739,
+      "Knee_B_L": 0.51054,
+      "Knee_B_R": 0.51054,
+      "prop_decals": 0.06855359999999999,
+      "prop_rider_R": 0.29725,
+      "prop_rider_L": 0.29725,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.2971888859135954,
+        "maximum_y": 0.4792792926301047,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.29719924932603714,
+        "maximum_y": 0.49665750954982296,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.2751859094699968,
+        "maximum_y": 0.36409175684319056,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.2765007484631761,
+        "maximum_y": 0.3761067367035766,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      }
+    }
+  },
+  {
+    "clip": "breed_walk",
+    "registration": "saddle_full_frame",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0572739999999996,
+    "source_bind_differences": {
+      "Horse_root": 0.06855359999999999,
+      "Horse_Hand_IK_R": 0.31336300000000006,
+      "Hoof_F_R": 0.0819282,
+      "Horse_Hand_IK_L": 0.31336300000000006,
+      "Hoof_F_L": 0.0819282,
+      "Horse_HeadNub": 1.0572739999999996,
+      "Horse_leg_IK_L": 0.355885,
+      "Hoof_B_L": 0.06825820000000005,
+      "Horse_leg_IK_R": 0.355885,
+      "Hoof_B_R": 0.06825820000000005,
+      "Horse_Spine": 0.752764,
+      "Horse_Spine_1": 0.15767390000000003,
+      "Horse_Spine_2": 0.19917340000000006,
+      "Horse_Neck": 0.20363109999999995,
+      "Horse_Neck_1": 0.07646920000000007,
+      "Horse_Neck_2": 0.2777865,
+      "Horse_Head": 0.18538269999999996,
+      "prop_head": 0.3154812,
+      "Horse_ear_R": 0.38014289999999995,
+      "Horse_ear_2_R": 0.45050636462,
+      "Horse_ear_L": 0.3801427,
+      "Horse_ear_2_L": 0.45050676265,
+      "Horse_shoulder_R": 0.20363109999999995,
+      "Horse_upperarm_R": 0.12420810000000004,
+      "Horse_Arm_R": 0.1542477,
+      "Horse_Forearm_R": 0.22798970000000007,
+      "Horse_Hand_R": 0.14397910000000003,
+      "Horse_Hoof_R": 0.0819282,
+      "Knee_Stretch_R": 0.22798970000000007,
+      "Horse_shoulder_L": 0.20363109999999995,
+      "Horse_upperarm_L": 0.12420809999999999,
+      "Horse_Arm_L": 0.15424709999999997,
+      "Horse_Forearm_L": 0.22798960000000001,
+      "Horse_Hand_L": 0.14397939999999998,
+      "Horse_Hoof_L": 0.08192840000000001,
+      "Knee_Stretch_L": 0.22798960000000001,
+      "prop_chest": 0.286581,
+      "prop_shield": 0.14477450000000003,
+      "prop_rider": 0.1854114,
+      "prop_saddle": 0.1854114,
+      "Horse_Belly": 0.1580395,
+      "prop_wings": 0.1828672,
+      "Horse_Thigh_L": 0.07454109999999997,
+      "Horse_Leg_L": 0.1790889,
+      "Horse_Shin_L": 0.23586249999999997,
+      "Horse_Foot_L": 0.20354549999999993,
+      "Horse_Hoof_back_L": 0.06825509999999996,
+      "Knee_Stretch_B_L": 0.23586249999999997,
+      "Leg_Stretch_L": 0.1790889,
+      "Horse_Thigh_R": 0.07454109999999997,
+      "Horse_Leg_R": 0.1790889,
+      "Horse_Shin_R": 0.23586229999999997,
+      "Horse_Foot_R": 0.2035454,
+      "Horse_Hoof_back_R": 0.06825490000000001,
+      "Knee_Stretch_B_R": 0.23586229999999997,
+      "Leg_Stretch_R": 0.1790889,
+      "Horse_Tail_base": 0.1582135,
+      "Horse_Tail": 0.1308688,
+      "Horse_Tail_2": 0.1329533,
+      "Horse_Tail_3": 0.028956499999999996,
+      "Horse_Tail_4": 0.0561412,
+      "Horse_Tail_5": 0.06522560000000002,
+      "Horse_Tail_6": 0.11035050000000002,
+      "Horse_Tail_7": 0.09188810000000003,
+      "Horse_Tail_8": 0.06337080000000003,
+      "Horse_Tail_9": 0.08490809999999999,
+      "Horse_Tail_10": 0.07724900000000001,
+      "Leg_target_L": 0.587205,
+      "Leg_target_R": 0.587205,
+      "Knee_F_L": 0.4824630000000001,
+      "Knee_F_R": 0.4824630000000001,
+      "Shoulder_Target_R": 0.555739,
+      "Shoulder_Target_L": 0.555739,
+      "Knee_B_L": 0.51054,
+      "Knee_B_R": 0.51054,
+      "prop_decals": 0.06855359999999999,
+      "prop_rider_R": 0.29725,
+      "prop_rider_L": 0.29725,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.2919041773646633,
+        "maximum_y": 0.47711862202519734,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.2905239882248852,
+        "maximum_y": 0.49387175927682503,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.2608149158713798,
+        "maximum_y": 0.3828791112752096,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.26161559228255854,
+        "maximum_y": 0.3955479119293198,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      }
+    }
+  },
+  {
+    "clip": "breed_trot",
+    "registration": "original_root",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0572739999999996,
+    "source_bind_differences": {
+      "Horse_root": 0.06855359999999999,
+      "Horse_Hand_IK_R": 0.31336300000000006,
+      "Hoof_F_R": 0.0819282,
+      "Horse_Hand_IK_L": 0.31336300000000006,
+      "Hoof_F_L": 0.0819282,
+      "Horse_HeadNub": 1.0572739999999996,
+      "Horse_leg_IK_L": 0.355885,
+      "Hoof_B_L": 0.06825820000000005,
+      "Horse_leg_IK_R": 0.355885,
+      "Hoof_B_R": 0.06825820000000005,
+      "Horse_Spine": 0.752764,
+      "Horse_Spine_1": 0.15767390000000003,
+      "Horse_Spine_2": 0.19917340000000006,
+      "Horse_Neck": 0.20363109999999995,
+      "Horse_Neck_1": 0.07646920000000007,
+      "Horse_Neck_2": 0.2777865,
+      "Horse_Head": 0.18538269999999996,
+      "prop_head": 0.3154812,
+      "Horse_ear_R": 0.38014289999999995,
+      "Horse_ear_2_R": 0.45050636462,
+      "Horse_ear_L": 0.3801427,
+      "Horse_ear_2_L": 0.45050676265,
+      "Horse_shoulder_R": 0.20363109999999995,
+      "Horse_upperarm_R": 0.12420810000000004,
+      "Horse_Arm_R": 0.1542477,
+      "Horse_Forearm_R": 0.22798970000000007,
+      "Horse_Hand_R": 0.14397910000000003,
+      "Horse_Hoof_R": 0.0819282,
+      "Knee_Stretch_R": 0.22798970000000007,
+      "Horse_shoulder_L": 0.20363109999999995,
+      "Horse_upperarm_L": 0.12420809999999999,
+      "Horse_Arm_L": 0.15424709999999997,
+      "Horse_Forearm_L": 0.22798960000000001,
+      "Horse_Hand_L": 0.14397939999999998,
+      "Horse_Hoof_L": 0.08192840000000001,
+      "Knee_Stretch_L": 0.22798960000000001,
+      "prop_chest": 0.286581,
+      "prop_shield": 0.14477450000000003,
+      "prop_rider": 0.1854114,
+      "prop_saddle": 0.1854114,
+      "Horse_Belly": 0.1580395,
+      "prop_wings": 0.1828672,
+      "Horse_Thigh_L": 0.07454109999999997,
+      "Horse_Leg_L": 0.1790889,
+      "Horse_Shin_L": 0.23586249999999997,
+      "Horse_Foot_L": 0.20354549999999993,
+      "Horse_Hoof_back_L": 0.06825509999999996,
+      "Knee_Stretch_B_L": 0.23586249999999997,
+      "Leg_Stretch_L": 0.1790889,
+      "Horse_Thigh_R": 0.07454109999999997,
+      "Horse_Leg_R": 0.1790889,
+      "Horse_Shin_R": 0.23586229999999997,
+      "Horse_Foot_R": 0.2035454,
+      "Horse_Hoof_back_R": 0.06825490000000001,
+      "Knee_Stretch_B_R": 0.23586229999999997,
+      "Leg_Stretch_R": 0.1790889,
+      "Horse_Tail_base": 0.1582135,
+      "Horse_Tail": 0.1308688,
+      "Horse_Tail_2": 0.1329533,
+      "Horse_Tail_3": 0.028956499999999996,
+      "Horse_Tail_4": 0.0561412,
+      "Horse_Tail_5": 0.06522560000000002,
+      "Horse_Tail_6": 0.11035050000000002,
+      "Horse_Tail_7": 0.09188810000000003,
+      "Horse_Tail_8": 0.06337080000000003,
+      "Horse_Tail_9": 0.08490809999999999,
+      "Horse_Tail_10": 0.07724900000000001,
+      "Leg_target_L": 0.587205,
+      "Leg_target_R": 0.587205,
+      "Knee_F_L": 0.4824630000000001,
+      "Knee_F_R": 0.4824630000000001,
+      "Shoulder_Target_R": 0.555739,
+      "Shoulder_Target_L": 0.555739,
+      "Knee_B_L": 0.51054,
+      "Knee_B_R": 0.51054,
+      "prop_decals": 0.06855359999999999,
+      "prop_rider_R": 0.29725,
+      "prop_rider_L": 0.29725,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": -0.02259623923435008,
+        "maximum_y": 0.153638446409293,
+        "support_fraction": 0.4875,
+        "negative_support_samples": 39,
+        "metres_per_cycle_median": 1.7575086064562884,
+        "metres_per_cycle_std": 0.8174467327256811
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": -0.02641383803815894,
+        "maximum_y": 0.25469765020184604,
+        "support_fraction": 0.425,
+        "negative_support_samples": 34,
+        "metres_per_cycle_median": 2.05166894755084,
+        "metres_per_cycle_std": 0.4256903872873165
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": -0.036363169347994856,
+        "maximum_y": 0.12609228706967973,
+        "support_fraction": 0.55,
+        "negative_support_samples": 33,
+        "metres_per_cycle_median": 2.3653217101486224,
+        "metres_per_cycle_std": 0.8125065989926602
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": -0.044421367168463705,
+        "maximum_y": 0.10592974454412296,
+        "support_fraction": 0.6625,
+        "negative_support_samples": 41,
+        "metres_per_cycle_median": 1.184682722473256,
+        "metres_per_cycle_std": 1.0579872117951523
+      }
+    }
+  },
+  {
+    "clip": "breed_trot",
+    "registration": "saddle_translation",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0572739999999996,
+    "source_bind_differences": {
+      "Horse_root": 0.06855359999999999,
+      "Horse_Hand_IK_R": 0.31336300000000006,
+      "Hoof_F_R": 0.0819282,
+      "Horse_Hand_IK_L": 0.31336300000000006,
+      "Hoof_F_L": 0.0819282,
+      "Horse_HeadNub": 1.0572739999999996,
+      "Horse_leg_IK_L": 0.355885,
+      "Hoof_B_L": 0.06825820000000005,
+      "Horse_leg_IK_R": 0.355885,
+      "Hoof_B_R": 0.06825820000000005,
+      "Horse_Spine": 0.752764,
+      "Horse_Spine_1": 0.15767390000000003,
+      "Horse_Spine_2": 0.19917340000000006,
+      "Horse_Neck": 0.20363109999999995,
+      "Horse_Neck_1": 0.07646920000000007,
+      "Horse_Neck_2": 0.2777865,
+      "Horse_Head": 0.18538269999999996,
+      "prop_head": 0.3154812,
+      "Horse_ear_R": 0.38014289999999995,
+      "Horse_ear_2_R": 0.45050636462,
+      "Horse_ear_L": 0.3801427,
+      "Horse_ear_2_L": 0.45050676265,
+      "Horse_shoulder_R": 0.20363109999999995,
+      "Horse_upperarm_R": 0.12420810000000004,
+      "Horse_Arm_R": 0.1542477,
+      "Horse_Forearm_R": 0.22798970000000007,
+      "Horse_Hand_R": 0.14397910000000003,
+      "Horse_Hoof_R": 0.0819282,
+      "Knee_Stretch_R": 0.22798970000000007,
+      "Horse_shoulder_L": 0.20363109999999995,
+      "Horse_upperarm_L": 0.12420809999999999,
+      "Horse_Arm_L": 0.15424709999999997,
+      "Horse_Forearm_L": 0.22798960000000001,
+      "Horse_Hand_L": 0.14397939999999998,
+      "Horse_Hoof_L": 0.08192840000000001,
+      "Knee_Stretch_L": 0.22798960000000001,
+      "prop_chest": 0.286581,
+      "prop_shield": 0.14477450000000003,
+      "prop_rider": 0.1854114,
+      "prop_saddle": 0.1854114,
+      "Horse_Belly": 0.1580395,
+      "prop_wings": 0.1828672,
+      "Horse_Thigh_L": 0.07454109999999997,
+      "Horse_Leg_L": 0.1790889,
+      "Horse_Shin_L": 0.23586249999999997,
+      "Horse_Foot_L": 0.20354549999999993,
+      "Horse_Hoof_back_L": 0.06825509999999996,
+      "Knee_Stretch_B_L": 0.23586249999999997,
+      "Leg_Stretch_L": 0.1790889,
+      "Horse_Thigh_R": 0.07454109999999997,
+      "Horse_Leg_R": 0.1790889,
+      "Horse_Shin_R": 0.23586229999999997,
+      "Horse_Foot_R": 0.2035454,
+      "Horse_Hoof_back_R": 0.06825490000000001,
+      "Knee_Stretch_B_R": 0.23586229999999997,
+      "Leg_Stretch_R": 0.1790889,
+      "Horse_Tail_base": 0.1582135,
+      "Horse_Tail": 0.1308688,
+      "Horse_Tail_2": 0.1329533,
+      "Horse_Tail_3": 0.028956499999999996,
+      "Horse_Tail_4": 0.0561412,
+      "Horse_Tail_5": 0.06522560000000002,
+      "Horse_Tail_6": 0.11035050000000002,
+      "Horse_Tail_7": 0.09188810000000003,
+      "Horse_Tail_8": 0.06337080000000003,
+      "Horse_Tail_9": 0.08490809999999999,
+      "Horse_Tail_10": 0.07724900000000001,
+      "Leg_target_L": 0.587205,
+      "Leg_target_R": 0.587205,
+      "Knee_F_L": 0.4824630000000001,
+      "Knee_F_R": 0.4824630000000001,
+      "Shoulder_Target_R": 0.555739,
+      "Shoulder_Target_L": 0.555739,
+      "Knee_B_L": 0.51054,
+      "Knee_B_R": 0.51054,
+      "prop_decals": 0.06855359999999999,
+      "prop_rider_R": 0.29725,
+      "prop_rider_L": 0.29725,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.2510722749505938,
+        "maximum_y": 0.4629150589196707,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.2525816504545848,
+        "maximum_y": 0.5507455399968983,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.24471520165488678,
+        "maximum_y": 0.4079958896307839,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.23505387843293102,
+        "maximum_y": 0.39519811146814743,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      }
+    }
+  },
+  {
+    "clip": "breed_trot",
+    "registration": "saddle_full_frame",
+    "surface_fit": "uniform",
+    "source_bind_max_difference": 1.0572739999999996,
+    "source_bind_differences": {
+      "Horse_root": 0.06855359999999999,
+      "Horse_Hand_IK_R": 0.31336300000000006,
+      "Hoof_F_R": 0.0819282,
+      "Horse_Hand_IK_L": 0.31336300000000006,
+      "Hoof_F_L": 0.0819282,
+      "Horse_HeadNub": 1.0572739999999996,
+      "Horse_leg_IK_L": 0.355885,
+      "Hoof_B_L": 0.06825820000000005,
+      "Horse_leg_IK_R": 0.355885,
+      "Hoof_B_R": 0.06825820000000005,
+      "Horse_Spine": 0.752764,
+      "Horse_Spine_1": 0.15767390000000003,
+      "Horse_Spine_2": 0.19917340000000006,
+      "Horse_Neck": 0.20363109999999995,
+      "Horse_Neck_1": 0.07646920000000007,
+      "Horse_Neck_2": 0.2777865,
+      "Horse_Head": 0.18538269999999996,
+      "prop_head": 0.3154812,
+      "Horse_ear_R": 0.38014289999999995,
+      "Horse_ear_2_R": 0.45050636462,
+      "Horse_ear_L": 0.3801427,
+      "Horse_ear_2_L": 0.45050676265,
+      "Horse_shoulder_R": 0.20363109999999995,
+      "Horse_upperarm_R": 0.12420810000000004,
+      "Horse_Arm_R": 0.1542477,
+      "Horse_Forearm_R": 0.22798970000000007,
+      "Horse_Hand_R": 0.14397910000000003,
+      "Horse_Hoof_R": 0.0819282,
+      "Knee_Stretch_R": 0.22798970000000007,
+      "Horse_shoulder_L": 0.20363109999999995,
+      "Horse_upperarm_L": 0.12420809999999999,
+      "Horse_Arm_L": 0.15424709999999997,
+      "Horse_Forearm_L": 0.22798960000000001,
+      "Horse_Hand_L": 0.14397939999999998,
+      "Horse_Hoof_L": 0.08192840000000001,
+      "Knee_Stretch_L": 0.22798960000000001,
+      "prop_chest": 0.286581,
+      "prop_shield": 0.14477450000000003,
+      "prop_rider": 0.1854114,
+      "prop_saddle": 0.1854114,
+      "Horse_Belly": 0.1580395,
+      "prop_wings": 0.1828672,
+      "Horse_Thigh_L": 0.07454109999999997,
+      "Horse_Leg_L": 0.1790889,
+      "Horse_Shin_L": 0.23586249999999997,
+      "Horse_Foot_L": 0.20354549999999993,
+      "Horse_Hoof_back_L": 0.06825509999999996,
+      "Knee_Stretch_B_L": 0.23586249999999997,
+      "Leg_Stretch_L": 0.1790889,
+      "Horse_Thigh_R": 0.07454109999999997,
+      "Horse_Leg_R": 0.1790889,
+      "Horse_Shin_R": 0.23586229999999997,
+      "Horse_Foot_R": 0.2035454,
+      "Horse_Hoof_back_R": 0.06825490000000001,
+      "Knee_Stretch_B_R": 0.23586229999999997,
+      "Leg_Stretch_R": 0.1790889,
+      "Horse_Tail_base": 0.1582135,
+      "Horse_Tail": 0.1308688,
+      "Horse_Tail_2": 0.1329533,
+      "Horse_Tail_3": 0.028956499999999996,
+      "Horse_Tail_4": 0.0561412,
+      "Horse_Tail_5": 0.06522560000000002,
+      "Horse_Tail_6": 0.11035050000000002,
+      "Horse_Tail_7": 0.09188810000000003,
+      "Horse_Tail_8": 0.06337080000000003,
+      "Horse_Tail_9": 0.08490809999999999,
+      "Horse_Tail_10": 0.07724900000000001,
+      "Leg_target_L": 0.587205,
+      "Leg_target_R": 0.587205,
+      "Knee_F_L": 0.4824630000000001,
+      "Knee_F_R": 0.4824630000000001,
+      "Shoulder_Target_R": 0.555739,
+      "Shoulder_Target_L": 0.555739,
+      "Knee_B_L": 0.51054,
+      "Knee_B_R": 0.51054,
+      "prop_decals": 0.06855359999999999,
+      "prop_rider_R": 0.29725,
+      "prop_rider_L": 0.29725,
+      "prop_hair": 1.0
+    },
+    "hooves": {
+      "Horse_Hoof_R": {
+        "vertices": 21,
+        "fixed_points": [
+          735,
+          648,
+          650
+        ],
+        "minimum_y": 0.23720740890394473,
+        "maximum_y": 0.44591729117080503,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_L": {
+        "vertices": 21,
+        "fixed_points": [
+          309,
+          222,
+          224
+        ],
+        "minimum_y": 0.2395763933737915,
+        "maximum_y": 0.5589649758707497,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_R": {
+        "vertices": 25,
+        "fixed_points": [
+          739,
+          727,
+          741
+        ],
+        "minimum_y": 0.25158056704162735,
+        "maximum_y": 0.451883189345092,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      },
+      "Horse_Hoof_back_L": {
+        "vertices": 25,
+        "fixed_points": [
+          313,
+          301,
+          315
+        ],
+        "minimum_y": 0.24322709062554157,
+        "maximum_y": 0.44234547966190557,
+        "support_fraction": 0.0,
+        "negative_support_samples": 0,
+        "metres_per_cycle_median": null,
+        "metres_per_cycle_std": null
+      }
+    }
+  }
+]
