@@ -10,7 +10,7 @@ var folder:String
 func _initialize()->void:run.call_deferred()
 func fail(message:String)->void:push_error(message);quit(1)
 func make_view()->SubViewport:
- var v=SubViewport.new();v.size=Vector2i(2560,1440);v.own_world_3d=true;v.msaa_3d=Viewport.MSAA_4X;v.mesh_lod_threshold=0.;root.add_child(v)
+ var v=SubViewport.new();v.size=Vector2i(2560,1440);v.own_world_3d=true;v.render_target_update_mode=SubViewport.UPDATE_ALWAYS;v.msaa_3d=Viewport.MSAA_4X;v.mesh_lod_threshold=0.;root.add_child(v)
  var env=WorldEnvironment.new();env.environment=Environment.new();env.environment.background_mode=Environment.BG_COLOR;env.environment.background_color=Color(.055,.065,.075);env.environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;env.environment.ambient_light_color=Color.WHITE;env.environment.ambient_light_energy=.4;env.environment.tonemap_mode=Environment.TONE_MAPPER_FILMIC;v.add_child(env)
  var sun=DirectionalLight3D.new();sun.rotation_degrees=Vector3(-35,-25,0);sun.light_energy=.91;sun.shadow_enabled=true;v.add_child(sun)
  var c=Camera3D.new();c.fov=55.;v.add_child(c)
@@ -64,5 +64,29 @@ func run()->void:
      if result!=OK:fail("PNG save failed "+str(result));return
     rows.append({"clip":clip,"phase":phase,"mode":mode,"prefix":label});print("LOD_MOTION_CAPTURE ",label)
  var report={"engine":Engine.get_version_info(),"renderer":RenderingServer.get_video_adapter_name(),"driver":RenderingServer.get_current_rendering_driver_name(),"resolution":[2560,1440],"internal":1.,"camera":{"yaw":-65,"pitch":32,"fov":55,"nominal_body_fraction":.10,"target":[4,.8,0]},"source_sha256":FileAccess.get_sha256("res://assets/ubc_lab/ubc_animated.glb"),"inventory":inventory,"rows":rows,"all_original_weights":true,"full_source_materials":true,"art_pass":false,"performance":"NOT_MEASURED","M5":"NOT_TESTED","scope":"UBC unarmored, no held weapon. Original 9 authored clips sampled at non-keyframe phases, not full-cycle motion acceptance. Opaque wall and procedural alpha-scissor cutout only; no real foliage or blend transparency acceptance."}
+ if OS.get_environment("LOD_MOTION_VIDEO")=="1":
+  var video_rows=[];var sequence=0
+  DirAccess.make_dir_recursive_absolute(folder+"/motion-frames")
+  views[0].render_target_update_mode=SubViewport.UPDATE_DISABLED
+  for obstacle in obstacles:obstacle.visible=false
+  for clip in clips:
+   if clip=="RESET":continue
+   var length=player.get_animation(clip).length;var frames=maxi(1,int(ceil(length*24.)))
+   var first=sequence
+   for frame in frames:
+    var time=minf(frame/24.,length)
+    player.play(clip);player.seek(time,true);player.advance(0.);sk.force_update_all_bone_transforms()
+    for entry in entries:
+     var pose=Palette.capture(sk,entry.native.skin);if pose.has("error"):fail(str(pose));return
+     var bank=Palette.encode([pose.transforms]);if bank.has("error"):fail(str(bank));return
+     var texture=ImageTexture.create_from_image(bank.image)
+     for shader in entry.shaders:shader.set_shader_parameter("palette",texture)
+    await process_frame
+    await RenderingServer.frame_post_draw
+    var result=views[1].get_texture().get_image().save_jpg(folder+"/motion-frames/%06d.jpg"%sequence,.95)
+    if result!=OK:fail("Motion frame save failed");return
+    sequence+=1
+   video_rows.append({"clip":clip,"source_length":length,"first_frame":first,"frames":frames,"sampling_hz":24})
+  report["motion_video"]={"clips":video_rows,"total_frames":sequence,"native_pixels":[2560,1440],"simulated_playback_hz":24,"performance_benchmark":false,"codec_source":"actual GPU JPEG95 frames, not lossless"}
  var f=FileAccess.open(folder+"/report.json",FileAccess.WRITE);if f==null:fail("report write failed");return
  f.store_string(JSON.stringify(report,"  "));f.close();quit(0)
