@@ -27,37 +27,7 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	var row:={"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"shadow_mode":field.map.sun.directional_shadow_mode,"shadow_pancake":field.map.sun.directional_shadow_pancake_size,"shadow_enabled":field.map.sun.shadow_enabled,"sun_degrees":str(field.map.sun.rotation_degrees),"shadow_distance":field.map.sun.directional_shadow_max_distance,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
-func _reverse_bank_faces() -> void:
-	for node:Node in field.map.get_children():
-		if not node is MeshInstance3D:continue
-		if not String(node.name).begins_with("EmbeddedRockBank"):continue
-		var bounds:AABB=node.mesh.get_aabb()
-		var anchor:=bounds.get_center()
-		anchor.y=bounds.end.y
-		var center:Vector3=node.position+node.basis*anchor
-		node.basis=Basis(Vector3.UP,PI)*node.basis
-		node.position=center-node.basis*anchor
-
 func _inventory() -> void:
-	var cliff:Mesh=field.map._library(field.map.CLIFF)["coastal_cliff_02_LOD0"]
-	var normal_area:=Vector3.ZERO
-	var positive_z:=0.
-	var negative_z:=0.
-	for surface in cliff.get_surface_count():
-		var arrays:=cliff.surface_get_arrays(surface)
-		var positions:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
-		var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
-		var normals:PackedVector3Array=arrays[Mesh.ARRAY_NORMAL]
-		for corner in range(0,indices.size(),3):
-			var a:=positions[indices[corner]]
-			var b:=positions[indices[corner+1]]
-			var c:=positions[indices[corner+2]]
-			var area:float=(b-a).cross(c-a).length()
-			var face:Vector3=(normals[indices[corner]]+normals[indices[corner+1]]+normals[indices[corner+2]])*(area/3.)
-			normal_area+=face
-			positive_z+=maxf(0.,face.z)
-			negative_z+=maxf(0.,-face.z)
-	print("WORLD_CLIFF_FACE ",JSON.stringify({"weighted_normal":str(normal_area),"positive_z":positive_z,"negative_z":negative_z}))
 	for path:String in [field.map.BROADLEAF]:
 		var packed:Node3D=(load(path) as PackedScene).instantiate()
 		var members:Array=[packed]
@@ -99,9 +69,6 @@ func _run() -> void:
 	await _snap("bridgehead-0050",Ground.BRIDGE_VIEW,22.)
 	for tick in 85:field._physics_process(Battle.DT)
 	await _snap("bridgehead-0135",Ground.BRIDGE_VIEW,22.)
-	_reverse_bank_faces()
-	await _snap("bank-reverse-control",Ground.BRIDGE_VIEW,22.)
-	_reverse_bank_faces()
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
 	await _snap("grove-0135",Vector2(38.,-10.),18.)
 	await _snap("gate-architecture",Vector2(48.,0.),18.)

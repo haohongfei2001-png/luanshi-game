@@ -14,8 +14,8 @@ void vertex() {
 	local_position = VERTEX;
 	if (botanical_part > 0) {
 		vec3 crown_point = (VERTEX-crown_center)/max(crown_extent,vec3(.1));
-		vec3 crown_normal = normalize(crown_point*vec3(.55,.65,.55)+vec3(0.,.65,0.));
-		NORMAL = normalize(mix(NORMAL,crown_normal,.88));
+		vec3 crown_normal = normalize(crown_point*vec3(.70,.75,.70)+vec3(0.,.22,0.));
+		NORMAL = normalize(mix(NORMAL,crown_normal,.70));
 		vec3 world = (MODEL_MATRIX*vec4(VERTEX,1.)).xyz;
 		float tip = smoothstep(crown_center.y-crown_extent.y,crown_center.y+crown_extent.y,VERTEX.y);
 		VERTEX.x += sin(world.x*.63+world.z*.42+TIME*.75)*.018*tip;
@@ -40,9 +40,7 @@ void fragment() {
 	ALPHA_TEXTURE_COORDINATE = coordinates*vec2(textureSize(native_atlas,0));
 	vec3 native_color = linear_color(source.rgb);
 	vec3 paint = linear_color(pigment);
-	float value = dot(native_color,vec3(.2126,.7152,.0722));
-	float detail = smoothstep(.025,.60,value);
-	vec3 color = paint*mix(.78,1.16,detail);
+	vec3 color = mix(native_color,paint,.30);
 	if (botanical_part == 0) color = mix(native_color*paint*1.6,paint,.48);
 	ALBEDO = render_color(color);
 	float crown_depth = smoothstep(crown_center.y-crown_extent.y,crown_center.y+crown_extent.y,local_position.y);

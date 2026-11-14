@@ -277,21 +277,31 @@ func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
 	return plant
 
 func _bank_foundation(channel:float,moat:bool) -> void:
-	# Place the complete scanned cliff within an excavated bank. Its open back
-	# terminates below the soil, while the original eroded face reaches the water.
-	var mesh:Mesh=_library(CLIFF)["coastal_cliff_02_LOD0"]
-	var bounds:=mesh.get_aabb()
-	var anchor:=bounds.get_center()
-	anchor.y=bounds.end.y
-	var reaches:=PackedFloat32Array([-14.1,14.1] if moat else [-55.,-17.5,17.5,55.])
+	# Whole rock volumes form the submerged bank. Keep every scan's original
+	# proportions and rotate its full silhouette into the eroded shore.
+	var parts:=_library(BOULDERS)
+	var names:=parts.keys()
+	names.sort()
+	var reaches:=range(-24,25,2) if moat else range(-63,64,2)
 	for side:float in [-1.,1.]:
-		for z:float in reaches:
+		for index in reaches.size():
+			var station:int=reaches[index]
+			var z:=float(station)+.35*sin(station*1.7+side)
+			var crossing:=0. if moat else Ground.crossing(z)
+			if absf(z-crossing)<5.:continue
 			var center:=channel if moat else Ground.river_center(z)
-			var face:=_piece(CLIFF,"coastal_cliff_02_LOD0",
-				Vector3(center+side*(5.0 if moat else 5.8),.10,z),Vector3.ONE*.40,
-				-PI*.5 if side>0. else PI*.5,anchor)
-			face.name="EmbeddedRockBank"
-			face.lod_bias=.9
+			var part:String=names[posmod(index*5+int(side),names.size())]
+			var mesh:Mesh=parts[part]
+			var bounds:=mesh.get_aabb()
+			var anchor:=bounds.get_center()
+			anchor.y=bounds.position.y
+			var diameter:=2.45+.15*sin(station*2.4)
+			var size:=diameter/Vector2(bounds.size.x,bounds.size.z).length()
+			var at:=Vector3(center+side*(3.0 if moat else 4.05),
+				Ground.BATTLE_WATER_LEVEL-.24, z)
+			var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,station*1.37+side,anchor)
+			rock.name="WholeBankFooting"
+			rock.lod_bias=1.
 
 func _bank_rocks(channel:float,moat:bool) -> void:
 	var parts:=_library(BOULDERS)
