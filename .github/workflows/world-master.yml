@@ -1,0 +1,44 @@
+name: Build complete authored masters for the replacement river battlefield
+on:
+  push:
+    branches: ['codex/river-visual-master']
+    paths: ['.github/workflows/world-master.yml','tools/art/import_world_masters.py']
+permissions:
+  contents: write
+jobs:
+  world:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare the complete editable environmental masters
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender python3-numpy python3-pil
+          blender --background --factory-startup --python tools/art/import_world_masters.py -- "$RUNNER_TEMP/world-masters" > /tmp/world-master.log 2>&1 || { tail -n 65 /tmp/world-master.log; exit 1; }
+          cat /tmp/world-master.log
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("assets/river_gate/world/masters")
+          for asset in ("coastal_cliff_02","modular_wooden_pier","island_tree_03","pine_tree_01"):
+              folder=root/asset
+              assert (folder/(asset+".gltf")).is_file(),asset
+              assert (folder/"SOURCE.json").is_file(),asset
+              for p in folder.rglob("*"):
+                  if p.is_file():assert p.stat().st_size<95*1024**2,(p,p.stat().st_size)
+          PY
+      - name: Preserve reproducible source assets
+        run: |
+          set -euo pipefail
+          git add assets/river_gate/world/masters
+          git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Import complete scanned cliffs, timber structures and mature trees as the replacement world foundation'
+          git push origin HEAD:refs/heads/codex/river-visual-master
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-world-master-sources
+          path: |
+            assets/river_gate/world/masters/
+            /tmp/world-master.log
