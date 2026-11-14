@@ -59,6 +59,10 @@ jobs:
             grep ROBE_GAME_WINDOW "$proof/$side/window.log"
             cp artifacts/bridge-window/line-*.jpg artifacts/bridge-window/reverse-*.jpg artifacts/bridge-window/kit*.jpg artifacts/bridge-window/field.json "$proof/$side/"
           done
+          git add assets/river_gate/figures/field_company_master.glb tools/art/source/field_anatomy.json reports/hm08
+          git diff --exit-code -- assets/river_gate/figures/company_motion.png assets/third_party/wildfire_garments/field_colours.png assets/river_gate/figures/river_company.glb
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete licensed field people on the existing weapon and motion bind'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
           if [ ! -d "$proof/rejected-first-after" ]; then cp -a /tmp/first-person-after "$proof/rejected-first-after"; fi
           /usr/bin/python3 - <<'PY'
           from PIL import Image
@@ -66,8 +70,8 @@ jobs:
           root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master")
           assert json.loads((root/"before"/"field.json").read_bytes())==json.loads((root/"after"/"field.json").read_bytes())
           out={}
-          for a in sorted((root/"before").glob("*.jpg")):
-              name=a.stem
+          for name in ("line-055","line-105","line-135","line-185","reverse-135","kit3-135","kit5-135","kit7-135"):
+              a=root/"before"/(name+".jpg")
               pair=[]
               for side in ("before","after"):
                   path=root/side/a.name
@@ -80,9 +84,7 @@ jobs:
               out[name]={"pixels_changed_12":int((delta>12).sum()),"pixels_changed_25":int((delta>25).sum())}
           (root/"compare.json").write_text(json.dumps(out,indent=2))
           PY
-          git add assets/river_gate/figures/field_company_master.glb tools/art/source/field_anatomy.json reports/hm08
-          git diff --exit-code -- assets/river_gate/figures/company_motion.png assets/third_party/wildfire_garments/field_colours.png assets/river_gate/figures/river_company.glb
-          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete licensed field people on the existing weapon and motion bind'
+
           git add "$proof"
           git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive matched normal and near actual 2K field windows'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
@@ -97,4 +99,6 @@ jobs:
           path: |
             docs/evidence/river-gate-v1-rc23/character-master
             artifacts/bridge-window
+            assets/river_gate/figures/field_company_master.glb
+            tools/art/source/field_anatomy.json
           retention-days: 7
