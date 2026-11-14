@@ -97,3 +97,48 @@ Local repair validation: 11 integrity/gate tests pass. The normal QA PCK
 export and a full-scene headless startup from that pack were exercised with the
 official editor; the hosted protected template remains pending a fresh run.
 This does not claim that a Linux editor is the actual Mac runtime.
+
+## Next isolated camera integration (no default change)
+
+The actual experimental camera subset from
+`9c214ca46836dbd8f22eb75e25f12fdeecda98d4` is integrated without its separate
+Linux workflow. Empty review profiles restore the existing default projection
+and transform. The experiment uses the real frustum/height-slab culling helper;
+it does not stop offscreen Battle simulation or move the camera to the culling
+rectangle center. Three bounded native frames use 32-degree pitch, FOV 55,
+yaw -65/-75, and a nominal 10% adult box at the look target, four meters ahead
+of the hero. These are project candidates, not Riot's official camera values.
+
+Local checks passed the six camera configurations, restoration to the default,
+unchanged Battle state, and three full-scene matched candidate setups. An
+independent frame integrity validator was also run on the actual Linux
+`43630015256` three-frame evidence. It verifies native pixels, source SHA,
+Battle snapshot file/hash, camera metadata and decodable PNGs. Missing or
+duplicate frames, wrong source/snapshot, reduced render scale, altered army,
+seed or camera profile are rejected. None of these gates is an art judgment.
+
+The camera-only mode intentionally does **not** claim a traversal, action
+recording, performance benchmark, new character, or accepted whole scene.
+
+## Second hosted attempt: native startup stall retained
+
+Run `43630764803`, source `3fd677b91f4c20aef2131724d97fb9fa4aa73df8`,
+successfully restored assets, imported the Mac project, validated setup, and
+exported its normal 515,281,744-byte QA pack. The protected native template
+reported Metal 4.0, Forward Mobile, Apple Paravirtual device (Apple5), but did
+not reach the scripted entry or produce a frame before the 240-second bound.
+No route or action ran. Artifact `14127737835` preserves this exact timeout;
+it is not a successful GPU benchmark or proof that the art works on Mac.
+
+The next bounded run adds early read-only process samples of the verified
+direct game child, before and after a single early activation diagnostic via
+the existing Cocoa helper. It does not extend the timeout, weaken errors,
+change OS security, or assume that focusing will resolve the stall. The
+camera-only attempt is bounded to 120 seconds. If it still stalls, use the
+captured stack evidence instead of repeatedly raising timeouts.
+
+The integrated camera branch also completed the full default-OFF `tools/test.sh`
+regression with exit 0 and no script/shader/error markers, including existing
+battle, officers, 20/100/250/512 scale, save/history, economy, youth career,
+world migration, restart and attrition cases. This is functional preservation,
+not a native graphics or art pass.

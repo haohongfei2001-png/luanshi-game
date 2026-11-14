@@ -13,7 +13,7 @@ def validate_engine(patch):
         raise ValueError("Native engine checksum mismatch")
     return executable, receipt
 
-def run(project, patch, output, helper):
+def run(project, patch, output, helper, mode='baseline'):
     if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("RUNNER_OS") != "macOS" or sys.platform != "darwin":
         raise RuntimeError("Only disposable authorized GitHub macOS runner; never the owner's computer")
     executable, engine_receipt = validate_engine(patch)
@@ -28,12 +28,28 @@ def run(project, patch, output, helper):
     master, slave = pty.openpty()
     args = ["/usr/bin/time", "-l", "-o", str(output / "resource-time.log"), str(executable),
             "--rendering-method", "mobile", "--rendering-driver", "metal",
-            "--audio-driver", "Dummy", "--disable-vsync", "--script", "res://tests/native_region_capture.gd",
-            "--", "--wall-clock-action", "--traversal-review", "--shadow-diagnostic"]
+            "--audio-driver", "Dummy", "--disable-vsync", "--script", "res://tests/native_region_capture.gd", "--"]
+    args += ['--camera-study'] if mode=='camera-study' else ['--wall-clock-action','--traversal-review','--shadow-diagnostic']
     process = subprocess.Popen(args, env=env, cwd=project, stdout=slave, stderr=slave,
                                stdin=subprocess.DEVNULL, start_new_session=True)
     os.close(slave)
     started = time.monotonic(); pending = b""; failure = None; focus = None
+    startup_probes=[]; probe_times=set()
+    def sample_own_child(label, request_focus=False):
+        children=subprocess.run(['/usr/bin/pgrep','-P',str(process.pid)],capture_output=True,text=True)
+        for child in children.stdout.split():
+            if not child.isdecimal():continue
+            command=subprocess.run(['/bin/ps','-p',child,'-o','comm='],capture_output=True,text=True)
+            if os.path.realpath(command.stdout.strip())!=os.path.realpath(executable):continue
+            sample=output/(label+'.sample.txt')
+            sampled=subprocess.run(['/usr/bin/sample',child,'1','10','-file',str(sample)],capture_output=True,text=True,timeout=10)
+            row={'label':label,'pid':int(child),'elapsed_seconds':time.monotonic()-started,'sample_exit':sampled.returncode}
+            if request_focus:
+                activated=subprocess.run([str(helper),'foreground',child],capture_output=True,text=True,timeout=8)
+                row['early_focus']={'exit':activated.returncode,'stdout':activated.stdout,'stderr':activated.stderr}
+            startup_probes.append(row)
+            (output/'startup-probes.json').write_text(json.dumps(startup_probes,indent=2))
+            return
     with (output / "actual-game.log").open("w") as log:
         def line(raw):
             nonlocal failure, focus
@@ -54,7 +70,14 @@ def run(project, patch, output, helper):
             if value.startswith(("NATIVE_REGION_FOCUS", "REGION_SETUP_", "ARCHITECTURE_CAPTURE_")):
                 print(value, flush=True)
         try:
-            while time.monotonic() - started < 240:
+            while time.monotonic() - started < (120 if mode=='camera-study' else 240):
+                elapsed=time.monotonic()-started
+                for second in (12,45):
+                    if focus is None and elapsed>=second and second not in probe_times:
+                        probe_times.add(second)
+                        # Read only this launched game; capture evidence before a
+                        # single early-activation diagnostic, not a global UI bypass.
+                        sample_own_child('before-entry-'+str(second),request_focus=second==12)
                 ready, _, _ = select.select([master], [], [], .5)
                 if ready:
                     try: data = os.read(master, 65536)
@@ -72,8 +95,8 @@ def run(project, patch, output, helper):
             try: process.wait(timeout=5)
             except subprocess.TimeoutExpired:
                 os.killpg(process.pid, signal.SIGKILL); process.wait(); failure = failure or "EXIT_TIMEOUT"
-    receipt = {"source":env["GITHUB_SHA"],"command":args,"exit":process.returncode,"failure":failure,
-               "elapsed_seconds":time.monotonic()-started,"focus":focus,"engine":engine_receipt,"pack":pack_receipt,
+    receipt = {"source":env["GITHUB_SHA"],"mode":mode,"command":args,"exit":process.returncode,"failure":failure,
+               "elapsed_seconds":time.monotonic()-started,"focus":focus,"startup_probes":startup_probes,"engine":engine_receipt,"pack":pack_receipt,
                "M5":"DEVICE_NOT_RUN","art_status":"NOT_ACCEPTED",
                "scope":"Real native Metal execution, readback-instrumented, not performance acceptance"}
     (output / "process.json").write_text(json.dumps(receipt, indent=2))
@@ -84,4 +107,5 @@ def run(project, patch, output, helper):
 if __name__ == "__main__":
     p=argparse.ArgumentParser()
     for name in ("project", "patch", "output", "helper"): p.add_argument(name, type=Path)
-    a=p.parse_args();print(json.dumps(run(*(getattr(a,n).resolve() for n in ("project","patch","output","helper")))))
+    p.add_argument('--mode',choices=['baseline','camera-study'],default='baseline')
+    a=p.parse_args();print(json.dumps(run(*(getattr(a,n).resolve() for n in ("project","patch","output","helper")),mode=a.mode)))

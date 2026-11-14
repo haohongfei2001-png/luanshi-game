@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 40
     env:
       LUANSHI_AUTHORED_LANDFORM: '1'
+      REGION_REVIEW_MODE: 'camera-study'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -63,6 +64,7 @@ jobs:
           echo "GODOT_EDITOR=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
           python3 -m venv "$RUNNER_TEMP/region-python"
           "$RUNNER_TEMP/region-python/bin/pip" install 'Pillow==11.1.0'
+          "$RUNNER_TEMP/region-python/bin/python" tests/native_region_stills_test.py
           if ! command -v ffmpeg >/dev/null; then brew install ffmpeg; fi
           { uname -a; sw_vers; system_profiler SPHardwareDataType SPDisplaysDataType; } >artifacts/native-region/host.txt
       - name: Import and validate source with exact official editor
@@ -93,17 +95,19 @@ jobs:
         run: bash tools/build_macos_engine.sh patch
       - name: Export normal adjacent internal resource pack without path overrides
         run: python3 tools/native_region/export_pack.py "$GODOT_EDITOR" "$PWD" "$PWD/patch" "$PWD/artifacts/native-region"
-      - name: Run genuine native 2K and 4K frame plus real-speed traversal
+      - name: Run genuine native 2K and 4K experimental camera frames
         run: |
           set -euo pipefail
           export CONTROLLER_BLOB=$(git hash-object scripts/field/controller.gd)
           clang -fobjc-arc -framework AppKit -o "$RUNNER_TEMP/region-focus" tools/macos_probe_focus.m
           chmod +x patch/godot.macos.template_release.arm64
-          python3 tools/native_region/run_native.py "$PWD" "$PWD/patch" "$PWD/artifacts/native-region" "$RUNNER_TEMP/region-focus"
+          python3 tools/native_region/run_native.py "$PWD" "$PWD/patch" "$PWD/artifacts/native-region" "$RUNNER_TEMP/region-focus" --mode "$REGION_REVIEW_MODE"
+          "$RUNNER_TEMP/region-python/bin/python" tools/native_region/validate_stills.py artifacts/native-region/pixels "$GITHUB_SHA" --mode "$REGION_REVIEW_MODE" >artifacts/native-region/still-integrity.json
       - name: Preserve wall-clock recording before separately judging route completion
         if: always()
         run: |
           set -uo pipefail
+          if [ "$REGION_REVIEW_MODE" = camera-study ]; then echo 'STATIC_CAMERA_STUDY_ONLY_NO_ACTION_OR_PERFORMANCE_CLAIM'; exit 0; fi
           RAW=artifacts/native-region/pixels/traversal-raw
           if [ ! -f "$RAW/frames.jsonl" ]; then echo 'TRAVERSAL_NOT_RUN'; exit 1; fi
           status=0
