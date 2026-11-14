@@ -93,6 +93,15 @@ void vertex() {
         int seated=(sample_kit==3 ? 4 : sample_kit*2)+(clip==6 ? 1 : 0);
         tile.y=float(4*(417+seated))+.5;
     }
+    // The author's fast two-handed forward chain needs denser affine keys
+    // than the slow carries. Select one of eight offline strips, still four
+    // texture reads per joint; mounted and stock strikes retain old strips.
+    if (code<64 && sample_kit==3 && (clip==2 || clip==6)) {
+        float progress=clamp(phase,0.,1.)*8.;
+        int segment=min(int(floor(progress)),7);
+        tile.x=(progress-float(segment))*31.+.5;
+        tile.y=float(4*(423+(clip==6 ? 8 : 0)+segment))+.5;
+    }
     // Legacy heads deform only their skin tiles. The continuous anatomical master
     // keeps coincident hair/skin UV seams together and has authored role variants.
     ivec2 swatch=ivec2(UV*vec2(8.,4.));

@@ -762,6 +762,11 @@ MOUNTED_BASIC=((0,2),(0,6),(1,2),(1,6),(3,2),(3,6))
 PIKE_SOURCE=json.loads((Path(__file__).parent/'source'/'wildfire_pike_curves.json').read_text())
 NATIVE_PIKE=PIKE_SOURCE['curves']['pike_02']
 PIKE_REST=NATIVE_PIKE['rest_points']
+# Preserve the established bank addresses. Only the new high-speed spear
+# chain uses eight contiguous 31-interval strips per action, with the same
+# four GPU reads per joint; coarse global affine interpolation opens wrists.
+PIKE_SEGMENTS=8
+PIKE_DENSE_BASE=417+len(MOUNTED_BASIC)
 SOURCE_GROUND[NATIVE_PIKE['source_path']]={side:min(p[1] for frame in NATIVE_PIKE['frames'] for p in frame['sole'][side]) for side in ('L','R')}
 
 def native_sample(phase,curve=NATIVE_CUT):
@@ -944,6 +949,7 @@ def bake_motion(out):
     lanes.extend((kit,clip,loadout,0) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
     lanes.extend((kit,clip,0,side) for kit in range(9) for clip,side in REACTIONS)
     lanes.extend((kit,clip,0,99) for kit,clip in MOUNTED_BASIC)
+    lanes.extend((3,clip,segment,98) for clip in (2,6) for segment in range(PIKE_SEGMENTS))
     tex=Image.new("RGBA",((FRAMES+1)*BONES,len(lanes)*4))
     px=tex.load()
     for lane,(kit,clip,loadout,side) in enumerate(lanes):
@@ -951,7 +957,10 @@ def bake_motion(out):
         y=lane*4
         for frame in range(FRAMES+1):
             t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
-            bones=legacy_pose(kit,clip,t) if side==99 else pose(kit,clip,t,loadout,side)
+            if side==98:
+                bones=pose(kit,clip,(loadout+t)/PIKE_SEGMENTS)
+            else:
+                bones=legacy_pose(kit,clip,t) if side==99 else pose(kit,clip,t,loadout,side)
             for b,(q,offset) in enumerate(bones):
                 # q and -q describe the same rotation. Choose neighbours on
                 # the same hemisphere before interpolation, including the wrap.
