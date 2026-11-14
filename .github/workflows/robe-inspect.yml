@@ -1,0 +1,49 @@
+name: Inspect the fitted field issues and the two approved references
+on:
+  push:
+    branches: [codex/river-rc23-robe-source]
+    paths: ['.github/workflows/robe-inspect.yml']
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the actual reference composition and issue topology
+        shell: bash
+        run: |
+          set -eu
+          mkdir -p reports/river-robe
+          python - <<'PY'
+          import struct,json,pathlib,collections
+          import numpy as np
+          from PIL import Image
+          p=pathlib.Path("reports/river-robe")
+          for n in ("battle-view","pose-detail"):
+              im=Image.open("docs/art-direction/river-gate/"+n+".png").convert("RGB")
+              print(n,im.size);im.thumbnail((1450,900));im.save(p/(n+".jpg"),quality=91,subsampling=0)
+          b=pathlib.Path("assets/third_party/wildfire_garments/field_issues.glb").read_bytes()
+          glen=struct.unpack_from("<I",b,12)[0];g=json.loads(b[20:20+glen]);offset=28+glen
+          def get(idx):
+              a=g["accessors"][idx];v=g["bufferViews"][a["bufferView"]];comp={5126:"<f4",5123:"<u2"}[a["componentType"]];dim={"VEC3":3,"VEC2":2,"SCALAR":1}[a["type"]]
+              return np.frombuffer(b,dtype=comp,count=a["count"]*dim,offset=offset+v.get("byteOffset",0)).reshape((-1,dim))
+          for m in g["meshes"]:
+              a=m["primitives"][0];v=get(a["attributes"]["POSITION"]);t=get(a["attributes"]["TEXCOORD_0"]);faces=get(a["indices"]).reshape((-1,3))
+              print(m["name"],len(faces),len(v))
+              slot={"RegularIssue":0,"GuardIssue":1,"ArcherIssue":2}[m["name"]]
+              for cut in (.55,.65,.75,.85,.95,1.05,1.25,1.42):
+                  mask=(np.abs(v[:,1]-cut)<.072)&(np.abs(v[:,0])<.27)
+                  if not mask.any(): continue
+                  clothuv=t[mask].copy();clothuv[:,0]-=2.;clothuv=(clothuv*528.-np.array([slot%2,slot//2])*264.-4.5)/255.
+                  print("y",cut,"points",int(mask.sum()),"xyz",np.round(v[mask].min(axis=0),2),np.round(v[mask].max(axis=0),2),"uv",np.round(clothuv.min(axis=0),2),np.round(clothuv.max(axis=0),2))
+              for i,tri in enumerate(faces):
+                  xy=v[tri].mean(axis=0)
+                  if xy[1]<.88 and (xy[2]>.10 or abs(xy[0])>.2):
+                      uv=(t[tri].mean(axis=0)-np.array([2.,0]))*528.-np.array([slot%2,slot//2])*264.-4.5
+                      print("SKIRT",m["name"],i,*np.round(xy,2),*np.round(uv/255.,2))
+          PY
+          git add reports/river-robe
+          git -c user.name='River Gate art study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Review copies of both existing art references at identical aspect'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
