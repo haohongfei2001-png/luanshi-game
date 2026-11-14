@@ -1,0 +1,4 @@
+shrub_01 by Rico Cilliers
+CC0-1.0. https://polyhaven.com/license
+https://polyhaven.com/a/shrub_01
+Derived game geometry and original matched albedo/AO; see SOURCE.json for exact source and checksums.

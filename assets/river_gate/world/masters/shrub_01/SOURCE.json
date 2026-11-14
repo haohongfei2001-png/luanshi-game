@@ -1,0 +1,32 @@
+{
+  "asset": "shrub_01",
+  "author": "Rico Cilliers",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/shrub_01",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/shrub_01/shrub_01_2k.gltf",
+  "gltf_md5": "b4dba9051ffc1eae61780af528973499",
+  "inputs": {
+    "shrub_01.bin": "baf77d162f397f43fa4737b545d73e1a",
+    "textures/shrub_01_diff_2k.jpg": "cd89f941ba9e5c60cbeee50e0b269e2c"
+  },
+  "bounds_blender": [
+    [
+      -1.8545849323272705,
+      -0.10474707186222076,
+      -0.008701303973793983
+    ],
+    [
+      0.7318801283836365,
+      0.11369948834180832,
+      0.38722172379493713
+    ]
+  ],
+  "source_triangles": 156012,
+  "game_triangles": 41999,
+  "objects": [
+    {
+      "name": "shrub_01_a",
+      "triangles": 41999
+    }
+  ]
+}
