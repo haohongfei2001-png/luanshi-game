@@ -1,0 +1,12 @@
+{
+  "source_sha256": "c138fdcf0af365fee7e9ce89f0df6bf0310411db9a86210fe359faf05007a584",
+  "bytes": 75085100,
+  "art_pass": false,
+  "game_tested": false,
+  "change": "Per-plate local radial tilt replaces cumulative row offsets; continuous bearing edge follows outer stack envelope",
+  "observed": "Broad shin tearing reduced by separate LOD fit repair; chest stack contour is tighter. Still flat slab-like scales, hard skirt, shoulder collisions and grip failures. Do not promote.",
+  "recovery_commands": [
+    "blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/cuirass_shingled_support.py -- PUTTEE15_SOURCE CUIRASS16_OUT --no-shoulders",
+    "blender -b --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/shoulder_pattern_retopology.py -- CUIRASS16_OUT/soldier-carrier-editable.blend WHOLE16_OUT"
+  ]
+}
