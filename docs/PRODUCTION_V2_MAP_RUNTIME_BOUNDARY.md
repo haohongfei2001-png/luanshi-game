@@ -71,3 +71,11 @@ wrapper parity passed5236 checks alternating open field/bridgehead contexts.
 These are unit-level adapters; Battle/Controller/Save are NOT yet switched to
 MapRuntime. No new scene GPU, newmap512 spawn capacity, combat performance,
 mounted traversal, actual saved-game restart or art acceptance is claimed.
+
+AuthoredSupport now indexes explicit walkable triangles by spatial cell and
+requires surface identity for overlapping supports. Actual JSON roundtrip tests
+cover numeric indices/revisions, a tagged gate floor beneath a nonwalkable roof,
+separate bridge/ground layers, malformed triangles and map-instance isolation.
+This module does not yet provide obstacle clearance, portal routes or Battle
+binding; the tiny test triangles are not game art. Next consume the real mother
+scene sidecar and validate support/spawn capacity before any newmap play claim.

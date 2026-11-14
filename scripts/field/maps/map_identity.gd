@@ -7,8 +7,8 @@ var _manifest:Dictionary={}
 func configure(manifest:Dictionary,verified_payload_hashes:Dictionary)->Error:
  if not _manifest.is_empty():return ERR_ALREADY_IN_USE
  if manifest.get("schema")!=SCHEMA or not manifest.get("map_id") is String or manifest.map_id.is_empty() or manifest.map_id==LEGACY_ID:return ERR_INVALID_DATA
- if not manifest.get("topology_revision") is int or manifest.topology_revision<1:return ERR_INVALID_DATA
- if not manifest.get("visual_revision") is int or manifest.visual_revision<1 or not valid_sha(manifest.get("topology_sha256")):return ERR_INVALID_DATA
+ if not positive_integer(manifest.get("topology_revision")):return ERR_INVALID_DATA
+ if not positive_integer(manifest.get("visual_revision")) or not valid_sha(manifest.get("topology_sha256")):return ERR_INVALID_DATA
  var source=manifest.get("authored_source_sha256","")
  if not valid_sha(source):return ERR_INVALID_DATA
  for key in ["scene","navigation"]:
@@ -19,7 +19,10 @@ func configure(manifest:Dictionary,verified_payload_hashes:Dictionary)->Error:
   if row.get("derived_from_source_sha256")!=source:return ERR_INVALID_DATA
   if verified_payload_hashes.get(path)!=digest:return ERR_FILE_CORRUPT
  _manifest=manifest.duplicate(true)
+ _manifest.topology_revision=int(_manifest.topology_revision);_manifest.visual_revision=int(_manifest.visual_revision)
  return OK
+static func positive_integer(value:Variant)->bool:
+ return (value is int or value is float) and is_finite(float(value)) and value>=1 and value==floor(float(value)) and value<2147483647
 static func valid_sha(value:Variant)->bool:
  if not value is String or value.length()!=64:return false
  for i in value.length():
