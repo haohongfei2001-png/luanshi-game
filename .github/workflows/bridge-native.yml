@@ -1,0 +1,45 @@
+name: Play the exact exported bridgehead on a hosted Mac
+on:
+  push:
+    branches: ['codex/river-rc22-native-crossing']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  play:
+    runs-on: macos-latest
+    timeout-minutes: 9
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-34b5af8db16793566df89139ccdd783ad7d6b723
+          path: package
+          run-id: 43535370706
+          github-token: ${{ github.token }}
+      - name: Run the released binary at normal speed with unmodified default graphics
+        run: |
+          set -euo pipefail
+          ditto -x -k package/Luanshi-macOS.zip "$RUNNER_TEMP/checked-mac"
+          python3 tests/native_bridge_window.py native-crossing "$RUNNER_TEMP/checked-mac"
+      - name: Preserve the native window, failures and frame intervals
+        if: always()
+        run: |
+          set -euo pipefail
+          test -d native-crossing
+          dst=docs/evidence/river-gate-v1-rc22/native-bridgehead
+          mkdir -p "$dst"
+          cp -R native-crossing/. "$dst"
+          git add -- "$dst"
+          if ! git diff --cached --quiet; then
+            git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record the hosted macOS bridgehead: raw window and actual frame times'
+            git push origin HEAD:refs/heads/codex/river-rc22-native-crossing
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exported-native-bridgehead
+          path: native-crossing/
