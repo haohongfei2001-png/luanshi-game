@@ -155,6 +155,7 @@ func _weapon(kit: int) -> void:
 	var row:={"e_and_space":committed,"defense_seen":defensive_effect,"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed,"max_ground_error":max_ground_error,"max_body_pick_error":cursor_error,"max_live_body_pick_error":live_cursor_error}
 	evidence.append(row)
 	print("FIELD_WEAPON_INPUT "+JSON.stringify(row))
+	print("FIELD_CONTROL_PROGRESS "+str(kit))
 
 func _check_orbit_aim(enemy: Battle.Unit) -> void:
 	var saved_yaw:=field.camera_yaw

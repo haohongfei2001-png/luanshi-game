@@ -12,6 +12,9 @@ touch artifacts/.gdignore
 "$GODOT" --version | tee artifacts/engine-version.log
 "$GODOT" --headless --path . --editor --import 2>&1 | tee artifacts/import.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/import.log; then exit 1; fi
+"$GODOT" --headless --path . --script tests/model_library_parity.gd 2>&1 | tee artifacts/model-library.log
+grep -q '^MESH_LIBRARY_PARITY ' artifacts/model-library.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/model-library.log; then exit 1; fi
 # The shipping landscape references imported glTF equipment and texture atlases.
 "$GODOT" --headless --path . --check-only --script scripts/field/landscape.gd
 "$GODOT" --headless --path . --script tests/gatehouse_sightline.gd 2>&1 | tee artifacts/gatehouse-sightline.log

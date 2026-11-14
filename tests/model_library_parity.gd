@@ -4,6 +4,10 @@ const FieldMeshes := preload("res://scripts/field/model_library.gd")
 func _initialize() -> void:
 	var total:=0
 	for library: PackedScene in [preload("res://assets/river_gate/figures/river_company.glb"),
+			preload("res://assets/river_gate/figures/field_company_master.glb"),
+			preload("res://assets/river_gate/equipment/field_equipment.glb"),
+			preload("res://assets/river_gate/world/architecture/river_fort.glb"),
+			preload("res://assets/river_gate/world/woodland/field_woodland.glb"),
 			preload("res://assets/river_gate/figures/field_garments.gltf"),
 			preload("res://assets/third_party/wildfire_garments/field_issues.glb"),
 			preload("res://assets/river_gate/figures/garrison_bodies.glb"),

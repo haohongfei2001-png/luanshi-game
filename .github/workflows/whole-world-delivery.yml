@@ -1,0 +1,104 @@
+name: Package and play the complete replacement world on hosted macOS
+on:
+  push:
+    branches: ['codex/river-whole-rebuild']
+    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: whole-world-native-delivery
+  cancel-in-progress: false
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install verified official Godot and export templates
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_export_templates.tpz" -o /tmp/templates.tpz
+          echo 'da606b61c10157844f8300172df374472665f95015495cb1a7cd132c40ede404faa96cc1016a4b9662db9909ddea69632c4948b2cd11163438dad4808881fb68  /tmp/templates.tpz' | sha512sum -c -
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+          unzip -j -q /tmp/templates.tpz 'templates/macos.zip' 'templates/linux_release.x86_64' 'templates/linux_debug.x86_64' 'templates/version.txt' -d "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+      - name: Verify simulation, old saves, officers, world and scene lifecycle
+        run: |
+          set -euo pipefail
+          timeout 8m ./tools/test.sh
+          timeout 30s godot --headless --path . --script tests/world_terrain_compat.gd
+          godot --headless --path . --check-only --script tests/whole_battle_replay.gd
+      - name: Export the complete game with full license notices
+        run: ./tools/export.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: whole-world-macOS-source-${{ github.sha }}
+          path: builds/Luanshi-macOS.zip
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: whole-world-linux-source-${{ github.sha }}
+          path: builds/Luanshi-linux.tar.gz
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whole-world-export-verification-${{ github.sha }}
+          path: |
+            artifacts/
+            builds/SHA256SUMS
+            builds/THIRD_PARTY_NOTICES.txt
+  native:
+    needs: export
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: whole-world-macOS-source-${{ github.sha }}
+          path: package
+      - uses: actions/download-artifact@v4
+        with:
+          name: mobile-mutex-native-probe
+          path: patch
+          run-id: '43550761384'
+          github-token: ${{ github.token }}
+      - name: Prepare the native movie encoder and audit the hosted hardware
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/whole-native
+          uname -a > artifacts/whole-native/host.txt
+          sw_vers >> artifacts/whole-native/host.txt
+          system_profiler SPHardwareDataType SPDisplaysDataType >> artifacts/whole-native/host.txt
+          if ! command -v ffmpeg >/dev/null; then brew install ffmpeg; fi
+          python3 -m venv "$RUNNER_TEMP/review-python"
+          "$RUNNER_TEMP/review-python/bin/pip" install Pillow
+      - name: Play and record the actual exported 512v512 game at native QHD
+        run: |
+          "$RUNNER_TEMP/review-python/bin/python" tools/whole_native_delivery.py package/Luanshi-macOS.zip patch artifacts/whole-native
+      - name: Repeat cold-data Metal startup and pre-tick focus interruption
+        if: success()
+        run: |
+          set -euo pipefail
+          for pass in 1 2 3; do
+            "$RUNNER_TEMP/review-python/bin/python" tools/rc3_native_probe.py artifacts/whole-native/Luanshi-macOS-arm64-world-review.zip artifacts/whole-native/unpacked "artifacts/whole-native/cold-$pass" --startup-regression
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whole-world-native-window-${{ github.sha }}
+          path: |
+            artifacts/whole-native/
+            !artifacts/whole-native/take/
+            !artifacts/whole-native/unpacked/
+            !artifacts/whole-native/focus
+          if-no-files-found: error
+          compression-level: 1

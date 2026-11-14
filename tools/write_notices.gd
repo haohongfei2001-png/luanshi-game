@@ -1,6 +1,19 @@
 extends SceneTree
 ## Bundle the engine and third-party redistribution notices with each build.
 
+func _world_notices(path:String) -> String:
+	var result:=""
+	var files:=DirAccess.get_files_at(path)
+	files.sort()
+	for name:String in files:
+		if name.ends_with("NOTICE.txt"):
+			result+=FileAccess.get_file_as_string(path+"/"+name)+"\n\n"
+	var directories:=DirAccess.get_directories_at(path)
+	directories.sort()
+	for name:String in directories:
+		result+=_world_notices(path+"/"+name)
+	return result
+
 func _initialize() -> void:
 	var text := "LUANSHI PROTOTYPE - THIRD-PARTY NOTICES\n\n"
 	text += "Game code, text and original art by the project authors. Additional assets are credited below.\n"
@@ -24,6 +37,7 @@ func _initialize() -> void:
 	text += "Brown Mud Dry by Rob Tuytel. https://polyhaven.com/a/brown_mud_dry\n"
 	text += "Sandy Gravel 02 by Dario Barresi. https://polyhaven.com/a/sandy_gravel_02\n"
 	text += "https://polyhaven.com/license\n\n"
+	text += _world_notices("res://assets/river_gate")
 	text += "Noto Sans SC Regular. Copyright 2014-2021 Adobe and the upstream font authors.\n"
 	text += FileAccess.get_file_as_string("res://assets/fonts/OFL.txt") + "\n\n"
 	text += "GODOT ENGINE\n" + Engine.get_license_text() + "\n\n"

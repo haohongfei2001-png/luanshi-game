@@ -18,12 +18,13 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	var pic:=root.get_texture().get_image()
 	assert(pic.get_size()==root.size)
 	assert(is_equal_approx(root.scaling_3d_scale,1.0))
+	var native_size:=pic.get_size()
 	pic.save_png(OUT+"/"+label+".png")
 	pic.save_jpg(OUT+"/"+label+".jpg",.94)
 	pic.resize(1440,810,Image.INTERPOLATE_LANCZOS)
 	pic.save_jpg(OUT+"/"+label+"-preview.jpg",.93)
 	var b=field.battle
-	var row:={"source_sha":source_sha,"pixels":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
+	var row:={"source_sha":source_sha,"pixels":[native_size.x,native_size.y],"preview_px":[pic.get_width(),pic.get_height()],"native_window":[root.size.x,root.size.y],"msaa":root.msaa_3d,"frame":label,"seed":Battle.SEED,"tick":b.tick,"ordinary":Array(b.ordinary_counts),"hits":b.hits.duplicate(),"center":[point.x,point.y],"zoom":zoom,"internal":root.scaling_3d_scale,"world_audit":field.theater.audit(),"renderer":RenderingServer.get_video_adapter_name()}
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _inventory() -> void:
