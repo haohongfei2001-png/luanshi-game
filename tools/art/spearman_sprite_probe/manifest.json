@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "source_sha256": "91fce351c709de249798f64064251a89494fb141f9567dbd03cb68dcf5bff3b3",
+  "source_bytes": 2058880,
+  "source_kind": "AI_GENERATED_STATIC_ASSET_EXPERIMENT",
+  "unchanged_source": true,
+  "size": [
+    1536,
+    1024
+  ],
+  "cell_size": [
+    384,
+    512
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "intended_direction": "front",
+      "intended_yaw_degrees": 0,
+      "rect": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        40,
+        28,
+        337,
+        443
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          121.4,
+          429
+        ],
+        [
+          273.6,
+          442
+        ]
+      ],
+      "anchor_px": [
+        197.5,
+        435.5
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 50579
+    },
+    {
+      "index": 1,
+      "intended_direction": "front_right",
+      "intended_yaw_degrees": 45,
+      "rect": [
+        384,
+        0,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        34,
+        31,
+        326,
+        456
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          124,
+          376
+        ],
+        [
+          250.8,
+          454
+        ]
+      ],
+      "anchor_px": [
+        187.4,
+        415.0
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 48971
+    },
+    {
+      "index": 2,
+      "intended_direction": "right",
+      "intended_yaw_degrees": 90,
+      "rect": [
+        768,
+        0,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        78,
+        19,
+        258,
+        470
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          150,
+          345
+        ],
+        [
+          177.9,
+          469
+        ]
+      ],
+      "anchor_px": [
+        163.95,
+        407.0
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 38495
+    },
+    {
+      "index": 3,
+      "intended_direction": "back_right",
+      "intended_yaw_degrees": 135,
+      "rect": [
+        1152,
+        0,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        76,
+        47,
+        297,
+        466
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          99.6,
+          386
+        ],
+        [
+          195.1,
+          464
+        ]
+      ],
+      "anchor_px": [
+        147.35,
+        425.0
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 44084
+    },
+    {
+      "index": 4,
+      "intended_direction": "back",
+      "intended_yaw_degrees": 180,
+      "rect": [
+        0,
+        512,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        54,
+        37,
+        327,
+        455
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          132.2,
+          453
+        ],
+        [
+          250.2,
+          454
+        ]
+      ],
+      "anchor_px": [
+        191.2,
+        453.5
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 53772
+    },
+    {
+      "index": 5,
+      "intended_direction": "back_left",
+      "intended_yaw_degrees": 225,
+      "rect": [
+        384,
+        512,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        74,
+        43,
+        307,
+        478
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          123,
+          409
+        ],
+        [
+          215.6,
+          476
+        ]
+      ],
+      "anchor_px": [
+        169.3,
+        442.5
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 47313
+    },
+    {
+      "index": 6,
+      "intended_direction": "left",
+      "intended_yaw_degrees": 270,
+      "rect": [
+        768,
+        512,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        93,
+        22,
+        249,
+        479
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          207,
+          367
+        ],
+        [
+          155.3,
+          478
+        ]
+      ],
+      "anchor_px": [
+        181.15,
+        422.5
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 40438
+    },
+    {
+      "index": 7,
+      "intended_direction": "front_left",
+      "intended_yaw_degrees": 315,
+      "rect": [
+        1152,
+        512,
+        384,
+        512
+      ],
+      "alpha128_bounds": [
+        60,
+        20,
+        272,
+        487
+      ],
+      "edge_max_alpha": 1,
+      "provisional_ground_contacts_px": [
+        [
+          118.8,
+          397
+        ],
+        [
+          233,
+          486
+        ]
+      ],
+      "anchor_px": [
+        175.9,
+        441.5
+      ],
+      "anchor_status": "VISUAL_ESTIMATE_NOT_CALIBRATED",
+      "foreground_pixels": 47289
+    }
+  ],
+  "alpha_scissor_candidate": 0.5019607843137255,
+  "alpha_policy": "Raw low-alpha residual retained in source; discard below threshold in probe only. Actual edge quality requires Godot review.",
+  "motions_available": [
+    "static_stance"
+  ],
+  "motions_missing": [
+    "walk",
+    "stop_transition",
+    "turn_transition",
+    "attack",
+    "defend",
+    "hit",
+    "death"
+  ],
+  "not_claimed": [
+    "camera_calibrated",
+    "direction_consistency_pass",
+    "gameplay_integration",
+    "art_acceptance",
+    "animation_complete"
+  ],
+  "reference_sha256": "fef54505bf0adb82646cd5c9e955170b255b3cbb8c5d6cfe1dc49c623167a932",
+  "ordinary_spear_tassel": false,
+  "shipping_enabled": false
+}

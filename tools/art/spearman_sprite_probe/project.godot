@@ -1,0 +1,10 @@
+config_version=5
+[application]
+config/name="Static spearman atlas diagnostic - NOT GAME"
+run/main_scene="res://main.tscn"
+[display]
+window/size/viewport_width=2560
+window/size/viewport_height=1440
+[rendering]
+renderer/rendering_method="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false

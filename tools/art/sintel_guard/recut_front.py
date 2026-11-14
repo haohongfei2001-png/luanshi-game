@@ -84,6 +84,38 @@ for side,line in [('left',left),('right',right)]:
    u=[(c/columns,r/(len(rows)-1)),(c/columns,(r+1)/(len(rows)-1)),((c+1)/columns,(r+1)/(len(rows)-1)),((c+1)/columns,r/(len(rows)-1))]
    if side=='right':f.reverse();u.reverse()
    newfaces.append(f);newuv.append(u)
+# Failed hem experiment preserved, never enabled by default.
+if '--rejected-hem' in sys.argv:
+ # Extend the ORIGINAL connected lower hem as a tailored short-robe panel.
+ # This is edge extrusion from authored clothing, not a body shell or separate skirt.
+ boundary_edges=[e for e,fs in edgefaces.items() if len(fs)==1]
+ badj={}
+ for a,b in boundary_edges:badj.setdefault(a,[]).append(b);badj.setdefault(b,[]).append(a)
+ seen=set();loops=[]
+ for start in badj:
+  if start in seen:continue
+  loop=[start];prev=None;cur=start
+  while True:
+   nxt=next(v for v in badj[cur] if v!=prev)
+   if nxt==start:break
+   loop.append(nxt);prev,cur=cur,nxt
+  seen.update(loop);loops.append(loop)
+ hem=min(loops,key=lambda ids:sum(verts[i].z for i in ids)/len(ids))
+ # Orient to oppose the existing face boundary when adding each new quad.
+ a,b=hem[:2];fi=edgefaces[tuple(sorted((a,b)))][0];f=faces[fi]
+ if not any(u==a and v==b for u,v in zip(f,f[1:]+f[:1])):hem.reverse()
+ side_vents={min(range(len(hem)),key=lambda i:(verts[hem[i]]-Vector((sg*.2,-.1,1.21))).length_squared) for sg in [-1,1]}
+ rows=[hem];nr=8
+ for r in range(1,nr+1):
+  t=r/nr;row=[]
+  for old in hem:
+   v=verts[old].copy();v.z-=.18*t;v.x*=1+.1*t;v.y=-.1+(v.y+.1)*(1+.04*t);row.append(len(verts));verts.append(v)
+  rows.append(row)
+ for r in range(nr):
+  for i in range(len(hem)):
+   if r>=3 and i in side_vents:continue
+   k=(i+1)%len(hem);newfaces.append([rows[r][k],rows[r][i],rows[r+1][i],rows[r+1][k]])
+   newuv.append([(k/len(hem),r/nr),(i/len(hem),r/nr),(i/len(hem),(r+1)/nr),(k/len(hem),(r+1)/nr)])
 # Bake derivative low sculpt with new UV islands; no claim to preserve original
 # Multires index identity after changing topology. Source high remains untouched.
 mesh=bpy.data.meshes.new('Sewn full garment derivative');mesh.from_pydata(verts,[],newfaces);mesh.update();uv=mesh.uv_layers.new(name='SourceAndSewnUV')
@@ -127,7 +159,13 @@ n=eye.node_tree.nodes.new('ShaderNodeTexImage');n.image=bpy.data.images.load(str
 cornea=plain('New transmissive cornea',(1,1,1),.04);b=cornea.node_tree.nodes.get('Principled BSDF');b.inputs['Transmission Weight'].default_value=1;b.inputs['IOR'].default_value=1.38
 for o in bpy.context.scene.objects:
  if o.type!='MESH' or o in [cage,source_cage]:continue
- if o.name=='GEO-headLT.002':o.show_instancer_for_render=False
+ if o.name=='GEO-headLT.002':
+  o.show_instancer_for_render=False
+  # Legacy 2.50 width did not migrate to plausible modern strand radii:
+  # default radius_scale=.01 made 10 mm roots. Explicit new 70 micron roots.
+  for ps in o.particle_systems:
+   ps.settings=ps.settings.copy();ps.settings.radius_scale=.0001;ps.settings.root_radius=.7;ps.settings.tip_radius=.08
+
  m=cloth if o==ob or 'sash' in o.name else trouser if 'pantsLT' in o.name else leather if 'boots' in o.name or 'gauntlets' in o.name else hair if o.name=='GEO-headLT.002' else cornea if 'cornea' in o.name else eye if 'eyeballs' in o.name else skin
  o.data.materials.clear();o.data.materials.append(m)
  for f in o.data.polygons:f.material_index=0
