@@ -3,6 +3,7 @@ extends SceneTree
 ## technical A/B, never Chinese art, locomotion/contact or battlefield acceptance.
 const Palette=preload("res://scripts/field/experimental/native_rig_palette.gd")
 const MaterialAdapter=preload("res://scripts/field/experimental/native_rig_material.gd")
+const Reference=preload("res://scripts/field/experimental/full_weight_reference.gd")
 var failures:=0
 var reports:=[]
 var diagnostic:=OS.get_environment("INTACT_DIAGNOSTIC")
@@ -88,12 +89,24 @@ func run() -> void:
 		print("INTACT_INSTANCE_COLOR ",JSON.stringify({"mesh":native.name,"instance_color":batch.multimesh.get_instance_color(0),"source_vertex_color_first":native.mesh.surface_get_arrays(0)[Mesh.ARRAY_COLOR][0]}))
 		batch.multimesh.custom_aabb=AABB(Vector3(-4,-4,-4),Vector3(8,8,8))
 		batch_view.add_child(batch)
-		entries.append({"native":native,"shaders":shaders})
+		var entry:={"native":native,"shaders":shaders}
+		if diagnostic=="cpu_reference":
+			native.visible=false
+			var reference_node:=MeshInstance3D.new();native_view.add_child(reference_node);reference_node.transform=native.global_transform
+			var full:=[]
+			for surface in native.mesh.get_surface_count():
+				var a:=native.mesh.surface_get_arrays(surface);full.append({"joints":a[Mesh.ARRAY_BONES],"weights":a[Mesh.ARRAY_WEIGHTS]})
+			entry["reference_node"]=reference_node;entry["full"]=full
+		entries.append(entry)
 	for sample:Array in [["Idle",0.0],["Walk",.45],["Sword_Attack",.5],["Death01",.75]]:
 		player.play(sample[0]);player.seek(player.get_animation(sample[0]).length*sample[1],true);player.advance(0.)
 		for entry:Dictionary in entries:
 			var capture:=Palette.capture(skeleton,entry.native.skin)
 			if capture.has("error"):abort(str(capture));return
+			if diagnostic=="cpu_reference":
+				var reference:=Reference.deform(entry.native.mesh,entry.full,capture.transforms)
+				if reference.has("error"):abort(str(reference));return
+				entry.reference_node.mesh=reference.mesh
 			var bank:=Palette.encode([capture.transforms])
 			for shader:ShaderMaterial in entry.shaders:shader.set_shader_parameter("palette",ImageTexture.create_from_image(bank.image))
 		for frame in 4:await process_frame

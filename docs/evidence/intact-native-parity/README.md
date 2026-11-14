@@ -62,3 +62,66 @@ No source weights, palette or shader are normalized or altered by this fix.
 The independent actual renderer 2-level/2-percent pixel gate remains mandatory.
 Source: https://github.com/godotengine/godot/blob/4.6.3-stable/scene/3d/mesh_instance_3d.cpp
 and https://github.com/godotengine/godot/blob/4.6.3-stable/drivers/gles3/shaders/skeleton.glsl
+
+
+## MH163 full-weight bridge, separately verified CPU prototype
+
+`full_source_weights.gd` requires the v2 normalized-runtime sidecar and exact
+UV2 source IDs supplied by the frozen MH production mother. It maps author bone
+names to actual Skin bind slots, never assumes skeleton/bind order. Original
+UV0, all native indices and rest positions are checked. Every declared runtime
+weight must equal its retained raw transferred Blender group times the explicit
+recorded normalization factor. No normalization or tail removal happens inside
+the adapter. Raw transferred groups are NOT original author skin weights: the
+initial clothing transfer clipped signed proxy weights in the wrong order;
+the v2 sidecar explicitly records the correction rather than blaming the author.
+
+On the frozen 7-mesh source (20,159 rendered seam-split vertices), 173,163
+assertions passed. All 33 rendered vertices having 9 source influences retain
+their tail: body14, robe11, boots2, trousers6. Rest deformation error is at most
+0.956 micrometres. Exact GLB and v2 sidecar hashes are in `mh-full-source.json`.
+The source GLB exporter omits tiny influences at 38 original source vertices;
+that GLB/native8 output is NOT treated as a complete weight reference. The full
+explicit normalized sidecar is retained instead.
+
+The artwork remains rejected as a whole. This CPU/data result says nothing about
+Chinese soldier quality, garment deformations, native GPU material parity, or
+full-battle performance. Source Mother binaries are intentionally not included
+in this code-only commit. Reproduce the licensed mother via the MH production
+branch's pinned-source scripts, then run:
+
+    MH_WEIGHT_FIXTURE=res://assets/mh_lab godot --headless --path . --script tests/mh_complete_weights.gd
+
+
+## Independent complete-weight pose oracle (diagnostic only)
+
+`full_weight_reference.gd` is a deliberately slow CPU oracle, not a shipping
+renderer. It deforms position/normal/tangent using every explicit source
+influence, retains tangent handedness, original UV/custom channels, topology,
+LOD indices and material references, and removes Skin attributes from the posed
+copy to prevent double skinning. It does not guess an eight-slot approximation.
+The eighteen fixed-value unit checks include a nonzero ninth influence at bind
+299, preserved LODs, invalid sums/negative weights, and refusing >16 influences.
+
+The frozen animated MH source `b735dc82ca668bf2417ce4ad6bd68aa0005a9188c7cbb5eec23f15711eb20f11`
+and explicit sidecar `8a580adf35abee5cc661d15a24f3f77d304c2f28ae78057edc50edc59d9093db`
+were actually sampled in nine imported Godot clips at three phases each.
+549,063 data assertions passed, zero failed: every sample retained all 20,159
+rendered vertices and all 33 >8-influence vertices; input files/arrays and
+original non-deforming attributes/material references were unchanged.
+`mh-full-pose-reference.json` contains all 27 per-part posed bounds. These are
+finite-data and preservation tests, NOT valid foot contacts, weapon contacts,
+visual parity or performance tests. The first local test correctly failed when
+it requested GLTF names ending `_Loop`; Godot import strips that suffix. The
+rerun uses the actual imported names listed in the report, not skipped clips.
+
+Important source audit correction: this frozen fixture's 163 joints/weights are
+intact, but the production audit subsequently found its generated bone roll
+uses a different local-axis convention from the original MakeHuman default.
+Therefore these tests prove internal consistency for the exact frozen fixture,
+NOT original-author rest-axis fidelity. An independently corrected mother must
+be retested under its own hashes. The frozen fixture is neither shipping nor
+art-approved, and no default gameplay path calls this reference implementation.
+
+    godot --headless --path . --script tests/full_weight_reference_unit.gd
+    MH_WEIGHT_FIXTURE=res://assets/mh_lab godot --headless --path . --script tests/mh_full_pose_reference.gd

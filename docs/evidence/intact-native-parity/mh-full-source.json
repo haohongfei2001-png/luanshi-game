@@ -1,0 +1,67 @@
+{
+  "art_pass": false,
+  "checks": 173163,
+  "failures": 0,
+  "full_tail_vertices": 33,
+  "graphics": "NOT_RUN",
+  "native_8_weight_renderer_is_complete": false,
+  "native_bones": 163,
+  "parts": [
+    {
+      "maximum_source_influences": 9,
+      "node": "Body_AuthorGarmentOcclusion",
+      "render_vertices": 9026,
+      "rest_position_error_m": 0.000000955554924075841,
+      "source_more_than8": 14
+    },
+    {
+      "maximum_source_influences": 9,
+      "node": "Cross-front robe",
+      "render_vertices": 4043,
+      "rest_position_error_m": 0.000000569372559766634,
+      "source_more_than8": 11
+    },
+    {
+      "maximum_source_influences": 4,
+      "node": "eyebrow001",
+      "render_vertices": 124,
+      "rest_position_error_m": 0.000000616377974438365,
+      "source_more_than8": 0
+    },
+    {
+      "maximum_source_influences": 4,
+      "node": "eyelashes01",
+      "render_vertices": 250,
+      "rest_position_error_m": 0.000000738568758151814,
+      "source_more_than8": 0
+    },
+    {
+      "maximum_source_influences": 3,
+      "node": "Eyes",
+      "render_vertices": 1076,
+      "rest_position_error_m": 0.000000734989953343756,
+      "source_more_than8": 0
+    },
+    {
+      "maximum_source_influences": 9,
+      "node": "Medieval boots",
+      "render_vertices": 4100,
+      "rest_position_error_m": 0.000000601857095716696,
+      "source_more_than8": 2
+    },
+    {
+      "maximum_source_influences": 9,
+      "node": "Wool trousers",
+      "render_vertices": 1540,
+      "rest_position_error_m": 0.000000515545707457932,
+      "source_more_than8": 6
+    }
+  ],
+  "renormalized_in_adapter": false,
+  "shipping_enabled": false,
+  "sidecar_sha256": "8a580adf35abee5cc661d15a24f3f77d304c2f28ae78057edc50edc59d9093db",
+  "source_glb_sha256": "6853fbca1b76eed03d764e32577f46e0354583a29405ae3a3a7088d69cc18539",
+  "upstream_normalization": "explicit v2 source-transfer factor; raw groups retained",
+  "weights_recovered_by": "exact explicit UV2 sourceID + native named Skin bind",
+  "weights_truncated": false
+}
