@@ -50,3 +50,8 @@ actual version is retained in host/provenance records. It is not claimed to be
 Blender 4.3.2 or a byte-identical `.blend`. The frozen pure-Python runtime GLB
 builder, Godot 4.6.3 checksum, complete rig, source packages, textures and all
 verification gates are unchanged. No payment, new account or user computer.
+
+Run 43609982782 verified both package hashes and rebuilt the nine-clip GLB,
+but the distribution Blender importer could not see numpy. Recovery installs
+Ubuntu python3-numpy explicitly and supplies its standard dist-packages path
+only to Blender. No runtime GLB construction or validation gate is relaxed.

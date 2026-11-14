@@ -24,7 +24,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb ffmpeg libgl1-mesa-dri libxi6 libxrender1 libxfixes3 libxkbcommon0 libsm6 blender
+          sudo apt-get install -y -qq xvfb ffmpeg libgl1-mesa-dri libxi6 libxrender1 libxfixes3 libxkbcommon0 libsm6 blender python3-numpy
           mkdir -p artifacts/intact-native
           touch artifacts/.gdignore
           curl -fLsS --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
@@ -41,7 +41,7 @@ jobs:
           /tmp/character-python/bin/python tools/art/ubc_character/fetch_verified.py /tmp/ubc-cache /tmp/ubc-extract >artifacts/intact-native/source-download.log 2>&1
           /tmp/character-python/bin/python tools/art/ubc_character/preserve_sources.py /tmp/ubc-extract assets/ubc_lab/source
           /tmp/character-python/bin/python tools/art/ubc_character/build.py /tmp/ubc-extract assets/ubc_lab >artifacts/intact-native/retarget.log 2>&1
-          blender --background --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/ubc_character/editable.py -- "$PWD/assets/ubc_lab" >artifacts/intact-native/editable.log 2>&1
+          PYTHONPATH=/usr/lib/python3/dist-packages blender --background --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/ubc_character/editable.py -- "$PWD/assets/ubc_lab" >artifacts/intact-native/editable.log 2>&1
           timeout 240s godot --headless --editor --path . --import >artifacts/intact-native/import.log 2>&1
           UBC_TEST=1 timeout 60s godot --headless --path . --script tests/ubc_character_lab.gd >artifacts/intact-native/import-test.log 2>&1
           timeout 180s godot --headless --path . --script tests/intact_character_state_adapter.gd >artifacts/intact-native/state-test.log 2>&1
