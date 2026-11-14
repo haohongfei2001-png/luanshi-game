@@ -251,3 +251,44 @@ a requirement for actual native rendering.
 The canonical-runtime migration also passed the five existing authoring
 compatibility tests (surface seams, winding, water clipping, support and
 shader-time override/restore). Native images, action and M5 remain unverified.
+
+## Verified native Metal frame integrity result (not art acceptance)
+
+Source `c983db2dcc7c633116fa4eeae5e0784ebc052f1c`,
+[run 43634640376](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43634640376),
+completed successfully on the existing Apple M1 Virtual / Apple Paravirtual
+Metal device, not an owner computer or M5. The normal protected template,
+source-closed PCK and game's own native window all worked.
+
+Artifact `14129183206`, 16,783,092-byte ZIP SHA-256
+`c64318763aed53bc8a0a496244887457cfa720babe56116856d7b8769e46a8c2`,
+was downloaded and independently revalidated: two 2560x1440 views and one
+3840x2160 view, internal scale 1.0, seed61112/tick135/20 per side, unchanged
+snapshot within all three frames. All returned import/export/setup/runtime
+logs were scanned independently with no SCRIPT ERROR, SHADER ERROR or ERROR.
+
+| View | PNG SHA-256 |
+|---|---|
+| QHD road65 | d286797d513341f269216cc79666a9827ab0ce1de6f082e6eb685e88e320bb21 |
+| QHD road75 | d5b34bf8b5012b66b0c9987ad84ead31bcaecd345068a84eae3051bef08ddbcb |
+| UHD road65 | 43b573492aa6f4b5608c870150829cc2d4b321ebb4426f9c439a02ecf74607b1 |
+
+The new source-closed pack is 515,309,564 bytes, SHA-256
+`74ad8fb19822b5c705afb737def3943dc1871c68ebc193fa2a8689b86d59ceee`.
+Runtime took 106.27 seconds including startup, shader compilation and PNG
+readback; that number is **not a frame-rate benchmark**. macOS `time -l`
+reported maximum RSS 695,009,280 bytes and peak memory footprint 2,171,768,576
+bytes; neither is a physical GPU-VRAM measurement.
+
+These pixels still use the frozen **ee5d138 scene assets**, with the new camera
+study, not the later 677 basin or 03 road/gate/character work. The Linux and
+Mac snapshots differ, so only each run's internal view pairs are asserted
+identical; this is not a cross-backend identical-state comparison.
+**Art NOT_ACCEPTED; action/traversal NOT_RUN; performance NOT_MEASURED;
+MacBook Air M5 DEVICE_NOT_RUN.** No failed image was delivered as qualified art.
+
+Next: reuse the verified capture mechanism for the complete 03 road, new
+structurally closed stone/timber gateway and latest single full-character
+oracle. Preserve their precise source/artifact hashes, full-army behavior and
+strict frame gates. Do not rebake unchanged professional mothers. The separate
+minimal Metal character parity oracle uses the same pinned engine.

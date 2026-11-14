@@ -1,0 +1,27 @@
+{
+  "source": "c983db2dcc7c633116fa4eeae5e0784ebc052f1c",
+  "mode": "camera-study",
+  "frame_integrity": "PASS",
+  "files": [
+    {
+      "view": "qhd-perspective-road65",
+      "sha256": "d286797d513341f269216cc79666a9827ab0ce1de6f082e6eb685e88e320bb21",
+      "bytes": 3931191
+    },
+    {
+      "view": "qhd-perspective-road75",
+      "sha256": "d5b34bf8b5012b66b0c9987ad84ead31bcaecd345068a84eae3051bef08ddbcb",
+      "bytes": 3931951
+    },
+    {
+      "view": "uhd-perspective-road65",
+      "sha256": "43b573492aa6f4b5608c870150829cc2d4b321ebb4426f9c439a02ecf74607b1",
+      "bytes": 8840837
+    }
+  ],
+  "battle_snapshot_sha256": "1a5c18a4cbcdb748322ddac8a528a5a0c29f4341cc0623500490fb103f02de71",
+  "art": "NOT_ACCEPTED_REQUIRES_PIXEL_REVIEW",
+  "performance": "NOT_MEASURED",
+  "M5": "DEVICE_NOT_RUN",
+  "scope": "Native actual-frame integrity only; nominal adult box is not measured character readability"
+}
