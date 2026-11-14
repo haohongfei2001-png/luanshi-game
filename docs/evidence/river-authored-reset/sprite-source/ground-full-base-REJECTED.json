@@ -1,0 +1,99 @@
+{
+  "source_blend_sha256": "25ed51ac40fcbe84dd7203b8202b8ebbf4564fcbaf730981148ddb32dc35f728",
+  "source_object": "GEO-grove_ground.base",
+  "source_original_hide_render": true,
+  "source_modifiers": 0,
+  "source_vertices": 5070,
+  "source_polygons": 4928,
+  "source_uv_layers": [
+    "ground_moss_mask"
+  ],
+  "source_attributes": [
+    [
+      ".sculpt_mask",
+      "FLOAT",
+      "POINT"
+    ],
+    [
+      "position",
+      "FLOAT_VECTOR",
+      "POINT"
+    ],
+    [
+      ".select_vert",
+      "BOOLEAN",
+      "POINT"
+    ],
+    [
+      ".edge_verts",
+      "INT32_2D",
+      "EDGE"
+    ],
+    [
+      ".sculpt_face_set",
+      "INT",
+      "FACE"
+    ],
+    [
+      ".corner_vert",
+      "INT",
+      "CORNER"
+    ],
+    [
+      ".corner_edge",
+      "INT",
+      "CORNER"
+    ],
+    [
+      "ground_blend",
+      "BYTE_COLOR",
+      "CORNER"
+    ],
+    [
+      "ground_moss_mask",
+      "FLOAT2",
+      "CORNER"
+    ],
+    [
+      ".vs.ground_moss_mask",
+      "BOOLEAN",
+      "CORNER"
+    ]
+  ],
+  "original_uv_values_preserved": true,
+  "ground_blend_retained_during_bake": true,
+  "source_highres_loaded": false,
+  "runtime_region_xz": [
+    29.6,
+    -24,
+    46.6,
+    24
+  ],
+  "survey_sha256": "aa8b7dd3b0c18e3e8e9b1bf643d3d6844c8535aafe10184a9fe7f3d00f099d29",
+  "peak_rss_kib_linux": 1018388,
+  "outputs_sha256": {
+    "diffuse.png": "a10d200c562510c2549fc3ea24806ed9d555daff1a51742509ad059593bba662",
+    "retargeted-ground-NOT-GAME.png": "a89fef5f41f4df9597a47018e3cb04419dfb2ce929a9352538b76791b2cf7bce",
+    "normal.png": "0f69c42d8baa55c496a1859f067607b877045729b95da37dbb190101061c7450",
+    "roughness.png": "976b01753f6b7891a12f0b40bb31246a4304e2286d4dcc136cc1f1003d354426",
+    "ground-approach.glb": "d24c2b86a57109b06c9670ef721f782c0ea3f930b1c7f04d98877efbba33c30a",
+    "native-hidden-base-NOT-GAME.png": "3d515107066f59049479e1d64b1495a51f10d33c06f88addb058c49fd3925cb1"
+  },
+  "limits": [
+    "Retargeted original base topology, not original film render/highres",
+    "Original terrain material masks retained; military road painting still to review",
+    "Source material normal, not high-to-low geometric normal bake",
+    "Godot actual graphics NOT_RUN",
+    "Not art acceptance"
+  ],
+  "art_status": "REJECTED_SOURCE_EDGE_UV_COLLAPSE",
+  "support_test": {
+    "route_samples": 495,
+    "holes": 0,
+    "max_interpolated_height_error_m": 0.00630037977436915,
+    "max_vertex_height_error_m": 0.00351471318822257,
+    "vertices": 5070,
+    "triangles": 9856,
+    "graphics": "NOT_RUN"
+  }
+}

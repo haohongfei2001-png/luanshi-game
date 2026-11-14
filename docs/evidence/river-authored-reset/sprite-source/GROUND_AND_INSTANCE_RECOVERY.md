@@ -63,3 +63,42 @@ The engine lifecycle test opens and frees this packed scene three times and
 verifies ten instances share only two mesh resources. Graphical composition,
 material appearance, shadows, branch visibility and performance are NOT RUN.
 The assembly is a woodland component, not a complete playable environment.
+
+## Explicit road-wear material derivation (not yet game-reviewed)
+
+Static source inspection confirms `ground_blend` is a BYTE_COLOR/CORNER author
+attribute, but `ground.grove` does not read it. The effective source chain is
+moss-mask + procedural noise/cracks -> ColorRamp.003 -> Mix Shader.Fac.
+Mix input 1 is the original Dirt BSDF and input 2 the original Moss BSDF.
+`--road-wear` inserts only a multiplicative road factor after that ramp,
+retaining both complete shader families. The protected lane is dirt; a smooth
+3.9-to-6.1 m shoulder restores the original moss mix. This is explicitly new
+authored wear, not original film content and not geometric wheel ruts.
+`--preview-only` stops after an actual Blender material render, without bakes,
+GLB export or a completion receipt. It is NOT Godot/game evidence.
+
+Observed source edge streaks remain rejected. Their cause is not established:
+the source image node uses REPEAT (not CLAMP) and its original named UV range
+is within 0..1. A visual streak alone does not identify the sampling fault.
+
+## Full-base result and safe-core follow-up
+
+The full-base PBR conversion completed (9856 triangles, peak RSS 1018388 KiB),
+with all three 2048 maps and GLB. Godot imported it and the protected-route
+check found zero holes across 495 samples, worst interpolated height error
+6.3004 mm; max vertex-height error 3.5148 mm. Its ART status remains REJECTED,
+not passed: source edge UVs collapse/repeat. The complete receipt is preserved
+in ground-full-base-REJECTED.json. Actual game graphics NOT RUN.
+
+A static source audit found 185 nonzero-area faces with near-zero UV area and
+659 faces sharing quantized UV footprints. The central local-Y [-8,8] region
+has no corresponding density/anisotropy outliers. The original render-object
+UV array is identical, so selecting it would not cure the problem.
+
+`--safe-core` now bisects a copied mesh at local Y=-8,+8, interpolating existing
+per-corner UVs at the actual new edges. It does not merely remove boundary
+faces by centroid. The original complete source file is unchanged. This
+explicit derivative maps to x29.6..46.6,z-12..12, not the previous 48m width;
+outer forest terrain still needs authoring. Combined with `--road-wear`, the
+protected lane uses the original Dirt shader with soft original-Moss shoulders.
+This follow-up bake is RUNNING, not yet a successful exported/game result.

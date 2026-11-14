@@ -1,9 +1,9 @@
 """Derive the complete authored ground base, preserving its UV/attribute masks.
 This is explicitly the hidden author BASE, not the film highres/render object.
 """
-import bpy,json,pathlib,sys,math,hashlib,resource
+import bpy,bmesh,json,pathlib,sys,math,hashlib,resource
 from mathutils import Vector
-source,survey_path,out=sys.argv[sys.argv.index('--')+1:];out=pathlib.Path(out);out.mkdir(parents=True,exist_ok=True)
+args=sys.argv[sys.argv.index('--')+1:];source,survey_path,out=args[:3];road='--road-wear' in args[3:];out=pathlib.Path(out);out.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 with bpy.data.libraries.load(source,link=False) as (a,b):
  assert 'GEO-grove_ground.base' in a.objects
@@ -11,6 +11,16 @@ with bpy.data.libraries.load(source,link=False) as (a,b):
 obj=b.objects[0];s=bpy.context.scene;s.collection.objects.link(obj)
 assert obj.type=='MESH' and len(obj.modifiers)==0
 source_hidden=obj.hide_render;obj.hide_render=False;obj.hide_viewport=False;obj.hide_select=False;obj.hide_set(False);obj.data=obj.data.copy()
+safe_core='--safe-core' in args[3:]
+original_base_vertices=len(obj.data.vertices);original_base_polygons=len(obj.data.polygons)
+if safe_core:
+ bm=bmesh.new();bm.from_mesh(obj.data)
+ for y,normal in [(-8,(0,-1,0)),(8,(0,1,0))]:
+  bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),dist=0.000001,plane_co=(0,y,0),plane_no=normal,clear_outer=True,clear_inner=False)
+ bm.to_mesh(obj.data);bm.free();obj.data.update()
+ # Retain interpolated original per-corner UVs; no new arbitrary UV unwrap.
+ assert all(-8.00001<=v.co.y<=8.00001 for v in obj.data.vertices)
+region_half_depth=12.0 if safe_core else 24.0
 bpy.context.view_layer.update()
 source_uv={layer.name:[tuple(p.uv) for p in layer.data] for layer in obj.data.uv_layers}
 attributes=[(a.name,a.data_type,a.domain) for a in obj.data.attributes]
@@ -25,6 +35,25 @@ for poly in obj.data.polygons:
   atlas.data[li].uv=((co.x-lo.x)/(hi.x-lo.x),(co.y-lo.y)/(hi.y-lo.y))
 for slot in obj.material_slots:
  slot.material=slot.material.copy();node=slot.material.node_tree.nodes.new('ShaderNodeTexImage');slot.material.node_tree.nodes.active=node
+# Optional authored military wear changes only the copied material mix factor.
+# Source Fac=0 is the original dirt BSDF, Fac=1 the original moss BSDF.
+# ground_blend is retained but does NOT drive this material.
+if road:
+ for slot in obj.material_slots:
+  nt=slot.material.node_tree;nodes=nt.nodes;links=nt.links
+  mix=nodes.get('Mix Shader');ramp=nodes.get('ColorRamp.003')
+  assert mix and ramp and mix.inputs[0].links[0].from_node==ramp
+  uv=nodes.new('ShaderNodeUVMap');uv.uv_map='GroundRuntimeAtlas'
+  separate=nodes.new('ShaderNodeSeparateXYZ');links.new(uv.outputs['UV'],separate.inputs[0])
+  subtract=nodes.new('ShaderNodeMath');subtract.operation='SUBTRACT';subtract.inputs[1].default_value=.5;links.new(separate.outputs['Y'],subtract.inputs[0])
+  absolute=nodes.new('ShaderNodeMath');absolute.operation='ABSOLUTE';links.new(subtract.outputs[0],absolute.inputs[0])
+  metres=nodes.new('ShaderNodeMath');metres.operation='MULTIPLY';metres.inputs[1].default_value=region_half_depth*2;links.new(absolute.outputs[0],metres.inputs[0])
+  shoulder=nodes.new('ShaderNodeMapRange');shoulder.interpolation_type='SMOOTHSTEP';shoulder.clamp=True
+  shoulder.inputs['From Min'].default_value=3.9;shoulder.inputs['From Max'].default_value=6.1
+  shoulder.inputs['To Min'].default_value=0;shoulder.inputs['To Max'].default_value=1
+  links.new(metres.outputs[0],shoulder.inputs['Value'])
+  preserve=nodes.new('ShaderNodeMath');preserve.operation='MULTIPLY'
+  links.new(ramp.outputs['Color'],preserve.inputs[0]);links.new(shoulder.outputs[0],preserve.inputs[1]);links.new(preserve.outputs[0],mix.inputs[0])
 s.render.engine='CYCLES';s.cycles.samples=8;s.cycles.use_denoising=False
 s.render.resolution_x=1280;s.render.resolution_y=720;s.render.resolution_percentage=100
 world=bpy.data.worlds.new('Ground_review_world');world.use_nodes=True;world.node_tree.nodes['Background'].inputs[1].default_value=.6;s.world=world
@@ -35,6 +64,8 @@ def camera(center,span):
 obj.data.uv_layers.active=obj.data.uv_layers[original_active_uv];obj.data.uv_layers[original_active_uv].active_render=True
 bpy.context.view_layer.update()
 camera(obj.matrix_world@((lo+hi)/2),max(hi-lo));s.render.image_settings.file_format='PNG';s.render.filepath=str(out/'native-hidden-base-NOT-GAME.png');bpy.ops.render.render(write_still=True)
+if '--preview-only' in args[3:]:
+ print('GROUND_MATERIAL_PREVIEW_ONLY road_wear='+str(road));sys.exit(0)
 bpy.ops.object.select_all(action='DESELECT');obj.select_set(True);bpy.context.view_layer.objects.active=obj
 s.render.bake.use_selected_to_active=False;s.render.bake.margin=4;s.render.bake.use_pass_direct=False;s.render.bake.use_pass_indirect=False;s.render.bake.use_pass_color=True
 images={}
@@ -67,10 +98,10 @@ def height(x,z):
  return (rows[iz][ix]*(1-u)+rows[iz][ix+1]*u)*(1-v)+(rows[iz+1][ix]*(1-u)+rows[iz+1][ix+1]*u)*v
 obj.location=(0,0,0);obj.rotation_euler=(0,0,0);obj.scale=(1,1,1)
 for vertex,co in zip(obj.data.vertices,coords):
- u=(co.x-lo.x)/(hi.x-lo.x);v=(co.y-lo.y)/(hi.y-lo.y);x=29.6+17*u;z=24-48*v
+ u=(co.x-lo.x)/(hi.x-lo.x);v=(co.y-lo.y)/(hi.y-lo.y);x=29.6+17*u;z=region_half_depth-region_half_depth*2*v
  vertex.co=(x,-z,height(x,z))
 obj.data.update();obj.name='AuthoredGroundApproach_DERIVED'
 bpy.ops.export_scene.gltf(filepath=str(out/'ground-approach.glb'),export_format='GLB',use_selection=True,export_apply=False,export_texcoords=True,export_normals=True)
 camera(Vector((38.1,0,0)),48);s.render.filepath=str(out/'retargeted-ground-NOT-GAME.png');bpy.ops.render.render(write_still=True)
-report={'source_blend_sha256':hashlib.sha256(pathlib.Path(source).read_bytes()).hexdigest(),'source_object':'GEO-grove_ground.base','source_original_hide_render':source_hidden,'source_modifiers':0,'source_vertices':len(coords),'source_polygons':len(obj.data.polygons),'source_uv_layers':list(source_uv),'source_attributes':attributes,'original_uv_values_preserved':True,'ground_blend_retained_during_bake':True,'source_highres_loaded':False,'runtime_region_xz':[29.6,-24,46.6,24],'survey_sha256':hashlib.sha256(pathlib.Path(survey_path).read_bytes()).hexdigest(),'peak_rss_kib_linux':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'outputs_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.suffix in ('.png','.glb')},'limits':['Retargeted original base topology, not original film render/highres','Original terrain material masks retained; military road painting still to review','Source material normal, not high-to-low geometric normal bake','Godot actual graphics NOT_RUN','Not art acceptance']}
+report={'source_blend_sha256':hashlib.sha256(pathlib.Path(source).read_bytes()).hexdigest(),'source_object':'GEO-grove_ground.base','source_original_hide_render':source_hidden,'source_modifiers':0,'derived_road_wear':road,'material_mix_control':'ColorRamp.003 -> Mix Shader, 0=dirt 1=moss; ground_blend is unused by this shader','original_base_vertices':original_base_vertices,'original_base_polygons':original_base_polygons,'safe_core_crop_local_y':[-8,8] if safe_core else None,'source_vertices':len(coords),'source_polygons':len(obj.data.polygons),'derived_triangles':sum(len(p.vertices)-2 for p in obj.data.polygons),'source_uv_layers':list(source_uv),'source_attributes':attributes,'original_uv_values_preserved':True,'ground_blend_retained_during_bake':True,'source_highres_loaded':False,'runtime_region_xz':[29.6,-region_half_depth,46.6,region_half_depth],'survey_sha256':hashlib.sha256(pathlib.Path(survey_path).read_bytes()).hexdigest(),'peak_rss_kib_linux':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'outputs_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.suffix in ('.png','.glb')},'limits':['Retargeted original base topology, not original film render/highres','Original terrain material masks retained; military road painting still to review','Source material normal, not high-to-low geometric normal bake','Godot actual graphics NOT_RUN','Not art acceptance']}
 (out/'complete.json').write_text(json.dumps(report,indent=2));print('GROUND_COMPLETE',json.dumps(report))

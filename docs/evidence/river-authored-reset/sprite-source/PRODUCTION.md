@@ -53,7 +53,7 @@ Measured source contributors: three oak leaf geometries each 808 triangles, repe
 
 The first whole-tree baking attempt was rejected as black foliage. Looking at its actual atlas exposed the primary fault: thousands of repeated leaves were individually unwrapped into a 1K atlas with excessive island padding, leaving subpixel islands. An initial shader-closure-only diagnosis was insufficient. Do not repeat this route or reuse its black GLB.
 
-`bake_reusable_collection.py` is the corrected whole-tree route:
+The frozen `bake_reusable_collection.py` at remote source `aa5629375bac9ee593cc22803b6adc54f0156236` is the measured whole-tree route below. Later evaluated-geometry signature changes are a separate experiment and must be revalidated before their outputs can inherit these measurements:
 
 * Evaluate **12 unique author geometries once**, preserve all 2690 placements, and reuse their UV tiles across repeated leaves/branches.
 * 2048 shared diffuse/normal/roughness atlas, four-by-four tile layout. No duplicated per-leaf atlas allocation, no fake lighting baked into color.
@@ -73,4 +73,4 @@ godot --headless --path . --script tests/art_reset/sprite_gltf_intake.gd -- \
   /tmp/sprite-tree-shared/derived.glb 185676
 ```
 
-Next: derive coherent ground/rock/understory from the **same production family**, author the complete river approach with correctly grounded roots and retained combat spaces, then obtain real Godot native-resolution same-camera whole-region evidence. Bridge/gate professional architecture remains unresolved. Neither one shrub nor one tree is a completion condition. No failed R1/R2 visual assets are reintroduced.
+Next: derive coherent ground/rock/understory from the **same production family**, author the complete river approach with correctly grounded roots and retained combat spaces, then obtain real Godot native-resolution same-camera whole-region evidence. Bridge/gate structural production is proceeding separately; graphical acceptance remains unresolved. Neither one shrub nor one tree is a completion condition. No failed R1/R2 visual assets are reintroduced.
