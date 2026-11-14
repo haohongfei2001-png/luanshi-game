@@ -40,76 +40,76 @@
   },
   "cost": {
     "LevyClose": {
-      "triangles": 12040,
-      "vertices": 6769
+      "triangles": 12057,
+      "vertices": 6798
     },
     "LevyLine": {
-      "triangles": 6871,
-      "vertices": 4098
+      "triangles": 6894,
+      "vertices": 4125
     },
     "LevyRank": {
-      "triangles": 1951,
-      "vertices": 1343
+      "triangles": 1959,
+      "vertices": 1347
     },
     "ArcherClose": {
-      "triangles": 12040,
-      "vertices": 6769
+      "triangles": 12057,
+      "vertices": 6798
     },
     "ArcherLine": {
-      "triangles": 6871,
-      "vertices": 4098
+      "triangles": 6894,
+      "vertices": 4125
     },
     "ArcherRank": {
-      "triangles": 1951,
-      "vertices": 1343
+      "triangles": 1959,
+      "vertices": 1347
     },
     "RegularClose": {
-      "triangles": 12256,
-      "vertices": 6931
+      "triangles": 12267,
+      "vertices": 6955
     },
     "RegularLine": {
-      "triangles": 7083,
-      "vertices": 4249
+      "triangles": 7111,
+      "vertices": 4280
     },
     "RegularRank": {
-      "triangles": 2035,
-      "vertices": 1407
+      "triangles": 2044,
+      "vertices": 1413
     },
     "GuardClose": {
-      "triangles": 12396,
-      "vertices": 6992
+      "triangles": 12407,
+      "vertices": 7016
     },
     "GuardLine": {
-      "triangles": 7223,
-      "vertices": 4310
+      "triangles": 7251,
+      "vertices": 4341
     },
     "GuardRank": {
-      "triangles": 2175,
-      "vertices": 1468
+      "triangles": 2184,
+      "vertices": 1474
     },
     "OfficerClose": {
-      "triangles": 12504,
-      "vertices": 7082
+      "triangles": 12515,
+      "vertices": 7106
     },
     "OfficerLine": {
-      "triangles": 7331,
-      "vertices": 4400
+      "triangles": 7359,
+      "vertices": 4431
     },
     "OfficerRank": {
-      "triangles": 2283,
-      "vertices": 1558
+      "triangles": 2292,
+      "vertices": 1564
     },
     "PlayerClose": {
-      "triangles": 12658,
-      "vertices": 7186
+      "triangles": 12669,
+      "vertices": 7210
     },
     "PlayerLine": {
-      "triangles": 7429,
-      "vertices": 4472
+      "triangles": 7457,
+      "vertices": 4503
     },
     "PlayerRank": {
-      "triangles": 2315,
-      "vertices": 1588
+      "triangles": 2324,
+      "vertices": 1594
     }
   },
   "palette": {
