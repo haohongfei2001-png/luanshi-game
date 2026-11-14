@@ -2,7 +2,7 @@ name: Integrate and play the whole replacement battlefield
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['scripts/field/river_master*','scripts/field/river_botanical.gdshader','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','tools/art/import_field_equipment.py','tools/art/import_field_woodland.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','tests/world_master_review.gd','scripts/field/company_art.gd','scripts/field/company_skin.gdshader','.github/workflows/whole-rebuild.yml']
+    paths: ['scripts/field/river_master*','scripts/field/river_botanical.gdshader','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','tools/art/import_field_equipment.py','tools/art/import_field_woodland.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','tests/world_master_review.gd','tests/model_library_parity.gd','scripts/field/company_art.gd','scripts/field/company_skin.gdshader','.github/workflows/whole-rebuild.yml']
 permissions:
   contents: write
   actions: read
