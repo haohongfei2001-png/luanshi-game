@@ -7,7 +7,12 @@ func run() -> void:
 	var expected_vertices:=5070;var expected_triangles:=9856
 	if args.size()==2:
 		var report:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[1]))
-		expected_vertices=int(report["source_vertices"]);expected_triangles=int(report["derived_triangles"])
+		expected_vertices=int(report["source_vertices"])
+		if report.has("derived_triangles"):expected_triangles=int(report["derived_triangles"])
+		else:
+			var crop:Array=report.get("safe_core_crop_local_y",[])
+			assert(expected_vertices==3849 and int(report.get("source_polygons",0))==3724 and crop.size()==2 and float(crop[0])==-8. and float(crop[1])==8.,"Unknown legacy receipt, no guessed triangles")
+			expected_triangles=7448
 	var doc:=GLTFDocument.new();var state:=GLTFState.new()
 	assert(doc.append_from_file(args[0],state)==OK)
 	var scene:=doc.generate_scene(state);assert(scene);root.add_child(scene)

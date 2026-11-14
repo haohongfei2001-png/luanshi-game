@@ -27,7 +27,7 @@ static func tile(origin:Vector2,size:float=16.,step:float=.5) -> ArrayMesh:
 			uvs.append(p);colors.append(masks(p))
 	for z:int in n-1:
 		for x:int in n-1:
-			var i:=z*n+x;indices.append_array([i,i+n,i+1,i+1,i+n,i+n+1])
+			var i:=z*n+x;indices.append_array([i,i+1,i+n,i+1,i+n+1,i+n])
 	var arrays:=[];arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX]=vertices;arrays[Mesh.ARRAY_NORMAL]=normals;arrays[Mesh.ARRAY_TEX_UV]=uvs;arrays[Mesh.ARRAY_COLOR]=colors;arrays[Mesh.ARRAY_INDEX]=indices
 	var mesh:=ArrayMesh.new();mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
