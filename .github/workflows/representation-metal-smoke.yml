@@ -63,6 +63,8 @@ jobs:
           COMPARE_PACK_8_ONLY: '1'
         run: |
           set -euo pipefail
+          bash tools/prepare-font.sh > evidence/font-bootstrap.log 2>&1
+          shasum -a 256 assets/fonts/NotoSansSC-Regular.otf > evidence/font-sha256.txt
           "$GODOT_EDITOR" --headless --editor --import --path . > evidence/import.log 2>&1
           "$RUNNER_TEMP/check-python/bin/python" tools/representation_compare/crop_atlas.py "$RUNNER_TEMP/atlas-original" "$COMPARE_ASSETS" > evidence/lossless-crop.log
           "$GODOT_EDITOR" --headless --path . --script tools/representation_compare/pack_control_atlas.gd > evidence/pack-atlas.log 2>&1
