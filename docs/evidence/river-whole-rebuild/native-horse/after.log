@@ -1,0 +1,8 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+BRIDGE_MENU (78, 280) (200, 176) logical=(168.0, 438.4) pixel=(336.0, 876.8)
+BRIDGE_MENU_SELECTED 5 encounter=true popup=false
+NATIVE_REMOUNT_MOTION {"actor":22,"facing":[0.995035827159882,-0.0995166897773743],"hits":[167,210],"hp":2.92838397622108,"losses":[50,46],"mount_hp":15.5106111869216,"ordinary":[512,512],"state":4,"stride":0.440903571546079,"tick":116,"travel":0.0,"xz":[37.5029907226562,0.41179421544075]}
