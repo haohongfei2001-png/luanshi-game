@@ -15,6 +15,9 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Old-save migrations archive historical committed fixtures.
+          fetch-depth: 0
       - name: Install verified official Godot and export templates
         run: |
           set -euo pipefail
