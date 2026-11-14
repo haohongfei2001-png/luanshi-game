@@ -1,0 +1,34 @@
+{
+  "source": [
+    [
+      "targets/macrodetails/asian-male-young.target",
+      "8cd3ef3e9ddb06ee2d166f75f9ac10871251f938",
+      1.0
+    ],
+    [
+      "targets/macrodetails/proportions/male-young-averagemuscle-averageweight-idealproportions.target",
+      "c0a95b13bd0d2a78b025da7502f7b5653f917904",
+      0.6
+    ],
+    [
+      "targets/macrodetails/universal-male-young-maxmuscle-averageweight.target",
+      "b7c039c7f463fe1f1721b9ab269c7248d9c4f2f7",
+      0.22
+    ]
+  ],
+  "crown": 8.0953,
+  "surface_counts": {
+    "headClose": 1097,
+    "headLine": 359,
+    "headRank": 99,
+    "forearmsClose": 359,
+    "forearmsLine": 150,
+    "forearmsRank": 60,
+    "legsClose": 1982,
+    "legsLine": 1982,
+    "legsRank": 1982,
+    "feetClose": 1986,
+    "feetLine": 1986,
+    "feetRank": 1986
+  }
+}
