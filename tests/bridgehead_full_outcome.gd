@@ -30,13 +30,16 @@ func _initialize() -> void:
 	var waited:=campaign.wait_at_camp() if camp else false
 	var march:=false
 	if camp:
-		for destination:String in ["hequ","pinglu","guancheng"]:
-			if campaign.camp_order(destination):
-				march=true;break
+		var world:=campaign.player_view()
+		march=not world.army.march.is_empty()
+		if not march:
+			for road:String in world.routes:
+				if campaign.camp_order(road):
+					march=true;break
 	var restored:=Store.restore(Store.snapshot(b))
 	var legacy_ok:=restored!=null and restored.bridgehead and restored.result==b.result and restored.aftermath_hours==b.aftermath_hours
 	var audit:=campaign.audit().is_empty() and campaign.audit_quivers()
-	var result:={"tick":b.tick,"end":b.result,"gate":b.gate_hp,"hero_health":b.hero.hp,"losses":b.losses,"hits":b.hits,"blocks":b.blocked_hits,"hero_crossed":crossing_tick,"ram_arrival":ram_arrival,"camp":camp,"wait_one_hour":waited,"march":march,"saved_result":legacy_ok,"ledger":not ledger.is_empty(),"audits":audit,"receipt":ledger}
+	var result:={"tick":b.tick,"end":b.result,"gate":b.gate_hp,"hero_health":b.hero.hp,"losses":b.losses,"hits":b.hits,"blocks":b.blocked_hits,"hero_crossed":crossing_tick,"ram_arrival":ram_arrival,"camp":camp,"wait_one_hour":waited,"march":march,"saved_result":legacy_ok,"ledger":not ledger.is_empty(),"audits":audit,"captured_city":ledger.get("captured_city",false),"spoils":ledger.get("spoils",{})}
 	print("BRIDGE_FULL_RUN ",JSON.stringify(result))
-	var ok:=not b.result.is_empty() and not ledger.is_empty() and audit and legacy_ok and camp and waited
+	var ok:=not b.result.is_empty() and not ledger.is_empty() and audit and legacy_ok and camp and waited and march
 	quit(0 if ok else 1)
