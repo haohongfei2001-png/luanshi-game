@@ -72,9 +72,9 @@ func _run() -> void:
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
 	await _snap("grove-0135",Vector2(38.,-10.),18.)
 	await _snap("gate-architecture",Vector2(48.,0.),18.)
-	field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)
-	await _snap("side-daylight",Ground.BRIDGE_VIEW,22.)
 	field.map.sun.rotation_degrees=Vector3(-48.,-31.,0.)
+	await _snap("previous-daylight",Ground.BRIDGE_VIEW,22.)
+	field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)
 	root.size=Vector2i(3840,2160)
 	await process_frame
 	await _snap("bridgehead-0135-uhd",Ground.BRIDGE_VIEW,22.)

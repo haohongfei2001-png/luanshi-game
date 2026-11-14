@@ -47,7 +47,7 @@ func _daylight() -> void:
 	world.environment.ambient_light_energy=.40
 	world.environment.tonemap_mode=Environment.TONE_MAPPER_FILMIC
 	add_child(world)
-	sun.rotation_degrees=Vector3(-48,-31,0)
+	sun.rotation_degrees=Vector3(-48,58,0)
 	sun.light_color=Color("fff1d7")
 	sun.light_energy=.91
 	sun.shadow_enabled=true
@@ -84,6 +84,13 @@ func _library(path:String) -> Dictionary:
 					var label:=material.resource_name.to_lower()
 					kind=0 if ("bark" in label or "wood" in label or "branch" in label) else 3
 				mesh.surface_set_material(surface,_botanical_material(material,kind,mesh.get_aabb()))
+			if path==FORT and String(model.name) in ["han_wall_long","han_wall_tower","han_wall_gate_struct"]:
+				var footing:=ShaderMaterial.new()
+				footing.shader=preload("res://scripts/field/river_master_masonry.gdshader")
+				footing.set_shader_parameter("native_atlas",material.albedo_texture)
+				footing.set_shader_parameter("has_occlusion",material.ao_texture!=null)
+				if material.ao_texture:footing.set_shader_parameter("native_occlusion",material.ao_texture)
+				mesh.surface_set_material(surface,footing)
 		parts[String(model.name)]=mesh
 	root.free()
 	libraries[path]=parts
@@ -246,8 +253,20 @@ func _scene_plant(path:String,at:Vector2,height:float,yaw:float=0.) -> Node3D:
 	for part:String in parts:
 		var child:=_piece(path,part,group.position,Vector3.ONE*scale_value,yaw,anchor)
 		child.reparent(group,true)
-		child.visibility_range_end=250. if height>3. else 150.
-		child.lod_bias=1.2
+		child.visibility_range_end=80. if path==BROADLEAF else (250. if height>3. else 150.)
+		child.lod_bias=4. if path==BROADLEAF else 1.2
+	if path==BROADLEAF:
+		# A complete authored crown retains its area at army overview distances.
+		# Close meshes preserve each native leaf instead of collapsing the crown.
+		var distant_part:="FieldOakA"
+		var distant_mesh:Mesh=_library(WOODLAND)[distant_part]
+		var distant:=_plant(WOODLAND,distant_part,at,height/distant_mesh.get_aabb().size.y,yaw)
+		distant.scale.x*=1.12
+		distant.scale.z*=1.12
+		distant.visibility_range_begin=80.
+		distant.visibility_range_end=300.
+		distant.lod_bias=2.
+		distant.reparent(group,true)
 	return group
 
 func _bank_rocks(channel:float,moat:bool) -> void:
@@ -346,23 +365,30 @@ func _banks_and_groves() -> void:
 	for i in willow_positions.size():
 		var p:=willow_positions[i]
 		_willow(Vector2(p.x,p.y),int(p.z),.90+.07*(i%2),i*1.8)
-	# Complete, differently aged woodland masses follow the shared terrain ridges.
-	var wooded_slopes:Array[Vector2]=[
-		Vector2(-9.,39.),Vector2(4.,44.),Vector2(-21.,48.),
-		Vector2(-70.,-42.),Vector2(-87.,-47.),Vector2(-106.,-42.),
-		Vector2(-98.,39.),Vector2(-72.,43.),
-		Vector2(79.,47.),Vector2(98.,48.),Vector2(112.,-41.)]
+	# Cohesive stands follow existing tactical woodland and ridge footprints.
+	# The approach and its line of sight remain the retained playable geometry.
+	var wooded_slopes:Array[Vector3]=[
+		Vector3(-2.,37.,12.5),Vector3(-18.,49.,9.),
+		Vector3(-70.,-42.,10.),Vector3(-87.,-47.,13.),Vector3(-106.,-42.,9.),
+		Vector3(-98.,39.,10.),Vector3(-72.,43.,10.),
+		Vector3(79.,47.,11.),Vector3(98.,48.,10.),Vector3(112.,-41.,12.)]
 	for i in wooded_slopes.size():
-		var p:=wooded_slopes[i]
-		_scene_plant(BROADLEAF,p,6.9+.65*(i%3),i*1.37)
-		for j in 3:
-			var q:=p+Vector2(cos(i*.7+j*2.1),sin(i*.7+j*2.1))*5.4
-			_scene_plant(BROADLEAF,q,5.3+.7*j,i+j*1.1)
-			_native_understory(SHRUB,q+Vector2(1.2,1.1),.85,i+j,i+j)
-	# A few complete outcrops form the skyline outside traversable ground.
-	for i in 10:
-		var p:=Vector2(-135.+i*29.,-75.-8.*sin(i*.8))
-		_plant(CLIFF,"coastal_cliff_02_LOD0",p,.48+.05*(i%4),i*.63)
+		var stand:=wooded_slopes[i]
+		var p:=Vector2(stand.x,stand.y)
+		for j in 13:
+			var radius:=sqrt(float(j)/12.)*stand.z
+			var angle:=j*2.399963+i*.83
+			var q:=p+Vector2(cos(angle),sin(angle))*radius
+			if absf(q.y)<24.:continue
+			var height:=6.8+.65*((i+j)%4)
+			_scene_plant(BROADLEAF,q,height,i+j*1.1)
+			if j%3==0:
+				_native_understory(THICKET,q+Vector2(1.2,1.1),1.4,i+j,i+j)
+	# Complete scanned outcrops sit partly within the background ridge.
+	for i in 14:
+		var p:=Vector2(-141.+i*22.,-77.-5.*sin(i*.8))
+		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",p,.60+.05*(i%4),i*.63)
+		cliff.position.y-=2.0
 
 func _field_quarters() -> void:
 	for side:float in [-1.,1.]:

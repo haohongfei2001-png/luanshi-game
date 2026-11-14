@@ -24,7 +24,7 @@ void vertex() {
 void fragment() {
 	vec2 coordinates = UV*uv_scale.xy+uv_offset.xy;
 	vec4 source = vec4(.5,.5,.5,1.);
-	if (has_atlas) source = texture(native_atlas,coordinates,botanical_part==0 ? .0 : 1.6);
+	if (has_atlas) source = texture(native_atlas,coordinates);
 	if (source.a<.40) discard;
 	float value = dot(source.rgb,vec3(.2126,.7152,.0722));
 	float detail = smoothstep(.025,.60,value);

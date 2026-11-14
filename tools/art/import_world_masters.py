@@ -77,8 +77,23 @@ def import_master(asset,budget,author):
         if lod and int(lod.group(1))>0:continue
         keep.append(obj)
     assert keep,asset
+    # Dense native crowns consist of many disconnected leaves. A global collapse
+    # modifier deletes entire leaves before it preserves the tree's silhouette.
+    # Separate the author's material parts so only woody geometry is collapsed.
+    if asset=="island_tree_01":
+        expanded=[]
+        for obj in keep:
+            bpy.ops.object.select_all(action="DESELECT")
+            obj.select_set(True);bpy.context.view_layer.objects.active=obj
+            bpy.ops.object.mode_set(mode="EDIT")
+            bpy.ops.mesh.select_all(action="SELECT")
+            bpy.ops.mesh.separate(type="MATERIAL")
+            bpy.ops.object.mode_set(mode="OBJECT")
+            expanded.extend(bpy.context.selected_objects)
+        keep=list(dict.fromkeys(expanded))
     total=sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in keep)
     ratio=min(1.,budget/max(total,1))
+    foliage=[]
     bpy.ops.object.select_all(action="DESELECT")
     for obj in keep:
         bpy.context.view_layer.objects.active=obj
@@ -86,7 +101,21 @@ def import_master(asset,budget,author):
         obj.data=obj.data.copy();obj.parent=None
         obj.matrix_world=Matrix.Identity(4);obj.data.transform(world)
         obj.select_set(True)
-        if ratio<.97:
+        source_count=sum(len(p.vertices)-2 for p in obj.data.polygons)
+        leaf_part=asset=="island_tree_01" and any(
+            obj.data.materials[index] and "leaves" in obj.data.materials[index].name.lower()
+            for index in {face.material_index for face in obj.data.polygons})
+        if leaf_part:
+            mod=obj.modifiers.new("Preserve complete native leaves and their boundaries","DECIMATE")
+            mod.decimate_type="DISSOLVE"
+            mod.angle_limit=math.radians(6.)
+            mod.use_dissolve_boundaries=False
+            mod.delimit={"UV","NORMAL"}
+            bpy.ops.object.modifier_apply(modifier=mod.name)
+            foliage.append({"object":obj.name,"source_triangles":source_count,
+                "game_triangles":sum(len(p.vertices)-2 for p in obj.data.polygons),
+                "policy":"Planar internal edges only. Native leaf boundaries and UV seams retained."})
+        elif ratio<.97:
             mod=obj.modifiers.new("Camera master silhouette and UV preservation","DECIMATE")
             mod.ratio=ratio
             bpy.ops.object.modifier_apply(modifier=mod.name)
@@ -103,6 +132,7 @@ def import_master(asset,budget,author):
         obj.select_set(obj in selected)
     points=[obj.matrix_world@Vector(corner) for obj in selected for corner in obj.bound_box]
     receipt["bounds_blender"]=[[min(v[i] for v in points) for i in range(3)],[max(v[i] for v in points) for i in range(3)]]
+    receipt["foliage"]=foliage
     receipt["source_triangles"]=total
     receipt["game_triangles"]=sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in selected)
     receipt["objects"]=[{"name":o.name,"triangles":sum(len(p.vertices)-2 for p in o.data.polygons)} for o in selected]
