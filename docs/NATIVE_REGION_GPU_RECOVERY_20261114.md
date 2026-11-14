@@ -195,3 +195,33 @@ a source regression test. This is not a relaxation: missing images, incorrect
 shader time and absent recording remain failures. The earlier c4756d5 run
 is preserved as an entry diagnostic only and cannot qualify art or output.
 Source: https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/gdscript/gdscript_compiler.cpp
+
+## Exported runtime closure repaired, with a real negative control
+
+Run `43632900392` / source `c4756d5` failed after 15.57 s with
+`Could not resolve class res://tests/authored_architecture_capture.gd`.
+Artifact `14128992323` preserves the original error, not a graphics pass.
+The exact export log contained the capture but none of its five `tools/art`
+runtime helpers: `tools/art/.gdignore` excluded them. Earlier local pack checks
+were flawed because running from the checkout let missing resources resolve
+from disk. This is explicitly corrected, not concealed as an engine fault.
+
+The five pure runtime helpers now live canonically in `scripts/review`.
+Their old authoring paths are thin compatibility subclasses, so authoring
+commands retain their entry points without duplicate implementations. No
+simulation, asset shape or default gameplay is changed. The real capture
+references the exported canonical paths. Shader-clock and matched-state
+requirements now execute explicitly in release, not debug-only assertions.
+
+A genuine negative control runs the old exact 507,503,596-byte pack from an
+empty temporary cwd: it reproduces the missing-base-class error. With the
+runtime helpers included, a new 507,516,164-byte pack (SHA-256
+`645d831445ea1c17fc1303d6f63bb6aaab2181a56f78baae0767dd0481ad4c82`)
+passes the same isolated 20v20/tick135 headless startup in 7.34 s. The initial
+negative-control command had an unrelated user-log-directory error; only its
+repeat with the normal scoped XDG paths is used as the dependency evidence.
+
+The exporter now requires this empty-cwd pack startup on every hosted build,
+records it in the pack receipt, and refuses native launch without it. This
+proves resource closure with the official editor, not native graphics or art.
+The Mac template execution remains a separate required gate.

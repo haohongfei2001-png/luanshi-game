@@ -1,13 +1,16 @@
 extends SceneTree
-const Traversal:=preload('res://tools/art/gate_structure/traversal_review.gd')
-const FreezeClock:=preload('res://tools/art/gate_structure/freeze_shader_clock.gd')
-const WaterContours:=preload('res://tools/art/continuous_landform/water_contours.gd')
+const Traversal:=preload('res://scripts/review/traversal_review.gd')
+const FreezeClock:=preload('res://scripts/review/freeze_shader_clock.gd')
+const WaterContours:=preload('res://scripts/review/water_contours.gd')
 const Store:=preload('res://scripts/field/save.gd')
-const Support:=preload('res://tools/art/gate_structure/region_support.gd')
-const Surface:=preload('res://tools/art/authored_reset/surface_authoring.gd')
+const Support:=preload('res://scripts/review/region_support.gd')
+const Surface:=preload('res://scripts/review/surface_authoring.gd')
 var out:=OS.get_environment('ARCHITECTURE_CAPTURE_OUT')
 func vec(v:Vector3)->Array:return [v.x,v.y,v.z]
 func vec4(v:Vector4)->Array:return [v.x,v.y,v.z,v.w]
+func require_capture(condition:bool,message:String)->bool:
+ if condition:return true
+ push_error(message);quit(1);return false
 func _initialize() -> void:run.call_deferred()
 func run() -> void:
  if out.is_empty():out='user://architecture-review'
@@ -25,21 +28,22 @@ func run() -> void:
  field.map.gate=model.find_child('GateDoor_Structure',true,false) as MeshInstance3D
  print('REGION_SETUP_LOADING_WOODLAND')
  var woodland=(load('res://assets/river_authored/woodland/region.scn') as PackedScene).instantiate();field.add_child(woodland)
- assert(OS.get_environment('LUANSHI_AUTHORED_LANDFORM')=='1','Entire game process must use matching authored Ground')
+ if not require_capture(OS.get_environment('LUANSHI_AUTHORED_LANDFORM')=='1','Entire game process must use matching authored Ground'):return
  print('REGION_SETUP_LOADING_CONTINUOUS_LANDFORM')
  var support=(load('res://assets/river_authored/ground/continuous-region.scn') as PackedScene).instantiate();field.add_child(support)
- assert(support.transform==Transform3D.IDENTITY,'Continuous ground must remain world-space')
+ if not require_capture(support.transform==Transform3D.IDENTITY,'Continuous ground must remain world-space'):return
  print('REGION_SETUP_STARTING_REAL_BATTLE')
  field.hud.go.pressed.emit()
  for tick in 135:field._physics_process(.05)
  field.camera_center=Vector2(34.2,1.0);field.camera.size=22.;field._process(.05)
  if '--validate-setup' in OS.get_cmdline_user_args():
-  assert(field.map.gate is MeshInstance3D and not old.visible)
-  assert(Array(field.battle.ordinary_counts)==[20,20])
+  if not require_capture(field.map.gate is MeshInstance3D and not old.visible,'Wrong authored scene setup'):return
+  if not require_capture(Array(field.battle.ordinary_counts)==[20,20],'Wrong real battle fixture'):return
   print('ARCHITECTURE_GAME_SETUP_PASS tick=',field.battle.tick,' ordinary=',field.battle.ordinary_counts)
   scene.queue_free();await process_frame;await process_frame;await create_timer(.15).timeout;quit();return
  var clock=FreezeClock.new()
  var clock_report=clock.freeze(scene,field.battle.tick*field.Battle.DT)
+ if not require_capture(not clock.failed,'Shader time freeze failed'):return
  print('STATIC_SHADER_CLOCK_FROZEN ',JSON.stringify({'overrides':clock_report,'include_audit':clock.include_audit}))
  var frozen=var_to_bytes(Store.snapshot(field.battle))
  var hasher=HashingContext.new();hasher.start(HashingContext.HASH_SHA256);hasher.update(frozen)
@@ -62,16 +66,17 @@ func run() -> void:
    field.review_camera_profile={'projection':'perspective','nominal_body_fraction':.10,'pitch_degrees':32.,'fov_degrees':55.}
   field._camera();field._draw_field();root.scaling_3d_scale=1.
   for frame in 8:await process_frame
-  assert(var_to_bytes(Store.snapshot(field.battle))==frozen,'Battle state changed between matched views')
+  if not require_capture(var_to_bytes(Store.snapshot(field.battle))==frozen,'Battle state changed between matched views'):return
   if '--validate-pairs' in OS.get_cmdline_user_args():
    print('MATCHED_STATE_SETUP_PASS ',mode,' snapshot=',frozen_hash);continue
   print('ARCHITECTURE_CAPTURE_BEGIN ',mode)
   await RenderingServer.frame_post_draw
-  var img=root.get_texture().get_image();assert(img.get_size()==root.size)
+  var img=root.get_texture().get_image()
+  if not require_capture(img.get_size()==root.size,'Wrong native attachment pixels'):return
   var image_save_error=img.save_png(out+'/'+mode+'.png')
   if image_save_error!=OK:
    push_error('Native image write failed: '+mode+' error='+str(image_save_error));quit(1);return
-  assert(var_to_bytes(Store.snapshot(field.battle))==frozen,'Battle state changed between matched views')
+  if not require_capture(var_to_bytes(Store.snapshot(field.battle))==frozen,'Battle state changed during readback'):return
   var camera=field.camera
   var projection=camera.get_camera_projection()
   var transform=camera.global_transform

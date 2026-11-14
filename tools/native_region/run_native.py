@@ -5,7 +5,7 @@ from pathlib import Path
 ENTRY='application/run/main_loop_type=DotNativeRegionCapture; inert bootstrap scene; no CLI override'
 
 def validate_pack_receipt(receipt):
-    if receipt.get('entry')!=ENTRY or receipt.get('original_project_restored') is not True or receipt.get('original_export_config_restored') is not True:
+    if receipt.get('entry')!=ENTRY or receipt.get('original_project_restored') is not True or receipt.get('original_export_config_restored') is not True or receipt.get('isolated_pack_setup_passed') is not True:
         raise ValueError('QA pack entry or original configuration restoration not verified')
 
 def validate_engine(patch):

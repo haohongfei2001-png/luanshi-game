@@ -60,14 +60,14 @@ class NativeRegionInputs(unittest.TestCase):
         for data in [b'wrong',b'run/main_scene="res://scenes/game.tscn"\nrun/main_loop_type="Unexpected"']:
             with self.assertRaises(ValueError):transform_project(data)
     def test_pack_entry_receipt(self):
-        row={'entry':ENTRY,'original_project_restored':True,'original_export_config_restored':True}
+        row={'entry':ENTRY,'original_project_restored':True,'original_export_config_restored':True,'isolated_pack_setup_passed':True}
         validate_pack_receipt(row)
-        for key,value in [('entry','old --script entry'),('original_project_restored',False),('original_export_config_restored',False)]:
+        for key,value in [('entry','old --script entry'),('original_project_restored',False),('original_export_config_restored',False),('isolated_pack_setup_passed',False)]:
             with self.subTest(key=key):
                 wrong={**row,key:value}
                 with self.assertRaises(ValueError):validate_pack_receipt(wrong)
     def test_no_capture_side_effect_inside_release_assert(self):
-        for name in ['tests/authored_architecture_capture.gd','tools/art/gate_structure/traversal_review.gd','tools/art/gate_structure/freeze_shader_clock.gd']:
+        for name in ['tests/authored_architecture_capture.gd','scripts/review/traversal_review.gd','scripts/review/freeze_shader_clock.gd']:
             text=(ROOT/name).read_text()
             self.assertNotRegex(text,r'assert\([^\n]*(?:\.save_png|\.compile|recorder\.start)\(')
 
