@@ -5,11 +5,12 @@ const Palette=preload("res://scripts/field/experimental/native_rig_palette.gd")
 const MaterialAdapter=preload("res://scripts/field/experimental/native_rig_material.gd")
 var failures:=0
 var reports:=[]
+var diagnostic:=OS.get_environment("INTACT_DIAGNOSTIC")
 func _initialize() -> void:run.call_deferred()
 func view() -> SubViewport:
 	var viewport:=SubViewport.new();viewport.size=Vector2i(512,512);viewport.own_world_3d=true
 	viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS;viewport.msaa_3d=Viewport.MSAA_4X
-	if OS.has_environment("INTACT_PARITY_FULL_MESH"):viewport.mesh_lod_threshold=0.0
+	if OS.has_environment("INTACT_PARITY_FULL_MESH") or not diagnostic.is_empty():viewport.mesh_lod_threshold=0.0
 	root.add_child(viewport)
 	var world:=WorldEnvironment.new();world.environment=Environment.new()
 	world.environment.background_mode=Environment.BG_COLOR;world.environment.background_color=Color(.035,.045,.055)
@@ -24,6 +25,7 @@ func abort(detail:String) -> void:
 func run() -> void:
 	if DisplayServer.get_name()=="headless":abort("GPU parity requires an actual graphics renderer");return
 	var folder:="res://artifacts/native-character-parity/gpu_full" if OS.has_environment("INTACT_PARITY_FULL_MESH") else "res://artifacts/native-character-parity/gpu"
+	if not diagnostic.is_empty():folder="res://artifacts/native-character-parity/diagnostic_"+diagnostic
 	DirAccess.make_dir_recursive_absolute(folder)
 	var native_view:=view();var batch_view:=view()
 	var actor:Node3D=load("res://assets/ubc_lab/ubc_animated.glb").instantiate();native_view.add_child(actor)
@@ -36,9 +38,24 @@ func run() -> void:
 		if packed.has("error"):abort(str(packed));return
 		var shaders:=[]
 		for surface in native.mesh.get_surface_count():
-			var material:=MaterialAdapter.adapt(native.mesh.surface_get_material(surface))
+			var original:StandardMaterial3D=native.get_active_material(surface)
+			var colors:PackedColorArray=native.mesh.surface_get_arrays(surface)[Mesh.ARRAY_COLOR]
+			var low:=Color(1,1,1,1);var high:=Color(0,0,0,0)
+			for color:Color in colors:
+				for channel in 4:low[channel]=minf(low[channel],color[channel]);high[channel]=maxf(high[channel],color[channel])
+			print("INTACT_ACTIVE_MATERIAL ",JSON.stringify({"mesh":native.name,"surface":surface,"active_equals_surface":original==native.mesh.surface_get_material(surface),"material_override":str(native.material_override),"surface_override":str(native.get_surface_override_material(surface)),"color_min":low,"color_max":high,"normal_enabled":original.normal_enabled,"normal_scale":original.normal_scale,"albedo":original.albedo_color,"roughness":original.roughness,"metallic":original.metallic}))
+			var chosen:StandardMaterial3D=original
+			if diagnostic=="no_normal":
+				chosen=original.duplicate();chosen.normal_enabled=false
+				native.set_surface_override_material(surface,chosen)
+			var material:=MaterialAdapter.adapt(chosen)
 			if material.has("error"):abort(str(material));return
 			var shader:ShaderMaterial=material.material
+			if diagnostic=="unshaded":
+				var plain:StandardMaterial3D=original.duplicate();plain.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+				native.set_surface_override_material(surface,plain)
+				var plain_shader:=Shader.new();plain_shader.code=shader.shader.code.replace("render_mode blend_mix,", "render_mode unshaded, blend_mix,")
+				shader.shader=plain_shader
 			shader.set_shader_parameter("influence_table",ImageTexture.create_from_image(packed.tables[surface].image))
 			shader.set_shader_parameter("influence_groups",packed.tables[surface].groups)
 			packed.mesh.surface_set_material(surface,shader);shaders.append(shader)
@@ -78,5 +95,5 @@ func run() -> void:
 		var row:={"clip":sample[0],"phase":sample[1],"mae":error_sum/(512*512),"max":error_max,"visible":visible,"pixels_over_2_levels":different,"pass":pass_value}
 		reports.append(row);print("INTACT_NATIVE_GPU ",JSON.stringify(row))
 	var f:=FileAccess.open(folder+"/parity.json",FileAccess.WRITE)
-	f.store_string(JSON.stringify({"source":OS.get_environment("GITHUB_SHA"),"renderer":RenderingServer.get_video_adapter_name(),"lod_threshold":native_view.mesh_lod_threshold,"native_size":[512,512],"internal":1.,"reports":reports,"art_pass":false,"shipping_enabled":false,"full_battle_performance":"NOT_RUN","source_weights":"UBC four-slot import; explicit >8 source tested separately on CPU only"},"  "));f.close()
+	f.store_string(JSON.stringify({"source":OS.get_environment("GITHUB_SHA"),"renderer":RenderingServer.get_video_adapter_name(),"diagnostic_only":not diagnostic.is_empty(),"diagnostic":diagnostic,"lod_threshold":native_view.mesh_lod_threshold,"native_size":[512,512],"internal":1.,"reports":reports,"art_pass":false,"shipping_enabled":false,"full_battle_performance":"NOT_RUN","source_weights":"UBC four-slot import; explicit >8 source tested separately on CPU only"},"  "));f.close()
 	quit(0 if failures==0 else 1)
