@@ -141,7 +141,7 @@ func _run() -> void:
 		deadline+=1
 		if b.tick>=next_progress:
 			print("JOURNEY_PROGRESS tick=%d gate=%.1f hits=%d" % [b.tick,b.gate_hp,b.hits[0]+b.hits[1]])
-			next_progress+=100
+			next_progress+=25
 		if b.tick<order_tick+115:
 			var best: Battle.Unit=null
 			var sep:=INF

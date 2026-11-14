@@ -1,17 +1,43 @@
 extends SceneTree
 ## Bundle the engine and third-party redistribution notices with each build.
 
+func _world_notices(path:String) -> String:
+	var result:=""
+	var files:=DirAccess.get_files_at(path)
+	files.sort()
+	for name:String in files:
+		if name.ends_with("NOTICE.txt"):
+			result+=FileAccess.get_file_as_string(path+"/"+name)+"\n\n"
+	var directories:=DirAccess.get_directories_at(path)
+	directories.sort()
+	for name:String in directories:
+		result+=_world_notices(path+"/"+name)
+	return result
+
 func _initialize() -> void:
 	var text := "LUANSHI PROTOTYPE - THIRD-PARTY NOTICES\n\n"
-	text += "Game code, text, clothing, props and original environment art by the project authors.\n"
+	text += "Game code, text and original art by the project authors. Additional assets are credited below.\n"
 	text += "No open-source license has been selected for the game itself.\n\n"
-	text += "Human head topology and morph derived from the MakeHuman Team HM08 base and asian-male-young target. Published under CC0 1.0 Universal.\n"
+	text += "Head topology, anatomical hands and finger articulation derived from the MakeHuman Team HM08 mesh, skin weights and youth morph. Published under CC0 1.0 Universal.\n"
 	text += "https://github.com/makehumancommunity/makehuman/blob/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md\n\n"
+	text += "CommonTree_1 and CommonTree_3 meshes, bark and leaves by Quaternius from the free Stylized Nature MegaKit Standard, CC0 1.0 Universal. Adapted for River Gate.\n"
+	text += "https://quaternius.com/packs/stylizednaturemegakit.html\n\n"
+	text += "Walk_Loop, Walk_Formal_Loop and Jog_Fwd_Loop adapted from the Quaternius Universal Animation Library (free Standard edition). CC0 1.0 Universal.\n"
+	text += "https://quaternius.com/packs/universalanimationlibrary.html\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_garments/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_remounts/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_gate/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_willow/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_headwear/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_bridge/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/wildfire_shields/NOTICE.txt") + "\n\n"
+	text += FileAccess.get_file_as_string("res://assets/third_party/polyhaven_bank/NOTICE.txt") + "\n\n"
 	text += "Terrain textures adapted from Poly Haven scans under CC0 1.0 Universal.\n"
 	text += "Sparse Grass by Amal Kumar. https://polyhaven.com/a/sparse_grass\n"
 	text += "Brown Mud Dry by Rob Tuytel. https://polyhaven.com/a/brown_mud_dry\n"
 	text += "Sandy Gravel 02 by Dario Barresi. https://polyhaven.com/a/sandy_gravel_02\n"
 	text += "https://polyhaven.com/license\n\n"
+	text += _world_notices("res://assets/river_gate")
 	text += "Noto Sans SC Regular. Copyright 2014-2021 Adobe and the upstream font authors.\n"
 	text += FileAccess.get_file_as_string("res://assets/fonts/OFL.txt") + "\n\n"
 	text += "GODOT ENGINE\n" + Engine.get_license_text() + "\n\n"

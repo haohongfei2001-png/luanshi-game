@@ -5,6 +5,8 @@ support hand. No per-soldier Godot Skeleton3D or runtime inverse kinematics is r
 """
 from math import sin,cos,pi,acos,sqrt
 from PIL import Image
+from pathlib import Path
+import json
 from figure_mesh import add,sub,mul,dot,cross,unit,lerp,smooth
 from company_figures import *
 from company_weapons import TWO_HAND, FRONT_GRIP
@@ -13,6 +15,7 @@ BONES=16
 FRAMES=32
 CLIPS=31
 IDENT=(0.,0.,0.,1.)
+MARCH_BANK=json.loads((Path(__file__).parent/'source'/'march_curves.json').read_text())['curves']
 def qm(q,r):
     a,b=q[:3],r[:3]
     return (*add(add(mul(b,q[3]),mul(a,r[3])),cross(a,b)), q[3]*r[3]-dot(a,b))
@@ -90,7 +93,72 @@ REACTIONS=((10,-1),(10,1),(11,-1),(11,1))
 def ramp(t,start,end):
     return smooth(max(0.,min(1.,(t-start)/(end-start))))
 
-def pose(kit,clip,t,loadout=0,side_hit=0):
+def blend_rigid(origin, target, amount):
+    q,p=origin
+    n,end=target
+    if dot(q,n)<0.:
+        n=tuple(-v for v in n)
+    return unit(lerp(q,n,amount)),lerp(p,end,amount)
+
+
+def grounded_rest(kit):
+    """Rest on the back or rear shoulder with the heavy parts on the earth.
+
+    Locations are body-joint pivots, never scaled. Forward +Z runs towards
+    the boots once prone. The unchanged 2-bone solver maintains bone lengths.
+    """
+    side=-1 if kit in (1,3,6,8) else 1
+    curl=kit in (2,4,7)
+    root=(side*.033,.164,-.018)
+    pelvis=placed((0,.86,0),root,euler(-82.,side*(6. if curl else 3.),side*4.))
+    chest_root=trans(pelvis,(0,1.008,0))
+    chest=placed((0,1.008,0),chest_root,euler(-91.,side*(14. if curl else 8.),side*5.))
+    neck=trans(chest,(0,1.427,.015))
+    head=placed((0,1.427,.015),neck,euler(-101.,side*23.,side*6.))
+    ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
+    ms[HIPS],ms[CHEST],ms[HEAD]=pelvis,chest,head
+    for direction in (-1,1):
+        thigh,shin,boot=(LT,LS,LB) if direction<0 else (RT,RS,RB)
+        binds=leg_nodes(direction)
+        hip=trans(pelvis,binds[0])
+        bent=direction==side
+        ankle=(direction*(.254 if bent else .168),.087 if bent else .080,
+               .655 if bent and curl else .675 if bent else .710)
+        # The bent knee falls out towards the soil. It does not hinge up in
+        # the air as in the standing IK pose.
+        ms[thigh],ms[shin]=two_link(binds,hip,ankle,(direction*.98,.12,-.10))
+        ms[boot]=placed(binds[2],ankle,euler(-70. if bent else -78.,
+                              direction*(31. if bent else 15.),direction*17.))
+        upper,fore,hand=(LU,LF,LH) if direction<0 else (RU,RF,RH)
+        arms=arm_nodes(direction)
+        shoulder=trans(chest,arms[0])
+        across = direction==-side and curl
+        elbow=(direction*(.248 if across else .402),.121,
+               -.267 if across else -.277)
+        # A long blade/shaft runs along the hand's +Z axis. A falling palm
+        # pitched eighty degrees left that axis vertical above a prone body.
+        # Rest blades on their broad face, the bow in its stave plane and the
+        # crossbow across its prod. The hand remains joined at the same wrist.
+        hand_q=euler(0.,direction*20.,direction*90.)
+        height=.070
+        if direction==1 and kit==5:
+            hand_q=euler(-90.,20.)
+            height=.150
+        elif direction==1 and kit==6:
+            hand_q=euler(0.,20.)
+            height=.120
+        elif direction==-1 and kit==7:
+            hand_q=euler(-90.,-20.)
+            height=.035
+        wrist=(direction*(.123 if across else .461),height,
+               -.095 if across else -.068)
+        pole=unit(sub(elbow,shoulder))
+        ms[upper],ms[fore]=two_link(arms,shoulder,wrist,pole)
+        ms[hand]=placed(arms[2],wrist,hand_q)
+    ms[NOCK]=ms[RH]
+    return ms
+
+def legacy_pose(kit,clip,t,loadout=0,side_hit=0):
     # 0 locomotion, 1 idle, 2..5 windup, 6..9 recovery, 10 guard,
     # 11 hit, 12 rout, 13 wounded, 14 falling, 15 mounted legs.
     running=clip>=23
@@ -160,12 +228,25 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
     thrust=kit==3 and attack and slot<3
     if move:
         hips=cos(t*2*pi)
-        sway=(.022 if running else .044)*sin(t*2*pi)
-        hip_yaw=7*hips
-        shoulder_yaw=-8.5*hips
-        hip_roll=4.0*walk
-        chest_roll=-3.3*walk
-        crouch=(.088+.050*cos(t*4*pi-.22)) if running else (.089+.026*cos(t*4*pi))
+        # Imported gait first, then the two-hand grips and ground-locked soles.
+        # A rank bearing a shaft braces its shoulders more than a light footman.
+        mode="Jog_Fwd_Loop" if running or clip==12 else ("Walk_Formal_Loop" if kit in (3,4,7) else "Walk_Loop")
+        step=MARCH_BANK[mode][round(t*FRAMES)%FRAMES]
+        sway,rise,hip_yaw,shoulder_yaw,hip_roll,chest_roll=step
+        if mode=="Jog_Fwd_Loop":
+            # The unarmed source twists 80 degrees and bobs 25 cm peak to peak.
+            # Keep the planted phase and the asymmetric stride of the animator.
+            # A braced shaft or a shield limits the movement at the shoulder.
+            braced = kit in TWO_HAND or kit == 7
+            rise *= .43 if braced else .52
+            shoulder_yaw *= .36 if braced else .46
+            chest_roll *= .48 if braced else .64
+        lateral=abs(sin(heading))
+        sway*=1.-.34*lateral
+        hip_yaw*=1.-.42*lateral
+        shoulder_yaw*=(.83 if kit in TWO_HAND else 1.)*(1.-.40*lateral)
+        chest_roll*=.90
+        crouch=(.088 if running else .084)-rise
         lean=12*cos(heading) if running else (9 if clip==12 else 5.8*cos(heading))
         hand=tuple(v+(.032*hips if i==0 else .035*breath if i==1 else .034*hips if i==2 else
                       (5.2 if running else 3.7)*walk if i==3 else 2.4*hips if i==4 else 0) for i,v in enumerate(hand))
@@ -256,6 +337,29 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             chest_roll=-side_hit*17.*recoil
             crouch=.040+.107*settle
             hand=tuple(v+d*recoil for v,d in zip(hand,(side_hit*.074,.102,-.095,-20.,side_hit*18.,9.)))
+    # The timber shield is carried in the left palm. At rest set it across the
+    # ribs, with the left boot in front. A real contact gives at the elbow,
+    # passes through the shoulder and then loads the hip. At both endpoints
+    # the two directional reactions meet the exact same waiting guard.
+    board_give=0.
+    board_drive=0.
+    if kit==7 and clip==10:
+        sway=-.060; shift=.034; crouch=.139
+        lean=14.; hip_yaw=-9.; shoulder_yaw=-16.; hip_roll=1.4; chest_roll=-3.8
+        hand=(.300,1.258,.192,-49.,-9.,11.)
+        if side_hit:
+            board_give=ramp(t,0.,.19)*(1.-ramp(t,.34,.79))
+            board_drive=ramp(t,.38,.66)*(1.-ramp(t,.70,1.))
+            sway-=side_hit*(.044*board_give+.039*settle)
+            shift-=.083*settle
+            crouch+=.090*settle
+            lean-=15.*board_give-6.2*board_drive
+            hip_yaw+=side_hit*9.8*settle
+            shoulder_yaw+=side_hit*17.5*board_give
+            hip_roll-=side_hit*4.4*settle
+            chest_roll-=side_hit*8.*board_give
+            hand=tuple(v+d*board_give for v,d in zip(hand,
+                       (.035,-.020,-.080,9.,side_hit*10.,5.)))
     # Opening the torso places the drawing elbow to the side of the face.
     # Keep the head on its target while the bow shoulder reaches forward.
     bow_draw=0.
@@ -326,8 +430,85 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         shift+=(.048 if high else -.037)*counter
         crouch+=.012*(1.-load_beat)
         hand=tuple(v+d*load_beat for v,d in zip(hand,offsets))
+    # The source formal march was taken from an upright parade. Its feet
+    # have useful contact timing; its level shoulders and pelvis turn in the
+    # same direction. Let the loaded hip lead, and let the chest overtake it
+    # over the opposite planted leg. Feet are solved against the ground below.
+    pelvic_pitch=lean*.40
+    if clip==0:
+        a=2.*pi*t
+        support=sin(a)                 # left support in the first half
+        strike=cos(a-.10)              # left heel arrives, right shoulder leads
+        absorb=cos(2.*a-.55)           # compress just after each foot arrives
+        forward=cos(heading)
+        across=sin(heading)
+        front=.48+.52*abs(forward)
+        heavy=kit in (4,7)
+        bow=kit in (5,6)
+        root_turn=6.5 if running else 7.2
+        upper_turn=(4.0 if heavy else 4.2 if bow else 6.4) * (.72 if running else 1.)
+        # Swing the girdle into the leading thigh while seating the belt on the
+        # current support. Reverse and oblique steps keep their true footpath.
+        hip_yaw+=(root_turn*strike*forward)
+        hip_roll-=(4.3 if running else 5.)*support*front
+        sway-=(.041 if heavy else .034)*support*front
+        shift+=(.030 if running else .024)*(.24+.76*abs(forward))*sin(2.*a-.36)*forward
+        crouch+=(.016 if running else .009)*absorb+(.019 if heavy else .006)
+        pelvic_pitch+=(4.5 if running else 3.3)*absorb*forward
+        # The shoulders turn about a different centre than the belt. A shield
+        # keeps the loaded left side forward; an archer controls the bow with
+        # a quieter outside shoulder. Let the free side complete the stride.
+        shoulder_yaw-=upper_turn*(cos(a+.19)*forward+.32*support*across)
+        chest_roll+=((1.2 if heavy else 1.8) if running else (5.1 if heavy else 6.0))*sin(a-.26)*front
+        lean+=(7.2 if running else 5.7)*cos(2.*a-.80)*forward
+        lean+=(4.0 if heavy else 2.2 if kit==3 else 0.)*forward
+        # This offset falls away on a backstep: a loaded forward advance
+        # puts the sternum ahead of the pelvis, while the rear file can step
+        # away without pitching its head across the rear heel.
+        advancing=max(0.,forward)
+        if kit==7:
+            sway-=.041; shoulder_yaw+=10.; chest_roll-=7.
+            lean+=7.*advancing; shift+=.045*advancing; crouch+=.034
+        elif kit==3:
+            shoulder_yaw-=9.; chest_roll+=2.3
+            lean+=6.2*advancing; shift+=.040*advancing; crouch+=.024
+        elif kit==4:
+            shoulder_yaw-=5.; chest_roll+=3.6
+            lean+=5.5*advancing; shift+=.030*advancing; crouch+=.020
+        elif kit==6:
+            shoulder_yaw-=15.; chest_roll+=3.6; crouch+=.033
+            lean+=4.6*advancing; shift+=.030*advancing
+        elif kit==5:
+            sway+=.018; shoulder_yaw+=2.7; lean-=2.1*advancing
+        else:
+            lean+=4.6*advancing; shift+=.041*advancing; crouch+=.010
+        if kit in (2,3,4,6):
+            # Both palms still lie on the rigid weapon axis. The support
+            # forearm rides the carried mass instead of following the sternum.
+            reach=(.011,.022,-.029,-3.5,2.1,1.4) if heavy else (.020,.028,-.043,-5.8,3.2,2.4)
+            hand=tuple(v+d*strike*front for v,d in zip(hand,reach))
+        elif kit not in (5,7):
+            hand=tuple(v+d*strike*front for v,d in zip(hand,(.013,.027,-.066,-7.,3.,4.)))
+    elif clip==1:
+        # Split stance when the file checks its advance. Put the belt over
+        # the front or rear leg and keep the face looking down the weapon.
+        # This is the existing idle row, including when a target checks a file.
+        if kit in (2,3,4,6,7):
+            forward_leg=kit in (3,6,7)
+            sway+=-.046 if forward_leg else .037
+            crouch+=.049 if kit==7 else .036
+            shift+=.039 if forward_leg else -.023
+            hip_yaw+=7. if kit in (3,4) else -7.
+            shoulder_yaw+=-9.5 if kit in (3,6) else 8.5
+            chest_roll+=-4.8 if forward_leg else 4.
+            lean+=5.2 if forward_leg else 2.5
+            pelvic_pitch+=2.
+        elif kit==5:
+            sway+=.034; hip_yaw-=8.; shoulder_yaw+=9.; chest_roll+=3.
+        else:
+            sway+=.023; hip_yaw+=5.; shoulder_yaw-=5.
     waist=(0,.86,0)
-    pelvic=placed(waist,(sway,.86-crouch,shift),euler(lean*.40,hip_yaw,hip_roll))
+    pelvic=placed(waist,(sway,.86-crouch,shift),euler(pelvic_pitch,hip_yaw,hip_roll))
     chest=placed((0,1.008,0),trans(pelvic,(0,1.008,0)),euler(lean,shoulder_yaw,chest_roll))
     head_m=placed((0,1.427,.015),trans(chest,(0,1.427,.015)),euler(lean*.42,shoulder_yaw*.40,chest_roll*.28))
     ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
@@ -361,7 +542,20 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             elbow_height=(.015*walk if move else 0.)
             carry=add(carry,(.019*walk,elbow_height,.025*walk))
             anchor=lerp(carry,add((.136,1.420,.430),(sway*.72,-crouch,shift)),bow_draw)
-            aim=euler(-13.+11.*bow_draw,-32.+24.*bow_draw,-60.+48.*bow_draw)
+            pitch,yaw,roll=-13.+11.*bow_draw,-32.+24.*bow_draw,-60.+48.*bow_draw
+            if move:
+                # The old walking bow had exactly the same rotation in all 32
+                # poses. Let the support arm absorb the alternating footfall,
+                # while both hands and the nock travel as one loaded bow.
+                stride=2.*pi*t
+                support=cos(stride-.29)
+                swing=sin(stride-.24)
+                balance=(1.16 if running else 1.)*(1.-.30*abs(sin(heading)))
+                pitch+=balance*(7.4*support+1.35*sin(2.*stride-.49))
+                yaw+=balance*5.6*swing
+                roll-=balance*(8.1*support+1.2*sin(2.*stride+.60))
+                anchor=add(anchor,(.013*swing,.014*support,-.018*swing))
+            aim=euler(pitch,yaw,roll)
             offq=aim
             right,radius=reachable(chest,1,aim)
             anchor=limit_grip(anchor,right,radius)
@@ -397,11 +591,30 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             offq=qm(euler((-12. if braced else 15.)*load_beat,
                           (11. if braced else -14.)*load_beat,
                           (8. if braced else -7.)*load_beat),offq)
-        if side_hit and clip==10:
-            off=add(off,(-side_hit*.074*recoil,.028*recoil-.022*settle,-.128*recoil))
-            offq=euler(-15.-20.*recoil,-9.+side_hit*25.*recoil,-14.+side_hit*14.*settle)
+        if clip==10:
+            # The old top edge was tilted backwards into the head while the
+            # board retreats. Carry the top slightly outward on impact and
+            # keep its working face towards the side of actual contact.
+            # The elbow yields behind the grip; the rear leg then helps push
+            # the board back out. No shaft or shield corner moves on its own.
+            off=(-.083+sway*.50,1.355-crouch,.344+shift)
+            off=add(off,(side_hit*.055*board_give,.032*board_give-.026*settle,
+                         -.083*board_give+.095*board_drive))
+            offq=euler(4.+11.*board_give-5.*board_drive,
+                       6.+side_hit*26.*board_give,-7.-side_hit*8.*board_give)
+        if clip in (0,1):
+            # Let the strapped board travel with the loaded shoulder. The
+            # old low carry used the identical vertical board at both heel
+            # strikes while the shield shoulder moved visibly around it.
+            step=sin(2.*pi*t-.28)*front if clip==0 else .15*sin(2.*pi*t)
+            heel=cos(2.*pi*t-.32)*front if clip==0 else .10*cos(2.*pi*t)
+            off=add(off,(-.012-.027*step,.022-.032*step,.048+.049*heel))
+            offq=qm(euler(-4.+5.4*heel,5.5-5.1*heel,2.2+4.*step),offq)
         if carried:
-            anchor=limit_grip(add(anchor,mul((.066,.043,.029),carried)),right,radius)
+            # The sword rests outside the leading edge of the shield. Its weight
+            # sits in a lowered elbow; both wrist and crossguard continue to be
+            # solved at the same palm, and release keeps the authored contact.
+            anchor=limit_grip(add(anchor,mul((.148,-.008,.206),carried)),right,radius)
     elif kit==8:
         off=(-hand[0],1.14+(1.24-hand[1])*.7-crouch,.225-(hand[2]-.21)*.52+shift)
         offq=euler(-11-hand[3]*.49,-hand[4]*.81,8)
@@ -432,6 +645,24 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
             pole=(side*(.91 if open_arm else .49),
                   (-.22 if open_arm else -.69)+(.14 if lead else -.12)*load_beat,
                   -.64 if open_arm else -.95)
+        if clip in (0,1) and kit in (3,4,6):
+            # The front elbow supports a shaft from underneath, the other
+            # hangs back beside the ribs. A crossbow tucks both closer to
+            # the torso so the stock lies on the line of the shoulder.
+            pulse=sin(2.*pi*t-.31) if clip==0 else .14*sin(2.*pi*t)
+            if kit==6:
+                pole=(side*(.43+.07*pulse),-.86+.08*pulse,-.58)
+            elif side<0:
+                pole=(-.51-.08*pulse,-.70+.12*pulse,-.75)
+            else:
+                pole=(.80+.12*pulse,-.43-.09*pulse,-.80)
+        if kit==7 and clip==10:
+            # A bent, strapped shield arm stays on the outer side of the
+            # board. The weapon elbow folds by the ribs, clear of the face.
+            if side<0:
+                pole=(-.91,-.34-.35*board_give,-.74+.22*board_drive)
+            else:
+                pole=(.83,-.54+.12*settle,-.78)
         if kit==5 and not ride:
             # The working elbow points outward as the fingers draw, while the
             # bow elbow remains outside the line of the string.
@@ -490,10 +721,159 @@ def pose(kit,clip,t,loadout=0,side_hit=0):
         ms[thigh],ms[shin]=two_link(binds,trans(pelvic,binds[0]),foot,(side*(1.1 if ride else .16),-.08,1))
         ms[boot]=placed(binds[2],foot,foot_q)
     if clip==14:
-        k=smooth(max(0.,min(1.,(t-.14)/.80)))
+        k=ramp(t,.14,.75)
         fall=placed((0,.10,0),(0,.10,0),euler(-76*k,18*k,29*k))
         ms=[chain(fall,m) for m in ms]
+        if t>.28:
+            # When the pelvis reaches the floor, the inert body uncoils off
+            # the kneeling pose. Give the final ankles, torso and head their
+            # own support heights; turning a crouched upright rig around its
+            # feet left both boot shafts pointing into the air indefinitely.
+            weight=ramp(t,.28,.97)
+            rest=grounded_rest(kit)
+            ms=[blend_rigid(from_pose,to_pose,weight) for from_pose,to_pose in zip(ms,rest)]
+            # Keep each joint shared in the transitional frames. Blending
+            # translations around the world origin makes the forearm pull
+            # away from the palm when its quaternion turns ninety degrees.
+            # Rebuild the chain about the existing bind points instead.
+            ms[CHEST]=placed((0,1.008,0),trans(ms[HIPS],(0,1.008,0)),ms[CHEST][0])
+            ms[HEAD]=placed((0,1.427,.015),trans(ms[CHEST],(0,1.427,.015)),ms[HEAD][0])
+            for direction in (-1,1):
+                upper,fore,hand=(LU,LF,LH) if direction<0 else (RU,RF,RH)
+                thigh,shin,boot=(LT,LS,LB) if direction<0 else (RT,RS,RB)
+                for parent,chain_ids,pivots in ((CHEST,(upper,fore,hand),arm_nodes(direction)),
+                                                 (HIPS,(thigh,shin,boot),leg_nodes(direction))):
+                    for child,pivot in zip(chain_ids,pivots):
+                        ms[child]=placed(pivot,trans(ms[parent],pivot),ms[child][0])
+                        parent=child
+            if kit==5:
+                ms[NOCK]=ms[RH]
     return ms
+
+
+# Full authored Wildfire chain, with the original bind axes retained.
+COMBAT_SOURCE=json.loads((Path(__file__).parent/'source'/'wildfire_combat_curves.json').read_text())
+NATIVE_CUT=COMBAT_SOURCE['curves']['shield_cut_02']
+NATIVE_READY=COMBAT_SOURCE['curves']['shield_ready']
+NATIVE_REST=NATIVE_CUT['rest_points']
+SOURCE_GROUND={curve['source_path']:{side:min(p[1] for frame in curve['frames'] for p in frame['sole'][side])
+                                   for side in ('L','R')} for curve in (NATIVE_CUT,NATIVE_READY)}
+MOUNTED_BASIC=((0,2),(0,6),(1,2),(1,6))
+
+def native_sample(phase,curve=NATIVE_CUT):
+    rows=curve['frames']
+    at=max(0.,min(1.,phase))*(len(rows)-1)
+    index=min(int(at),len(rows)-2)
+    weight=at-index
+    first,last=rows[index:index+2]
+    points={name:lerp(p,last['p'][name],weight) for name,p in first['p'].items()}
+    quats={}
+    for name,q in first['q'].items():
+        end=last['q'][name]
+        if dot(q,end)<0: end=mul(end,-1.)
+        quats[name]=unit(lerp(q,end,weight))
+    a,b=first['weapon'],last['weapon']
+    if dot(a,b)<0: b=mul(b,-1.)
+    weapon=unit(lerp(a,b,weight))
+    sole={side:(1.-weight)*min(p[1] for p in first['sole'][side])+
+               weight*min(p[1] for p in last['sole'][side])-SOURCE_GROUND[curve['source_path']][side] for side in ('L','R')}
+    return points,quats,weapon,sole
+
+def source_limb_rotation(q,name,child,binds):
+    source_axis=sub(NATIVE_REST[child],NATIVE_REST[name])
+    return qm(q[name],towards(sub(binds[1],binds[0]),source_axis))
+
+def fit_leg(binds,root,foot,pole,upper_q,lower_q):
+    upper,lower=two_link(binds,root,foot,pole)
+    knee=trans(lower,binds[1])
+    result=[]
+    for base,end,origin,at,preferred in (
+            (binds[0],binds[1],root,knee,upper_q),
+            (binds[1],binds[2],knee,foot,lower_q)):
+        axis=sub(end,base)
+        q=qm(towards(rot(preferred,axis),sub(at,origin)),preferred)
+        result.append(placed(base,origin,q))
+    return result
+
+def native_chain_pose(phase,curve=NATIVE_CUT):
+    points,q,weapon,sole=native_sample(phase,curve)
+    waist=(0.,.86,0.)
+    at=add(points['hips'],sub(waist,NATIVE_REST['hips']))
+    feet={}
+    for side,label in ((-1,'L'),(1,'R')):
+        ankle=leg_nodes(side)[2]
+        foot_q=q['foot.'+label]
+        minimum=min(rot(foot_q,(dx,-.117,dz))[1] for dx in (-.05,.05) for dz in (-.072,.187))
+        desired=add(points['foot.'+label],sub(ankle,NATIVE_REST['foot.'+label]))
+        desired=(desired[0],.006+max(0.,sole[label])-minimum,desired[2])
+        feet[side]=(desired,foot_q)
+        # Fit the shorter target leg through its original support, lowering
+        # only enough to keep its two rigid lengths physically reachable.
+        a,b,c=leg_nodes(side)
+        length=sqrt(dot(sub(b,a),sub(b,a)))+sqrt(dot(sub(c,b),sub(c,b)))-.002
+        offset=rot(q['hips'],sub(a,waist))
+        planar=(at[0]+offset[0]-desired[0])**2+(at[2]+offset[2]-desired[2])**2
+        ceiling=desired[1]+sqrt(max(.001,length*length-planar))-offset[1]
+        at=(at[0],min(at[1],ceiling),at[2])
+    ms=[(IDENT,(0.,0.,0.)) for _ in range(BONES)]
+    ms[HIPS]=placed(waist,at,q['hips'])
+    ms[CHEST]=placed((0.,1.008,0.),trans(ms[HIPS],(0.,1.008,0.)),q['spine.003'])
+    ms[HEAD]=placed((0.,1.427,.015),trans(ms[CHEST],(0.,1.427,.015)),q['head'])
+    for side,label in ((-1,'L'),(1,'R')):
+        upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
+        a,b,c=arm_nodes(side)
+        upper_q=source_limb_rotation(q,'upper_arm.'+label,'forearm.'+label,(a,b))
+        fore_q=source_limb_rotation(q,'forearm.'+label,'hand.'+label,(b,c))
+        shoulder=trans(ms[CHEST],a)
+        elbow=add(shoulder,rot(upper_q,sub(b,a)))
+        wrist=add(elbow,rot(fore_q,sub(c,b)))
+        ms[upper]=placed(a,shoulder,upper_q)
+        ms[fore]=placed(b,elbow,fore_q)
+        # Source weapon_R is the author's actual attachment orientation.
+        # The target hand and blade keep their existing relative registration.
+        fingers=sub(NATIVE_REST['finger.'+label],NATIVE_REST['hand.'+label])
+        hand_q=weapon if side>0 else qm(q['hand.'+label],towards((0.,-1.,0.),fingers))
+        ms[hand]=placed(c,wrist,hand_q)
+        thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
+        binds=leg_nodes(side)
+        hip=trans(ms[HIPS],binds[0])
+        foot,foot_q=feet[side]
+        pole=sub(points['shin.'+label],points['thigh.'+label])
+        thigh_q=source_limb_rotation(q,'thigh.'+label,'shin.'+label,binds[:2])
+        shin_q=source_limb_rotation(q,'shin.'+label,'foot.'+label,binds[1:])
+        ms[thigh],ms[shin]=fit_leg(binds,hip,foot,pole,thigh_q,shin_q)
+        ms[boot]=placed(binds[2],foot,foot_q)
+    ms[NOCK]=ms[LH]
+    return ms
+
+def blade_tip(kit,bones):
+    far_z=1.1036090310278026 if kit==0 else 1.139332698972023
+    return trans(bones[RH],(.273,.943,far_z))
+
+def authored_contact(kit):
+    # Locate the leading blade's first crossing of the opponent's centre
+    # during the forward cut. Keep this phase at the simulation release.
+    samples=[blade_tip(kit,native_chain_pose(i/256.)) for i in range(257)]
+    for i in range(1,len(samples)):
+        a,b=samples[i-1],samples[i]
+        if a[0]>0. and b[0]<=0. and b[2]>.8:
+            return (i-1+a[0]/(a[0]-b[0]))/256.
+    raise ValueError("The native blade never crosses the frontal contact plane")
+
+NATIVE_CONTACT={kit:authored_contact(kit) for kit in (0,1)}
+
+def pose(kit,clip,t,loadout=0,side_hit=0):
+    if kit not in (0,1) or clip not in (1,2,6) or side_hit:
+        return legacy_pose(kit,clip,t,loadout,side_hit)
+    if clip==1:
+        return native_chain_pose(t,NATIVE_READY)
+    release=NATIVE_CONTACT[kit]
+    phase=release*t if clip==2 else release+(1.-release)*t
+    # The author's ready stance and the cut share the same loaded leg.
+    # Switching back through the older opposite-foot pose added two rapid
+    # half-metre ankle slides to every strike, despite planted source feet.
+    return native_chain_pose(phase)
+
 
 def cycling(clip):
     return clip in (0,1,12,15) or clip>=16
@@ -505,6 +885,7 @@ def bake_motion(out):
     lanes=[(kit,clip,0,0) for kit in range(9) for clip in range(CLIPS)]
     lanes.extend((kit,clip,loadout,0) for kit in CARRY_KITS for loadout in (1,2) for clip in CARRY_CLIPS)
     lanes.extend((kit,clip,0,side) for kit in range(9) for clip,side in REACTIONS)
+    lanes.extend((kit,clip,0,99) for kit,clip in MOUNTED_BASIC)
     tex=Image.new("RGBA",((FRAMES+1)*BONES,len(lanes)*4))
     px=tex.load()
     for lane,(kit,clip,loadout,side) in enumerate(lanes):
@@ -512,7 +893,8 @@ def bake_motion(out):
         y=lane*4
         for frame in range(FRAMES+1):
             t=(frame%FRAMES)/FRAMES if cycling(clip) else min(frame,FRAMES-1)/(FRAMES-1)
-            for b,(q,offset) in enumerate(pose(kit,clip,t,loadout,side)):
+            bones=legacy_pose(kit,clip,t) if side==99 else pose(kit,clip,t,loadout,side)
+            for b,(q,offset) in enumerate(bones):
                 # q and -q describe the same rotation. Choose neighbours on
                 # the same hemisphere before interpolation, including the wrap.
                 if previous[b] and sum(a*c for a,c in zip(q,previous[b]))<0:

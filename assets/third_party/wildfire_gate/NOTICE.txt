@@ -1,0 +1,18 @@
+River Gate watchhall · Wildfire Games
+Copyright (C) 2009 Wildfire Games. https://www.wildfiregames.com/
+Original: 0 A.D. Han wall gate structure (han_wall_gate_struct.dae) and its han_struct_02.png diffuse atlas.
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+These files and the derived river_gate.glb and gate_clay_and_timber.png are distributed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+Luanshi contributors fitted the gate span and passage height to the playable River Gate wall, split masonry, upper storey and roof pitches for the camera, and filtered the diffuse atlas into matte tile, wood and plaster. This is an adaptation of a historical game asset, not an archaeological reconstruction.
+
+The four corner galleries and battered bases in corner_tower.glb use Wildfire Games' han_wall_tower.dae from the same fixed revision and the same shared atlas. Luanshi contributors refitted it to the existing wall walk, separated the gallery at walk height for the normal camera, and retained its original roof and timber UVs. The derivative is distributed under the same CC BY-SA 3.0 Unported terms.
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/actors/structures/han/wall_tower.xml
+
+The side and rear wall walks are derived from the same artist's han_wall_medium.dae, under the same CC BY-SA 3.0 Unported. They use the existing diffuse atlas and are fitted to the local ramp heights and postern opening.
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/actors/structures/han/wall_medium.xml
+
+The gate courtyard's guard lodging and company stores in corner_tower.glb adapt han_house_a.dae and han_storehouse.dae by Wildfire Games and contributors. Their original diffuse UVs remain on the existing atlas. We fitted both buildings into four wall-side yards behind the existing garrison and separated entire connected roof sections for the player's camera. CC BY-SA 3.0 Unported applies to both adaptations.
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/actors/structures/han/house.xml
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/actors/structures/han/storehouse.xml

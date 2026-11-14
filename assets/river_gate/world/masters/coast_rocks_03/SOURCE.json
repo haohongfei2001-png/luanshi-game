@@ -1,0 +1,34 @@
+{
+  "asset": "coast_rocks_03",
+  "author": "Rico Cilliers and Rob Tuytel",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/coast_rocks_03",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/coast_rocks_03/coast_rocks_03_2k.gltf",
+  "gltf_md5": "78877cf5cb28d3e3ffdd234a0968893d",
+  "inputs": {
+    "coast_rocks_03.bin": "d2a51492a0132d36c2ff8947ed0b36b7",
+    "textures/coast_rocks_03_diff_2k.jpg": "70070beaf6ec79b094841ce401afee41"
+  },
+  "bounds_blender": [
+    [
+      -9.646661758422852,
+      -13.35673713684082,
+      -1.4408175945281982
+    ],
+    [
+      11.477492332458496,
+      14.913022994995117,
+      1.7619801759719849
+    ]
+  ],
+  "foliage": [],
+  "canopy_revision": 0,
+  "source_triangles": 813464,
+  "game_triangles": 65000,
+  "objects": [
+    {
+      "name": "coast_rocks_03",
+      "triangles": 65000
+    }
+  ]
+}

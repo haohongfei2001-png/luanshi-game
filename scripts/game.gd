@@ -3,6 +3,15 @@ extends Node
 var field: Node3D
 var campaign: Node3D
 var active: Node3D
+func _init() -> void:
+	if "--whole-battle-review" in OS.get_cmdline_user_args() and "--native-qhd" in OS.get_cmdline_user_args():
+		# The exported main scene is instantiated before MovieWriter.begin().
+		ProjectSettings.set_setting("display/window/size/viewport_width",2560)
+		ProjectSettings.set_setting("display/window/size/viewport_height",1440)
+		ProjectSettings.set_setting("display/window/stretch/mode","viewport")
+		ProjectSettings.set_setting("display/window/stretch/aspect","keep")
+		ProjectSettings.set_setting("editor/movie_writer/mjpeg_quality",0.90)
+
 func _ready() -> void:
 	var legacy := false
 	for argument in OS.get_cmdline_user_args():
@@ -11,6 +20,8 @@ func _ready() -> void:
 	if legacy: open_campaign()
 	else:
 		open_field()
+		if "--whole-battle-review" in OS.get_cmdline_user_args():
+			add_child(preload("res://scripts/field/whole_battle_review.gd").new())
 		if "--field-check" in OS.get_cmdline_user_args():
 			preload("res://scripts/field/package_probe.gd").run(get_tree(),field)
 

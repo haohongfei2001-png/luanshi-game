@@ -1,0 +1,780 @@
+{
+  "generator": "Blender Sapling Tree Gen",
+  "generator_commit": "b42d68627734cb18af0e6f41537063984313a284",
+  "generator_license": "GPL-2.0-or-later, generator source stays upstream",
+  "preset": "weeping_willow",
+  "variants": [
+    {
+      "file": "river_willow_0.glb",
+      "seed": 2789,
+      "metres": 8.6,
+      "triangles": 246824,
+      "settings": {
+        "showLeaves": true,
+        "leafScaleX": 0.21,
+        "horzLeaves": false,
+        "useArm": false,
+        "rMode": "rotate",
+        "branchDist": 1.5,
+        "scale": 8.6,
+        "armLevels": 2,
+        "gustF": 0.07500000298023224,
+        "closeTip": false,
+        "shape": "4",
+        "minRadius": 0.001500000013038516,
+        "leafScaleT": 0.0,
+        "leafDownAngle": 30.0,
+        "splitByLen": true,
+        "prunePowerLow": 0.0010000000474974513,
+        "splitBias": 0.0,
+        "autoTaper": true,
+        "leafRotateV": 30.0,
+        "scale0": 1.0,
+        "length": [
+          0.75,
+          0.5,
+          1.5,
+          0.10000000149011612
+        ],
+        "lengthV": [
+          0.0,
+          0.10000000149011612,
+          0.0,
+          0.0
+        ],
+        "bevel": true,
+        "baseSize": 0.20000000298023224,
+        "handleType": "1",
+        "ratioPower": 1.75,
+        "leafScaleV": 0.24,
+        "ratio": 0.038,
+        "scaleV": 0.0,
+        "gust": 1.0,
+        "baseSplits": 2,
+        "loopFrames": 0,
+        "curve": [
+          0.0,
+          20.0,
+          -40.0,
+          0.0
+        ],
+        "pruneWidth": 0.5,
+        "shapeS": "4",
+        "splitAngleV": [
+          0.0,
+          10.0,
+          20.0,
+          0.0
+        ],
+        "branches": [
+          0,
+          28,
+          16,
+          1
+        ],
+        "frameRate": 1.0,
+        "splitAngle": [
+          12.0,
+          30.0,
+          16.0,
+          0.0
+        ],
+        "seed": 2789,
+        "nrings": 0,
+        "previewArm": false,
+        "pruneWidthPeak": 0.6000000238418579,
+        "af1": 1.0,
+        "splitHeight": 0.20000000298023224,
+        "rotateV": [
+          15.0,
+          15.0,
+          45.0,
+          0.0
+        ],
+        "attractUp": [
+          0.0,
+          0.0,
+          -2.75,
+          -3.0
+        ],
+        "curveV": [
+          80.0,
+          95.0,
+          20.0,
+          0.0
+        ],
+        "makeMesh": false,
+        "leaves": 170,
+        "curveBack": [
+          0.0,
+          20.0,
+          0.0,
+          0.0
+        ],
+        "taper": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "resU": 3,
+        "useOldDownAngle": false,
+        "pruneRatio": 0.800000011920929,
+        "levels": 3,
+        "taperCrown": 0.0,
+        "attractOut": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leafRotate": 137.5,
+        "prunePowerHigh": 0.20000000298023224,
+        "prune": false,
+        "leafangle": 0.0,
+        "bevelRes": 2,
+        "curveRes": [
+          10,
+          14,
+          10,
+          1
+        ],
+        "rotate": [
+          99.5,
+          137.5,
+          -60.0,
+          140.0
+        ],
+        "pruneBase": 0.07000000029802322,
+        "segSplits": [
+          0.10000000149011612,
+          0.20000000298023224,
+          0.20000000298023224,
+          0.0
+        ],
+        "scaleV0": 0.0,
+        "boneStep": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "useParentAngle": true,
+        "armAnim": false,
+        "wind": 1.0,
+        "leafDist": "10",
+        "leafScale": 0.3,
+        "radiusTweak": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "leafDownAngleV": 10.0,
+        "leafAnim": false,
+        "downAngle": [
+          0.0,
+          20.0,
+          30.0,
+          20.0
+        ],
+        "af2": 1.0,
+        "af3": 4.0,
+        "downAngleV": [
+          0.0,
+          20.0,
+          10.0,
+          10.0
+        ],
+        "customShape": [
+          0.5,
+          1.0,
+          0.30000001192092896,
+          0.5
+        ],
+        "leafShape": "hex",
+        "rootFlare": 1.0,
+        "baseSize_s": 0.25
+      }
+    },
+    {
+      "file": "river_willow_1.glb",
+      "seed": 2868,
+      "metres": 7.4,
+      "triangles": 252320,
+      "settings": {
+        "showLeaves": true,
+        "leafScaleX": 0.21,
+        "horzLeaves": false,
+        "useArm": false,
+        "rMode": "rotate",
+        "branchDist": 1.5,
+        "scale": 7.4,
+        "armLevels": 2,
+        "gustF": 0.07500000298023224,
+        "closeTip": false,
+        "shape": "4",
+        "minRadius": 0.001500000013038516,
+        "leafScaleT": 0.0,
+        "leafDownAngle": 30.0,
+        "splitByLen": true,
+        "prunePowerLow": 0.0010000000474974513,
+        "splitBias": 0.0,
+        "autoTaper": true,
+        "leafRotateV": 30.0,
+        "scale0": 1.0,
+        "length": [
+          0.75,
+          0.5,
+          1.5,
+          0.10000000149011612
+        ],
+        "lengthV": [
+          0.0,
+          0.10000000149011612,
+          0.0,
+          0.0
+        ],
+        "bevel": true,
+        "baseSize": 0.20000000298023224,
+        "handleType": "1",
+        "ratioPower": 1.75,
+        "leafScaleV": 0.24,
+        "ratio": 0.038,
+        "scaleV": 0.0,
+        "gust": 1.0,
+        "baseSplits": 2,
+        "loopFrames": 0,
+        "curve": [
+          0.0,
+          20.0,
+          -40.0,
+          0.0
+        ],
+        "pruneWidth": 0.5,
+        "shapeS": "4",
+        "splitAngleV": [
+          0.0,
+          10.0,
+          20.0,
+          0.0
+        ],
+        "branches": [
+          0,
+          28,
+          16,
+          1
+        ],
+        "frameRate": 1.0,
+        "splitAngle": [
+          12.0,
+          30.0,
+          16.0,
+          0.0
+        ],
+        "seed": 2868,
+        "nrings": 0,
+        "previewArm": false,
+        "pruneWidthPeak": 0.6000000238418579,
+        "af1": 1.0,
+        "splitHeight": 0.20000000298023224,
+        "rotateV": [
+          15.0,
+          15.0,
+          45.0,
+          0.0
+        ],
+        "attractUp": [
+          0.0,
+          0.0,
+          -2.75,
+          -3.0
+        ],
+        "curveV": [
+          80.0,
+          95.0,
+          20.0,
+          0.0
+        ],
+        "makeMesh": false,
+        "leaves": 170,
+        "curveBack": [
+          0.0,
+          20.0,
+          0.0,
+          0.0
+        ],
+        "taper": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "resU": 3,
+        "useOldDownAngle": false,
+        "pruneRatio": 0.800000011920929,
+        "levels": 3,
+        "taperCrown": 0.0,
+        "attractOut": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leafRotate": 137.5,
+        "prunePowerHigh": 0.20000000298023224,
+        "prune": false,
+        "leafangle": 0.0,
+        "bevelRes": 2,
+        "curveRes": [
+          10,
+          14,
+          10,
+          1
+        ],
+        "rotate": [
+          99.5,
+          137.5,
+          -60.0,
+          140.0
+        ],
+        "pruneBase": 0.07000000029802322,
+        "segSplits": [
+          0.10000000149011612,
+          0.20000000298023224,
+          0.20000000298023224,
+          0.0
+        ],
+        "scaleV0": 0.0,
+        "boneStep": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "useParentAngle": true,
+        "armAnim": false,
+        "wind": 1.0,
+        "leafDist": "10",
+        "leafScale": 0.3,
+        "radiusTweak": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "leafDownAngleV": 10.0,
+        "leafAnim": false,
+        "downAngle": [
+          0.0,
+          20.0,
+          30.0,
+          20.0
+        ],
+        "af2": 1.0,
+        "af3": 4.0,
+        "downAngleV": [
+          0.0,
+          20.0,
+          10.0,
+          10.0
+        ],
+        "customShape": [
+          0.5,
+          1.0,
+          0.30000001192092896,
+          0.5
+        ],
+        "leafShape": "hex",
+        "rootFlare": 1.0,
+        "baseSize_s": 0.25
+      }
+    },
+    {
+      "file": "river_maple_0.glb",
+      "seed": 3881,
+      "metres": 7.8,
+      "triangles": 235440,
+      "settings": {
+        "leafDownAngle": 45.0,
+        "handleType": "0",
+        "radiusTweak": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "useArm": false,
+        "rootFlare": 1.0,
+        "segSplits": [
+          0.44999998807907104,
+          0.5,
+          0.800000011920929,
+          0.0
+        ],
+        "leafRotateV": 0.0,
+        "leaves": 58,
+        "baseSplits": 1,
+        "rotate": [
+          99.5,
+          137.5,
+          137.5,
+          137.5
+        ],
+        "scale": 7.8,
+        "makeMesh": false,
+        "leafDownAngleV": 10.0,
+        "curve": [
+          0.0,
+          30.0,
+          0.0,
+          0.0
+        ],
+        "splitBias": 0.0,
+        "leafScale": 0.3,
+        "levels": 3,
+        "leafScaleT": 0.3499999940395355,
+        "seed": 3881,
+        "autoTaper": true,
+        "pruneWidthPeak": 0.6000000238418579,
+        "branchDist": 1.25,
+        "prune": false,
+        "splitAngle": [
+          8.0,
+          18.0,
+          18.0,
+          0.0
+        ],
+        "shapeS": "7",
+        "useParentAngle": true,
+        "af1": 1.0,
+        "armAnim": false,
+        "resU": 3,
+        "ratioPower": 1.2000000476837158,
+        "scaleV": 0.0,
+        "splitHeight": 0.20000000298023224,
+        "leafRotate": 137.5,
+        "customShape": [
+          0.5,
+          1.0,
+          0.30000001192092896,
+          0.5
+        ],
+        "shape": "7",
+        "ratio": 0.033,
+        "rMode": "rotate",
+        "downAngle": [
+          90.0,
+          48.0,
+          45.0,
+          45.0
+        ],
+        "bevelRes": 2,
+        "showLeaves": true,
+        "wind": 1.0,
+        "loopFrames": 0,
+        "splitByLen": true,
+        "lengthV": [
+          0.0,
+          0.029999999329447746,
+          0.15000000596046448,
+          0.0
+        ],
+        "leafShape": "hex",
+        "downAngleV": [
+          0.0,
+          48.0,
+          10.0,
+          10.0
+        ],
+        "leafangle": -35.0,
+        "bevel": true,
+        "gustF": 0.07500000298023224,
+        "taper": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "previewArm": false,
+        "frameRate": 1.0,
+        "curveBack": [
+          0.0,
+          -30.0,
+          -20.0,
+          0.0
+        ],
+        "taperCrown": 0.20000000298023224,
+        "rotateV": [
+          15.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scaleV0": 0.20000000298023224,
+        "gust": 1.0,
+        "horzLeaves": true,
+        "attractUp": [
+          -0.5,
+          -0.699999988079071,
+          0.0,
+          0.0
+        ],
+        "splitAngleV": [
+          2.0,
+          5.0,
+          5.0,
+          0.0
+        ],
+        "pruneRatio": 1.0,
+        "curveV": [
+          10.0,
+          35.0,
+          35.0,
+          0.0
+        ],
+        "prunePowerHigh": 0.5,
+        "closeTip": false,
+        "leafScaleV": 0.20000000298023224,
+        "leafAnim": false,
+        "minRadius": 0.0020000000949949026,
+        "af3": 4.0,
+        "attractOut": [
+          0.0,
+          0.4000000059604645,
+          0.5,
+          0.0
+        ],
+        "branches": [
+          0,
+          55,
+          16,
+          8
+        ],
+        "leafScaleX": 0.72,
+        "length": [
+          1.0,
+          0.46000000834465027,
+          0.44999998807907104,
+          0.44999998807907104
+        ],
+        "useOldDownAngle": false,
+        "armLevels": 2,
+        "boneStep": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "pruneBase": 0.30000001192092896,
+        "curveRes": [
+          8,
+          5,
+          3,
+          1
+        ],
+        "prunePowerLow": 0.0010000000474974513,
+        "af2": 1.0,
+        "pruneWidth": 0.4000000059604645,
+        "nrings": 0,
+        "baseSize_s": 0.25,
+        "baseSize": 0.2800000011920929,
+        "leafDist": "6",
+        "scale0": 1.0
+      }
+    },
+    {
+      "file": "river_maple_1.glb",
+      "seed": 3793,
+      "metres": 6.2,
+      "triangles": 240824,
+      "settings": {
+        "leafDownAngle": 45.0,
+        "handleType": "0",
+        "radiusTweak": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "useArm": false,
+        "rootFlare": 1.0,
+        "segSplits": [
+          0.44999998807907104,
+          0.5,
+          0.800000011920929,
+          0.0
+        ],
+        "leafRotateV": 0.0,
+        "leaves": 58,
+        "baseSplits": 1,
+        "rotate": [
+          99.5,
+          137.5,
+          137.5,
+          137.5
+        ],
+        "scale": 6.2,
+        "makeMesh": false,
+        "leafDownAngleV": 10.0,
+        "curve": [
+          0.0,
+          30.0,
+          0.0,
+          0.0
+        ],
+        "splitBias": 0.0,
+        "leafScale": 0.3,
+        "levels": 3,
+        "leafScaleT": 0.3499999940395355,
+        "seed": 3793,
+        "autoTaper": true,
+        "pruneWidthPeak": 0.6000000238418579,
+        "branchDist": 1.25,
+        "prune": false,
+        "splitAngle": [
+          8.0,
+          18.0,
+          18.0,
+          0.0
+        ],
+        "shapeS": "7",
+        "useParentAngle": true,
+        "af1": 1.0,
+        "armAnim": false,
+        "resU": 3,
+        "ratioPower": 1.2000000476837158,
+        "scaleV": 0.0,
+        "splitHeight": 0.20000000298023224,
+        "leafRotate": 137.5,
+        "customShape": [
+          0.5,
+          1.0,
+          0.30000001192092896,
+          0.5
+        ],
+        "shape": "7",
+        "ratio": 0.033,
+        "rMode": "rotate",
+        "downAngle": [
+          90.0,
+          48.0,
+          45.0,
+          45.0
+        ],
+        "bevelRes": 2,
+        "showLeaves": true,
+        "wind": 1.0,
+        "loopFrames": 0,
+        "splitByLen": true,
+        "lengthV": [
+          0.0,
+          0.029999999329447746,
+          0.15000000596046448,
+          0.0
+        ],
+        "leafShape": "hex",
+        "downAngleV": [
+          0.0,
+          48.0,
+          10.0,
+          10.0
+        ],
+        "leafangle": -35.0,
+        "bevel": true,
+        "gustF": 0.07500000298023224,
+        "taper": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "previewArm": false,
+        "frameRate": 1.0,
+        "curveBack": [
+          0.0,
+          -30.0,
+          -20.0,
+          0.0
+        ],
+        "taperCrown": 0.20000000298023224,
+        "rotateV": [
+          15.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scaleV0": 0.20000000298023224,
+        "gust": 1.0,
+        "horzLeaves": true,
+        "attractUp": [
+          -0.5,
+          -0.699999988079071,
+          0.0,
+          0.0
+        ],
+        "splitAngleV": [
+          2.0,
+          5.0,
+          5.0,
+          0.0
+        ],
+        "pruneRatio": 1.0,
+        "curveV": [
+          10.0,
+          35.0,
+          35.0,
+          0.0
+        ],
+        "prunePowerHigh": 0.5,
+        "closeTip": false,
+        "leafScaleV": 0.20000000298023224,
+        "leafAnim": false,
+        "minRadius": 0.0020000000949949026,
+        "af3": 4.0,
+        "attractOut": [
+          0.0,
+          0.4000000059604645,
+          0.5,
+          0.0
+        ],
+        "branches": [
+          0,
+          55,
+          16,
+          8
+        ],
+        "leafScaleX": 0.72,
+        "length": [
+          1.0,
+          0.46000000834465027,
+          0.44999998807907104,
+          0.44999998807907104
+        ],
+        "useOldDownAngle": false,
+        "armLevels": 2,
+        "boneStep": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "pruneBase": 0.30000001192092896,
+        "curveRes": [
+          8,
+          5,
+          3,
+          1
+        ],
+        "prunePowerLow": 0.0010000000474974513,
+        "af2": 1.0,
+        "pruneWidth": 0.4000000059604645,
+        "nrings": 0,
+        "baseSize_s": 0.25,
+        "baseSize": 0.2800000011920929,
+        "leafDist": "6",
+        "scale0": 1.0
+      }
+    }
+  ]
+}

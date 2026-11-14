@@ -1,0 +1,4 @@
+Complete Han architectural meshes, diffuse artwork and matched UV2 occlusion from Wildfire Games 0 A.D. contributors.
+CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+Coordinate fitting and library conversion for River Gate, distributed under the same CC BY-SA 3.0 license. All source blobs and transformations are recorded.

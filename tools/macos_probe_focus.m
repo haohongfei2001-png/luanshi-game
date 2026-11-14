@@ -1,9 +1,12 @@
 // macOS hosted QA only. Bring the indicated test process forward or temporarily
-// make a separate Cocoa application active. No global key events or Accessibility.
+// make a separate Cocoa application active until the game has processed the key-window loss.
+// The parent sends an acknowledgement down a private pipe. No global keys or Accessibility.
 #import <AppKit/AppKit.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <poll.h>
+#include <unistd.h>
 
 static void pump(double seconds) {
     NSDate *until = [NSDate dateWithTimeIntervalSinceNow:seconds];
@@ -31,8 +34,26 @@ int main(int argc, char **argv) {
             window.title = @"Luanshi hosted focus control";
             [window makeKeyAndOrderFront:nil];
             [NSApp activateIgnoringOtherApps:YES];
-            pump(1.1);
-            fprintf(stdout, "control_active=%d game_active=%d\n", (int)NSApp.isActive, (int)game.isActive);
+            NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:8.0];
+            BOOL tookFocus = NO;
+            BOOL acknowledged = NO;
+            while (deadline.timeIntervalSinceNow > 0.0) {
+                pump(0.05);
+                if (!tookFocus && NSApp.isActive && !game.isActive) {
+                    tookFocus = YES;
+                    fprintf(stdout, "control_active=1 game_active=0\n");
+                    fflush(stdout);
+                }
+                struct pollfd input = { .fd = STDIN_FILENO, .events = POLLIN };
+                if (tookFocus && poll(&input, 1, 0) > 0 && (input.revents & POLLIN)) {
+                    char byte = 0;
+                    if (read(STDIN_FILENO, &byte, 1) == 1 && byte == '1') {
+                        acknowledged = YES;
+                        break;
+                    }
+                }
+            }
+            fprintf(stdout, "game_observed_pause=%d\n", (int)acknowledged);
             fflush(stdout);
         } else if (strcmp(argv[1], "foreground") != 0) {
             return 2;

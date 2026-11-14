@@ -1,0 +1,10 @@
+Wildfire Games — 0 A.D. hand shield
+Copyright (C) 2009 Wildfire Games. https://www.wildfiregames.com/
+Source and adapted shield mesh / paint are licensed under CC BY-SA 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+
+Mesh: meshes/props/shield/han_02.dae
+Albedo: textures/skins/props/shield/han_04.dds
+Source root: https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+Luanshi contributors refitted the carved outline, thickness and wooden rear handle to the field hand and repainted two-colour lacquer and wood into the lower right quadrant of the shared field_colours.png atlas. The derivative garrison_shield.glb and this quadrant retain the same licence. Source retrieval and verified Git blob identifiers: tools/art/fit_field_shield.py. The shield is adapted for an imagined force; it is not an authenticated late-Tang reconstruction.

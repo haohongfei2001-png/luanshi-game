@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Replay RC12 and this shipping revision on one GPU, with the same seed, camera and live orders.
+# Replay the preceding RC19 package source and this shipping revision on one GPU, with the same seed, camera and live orders.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 repo_dir=$PWD
-baseline=e627086d985f0e458f187f4d691e816471574912
+baseline=126091196db530aa7ec13de61f839c9c41cac24b
 out=$PWD/artifacts/river-art-comparison
 work=$(mktemp -d)
 mkdir -p "$out"
@@ -22,35 +22,50 @@ for side in before after; do
     ./tools/prepare-font.sh
     godot --headless --editor --path . --import >"$out/$side-import.log" 2>&1
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-import.log"; then exit 1; fi
-    timeout 270s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/river_art_capture.gd -- --field-size=512 2>&1 | tee "$out/$side-window.log"
+    python3 "$repo_dir/tools/record-progress.py" --idle 180 --limit 900 --progress-marker 'RIVER_ART_PROGRESS sample=' -- xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/river_art_capture.gd -- --field-size=512 2>&1 | tee "$out/$side-window.log"
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-window.log"; then exit 1; fi
     grep -q '^RIVER_ART_PASS' "$out/$side-window.log"
     cp -a artifacts/river-art "$out/$side"
     cp "$repo_dir/tests/river_contact_seed61112.json" artifacts/contact-plan.json
-    timeout 190s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_contact_window.gd -- --field-size=512 2>&1 | tee "$out/$side-contact.log"
+    timeout 600s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 20 --script tests/field_contact_window.gd -- --field-size=512 2>&1 | tee "$out/$side-contact.log"
     grep -q '^FIELD_CONTACT_WINDOW true' "$out/$side-contact.log"
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-contact.log"; then exit 1; fi
     cp -a artifacts/contact-window "$out/$side/melee"
     for action in shield stagger; do
       ffmpeg -nostdin -loglevel error -y -framerate 20 -i "$out/$side/melee/$action-%02d.jpg" -c:v libx264 -crf 19 -pix_fmt yuv420p -movflags +faststart "$out/$side/melee/$action.mp4"
     done
-    timeout 340s xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/$side-motion.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 2>&1 | tee "$out/$side-motion.log"
+    python3 "$repo_dir/tools/record-progress.py" --idle 180 --limit 1200 --progress-marker 'FIELD_MOTION_PROGRESS frame=' -- xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/$side-motion.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 2>&1 | tee "$out/$side-motion.log"
     if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-motion.log"; then exit 1; fi
     grep -q '^FIELD_MOTION_RECEIPT ' "$out/$side-motion.log"
     ffmpeg -nostdin -loglevel error -y -i "$work/$side-motion.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -movflags +faststart "$out/$side-motion.mp4"
+    # Replay the regular input and follow camera on both sides of the change.
+    timeout 600s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512 2>&1 | tee "$out/$side-personal.log"
+    grep -q '^RC7_PERSONAL_PASS' "$out/$side-personal.log"
+    if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/$side-personal.log"; then exit 1; fi
+    python3 tools/check_playfield.py artifacts/personal-contact/personal-{windup,contact}.png
+    if [[ $side == before ]]; then
+      cp -a artifacts/personal-contact "$out/before-22m"
+    fi
     if [[ $side == after ]]; then
-      # The full scene above is a theatre tour. Also archive a real landed hit
-      # on the ordinary follow camera, without changing troop positions or HP.
-      timeout 240s xvfb-run -a -s '-screen 0 1920x1200x24' godot --path . --resolution 1920x1200 --audio-driver Dummy --disable-vsync --fixed-fps 30 --script tests/rc7_personal_contact.gd -- --field-size=512 2>&1 | tee "$out/after-personal.log"
-      grep -q '^RC7_PERSONAL_PASS' "$out/after-personal.log"
-      if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/after-personal.log"; then exit 1; fi
-      python3 tools/check_playfield.py artifacts/personal-contact/personal-{windup,contact}.png
       cp -a artifacts/personal-contact "$out/normal-22m"
       python3 - "$out/normal-22m" <<'PY'
-import base64, hashlib, os.path, sys
+import base64, hashlib, json, sys
 from pathlib import Path
 from PIL import Image
 folder=Path(sys.argv[1])
+previous=folder.parent/"before-22m"
+assert json.loads((previous/"input.json").read_text())==json.loads((folder/"input.json").read_text()), "Follow input diverged"
+pair=Image.new("RGB",(1920,600))
+for index,directory in enumerate((previous,folder)):
+    with Image.open(directory/"personal-contact.png") as raw:
+        assert raw.size==(1920,1200)
+        pair.paste(raw.resize((960,600),Image.Resampling.LANCZOS),(index*960,0))
+path=folder/"normal-pair.jpg"
+pair.save(path,quality=91,subsampling=0)
+data=path.read_bytes()
+wire=base64.b64encode(data).decode()
+print("RC8_WINDOW_INFO","normal-pair",len(data),hashlib.sha256(data).hexdigest(),len(wire))
+for at in range(0,len(wire),16000): print("RC8_WINDOW_PART","normal-pair",at,wire[at:at+16000])
 for name,width,quality in (("normal-review",1280,88),("normal-full",1920,91)):
     im=Image.open(folder/"personal-contact.png").convert("RGB")
     if im.width!=width: im=im.resize((width,round(im.height*width/im.width)),Image.Resampling.LANCZOS)
@@ -59,7 +74,7 @@ for name,width,quality in (("normal-review",1280,88),("normal-full",1920,91)):
     print("RC8_WINDOW_INFO",name,len(data),hashlib.sha256(data).hexdigest(),len(encoded),flush=True)
     for at in range(0,len(encoded),16000): print("RC8_WINDOW_PART",name,at,encoded[at:at+16000],flush=True)
 PY
-      python3 tools/watch_field_film.py xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/line.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 --field-line-film 2>&1 | tee "$out/battlefield-motion.log"
+      python3 "$repo_dir/tools/watch_field_film.py" xvfb-run -a -s '-screen 0 1280x800x24' godot --path . --resolution 1280x800 --disable-vsync --write-movie "$work/line.avi" --fixed-fps 30 --script tests/field_motion_review.gd -- --field-size=512 --field-line-film 2>&1 | tee "$out/battlefield-motion.log"
       grep -q '^FIELD_LINE_FILM ' "$out/battlefield-motion.log"
       if grep -E 'SCRIPT ERROR|SHADER ERROR|Parse Error|ERROR:' "$out/battlefield-motion.log"; then exit 1; fi
       ffmpeg -nostdin -loglevel error -y -i "$work/line.avi" -map 0:v:0 -map 0:a:0 -c:v libx264 -crf 21 -pix_fmt yuv420p -c:a aac -b:a 112k -movflags +faststart "$out/battlefield-motion.mp4"
@@ -118,10 +133,11 @@ for old,new in zip(left,right):
         sample=io.BytesIO()
         pair.resize((1024,320),Image.Resampling.LANCZOS).save(sample,"JPEG",quality=81)
         print("RIVER_PAIR_JPEG",name,base64.b64encode(sample.getvalue()).decode())
-    if name in ("player-action","formation","gate"):
-        # One normal-view frame at the captured dimensions, easy to inspect outside the ZIP.
+    if name in ("bank","formation","gate","bowline","ranks"):
+        # Link-size previews accompany the full, unchanged PNGs in the artifact.
+        # Dumping multiple native JPEGs here exceeds the GitHub log transport.
         sample=io.BytesIO()
-        r.save(sample,"JPEG",quality=89,subsampling=0)
+        r.resize((1024,640),Image.Resampling.LANCZOS).save(sample,"JPEG",quality=84)
         print("RIVER_WINDOW_JPEG",name,base64.b64encode(sample.getvalue()).decode())
 print("RIVER_PAIR_PASS",len(left))
 PY

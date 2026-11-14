@@ -1,0 +1,44 @@
+{
+  "asset": "fern_02",
+  "author": "Rico Cilliers and Rob Tuytel",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/fern_02",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/fern_02/fern_02_2k.gltf",
+  "gltf_md5": "904c73900125e017f5e76ac1cdd906fe",
+  "inputs": {
+    "fern_02.bin": "c061e9255f7d36ae9ce0e92ef3e100b2",
+    "textures/fern_02_diff_2k.jpg": "ba8bbb9dc9ff55bdc081565cd926d776"
+  },
+  "bounds_blender": [
+    [
+      -0.5281425714492798,
+      -1.3021531105041504,
+      -0.030510280281305313
+    ],
+    [
+      1.4443871974945068,
+      0.421874463558197,
+      0.39718443155288696
+    ]
+  ],
+  "source_triangles": 6232,
+  "game_triangles": 5995,
+  "objects": [
+    {
+      "name": "fern_02_b",
+      "triangles": 2294
+    },
+    {
+      "name": "fern_02_c",
+      "triangles": 2163
+    },
+    {
+      "name": "fern_02_a",
+      "triangles": 753
+    },
+    {
+      "name": "fern_02_d",
+      "triangles": 785
+    }
+  ]
+}

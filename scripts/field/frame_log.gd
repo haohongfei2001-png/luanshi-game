@@ -15,6 +15,7 @@ var observed_hits:=0
 var last_contact_tick:=-1
 var first_sim := 0
 var first_view := 0
+var first_phases:=PackedInt64Array()
 var active_seconds := 0.0
 var observed: Object
 var first_camera := Vector2.ZERO
@@ -81,6 +82,8 @@ func sample(scene) -> void:
 	if observed!=b:
 		interrupt("new_battle")
 		observed=b
+		b.trace_phase_us.resize(b.TRACE_STAGES.size())
+		b.trace_phase_us.fill(0)
 		active_seconds=0
 		observed_hits=0
 		last_contact_tick=-1
@@ -117,6 +120,7 @@ func _begin(scene) -> void:
 	first_hits=scene.battle.hits[0]+scene.battle.hits[1]
 	first_sim=scene.sim_us
 	first_view=scene.view_us
+	first_phases=scene.battle.trace_phase_us.duplicate()
 	first_camera=scene.camera_center
 
 func _stats(values: PackedFloat32Array) -> Variant:
@@ -135,14 +139,18 @@ func _flush(scene) -> void:
 	var logical:=vp.get_texture().get_size()
 	var window:=DisplayServer.window_get_size()
 	var memory:=OS.get_static_memory_usage()
+	var phases:Dictionary={}
+	for index in b.TRACE_STAGES.size():
+		phases[b.TRACE_STAGES[index]]=float(b.trace_phase_us[index]-first_phases[index])/1000.
 	_write({"kind":"frames","seed":b.rng.seed,"ordinary_rosters":[b.ordinary_counts[0],b.ordinary_counts[1]],"per_side":b.side_size if b.ordinary_counts[0]==b.ordinary_counts[1] else null,"start_tick":first_tick,"end_tick":b.tick,
 		"engaged_wall_seconds":active_seconds,"viewport":[vp.get_visible_rect().size.x,vp.get_visible_rect().size.y],
 		"window_px":[window.x,window.y],"reported_viewport_texture_px":[logical.x,logical.y],"render_target_px":[target.x,target.y] if target.x>0 else null,
 		"estimated_internal_px":[roundi(target.x*vp.scaling_3d_scale),roundi(target.y*vp.scaling_3d_scale)] if target.x>0 else null,"internal_scale":vp.scaling_3d_scale,"preset":scene.detail_preset,"shadows":scene.map.sun.shadow_enabled,"shadow_max_m":scene.map.sun.directional_shadow_max_distance,"camera_size":scene.camera.size,"camera_travel":first_camera.distance_to(scene.camera_center),
 		"visible_soldiers":scene.view.visible_soldiers,"visible_combat_poses":scene.view.visible_fighting,
 		"hits_in_window":b.hits[0]+b.hits[1]-first_hits,"losses":b.losses,"gate_hp":b.gate_hp,"outcome":b.result,
-		"sim_cpu_ms":float(scene.sim_us-first_sim)/1000.0,"view_script_ms":float(scene.view_us-first_view)/1000.0,
-		"wall":_stats(wall),"render_cpu":_stats(cpu),"render_gpu":_stats(gpu),"memory_bytes":memory if memory>0 else null,"raw_wall_ms":Array(wall)})
+		"step_phase_ms":phases,"sim_cpu_ms":float(scene.sim_us-first_sim)/1000.0,"view_script_ms":float(scene.view_us-first_view)/1000.0,
+		"wall":_stats(wall),"render_cpu":_stats(cpu),"render_gpu":_stats(gpu),"memory_bytes":memory if memory>0 else null,
+		"last_reported_render_counters":{"objects":int(Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME)),"primitives_including_passes":int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)),"draw_calls":int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)),"video_memory_bytes":int(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED))},"raw_wall_ms":Array(wall)})
 	wall.clear()
 	gpu.clear()
 	cpu.clear()

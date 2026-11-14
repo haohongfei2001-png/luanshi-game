@@ -1,0 +1,15 @@
+River Gate remount studies · Wildfire Games
+Copyright (C) 2009 Wildfire Games. https://www.wildfiregames.com/
+Source horse_persian, hair_mane_01, hair_tail_01 and four coat textures with the black hair texture were published in the 0 A.D. art repository. Source and derivative hide.glb, horse_coats.png and horse_hair.png are distributed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+
+Luanshi contributors fitted the original body to the river-gate saddle, bit, hoof and cart coordinates, transferred authored skin groups into the shared low-cost pose, filtered the four pigments and retained the hair coverage mask. The project saddle, tack, cart and wheel geometry are separate. Individual source hashes and the converter are in tools/art/import_remount.py.
+
+Complete native remount animation derivative, 2026-11-14
+The same source meshes, complete 51-joint skin weights and original walk/trot hierarchy are retained in complete_remount.glb and native_pose_hi/lo/normal.png. native_sockets.json follows the author's prop_saddle and Horse_Head frames. One uniform similarity fit preserves the source proportions. Native walk bind differences for ear/tail nodes are retargeted explicitly. These derivatives use the same CC BY-SA 3.0 terms above.
+Source motions from the pinned 0 A.D. art revision
+animation/quadraped/horse_walk.dae Git blob f5f3c10fde8cea8be4632a2930e0f3ddb5b794fa
+animation/quadraped/horse_trot.dae Git blob 3029b971df52c2b3bb67dd2ca6e44971bf894bc4
+Editable conversion and exact hashes are in tools/art/bake_native_remount.py. native_tack.glb derives from the existing project-authored saddle/cart library and is refitted to the original horse head.

@@ -1,0 +1,13 @@
+[remap]
+importer="texture"
+type="CompressedTexture2D"
+path="res://.godot/imported/leafy_grass_nor_gl.jpg-59fe03ddaf91d08628f7c19cac4a6357.ctex"
+metadata={"vram_texture": false}
+[deps]
+source_file="res://assets/river_gate/world/ground/leafy_grass_nor_gl.jpg"
+dest_files=["res://.godot/imported/leafy_grass_nor_gl.jpg-59fe03ddaf91d08628f7c19cac4a6357.ctex"]
+[params]
+compress/mode=0
+mipmaps/generate=true
+detect_3d/compress_to=0
+compress/normal_map=1

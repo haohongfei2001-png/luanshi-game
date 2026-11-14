@@ -1,0 +1,407 @@
+{
+  "upstream": "61a3b9507d974084e6badb88a0826bd89a6d5b8b",
+  "license": "CC BY-SA 3.0",
+  "authors": "Wildfire Games contributors",
+  "texture": [
+    "textures/skins/props/prop_weap.dds",
+    "0d1e7d24f2c436f7721c0860b692ba55d5ef8348"
+  ],
+  "records": [
+    {
+      "kit": 0,
+      "lod": "Close",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.4617817883840983,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2526449038111846,
+          0.8936885305645758,
+          -0.14639096897219733
+        ],
+        [
+          0.2957354762844231,
+          0.9934001117691188,
+          1.1036090310278026
+        ]
+      ]
+    },
+    {
+      "kit": 0,
+      "lod": "Line",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.4617817883840983,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2526449038111846,
+          0.8936885305645758,
+          -0.14639096897219733
+        ],
+        [
+          0.2957354762844231,
+          0.9934001117691188,
+          1.1036090310278026
+        ]
+      ]
+    },
+    {
+      "kit": 0,
+      "lod": "Rank",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.4617817883840983,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2526449038111846,
+          0.8936885305645758,
+          -0.14639096897219733
+        ],
+        [
+          0.2957354762844231,
+          0.9934001117691188,
+          1.1036090310278026
+        ]
+      ]
+    },
+    {
+      "kit": 1,
+      "lod": "Close",
+      "master": "dao",
+      "source": "sword/weap_han_curved_dao.dae",
+      "source_blob": "f69c96bfb58280752b09279e1b4eb00094a024d8",
+      "shaft_axis": "+Z",
+      "scale": 0.6672210053982535,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.23487092664832654,
+          0.8681648807031691,
+          -0.1106673010279768
+        ],
+        [
+          0.31493330072419806,
+          1.0176845461319928,
+          1.139332698972023
+        ]
+      ]
+    },
+    {
+      "kit": 1,
+      "lod": "Line",
+      "master": "dao",
+      "source": "sword/weap_han_curved_dao.dae",
+      "source_blob": "f69c96bfb58280752b09279e1b4eb00094a024d8",
+      "shaft_axis": "+Z",
+      "scale": 0.6672210053982535,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.23487092664832654,
+          0.8681648807031691,
+          -0.1106673010279768
+        ],
+        [
+          0.31493330072419806,
+          1.0176845461319928,
+          1.139332698972023
+        ]
+      ]
+    },
+    {
+      "kit": 1,
+      "lod": "Rank",
+      "master": "dao",
+      "source": "sword/weap_han_curved_dao.dae",
+      "source_blob": "f69c96bfb58280752b09279e1b4eb00094a024d8",
+      "shaft_axis": "+Z",
+      "scale": 0.6672210053982535,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.23487092664832654,
+          0.8681648807031691,
+          -0.1106673010279768
+        ],
+        [
+          0.31493330072419806,
+          1.0176845461319928,
+          1.139332698972023
+        ]
+      ]
+    },
+    {
+      "kit": 3,
+      "lod": "Close",
+      "master": "spear",
+      "source": "spear/weap_han_standard_spear.dae",
+      "source_blob": "49277a13b8fe00a58e684be16e59a4ee36909e09",
+      "shaft_axis": "+Z",
+      "scale": 0.47794191154162785,
+      "hand_offset": 0.28313818954073944,
+      "weapon_bounds": [
+        [
+          0.24753158435918146,
+          0.9121643588250173,
+          -0.64
+        ],
+        [
+          0.2984684156408186,
+          0.9738362672788866,
+          2.109
+        ]
+      ]
+    },
+    {
+      "kit": 3,
+      "lod": "Line",
+      "master": "spear",
+      "source": "spear/weap_han_standard_spear.dae",
+      "source_blob": "49277a13b8fe00a58e684be16e59a4ee36909e09",
+      "shaft_axis": "+Z",
+      "scale": 0.47794191154162785,
+      "hand_offset": 0.28313818954073944,
+      "weapon_bounds": [
+        [
+          0.24753158435918146,
+          0.9121643588250173,
+          -0.64
+        ],
+        [
+          0.2984684156408186,
+          0.9738362672788866,
+          2.109
+        ]
+      ]
+    },
+    {
+      "kit": 3,
+      "lod": "Rank",
+      "master": "spear",
+      "source": "spear/weap_han_standard_spear.dae",
+      "source_blob": "49277a13b8fe00a58e684be16e59a4ee36909e09",
+      "shaft_axis": "+Z",
+      "scale": 0.47794191154162785,
+      "hand_offset": 0.28313818954073944,
+      "weapon_bounds": [
+        [
+          0.24753158435918146,
+          0.9121643588250173,
+          -0.64
+        ],
+        [
+          0.2984684156408186,
+          0.9738362672788866,
+          2.109
+        ]
+      ]
+    },
+    {
+      "kit": 7,
+      "lod": "Close",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.4617817883840983,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2526449038111846,
+          0.8936885305645758,
+          -0.14639096897219733
+        ],
+        [
+          0.2957354762844231,
+          0.9934001117691188,
+          1.1036090310278026
+        ]
+      ]
+    },
+    {
+      "kit": 7,
+      "lod": "Line",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.4617817883840983,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2526449038111846,
+          0.8936885305645758,
+          -0.14639096897219733
+        ],
+        [
+          0.2957354762844231,
+          0.9934001117691188,
+          1.1036090310278026
+        ]
+      ]
+    },
+    {
+      "kit": 7,
+      "lod": "Rank",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.4617817883840983,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2526449038111846,
+          0.8936885305645758,
+          -0.14639096897219733
+        ],
+        [
+          0.2957354762844231,
+          0.9934001117691188,
+          1.1036090310278026
+        ]
+      ]
+    },
+    {
+      "kit": 8,
+      "lod": "Close",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.3731196850143514,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          -0.28944691772056286,
+          0.9031563326961772,
+          -0.10388390292953543
+        ],
+        [
+          -0.2546297351621862,
+          0.9837232903094479,
+          0.9061160970704645
+        ]
+      ]
+    },
+    {
+      "kit": 8,
+      "lod": "Close",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.3731196850143514,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2565530822794372,
+          0.9031563326961772,
+          -0.10388390292953543
+        ],
+        [
+          0.29137026483781386,
+          0.9837232903094479,
+          0.9061160970704645
+        ]
+      ]
+    },
+    {
+      "kit": 8,
+      "lod": "Line",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.3731196850143514,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          -0.28944691772056286,
+          0.9031563326961772,
+          -0.10388390292953543
+        ],
+        [
+          -0.2546297351621862,
+          0.9837232903094479,
+          0.9061160970704645
+        ]
+      ]
+    },
+    {
+      "kit": 8,
+      "lod": "Line",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.3731196850143514,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2565530822794372,
+          0.9031563326961772,
+          -0.10388390292953543
+        ],
+        [
+          0.29137026483781386,
+          0.9837232903094479,
+          0.9061160970704645
+        ]
+      ]
+    },
+    {
+      "kit": 8,
+      "lod": "Rank",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.3731196850143514,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          -0.28944691772056286,
+          0.9031563326961772,
+          -0.10388390292953543
+        ],
+        [
+          -0.2546297351621862,
+          0.9837232903094479,
+          0.9061160970704645
+        ]
+      ]
+    },
+    {
+      "kit": 8,
+      "lod": "Rank",
+      "master": "jian",
+      "source": "sword/weap_han_sword_a.dae",
+      "source_blob": "90d53cd94266ef5e7a113ee5a56ddbd7c1ce5a24",
+      "shaft_axis": "+Z",
+      "scale": 0.3731196850143514,
+      "hand_offset": 0.0,
+      "weapon_bounds": [
+        [
+          0.2565530822794372,
+          0.9031563326961772,
+          -0.10388390292953543
+        ],
+        [
+          0.29137026483781386,
+          0.9837232903094479,
+          0.9061160970704645
+        ]
+      ]
+    }
+  ]
+}

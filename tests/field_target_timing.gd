@@ -40,5 +40,12 @@ func _sample(per_side: int) -> void:
 			start=Time.get_ticks_usec()
 			battle.step()
 			if round_index>0: step_times.append(Time.get_ticks_usec()-start)
-	var state:=Marshalls.raw_to_base64(var_to_bytes(Saves.snapshot(battle))).sha256_text()
-	print("FIELD_TARGET_TRIAL ",JSON.stringify({"ordinary":[per_side,per_side],"step_us":step_times,"grid_us":grid_times,"query_us":lookups,"decisions":signatures,"final_state_sha256":state,"tick":battle.tick,"hits":battle.hits[0]+battle.hits[1]-contacts}))
+	var snapshot:=Saves.snapshot(battle)
+	var full_state:=Marshalls.raw_to_base64(var_to_bytes(snapshot)).sha256_text()
+	var terrain_revision: int=snapshot.get("terrain_revision",1)
+	# This open-field targeting comparison predates the terrain migration tag.
+	# Preserve every combat field and verify the known metadata explicitly.
+	assert(terrain_revision in [1,3] and not snapshot.get("bridgehead",false))
+	snapshot.erase("terrain_revision")
+	var state:=Marshalls.raw_to_base64(var_to_bytes(snapshot)).sha256_text()
+	print("FIELD_TARGET_TRIAL ",JSON.stringify({"ordinary":[per_side,per_side],"step_us":step_times,"grid_us":grid_times,"query_us":lookups,"decisions":signatures,"final_state_sha256":state,"full_snapshot_sha256":full_state,"terrain_revision":terrain_revision,"tick":battle.tick,"hits":battle.hits[0]+battle.hits[1]-contacts}))

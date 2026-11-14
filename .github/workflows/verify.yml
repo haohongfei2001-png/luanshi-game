@@ -8,13 +8,14 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: playable-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify-and-export:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,7 +35,10 @@ jobs:
       - name: Test simulation and real scene lifecycle
         env:
           XDG_DATA_HOME: /home/runner/.local/share
-        run: timeout 5m ./tools/test.sh
+        run: |
+          python3 -m py_compile tools/whole_native_delivery.py tools/rc3_native_probe.py tools/backport_mobile_mutex.py
+          bash -n tools/build_macos_engine.sh
+          timeout 5m ./tools/test.sh
       - name: Compare exact target selection and full fixed steps on this runner
         run: python3 tools/compare-river-targets.py
       - name: Measure field reservations and casualties at four army sizes
@@ -103,7 +107,7 @@ jobs:
       - name: Upload macOS playable
         uses: actions/upload-artifact@v4
         with:
-          name: Luanshi-macOS-${{ github.sha }}
+          name: Luanshi-macOS-source-${{ github.sha }}
           path: builds/Luanshi-macOS.zip
           if-no-files-found: error
       - name: Upload Linux playable
@@ -126,13 +130,14 @@ jobs:
             !artifacts/*.mp4
           if-no-files-found: warn
   field-playthrough:
+    needs: verify-and-export
     name: Verify field ${{ matrix.suite }}
     strategy:
       fail-fast: false
       matrix:
-        suite: [journey, footage]
+        suite: [journey, escort, footage]
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 95
     steps:
       - uses: actions/checkout@v4
       - name: Import the shipping game for graphical regressions
@@ -153,6 +158,11 @@ jobs:
         run: |
           if ! command -v ffmpeg >/dev/null || ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
           ./tools/test-field-journey.sh
+          ffmpeg -nostdin -loglevel error -y -i artifacts/river-gate-review.mp4 -vf "select=not(mod(n\\,75)),scale=440:-2,tile=3x4:padding=2:margin=2:color=black" -frames:v 1 -q:v 3 artifacts/journey-frames.jpg
+      - name: Exercise both escort routes and distinct battle endings
+        if: matrix.suite == 'escort'
+        run: |
+          if ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool; fi
           ./tools/test-field-render.sh journey
       - name: Measure four army sizes and film weapons and the full siege
         if: matrix.suite == 'footage'
@@ -160,6 +170,7 @@ jobs:
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
           ./tools/test-field-render.sh footage
       - name: Upload gameplay footage
+        if: ${{ !cancelled() && matrix.suite != 'escort' }}
         uses: actions/upload-artifact@v4
         with:
           name: gameplay-${{ matrix.suite }}-${{ github.sha }}
@@ -169,6 +180,7 @@ jobs:
             artifacts/river-gate-full-siege.mp4
             artifacts/river-gate-journey.mp4
             artifacts/river-gate-review.mp4
+            artifacts/journey-frames.jpg
           if-no-files-found: error
       - name: Preserve field records, stills and raw frame samples
         if: always()
@@ -182,24 +194,79 @@ jobs:
             !artifacts/siege-film/**
             !artifacts/*.mp4
 
+  play-export:
+    name: Play the exported Linux package through its normal inputs
+    needs: verify-and-export
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-Linux-${{ github.sha }}
+          path: package
+      - uses: actions/download-artifact@v4
+        with:
+          name: verification-${{ github.sha }}
+          path: package-report
+      - name: Record the shipped binary with real keyboard, pointer and engine audio
+        env:
+          EXPECTED_EXPORT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          sums=$(find package-report -name SHA256SUMS -print -quit)
+          export PACKAGE_HASH=$(awk '/Luanshi-linux.tar.gz$/ {print $1}' "$sums")
+          test -n "$PACKAGE_HASH"
+          echo "$PACKAGE_HASH  package/Luanshi-linux.tar.gz" | sha256sum --check
+          tar -C package -xf package/Luanshi-linux.tar.gz Luanshi-linux.x86_64
+          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool ffmpeg; fi
+          xvfb-run -a -s '-screen 0 1280x800x24' python3 tools/record_export_window.py records "$RUNNER_TEMP/river-frames" package/Luanshi-linux.x86_64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exported-game-window-${{ github.sha }}
+          path: records/
+          if-no-files-found: warn
+
   macos-runtime:
     needs: verify-and-export
     runs-on: macos-latest
-    timeout-minutes: 12
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Luanshi-macOS-${{ github.sha }}
+          name: Luanshi-macOS-source-${{ github.sha }}
           path: package
+      - name: Restore the pinned native engine
+        id: engine-cache
+        uses: actions/cache@v4
+        with:
+          path: patch
+          key: macos-arm64-godot-35e80b3-angle-7578-mobile-mutex-v1
+      - uses: actions/download-artifact@v4
+        id: engine-artifact
+        if: steps.engine-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        with:
+          name: mobile-mutex-angle-template
+          path: patch
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+      - name: Rebuild the pinned source if its original artifact has expired
+        if: steps.engine-cache.outputs.cache-hit != 'true' && steps.engine-artifact.outcome == 'failure'
+        run: bash tools/build_macos_engine.sh patch
+      - name: Assemble the pinned arm64 renderer and license notices
+        run: python3 tools/whole_native_delivery.py package/Luanshi-macOS.zip patch mac-evidence --package-only
       - name: Verify bundle and run native macOS headless smoke
         run: |
           set -euo pipefail
           mkdir -p mac-evidence
           uname -a | tee mac-evidence/host.log
           sw_vers | tee -a mac-evidence/host.log
-          ditto -x -k package/Luanshi-macOS.zip package/unpacked
-          APP=$(find package/unpacked -maxdepth 1 -name '*.app' -print -quit)
+          APP=$(find mac-evidence/unpacked -maxdepth 1 -name '*.app' -print -quit)
           codesign --verify --deep --strict --verbose=2 "$APP" 2>&1 | tee mac-evidence/codesign.log
           BIN=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Contents/Info.plist")
           "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --smoke-scene --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/runtime.log
@@ -225,14 +292,24 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/youth-*.log; then exit 1; fi
       - name: Render the exported siege and compare two macOS backends on identical hardware
         run: |
-          python3 tools/rc3_native_probe.py package/Luanshi-macOS.zip package/unpacked mac-evidence
+          python3 tools/rc3_native_probe.py mac-evidence/Luanshi-macOS-arm64-world-review.zip mac-evidence/unpacked mac-evidence
           python3 tools/check_playfield.py mac-evidence/*.png
+      - name: Upload the actually tested arm64 playable
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luanshi-macOS-${{ github.sha }}
+          path: mac-evidence/Luanshi-macOS-arm64-world-review.zip
+          if-no-files-found: error
       - name: Upload native macOS evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: macos-verification-${{ github.sha }}
-          path: mac-evidence/
+          path: |
+            mac-evidence/
+            !mac-evidence/unpacked/
+            !mac-evidence/*.zip
 
   review-footage:
     name: Preserve review video bytes
@@ -252,12 +329,15 @@ jobs:
           print('JOURNEY_DIGEST',len(data),hashlib.sha256(data).hexdigest(),flush=True)
           wire=base64.b64encode(data).decode()
           for i in range(0,len(wire),32000): print('JOURNEY_PART',i//32000,wire[i:i+32000],flush=True)
+          sheet=next(pathlib.Path('review').rglob('journey-frames.jpg')).read_bytes()
+          print('JOURNEY_SHEET',hashlib.sha256(sheet).hexdigest(),base64.b64encode(sheet).decode(),flush=True)
           PY
 
   art-comparison:
-    name: Compare RC12 and candidate in the game window
+    needs: verify-and-export
+    name: Compare the previous and current game in the same window
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
         with:
@@ -274,13 +354,23 @@ jobs:
           python3 -c 'from PIL import Image' || python3 -m pip install Pillow
       - name: Check planted steps, fitted grips and the reproducible horse mesh
         run: |
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > /tmp/field-import.log 2>&1
+          if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' /tmp/field-import.log; then exit 1; fi
+          godot --headless --path . --script tests/model_library_parity.gd
+          godot --headless --path . --script tests/native_remount_sockets.gd
           python3 tools/art/check_company_motion.py
           python3 tools/art/check_field_carries.py
           python3 tools/art/check_contact_motion.py
+          git show 3d15051d76eb49a81804cbc5346390a2a42d317c:assets/river_gate/figures/company_motion.png > /tmp/river-motion-before.png
+          python3 tools/art/check_native_chain.py /tmp/river-motion-before.png
+          python3 tools/art/check_native_entry.py
           node tools/art/bake_mounts.mjs --check
           node tools/art/bake_field_garments.mjs --check
           node tools/env_assets.mjs --check-ram
+          node tools/env_assets.mjs --check-skiff
           node tools/env_cartway.mjs --check
+          node tools/env_survey.mjs --check
       - name: Replay two game revisions on the same display
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

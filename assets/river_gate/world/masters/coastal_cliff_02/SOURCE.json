@@ -1,0 +1,32 @@
+{
+  "asset": "coastal_cliff_02",
+  "author": "Rob Tuytel",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/coastal_cliff_02",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/coastal_cliff_02/coastal_cliff_02_2k.gltf",
+  "gltf_md5": "eafa7dd7437be09a065850624871b942",
+  "inputs": {
+    "coastal_cliff_02.bin": "e6324e54479fd0f9aefe707dfa9e728b",
+    "textures/coastal_cliff_02_diff_2k.jpg": "42b243a7d28f370b4a6ac050ea16d615"
+  },
+  "bounds_blender": [
+    [
+      -20.518463134765625,
+      -4.158995628356934,
+      -0.22693955898284912
+    ],
+    [
+      20.412357330322266,
+      4.495288372039795,
+      9.825679779052734
+    ]
+  ],
+  "source_triangles": 943284,
+  "game_triangles": 89999,
+  "objects": [
+    {
+      "name": "coastal_cliff_02_LOD0",
+      "triangles": 89999
+    }
+  ]
+}

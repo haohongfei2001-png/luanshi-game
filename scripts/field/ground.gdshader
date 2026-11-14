@@ -1,13 +1,21 @@
 shader_type spatial;
 render_mode diffuse_lambert, cull_disabled;
+uniform bool gate_crossing = false;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D forecourt : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
-uniform sampler2D floodplain : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D valley_wash : source_color, filter_linear_mipmap, repeat_disable;
+uniform vec4 turf_sheltered : source_color = vec4(.195,.277,.201,1.0);
+uniform vec4 turf_open : source_color = vec4(.445,.517,.308,1.0);
+uniform vec4 clay_bed : source_color = vec4(.435,.337,.242,1.0);
+uniform vec4 clay_dry : source_color = vec4(.672,.555,.375,1.0);
 uniform sampler2D shale_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D meadow_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D grazing_detail : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D track_detail : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D lane_paint : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D verge_track : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform vec4 river_silt : source_color = vec4(.39,.40,.31,1.);
@@ -39,69 +47,96 @@ void vertex() {
 	}
 }
 
+// Work in painted value for the mask, independent of the renderer's light space.
+float paint_value(vec3 albedo) {
+	vec3 ink=albedo;
+	if (!OUTPUT_IS_SRGB) {
+		ink=mix(12.92*albedo,1.055*pow(max(albedo,vec3(0.0)),vec3(1.0/2.4))-.055,step(vec3(.0031308),albedo));
+	}
+	return dot(ink,vec3(.26,.58,.16));
+}
+
 vec3 painted_ground(vec2 p, float shore) {
-    // Soil cover is a measured distance field for the three cart routes. At play
-    // scale, keep their pale open centres distinct from the cooler cropped verges.
-    vec2 mapped=(p+vec2(168.0,108.0))/vec2(336.0,216.0);
-    vec4 cover=texture(soil_cover,mapped);
-    vec3 landscape=texture(floodplain,mapped).rgb;
-    vec2 uv=vec2(p.x*.134+p.y*.025,p.y*.141-p.x*.022);
-    vec3 marks=texture(verge_track,uv*.78).rgb;
-    vec2 warp=.10*vec2(sin(p.y*.22+p.x*.06),cos(p.x*.19-p.y*.087));
-    // Compress the value of small isolated marks as the player's window covers
-    // more ground. Keep wheel ruts, clump boundaries and the terrain's own hues.
-    float footprint=max(length(dFdx(p)),length(dFdy(p)));
-    float tactical=smoothstep(.009,.045,footprint);
-    vec3 turf=texture(meadow_paint,uv+warp).rgb;
-    vec3 clay=texture(lane_paint,vec2(uv.y,-uv.x)*.86+warp*.66).rgb;
-    float clay_value=dot(clay,vec3(.30,.57,.13));
-    float turf_value=dot(turf,vec3(.30,.57,.13));
-    // Suppress orange and lime in sunlight, keeping the sampled shape and value.
-    clay=mix(vec3(clay_value),clay,.32)*(OUTPUT_IS_SRGB?vec3(.76,.78,.88):vec3(.60,.63,.79));
-    turf=mix(vec3(turf_value),turf,.52)*(OUTPUT_IS_SRGB?vec3(.78,.79,.82):vec3(.64,.65,.70));
-    float grass_mid=OUTPUT_IS_SRGB ? .224 : .097;
-    float clay_mid=OUTPUT_IS_SRGB ? .292 : .147;
-    turf=mix(turf,vec3(grass_mid)*vec3(.83,1.06,.80),.23+.22*tactical);
-    clay=mix(clay,vec3(clay_mid)*vec3(1.11,1.01,.84),.16+.14*tactical);
-    float near_track=1.0-smoothstep(.55,.96,cover.a);
-    float tilled=smoothstep(.25,.60,cover.r)*(1.0-smoothstep(.72,.89,cover.r))*(1.0-near_track);
-    float broken=smoothstep(.23,.91,marks.g+.24*marks.b);
-    float edge=cover.r*(1.0-tilled*(.26+.39*broken))+(.47-marks.r)*.22+(.54-marks.b)*.083;
-    float lane=smoothstep(.32,.79,edge);
-    float wet=max(cover.g,shore);
-    vec3 verge=turf*vec3(.84,.99,.95);
-    // Mown and uncropped banks differ in broad value, not just their highlights.
-    verge*=.83+.17*smoothstep(.22,.62,cover.b)+.16*clamp(landscape.g*1.55,0.0,1.0);
-    // Small changes of hue identify the fallow field and the cool turf under
-    // the elms while retaining the close grass, wheel wear and tonal breaks.
-    vec3 margins=texture(field_margins,mapped).rgb;
-    verge*=mix(vec3(1.0),vec3(.79,.88,.98),margins.g*.81);
-    verge*=mix(vec3(1.0),vec3(1.16,1.018,.825),margins.r*.76);
-    // Isolated blades on the existing hand-painted margin map sit in small
-    // cool banks. They receive emphasis only where the verge is untrampled.
-    float clump=smoothstep(.24,.76,marks.r)*(1.-lane)*(.36+.64*margins.g);
-    verge*=1.-.095*clump;
-    vec3 colour=mix(verge,clay*vec3(1.075,1.056,1.012),lane);
-    colour=mix(colour,landscape,.159+.06*(1.0-lane));
-    float lip=4.0*lane*(1.0-lane);
-    colour*=1.0-lip*(.075+.085*marks.r);
-    colour=mix(colour,clay*.94,.20*margins.b*(1.0-lane)*(.53+.47*marks.g));
-    float rut=1.0-smoothstep(.028,.101,abs(cover.a-.385+(.5-marks.g)*.04));
-    colour*=1.0-.23*rut*lane*(.38+.62*marks.g)*(1.0-wet);
-    // The worn bridge-to-gate approach was painted in world metres. Each
-    // channel describes an independent hollow, broken stone edge, or turf cut.
-    if (p.x > -25. && p.x < 47. && p.y > -8. && p.y < 8.) {
-        vec3 wear=texture(cartway,(p+vec2(25.,8.))/vec2(72.,16.)).rgb;
-        float dry=1.0-wet;
-        float packed=wear.r*(.59+.41*smoothstep(.19,.67,marks.g+.22*cover.b));
-        colour*=1.0-dry*.25*packed;
-        colour+=clay*vec3(.23,.22,.20)*wear.g*dry;
-        vec3 edge_earth=mix(verge,clay*vec3(.84,.85,.80),.74);
-        colour=mix(colour,edge_earth,wear.b*.79*dry);
-    }
-    vec3 alluvium=mix(clay,river_silt.rgb,.64)*vec3(.84,.98,.96);
-    colour=mix(colour,alluvium, .73*smoothstep(.20,.98,wet));
-    return colour;
+	vec2 mapped=(p+vec2(168.,108.))/vec2(336.,216.);
+	vec4 cover=texture(soil_cover,mapped);
+	vec3 margin=texture(field_margins,mapped).rgb;
+	vec2 meadow_uv=vec2(p.x*.069+p.y*.021,p.y*.077-p.x*.019);
+	vec2 loess_uv=vec2(p.y*.067+p.x*.012,-p.x*.082+p.y*.023);
+	// Mirror the edge of each painting. The change of direction happens
+	// continuously; no square border is exposed when a squad crosses a tile.
+	vec2 bend=vec2(sin(.17*p.y+.071*p.x),sin(.16*p.x-.057*p.y))*.067;
+	vec2 turf_tile=1.-abs(2.*fract((meadow_uv+bend)*.5)-1.);
+	vec2 dirt_tile=1.-abs(2.*fract((loess_uv-bend)*.5)-1.);
+	vec3 meadow=texture(meadow_paint,turf_tile).rgb;
+	float grass=paint_value(meadow);
+	float soil=paint_value(texture(lane_paint,dirt_tile).rgb);
+	vec3 verge_marks=texture(verge_track,meadow_uv*1.41).rgb;
+	float grass_shape=smoothstep(.28,.70,grass)*.78+.22*smoothstep(.25,.69,verge_marks.r);
+	float dry_shape=smoothstep(.31,.73,soil);
+	// Large shape and small-scale painting occupy different world footprints.
+	// Averaging the swatches erased the dark grass at the feet and all of the
+	// cartway grain in the regular 22 metre view.
+	vec2 brush_uv=vec2(p.x*.134+p.y*.025,p.y*.141-p.x*.022);
+	// At a player's distance a tuft is a group of blades. Sample a broad
+	// colour island before the short verge marks; keep wheel tracks continuous.
+	float footprint=max(length(dFdx(p)),length(dFdy(p)));
+	float army_view=smoothstep(.012,.070,footprint);
+	vec3 grass_brush=texture(grazing_detail,brush_uv+bend,.8+army_view*1.4).rgb;
+	vec3 earth_brush=texture(track_detail,vec2(brush_uv.y,-brush_uv.x)*.87+bend*.67,.65+army_view).rgb;
+	float tuft=smoothstep(.32,.62,grass)*.64+smoothstep(.28,.74,verge_marks.r)*.36;
+	float shelter=clamp(.19+.42*grass_shape+.20*cover.b-.29*margin.g+.15*margin.r,0.,1.);
+	vec3 blade=mix(vec3(dot(grass_brush,vec3(.29,.57,.14))),grass_brush,.61);
+	vec3 loess=mix(vec3(dot(earth_brush,vec3(.29,.57,.14))),earth_brush,.37);
+	blade*=OUTPUT_IS_SRGB?vec3(.73,.83,.87):vec3(.59,.68,.75);
+	loess*=OUTPUT_IS_SRGB?vec3(.78,.78,.84):vec3(.62,.63,.73);
+	vec3 bed=mix(turf_sheltered.rgb,turf_open.rgb,shelter+.18*(tuft-.5));
+	vec3 turf=mix(blade,bed,.39+.07*army_view)*(.89+.19*tuft);
+	turf*=mix(vec3(1.),vec3(.87,.96,1.08),margin.g*.72);
+	turf*=mix(vec3(1.),vec3(1.09,1.01,.91),margin.r*.68);
+	vec3 dust=mix(clay_bed.rgb,clay_dry.rgb,.15+.68*dry_shape);
+	vec3 clay=mix(loess,dust,.36+.04*army_view)*(.92+.15*dry_shape);
+	float centre=1.-smoothstep(.57,.99,cover.a);
+	float fallow=smoothstep(.24,.58,cover.r)*(1.-smoothstep(.73,.9,cover.r))*(1.-centre);
+	float edge=cover.r-.21*fallow+(.53-grass_shape)*.20+(.50-verge_marks.r)*.09;
+	float road=smoothstep(.30,.76,edge);
+	vec3 colour=mix(turf,clay,road);
+	float lip=4.*road*(1.-road);
+	colour*=1.-lip*(.05+.065*grass_shape);
+	colour=mix(colour,clay,margin.b*(1.-road)*(.12+.18*dry_shape));
+	float rut=1.-smoothstep(.027,.095,abs(cover.a-.385+(.5-verge_marks.g)*.036));
+	float surviving=smoothstep(.37,.73,verge_marks.g*.53+dry_shape*.47);
+	colour*=1.-.19*rut*road*surviving;
+	if (p.x > -25. && p.x < 47. && p.y > -8. && p.y < 8.) {
+		vec3 wear=texture(cartway,(p+vec2(25.,8.))/vec2(72.,16.)).rgb;
+		colour*=1.-.22*wear.r*(.63+.37*dry_shape);
+		colour=mix(colour,clay_dry.rgb,wear.g*.29);
+		colour=mix(colour,mix(turf,clay_bed.rgb,.58),wear.b*.68);
+	}
+	// The old non-repeating survey painting carries the cuts of the real
+	// field banks, woodlots and river gravels beneath the sparser surface art.
+	vec3 survey=texture(valley_wash,mapped).rgb;
+	float survey_value=paint_value(survey);
+	float bank_wash=smoothstep(.24,.54,survey_value);
+	colour*=.92+.11*bank_wash;
+	colour=mix(colour,survey,.10*(1.-road)+.035);
+	// Two cart ruts continue from the timber tread toward both door leaves.
+	// The apron widens where the teams turn. It observes the dressed banks
+	// and stays behind the figures as one connected, quiet earth mass.
+	if (gate_crossing && p.x>13.0 && p.x<50.0 && abs(p.y)<9.2) {
+		float progress=smoothstep(24.0,47.2,p.x);
+		float bend=.30*sin((p.x-21.0)*.174)+.15*sin((p.x-18.0)*.62);
+		float side=p.y-bend;
+		float apron=3.28+1.37*progress+.21*sin(p.x*.43)+.40*(grass_shape-.50);
+		float lane=(1.-smoothstep(apron-.34,apron+.98,abs(side)))*smoothstep(13.,18.4,p.x);
+		vec2 track_uv=(p-vec2(14.0,-9.5))/vec2(36.0,19.0);
+		vec3 cut=texture(forecourt,track_uv).rgb;
+		vec3 compact=mix(clay,cut,.86);
+		float rut=1.-smoothstep(.043,.26,abs(abs(side+.09*sin(p.x*.55))-1.19));
+		compact*=1.-.105*rut*(.50+.5*surviving);
+		colour=mix(colour,compact,lane*.93);
+	}
+	float wet=smoothstep(.19,.98,max(cover.g,shore));
+	return mix(colour,mix(clay_bed.rgb,river_silt.rgb,.73),.79*wet);
 }
 
 void fragment() {
@@ -114,7 +149,7 @@ void fragment() {
 		// world space. Fine surface marks disappear into mipmaps at army scale.
 		color=painted_ground(p,0.0);
 	} else if (part>1.5 && part<2.5) {
-		float bank=abs(p.x+32.0);
+		float bank=min(abs(p.x+32.0),abs(p.x-24.0));
 		float turn=sin(p.y*.42)*.42+sin(p.y*.15+1.1)*.30;
 		vec2 flow=vec2(p.x*.27+turn*.33,p.y*.052-TIME*.017);
 		float ripple=texture(fieldbed,flow).r;
@@ -179,18 +214,25 @@ void fragment() {
 			vec3 r=texture(fieldbed,vec2(side*.35,across*.51)).rgb;
 			color*=.76+.36*r.r+.09*r.b;
 		} else if (part>12.5 && part<13.5) {
-			float bank=abs(p.x+32.0);
+			float bank=min(abs(p.x+32.0),abs(p.x-24.0));
 			float lip=bank+.28*sin(p.y*.39)+.14*sin(p.y*.87+.44);
 			color=painted_ground(p,1.0-smoothstep(4.38,6.58,lip));
 		} else if(part>15.5 && part<16.5) {
 			float grain=texture(joinery,vec2(local_pos.z*.31,(local_pos.x+local_pos.y)*.94)).r;
 			float z=abs(p.y);
 			float cross_distance=min(z,abs(z-35.0));
-			float board=fract((p.x+32.0)/.482+.5);
+			bool moat_tread=gate_crossing && abs(p.x-24.)<6.;
+			float board=moat_tread?fract((p.x-24.)/.335+.5):fract((p.x+32.)/.482+.5);
 			float weather=texture(fieldbed,p*vec2(.28,.61)).r;
 			float worn=1.0-smoothstep(.12,.46,abs(cross_distance-1.20+.13*(weather-.5)));
 			float peg=(1.0-smoothstep(.10,.21,abs(board-.44)))*(1.0-smoothstep(.08,.14,abs(cross_distance-3.41)));
-			color*=.68+.50*grain+.12*worn*(.27+weather)-.19*peg;
+			// The wheel paths bleach the same boards; occasional repairs remain visible at the landings.
+			float traffic=.66+.34*smoothstep(.30,.72,texture(fieldbed,p*vec2(.10,.22)).g);
+			color*=.78+.31*grain+.19*worn*traffic*(.48+.52*weather)-.16*peg;
+			if(moat_tread) {
+				float wet_end=smoothstep(2.75,3.84,cross_distance);
+				color*=1.-wet_end*(.11+.11*(1.-weather));
+			}
 			roughness=.91-.14*worn;
 		} else if(part>18.5 && part<19.5) {
 			// One projection per face; even short, walkable fragments show bedding

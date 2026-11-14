@@ -1,0 +1,4 @@
+modular_wooden_pier by Rico Cilliers
+CC0-1.0. https://polyhaven.com/license
+https://polyhaven.com/a/modular_wooden_pier
+Derived game geometry and original matched albedo/AO; see SOURCE.json for exact source and checksums.

@@ -1,0 +1,87 @@
+name: Integrate and play the whole replacement battlefield
+on:
+  push:
+    branches: ['codex/river-whole-rebuild']
+    paths: ['scripts/field/river_master*','scripts/field/river_botanical.gdshader','scripts/field/controller.gd','tools/art/audit_world_sources.py','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','tools/art/import_field_equipment.py','tools/art/import_field_woodland.py','scripts/field/ground.gd','scripts/field/save.gd','scripts/field/battle.gd','tests/world_terrain_compat.gd','tests/world_master_review.gd','tests/model_library_parity.gd','scripts/field/company_art.gd','scripts/field/company_skin.gdshader','.github/workflows/whole-rebuild.yml']
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: whole-world-rebuild
+  cancel-in-progress: true
+jobs:
+  playable:
+    # Frozen packages run the full native delivery and formal PR comparisons.
+    if: "!startsWith(github.event.head_commit.message, 'Package ')"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 48
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare the ground and complete gate library
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-pil python3-numpy xdotool blender
+          mkdir -p "$RUNNER_TEMP/art-sources" artifacts/world-rebuild
+          touch artifacts/.gdignore
+          python3 tools/art/import_ground_masters.py "$RUNNER_TEMP/art-sources"
+          python3 tools/art/build_river_architecture.py "$RUNNER_TEMP/art-sources"
+          python3 tools/art/import_field_equipment.py "$RUNNER_TEMP/art-sources"
+          python3 tools/art/import_field_woodland.py "$RUNNER_TEMP/art-sources"
+          blender --background --factory-startup --python-exit-code 1 --python tools/art/build_intact_bridge.py > artifacts/world-rebuild/bridge.log 2>&1 || { tail -n 60 artifacts/world-rebuild/bridge.log; exit 1; }
+          for asset in island_tree_01 fern_02 shrub_03 searsia_burchellii coast_rocks_03 rock_moss_set_01; do
+            if [ ! -f "assets/river_gate/world/masters/$asset/SOURCE.json" ] || { [ "$asset" = island_tree_01 ] && ! grep -q '"canopy_revision": 2' "assets/river_gate/world/masters/$asset/SOURCE.json"; }; then
+              blender --background --factory-startup --python-exit-code 1 --python tools/art/import_world_masters.py -- "$RUNNER_TEMP/whole-plants" "$asset" > "artifacts/world-rebuild/$asset.log" 2>&1 || { tail -n 60 "artifacts/world-rebuild/$asset.log"; exit 1; }
+            fi
+          done
+          blender --background --factory-startup --python-exit-code 1 --python tools/art/build_river_willows.py -- "$RUNNER_TEMP/canopies" > artifacts/world-rebuild/canopies.log 2>&1 || { tail -n 60 artifacts/world-rebuild/canopies.log; exit 1; }
+          python3 tools/art/audit_world_sources.py
+          git add assets/river_gate/world assets/river_gate/equipment
+          git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete timber spans, full tree masters and fitted battlefield material sources' || test -z "$(git status --porcelain assets/river_gate/world)"
+          git push origin HEAD:refs/heads/codex/river-whole-rebuild
+      - name: Import the actual Godot game
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --import > artifacts/world-rebuild/import.log 2>&1
+          if grep -E 'ERROR:|Parse Error|SHADER ERROR' artifacts/world-rebuild/import.log; then exit 1; fi
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/field_bridgehead.gd > artifacts/world-rebuild/bridgehead.log 2>&1 || { cat artifacts/world-rebuild/bridgehead.log; exit 1; }
+          cat artifacts/world-rebuild/bridgehead.log
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/world_terrain_compat.gd > artifacts/world-rebuild/terrain-save.log 2>&1 || { cat artifacts/world-rebuild/terrain-save.log; exit 1; }
+          cat artifacts/world-rebuild/terrain-save.log
+      - name: Render the rebuilt full scene before its continuous-input run
+        run: |
+          set -euo pipefail
+          printf '[display]\nwindow/size/window_width_override=2560\nwindow/size/window_height_override=1440\n' > override.cfg
+          export WORLD_SOURCE_SHA="$(git rev-parse HEAD)"
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+          for path in Path("assets/river_gate/world/masters").rglob("*.png"):
+              image=Image.open(path)
+              if "A" not in image.getbands():continue
+              histogram=image.getchannel("A").histogram()
+              pixels=image.width*image.height
+              print("WORLD_NATIVE_ALPHA",json.dumps({"path":str(path),"size":image.size,"alpha_minmax":image.getchannel("A").getextrema(),"coverage_38":sum(histogram[97:])/pixels,"coverage_5":sum(histogram[13:])/pixels}))
+          PY
+          timeout 720s xvfb-run -a -s "-screen 0 3840x2160x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --script tests/world_master_review.gd > artifacts/world-rebuild/stills.log 2>&1 || { cat artifacts/world-rebuild/stills.log; exit 1; }
+          cat artifacts/world-rebuild/stills.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/world-rebuild/stills.log; then exit 1; fi
+          git add docs/evidence/river-whole-rebuild/review
+          git -c user.name='River Gate visual verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve full-map and reference-camera actual game frames for review'
+          git push origin HEAD:refs/heads/codex/river-whole-rebuild
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whole-battlefield-first-play
+          path: |
+            docs/evidence/river-whole-rebuild/
+            artifacts/world-rebuild/
+            artifacts/bridge-window/

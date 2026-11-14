@@ -1,0 +1,22 @@
+{
+  "version": "0.16.0-rc.25",
+  "freeze_commit": "containing Git commit",
+  "world_source": "626b70a89be2a8b034b5a375716e390510f3f7bd",
+  "world_evidence": "1fb7c94daa43ab4616566e2ed2c68a6b9366d412",
+  "human_source": "c617a1fb4383200a00df197086a338e61dfbb776",
+  "previous_played_package_source": "4f3c0819cf44a89c24bd825c90f241d8974fbbb6",
+  "art": "ART_REBUILD_REQUIRED",
+  "M5": "DEVICE_NOT_RUN",
+  "requested": [
+    "native 2560x1440 internal 1.0 complete 512v512 battle film",
+    "20/100/250/512 sustained realtime and rapid camera tour",
+    "both renderer initialization and telemetry checks",
+    "nine cold user-data starts with recorded driver cache scope",
+    "nine weapons, officers, orders, mounted/chariot, old saves, postbattle march",
+    "source, tested package SHA-256, licenses and raw logs"
+  ],
+  "horse_source": "0e86bc33db6722bed431e7a52029b1be4ab72fb4",
+  "horse_proof": "ec46e7068bbb5de7008c106728a1c44af55d97cb",
+  "previous_package_sha256": "b6b44df6c19c1b74efd22a66bd761df770a1110bf123dcd813adcbd1089e0910",
+  "formal_ci_repair": "Explicit terrain metadata parity and progress-bounded full software-rendered regressions"
+}

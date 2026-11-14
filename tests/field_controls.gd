@@ -155,6 +155,7 @@ func _weapon(kit: int) -> void:
 	var row:={"e_and_space":committed,"defense_seen":defensive_effect,"weapon":Arms.NAMES[kit],"hits":b.hero.impacts,"target_hp":enemy.hp,"hero_hp":b.hero.hp,"quiver":b.hero.ammo,"skill_input":skill_committed,"max_ground_error":max_ground_error,"max_body_pick_error":cursor_error,"max_live_body_pick_error":live_cursor_error}
 	evidence.append(row)
 	print("FIELD_WEAPON_INPUT "+JSON.stringify(row))
+	print("FIELD_CONTROL_PROGRESS "+str(kit))
 
 func _check_orbit_aim(enemy: Battle.Unit) -> void:
 	var saved_yaw:=field.camera_yaw
@@ -188,7 +189,15 @@ func _portrait() -> void:
 	await RenderingServer.frame_post_draw
 	var full:=root.get_texture().get_image()
 	var feet:=Ground.unit_point(u.pos)
-	var face:=field.camera.unproject_position(feet+Vector3(0.143,1.485,0))
+	# Sample the exposed lower cheek of the actual posed soldier. The previous
+	# fixed screen point landed on the top of this helmet after the loaded stance.
+	var batch=field.view.groups[field.view._key(u)]
+	var body:Transform3D=batch.mesh.get_instance_transform(0)
+	var pose:Color=batch.mesh.get_instance_custom_data(0)
+	var material:=batch.node.material_override as ShaderMaterial
+	var bank:Texture2D=material.get_shader_parameter("motion_bank")
+	var face_local:=_idle_head_point(bank.get_image(),u.kit,pose.b,Vector3(0.035,1.548,0.124))
+	var face:=field.camera.unproject_position(body*face_local)
 	var face_pixels:=_warm_pixels(full,Vector2i(face),5)
 	var hand_pixels:=0
 	for sign_z: float in [-1,1]:
@@ -201,6 +210,22 @@ func _portrait() -> void:
 	_check(face_pixels>=7 and hand_pixels>=3,"Modeled skin remains visible on the face and at least one hand")
 	print("FIELD_PORTRAIT "+JSON.stringify({"face_skin_pixels":face_pixels,"hand_skin_pixels":hand_pixels,"crop_px":[rect.size.x,rect.size.y],"zoom":field.camera.size}))
 	field.camera_yaw=entering_yaw
+
+func _idle_head_point(atlas: Image,kit: int,phase: float,bind_point: Vector3) -> Vector3:
+	# The first unit uses its kit's standard idle, with the head on joint 2.
+	# Decode the same two adjacent baked RGBA16 keys as the rendered mesh.
+	var key:=clampf(phase,0.,1.)*32.
+	var first:=floori(key)
+	var column:=2*33+first
+	var row:=(kit*31+1)*4
+	var parts:Array[Color]=[]
+	for i in 4:
+		var a:=atlas.get_pixel(column,row+i)
+		var b:=atlas.get_pixel(2*33+mini(first+1,32),row+i)
+		parts.append(a.lerp(b,key-first))
+	var q:Color=(parts[0]*256.+parts[1])*(2./257.)-Color(1,1,1,1)
+	var t:Color=(parts[2]*256.+parts[3])*(6./257.)-Color(3,3,3,3)
+	return Quaternion(q.r,q.g,q.b,q.a).normalized()*bind_point+Vector3(t.r,t.g,t.b)
 
 func _warm_pixels(pic: Image,center: Vector2i,radius: int) -> int:
 	var found:=0

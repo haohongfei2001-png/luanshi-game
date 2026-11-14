@@ -1,0 +1,17 @@
+Wildfire Games · 0 A.D. Han field clothing
+Copyright (C) 2009 Wildfire Games. https://www.wildfiregames.com/
+The editable source meshes and textures, field_issues.glb and field_colours.png
+are licensed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+Original upstream art directory and attribution:
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+
+Luanshi contributors extracted garment and sleeve faces from these author-published
+COLLADA meshes: m_pants_tunic_long, m_armor_tunic_long, m_tunic_short. They refitted
+the body and arm weights to the river company, kept the artist UV seams, and adapted
+lamellar_01_lacquered_01, lamellar_02_lacquered_01 and tunic_01_01 into a shared
+cel-colour atlas. The output consists solely of clothing adaptations. There is no
+Wildfire code, animation file, logo or material from a retail game in the conversion.
+Source retrieval and verified upstream blob identifiers: tools/art/import_garrison_issues.py.
+No affiliation or endorsement is implied.

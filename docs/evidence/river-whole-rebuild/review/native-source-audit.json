@@ -1,0 +1,93 @@
+{
+  "textures": [
+    {
+      "source": "assets/river_gate/world/ground/brown_mud_dry.jpg",
+      "pixels": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "linear_luminance_percentiles": [
+        0.0,
+        0.020897010958660395,
+        0.0619374828685075,
+        0.10805230632573366,
+        0.17667475694864987,
+        0.3508540029555559,
+        0.9936814532279968
+      ]
+    },
+    {
+      "source": "assets/river_gate/world/ground/leafy_grass.jpg",
+      "pixels": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "linear_luminance_percentiles": [
+        0.0249149490006268,
+        0.12789400487829003,
+        0.17979439221620558,
+        0.22952873293906448,
+        0.29479392516016956,
+        0.4328403992027044,
+        0.947380869626999
+      ]
+    },
+    {
+      "source": "assets/river_gate/world/ground/forest_ground_04.jpg",
+      "pixels": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "linear_luminance_percentiles": [
+        0.0011507030844688415,
+        0.03267856923025101,
+        0.07106137219518423,
+        0.10676933821737766,
+        0.15634742949604988,
+        0.22983912913501262,
+        0.804426386141777
+      ]
+    },
+    {
+      "source": "assets/river_gate/world/masters/island_tree_01/island_tree_01_leaves_diff_2k.png",
+      "pixels": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "linear_luminance_percentiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.03742230739500373,
+        0.15758772923983633,
+        0.6137774158805609
+      ]
+    }
+  ],
+  "leaf_components": {
+    "triangles": 353352,
+    "native_vertices": 309183,
+    "welded_vertices": 309183,
+    "connected_islands": 14723,
+    "island_span_m_percentiles": [
+      0.02647683946322061,
+      0.064596748654826,
+      0.09016598719473377,
+      0.1116854434390409,
+      0.1371258020259013,
+      0.16880615530171564,
+      0.21245837873436882
+    ],
+    "tree_bounds_m": [
+      4.799322605133057,
+      4.399192810058594,
+      4.801395416259766
+    ],
+    "leaf_islands_under_20cm": 14694
+  }
+}

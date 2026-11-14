@@ -101,6 +101,7 @@ func _run() -> void:
 	var directions:={}
 	var started_at:=b.tick
 	for frame in 330:
+		if frame%30==0: print("FIELD_MOTION_PROGRESS frame=",frame)
 		var target: Battle.Unit=null
 		var closest:=INF
 		for u in b.roster:

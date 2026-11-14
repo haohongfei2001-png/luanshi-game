@@ -1,8 +1,17 @@
 extends RefCounted
-## Imported original meshes share a costume atlas, the metre-scale hand bind and a baked
+## Imported field meshes share a costume atlas, the metre-scale hand bind and a baked
 ## motion bank. Merge shared body/weapon geometry once, retaining one draw per crowd batch.
+const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
 const GARMENTS := preload("res://assets/river_gate/figures/field_garments.gltf")
+const GARRISON := preload("res://assets/third_party/wildfire_garments/field_issues.glb")
+const SHIELD := preload("res://assets/third_party/wildfire_shields/garrison_shield.glb")
+const HEADWEAR := preload("res://assets/third_party/wildfire_headwear/headwear.glb")
+const ISSUE_COLOURS := preload("res://assets/third_party/wildfire_garments/field_colours.png")
+const EQUIPMENT := preload("res://assets/river_gate/equipment/field_equipment.glb")
+const EQUIPMENT_COLOURS := preload("res://assets/river_gate/equipment/native_iron_wood.png")
+const MASTER := preload("res://assets/river_gate/figures/field_company_master.glb")
+const FIELD_BODY := preload("res://assets/river_gate/figures/garrison_bodies.glb")
 const SKIN := preload("res://scripts/field/company_skin.gdshader")
 const FABRIC := preload("res://assets/river_gate/figures/campaign_colours.svg")
 const MOTION := preload("res://assets/river_gate/figures/company_motion.png")
@@ -11,11 +20,8 @@ static var assembled: Dictionary = {}
 
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
-	for asset: PackedScene in [LIBRARY, GARMENTS]:
-		var library := asset.instantiate()
-		for part in library.find_children("*", "MeshInstance3D", true, false):
-			pieces[String(part.name)]=part.mesh
-		library.free()
+	for asset: PackedScene in [LIBRARY, MASTER, SHIELD, EQUIPMENT]:
+		pieces.merge(FieldMeshes.meshes(asset),true)
 
 static func costume(kit: int) -> String:
 	if kit in [5,6]: return "Archer"
@@ -28,14 +34,14 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	var key := "%s-%d-%s" % [look,kit,lod]
 	if assembled.has(key): return assembled[key]
 	_load_pieces()
-	var body: ArrayMesh=pieces[look+lod]
-	var arm_lod := "Close" if detailed else "Line"
-	var arms: ArrayMesh=pieces["Arms"+str(kit)+arm_lod]
+	var body: ArrayMesh=pieces[look+lod+"Master"]
+	var arms: ArrayMesh=pieces[("FieldArms" if kit in [0,1,3,7,8] else "Arms")+str(kit)+lod]
 	# Copy packed indexed arrays only. SurfaceTool would expand every triangle,
 	# and importer-generated tangents/lightmap data have no role in these materials.
 	var arrays:=body.surface_get_arrays(0)
-	var garment: ArrayMesh=pieces[look+lod+"Trim"]
-	for attachment: ArrayMesh in [arms, garment]:
+	var attachments: Array[ArrayMesh]=[arms]
+	if kit==7: attachments.append(pieces["GarrisonShield"])
+	for attachment: ArrayMesh in attachments:
 		var gear:=attachment.surface_get_arrays(0)
 		var vertex_offset: int=arrays[Mesh.ARRAY_VERTEX].size()
 		for attr: int in [Mesh.ARRAY_VERTEX,Mesh.ARRAY_NORMAL,Mesh.ARRAY_TEX_UV,Mesh.ARRAY_TEX_UV2]:
@@ -54,12 +60,16 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	assembled[key]=result
 	return result
 
-static func material(colour: Color, kit: int, player: bool=false) -> ShaderMaterial:
+static func material(colour: Color, kit: int, player: bool=false, shoulder: Color=Color.TRANSPARENT) -> ShaderMaterial:
 	var result:=ShaderMaterial.new()
 	result.shader=SKIN
 	result.set_shader_parameter("cloth_atlas", FABRIC)
+	result.set_shader_parameter("issue_atlas", ISSUE_COLOURS)
+	result.set_shader_parameter("equipment_atlas", EQUIPMENT_COLOURS)
 	result.set_shader_parameter("motion_bank", MOTION)
 	result.set_shader_parameter("livery", colour)
+	result.set_shader_parameter("shoulder_dye", shoulder)
 	result.set_shader_parameter("kit", kit)
 	result.set_shader_parameter("player_costume",player)
+	result.set_shader_parameter("anatomical_master",true)
 	return result

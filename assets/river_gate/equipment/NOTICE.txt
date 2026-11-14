@@ -1,0 +1,4 @@
+Complete jian, curved dao and spear masters and prop_weap artwork by Wildfire Games contributors, from 0 A.D.
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/
+Derived hand registration, shader joint encoding and atlas conversion are distributed under the same license. The original hand meshes retain their separate licenses in tools/art/source/README.md. See SOURCE.json for exact inputs.

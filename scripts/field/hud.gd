@@ -28,6 +28,8 @@ var feedback := Label.new()
 var order_panel := PanelContainer.new()
 var weapon := OptionButton.new()
 var quality := OptionButton.new()
+var display_mode := OptionButton.new()
+var physical_size := Label.new()
 var unit := OptionButton.new()
 var mission := OptionButton.new()
 var channel := OptionButton.new()
@@ -114,6 +116,8 @@ func _ready() -> void:
 	graphic_row.offset_top=150
 	_select(graphic_row,quality,"画质",["清晰 · 100%","均衡 · 85%","性能 · 70%"])
 	quality.item_selected.connect(func(i: int): quality_changed.emit(i))
+	_select(graphic_row,display_mode,"显示",["当前窗口","显示器全屏","2560 × 1440","3840 × 2160"])
+	_label(graphic_row,physical_size,13,Color("c4c8ba"))
 	var saves:=HBoxContainer.new()
 	graphic_row.add_child(saves)
 	_button(saves,save_button,"保存 F5",func(): save_requested.emit())
@@ -162,7 +166,7 @@ func _ready() -> void:
 	_select(stack,unit,"部队",[])
 	_label(stack,composition,14,Color("e0c891"))
 	stack.add_child(orders)
-	_select(orders,plan,"全军",["河关会战 · 全军","协同攻门","交替撤离","护送冲车","平陵巡防 · 按军籍"])
+	_select(orders,plan,"全军",["河关会战 · 全军","协同攻门","交替撤离","护送冲车","平陵巡防 · 按军籍","桥头攻门"])
 	plan.item_selected.connect(func(index: int): plan_requested.emit(index))
 	_select(orders,weapon,"兵器",Arms.NAMES)
 	weapon.select(Arms.Kit.SPEAR)
@@ -252,7 +256,7 @@ func bind(b: Battle) -> void:
 	slot.clear()
 	phase=-1
 	career_alive=b.hero.hp>0
-	plan.select(4 if b.world_patrol else (3 if b.objectives.task==Battle.Objectives.Task.ESCORT else 0))
+	plan.select(5 if b.bridgehead else (4 if b.world_patrol else (3 if b.objectives.task==Battle.Objectives.Task.ESCORT else 0)))
 	for i in b.companies_per_side:
 		var point:=b.muster_slots[i]
 		var wing: String="北翼" if point.y< -5 else ("南翼" if point.y>5 else "中军")
@@ -311,6 +315,8 @@ func update_model(b: Battle,paused: bool) -> void:
 		inset.set_muster(b,maxi(0,unit.selected))
 	if phase==0:
 		context.text=b.objectives.brief()+"\n"+("平陵部队已沿河道到场，按实有军械出阵。" if b.world_patrol else "点小地图勘察，选部队查看阵位。")
+	if phase==0 and b.bridgehead:
+		context.text=b.objectives.brief()+"\n随先队过外壕木桥，盾枪队在门前接敌。"
 	if b.at_camp:
 		objective.text="战后随军"
 	elif b.result!="":

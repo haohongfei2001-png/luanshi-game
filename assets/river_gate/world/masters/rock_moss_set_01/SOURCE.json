@@ -1,0 +1,54 @@
+{
+  "asset": "rock_moss_set_01",
+  "author": "Kless Gyzen",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/rock_moss_set_01",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/rock_moss_set_01/rock_moss_set_01_2k.gltf",
+  "gltf_md5": "c45cebb55c848a11233126f691557ca0",
+  "inputs": {
+    "rock_moss_set_01.bin": "207a51c9f56d34732e9814bbf9cc07b1",
+    "textures/rock_moss_set_01_diff_2k.jpg": "d3e1292c9e34bd6b4a236698a1b41290"
+  },
+  "bounds_blender": [
+    [
+      -3.9140210151672363,
+      -3.124943256378174,
+      -0.6609705686569214
+    ],
+    [
+      4.090582847595215,
+      3.823821544647217,
+      1.1073492765426636
+    ]
+  ],
+  "foliage": [],
+  "canopy_revision": 0,
+  "source_triangles": 63127,
+  "game_triangles": 63127,
+  "objects": [
+    {
+      "name": "RockVolume00",
+      "triangles": 16548
+    },
+    {
+      "name": "RockVolume01",
+      "triangles": 11000
+    },
+    {
+      "name": "RockVolume02",
+      "triangles": 10996
+    },
+    {
+      "name": "RockVolume03",
+      "triangles": 10589
+    },
+    {
+      "name": "RockVolume04",
+      "triangles": 8994
+    },
+    {
+      "name": "RockVolume05",
+      "triangles": 5000
+    }
+  ]
+}

@@ -5,43 +5,19 @@ from company_figures import grip,RH,LH,NOCK
 TWO_HAND={2,3,4,6}
 FRONT_GRIP={2:.48,3:.55,4:.54,6:.31}
 
-def field_shield(surface, detailed):
-    """Slightly crowned timber board with a leather edge and a working inner grip."""
-    # Position and angle are relative to the existing left-hand socket. The
-    # board widens near the forearm and tapers towards the ground.
-    center=add(grip(-1),(-.089,-.064,.102))
-    levels=[(-.510,.096),(-.454,.198),(-.278,.250),(.205,.284),(.391,.258),(.482,.164),(.495,.122)]
-    columns=8 if detailed else 4
-    def face(u,v,back=False):
-        row=round(v*(len(levels)-1))
-        y,half_width=levels[row]
-        side=2*u-1
-        # The hand is inside the sword-side rail. Sweep the upper, inner
-        # corner away from the face without narrowing the central plank field.
-        high=max(0.,min(1.,(y-.20)/.27))
-        inner=max(0.,side)
-        x=side*half_width-.048*high-.046*inner*high
-        z=.077*(1-side*side)-.055*side*side+.085*x-.055*y
-        if back: z-=.036
-        return add(center,(x,y-.056*inner*high,z)),LH
-    surface.grid(columns,len(levels)-1,face,"shield")
-    surface.grid(columns,len(levels)-1,lambda u,v:face(1-u,v,True),"shield")
-    for side in (0,1):
-        edge=[face(side,i/(len(levels)-1))[0] for i in range(len(levels))]
-        surface.tube(edge,[.018]*len(edge),"leather",LH,7 if detailed else 4)
-    for v in (0.,1.):
-        surface.tube([face(u/columns,v)[0] for u in range(columns+1)], [.018]*(columns+1),
-                     "leather",LH,6 if detailed else 4)
-    # The grip, dome and timber share the same animated hand, even edge-on.
-    surface.oval(add(center,(0,.023,.086)),(.070,.091,.026),"iron",LH,10 if detailed else 7,4)
-    socket=grip(-1)
-    surface.tube([add(socket,(-.102,.016,.123)),socket,add(socket,(.074,-.015,.103))],
-                 [.018,.029,.018],"binding",LH,6 if detailed else 4)
-    if detailed:
-        for side in (-1,1):
-            for y in (-.29,.29):
-                surface.oval(add(center,(side*.188,y,.015)),(.010,.012,.009),"iron_binding",LH,5,3)
-
+def nocked_arrow(s, close):
+    """Use the existing animated string joint for the shaft in the drawing hand."""
+    socket=add(grip(1),(.009,0.,-.159))
+    def point(x,y,z): return add(socket,(x,y,z))
+    n=6 if close else 4
+    s.tube([point(0,0,.0),point(0,0,.66),point(0,0,.743)],
+           [.010,.009,.008],"timber",NOCK,n)
+    for x,y in ((.6,.8),(-.8,.6)):
+        s.panel([point(0,0,.038),point(.025*x,.025*y,.057),
+                 point(.024*x,.024*y,.109),point(0,0,.17)],"lining",NOCK)
+    # The narrow dark metal shoulder carries an edge at the apex.
+    s.tube([point(0,0,.722),point(0,0,.745),point(0,0,.799)],
+           [(.010,.009),(.014,.021),(.001,.001)],"iron",NOCK,n)
 
 def weapon(kit,detail):
     s=Surface(detail)
@@ -79,8 +55,6 @@ def weapon(kit,detail):
                    add(off,(.083,-.005,.151))],[.014,.026,.026,.014],"brass",bone)
             blade(add(grip(side),(0,0,.145)),.71 if kit==8 else .91,.047 if kit==1 else .033,
                   .142 if kit==1 else .012,bone)
-        if kit==7:
-            field_shield(s,True)
     elif kit in (2,3,4):
         stick([(0,0,-.69),(0,0,-.54),(0,0,1.52),(0,.004,1.69)],
               [.031,.032,.027,.024],"timber")
@@ -97,6 +71,7 @@ def weapon(kit,detail):
                     s.tube([at((0,0,1.56)),at((sin(a)*.036,-.05,1.49)),at((sin(a)*.074,-.091+i*.011,1.40))],
                            [.019,.016,.004],"dyed",RH,4)
     elif kit==5:
+        nocked_arrow(s,detail)
         for side in (-1,1):
             limb=[(0,side*y,z) for y,z in ((0,0),(.13,.029),(.32,.096),(.49,.081),(.59,.011),(.63,-.095),(.694,-.123))]
             stick(limb,[.03,.029,.026,.023,.019,.014,.009],"timber",RH,n)

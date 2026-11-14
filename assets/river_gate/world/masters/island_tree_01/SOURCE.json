@@ -1,0 +1,55 @@
+{
+  "asset": "island_tree_01",
+  "author": "Rico Cilliers and Rob Tuytel",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/island_tree_01",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/island_tree_01/island_tree_01_2k.gltf",
+  "gltf_md5": "5facbb0c10b6bce8956bba1c179bfdad",
+  "inputs": {
+    "island_tree_01.bin": "8271f2d12c2727bd647ce0c242acdcec",
+    "textures/island_tree_01_diff_2k.jpg": "06808aa5ccbfbc2a7e2f99a23f412c17",
+    "textures/island_tree_01_leaves_diff_2k.jpg": "9898a7bf79fe6214f7ca8c3b139c4116",
+    "textures/island_tree_01_branches_diff_2k.jpg": "3210126439a8423b3caba28de0f3c25f"
+  },
+  "bounds_blender": [
+    [
+      -2.3444457054138184,
+      -2.2341415882110596,
+      -0.019878048449754715
+    ],
+    [
+      2.4107038974761963,
+      2.583538055419922,
+      5.0071187019348145
+    ]
+  ],
+  "foliage": [
+    {
+      "object": "island_tree_01_LOD0.002",
+      "source_triangles": 1060032,
+      "game_triangles": 353352,
+      "source_leaf_islands": 44168,
+      "retained_whole_leaves": 14723,
+      "native_leaf_scale": 2.1,
+      "attachment": "Nearest original woody surface vertex remains anchored",
+      "policy": "Every third complete source leaf, original curved contour and matched UV retained"
+    }
+  ],
+  "canopy_revision": 2,
+  "source_triangles": 1599403,
+  "game_triangles": 427541,
+  "objects": [
+    {
+      "name": "island_tree_01_LOD0",
+      "triangles": 69406
+    },
+    {
+      "name": "island_tree_01_LOD0.001",
+      "triangles": 4783
+    },
+    {
+      "name": "island_tree_01_LOD0.002",
+      "triangles": 353352
+    }
+  ]
+}
