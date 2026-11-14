@@ -3,6 +3,7 @@ render_mode cull_disabled, diffuse_lambert, specular_disabled;
 
 uniform sampler2D cloth_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D issue_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D face_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D motion_bank : filter_linear, repeat_disable;
 uniform vec4 livery : source_color = vec4(.28,.40,.40,1.);
 uniform vec4 shoulder_dye : source_color = vec4(0.0);
@@ -189,17 +190,25 @@ void vertex() {
         if (cloth_lot>.72) UV+=vec2(.125,.25);
         else if (cloth_lot>.31) UV.y+=.25;
     }
-    cloth_panel=UV.x>=3.0 ? 33 : (UV.x>=2.0 ? 32 : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0)));
+    cloth_panel=UV.x>=4.0 ? 34 : UV.x>=3.0 ? 33 : (UV.x>=2.0 ? 32 : int(floor(UV.x*8.0))+8*int(floor(UV.y*4.0)));
+    if (cloth_panel==34) {
+        int roll=int(floor(wear));
+        int face=(roll+(kit==7 ? 1 : 0))%3;
+        UV.x=(float(face*136)+4.5+fract(UV.x)*127.0)/408.0;
+    }
     flash=clamp((fract(wear)-.055)/.88,0.0,1.0);
     fallen=state==7 ? smoothstep(0.,.8,phase) : 0.;
 }
 void fragment() {
-    vec4 swatch = cloth_panel>=32 ? texture(issue_atlas, vec2(fract(UV.x),UV.y)) : texture(cloth_atlas, UV);
+    vec4 swatch;
+    if (cloth_panel==34) swatch=texture(face_atlas,UV);
+    else if (cloth_panel>=32) swatch=texture(issue_atlas, vec2(fract(UV.x),UV.y));
+    else swatch=texture(cloth_atlas,UV);
     vec3 ink = swatch.rgb;
     // Team dye runs through fabric panels. Iron, hands, hair, and blade bevels retain
     // their own values even where soldiers overlap in the default orthographic view.
     float dye = 0.0;
-    if (cloth_panel>=32) dye=swatch.a;
+    if (cloth_panel==32 || cloth_panel==33) dye=swatch.a;
     else if (cloth_panel == 1 || cloth_panel == 27 || cloth_panel == 19) dye = .96;
     else if (cloth_panel == 22) dye = .82;
     else if (cloth_panel == 26) dye = .66;

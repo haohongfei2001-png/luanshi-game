@@ -5,6 +5,8 @@ const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const LIBRARY := preload("res://assets/river_gate/figures/river_company.glb")
 const GARMENTS := preload("res://assets/river_gate/figures/field_garments.gltf")
 const GARRISON := preload("res://assets/third_party/wildfire_garments/field_issues.glb")
+const FACES := preload("res://assets/third_party/wildfire_faces/field_heads.glb")
+const FACE_COLOURS := preload("res://assets/third_party/wildfire_faces/field_visages.png")
 const SHIELD := preload("res://assets/third_party/wildfire_shields/garrison_shield.glb")
 const HEADWEAR := preload("res://assets/third_party/wildfire_headwear/headwear.glb")
 const ISSUE_COLOURS := preload("res://assets/third_party/wildfire_garments/field_colours.png")
@@ -17,7 +19,7 @@ static var assembled: Dictionary = {}
 
 static func _load_pieces() -> void:
 	if not pieces.is_empty(): return
-	for asset: PackedScene in [LIBRARY, GARMENTS, GARRISON, FIELD_BODY, HEADWEAR, SHIELD]:
+	for asset: PackedScene in [LIBRARY, GARMENTS, GARRISON, FIELD_BODY, HEADWEAR, SHIELD, FACES]:
 		pieces.merge(FieldMeshes.meshes(asset),true)
 
 static func costume(kit: int) -> String:
@@ -40,7 +42,9 @@ static func fighter(kit: int, look: String, detailed: bool, ranks: bool=false) -
 	var garment: ArrayMesh=pieces[look+lod+"Trim"]
 	var attachments: Array[ArrayMesh]=[arms,garment]
 	if kit==7: attachments.append(pieces["GarrisonShield"])
-	if fitted: attachments.append(pieces[look+"Issue"])
+	if fitted:
+		attachments.append(pieces[look+"Issue"])
+		attachments.append(pieces[look+"Face"])
 	if pieces.has(look+"Headwear"): attachments.append(pieces[look+"Headwear"])
 	for attachment: ArrayMesh in attachments:
 		var gear:=attachment.surface_get_arrays(0)
@@ -66,6 +70,7 @@ static func material(colour: Color, kit: int, player: bool=false, shoulder: Colo
 	result.shader=SKIN
 	result.set_shader_parameter("cloth_atlas", FABRIC)
 	result.set_shader_parameter("issue_atlas", ISSUE_COLOURS)
+	result.set_shader_parameter("face_atlas", FACE_COLOURS)
 	result.set_shader_parameter("motion_bank", MOTION)
 	result.set_shader_parameter("livery", colour)
 	result.set_shader_parameter("shoulder_dye", shoulder)

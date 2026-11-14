@@ -52,14 +52,15 @@ def costume(look,rank=False):
         equipment(s,look)
     if rank:
         ns=6
-        s.rings([(1.426,.050,.057,0,.026),(1.495,.060,.071,0,.044),(1.550,.081,.083,0,.051),
-                 (1.635,.085,.099,0,.034),(1.703,.065,.077,0,.018)],"skin",HEAD,ns)
+        if look not in ("regular","guard","archer"):
+            s.rings([(1.426,.050,.057,0,.026),(1.495,.060,.071,0,.044),(1.550,.081,.083,0,.051),
+                     (1.635,.085,.099,0,.034),(1.703,.065,.077,0,.018)],"skin",HEAD,ns)
         if look in ("levy","player"):
             s.rings([(1.62,.092,.103,0,.015),(1.67,.088,.100,0,.005),(1.719,.044,.065,0,-.003)],"hair",HEAD,ns)
             s.rings([(1.625,.095,.108,0,.015),(1.646,.096,.109,0,.013)],"leather" if look=="player" else "headcloth",HEAD,ns)
             if look=="player":
                 s.oval((-.016,1.750,-.054),(.057,.058,.067),"hair",HEAD,7,4)
-    else:
+    elif look not in ("regular","guard","archer"):
         head(s,look,HEAD)
     n=3 if rank else 5
     for side in (-1,1):

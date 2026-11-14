@@ -365,6 +365,7 @@ def costume(look,detail):
     s.rings([(1.372,.071,.067,0,.005),(1.421,.062,.064,0,.008),
              (1.485,.055,.069,0,.016),(1.521,.062,.071,0,.019)],"skin",
             lambda p:(HEAD,CHEST,clamp((p[1]-1.391)/.115)),10)
-    head(s,look,HEAD)
+    if look not in ("regular","guard","archer"):
+        head(s,look,HEAD)
     equipment(s,look)
     return s

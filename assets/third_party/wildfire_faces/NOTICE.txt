@@ -1,0 +1,10 @@
+Wildfire Games — 0 A.D. field heads and Han faces
+Copyright (C) 2009 Wildfire Games. https://www.wildfiregames.com/
+The upstream art and the adapted field_heads.glb and field_visages.png are licensed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+
+Editable source geometry: meshes/props/new/dude_head.dae
+Paint: textures/skins/props/head/han_a.png, han_b.png, han_c.png
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+Luanshi contributors fitted the faces and neck to the existing clothing and helm bind, retained the source paint registration and authored normals, removed fine grain and remapped the colour values for the cel lighting. Fixed upstream Git blob IDs and the conversion are in tools/art/fit_field_faces.py.
