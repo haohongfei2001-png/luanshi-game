@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: playable-${{ github.ref }}
   cancel-in-progress: true
@@ -103,7 +104,7 @@ jobs:
       - name: Upload macOS playable
         uses: actions/upload-artifact@v4
         with:
-          name: Luanshi-macOS-${{ github.sha }}
+          name: Luanshi-macOS-source-${{ github.sha }}
           path: builds/Luanshi-macOS.zip
           if-no-files-found: error
       - name: Upload Linux playable
@@ -224,21 +225,40 @@ jobs:
   macos-runtime:
     needs: verify-and-export
     runs-on: macos-latest
-    timeout-minutes: 12
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Luanshi-macOS-${{ github.sha }}
+          name: Luanshi-macOS-source-${{ github.sha }}
           path: package
+      - name: Restore the pinned native engine
+        id: engine-cache
+        uses: actions/cache@v4
+        with:
+          path: patch
+          key: macos-arm64-godot-35e80b3-angle-7578-mobile-mutex-v1
+      - uses: actions/download-artifact@v4
+        id: engine-artifact
+        if: steps.engine-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        with:
+          name: mobile-mutex-angle-template
+          path: patch
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+      - name: Rebuild the pinned source if its original artifact has expired
+        if: steps.engine-cache.outputs.cache-hit != 'true' && steps.engine-artifact.outcome == 'failure'
+        run: bash tools/build_macos_engine.sh patch
+      - name: Assemble the complete validated arm64 engine and license notices
+        run: python3 tools/whole_native_delivery.py package/Luanshi-macOS.zip patch mac-evidence --package-only
       - name: Verify bundle and run native macOS headless smoke
         run: |
           set -euo pipefail
           mkdir -p mac-evidence
           uname -a | tee mac-evidence/host.log
           sw_vers | tee -a mac-evidence/host.log
-          ditto -x -k package/Luanshi-macOS.zip package/unpacked
-          APP=$(find package/unpacked -maxdepth 1 -name '*.app' -print -quit)
+          APP=$(find mac-evidence/unpacked -maxdepth 1 -name '*.app' -print -quit)
           codesign --verify --deep --strict --verbose=2 "$APP" 2>&1 | tee mac-evidence/codesign.log
           BIN=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Contents/Info.plist")
           "$APP/Contents/MacOS/$BIN" --headless --fixed-fps 60 -- --smoke-scene --campaign-save-id="native_${GITHUB_RUN_ID}" 2>&1 | tee mac-evidence/runtime.log
@@ -264,14 +284,24 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' mac-evidence/youth-*.log; then exit 1; fi
       - name: Render the exported siege and compare two macOS backends on identical hardware
         run: |
-          python3 tools/rc3_native_probe.py package/Luanshi-macOS.zip package/unpacked mac-evidence
+          python3 tools/rc3_native_probe.py mac-evidence/Luanshi-macOS-arm64-world-review.zip mac-evidence/unpacked mac-evidence
           python3 tools/check_playfield.py mac-evidence/*.png
+      - name: Upload the actually tested arm64 playable
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luanshi-macOS-${{ github.sha }}
+          path: mac-evidence/Luanshi-macOS-arm64-world-review.zip
+          if-no-files-found: error
       - name: Upload native macOS evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: macos-verification-${{ github.sha }}
-          path: mac-evidence/
+          path: |
+            mac-evidence/
+            !mac-evidence/unpacked/
+            !mac-evidence/*.zip
 
   review-footage:
     name: Preserve review video bytes

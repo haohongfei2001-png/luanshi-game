@@ -73,19 +73,31 @@ jobs:
   native:
     needs: export
     runs-on: macos-latest
-    timeout-minutes: 48
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: whole-world-macOS-source-${{ github.sha }}
           path: package
+      - name: Restore the pinned native engine
+        id: engine-cache
+        uses: actions/cache@v4
+        with:
+          path: patch
+          key: macos-arm64-godot-35e80b3-angle-7578-mobile-mutex-v1
       - uses: actions/download-artifact@v4
+        id: engine-artifact
+        if: steps.engine-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
         with:
           name: mobile-mutex-angle-template
           path: patch
           run-id: '43580708251'
           github-token: ${{ github.token }}
+      - name: Rebuild the pinned source if its original artifact has expired
+        if: steps.engine-cache.outputs.cache-hit != 'true' && steps.engine-artifact.outcome == 'failure'
+        run: bash tools/build_macos_engine.sh patch
       - name: Prepare the native movie encoder and audit the hosted hardware
         run: |
           set -euo pipefail

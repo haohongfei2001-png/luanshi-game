@@ -222,6 +222,12 @@ def trial(executable, output, data_dir, helper, plan):
     session_matches_image = bool(attachments and frame_rows) and attachments[-1] == png_size and all(
         sample.get("render_target_px") == png_size for sample in frame_rows
     )
+    session_phases_valid = bool(frame_rows) and all(
+        sample.get("step_phase_ms")
+        and all(value >= 0 for value in sample["step_phase_ms"].values())
+        and sum(sample["step_phase_ms"].values()) <= sample.get("sim_cpu_ms", 0) + .2
+        for sample in frame_rows
+    )
     longest = row.get("longest_frame_context", {})
     trace_path = output / (label + "-frames.json")
     trace = json.loads(trace_path.read_text()) if trace_path.is_file() else {}
@@ -249,7 +255,7 @@ def trial(executable, output, data_dir, helper, plan):
              and all(Path(event["data_dir"]) == data_dir for event in events)
              and "FIELD_PACKAGE_PASS " in log and row.get("renderer") == method
              and image.is_file() and image.stat().st_size > 4096 and row.get("hits_in_window", 0) > 0
-             and bool(png_size) and row.get("render_target_px") == png_size and session_matches_image
+             and bool(png_size) and row.get("render_target_px") == png_size and session_matches_image and session_phases_valid
              and row.get("preset") == quality and row.get("shadows") == (quality != 2)
              and row.get("requested_msaa_samples") == (4 if quality == 0 else 1)
              and abs(row.get("scale", 0) - [1.0, 0.85, 0.70, 1.0][quality]) < 0.001
@@ -262,7 +268,7 @@ def trial(executable, output, data_dir, helper, plan):
     requested = [1280, 800] if default_size else [1000, 600]
     if default_size:
         valid = valid and png_size[0] >= 1000 and png_size[1] >= 600
-    row.update(label=label, session_matches_image=session_matches_image, returncode=code, requested_method=method, validated=valid,
+    row.update(label=label, session_matches_image=session_matches_image, session_phases_valid=session_phases_valid, returncode=code, requested_method=method, validated=valid,
                requested_window_px=requested, png_ihdr_px=png_size, uses_default_window=default_size,
                max_rss_bytes=int(rss.group(1)) if rss else None, app_data_absent_at_spawn=empty_at_launch,
                pre_scene_sample=(output/(label+"-before-scene.sample.txt")).is_file(),

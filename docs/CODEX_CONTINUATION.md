@@ -5,11 +5,11 @@
 整体美术仍为 **ART_REBUILD_REQUIRED / OWNER_REJECTED**。批准参考是最低门槛。开发、素材处理、导出和实际图形运行均使用托管环境，真实 M5 为 **DEVICE_NOT_RUN**。
 
 - 主线分支 `codex/river-whole-rebuild`。整个人体衣甲母版、原生武器、整套城防与营地、桥梁、地表和自然模型已接入现有游戏。世界、伤亡、输入、军令、行军与旧存档保留。
-- 当前全图固定证据 `53cb43ec3e71f3ebab1b2bc197ca9e1d7afded4b`，资产 `9fa960c5898bf715c48887cd9ed4ab62fc67e06e`，run43578708350。同种子61112，512+512，22米/yaw-33，原生2K和4K、内部1.0。全场稀疏小叶树已替换为0AD作者完整树干/枝叶冠，采用原UV和完整轮廓。此前427k三角形原生叶片树仍在仓库，但当前森林使用完整FieldOakA/B；帧率收益尚未实测。
-- 此前河岸试版 `52a30f9` / 证据 `03fb691` 仍像细长石条，已退回。当前正把沿岸小块拼装更换为CC0 `coast_rocks_03` 完整岸坡模型，待当前工作流同机位复核。不得把新导入即写成达标。
+- 当前完整岩块证据 `3d15051d76eb49a81804cbc5346390a2a42d317c`，run43581961244。同种子61112，512+512，22米/yaw-33，原生2K和4K、内部1.0。全场稀疏小叶树已替换为0AD作者完整树干/枝叶冠，采用原UV和完整轮廓。此前427k三角形原生叶片树仍在仓库，但当前森林使用完整FieldOakA/B；帧率收益尚未实测。
+- 已退回瓷砖状完整coast_rocks_03和薄片状cliff岸线。完整Rock Moss六种原始扫描体积已接入，但孤立岩块与平面地形衔接仍差。现在整体重建河床、岸坡和入水桥桩，将完整cliff背面埋入真实地形。源ee59e6d通过旧档/桥头/行走地表测试，图形录制发现typed-array运行错误，已修复后重新运行。
 - 地表的扫描土、草、叶和砂砾2K贴图及匹配法线、分区MultiMesh地表装饰、水面已进入实际Metal包。软件兼容与Metal材质色彩路径已分别校正。
 - 净倒地修复已集成三项生产文件。9个倒地条带修正，408个生前条带不变。真实刀兵617原速前后片 `bfb07544840eae1f380440815fb852d128c3bc14`，run43576987264，32帧20fps、2560×1600、种子61112、512v512，模拟逐步相同。刀枪落地与手部轴已核对。
-- 完整肩肘腕/躯干/双腿作者动作仍由 `codex/river-rc23-native-chain` 独立验证。高位前刺源01不适合作为剑刀劈斩，正在替换为同源02完整过顶斩并录制真实连续片。主线未集成这些实验。马的完整作者动作仍因支撑蹄滑移判退，`codex/river-remount-contact` 正审计多种原作者步态与绑定关系，未改运行马。
+- 完整肩肘腕/躯干/双腿作者动作仍由 `codex/river-rc23-native-chain` 独立验证。高位前刺源01和换脚滑移的source02均退回。最新完整ready→过顶斩→ready链已录制，正复查支撑脚遮挡较少的实际交手。主线未集成这些实验。马的完整作者动作仍因支撑蹄滑移判退，`codex/river-remount-contact` 正审计多种原作者步态与绑定关系，未改运行马。
 
 ### 最新同源完整运行包
 
@@ -19,7 +19,7 @@
 - 原生Mac实际游戏影片115秒，2760帧，24fps原速，2560×1440，内部1.0，正常菜单、WASD、鼠标、J/Q/E/Space和军令输入。战斗111秒后自然结算“守城成功”，保留结果后三秒。24fps为录制采样率，实时性能单独测量。托管系统物理窗口1024×645，实际Godot渲染附件及影片为2K。
 - 影片完整307643088字节，SHA256 `738080805ddcb2aadb003cb32dcd89a179675bd5e300e8d5cdf6e4a77dbc0b65`。证据提交 `b060c578fcff3688887542b089097802b5d9dfb4` 下 `docs/evidence/river-whole-rebuild/native/b71573d6475faa94503069d5ba2debe295b8d9b8/movie/parts/` 有12个可直接播放分段，逐视频数据包相同、合计2760帧。
 - 运行并校验的arm64包SHA256 `da752b3468c1709149a74bbde449a89a13846fed7d8dda425312b81a41e994f6`。包与完整影片、原始逐帧、日志在 [artifact14107214690](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43576958151/artifacts/14107214690)。使用Godot4.6.3上游PR123312隔离锁修复，源码35e80b3，二进制a15d4f69，包含MIT/补丁/出处。adhoc签名校验通过，未公证。
-- 9次冷用户数据启动全部通过，包括6次自然Metal、3次首步前焦点中断。窗口1000×600，系统驱动缓存保留。stock4.6.3正式verify工作流仍需统一已验证的引擎修复，不能把专用交付工作流成功等同于所有正式CI通过。
+- 9次冷用户数据启动全部通过，包括6次自然Metal、3次首步前焦点中断。窗口1000×600，系统驱动缓存保留。新静态ANGLE+mutex引擎已构建，binary SHA256 9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3，来源run43580708251/artifact14108148499。Metal六模式通过，兼容三次能实际战斗但短样本遥测未刷盘，校验失败。run43583221032定位为不足180帧没有frames行，且旧package_probe重置共享累计计数。已修正计数所有权和收尾刷盘，并加强原始分段计数校验，等待新完整包验证。正式verify正在统一此引擎，保留缓存和固定源码重建路径。
 - 已直接审查影片的接敌/近兵/结算实际提取帧，完整视频已可播放归档。完整连续影片的视觉逐帧人工审核尚未完成。
 
 ### 实时2K性能仍未达标
@@ -38,7 +38,7 @@
 
 Goal active。automation-2已配置上海10/22点，独立定时执行未证实。旧重叠PR保持原样。
 
-下一条执行动作先读取本分支最新head和whole-rebuild工作流，看新完整岸坡2K/4K同镜头。审核动作线可采纳文件，再同源导出完整包与真实影片；修正250兵输入路线后补足持续性能样本。图形入口 `godot --path . -- --whole-battle-review --native-qhd`，完整自然战役另加 `--complete-battle`。廉价输入预检 `godot --headless --path . --script tests/whole_input_calibration.gd`。
+下一条执行动作先读取本分支最新head和whole-rebuild工作流，看新河床/完整岸坡2K/4K同镜头。审核动作线可采纳文件，再同源导出完整包与真实影片；修正250兵输入路线后补足持续性能样本。完整包仅在以`Package `开头的冻结提交触发whole-world-delivery；更新`docs/evidence/river-whole-rebuild/candidate-request.json`保存本次源与要求。普通美术提交用whole-rebuild实机检查，PR仍执行完整正式verify。图形入口 `godot --path . -- --whole-battle-review --native-qhd`，完整自然战役另加 `--complete-battle`。廉价输入预检 `godot --headless --path . --script tests/whole_input_calibration.gd`。
 
 ## OWNER-AUTONOMOUS-20261114｜自动续接入口（真实进展仍以本文件最新 commit 为准）
 

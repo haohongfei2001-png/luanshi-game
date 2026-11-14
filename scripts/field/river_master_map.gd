@@ -283,7 +283,7 @@ func _bank_foundation(channel:float,moat:bool) -> void:
 	var bounds:=mesh.get_aabb()
 	var anchor:=bounds.get_center()
 	anchor.y=bounds.end.y
-	var reaches:Array[float]=[-14.1,14.1] if moat else [-55.,-17.5,17.5,55.]
+	var reaches:=PackedFloat32Array([-14.1,14.1] if moat else [-55.,-17.5,17.5,55.])
 	for side:float in [-1.,1.]:
 		for z:float in reaches:
 			var center:=channel if moat else Ground.river_center(z)
