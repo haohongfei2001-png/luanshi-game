@@ -82,4 +82,22 @@ func go():
  material.set_shader_parameter("pigment",ImageTexture.create_from_image(baked_shadow))
  var matched:Image=await capture(viewport,out.path_join("sprite-matched-shadow.png"))
  report["field_shadow_match_probe"]={"same_native_without_vs_with_field_shadow":compare(native_shadow,reference),"unmatched_bake":compare(native_shadow,unmatched),"matched_bake":compare(native_shadow,matched),"scene_light_parameters_changed":false,"bake_matches_existing_field_shadow_parameters":true}
+ var display_material=ShaderMaterial.new();var display_shader=Shader.new()
+ display_shader.code="""shader_type spatial;
+render_mode unshaded,cull_disabled,depth_prepass_alpha;
+uniform sampler2D pigment:source_color,filter_linear,repeat_disable;
+float decode_srgb(float c){return c<=.04045?c/12.92:pow((c+.055)/1.055,2.4);}
+float encode_srgb(float c){return c<=.0031308?c*12.92:1.055*pow(c,1./2.4)-.055;}
+float inv_filmic(float y){
+ float A=.88;float B=.60;float C=.10;float D=.20;float E=.01;float F=.30;
+ float white=((A+C*B+D*E)/(A+B+D*F))-E/F;
+ float q=y*white+E/F;float a=A*(q-1.);float b=B*(q-C);float c=D*(q*F-E);
+ return max(0.,(-b-sqrt(max(0.,b*b-4.*a*c)))/(2.*a));
+}
+void vertex(){MODELVIEW_MATRIX=VIEW_MATRIX*mat4(INV_VIEW_MATRIX[0],INV_VIEW_MATRIX[1],INV_VIEW_MATRIX[2],MODEL_MATRIX[3]);}
+void fragment(){vec4 p=texture(pigment,UV);ALBEDO=vec3(encode_srgb(inv_filmic(decode_srgb(p.r))),encode_srgb(inv_filmic(decode_srgb(p.g))),encode_srgb(inv_filmic(decode_srgb(p.b))));ALPHA=p.a;}
+"""
+ display_material.shader=display_shader;display_material.set_shader_parameter("pigment",ImageTexture.create_from_image(native_shadow));mesh.material=display_material
+ var display_exact:Image=await capture(viewport,out.path_join("sprite-final-display-inverse.png"))
+ report["final_display_inverse_probe"]={"comparison":compare(native_shadow,display_exact),"bake":"actual native final FILMIC image with original Field shadow lighting","reconstruction":"mathematical inverse of locked FILMIC white1 exposure1 before same final pipeline; not scene retuning","relighting_supported":false,"compressed_texture_tested":false}
  FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"  "));print("TONEMAP_PROBE ",JSON.stringify(report));quit()
