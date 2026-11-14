@@ -142,3 +142,44 @@ regression with exit 0 and no script/shader/error markers, including existing
 battle, officers, 20/100/250/512 scale, save/history, economy, youth career,
 world migration, restart and attrition cases. This is functional preservation,
 not a native graphics or art pass.
+
+## Third hosted attempt: wrong entry conclusively diagnosed
+
+Run `43631942777`, source `c035adb0713bbbf9390642ac9c058bee079474a3`,
+failed at the 120-second camera bound and produced **no native images**.
+Artifact `14128123661`, ZIP SHA-256
+`dabaf4926f96de4087b3e0219470a82cc9eee1bafda8d973d320914cf1c43b50`,
+retains the 12/45-second own-process samples and a successful early Cocoa
+activation (`game_active=1`). The first sample is initial Metal shader
+compilation; the second is normal scene `_ready` and material/mesh compilation.
+They do not establish a focus or OS deadlock.
+
+The exact upstream engine [main.cpp at 35e80b3](https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/main/main.cpp#L4223-L4234)
+clears the command-line `script`, `game_path`, and `main_loop_type` when
+`OVERRIDE_PATH_ENABLED` is absent. Thus the protected template silently ignored
+our `--script` and started the ordinary configured game scene. Earlier
+headless checks used an editor, so they did not expose this template difference.
+The evidence is preserved rather than called a successful graphics run.
+
+The next correction keeps the exact protected binary. The internal QA export
+uses normal `application/run/main_loop_type=DotNativeRegionCapture` settings
+and a tiny inert bootstrap scene. A scene is required by Godot's initial
+project validation even with a custom MainLoop. The original project and export
+configuration are restored byte-for-byte in `finally`; shipped defaults are
+not altered. The native command no longer requests `--script` or any path
+override. Local normal-project entry and packed entry must both reach the
+explicit `NATIVE_REGION_FOCUS` plus real 20v20/tick135 setup markers without
+`--script`; they are still not an actual Mac graphic or art result.
+
+Release-template GDScript assertions must not be the final acceptance gate.
+External Python validates source, exact image dimensions and internal scale,
+mode/camera/seed/count, snapshot file bytes, PNG decoding, and complete output.
+All runtime logs are independently scanned for script/shader/errors.
+
+Local entry correction verified: 14 integrity/entry/gate tests pass. Normal
+project launch (no `--script`) completed real headless scene setup in 8.40 s.
+The exported 507,503,596-byte QA pack (SHA-256
+`5542531860aa5ac49b339e9f2dd35419cca29f6881bb677e1347c71943976200`)
+also reached the custom entry and 20v20/tick135 setup in 8.68 s, without a
+script override. Both original configuration files match their pre-export
+bytes. These editor-based Linux checks do not certify Mac Metal startup.

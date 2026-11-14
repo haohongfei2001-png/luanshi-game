@@ -2,6 +2,12 @@
 import argparse, hashlib, json, os, pty, re, select, signal, subprocess, sys, time
 from pathlib import Path
 
+ENTRY='application/run/main_loop_type=DotNativeRegionCapture; inert bootstrap scene; no CLI override'
+
+def validate_pack_receipt(receipt):
+    if receipt.get('entry')!=ENTRY or receipt.get('original_project_restored') is not True or receipt.get('original_export_config_restored') is not True:
+        raise ValueError('QA pack entry or original configuration restoration not verified')
+
 def validate_engine(patch):
     receipt = json.loads((patch / "provenance.json").read_text())
     executable = patch / "godot.macos.template_release.arm64"
@@ -19,6 +25,7 @@ def run(project, patch, output, helper, mode='baseline'):
     executable, engine_receipt = validate_engine(patch)
     pack = executable.with_suffix('.pck')
     pack_receipt = json.loads((output/'pack-integrity.json').read_text())
+    validate_pack_receipt(pack_receipt)
     if not pack.is_file() or pack.stat().st_size != pack_receipt['bytes'] or hashlib.sha256(pack.read_bytes()).hexdigest() != pack_receipt['sha256']:
         raise ValueError('Adjacent resource pack integrity mismatch')
     output.mkdir(parents=True, exist_ok=True)
@@ -28,7 +35,7 @@ def run(project, patch, output, helper, mode='baseline'):
     master, slave = pty.openpty()
     args = ["/usr/bin/time", "-l", "-o", str(output / "resource-time.log"), str(executable),
             "--rendering-method", "mobile", "--rendering-driver", "metal",
-            "--audio-driver", "Dummy", "--disable-vsync", "--script", "res://tests/native_region_capture.gd", "--"]
+            "--audio-driver", "Dummy", "--disable-vsync", "--"]
     args += ['--camera-study'] if mode=='camera-study' else ['--wall-clock-action','--traversal-review','--shadow-diagnostic']
     process = subprocess.Popen(args, env=env, cwd=project, stdout=slave, stderr=slave,
                                stdin=subprocess.DEVNULL, start_new_session=True)
@@ -59,6 +66,8 @@ def run(project, patch, output, helper, mode='baseline'):
                 failure = "GODOT_ERROR"
             if value.startswith("NATIVE_REGION_FOCUS ") and focus is None:
                 row = json.loads(value.partition(" ")[2])
+                if row.get('platform')!='macOS' or row.get('display')!='macOS' or row.get('renderer')!='mobile':
+                    failure='UNEXPECTED_NATIVE_RENDERER'; return
                 # Only this probe's child; no global keyboard or accessibility input.
                 child = subprocess.run(["/bin/ps", "-p", str(row["pid"]), "-o", "comm="], capture_output=True, text=True, check=True)
                 if os.path.realpath(child.stdout.strip()) != os.path.realpath(executable):
@@ -102,6 +111,8 @@ def run(project, patch, output, helper, mode='baseline'):
     (output / "process.json").write_text(json.dumps(receipt, indent=2))
     if failure or process.returncode: raise RuntimeError(json.dumps(receipt))
     if focus is None: raise RuntimeError("No verified actual native window")
+    if not re.search(r'^Metal .*Forward Mobile.*Apple', (output/'actual-game.log').read_text(),re.MULTILINE):
+        raise RuntimeError('No actual Metal/Apple adapter log; fallback forbidden')
     return receipt
 
 if __name__ == "__main__":

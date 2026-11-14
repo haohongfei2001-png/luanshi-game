@@ -4,9 +4,9 @@ import hashlib, importlib.util, json, sys, tempfile, unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools/native_region'))
 from restore_inputs import verified_copy, FILES
-from run_native import validate_engine
+from run_native import validate_engine,validate_pack_receipt,ENTRY
 from validate_route import validate
-from export_pack import transform_preset
+from export_pack import transform_preset,transform_project
 
 class NativeRegionInputs(unittest.TestCase):
     def setUp(self):
@@ -50,5 +50,21 @@ class NativeRegionInputs(unittest.TestCase):
         self.assertEqual(converted.count(b'script_export_mode=2'),1)
     def test_unknown_pack_config_rejected(self):
         with self.assertRaises(ValueError):transform_preset(b'wrong')
+    def test_project_mainloop_is_normal_export_setting(self):
+        data=(ROOT/'project.godot').read_bytes();converted=transform_project(data)
+        self.assertEqual(converted.count(b'run/main_loop_type="DotNativeRegionCapture"'),1)
+        self.assertEqual(converted.count(b'run/main_scene="res://tests/native_region_bootstrap.tscn"'),1)
+        self.assertNotIn(b'run/main_scene="res://scenes/game.tscn"',converted)
+        self.assertIn(b'run/main_scene="res://scenes/game.tscn"',data)
+    def test_unknown_project_entry_rejected(self):
+        for data in [b'wrong',b'run/main_scene="res://scenes/game.tscn"\nrun/main_loop_type="Unexpected"']:
+            with self.assertRaises(ValueError):transform_project(data)
+    def test_pack_entry_receipt(self):
+        row={'entry':ENTRY,'original_project_restored':True,'original_export_config_restored':True}
+        validate_pack_receipt(row)
+        for key,value in [('entry','old --script entry'),('original_project_restored',False),('original_export_config_restored',False)]:
+            with self.subTest(key=key):
+                wrong={**row,key:value}
+                with self.assertRaises(ValueError):validate_pack_receipt(wrong)
 
 if __name__=='__main__':unittest.main()
