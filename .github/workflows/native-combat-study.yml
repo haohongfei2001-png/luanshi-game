@@ -1,26 +1,24 @@
-name: Inspect the licensed humanoid combat source
+name: Check the authored sword retarget and support
 on:
   push:
     branches: [codex/river-rc23-authored-combat]
-    paths: ['tools/art/import_company_combat.py','tools/art/company_motion.py','tools/art/check_native_combat.py','.github/workflows/native-combat-study.yml']
+    paths: ['tools/art/company_motion.py','tools/art/check_native_combat.py','.github/workflows/native-combat-study.yml']
 permissions:
   contents: write
 concurrency:
   group: native-combat-study
   cancel-in-progress: true
 jobs:
-  inspect:
+  check:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Read the exact already verified free Standard source
+      - name: Bake only the shared pose palette and check actual joints
         shell: bash
         run: |
           set -euo pipefail
-          if ! /usr/bin/python3 -c 'import numpy,PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy python3-pil; fi
-          curl -fsSL --retry 2 'https://store.godotengine.org/asset/quaternius/universal-animation-library/download/44/?study=rc23-authored-combat-20261114' -o /tmp/standard.zip
-          /usr/bin/python3 tools/art/import_company_combat.py /tmp/standard.zip
+          if ! /usr/bin/python3 -c 'import PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-pil; fi
           /usr/bin/python3 - <<'PY'
           import sys
           from pathlib import Path
@@ -32,14 +30,12 @@ jobs:
           /usr/bin/python3 tools/art/check_company_motion.py
           /usr/bin/python3 tools/art/check_field_carries.py
           /usr/bin/python3 tools/art/check_contact_motion.py
-          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/native-combat tools/art/source/combat_curves.json
-          git -c user.name='River Gate authored combat source' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the complete authored sword body transfer and preserve release and support checks'
+          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/native-combat/retarget-metrics.json
+          git -c user.name='River Gate authored combat source' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake a complete authored cut with shared grip and support evidence'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: licensed-combat-source-survey
-          path: |
-            docs/evidence/river-gate-v1-rc23/native-combat
-            tools/art/source/combat_curves.json
+          name: authored-combat-support-check
+          path: docs/evidence/river-gate-v1-rc23/native-combat
           retention-days: 7

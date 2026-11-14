@@ -6,6 +6,7 @@ from company_motion import *
 
 def main():
     worst_gap=0.
+    failing=[]
     floor=10.
     release_error=0.
     boundary=0.
@@ -23,8 +24,9 @@ def main():
                                       dist(trans(bones[fore],wrist),trans(bones[hand],wrist)))
                     for side,thigh,shin,boot in ((-1,LT,LS,LB),(1,RT,RS,RB)):
                         knee,ankle=leg_nodes(side)[1:]
-                        worst_gap=max(worst_gap,dist(trans(bones[thigh],knee),trans(bones[shin],knee)),
-                                      dist(trans(bones[shin],ankle),trans(bones[boot],ankle)))
+                        gap=dist(trans(bones[shin],ankle),trans(bones[boot],ankle))
+                        worst_gap=max(worst_gap,dist(trans(bones[thigh],knee),trans(bones[shin],knee)),gap)
+                        if gap>.008: failing.append({"kit":kit,"loadout":loadout,"clip":clip,"phase":t,"leg":side,"gap":gap,"hip":trans(bones[HIPS],leg_nodes(side)[0]),"ankle":trans(bones[boot],ankle)})
                         for dx in (-.05,.05):
                             for dz in (-.072,.187):
                                 foot=trans(bones[boot],add(ankle,(dx,-.117,dz)))
@@ -37,7 +39,7 @@ def main():
             release_error=max(release_error,error)
             rows.append({"kit":kit,"loadout":loadout,"release_socket_error_m":error})
     report={"max_connected_joint_gap_m":worst_gap,"minimum_sole_y_m":floor,
-            "release_socket_error_m":release_error,"windup_recovery_seam_m":boundary,"kits":rows}
+            "release_socket_error_m":release_error,"windup_recovery_seam_m":boundary,"kits":rows,"failed_leg_samples":sorted(failing,key=lambda x:x["gap"],reverse=True)[:8]}
     out=Path("docs/evidence/river-gate-v1-rc23/native-combat/retarget-metrics.json")
     out.write_text(json.dumps(report,indent=2)+"\n")
     print("NATIVE_COMBAT_CHECK",json.dumps(report),flush=True)
