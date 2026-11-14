@@ -1,0 +1,21 @@
+name: Inspect original licensed HM08 anatomy
+on:
+  push:
+    branches: [codex/river-rc23-hm08-body]
+    paths: ['.github/workflows/hm08-field-figure.yml','tests/inspect_hm08_body.py']
+permissions:
+  contents: write
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tests/inspect_hm08_body.py
+      - name: Save exact master dimensions
+        run: |
+          git config user.name "Luanshi art source worker"
+          git config user.email "actions@users.noreply.github.com"
+          git add reports/hm08/bind.json
+          git commit -m "Record original HM08 body and bind measurements"
+          git push origin HEAD
