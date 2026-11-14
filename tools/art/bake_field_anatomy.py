@@ -1,7 +1,7 @@
 """Bake the licensed HM08 anatomical surface onto the existing field joints.
 
 Run in Blender after fetch_hand_source.py. The output stores the original
-surface, bounded reduction and two-bone bind. No gameplay or hand socket changes.
+surface, smooth reference normals and two-bone bind. No gameplay or hand socket changes.
 """
 import hashlib
 import json
@@ -91,22 +91,12 @@ def main():
     for name in ("head","forearms","legs","feet"):
         def wanted(i):
             x,y,z=chart[i]
-            if name=="head": return y>5.04 and abs(x)<1.1
+            if name=="head": return y>5.04 and abs(x)<1.4
             weights=bone_weights[i]
             if name=="forearms": return sum(weights.get(k,0) for k in (4,7))>.15
             if name=="feet": return sum(weights.get(k,0) for k in (11,14))>.15 or y<-7.35
             return y<.35 and sum(weights.get(k,0) for k in (9,10,12,13))>.15
         selected=[face for face in faces if all(wanted(i) for i in face)]
-        if name=="head":
-            # Remove the hidden oral interior and eye-return walls. Fill their
-            # own boundary loops before reducing the continuous exterior shell.
-            def outside(face):
-                q=chart[face].mean(axis=0)
-                x,y,z=q
-                if abs(x)<.49 and 6.16<y<6.64 and z<1.16: return False
-                if .12<abs(x)<.55 and 6.90<y<7.13 and z<1.26: return False
-                return True
-            selected=[face for face in selected if outside(face)]
         used=sorted({i for face in selected for i in face})
         lookup={old:new for new,old in enumerate(used)}
         source_pos=[]
@@ -141,7 +131,7 @@ def main():
         kd=KDTree(len(used))
         for i,v in enumerate(source_pos): kd.insert(Vector(v),i)
         kd.balance()
-        for tier,ratio in (("Close",.30 if name=="head" else .42),("Line",.115 if name=="head" else .19),("Rank",.035 if name=="head" else .07)):
+        for tier,ratio in (("Close",1.0),("Line",.58),("Rank",.20)):
             bpy.ops.wm.read_factory_settings(use_empty=True)
             mesh=bpy.data.meshes.new(name+tier)
             # Reflection in X changes the source polygon orientation.
@@ -184,16 +174,17 @@ def main():
                 replacement.from_pydata(hp,[],hf);replacement.update()
                 obj.data=replacement
             dec=obj.modifiers.new("Field surface reduction","DECIMATE")
-            budget={"head":(1100,360,100),"forearms":(360,150,60),"legs":(560,240,100),"feet":(220,100,48)}[name][("Close","Line","Rank").index(tier)]
+            budget={"head":(6800,3200,900),"forearms":(1400,700,180),"legs":(2600,1200,400),"feet":(800,400,140)}[name][("Close","Line","Rank").index(tier)]
             dec.ratio=min(ratio,budget/max(1,sum(len(p.vertices)-2 for p in obj.data.polygons)));dec.use_collapse_triangulate=True
             bpy.ops.object.modifier_apply(modifier=dec.name)
             final=obj.data
+            final.update()
             final.calc_loop_triangles()
             verts=[list(v.co) for v in final.vertices]
             assert np.isfinite(verts).all(), (name,tier,"non-finite reduced anatomy")
             assert len(final.loop_triangles)<=budget*1.1, (name,tier,len(final.loop_triangles),budget)
             nearest=[kd.find(v.co)[1] for v in final.vertices]
-            result={"p":[],"f":[],"w":[],"chart":[]}
+            result={"p":[],"f":[],"w":[],"chart":[],"n":[]}
             remapped={}
             for triangle in final.loop_triangles:
                 face=[]
@@ -207,6 +198,7 @@ def main():
                     if key not in remapped:
                         remapped[key]=len(result["p"])
                         result["p"].append([round(a,6) for a in verts[i]])
+                        result["n"].append([round(a,7) for a in final.vertices[i].normal])
                         result["chart"].append(sample)
                         result["w"].append(compact_weights[nearest[i]])
                     face.append(remapped[key])

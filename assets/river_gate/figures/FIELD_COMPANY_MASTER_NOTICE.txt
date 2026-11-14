@@ -12,8 +12,9 @@ male-young-averagemuscle-averageweight-idealproportions.target and
 universal-male-young-maxmuscle-averageweight.target.
 Exact source blob IDs and weights are checked by tools/art/bake_field_anatomy.py.
 The game adaptation fits the original surface to its field animation joints,
-closes the eye/mouth apertures for the battle camera, and derives three
-reductions. Feet use the source anatomical last under closed leather.
+preserves the original head topology and its smooth normals, closes boundary
+loops, and derives three detail levels. Continuous garment subdivision preserves
+shared skin and positional seams while retaining each source UV island. Feet use the source anatomical last under closed leather.
 Hands remain the existing separately licensed HM08 fitted grips.
 
 The garments are Wildfire Games 0 A.D. m_dress_sleeves.dae and
@@ -28,6 +29,8 @@ field as Blender User. Attribution is to Wildfire Games and its contributors.
 No more specific personal authorship is asserted.
 The derivative garments retain their original surfaces, UVs and skin weights,
 with retargeted joints, fitted hems and existing Han cloth/lamellar colour maps.
+The first three atlas tiles have unified cloth dye and subdued cloth values.
+The fourth, separately attributed shield tile is retained pixel for pixel.
 Their source blob IDs are recorded in tools/art/mature_field_company.py.
 Existing garment and headwear notices continue to identify the maps and helms.
 

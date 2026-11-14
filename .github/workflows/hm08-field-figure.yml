@@ -1,4 +1,4 @@
-name: Compare River Gate field tailoring in playing and close windows
+name: Rebuild continuous field people and inspect actual 2K battle
 on:
   push:
     branches: [codex/river-rc23-hm08-body]
@@ -16,8 +16,10 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
-      - name: Keep the rejected first render separately
-        run: cp -a docs/evidence/river-gate-v1-rc23/character-master/after /tmp/first-person-after
+      - name: Preserve the actual previous full-person windows
+        run: |
+          mkdir -p docs/evidence/river-gate-v1-rc23/character-master-refined
+          cp -a docs/evidence/river-gate-v1-rc23/character-master/after docs/evidence/river-gate-v1-rc23/character-master-refined/before
       - name: Install the pinned runtime and known upstream clothing tools
         run: |
           set -eu
@@ -27,7 +29,7 @@ jobs:
           sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           if ! command -v blender >/dev/null || ! command -v xdotool >/dev/null || ! /usr/bin/python3 -c 'import PIL,numpy'; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool python3-numpy python3-pil blender ffmpeg; fi
           ./tools/prepare-font.sh
-          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/character-master
+          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/character-master-refined
           touch artifacts/.gdignore
           cat >override.cfg <<'CFG'
           [display]
@@ -36,14 +38,13 @@ jobs:
           CFG
       - name: Keep evidence outside Godot's resource import
         run: |
-          touch docs/evidence/river-gate-v1-rc23/character-master/.gdignore
+          touch docs/evidence/river-gate-v1-rc23/character-master-refined/.gdignore
       - name: Photograph both complete 2560 x 1600 windows on matching soldiers
         shell: bash
         run: |
           set -euo pipefail
-          proof=docs/evidence/river-gate-v1-rc23/character-master
+          proof=docs/evidence/river-gate-v1-rc23/character-master-refined
           cp scripts/field/company_art.gd /tmp/complete-company.gd
-          curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/0315c9fc4665d33e7c2fc7d1e793b2c6cb82f725/scripts/field/company_art.gd -o scripts/field/company_art.gd
           for side in after; do
             mkdir -p "$proof/$side"
             if [ "$side" = after ]; then
@@ -59,15 +60,14 @@ jobs:
             grep ROBE_GAME_WINDOW "$proof/$side/window.log"
             cp artifacts/bridge-window/line-*.jpg artifacts/bridge-window/reverse-*.jpg artifacts/bridge-window/kit*.jpg artifacts/bridge-window/field.json "$proof/$side/"
           done
-          git add assets/river_gate/figures/field_company_master.glb tools/art/source/field_anatomy.json reports/hm08
-          git diff --exit-code -- assets/river_gate/figures/company_motion.png assets/third_party/wildfire_garments/field_colours.png assets/river_gate/figures/river_company.glb
-          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete licensed field people on the existing weapon and motion bind'
+          git add assets/river_gate/figures/field_company_master.glb assets/third_party/wildfire_garments/field_colours.png tools/art/source/field_anatomy.json reports/hm08
+          git diff --exit-code -- assets/river_gate/figures/company_motion.png assets/river_gate/figures/river_company.glb
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake continuous high-detail people, fitted full clothes and unified cloth dye'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
-          if [ ! -d "$proof/rejected-first-after" ]; then cp -a /tmp/first-person-after "$proof/rejected-first-after"; fi
           /usr/bin/python3 - <<'PY'
           from PIL import Image
           import pathlib,json,numpy as np
-          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master")
+          root=pathlib.Path("docs/evidence/river-gate-v1-rc23/character-master-refined")
           assert json.loads((root/"before"/"field.json").read_bytes())==json.loads((root/"after"/"field.json").read_bytes())
           out={}
           for name in ("line-055","line-105","line-135","line-185","reverse-135","kit3-135","kit5-135","kit7-135"):
@@ -86,18 +86,18 @@ jobs:
           PY
 
           git add "$proof"
-          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive matched normal and near actual 2K field windows'
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive matched 2K windows after complete person continuity correction'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
       - name: Show the actual import and window errors
         if: failure()
         run: |
-          for f in docs/evidence/river-gate-v1-rc23/character-master/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
+          for f in docs/evidence/river-gate-v1-rc23/character-master-refined/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: complete-character-master-2k
           path: |
-            docs/evidence/river-gate-v1-rc23/character-master
+            docs/evidence/river-gate-v1-rc23/character-master-refined
             artifacts/bridge-window
             assets/river_gate/figures/field_company_master.glb
             tools/art/source/field_anatomy.json

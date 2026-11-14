@@ -9,6 +9,7 @@ uniform vec4 shoulder_dye : source_color = vec4(0.0);
 uniform int kit = 0;
 uniform int travelling_attack_legs = -1;
 uniform bool player_costume = false;
+uniform bool anatomical_master = false;
 uniform bool field_carries = false;
 uniform float travelling_leg_phase = 0.0;
 varying flat float flash;
@@ -83,10 +84,10 @@ void vertex() {
         int reaction=(clip==10 ? 0 : 2)+slot-1;
         tile.y=float(4*(381+kit*4+reaction))+.5;
     }
-    // Preserve ordinary soldiers' identities across LODs without extra mesh
-    // instances. Only first-joint head skin changes below the skull/helmet seam.
+    // Legacy heads deform only their skin tiles. The continuous anatomical master
+    // keeps coincident hair/skin UV seams together and has authored role variants.
     ivec2 swatch=ivec2(UV*vec2(8.,4.));
-    if (first==2 && !player_costume &&
+    if (first==2 && !player_costume && !anatomical_master &&
             (swatch==ivec2(0,2) || swatch==ivec2(0,1)) && VERTEX.y>1.447) {
         float lot=floor(INSTANCE_CUSTOM.a*8.0);
         float shape=lot<2.5 ? 0.0 : (lot<5.5 ? -1.0 : 1.0);
@@ -222,7 +223,7 @@ void fragment() {
     // The upper part of an issued garment is sewn from a deeper bolt of
     // indigo or madder. The officer's iron and an archer's leather belt stay
     // in their original material; only woven cloth has coverage in this mask.
-    if (shoulder_dye.a>.5) {
+    if (shoulder_dye.a>.5 && !anatomical_master) {
         float yoke=0.;
         if (cloth_panel==32) {
             if (kit==5 || kit==6) {
