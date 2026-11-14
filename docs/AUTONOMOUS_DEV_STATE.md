@@ -1,21 +1,22 @@
-# 《乱世》 Codex 自主开发续接状态
+# 《乱世》自主开发状态
 
-> OWNER-AUTONOMOUS-20261114：此文件为跨会话的**可更新状态表**，不是新的规划文档。每次实际开发运行都应更新并链接真实 SHA/PR/截图/日志。未知不得填 PASS。最高执行协议：[CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md](CODEX_AUTONOMOUS_DEVELOPMENT_PROTOCOL_20261114.md)。
+Owner于2026-11-14暂停Codex开发并转交Dot。[完整交接与恢复入口](DOT_DEVELOPMENT_HANDOFF_20261114.md)。
 
-| 字段 | 初始已知状态（2026-11-14 指令创建时） |
+| 项目 | 当前状态 |
 |---|---|
-| 当前事实起点 | README 记载河关 RC13 为试玩候选；真实源码和分支以**每轮最新 main/PR/CI 为准**，请先读和同步 |
-| 艺术质量 | ART_REVIEW_REQUIRED；Owner 之前否定粗糙画面。旧 RC3/RC13 不能作为已认可的画质底座 |
-| 商业参考 | ARTREF-01～12 和八游戏对标规范已写入；对标实现仍待逐项实测 |
-| 当前 P0 | 真正高质量可玩角色/普通兵/持械动画 + 城门/河岸统一美术，替换近景粗糙程序化视觉基础 |
-| 素材状态 | Fab/Unity 付费素材只是候选，NOT_ACQUIRED；使用前须授权、格式、可移植性评估。已有原创/CC0 环境素材可以合法使用 |
-| 真实 M5 性能 | DEVICE_NOT_RUN，不能用托管 M1 Virtual 的数据标达标 |
-| Codex Goal | NOT_CONFIGURED_OR_UNVERIFIED；下一次 Codex 执行应设置或检查 |
-| Codex Automation | NOT_CONFIGURED_OR_UNVERIFIED；应设置现有订阅内的定时续接并验证；不可虚报已安排 |
-| 权威总任务 | [Issue #12](https://github.com/haohongfei2001-png/luanshi-game/issues/12) |
-| 最新已验证游戏改动 SHA | 本文件创建不代表已改游戏；请 Codex 在实际下一轮后填写 |
-| 最新可检查正常镜头与视频 | [RC13 正常镜头](evidence/river-gate-v1-rc13/normal-native.jpg) · [RC13 PLAYTEST](evidence/river-gate-v1-rc13/PLAYTEST.md) |
-| 下一件具体工作 | 检查最新 main/未合并 PR，选一个真正可合法导入的高质量角色/装备/城门资源，**动手实现** Godot 近景模型/材质/动画替换及可复用导入路径；拍真实默认/近/中/远游戏画面，运行战斗与回归测试，并提交 PR |
-| 禁止阻塞循环 | 无付费资源/无 M5/无法启动 Automation 时，记录 blocker，继续合法免费资产与真实可运行代码开发；不要交纯调研报告后退出 |
+| 研发交接 | Dot接续，Codex停止开发，尚未确认Dot收到或开工 |
+| Codex Goal | PAUSED，工具已确认 |
+| Codex Automation | automation-2 PAUSED，暂停提示已同步 |
+| 子代理 | 全部停止，所有仓库工作已推送 |
+| 整体美术 | ART_REBUILD_REQUIRED / OWNER_REJECTED，效果图为最低线 |
+| 主候选 | PR59 Draft，d1c1895221c33386d471922807ed590a6987dbe1，RC25 |
+| RC25正式验证 | 基础通过，footage/escort失败，其余图形任务收尾中 |
+| RC25原生候选 | run43595539334，export通过，native收尾中 |
+| 新环境实验 | codex/river-biome-rebuild，2K/4K静帧814417f，尚未自审，输入录像收尾中 |
+| 双手枪实验 | 7aaf21be，实拍完成，入步位移与近景遮挡仍未通过 |
+| 已完整运行版本 | RC24源4f3c0819，run43587113557，包/115秒2K片/原始数据可用 |
+| RC24实时千人2K | M1 Virtual平均27.47FPS，P95 60.954ms，P99 78.508ms |
+| 真实M5 | DEVICE_NOT_RUN |
+| 下一步归属 | Dot读取交接和GitHub最终运行状态后决定恢复与集成 |
 
-**Codex 更新纪律**：每轮保留此表的概括性字段，覆盖为实际最新的状态；实际测试用例链接放 docs/evidence/<candidate>/，真实代码/构建细节放 CODEX_CONTINUATION.md，不要在本文件堆积复制的长日志。提交时将本文的初始占位替换为本轮验证事实。不要把一次技术成功写成 Owner ART APPROVED。
+完整分支SHA、失败日志、安装包SHA256、许可、录像和恢复命令见交接文件。所有在途运行状态需在接手时重新读取。
