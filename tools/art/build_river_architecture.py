@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image
 from figure_mesh import Library
 from import_garrison_issues import source_file
-from import_river_gatehouse import read_frame,fit
+from import_river_gatehouse import read_frame,fit,clip_pitch
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/"assets/river_gate/world/architecture"
 def second_uv(path):
@@ -42,6 +42,59 @@ def rest_frame(path,cache):
     baked=cache/"closed_gate_bind_geometry.dae"
     ET.ElementTree(root).write(baked)
     return read_frame(baked)
+
+def gate_fit(point):
+    fitted=np.asarray(fit(point))
+    # Keep the established eight-metre passage. Fit the entire gate master
+    # around it, with a narrower outer pavilion and connected curtain walls.
+    span=point[0]
+    fitted[2]=np.copysign(np.interp(abs(span),[0.,3.1,6.2,12.,18.4],
+                                  [0.,4.,4.8,6.2,7.9]),span)
+    return fitted
+
+def add_gate_shells(library,vertices,normals,uv0,uv1,indices,material):
+    rows=np.column_stack((vertices,normals,uv0,uv1))
+    shells={name:[] for name in ("GatePiers","GateWatchHall","GateWestPitch","GateEastPitch")}
+    for triangle in np.asarray(indices).reshape(-1,3):
+        face=rows[triangle]
+        y=face[:,1]
+        if y.max()<3.91 or (y.min()<3.77 and y.mean()<3.82):
+            shells["GatePiers"].append(face)
+            continue
+        shells["GateWatchHall"].append(face)
+        if face[:,0].max()<=0.:
+            shells["GateWestPitch"].append(face)
+        elif face[:,0].min()>=0.:
+            shells["GateEastPitch"].append(face)
+        else:
+            shells["GateWestPitch"].extend(clip_pitch(face,-1))
+            shells["GateEastPitch"].extend(clip_pitch(face,1))
+    assert len(shells["GatePiers"])+len(shells["GateWatchHall"])==len(indices)//3
+    def area(name):
+        points=np.asarray(shells[name])[:,:,:3]
+        return np.linalg.norm(np.cross(points[:,1]-points[:,0],points[:,2]-points[:,0]),axis=1).sum()*.5
+    assert abs(area("GateWatchHall")-area("GateWestPitch")-area("GateEastPitch"))<1.e-5
+    for name,triangles in shells.items():
+        points=[];corners=[];found={}
+        for face in triangles:
+            for vertex in face:
+                key=tuple(np.round(vertex,7))
+                if key not in found:
+                    found[key]=len(points);points.append(vertex)
+                corners.append((found[key],))
+        points=np.asarray(points)
+        points[:,3:6]/=np.maximum(np.linalg.norm(points[:,3:6],axis=1)[:,None],1.e-9)
+        attributes={
+            "POSITION":library.accessor(points[:,:3],"f",3,True),
+            "NORMAL":library.accessor(points[:,3:6],"f",3),
+            "TEXCOORD_0":library.accessor(points[:,6:8],"f",2),
+            "TEXCOORD_1":library.accessor(points[:,8:10],"f",2)}
+        number=len(library.doc["meshes"])
+        library.doc["meshes"].append({"name":name,"primitives":[{
+            "attributes":attributes,"indices":library.accessor(corners,"H",1),"material":material}]})
+        library.doc["nodes"].append({"name":name,"mesh":number})
+        library.doc["scenes"][0]["nodes"].append(number)
+        print("CONTINUOUS_GATE_SHELL",name,len(corners)//3,flush=True)
 
 def main(cache):
     cache.mkdir(parents=True,exist_ok=True);OUT.mkdir(parents=True,exist_ok=True)
@@ -78,7 +131,7 @@ def main(cache):
         ao_uv,ao_corners=second_uv(path)
         height=float(pos[:,2].max())
         if row["name"] in ("han_wall_gate_struct","han_wall_gate"):
-            fitted=np.asarray([fit(p) for p in pos])
+            fitted=np.asarray([gate_fit(p) for p in pos])
             # Keep the passage's physical lintel, with an unbroken upper frame.
             upper=np.maximum(fitted[:,1]-3.88,0.)
             fitted[:,1]-=.10*upper
@@ -117,6 +170,8 @@ def main(cache):
         lib.doc["meshes"].append({"name":row["name"],"primitives":[primitive]})
         lib.doc["nodes"].append({"name":row["name"],"mesh":number})
         lib.doc["scenes"][0]["nodes"].append(number)
+        if row["name"]=="han_wall_gate_struct":
+            add_gate_shells(lib,vertices,normal,uv0,uv1,indices,material_index)
         receipt.append({"name":row["name"],"triangles":len(indices)//3,"source_sha":row["sha"],"has_native_ao":ao_uv is not None,"bounds":[fitted.min(axis=0).tolist(),fitted.max(axis=0).tolist()]})
         print("COMPLETE_BUILDING",json.dumps(receipt[-1]),flush=True)
     lib.save(OUT/"river_fort.glb")

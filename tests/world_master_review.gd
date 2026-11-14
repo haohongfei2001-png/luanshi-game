@@ -72,6 +72,10 @@ func _run() -> void:
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
 	await _snap("grove-0135",Vector2(38.,-10.),18.)
 	await _snap("gate-architecture",Vector2(48.,0.),18.)
+	var previous_lod:=root.mesh_lod_threshold
+	root.mesh_lod_threshold=0.
+	await _snap("native-crowns-full-geometry",Vector2(38.,-10.),18.)
+	root.mesh_lod_threshold=previous_lod
 	field.map.sun.rotation_degrees=Vector3(-48.,-31.,0.)
 	await _snap("previous-daylight",Ground.BRIDGE_VIEW,22.)
 	field.map.sun.rotation_degrees=Vector3(-48.,58.,0.)

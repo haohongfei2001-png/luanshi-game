@@ -14,6 +14,8 @@ var libraries:Dictionary={}
 var ground_material:ShaderMaterial
 var water_material:ShaderMaterial
 var botanical_materials:Dictionary={}
+var crown_pairs:Array[Dictionary]=[]
+var detailed_crowns:=true
 
 func _ready() -> void:
 	name="RiverMasterMap"
@@ -84,7 +86,7 @@ func _library(path:String) -> Dictionary:
 					var label:=material.resource_name.to_lower()
 					kind=0 if ("bark" in label or "wood" in label or "branch" in label) else 3
 				mesh.surface_set_material(surface,_botanical_material(material,kind,mesh.get_aabb()))
-			if path==FORT and String(model.name) in ["han_wall_long","han_wall_tower","han_wall_gate_struct"]:
+			if path==FORT and String(model.name) in ["han_wall_long","han_wall_tower","han_wall_gate_struct","GatePiers"]:
 				var footing:=ShaderMaterial.new()
 				footing.shader=preload("res://scripts/field/river_master_masonry.gdshader")
 				footing.set_shader_parameter("native_atlas",material.albedo_texture)
@@ -189,9 +191,20 @@ func _wall(a:Vector2,b:Vector2) -> void:
 		_piece(FORT,"han_wall_long",Vector3(p.x,0.,p.y),Vector3(1.,1.,length/12.997),yaw)
 
 func _fortress() -> void:
-	_piece(FORT,"han_wall_gate_struct",Vector3(Ground.WALL_X,0.,0.))
+	var station:=Vector3(Ground.WALL_X,0.,0.)
+	_piece(FORT,"GatePiers",station)
+	var hall:=_piece(FORT,"GateWatchHall",station)
+	var box:=hall.mesh.get_aabb()
+	var patches:Array=[]
+	for label in ["GateWestPitch","GateEastPitch"]:
+		var pitch:=_piece(FORT,label,station)
+		pitch.visible=false
+		var bounds:=pitch.mesh.get_aabb()
+		patches.append({"node":pitch,"center":station+bounds.get_center(),"w":bounds.size.x*.5,"d":bounds.size.z*.5,
+			"normal":Vector3.LEFT if label=="GateWestPitch" else Vector3.RIGHT})
+	roofs.append({"node":hall,"center":station+box.get_center(),"w":box.size.x*.5,"d":box.size.z*.5,"pieces":patches})
 	for side:float in [-1.,1.]:
-		_wall(Vector2(Ground.WALL_X,side*10.4),Vector2(Ground.WALL_X,side*Ground.WALL_Z))
+		_wall(Vector2(Ground.WALL_X,side*7.65),Vector2(Ground.WALL_X,side*Ground.WALL_Z))
 		_wall(Vector2(Ground.WALL_X,side*Ground.WALL_Z),Vector2(Ground.BACK_X,side*Ground.WALL_Z))
 		_wall(Vector2(Ground.BACK_X,side*Ground.POSTERN_HALF),Vector2(Ground.BACK_X,side*Ground.WALL_Z))
 		for x:float in [Ground.WALL_X,Ground.BACK_X]:
@@ -250,10 +263,12 @@ func _scene_plant(path:String,at:Vector2,height:float,yaw:float=0.) -> Node3D:
 	group.name=path.get_file().get_basename()
 	group.position=Vector3(at.x,_land_height(at),at.y)
 	add_child(group)
+	var close_parts:Array[MeshInstance3D]=[]
 	for part:String in parts:
 		var child:=_piece(path,part,group.position,Vector3.ONE*scale_value,yaw,anchor)
 		child.reparent(group,true)
-		child.visibility_range_end=80. if path==BROADLEAF else (250. if height>3. else 150.)
+		child.visibility_range_end=260. if height>3. else 150.
+		close_parts.append(child)
 		child.lod_bias=4. if path==BROADLEAF else 1.2
 	if path==BROADLEAF:
 		# A complete authored crown retains its area at army overview distances.
@@ -263,10 +278,11 @@ func _scene_plant(path:String,at:Vector2,height:float,yaw:float=0.) -> Node3D:
 		var distant:=_plant(WOODLAND,distant_part,at,height/distant_mesh.get_aabb().size.y,yaw)
 		distant.scale.x*=1.12
 		distant.scale.z*=1.12
-		distant.visibility_range_begin=80.
+		distant.visible=false
 		distant.visibility_range_end=300.
 		distant.lod_bias=2.
 		distant.reparent(group,true)
+		crown_pairs.append({"close":close_parts,"overview":distant})
 	return group
 
 func _bank_rocks(channel:float,moat:bool) -> void:
@@ -386,7 +402,7 @@ func _banks_and_groves() -> void:
 				_native_understory(THICKET,q+Vector2(1.2,1.1),1.4,i+j,i+j)
 	# Complete scanned outcrops sit partly within the background ridge.
 	for i in 14:
-		var p:=Vector2(-141.+i*22.,-77.-5.*sin(i*.8))
+		var p:=Vector2(-141.+i*22.,-96.-5.*sin(i*.8))
 		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",p,.60+.05*(i%4),i*.63)
 		cliff.position.y-=2.0
 
@@ -400,3 +416,14 @@ func _field_quarters() -> void:
 		cart.position=p
 		cart.rotation.y=.25
 		add_child(cart)
+
+func reveal_sightline(focus:Vector2,hero:Vector2,eye:Vector3,zoom:float,live:bool,assault_near:bool=false) -> void:
+	super.reveal_sightline(focus,hero,eye,zoom,live,assault_near)
+	# Orthographic zoom changes projected size while eye distance remains 77.5 m.
+	# Select the whole crown by its on-screen size rather than that eye distance.
+	var detailed:=zoom<56. if detailed_crowns else zoom<48.
+	if detailed==detailed_crowns:return
+	detailed_crowns=detailed
+	for pair:Dictionary in crown_pairs:
+		for node:MeshInstance3D in pair.close:node.visible=detailed
+		pair.overview.visible=not detailed
