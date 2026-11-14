@@ -19,6 +19,9 @@ ASSETS=[
     ("modular_wooden_pier",85000,"Rico Cilliers"),
     ("island_tree_03",180000,"Rico Cilliers and Rob Tuytel"),
     ("pine_tree_01",120000,"Rico Cilliers and Rob Tuytel"),
+    ("island_tree_01",220000,"Rico Cilliers and Rob Tuytel"),
+    ("fern_02",6000,"Rico Cilliers and Rob Tuytel"),
+    ("shrub_03",22000,"Rico Cilliers"),
 ]
 HEADERS={"User-Agent":"Luanshi-River-Art/1.0 (github.com/haohongfei2001-png/luanshi-game)"}
 def read(url):
@@ -107,4 +110,9 @@ def import_master(asset,budget,author):
     (destination/"NOTICE.txt").write_text(asset+" by "+author+"\nCC0-1.0. https://polyhaven.com/license\nhttps://polyhaven.com/a/"+asset+"\nDerived game geometry and original matched albedo/AO; see SOURCE.json for exact source and checksums.\n")
     print("MASTER_READY",asset,receipt["source_triangles"],receipt["game_triangles"],receipt["bounds_blender"],flush=True)
 CACHE.mkdir(parents=True,exist_ok=True)
-for asset,budget,author in ASSETS:import_master(asset,budget,author)
+requested=set(sys.argv[sys.argv.index("--")+2:])
+unknown=requested-{row[0] for row in ASSETS}
+assert not unknown,unknown
+for asset,budget,author in ASSETS:
+    if requested and asset not in requested:continue
+    import_master(asset,budget,author)

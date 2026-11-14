@@ -28,13 +28,20 @@ static func height(p: Vector2) -> float:
 	var slope := (p - RIDGE) / RIDGE_RADII
 	var hill := maxf(0.0, 1.0 - slope.length_squared())
 	var east := (p - EAST_HILL) / EAST_RADII
-	var bank := clampf((absf(p.x - RIVER_X) - 3.9) / 2.4, 0.0, 1.0)
+	var bank := smoothstep(3.9,6.8,absf(p.x-river_center(p.y))-river_shore_variation(p.y))
 	var western_ridge:=(p-Vector2(-86.,-48.))/Vector2(46.,17.)
 	var northern_ridge:=(p-Vector2(-4.,58.))/Vector2(29.,11.)
 	var eastern_ridge:=(p-Vector2(112.,-45.))/Vector2(25.,17.)
 	var relief:=4.8*pow(maxf(0.,1.-western_ridge.length_squared()),2)+3.6*pow(maxf(0.,1.-northern_ridge.length_squared()),2)+5.4*pow(maxf(0.,1.-eastern_ridge.length_squared()),2)
 	relief*=smoothstep(6.3,14.,absf(p.x-RIVER_X))
 	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief - (1.0 - bank) * 0.92
+
+static func river_center(z: float) -> float:
+	var approach:=smoothstep(4.2,12.,absf(z-crossing(z)))
+	return RIVER_X+approach*(1.10*sin(z*.083)+.45*sin(z*.173+.7))
+
+static func river_shore_variation(z: float) -> float:
+	return smoothstep(4.2,9.,absf(z-crossing(z)))*(.44*sin(z*.63)+.22*sin(z*1.27+.8))
 
 static func crossing(z: float) -> float:
 	var best := 0.0
@@ -49,7 +56,8 @@ static func parapet(p: Vector2) -> float:
 	return clampf((z-5.5)*0.43,0.0,3.25)
 
 static func moat_depth(p: Vector2) -> float:
-	return (1.0-smoothstep(MOAT_WATER,MOAT_BANK,absf(p.x-MOAT_X))) * (1.0-smoothstep(MOAT_END-1.5,MOAT_END+1.5,absf(p.y)))
+	var edge:=smoothstep(MOAT_DECK+1.,MOAT_DECK+4.,absf(p.y))*(.48*sin(p.y*.71)+.25*sin(p.y*1.33))
+	return (1.0-smoothstep(MOAT_WATER,MOAT_BANK+.6+edge,absf(p.x-MOAT_X))) * (1.0-smoothstep(MOAT_END-2.2,MOAT_END+1.5,absf(p.y)))
 
 static func moat_blocks(p: Vector2) -> bool:
 	return absf(p.x-MOAT_X)<MOAT_WATER and absf(p.y)>MOAT_DECK and absf(p.y)<MOAT_END
@@ -85,7 +93,7 @@ static func pace(p: Vector2, mounted: bool, bridgehead: bool=false) -> float:
 
 static func blocked(p: Vector2, open: bool, bridgehead: bool=false) -> bool:
 	if bridgehead and moat_blocks(p): return true
-	if absf(p.x - RIVER_X) < 4.8 and absf(p.y - crossing(p.y)) > 3.8:
+	if absf(p.x-river_center(p.y))<4.8+river_shore_variation(p.y) and absf(p.y-crossing(p.y))>3.8:
 		return true
 	if absf(p.x - WALL_X) < 1.4 and absf(p.y) <= WALL_Z + 1.0:
 		return not (open and absf(p.y) < GATE_HALF - 0.3)
@@ -124,8 +132,8 @@ static func waypoint(p: Vector2, goal: Vector2, bridgehead: bool=false) -> Vecto
 	if (p.x < RIVER_X - 5.0 and goal.x > RIVER_X - 5.0) or (p.x > RIVER_X + 5.0 and goal.x < RIVER_X + 5.0):
 		var z := crossing(p.y)
 		if absf(p.y - z) > 2.7:
-			return Vector2(RIVER_X + signf(p.x - RIVER_X) * 7.0, z)
-		return Vector2(RIVER_X - signf(p.x - RIVER_X) * 7.1, z)
+			return Vector2(RIVER_X + signf(p.x - RIVER_X) * 8.8, z)
+		return Vector2(RIVER_X - signf(p.x - RIVER_X) * 8.9, z)
 	if p.x < WALL_X and goal.x >= WALL_X and absf(p.y) > GATE_HALF - 1.2:
 		return Vector2(WALL_X - 4.0, 0)
 	return goal

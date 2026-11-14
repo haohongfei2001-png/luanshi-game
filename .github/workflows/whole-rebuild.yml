@@ -2,7 +2,7 @@ name: Integrate and play the whole replacement battlefield
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','.github/workflows/whole-rebuild.yml']
+    paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','tools/art/build_intact_bridge.py','tools/art/import_world_masters.py','scripts/field/ground.gd','.github/workflows/whole-rebuild.yml']
 permissions:
   contents: write
 concurrency:
@@ -25,9 +25,15 @@ jobs:
           touch artifacts/.gdignore
           python3 tools/art/import_ground_masters.py "$RUNNER_TEMP/art-sources"
           python3 tools/art/build_river_architecture.py "$RUNNER_TEMP/art-sources"
+          python3 tools/art/build_intact_bridge.py
+          for asset in island_tree_01 fern_02 shrub_03; do
+            if [ ! -f "assets/river_gate/world/masters/$asset/SOURCE.json" ]; then
+              blender --background --factory-startup --python tools/art/import_world_masters.py -- "$RUNNER_TEMP/whole-plants" "$asset" > "artifacts/world-rebuild/$asset.log" 2>&1 || { tail -n 60 "artifacts/world-rebuild/$asset.log"; exit 1; }
+            fi
+          done
           blender --background --factory-startup --python tools/art/build_river_willows.py -- "$RUNNER_TEMP/canopies" > artifacts/world-rebuild/canopies.log 2>&1 || { tail -n 60 artifacts/world-rebuild/canopies.log; exit 1; }
-          git add assets/river_gate/world/ground assets/river_gate/world/architecture assets/river_gate/world/willows
-          git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake native ground surfaces and the complete gate leaf bind geometry' || test -z "$(git status --porcelain assets/river_gate/world)"
+          git add assets/river_gate/world
+          git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete timber spans, full tree masters and fitted battlefield material sources' || test -z "$(git status --porcelain assets/river_gate/world)"
           git push origin HEAD:refs/heads/codex/river-whole-rebuild
       - name: Import the actual Godot game
         run: |

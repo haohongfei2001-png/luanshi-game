@@ -4,7 +4,9 @@ const WORLD := "res://assets/river_gate/world/"
 const FORT := WORLD+"architecture/river_fort.glb"
 const PIER := WORLD+"masters/modular_wooden_pier/modular_wooden_pier.gltf"
 const CLIFF := WORLD+"masters/coastal_cliff_02/coastal_cliff_02.gltf"
-const BROADLEAF := WORLD+"masters/island_tree_03/island_tree_03.gltf"
+const BROADLEAF := WORLD+"masters/island_tree_01/island_tree_01.gltf"
+const SHRUB := WORLD+"masters/shrub_03/shrub_03.gltf"
+const FERN := WORLD+"masters/fern_02/fern_02.gltf"
 const PINE := WORLD+"masters/pine_tree_01/pine_tree_01.gltf"
 var libraries:Dictionary={}
 var ground_material:ShaderMaterial
@@ -174,14 +176,15 @@ func _water(at:Vector3,size:Vector2) -> void:
 	add_child(node)
 
 func _bridge(x:float,z:float) -> void:
-	var plank:Mesh=_library(PIER)["modular_wooden_pier_planks"]
+	var deck_path:=WORLD+"bridge/intact_bridge_span.glb"
+	var plank:Mesh=_library(deck_path)["IntactBridgeSpan"]
 	var bounds:=plank.get_aabb()
 	var anchor:=bounds.get_center()
 	anchor.y=bounds.end.y
-	for along in 5:
+	for along in 4:
 		for across in 3:
-			_piece(PIER,"modular_wooden_pier_planks",Vector3(x-4.8+along*2.4,.13,z-2.52+across*2.52),
-				Vector3(.998,1.,1.091),PI*.5,anchor)
+			_piece(deck_path,"IntactBridgeSpan",Vector3(x-4.5+along*3.,.13,z-2.49+across*2.49),
+				Vector3(2.50/bounds.size.x,1.,3.01/bounds.size.z),PI*.5,anchor)
 	# The mature tied-timber edge includes its braces, knots and driven supports.
 	var rail_material:=StandardMaterial3D.new()
 	rail_material.albedo_texture=preload("res://assets/third_party/wildfire_bridge/bound_timber.png")
@@ -192,21 +195,67 @@ func _bridge(x:float,z:float) -> void:
 		rail.material_override=rail_material
 
 func _river() -> void:
-	_water(Vector3(Ground.RIVER_X,-.37,0.),Vector2(10.5,256.))
+	_water(Vector3(Ground.RIVER_X,-.37,0.),Vector2(20.,256.))
 	for z:float in Ground.CROSSINGS: _bridge(Ground.RIVER_X,z)
 	if bridgehead:
-		_water(Vector3(Ground.MOAT_X,-.38,0.),Vector2(10.3,53.))
+		_water(Vector3(Ground.MOAT_X,-.38,0.),Vector2(16.,58.))
 		_bridge(Ground.MOAT_X,0.)
 	var boat:=preload("res://assets/environment/river_skiff.gltf").instantiate() as Node3D
 	boat.position=Vector3(Ground.RIVER_X+1.8,-.35,-11.5)
 	boat.rotation.y=.12
 	add_child(boat)
 
-func _bank_cliff(x:float,z:float,side:float,index:int) -> void:
-	var node:=_piece(CLIFF,"coastal_cliff_02_LOD0",Vector3(x,-.94,z),
-		Vector3(.19,.27,.18),side*PI*.5)
-	node.lod_bias=.50
-	node.name="AuthoredBank_%d"%index
+func _scene_plant(path:String,at:Vector2,height:float,yaw:float=0.) -> Node3D:
+	var parts:=_library(path)
+	var bounds:=AABB()
+	var first:=true
+	for mesh:Mesh in parts.values():
+		bounds=mesh.get_aabb() if first else bounds.merge(mesh.get_aabb())
+		first=false
+	var anchor:=bounds.get_center()
+	anchor.y=bounds.position.y
+	var scale_value:=height/maxf(bounds.size.y,.01)
+	var group:=Node3D.new()
+	group.name=path.get_file().get_basename()
+	group.position=Vector3(at.x,_land_height(at),at.y)
+	add_child(group)
+	for part:String in parts:
+		var child:=_piece(path,part,group.position,Vector3.ONE*scale_value,yaw,anchor)
+		child.reparent(group,true)
+		child.visibility_range_end=140. if height>3. else 75.
+	return group
+
+func _bank_rocks(channel:float,moat:bool) -> void:
+	const STONE_PATH:="res://assets/third_party/polyhaven_bank/bank_stones.glb"
+	var material:=StandardMaterial3D.new()
+	material.albedo_texture=preload("res://assets/third_party/polyhaven_bank/lichen_and_stone.jpg")
+	material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	material.roughness=.96
+	material.metallic_specular=.08
+	var stations:Array[Vector3]=[
+		Vector3(1.,-8.5,3.3),Vector3(-1.,-12.,4.0),Vector3(1.,-17.2,3.5),
+		Vector3(-1.,-21.,3.2),Vector3(-1.,7.8,3.6),Vector3(1.,12.4,4.1),
+		Vector3(-1.,17.,3.4),Vector3(1.,22.,3.0)]
+	if not moat:
+		stations.append_array([Vector3(1.,-55.,4.3),Vector3(-1.,-46.,4.2),
+			Vector3(-1.,-29.,3.1),Vector3(1.,28.,3.4),Vector3(-1.,43.,4.0),
+			Vector3(1.,52.,3.6),Vector3(-1.,61.,4.4)])
+	var shapes:Array[Vector4]=[Vector4(0.,0.,1.,.82),Vector4(.8,.7,.63,.74),
+		Vector4(-1.,.6,.57,.71),Vector4(.4,1.2,.38,.49)]
+	for i in stations.size():
+		var station:=stations[i]
+		var center:=channel if moat else Ground.river_center(station.y)
+		for j in shapes.size():
+			var shape:=shapes[j]
+			var width:=station.z*shape.z
+			var along:=station.y+shape.x*1.2
+			var inset:=2.35+shape.y*.72
+			var at:=Vector3(center+station.x*inset,-.67+shape.y*.13,along)
+			var rock:=_piece(STONE_PATH,"RiverStone%02d"%[(i*5+j*7)%6],at,
+				Vector3(width,width*shape.w,width*.84),i*1.83+j*2.14)
+			rock.material_override=material
+			rock.name="WholeRiverStone"
+			rock.visibility_range_end=175.
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
@@ -229,47 +278,44 @@ func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 	add_child(tree)
 
 func _banks_and_groves() -> void:
-	# Whole cliff silhouettes sit within the existing unwalkable channel.
-	# Both ends of every bridge remain open for the actual army routes.
-	var index:=0
-	var channels:Array[float]=[Ground.RIVER_X]
-	if bridgehead: channels.append(Ground.MOAT_X)
-	for channel:float in channels:
-		var locations:Array[float]=[-23.,-15.,-8.8,8.8,16.,23.]
-		if channel==Ground.RIVER_X: locations=[-61.,-52.,-44.,-26.,-17.,-8.8,8.8,17.,26.,44.,52.,61.]
-		for side:float in [-1.,1.]:
-			for z:float in locations:
-				index+=1
-				_bank_cliff(channel+side*3.25,z,side,index)
-			if channel==Ground.MOAT_X:
-				_willow(Vector2(channel+side*6.25,side*-11.5),0,.91,.5+side)
-				_willow(Vector2(channel+side*6.8,side*21.5),1,.92,side*1.2)
-			else:
-				for z:float in [-50.,-18.,19.,51.]:
-					_willow(Vector2(channel+side*6.8,z),index%2,.9,side*.6+z*.11)
-	# Interlocking broad-leaf crowns carry the grove from foreground to background.
-	var clusters:Array[Vector3]=[
-		Vector3(39.,0.,-14.5),Vector3(36.5,0.,-18.),Vector3(42.5,0.,-17.),
-		Vector3(31.5,0.,16.5),Vector3(36.,0.,21.),Vector3(44.,0.,19.),
-		Vector3(-6.,0.,35.),Vector3(0.,0.,40.),Vector3(-13.,0.,42.),Vector3(8.,0.,44.),
-		Vector3(-63.,0.,-33.),Vector3(-74.,0.,-37.),Vector3(-91.,0.,33.),
-		Vector3(91.,0.,38.),Vector3(98.,0.,47.),Vector3(76.,0.,53.)]
-	for i in clusters.size():
-		var p:=Vector2(clusters[i].x,clusters[i].z)
-		_maple(p,i%2,.88+.06*(i%4),i*2.13)
-		for j in 2:
-			var q:=p+Vector2(cos(i+j*2.1),sin(i+j*2.1))*3.2
-			_maple(q,(i+j)%2,.19+.045*j,i+j*.9)
-	# A coherent tree line and rocky skyline surrounds the full playable map.
-	for i in 22:
-		var p:=Vector2(-125.+i*12.,-49.-7.*sin(i*.63))
-		var pine:="pine_tree_01_%s_LOD0"%["a","b","c"][i%3]
-		_plant(PINE,pine,p,.64+.07*(i%5),i*1.41)
-		if i%3==0:
-			_plant(CLIFF,"coastal_cliff_02_LOD0",p+Vector2(0.,-8.),.7,i*.16)
-	for i in 13:
-		var p:=Vector2(-120.+i*21.,57.+5.*sin(i*.74))
-		_plant(PINE,"pine_tree_01_b_LOD0",p,.82,i*.71)
+	_bank_rocks(Ground.RIVER_X,false)
+	if bridgehead: _bank_rocks(Ground.MOAT_X,true)
+	var near_groves:Array[Vector3]=[
+		Vector3(40.,-17.,6.8),Vector3(36.,-21.,5.6),Vector3(44.,-23.,6.4),
+		Vector3(34.,19.,6.2),Vector3(40.,24.,7.1),Vector3(29.,25.,5.8)]
+	for i in near_groves.size():
+		var entry:=near_groves[i]
+		var p:=Vector2(entry.x,entry.y)
+		_scene_plant(BROADLEAF,p,entry.z,i*2.1)
+		for j in 3:
+			var q:=p+Vector2(cos(i+j*2.1),sin(i+j*2.1))*3.1
+			_scene_plant(SHRUB,q,.38+.10*(j%2),i+j*1.9)
+			_scene_plant(FERN,q+Vector2(.9,-.4),.35+.06*j,j+.8*i)
+	var willow_positions:Array[Vector3]=[
+		Vector3(17.5,-11.5,0.),Vector3(30.5,17.5,1.),
+		Vector3(30.5,-25.,1.),Vector3(17.3,23.,0.),
+		Vector3(-39.,-15.,0.),Vector3(-24.8,20.,1.),
+		Vector3(-40.,47.,1.),Vector3(-24.5,-49.,0.)]
+	for i in willow_positions.size():
+		var p:=willow_positions[i]
+		_willow(Vector2(p.x,p.y),int(p.z),.90+.07*(i%2),i*1.8)
+	# Complete, differently aged woodland masses follow the shared terrain ridges.
+	var wooded_slopes:Array[Vector2]=[
+		Vector2(-9.,39.),Vector2(4.,44.),Vector2(-21.,48.),
+		Vector2(-70.,-42.),Vector2(-87.,-47.),Vector2(-106.,-42.),
+		Vector2(-98.,39.),Vector2(-72.,43.),
+		Vector2(79.,47.),Vector2(98.,48.),Vector2(112.,-41.)]
+	for i in wooded_slopes.size():
+		var p:=wooded_slopes[i]
+		_scene_plant(BROADLEAF,p,6.9+.65*(i%3),i*1.37)
+		for j in 3:
+			var q:=p+Vector2(cos(i*.7+j*2.1),sin(i*.7+j*2.1))*5.4
+			_plant(PINE,"pine_tree_01_%s_LOD0"%["a","b","c"][(i+j)%3],q,.53+.05*j,i+j*1.1)
+			_scene_plant(SHRUB,q+Vector2(1.2,1.1),.45,i+j)
+	# A few complete outcrops form the skyline outside traversable ground.
+	for i in 10:
+		var p:=Vector2(-135.+i*29.,-75.-8.*sin(i*.8))
+		_plant(CLIFF,"coastal_cliff_02_LOD0",p,.48+.05*(i%4),i*.63)
 
 func _field_quarters() -> void:
 	for side:float in [-1.,1.]:
