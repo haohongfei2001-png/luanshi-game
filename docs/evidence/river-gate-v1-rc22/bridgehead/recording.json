@@ -1,0 +1,234 @@
+{
+  "game_source": "dc9805fd2930344be9737cfc19074442618d7e5c",
+  "capture_source": "b2f92020a21076b1bfbd93aba6f4874f474cab12",
+  "capture_run": "43535486291",
+  "mode": "Godot Movie Maker 24 successive game frames per simulated second; physical keyboard and pointer input; no game-state writes",
+  "fps": 24,
+  "physical_capture_px": [
+    1600,
+    1000
+  ],
+  "logical_root": [
+    1600,
+    1000
+  ],
+  "seconds": 33.25,
+  "simulated_battle_seconds": 32.7,
+  "source_frame_count": 798,
+  "streams": [
+    {
+      "codec_name": "h264",
+      "width": 1600,
+      "height": 1000,
+      "avg_frame_rate": "24/1",
+      "duration": "33.250000",
+      "nb_frames": "798"
+    },
+    {
+      "codec_name": "aac",
+      "channels": 2,
+      "avg_frame_rate": "0/0",
+      "duration": "33.250000",
+      "nb_frames": "1560"
+    }
+  ],
+  "source_frame_range": [
+    0,
+    797
+  ],
+  "max_signal_db": -11.8,
+  "sha256": "7a05ad133b6a1184a305b852af39ac6af01d219b822c8e91a08a406a265463ba",
+  "bytes": 104013593,
+  "summary": {
+    "camera_start": [
+      34.2000007629395,
+      1.0
+    ],
+    "different_lens": false,
+    "feet_in_deep_water": false,
+    "first_game_frame": 11,
+    "first_player_strike": 135,
+    "frames_of_play": 785,
+    "held_both": 654,
+    "inputs": [
+      {
+        "aimed_at": 595,
+        "cursor": [
+          721.584228515625,
+          279.271362304688
+        ],
+        "direction": [
+          0.900077700614929,
+          0.435729503631592
+        ],
+        "key": "E",
+        "range": 4.63919137715951,
+        "tick": 128
+      }
+    ],
+    "internal": 1.0,
+    "last": {
+      "arch_screen": [
+        1041.05517578125,
+        79.5673599243164
+      ],
+      "blocks": 56,
+      "both_landmarks": true,
+      "center": [
+        34.2000007629395,
+        1.0
+      ],
+      "crossed": 360,
+      "deck_screen": [
+        309.12451171875,
+        529.878112792969
+      ],
+      "feet_in_deep_water": 0,
+      "gate_hp": 0.0,
+      "guarding": 0,
+      "hero": [
+        28.7934246063232,
+        -2.71150970458984
+      ],
+      "hero_impacts": 1,
+      "hits": [
+        878,
+        878
+      ],
+      "hp": 100.0,
+      "losses": [
+        208,
+        212
+      ],
+      "orders_delivered": 1,
+      "pitch": 0.886197745392511,
+      "result": "",
+      "soldier_shield_contacts": 5,
+      "tick": 654,
+      "visible_ordinary": 573,
+      "visible_shields": 14,
+      "yaw": -0.575958653158129,
+      "zoom": 22.0
+    },
+    "officers": [
+      16,
+      16
+    ],
+    "ordinary": [
+      512,
+      512
+    ],
+    "physics_fps": 60,
+    "rank_spear_contacts": [
+      {
+        "blocked": false,
+        "spearman": 68,
+        "target": 583,
+        "tick": 7
+      },
+      {
+        "blocked": false,
+        "spearman": 580,
+        "target": 65,
+        "tick": 10
+      },
+      {
+        "blocked": false,
+        "spearman": 610,
+        "target": 71,
+        "tick": 10
+      },
+      {
+        "blocked": true,
+        "spearman": 65,
+        "target": 581,
+        "tick": 10
+      },
+      {
+        "blocked": false,
+        "spearman": 578,
+        "target": 72,
+        "tick": 12
+      },
+      {
+        "blocked": false,
+        "spearman": 33,
+        "target": 551,
+        "tick": 12
+      },
+      {
+        "blocked": false,
+        "spearman": 66,
+        "target": 582,
+        "tick": 12
+      },
+      {
+        "blocked": true,
+        "spearman": 577,
+        "target": 36,
+        "tick": 13
+      },
+      {
+        "blocked": false,
+        "spearman": 583,
+        "target": 68,
+        "tick": 17
+      },
+      {
+        "blocked": false,
+        "spearman": 548,
+        "target": 40,
+        "tick": 21
+      },
+      {
+        "blocked": false,
+        "spearman": 581,
+        "target": 73,
+        "tick": 22
+      },
+      {
+        "blocked": false,
+        "spearman": 69,
+        "target": 609,
+        "tick": 22
+      }
+    ],
+    "resolution": [
+      1600,
+      1000
+    ],
+    "sampled_ticks": 654,
+    "seed": 61112,
+    "shield_contacts": [
+      {
+        "defender": 70,
+        "source": 633,
+        "tick": 14
+      },
+      {
+        "defender": 70,
+        "source": 618,
+        "tick": 16
+      },
+      {
+        "defender": 70,
+        "source": 617,
+        "tick": 17
+      },
+      {
+        "defender": 742,
+        "source": 151,
+        "tick": 141
+      },
+      {
+        "defender": 128,
+        "source": 733,
+        "tick": 581
+      }
+    ],
+    "software": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "world_audit": true
+  },
+  "device_framerate_measurement": false,
+  "gameplay_review_pass": true
+}
