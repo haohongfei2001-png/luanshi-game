@@ -8,7 +8,9 @@ editor,project,patch,atlas,out,focus=map(lambda x:Path(x).resolve(),sys.argv[1:]
 if sys.platform!='darwin' or os.environ.get('GITHUB_ACTIONS')!='true' or os.environ.get('RUNNER_OS')!='macOS':raise RuntimeError('Existing hosted Mac only')
 out.mkdir(parents=True,exist_ok=True)
 scale_matrix=os.environ.get('COMPARE_SCALE_MATRIX')=='1'
-counts=[100,250,512] if scale_matrix else [20]
+repeat512=os.environ.get('COMPARE_REPEAT512')=='1'
+counts=[512] if repeat512 else ([100,250,512] if scale_matrix else [20])
+if repeat512 and not scale_matrix:raise RuntimeError('Repeat requires identical contact-window scale configuration')
 exe=patch/'godot.macos.template_release.arm64';pack=exe.with_name('godot.macos.template_release.pck')
 if hashlib.sha256(exe.read_bytes()).hexdigest()!='9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3':raise RuntimeError('Unexpected reused engine')
 if pack.exists():raise RuntimeError('Prior pack cannot be overwritten')
@@ -38,9 +40,13 @@ with tempfile.TemporaryDirectory(prefix='representation-empty-') as empty:
  (out/'pack-and-source.json').write_text(json.dumps(provenance,indent=2));shutil.copyfile(atlas/'atlas.json',out/'atlas.json')
  exe.chmod(0o755)
  for count in counts:
-  for capture in [True,False]:
-   for mode in ['shared3d','sprite8']:
-    name=('capture-' if capture else 'profile-')+mode+(f'-{count}' if scale_matrix else '');target=out/name;target.mkdir()
+  for capture in ([False] if repeat512 else [True,False]):
+   for repeat_index,mode in enumerate(['sprite8','shared3d','shared3d','sprite8'] if repeat512 else ['shared3d','sprite8']):
+    name=('capture-' if capture else 'profile-')+mode+(f'-{count}' if scale_matrix else '')+(f'-repeat{repeat_index+1}' if repeat512 else '');target=out/name;target.mkdir()
+    if repeat512:
+     for label,command in [('vm-before',['/usr/bin/vm_stat']),('swap-before',['/usr/sbin/sysctl','vm.swapusage']),('pressure-before',['/usr/bin/memory_pressure','-Q']),('processes-before',['/bin/ps','-A','-o','pid,%cpu,rss,comm'])]:
+      snapshot=subprocess.run(command,capture_output=True,text=True,timeout=15);(target/(label+'.txt')).write_text(snapshot.stdout+snapshot.stderr)
+      if snapshot.returncode:raise RuntimeError('Read-only resource snapshot failed '+label)
     env=dict(os.environ,COMPARE_MODE=mode,COMPARE_COUNT=str(count),COMPARE_CAMERA_SIZE='12',COMPARE_END_TICK=('570' if count==512 else '370') if scale_matrix else '620',COMPARE_LOD_TIER='1',COMPARE_CAPTURE='1' if capture else '0',COMPARE_OUTPUT=str(target),COMPARE_ASSETS=str(atlas),COMPARE_REQUIRE_METAL='1')
     master,slave=pty.openpty();args=['/usr/bin/time','-l','-o',str(target/'resource-time.log'),str(exe),'--rendering-method','mobile','--rendering-driver','metal','--audio-driver','Dummy','--disable-vsync']
     p=subprocess.Popen(args,cwd=empty,env=env,stdout=slave,stderr=slave,stdin=subprocess.DEVNULL,start_new_session=True);os.close(slave)
@@ -74,4 +80,8 @@ with tempfile.TemporaryDirectory(prefix='representation-empty-') as empty:
      (target/'process.json').write_text(json.dumps({'exit':p.returncode,'failure':failure,'process_wall_seconds':time.monotonic()-started,'focused_own_pid':focused,'capture_readback':capture,'performance_source':'raw frame intervals, not this process time','command':args},indent=2))
     if failure or p.returncode or re.search(r'SCRIPT ERROR|SHADER ERROR|ERROR:',log):raise RuntimeError(name+' failed: '+str(failure)+' '+log[-900:])
     if not re.search(r'Metal .*Forward Mobile.*Apple',log):raise RuntimeError('Actual Apple Metal startup missing')
+    if repeat512:
+     for label,command in [('vm-after',['/usr/bin/vm_stat']),('swap-after',['/usr/sbin/sysctl','vm.swapusage']),('pressure-after',['/usr/bin/memory_pressure','-Q']),('processes-after',['/bin/ps','-A','-o','pid,%cpu,rss,comm'])]:
+      snapshot=subprocess.run(command,capture_output=True,text=True,timeout=15);(target/(label+'.txt')).write_text(snapshot.stdout+snapshot.stderr)
+      if snapshot.returncode:raise RuntimeError('Read-only resource snapshot failed '+label)
     print('COMPLETE',name,flush=True)

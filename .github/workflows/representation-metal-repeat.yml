@@ -1,0 +1,86 @@
+name: Bounded512 counterbalanced no-readback Metal repeat
+on:
+  push:
+    branches: ['dot/representation-metal-repeat']
+    paths: ['tools/representation_metal/**','tools/representation_compare/**','.github/workflows/representation-metal-repeat.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  COMPARE_SCALE_MATRIX: '1'
+  COMPARE_REPEAT512: '1'
+jobs:
+  native-smoke:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: representation-lod-motion-ab1b22064e8cf6a3a55137d89faae494190f44d7
+          run-id: '43634271139'
+          github-token: ${{ github.token }}
+          path: .inputs/source
+      - uses: actions/download-artifact@v4
+        with:
+          name: mobile-mutex-angle-template
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+          path: .inputs/engine
+      - name: Restore exact existing UBC source and atlas, retain license evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p evidence "$RUNNER_TEMP/source" "$RUNNER_TEMP/atlas-original" "$RUNNER_TEMP/atlas-cropped"
+          echo 'e5ccee3bdd2383d19a7019e3a45283b84a594317d80663ac80e6a7ff8403b968  .inputs/source/metal-oracle-source.tar.gz' | shasum -a 256 -c -
+          echo '9cb81197d4402a2b5b57719ba7f89616b90ebbb33e88dbb6dbab7c588fc036d3  .inputs/engine/godot.macos.template_release.arm64' | shasum -a 256 -c -
+          tar -xzf .inputs/source/metal-oracle-source.tar.gz -C "$RUNNER_TEMP/source"
+          mkdir -p assets/ubc_lab
+          cp -R "$RUNNER_TEMP/source/assets/ubc_lab/." assets/ubc_lab/
+          cp "$RUNNER_TEMP/source/fixture-manifest.json" evidence/source-fixture-manifest.json
+          cp assets/ubc_lab/NOTICE.md evidence/UBC-NOTICE.md
+          cp assets/ubc_lab/source/*LICENSE* evidence/
+          gh api repos/haohongfei2001-png/luanshi-game/actions/artifacts/14126743401/zip > "$RUNNER_TEMP/atlas.zip"
+          echo "1e817b66e1c649db59b875f14655f8638b51f6a2f4c2313dc1d8c9462a45ab3e  $RUNNER_TEMP/atlas.zip" | shasum -a 256 -c -
+          unzip -q "$RUNNER_TEMP/atlas.zip" -d "$RUNNER_TEMP/atlas-original"
+          echo 'Pinned existing Godot source atlas43625844890 /14126743401; crop only, no re-render. UBC/UAL exact historical CC0 packages retained.' > evidence/source-origin.txt
+          { uname -a; sw_vers; system_profiler SPHardwareDataType SPDisplaysDataType; } > evidence/hardware.txt
+          echo "$GITHUB_SHA" > evidence/source-sha.txt
+      - name: Official existing importer and external checker
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "0155bbc8dcf179edab4ef08e3dbbd4480d7434ab1990cb3fb25517d453b1b65787c7fe6dfc8824b15ff25e1fdcec59e8584f765054106894fee00311868c3964  $RUNNER_TEMP/editor.zip" | shasum -a 512 -c -
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/editor"
+          echo "GODOT_EDITOR=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+          python3 -m venv "$RUNNER_TEMP/check-python"
+          "$RUNNER_TEMP/check-python/bin/pip" install 'Pillow==11.1.0'
+          clang -fobjc-arc -framework AppKit -o "$RUNNER_TEMP/compare-focus" tools/metal_character_oracle/focus.m
+      - name: Reuse lossless-cropped original pixels and pack8way only
+        env:
+          COMPARE_ASSETS: ${{ runner.temp }}/atlas-cropped
+          COMPARE_PACK_8_ONLY: '1'
+        run: |
+          set -euo pipefail
+          bash tools/prepare-font.sh > evidence/font-bootstrap.log 2>&1
+          shasum -a 256 assets/fonts/NotoSansSC-Regular.otf > evidence/font-sha256.txt
+          "$GODOT_EDITOR" --headless --editor --import --path . > evidence/import.log 2>&1
+          "$RUNNER_TEMP/check-python/bin/python" tools/representation_compare/crop_atlas.py "$RUNNER_TEMP/atlas-original" "$COMPARE_ASSETS" > evidence/lossless-crop.log
+          "$GODOT_EDITOR" --headless --path . --script tools/representation_compare/pack_control_atlas.gd > evidence/pack-atlas.log 2>&1
+          python3 tools/representation_compare/assert_clean_logs.py evidence/import.log evidence/pack-atlas.log
+      - name: Full closure then512-only sprite-3D-3D-sprite no-readback windows
+        run: |
+          set -euo pipefail
+          python3 tools/representation_metal/run_smoke.py "$GODOT_EDITOR" "$PWD" "$PWD/.inputs/engine" "$RUNNER_TEMP/atlas-cropped" "$PWD/evidence" "$RUNNER_TEMP/compare-focus"
+          "$RUNNER_TEMP/check-python/bin/python" tools/representation_metal/check_repeat.py evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: representation-metal-repeat-${{ github.sha }}
+          path: evidence/
+          retention-days: 30
+          if-no-files-found: error
