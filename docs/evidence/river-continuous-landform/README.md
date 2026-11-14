@@ -107,3 +107,35 @@ experiment until real game evidence meets the owner's visual acceptance.
 Campaign save regression ran both with default OFF and with explicit opt-in:
 1467 assertions, zero failures in each process. This does not substitute for
 battle/action/art/performance acceptance.
+
+## Independent water-contour intake for current game support
+
+`tools/art/continuous_landform/water_contours.gd` also exposes a pure
+`mesh(origin, extent, step)` helper. It reads the currently active Ground survey
+without enabling the new landform. A capture can replace its rectangular water
+plane with this true contour mesh without changing battle state or support
+heights. The default-OFF helper removes two sub-square-millimetre slivers from the
+unfiltered 14124 triangles. Its first hardcoded count check failed before this
+difference was recorded; the gate now checks 14122 retained triangles and exactly
+two discarded slivers. The default-OFF test covers those upward-facing water triangles across
+112×96 m and checks waterline/terrain agreement. The full new terrain scene still
+requires its explicit opt-in; this helper does not turn it on implicitly.
+
+Owner's latest whole-scene concept feedback is conditional, not an approved oil-
+painting style: the clean soldier/white-horse inset presentation takes priority.
+Prefer simple clean surfaces over smeared colour, dirt noise or painted-looking
+mixed patches. New broad material zones are a structural starting point; they
+still need actual normal-pixel game inspection, not approval by source pedigree.
+
+## Same-family rock candidates rejected after actual source renders
+
+The source collections ENV-rock_smooth.medium.02 and .05 were actually opened
+and rendered with their original materials, then personally inspected. Both
+remain rounded low-profile boulders with mottled microtexture, not a mature
+stratified shoreline assembly. They are rejected as the primary bank/cliff
+silhouette; no row of these pebbles will be used as a substitute for authored
+shore structure. Their previews are internal non-game diagnostics. Source
+rocks.blend SHA256 ee7e7194fb547f58797a98fc989c038e4ad9536c73b05d774879b89b891c467d
+belongs to the same already licensed Sprite Fright package. No extra asset
+purchase/account/source has been introduced. The continuous landform and
+waterline production does not wait on a nonexistent complete cliff kit.
