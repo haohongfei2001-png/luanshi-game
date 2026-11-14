@@ -1,0 +1,179 @@
+{
+  "art_pass": false,
+  "bones": 308,
+  "cache_created_once": true,
+  "cache_texture_payload_bytes": 178618368,
+  "camera": {
+    "camera_distance_m": 77.5,
+    "far": 360.0,
+    "field_controller_blob": "e3180c8c12d88d98a799d4011d7e7cefd1557fb3",
+    "near": 51.5207481384277,
+    "pitch_degrees": 50.775390625,
+    "projection": "orthogonal",
+    "size": 22.0,
+    "source_units": "metres, author whole-character scale unchanged",
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "transform": "[X: (0.838671, 0.0, 0.544639), Y: (0.421917, 0.632362, -0.649695), Z: (-0.344409, 0.774673, 0.530343), O: (-26.6917, 60.03715, 41.10162)]",
+    "yaw_degrees": -33.0
+  },
+  "cpu_vertex_upload_per_frame_bytes": 0,
+  "display": "X11",
+  "frames": [
+    {
+      "elapsed_seconds": 0.00114,
+      "monotonic_usec": 779686,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.147759,
+      "monotonic_usec": 926296,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.179725,
+      "monotonic_usec": 958281,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.21265,
+      "monotonic_usec": 991175,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.244939,
+      "monotonic_usec": 1023464,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.276157,
+      "monotonic_usec": 1054675,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.307515,
+      "monotonic_usec": 1086039,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.338633,
+      "monotonic_usec": 1117167,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.369152,
+      "monotonic_usec": 1147663,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.399686,
+      "monotonic_usec": 1178190,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.432258,
+      "monotonic_usec": 1210811,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.464736,
+      "monotonic_usec": 1243254,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.496413,
+      "monotonic_usec": 1274934,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.528253,
+      "monotonic_usec": 1306777,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.559126,
+      "monotonic_usec": 1337643,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.589547,
+      "monotonic_usec": 1368047,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.620641,
+      "monotonic_usec": 1399139,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.651152,
+      "monotonic_usec": 1429645,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.684341,
+      "monotonic_usec": 1462863,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.716811,
+      "monotonic_usec": 1495336,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.747774,
+      "monotonic_usec": 1526289,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.778909,
+      "monotonic_usec": 1557421,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.811032,
+      "monotonic_usec": 1589539,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.842063,
+      "monotonic_usec": 1620575,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.872965,
+      "monotonic_usec": 1651475,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.905021,
+      "monotonic_usec": 1683651,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.937903,
+      "monotonic_usec": 1716414,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 0.969032,
+      "monotonic_usec": 1747536,
+      "source_frame": 12.0
+    },
+    {
+      "elapsed_seconds": 1.000447,
+      "monotonic_usec": 1778995,
+      "source_frame": 12.0
+    }
+  ],
+  "gpu_allocation_measured": false,
+  "kind": "actual Godot source-cache diagnostic; not combat/general skinning",
+  "meshes": 19,
+  "render_scale": 1.0,
+  "triangles": 56760,
+  "vertices": 113714,
+  "viewport": "(2560.0, 1440.0)"
+}
