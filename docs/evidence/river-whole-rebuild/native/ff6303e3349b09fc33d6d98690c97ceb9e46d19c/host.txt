@@ -1,0 +1,21 @@
+Darwin sjc22-bt146-4c7ff87d-9eb4-4a78-a55a-babb61391e0d-52557901A7AD.local 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
+ProductName:		macOS
+ProductVersion:		26.7.2
+BuildVersion:		25G332
+Hardware:
+
+    Hardware Overview:
+
+      Model Name: Apple Virtual Machine 1
+      Model Identifier: VirtualMac2,1
+      Model Number: VM0001LL/A
+      Chip: Apple M1 (Virtual)
+      Total Number of Cores: 3
+      Memory: 7 GB
+      System Firmware Version: 20457.41.3
+      OS Loader Version: 18000.161.10.702.4
+      Serial Number (system): ZHRJ4659RX
+      Hardware UUID: 8DBF21A6-4AC6-52E4-A8D5-686425A02B3D
+      Provisioning UDID: 4242cfc42552372d7ac302ff1bd7b111bd284bed
+      Activation Lock Status: Disabled
+

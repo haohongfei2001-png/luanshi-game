@@ -1,0 +1,103 @@
+{
+  "source": "ff6303e3349b09fc33d6d98690c97ceb9e46d19c",
+  "run": "43566871928",
+  "files": [
+    {
+      "file": "delivery.json",
+      "bytes": 1031,
+      "sha256": "878f8d16da9baf815073293484fc619143584342caf4718365fbdeda031eb182"
+    },
+    {
+      "file": "host.txt",
+      "bytes": 785,
+      "sha256": "ae13c608bfd539340fed71295febc020e263e4680f4682ac083c447f89387974"
+    },
+    {
+      "file": "input-smoke/muster.jpg",
+      "bytes": 904473,
+      "sha256": "1de79699de8c00a7f5d4a6446af04736f3bface89db49e32dfbed1e94551e99d"
+    },
+    {
+      "file": "input-smoke/prepared-native.jpg",
+      "bytes": 1504828,
+      "sha256": "affce3e34840aac308ac5fa7957388ef238bcd458822fb8a2f023c307ba36094"
+    },
+    {
+      "file": "input-smoke/resource-time.log",
+      "bytes": 697,
+      "sha256": "ac04884c05f88f36c920fb4a127363424163e8fdb16af304492fe3ddae4c7d8d"
+    },
+    {
+      "file": "input-smoke/side-daylight-native.jpg",
+      "bytes": 1501095,
+      "sha256": "c88243d56bc280d3b5fcdb5dad202f98a9d6d4ef5c5581b67989ea6a46d07ade"
+    },
+    {
+      "file": "input-smoke/window.log",
+      "bytes": 416,
+      "sha256": "0836cb40741761b203ec5c155f883353e64968517ac0a785445078c17ad0061a"
+    },
+    {
+      "file": "movie/muster.jpg",
+      "bytes": 904552,
+      "sha256": "efdc65c4730a9c89a8898956f96f52b0ec2518ae6ac7390dd02ba1b718b99072"
+    },
+    {
+      "file": "movie/prepared-native.jpg",
+      "bytes": 1506814,
+      "sha256": "1fe0beeb5450937d4f64e57a80b6df7bdbacda3d54aab9cd997886bf775bd224"
+    },
+    {
+      "file": "movie/resource-time.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "movie/view-0015.jpg",
+      "bytes": 1313974,
+      "sha256": "445a4800a3224af1735822fda572ab944a47531290d01f37edb21fa256415c2a"
+    },
+    {
+      "file": "movie/view-0050.jpg",
+      "bytes": 1326718,
+      "sha256": "c7a81c3ccbcfb8812e93fca9ec5e35651a0d2d51fb928ae0cf726fe2d4962d79"
+    },
+    {
+      "file": "movie/view-0075.jpg",
+      "bytes": 1351106,
+      "sha256": "66f4601d370de1da861860f8b379466d4a37d16b41a34228c4dab9699cc5d795"
+    },
+    {
+      "file": "movie/view-0105.jpg",
+      "bytes": 1394225,
+      "sha256": "d24870b8b53d0d00183bf6079787f4d36f9ac8411b11cbcefd885480d71267e8"
+    },
+    {
+      "file": "movie/view-0145.jpg",
+      "bytes": 1405355,
+      "sha256": "93cd35ce548487b6a3c63a44ae722b4d16395146730ee55862888f116ea9d51f"
+    },
+    {
+      "file": "movie/view-0185.jpg",
+      "bytes": 1437287,
+      "sha256": "7295b874936216dacbbdbbe62cd85131bb292032e391e5c1739997ead122c9bb"
+    },
+    {
+      "file": "movie/view-0245.jpg",
+      "bytes": 1488561,
+      "sha256": "93d5c863fe590ef7a04b5c0ad2fbf9daec48c37d251249829fa7ed0d943eecba"
+    },
+    {
+      "file": "movie/view-0355.jpg",
+      "bytes": 1509188,
+      "sha256": "8c6a592ef8808687df0fff2760e1706362a38a93e894bdf18d3c02220dfeea97"
+    },
+    {
+      "file": "movie/window.log",
+      "bytes": 8971,
+      "sha256": "770469c217d4d22bd5104f7d075f173cc17b59d79e7505516408930fa50d6073"
+    }
+  ],
+  "art_status": "ART_REBUILD_REQUIRED",
+  "device": "Hosted macOS, actual M5 DEVICE_NOT_RUN"
+}
