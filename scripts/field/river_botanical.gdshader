@@ -7,15 +7,17 @@ uniform vec3 pigment : source_color = vec3(.30,.36,.16);
 uniform vec3 uv_scale = vec3(1.);
 uniform vec3 uv_offset = vec3(0.);
 uniform vec3 crown_center = vec3(0.,2.8,0.);
+uniform vec3 crown_extent = vec3(2.,2.5,2.);
 varying vec3 local_position;
 
 void vertex() {
 	local_position = VERTEX;
-	if (botanical_part == 1 || botanical_part == 2) {
-		vec3 crown_normal = normalize((VERTEX-crown_center)*vec3(.32,.62,.32)+vec3(0.,.9,0.));
+	if (botanical_part > 0) {
+		vec3 crown_point = (VERTEX-crown_center)/max(crown_extent,vec3(.1));
+		vec3 crown_normal = normalize(crown_point*vec3(.55,.65,.55)+vec3(0.,.65,0.));
 		NORMAL = normalize(mix(NORMAL,crown_normal,.88));
 		vec3 world = (MODEL_MATRIX*vec4(VERTEX,1.)).xyz;
-		float tip = smoothstep(1.8,5.,VERTEX.y);
+		float tip = smoothstep(crown_center.y-crown_extent.y,crown_center.y+crown_extent.y,VERTEX.y);
 		VERTEX.x += sin(world.x*.63+world.z*.42+TIME*.75)*.018*tip;
 	}
 }
@@ -28,8 +30,8 @@ void fragment() {
 	float detail = smoothstep(.025,.60,value);
 	ALBEDO = pigment*mix(.78,1.16,detail);
 	if (botanical_part == 0) ALBEDO = mix(source.rgb*pigment*1.6,pigment,.48);
-	float crown_depth = smoothstep(.7,4.8,local_position.y);
-	AO = botanical_part==1 ? mix(.69,1.,crown_depth) : .94;
+	float crown_depth = smoothstep(crown_center.y-crown_extent.y,crown_center.y+crown_extent.y,local_position.y);
+	AO = botanical_part>0 ? mix(.48,1.,crown_depth) : .94;
 	AO_LIGHT_AFFECT = .35;
 	ROUGHNESS = .95;
 	SPECULAR = .0;

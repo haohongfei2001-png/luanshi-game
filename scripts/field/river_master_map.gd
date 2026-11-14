@@ -83,14 +83,14 @@ func _library(path:String) -> Dictionary:
 				if path==THICKET:
 					var label:=material.resource_name.to_lower()
 					kind=0 if ("bark" in label or "wood" in label or "branch" in label) else 3
-				mesh.surface_set_material(surface,_botanical_material(material,kind))
+				mesh.surface_set_material(surface,_botanical_material(material,kind,mesh.get_aabb()))
 		parts[String(model.name)]=mesh
 	root.free()
 	libraries[path]=parts
 	return parts
 
-func _botanical_material(source:StandardMaterial3D,kind:int) -> ShaderMaterial:
-	var key:=str(source.get_instance_id())+"_"+str(kind)
+func _botanical_material(source:StandardMaterial3D,kind:int,bounds:AABB=AABB()) -> ShaderMaterial:
+	var key:=str(source.get_instance_id())+"_"+str(kind)+"_"+str(bounds)
 	if botanical_materials.has(key):return botanical_materials[key]
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://scripts/field/river_botanical.gdshader")
@@ -104,7 +104,9 @@ func _botanical_material(source:StandardMaterial3D,kind:int) -> ShaderMaterial:
 	elif kind==2:pigment=Color("96904b")
 	elif kind==3:pigment=Color("697444")
 	material.set_shader_parameter("pigment",pigment)
-	if kind==2:material.set_shader_parameter("crown_center",Vector3(0.,4.6,0.))
+	if bounds.size.length_squared()>.01:
+		material.set_shader_parameter("crown_center",bounds.get_center())
+		material.set_shader_parameter("crown_extent",bounds.size*.5)
 	botanical_materials[key]=material
 	return material
 
@@ -281,7 +283,7 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 			accent.name="BankShoulderStone"
 		for j in 2:
 			var p:=Vector2(center+entry.x*(6.0+.48*j),entry.y+(j-.5)*1.55)
-			_scene_plant(THICKET,p,1.12+.17*((i+j)%3),i*1.43+j)
+			_native_understory(THICKET,p,1.12+.17*((i+j)%3),i*1.43+j,i+j)
 			_native_understory(FERN,p+Vector2(entry.x*.75,.48),.45,i*.8+j,i+j)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
@@ -298,7 +300,7 @@ func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
 				var source:=node.mesh.surface_get_material(surface) as StandardMaterial3D
 				if source:
 					var kind:=2 if String(node.name).begins_with("PendantLeaves") else 0
-					node.set_surface_override_material(surface,_botanical_material(source,kind))
+					node.set_surface_override_material(surface,_botanical_material(source,kind,node.mesh.get_aabb()))
 	add_child(tree)
 
 func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
@@ -334,7 +336,7 @@ func _banks_and_groves() -> void:
 		_scene_plant(BROADLEAF,p,entry.z,i*2.1)
 		for j in 3:
 			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.7+.22*j)
-			_scene_plant(THICKET,q,1.15+.16*(j%3),i+j*1.9)
+			_native_understory(THICKET,q,1.15+.16*(j%3),i+j*1.9,i+j)
 			_native_understory(FERN,q+Vector2(.9,-.4),.42+.06*(j%3),j+.8*i,i+j)
 	var willow_positions:Array[Vector3]=[
 		Vector3(17.5,-11.5,0.),Vector3(17.5,11.5,1.),
