@@ -171,3 +171,38 @@ comparison: max knee displacement118.97mm(L)/111.89mm(R), minimum bend direction
 dot0.301/0.286. Removing penetration alone is insufficient. It remains OFF and
 is NOT in the actor rebuild/capture pipeline. knee_continuity.py reproduces
 this failure; original donor/source/target masters are retained.
+
+## Complete source to shared-runtime boundary
+`runtime-source-boundary.json` is actually read from the grip3 editable source,
+with its exact SHA. It identifies43visible meshes and every modifier/dependency;
+it does not pretend to be a latest-layer8 geometry hash. New armor topology must
+be re-evaluated and rehashed independently.
+- Boots/pants/sash retain original566point DQ cage→MeshDeform→Multires.
+- Gauntlets retain cage→MeshDeform→Subsurf.
+- Recut top uses independent566point DERIVED cloth envelope binding→Solidify;
+  original1373top response cannot be reused.
+- Hands retain MeshDeform→79deform DQ Armature→Subsurf, not plain Skin alone.
+- MH face/eyes/brows/lashes use original163bone Armature; face has14vertices with
+  nine influences. Neither truncation nor ordinary8weight native import suffices.
+- Newly authored armor/helmet uses assigned Armature weights; spear is an intact
+  rigid child with a separate controlled transform track.
+No part is marked runtime_ready. Single-actor197MB pose geometry exists only as
+an authoring oracle. Shared3D LOD2 needs an independently measured source→runtime
+derivative and source-specific pose/normal/occlusion evidence, not one cache
+per soldier or471CPU Skeleton3D instances per crowd member.
+
+## Actual plate-normal result and proven color-input correction
+Run43633929202/dc6904d6 completed real Godot on llvmpipe. Artifact14129526055,
+SHA3cbdd663b3bf67cffccf9e7b43979ce81d042569145c491eab5a94853309dd29.
+Personal near4K review confirms triangular bulging is gone after explicit plate
+cap normals, though complete appearance remains unaccepted.
+
+Actual six-patch calibration found a separate interface error. Source BSDF
+linear(.44,.265,.17) passed without color semantics outputs approximately
+(.439,.263,.165), while its correct encoded value(.69436,.55165,.44920) via
+StandardMaterial or source_color uniform outputs(.69412,.55294,.45098).
+Source-color texture and StandardMaterial texture agree to the same8bit values.
+Therefore source BSDF colors are now CPU-encoded with linear_to_srgb and the
+uniform declares source_color, matching the engine's authored color interface.
+Source textures, physical light intensity and exposure remain unchanged. This
+is not an arbitrary brightening or claim that full Blender shading is preserved.

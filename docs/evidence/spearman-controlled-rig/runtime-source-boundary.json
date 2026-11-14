@@ -1,0 +1,1512 @@
+{
+  "source_sha256": "5d9ed8484e2d92ce1aefbc92f48c09dc58d9f41651e3954cdcd736de4960b37b",
+  "source_scope": "grip3 editable complete actor; same original garment/face stacks as layer8, not claiming identical armor geometry or latest pose cache SHA",
+  "art_pass": false,
+  "runtime_ready": false,
+  "army_cache_per_actor_permitted": false,
+  "parts": [
+    {
+      "object": "Eyes",
+      "source_vertices": 1064,
+      "source_polygons": 1020,
+      "uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "max_author_influences": 3,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Original complete163 deformation",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "MH163",
+          "bones": 163,
+          "deform_bones": 163,
+          "preserve_volume_DQ": false
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "GEO-HandsJA.001",
+      "source_vertices": 2406,
+      "source_polygons": 2394,
+      "uv_layers": [
+        "UVTex"
+      ],
+      "max_author_influences": 8,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "enabled": true,
+          "cage": "GEO-deformation_cage",
+          "cage_vertices": 566,
+          "bound": true,
+          "precision": 6,
+          "cage_modifiers": [
+            {
+              "type": "ARMATURE",
+              "object": "rig",
+              "DQ": true
+            }
+          ]
+        },
+        {
+          "name": "Armature",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "MeshDeform binding is not ordinary Skin weights; requires independent source response/shape verification"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "GEO-bootsLT.001",
+      "source_vertices": 1040,
+      "source_polygons": 1026,
+      "uv_layers": [
+        "UVTex"
+      ],
+      "max_author_influences": 0,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "enabled": true,
+          "cage": "GEO-deformation_cage",
+          "cage_vertices": 566,
+          "bound": true,
+          "precision": 6,
+          "cage_modifiers": [
+            {
+              "type": "ARMATURE",
+              "object": "rig",
+              "DQ": true
+            }
+          ]
+        },
+        {
+          "name": "Multires",
+          "type": "MULTIRES",
+          "enabled": true,
+          "levels": 0,
+          "render_levels": 3,
+          "total_levels": 3
+        }
+      ],
+      "runtime_boundary": [
+        "MeshDeform binding is not ordinary Skin weights; requires independent source response/shape verification",
+        "Multires evaluated shape/normals are not preserved merely by exporting base mesh plus Skin"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "GEO-gauntletsDG",
+      "source_vertices": 2248,
+      "source_polygons": 2226,
+      "uv_layers": [
+        "UVTex"
+      ],
+      "max_author_influences": 0,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "enabled": true,
+          "cage": "GEO-deformation_cage",
+          "cage_vertices": 566,
+          "bound": true,
+          "precision": 6,
+          "cage_modifiers": [
+            {
+              "type": "ARMATURE",
+              "object": "rig",
+              "DQ": true
+            }
+          ]
+        },
+        {
+          "name": "Subsurf",
+          "type": "SUBSURF",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "MeshDeform binding is not ordinary Skin weights; requires independent source response/shape verification"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "GEO-pantsLT.001",
+      "source_vertices": 652,
+      "source_polygons": 614,
+      "uv_layers": [
+        "UVTex",
+        "UVTex.001"
+      ],
+      "max_author_influences": 0,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "enabled": true,
+          "cage": "GEO-deformation_cage",
+          "cage_vertices": 566,
+          "bound": true,
+          "precision": 6,
+          "cage_modifiers": [
+            {
+              "type": "ARMATURE",
+              "object": "rig",
+              "DQ": true
+            }
+          ]
+        },
+        {
+          "name": "Multires",
+          "type": "MULTIRES",
+          "enabled": true,
+          "levels": 0,
+          "render_levels": 4,
+          "total_levels": 4
+        }
+      ],
+      "runtime_boundary": [
+        "MeshDeform binding is not ordinary Skin weights; requires independent source response/shape verification",
+        "Multires evaluated shape/normals are not preserved merely by exporting base mesh plus Skin"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "GEO-sashDG.001",
+      "source_vertices": 576,
+      "source_polygons": 512,
+      "uv_layers": [
+        "UVTex"
+      ],
+      "max_author_influences": 0,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "MeshDeform",
+          "type": "MESH_DEFORM",
+          "enabled": true,
+          "cage": "GEO-deformation_cage",
+          "cage_vertices": 566,
+          "bound": true,
+          "precision": 6,
+          "cage_modifiers": [
+            {
+              "type": "ARMATURE",
+              "object": "rig",
+              "DQ": true
+            }
+          ]
+        },
+        {
+          "name": "Multires",
+          "type": "MULTIRES",
+          "enabled": true,
+          "levels": 0,
+          "render_levels": 3,
+          "total_levels": 3
+        }
+      ],
+      "runtime_boundary": [
+        "MeshDeform binding is not ordinary Skin weights; requires independent source response/shape verification",
+        "Multires evaluated shape/normals are not preserved merely by exporting base mesh plus Skin"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "GEO-topLT-recut",
+      "source_vertices": 28288,
+      "source_polygons": 24085,
+      "uv_layers": [
+        "SourceAndSewnUV"
+      ],
+      "max_author_influences": 0,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rebound full neutral-pose cage",
+          "type": "MESH_DEFORM",
+          "enabled": true,
+          "cage": "DERIVED cloth envelope",
+          "cage_vertices": 566,
+          "bound": true,
+          "precision": 5,
+          "cage_modifiers": [
+            {
+              "type": "ARMATURE",
+              "object": "rig",
+              "DQ": true
+            }
+          ]
+        },
+        {
+          "name": "Turned cloth thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "MeshDeform binding is not ordinary Skin weights; requires independent source response/shape verification"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet articulated back guard",
+      "source_vertices": 189,
+      "source_polygons": 160,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet articulated left guard",
+      "source_vertices": 189,
+      "source_polygons": 160,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet articulated right guard",
+      "source_vertices": 189,
+      "source_polygons": 160,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet brow band",
+      "source_vertices": 192,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet crown fitting",
+      "source_vertices": 48,
+      "source_polygons": 32,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 0",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 1",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 2",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 3",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 4",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 5",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 6",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet dome gore 7",
+      "source_vertices": 117,
+      "source_polygons": 96,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 0",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 1",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 2",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 3",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 4",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 5",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 6",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Helmet gore seam 7",
+      "source_vertices": 26,
+      "source_polygons": 12,
+      "uv_layers": [
+        "HelmetPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Rigid original head frame",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": true
+        },
+        {
+          "name": "Physical sheet edge",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge rounding",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD graded shoulder yoke L",
+      "source_vertices": 119,
+      "source_polygons": 96,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 2,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD graded shoulder yoke R",
+      "source_vertices": 119,
+      "source_polygons": 96,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 2,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD overlapping circumferential lamellar",
+      "source_vertices": 1680,
+      "source_polygons": 280,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 2,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD short curved split tasset 0",
+      "source_vertices": 216,
+      "source_polygons": 36,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD short curved split tasset 1",
+      "source_vertices": 216,
+      "source_polygons": 36,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD short curved split tasset 2",
+      "source_vertices": 216,
+      "source_polygons": 36,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD short curved split tasset 3",
+      "source_vertices": 216,
+      "source_polygons": 36,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 1,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD shoulder overlapping rows L",
+      "source_vertices": 216,
+      "source_polygons": 36,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 2,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD shoulder overlapping rows R",
+      "source_vertices": 216,
+      "source_polygons": 36,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 2,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "REBUILD whole contoured breast back and side carrier",
+      "source_vertices": 832,
+      "source_polygons": 768,
+      "uv_layers": [
+        "CarrierPatternUV"
+      ],
+      "max_author_influences": 2,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Complete source rig, new weighted armor",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "rig",
+          "bones": 308,
+          "deform_bones": 79,
+          "preserve_volume_DQ": false
+        },
+        {
+          "name": "Real closed sheet thickness",
+          "type": "SOLIDIFY",
+          "enabled": true
+        },
+        {
+          "name": "Worked edge, not specular stripe",
+          "type": "BEVEL",
+          "enabled": true
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "SPEAR forged leaf point",
+      "source_vertices": 5,
+      "source_polygons": 6,
+      "uv_layers": [],
+      "max_author_influences": 0,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "SPEAR whole unbroken wood shaft no tassel",
+      "source_vertices": 32,
+      "source_polygons": 18,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "max_author_influences": 0,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "Young complete author face module",
+      "source_vertices": 4177,
+      "source_polygons": 4152,
+      "uv_layers": [
+        "Original source UV"
+      ],
+      "max_author_influences": 9,
+      "vertices_over8": 14,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Original complete163 deformation",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "MH163",
+          "bones": 163,
+          "deform_bones": 163,
+          "preserve_volume_DQ": false
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "eyebrow001",
+      "source_vertices": 124,
+      "source_polygons": 96,
+      "uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "max_author_influences": 4,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Original complete163 deformation",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "MH163",
+          "bones": 163,
+          "deform_bones": 163,
+          "preserve_volume_DQ": false
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    },
+    {
+      "object": "eyelashes01",
+      "source_vertices": 250,
+      "source_polygons": 184,
+      "uv_layers": [
+        "Original source UV",
+        "SourceVertexID"
+      ],
+      "max_author_influences": 4,
+      "vertices_over8": 0,
+      "shape_keys": [],
+      "modifiers": [
+        {
+          "name": "Original complete163 deformation",
+          "type": "ARMATURE",
+          "enabled": true,
+          "object": "MH163",
+          "bones": 163,
+          "deform_bones": 163,
+          "preserve_volume_DQ": false
+        }
+      ],
+      "runtime_boundary": [
+        "Armature/static path potentially exportable; actual constraints/attachments/bind/influences/normal preservation still must be verified"
+      ],
+      "runtime_ready": false
+    }
+  ]
+}

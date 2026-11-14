@@ -3,7 +3,7 @@ render_mode cull_disabled;
 uniform sampler2D position_cache : filter_nearest, repeat_disable;
 uniform sampler2D normal_cache : filter_nearest, repeat_disable;
 uniform sampler2D diffuse_texture : source_color, filter_linear_mipmap, repeat_enable;
-uniform vec4 base_color = vec4(0.4,0.4,0.4,1.0); // Explicit LINEAR source BSDF values, no sRGB re-decoding.
+uniform vec4 base_color : source_color = vec4(0.4,0.4,0.4,1.0); // Source BSDF linear values are CPU-encoded for the engine color input contract.
 uniform bool has_diffuse = false;
 uniform bool uses_alpha = false;
 uniform float roughness_value = 0.8;
