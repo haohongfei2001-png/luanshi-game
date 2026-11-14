@@ -1,0 +1,89 @@
+name: Record the native 1440p bridgehead at normal battle speed
+on:
+  push:
+    branches: ['codex/river-rc23-native-qhd-film']
+permissions:
+  contents: read
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 85
+    permissions:
+      contents: write
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned Godot runtime and native input tool
+        run: |
+          set -euo pipefail
+          BASE=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fL --retry 3 "$BASE/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null || ! /usr/bin/python3 -c 'from PIL import Image'; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool python3-pil; fi
+          mkdir -p artifacts/bridge-window
+          touch artifacts/.gdignore
+          ./tools/prepare-font.sh
+          godot --headless --editor --path . --import > artifacts/bridge-window/import.log 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/bridge-window/import.log; then exit 1; fi
+      - name: Record the real bridgehead with in-game controls and original audio
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/take"
+          # Movie Maker reads override.cfg at startup for the output dimensions.
+          # Keep the designed canvas and aspect unchanged; export the actual viewport.
+          test ! -e override.cfg
+          cat > override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1440
+          CFG
+          # Inspect the first encoded lossless frame before spending time on the take.
+          (
+            for i in $(seq 1 100); do
+              first=$(find "$RUNNER_TEMP/take" -name 'frame*.png' -size +8k -print -quit)
+              if test -n "$first"; then
+                /usr/bin/python3 -c 'from PIL import Image; import sys; size=Image.open(sys.argv[1]).size; print("MOVIE_NATIVE_PIXELS",size,flush=True); assert size==(2560,1440)' "$first" && exit 0
+                exit 1
+              fi
+              sleep 1
+            done
+            exit 1
+          ) > artifacts/bridge-window/native-pixels.log 2>&1 &
+          watchpid=$!
+          played=0
+          xvfb-run -a -s '-screen 0 3000x1700x24' godot --path . --display-driver x11 --resolution 2560x1440 --disable-vsync --fixed-fps 24 --write-movie "$RUNNER_TEMP/take/frame.png" --script tests/bridgehead_window.gd 2>&1 | tee artifacts/bridge-window/window.log || played=$?
+          wait "$watchpid"
+          cat artifacts/bridge-window/native-pixels.log
+          /usr/bin/python3 tools/encode_bridgehead.py "$RUNNER_TEMP/take" artifacts/bridge-window d5ea3052449377f8d389a30fbacaa005cfec0869
+          test "$played" = 0
+          grep -Fq 'BRIDGE_WINDOW true' artifacts/bridge-window/window.log
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/bridge-window/window.log; then exit 1; fi
+      - name: Preserve the original film and its input / camera / contact receipt
+        if: always()
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/bridgehead
+          mkdir -p "$proof"
+          cp -a artifacts/bridge-window/. "$proof/"
+          if test -e "$proof/river-gate-bridgehead.mp4" && test "$(wc -c < "$proof/river-gate-bridgehead.mp4")" -ge 104857600; then
+            # The original remains downloadable in the action artifact. GitHub's normal
+            # blob limit is 100 MiB; do not truncate or transcode the original.
+            mv "$proof/river-gate-bridgehead.mp4" "$RUNNER_TEMP/bridge-film.mp4"
+          fi
+          if test -f "$proof/recording.json"; then
+            cd "$proof"
+            sha256sum *-preview.jpg recording.json input-and-camera.json > SHA256SUMS
+            python3 -c 'import json; r=json.load(open("recording.json"));print(r["sha256"]+"  river-gate-bridgehead.mp4")' >> SHA256SUMS
+            cd "$GITHUB_WORKSPACE"
+          fi
+          git add -- "$proof"
+          git -c user.name='River Gate build evidence' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve the real-time bridgehead play window, original stereo and camera receipt'
+          git push origin HEAD:refs/heads/codex/river-rc23-native-qhd-film
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: river-bridgehead-normal-speed
+          path: artifacts/bridge-window

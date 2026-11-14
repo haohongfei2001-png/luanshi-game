@@ -29,7 +29,7 @@ def sha(p):
 pattern = frames[0].name[:number.start(1)]+"%0"+str(digits)+"d.png"
 movie = directory/"river-gate-bridgehead.mp4"
 run(["ffmpeg","-nostdin","-loglevel","error","-y","-framerate",str(fps),"-start_number",str(first),"-i",str(root/pattern),
-     "-i",str(root/"frame.wav"),"-map","0:v:0","-map","1:a:0","-c:v","libx264","-preset","fast","-crf","17",
+     "-i",str(root/"frame.wav"),"-map","0:v:0","-map","1:a:0","-c:v","libx264","-preset","fast","-crf","22",
      "-pix_fmt","yuv420p","-c:a","aac","-b:a","128k","-movflags","+faststart",str(movie)])
 streams = json.loads(run(["ffprobe","-v","error","-show_entries","stream=codec_name,width,height,avg_frame_rate,channels,duration,nb_frames",
                           "-of","json",str(movie)],capture_output=True,text=True).stdout)["streams"]
@@ -39,7 +39,7 @@ assert streams[0]["codec_name"]=="h264" and streams[0]["avg_frame_rate"]=="24/1"
 from PIL import Image
 with Image.open(next(directory.glob("view-*.jpg"))) as source_still:
     physical=list(source_still.size)
-assert [streams[0]["width"],streams[0]["height"]]==physical==[1600,1000] and facts["internal"]==1,(physical,streams[0],facts["resolution"])
+assert [streams[0]["width"],streams[0]["height"]]==physical==[2560,1440] and facts["internal"]==1,(physical,streams[0],facts["resolution"])
 assert streams[1]["channels"]==2 and abs(float(streams[1]["duration"])-duration)<.12
 vol=run(["ffmpeg","-hide_banner","-i",str(movie),"-vn","-af","volumedetect","-f","null","-"],capture_output=True,text=True).stderr
 peak=float(re.search(r"max_volume: ([-.0-9]+) dB",vol)[1])
@@ -48,7 +48,7 @@ for name,i in [("approach",max(3,int(fps*2))),("gate",min(len(frames)-1,int(fps*
                ("first-contact" if facts["first_player_strike"]>=0 else "east-bank",min(len(frames)-1,facts["first_game_frame"]+round((facts["first_player_strike"] if facts["first_player_strike"]>=0 else facts["last"]["tick"]*.78)*fps/20)))]:
     with Image.open(frames[i]) as image:
         image.convert("RGB").save(directory/(name+".jpg"),quality=96,subsampling=0)
-        thumb=image.copy();thumb.thumbnail((1152,720));thumb.convert("RGB").save(directory/(name+"-preview.jpg"),quality=92,subsampling=0)
+        thumb=image.copy();thumb.thumbnail((1440,810));thumb.convert("RGB").save(directory/(name+"-preview.jpg"),quality=92,subsampling=0)
 # Show six untouched, time-ordered moments without altering the playable video.
 tile=Image.new("RGB",(960,421),(29,35,31))
 for slot,frac in enumerate((.08,.17,.24,.34,.62,.89)):
