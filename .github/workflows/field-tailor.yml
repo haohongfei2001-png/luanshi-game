@@ -47,9 +47,9 @@ jobs:
               # Keep the tested outfit and original body provenance separate.
               git restore assets/river_gate/figures/garrison_bodies.glb assets/third_party/wildfire_garments/field_colours.png
             fi
-            godot --headless --editor --path . --import > "$proof/$side/import.log" 2>&1
+            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side/import.log" 2>&1
             if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/import.log"; then exit 1; fi
-            timeout 5m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/bridgehead_clothing_window.gd > "$proof/$side/window.log" 2>&1
+            timeout 5m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/bridgehead_clothing_window.gd > "$proof/$side/window.log" 2>&1
             if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/window.log"; then exit 1; fi
             grep ROBE_GAME_WINDOW "$proof/$side/window.log"
             cp artifacts/bridge-window/line-*.jpg artifacts/bridge-window/reverse-*.jpg artifacts/bridge-window/kit*.jpg artifacts/bridge-window/field.json "$proof/$side/"
