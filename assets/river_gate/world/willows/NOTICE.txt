@@ -1,0 +1,4 @@
+Original River Gate willow scenes authored with Blender Sapling Tree Gen, using the documented immutable generator and edited weeping-willow parameters.
+Generator by Andrew Hale, Aaron Buchler, CansecoGPC and Blender contributors, GPL-2.0-or-later.
+https://github.com/blender/blender-addons/tree/b42d68627734cb18af0e6f41537063984313a284/add_curve_sapling
+AUTHORING.json records the parameters and complete connected geometry.

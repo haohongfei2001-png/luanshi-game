@@ -1,0 +1,43 @@
+{
+  "asset": "pine_tree_01",
+  "author": "Rico Cilliers and Rob Tuytel",
+  "license": "CC0-1.0",
+  "page": "https://polyhaven.com/a/pine_tree_01",
+  "gltf": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/pine_tree_01/pine_tree_01_2k.gltf",
+  "gltf_md5": "001c1a0eb6748333f000d3fa0db5e278",
+  "inputs": {
+    "pine_tree_01.bin": "3079e56cc48c57d8ba530d005e86bae6",
+    "textures/pine_tree_01_bark_diff_2k.jpg": "f420cb9ca2e845cd988f3bcf03c41a85",
+    "textures/pine_tree_01_trunk_a_diff_2k.jpg": "44fd71883c0e29551243c8937c47b65c",
+    "textures/pine_tree_01_twig_diff_2k.jpg": "45d577b1b780711976147d66234a1f4c",
+    "textures/pine_tree_01_trunk_b_diff_2k.jpg": "cba156ed09519ca12bea8c7ff90585ee"
+  },
+  "bounds_blender": [
+    [
+      -9.48216724395752,
+      -4.058371543884277,
+      -0.09352363646030426
+    ],
+    [
+      12.326258659362793,
+      4.481916427612305,
+      20.292461395263672
+    ]
+  ],
+  "source_triangles": 17182252,
+  "game_triangles": 119999,
+  "objects": [
+    {
+      "name": "pine_tree_01_a_LOD0",
+      "triangles": 48549
+    },
+    {
+      "name": "pine_tree_01_b_LOD0",
+      "triangles": 29573
+    },
+    {
+      "name": "pine_tree_01_c_LOD0",
+      "triangles": 41877
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+coastal_cliff_02 by Rob Tuytel
+CC0-1.0. https://polyhaven.com/license
+https://polyhaven.com/a/coastal_cliff_02
+Derived game geometry and original matched albedo/AO; see SOURCE.json for exact source and checksums.

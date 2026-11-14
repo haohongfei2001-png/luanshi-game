@@ -1,0 +1,65 @@
+{
+  "upstream": "61a3b9507d974084e6badb88a0826bd89a6d5b8b",
+  "models": [
+    {
+      "name": "han_wall_gate_struct",
+      "sha": "5312a78095cdfc55550c94ffb93d3867de9c7497",
+      "ao": "dd0d65ced5f7f4f5d9a9a518b3add0f99b196126",
+      "ao_file": "han_wall_gate.png"
+    },
+    {
+      "name": "han_wall_gate_gutters",
+      "sha": "1335aaba15bf281347f3b96313ed5f5769c2a2ed",
+      "ao": null,
+      "ao_file": "han_wall_gate_gutters.png"
+    },
+    {
+      "name": "han_wall_long",
+      "sha": "54d46d9668f110777d088e0312426dcb01658a67",
+      "ao": "12e12521c912f9e104525ca44bc311db4e78105f",
+      "ao_file": "han_wall_long.png"
+    },
+    {
+      "name": "han_wall_tower",
+      "sha": "c6b08f0b6c6d366518efd533b3c71aab86ec1534",
+      "ao": "9e53ab13dc4dcce545e879bdf53edf9c1999cc94",
+      "ao_file": "han_wall_tower.png"
+    },
+    {
+      "name": "han_barracks",
+      "sha": "ab79c85aac416eea116d8fa30423b066d98a4402",
+      "ao": "139748c72348382bbefe913192202a83d36d527f",
+      "ao_file": "han_barracks.png"
+    },
+    {
+      "name": "han_house_a",
+      "sha": "a40e59244e5a8ab346f0821044d9f0705d70e9c4",
+      "ao": "65a5df10b646ead8a021b0dd6a27a9239a7f1aef",
+      "ao_file": "han_house_a.png"
+    },
+    {
+      "name": "han_house_b",
+      "sha": "3dd194dc6708dcd61bb54c272a8d36d77eab9be6",
+      "ao": "fdd3e4c6d5c7425ed8fa7e08464065fd340b8964",
+      "ao_file": "han_house_b.png"
+    },
+    {
+      "name": "han_storehouse",
+      "sha": "bf371be5bf5a5fdca0c81687021ae618d2b13ed3",
+      "ao": "29e930537088f4544c916bb8144e16be9423d1cc",
+      "ao_file": "han_storehouse.png"
+    },
+    {
+      "name": "han_fortress",
+      "sha": "c535b0720f8bc21f458733279e640eece93fb398",
+      "ao": "fc9e871718dd985c4edc7476f9aa88295362e7e6",
+      "ao_file": "han_fortress.png"
+    },
+    {
+      "name": "han_wall_gate",
+      "sha": "cc5efecdf45709d869e2b21367cddf9c4a7b98ff",
+      "ao": null,
+      "ao_file": null
+    }
+  ]
+}

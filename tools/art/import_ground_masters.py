@@ -1,0 +1,18 @@
+"""Import unaltered 2K CC0 soil, grass and forest-floor diffuse masters."""
+from pathlib import Path
+import json,sys
+from PIL import Image
+from bake_gate_apron import scan
+ROOT=Path(__file__).resolve().parents[2]
+def main(cache):
+    cache.mkdir(parents=True,exist_ok=True)
+    out=ROOT/"assets/river_gate/world/ground"
+    out.mkdir(parents=True,exist_ok=True)
+    receipt={}
+    for name,author in [("brown_mud_dry","Rob Tuytel"),("leafy_grass","Charlotte Baglioni"),("forest_ground_04","Rob Tuytel and Rico Cilliers")]:
+        pixels=scan(name,cache,receipt)
+        Image.fromarray(pixels).save(out/(name+".jpg"),quality=94,subsampling=0)
+        receipt[name]["author"]=author
+    (out/"SOURCE.json").write_text(json.dumps(receipt,indent=2)+"\n")
+    (out/"NOTICE.txt").write_text("Poly Haven CC0 1.0 diffuse scan masters. Original sources and authors are recorded in SOURCE.json. No normal-map or roughness-map dependency.\n")
+if __name__=="__main__":main(Path(sys.argv[1]))

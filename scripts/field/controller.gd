@@ -2,7 +2,7 @@ extends Node3D
 const Battle := preload("res://scripts/field/battle.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Figures := preload("res://scripts/field/presentation.gd")
-const Landscape := preload("res://scripts/field/landscape.gd")
+const Landscape := preload("res://scripts/field/river_master_map.gd")
 const Hud := preload("res://scripts/field/hud.gd")
 const Sound := preload("res://scripts/field/sound.gd")
 const Store := preload("res://scripts/field/save.gd")
