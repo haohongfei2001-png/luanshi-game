@@ -139,3 +139,23 @@ rocks.blend SHA256 ee7e7194fb547f58797a98fc989c038e4ad9536c73b05d774879b89b891c4
 belongs to the same already licensed Sprite Fright package. No extra asset
 purchase/account/source has been introduced. The continuous landform and
 waterline production does not wait on a nonexistent complete cliff kit.
+
+## Whole-surface metric earth experiment, not accepted art
+
+The latest owner-approved *direction* is the full scene `exec-3bebef23-c990-4b69-ba78-81924b6cdb61.png`: naturally aged matte earth/wood/stone, legible intermediate-scale form and comfortable human proportions. It is concept art, not Godot evidence. Wild Rift-style human screen scale supersedes the historical 22 m art gate. No glossy brightening, painterly smear or noisy detail-count substitute.
+
+A single optional CC0 Poly Haven `dirt` source by Charlotte Baglioni is now restored by exact SHA256 from official URLs (`tools/art/continuous_landform/earth_source.json`). Official source https://polyhaven.com/a/dirt and license https://polyhaven.com/license permit raw redistribution under CC0. Website preview/text is not republished. The downloaded diffuse was inspected at its actual 2048×2048 resolution: compacted earth with fine granular inclusions, not a moss painting. This is a candidate material, **not a finding that its repetition/noise at normal game pixels passes**.
+
+```sh
+python tools/art/continuous_landform/fetch_earth.py /tmp/earth-source
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . \
+  --script tools/art/continuous_landform/build_region.gd -- /tmp/continuous-earth.scn /tmp/earth-source
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . \
+  --script tests/art_reset/earth_material.gd -- /tmp/continuous-earth.scn
+LUANSHI_AUTHORED_LANDFORM=1 godot --headless --path . \
+  --script tests/art_reset/continuous_landform_mesh.gd -- /tmp/continuous-earth.scn
+```
+
+The optional second builder argument uses the original diffuse/OpenGL normal/roughness maps at a 2 m repeat, generated 11-level mip chains, anisotropic sampling and a real mesh tangent basis. No source recoloring/blur/sharpening/baked shadows. A small explicitly authored woodland tint remains; roughness has a .82 floor and specular .12. Normal depth .45 is a declared adaptation, not claimed preservation. Material is shared across all 42 tiles. Texture source is restored rather than copying 32.8 MB of raw data into Git.
+
+Verified locally: build 86,016 terrain triangles / 14,124 contour-water triangles; 3 packed-scene instantiate/free cycles, 137,214 normal/tangent pairs, maximum orthogonality error 0.000130677; all three texture images retained native resolution and full mip chains. Physical mesh regression remains unchanged. **Real graphics/shader compilation, normal-pixel repetition/noise review, whole scene integration and runtime cost NOT_RUN for this material.** No whole-terrain art pass, release or M5 claim. Existing failed game captures remain failures.

@@ -28,13 +28,16 @@ func zone(p:Vector2) -> Color:
 	var woodland:=smoothstep(6.,11.,absf(p.y))
 	return Color(road,drain,woodland,1.)
 func run() -> void:
-	var args:=OS.get_cmdline_user_args();assert(args.size()==1,"Pass output.scn")
+	var args:=OS.get_cmdline_user_args();assert(args.size() in [1,2],"Pass output.scn [verified earth directory]")
 	assert(Ground.authored_landform_enabled,"Explicit LUANSHI_AUTHORED_LANDFORM=1 required")
 	var scene:=Node3D.new();scene.name="ContinuousLandform_EXPERIMENT_OFF";scene.set_script(load("res://scripts/field/experimental_landform_guard.gd"));root.add_child(scene)
 	scene.set_meta("composition","continuous-causeway-drainage-01")
 	scene.set_meta("status","STRUCTURE_PRODUCTION_NOT_ART_ACCEPTED")
 	scene.set_meta("required_environment","LUANSHI_AUTHORED_LANDFORM=1")
 	var shader:=ShaderMaterial.new();shader.shader=load("res://shaders/experimental/surveyed_landform.gdshader")
+	if args.size()==2:
+		preload("res://tools/art/continuous_landform/earth_material.gd").attach(shader,args[1])
+		scene.set_meta("earth_source","Poly Haven dirt / Charlotte Baglioni / CC0 / fixed SHA256")
 	var terrain_triangles:=0;var tiles:=0
 	for z in range(-48,48,16):
 		for x in range(-48,64,16):
@@ -44,6 +47,7 @@ func run() -> void:
 			var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX];var colors:=PackedColorArray()
 			for v:Vector3 in vertices:colors.append(zone(Vector2(v.x,v.z)))
 			arrays[Mesh.ARRAY_COLOR]=colors;mesh.clear_surfaces();mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+			if args.size()==2:mesh=preload("res://tools/art/continuous_landform/earth_material.gd").with_tangents(mesh)
 			var instance:=MeshInstance3D.new();instance.name="Survey_%s_%s"%[x,z];instance.mesh=mesh;instance.material_override=shader;scene.add_child(instance)
 			instance.create_trimesh_collision()
 			for i in range(0,indices.size(),3):append_water(vertices[indices[i]],vertices[indices[i+1]],vertices[indices[i+2]])
