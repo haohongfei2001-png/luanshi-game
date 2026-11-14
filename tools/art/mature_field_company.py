@@ -11,7 +11,7 @@ import math
 import numpy as np
 from figure_atlas import NAMES, uv
 from figure_mesh import Library, Surface
-from refine_field_outfit import FieldSurface, subdivide, palette
+from refine_field_outfit import FieldSurface, subdivide, palette, align_neckline
 from import_garrison_issues import source_file, fit_garment
 from fit_field_headwear import bake as helmet, FITS
 from field_dress import player_half_mantle
@@ -101,6 +101,7 @@ def main():
             # Light and heavy corselets have their own published Han maps.
             cloth.tex=[(u-.5,v) if 2.5<u<3. else (u,v) for u,v in cloth.tex]
             cloth.positions=[(x*.967,y,z) for x,y,z in cloth.positions]
+        align_neckline(cloth)
         rounded=subdivide(cloth)
         headgear=helmet(hat,FITS[hat],cache)
         headgear.positions=[(x*.86,1.725+(y-1.725)*.86,.015+(z-.015)*.89) for x,y,z in headgear.positions]

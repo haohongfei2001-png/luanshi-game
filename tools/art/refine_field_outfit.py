@@ -5,9 +5,8 @@ but positions, smooth normals and skin weights meet across those seams.
 """
 from collections import defaultdict
 import hashlib
-from pathlib import Path
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image
 from figure_mesh import Surface
 from import_garrison_issues import source_file, cloth, ISSUES
 
@@ -97,6 +96,24 @@ def subdivide(source):
         out.faces.extend([(pa,pab,pca),(pab,pb,pbc),(pca,pbc,pc),(pab,pbc,pca)])
     assert np.isfinite(out.positions).all()
     return out
+
+def align_neckline(source):
+    """Align Wildfire's actual collar with the HM08 throat and nape.
+
+    The native opening was centred 55 mm behind the game's head bind.
+    Move the existing upper garment continuously, with ease around the throat.
+    Shoulder, elbow, wrist, belt and weapon anchors remain at their original bind.
+    """
+    def transition(a,b,value):
+        t = max(0., min(1., (value-a)/(b-a)))
+        return t*t*(3.-2.*t)
+    points = []
+    for x,y,z in source.positions:
+        follow = transition(1.36,1.485,y)*(1.-transition(.078,.18,abs(x)))
+        side = float(np.tanh(x/.02))
+        points.append((x+.007*side*follow,y,z+.055*follow))
+    source.positions = points
+    return source
 
 def palette(cache, destination):
     """Retain native cloth/lacing regions and the untouched fourth shield tile."""
