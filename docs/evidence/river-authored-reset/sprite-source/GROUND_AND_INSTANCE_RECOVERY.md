@@ -102,3 +102,42 @@ explicit derivative maps to x29.6..46.6,z-12..12, not the previous 48m width;
 outer forest terrain still needs authoring. Combined with `--road-wear`, the
 protected lane uses the original Dirt shader with soft original-Moss shoulders.
 This follow-up bake is RUNNING, not yet a successful exported/game result.
+
+## Safe-core conversion completed
+
+The safe-core + road-wear follow-up actually completed. Receipt:
+`ground-safe-core-conversion.json`. GLB SHA256
+`1f7b0444495e8851c5e4685d8dc8a5a8766ac2e76c69f43a6a935dadf98bff10`.
+7448 triangles / 3849 vertices / one mesh and surface / two UV channels;
+2048 diffuse, normal and roughness all verified in Godot. An independent
+no-evaluation crop count verified the expected 3849 vertices / 7448 triangles.
+Godot protected-route check: 495 samples, zero holes, max interpolated error
+6.0890 mm; max vertex error 3.5276 mm. Process peak RSS 1018296 KiB is conversion
+memory, NOT gameplay performance. Graphical/art approval remains NOT RUN.
+
+Reproduction (source root is the fixed official package in SOURCE.json):
+
+```sh
+godot --headless --path . --script tools/art/sprite_source/export_ground_survey.gd -- /tmp/survey.json
+blender -b --factory-startup --disable-autoexec --python-exit-code 1 -t 2 \
+  --python tools/art/sprite_source/bake_ground_base.py -- \
+  ROOT/lib/sets/mushroom_grove/mushroom_grove.blend /tmp/survey.json OUT \
+  --road-wear --safe-core
+godot --headless --path . --script tests/art_reset/sprite_ground_intake.gd -- \
+  OUT/ground-approach.glb OUT/complete.json
+godot --headless --path . --script tests/art_reset/sprite_gltf_intake.gd -- \
+  OUT/ground-approach.glb 7448
+```
+
+The GLB already contains world coordinates x29.6..46.6,z±12 and shared gameplay
+terrain heights. Instantiate at origin with identity scale; do not normalize
+its bounding box or add another world offset. The original movie elevation
+is deliberately retargeted to existing gameplay support, not retained as new
+battlefield landforms. This is a production road/understory component, not the
+whole terrain/river system and not a complete high-quality map claim.
+
+Measured tree converter remains pinned to aa562937. Bush command uses
+`bake_native_collection.py -- ROOT/lib/env/bushes.blend EN-bush.01 OUT`, without
+`lod-study`, and its real automatic filename is `derived-EN-bush.01.glb`.
+Some local diagnostics renamed a copy `derived-bush01.glb`; do not use that
+renamed-copy filename as the expected output in reproducible CI.

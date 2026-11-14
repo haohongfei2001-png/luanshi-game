@@ -1,0 +1,108 @@
+{
+  "source_blend_sha256": "25ed51ac40fcbe84dd7203b8202b8ebbf4564fcbaf730981148ddb32dc35f728",
+  "source_object": "GEO-grove_ground.base",
+  "source_original_hide_render": true,
+  "source_modifiers": 0,
+  "derived_road_wear": true,
+  "material_mix_control": "ColorRamp.003 -> Mix Shader, 0=dirt 1=moss; ground_blend is unused by this shader",
+  "original_base_vertices": 5070,
+  "original_base_polygons": 4928,
+  "safe_core_crop_local_y": [
+    -8,
+    8
+  ],
+  "source_vertices": 3849,
+  "source_polygons": 3724,
+  "source_uv_layers": [
+    "ground_moss_mask"
+  ],
+  "source_attributes": [
+    [
+      ".sculpt_mask",
+      "FLOAT",
+      "POINT"
+    ],
+    [
+      "position",
+      "FLOAT_VECTOR",
+      "POINT"
+    ],
+    [
+      ".select_vert",
+      "BOOLEAN",
+      "POINT"
+    ],
+    [
+      ".edge_verts",
+      "INT32_2D",
+      "EDGE"
+    ],
+    [
+      ".sculpt_face_set",
+      "INT",
+      "FACE"
+    ],
+    [
+      ".corner_vert",
+      "INT",
+      "CORNER"
+    ],
+    [
+      ".corner_edge",
+      "INT",
+      "CORNER"
+    ],
+    [
+      "ground_blend",
+      "BYTE_COLOR",
+      "CORNER"
+    ],
+    [
+      "ground_moss_mask",
+      "FLOAT2",
+      "CORNER"
+    ],
+    [
+      ".vs.ground_moss_mask",
+      "BOOLEAN",
+      "CORNER"
+    ]
+  ],
+  "original_uv_values_preserved": true,
+  "ground_blend_retained_during_bake": true,
+  "source_highres_loaded": false,
+  "runtime_region_xz": [
+    29.6,
+    -12.0,
+    46.6,
+    12.0
+  ],
+  "survey_sha256": "aa8b7dd3b0c18e3e8e9b1bf643d3d6844c8535aafe10184a9fe7f3d00f099d29",
+  "peak_rss_kib_linux": 1018296,
+  "outputs_sha256": {
+    "diffuse.png": "ccdb1414a6d30cc066fe0419cda9a90fe451fa3ac6e4ba640876ca862bc6b2e2",
+    "retargeted-ground-NOT-GAME.png": "122340f2d496c1f74862502f296d25143eb357036e09ca4c2235ae67e18b0fb6",
+    "normal.png": "e06c6d19146acac83b86894193b31d2268d0bed170428a681e67db6537a772ae",
+    "roughness.png": "100251e4258d212f0303b5c49225076ddf0748be603b8218ca70836670adc19a",
+    "ground-approach.glb": "1f7b0444495e8851c5e4685d8dc8a5a8766ac2e76c69f43a6a935dadf98bff10",
+    "native-hidden-base-NOT-GAME.png": "9d9eb803030b6221f832dca208ce18fa2a77a1d74479df4754ceed8669ee4ecb"
+  },
+  "limits": [
+    "Retargeted original base topology, not original film render/highres",
+    "Original terrain material masks retained; military road painting still to review",
+    "Source material normal, not high-to-low geometric normal bake",
+    "Godot actual graphics NOT_RUN",
+    "Not art acceptance"
+  ],
+  "derived_triangles": 7448,
+  "godot_support_test": {
+    "vertices": 3849,
+    "triangles": 7448,
+    "protected_route_samples": 495,
+    "holes": 0,
+    "max_interpolated_error_m": 0.00608898023488824,
+    "max_vertex_error_m": 0.00352756865910209,
+    "actual_game_graphics": "NOT_RUN"
+  },
+  "status": "CONVERSION_AND_SUPPORT_CHECK_ONLY_NOT_ART_ACCEPTANCE"
+}
