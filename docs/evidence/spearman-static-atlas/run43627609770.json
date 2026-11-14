@@ -1,0 +1,68 @@
+{
+  "run_id": 43627609770,
+  "head": "9f2c48abe625daeee17524e476b190c38d92be64",
+  "artifact_id": 14127037058,
+  "artifact_sha256": "2e3e36bc8ab5c3d131c4ac47f148aba95c6c7983e2cc21877f49d1461ebe3423",
+  "graphics_executed": true,
+  "hardware": "Mesa llvmpipe SOFTWARE",
+  "art_accepted": false,
+  "shipping": false,
+  "files": {
+    "2560x1440-raw.log": {
+      "bytes": 500,
+      "sha256": "ba88b72728371199f71023d6db754dfb0e6dd3dcf367145bf6c8fec267f2fb2c"
+    },
+    "2560x1440-scissor.png.json": {
+      "bytes": 599,
+      "sha256": "5983d0c5ff9be871b2173b7b634f0f51f24ad019b2b5e1ee0aab6fce9ebb232f"
+    },
+    "3840x2160-scissor.png.json": {
+      "bytes": 599,
+      "sha256": "a7d14f3d5100e7f647b91a506b0aa334d5fd2c22944ab427916352b68ec321f3"
+    },
+    "3840x2160-raw.png.json": {
+      "bytes": 595,
+      "sha256": "6c16f630cd08c9cc1004229a8ab74cdafd84365067b4515e344f0d89a4b162ab"
+    },
+    "3840x2160-raw.log": {
+      "bytes": 500,
+      "sha256": "ba88b72728371199f71023d6db754dfb0e6dd3dcf367145bf6c8fec267f2fb2c"
+    },
+    "2560x1440-scissor.png": {
+      "bytes": 271651,
+      "sha256": "c97690c0faf933d61136a59bf35dab96d4da15571ef7435b2a1329d1f584fe98"
+    },
+    "3840x2160-scissor.log": {
+      "bytes": 500,
+      "sha256": "ba88b72728371199f71023d6db754dfb0e6dd3dcf367145bf6c8fec267f2fb2c"
+    },
+    "source-check.log": {
+      "bytes": 97,
+      "sha256": "7f64128f805b5b553965dedbdbf5c2e39bb413b1e7c25504eacc8212af8d54a6"
+    },
+    "3840x2160-raw.png": {
+      "bytes": 568039,
+      "sha256": "8c15433e84d89ec2317b8a8dbaa84168b376fb86e66c328cefbd05d14340799b"
+    },
+    "2560x1440-raw.png.json": {
+      "bytes": 595,
+      "sha256": "d2eed90d50d0f3426ad8a566e0ede8da31eb2c252c21feec4ee62868201b3c74"
+    },
+    "hardware.txt": {
+      "bytes": 3490,
+      "sha256": "d544d060ecc26426e532aad395f987866bde93d2c5d445054ce2a2de4828f3e5"
+    },
+    "3840x2160-scissor.png": {
+      "bytes": 556374,
+      "sha256": "92224ccee8ea5f0287848eebb244b4e69652b4d11db1796e04de48f4077b1705"
+    },
+    "2560x1440-scissor.log": {
+      "bytes": 500,
+      "sha256": "ba88b72728371199f71023d6db754dfb0e6dd3dcf367145bf6c8fec267f2fb2c"
+    },
+    "2560x1440-raw.png": {
+      "bytes": 278055,
+      "sha256": "7abe113142a74b00d78ba783e47cad6736e72a260c9fd38b53269feca1cb4885"
+    }
+  }
+}
