@@ -1,0 +1,8 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+BRIDGE_MENU (78, 280) (200, 176) logical=(168.0, 438.4) pixel=(336.0, 876.8)
+BRIDGE_MENU_SELECTED 5 encounter=true popup=false
+PERSON_DIAGNOSTIC 62 135 [{"close":false,"normal_length":[0.99999988079071,1.00000011920929],"role":"Archer","triangles":7344,"vertices":4240},{"close":true,"normal_length":[0.99999988079071,1.00000011920929],"role":"Archer","triangles":13985,"vertices":7799},{"close":false,"normal_length":[0.99999988079071,1.00000011920929],"role":"Regular","triangles":7561,"vertices":4393},{"close":true,"normal_length":[0.99999988079071,1.00000011920929],"role":"Regular","triangles":14195,"vertices":7952},{"close":false,"normal_length":[0.99999988079071,1.00000011920929],"role":"Guard","triangles":7701,"vertices":4454},{"close":true,"normal_length":[0.99999988079071,1.00000011920929],"role":"Guard","triangles":14335,"vertices":8013},{"close":false,"normal_length":[0.99999988079071,1.00000011920929],"role":"Player","triangles":7907,"vertices":4616},{"close":true,"normal_length":[0.99999988079071,1.00000011920929],"role":"Player","triangles":14597,"vertices":8207},{"close":false,"normal_length":[0.99999988079071,1.00000011920929],"role":"Officer","triangles":7809,"vertices":4544},{"close":true,"normal_length":[0.99999988079071,1.00000011920929],"role":"Officer","triangles":14443,"vertices":8103}]
