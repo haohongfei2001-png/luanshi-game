@@ -1,0 +1,31 @@
+{
+  "objects": [
+    {
+      "name": "island_tree_01_LOD0",
+      "vertices": 1303928,
+      "triangles": 1599403,
+      "materials": [
+        "island_tree_01",
+        "island_tree_01_leaves",
+        "island_tree_01_branches"
+      ]
+    }
+  ],
+  "triangles": 1599403,
+  "bounds": [
+    [
+      -2.3444457054138184,
+      -2.2341415882110596,
+      -0.020327899605035782
+    ],
+    [
+      2.4107038974761963,
+      2.583538055419922,
+      5.0071187019348145
+    ]
+  ],
+  "actual_source_primitive_geometry": true,
+  "gameplay": "NOT_RUN",
+  "art": "NOT_ACCEPTED",
+  "render": "offline neutral diagnostic only"
+}
