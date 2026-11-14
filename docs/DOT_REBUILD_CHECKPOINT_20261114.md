@@ -1,5 +1,54 @@
 # Dot 全面重建检查点 · 2026-11-14
 
+## 2026-11-14 16:23 UTC · 完整母版准入与原生渲染阻塞定位
+
+全画面仍为 **ART FAIL**；R1/R2 与两版新程序裁片衣甲都已自行淘汰，不是接近通过的基础。
+默认玩法、main、RC24/RC25均未被这些实验替换。Codex PAUSED / Dot 接续不变。
+
+- 完整专业自然环境来源已实际取得，不再仅搜零散资产：Blender 官方
+  `https://download.blender.org/demo/sprite_fright_030_0020_A.zip`，254,374,945 bytes，
+  SHA256 `21ee25dfffc76030770b644de5fe897559aead064b384fba77166b71a9337791`。
+  包内readme明确整个collection为 **CC BY 4.0**，保留署名/来源/改作说明。
+  64成员CRC/哈希已核，独立sprite_village在Blender4.3.2禁自动脚本可读；
+  22链接库齐备、实际材质图像齐备，仅两张未参与材质的工作参考图缺失。
+  这是统一源模型、材料、散布与场景，不是中国战场成品。整set求值曾exit137，
+  已保留失败并改分区；原作者完整灌木collection实际Cycles预览成功，但**不是Godot画面**。
+  新生产须保留专业源与统一材料体系，显式烘焙/LOD/实例预算，不用plain glTF丢材质。
+  成套中国城防/门桥与专业短袍仍未获得，不以源合法或技术能打开冒充达标。
+- `dot/river-authored-reset` / `572d416b90fbc885af37c6659e7ee60621bcbd0e`
+  是可恢复生产/契约代码，12文本已远端核验；无该分支CI运行，不是新艺术交付。
+- `dot/mh-natural-fullrig` / `8ca3ee5b0f7641c6acbfb8d9d829ea0f538541a4`
+  的40固定源→Blender→9动作→Godot→ID/动作整链真实exit0。修复source目录缺.gdignore、
+  验证器参数错误及硬超时。旧冻结静态GLB6853fbca、动画b735dc82、sidecar8a580adf
+  自身一致，但新审计确认163骨roll使用了不同于官方默认轴的约90度约定。
+  **不得再称原作者rest轴完全原样。** 新官方轴独立母版ddfd0662/83cfe096已本地通过
+  163骨轴、65 mesh/UV/全导出权重accessor、9动作与完整源权重测试；正规源恢复脚本
+  `tools/art/mh_character/build_official_seed.sh` 已远端发布于同分支
+  `b778bc0f016a7d339fcd8459e6b622387ad3a755`，主线程fetch核验，整链exit0。
+  接地/布料/持握仍未通过，不用数据通过掩饰。旧冻结源未覆盖。
+- `dot/native-character-parity` / `a3665f4d8d9e5f27060e44763d923226b261aed5`
+  已保存完整163骨源ID/完整影响权重桥、独立CPU姿态oracle、固定值单元与原始JSON。
+  主线程fetch逐字节核7个代码/报告文件。18单元与9动作×3相位549,063数据检查通过；
+  20,159渲染点及33个>8影响点无截尾，原UV/材质/LOD保留。不是图像或动作合格证明。
+- 真正图形探针发现官方4.6.3 Compatibility原生Skin切线错误：run43614620176，
+  artifact14121359013；3顶点/单identity骨/精确一权重下，静态TBN色与Skin色不同，
+  mesh数组roundtrip仍同错，故与UBC重定向/palette无关。
+  官方GLES3 mesh_storage输入切线绑定与skeleton.glsl UNORM解码路径已定位，正在独立补丁验证。
+  **旧原生Skin门禁仍红，不故意把正确batch改坏来仿引擎错误。**
+  run43614764419的第三方位比较（本项目独立全权重CPU静态mesh+原材质）与batch
+  4实际姿态均严格过，MAE约0.69–1.97e-6，>2色阶点仅1/3/4/7；这不是原Skin已修复。
+- 原生Mac工程取证最新源为 `dot/river-native-review-source` /
+  `caec14c18bb063210eae0a7098fe6870a5763870`，run **43612407649**。
+  export整个job已最终SUCCESS：完整回归、旧存档、三输入模式校准、真实macOS/Linux导出
+  与包检查通过；402,881,462B源macOS包已分组恢复并逐字节核验。Mac固定引擎/编码器准备通过，
+  现处原生窗口2K/4K性能矩阵与原速录像步骤；**尚不宣称其最终成功、FPS或可交付包**。
+  这是旧被否决画面的工程基线，不是合格新美术；M5仍DEVICE_NOT_RUN。
+
+恢复先核最新refs/CI，勿重复create既有分支；实验独立、默认关闭。继续分区转换完整专业森林母版、
+修正原作者骨轴并重验全动作、验证原生切线补丁。每一步区分源保真、工程、图形正确性、性能、
+完整玩法、整体美术和Owner验收。只有真正的新Godot样板可作为美术进展。
+
+
 ## Owner 后续整体否决与方法重置
 
 Owner 随后再次明确：这一轮不是部分不足，而是整张画面全部不达标，

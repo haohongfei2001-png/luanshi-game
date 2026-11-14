@@ -1,3 +1,7 @@
+## Dot 2026-11-14 16:23 UTC continuation update
+
+Codex PAUSED / Dot owner-authorized continuation remains in force. Whole-frame ART FAIL; no RC/main promotion. New coherent Sprite Fright CC BY4 production source acquired; conversion is not complete. MH original-axis audit corrected an earlier fidelity claim. Official Compatibility Skin tangent failure is independently reproduced; patch validation pending. Native run43612407649 export SUCCESS, native graphics/performance still in progress. Read the latest section of [Dot checkpoint](DOT_REBUILD_CHECKPOINT_20261114.md) before resuming; older sections below are historical, not current pass claims.
+
 # 《乱世》自主开发状态
 
 ## Dot 实际接管与全面重建检查点 · 2026-11-14
