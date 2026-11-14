@@ -2,9 +2,12 @@ extends RefCounted
 ## Shared baked, single-surface horse and carriage meshes. +Z is the muzzle.
 const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const TACK := preload("res://assets/art/mounts/field_tack.glb")
-const REMOUNT := preload("res://assets/third_party/wildfire_remounts/hide.glb")
+const REMOUNT := preload("res://assets/third_party/wildfire_remounts/complete_remount.glb")
 const PIGMENTS := preload("res://assets/third_party/wildfire_remounts/horse_coats.png")
 const MANE := preload("res://assets/third_party/wildfire_remounts/horse_hair.png")
+const POSE_HI := preload("res://assets/third_party/wildfire_remounts/native_pose_hi.png")
+const POSE_LO := preload("res://assets/third_party/wildfire_remounts/native_pose_lo.png")
+const POSE_NORMAL := preload("res://assets/third_party/wildfire_remounts/native_pose_normal.png")
 const SURFACE := preload("res://scripts/field/mount_hide.gdshader")
 const ATLAS := preload("res://assets/art/mounts/mount-atlas.png")
 const SADDLE := Vector3(0.0,1.44,-0.04)
@@ -17,10 +20,11 @@ static var _hide: ShaderMaterial
 
 static func mesh(draught: bool=false, close: bool=true) -> Mesh:
 	if _meshes.is_empty():
-		var animal: ArrayMesh=FieldMeshes.meshes(REMOUNT)["Remount"]
+		var animals:=FieldMeshes.meshes(REMOUNT)
 		var tack:=FieldMeshes.meshes(TACK)
 		for title: String in tack:
 			var part: ArrayMesh=tack[title]
+			var animal: ArrayMesh=animals["RemountClose" if title.ends_with("Close") else "RemountRank"]
 			var body:=animal.surface_get_arrays(0)
 			var gear:=part.surface_get_arrays(0)
 			var offset: int=body[Mesh.ARRAY_VERTEX].size()
@@ -48,6 +52,9 @@ static func material() -> ShaderMaterial:
 		_hide.set_shader_parameter("surface_atlas",ATLAS)
 		_hide.set_shader_parameter("coat_pigments",PIGMENTS)
 		_hide.set_shader_parameter("mane_ink",MANE)
+		_hide.set_shader_parameter("native_pose_hi",POSE_HI)
+		_hide.set_shader_parameter("native_pose_lo",POSE_LO)
+		_hide.set_shader_parameter("native_pose_normal",POSE_NORMAL)
 	return _hide
 
 ## stride is accumulated from *real* distance. Interpolate the last fixed step for matching hooves and wheels.

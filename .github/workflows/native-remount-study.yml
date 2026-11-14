@@ -2,7 +2,7 @@ name: Evaluate the complete authored horse and original joint gait
 on:
   push:
     branches: [codex/river-rc23-complete-remount]
-    paths: ['tools/art/bake_native_remount.py','.github/workflows/native-remount-study.yml']
+    paths: ['tools/art/bake_native_remount.py','.github/workflows/native-remount-study.yml','tests/native_remount_window.gd','scripts/field/mount_art.gd','scripts/field/mount_hide.gdshader']
 permissions:
   contents: write
 concurrency:
@@ -11,7 +11,9 @@ concurrency:
 jobs:
   bake:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 25
+    env:
+      LIBGL_ALWAYS_SOFTWARE: "1"
     steps:
       - uses: actions/checkout@v4
       - name: Install the source converter dependencies
@@ -26,9 +28,67 @@ jobs:
           git add assets/third_party/wildfire_remounts/complete_remount.glb assets/third_party/wildfire_remounts/native_pose_*.png reports/remount
           git -c user.name='River Gate complete remount study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the complete authored horse and native shoulder wrist hock and hoof movement'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Install the pinned actual Godot window
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool; fi
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/remount-window docs/evidence/river-gate-v1-rc23/native-remount
+          touch artifacts/.gdignore docs/evidence/river-gate-v1-rc23/native-remount/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Photograph the fixed real cavalry before and after the full source retarget
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/native-remount
+          cp scripts/field/mount_art.gd /tmp/native-mount-art.gd
+          cp scripts/field/mount_hide.gdshader /tmp/native-mount-hide.gdshader
+          for side in before after; do
+            mkdir -p "$proof/$side"
+            if [ "$side" = before ]; then
+              for file in scripts/field/mount_art.gd scripts/field/mount_hide.gdshader; do curl -fsSL --retry 2 "https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/3859cb318746bf2552ba1fab26ea438af5db8be1/$file" -o "$file"; done
+            else
+              cp /tmp/native-mount-art.gd scripts/field/mount_art.gd
+              cp /tmp/native-mount-hide.gdshader scripts/field/mount_hide.gdshader
+            fi
+            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side/import.log" 2>&1
+            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/import.log"; then exit 1; fi
+            timeout 8m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/native_remount_window.gd > "$proof/$side/window.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/window.log"; then exit 1; fi
+            grep NATIVE_REMOUNT_WINDOW "$proof/$side/window.log"
+            cp artifacts/remount-window/* "$proof/$side/"
+          done
+          /usr/bin/python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import json
+          proof=Path("docs/evidence/river-gate-v1-rc23/native-remount")
+          assert json.loads((proof/"before/field.json").read_text())==json.loads((proof/"after/field.json").read_text())
+          for side in ("before","after"):
+              for path in (proof/side).glob("*.jpg"):
+                  im=Image.open(path)
+                  assert im.size==(2560,1600)
+                  im.save(path.with_stem(path.stem+"-native-preview"),quality=78,subsampling=2)
+          PY
+          git diff --exit-code -- scripts/field/mount_art.gd scripts/field/mount_hide.gdshader
+          git add "$proof"
+          git -c user.name='River Gate complete remount study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive real 2K cavalry windows with matched troops positions and live poses'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: native-remount-source-study
-          path: reports/remount
+          path: |
+            reports/remount
+            docs/evidence/river-gate-v1-rc23/native-remount
+            artifacts/remount-window
           retention-days: 7

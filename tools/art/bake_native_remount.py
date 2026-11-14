@@ -194,6 +194,9 @@ def main():
             base=len(all_groups)
             all_positions.extend(posed.transpose(2,0,1,3))
             all_normals.extend(norm.transpose(2,0,1,3))
+            for i,group in enumerate(groups):
+                if group==12: strength[i]*=float(np.clip((1.38-rest[i,1])/.72,0.,1.))
+                elif group==11: strength[i]*=float(np.clip((rest[i,2]-.27)*1.05+(rest[i,1]-1.14)*.90,0.,1.))
             all_groups.extend(groups.tolist());all_strength.extend(strength.tolist())
             used={}
             for face,coords in zip(faces,face_uv):

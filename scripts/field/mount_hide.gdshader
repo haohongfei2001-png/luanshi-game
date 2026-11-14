@@ -2,6 +2,9 @@ shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 uniform sampler2D surface_atlas : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2D coat_pigments : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D native_pose_hi : filter_linear, repeat_disable;
+uniform sampler2D native_pose_lo : filter_linear, repeat_disable;
+uniform sampler2D native_pose_normal : filter_linear, repeat_disable;
 uniform sampler2D mane_ink : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 varying flat float atlas_patch;
 varying flat float fallen;
@@ -26,9 +29,29 @@ uniform float stable_clock = 0.0;
 
 vec3 rx(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(p.x,c*p.y-s*p.z,s*p.y+c*p.z);}
 vec3 rz(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(c*p.x-s*p.y,s*p.x+c*p.y,p.z);}
+
+vec2 native_address(int index, float phase, int clip) {
+    return vec2((.5+32.*clamp(phase,0.,1.)+33.*float(clip))/66.,
+                (float(index)+.5)/float(textureSize(native_pose_hi,0).y));
+}
+void native_position(int index, float phase, int clip, out vec3 position, out vec3 normal) {
+    vec2 at=native_address(index,phase,clip);
+    vec3 high=textureLod(native_pose_hi,at,0.).rgb;
+    vec3 low=textureLod(native_pose_lo,at,0.).rgb;
+    position=((high*256.+low)/257.-.5)*6.;
+    normal=normalize(textureLod(native_pose_normal,at,0.).rgb*2.-1.);
+}
+
 void vertex(){
 	int bone=int(floor(UV2.x*32.0));
 	float weight=clamp(UV2.y,0.0,1.0);
+    bool native_hide=UV.x>=2.;
+    int native_index=int(floor(UV2.x*256.))+256*int(floor(UV2.y*32.));
+    if(native_hide) {
+        vec2 at=native_address(native_index,0.,0);
+        bone=int(round(textureLod(native_pose_hi,at,0.).a*255.));
+        weight=textureLod(native_pose_lo,at,0.).a;
+    }
 	int state=int(floor(INSTANCE_CUSTOM.r*128.0))%8;
 	float collapse=state==7?smoothstep(0.0,0.91,INSTANCE_CUSTOM.g):0.0;
 	float gait=state==7?0.0:clamp(INSTANCE_CUSTOM.g,0.0,1.0);
@@ -41,7 +64,17 @@ void vertex(){
 	coat_shade=max(1.-smoothstep(.29,.66,p.y),smoothstep(1.085,1.241,p.z)*.76);
 	coat_under=max(0.,-n.y)*smoothstep(.50,.89,p.y);
 	animal_barrel=smoothstep(.49,.84,p.y)*(1.-smoothstep(.60,.79,p.z));
-	if(bone>=1 && bone<=4){
+	if(native_hide && bone>=1 && bone<=4) {
+        vec3 walk_point,walk_normal,trot_point,trot_normal;
+        native_position(native_index,INSTANCE_CUSTOM.b,0,walk_point,walk_normal);
+        native_position(native_index,INSTANCE_CUSTOM.b,1,trot_point,trot_normal);
+        float pace=smoothstep(.25,.90,gait);
+        float moving=smoothstep(0.,.16,gait);
+        p=mix(p,mix(walk_point,trot_point,pace),moving);
+        n=normalize(mix(n,normalize(mix(walk_normal,trot_normal,pace)),moving));
+        p.y+=bounce*smoothstep(.17,.94,VERTEX.y);
+        p.y=max(.008,p.y);
+    } else if(bone>=1 && bone<=4){
 		bool hind=bone>=3;
 		float side=(bone==1 || bone==3)?-1.0:1.0;
 		// At marching speed each foot lands separately. The diagonal pairs converge in a trot.

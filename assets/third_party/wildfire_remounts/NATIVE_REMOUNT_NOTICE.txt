@@ -1,0 +1,24 @@
+Complete River Gate remount study — Wildfire Games
+Copyright Wildfire Games and contributors. https://www.wildfiregames.com/
+
+The original horse_persian, hair_mane_01 and hair_tail_01 surfaces, their skin
+weights, and the published horse_walk and horse_trot joint animations are from
+the 0 A.D. repository at revision 61a3b9507d974084e6badb88a0826bd89a6d5b8b.
+These publicly editable COLLADA files identify Blender User as their author.
+The horse asset identifies Blender 2.80.54 and a 2019-05-09 modification.
+The walk identifies Blender 2.80.45 and a 2019-03-06 modification.
+A more specific individual authorship is not asserted.
+
+https://github.com/0ad/0ad/tree/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art
+https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/LICENSE.txt
+https://creativecommons.org/licenses/by-sa/3.0/
+
+The derivative complete_remount.glb and native_pose_hi.png, native_pose_lo.png
+and native_pose_normal.png are distributed under CC BY-SA 3.0 Unported.
+The original coat and hair maps retain the attribution in NOTICE.txt.
+The existing independently authored saddle, bridle, reins and cart remain
+separate assets. The converter is tools/art/bake_native_remount.py and checks
+every upstream Git blob. It sews the original surface for the close detail
+level and samples the original shoulder, wrist, hip, hock and hoof motion into
+a shared texture. The saddle, rein anchors and real-distance phase follow the
+existing River Gate interfaces. This study requires actual-game evaluation.
