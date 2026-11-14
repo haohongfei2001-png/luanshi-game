@@ -54,7 +54,10 @@ def main():
         result = []
         for index in range(2):
             reference = samples["before"][0][index]
-            row = {"ordinary": reference["ordinary"], "hits": reference["hits"], "final_state_sha256": reference["final_state_sha256"]}
+            row = {"ordinary": reference["ordinary"], "hits": reference["hits"], "final_state_sha256": reference["final_state_sha256"],
+                   "comparison_contract": "Every legacy combat field, byte-exact. Known open-field terrain_revision metadata recorded separately.",
+                   "terrain_revisions": {side: [trial[index]["terrain_revision"] for trial in repeats] for side, repeats in samples.items()},
+                   "full_snapshot_sha256": {side: [trial[index]["full_snapshot_sha256"] for trial in repeats] for side, repeats in samples.items()}}
             for repetitions in samples.values():
                 for pair in repetitions:
                     for key in ("tick", "hits", "decisions", "final_state_sha256"):

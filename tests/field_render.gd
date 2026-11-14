@@ -135,6 +135,7 @@ func _measure(count: int) -> void:
 		"render_cpu_p95_ms":_pct(cpu,0.95),"render_gpu_p95_ms":_pct(gpu,0.95),"draw_calls_p95":_pct(draws,0.95),
 		"resident_kib":rss,"median_ms":_pct(clips,0.50),"last_rank_soldiers":field.view.rank_soldiers,"static_memory_bytes":OS.get_static_memory_usage(),"input_observed_ms":latency,"peak_visible_combat_poses":peak_poses,"last_visible_soldiers":field.view.visible_soldiers,"last_high_detail_soldiers":field.view.high_detail_soldiers,"hits_during_sample":b.hits[0]+b.hits[1]-before_hits})
 	totals.append(record)
+	print("FIELD_BENCHMARK_PROGRESS pose=",totals.size()-1)
 	print("FIELD_FRAME_SAMPLE "+JSON.stringify(record))
 	var pic:=root.get_texture().get_image()
 	check(pic.save_png("res://artifacts/field-%d.png"%count)==OK,"Save rendered frame")
@@ -215,6 +216,7 @@ func _paired_detail() -> void:
 	var triangles := [0,0,0,0]
 	var visible := -1
 	for frame in 12:
+		print("FIELD_BENCHMARK_PROGRESS pose=",4+frame)
 		field.battle.step()
 		for half in 4:
 			var ref: int=(frame+half)%4

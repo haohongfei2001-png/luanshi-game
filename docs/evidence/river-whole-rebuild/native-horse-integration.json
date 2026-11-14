@@ -1,0 +1,85 @@
+{
+  "source": "0e86bc33db6722bed431e7a52029b1be4ab72fb4",
+  "proof": "ec46e7068bbb5de7008c106728a1c44af55d97cb",
+  "run": 43587910877,
+  "status": "LIMITED_NATIVE_HORSE_ADOPTED",
+  "whole_art": "ART_REBUILD_REQUIRED",
+  "files": [
+    {
+      "path": "assets/third_party/wildfire_remounts/NOTICE.txt",
+      "blob": "6414d10973b08622951bd9d0e18124809a55aab5",
+      "bytes": 1949
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/complete_remount.glb",
+      "blob": "99128181b8a02b6dc9a9b3de92ea7bcf34c346a4",
+      "bytes": 263588
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_pose_hi.png",
+      "blob": "7848052fb5d56d994ec584857c7f55443d18dc75",
+      "bytes": 164412
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_pose_hi.png.import",
+      "blob": "83ff38c3114e0c0a2559ef7205b084aea798a263",
+      "bytes": 501
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_pose_lo.png",
+      "blob": "21cfb72b236482cb1e7ee9baa2dd4a5f48f61435",
+      "bytes": 887356
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_pose_lo.png.import",
+      "blob": "dbfbbafd61905b4199a61af53c385cd6ddf94625",
+      "bytes": 501
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_pose_normal.png",
+      "blob": "0d0bc72754b65996a9a6e48158bac0a90141ff66",
+      "bytes": 377689
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_pose_normal.png.import",
+      "blob": "f8c3c09ded374328861db9d946ca9abd919814c2",
+      "bytes": 513
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_sockets.json",
+      "blob": "540131218e970827608b08297f90eb62d69f3b4c",
+      "bytes": 35250
+    },
+    {
+      "path": "assets/third_party/wildfire_remounts/native_tack.glb",
+      "blob": "571ce852d2464e69621a4ca2cff3b610de3d7dac",
+      "bytes": 187716
+    },
+    {
+      "path": "scripts/field/mount_art.gd",
+      "blob": "7886a2987a8338550c279f528e6fb92fdcc1d37d",
+      "bytes": 5264
+    },
+    {
+      "path": "scripts/field/mount_hide.gdshader",
+      "blob": "69263327ff48ad16ed112d1462e053a8804543b3",
+      "bytes": 9039
+    },
+    {
+      "path": "scripts/field/presentation.gd",
+      "blob": "f185062c966ddb3434cd3358a601639d6bbde649",
+      "bytes": 21951
+    },
+    {
+      "path": "tests/native_remount_sockets.gd",
+      "blob": "210cc063ef7ab8c393c9c25e0deef695c15bac76",
+      "bytes": 1259
+    },
+    {
+      "path": "tools/art/bake_native_remount.py",
+      "blob": "c35836cd40bba4499386b61488c433725c328d22",
+      "bytes": 18107
+    }
+  ],
+  "real_M5": "DEVICE_NOT_RUN"
+}

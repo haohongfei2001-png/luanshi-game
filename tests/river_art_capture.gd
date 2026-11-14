@@ -9,6 +9,11 @@ var field: Field
 var success:=true
 var directory:="res://artifacts/river-art"
 var shots: Array=[]
+var review_progress:=0
+
+func _progress() -> void:
+	review_progress+=1
+	print("RIVER_ART_PROGRESS sample=",review_progress)
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -81,6 +86,7 @@ func _snap(label: String,kind: String,zoom: float,yaw: float) -> void:
 	success=success and field.view.visible_soldiers>=on_screen.size()
 	shots.append(item)
 	print("RIVER_ART_FRAME "+JSON.stringify(item))
+	_progress()
 
 func _run() -> void:
 	if DisplayServer.get_name()=="headless": quit(1); return
@@ -125,6 +131,7 @@ func _run() -> void:
 		await RenderingServer.frame_post_draw
 		var shot:=root.get_texture().get_image()
 		success=shot.save_jpg("%s/film/frame-%03d.jpg"%[directory,i],.88)==OK and success
+		if i%10==0: _progress()
 	_advance(490)
 	await _snap("siege","ram",19.0,-.65)
 	await _snap("gate","gate",34.0,-.89)

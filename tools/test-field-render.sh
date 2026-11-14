@@ -15,7 +15,7 @@ if [[ "$suite" != footage ]]; then
   # Both real escort routes share the same game process. Under hosted software
   # rendering they can take 900 seconds to reach the second report. The driver
   # aborts a stuck battle after 30 unchanged frames; leave time for camp input.
-  timeout 23m xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
+  timeout 40m xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
   grep -q '^FIELD_ESCORT_GUI_PASS' artifacts/field-escort-gui.log
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-escort-gui.log; then exit 1; fi
 fi
@@ -27,21 +27,21 @@ for mode in benchmark film; do
     args+=(--fixed-fps 30)
     user_args=(--field-size=512 --field-film)
   fi
-  runner=(timeout 270s)
+  runner=(python3 tools/record-progress.py --idle 180 --limit 900 --progress-marker "FIELD_BENCHMARK_PROGRESS pose=" --)
   if [[ "$mode" == film ]]; then
     # Under llvmpipe an active 360-frame capture can outlive six minutes.
     # Keep the source, camera, samples, resolution and timing unchanged.
-    runner=(python3 tools/record-progress.py --idle 135 --limit 900)
+    runner=(python3 tools/record-progress.py --idle 135 --limit 1500)
     runner+=(--progress-marker 'FIELD_FILM_PROGRESS frame=' --)
   fi
   "${runner[@]}" xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . "${args[@]}" --script tests/field_render.gd -- "${user_args[@]}" 2>&1 | tee "artifacts/field-$mode.log"
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "artifacts/field-$mode.log"; then exit 1; fi
 done
-python3 tools/record-progress.py --idle 150 --limit 1050 --progress-marker 'FIELD_CONTROL_PROGRESS ' -- xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/field_controls.gd -- --field-size=20 2>&1 | tee artifacts/field-controls.log
+python3 tools/record-progress.py --idle 150 --limit 1500 --progress-marker 'FIELD_CONTROL_PROGRESS ' -- xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/field_controls.gd -- --field-size=20 2>&1 | tee artifacts/field-controls.log
 grep -q '^FIELD_CONTROLS_PASS' artifacts/field-controls.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-controls.log; then exit 1; fi
 ffmpeg -nostdin -loglevel error -y -framerate 10 -i artifacts/kit-film/frame-%03d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/player-nine-weapons.mp4
-timeout 720s xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --disable-vsync --audio-driver Dummy --resolution 960x600 --fixed-fps 10 --script tests/field_siege_film.gd -- --field-size=512 2>&1 | tee artifacts/natural-siege.log
+timeout 1500s xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --disable-vsync --audio-driver Dummy --resolution 960x600 --fixed-fps 10 --script tests/field_siege_film.gd -- --field-size=512 2>&1 | tee artifacts/natural-siege.log
 grep -q '^FIELD_SIEGE_FILM_PASS' artifacts/natural-siege.log
 if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/natural-siege.log; then exit 1; fi
 ffmpeg -nostdin -loglevel error -y -framerate 10 -i artifacts/siege-film/frame-%04d.jpg -c:v libx264 -pix_fmt yuv420p -movflags +faststart artifacts/river-gate-full-siege.mp4

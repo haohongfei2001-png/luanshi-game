@@ -21,7 +21,9 @@ func _initialize() -> void:
 			preload("res://assets/third_party/wildfire_gate/corner_tower.glb"),
 			preload("res://assets/environment/quaternius/grove.glb"),
 			preload("res://assets/art/mounts/field_tack.glb"),
-			preload("res://assets/third_party/wildfire_remounts/hide.glb")]:
+			preload("res://assets/third_party/wildfire_remounts/hide.glb"),
+			preload("res://assets/third_party/wildfire_remounts/complete_remount.glb"),
+			preload("res://assets/third_party/wildfire_remounts/native_tack.glb")]:
 		var actual:=FieldMeshes.meshes(library)
 		var root_node:=library.instantiate()
 		var expected:=root_node.find_children("*","MeshInstance3D",true,false)

@@ -15,7 +15,7 @@ concurrency:
 jobs:
   verify-and-export:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -130,13 +130,14 @@ jobs:
             !artifacts/*.mp4
           if-no-files-found: warn
   field-playthrough:
+    needs: verify-and-export
     name: Verify field ${{ matrix.suite }}
     strategy:
       fail-fast: false
       matrix:
-        suite: [journey, footage]
+        suite: [journey, escort, footage]
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 95
     steps:
       - uses: actions/checkout@v4
       - name: Import the shipping game for graphical regressions
@@ -158,6 +159,10 @@ jobs:
           if ! command -v ffmpeg >/dev/null || ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg xdotool; fi
           ./tools/test-field-journey.sh
           ffmpeg -nostdin -loglevel error -y -i artifacts/river-gate-review.mp4 -vf "select=not(mod(n\\,75)),scale=440:-2,tile=3x4:padding=2:margin=2:color=black" -frames:v 1 -q:v 3 artifacts/journey-frames.jpg
+      - name: Exercise both escort routes and distinct battle endings
+        if: matrix.suite == 'escort'
+        run: |
+          if ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool; fi
           ./tools/test-field-render.sh journey
       - name: Measure four army sizes and film weapons and the full siege
         if: matrix.suite == 'footage'
@@ -165,7 +170,7 @@ jobs:
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; fi
           ./tools/test-field-render.sh footage
       - name: Upload gameplay footage
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.suite != 'escort' }}
         uses: actions/upload-artifact@v4
         with:
           name: gameplay-${{ matrix.suite }}-${{ github.sha }}
@@ -329,9 +334,10 @@ jobs:
           PY
 
   art-comparison:
+    needs: verify-and-export
     name: Compare the previous and current game in the same window
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
         with:
@@ -352,6 +358,7 @@ jobs:
           godot --headless --editor --path . --import > /tmp/field-import.log 2>&1
           if grep -E 'SHADER ERROR|SCRIPT ERROR|Parse Error|ERROR:' /tmp/field-import.log; then exit 1; fi
           godot --headless --path . --script tests/model_library_parity.gd
+          godot --headless --path . --script tests/native_remount_sockets.gd
           python3 tools/art/check_company_motion.py
           python3 tools/art/check_field_carries.py
           python3 tools/art/check_contact_motion.py
