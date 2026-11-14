@@ -1,0 +1,78 @@
+name: Inspect authored cut support in an open same-state view
+on:
+  push:
+    branches: [codex/river-rc23-authored-combat]
+    paths: ['tests/authored_combat_close.gd','.github/workflows/authored-combat-close.yml']
+permissions:
+  contents: write
+concurrency:
+  group: authored-combat-close
+  cancel-in-progress: true
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    env:
+      LIBGL_ALWAYS_SOFTWARE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare the pinned real Godot window
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xdotool
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/authored-combat-close docs/evidence/river-gate-v1-rc23/native-combat/close
+          touch artifacts/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Compare identical approach cut and return frames
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/native-combat/close
+          cp assets/river_gate/figures/company_motion.png /tmp/native-motion.png
+          for side in before after; do
+            mkdir -p "$proof/$side"
+            if [ "$side" = before ]; then
+              curl -fsSL --retry 2 https://raw.githubusercontent.com/haohongfei2001-png/luanshi-game/aa6623fab538de37cfb92ff18f0c37bb5e443e93/assets/river_gate/figures/company_motion.png -o assets/river_gate/figures/company_motion.png
+            else
+              cp /tmp/native-motion.png assets/river_gate/figures/company_motion.png
+            fi
+            godot --headless --audio-driver Dummy --editor --path . --import > "$proof/$side/import.log" 2>&1
+            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/import.log"; then exit 1; fi
+            timeout 6m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 20 --script tests/authored_combat_close.gd > "$proof/$side/runtime.log" 2>&1
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/runtime.log"; then exit 1; fi
+            cp artifacts/authored-combat-close/* "$proof/$side/"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path("docs/evidence/river-gate-v1-rc23/native-combat/close")
+          a=json.loads((p/"before/sequence.json").read_text())
+          b=json.loads((p/"after/sequence.json").read_text())
+          assert a==b and len(a)==11 and all(x["scale"]==1. for x in a)
+          PY
+          git diff --exit-code -- assets/river_gate/figures/company_motion.png
+          git add "$proof"
+          git -c user.name='River Gate authored combat proof' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Inspect true body and grip support from the open river side'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Preserve errors
+        if: failure()
+        run: find docs/evidence/river-gate-v1-rc23/native-combat/close -name '*.log' -exec tail -n 80 '{}' +
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: authored-combat-open-view
+          path: |
+            docs/evidence/river-gate-v1-rc23/native-combat/close
+            artifacts/authored-combat-close
+          retention-days: 7
