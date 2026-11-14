@@ -32,6 +32,9 @@ jobs:
           window/size/window_width_override=2560
           window/size/window_height_override=1600
           CFG
+      - name: Keep evidence outside Godot's resource import
+        run: |
+          touch docs/evidence/river-gate-v1-rc23/field-coats/.gdignore
       - name: Photograph both complete 2560 x 1600 windows on matching soldiers
         shell: bash
         run: |
@@ -45,7 +48,7 @@ jobs:
               git restore assets/river_gate/figures/garrison_bodies.glb assets/third_party/wildfire_garments/field_colours.png
             fi
             godot --headless --editor --path . --import > "$proof/$side/import.log" 2>&1
-            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/import.log"; then exit 1; fi
+            if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/import.log"; then exit 1; fi
             timeout 5m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 24 --script tests/bridgehead_clothing_window.gd > "$proof/$side/window.log" 2>&1
             if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$side/window.log"; then exit 1; fi
             grep ROBE_GAME_WINDOW "$proof/$side/window.log"
@@ -75,6 +78,10 @@ jobs:
           git add "$proof"
           git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive matched normal and near actual 2K field windows'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Show the actual import and window errors
+        if: failure()
+        run: |
+          for f in docs/evidence/river-gate-v1-rc23/field-coats/*/*.log; do if test -f "$f"; then tail -n 28 "$f"; fi; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
