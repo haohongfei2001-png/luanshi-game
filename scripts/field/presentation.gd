@@ -187,7 +187,8 @@ func _reserve(g: Batch,count: int) -> void:
 		g.mesh.instance_count = maxi(count,g.mesh.instance_count*2)
 		g.submitted_count = -1 # A resized buffer needs a fresh visibility submission.
 
-func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) -> void:
+func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float,cull_center:Vector2=Vector2(INF,INF)) -> void:
+	if not cull_center.is_finite():cull_center=center
 	visible_soldiers = 0
 	high_detail_soldiers=0
 	rank_soldiers=0
@@ -223,9 +224,9 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 	for u in battle.roster:
 		if u.state == Battle.State.ESCAPED: continue
 		var p := u.before.lerp(u.pos,alpha)
-		if absf(p.x-center.x)>half_extent.x or absf(p.y-center.y)>half_extent.y: continue
+		if absf(p.x-cull_center.x)>half_extent.x or absf(p.y-cull_center.y)>half_extent.y: continue
 		var offset:=p-center
-		if cam and absf(offset.dot(right))>horizontal_limit: continue
+		if cam and cam.projection==Camera3D.PROJECTION_ORTHOGONAL and absf(offset.dot(right))>horizontal_limit: continue
 		# Static terrain. A soldier holding, attacking or fallen at the same
 		# position has the identical sole height on every intervening draw.
 		if p!=grounded_at[u.id]:
@@ -234,7 +235,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		var ground:=Vector3(p.x,floor_y[u.id],p.y)
 		# Test the oriented window in camera space. Keep enough padding for the
 		# longest blade, a raised banner, a mounted head and their projected shadows.
-		if cam and absf(offset.dot(vertical_xz)+(ground.y-center_height+1.0)*vertical_y)>vertical_limit: continue
+		if cam and cam.projection==Camera3D.PROJECTION_ORTHOGONAL and absf(offset.dot(vertical_xz)+(ground.y-center_height+1.0)*vertical_y)>vertical_limit: continue
 		var base := ground
 		var distance_sq:=p.distance_squared_to(center)
 		var travelled:=u.pos.distance_to(u.before)
@@ -379,10 +380,10 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 			travelled=distance-path.distance_at(age-Battle.DT)
 		var at:=transform_xz.origin
 		var offset:=at-center
-		if absf(offset.x)>half_extent.x or absf(offset.y)>half_extent.y: continue
-		if cam and absf(offset.dot(right))>horizontal_limit: continue
+		if absf(at.x-cull_center.x)>half_extent.x or absf(at.y-cull_center.y)>half_extent.y: continue
+		if cam and cam.projection==Camera3D.PROJECTION_ORTHOGONAL and absf(offset.dot(right))>horizontal_limit: continue
 		var ground:=Ground.unit_point(at,true)
-		if cam and absf(offset.dot(vertical_xz)+(ground.y-center_height+1.)*vertical_y)>vertical_limit: continue
+		if cam and cam.projection==Camera3D.PROJECTION_ORTHOGONAL and absf(offset.dot(vertical_xz)+(ground.y-center_height+1.)*vertical_y)>vertical_limit: continue
 		var turn:=Basis(Vector3.UP,transform_xz.get_rotation())
 		var mounts:=horse if zoom<36 and offset.length_squared()<185. else horse_rank
 		var stride:=rider.stride+distance*.68
@@ -392,7 +393,7 @@ func sync_view(center: Vector2,half_extent: Vector2,alpha: float,zoom: float) ->
 		if not battle.corps.can_command(battle,company): continue
 		var bearer: Battle.Unit=battle.corps.recipient(battle,company)
 		var at:=bearer.before.lerp(bearer.pos,alpha)
-		if absf(at.x-center.x)>half_extent.x or absf(at.y-center.y)>half_extent.y: continue
+		if absf(at.x-cull_center.x)>half_extent.x or absf(at.y-cull_center.y)>half_extent.y: continue
 		var role: String=battle.corps.title_of(battle,bearer)
 		var height:=1.25 if role=="战场主将" else (1.10 if role=="先锋" else 1.0)
 		var turn:=Basis(Vector3.UP,atan2(bearer.facing.x,bearer.facing.y))

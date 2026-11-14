@@ -1,4 +1,8 @@
 extends Node3D
+const ReviewFrustum:=preload("res://scripts/field/experimental/frustum_footprint.gd")
+# Explicit internal review only; empty preserves the shipping camera path.
+var review_camera_profile:Dictionary={}
+var _review_camera_restore:Dictionary={}
 const Battle := preload("res://scripts/field/battle.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Figures := preload("res://scripts/field/presentation.gd")
@@ -325,6 +329,30 @@ func _load() -> void:
 
 func _camera() -> void:
 	var p := Ground.unit_point(camera_center,battle.bridgehead)
+	if not review_camera_profile.is_empty():
+		if _review_camera_restore.is_empty():_review_camera_restore={"far":camera.far,"fov":camera.fov}
+		camera_pitch=deg_to_rad(float(review_camera_profile['pitch_degrees']))
+		var fraction:float=review_camera_profile['nominal_body_fraction']
+		# Anonymous adult box projection, not measured model quality or Riot specification.
+		var body_depth:=.55*absf(sin(camera_yaw))+.35*absf(cos(camera_yaw))
+		var body_span:=1.8*cos(camera_pitch)+body_depth*sin(camera_pitch)
+		camera.size=body_span/fraction
+		var distance:=CAMERA_DISTANCE
+		if review_camera_profile['projection']=='perspective':
+			camera.projection=Camera3D.PROJECTION_PERSPECTIVE
+			camera.fov=float(review_camera_profile['fov_degrees'])
+			distance=body_span/(2.*tan(deg_to_rad(camera.fov)*.5)*fraction)
+		else:camera.projection=Camera3D.PROJECTION_ORTHOGONAL
+		p.y+=.8
+		camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*distance
+		camera.look_at(p);camera.near=.1;camera.far=400.
+		map.sun.directional_shadow_max_distance=distance+80.
+		camera.current=true
+		return
+	if not _review_camera_restore.is_empty():
+		camera.far=_review_camera_restore.far;camera.fov=_review_camera_restore.fov
+		_review_camera_restore.clear();shadow_zoom=-1.
+	camera.projection=Camera3D.PROJECTION_ORTHOGONAL
 	camera_pitch=lerpf(deg_to_rad(31.0),deg_to_rad(51.0),smoothstep(7.0,23.0,camera.size))
 	camera.position=p+Vector3(sin(camera_yaw)*cos(camera_pitch),sin(camera_pitch),cos(camera_yaw)*cos(camera_pitch))*CAMERA_DISTANCE
 	camera.look_at(p)
@@ -529,7 +557,16 @@ func _draw_field() -> void:
 		var ahead:=camera.unproject_position(hp+Vector3(hero.facing.x,0,hero.facing.y))
 		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1),battle.bridgehead)
 	var t := Time.get_ticks_usec()
-	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
+	var cull_center:=camera_center
+	if not review_camera_profile.is_empty():
+		# Deliberately broad experimental slab/pad encompasses present terrain, mounted
+		# actors and long weapons. It is not a tight production performance budget.
+		var footprint:=ReviewFrustum.bounds(camera,-16.,32.,8.)
+		if footprint.valid:
+			cull_center=footprint.center;half_extent=footprint.half_extent
+		else:
+			cull_center=Vector2.ZERO;half_extent=Ground.LIMIT+Vector2.ONE*8.
+	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size,cull_center)
 	if frame_log: frame_log.pose_submitted(battle)
 	map.update_battle(battle)
 	map.reveal_sightline(camera_center,battle.hero.pos,camera.position,camera.size,battle.started and battle.result=="",battle.gate_hp<260.0 or battle.ram.x>Ground.WALL_X-12.0)
