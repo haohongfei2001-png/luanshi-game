@@ -89,3 +89,21 @@ CPU-only independent response microbenchmark (`cpu_response_cost.py`) covers
 single-thread settings. It excludes DQ, constraints, normals, Multires and draw.
 Exact sparse CSR can be slower than dense BLAS despite lower MAC count; see
 raw percentiles in `cpu-response-cost.json`. Neither is a full army result.
+
+## Clean GPU closure
+
+Run43622241297 at9fab3c1372a48266fabf83aa8e1682a43f074251 completed
+all steps successfully. Artifact14124736263 is1,936,568 bytes; independently
+downloaded ZIP SHA256 is0c8d0ffe7acb24c89b883c0556e5147256ccbd2615c49d2d13d9a1d550948165.
+All25 actual GPU poses pass, maximum cage error1.131933um and coat23.187629um.
+The final GPU log has no ERROR; cache startup repair did not alter shaders or
+thresholds. `clean-gpu-arithmetic.json` retains exact final measurements.
+
+This closes the coat-base arithmetic experiment, not complete character runtime.
+The25 poses exercise upper-arm/forearm three-axis FK plus torso translations;
+walking gait, foot contacts, mounted movement and nonrigid/scaled bone poses
+are not validated. Next integration uses the stable original308/79 source rig
+for complete-character walk/stop/turn/weapon attachment work. The character-art
+branch's evolving garment cuts need their own source SHA/response, not this
+old topology's H. Original19-mesh outfit components will be audited separately.
+No production/default scene or macOS engine is changed.
