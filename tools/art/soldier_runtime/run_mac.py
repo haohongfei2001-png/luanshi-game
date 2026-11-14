@@ -50,10 +50,11 @@ try:
  else:failure='actual Metal oracle timed out'
 finally:
  os.close(master)
- if p.poll() is None:
-  os.killpg(p.pid,signal.SIGTERM)
-  try:p.wait(timeout=8)
-  except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait()
+ # PTY EOF can precede process exit. Do not signal a process group on normal EOF.
+ # A prior group-signal attempt was denied by macOS; it is not retried here.
+ # The disposable Actions runner owns orphan cleanup if graceful waiting fails.
+ try:p.wait(timeout=30)
+ except subprocess.TimeoutExpired:failure=failure or 'own process did not exit after PTY EOF; no signal attempted'
 text=re.sub(r'\x1b\[[0-9;]*m','',data.decode(errors='replace'));(out/'actual-metal.log').write_text(text)
 receipt.update(exit=p.returncode,wall_seconds=time.monotonic()-start,failure=failure,command='normal adjacent PCK; mobile/metal; no script/path/main-pack override');(out/'process.json').write_text(json.dumps(receipt,indent=2))
 if failure or p.returncode or re.search(r'SCRIPT ERROR|SHADER ERROR|ERROR:',text):raise RuntimeError('Actual Metal failed: '+text[-1800:])
