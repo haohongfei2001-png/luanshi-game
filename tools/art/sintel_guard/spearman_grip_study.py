@@ -8,12 +8,12 @@ for side,sign,t in [('L',1,.20),('R',-1,-.20)]:
  x=axis.copy();y=Vector((-.8660254*sign,0,.5*sign));z=x.cross(y).normalized()
  # Flip X with the hand, retaining right-handed frame and a shared shaft axis.
  if side=='R':x=-x;z=x.cross(y).normalized()
- desired=Matrix((x,y,z)).transposed().to_4x4();grip=shaft_center+axis*t;desired.translation=grip-y*.145+z*.035
+ desired=Matrix((x,y,z)).transposed().to_4x4();grip=shaft_center+axis*t;desired.translation=grip-y*.165-z*.035
  rig.pose.bones['hand_ik.'+side]['ik']=1.;rig.pose.bones['hand_ik.'+side].matrix=desired
  for stem in ['finger_index.','finger_middle.','finger_ring.','finger_pinky.']:
   b=rig.pose.bones.get(stem+side)
   if b:b.rotation_mode='XYZ';b.rotation_euler[0]=.3;b.scale[1]=.65
- b=rig.pose.bones['thumb.'+side];b.rotation_mode='XYZ';b.rotation_euler[0]=.5;b.scale[1]=.72
+ b=rig.pose.bones['thumb.'+side];b.rotation_mode='XYZ';b.rotation_euler[0]=.2;b.scale[1]=.74
  bpy.context.view_layer.update()
  rows.append({'side':side,'desired_wrist':list(desired.translation),'actual_wrist':list(rig.pose.bones['DEF-hand.'+side].head),'wrist_error_m':(rig.pose.bones['DEF-hand.'+side].head-desired.translation).length,'target_grip':list(grip)})
 def material(name,rgb,rough=.8,metal=0):

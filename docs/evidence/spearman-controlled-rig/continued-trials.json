@@ -1,0 +1,324 @@
+[
+  {
+    "trial": "grip-study3",
+    "files": {
+      "soldier-grip-editable.blend": {
+        "bytes": 71155844,
+        "sha256": "5d9ed8484e2d92ce1aefbc92f48c09dc58d9f41651e3954cdcd736de4960b37b"
+      },
+      "whole-grip-BLENDER-NOT-GAME.png": {
+        "bytes": 197584,
+        "sha256": "a25f0b95bad216475382b3ce3d730174f0eff1abce1608ffd153357e9dd5d356"
+      },
+      "report.json": {
+        "bytes": 1148,
+        "sha256": "d2ce365d0767c9e93ce43c9e8db2b05f56bcbb21355c49cf8aedb7046848f674"
+      }
+    },
+    "log_tail": ".66M | Scene, 1 RenderLayer | Updating Primitive Offsets\nFra:1 Mem:255.21M (Peak 332.40M) | Time:00:00.67 | Mem:111.66M, Peak:111.66M | Scene, 1 RenderLayer | Updating Images\nFra:1 Mem:255.21M (Peak 332.40M) | Time:00:00.67 | Mem:111.66M, Peak:111.66M | Scene, 1 RenderLayer | Updating Camera Volume\nFra:1 Mem:255.21M (Peak 332.40M) | Time:00:00.67 | Mem:111.66M, Peak:111.66M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:255.21M (Peak 332.40M) | Time:00:00.67 | Mem:111.74M, Peak:111.74M | Scene, 1 RenderLayer | Updating Lights\nFra:1 Mem:255.22M (Peak 332.40M) | Time:00:00.67 | Mem:111.74M, Peak:111.74M | Scene, 1 RenderLayer | Updating Lights | Computing distribution\nFra:1 Mem:255.22M (Peak 332.40M) | Time:00:00.67 | Mem:111.74M, Peak:111.74M | Scene, 1 RenderLayer | Updating Integrator\nFra:1 Mem:256.22M (Peak 332.40M) | Time:00:00.67 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Updating Film\nFra:1 Mem:256.22M (Peak 332.40M) | Time:00:00.67 | Mem:112.66M, Peak:112.74M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:256.22M (Peak 332.40M) | Time:00:00.67 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Updating Baking\nFra:1 Mem:256.22M (Peak 332.40M) | Time:00:00.67 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Updating Device | Writing constant memory\nFra:1 Mem:256.22M (Peak 332.40M) | Time:00:00.67 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Sample 0/32\nFra:1 Mem:276.41M (Peak 332.40M) | Time:00:00.80 | Remaining:00:04.05 | Mem:132.89M, Peak:132.89M | Scene, 1 RenderLayer | Sample 1/32\nFra:1 Mem:296.56M (Peak 332.82M) | Time:00:02.83 | Mem:132.89M, Peak:132.89M | Scene, 1 RenderLayer | Sample 32/32\nFra:1 Mem:296.56M (Peak 332.82M) | Time:00:02.83 | Mem:132.89M, Peak:132.89M | Scene, 1 RenderLayer | Finished\nSaved: '/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/grip-study3/whole-grip-BLENDER-NOT-GAME.png'\nTime: 00:02.92 (Saving: 00:00.08)\n\nInfo: Saved \"soldier-grip-editable.blend\"\n\nBlender quit\n",
+    "report": {
+      "source_sha256": "a9d14419d6c248dbb7e601ce2d7066b9c702f3fea9281bd9c4ba44b0fb05a3c0",
+      "hand_controls": [
+        {
+          "side": "L",
+          "desired_wrist": [
+            0.24289420247077942,
+            -0.32500001788139343,
+            1.4907050132751465
+          ],
+          "actual_wrist": [
+            0.24289089441299438,
+            -0.3250082731246948,
+            1.4906983375549316
+          ],
+          "wrist_error_m": 1.1120140676321034e-05,
+          "target_grip": [
+            0.10000000149011612,
+            -0.36000001430511475,
+            1.5732049942016602
+          ]
+        },
+        {
+          "side": "R",
+          "desired_wrist": [
+            -0.24289420247077942,
+            -0.32500001788139343,
+            1.3092949390411377
+          ],
+          "actual_wrist": [
+            -0.24288786947727203,
+            -0.32501929998397827,
+            1.3092734813690186
+          ],
+          "wrist_error_m": 2.9535368283286708e-05,
+          "target_grip": [
+            -0.10000000149011612,
+            -0.36000001430511475,
+            1.226794958114624
+          ]
+        }
+      ],
+      "spear_length_m": 2.86,
+      "spear_tassel": false,
+      "art_pass": false,
+      "game_tested": false,
+      "finger_contact_tested": false,
+      "animations_complete": false
+    }
+  },
+  {
+    "trial": "moba-review1",
+    "files": {
+      "report.json": {
+        "bytes": 308,
+        "sha256": "b806be6cb7f4a739d2eb6621e22a6521bcb1d3e6bbc79b8a878d5fa0a31ce3ef"
+      },
+      "native2k-moba-candidate-BLENDER-NOT-GODOT.png": {
+        "bytes": 1208136,
+        "sha256": "fe289067380395c3a014bf54c865755c0869f705c3bf9a828e88d8b4b7e5bcf5"
+      }
+    },
+    "log_tail": "em:111.66M, Peak:111.66M | Scene, 1 RenderLayer | Updating Images\nFra:1 Mem:255.28M (Peak 332.91M) | Time:00:00.79 | Mem:111.66M, Peak:111.66M | Scene, 1 RenderLayer | Updating Camera Volume\nFra:1 Mem:255.28M (Peak 332.91M) | Time:00:00.79 | Mem:111.66M, Peak:111.66M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:255.28M (Peak 332.91M) | Time:00:00.79 | Mem:111.74M, Peak:111.74M | Scene, 1 RenderLayer | Updating Lights\nFra:1 Mem:255.28M (Peak 332.91M) | Time:00:00.79 | Mem:111.74M, Peak:111.74M | Scene, 1 RenderLayer | Updating Lights | Computing distribution\nFra:1 Mem:255.28M (Peak 332.91M) | Time:00:00.79 | Mem:111.74M, Peak:111.74M | Scene, 1 RenderLayer | Updating Integrator\nFra:1 Mem:256.28M (Peak 332.91M) | Time:00:00.79 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Updating Film\nFra:1 Mem:256.29M (Peak 332.91M) | Time:00:00.79 | Mem:112.66M, Peak:112.74M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:256.29M (Peak 332.91M) | Time:00:00.79 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Updating Baking\nFra:1 Mem:256.29M (Peak 332.91M) | Time:00:00.79 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Updating Device | Writing constant memory\nFra:1 Mem:256.29M (Peak 332.91M) | Time:00:00.79 | Mem:112.74M, Peak:112.74M | Scene, 1 RenderLayer | Sample 0/48\nFra:1 Mem:326.65M (Peak 332.91M) | Time:00:01.67 | Remaining:00:41.36 | Mem:183.07M, Peak:183.07M | Scene, 1 RenderLayer | Sample 1/48\nFra:1 Mem:326.65M (Peak 332.91M) | Time:00:20.99 | Remaining:00:09.18 | Mem:183.07M, Peak:183.07M | Scene, 1 RenderLayer | Sample 33/48\nFra:1 Mem:396.97M (Peak 523.53M) | Time:00:30.87 | Mem:183.07M, Peak:183.07M | Scene, 1 RenderLayer | Sample 48/48\nFra:1 Mem:396.97M (Peak 523.53M) | Time:00:30.87 | Mem:183.07M, Peak:183.07M | Scene, 1 RenderLayer | Finished\nSaved: '/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/moba-review1/native2k-moba-candidate-BLENDER-NOT-GODOT.png'\nTime: 00:33.93 (Saving: 00:03.04)\n\n\nBlender quit\n",
+    "report": {
+      "source_sha256": "5d9ed8484e2d92ce1aefbc92f48c09dc58d9f41651e3954cdcd736de4960b37b",
+      "native_resolution": [
+        2560,
+        1440
+      ],
+      "camera_orthographic_width_m": 16,
+      "pitch_deg": 50,
+      "yaw_deg": 25,
+      "actual_game_camera": false,
+      "engine": "Blender Cycles CPU authoring",
+      "art_pass": false
+    }
+  },
+  {
+    "trial": "carrier-rebuild4",
+    "files": {},
+    "log_tail": "Traceback (most recent call last):\n  File \"/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/spearman_carrier_rebuild.py\", line 107, in <module>\n    points.append(shoulder_point(sign,t,v));weights.append({'DEF-spine.04':1-blend,'DEF-upper_arm.'+side+'.01':blend});uv.append((t,c/cols))\n                  ~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/spearman_carrier_rebuild.py\", line 99, in shoulder_point\n    if hit[0] is None:raise RuntimeError(f'Shoulder pattern outside garment {x} {y}')\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Shoulder pattern outside garment 0.13 0.10310000000000002\n\nError: script failed, file: 'tools/art/sintel_guard/spearman_carrier_rebuild.py', exiting.\nBlender 4.3.2\nRead blend: \"/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/helmet-kit2/helmet-kit-editable.blend\"\nscripts disabled for \"/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/helmet-kit2/helmet-kit-editable.blend\", skipping 'lao_tseu_rig_props.py'\n\nBlender quit\n"
+  },
+  {
+    "trial": "carrier-rebuild5",
+    "files": {},
+    "log_tail": "Traceback (most recent call last):\n  File \"/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/spearman_carrier_rebuild.py\", line 107, in <module>\n    points.append(shoulder_point(sign,t,v));weights.append({'DEF-spine.04':1-blend,'DEF-upper_arm.'+side+'.01':blend});uv.append((t,c/cols))\n                  ~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/workspace/scratch/24e34dc252d3/luanshi-mh-soldier/tools/art/sintel_guard/spearman_carrier_rebuild.py\", line 99, in shoulder_point\n    if hit[0] is None:raise RuntimeError(f'Shoulder pattern outside garment {x} {y}')\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Shoulder pattern outside garment 0.2625 -0.173575\n\nError: script failed, file: 'tools/art/sintel_guard/spearman_carrier_rebuild.py', exiting.\nBlender 4.3.2\nRead blend: \"/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/helmet-kit2/helmet-kit-editable.blend\"\nscripts disabled for \"/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/helmet-kit2/helmet-kit-editable.blend\", skipping 'lao_tseu_rig_props.py'\n\nBlender quit\n"
+  },
+  {
+    "trial": "carrier-rebuild6",
+    "files": {
+      "soldier-carrier-editable.blend": {
+        "bytes": 71132396,
+        "sha256": "2215098b2aba0f53f2996d74772e4e2be4116221cb313bd2c0ef58f5e80fdf8a"
+      },
+      "source.py": {
+        "bytes": 9802,
+        "sha256": "c2f8b47d44f497dbb635c6fe46754e020525004dade7ee5d3e967b0b7e2631f8"
+      },
+      "report.json": {
+        "bytes": 2004,
+        "sha256": "3277a211418934576c762919b5df9c5c430d4a752ab262c91ba25a282c20f863"
+      },
+      "whole-carrier-arms-BLENDER-NOT-GAME.png": {
+        "bytes": 250673,
+        "sha256": "f2ebccff300e3b1ba882a29f9ff96c6040d8e51bc21be016fb7855f93c029b58"
+      },
+      "whole-carrier-BLENDER-NOT-GAME.png": {
+        "bytes": 246929,
+        "sha256": "b0391f2c112dc3d81675a836b7431d15e8027ba09f5a513b8725a9f9c4228f89"
+      }
+    },
+    "log_tail": "RenderLayer | Updating Primitive Offsets\nFra:1 Mem:286.31M (Peak 363.19M) | Time:00:00.61 | Mem:111.54M, Peak:111.54M | Scene, 1 RenderLayer | Updating Images\nFra:1 Mem:286.31M (Peak 363.19M) | Time:00:00.61 | Mem:111.54M, Peak:111.54M | Scene, 1 RenderLayer | Updating Camera Volume\nFra:1 Mem:286.31M (Peak 363.19M) | Time:00:00.61 | Mem:111.54M, Peak:111.54M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:286.31M (Peak 363.19M) | Time:00:00.61 | Mem:111.62M, Peak:111.62M | Scene, 1 RenderLayer | Updating Lights\nFra:1 Mem:286.31M (Peak 363.19M) | Time:00:00.61 | Mem:111.62M, Peak:111.62M | Scene, 1 RenderLayer | Updating Lights | Computing distribution\nFra:1 Mem:286.31M (Peak 363.19M) | Time:00:00.61 | Mem:111.62M, Peak:111.62M | Scene, 1 RenderLayer | Updating Integrator\nFra:1 Mem:287.31M (Peak 363.19M) | Time:00:00.61 | Mem:112.62M, Peak:112.62M | Scene, 1 RenderLayer | Updating Film\nFra:1 Mem:287.31M (Peak 363.19M) | Time:00:00.61 | Mem:112.54M, Peak:112.62M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:287.31M (Peak 363.19M) | Time:00:00.61 | Mem:112.62M, Peak:112.62M | Scene, 1 RenderLayer | Updating Baking\nFra:1 Mem:287.31M (Peak 363.19M) | Time:00:00.61 | Mem:112.62M, Peak:112.62M | Scene, 1 RenderLayer | Updating Device | Writing constant memory\nFra:1 Mem:287.31M (Peak 363.19M) | Time:00:00.61 | Mem:112.62M, Peak:112.62M | Scene, 1 RenderLayer | Sample 0/32\nFra:1 Mem:307.51M (Peak 363.19M) | Time:00:00.71 | Remaining:00:03.27 | Mem:132.77M, Peak:132.77M | Scene, 1 RenderLayer | Sample 1/32\nFra:1 Mem:327.65M (Peak 363.91M) | Time:00:03.10 | Mem:132.77M, Peak:132.77M | Scene, 1 RenderLayer | Sample 32/32\nFra:1 Mem:327.65M (Peak 363.91M) | Time:00:03.10 | Mem:132.77M, Peak:132.77M | Scene, 1 RenderLayer | Finished\nSaved: '/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/carrier-rebuild6/whole-carrier-arms-BLENDER-NOT-GAME.png'\nTime: 00:03.24 (Saving: 00:00.13)\n\nInfo: Saved \"soldier-carrier-editable.blend\"\n\nBlender quit\n",
+    "report": {
+      "source_sha256": "5fcae9943bae94b1780e2e29eb1f6f770a3f74d241c2fdacad4f8199fb018158",
+      "removed_rejected_objects": [
+        "KIT articulated lamellar complete",
+        "SOURCE lamella master"
+      ],
+      "source_armatures": {
+        "MH163": 163,
+        "rig": 308,
+        "meta_rig": 69,
+        "rig_weapon": 2
+      },
+      "parts": [
+        {
+          "name": "REBUILD whole contoured breast back and side carrier",
+          "vertices": 832,
+          "faces": 768,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD overlapping circumferential lamellar",
+          "vertices": 1680,
+          "faces": 280,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted complete shoulder cloth carrier L",
+          "vertices": 117,
+          "faces": 96,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted overlapping shoulder layers L",
+          "vertices": 160,
+          "faces": 40,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted complete shoulder cloth carrier R",
+          "vertices": 117,
+          "faces": 96,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted overlapping shoulder layers R",
+          "vertices": 160,
+          "faces": 40,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD short curved split tasset 0",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        },
+        {
+          "name": "REBUILD short curved split tasset 1",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        },
+        {
+          "name": "REBUILD short curved split tasset 2",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        },
+        {
+          "name": "REBUILD short curved split tasset 3",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        }
+      ],
+      "art_pass": false,
+      "game_tested": false,
+      "new_deformation": "Own armor LBS graded weights; original cloth cage/DQ/face intact",
+      "missing": [
+        "weapon grip",
+        "cloth shoe/puttee topology conversion",
+        "full walk and attack",
+        "runtime LOD/bake",
+        "historical/visual acceptance"
+      ]
+    }
+  },
+  {
+    "trial": "carrier-rebuild7",
+    "files": {
+      "soldier-carrier-editable.blend": {
+        "bytes": 71132396,
+        "sha256": "2c41cec4d59f120384a44b5036b9bb5bcdc68ac8c727e79e2824959c45a66ffe"
+      },
+      "report.json": {
+        "bytes": 2004,
+        "sha256": "3277a211418934576c762919b5df9c5c430d4a752ab262c91ba25a282c20f863"
+      },
+      "whole-carrier-arms-BLENDER-NOT-GAME.png": {
+        "bytes": 249756,
+        "sha256": "53362d836b8349d0ccc4d069b9f87256cf332b53910aae45d111f599e4f106fa"
+      },
+      "whole-carrier-BLENDER-NOT-GAME.png": {
+        "bytes": 245534,
+        "sha256": "d7acbeb56a17371ece26e97684c768370f66836f3b593b87af1daf727a2ab58d"
+      }
+    },
+    "log_tail": "RenderLayer | Updating Primitive Offsets\nFra:1 Mem:286.27M (Peak 363.15M) | Time:00:00.57 | Mem:111.53M, Peak:111.53M | Scene, 1 RenderLayer | Updating Images\nFra:1 Mem:286.27M (Peak 363.15M) | Time:00:00.57 | Mem:111.53M, Peak:111.53M | Scene, 1 RenderLayer | Updating Camera Volume\nFra:1 Mem:286.27M (Peak 363.15M) | Time:00:00.57 | Mem:111.53M, Peak:111.53M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:286.27M (Peak 363.15M) | Time:00:00.57 | Mem:111.61M, Peak:111.61M | Scene, 1 RenderLayer | Updating Lights\nFra:1 Mem:286.27M (Peak 363.15M) | Time:00:00.57 | Mem:111.61M, Peak:111.61M | Scene, 1 RenderLayer | Updating Lights | Computing distribution\nFra:1 Mem:286.27M (Peak 363.15M) | Time:00:00.57 | Mem:111.61M, Peak:111.61M | Scene, 1 RenderLayer | Updating Integrator\nFra:1 Mem:287.27M (Peak 363.15M) | Time:00:00.57 | Mem:112.61M, Peak:112.61M | Scene, 1 RenderLayer | Updating Film\nFra:1 Mem:287.28M (Peak 363.15M) | Time:00:00.57 | Mem:112.53M, Peak:112.61M | Scene, 1 RenderLayer | Updating Lookup Tables\nFra:1 Mem:287.28M (Peak 363.15M) | Time:00:00.57 | Mem:112.61M, Peak:112.61M | Scene, 1 RenderLayer | Updating Baking\nFra:1 Mem:287.28M (Peak 363.15M) | Time:00:00.57 | Mem:112.61M, Peak:112.61M | Scene, 1 RenderLayer | Updating Device | Writing constant memory\nFra:1 Mem:287.28M (Peak 363.15M) | Time:00:00.57 | Mem:112.61M, Peak:112.61M | Scene, 1 RenderLayer | Sample 0/32\nFra:1 Mem:307.47M (Peak 363.15M) | Time:00:00.69 | Remaining:00:03.72 | Mem:132.77M, Peak:132.77M | Scene, 1 RenderLayer | Sample 1/32\nFra:1 Mem:327.62M (Peak 363.87M) | Time:00:03.03 | Mem:132.77M, Peak:132.77M | Scene, 1 RenderLayer | Sample 32/32\nFra:1 Mem:327.62M (Peak 363.87M) | Time:00:03.03 | Mem:132.77M, Peak:132.77M | Scene, 1 RenderLayer | Finished\nSaved: '/workspace/scratch/24e34dc252d3/character-diagnostics/sintel-guardian/carrier-rebuild7/whole-carrier-arms-BLENDER-NOT-GAME.png'\nTime: 00:03.19 (Saving: 00:00.14)\n\nInfo: Saved \"soldier-carrier-editable.blend\"\n\nBlender quit\n",
+    "report": {
+      "source_sha256": "5fcae9943bae94b1780e2e29eb1f6f770a3f74d241c2fdacad4f8199fb018158",
+      "removed_rejected_objects": [
+        "KIT articulated lamellar complete",
+        "SOURCE lamella master"
+      ],
+      "source_armatures": {
+        "MH163": 163,
+        "rig": 308,
+        "meta_rig": 69,
+        "rig_weapon": 2
+      },
+      "parts": [
+        {
+          "name": "REBUILD whole contoured breast back and side carrier",
+          "vertices": 832,
+          "faces": 768,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD overlapping circumferential lamellar",
+          "vertices": 1680,
+          "faces": 280,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted complete shoulder cloth carrier L",
+          "vertices": 117,
+          "faces": 96,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted overlapping shoulder layers L",
+          "vertices": 160,
+          "faces": 40,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted complete shoulder cloth carrier R",
+          "vertices": 117,
+          "faces": 96,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD fitted overlapping shoulder layers R",
+          "vertices": 160,
+          "faces": 40,
+          "max_weights": 2
+        },
+        {
+          "name": "REBUILD short curved split tasset 0",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        },
+        {
+          "name": "REBUILD short curved split tasset 1",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        },
+        {
+          "name": "REBUILD short curved split tasset 2",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        },
+        {
+          "name": "REBUILD short curved split tasset 3",
+          "vertices": 216,
+          "faces": 36,
+          "max_weights": 1
+        }
+      ],
+      "art_pass": false,
+      "game_tested": false,
+      "new_deformation": "Own armor LBS graded weights; original cloth cage/DQ/face intact",
+      "missing": [
+        "weapon grip",
+        "cloth shoe/puttee topology conversion",
+        "full walk and attack",
+        "runtime LOD/bake",
+        "historical/visual acceptance"
+      ]
+    }
+  }
+]

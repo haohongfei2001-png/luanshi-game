@@ -59,3 +59,27 @@ carrier report. Its upstream recovery remains recut_front.py, young_head_module.
 spearman_helmet.py, exact CC-BY3 Guardian source and CC0 official MH source.
 `actual-trials.json` records real generated file hashes and reports, not screenshots
 claimed from a different runtime. No visual acceptance is inferred from tests.
+
+## Continued actual inspection after publication
+
+Grip3 fixes a substantive bind-space mistake: original finger controls curl toward
+hand-local+Z, while prior shaft location was on the-Z/palm-back side. New shaft
+center uses measured native finger-chain coordinates (localY0.165,Z+0.035).
+Actual image now places shaft inside both curved finger regions. This remains
+unaccepted exact skin contact, not permission to label the full actor finished.
+
+Native2560x1440 Blender screen-scale frame (`moba-review1`) was rendered and
+personally viewed before any new Godot art claim: camera orthographic width16,
+pitch50°, yaw25°. Gray armor reads as a smooth slab and shoulder joins remain
+poor. This is an explicitly rejected normal-pixel art result, not final camera
+approval or a screenshot sent to the owner.
+
+Shoulder method changed again from circular cap to original professional coat
+surface fitting. Trials4/5 stopped because the proposed pattern exceeded the
+actual garment footprint. Trials6/7 measure that footprint but actual stress
+images expose discontinuous surface selection/large triangulated shards. Both
+are rejected. The current experimental source preserves this failure; do not
+treat it as a better approved shoulder or a runtime replacement. The complete
+source rigs/garments remain untouched and the earlier trial3 oracle stays saved.
+A new ray projection over disconnected folded source surfaces is not a substitute
+for a coherent authored shoulder pattern. No detail/shine pass may hide this.

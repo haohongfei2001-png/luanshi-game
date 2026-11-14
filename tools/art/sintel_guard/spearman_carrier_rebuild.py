@@ -91,26 +91,44 @@ for row in range(9):
   n=Vector((math.sin(a),-math.cos(a),0));c=surface(a,z,.020+row*.0007)
   add_plate(c,n,(0,0,1),.042,.073,spine_weights(z),True)
 make('REBUILD overlapping circumferential lamellar',pts,polys,ws,iron,uv,.0015)
-# Broad contoured shoulder yokes, small articulated rows with graded attachment.
-# Inner yoke follows torso; outer follows upper-arm. Not a rigid arm-bound barrel.
+# Whole shoulder panels now derive from the professional garment's actual top
+# surface, NOT the rejected circular barrel. Front edge extends onto breast/back.
+shoulder_limits={}
+def shoulder_point(sign,t,v,offset=.018):
+ x=sign*(.13+.265*t);key=round(x,8)
+ if key not in shoulder_limits:
+  ext=[]
+  for direction in [-1,1]:
+   lo,hi=0.,.24
+   for _ in range(18):
+    mid=(lo+hi)/2;h=bvh.ray_cast(Vector((x,-.055+direction*mid,2.8)),Vector((0,0,-1)))
+    if h[0] is not None and h[0].z>=1.66:lo=mid
+    else:hi=mid
+   ext.append(lo)
+  shoulder_limits[key]=ext
+ half=shoulder_limits[key][0 if v<0 else 1];y=-.055+v*half
+ hit=bvh.ray_cast(Vector((x,y,2.8)),Vector((0,0,-1)))
+ if hit[0] is None:raise RuntimeError(f'Shoulder pattern outside measured garment {x} {y}')
+ return hit[0]+Vector((0,0,offset))
 for sign,side in [(1,'L'),(-1,'R')]:
- points=[];weights=[];faces=[];uv=[];rows=6;cols=16
+ points=[];weights=[];faces=[];uv=[];rows=8;cols=12
  for r in range(rows+1):
-  t=r/rows;x=sign*(.135+.235*t)
+  t=r/rows;blend=max(0,min(1,(t-.20)/.8))
   for c in range(cols+1):
-   a=-1.28+2.56*c/cols;z=1.655+(.100-.012*t)*math.cos(a);y=-.055-(.100-.012*t)*math.sin(a)
-   w={'DEF-spine.04':1-t,'DEF-upper_arm.'+side+'.01':t}
-   points.append((x,y,z));weights.append(w);uv.append((t,c/cols))
+   v=-.93+1.86*c/cols
+   points.append(shoulder_point(sign,t,v));weights.append({'DEF-spine.04':1-blend,'DEF-upper_arm.'+side+'.01':blend});uv.append((t,c/cols))
  for r in range(rows):
   for c in range(cols):i=r*(cols+1)+c;faces.append((i,i+1,i+cols+2,i+cols+1))
- make('REBUILD graded shoulder yoke '+side,points,faces,weights,carrier,uv,.0025)
+ make('REBUILD fitted complete shoulder cloth carrier '+side,points,faces,weights,carrier,uv,.003)
  pts=[];polys=[];ws=[];uv=[]
- for r in range(4):
-  t=(r+.5)/4;x=sign*(.145+.22*t)
-  for c in range(9):
-   a=-1.16+c*.29;n=Vector((0,-math.sin(a),math.cos(a)))
-   add_plate(Vector((x,-.055,1.655))+n*(.108-.012*t),n,(sign,0,0),.038,.067,{'DEF-spine.04':1-t,'DEF-upper_arm.'+side+'.01':t})
- make('REBUILD shoulder overlapping rows '+side,pts,polys,ws,iron,uv,.0015)
+ for row in range(5):
+  t0=row/5;t1=min(1,(row+1.18)/5)
+  for col in range(8):
+   v0=-.91+col*1.82/8;v1=min(.93,v0+1.82/8*1.12);start=len(pts)
+   for t,v in [(t0,v0),(t1,v0),(t1,v1),(t0,v1)]:
+    blend=max(0,min(1,(t-.20)/.8));pts.append(shoulder_point(sign,t,v,.025));ws.append({'DEF-spine.04':1-blend,'DEF-upper_arm.'+side+'.01':blend});uv.append((t,v*.5+.5))
+   polys.append(tuple(range(start,start+4)))
+ make('REBUILD fitted overlapping shoulder layers '+side,pts,polys,ws,iron,uv,.0015)
 # Four short, broad curved split tassets, not eight rigid long rectangular leaves.
 for panel,mid in enumerate([0,math.pi/2,math.pi,3*math.pi/2]):
  pts=[];polys=[];ws=[];uv=[]
