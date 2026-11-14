@@ -1,0 +1,58 @@
+name: Guardian native source diagnostic (not shipping)
+on:
+  push:
+    branches: ['dot/guardian-native-source']
+    paths: ['.github/workflows/guardian-native-probe.yml', 'tools/art/sintel_guard/godot_probe/**', 'tools/art/sintel_guard/export_native_cache.py', 'tools/art/sintel_guard/encode_monotonic.py']
+  workflow_dispatch:
+jobs:
+  native-character:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install headless software-render capture dependencies
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri mesa-utils ffmpeg
+      - name: Install pinned official Blender and Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz -o /tmp/blender.tar.xz
+          curl -fsSL https://download.blender.org/release/Blender4.3/blender-4.3.2.sha256 -o /tmp/blender.sha256
+          EXPECTED=$(grep 'blender-4.3.2-linux-x64.tar.xz' /tmp/blender.sha256 | awk '{print $1}')
+          test -n "$EXPECTED"
+          echo "$EXPECTED  /tmp/blender.tar.xz" | sha256sum -c -
+          tar -xf /tmp/blender.tar.xz -C /tmp
+          echo /tmp/blender-4.3.2-linux-x64 >> "$GITHUB_PATH"
+          curl -fsSL https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.6.3-stable_linux.x86_64
+      - name: Recover exact official source and export complete native cache
+        run: |
+          python tools/art/sintel_guard/fetch_source.py --output "$RUNNER_TEMP/guardian-source"
+          blender --background --disable-autoexec --python-exit-code 1 --python tools/art/sintel_guard/export_native_cache.py -- "$RUNNER_TEMP/guardian-source/guardians_r854/guardian_lao_tseu.blend" "$RUNNER_TEMP/guardian-cache"
+      - name: Actual Godot full-body native-resolution captures
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          GUARDIAN_CACHE: ${{ runner.temp }}/guardian-cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          uname -a > evidence/hardware.txt
+          lscpu >> evidence/hardware.txt
+          GODOT=/tmp/godot/Godot_v4.6.3-stable_linux.x86_64
+          PROJECT=tools/art/sintel_guard/godot_probe
+          for SPEC in '22 2560x1440' '3 3840x2160'; do
+            read -r DIST SIZE <<< "$SPEC"
+            for POSE in 0 24; do
+              GUARDIAN_DISTANCE=$DIST GUARDIAN_POSE_FRAME=$POSE GUARDIAN_DURATION=1 GUARDIAN_OUTPUT="$PWD/evidence/${DIST}m-pose${POSE}" xvfb-run -a -s '-screen 0 3840x2160x24' "$GODOT" --path "$PROJECT" --resolution "$SIZE" --rendering-method gl_compatibility > "evidence/${DIST}m-pose${POSE}.log" 2>&1
+            done
+          done
+          GUARDIAN_DISTANCE=22 GUARDIAN_DURATION=4 GUARDIAN_RECORD=1 GUARDIAN_OUTPUT="$PWD/evidence/motion22m" xvfb-run -a -s '-screen 0 2560x1440x24' "$GODOT" --path "$PROJECT" --resolution 2560x1440 --rendering-method gl_compatibility > evidence/motion22m.log 2>&1
+          python tools/art/sintel_guard/encode_monotonic.py evidence/motion22m
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: guardian-actual-godot-software-render-diagnostic
+          path: evidence/
+          retention-days: 14

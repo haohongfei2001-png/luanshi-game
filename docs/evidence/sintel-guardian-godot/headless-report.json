@@ -1,0 +1,178 @@
+{
+  "art_pass": false,
+  "bones": 308,
+  "cache_created_once": true,
+  "cache_texture_payload_bytes": 178618368,
+  "camera_distance_m": 22.0,
+  "cpu_vertex_upload_per_frame_bytes": 0,
+  "display": "headless",
+  "frames": [
+    {
+      "elapsed_seconds": 0.001224,
+      "monotonic_usec": 977371,
+      "source_frame": 0.029376
+    },
+    {
+      "elapsed_seconds": 0.002618,
+      "monotonic_usec": 978485,
+      "source_frame": 0.062832
+    },
+    {
+      "elapsed_seconds": 0.003607,
+      "monotonic_usec": 979435,
+      "source_frame": 0.086568
+    },
+    {
+      "elapsed_seconds": 0.009526,
+      "monotonic_usec": 985377,
+      "source_frame": 0.228624
+    },
+    {
+      "elapsed_seconds": 0.016488,
+      "monotonic_usec": 992416,
+      "source_frame": 0.395712
+    },
+    {
+      "elapsed_seconds": 0.023444,
+      "monotonic_usec": 999404,
+      "source_frame": 0.562656
+    },
+    {
+      "elapsed_seconds": 0.03025,
+      "monotonic_usec": 1006075,
+      "source_frame": 0.726
+    },
+    {
+      "elapsed_seconds": 0.037178,
+      "monotonic_usec": 1013145,
+      "source_frame": 0.892272
+    },
+    {
+      "elapsed_seconds": 0.04406,
+      "monotonic_usec": 1019895,
+      "source_frame": 1.05744
+    },
+    {
+      "elapsed_seconds": 0.050931,
+      "monotonic_usec": 1026834,
+      "source_frame": 1.222344
+    },
+    {
+      "elapsed_seconds": 0.05782,
+      "monotonic_usec": 1033688,
+      "source_frame": 1.38768
+    },
+    {
+      "elapsed_seconds": 0.064723,
+      "monotonic_usec": 1040596,
+      "source_frame": 1.553352
+    },
+    {
+      "elapsed_seconds": 0.071624,
+      "monotonic_usec": 1047496,
+      "source_frame": 1.718976
+    },
+    {
+      "elapsed_seconds": 0.078557,
+      "monotonic_usec": 1054447,
+      "source_frame": 1.885368
+    },
+    {
+      "elapsed_seconds": 0.08543,
+      "monotonic_usec": 1061317,
+      "source_frame": 2.05032
+    },
+    {
+      "elapsed_seconds": 0.092349,
+      "monotonic_usec": 1068219,
+      "source_frame": 2.216376
+    },
+    {
+      "elapsed_seconds": 0.099277,
+      "monotonic_usec": 1075105,
+      "source_frame": 2.382648
+    },
+    {
+      "elapsed_seconds": 0.106194,
+      "monotonic_usec": 1082029,
+      "source_frame": 2.548656
+    },
+    {
+      "elapsed_seconds": 0.1131,
+      "monotonic_usec": 1088931,
+      "source_frame": 2.7144
+    },
+    {
+      "elapsed_seconds": 0.120188,
+      "monotonic_usec": 1096027,
+      "source_frame": 2.884512
+    },
+    {
+      "elapsed_seconds": 0.127038,
+      "monotonic_usec": 1103589,
+      "source_frame": 3.048912
+    },
+    {
+      "elapsed_seconds": 0.133798,
+      "monotonic_usec": 1109809,
+      "source_frame": 3.211152
+    },
+    {
+      "elapsed_seconds": 0.14067,
+      "monotonic_usec": 1116596,
+      "source_frame": 3.37608
+    },
+    {
+      "elapsed_seconds": 0.147518,
+      "monotonic_usec": 1123427,
+      "source_frame": 3.540432
+    },
+    {
+      "elapsed_seconds": 0.154493,
+      "monotonic_usec": 1130415,
+      "source_frame": 3.707832
+    },
+    {
+      "elapsed_seconds": 0.161318,
+      "monotonic_usec": 1137164,
+      "source_frame": 3.871632
+    },
+    {
+      "elapsed_seconds": 0.168352,
+      "monotonic_usec": 1144259,
+      "source_frame": 4.040448
+    },
+    {
+      "elapsed_seconds": 0.175177,
+      "monotonic_usec": 1151044,
+      "source_frame": 4.204248
+    },
+    {
+      "elapsed_seconds": 0.182031,
+      "monotonic_usec": 1157888,
+      "source_frame": 4.368744
+    },
+    {
+      "elapsed_seconds": 0.188911,
+      "monotonic_usec": 1164778,
+      "source_frame": 4.533864
+    },
+    {
+      "elapsed_seconds": 0.195823,
+      "monotonic_usec": 1171954,
+      "source_frame": 4.699752
+    },
+    {
+      "elapsed_seconds": 0.202748,
+      "monotonic_usec": 1178628,
+      "source_frame": 4.865952
+    }
+  ],
+  "gpu_allocation_measured": false,
+  "kind": "actual Godot source-cache diagnostic; not combat/general skinning",
+  "meshes": 19,
+  "render_scale": 1.0,
+  "triangles": 56760,
+  "vertices": 113714,
+  "viewport": "(64.0, 64.0)"
+}
