@@ -63,3 +63,29 @@ Blender official CDN returned HTTP403. The upload step found no evidence files;
 no artifact or graphics success is claimed. Recovery uses Ubuntu's official
 signed Blender package with its actual version recorded, rebuilding both oracle
 and response within that same run rather than pretending it is Blender4.3.2.
+
+## First actual GPU result, still failed startup hygiene
+
+Run 43621867652, artifact 14123794509: Ubuntu Blender4.0.2 rebuilt and passed
+all native CPU gates. Patched same-source35e80 engine executed both GPU stages
+under llvmpipe and all25 poses passed positional gates: cage maximum1.132um,
+coat maximum23.188um. `first-gpu-arithmetic.json` retains every measurement.
+The overall CI was correctly red because the template-only isolated project
+emitted `Could not load global script cache`. Do not mislabel it a clean run.
+The next harness bootstraps the exact empty global class cache (`list=[]`)
+actually emitted by the local editor for this no-class_name project, and keeps
+the strict ERROR log rejection; no warning/error filter was weakened.
+
+The current proof's RGBAF padded shared textures occupy4,874,384 bytes,
+including4,789,024 bytes for sparse response entries (index,coefficient,0,0).
+Per-pose complete79-bone DQ input is2,528 bytes. These physical allocations are
+larger than the theoretical compact pair table and are reported honestly.
+Readback/reupload is deliberate for independent stage inspection, not a fast
+production architecture. Four-frame software-render/readback wall times are
+not frame rates or isolated shader timings.
+
+CPU-only independent response microbenchmark (`cpu_response_cost.py`) covers
+1/20/100/250/512 sets of cage points on the cloud AMD EPYC9V74 with OpenBLAS
+single-thread settings. It excludes DQ, constraints, normals, Multires and draw.
+Exact sparse CSR can be slower than dense BLAS despite lower MAC count; see
+raw percentiles in `cpu-response-cost.json`. Neither is a full army result.

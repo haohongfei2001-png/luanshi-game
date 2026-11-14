@@ -53,7 +53,11 @@ jobs:
           set -euo pipefail
           uname -a > evidence/host.txt
           /tmp/engine/bin/godot-patched --version >> evidence/host.txt
-          xvfb-run -a -s '-screen 0 1600x900x24' /tmp/engine/bin/godot-patched --path tools/art/sintel_guard/dq_gpu_probe --rendering-method gl_compatibility --audio-driver Dummy > evidence/gpu.log 2>&1
+          # This standalone project declares no global script classes. The editor's
+          # actual generated cache is exactly list=[]; bootstrap it for template.
+          mkdir -p tools/art/sintel_guard/dq_gpu_probe/.godot
+          printf 'list=[]\n' > tools/art/sintel_guard/dq_gpu_probe/.godot/global_script_class_cache.cfg
+          timeout 120s xvfb-run -a -s '-screen 0 1600x900x24' /tmp/engine/bin/godot-patched --path tools/art/sintel_guard/dq_gpu_probe --rendering-method gl_compatibility --audio-driver Dummy > evidence/gpu.log 2>&1
           ! grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/gpu.log
       - uses: actions/upload-artifact@v4
         if: always()

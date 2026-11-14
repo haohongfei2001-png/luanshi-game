@@ -1,0 +1,112 @@
+{
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "processor": "AMD EPYC 9V74 80-Core Processor",
+  "numpy_version": "2.3.5",
+  "threads_env": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "scope": "single CPU host matrix response only; NOT complete character/game/GPU FPS; no DQ, normals, multires, rig eval or draw included",
+  "rows": [
+    {
+      "actors": 1,
+      "method": "dense_float32",
+      "avg_ms": 0.24303291666666668,
+      "p50_ms": 0.22913499999999998,
+      "p95_ms": 0.30265765,
+      "p99_ms": 0.31929713000000004,
+      "bytes_input_frame": 6792,
+      "bytes_output_frame": 16476
+    },
+    {
+      "actors": 1,
+      "method": "exact_nonzero_csr_float32",
+      "avg_ms": 0.7190896666666667,
+      "p50_ms": 0.7070510000000001,
+      "p95_ms": 0.8045449499999999,
+      "p99_ms": 0.81655299,
+      "bytes_input_frame": 6792,
+      "bytes_output_frame": 16476
+    },
+    {
+      "actors": 20,
+      "method": "dense_float32",
+      "avg_ms": 1.2100936666666666,
+      "p50_ms": 1.1746050000000001,
+      "p95_ms": 1.44855775,
+      "p99_ms": 1.45032435,
+      "bytes_input_frame": 135840,
+      "bytes_output_frame": 329520
+    },
+    {
+      "actors": 20,
+      "method": "exact_nonzero_csr_float32",
+      "avg_ms": 1.477107916666667,
+      "p50_ms": 1.4350075,
+      "p95_ms": 1.6368084999999999,
+      "p99_ms": 1.6921385,
+      "bytes_input_frame": 135840,
+      "bytes_output_frame": 329520
+    },
+    {
+      "actors": 100,
+      "method": "dense_float32",
+      "avg_ms": 6.590670416666665,
+      "p50_ms": 6.5040835,
+      "p95_ms": 9.2041696,
+      "p99_ms": 9.51453152,
+      "bytes_input_frame": 679200,
+      "bytes_output_frame": 1647600
+    },
+    {
+      "actors": 100,
+      "method": "exact_nonzero_csr_float32",
+      "avg_ms": 11.270220916666666,
+      "p50_ms": 12.458012,
+      "p95_ms": 13.1776023,
+      "p99_ms": 13.23443886,
+      "bytes_input_frame": 679200,
+      "bytes_output_frame": 1647600
+    },
+    {
+      "actors": 250,
+      "method": "dense_float32",
+      "avg_ms": 12.2479845,
+      "p50_ms": 12.107704,
+      "p95_ms": 13.553029049999997,
+      "p99_ms": 14.30606661,
+      "bytes_input_frame": 1698000,
+      "bytes_output_frame": 4119000
+    },
+    {
+      "actors": 250,
+      "method": "exact_nonzero_csr_float32",
+      "avg_ms": 18.205259166666668,
+      "p50_ms": 17.9668195,
+      "p95_ms": 22.4715637,
+      "p99_ms": 22.72733834,
+      "bytes_input_frame": 1698000,
+      "bytes_output_frame": 4119000
+    },
+    {
+      "actors": 512,
+      "method": "dense_float32",
+      "avg_ms": 27.14922308333333,
+      "p50_ms": 26.238436999999998,
+      "p95_ms": 30.4040264,
+      "p99_ms": 30.700732480000003,
+      "bytes_input_frame": 3477504,
+      "bytes_output_frame": 8435712
+    },
+    {
+      "actors": 512,
+      "method": "exact_nonzero_csr_float32",
+      "avg_ms": 54.92847258333334,
+      "p50_ms": 59.1534885,
+      "p95_ms": 76.0428674,
+      "p99_ms": 77.32220788000001,
+      "bytes_input_frame": 3477504,
+      "bytes_output_frame": 8435712
+    }
+  ]
+}
