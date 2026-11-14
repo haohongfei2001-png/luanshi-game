@@ -1,0 +1,11 @@
+{
+  "physics_sequences_equal": true,
+  "consecutive_steps": 24,
+  "fps": 20,
+  "duration": 1.2,
+  "dimensions": [
+    2560,
+    1600
+  ],
+  "realtime_performance_measurement": false
+}
