@@ -18,7 +18,8 @@ def main():
                                "R":trans(bones[RB],leg_nodes(1)[2])})
             record["boundaries"][str(clip)]={"frames":frames,"max_local_ankle_step_m":{side:max(dist(a[side],b[side]) for a,b in zip(frames,frames[1:])) for side in ("L","R")}}
         rows.append(record)
-    out=Path("docs/evidence/river-gate-v1-rc23/native-chain/overhead/entry-audit.json")
+    out=Path("docs/evidence/river-gate-v1-rc23/native-chain/ready/entry-audit.json")
+    out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text(json.dumps({"kind":"diagnosis, no visual acceptance asserted","rows":rows},indent=2)+"\n")
     print("NATIVE_ENTRY_DIAGNOSIS",json.dumps(rows))
 

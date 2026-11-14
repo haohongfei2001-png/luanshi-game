@@ -26,6 +26,7 @@ jobs:
           PY
           python3 tools/art/check_native_chain.py /tmp/original-motion.png
           python3 tools/art/check_company_motion.py
-          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/native-chain/chain-check.json
+          python3 tools/art/check_native_entry.py
+          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/native-chain/chain-check.json docs/evidence/river-gate-v1-rc23/native-chain/ready/entry-audit.json
           git -c user.name='River Gate complete motion bake' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the original armed force chain with preserved mounted attacks'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"

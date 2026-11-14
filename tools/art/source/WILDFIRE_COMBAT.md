@@ -4,6 +4,8 @@ Author is Wildfire Games and contributors. Original editable files are public CO
 
 Source paths and Git blob identities are fixed in `tools/art/import_wildfire_combat.py`. The selected second study is `binaries/data/mods/public/art/animation/biped/infantry/swordsman/attack_melee_shield_02.dae`, blob 32ace1da919078a25f156a0fbb80131af477e1ff.
 
+The matching ready stance is `binaries/data/mods/public/art/animation/biped/infantry/swordsman/idle_ready_shield_01.dae`, blob fbbb12bcef7b5cb1a409596d7db293de160c080c, from the same pinned source and license.
+
 The full parent/child source matrices, bind matrices and weighted source boot vertices are sampled offline. The derived curves and any animation palette containing them are distributed under CC BY-SA 3.0. Existing independently authored meshes, textures and source clips keep their recorded licenses.
 
 - [Original source](https://github.com/0ad/0ad/blob/61a3b9507d974084e6badb88a0826bd89a6d5b8b/binaries/data/mods/public/art/animation/biped/infantry/swordsman/attack_melee_shield_02.dae)

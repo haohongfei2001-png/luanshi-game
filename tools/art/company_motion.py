@@ -754,12 +754,14 @@ def legacy_pose(kit,clip,t,loadout=0,side_hit=0):
 # Full authored Wildfire chain, with the original bind axes retained.
 COMBAT_SOURCE=json.loads((Path(__file__).parent/'source'/'wildfire_combat_curves.json').read_text())
 NATIVE_CUT=COMBAT_SOURCE['curves']['shield_cut_02']
+NATIVE_READY=COMBAT_SOURCE['curves']['shield_ready']
 NATIVE_REST=NATIVE_CUT['rest_points']
-SOURCE_GROUND={side:min(p[1] for frame in NATIVE_CUT['frames'] for p in frame['sole'][side]) for side in ('L','R')}
+SOURCE_GROUND={curve['source_path']:{side:min(p[1] for frame in curve['frames'] for p in frame['sole'][side])
+                                   for side in ('L','R')} for curve in (NATIVE_CUT,NATIVE_READY)}
 MOUNTED_BASIC=((0,2),(0,6),(1,2),(1,6))
 
-def native_sample(phase):
-    rows=NATIVE_CUT['frames']
+def native_sample(phase,curve=NATIVE_CUT):
+    rows=curve['frames']
     at=max(0.,min(1.,phase))*(len(rows)-1)
     index=min(int(at),len(rows)-2)
     weight=at-index
@@ -774,7 +776,7 @@ def native_sample(phase):
     if dot(a,b)<0: b=mul(b,-1.)
     weapon=unit(lerp(a,b,weight))
     sole={side:(1.-weight)*min(p[1] for p in first['sole'][side])+
-               weight*min(p[1] for p in last['sole'][side])-SOURCE_GROUND[side] for side in ('L','R')}
+               weight*min(p[1] for p in last['sole'][side])-SOURCE_GROUND[curve['source_path']][side] for side in ('L','R')}
     return points,quats,weapon,sole
 
 def source_limb_rotation(q,name,child,binds):
@@ -793,8 +795,8 @@ def fit_leg(binds,root,foot,pole,upper_q,lower_q):
         result.append(placed(base,origin,q))
     return result
 
-def native_chain_pose(phase):
-    points,q,weapon,sole=native_sample(phase)
+def native_chain_pose(phase,curve=NATIVE_CUT):
+    points,q,weapon,sole=native_sample(phase,curve)
     waist=(0.,.86,0.)
     at=add(points['hips'],sub(waist,NATIVE_REST['hips']))
     feet={}
@@ -844,26 +846,6 @@ def native_chain_pose(phase):
     ms[NOCK]=ms[LH]
     return ms
 
-def blend_chain(first,last,weight):
-    ms=[blend_rigid(a,b,weight) for a,b in zip(first,last)]
-    ms[CHEST]=placed((0.,1.008,0.),trans(ms[HIPS],(0.,1.008,0.)),ms[CHEST][0])
-    ms[HEAD]=placed((0.,1.427,.015),trans(ms[CHEST],(0.,1.427,.015)),ms[HEAD][0])
-    for side in (-1,1):
-        upper,fore,hand=(LU,LF,LH) if side<0 else (RU,RF,RH)
-        parent=CHEST
-        for child,pivot in zip((upper,fore,hand),arm_nodes(side)):
-            ms[child]=placed(pivot,trans(ms[parent],pivot),ms[child][0])
-            parent=child
-        thigh,shin,boot=(LT,LS,LB) if side<0 else (RT,RS,RB)
-        binds=leg_nodes(side)
-        hip=trans(ms[HIPS],binds[0])
-        foot=lerp(trans(first[boot],binds[2]),trans(last[boot],binds[2]),weight)
-        knee=lerp(trans(first[shin],binds[1]),trans(last[shin],binds[1]),weight)
-        ms[thigh],ms[shin]=fit_leg(binds,hip,foot,sub(knee,hip),ms[thigh][0],ms[shin][0])
-        ms[boot]=placed(binds[2],foot,ms[boot][0])
-    ms[NOCK]=ms[LH]
-    return ms
-
 def blade_tip(kit,bones):
     far_z=1.1036090310278026 if kit==0 else 1.139332698972023
     return trans(bones[RH],(.273,.943,far_z))
@@ -881,18 +863,16 @@ def authored_contact(kit):
 NATIVE_CONTACT={kit:authored_contact(kit) for kit in (0,1)}
 
 def pose(kit,clip,t,loadout=0,side_hit=0):
-    if kit not in (0,1) or clip not in (2,6) or side_hit:
+    if kit not in (0,1) or clip not in (1,2,6) or side_hit:
         return legacy_pose(kit,clip,t,loadout,side_hit)
+    if clip==1:
+        return native_chain_pose(t,NATIVE_READY)
     release=NATIVE_CONTACT[kit]
     phase=release*t if clip==2 else release+(1.-release)*t
-    authored=native_chain_pose(phase)
-    # Only entry and final settling blend through the established waiting
-    # stance. The source's hip, loaded knee, shoulder and wrist own the cut.
-    if clip==2 and t<.24:
-        return blend_chain(legacy_pose(kit,2,0.),authored,ramp(t,0.,.24))
-    if clip==6 and t>.82:
-        return blend_chain(authored,legacy_pose(kit,6,1.),ramp(t,.82,1.))
-    return authored
+    # The author's ready stance and the cut share the same loaded leg.
+    # Switching back through the older opposite-foot pose added two rapid
+    # half-metre ankle slides to every strike, despite planted source feet.
+    return native_chain_pose(phase)
 
 
 def cycling(clip):

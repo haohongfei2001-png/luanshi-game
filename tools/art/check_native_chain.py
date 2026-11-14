@@ -12,7 +12,7 @@ def main():
     current=Image.open("assets/river_gate/figures/company_motion.png").convert("RGBA")
     assert original.size==(528,1668)
     assert current.size==(528,1684)
-    changed={2,6,33,37}
+    changed={1,2,6,32,33,37}
     for strip in range(417):
         if strip not in changed:
             assert original.crop((0,strip*4,528,strip*4+4)).tobytes()==current.crop((0,strip*4,528,strip*4+4)).tobytes(),strip
@@ -33,6 +33,12 @@ def main():
                     gaps.append(dist(trans(bones[fore],wrist),trans(bones[hand],wrist)))
                     ankle=leg_nodes(side)[2]
                     gaps.append(dist(trans(bones[shin],ankle),trans(bones[boot],ankle)))
+        ready=[]
+        for n in range(33):
+            idle=pose(kit,1,n/32.)
+            first=pose(kit,2,0.)
+            ready.append(max(dist(trans(a,p),trans(b,p)) for a,b in zip(idle,first) for p in ((0.,.86,0.),(.2,1.4,0.))))
+        assert max(ready)<.055,max(ready)
         feet=[]
         for n in range(65):
             phase=n/64.
@@ -45,9 +51,9 @@ def main():
         rows.append({"kit":kit,"source_contact_phase":NATIVE_CONTACT[kit],"source_contact_seconds":NATIVE_CONTACT[kit]*NATIVE_CUT["duration"],
                      "maximum_wrist_ankle_gap_m":max(gaps),"supporting_left_sole_span_m":support,
                      "release_boundary_gap_m":release,"release_tip_m":blade_tip(kit,a),
-                     "source_clip":"shield_cut_02","source_license":"CC BY-SA 3.0",
+                     "maximum_ready_to_cut_probe_gap_m":max(ready),"source_clip":"shield_cut_02","source_license":"CC BY-SA 3.0",
                      "old_world_grip_constraint":False})
-    report={"preserved_strips":413,"candidate_strips":sorted(changed),"preserved_mounted_strips":4,
+    report={"preserved_strips":411,"candidate_strips":sorted(changed),"preserved_mounted_strips":4,
             "palette":[528,1684],"runtime_bones":16,"new_runtime_samples":0,"rows":rows}
     out=Path("docs/evidence/river-gate-v1-rc23/native-chain/chain-check.json")
     out.parent.mkdir(parents=True,exist_ok=True)
