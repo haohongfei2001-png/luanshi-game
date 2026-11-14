@@ -1,0 +1,86 @@
+[
+  {
+    "ordinary": [
+      512,
+      512
+    ],
+    "hits": 298,
+    "final_state_sha256": "e9fb94604eddfb5041f80d148bb430d2de0e331f8c6e2dcb8cdde7d6c9a43567",
+    "before": {
+      "query_us": {
+        "median": 32382.5,
+        "p95": 35158,
+        "samples": 8
+      },
+      "grid_us": {
+        "median": 1788.5,
+        "p95": 1921,
+        "samples": 8
+      },
+      "step_us": {
+        "median": 19666.0,
+        "p95": 22362,
+        "samples": 64
+      }
+    },
+    "after": {
+      "query_us": {
+        "median": 24986.0,
+        "p95": 26300,
+        "samples": 8
+      },
+      "grid_us": {
+        "median": 1940.0,
+        "p95": 2115,
+        "samples": 8
+      },
+      "step_us": {
+        "median": 18989.5,
+        "p95": 21080,
+        "samples": 64
+      }
+    }
+  },
+  {
+    "ordinary": [
+      2500,
+      2500
+    ],
+    "hits": 309,
+    "final_state_sha256": "7b7b95cf082abe5cd10f18c22b1f2c1013770dea9714ebe03dc3e0fa7791c492",
+    "before": {
+      "query_us": {
+        "median": 165707.0,
+        "p95": 168199,
+        "samples": 8
+      },
+      "grid_us": {
+        "median": 9201.5,
+        "p95": 9560,
+        "samples": 8
+      },
+      "step_us": {
+        "median": 114298.5,
+        "p95": 119637,
+        "samples": 64
+      }
+    },
+    "after": {
+      "query_us": {
+        "median": 104707.5,
+        "p95": 108093,
+        "samples": 8
+      },
+      "grid_us": {
+        "median": 10034.0,
+        "p95": 12960,
+        "samples": 8
+      },
+      "step_us": {
+        "median": 106299.0,
+        "p95": 112127,
+        "samples": 64
+      }
+    }
+  }
+]

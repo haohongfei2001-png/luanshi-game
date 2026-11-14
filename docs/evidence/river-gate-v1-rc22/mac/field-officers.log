@@ -1,0 +1,11 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+FIELD_OFFICER_MANIFEST {"existing_billets":128,"officers":[16,16],"ordinary":[512,512]}
+FIELD_OFFICER_CONTACT {"dead":[1,1],"kills":[1,1],"skills":[2,2],"ticks":230}
+FIELD_OFFICER_DUEL {"blocked":7.88665494918823,"exposed":35.8484315872192,"out_of_reach":0.0}
+FIELD_OFFICER_CHALLENGE {"challenger":206,"player_distance":15.9600105285645,"seen_tick":10}
+FIELD_OFFICER_SUCCESSION {"active_commands":[1,1],"captives":[[],[]],"commanders":[40,41],"evacuated":[[],[]],"fallen":[[40],[41]],"kills":[0,0],"ranked":true,"rescued":[[],[]],"skills":[0,0],"successions":[1,1],"wounded":[[],[]]}
+FIELD_OFFICER_RESCUE {"guard":0,"largest_step":0.158789128065109,"rescued":[[40],[]],"ticks":57}
+FIELD_OFFICER_WORLD {"ordinary_dead":[0,0],"outcome":"主将阵亡","prisoners":[[40],[]],"ticks":89}
+FIELD_OFFICER_CUSTODY {"fatal":[[40],[]],"holder":37,"prisoner":40}
+FIELD_OFFICERS_PASS []

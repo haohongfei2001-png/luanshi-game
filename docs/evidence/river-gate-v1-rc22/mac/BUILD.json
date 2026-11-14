@@ -1,0 +1,51 @@
+{
+  "source": "dc9805fd2930344be9737cfc19074442618d7e5c",
+  "export": "34b5af8db16793566df89139ccdd783ad7d6b723",
+  "workflow": "43535370706",
+  "sha256": "b4d05fcd03baae04b7f8fa73daf11a8002dcee7322aa1bca9565eabd1afa27f7",
+  "bytes": 101477654,
+  "identifier": "com.luanshi.prototype",
+  "bundle_version": "16022",
+  "notices_sha256": "2d8118d586556403b5fc8b1d42bda6d90ce282cfe808adc1b5fcafd0188a3ebf",
+  "platform": "hosted macOS only",
+  "git_archive": true,
+  "samples": [
+    {
+      "label": "compat-1",
+      "passed": true
+    },
+    {
+      "label": "default-metal-1",
+      "passed": false
+    },
+    {
+      "label": "default-metal-2",
+      "passed": true
+    },
+    {
+      "label": "balanced-metal",
+      "passed": true
+    },
+    {
+      "label": "performance-metal",
+      "passed": true
+    },
+    {
+      "label": "compat-2",
+      "passed": true
+    },
+    {
+      "label": "native-single-sample",
+      "passed": true
+    },
+    {
+      "label": "focus-control",
+      "passed": true
+    },
+    {
+      "label": "shipping-metal",
+      "passed": true
+    }
+  ],
+  "real_m5": "NOT_RUN"
+}

@@ -1,0 +1,5 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple Paravirtual device (Apple5)
+
+FIELD_PROFILE_FILE /Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish/frame-times/river-gate-1794617673-2742.jsonl
+FIELD_BOOT {"data_dir":"/Users/runner/Library/Application Support/Godot/app_userdata/Luanshi - Border Skirmish","drawn_frames":0,"engine_ms":20012,"focus":false,"hits":0,"paused":false,"physics_frames":8,"pid":2742,"pipelines":{"canvas":0,"draw":0,"mesh":10,"specialization":0,"surface":0},"renderer":"mobile","result":"","stage":"scene_ready","started":false,"tick":0}
