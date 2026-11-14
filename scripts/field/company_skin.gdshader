@@ -87,6 +87,12 @@ void vertex() {
         int reaction=(clip==10 ? 0 : 2)+slot-1;
         tile.y=float(4*(381+kit*4+reaction))+.5;
     }
+    // Keep the established seated upper-body attacks when the on-foot
+    // sword or dao uses its complete authored weight-bearing chain.
+    if (code>=64 && sample_kit<2 && (clip==2 || clip==6)) {
+        int seated=sample_kit*2+(clip==6 ? 1 : 0);
+        tile.y=float(4*(417+seated))+.5;
+    }
     // Legacy heads deform only their skin tiles. The continuous anatomical master
     // keeps coincident hair/skin UV seams together and has authored role variants.
     ivec2 swatch=ivec2(UV*vec2(8.,4.));

@@ -1,0 +1,31 @@
+name: Bake the complete authored sword chain
+on:
+  push:
+    branches: [codex/river-rc23-native-chain]
+    paths: ['tools/art/company_motion.py','scripts/field/company_skin.gdshader','tools/art/check_native_chain.py','.github/workflows/native-chain-bake.yml']
+permissions:
+  contents: write
+jobs:
+  bake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bake full body chain and check precise wrist, ankle and contact continuity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install pillow numpy
+          cp assets/river_gate/figures/company_motion.png /tmp/original-motion.png
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,"tools/art")
+          from company_motion import bake_motion
+          bake_motion(Path("assets/river_gate/figures"))
+          PY
+          python3 tools/art/check_native_chain.py /tmp/original-motion.png
+          python3 tools/art/check_company_motion.py
+          git add assets/river_gate/figures/company_motion.png docs/evidence/river-gate-v1-rc23/native-chain/chain-check.json
+          git -c user.name='River Gate complete motion bake' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the original armed force chain with preserved mounted attacks'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
