@@ -91,8 +91,10 @@ def main(cache):
                     vertices.append(fitted[pi]);normal.append(direction[ni]);uv0.append((uv[ti,0],1.-uv[ti,1]))
                     v=ao_uv[ai] if ao_uv is not None else uv[ti];uv1.append((v[0],1.-v[1]))
                 indices.append((found[key],))
+        assert len(vertices)<65536,(row["name"],len(vertices))
+        assert np.isfinite(np.asarray(vertices)).all(),row["name"]
         attributes={"POSITION":lib.accessor(vertices,"f",3,True),"NORMAL":lib.accessor(normal,"f",3),"TEXCOORD_0":lib.accessor(uv0,"f",2),"TEXCOORD_1":lib.accessor(uv1,"f",2)}
-        primitive={"attributes":attributes,"indices":lib.accessor(indices,"I",1),"material":material_index}
+        primitive={"attributes":attributes,"indices":lib.accessor(indices,"H",1),"material":material_index}
         number=len(lib.doc["meshes"])
         lib.doc["meshes"].append({"name":row["name"],"primitives":[primitive]})
         lib.doc["nodes"].append({"name":row["name"],"mesh":number})

@@ -5,6 +5,7 @@ on:
     paths: ['scripts/field/river_master*','scripts/field/controller.gd','tools/art/import_ground_masters.py','tools/art/build_river_architecture.py','tools/art/source/river_architecture.json','.github/workflows/whole-rebuild.yml']
 permissions:
   contents: write
+  actions: write
 jobs:
   playable:
     runs-on: ubuntu-24.04
@@ -13,6 +14,11 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
+      - name: Stop the superseded invalid-index render
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST repos/haohongfei2001-png/luanshi-game/actions/runs/43553508581/cancel || true
       - name: Prepare the ground and complete gate library
         run: |
           set -euo pipefail
@@ -37,6 +43,16 @@ jobs:
           if grep -E 'ERROR:|Parse Error|SHADER ERROR' artifacts/world-rebuild/import.log; then exit 1; fi
           /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/field_bridgehead.gd > artifacts/world-rebuild/bridgehead.log 2>&1
           cat artifacts/world-rebuild/bridgehead.log
+      - name: Render the rebuilt full scene before its continuous-input run
+        run: |
+          set -euo pipefail
+          printf '[display]\\nwindow/size/window_width_override=2560\\nwindow/size/window_height_override=1440\\n' > override.cfg
+          timeout 480s xvfb-run -a -s "-screen 0 2560x1440x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --script tests/world_master_review.gd > artifacts/world-rebuild/stills.log 2>&1 || { cat artifacts/world-rebuild/stills.log; exit 1; }
+          cat artifacts/world-rebuild/stills.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/world-rebuild/stills.log; then exit 1; fi
+          git add docs/evidence/river-whole-rebuild/review
+          git -c user.name='River Gate visual verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve full-map and reference-camera actual game frames for review'
+          git push origin HEAD:refs/heads/codex/river-whole-rebuild
       - name: Play the complete replacement map through the normal bridgehead menu
         run: |
           set -euo pipefail
