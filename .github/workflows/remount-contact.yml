@@ -19,7 +19,7 @@ jobs:
           set -euo pipefail
           python3 -m pip install numpy Pillow
           python3 tools/art/analyse_remount_contacts.py "$RUNNER_TEMP/horse-source"
-          git add reports/remount/native-contact-audit.json
+          git add reports/remount/native-contact-audit.json reports/remount/contact-summary.json
           git -c user.name='River Gate motion review' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve original horse contact and rig registration measurements'
           git push origin HEAD:refs/heads/codex/river-remount-contact
       - uses: actions/upload-artifact@v4

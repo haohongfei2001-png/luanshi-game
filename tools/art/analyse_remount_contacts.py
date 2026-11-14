@@ -20,7 +20,15 @@ weights /= np.maximum(weights.sum(axis=1)[:, None], 1.e-10)
 rest = fitted(points, 0)
 homogeneous = np.column_stack((points, np.ones(len(points))))
 samples = 80
+ANIMATIONS = [*ANIMATIONS,
+    ("gallop", "animation/quadraped/horse_gallop.dae", "61939f29aa5206e7b67a28f739871b968b512739"),
+    ("pace", "animation/quadraped/horse_pace.dae", "5f07ddf2459089819dfa92445d52730398478c38"),
+    ("relaxed_walk", "animation/quadraped/horse_walk_relax.dae", "c04eac5c186f01d13509dd4a700b8e3aabdc3a32"),
+    ("breed_walk", "animation/quadraped/horse_breed_walk.dae", "6a5e17621242b7354286666eb835e88c5f80eff3"),
+    ("breed_trot", "animation/quadraped/horse_breed_trot.dae", "7bdab1fb87707cfd52a2726e5b92bc4d3956cc28"),
+]
 reports = []
+summaries = []
 for clip_name, path, signature in ANIMATIONS:
     source = source_file(cache, path, signature)
     source_names, source_inverse, source_nodes = rig(source)
@@ -81,7 +89,9 @@ for clip_name, path, signature in ANIMATIONS:
         concise = {key: value for key, value in row.items() if key not in ("saddle_path", "hooves")}
         concise["hooves"] = {key: {field: value for field, value in data.items() if field not in ("track", "sole_y")}
                             for key, data in hooves.items()}
+        summaries.append(concise)
         print("AUTHORED_HORSE_CONTACT", json.dumps(concise), flush=True)
 out = Path("reports/remount")
 out.mkdir(parents=True, exist_ok=True)
 (out / "native-contact-audit.json").write_text(json.dumps(reports, indent=2) + "\n")
+(out / "contact-summary.json").write_text(json.dumps(summaries, indent=2) + "\n")
