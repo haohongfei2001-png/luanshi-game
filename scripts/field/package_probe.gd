@@ -183,9 +183,12 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 	var longest_frame_ms:=0.0
 	var longest_context: Dictionary={}
 	var previous_tick:=b.tick
-	b.trace_phase_us.resize(Battle.TRACE_STAGES.size())
-	b.trace_phase_us.fill(0)
-	var preceding_phases:=b.trace_phase_us.duplicate()
+	var owns_phase_trace:=b.trace_phase_us.size()!=Battle.TRACE_STAGES.size()
+	if owns_phase_trace:
+		b.trace_phase_us.resize(Battle.TRACE_STAGES.size())
+		b.trace_phase_us.fill(0)
+	var first_phases:=b.trace_phase_us.duplicate()
+	var preceding_phases:=first_phases.duplicate()
 	var previous_sim_us:=scene.sim_us
 	var previous_view_us:=scene.view_us
 	var last_camera_request:=-1
@@ -255,8 +258,11 @@ static func _window_sample(tree: SceneTree,scene: Field,path: String) -> bool:
 		if gpu>0: rgpu.append(gpu)
 	var phase_totals: Dictionary = {}
 	for i in Battle.TRACE_STAGES.size():
-		phase_totals[Battle.TRACE_STAGES[i]]=b.trace_phase_us[i]/1000.0
-	b.trace_phase_us.clear()
+		phase_totals[Battle.TRACE_STAGES[i]]=(b.trace_phase_us[i]-first_phases[i])/1000.0
+	# A slow renderer can finish this sample before the recorder's 180-frame batch.
+	# Flush its real intervals before image readback or resetting owned counters.
+	if scene.frame_log: scene.frame_log.interrupt("package_sample_complete",scene)
+	if owns_phase_trace: b.trace_phase_us.clear()
 	var sorted:=frames.duplicate()
 	sorted.sort(); rcpu.sort(); rgpu.sort()
 	if sorted.is_empty(): return false

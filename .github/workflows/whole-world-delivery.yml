@@ -2,7 +2,7 @@ name: Package and play the complete replacement world on hosted macOS
 on:
   push:
     branches: ['codex/river-whole-rebuild']
-    paths: ['.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py','tests/field_history_probe.gd','scripts/field/save.gd','scripts/field/ground.gd','scripts/field/battle.gd','scripts/game.gd','scripts/field/whole_battle_review.gd','tools/archive_native_world.py','tests/whole_input_calibration.gd']
+    paths: ['docs/evidence/river-whole-rebuild/candidate-request.json','.github/workflows/whole-world-delivery.yml','tests/whole_battle_replay.gd','tools/whole_native_delivery.py','tools/encode_whole_battle.py','tests/field_history_probe.gd','scripts/field/save.gd','scripts/field/ground.gd','scripts/field/battle.gd','scripts/game.gd','scripts/field/whole_battle_review.gd','tools/archive_native_world.py','tests/whole_input_calibration.gd']
 permissions:
   contents: write
   actions: read
@@ -11,6 +11,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   export:
+    # Art iterations use the cheaper whole-scene review. A frozen candidate runs
+    # this full export, native movie, scale matrix and repeated startup suite.
+    if: startsWith(github.event.head_commit.message, 'Package ')
     runs-on: ubuntu-24.04
     timeout-minutes: 24
     steps:
@@ -70,7 +73,7 @@ jobs:
   native:
     needs: export
     runs-on: macos-latest
-    timeout-minutes: 40
+    timeout-minutes: 48
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -79,9 +82,9 @@ jobs:
           path: package
       - uses: actions/download-artifact@v4
         with:
-          name: mobile-mutex-native-probe
+          name: mobile-mutex-angle-template
           path: patch
-          run-id: '43550761384'
+          run-id: '43580708251'
           github-token: ${{ github.token }}
       - name: Prepare the native movie encoder and audit the hosted hardware
         run: |

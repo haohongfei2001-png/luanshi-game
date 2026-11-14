@@ -18,7 +18,8 @@ func _run() -> void:
 	replay.root=root
 	replay.field=field
 	var b=field.battle
-	for step in 3600:
+	replay.requested_side=b.ordinary_counts[0]
+	for step in (900 if replay.real_time else 3600):
 		replay._drive()
 		field._physics_process(Battle.DT)
 		field._process(Battle.DT)
@@ -27,6 +28,8 @@ func _run() -> void:
 		if b.result!="":break
 		await process_frame
 	var ok:bool=b.hero.impacts>0 and b.tick>=600 and b.hits[0]+b.hits[1]>0 and b.result!=""
+	if replay.real_time:
+		ok=b.hero.hp>0 and b.hits[0]+b.hits[1]>0 and (b.tick>=900 or b.result!="")
 	print("WHOLE_INPUT_CALIBRATION ",ok," tick=",b.tick," impacts=",b.hero.impacts," hp=",b.hero.hp," result=",b.result)
 	replay.free()
 	scene.queue_free()

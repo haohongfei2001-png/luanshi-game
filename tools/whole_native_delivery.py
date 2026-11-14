@@ -58,11 +58,7 @@ def run_game(executable,output,helper,user_args,movie=None):
     assert not any(marker in text for marker in ("SCRIPT ERROR","SHADER ERROR","ERROR:")),text[-2200:]
     return text
 
-def main():
-    assert os.environ.get("GITHUB_ACTIONS")=="true" and os.environ.get("RUNNER_OS")=="macOS"
-    workspace=Path.cwd()
-    package,patch,out=map(lambda p:Path(p).resolve(),sys.argv[1:4])
-    out.mkdir(parents=True,exist_ok=True)
+def prepare_package(package,patch,out):
     unpacked=out/"unpacked"
     subprocess.run(["ditto","-x","-k",str(package),str(unpacked)],check=True)
     app,=unpacked.glob("*.app")
@@ -71,15 +67,17 @@ def main():
     original_hash=hashlib.sha256(executable.read_bytes()).hexdigest()
     receipt=json.loads((patch/"provenance.json").read_text())
     engine=patch/"godot.macos.template_release.arm64"
+    assert receipt["engine_source"]=="35e80b3a8822a9df9be390814b62f44c0a9c69e8"
+    assert receipt["angle_archive_sha256"]=="9eadd2055f66507e9d74655e7683e068e7e4a9dade5a84bc03d3f5affdfb7b9d"
     assert hashlib.sha256(engine.read_bytes()).hexdigest()==receipt["patched_binary_sha256"]
     executable.write_bytes(engine.read_bytes());executable.chmod(0o755)
     subprocess.run(["codesign","--force","--deep","--sign","-",str(app)],check=True)
     subprocess.run(["codesign","--verify","--deep","--strict",str(app)],check=True)
-    for name in ("GODOT-MIT-LICENSE.txt","actual.patch","engine-version.txt"):
+    for name in ("GODOT-MIT-LICENSE.txt","GODOT-COPYRIGHT.txt","ANGLE-BSD-LICENSE.txt","ANGLE-BUILD-LICENSE.txt","actual.patch","engine-version.txt"):
         (unpacked/name).write_bytes((patch/name).read_bytes())
     provenance={"game_source":os.environ["GITHUB_SHA"],"original_package_sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
-        "original_binary_sha256":original_hash,"engine":receipt,
-        "scope":"arm64 hosted Mac review candidate, upstream shader mutex backport, actual M5 DEVICE_NOT_RUN",
+        "original_binary_sha256":original_hash,"signed_binary_sha256":hashlib.sha256(executable.read_bytes()).hexdigest(),"engine":receipt,
+        "scope":"arm64 internal Mac candidate, upstream shader mutex backport and static ANGLE, actual M5 DEVICE_NOT_RUN",
         "art_status":"ART_REBUILD_REQUIRED","codesign":"ad-hoc verified, not notarized"}
     (unpacked/"ENGINE-PROVENANCE.json").write_text(json.dumps(provenance,indent=2)+"\n")
     archive=out/"Luanshi-macOS-arm64-world-review.zip"
@@ -87,6 +85,19 @@ def main():
     provenance["package_sha256"]=hashlib.sha256(archive.read_bytes()).hexdigest()
     (out/"delivery.json").write_text(json.dumps(provenance,indent=2)+"\n")
     print("WHOLE_NATIVE_PACKAGE",json.dumps(provenance),flush=True)
+    return app,executable
+
+def main():
+    assert os.environ.get("GITHUB_ACTIONS")=="true" and os.environ.get("RUNNER_OS")=="macOS"
+    workspace=Path.cwd()
+    package,patch,out=map(lambda p:Path(p).resolve(),sys.argv[1:4])
+    out.mkdir(parents=True,exist_ok=True)
+    app,executable=prepare_package(package,patch,out)
+    if "--package-only" in sys.argv[4:]:
+        return
+    subprocess.run([sys.executable, str(workspace/"tools/rc3_native_probe.py"),
+                    str(out/"Luanshi-macOS-arm64-world-review.zip"), str(out/"unpacked"),
+                    str(out/"both-renderers")], check=True)
     helper=out/"focus"
     subprocess.run(["clang","-fobjc-arc","-framework","AppKit","-o",str(helper),
                     str(workspace/"tools/macos_probe_focus.m")],check=True)
