@@ -6,6 +6,7 @@ the upstream walk and trot onto the existing saddle and real-distance phase.
 """
 from collections import defaultdict
 import json
+import hashlib
 from pathlib import Path
 import sys
 import xml.etree.ElementTree as ET
@@ -227,6 +228,14 @@ def main():
     normal_image[:,:,3]=255
     for name,data in (("native_pose_hi",high),("native_pose_lo",low),("native_pose_normal",normal_image)):
         Image.fromarray(data,"RGBA").save(OUT/(name+".png"),optimize=True)
+        resource="res://"+str((OUT/(name+".png")).relative_to(ROOT))
+        imported="res://.godot/imported/"+name+".png-"+hashlib.md5(resource.encode()).hexdigest()+".ctex"
+        (OUT/(name+".png.import")).write_text(
+            '[remap]\nimporter="texture"\ntype="CompressedTexture2D"\npath="'+imported+'"\n\n'
+            '[deps]\nsource_file="'+resource+'"\ndest_files=["'+imported+'"]\n\n'
+            '[params]\ncompress/mode=0\nmipmaps/generate=false\nmipmaps/limit=-1\n'
+            'process/fix_alpha_border=false\nprocess/premult_alpha=false\n'
+            'process/normal_map_invert_y=false\ndetect_3d/compress_to=0\n')
     library.save(OUT/"complete_remount.glb")
     metrics["vertex_rows"]=count
     Path("reports/remount").mkdir(parents=True,exist_ok=True)

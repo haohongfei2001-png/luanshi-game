@@ -5,6 +5,7 @@ on:
     paths: ['tools/art/bake_native_remount.py','.github/workflows/native-remount-study.yml','tests/native_remount_window.gd','scripts/field/mount_art.gd','scripts/field/mount_hide.gdshader']
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: native-remount-study
   cancel-in-progress: true
@@ -16,6 +17,15 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Preserve the first failed real-window diagnostic
+        uses: actions/download-artifact@v4
+        with:
+          name: native-remount-source-study
+          run-id: 43562297700
+          github-token: ${{ github.token }}
+          path: artifacts/remount-first-failure
+      - name: Show the original photography failure
+        run: find artifacts/remount-first-failure -name window.log -exec cat '{}' +
       - name: Install the source converter dependencies
         run: |
           if ! /usr/bin/python3 -c 'import numpy,PIL'; then sudo apt-get update -qq && sudo apt-get install -y -qq python3-numpy python3-pil; fi
@@ -25,8 +35,8 @@ jobs:
           set -euo pipefail
           mkdir -p reports/remount
           /usr/bin/python3 tools/art/bake_native_remount.py /tmp/native-remount | tee reports/remount/bake.log
-          git add assets/third_party/wildfire_remounts/complete_remount.glb assets/third_party/wildfire_remounts/native_pose_*.png reports/remount
-          git -c user.name='River Gate complete remount study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the complete authored horse and native shoulder wrist hock and hoof movement'
+          git add assets/third_party/wildfire_remounts/complete_remount.glb assets/third_party/wildfire_remounts/native_pose_*.png assets/third_party/wildfire_remounts/native_pose_*.png.import reports/remount
+          if ! git diff --cached --quiet; then git -c user.name='River Gate complete remount study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake the complete authored horse and native shoulder wrist hock and hoof movement'; fi
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
       - name: Install the pinned actual Godot window
         shell: bash
@@ -38,7 +48,7 @@ jobs:
           sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
           if ! command -v xdotool >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool; fi
           ./tools/prepare-font.sh
-          mkdir -p artifacts/remount-window docs/evidence/river-gate-v1-rc23/native-remount
+          mkdir -p artifacts/remount-window artifacts/bridge-window docs/evidence/river-gate-v1-rc23/native-remount
           touch artifacts/.gdignore docs/evidence/river-gate-v1-rc23/native-remount/.gdignore
           cat >override.cfg <<'CFG'
           [display]
@@ -83,6 +93,9 @@ jobs:
           git add "$proof"
           git -c user.name='River Gate complete remount study' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive real 2K cavalry windows with matched troops positions and live poses'
           git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Show actual import and game-window errors
+        if: failure()
+        run: find docs/evidence/river-gate-v1-rc23/native-remount -name '*.log' -exec tail -100 '{}' +
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -91,4 +104,5 @@ jobs:
             reports/remount
             docs/evidence/river-gate-v1-rc23/native-remount
             artifacts/remount-window
+            artifacts/remount-first-failure
           retention-days: 7
