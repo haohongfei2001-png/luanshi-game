@@ -1,0 +1,85 @@
+name: Watch the bridgehead field coats at the actual simulation speed
+on:
+  push:
+    branches: [codex/river-rc23-wrap-motion]
+    paths: ['.github/workflows/field-tailor-motion.yml','tests/bridgehead_dress_motion.gd']
+permissions:
+  contents: write
+concurrency:
+  group: costume-codex/river-rc23-wrap-motion
+  cancel-in-progress: true
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 19
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned runtime and known upstream clothing tools
+        run: |
+          set -eu
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          if ! command -v xdotool >/dev/null || ! command -v ffmpeg >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y -qq xdotool ffmpeg; fi
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/bridge-window docs/evidence/river-gate-v1-rc23/field-coats
+          touch artifacts/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Record the original 20 Hz world motion at 2560 x 1600
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/field-coats/motion
+          mkdir -p "$proof"
+          touch "$proof/.gdignore"
+          godot --headless --audio-driver Dummy --editor --path . --import >/tmp/costume-motion-import.log 2>&1
+          for shot in normal close; do
+            args=()
+            if [ "$shot" = close ]; then args=(--close-dress); fi
+            xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 20 --script tests/bridgehead_dress_motion.gd -- "${args[@]}" > "$proof/$shot.log" 2>&1
+            grep FIELD_COAT_MOTION_PASS "$proof/$shot.log"
+            if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/$shot.log"; then exit 1; fi
+            ffmpeg -y -hide_banner -loglevel error -framerate 20 -start_number 0 -i artifacts/bridge-window/frame-%03d.jpg -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -movflags +faststart "$proof/$shot.mp4"
+            ffprobe -v error -show_entries stream=codec_name,width,height,avg_frame_rate,nb_frames,duration -of json "$proof/$shot.mp4" > "$proof/$shot-stream.json"
+            cp artifacts/bridge-window/recording.json "$proof/$shot.json"
+            /usr/bin/python3 - "$shot" "$proof" <<'PY'
+          from PIL import Image
+          import pathlib,sys
+          take=pathlib.Path("artifacts/bridge-window");proof=pathlib.Path(sys.argv[2]);sheet=Image.new("RGB",(1280,480))
+          for i,frame in enumerate([0,14,32,59]):
+              with Image.open(take/f"frame-{frame:03d}.jpg") as im:
+                  im.thumbnail((320,200));sheet.paste(im,(320*i,0))
+                  # Full windows above; normal central detail from the same
+                  # captured pixels underneath for a small motion review.
+                  with Image.open(take/f"frame-{frame:03d}.jpg") as whole:
+                      patch=whole.crop((1070,590,1490,1010));patch.thumbnail((280,280))
+                      sheet.paste(patch,(320*i+20,200))
+          sheet.save(proof/(sys.argv[1]+"-four-times.jpg"),quality=93,subsampling=0)
+          PY
+          done
+          python - <<'PY'
+          import pathlib,json
+          p=pathlib.Path('docs/evidence/river-gate-v1-rc23/field-coats/motion')
+          a,b=[json.loads((p/(n+".json")).read_text()) for n in ("normal","close")]
+          assert a["fps"]==b["fps"]==20 and a["frames"]==b["frames"]==60
+          assert [{k:v for k,v in row.items() if k!="view"} for row in a['index']]==[{k:v for k,v in row.items() if k!="view"} for row in b['index']]
+          for n in ("normal","close"):
+              s=json.loads((p/(n+"-stream.json")).read_text())["streams"][0]
+              assert s["width"]==2560 and s["height"]==1600 and s["nb_frames"]=="60" and s["avg_frame_rate"]=="20/1"
+          PY
+          git add "$proof"
+          git -c user.name='River Gate costume art' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive original-speed bridgehead dress in action from both game cameras'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bridgehead-clothing-movement-2k
+          path: docs/evidence/river-gate-v1-rc23/field-coats/motion
+          retention-days: 7
