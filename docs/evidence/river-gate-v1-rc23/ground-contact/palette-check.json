@@ -1,0 +1,19 @@
+{
+  "preserved_existing_strips": 408,
+  "falling_strips": [
+    14,
+    45,
+    76,
+    107,
+    138,
+    169,
+    200,
+    231,
+    262
+  ],
+  "dimensions": [
+    528,
+    1668
+  ],
+  "new_runtime_samples": 0
+}
