@@ -1,0 +1,22 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://c6v3elm1crown"
+path="res://.godot/imported/painted-elm.png-0103415a728d02575d7f5572cd08a849.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/environment/painted-elm.png"
+dest_files=["res://.godot/imported/painted-elm.png-0103415a728d02575d7f5572cd08a849.ctex"]
+
+[params]
+
+compress/mode=0
+mipmaps/generate=true
+mipmaps/limit=-1
+process/normal_map_invert_y=false
+detect_3d/compress_to=0

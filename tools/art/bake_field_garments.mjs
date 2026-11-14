@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const HIPS=0, CHEST=1, HEAD=2, LEFT_ARM=3, RIGHT_ARM=6;
-const SWATCH={ cloth:1, hide:2, lining:10, headcloth:18, edge:29, iron:30, waist:31 };
+const SWATCH={ cloth:1, hide:2, lining:10, headcloth:18 };
 const pack=[];
 const views=[], accessors=[], nodes=[], meshes=[];
 const lods=[["Close",10,5],["Line",6,3],["Rank",4,2]];
@@ -43,28 +43,70 @@ function surface(look,segments,rows) {
             if(reverse) indices.push(a,d,c,a,c,b);else indices.push(a,b,c,a,c,d);
         }
     }
-    const armoured=["Regular","Guard","Officer","Player"].includes(look);
+    const armoured=["Regular","Guard","Officer"].includes(look);
     if(armoured) {
-        for(const side of [-1,1]) {
-            const arm=side===-1?LEFT_ARM:RIGHT_ARM;
-            const span=look==="Regular"?.130:(look==="Player"&&side===1?.108:.194);
-            // A curved shoulder defence laps over the fitted sleeve. The bound rim and
-            // textile lining share the same edge vertices and joint weights as the iron.
-            function at(u,t) {
-                const a=(u-.5)*2.95,round=Math.cos(a),rise=Math.sin(t*Math.PI);
-                // The pauldron is cupped high on the deltoid with a cut-away front.
-                // Its lowest point faces back toward the elbow, clearing the wrist.
-                const x=.218+.020*t+(.056+.044*t+.030*rise)*round;
-                const y=1.423-.010*round-t*(span-.051*(1-round)-.022*Math.sin(a));
-                const z=-.010+(.092+.017*rise+.015*t)*Math.sin(a);
-                return [side*x,y,z,arm,CHEST,.46+.54*t];
+        // Both halves of the wool shoulder piece are cut from one polygonal
+        // pattern. The two open corners stop on the ribcage, several centimetres
+        // inside the arm socket, with the sewn sleeve visible below the edge.
+        const guard=look==="Guard";
+        const depth=guard?.106:(look==="Regular"?.153:.166);
+        const n=segments<=4?4:segments;
+        function textile(a,down) {
+            const front=Math.cos(a),side=Math.sin(a),left=Math.max(0,-side);
+            const fall=.50+.31*(1-front)+.66*left;
+            const y=1.456-depth*fall*down-.025*side*side;
+            const rx=.086+(.166+.031*left)*Math.sin(down*1.49);
+            const rz=.083+(.092+.044*Math.max(0,-front))*Math.sin(down*1.45);
+            const fold=.009*Math.sin(2*a+.47)*Math.sin(Math.PI*down);
+            const shoulder=Math.abs(side);
+            return [(rx+fold)*side,y,-.008+(rz+fold)*front,
+                    side<0?LEFT_ARM:RIGHT_ARM,CHEST,.33*shoulder*down];
+        }
+        // The spearman's left mantle fastens under a bare right shoulder. A
+        // shieldman wears the much shorter padded cover beneath a dark corslet.
+        const low=-3.60,high=guard?2.47:.30;
+        const mat=guard?11:(look==="Regular"?1:19);
+        panel(n,rows,mat,(u,v)=>textile(low+(high-low)*u,1-v));
+        if(look==="Regular"||guard){
+            panel(n,1,guard?2:26,(u,v)=>textile(low+(high-low)*u,1.055-.055*v));
+        }
+    }
+    // Segmented upper-arm defences wrap the sewn sleeve. Two laced courses
+    // share the same soft root over the socket; the lower edge turns under
+    // the arm, below the outside shoulder. No plate extends beyond the cuff.
+    if (look==="Guard" || look==="Regular" || look==="Officer" || look==="Player") {
+        const heavy=look==="Guard", both=heavy || look==="Officer";
+        const sides=both ? [-1,1] : [1];
+        for (const side of sides) {
+            const upper=side<0?LEFT_ARM:RIGHT_ARM;
+            const rootY=1.407, shoulderBone=.225;
+            const length=heavy?.199:.166;
+            const material=heavy?3:30;
+            const sweep=heavy?1.83:1.60;
+            const clothAt=(u,v,lip=0)=>{
+                const angle=(2*u-1)*sweep-.09;
+                const flank=Math.cos(angle),toward=Math.sin(angle);
+                // Sloped crown and recessed ends wrap around the front and
+                // back of the sleeve. The largest radius follows the actual
+                // padding above the elbow, then hangs in a shallow curve.
+                const breadth=.045+.046*Math.sin(1.36*v)+.008*v+lip;
+                const depth=.051+.048*Math.sin(1.48*v)+lip;
+                const cx=shoulderBone+.021*v,cz=-.013+.014*v;
+                const y=rootY+.015*flank-length*v+.047*v*Math.abs(toward)**1.60;
+                const arm=.20+.72*v+.045*Math.max(0,flank);
+                return [side*(cx+breadth*flank),y,cz+depth*toward,upper,CHEST,arm];
+            };
+            const n=segments<=4?4:(segments<=6?6:9);
+            panel(n,2,material,(u,v)=>clothAt(u,v*.52,.003));
+            panel(n,2,material,(u,v)=>clothAt(u,.48+.52*v));
+            panel(n,1,2,(u,v)=>clothAt(u,.962+.038*v,.0015));
+            // A paired broad cord ties the outboard ends of the two courses.
+            // Only the upper two detail meshes spend triangles on the lacing.
+            if(segments>4) {
+                for(const at of [.25,.73]) {
+                    panel(1,2,2,(u,v)=>clothAt(at+.034*(u-.5)+.044*v,.36+.27*v,.0042));
+                }
             }
-            const parts=look==="Regular"
-                ? [[0,.33,SWATCH.cloth],[.33,.76,SWATCH.iron],[.76,.83,SWATCH.hide],[.83,1,SWATCH.cloth]]
-                : (look==="Guard"
-                  ? [[0,.24,SWATCH.cloth],[.24,.70,SWATCH.iron],[.70,.81,SWATCH.hide],[.81,1,SWATCH.iron]]
-                  : [[0,.64,SWATCH.iron],[.64,.73,SWATCH.edge],[.73,.88,SWATCH.iron],[.88,1,SWATCH.hide]]);
-            for(const [top,bottom,colour] of parts) panel(segments,top===0?rows:1,colour,(u,v)=>at(u,top+(bottom-top)*v),side===-1);
         }
     }
     if(look==="Levy" || look==="Archer") {
@@ -81,10 +123,10 @@ function surface(look,segments,rows) {
             });
         }
     }
-    if(look==="Officer" || look==="Player") {
+    if(look==="Officer") {
         // A diagonal folded collar rests on the upper back above the mantle. It gives
         // the normal follow camera a direction cue when the weapon arm is hidden.
-        panel(segments,2,look==="Player"?20:SWATCH.edge,(u,v)=>{
+        panel(segments,2,19,(u,v)=>{
             const angle=1.55+3.18*u;
             const x=(.119+.109*v)*Math.sin(angle);
             const y=1.457-.066*v-.032*v*Math.sin(Math.PI*u)-.030*u;
@@ -92,40 +134,76 @@ function surface(look,segments,rows) {
             return [x,y,z,CHEST,HIPS,.98];
         },true);
     }
+    if(look==="Player") {
+        // Narrow leather keeper between the left collar and the chest strap.
+        // The shoulder cloth is cut and skinned with the player's fitted vest.
+        const keeper=[[-.121,1.438,.086],[-.115,1.418,.116],[-.080,1.391,.146],
+                      [-.029,1.370,.158],[.030,1.343,.166],[.087,1.314,.178]];
+        panel(1,keeper.length-1,2,(u,v)=>{
+            const [x,y,z]=keeper[Math.round(v*(keeper.length-1))];
+            return [x+.016*(u-.5),y+.018*(u-.5),z+.008,CHEST,HIPS,1];
+        });
+        const rim=[[0,1],[-.88,.48],[-.88,-.48],[0,-1],[.88,-.48],[.88,.48],[0,1]];
+        panel(rim.length-1,1,6,(u,v)=>{
+            const [rx,ry]=rim[Math.round(u*(rim.length-1))], r=.013+.006*v;
+            return [-.112+rx*r,1.415+ry*r,.141-.30*ry*r,CHEST,HIPS,1];
+        });
+    }
     // Costume masses for a 22 m orthographic camera. They are fitted to the
     // existing bind, not camera-facing badges. Hardware still uses the same surface.
     const PI=Math.PI,TAU=2*PI;
     const far=segments<=4, sides=far?5:segments+2;
     if(look==="Archer") {
-        // A suspended leather quiver follows the diagonal from left hip to right
-        // shoulder. The mouth, lip and two long feather vanes read together.
-        function tube(u,t,pad=0) {
-            const a=TAU*u,bulge=Math.sin(PI*t),r=.053+.024*t+.012*bulge+pad;
-            const x=-.185+.350*t,z=-.228-.058*t;
-            return [x+r*.86*Math.cos(a),.804+.605*t-.50*r*Math.cos(a),
-                    z+r*.88*Math.sin(a),CHEST,HIPS,.83+.16*t];
+        // One flat, slung case from the left hip to the right shoulder. The
+        // stitched leather edge rises at the back and leaves an open, dark mouth.
+        // The same cross-section and attachment points are used at each distance.
+        function casePoint(angle,t,rim=0) {
+            const cosine=Math.cos(angle), sine=Math.sin(angle);
+            const bulge=Math.sin(PI*t);
+            const halfWidth=.059+.043*t+.011*bulge+rim;
+            const halfDepth=.028+.026*t+.006*bulge+rim;
+            const across=halfWidth*Math.sign(cosine)*Math.pow(Math.abs(cosine),.71);
+            const back=halfDepth*Math.sign(sine)*Math.pow(Math.abs(sine),.83);
+            return [-.164+.340*t+.874*across,.838+.559*t-.48*across+
+                    (.029*Math.max(0,-sine)+.011*cosine)*t*t,
+                    -.195-.064*t-.012*bulge+back,CHEST,CHEST,1];
         }
-        panel(sides,far?2:3,21,(u,v)=>tube(u,v));
-        panel(sides,1,2,(u,v)=>tube(u,.87+.09*v,.004));
-        panel(sides,1,10,(u,v)=>tube(u,.966+.034*v,.003));
-        panel(sides,1,2,(u,v)=>{
-            const p=tube(u,1),q=tube(0,1);
-            return [.165+(p[0]-.165)*(1-.96*v),1.409+(p[1]-1.409)*(1-.96*v),
-                    -.286+(p[2]+.286)*(1-.96*v),q[3],q[4],q[5]];
+        panel(sides,far?3:6,21,(u,v)=>casePoint(TAU*u,v));
+        panel(sides,1,2,(u,v)=>casePoint(TAU*u,.915+.052*v,.004));
+        panel(sides,1,14,(u,v)=>casePoint(TAU*u,.978+.022*v,.004));
+        panel(sides,2,2,(u,v)=>casePoint(TAU*u,1.-.213*v,-.005),true);
+        panel(sides,1,15,(u,v)=>{
+            const rim=casePoint(TAU*u,.78,-.005);
+            const middle=[-.164+.340*.78,.838+.559*.78,-.195-.064*.78];
+            return rim.map((value,i)=>i<3?value+(middle[i]-value)*.990*v:value);
         });
-        for(const wing of [-1,1]) {
-            panel(far?1:2,far?2:3,18,(u,v)=>{
-                const s=wing*(.032+.037*v),span=Math.sin(PI*(.12+.86*v))*.027;
-                return [.168+s+.059*v+(u-.5)*span,1.41+.181*v+(wing<0?0:.041),
-                        -.290-.044*v+(u-.5)*span*.72,CHEST,HIPS,.99];
-            },wing<0);
+        // Hem folded across the flat side, following the silhouette when the
+        // bow arm rises. A single seam replaces the coincident older tube.
+        panel(1,far?3:5,2,(u,v)=>casePoint(.27+.14*u+.32*v,.08+.85*v,.002));
+        const featherCount=far?3:4;
+        for(let shaft=0;shaft<featherCount;shaft++) {
+            const where=[-.056,-.019,.021,.066][shaft];
+            const height=[.140,.232,.171,.207][shaft];
+            const back=[.014,-.021,.011,-.012][shaft];
+            const step=[-.021,.015,.006,.030][shaft];
+            function fletch(t,x=0,z=0) {
+                return [.174+where+(.074+step)*t+x,1.359-.39*where+height*t,
+                        -.263+back-.048*t+z,CHEST,CHEST,1];
+            }
+            panel(far?3:5,1,7,(u,v)=>fletch(v,.007*Math.cos(TAU*u),.007*Math.sin(TAU*u)));
+            for(const yaw of (far?[.33]:[.33,2.09])) {
+                panel(1,3,18,(u,v)=>{
+                    const t=.44+.55*v, vane=.026*(.18+Math.sin(PI*(v*.82))*1.05)*(1-.91*v*v);
+                    return fletch(t,u*vane*Math.cos(yaw),u*vane*Math.sin(yaw));
+                });
+            }
         }
         // A single soft, cross-body wrap. Its taper exposes the opposite shoulder
         // and elbow on the draw, instead of another symmetrical shoulder plate.
-        panel(segments,3,26,(u,v)=>{
+        panel(segments,3,1,(u,v)=>{
             const a=-2.80+u*2.48, spread=Math.sin(Math.PI*u);
             return [(.169+.099*v)*Math.sin(a),1.432-.168*v*(.55+.51*spread)-.027*Math.sin(a)**2,
-                    -.012+(.108+.064*v)*Math.cos(a),LEFT_ARM,CHEST,.32*v*spread];
+                    -.012+(.108+.064*v)*Math.cos(a),LEFT_ARM,CHEST,.44*v*spread];
         });
     } else if(look==="Levy") {
         // A small, soft ration satchel sits against the right hip, below the existing sling.
@@ -139,21 +217,6 @@ function surface(look,segments,rows) {
             return [.187+(.064+.009*v)*Math.cos(a),.966+.032*v-.017*Math.cos(a),
                     -.094+(.093+.010*v)*Math.sin(a),HIPS,12,.98];
         });
-    } else if(look==="Regular" || look==="Guard") {
-        // The two leather straps pass over the shoulders and disappear into the
-        // iron corslet. Keep the cloth at the nape and the upper arms visible.
-        for(const side of [-1,1]) {
-            const width=look==="Guard"?.047:.035;
-            panel(far?1:2,far?3:5,SWATCH.hide,(u,v)=>{
-                const angle=PI*(.09+.85*v);
-                const x=side*(.111+.037*v)+width*(u-.5);
-                const z=-.018+.155*Math.cos(angle);
-                const y=1.266+.173*Math.sin(angle)-.014*v;
-                return [x,y,z,CHEST,HIPS,.98];
-            });
-        }
-        // The iron leaves, exposed cloth and their bindings now share one
-        // fitted, thigh-weighted surface in field_armour.skirts at all distances.
     }
     for(let i=0;i<indices.length;i+=3) {
         const a=indices[i]*3,b=indices[i+1]*3,c=indices[i+2]*3;

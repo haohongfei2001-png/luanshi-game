@@ -12,10 +12,10 @@ if [[ "$suite" != footage ]]; then
   timeout 100s xvfb-run -a -s '-screen 0 800x500x24' "$GODOT" --path . --resolution 800x500 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_alternate_outcomes.gd -- --field-size=20 2>&1 | tee artifacts/field-outcomes.log
   grep -q '^FIELD_ENDINGS_PASS' artifacts/field-outcomes.log
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-outcomes.log; then exit 1; fi
-  # This driver plays two complete orders of battle without quitting the shipping shell.
-  # With 4x MSAA on llvmpipe, the first 724-tick route alone took 295 s. The driver
-  # reports progress and rejects a stalled simulation independently of this process guard.
-  timeout 15m xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
+  # Both real escort routes share the same game process. Under hosted software
+  # rendering they can take 900 seconds to reach the second report. The driver
+  # aborts a stuck battle after 30 unchanged frames; leave time for camp input.
+  timeout 23m xvfb-run -a -s '-screen 0 960x600x24' "$GODOT" --path . --resolution 960x600 --disable-vsync --audio-driver Dummy --fixed-fps 10 --script tests/field_escort_gui.gd -- --field-size=512 2>&1 | tee artifacts/field-escort-gui.log
   grep -q '^FIELD_ESCORT_GUI_PASS' artifacts/field-escort-gui.log
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' artifacts/field-escort-gui.log; then exit 1; fi
 fi
@@ -27,11 +27,14 @@ for mode in benchmark film; do
     args+=(--fixed-fps 30)
     user_args=(--field-size=512 --field-film)
   fi
-  # Previous native 4x MSAA recordings were much slower under llvmpipe than on Metal.
-  # Keep the game settings and the number of frames identical in the recording.
-  limit=360s
-  if [[ "$mode" == benchmark ]]; then limit=270s; fi
-  timeout "$limit" xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . "${args[@]}" --script tests/field_render.gd -- "${user_args[@]}" 2>&1 | tee "artifacts/field-$mode.log"
+  runner=(timeout 270s)
+  if [[ "$mode" == film ]]; then
+    # Under llvmpipe an active 360-frame capture can outlive six minutes.
+    # Keep the source, camera, samples, resolution and timing unchanged.
+    runner=(python3 tools/record-progress.py --idle 135 --limit 900)
+    runner+=(--progress-marker 'FIELD_FILM_PROGRESS frame=' --)
+  fi
+  "${runner[@]}" xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . "${args[@]}" --script tests/field_render.gd -- "${user_args[@]}" 2>&1 | tee "artifacts/field-$mode.log"
   if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "artifacts/field-$mode.log"; then exit 1; fi
 done
 timeout 480s xvfb-run -a -s '-screen 0 1280x800x24' "$GODOT" --path . --disable-vsync --resolution 1280x800 --audio-driver Dummy --fixed-fps 30 --script tests/field_controls.gd -- --field-size=20 2>&1 | tee artifacts/field-controls.log

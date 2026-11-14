@@ -46,6 +46,9 @@ if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-package-source.log;
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-entry.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/field_simulation.gd 2>&1 | tee artifacts/field-simulation.log
 grep -q '^FIELD_SIM_PASS' artifacts/field-simulation.log
+"$GODOT" --headless --path . --script tests/field_bridgehead.gd 2>&1 | tee artifacts/bridgehead-simulation.log
+grep -q '^BRIDGEHEAD_SIM .*"pass":true' artifacts/bridgehead-simulation.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/bridgehead-simulation.log; then exit 1; fi
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-simulation.log; then exit 1; fi
 "$GODOT" --headless --path . --script tests/test_battle.gd 2>&1 | tee artifacts/simulation-tests.log
 "$GODOT" --headless --path . --script tests/test_world.gd 2>&1 | tee artifacts/world-tests.log

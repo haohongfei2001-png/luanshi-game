@@ -149,6 +149,7 @@ var side_size := 0 # Player-side count used by the four historical benchmark cal
 var ordinary_counts := PackedInt32Array([0,0])
 var command_counts := PackedInt32Array([0,0])
 var world_patrol := false
+var bridgehead := false
 var companies_per_side := 0
 var tick := 0
 var started := false
@@ -192,7 +193,8 @@ var team_links := PackedInt32Array()
 var hostile_min_x:=PackedFloat64Array([INF,INF])
 var hostile_max_x:=PackedFloat64Array([-INF,-INF])
 
-func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true,ranked_officers: bool=true,defenders: int=-1) -> void:
+func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true,ranked_officers: bool=true,defenders: int=-1,at_moat: bool=false) -> void:
+	bridgehead=at_moat
 	if defenders==-1: defenders=n
 	assert(n>0 and defenders>0 and roster.is_empty())
 	ordinary_counts=PackedInt32Array([n,defenders])
@@ -217,6 +219,17 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 			# Sortie companies meet the attacker on the outer field. The garrison still
 			# physically occupies the walled court when the outer line collapses.
 			var garrison := team == 1 and company_count >= 4 and c >= ceili(company_count*0.58)
+			if bridgehead and not garrison:
+				if team==0:
+					var file:=c%3
+					company.home=Vector2(Ground.MOAT_X-8.3-float(file)*4.9-floorf(c/3.0)*1.25, float(floori(c/3.0)-2)*11.7)
+					if c==0: company.home=Vector2(Ground.MOAT_X-3.9,0)
+					elif c==6: company.home=Vector2(Ground.MOAT_X-19.1,-25.6)
+					elif c==1: company.home=Vector2(Ground.MOAT_X+10.7,-3.7)
+					elif c==2: company.home=Vector2(Ground.MOAT_X+12.5,5.8)
+					elif c==15: company.home=Vector2(1.2,33.)
+				else:
+					company.home=Vector2(Ground.MOAT_X+15.3+floorf(c/5.0)*4.45, (float(c%5)-2.0)*12.8)
 			if garrison:
 				var post := c-ceili(company_count*0.58)
 				company.home = Vector2(55.5 + floorf(post/3.0)*8.4, (post%3-1)*12.0)
@@ -229,6 +242,9 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 			companies.append(company)
 			for j in mini(32, ordinary_counts[team] - c * 32):
 				var pos := company.home + Vector2(-sign_x * floorf(j / 8.0) * 1.78, (j % 8 - 3.5) * 1.58)
+				if bridgehead and team==0 and c==0:
+					pos=company.home+Vector2(-floorf(j/4.0)*.91,(j%4-1.5)*1.14)
+					company.shape=2
 				var u := _add(team, companies.size()-1, pos)
 				var file := j % 8
 				if j >= 24:
@@ -267,7 +283,10 @@ func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_bank
 		u.hp = u.max_hp
 		u.armor = 0.15
 		c.officer_id = u.id
-	hero = _add(0, 0, Vector2(-10, -3))
+	if bridgehead:
+		ram=Vector2(Ground.MOAT_X-10.5,1.3)
+		objectives.last_ram=ram
+	hero = _add(0, 0, Vector2(Ground.MOAT_X-6.5,-1.25) if bridgehead else Vector2(-10,-3))
 	hero.hero = true
 	equip_hero(weapon)
 	hero.max_hp = Profiles.get_profile(Profiles.EARLY).max_hp
@@ -307,10 +326,12 @@ func _place_company(index: int) -> void:
 	for j in line.size():
 		var u:=line[j]
 		u.station=c.home+Vector2(-floorf(float(j)/width)*depth,(float(j%width)-(width-1)*0.5)*spacing)
+		if bridgehead: u.station=Ground.muster_ground(u.station,c.home.x)
 		u.pos=u.station
 		u.before=u.pos
 	var officer:=roster[c.officer_id]
 	officer.station=c.home+Vector2(-7.6,1.2)
+	if bridgehead: officer.station=Ground.muster_ground(officer.station,c.home.x)
 	officer.pos=officer.station
 	officer.before=officer.pos
 
@@ -551,8 +572,8 @@ func _dispatches() -> void:
 			orders.remove_at(at)
 			continue
 		var destination:=hero.pos if order.leg==1 else officer.pos
-		var direction:=order.pos.direction_to(Ground.waypoint(order.pos,destination))
-		order.pos=Ground.travel(order.pos,direction*7.0*DT,gate_hp<=0)
+		var direction:=order.pos.direction_to(Ground.waypoint(order.pos,destination,bridgehead))
+		order.pos=Ground.travel(order.pos,direction*7.0*DT,gate_hp<=0,bridgehead)
 		if (order.leg==0 and not corps.can_command(self,c)) or not _near(order.pos,1.55,1).is_empty() or order.age>90.0:
 			if order.leg==0: messages_lost+=1
 			if _observed(order.pos):
@@ -572,6 +593,11 @@ func _objective(c: Company) -> Vector2:
 	if not corps.can_command(self,c):
 		return c.home
 	if c.regrouping:
+		if bridgehead and c.team==0:
+			# Regroup behind this crossing, on this army's approach. A rear
+			# column need not walk past two rivers to reform at an old landmark.
+			var west_bank:=Ground.MOAT_X-Ground.MOAT_BANK-3.2
+			return Vector2(minf(west_bank,c.home.x),clampf(c.home.y,-Ground.MOAT_END,Ground.MOAT_END))
 		return Vector2(43.5,clampf(c.home.y,-16,16)) if c.team==1 else Vector2(-36,Ground.crossing(c.home.y))
 	match c.mission:
 		Mission.WITHDRAW: return Vector2(-92 if c.team == 0 else 96, c.home.y)
@@ -596,8 +622,8 @@ func mount(id: int) -> bool:
 			parked_heading[vehicle]=riding_heading
 			vehicle_pos[vehicle]=hero.pos+(riding_heading*1.83 if vehicle==2 else Vector2.ZERO)
 			var side:=riding_heading.orthogonal()*1.05
-			var landing:=Ground.travel(hero.pos,side,gate_hp<=0)
-			if landing.distance_to(hero.pos)<0.5: landing=Ground.travel(hero.pos,-side,gate_hp<=0)
+			var landing:=Ground.travel(hero.pos,side,gate_hp<=0,bridgehead)
+			if landing.distance_to(hero.pos)<0.5: landing=Ground.travel(hero.pos,-side,gate_hp<=0,bridgehead)
 			hero.pos=landing
 			hero.before=landing
 		else: vehicle_pos[vehicle] = hero.pos
@@ -610,7 +636,7 @@ func mount(id: int) -> bool:
 		return false
 	var seat: Vector2=vehicle_pos[id]-(parked_heading[id]*1.83 if seat_origin and id==2 else Vector2.ZERO)
 	if seat_origin:
-		if Ground.blocked(seat,gate_hp<=0) or not Ground.clear_shot(hero.pos,seat,gate_hp<=0):
+		if Ground.blocked(seat,gate_hp<=0,bridgehead) or not Ground.clear_shot(hero.pos,seat,gate_hp<=0):
 			notice="车马在阻隔另一侧"
 			return false
 		hero.pos=seat
@@ -701,7 +727,7 @@ func _release(u: Unit, move: Arms.Move,apply_stride: bool=true) -> void:
 			shot.pos = u.pos + u.locked * 0.45
 			shot.previous = shot.pos
 			shot.direction = u.locked.rotated((float(j)-(count-1)*0.5)*0.12)
-			shot.launch_height=Ground.deck_height(u.pos)
+			shot.launch_height=Ground.deck_height(u.pos,bridgehead)
 			if seat_origin and (u.mounted or (u.hero and vehicle!=0)): shot.launch_height+=0.91 if u.hero and vehicle==2 else 0.81
 			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.hero and locked_at_wall_post) or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
@@ -842,7 +868,7 @@ func _projectiles() -> void:
 
 func _move(u: Unit, offset: Vector2) -> void:
 	if traffic_enabled and ram_hp>0: offset=Traffic.ram_motion(u.pos,offset,ram,u.id)
-	u.pos = Ground.travel(u.pos, offset, gate_hp <= 0)
+	u.pos = Ground.travel(u.pos, offset,gate_hp<=0,bridgehead)
 
 func _player_walk() -> void:
 	var walk := hero_move
@@ -869,9 +895,9 @@ func _player_walk() -> void:
 	if hero.state in [State.WINDUP, State.GUARD]:
 		speed *= 0.45
 	if hero.state != State.STAGGER:
-		_move(hero, walk * speed * DT * Ground.pace(hero.pos,vehicle != 0))
+		_move(hero, walk * speed * DT * Ground.pace(hero.pos,vehicle != 0,bridgehead))
 	if vehicle != 0:
-		if vehicle==2 and seat_origin and (Ground.blocked(hero.pos+riding_heading*1.83,gate_hp<=0) or not Ground.clear_shot(hero.pos,hero.pos+riding_heading*1.83,gate_hp<=0)):
+		if vehicle==2 and seat_origin and (Ground.blocked(hero.pos+riding_heading*1.83,gate_hp<=0,bridgehead) or not Ground.clear_shot(hero.pos,hero.pos+riding_heading*1.83,gate_hp<=0)):
 			hero.pos=start_pos
 			riding_heading=start_heading
 		vehicle_pos[vehicle] = hero.pos+(riding_heading*1.83 if vehicle==2 and seat_origin else Vector2.ZERO)
@@ -948,16 +974,16 @@ func _soldier(u: Unit) -> void:
 			return
 	var next: Vector2
 	if withdrawing:
-		next=Ground.retreat_waypoint(u.pos,goal,gate_hp<=0)
+		next=Ground.retreat_waypoint(u.pos,goal,gate_hp<=0,bridgehead)
 	elif traffic_enabled and not at_post:
-		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0,ram_hp>0 and ram.x>Ground.WALL_X-6.0,keep_gate_file)
+		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0,ram_hp>0 and ram.x>Ground.WALL_X-6.0,keep_gate_file,bridgehead)
 	else:
-		next=Ground.waypoint(u.pos,goal)
+		next=Ground.waypoint(u.pos,goal,bridgehead)
 	if traffic_enabled and ram_hp>0 and not at_post:
 		next=Traffic.around_ram(u.pos,next,ram,u.id,gate_hp<=0)
 	var dist := u.pos.distance_to(next)
 	var speed := 5.8 if u.mounted else (4.1 if fleeing else 2.85)
-	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted),dist / DT)
+	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted,bridgehead),dist / DT)
 	var old_heading:=u.facing
 	if vel.length_squared() > 0.08:
 		u.facing = vel.normalized()
@@ -1034,7 +1060,7 @@ func _siege() -> void:
 					gate_hp = maxf(0,gate_hp - 14.0 - crew*1.5)
 					ram_timer = 1.7
 			else:
-				ram = Ground.travel(ram,ram.direction_to(Ground.GATE)*DT*4*1.5,false)
+				ram = Ground.travel(ram,ram.direction_to(Ground.GATE)*DT*4*1.5,false,bridgehead)
 	if tick % 5 == 0:
 		var friendly := _court_holders(0)
 		var enemy := _court_holders(1)
@@ -1052,9 +1078,22 @@ func _court_holders(team: int) -> int:
 		if u.state!=State.ROUT and not corps.is_wounded(id): standing+=1
 	return standing
 
+# Populated only while sampling an explicitly requested exported game window.
+# All values are elapsed wall time on the game thread, including host scheduling.
+const TRACE_STAGES := ["grid_and_input","officers_and_orders","target_selection",
+	"unit_actions_and_density","projectiles","siege","objectives"]
+var trace_phase_us := PackedInt64Array()
+var _phase_started_us := 0
+
+func _mark_phase(index: int) -> void:
+	var now:=Time.get_ticks_usec()
+	trace_phase_us[index]+=now-_phase_started_us
+	_phase_started_us=now
+
 func step() -> void:
 	if not started or result != "":
 		return
+	if not trace_phase_us.is_empty(): _phase_started_us=Time.get_ticks_usec()
 	tick += 1
 	for i in hero_cds.size():
 		hero_cds[i] = maxf(0, hero_cds[i]-DT)
@@ -1070,6 +1109,7 @@ func step() -> void:
 		buffer_ticks-=1
 		if buffer_ticks==0: buffered_slot=-1
 	_rebuild_grid()
+	if not trace_phase_us.is_empty(): _mark_phase(0)
 	corps.advance(self)
 	if tick%20==0: _rotate_ram_crew()
 	_dispatches()
@@ -1078,6 +1118,7 @@ func step() -> void:
 			c.regrouping = corps.can_command(self,c) and c.standing*2 < c.initial and c.standing>0 and c.mission in [Mission.PRESS,Mission.HOLD]
 			if objectives.garrison_retiring and c.team==0 and c.mission in [Mission.PRESS,Mission.FLANK]: c.regrouping=false
 			c.aim = corps.guide_company(self,c,_objective(c))
+	if not trace_phase_us.is_empty(): _mark_phase(1)
 	for u in roster:
 		u.before = u.pos
 		u.facing_before = u.facing
@@ -1085,6 +1126,7 @@ func step() -> void:
 			var interval := 8 if u.kit in [Arms.Kit.BOW, Arms.Kit.CROSSBOW] else 5
 			if (tick+u.id)%interval==0 or (u.target>=0 and not active(roster[u.target])):
 				_assessment(u)
+	if not trace_phase_us.is_empty(): _mark_phase(2)
 	# Alternate initiative for contacts that share a tick.
 	for i in roster.size():
 		var u := roster[i if tick % 2 == 0 else roster.size()-1-i]
@@ -1107,12 +1149,16 @@ func step() -> void:
 		u.visual_run=travel>DT*(3.0 if u.visual_run else 3.55)
 		u.visual_stride=fposmod(u.visual_stride+travel*(.42 if u.visual_run else .68),1.)
 		u.stride = fposmod(u.stride + travel * 0.68, 1.0)
+	if not trace_phase_us.is_empty(): _mark_phase(3)
 	_projectiles()
+	if not trace_phase_us.is_empty(): _mark_phase(4)
 	_siege()
+	if not trace_phase_us.is_empty(): _mark_phase(5)
 	if objectives.enabled:
 		result=objectives.resolve(self)
-		return
-	_resolve_historical()
+	else:
+		_resolve_historical()
+	if not trace_phase_us.is_empty(): _mark_phase(6)
 
 # Version 1–3 checkpoints replay their original adjudication from their saved tick.
 func _resolve_historical() -> void:

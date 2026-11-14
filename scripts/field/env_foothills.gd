@@ -1,5 +1,6 @@
 extends RefCounted
-## Original painted branch sprays, field paving and split rock grouped by terrain cell.
+## Imported river trees, original branch sprays, paving and rock share terrain cells.
+const FieldMeshes := preload("res://scripts/field/model_library.gd")
 const Ground := preload("res://scripts/field/ground.gd")
 const Builder := preload("res://scripts/field/mesh_builder.gd")
 const PLAN := preload("res://assets/environment/foothills.json")
@@ -12,6 +13,9 @@ var leaf_material:=ShaderMaterial.new()
 var terrain_tiles: Dictionary
 var rng:=RandomNumberGenerator.new()
 var trees: Array[Dictionary]=[]
+var ford_willow: ArrayMesh
+var inland_meshes: Array[ArrayMesh]=[]
+var inland_stands: Dictionary = {}
 
 class Patch:
 	var stone:Builder
@@ -59,26 +63,15 @@ func _spray(patch: Patch,base: Vector3,tip: Vector3,side: Vector3,tile: int,ligh
 		patch.leaves.add_vertex(points[i])
 	patch.sprays+=1
 
-# Each profile describes a branching crown in local tree heights. The crown
-# forks intentionally differ in height, reach and width within the same tree.
-const CROWNS := [
-	[Vector4(-.20,.63,.03,.25),Vector4(.16,.70,-.12,.24),Vector4(.05,.79,.18,.22),Vector4(-.06,.85,-.02,.207),Vector4(.25,.63,.12,.16)],
-	[Vector4(-.22,.58,.11,.203),Vector4(.20,.65,-.14,.223),Vector4(.02,.70,.23,.207),Vector4(-.09,.79,-.16,.223),Vector4(.09,.90,.03,.182),Vector4(.28,.74,.09,.14)],
-	[Vector4(-.06,.48,.02,.17),Vector4(.10,.61,-.05,.163),Vector4(-.08,.72,.10,.156),Vector4(.04,.82,-.03,.148),Vector4(-.02,.93,.01,.112)]
-]
-
-# A crown is assembled from bowed leaf-bearing limbs. The open spaces between
-# forks expose the structure from rotating play cameras; the foliage is not a
-# cutout facing the player. Each limb has a pitched spine and folded sides.
-func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float,canopy: bool=false,sweep: float=0.) -> void:
+func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float,tilt: float,grade: float) -> void:
 	var across:=Vector3(-ray.z,0.0,ray.x)
 	var verts:=PackedVector3Array()
 	var normals:=PackedVector3Array()
 	var uv:=PackedVector2Array()
 	for row in 4:
 		var t:=float(row)/3.0
-		var spine:=root+ray*length*t+across*length*sweep*t*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
-		var width:=breadth*(.70+.30*sin(t*PI))*(1.-absf(sweep)*.44*t)
+		var spine:=root+ray*length*t+Vector3.UP*length*(sin(t*PI)*.19+tilt*t)
+		var width:=breadth*(.70+.30*sin(t*PI))
 		for col in 3:
 			var v:=float(col-1)
 			verts.append(spine+across*v*width+Vector3.DOWN*absf(v)*breadth*(.12+.18*t))
@@ -91,55 +84,13 @@ func _bough(patch: Patch,root: Vector3,ray: Vector3,length: float,breadth: float
 				patch.leaves.set_color(Color.WHITE)
 				patch.leaves.set_normal(normals[k])
 				patch.leaves.set_uv(uv[k])
-				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,(8.1 if canopy else 6.1)+grade*.70))
+				patch.leaves.set_uv2(Vector2(1.0-uv[k].y,6.1+grade*.70))
 				patch.leaves.add_vertex(verts[k])
 	patch.sprays+=1
 
-func _tree(patch: Patch,p: Vector2,h: float,kind: int) -> void:
-	var foot:=ground_point(p)
-	var spin:=rng.randf_range(0.0,TAU)
-	var turn:=Basis(Vector3.UP,spin)
-	var bend:=turn*Vector3(0.08,0.0,-0.045)*h
-	var fork:=foot+Vector3.UP*h*0.37+bend
-	patch.stone.joint=11
-	for i in 4:
-		var a:=spin+i*TAU/4.0+rng.randf_range(-0.3,0.32)
-		var toe:=foot+Vector3(cos(a),0,sin(a))*h*rng.randf_range(.07,.113)
-		patch.stone.rod(toe,foot+Vector3.UP*h*.11,h*.013,h*.046,BARK,4)
-	patch.stone.rod(foot,fork,h*(.057 if kind!=2 else .048),h*.033,BARK,6)
-	for index:int in CROWNS[kind].size():
-		var knot:Vector4=CROWNS[kind][index]
-		var center:=foot+turn*Vector3(knot.x,knot.y,knot.z)*h+bend*0.37
-		var elbow:=fork.lerp(center,0.63)+turn*Vector3(.028,.005,-.031)*h
-		var radius:=knot.w*h*rng.randf_range(.95,1.12)
-		var base:=fork.lerp(foot,0.13 if index<2 else 0.0)
-		patch.stone.rod(base,elbow,h*.027,h*.016,BARK,5)
-		patch.stone.rod(elbow,center,h*.016,h*.006,BARK.lightened(.05),4)
-		var heading:=spin+index*2.29
-		var radial:=Vector3(cos(heading),0.0,sin(heading))
-		var joint:=center-radial*radius*.43
-		# Hanging lower twigs reveal the elbow. One sheltered bough crosses
-		# the fork; the higher fork leans into a separate, sunlit crown tier.
-		var sprays:=4 if kind==1 else 3
-		for leaf in sprays:
-			var a:=heading+(leaf-1.25)*1.46+rng.randf_range(-.18,.15)
-			var ray:=Vector3(cos(a),0.0,sin(a))
-			var hanging:bool=leaf%2==0
-			var root:=joint+radial*radius*(.14 if hanging else -.19)
-			root+=Vector3.UP*radius*(.035 if hanging else .23)
-			var reach:=radius*rng.randf_range(1.33,1.76)
-			var width:=radius*rng.randf_range(.64,.83)
-			var tilt:=rng.randf_range(-.29,-.04) if hanging else rng.randf_range(.04,.33)
-			var mid:=root+ray*reach*.67+Vector3.UP*reach*(.15+.67*tilt)
-			patch.stone.rod(elbow.lerp(root,.40),mid,h*.0064,h*.0022,BARK,4)
-			var grade:=clampf(.16+.084*index+(.23 if not hanging else 0.0)+rng.randf_range(-.09,.08),.14,.92)
-			var sweep:=.27*sin(1.4+2.1*leaf+.64*index)
-			_bough(patch,root,ray,reach,width,tilt,grade,true,sweep)
-
-func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
-	var node:=library.find_child(name_in_asset,true,false) as MeshInstance3D
+func _grove_part(mesh: ArrayMesh) -> ArrayMesh:
 	var part:=SurfaceTool.new()
-	part.create_from(node.mesh,0)
+	part.create_from(mesh,0)
 	# Static terrain already contains unindexed triangles. Appending glTF
 	# indices to that buffer would make only the newly indexed piece draw.
 	part.deindex()
@@ -148,29 +99,65 @@ func _willow_part(library: Node,name_in_asset: String) -> ArrayMesh:
 func _bake_trees() -> void:
 	# The two swept-bole willow assets and the inland tree prototypes use the
 	# same static, spatially culled draw batches. Local +X points over water.
-	var willows:=preload("res://assets/environment/bank-willows.gltf").instantiate()
+	var willows:=FieldMeshes.meshes(preload("res://assets/environment/bank-willows.gltf"))
 	for prefix:String in ["Veteran","Coppice"]:
-		trees.append({"wood":_willow_part(willows,prefix+"Bark"),"leaves":_willow_part(willows,prefix+"Foliage")})
-	willows.free()
-	for kind in range(1,3):
-		for variant in 2:
-			var prototype:=Patch.new()
-			_tree(prototype,Vector2.ZERO,1.0,kind)
-			trees.append({"wood":prototype.stone.surface.commit(),"leaves":prototype.leaves.commit()})
+		trees.append({"wood":_grove_part(willows[prefix+"Bark"]),"leaves":_grove_part(willows[prefix+"Foliage"])})
+	ford_willow=_grove_part(FieldMeshes.meshes(preload("res://assets/third_party/wildfire_willow/ford_willow.glb"))["Willow"])
+	var broadleaves:=FieldMeshes.meshes(preload("res://assets/environment/quaternius/grove.glb"))
+	for prefix: String in ["Broad","Upright"]:
+		# Bark and leaves use the same cutout material. Preserve the author's
+		# indices and render both surfaces together in each grove instance.
+		var combined := SurfaceTool.new()
+		combined.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for part: String in ["Bark","Foliage"]:
+			combined.append_from(broadleaves[prefix+part],0,Transform3D.IDENTITY)
+		inland_meshes.append(combined.commit())
+
+func _place_inland_stands(parent: Node3D) -> void:
+	for key: Vector3i in inland_stands:
+		var placements: Array = inland_stands[key]
+		var batch := MultiMesh.new()
+		batch.transform_format = MultiMesh.TRANSFORM_3D
+		batch.mesh = inland_meshes[key.z]
+		batch.instance_count = placements.size()
+		var bounds: AABB = placements[0] * batch.mesh.get_aabb()
+		for i in placements.size():
+			var placement: Transform3D = placements[i]
+			batch.set_instance_transform(i,placement)
+			bounds = bounds.merge(placement * batch.mesh.get_aabb())
+		# The shader sways the tips slightly beyond the authored static surface.
+		batch.custom_aabb = bounds.grow(.10)
+		var stand := MultiMeshInstance3D.new()
+		stand.multimesh = batch
+		stand.material_override = leaf_material
+		parent.add_child(stand)
 
 func _plant(patch: Patch,p: Vector2,height: float,kind: int,variant: int,yaw: float) -> void:
 	var shape:=1 if kind==0 and height<5.48 else variant
-	var source:=trees[2*kind+shape]
 	var source_height:=5.63 if shape==0 else 4.91
 	var scale_factor:=height/source_height if kind==0 else height
 	var basis:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*scale_factor)
 	var placement:=Transform3D(basis,ground_point(p))
-	if kind==0:
-		# Both imported parts retain their own bark or foliage tags. Cull the
-		# whole willow in a single grove draw, independently of the terrain tile.
-		patch.leaves.append_from(source.wood,0,placement)
-	else:
-		patch.stone.surface.append_from(source.wood,0,placement)
+	if kind!=0:
+		# Keep the former 21 x 18 metre culling boundaries. The 158 inland
+		# placements share two artist meshes instead of copying all triangles.
+		var archetype:=shape if kind==1 else 1-shape
+		var key:=Vector3i(floori(p.x/21.),floori(p.y/18.),archetype)
+		if not inland_stands.has(key): inland_stands[key]=[]
+		inland_stands[key].append(placement)
+		return
+	if height>=5.45 and variant==0:
+		# Fit the hanging sprays to the old river-marking trunk and root flares.
+		# Every existing branch, bank and troop landing keeps its position.
+		patch.leaves.append_from(trees[0].wood,0,Transform3D(Basis(Vector3.UP,yaw).scaled(Vector3.ONE*(height/5.63)),ground_point(p)))
+		var footing:=ground_point(p)
+		var planted:=Basis(Vector3.UP,yaw).scaled(Vector3.ONE*height)
+		patch.leaves.append_from(ford_willow,0,Transform3D(planted,footing))
+		patch.sprays+=1
+		return
+	var source:=trees[shape]
+	# Riverbank willows still share the small shoreline spray batches.
+	patch.leaves.append_from(source.wood,0,placement)
 	patch.leaves.append_from(source.leaves,0,placement)
 	patch.sprays+=1
 
@@ -355,6 +342,45 @@ func _stands(plan: Dictionary) -> void:
 # Banks at the edges of the old fields collect earth and slate where carts
 # cut through the sod. The three central remnants top out below ankle height;
 # the stone buttress at the gate lies inside the existing blocked wall strip.
+# The old pasture is still grazed into short fans along its raised banks.
+# Low broad blades have a real root and a curved back when a soldier walks across them.
+func _verge_grass(bed: Builder,p: Vector2,h: float,phase: float) -> void:
+	var foot:=ground_point(p)
+	var dark:=Color("536f52")
+	var ripe:=Color("9da66c")
+	bed.joint=0
+	for blade in 6:
+		var a:=phase+2.40*blade
+		var axis:=Vector3(cos(a),0.,sin(a))
+		var across:=Vector3(-axis.z,0.,axis.x)
+		var size:=h*(.79+.23*sin(a*.64+1.6))
+		var base:=foot+axis*.046-Vector3.UP*.010
+		var knee:=base+axis*size*.43+Vector3.UP*size*.63
+		var tip:=base+axis*size*(.91+.29*sin(a))+Vector3.UP*size*.93
+		var w:=size*(.115+.034*(blade%2))
+		var ink:=dark.lerp(ripe,.31+.091*(blade%4))
+		bed.quad(base-across*w*.36,knee-across*w,knee+across*w,base+across*w*.36,ink)
+		bed.tri(knee-across*w,tip,knee+across*w,ink.lightened(.12))
+
+func _grazed_banks() -> void:
+	var roots: Array[Vector4]=[Vector4(-8.1,-8.4,.16,1.12),Vector4(-3.4,-9.2,-.34,1.04),
+		Vector4(7.8,-7.3,-.25,.87),Vector4(10.6,-8.6,.11,.71),Vector4(19.2,9.4,-.32,1.17),
+		Vector4(-19.2,11.5,-.23,.94),Vector4(-11.9,7.6,-.48,.80),Vector4(34.7,-5.8,.08,.78)]
+	for i in roots.size():
+		var r:=roots[i]
+		var path:=Vector2(cos(r.z),sin(r.z))
+		var across:=Vector2(-path.y,path.x)
+		for tuft in 14:
+			var t:=float(tuft)/13.
+			var sweep:=sin(t*PI)
+			var off:=sin(tuft*2.97+i)*(.15+.43*sweep)
+			var p:=Vector2(r.x,r.y)+path*((t-.5)*r.w*5.6)+across*(off+.17*sin(t*4.1+i))
+			var h:=r.w*(.17+.12*sweep+.035*sin(tuft*2.18))
+			_verge_grass(_cell(p).stone,p,h,tuft*1.27+i*.8)
+			if tuft%3==1:
+				var other:=p+across*.39+path*.17
+				_verge_grass(_cell(other).stone,other,h*.77,2.72+tuft)
+
 func _field_banks() -> void:
 	# Local coordinates run along the bank, then across it, in metres.
 	var shoulders: Array[Vector4]=[Vector4(-7.4,-8.45,.14,1.05),Vector4(8.9,-7.55,-.32,.76),
@@ -450,25 +476,34 @@ func _bridge_ledges() -> void:
 			var turf:=center+Vector2(side*(1.62+.25*i),-1.23+i*1.13)*scale_factor
 			_field_margin(_cell(turf),turf,.53+.081*i,bank.y+i*2.1)
 
+# Four staggered courses run along the road. Close slabs support wagons at
+# the gate; isolated plates and grass show through where traffic has broken
+# the surface further west. All stones stay below the sole of a passing boot.
 func _pavers(plan: Dictionary) -> void:
 	for bed:Array in plan.masonry:
 		var p:=Vector2(float(bed[0]),float(bed[1]))
 		var extent:=float(bed[2])
-		# Remnants of the surfaced cart road become more continuous at the gatehouse.
-		for row in 5:
-			for column in 6:
-				if rng.randf()<(0.09 if p.x>30.0 else 0.64): continue
-				var q:=p+Vector2((column-2.5+(row%2)*0.32)*extent/3.30,(row-2)*0.51)
-				q+=Vector2(rng.randf_range(-0.075,0.075),rng.randf_range(-0.055,0.055))
-				_shelf(_cell(q),q,rng.randf_range(0.29,0.62),rng.randf_range(0.19,0.40),rng.randf_range(0.018,0.041),rng.randf_range(-0.24,0.19),true)
+		var approach:=p.x>30.0
+		for row in 4:
+			var edge:=-extent*.84-.30*(row%2)
+			var z:=(float(row)-1.5)*.47+rng.randf_range(-.085,.085)
+			while edge<extent*.84:
+				var span:=rng.randf_range(.53,.99)
+				var center:=p+Vector2(edge+span*.5,z+rng.randf_range(-.035,.035))
+				edge+=span+rng.randf_range(.07,.20)
+				var intact:=rng.randf()>(.19 if approach else .62)
+				if not intact: continue
+				_shelf(_cell(center),center,span*.53,rng.randf_range(.29,.39),rng.randf_range(.018,.037),rng.randf_range(-.096,.096),true)
 
-func build(parent: Node3D,tiles: Dictionary) -> void:
+func build(parent: Node3D,tiles: Dictionary,bridgehead: bool=false) -> void:
 	terrain_tiles=tiles
 	leaf_material.shader=preload("res://scripts/field/env_leaf.gdshader")
 	leaf_material.set_shader_parameter("ink",preload("res://assets/environment/leaf-sprays.png"))
 	leaf_material.set_shader_parameter("willow_ink",preload("res://assets/environment/willow-sprays.png"))
 	leaf_material.set_shader_parameter("willow_pendant",preload("res://assets/environment/willow-pendant.png"))
-	leaf_material.set_shader_parameter("elm_spray",preload("res://assets/environment/elm-spray.svg"))
+	leaf_material.set_shader_parameter("ford_ink",preload("res://assets/third_party/wildfire_willow/ford_willow.png"))
+	leaf_material.set_shader_parameter("grove_leaf",preload("res://assets/environment/quaternius/leaves.png"))
+	leaf_material.set_shader_parameter("grove_bark",preload("res://assets/environment/quaternius/bark.png"))
 	leaf_material.set_shader_parameter("elm_bough",preload("res://assets/environment/elm-bough.png"))
 	leaf_material.set_shader_parameter("canopy_paint",preload("res://assets/environment/elm-foliage.svg"))
 	leaf_material.set_shader_parameter("leaf_marks",preload("res://assets/environment/fieldbed.png"))
@@ -476,9 +511,38 @@ func build(parent: Node3D,tiles: Dictionary) -> void:
 	_bake_trees()
 	var plan:Dictionary=PLAN.data
 	_stands(plan)
+	if bridgehead:
+		# Frame the outer bridge with two mature willow stools and a pair of
+		# smaller alternating banks. None stands on the seven-metre tread.
+		for planting:Vector4 in [Vector4(18.4,-9.9,6.1,-.2),Vector4(30.5,-14.2,6.5,3.10),
+				Vector4(18.2,10.7,5.8,.28),Vector4(30.3,15.0,5.0,2.94)]:
+			var p:=Vector2(planting.x,planting.y)
+			_plant(_cell(p),p,planting.z,0,0,planting.w)
+		for stone:Vector4 in [Vector4(29.1,-6.6,1.40,.82),Vector4(30.3,-7.4,1.03,.62),
+				Vector4(18.8,6.8,1.34,.68),Vector4(18.5,-12.1,1.69,.78),Vector4(29.3,10.2,1.30,.61)]:
+			var p:=Vector2(stone.x,stone.y)
+			_river_bed(_cell(p).stone,p,stone.z,stone.z*.66,stone.w,.87+stone.x*.21,stone.y*.49)
+		# Sedge roots follow the wet ledge. Leave gaps between clumps, both
+		# bridge mouths and the road completely open at boot height.
+		var reed_beds: Array[Vector3]=[Vector3(-1.,-5.7,1.35),Vector3(1.,-7.1,1.35),
+			Vector3(-1.,8.3,1.6),Vector3(1.,6.5,1.36),Vector3(1.,12.7,1.92),
+			Vector3(-1.,-15.2,1.7),Vector3(-1.,19.6,1.24),Vector3(1.,-18.4,1.45)]
+		for bed in reed_beds:
+			for clump in 6:
+				var along:=(float(clump)/5.-.5)*bed.z
+				var p:=Vector2(Ground.MOAT_X+bed.x*(4.93+.38*sin(clump*2.3+bed.y)),bed.y+along)
+				var root_pos:=Vector3(p.x,-.87*Ground.moat_depth(p)+.022,p.y)
+				for fan in 4:
+					var a:=float(fan)*1.61+clump*1.77+bed.y
+					var light:=.44+.16*sin(a+.6)
+					var dir:=Vector3(cos(a),0.,sin(a))
+					var tip:=root_pos+dir*(.21+.09*sin(a*.7))+Vector3.UP*(.40+.13*sin(a))
+					_spray(_cell(p),root_pos,tip,Vector3(-dir.z,0.,dir.x)*(.23+.045*cos(a)),3,light,true)
+	_place_inland_stands(parent)
 	_bank_sedge()
 	_pavers(plan)
 	_field_banks()
+	_grazed_banks()
 	_bridge_ledges()
 	for patch:Patch in cells.values():
 		if patch.sprays>0:

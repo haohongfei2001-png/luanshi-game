@@ -60,13 +60,15 @@ static func _passage(p: Vector2, x: float, z: float, half_depth: float, directio
 		return Vector2(x - direction * (half_depth + 1.48), z)
 	return Vector2(x + direction * (half_depth + 0.85), z)
 
-static func waypoint(p: Vector2, goal: Vector2, file_z: float, id: int, gate_open: bool, ram_at_gate: bool = false, keep_gate_file: bool = true) -> Vector2:
+static func waypoint(p: Vector2, goal: Vector2, file_z: float, id: int, gate_open: bool, ram_at_gate: bool = false, keep_gate_file: bool = true, bridgehead: bool = false) -> Vector2:
 	var direction := signf(goal.x - p.x)
 	if direction == 0.0:
 		return Ground.waypoint(p, goal)
 	# Inbound and outbound files keep right. Formation widths compress across the
 	# bridge deck without changing the destination of an enemy already on it.
 	var lane := direction * 0.70 + clampf(file_z * 0.39, -2.12, 2.12)
+	if bridgehead and Ground.needs_moat_crossing(p,goal):
+		return Ground.moat_waypoint(p,goal,lane)
 	var from_river := (p.x - Ground.RIVER_X) * direction
 	var to_river := (goal.x - Ground.RIVER_X) * direction
 	if from_river < 5.05 and to_river > 5.05:
