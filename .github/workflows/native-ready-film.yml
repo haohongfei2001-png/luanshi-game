@@ -1,0 +1,102 @@
+name: Review the continuous authored ready and cut chain
+on:
+  push:
+    branches: [codex/river-rc23-native-chain]
+    paths: ['tests/native_ready_film.gd','.github/workflows/native-ready-film.yml']
+permissions:
+  contents: write
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      LIBGL_ALWAYS_SOFTWARE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Godot and capture tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xdotool ffmpeg python3-pil
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/editor
+          sudo install /tmp/editor/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          ./tools/prepare-font.sh
+          mkdir -p artifacts/native-ready-film docs/evidence/river-gate-v1-rc23/native-chain/ready
+          touch artifacts/.gdignore docs/evidence/river-gate-v1-rc23/native-chain/.gdignore
+          cat >override.cfg <<'CFG'
+          [display]
+          window/size/window_width_override=2560
+          window/size/window_height_override=1600
+          CFG
+      - name: Record the original-speed overhead chain against the unchanged recorded baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof=docs/evidence/river-gate-v1-rc23/native-chain/ready
+          cp docs/evidence/river-gate-v1-rc23/native-chain/movie/before-* "$proof/"
+          cp docs/evidence/river-gate-v1-rc23/native-chain/movie/before.json "$proof/"
+          printf '%s\n' "$GITHUB_SHA" > "$proof/candidate-source.txt"
+          printf '%s\n' 'e10b336005497a26de914ac0f0ddc5630bb758d3' 'recorded by dab4fbd1ba3371134e498901d13a89dc9795b207 in run 43579140572' > "$proof/baseline-source.txt"
+          sha256sum assets/river_gate/figures/company_motion.png > "$proof/after-palette-sha256.txt"
+          godot --headless --audio-driver Dummy --editor --path . --import > "$proof/after-import.log" 2>&1
+          if grep -n -C3 -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/after-import.log"; then exit 1; fi
+          timeout 10m xvfb-run -a -s '-screen 0 2560x1600x24' godot --path . --audio-driver Dummy --display-driver x11 --resolution 2560x1600 --disable-vsync --fixed-fps 20 --script tests/native_ready_film.gd > "$proof/after.log" 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|SHADER ERROR|ERROR:' "$proof/after.log"; then exit 1; fi
+          grep NATIVE_CHAIN_MOTION "$proof/after.log"
+          cp artifacts/native-ready-film/sequence.json "$proof/after.json"
+          cp artifacts/native-ready-film/render-selection.json "$proof/render-selection.json"
+          cp artifacts/native-ready-film/reverse-112.jpg "$proof/after-reverse-112.jpg"
+          for view in normal side; do
+            ffmpeg -v error -y -framerate 20 -i "artifacts/native-ready-film/$view/frame-%03d.jpg" -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p -movflags +faststart "$proof/after-$view.mp4"
+            ffprobe -v error -count_frames -show_entries stream=width,height,r_frame_rate,nb_read_frames,duration -of json "$proof/after-$view.mp4" > "$proof/after-$view-stream.json"
+          done
+          /usr/bin/python3 - <<'PY'
+          import json
+          from PIL import Image
+          from pathlib import Path
+          out=Path("docs/evidence/river-gate-v1-rc23/native-chain/ready")
+          for view in ("normal","side"):
+              frames=(0,5,6,8,11,12,15,20,21,23)
+              sheet=Image.new("RGB",(1280,2000))
+              for n,k in enumerate(frames):
+                  im=Image.open(Path("artifacts/native-ready-film")/view/f"frame-{k:03d}.jpg").convert("RGB")
+                  assert im.size==(2560,1600)
+                  if k in (5,6,8,11,12,15,20,21,23): im.save(out/f"after-{view}-{k:03d}-native.jpg",quality=78,subsampling=2)
+                  small=im.resize((640,400),Image.Resampling.LANCZOS)
+                  sheet.paste(small,((n%2)*640,(n//2)*400))
+              sheet.save(out/f"after-{view}-times.jpg",quality=86)
+          a=json.loads((out/"before.json").read_text());b=json.loads((out/"after.json").read_text())
+          assert a==b
+          ticks=[x["tick"] for x in a["index"]]
+          assert len(ticks)==24 and ticks==list(range(ticks[0],ticks[0]+24))
+          assert a["scale"]==1. and all(x["ordinary"]==[512,512] for x in a["index"])
+          cut=next(i for i,x in enumerate(a["index"]) if x["state"]==1)
+          release=next(i for i,x in enumerate(a["index"]) if i>cut and x["state"]==2)
+          assert sum(x["travel"] for x in a["index"][:cut] if x["state"]==0)>.10
+          assert sum(x["travel"] for x in a["index"][release:] if x["state"]==0)>.12
+          assert a["index"][-1]["impacts"]>a["index"][0]["impacts"]
+          for path in out.glob("*-stream.json"):
+              stream=json.loads(path.read_text())["streams"][0]
+              assert stream["width"]==2560 and stream["height"]==1600 and int(stream["nb_read_frames"])==24
+              assert stream["r_frame_rate"]=="20/1"
+          (out/"verification.json").write_text(json.dumps({"physics_sequences_equal":True,"baseline_reused_from_run":43579140572,"consecutive_steps":24,"fps":20,"duration":1.2,"dimensions":[2560,1600],"realtime_performance_measurement":False},indent=2)+"\n")
+          PY
+          git diff --exit-code -- assets/river_gate/figures/company_motion.png scripts/field/company_skin.gdshader
+          sha256sum "$proof"/*.mp4 > "$proof/video-sha256.txt"
+          git add "$proof"
+          git -c user.name='River Gate native overhead proof' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Archive the complete source overhead cut in the same real encounter'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+      - name: Preserve failure logs
+        if: failure()
+        run: find docs/evidence/river-gate-v1-rc23/native-chain/ready -name '*.log' -exec tail -n 100 '{}' +
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-ready-original-speed
+          path: |
+            docs/evidence/river-gate-v1-rc23/native-chain/ready
+            artifacts/native-ready-film
+          retention-days: 7
