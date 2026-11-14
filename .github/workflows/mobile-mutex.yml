@@ -1,0 +1,65 @@
+name: Verify the upstream Mobile shader deadlock fix on hosted macOS
+on:
+  push:
+    branches: ['codex/river-rc23-mobile-mutex']
+    paths: ['.github/workflows/mobile-mutex.yml','tools/backport_mobile_mutex.py']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  cold:
+    runs-on: macos-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Luanshi-macOS-88bd036da5927c4699f176bf2f72633a6e45bbdb
+          path: package
+          run-id: '43547163844'
+          github-token: ${{ github.token }}
+      - name: Build the narrowly patched official engine source
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/mobile-mutex
+          git clone --filter=blob:none --no-checkout https://github.com/godotengine/godot.git "$RUNNER_TEMP/engine"
+          git -C "$RUNNER_TEMP/engine" checkout --detach 35e80b3a8822a9df9be390814b62f44c0a9c69e8
+          python3 tools/backport_mobile_mutex.py "$RUNNER_TEMP/engine" > artifacts/mobile-mutex/actual.patch
+          python3 -m venv "$RUNNER_TEMP/compiler"
+          "$RUNNER_TEMP/compiler/bin/python" -m pip install 'scons==4.9.1'
+          "$RUNNER_TEMP/compiler/bin/scons" -C "$RUNNER_TEMP/engine" platform=macos arch=arm64 target=template_release production=yes debug_symbols=no lto=none module_mono_enabled=no -j3 > artifacts/mobile-mutex/build.log 2>&1 || { tail -n 60 artifacts/mobile-mutex/build.log; exit 1; }
+          cp "$RUNNER_TEMP/engine/LICENSE.txt" artifacts/mobile-mutex/GODOT-MIT-LICENSE.txt
+          cp "$RUNNER_TEMP/engine/bin/godot.macos.template_release.arm64" artifacts/mobile-mutex/godot.macos.template_release.arm64
+          artifacts/mobile-mutex/godot.macos.template_release.arm64 --version | tee artifacts/mobile-mutex/engine-version.txt
+      - name: Substitute only the tested app executable and verify the signed bundle
+        run: |
+          set -euo pipefail
+          ditto -x -k package/Luanshi-macOS.zip package/unpacked
+          python3 - <<'PY'
+          import hashlib,json,plistlib,shutil,subprocess
+          from pathlib import Path
+          app,=Path("package/unpacked").glob("*.app")
+          info=plistlib.loads((app/"Contents/Info.plist").read_bytes())
+          exe=app/"Contents/MacOS"/info["CFBundleExecutable"]
+          before=hashlib.sha256(exe.read_bytes()).hexdigest()
+          binary=Path("artifacts/mobile-mutex/godot.macos.template_release.arm64")
+          shutil.copyfile(binary,exe)
+          exe.chmod(0o755)
+          subprocess.run(["codesign","--force","--deep","--sign","-",str(app)],check=True)
+          subprocess.run(["codesign","--verify","--deep","--strict",str(app)],check=True)
+          (Path("artifacts/mobile-mutex")/"provenance.json").write_text(json.dumps({"game_source":"7481b60411540e8c6c23a4553a0a99cc2a3a5df2","original_binary_sha256":before,"patched_binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"engine_source":"35e80b3a8822a9df9be390814b62f44c0a9c69e8","upstream_fix":"https://github.com/godotengine/godot/pull/123312","role":"isolated startup regression, arm64 only, no game assets changed"},indent=2)+"\n")
+          PY
+          ditto -c -k --keepParent package/unpacked/*.app package/patched-macOS.zip
+      - name: Recheck every renderer trial and six independently cold-data Metal launches
+        run: |
+          set -euo pipefail
+          python3 tools/rc3_native_probe.py package/patched-macOS.zip package/unpacked artifacts/mobile-mutex/both-renderers
+          for pass in 1 2 3; do
+            python3 tools/rc3_native_probe.py package/patched-macOS.zip package/unpacked "artifacts/mobile-mutex/cold-$pass" --startup-regression
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-mutex-native-probe
+          path: artifacts/mobile-mutex/
+          compression-level: 1
