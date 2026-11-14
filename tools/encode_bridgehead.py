@@ -17,7 +17,6 @@ first = int(number[1])
 digits = len(number[1])
 assert all(int(re.search(r"(\d+)\.png$",p.name)[1])==first+i for i,p in enumerate(frames))
 fps = 24
-assert facts["sampled_ticks"]>200 and facts["last"]["hero_impacts"]>0 and facts["last"]["soldier_shield_contacts"]>0
 assert all(row["both_landmarks"] and abs(row["zoom"]-22.)<.001 for row in facts["frames"])
 assert all(abs(row["center"][0]-34.2)<.35 and abs(row["center"][1]-1.)<.35 for row in facts["frames"])
 duration = len(frames)/fps
@@ -40,16 +39,23 @@ assert streams[1]["channels"]==2 and abs(float(streams[1]["duration"])-duration)
 vol=run(["ffmpeg","-hide_banner","-i",str(movie),"-vn","-af","volumedetect","-f","null","-"],capture_output=True,text=True).stderr
 peak=float(re.search(r"max_volume: ([-.0-9]+) dB",vol)[1])
 assert -60<peak<=0,vol[-500:]
-import shutil
 from PIL import Image
 for name,i in [("approach",max(3,int(fps*2))),("gate",min(len(frames)-1,int(fps*12))),
-               ("first-contact",min(len(frames)-1,facts["first_game_frame"]+round(facts["first_player_strike"]*fps/20)))]:
+               ("first-contact" if facts["first_player_strike"]>=0 else "east-bank",min(len(frames)-1,facts["first_game_frame"]+round((facts["first_player_strike"] if facts["first_player_strike"]>=0 else facts["last"]["tick"]*.78)*fps/20)))]:
     with Image.open(frames[i]) as image:
         image.convert("RGB").save(directory/(name+".jpg"),quality=96,subsampling=0)
         thumb=image.copy();thumb.thumbnail((1152,720));thumb.convert("RGB").save(directory/(name+"-preview.jpg"),quality=92,subsampling=0)
+# Show six untouched, time-ordered moments without altering the playable video.
+tile=Image.new("RGB",(960,421),(29,35,31))
+for slot,frac in enumerate((.08,.17,.24,.34,.62,.89)):
+    index=min(len(frames)-1,int(len(frames)*frac))
+    with Image.open(frames[index]) as image:
+        tile.paste(image.convert("RGB").resize((320,200),Image.Resampling.LANCZOS),(320*(slot%3),210*(slot//3)))
+tile.save(directory/"sequence.jpg",quality=93,subsampling=0)
 receipt={"game_source":game_sha,"capture_source":os.environ.get("GITHUB_SHA"),"capture_run":os.environ.get("GITHUB_RUN_ID"),"mode":"Godot Movie Maker 24 successive game frames per simulated second; physical keyboard and pointer input; no game-state writes",
          "fps":fps,"seconds":duration,"simulated_battle_seconds":battle_seconds,"source_frame_count":len(frames),"streams":streams,
          "source_frame_range":[first,first+len(frames)-1],"max_signal_db":peak,"sha256":sha(movie),"bytes":movie.stat().st_size,
-         "summary":{k:v for k,v in facts.items() if k!="frames"},"device_framerate_measurement":False}
+         "summary":{k:v for k,v in facts.items() if k!="frames"},"device_framerate_measurement":False,"gameplay_review_pass":bool(facts["sampled_ticks"]>200 and facts["last"]["hero_impacts"]>0 and facts["last"]["soldier_shield_contacts"]>0 and duration>=30)}
 (directory/"recording.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
-print("BRIDGE_FILM",json.dumps(receipt,ensure_ascii=False))
+print("BRIDGE_FILM",json.dumps({k:v for k,v in receipt.items() if k!="summary"},ensure_ascii=False))
+assert receipt["gameplay_review_pass"], "The intact recorded attempt is archived; one or more actual combat acceptance checks failed."

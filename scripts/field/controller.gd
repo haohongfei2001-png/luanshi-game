@@ -454,7 +454,7 @@ func _draw_field() -> void:
 		var hp:=Ground.unit_point(hero.before.lerp(hero.pos,clampf(carry/Battle.DT,0,1)),battle.bridgehead)
 		var at:=camera.unproject_position(hp)
 		var ahead:=camera.unproject_position(hp+Vector3(hero.facing.x,0,hero.facing.y))
-		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1))
+		hud.marker.project(at,ahead-at,camera.unproject_position(hp+camera.basis.x*0.5).distance_to(at),clampf(1.0-(battle.tick-last_hero_hit)*0.21,0,1),clampf(hero.flash/0.22,0,1),battle.bridgehead)
 	var t := Time.get_ticks_usec()
 	view.sync_view(camera_center,half_extent,clampf(carry/Battle.DT,0,1),camera.size)
 	if frame_log: frame_log.pose_submitted(battle)

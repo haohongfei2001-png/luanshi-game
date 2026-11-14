@@ -11,6 +11,8 @@
 
 首轮桥头部署中，先过桥的主角在第 71 步阵亡，渡过桥面的后队仅两人。调整为两支在编先锋先据东岸，西岸纵队再跟进，保留原有兵力、伤害、箭矢和永久伤亡。在军议即可选择、交战、存档和重新部署，同镜头原速片与本版本原生包仍以对应证据为准。
 
+固定窗口第一跑确认城门和桥心同屏，但主角直接沿路心冲入射界，在第 128 步阵亡。复看实机后给桥两侧补了小片水边莎草，收暗木板湿端，在同一镜头保留主角足边的两段识别线。压力测试还覆盖桥头横阵、疏列与纵队的换位。原速采集改用现有长枪进步刺，随先锋过桥，从桥的一侧交手后退到同伴身后。常规兵力、战斗伤害和敌方决策维持原规则。[原始失败窗口](https://github.com/haohongfei2001-png/luanshi-game/tree/b8dd831a1506277702eabeee83a1703fd4624732/docs/evidence/river-gate-v1-rc22/bridge-scout) · [同种子 21 条进退路线实测](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43531597957)
+
 复现渡桥和读档：`godot --headless --path . --script tests/field_bridgehead.gd`。录制步骤使用 `tests/bridgehead_window.gd` 的常规键鼠入口，22 米，默认画质，固定 61112。真实 M5 尚未测试。
 
 ## 河关 RC21 · 守军院落和城墙

@@ -522,6 +522,22 @@ func build(parent: Node3D,tiles: Dictionary,bridgehead: bool=false) -> void:
 				Vector4(18.8,6.8,1.34,.68),Vector4(18.5,-12.1,1.69,.78),Vector4(29.3,10.2,1.30,.61)]:
 			var p:=Vector2(stone.x,stone.y)
 			_river_bed(_cell(p).stone,p,stone.z,stone.z*.66,stone.w,.87+stone.x*.21,stone.y*.49)
+		# Sedge roots follow the wet ledge. Leave gaps between clumps, both
+		# bridge mouths and the road completely open at boot height.
+		var reed_beds: Array[Vector3]=[Vector3(-1.,-5.7,1.35),Vector3(1.,-7.1,1.35),
+			Vector3(-1.,8.3,1.6),Vector3(1.,6.5,1.36),Vector3(1.,12.7,1.92),
+			Vector3(-1.,-15.2,1.7),Vector3(-1.,19.6,1.24),Vector3(1.,-18.4,1.45)]
+		for bed in reed_beds:
+			for clump in 6:
+				var along:=(float(clump)/5.-.5)*bed.z
+				var p:=Vector2(Ground.MOAT_X+bed.x*(4.93+.38*sin(clump*2.3+bed.y)),bed.y+along)
+				var root_pos:=Vector3(p.x,-.87*Ground.moat_depth(p)+.022,p.y)
+				for fan in 4:
+					var a:=float(fan)*1.61+clump*1.77+bed.y
+					var light:=.44+.16*sin(a+.6)
+					var dir:=Vector3(cos(a),0.,sin(a))
+					var tip:=root_pos+dir*(.21+.09*sin(a*.7))+Vector3.UP*(.40+.13*sin(a))
+					_spray(_cell(p),root_pos,tip,Vector3(-dir.z,0.,dir.x)*(.23+.045*cos(a)),3,light,true)
 	_place_inland_stands(parent)
 	_bank_sedge()
 	_pavers(plan)

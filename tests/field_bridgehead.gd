@@ -22,6 +22,13 @@ func _initialize() -> void:
 	expect(Ground.travel(west,Vector2.RIGHT,false).x>west.x,"Original field is unaffected")
 	for u in b.roster:
 		expect(not Ground.moat_blocks(u.pos),"Soldier musters in the water "+str(u.id))
+	var muster:=Battle.new()
+	muster.setup(100,Battle.SEED,Battle.Arms.Kit.SPEAR,true,true,100,true)
+	for shape in Battle.FORMATIONS.size():
+		for slot in muster.companies_per_side:
+			expect(muster.deploy_company(0,slot,shape,1),"Rearrange the bridge muster")
+			for u in muster.roster:
+				expect(not Ground.moat_blocks(u.pos),"A redeployed file starts below the water "+str(u.id))
 	var world:=World.new()
 	expect(world.bind(b) and world.reserve(),"Crossing has its own real reserved military ledger")
 	var was_west:={}

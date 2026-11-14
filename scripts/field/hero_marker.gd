@@ -5,8 +5,10 @@ var heading:=Vector2.UP
 var width:=10.0
 var contact:=0.0
 var hurt:=0.0
+var bridge_watch:=false
 
-func project(at: Vector2,dir: Vector2,radius: float,hit: float,hit_back: float) -> void:
+func project(at: Vector2,dir: Vector2,radius: float,hit: float,hit_back: float,at_bridge: bool=false) -> void:
+	bridge_watch=at_bridge
 	foot=at
 	heading=dir.normalized()
 	width=clampf(radius,6,28)
@@ -21,8 +23,15 @@ func _draw() -> void:
 	for sign_x: float in [-1,1]:
 		var a:=foot+Vector2(sign_x*width,-1)
 		var points:=PackedVector2Array([a+Vector2(-sign_x*width*0.22,-2),a,a+Vector2(-sign_x*width*0.25,3)])
+		if bridge_watch:
+			# At the fixed crossing view the boots often meet other boots.
+			# Keep the center free and reserve the two edges for the player.
+			points.clear()
+			for i in 9:
+				var angle:=float(i-4)*.162
+				points.append(foot+Vector2(sign_x*cos(angle)*width*1.31,sin(angle)*width*.72))
 		draw_polyline(points,Color("383b32a8"),3.2,true)
-		draw_polyline(points,color,1.4,true)
+		draw_polyline(points,color,1.65 if bridge_watch else 1.4,true)
 	var tip:=foot+heading*(width+4)
 	draw_line(tip-heading*3,tip,color,1.6,true)
 	if contact>0:

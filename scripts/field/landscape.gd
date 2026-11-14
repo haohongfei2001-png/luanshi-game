@@ -115,7 +115,14 @@ func _ground_tiles(tiles: Dictionary) -> void:
 			land.joint=1
 			for x in range(x0,x0+42,3):
 				for z in range(z0,z0+36,3):
-					land.quad(_point(x,z),_point(x,z+3),_point(x+3,z+3),_point(x+3,z),Color.WHITE)
+					if bridgehead and x>=15 and x<33 and z>=-30 and z<30:
+						# Resolve the cut bank at one metre, where a three-metre
+						# quad used to cover the toe and meet the water in a ruler line.
+						for dx in 3:
+							for dz in 3:
+								land.quad(_point(x+dx,z+dz),_point(x+dx,z+dz+1),_point(x+dx+1,z+dz+1),_point(x+dx+1,z+dz),Color.WHITE)
+					else:
+						land.quad(_point(x,z),_point(x,z+3),_point(x+3,z+3),_point(x+3,z),Color.WHITE)
 
 func _bank_litter(patches: Dictionary,rng: RandomNumberGenerator) -> void:
 	for i in 135:
@@ -260,7 +267,7 @@ func _outer_bridge(b: Builder) -> void:
 		var u:=(float(i)-17.)*.335
 		var length:=7.91+.042*sin(i*3.82)
 		var seam:=.87*sin(i*1.29)
-		var grain:=Color("a08464").lerp(Color("796953"),.31+.20*sin(i*.70))
+		var grain:=Color("8c755b").lerp(Color("716452"),.38+.24*sin(i*.70))
 		for side:float in [-1.,1.]:
 			var end:=side*length*.5
 			b.block(origin+Vector3(u,.068+.003*sin(i*5.1),(end+seam)*.5),

@@ -49,6 +49,13 @@ static func moat_depth(p: Vector2) -> float:
 static func moat_blocks(p: Vector2) -> bool:
 	return absf(p.x-MOAT_X)<MOAT_WATER and absf(p.y)>MOAT_DECK and absf(p.y)<MOAT_END
 
+# At the bridgehead a change from a column to a line can put the outside
+# files into the moat. Keep their frontage and dress them back onto their bank.
+static func muster_ground(station: Vector2,company_x: float) -> Vector2:
+	if moat_blocks(station):
+		station.x=MOAT_X+signf(company_x-MOAT_X)*(MOAT_WATER+.24)
+	return station
+
 static func deck_height(p: Vector2, bridgehead: bool=false) -> float:
 	if bridgehead and absf(p.x-MOAT_X)<5.95 and absf(p.y)<=MOAT_DECK+.18: return .13
 	var ledge := parapet(p)

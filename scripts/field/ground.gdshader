@@ -218,13 +218,18 @@ void fragment() {
 			float grain=texture(joinery,vec2(local_pos.z*.31,(local_pos.x+local_pos.y)*.94)).r;
 			float z=abs(p.y);
 			float cross_distance=min(z,abs(z-35.0));
-			float board=fract((p.x+32.0)/.482+.5);
+			bool moat_tread=gate_crossing && abs(p.x-24.)<6.;
+			float board=moat_tread?fract((p.x-24.)/.335+.5):fract((p.x+32.)/.482+.5);
 			float weather=texture(fieldbed,p*vec2(.28,.61)).r;
 			float worn=1.0-smoothstep(.12,.46,abs(cross_distance-1.20+.13*(weather-.5)));
 			float peg=(1.0-smoothstep(.10,.21,abs(board-.44)))*(1.0-smoothstep(.08,.14,abs(cross_distance-3.41)));
 			// The wheel paths bleach the same boards; occasional repairs remain visible at the landings.
 			float traffic=.66+.34*smoothstep(.30,.72,texture(fieldbed,p*vec2(.10,.22)).g);
 			color*=.78+.31*grain+.19*worn*traffic*(.48+.52*weather)-.16*peg;
+			if(moat_tread) {
+				float wet_end=smoothstep(2.75,3.84,cross_distance);
+				color*=1.-wet_end*(.11+.11*(1.-weather));
+			}
 			roughness=.91-.14*worn;
 		} else if(part>18.5 && part<19.5) {
 			// One projection per face; even short, walkable fragments show bedding

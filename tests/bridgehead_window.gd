@@ -69,28 +69,41 @@ func _select_bridge() -> bool:
 func _drive() -> void:
 	var b:=field.battle
 	var t:=b.tick
-	# Alternate two physical movement chords to travel along the surveyed
-	# road despite the diagonal camera rotation.
-	var forward:=t>28 and b.hero.pos.x<34.1 and b.hero.hp>44. and b.result==""
-	var steer:=b.hero.pos.y>-.90
-	_key(KEY_D,forward)
-	_key(KEY_W,forward and steer)
-	var best:Battle.Unit=null
-	var distance:=21.0
-	for id in b._near(b.hero.pos,5.,1):
+	var target:Battle.Unit=null
+	var d2:=42.
+	for id in b._near(b.hero.pos,6.5,1):
 		var other:=b.roster[id]
-		if not b.active(other) or other.state==Battle.State.ROUT: continue
-		var d:=b.hero.pos.distance_squared_to(other.pos)
-		if d<distance and Ground.clear_shot(b.hero.pos,other.pos,b.gate_hp<=0):
-			best=other
-			distance=d
-	if best!=null:
-		_point(field.camera.unproject_position(Ground.unit_point(best.pos,true)+Vector3.UP*.86))
-		if t%8==0 and b.hero.state==Battle.State.MARCH:
-			var k:=KEY_Q if b.hero.impacts>0 and t%32==0 else KEY_J
-			_key(k,true)
-			_key(k,false)
-	elif forward:
+		if other.state==Battle.State.ROUT: continue
+		var dist:=b.hero.pos.distance_squared_to(other.pos)
+		if dist<d2 and Ground.clear_shot(b.hero.pos,other.pos,b.gate_hp<=0):
+			target=other
+			d2=dist
+	var goal:=Vector2(34.0,-2.8)
+	if b.hero.impacts>0: goal=Vector2(28.65,-2.8)
+	if b.hero.hp<62.: goal=Vector2(26.8,-1.)
+	# A human can follow the cart ruts with eight directions and retire
+	# behind the other advancing soldiers. Send the same four mapped keys.
+	var walk:=Vector2.ZERO
+	if t>28 and b.hero.pos.distance_to(goal)>.28:
+		var local:=b.hero.pos.direction_to(goal).rotated(field.camera_yaw)
+		walk=Vector2.from_angle(roundf(local.angle()/(PI/4.))*PI/4.)
+	_key(KEY_W,walk.y<-.25)
+	_key(KEY_S,walk.y>.25)
+	_key(KEY_A,walk.x<-.25)
+	_key(KEY_D,walk.x>.25)
+	if target!=null:
+		var screen:=field.camera.unproject_position(Ground.unit_point(target.pos,true)+Vector3.UP*.86)
+		_point(screen)
+		if b.hero.state==Battle.State.MARCH:
+			var key:Key=KEY_NONE
+			if b.hero.hp<69. and b.hero_cds[3]<=0.: key=KEY_SPACE
+			elif d2<9.75: key=KEY_Q if b.hero_cds[1]<=0. else KEY_J
+			elif d2<22. and b.hero_cds[2]<=0. and b.hero.impacts==0: key=KEY_E
+			if key!=KEY_NONE:
+				_key(key,true)
+				_key(key,false)
+				notes.append({"tick":t,"key":OS.get_keycode_string(key),"aimed_at":target.id,"range":sqrt(d2),"cursor":[screen.x,screen.y],"direction":[b.hero.locked.x,b.hero.locked.y]})
+	elif walk!=Vector2.ZERO:
 		_point(field.camera.unproject_position(Ground.unit_point(b.hero.pos+Vector2(3.,0.),true)+Vector3.UP*.65))
 	if t==90:
 		_key(KEY_1,true)
@@ -149,7 +162,7 @@ func _run() -> void:
 	first_game_frame=Engine.get_frames_drawn()
 	var preview:="--bridge-stills" in OS.get_cmdline_user_args()
 	var frames:=0
-	while frames<601 and b.result=="" and not field.paused:
+	while frames<785 and b.result=="" and not field.paused:
 		frames+=1
 		if b.tick!=last_tick:
 			last_tick=b.tick
@@ -164,8 +177,7 @@ func _run() -> void:
 				screenshot_ok=frame.save_jpg(OUT+"/view-%04d.jpg"%b.tick,.94)==OK and screenshot_ok
 		await process_frame
 		if preview and b.tick>=150: break
-	_key(KEY_W,false)
-	_key(KEY_D,false)
+	for key:Key in [KEY_W,KEY_S,KEY_A,KEY_D]: _key(key,false)
 	var fact:=_facts()
 	var clear_count:=0
 	var entered_water:=false
@@ -181,7 +193,7 @@ func _run() -> void:
 		"held_both":clear_count,"feet_in_deep_water":entered_water,"different_lens":off_lens,
 		"shield_contacts":contacts.values(),"rank_spear_contacts":troop_contacts,"resolution":[root.size.x,root.size.y],"internal":root.scaling_3d_scale,
 		"camera_start":[Ground.BRIDGE_VIEW.x,Ground.BRIDGE_VIEW.y],"software":RenderingServer.get_video_adapter_name(),
-		"last":fact,"frames":snapshots,"first_game_frame":first_game_frame,"physics_fps":Engine.physics_ticks_per_second,"world_audit":field.theater.audit().is_empty()}
+		"last":fact,"frames":snapshots,"inputs":notes,"first_game_frame":first_game_frame,"physics_fps":Engine.physics_ticks_per_second,"world_audit":field.theater.audit().is_empty()}
 	var file:=FileAccess.open(OUT+"/input-and-camera.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(terminal,"  "))
 	file.close()

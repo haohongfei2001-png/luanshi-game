@@ -14,7 +14,7 @@ const PLAYER_CLOTH:=Color("364967")
 # The concentrated dye is confined to cut shoulder and upper sleeve panels.
 const INDIGO_BOLT:=Color("345265")
 const MADDER_BOLT:=Color("69352b")
-const PLAYER_MANTLE:=Color("859ba2")
+const PLAYER_MANTLE:=Color("a2b7b6")
 
 class Batch:
 	var node: MultiMeshInstance3D

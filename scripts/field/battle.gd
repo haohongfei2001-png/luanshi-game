@@ -326,10 +326,12 @@ func _place_company(index: int) -> void:
 	for j in line.size():
 		var u:=line[j]
 		u.station=c.home+Vector2(-floorf(float(j)/width)*depth,(float(j%width)-(width-1)*0.5)*spacing)
+		if bridgehead: u.station=Ground.muster_ground(u.station,c.home.x)
 		u.pos=u.station
 		u.before=u.pos
 	var officer:=roster[c.officer_id]
 	officer.station=c.home+Vector2(-7.6,1.2)
+	if bridgehead: officer.station=Ground.muster_ground(officer.station,c.home.x)
 	officer.pos=officer.station
 	officer.before=officer.pos
 
