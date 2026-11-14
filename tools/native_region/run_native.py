@@ -1,6 +1,7 @@
 """Bounded real graphical execution on existing ephemeral GitHub macOS runners."""
 import argparse, hashlib, json, os, pty, re, select, signal, subprocess, sys, time
 from pathlib import Path
+from capture_mode import MODES, arguments, capture_budget
 
 ENTRY='application/run/main_loop_type=DotNativeRegionCapture; inert bootstrap scene; no CLI override'
 
@@ -23,12 +24,15 @@ def validate_engine(patch):
     return executable, receipt
 
 def run(project, patch, output, helper, mode='baseline'):
+    mode_arguments=arguments(mode)
     if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("RUNNER_OS") != "macOS" or sys.platform != "darwin":
         raise RuntimeError("Only disposable authorized GitHub macOS runner; never the owner's computer")
     executable, engine_receipt = validate_engine(patch)
     pack = executable.with_suffix('.pck')
     pack_receipt = json.loads((output/'pack-integrity.json').read_text())
     validate_pack_receipt(pack_receipt)
+    if mode=='gate-context-study' and pack_receipt.get('validated_capture_mode')!=mode:
+        raise ValueError('Pack never validated complete road/gate/author runtime closure')
     if not pack.is_file() or pack.stat().st_size != pack_receipt['bytes'] or hashlib.sha256(pack.read_bytes()).hexdigest() != pack_receipt['sha256']:
         raise ValueError('Adjacent resource pack integrity mismatch')
     output.mkdir(parents=True, exist_ok=True)
@@ -39,7 +43,7 @@ def run(project, patch, output, helper, mode='baseline'):
     args = ["/usr/bin/time", "-l", "-o", str(output / "resource-time.log"), str(executable),
             "--rendering-method", "mobile", "--rendering-driver", "metal",
             "--audio-driver", "Dummy", "--disable-vsync", "--"]
-    args += ['--camera-study'] if mode=='camera-study' else ['--wall-clock-action','--traversal-review','--shadow-diagnostic']
+    args += mode_arguments
     process = subprocess.Popen(args, env=env, cwd=project, stdout=slave, stderr=slave,
                                stdin=subprocess.DEVNULL, start_new_session=True)
     os.close(slave)
@@ -86,7 +90,7 @@ def run(project, patch, output, helper, mode='baseline'):
             if value.startswith(("NATIVE_REGION_FOCUS", "NATIVE_WINDOW_READY", "REGION_SETUP_", "ARCHITECTURE_CAPTURE_")):
                 print(value, flush=True)
         try:
-            while time.monotonic() - started < (120 if mode=='camera-study' else 240):
+            while time.monotonic() - started < capture_budget(mode):
                 elapsed=time.monotonic()-started
                 for second in (12,45):
                     if focus is None and elapsed>=second and second not in probe_times:
@@ -112,7 +116,7 @@ def run(project, patch, output, helper, mode='baseline'):
             except subprocess.TimeoutExpired:
                 os.killpg(process.pid, signal.SIGKILL); process.wait(); failure = failure or "EXIT_TIMEOUT"
     receipt = {"source":env["GITHUB_SHA"],"mode":mode,"command":args,"exit":process.returncode,"failure":failure,
-               "elapsed_seconds":time.monotonic()-started,"focus":focus,"startup_probes":startup_probes,"engine":engine_receipt,"pack":pack_receipt,
+               "elapsed_seconds":time.monotonic()-started,"capture_budget_seconds":capture_budget(mode),"focus":focus,"startup_probes":startup_probes,"engine":engine_receipt,"pack":pack_receipt,
                "M5":"DEVICE_NOT_RUN","art_status":"NOT_ACCEPTED",
                "scope":"Real native Metal execution, readback-instrumented, not performance acceptance"}
     (output / "process.json").write_text(json.dumps(receipt, indent=2))
@@ -125,5 +129,5 @@ def run(project, patch, output, helper, mode='baseline'):
 if __name__ == "__main__":
     p=argparse.ArgumentParser()
     for name in ("project", "patch", "output", "helper"): p.add_argument(name, type=Path)
-    p.add_argument('--mode',choices=['baseline','camera-study'],default='baseline')
+    p.add_argument('--mode',choices=MODES,default='baseline')
     a=p.parse_args();print(json.dumps(run(*(getattr(a,n).resolve() for n in ("project","patch","output","helper")),mode=a.mode)))

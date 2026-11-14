@@ -13,6 +13,23 @@ def rows():
         result.append(r)
     return result
 
+def context_rows():
+    result=[]
+    for name,size in VIEWS['gate-context-study'].items():
+        r=rows()[0]
+        r.update({k:list(size) for k in ['pixels','internal_pixels','attachment_size','viewport']})
+        r.update(view=name, camera_yaw=math.radians(-65),
+            camera_review_profile={'projection':'perspective','nominal_body_fraction':.1,'pitch_degrees':32 if name.endswith('road65') else 38,'fov_degrees':55},
+            runtime_architecture_sha256='1'*64,runtime_ground_sha256='2'*64,runtime_woodland_sha256='3'*64,
+            shader_clock={'fixed_seconds':6.75},
+            single_real_unit_author_oracle={'mesh_count':43,'unit_is_real_hero':True,'art_pass':False,'actions_accepted':False,
+                'battle_state_written':False,'single_actor_author_oracle_not_army_runtime':True,'ground_lift_m':0,
+                'metadata_sha256':'4'*64,'source_files':{'walk':{'sha256':'5'*64}}},
+            actual_author_body_projection={'display_backend':'macOS','projection_viewport':list(size),'top_y':size[1]*.45,
+                'boot_bottom_y':size[1]*.57,'height_px':size[1]*.12,'height_fraction':.12,'vertices_checked':13242})
+        result.append(r)
+    return result
+
 class StillGate(unittest.TestCase):
     def test_correct(self):self.assertEqual(validate_records(rows(),'a'*40,'camera-study'),'b'*64)
     def test_missing(self):
@@ -25,4 +42,20 @@ class StillGate(unittest.TestCase):
             with self.subTest(key=key):
                 r=rows();r[1][key]=value
                 with self.assertRaises(ValueError):validate_records(r,'a'*40,'camera-study')
+    def test_context_correct(self):self.assertEqual(validate_records(context_rows(),'a'*40,'gate-context-study'),'b'*64)
+    def test_context_rejects_drift_and_wrong_evidence(self):
+        mutations=[('runtime_ground_sha256',None,'f'*64),('single_real_unit_author_oracle','mesh_count',1),
+            ('single_real_unit_author_oracle','actions_accepted',True),('single_real_unit_author_oracle','ground_lift_m',.04),
+            ('actual_author_body_projection','display_backend','headless'),('actual_author_body_projection','projection_viewport',[1280,800]),
+            ('actual_author_body_projection','height_px',float('nan')),('actual_author_body_projection','height_fraction',.1),
+            ('camera_review_profile','pitch_degrees',32),('shader_clock','fixed_seconds',0)]
+        for top,sub,value in mutations:
+            with self.subTest(top=top,sub=sub):
+                r=context_rows()
+                if sub is None:r[1][top]=value
+                else:r[1][top][sub]=value
+                with self.assertRaises(ValueError):validate_records(r,'a'*40,'gate-context-study')
+    def test_consistent_but_shrunken_actor_is_rejected(self):
+        r=context_rows();b=r[1]['actual_author_body_projection'];b.update(height_px=144,height_fraction=.1,boot_bottom_y=b['top_y']+144)
+        with self.assertRaisesRegex(ValueError,'resized'):validate_records(r,'a'*40,'gate-context-study')
 if __name__=='__main__':unittest.main()

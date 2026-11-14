@@ -7,6 +7,7 @@ from restore_inputs import verified_copy, FILES
 from run_native import validate_engine,validate_pack_receipt,window_ready,ENTRY
 from validate_route import validate
 from export_pack import transform_preset,transform_project
+from capture_mode import arguments,capture_budget
 
 class NativeRegionInputs(unittest.TestCase):
     def setUp(self):
@@ -75,5 +76,12 @@ class NativeRegionInputs(unittest.TestCase):
         self.assertTrue(window_ready(focus,row));self.assertFalse(window_ready(None,row))
         for key,value in [('pid',124),('focused',False),('display','headless')]:
             self.assertFalse(window_ready(focus,{**row,key:value}))
+    def test_capture_mode_is_explicit_and_bounded(self):
+        self.assertEqual(arguments('gate-context-study'),['--gate-context-study','--road-section-study','--author-oracle'])
+        self.assertNotIn('--traversal-review',arguments('gate-context-study'))
+        self.assertEqual(capture_budget('gate-context-study'),240)
+        self.assertEqual(capture_budget('camera-study'),120)
+        with self.assertRaises(ValueError):arguments('unexpected')
+        with self.assertRaises(ValueError):capture_budget('unexpected')
 
 if __name__=='__main__':unittest.main()

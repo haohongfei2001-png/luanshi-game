@@ -1,0 +1,22 @@
+{
+  "full_default_suite": {
+    "result": "PASS",
+    "source_base": "8078e1f93d0831c0126a07702f9a399425a1bf41",
+    "log_sha256": "59631010f0223653070ae7056b29af27f8da13a82f94a0724327f1fc67721e85",
+    "scope": "headless regression including profiler change; not actual new scene graphics or FPS"
+  },
+  "contact_baseline": {
+    "old_fixture_result": "FAIL: four explicit contact-baseline assertions, no script errors",
+    "new_result": "PASS",
+    "negative_log_sha256": "fabcf6e0461da0ca56b430008c222588abfadde6666b05b638f9eee0e886b061",
+    "fixed_log_sha256": "c284496ba81a0edfc6e1d205ae37eb49a079254a3a13ad81a92a1c1b8bbed2ed"
+  },
+  "native_guard_python_tests": {
+    "input_and_modes": 17,
+    "stills_and_context": 7,
+    "result": "PASS"
+  },
+  "new_scene_native": "NOT_RUN",
+  "art": "NOT_ACCEPTED",
+  "M5": "DEVICE_NOT_RUN"
+}

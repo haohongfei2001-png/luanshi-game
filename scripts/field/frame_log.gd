@@ -85,7 +85,10 @@ func sample(scene) -> void:
 		b.trace_phase_us.resize(b.TRACE_STAGES.size())
 		b.trace_phase_us.fill(0)
 		active_seconds=0
-		observed_hits=0
+		# A restored/fast-forwarded fixture can already contain old hits. Start
+		# from that total, rather than falsely reporting them as fresh contact.
+		# The next actual increase is the first eligible live render segment.
+		observed_hits=b.hits[0]+b.hits[1]
 		last_contact_tick=-1
 	var hits: int=b.hits[0]+b.hits[1]
 	if hits>observed_hits:

@@ -292,3 +292,26 @@ structurally closed stone/timber gateway and latest single full-character
 oracle. Preserve their precise source/artifact hashes, full-army behavior and
 strict frame gates. Do not rebake unchanged professional mothers. The separate
 minimal Metal character parity oracle uses the same pinned engine.
+
+## Follow-up evidence guards before complete-scene integration
+
+The live frame recorder previously initialized its observed-hit count to zero
+when first attaching to a Battle. A restored or fast-forwarded fixture with
+historical hits therefore fabricated a fresh-contact interval before observing
+any new attack. It now baselines the existing count, waits for the next real
+increase, and resets contact recency on a different Battle. A headless test
+first reproduced four explicit failures in the original code, then passed the
+fix. The full default regression suite also passed. No battle mechanics or
+historical performance reports were rewritten; no new FPS result is claimed.
+
+The upcoming `gate-context-study` is explicitly static: full road03, closed
+stone/timber gate and one 43-mesh authoring actor. It must preserve the actual
+head-to-boot normalized screen height across the 32/38-degree camera candidates,
+with real native viewport metadata, the same Battle, runtime and actor source
+hashes, and no artificial ground lift. Seven frame-validator tests include
+wrong viewport, source drift, fabricated action acceptance and a consistently
+reported but shrunken actor. The 17 input/mode tests also pass. The exported
+empty-working-directory closure check must load the actual single actor, not
+only the old default crowd. A bounded 240 seconds covers cold setup plus three
+readbacks; it is not a performance relaxation. New-scene graphics remain
+**NOT_RUN** until the exact reusable asset bundle is loaded and captured.

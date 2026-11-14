@@ -37,6 +37,9 @@ if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-missions.log; then 
 grep -q '^FIELD_TRAFFIC_PASS' artifacts/field-traffic.log
 if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/field-traffic.log; then exit 1; fi
 "$GODOT" --headless --path . --check-only --script scripts/field/package_probe.gd
+"$GODOT" --headless --path . --script tests/frame_log_contact_baseline.gd 2>&1 | tee artifacts/frame-log-contact-baseline.log
+grep -q '^FRAME_LOG_CONTACT_BASELINE_PASS' artifacts/frame-log-contact-baseline.log
+if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' artifacts/frame-log-contact-baseline.log; then exit 1; fi
 python3 -m unittest discover -s tests -p test_record_progress.py -v
 python3 tests/test_spear_transitions.py -v
 "$GODOT" --headless --path . --script tests/test_field_sample_budget.gd 2>&1 | tee artifacts/field-sample-budget.log

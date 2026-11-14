@@ -1,6 +1,7 @@
 """Build a normal adjacent resource pack; never relax template path restrictions."""
 from pathlib import Path
 import argparse, hashlib, json, os, subprocess, sys, tempfile
+from capture_mode import MODES, arguments
 
 def transform_project(data):
     old=b'run/main_scene="res://scenes/game.tscn"'
@@ -20,7 +21,8 @@ def transform_preset(data):
     # Evidence hashes the exact public .gd source, not an engine-version token stream.
     return data.replace(old, b'exclude_filter="docs/*,artifacts/*,builds/*"', 1).replace(b'script_export_mode=2', b'script_export_mode=0', 1)
 
-def export(editor, project, patch, output):
+def export(editor, project, patch, output, mode='baseline'):
+    mode_arguments=arguments(mode)
     config = project/'export_presets.cfg'
     original = config.read_bytes()
     temporary = transform_preset(original)
@@ -48,11 +50,13 @@ def export(editor, project, patch, output):
     with tempfile.TemporaryDirectory(prefix='isolated-pck-',dir=output) as isolated:
         subprocess.run([sys.executable,str(project/'tools/art/gate_structure/run_capture_checked.py'),
                         str(output/'isolated-pack-setup.log'),'75','--',str(editor),'--headless',
-                        '--main-pack',str(pack),'--','--validate-setup'],
+                        '--main-pack',str(pack),'--','--validate-setup',*mode_arguments],
                        check=True,cwd=isolated,env=env)
     setup_log=(output/'isolated-pack-setup.log').read_text()
     if 'NATIVE_REGION_FOCUS ' not in setup_log or 'ARCHITECTURE_GAME_SETUP_PASS tick=135 ordinary=[20, 20]' not in setup_log:
         raise ValueError('Isolated exported pack did not reach real intended setup')
+    if mode=='gate-context-study' and 'REGION_SETUP_LOADING_ONE_REAL_UNIT_AUTHOR_ORACLE' not in setup_log:
+        raise ValueError('Isolated pack did not load the requested real-unit author oracle')
     result={'pack':pack.name,'bytes':pack.stat().st_size,'sha256':hashlib.sha256(pack.read_bytes()).hexdigest(),
             'original_export_config_sha256':hashlib.sha256(original).hexdigest(),
             'internal_review_export_config_sha256':hashlib.sha256(temporary).hexdigest(),
@@ -63,6 +67,7 @@ def export(editor, project, patch, output):
             'entry':'application/run/main_loop_type=DotNativeRegionCapture; inert bootstrap scene; no CLI override',
             'isolated_pack_setup':'PASS: empty temporary cwd; no source checkout fallback; official editor headless, NOT native graphics',
             'isolated_pack_setup_passed':True,
+            'validated_capture_mode':mode,
             'scope':'Internal QA pack includes test/tool resources; not release or default configuration'}
     (output/'pack-integrity.json').write_text(json.dumps(result,indent=2)+'\n')
     return result
@@ -70,4 +75,5 @@ def export(editor, project, patch, output):
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     for name in ('editor','project','patch','output'):p.add_argument(name,type=Path)
-    a=p.parse_args();print(json.dumps(export(*(getattr(a,n).resolve() for n in ('editor','project','patch','output')))))
+    p.add_argument('--mode',choices=MODES,default='baseline')
+    a=p.parse_args();print(json.dumps(export(*(getattr(a,n).resolve() for n in ('editor','project','patch','output')),mode=a.mode)))
