@@ -1,0 +1,7 @@
+{
+  "all_four_gameplay_sequences_equal": true,
+  "frames": 60,
+  "duration": 3,
+  "playback_fps": 20,
+  "measurement_kind": "deterministic original-speed capture, not a realtime FPS benchmark"
+}
