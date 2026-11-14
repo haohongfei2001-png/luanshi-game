@@ -20,12 +20,16 @@
       512
     ],
     "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
       1440,
       810
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "525fcc7b5892e6f95e5d4313b44716ed3aa644c6",
+    "source_sha": "0b1badbc8287e5dad6920ce5ba59cc8769c3108d",
     "tick": 50,
     "world_audit": [],
     "zoom": 22.0
@@ -51,12 +55,16 @@
       512
     ],
     "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
       1440,
       810
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "525fcc7b5892e6f95e5d4313b44716ed3aa644c6",
+    "source_sha": "0b1badbc8287e5dad6920ce5ba59cc8769c3108d",
     "tick": 135,
     "world_audit": [],
     "zoom": 22.0
@@ -82,12 +90,16 @@
       512
     ],
     "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
       1440,
       810
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "525fcc7b5892e6f95e5d4313b44716ed3aa644c6",
+    "source_sha": "0b1badbc8287e5dad6920ce5ba59cc8769c3108d",
     "tick": 135,
     "world_audit": [],
     "zoom": 115.0
@@ -113,12 +125,16 @@
       512
     ],
     "pixels": [
+      2560,
+      1440
+    ],
+    "preview_px": [
       1440,
       810
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "525fcc7b5892e6f95e5d4313b44716ed3aa644c6",
+    "source_sha": "0b1badbc8287e5dad6920ce5ba59cc8769c3108d",
     "tick": 135,
     "world_audit": [],
     "zoom": 18.0
@@ -144,12 +160,16 @@
       512
     ],
     "pixels": [
+      3840,
+      2160
+    ],
+    "preview_px": [
       1440,
       810
     ],
     "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
     "seed": 61112,
-    "source_sha": "525fcc7b5892e6f95e5d4313b44716ed3aa644c6",
+    "source_sha": "0b1badbc8287e5dad6920ce5ba59cc8769c3108d",
     "tick": 135,
     "world_audit": [],
     "zoom": 22.0
