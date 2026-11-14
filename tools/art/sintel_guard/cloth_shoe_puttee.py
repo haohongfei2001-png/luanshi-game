@@ -6,6 +6,16 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 src,out=map(pathlib.Path,sys.argv[sys.argv.index('--')+1:][:2]);out.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.open_mainfile(filepath=str(src),use_scripts=False,load_ui=False);rig=bpy.data.objects['rig'];boot=bpy.data.objects['GEO-bootsLT.001']
+# Fit to the EXACT declared runtime derivative surface, not unsmoothed cage0.
+# Retain the complete original multires data (all sculpt levels); no destructive
+# apply/drop. The isolated diagnostic render uses this same explicit LOD1.
+source_multires=[]
+for modifier in boot.modifiers:
+ if modifier.type=='MULTIRES':
+  source_multires.append({'name':modifier.name,'original_view_level':modifier.levels,'original_render_level':modifier.render_levels,'retained_total_levels':modifier.total_levels})
+  if modifier.total_levels<1:raise RuntimeError('Required declared boot LOD1 unavailable')
+  modifier.levels=1;modifier.render_levels=1
+bpy.context.view_layer.update()
 def mat(name,c):
  m=bpy.data.materials.new(name);m.use_nodes=True;b=m.node_tree.nodes.get('Principled BSDF');b.inputs['Base Color'].default_value=(*c,1);b.inputs['Roughness'].default_value=.94;return m
 foot=mat('Cloth shoe matte dark woven upper',(.075,.073,.064));wrap=mat('Puttee natural warm undyed cloth',(.42,.40,.33))
@@ -61,4 +71,4 @@ for side,sign in [('L',1),('R',-1)]:
  rig.pose.bones['hand_ik.'+side]['ik']=0.
  for stem,ang in [('upper_arm.',-.95*sign),('forearm.',.75*sign)]:b=rig.pose.bones[stem+side];b.rotation_mode='XYZ';b.rotation_euler[2]=ang
 bpy.context.view_layer.update();s.render.filepath=str(out/'whole-BLENDER-NOT-GODOT.png');bpy.ops.render.render(write_still=True)
-(out/'report.json').write_text(json.dumps({'source_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),'retained_original_boot_topology_uv':True,'derived_material_regions':True,'new_complete_wrapped_cloth':records,'art_pass':False,'game_tested':False,'foot_contact_pass':False},indent=2)+'\n')
+(out/'report.json').write_text(json.dumps({'source_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),'declared_fit_and_diagnostic_multires_level':1,'source_multires':source_multires,'retained_original_boot_topology_uv':True,'derived_material_regions':True,'new_complete_wrapped_cloth':records,'art_pass':False,'game_tested':False,'foot_contact_pass':False},indent=2)+'\n')

@@ -1,0 +1,21 @@
+{
+  "rows": [
+    {
+      "level": 1,
+      "wrap_intersections": {
+        "CLOTH continuous bound puttee L": 142,
+        "CLOTH continuous bound puttee R": 142
+      }
+    },
+    {
+      "level": 3,
+      "wrap_intersections": {
+        "CLOTH continuous bound puttee L": 1344,
+        "CLOTH continuous bound puttee R": 1664
+      }
+    }
+  ],
+  "source_level": 1,
+  "total_levels": 3,
+  "not_art_pass": true
+}
