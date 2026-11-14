@@ -1,0 +1,3 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+AUTHOR_ACTOR_ADAPTER_CHECK {"actions_accepted":false,"art_pass":false,"battle_state_written":false,"cache_bytes":197525504,"camera_or_lighting_changed":false,"mesh_count":43,"runtime_cpu_skeletons":0,"single_actor_author_oracle_not_army_runtime":true,"source_author_rigs":{"MH163":{"bones":163.0,"deform_bones":163.0},"rig":{"bones":308.0,"deform_bones":79.0}},"source_files":{"thrust":{"bytes":71236488.0,"sha256":"ce822593c96aa138e0703fa468129b8fb130fc9c1ddbb25cc9f2db8522d52bb8"},"walk":{"bytes":175482008.0,"sha256":"957986f407c373dab9aa7f2b4d7ffd906627fa9ee9b0205ac5b6889bf8876b9c"}},"triangles":156946.0,"vertices":87941.0}
