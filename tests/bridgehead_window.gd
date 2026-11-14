@@ -175,6 +175,8 @@ func _run() -> void:
 				await RenderingServer.frame_post_draw
 				var frame:=root.get_texture().get_image()
 				screenshot_ok=frame.save_jpg(OUT+"/view-%04d.jpg"%b.tick,.94)==OK and screenshot_ok
+				if "--native-plates" in OS.get_cmdline_user_args() and b.tick in [50,145]:
+					screenshot_ok=frame.save_png(OUT+"/view-%04d.png"%b.tick)==OK and screenshot_ok
 		await process_frame
 		if preview and b.tick>=150: break
 	for key:Key in [KEY_W,KEY_S,KEY_A,KEY_D]: _key(key,false)

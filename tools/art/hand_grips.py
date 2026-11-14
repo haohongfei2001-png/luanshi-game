@@ -40,7 +40,10 @@ def field_hands(surface,kit,lod):
         elif kit in (0,1) and side<0:
             style="Rest"
         elif kit==7 and side<0:
-            style="Shield"
+            # The issued board has a vertical grip pinned to its inside rail.
+            # This fitted palm turns the finger row up the handle and keeps the
+            # root inside the sleeve, as it does on the upright bow stave.
+            style="BowPalm"
         else:
             style="Haft"
         vertices,triangles=library()[style+lod]

@@ -3,6 +3,7 @@ render_mode diffuse_lambert, cull_disabled;
 uniform bool gate_crossing = false;
 uniform sampler2D fieldbed : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D joinery : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D forecourt : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D cartway : filter_linear_mipmap_anisotropic, repeat_disable;
 uniform sampler2D soil_cover : filter_linear_mipmap, repeat_disable;
 uniform sampler2D field_margins : filter_linear_mipmap, repeat_disable;
@@ -127,7 +128,9 @@ vec3 painted_ground(vec2 p, float shore) {
 		float side=p.y-bend;
 		float apron=3.28+1.37*progress+.21*sin(p.x*.43)+.40*(grass_shape-.50);
 		float lane=(1.-smoothstep(apron-.34,apron+.98,abs(side)))*smoothstep(13.,18.4,p.x);
-		vec3 compact=mix(clay,clay_dry.rgb,.17+.07*dry_shape);
+		vec2 track_uv=(p-vec2(14.0,-9.5))/vec2(36.0,19.0);
+		vec3 cut=texture(forecourt,track_uv).rgb;
+		vec3 compact=mix(clay,cut,.86);
 		float rut=1.-smoothstep(.043,.26,abs(abs(side+.09*sin(p.x*.55))-1.19));
 		compact*=1.-.105*rut*(.50+.5*surviving);
 		colour=mix(colour,compact,lane*.93);

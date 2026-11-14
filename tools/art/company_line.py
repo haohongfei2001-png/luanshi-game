@@ -1,6 +1,6 @@
 """Small battle-camera meshes retain the fitted silhouettes and the same animated joints."""
 from company_figures import *
-from company_weapons import field_shield, nocked_arrow
+from company_weapons import nocked_arrow
 from figure_mesh import Surface, add, lerp
 
 def costume(look,rank=False):
@@ -113,8 +113,6 @@ def arms(kit):
             s.tube([add(c,(0,0,-.146)),add(c,(0,0,.13))],[.034,.033],"binding",bone,4)
             s.tube([add(c,(-.078,0,.15)),add(c,(.078,0,.15))],[.02,.02],"brass",bone,3)
             blade(c,.71 if kit==8 else .91,.048 if kit==1 else .036,.141 if kit==1 else .015,bone)
-        if kit==7:
-            field_shield(s,False)
     elif kit in (2,3,4):
         stick((0,0,-.697),(0,0,1.69),.031,.026,"timber")
         if kit!=2: blade(add(g,(0,0,1.56)),.343 if kit==3 else .614,.06 if kit==3 else .089,0 if kit==3 else .143,RH)
