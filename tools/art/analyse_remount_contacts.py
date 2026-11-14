@@ -17,6 +17,19 @@ for index, entries in enumerate(influences):
     for name, value in entries:
         weights[index, names.index(name)] += value
 weights /= np.maximum(weights.sum(axis=1)[:, None], 1.e-10)
+uniform = "--uniform" in sys.argv[2:]
+if uniform:
+    native_floor = float(points[:, 2].min())
+    native_saddle = initial["prop_saddle"][:3, 3]
+    source_scale = (1.44 - .012) / (native_saddle[2] - native_floor)
+    def fitted(source_points, slot):
+        target = np.empty_like(source_points)
+        target[:, 0] = (source_points[:, 0] - native_saddle[0]) * source_scale
+        target[:, 1] = (source_points[:, 2] - native_floor) * source_scale + .012
+        target[:, 2] = -(source_points[:, 1] - native_saddle[1]) * source_scale - .04
+        return target
+    print("UNIFORM_HORSE_FIT", json.dumps({"scale":source_scale,"native_floor":native_floor,
+          "native_saddle":native_saddle.tolist(),"ground_clamping":False}),flush=True)
 rest = fitted(points, 0)
 homogeneous = np.column_stack((points, np.ones(len(points))))
 samples = 80
@@ -81,7 +94,7 @@ for clip_name, path, signature in ANIMATIONS:
                 "metres_per_cycle_std": float(np.std(values)) if len(values) else None,
                 "sole_y": sole.tolist(), "track": track.tolist(),
             }
-        row = {"clip": clip_name, "registration": registration,
+        row = {"clip": clip_name, "registration": registration, "surface_fit":"uniform" if uniform else "piecewise",
                "source_bind_max_difference": max(bind_differences.values()),
                "source_bind_differences": {key: value for key, value in bind_differences.items() if value > .001},
                "saddle_path": saddle_path, "hooves": hooves}
@@ -93,5 +106,5 @@ for clip_name, path, signature in ANIMATIONS:
         print("AUTHORED_HORSE_CONTACT", json.dumps(concise), flush=True)
 out = Path("reports/remount")
 out.mkdir(parents=True, exist_ok=True)
-(out / "native-contact-audit.json").write_text(json.dumps(reports, indent=2) + "\n")
-(out / "contact-summary.json").write_text(json.dumps(summaries, indent=2) + "\n")
+(out / ("uniform-contact-audit.json" if uniform else "native-contact-audit.json")).write_text(json.dumps(reports, indent=2) + "\n")
+(out / ("uniform-contact-summary.json" if uniform else "contact-summary.json")).write_text(json.dumps(summaries, indent=2) + "\n")
