@@ -37,6 +37,7 @@ func _ready() -> void:
 	_banks_and_groves()
 	_ground_dressing()
 	_field_quarters()
+	_settlement_depth()
 	ram=preload("res://assets/environment/river_ram.gltf").instantiate() as Node3D
 	add_child(ram)
 	ram_beam=ram.find_child("SuspendedBeam",true,false) as Node3D
@@ -84,10 +85,20 @@ func _library(path:String) -> Dictionary:
 				material.alpha_antialiasing_mode=BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
 
 			if path==BOULDERS:
-				material.albedo_color=Color("a6b1b5")
+				var bank_surface:=ShaderMaterial.new()
+				bank_surface.shader=preload("res://scripts/field/river_bank_stone.gdshader")
+				bank_surface.set_shader_parameter("native_atlas",material.albedo_texture)
+				bank_surface.set_shader_parameter("uv_scale",material.uv1_scale)
+				bank_surface.set_shader_parameter("uv_offset",material.uv1_offset)
+				mesh.surface_set_material(surface,bank_surface)
 			if path==BROADLEAF or path==WOODLAND or path==FERN or path==SHRUB or path==THICKET:
 				var kind:=1 if "leaves" in material.resource_name else 0
-				if path==WOODLAND:kind=0 if "dead" in material.resource_name else 1
+				if path==WOODLAND:
+					var label:=material.resource_name
+					kind=0 if ("dead" in label or "bark" in label) else 1
+					if "willow" in label and not ("bark" in label):kind=2
+					if "autumn" in label and not ("bark" in label):kind=4
+					if "grass_field" in label:kind=3
 				if path==FERN or path==SHRUB:kind=3
 				if path==THICKET:
 					var label:=material.resource_name.to_lower()
@@ -111,14 +122,16 @@ func _botanical_material(source:StandardMaterial3D,kind:int,bounds:AABB=AABB()) 
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://scripts/field/river_botanical.gdshader")
 	material.set_shader_parameter("has_atlas",source.albedo_texture!=null)
+	material.set_shader_parameter("source_tint",source.albedo_color)
 	if source.albedo_texture:material.set_shader_parameter("native_atlas",source.albedo_texture)
 	material.set_shader_parameter("uv_scale",source.uv1_scale)
 	material.set_shader_parameter("uv_offset",source.uv1_offset)
 	material.set_shader_parameter("botanical_part",kind)
 	var pigment:=Color("544635")
-	if kind==1:pigment=Color("536447")
-	elif kind==2:pigment=Color("96904b")
-	elif kind==3:pigment=Color("697444")
+	if kind==1:pigment=Color("4f6541")
+	elif kind==2:pigment=Color("7e8240")
+	elif kind==3:pigment=Color("697346")
+	elif kind==4:pigment=Color("a06a35")
 	material.set_shader_parameter("pigment",pigment)
 	if bounds.size.length_squared()>.01:
 		material.set_shader_parameter("crown_center",bounds.get_center())
@@ -264,11 +277,10 @@ func _river() -> void:
 	boat.rotation.y=.12
 	add_child(boat)
 
-func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
-	# Retain the complete artist-built bark, branch and leaf-card assembly.
-	# The 22 m game comparison selected a coherent crown over isolated tiny leaves.
-	var variant:=posmod(roundi(at.x*3.+at.y*5.),2)
-	var part:="FieldOakA" if variant==0 else "FieldOakB"
+func _broadleaf_tree(at:Vector2,height:float,yaw:float,variant:int=-1) -> MeshInstance3D:
+	var choices:=["FieldOakBroadA","FieldOakBroadB","FieldElmA","FieldMapleGreen","FieldMapleCopper"]
+	var selection:=posmod(roundi(at.x*3.+at.y*5.),choices.size()) if variant<0 else posmod(variant,choices.size())
+	var part:String=choices[selection]
 	var mesh:Mesh=_library(WOODLAND)[part]
 	var plant:=_plant(WOODLAND,part,at,height/maxf(mesh.get_aabb().size.y,.01),yaw)
 	plant.name="WholeBroadleaf"
@@ -277,31 +289,28 @@ func _broadleaf_tree(at:Vector2,height:float,yaw:float) -> MeshInstance3D:
 	return plant
 
 func _bank_foundation(channel:float,moat:bool) -> void:
-	# Whole rock volumes form the submerged bank. Keep every scan's original
-	# proportions and rotate its full silhouette into the eroded shore.
+	# Buried toe blocks belong to the same eroded outcrop masses. Open lengths
+	# of sloped earth separate the rocky heads instead of a continuous bead row.
 	var parts:=_library(BOULDERS)
 	var names:=parts.keys()
 	names.sort()
-	var reaches:=range(-24,25,2) if moat else range(-63,64,2)
-	for side:float in [-1.,1.]:
-		for index in reaches.size():
-			var station:int=reaches[index]
-			var z:=float(station)+.35*sin(station*1.7+side)
-			var crossing:=0. if moat else Ground.crossing(z)
-			if absf(z-crossing)<5.:continue
-			var center:=channel if moat else Ground.river_center(z)
-			var part:String=names[posmod(index*5+int(side),names.size())]
-			var mesh:Mesh=parts[part]
-			var bounds:=mesh.get_aabb()
-			var anchor:=bounds.get_center()
-			anchor.y=bounds.position.y
-			var diameter:=2.45+.15*sin(station*2.4)
-			var size:=diameter/Vector2(bounds.size.x,bounds.size.z).length()
-			var at:=Vector3(center+side*(3.0 if moat else 4.05),
-				Ground.BATTLE_WATER_LEVEL-.24, z)
-			var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,station*1.37+side,anchor)
-			rock.name="WholeBankFooting"
-			rock.lod_bias=1.
+	var stations:Array[Vector3]=Ground.BANK_OUTCROPS.duplicate()
+	if not moat:stations.append_array(Ground.RIVER_OUTCROPS)
+	for index in stations.size():
+		if index%3==1:continue
+		var station:=stations[index]
+		var center:=channel if moat else Ground.river_center(station.y)
+		var part:String=names[(index*5+1)%names.size()]
+		var mesh:Mesh=parts[part]
+		var bounds:=mesh.get_aabb()
+		var anchor:=bounds.get_center()
+		anchor.y=bounds.position.y
+		var size:=station.z*.74/maxf(bounds.size.x,bounds.size.z)
+		var at:=Vector3(center+station.x*(2.65 if moat else 3.65),
+			Ground.BATTLE_WATER_LEVEL-bounds.size.y*size*.55,station.y+station.z*.35)
+		var rock:=_piece(BOULDERS,part,at,Vector3.ONE*size,index*1.37+station.x,anchor)
+		rock.name="BuriedBankToe"
+		rock.lod_bias=1.
 
 func _bank_rocks(channel:float,moat:bool) -> void:
 	var parts:=_library(BOULDERS)
@@ -334,31 +343,15 @@ func _bank_rocks(channel:float,moat:bool) -> void:
 			_native_understory(FERN,p+Vector2(entry.x*.75,.48),.45,i*.8+j,i+j)
 
 func _willow(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
-	var tree:Node3D=(load(WORLD+"willows/river_willow_%d.glb"%variant) as PackedScene).instantiate()
-	tree.position=Vector3(at.x,_land_height(at),at.y)
-	tree.scale=Vector3.ONE*scale_value
-	tree.rotation.y=yaw
-	for node in tree.find_children("*","GeometryInstance3D",true,false):
-		node.visibility_range_end=180.
-
-		node.lod_bias=1.2
-		if node is MeshInstance3D:
-			for surface in node.mesh.get_surface_count():
-				var source:=node.mesh.surface_get_material(surface) as StandardMaterial3D
-				if source:
-					var kind:=2 if String(node.name).begins_with("PendantLeaves") else 0
-					node.set_surface_override_material(surface,_botanical_material(source,kind,node.mesh.get_aabb()))
-	add_child(tree)
+	var part:="RiverWillowGreen" if variant==0 else "RiverWillowGold"
+	var mesh:Mesh=_library(WOODLAND)[part]
+	var tree:=_plant(WOODLAND,part,at,8.8*scale_value/maxf(mesh.get_aabb().size.y,.01),yaw)
+	tree.name="WholeNativeWillow"
+	tree.visibility_range_end=220.
+	tree.lod_bias=2.
 
 func _maple(at:Vector2,variant:int,scale_value:float,yaw:float) -> void:
-	var tree:Node3D=(load(WORLD+"willows/river_maple_%d.glb"%variant) as PackedScene).instantiate()
-	tree.position=Vector3(at.x,_land_height(at),at.y)
-	tree.scale=Vector3.ONE*scale_value
-	tree.rotation.y=yaw
-	for node in tree.find_children("*","GeometryInstance3D",true,false):
-		node.visibility_range_end=180.
-		node.lod_bias=.65
-	add_child(tree)
+	_broadleaf_tree(at,7.6*scale_value,yaw,3 if variant==0 else 4)
 
 func _native_understory(path:String,at:Vector2,height:float,yaw:float,variant:int) -> MeshInstance3D:
 	var parts:=_library(path)
@@ -376,28 +369,30 @@ func _banks_and_groves() -> void:
 		_bank_foundation(Ground.RIVER_X,false)
 		_bank_foundation(Ground.MOAT_X,true)
 	_bank_rocks(Ground.RIVER_X,false)
-	if bridgehead: _bank_rocks(Ground.MOAT_X,true)
-	var near_groves:Array[Vector3]=[
-		Vector3(37.5,-8.5,6.7),Vector3(34.,-15.,5.7),Vector3(43.,-17.,6.4),
-		Vector3(34.,19.,6.2),Vector3(40.,24.,7.1),Vector3(29.,25.,5.8)]
+	if bridgehead:_bank_rocks(Ground.MOAT_X,true)
+	# Asymmetric native tree assemblies make the outer court and river
+	# shoulders one continuous biome. The centre lane stays readable.
+	var near_groves:Array[Vector4]=[
+		Vector4(37.8,-13.8,7.8,0),Vector4(40.6,-21.3,8.2,1),
+		Vector4(33.5,-22.4,6.1,4),Vector4(33.8,-15.5,5.3,2),
+		Vector4(39.8,17.8,8.2,1),Vector4(35.0,23.5,6.7,4),
+		Vector4(44.2,26.5,7.8,0),Vector4(31.2,27.8,5.8,3)]
 	for i in near_groves.size():
 		var entry:=near_groves[i]
 		var p:=Vector2(entry.x,entry.y)
-		_broadleaf_tree(p,entry.z,i*2.1)
+		_broadleaf_tree(p,entry.z,i*2.1,int(entry.w))
 		for j in 3:
-			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.7+.22*j)
-			_native_understory(THICKET,q,1.15+.16*(j%3),i+j*1.9,i+j)
-			_native_understory(FERN,q+Vector2(.9,-.4),.42+.06*(j%3),j+.8*i,i+j)
+			var q:=p+Vector2(cos(i+j*2.4),sin(i+j*2.4))*(1.8+.28*j)
+			_native_understory(THICKET,q,.95+.16*(j%3),i+j*1.9,i+j)
+			_native_understory(FERN,q+Vector2(.9,-.4),.35+.06*(j%3),j+.8*i,i+j)
 	var willow_positions:Array[Vector3]=[
-		Vector3(17.5,-11.5,0.),Vector3(17.5,11.5,1.),
-		Vector3(30.5,-25.,1.),Vector3(17.3,23.,0.),
+		Vector3(17.6,-12.6,0.),Vector3(17.6,13.5,1.),
+		Vector3(30.2,-26.6,0.),Vector3(18.1,25.2,0.),
 		Vector3(-39.,-15.,0.),Vector3(-24.8,20.,1.),
 		Vector3(-40.,47.,1.),Vector3(-24.5,-49.,0.)]
 	for i in willow_positions.size():
 		var p:=willow_positions[i]
-		_willow(Vector2(p.x,p.y),int(p.z),.90+.07*(i%2),i*1.8)
-	# Cohesive stands follow existing tactical woodland and ridge footprints.
-	# The approach and its line of sight remain the retained playable geometry.
+		_willow(Vector2(p.x,p.y),int(p.z),.92+.10*(i%2),i*1.8)
 	var wooded_slopes:Array[Vector3]=[
 		Vector3(-2.,37.,12.5),Vector3(-18.,49.,9.),
 		Vector3(-70.,-42.,10.),Vector3(-87.,-47.,13.),Vector3(-106.,-42.,9.),
@@ -406,21 +401,24 @@ func _banks_and_groves() -> void:
 	for i in wooded_slopes.size():
 		var stand:=wooded_slopes[i]
 		var p:=Vector2(stand.x,stand.y)
-		for j in 13:
-			var radius:=sqrt(float(j)/12.)*stand.z
+		for j in 19:
+			var radius:=sqrt(float(j)/18.)*stand.z
 			var angle:=j*2.399963+i*.83
 			var q:=p+Vector2(cos(angle),sin(angle))*radius
-			if absf(q.y)<24.:continue
-			var height:=6.8+.65*((i+j)%4)
-			_broadleaf_tree(q,height,i+j*1.1)
+			if absf(q.y)<25.:continue
+			var height:=6.5+.58*((i+j)%5)
+			var kind:=4 if (i+j)%9==0 else (i*3+j)%4
+			_broadleaf_tree(q,height,i+j*1.1,kind)
 			if j%3==0:
-				_native_understory(THICKET,q+Vector2(1.2,1.1),1.4,i+j,i+j)
-	# Complete scanned outcrops sit partly within the background ridge.
+				_native_understory(THICKET,q+Vector2(1.2,1.1),1.2,i+j,i+j)
+	# Continuous distant woodland meets the authored rock ridges at the map edge.
+	for i in 44:
+		var p:=Vector2(-145.+i*6.9,-75.-7.*sin(i*.71))
+		_broadleaf_tree(p,8.2+1.1*(i%4),i*1.71,i%4)
 	for i in 14:
 		var p:=Vector2(-141.+i*22.,-96.-5.*sin(i*.8))
 		var cliff:=_plant(CLIFF,"coastal_cliff_02_LOD0",p,.60+.05*(i%4),i*.63)
 		cliff.position.y-=2.0
-
 
 func _ground_dressing() -> void:
 	var random:=RandomNumberGenerator.new()
@@ -441,20 +439,25 @@ func _ground_dressing() -> void:
 	var names:=herbs.keys()
 	names.sort()
 	sources.append({"mesh":herbs[names[0]],"material":null,"name":"NativeVergeFern"})
+	for label:String in ["VergeGrassA","VergeGrassB"]:
+		sources.append({"mesh":_library(WOODLAND)[label],"material":null,"name":"WholeVergeGrass"})
 	for x in range(-116,118,2):
 		for z in range(-61,63,2):
 			var at:=Vector2(x+random.randf_range(-.85,.85),z+random.randf_range(-.85,.85))
 			var roadside:=absf(at.y)
 			if at.x < -17.:
 				roadside=minf(roadside,minf(absf(at.y-35.),absf(at.y+35.)))
-			if roadside>12.5 or Ground.blocked(at,true,bridgehead):continue
+			if Ground.blocked(at,true,bridgehead):continue
 			if absf(at.x-Ground.RIVER_X)<7.:continue
 			if bridgehead and absf(at.x-Ground.MOAT_X)<7. and absf(at.y)<29.:continue
 			if at.x>62. and absf(at.y)>12.:continue
 			if Ground.parapet(at)>0.:continue
-			var herb:=roadside>4.8 and random.randf()<.18
-			if not herb and random.randf()>.38:continue
-			var kind:=6 if herb else random.randi_range(0,5)
+			var verges:=roadside>4.9 and roadside<16.
+			var woods:=roadside>25. and random.randf()<.55
+			var vegetation:=(verges or woods) and random.randf()<.58
+			if not vegetation and (roadside>12.5 or random.randf()>.38):continue
+			var kind:=random.randi_range(0,5)
+			if vegetation:kind=6 if random.randf()<.16 else random.randi_range(7,8)
 			var key:=Vector3i(floori(at.x/24.),floori(at.y/24.),kind)
 			if not batches.has(key):
 				var entry:Dictionary=sources[kind].duplicate()
@@ -465,9 +468,9 @@ func _ground_dressing() -> void:
 			var bounds:AABB=batch.mesh.get_aabb()
 			var anchor:=bounds.get_center()
 			anchor.y=bounds.position.y
-			var size:=random.randf_range(.20,.38)/maxf(bounds.size.y,.01) if herb else random.randf_range(.12,.33)/maxf(bounds.size.x,.01)
+			var size:=random.randf_range(.23,.48)/maxf(bounds.size.y,.01) if vegetation else random.randf_range(.12,.33)/maxf(bounds.size.x,.01)
 			var basis:=Basis(Vector3.UP,random.randf_range(0.,TAU)).scaled_local(Vector3.ONE*size)
-			var position:=Vector3(at.x,_land_height(at)-(.02 if herb else bounds.size.y*size*.48),at.y)
+			var position:=Vector3(at.x,_land_height(at)-(.02 if vegetation else bounds.size.y*size*.48),at.y)
 			batch.transforms.append(Transform3D(basis,position-basis*anchor-batch.origin))
 	for batch:Dictionary in batches.values():
 		var instances:=MultiMesh.new()
@@ -496,3 +499,17 @@ func _field_quarters() -> void:
 		cart.rotation.y=.25
 		add_child(cart)
 
+
+func _settlement_depth() -> void:
+	# A settled river fort has a working edge beyond its military court.
+	# The east-west withdrawal road remains open through the whole district.
+	var sites:Array[Vector4]=[
+		Vector4(101.,-17.,.78,.15),Vector4(115.,-13.,.92,-.12),
+		Vector4(128.,-22.,.86,.08),Vector4(99.,19.,.72,PI),
+		Vector4(116.,17.,.82,PI-.13),Vector4(132.,12.,.71,PI+.15)]
+	for i in sites.size():
+		var site:=sites[i]
+		var p:=Vector2(site.x,site.y)
+		_piece(FORT,"han_house_a" if i%2==0 else "han_house_b",
+			Vector3(p.x,_land_height(p),p.y),Vector3.ONE*site.z,site.w)
+		_broadleaf_tree(p+Vector2(4.8,5.4),6.2+i%3,i*.8,i%4)

@@ -53,7 +53,23 @@ static func height(p: Vector2,bridgehead:bool=false) -> float:
 	var eastern_ridge:=(p-Vector2(112.,-45.))/Vector2(25.,17.)
 	var relief:=4.8*pow(maxf(0.,1.-western_ridge.length_squared()),2)+3.6*pow(maxf(0.,1.-northern_ridge.length_squared()),2)+5.4*pow(maxf(0.,1.-eastern_ridge.length_squared()),2)
 	relief*=smoothstep(6.3,14.,absf(p.x-RIVER_X))
-	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief - (1.0 - bank) * RIVER_BED_DEPTH
+	return 3.9 * hill * hill + 1.8 * pow(maxf(0.0, 1.0 - east.length_squared()), 2) + relief + verge_relief(p) - (1.0 - bank) * RIVER_BED_DEPTH
+
+static func verge_relief(p: Vector2) -> float:
+	# Shallow terraces form the whole field surface. Keep the road, bridge,
+	# court and building foundations on their existing shared level.
+	var road:=absf(p.y)
+	if p.x < -17.:
+		road=minf(road,minf(absf(p.y-35.),absf(p.y+35.)))
+	var clearance:=smoothstep(4.5,10.,road)
+	var river_clear:=smoothstep(6.6,11.,absf(p.x-river_center(p.y)))
+	var moat_clear:=smoothstep(6.0,9.,absf(p.x-MOAT_X))
+	if absf(p.y)>MOAT_END+5.:moat_clear=1.
+	var fort_clear:=1.-(smoothstep(44.,48.,p.x)*(1.-smoothstep(90.,95.,p.x))*(1.-smoothstep(23.,28.,absf(p.y))))
+	var camp_clear:=1.-(smoothstep(-112.,-100.,p.x)*(1.-smoothstep(-60.,-48.,p.x))*(1.-smoothstep(21.,27.,absf(p.y))))
+	var terraces:=.28+.23*sin(p.x*.17+p.y*.09)+.16*sin(p.y*.29-p.x*.07)
+	var wooded_berm:=.82*exp(-pow((p.x-38.)/8.,2))*smoothstep(7.,13.,absf(p.y))*(1.-smoothstep(25.,31.,absf(p.y)))
+	return (terraces+wooded_berm)*clearance*river_clear*moat_clear*fort_clear*camp_clear
 
 static func river_center(z: float) -> float:
 	var approach:=smoothstep(4.2,12.,absf(z-crossing(z)))

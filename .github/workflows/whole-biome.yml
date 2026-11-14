@@ -1,0 +1,72 @@
+name: Rebuild and play the river biome as a whole
+on:
+  push:
+    branches: ['codex/river-biome-rebuild']
+    paths: ['scripts/field/river_master*','scripts/field/river_botanical.gdshader','scripts/field/river_bank_stone.gdshader','scripts/field/ground.gd','tools/art/import_field_woodland.py','tests/world_master_review.gd','.github/workflows/whole-biome.yml']
+permissions:
+  contents: write
+concurrency:
+  group: whole-biome-rebuild
+  cancel-in-progress: true
+jobs:
+  playable:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble the complete native tree masters
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-pil python3-numpy xdotool ffmpeg
+          mkdir -p "$RUNNER_TEMP/woodland" artifacts/world-biome
+          touch artifacts/.gdignore
+          python3 tools/art/import_field_woodland.py "$RUNNER_TEMP/woodland" > artifacts/world-biome/authoring.log 2>&1 || { tail -n 40 artifacts/world-biome/authoring.log; exit 1; }
+          cat artifacts/world-biome/authoring.log
+          git add assets/river_gate/world/woodland
+          git -c user.name='River Gate world authoring' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake complete native willow, maple, broad oak and grass masters'
+          git push origin HEAD:refs/heads/codex/river-biome-rebuild
+      - name: Import and verify the real game and old terrain saves
+        run: |
+          set -euo pipefail
+          base=https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable
+          curl -fLsS --retry 2 "$base/Godot_v4.6.3-stable_linux.x86_64.zip" -o /tmp/editor.zip
+          echo 'a035258da32b77f966a5376f9fa29c30a6adde826a85ba918e1605bd1fc9823eba7d85f1dd5e748956bd2ba72827c0025ffa11bb82aec91128c407a2e723c99c  /tmp/editor.zip' | sha512sum -c -
+          unzip -q /tmp/editor.zip -d /tmp/g
+          ./tools/prepare-font.sh
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --editor --import > artifacts/world-biome/import.log 2>&1
+          if grep -E 'ERROR:|Parse Error|SHADER ERROR' artifacts/world-biome/import.log; then exit 1; fi
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/world_terrain_compat.gd > artifacts/world-biome/terrain-save.log 2>&1 || { cat artifacts/world-biome/terrain-save.log; exit 1; }
+          /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --script tests/field_bridgehead.gd > artifacts/world-biome/bridgehead.log 2>&1 || { cat artifacts/world-biome/bridgehead.log; exit 1; }
+          cat artifacts/world-biome/terrain-save.log artifacts/world-biome/bridgehead.log
+      - name: Capture the unchanged seed and camera at native 2K and 4K
+        run: |
+          set -euo pipefail
+          printf '[display]\nwindow/size/window_width_override=2560\nwindow/size/window_height_override=1440\n' > override.cfg
+          export WORLD_SOURCE_SHA="$(git rev-parse HEAD)"
+          timeout 900s xvfb-run -a -s "-screen 0 3840x2160x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --script tests/world_master_review.gd > artifacts/world-biome/stills.log 2>&1 || { tail -n 35 artifacts/world-biome/stills.log; exit 1; }
+          cat artifacts/world-biome/stills.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/world-biome/stills.log; then exit 1; fi
+          git add docs/evidence/river-whole-rebuild/review
+          git -c user.name='River Gate visual verification' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve same-camera 2K and 4K whole-biome game frames'
+          git push origin HEAD:refs/heads/codex/river-biome-rebuild
+      - name: Record normal input and full armies at original simulation speed
+        run: |
+          set -euo pipefail
+          timeout 1500s xvfb-run -a -s "-screen 0 2560x1440x24" /tmp/g/Godot_v4.6.3-stable_linux.x86_64 --path . --display-driver x11 --resolution 2560x1440 --audio-driver Dummy --fixed-fps 20 --write-movie artifacts/world-biome/bridge-input.avi --script tests/bridgehead_window.gd -- --bridge-stills > artifacts/world-biome/input.log 2>&1 || { tail -n 40 artifacts/world-biome/input.log; exit 1; }
+          cat artifacts/world-biome/input.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' artifacts/world-biome/input.log; then exit 1; fi
+          ffmpeg -v error -y -i artifacts/world-biome/bridge-input.avi -c:v libx264 -preset medium -crf 17 -pix_fmt yuv420p -c:a aac -movflags +faststart artifacts/world-biome/bridge-input.mp4
+          ffprobe -v error -show_format -show_streams -of json artifacts/world-biome/bridge-input.mp4 > artifacts/world-biome/movie.json
+          sha256sum artifacts/world-biome/bridge-input.mp4 > artifacts/world-biome/movie.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whole-biome-real-game
+          path: |
+            docs/evidence/river-whole-rebuild/review/
+            artifacts/world-biome/
+            !artifacts/world-biome/*.avi
+            artifacts/bridge-window/

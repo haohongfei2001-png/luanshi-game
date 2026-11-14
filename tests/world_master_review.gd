@@ -28,7 +28,7 @@ func _snap(label:String,point:Vector2,zoom:float) -> void:
 	records.append(row)
 	print("WORLD_MASTER_FRAME ",JSON.stringify(row))
 func _inventory() -> void:
-	for path:String in [field.map.BROADLEAF]:
+	for path:String in [field.map.WOODLAND]:
 		var packed:Node3D=(load(path) as PackedScene).instantiate()
 		var members:Array=[packed]
 		members.append_array(packed.find_children("*","MeshInstance3D",true,false))
@@ -72,6 +72,8 @@ func _run() -> void:
 	await _snap("whole-war-0135",Vector2(9.,0.),115.)
 	await _snap("grove-0135",Vector2(38.,-10.),18.)
 	await _snap("gate-architecture",Vector2(48.,0.),18.)
+	await _snap("settled-fort",Vector2(89.,2.),48.)
+	await _snap("western-woodland",Vector2(-83.,-33.),42.)
 	var previous_lod:=root.mesh_lod_threshold
 	root.mesh_lod_threshold=0.
 	await _snap("native-crowns-full-geometry",Vector2(38.,-10.),18.)

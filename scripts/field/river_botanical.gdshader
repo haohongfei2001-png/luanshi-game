@@ -2,6 +2,7 @@ shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled, alpha_to_coverage;
 uniform sampler2D native_atlas : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform bool has_atlas = true;
+uniform vec4 source_tint : source_color = vec4(1.);
 uniform int botanical_part = 0;
 uniform vec3 pigment : source_color = vec3(.30,.36,.16);
 uniform vec3 uv_scale = vec3(1.);
@@ -32,16 +33,20 @@ vec3 render_color(vec3 color) {
 }
 void fragment() {
 	vec2 coordinates = UV*uv_scale.xy+uv_offset.xy;
-	vec4 source = vec4(.5,.5,.5,1.);
-	if (has_atlas) source = texture(native_atlas,coordinates);
+	vec4 source = source_tint;
+	if (has_atlas) source *= texture(native_atlas,coordinates);
 	ALPHA = source.a;
 	ALPHA_SCISSOR_THRESHOLD = .40;
 	ALPHA_ANTIALIASING_EDGE = .30;
 	ALPHA_TEXTURE_COORDINATE = coordinates*vec2(textureSize(native_atlas,0));
 	vec3 native_color = linear_color(source.rgb);
 	vec3 paint = linear_color(pigment);
-	vec3 color = mix(native_color,paint,.30);
-	if (botanical_part == 0) color = mix(native_color*paint*1.6,paint,.48);
+	float value = dot(native_color,vec3(.2126,.7152,.0722));
+	vec3 chroma = native_color/max(value,.018);
+	float paint_value = dot(paint,vec3(.2126,.7152,.0722));
+	vec3 color = mix(chroma*paint_value,paint,.66)*pow(clamp(value/.22,.30,1.80),.48);
+	if (botanical_part == 0) color = mix(native_color*.48,paint,.52);
+	if (!has_atlas) color = mix(native_color,paint,.12);
 	ALBEDO = render_color(color);
 	float crown_depth = smoothstep(crown_center.y-crown_extent.y,crown_center.y+crown_extent.y,local_position.y);
 	AO = botanical_part>0 ? mix(.48,1.,crown_depth) : .94;

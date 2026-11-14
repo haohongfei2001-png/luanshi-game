@@ -9,7 +9,7 @@ uniform sampler2D grass_normal : hint_normal, repeat_enable, filter_linear_mipma
 uniform sampler2D gravel_normal : hint_normal, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform bool bridgehead = false;
 uniform vec3 road_pigment : source_color = vec3(.53,.445,.33);
-uniform vec3 grass_pigment : source_color = vec3(.29,.34,.22);
+uniform vec3 grass_pigment : source_color = vec3(.255,.32,.19);
 uniform vec3 litter_pigment : source_color = vec3(.37,.325,.23);
 varying vec3 world;
 varying vec3 terrain_normal;
@@ -49,6 +49,9 @@ vec3 surface_color(vec3 sample_color,vec3 pigment,float median) {
 vec3 surface_normal(vec2 xy) {
 	return normalize(vec3(xy,sqrt(max(.02,1.-dot(xy,xy)))));
 }
+float forest_patch(vec2 p,vec2 center,vec2 radii) {
+	return 1.-smoothstep(.62,1.15,length((p-center)/radii));
+}
 void fragment() {
 	vec2 p = world.xz;
 	float drift = .30*sin(p.x*.13)+.23*sin(p.x*.31+.4);
@@ -65,6 +68,13 @@ void fragment() {
 		bank = max(bank,(1.-smoothstep(4.2,8.,abs(p.x-24.)+broken_edge*.65))
 			*(1.-smoothstep(23.,29.,abs(p.y))));
 	}
+	float forest = max(forest_patch(p,vec2(38.,-19.),vec2(9.,11.)),
+		forest_patch(p,vec2(39.,24.),vec2(10.,12.)));
+	forest = max(forest,forest_patch(p,vec2(-2.,39.),vec2(20.,16.)));
+	forest = max(forest,forest_patch(p,vec2(-87.,-44.),vec2(34.,19.)));
+	forest = max(forest,forest_patch(p,vec2(-85.,42.),vec2(28.,17.)));
+	forest = max(forest,forest_patch(p,vec2(94.,46.),vec2(31.,18.)));
+	forest = max(forest,forest_patch(p,vec2(113.,-43.),vec2(21.,17.)));
 	float patches = noise(p*.17)*.62+noise(p*.49)*.38;
 	float grass_pockets = smoothstep(.35,.70,patches);
 	vec2 dust_uv = p/2.6;
@@ -77,8 +87,8 @@ void fragment() {
 	float gravel_pockets = smoothstep(.44,.70,noise(p*.31+vec2(6.2,2.7)));
 	float gravel_weight = gravel_pockets*clamp(.26+bank*.55+court*.40,0.,.85);
 	dust = mix(dust,stones,gravel_weight);
-	float bare = clamp(lane+bank*.60+(patches-.55)*.6,0.,1.);
-	vec3 verge = mix(litter,turf,.36+.61*grass_pockets);
+	float bare = clamp(lane+bank*.62+(patches-.68)*.42,0.,1.);
+	vec3 verge = mix(turf,mix(litter,turf,.24+.33*grass_pockets),forest*.86);
 	vec3 col = mix(verge,dust,bare);
 	float rut = 0.;
 	for (int i=0;i<2;i++) {
@@ -87,7 +97,7 @@ void fragment() {
 		rut += exp(-d*d);
 	}
 	col *= 1.-.12*rut*lane;
-	ALBEDO = render_color(col*mix(.84,1.12,noise(p*.08)));
+	ALBEDO = render_color(col*mix(.90,1.08,noise(p*.08))*(1.-forest*.14));
 	vec2 dust_slope = texture(soil_normal,dust_uv).xy*2.-1.;
 	vec2 turf_slope = texture(grass_normal,turf_uv).xy*2.-1.;
 	turf_slope = mat2(vec2(.8,.6),vec2(-.6,.8))*turf_slope;
