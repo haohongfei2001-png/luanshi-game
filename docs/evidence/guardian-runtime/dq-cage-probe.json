@@ -1,0 +1,835 @@
+{
+  "source_sha256": "fb755d7afa77a01e0ba7ab095b33ee100aa199b1f88435050e7864daffc3e7e3",
+  "source_unchanged": true,
+  "rig_bones": 308,
+  "deform_bones": 79,
+  "cage_vertices": 566,
+  "top_vertices": 1373,
+  "preserve_volume": true,
+  "all_raw_weights_retained": true,
+  "raw_weight_sum_range": [
+    0.10194052755832672,
+    1.9354459308087826
+  ],
+  "nonzero_influences": 1139,
+  "max_influences": 5,
+  "bytes_float32": {
+    "H_shared": 3108472,
+    "folded_bind_shared": 1735472,
+    "cage_per_actor_frame": 6792,
+    "matrices_79_per_actor_frame": 3792
+  },
+  "dense_cage_response_vec3_macs_per_actor_frame": 2331354,
+  "poses": [
+    {
+      "pose": 0,
+      "dq_cage_vs_original": {
+        "max_m": 5.0974436541968e-07,
+        "rms_m": 1.3032615370938774e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.8340053177584235e-07,
+        "rms_m": 5.820693836598056e-08
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.3615119182063044e-07,
+        "rms_m": 9.253958743970886e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.003377763096941467,
+        "rms_m": 0.0004799251320281434
+      },
+      "fold_algebra": {
+        "max_m": 2.8871158593206904e-15,
+        "rms_m": 6.995436055711503e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 0.0,
+        "rms_m": 0.0
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.0020402155841870405,
+        "rms_m": 0.00046826298583691205
+      }
+    },
+    {
+      "pose": 1,
+      "dq_cage_vs_original": {
+        "max_m": 6.563703148315306e-07,
+        "rms_m": 1.551530350925186e-07
+      },
+      "dq_response_top": {
+        "max_m": 2.382112738216682e-05,
+        "rms_m": 3.501432485036583e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.515381395935092e-07,
+        "rms_m": 7.893788461859747e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.011387565650156454,
+        "rms_m": 0.0020661290127436936
+      },
+      "fold_algebra": {
+        "max_m": 2.8867263318529425e-15,
+        "rms_m": 6.84146021522296e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 2.3855295373286947e-05,
+        "rms_m": 3.501984895332479e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.0072596483279907635,
+        "rms_m": 0.0019432416164409498
+      }
+    },
+    {
+      "pose": 2,
+      "dq_cage_vs_original": {
+        "max_m": 5.995593622998918e-07,
+        "rms_m": 1.468517664937482e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.07427937071048e-05,
+        "rms_m": 1.9500842707676262e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.1819844677115733e-07,
+        "rms_m": 8.059110725675596e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.012824110971707494,
+        "rms_m": 0.0017602086847497676
+      },
+      "fold_algebra": {
+        "max_m": 2.2204568912455683e-15,
+        "rms_m": 6.853725824200026e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.0614616915148588e-05,
+        "rms_m": 1.946900532079423e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.008761786590462027,
+        "rms_m": 0.00171844822537159
+      }
+    },
+    {
+      "pose": 3,
+      "dq_cage_vs_original": {
+        "max_m": 5.659034405395464e-07,
+        "rms_m": 1.5976675481291106e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.1548676473475359e-05,
+        "rms_m": 2.1590911048574186e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.971714430526557e-07,
+        "rms_m": 8.957368669992252e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.008918810952957573,
+        "rms_m": 0.0020278043436071738
+      },
+      "fold_algebra": {
+        "max_m": 2.6681490744512628e-15,
+        "rms_m": 6.886758238147362e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.1522217255999997e-05,
+        "rms_m": 2.158964547631432e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.006134487631276079,
+        "rms_m": 0.0017279377408784913
+      }
+    },
+    {
+      "pose": 4,
+      "dq_cage_vs_original": {
+        "max_m": 4.620826341031521e-07,
+        "rms_m": 1.2254392353784046e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.5774610109295182e-05,
+        "rms_m": 2.9921203536491806e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.0189867166368326e-07,
+        "rms_m": 7.714377580755206e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.006709188760395622,
+        "rms_m": 0.0013513115659043592
+      },
+      "fold_algebra": {
+        "max_m": 2.4464300307136874e-15,
+        "rms_m": 6.999728383241798e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.588857655414892e-05,
+        "rms_m": 2.992013415089012e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.004963559276074512,
+        "rms_m": 0.001213449686610051
+      }
+    },
+    {
+      "pose": 5,
+      "dq_cage_vs_original": {
+        "max_m": 4.283282520929253e-07,
+        "rms_m": 1.224160104781022e-07
+      },
+      "dq_response_top": {
+        "max_m": 2.0003941875932782e-05,
+        "rms_m": 3.7916645698856417e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.131508740971622e-07,
+        "rms_m": 6.869410321893731e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.006735937826852726,
+        "rms_m": 0.0011570785863677438
+      },
+      "fold_algebra": {
+        "max_m": 2.6658530576668003e-15,
+        "rms_m": 6.762326219916252e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 2.0025295146594148e-05,
+        "rms_m": 3.7915988706933174e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.0047041408552848775,
+        "rms_m": 0.0010680379474638975
+      }
+    },
+    {
+      "pose": 6,
+      "dq_cage_vs_original": {
+        "max_m": 4.2530886009249794e-07,
+        "rms_m": 1.1954995564546044e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.5130560868470144e-05,
+        "rms_m": 2.3480211777263658e-06
+      },
+      "max_matrix_nonrigidity": 2.285502556986785e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.106206344220013e-07,
+        "rms_m": 8.243602582505773e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.00995537294323246,
+        "rms_m": 0.0013773496656555755
+      },
+      "fold_algebra": {
+        "max_m": 2.4428060380819047e-15,
+        "rms_m": 6.949976893866096e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.5107589489768684e-05,
+        "rms_m": 2.347395098623433e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.00709538025960758,
+        "rms_m": 0.0012616743484658954
+      }
+    },
+    {
+      "pose": 7,
+      "dq_cage_vs_original": {
+        "max_m": 5.42964833856735e-07,
+        "rms_m": 1.5432898041722314e-07
+      },
+      "dq_response_top": {
+        "max_m": 2.1291068340280114e-05,
+        "rms_m": 3.418199910064569e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 4.2465582278932483e-07,
+        "rms_m": 1.0005285486472367e-07
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.010713004061338034,
+        "rms_m": 0.0019396908436258105
+      },
+      "fold_algebra": {
+        "max_m": 2.668147382679322e-15,
+        "rms_m": 6.835561361347048e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 2.1161450302631056e-05,
+        "rms_m": 3.418116746759354e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.007223093788266269,
+        "rms_m": 0.0017883628450912168
+      }
+    },
+    {
+      "pose": 8,
+      "dq_cage_vs_original": {
+        "max_m": 4.803274092243168e-07,
+        "rms_m": 1.5782148294563298e-07
+      },
+      "dq_response_top": {
+        "max_m": 7.824244779742376e-06,
+        "rms_m": 1.2805809053416848e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.862683519278757e-07,
+        "rms_m": 8.354204898286574e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.008610359071064139,
+        "rms_m": 0.0018157322282320752
+      },
+      "fold_algebra": {
+        "max_m": 2.6697704266814254e-15,
+        "rms_m": 6.912487066934633e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 7.802666508429964e-06,
+        "rms_m": 1.2775973924246866e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.00629844288445543,
+        "rms_m": 0.001683599733077537
+      }
+    },
+    {
+      "pose": 9,
+      "dq_cage_vs_original": {
+        "max_m": 6.028551431435537e-07,
+        "rms_m": 1.6142527295081694e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.0285185244521512e-05,
+        "rms_m": 1.6306513244599632e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.920195332121449e-07,
+        "rms_m": 8.15685977512327e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.012424525411527202,
+        "rms_m": 0.002033792491559931
+      },
+      "fold_algebra": {
+        "max_m": 2.4502060270434968e-15,
+        "rms_m": 7.145606756234956e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.0281884122198923e-05,
+        "rms_m": 1.6290002142998483e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.008963410274043498,
+        "rms_m": 0.001924112386127277
+      }
+    },
+    {
+      "pose": 10,
+      "dq_cage_vs_original": {
+        "max_m": 7.499187629564394e-07,
+        "rms_m": 1.679492922799632e-07
+      },
+      "dq_response_top": {
+        "max_m": 2.5328653022042662e-05,
+        "rms_m": 3.6412972931982023e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.695153566227339e-07,
+        "rms_m": 8.322640305624066e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.02532395693291696,
+        "rms_m": 0.0032259429395322314
+      },
+      "fold_algebra": {
+        "max_m": 2.4464398712059904e-15,
+        "rms_m": 6.933464068516109e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 2.540055731806574e-05,
+        "rms_m": 3.640778869232273e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.0163030729729686,
+        "rms_m": 0.0032120115699763147
+      }
+    },
+    {
+      "pose": 11,
+      "dq_cage_vs_original": {
+        "max_m": 5.381118158340908e-07,
+        "rms_m": 1.421787830783297e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.3150566039844746e-05,
+        "rms_m": 2.047519811595241e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.6790604633564165e-07,
+        "rms_m": 7.371853854805497e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.010635861798679619,
+        "rms_m": 0.0017791388600059954
+      },
+      "fold_algebra": {
+        "max_m": 2.4425621119096074e-15,
+        "rms_m": 6.796409007099392e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.3129257900540036e-05,
+        "rms_m": 2.0453264003364764e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.00737733651148892,
+        "rms_m": 0.0017143129180011718
+      }
+    },
+    {
+      "pose": 12,
+      "dq_cage_vs_original": {
+        "max_m": 5.015689074854015e-07,
+        "rms_m": 1.4485177281142612e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.1826511764849297e-05,
+        "rms_m": 2.284868369466825e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.233955394633584e-07,
+        "rms_m": 7.663153248525671e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.01237741038144707,
+        "rms_m": 0.0023544820121868698
+      },
+      "fold_algebra": {
+        "max_m": 2.461513931847776e-15,
+        "rms_m": 6.875908412559264e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.1844681901972302e-05,
+        "rms_m": 2.2837532821192506e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.008652964388755794,
+        "rms_m": 0.0021014556072543895
+      }
+    },
+    {
+      "pose": 13,
+      "dq_cage_vs_original": {
+        "max_m": 5.597076350929419e-07,
+        "rms_m": 1.4656366250158486e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.6626954286211463e-05,
+        "rms_m": 3.071902624035084e-06
+      },
+      "max_matrix_nonrigidity": 2.336998569774096e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.3484159964218547e-07,
+        "rms_m": 8.551717353445471e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.0192645929115201,
+        "rms_m": 0.002347301321531577
+      },
+      "fold_algebra": {
+        "max_m": 2.888714249516106e-15,
+        "rms_m": 7.062573478492699e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.652817652653955e-05,
+        "rms_m": 3.0702107762864805e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.012854173778932769,
+        "rms_m": 0.00235372031450525
+      }
+    },
+    {
+      "pose": 14,
+      "dq_cage_vs_original": {
+        "max_m": 4.785721554563321e-07,
+        "rms_m": 1.333130099226794e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.3939160200972017e-05,
+        "rms_m": 2.5425437682517168e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.7683716442383444e-07,
+        "rms_m": 9.584667640048207e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.010987226804106616,
+        "rms_m": 0.00152053500118358
+      },
+      "fold_algebra": {
+        "max_m": 2.2266931079695534e-15,
+        "rms_m": 6.768941318141569e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.3953504135376143e-05,
+        "rms_m": 2.5414762442108836e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.007465604626341081,
+        "rms_m": 0.0013688117337594295
+      }
+    },
+    {
+      "pose": 15,
+      "dq_cage_vs_original": {
+        "max_m": 4.575508149898541e-07,
+        "rms_m": 1.3815579493448783e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.1725445047529227e-05,
+        "rms_m": 2.142659997491032e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.5795441483302903e-07,
+        "rms_m": 7.319868156847567e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.015443209651735222,
+        "rms_m": 0.0019714871063384524
+      },
+      "fold_algebra": {
+        "max_m": 2.4582255846744096e-15,
+        "rms_m": 6.785902676433738e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.1735257512739524e-05,
+        "rms_m": 2.1405069128866993e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.0103157603507464,
+        "rms_m": 0.0018152169208340383
+      }
+    },
+    {
+      "pose": 16,
+      "dq_cage_vs_original": {
+        "max_m": 5.18113575916684e-07,
+        "rms_m": 1.4686974153087544e-07
+      },
+      "dq_response_top": {
+        "max_m": 2.061087755144061e-05,
+        "rms_m": 2.910945032712815e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.6289849839813096e-07,
+        "rms_m": 7.508578384635103e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.017251174798983557,
+        "rms_m": 0.002170256432746688
+      },
+      "fold_algebra": {
+        "max_m": 2.671612842799029e-15,
+        "rms_m": 6.953965733711811e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 2.063716267839878e-05,
+        "rms_m": 2.910037109506764e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.00955167836229137,
+        "rms_m": 0.0019610128553107366
+      }
+    },
+    {
+      "pose": 17,
+      "dq_cage_vs_original": {
+        "max_m": 5.38152727884126e-07,
+        "rms_m": 1.379539917989925e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.0299983136684053e-05,
+        "rms_m": 1.5850484189135466e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.237547813230387e-07,
+        "rms_m": 7.267780666960352e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.008405052233865385,
+        "rms_m": 0.0017054653498997637
+      },
+      "fold_algebra": {
+        "max_m": 2.443160796312711e-15,
+        "rms_m": 6.866585610118195e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.0293836558810242e-05,
+        "rms_m": 1.5829478367350937e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.00602307330546941,
+        "rms_m": 0.0016115069148847604
+      }
+    },
+    {
+      "pose": 18,
+      "dq_cage_vs_original": {
+        "max_m": 3.7617831438538913e-07,
+        "rms_m": 1.1728744847990207e-07
+      },
+      "dq_response_top": {
+        "max_m": 2.2831671190096814e-05,
+        "rms_m": 3.5897883961476143e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.917276875825386e-07,
+        "rms_m": 7.76693459341285e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.009398932921559144,
+        "rms_m": 0.0014408750819583252
+      },
+      "fold_algebra": {
+        "max_m": 2.226688377887742e-15,
+        "rms_m": 6.783291367609701e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 2.2801527030955353e-05,
+        "rms_m": 3.589803265719535e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.006562458244743758,
+        "rms_m": 0.0013163080212441468
+      }
+    },
+    {
+      "pose": 19,
+      "dq_cage_vs_original": {
+        "max_m": 5.298865042234035e-07,
+        "rms_m": 1.2404648688053656e-07
+      },
+      "dq_response_top": {
+        "max_m": 6.202070437246581e-06,
+        "rms_m": 1.149328283194537e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.701015945726045e-07,
+        "rms_m": 8.113295106986932e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.006861801965664208,
+        "rms_m": 0.0013540432140047125
+      },
+      "fold_algebra": {
+        "max_m": 2.666852532547386e-15,
+        "rms_m": 6.791170862088432e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 6.184597753139469e-06,
+        "rms_m": 1.1480079782642823e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.004927449112976358,
+        "rms_m": 0.001226260385174295
+      }
+    },
+    {
+      "pose": 20,
+      "dq_cage_vs_original": {
+        "max_m": 6.541246439522446e-07,
+        "rms_m": 1.3403963442732028e-07
+      },
+      "dq_response_top": {
+        "max_m": 2.7205698781260494e-05,
+        "rms_m": 4.0786404096271345e-06
+      },
+      "max_matrix_nonrigidity": 2.8557602780310276e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.7891371304895387e-07,
+        "rms_m": 7.528888656669334e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.010432851129044463,
+        "rms_m": 0.0019401931459432555
+      },
+      "fold_algebra": {
+        "max_m": 2.445074124424818e-15,
+        "rms_m": 6.670954530196227e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 2.716430460894029e-05,
+        "rms_m": 4.077606478491982e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.007170616944323871,
+        "rms_m": 0.0017735778235535846
+      }
+    },
+    {
+      "pose": 21,
+      "dq_cage_vs_original": {
+        "max_m": 6.080540933447249e-07,
+        "rms_m": 1.308098839418537e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.2840903784787272e-05,
+        "rms_m": 2.392561381413045e-06
+      },
+      "max_matrix_nonrigidity": 2.2649606038482872e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.558230446014364e-07,
+        "rms_m": 8.236586337652709e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.006464813004793674,
+        "rms_m": 0.0011116299709021053
+      },
+      "fold_algebra": {
+        "max_m": 2.6697344981298546e-15,
+        "rms_m": 6.818567078876981e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.2765044220024866e-05,
+        "rms_m": 2.390827694552874e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.004630911494618631,
+        "rms_m": 0.0009105308365619741
+      }
+    },
+    {
+      "pose": 22,
+      "dq_cage_vs_original": {
+        "max_m": 5.899722724246838e-07,
+        "rms_m": 1.2654469055961928e-07
+      },
+      "dq_response_top": {
+        "max_m": 9.077712073270079e-06,
+        "rms_m": 1.5487128213255502e-06
+      },
+      "max_matrix_nonrigidity": 2.281954032512523e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.3650189461765266e-07,
+        "rms_m": 6.862832802885523e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.008589338718943084,
+        "rms_m": 0.001491479004510331
+      },
+      "fold_algebra": {
+        "max_m": 2.6646075382648726e-15,
+        "rms_m": 6.888300325372118e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 9.023789957488425e-06,
+        "rms_m": 1.5456738545071621e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.005523825656670705,
+        "rms_m": 0.00131018406482851
+      }
+    },
+    {
+      "pose": 23,
+      "dq_cage_vs_original": {
+        "max_m": 5.679042663192473e-07,
+        "rms_m": 1.516325917074455e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.1216121099143892e-05,
+        "rms_m": 1.9551674839314307e-06
+      },
+      "max_matrix_nonrigidity": 2.6807755542090916e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 3.799972453155843e-07,
+        "rms_m": 9.698025131663257e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.008579556267349702,
+        "rms_m": 0.0015483693843089364
+      },
+      "fold_algebra": {
+        "max_m": 2.8865956318264366e-15,
+        "rms_m": 6.957434621677167e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.1106906869816885e-05,
+        "rms_m": 1.9543043134161887e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.005068793963708294,
+        "rms_m": 0.0014079000815228446
+      }
+    },
+    {
+      "pose": 24,
+      "dq_cage_vs_original": {
+        "max_m": 4.300985545240633e-07,
+        "rms_m": 1.3195188203632727e-07
+      },
+      "dq_response_top": {
+        "max_m": 1.5417260367295488e-05,
+        "rms_m": 2.7037930265896655e-06
+      },
+      "max_matrix_nonrigidity": 2.3551750913952674e-06,
+      "cage_matrix_lbs_vs_native_lbs": {
+        "max_m": 2.591327513241809e-07,
+        "rms_m": 7.015020321381146e-08
+      },
+      "original_dq_vs_lbs": {
+        "max_m": 0.007499511272108184,
+        "rms_m": 0.0013953854430587818
+      },
+      "fold_algebra": {
+        "max_m": 2.442493118269948e-15,
+        "rms_m": 6.900424598405987e-16
+      },
+      "original_cage_response_top": {
+        "max_m": 1.5388002955928287e-05,
+        "rms_m": 2.7034783025283206e-06
+      },
+      "folded_lbs_vs_original_top": {
+        "max_m": 0.00460685709577546,
+        "rms_m": 0.0013168296491765546
+      }
+    }
+  ],
+  "probe_wall_seconds": 3.5718632089992752,
+  "scope": "level0 cage positional representation only; no multires, normals, GPU or army-performance acceptance",
+  "runtime": "OFF",
+  "gates": {
+    "dq_cage_2um": true,
+    "dq_response_top_100um": true,
+    "rigid_transform_1e_5": true,
+    "reject_lbs_fold": true
+  },
+  "exact_nonzero_H_entries": 208133
+}
