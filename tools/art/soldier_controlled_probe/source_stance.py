@@ -16,5 +16,13 @@ for i in range(33):
  for s,ids in labels.items():
   points=[ev.matrix_world@me.vertices[i].co for i in ids];feet[s]={'surface_min_z':min(p.z for p in points),'ankle_world':list(donor.matrix_world@donor.pose.bones['foot_'+s].head)}
  rows.append({'phase':i/32,'frame':frame,'feet':feet});ev.to_mesh_clear()
-r={'kind':'Donor source-space surface diagnostic only; no target correction or stance accepted','donor_object':donor.name,'mesh':body.name,'foot_surface_vertex_counts':{s:len(v) for s,v in labels.items()},'samples':rows,'ranges':{s:[min(x['feet'][s]['surface_min_z'] for x in rows),max(x['feet'][s]['surface_min_z'] for x in rows)] for s in labels}}
+ground_basis={}
+for name in ['A_TPose_Armature','Idle_Loop_Armature']:
+ donor.animation_data.action=bpy.data.actions[name];values=[];a=donor.animation_data.action
+ for f in [a.frame_range.x,(a.frame_range.x+a.frame_range.y)*.5,a.frame_range.y]:
+  bpy.context.scene.frame_set(int(f),subframe=f%1);bpy.context.view_layer.update();ev=body.evaluated_get(bpy.context.evaluated_depsgraph_get());me=ev.to_mesh()
+  values.append({'frame':f,'surface_min_z':{s:min((ev.matrix_world@me.vertices[i].co).z for i in ids) for s,ids in labels.items()}});ev.to_mesh_clear()
+ ground_basis[name]=values
+donor.animation_data.action=action
+r={'kind':'Donor source-space surface diagnostic only; no target correction or stance accepted','ground_basis':ground_basis,'donor_object':donor.name,'mesh':body.name,'foot_surface_vertex_counts':{s:len(v) for s,v in labels.items()},'samples':rows,'ranges':{s:[min(x['feet'][s]['surface_min_z'] for x in rows),max(x['feet'][s]['surface_min_z'] for x in rows)] for s in labels}}
 out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(r,indent=2));print('SOURCE_SURFACES',r['ranges'],flush=True)

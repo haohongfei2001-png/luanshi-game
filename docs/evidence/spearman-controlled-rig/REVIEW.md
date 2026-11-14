@@ -139,3 +139,35 @@ blue. Earlier Eyes alpha=False caused those transparent source regions to
 render blue. The face-module derivative now links the original image alpha,
 keeping all source UV/vertices/weights. No invented mask or hidden garment
 geometry is introduced; full original RGBA is preserved.
+
+## Source-phase native-leg-IK experiment, default OFF
+`stance_ik_experiment.py` is isolated, not called by the capture pipeline.
+The donor T-pose sole is+0.461mm and Idle about-0.102..+0.460mm, confirming
+that Walk's-26.56mm is not an authored-26mm ground plane. Only donor near-ground
+phase candidates(<=4mm source sole height) receive a target native foot-IK
+vertical constraint against the complete boot surface. Horizontal IK coordinates
+and foot orientation are asserted unchanged. No body translation, foot freezing,
+source motion overwrite, or gameplay change occurs. Maximum correction39.09mm;
+65samples including mid-keys have worst surface+0.167mm, versus original-36.30mm.
+This is NOT full contact acceptance: source-root-motion horizontal foot-lock,
+knee continuity, original-speed visual playback and terrain are still required.
+First attempt failed on nonexistent DEF-shin.L; corrected exact original name
+DEF-shin.L.01. Failed log is preserved locally. New editable master is independent.
+
+## Layer8 actual Godot and stricter IK rejection
+Run43633075648/fdd1f54 actually completed graphics with explicit fail-closed
+log gates. Artifact14128903050 is pinned in actual-godot-layer8.json. Personal
+near4K review confirms eye-alpha repair removes the blue membrane; whole art
+still fails. Triangular plate lighting persists despite physical layer spacing.
+Same-geometry Blender no-Bevel A/B confirms smooth caps plus sidewalls inflate
+thin plates; explicit flat cap normals eliminate that false bulging in the
+Blender diagnostic. Next Godot LOD uses this declared normal construction,
+not a source-normal preservation claim; source sculpt and editable high master
+remain unchanged. A six-patch actual-engine StandardMaterial/custom shader/
+source-color texture calibration is added before changing color conversion.
+
+The isolated stance IK experiment is rejected after stronger65phase knee
+comparison: max knee displacement118.97mm(L)/111.89mm(R), minimum bend direction
+dot0.301/0.286. Removing penetration alone is insufficient. It remains OFF and
+is NOT in the actor rebuild/capture pipeline. knee_continuity.py reproduces
+this failure; original donor/source/target masters are retained.

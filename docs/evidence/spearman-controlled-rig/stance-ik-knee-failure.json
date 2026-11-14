@@ -1,0 +1,21 @@
+{
+  "art_pass": false,
+  "samples": 65,
+  "source_comparison": "Same phase complete original deformation bones, no camera inference",
+  "sides": {
+    "L": {
+      "minimum_bend_direction_dot": 0.3007032200694084,
+      "maximum_knee_displacement_m": 0.11896588651807276,
+      "minimum_candidate_knee_bend_distance_m": 0.0038006808265425114,
+      "maximum_original_step_m": 0.07528009831719375,
+      "maximum_candidate_step_m": 0.07528009831719375
+    },
+    "R": {
+      "minimum_bend_direction_dot": 0.28614912927150726,
+      "maximum_knee_displacement_m": 0.11188528254034047,
+      "minimum_candidate_knee_bend_distance_m": 0.003929985179913544,
+      "maximum_original_step_m": 0.08126587197974461,
+      "maximum_candidate_step_m": 0.08126587197974461
+    }
+  }
+}

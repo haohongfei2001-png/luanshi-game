@@ -1,0 +1,39 @@
+{
+  "run_id": 43633075648,
+  "source_commit": "fdd1f54ece5cb67b0a020a07636fc5ac8c213aa6",
+  "artifact_id": 14128903050,
+  "artifact_sha256": "06a393018b7f18dd09961f5f80aa65b49f5322660828afbe64922cd09a8aeb2e",
+  "actual_graphics_executed": true,
+  "art_pass": false,
+  "observations": [
+    "Original eye alpha restored: blue corneal region no longer rendered",
+    "Physical layer changes do not solve smoothing/triangular plate shading",
+    "Whole armor/boot/grip/foot contact remain unaccepted"
+  ],
+  "images": [
+    {
+      "path": "thrust-motion/actual-godot.png",
+      "sha256": "681c337482db654eff882d457dd42475bbfb2f8064bd16e9f3901b42a79065e1"
+    },
+    {
+      "path": "thrust-near/actual-godot.png",
+      "sha256": "131264d7a65241c42e5f5bd29f44ca23b0ce7db3b694a05d8621ef97ba0a2b17"
+    },
+    {
+      "path": "thrust-normal/actual-godot.png",
+      "sha256": "bf905dc0b0c3f765bf2e10f1a27066491b644230e9d59252659d9294449bab2d"
+    },
+    {
+      "path": "walk-motion/actual-godot.png",
+      "sha256": "1d9993cf5b5384883316fe9cdd61a14b3d7a7c56dacb7180f06c373a9faa8f09"
+    },
+    {
+      "path": "walk-near/actual-godot.png",
+      "sha256": "ef5fee16d0e9390e3fd0f818bcf1f33a94d1f3ce4dabe6b06eb3f28b252ee2e4"
+    },
+    {
+      "path": "walk-normal/actual-godot.png",
+      "sha256": "ea8bf88eb1ef20eea0b83866775b018a9ea480196e580645bf8f11b3267c15e8"
+    }
+  ]
+}

@@ -48,7 +48,8 @@ jobs:
             SOLDIER_CLIP=$CLIP SOLDIER_CAMERA=normal SOLDIER_RECORD=1 SOLDIER_OUTPUT="$PWD/evidence/$CLIP-motion" timeout 180 xvfb-run -a -s '-screen 0 2560x1440x24' "$GODOT" --path tools/art/soldier_controlled_probe --resolution 2560x1440 --rendering-method gl_compatibility --audio-driver Dummy 2>&1 | tee "evidence/$CLIP-motion.log"
             python tools/art/sintel_guard/encode_monotonic.py "evidence/$CLIP-motion"
           done
-          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/walk-*.log evidence/thrust-*.log; then
+          SOLDIER_OUTPUT="$PWD/evidence/color-calibration" timeout 45 xvfb-run -a -s '-screen 0 1280x320x24' "$GODOT" --path tools/art/soldier_controlled_probe --resolution 1280x320 --rendering-method gl_compatibility --audio-driver Dummy --script res://color_probe.gd 2>&1 | tee evidence/color-calibration.log
+          if grep -E 'SCRIPT ERROR|SHADER ERROR|ERROR:' evidence/walk-*.log evidence/thrust-*.log evidence/color-calibration.log; then
             echo "Engine error found in actual probe logs" >&2; exit 1
           else
             status=$?; test "$status" -eq 1 || exit "$status"

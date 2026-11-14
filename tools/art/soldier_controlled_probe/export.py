@@ -3,7 +3,7 @@ import bpy,numpy as np,json,sys,pathlib,hashlib,shutil
 from mathutils import Matrix
 walk,thrust,out=map(pathlib.Path,sys.argv[sys.argv.index('--')+1:][:3]);out.mkdir(parents=True,exist_ok=True)
 C=Matrix(((1,0,0,0),(0,0,1,0),(0,-1,0,0),(0,0,0,1)))
-meta={'kind':'single-actor evaluated source cache, NOT runtime crowd architecture','default_enabled':False,'art_pass':False,'materials_equivalent_to_blender':False,'clips':[],'meshes':[],'frames':[],'source_files':{},'limitations':['Diffuse/roughness/metal only; no source SSS/transmission equivalence','No claim of foot contact, exact grip, terrain clearance or art acceptance','All mesh positions evaluated from author rig, not 471 CPU skeletons per crowd actor','No normal maps in this probe; no false rest-tangent lighting','Indexed seam-preserving vertices: exact UV/position, all70 poses assert corner normal merge error below2e-5','Derived Multires1/Subsurf0/no post-skin Bevel LOD, complete masters retained']}
+meta={'kind':'single-actor evaluated source cache, NOT runtime crowd architecture','default_enabled':False,'art_pass':False,'materials_equivalent_to_blender':False,'clips':[],'meshes':[],'frames':[],'source_files':{},'limitations':['Diffuse/roughness/metal only; no source SSS/transmission equivalence','No claim of foot contact, exact grip, terrain clearance or art acceptance','All mesh positions evaluated from author rig, not 471 CPU skeletons per crowd actor','No normal maps in this probe; no false rest-tangent lighting','Indexed seam-preserving vertices: exact UV/position, all70 poses assert corner normal merge error below2e-5','Derived Multires1/Subsurf0/no post-skin Bevel LOD, complete masters retained; new thin plate caps use explicit flat normals instead of smoothing across sidewalls']}
 records={};names=None;frame_index=0
 for clip,source,samples in [('walk',walk,33),('thrust',thrust,37)]:
  meta['source_files'][clip]={'sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'bytes':source.stat().st_size}
@@ -12,6 +12,11 @@ for clip,source,samples in [('walk',walk,33),('thrust',thrust,37)]:
  if names is None:names=[o.name for o in meshes]
  assert names==[o.name for o in meshes], 'Source clips changed visible geometry identity'
  for o in meshes:
+  # Bevel-free LOD must not smooth thin cap normals with its sidewalls.
+  # These newly authored plate faces are flat metal, not inflated pillows.
+  if o.name.startswith('REBUILD ') and any(x in o.name for x in ['lamellar','tasset','overlapping rows']):
+   for face in o.data.polygons:face.use_smooth=False
+   o.data.update()
   for m in o.modifiers:
    if m.type=='MULTIRES':m.levels=1
    elif m.type=='SUBSURF':m.levels=0
