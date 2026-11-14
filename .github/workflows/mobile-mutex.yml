@@ -1,4 +1,4 @@
-name: Verify the upstream Mobile shader deadlock fix on hosted macOS
+name: Build and validate the complete Metal and ANGLE startup fix
 on:
   push:
     branches: ['codex/river-rc23-mobile-mutex']
@@ -9,14 +9,14 @@ permissions:
 jobs:
   cold:
     runs-on: macos-latest
-    timeout-minutes: 100
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Luanshi-macOS-88bd036da5927c4699f176bf2f72633a6e45bbdb
+          name: whole-world-macOS-source-b71573d6475faa94503069d5ba2debe295b8d9b8
           path: package
-          run-id: '43547163844'
+          run-id: '43576958151'
           github-token: ${{ github.token }}
       - name: Build the narrowly patched official engine source
         run: |
@@ -25,10 +25,23 @@ jobs:
           git clone --filter=blob:none --no-checkout https://github.com/godotengine/godot.git "$RUNNER_TEMP/engine"
           git -C "$RUNNER_TEMP/engine" checkout --detach 35e80b3a8822a9df9be390814b62f44c0a9c69e8
           python3 tools/backport_mobile_mutex.py "$RUNNER_TEMP/engine" > artifacts/mobile-mutex/actual.patch
+          curl -fL --retry 2 https://github.com/godotengine/godot-angle-static/releases/download/chromium/7578/godot-angle-static-arm64-macos-release.zip -o "$RUNNER_TEMP/angle.zip"
+          echo "9eadd2055f66507e9d74655e7683e068e7e4a9dade5a84bc03d3f5affdfb7b9d  $RUNNER_TEMP/angle.zip" | shasum -a 256 -c -
+          mkdir -p "$RUNNER_TEMP/angle"
+          unzip -q "$RUNNER_TEMP/angle.zip" -d "$RUNNER_TEMP/angle"
+          find "$RUNNER_TEMP/angle" -type f > artifacts/mobile-mutex/angle-files.txt
+          angle_library=$(find "$RUNNER_TEMP/angle" -name 'libANGLE.macos.arm64.a' -print -quit)
+          test -n "$angle_library"
+          angle_directory=$(dirname "$angle_library")
+          test -s "$angle_directory/libEGL.macos.arm64.a"
+          test -s "$angle_directory/libGLES.macos.arm64.a"
           python3 -m venv "$RUNNER_TEMP/compiler"
           "$RUNNER_TEMP/compiler/bin/python" -m pip install 'scons==4.9.1'
-          "$RUNNER_TEMP/compiler/bin/scons" -C "$RUNNER_TEMP/engine" platform=macos arch=arm64 target=template_release production=yes debug_symbols=no lto=none module_mono_enabled=no vulkan=no metal=yes -j3 > artifacts/mobile-mutex/build.log 2>&1 || { tail -n 60 artifacts/mobile-mutex/build.log; exit 1; }
+          "$RUNNER_TEMP/compiler/bin/scons" -C "$RUNNER_TEMP/engine" platform=macos arch=arm64 target=template_release production=yes debug_symbols=no lto=none module_mono_enabled=no vulkan=no metal=yes angle_libs="$angle_directory" -j3 > artifacts/mobile-mutex/build.log 2>&1 || { tail -n 60 artifacts/mobile-mutex/build.log; exit 1; }
           cp "$RUNNER_TEMP/engine/LICENSE.txt" artifacts/mobile-mutex/GODOT-MIT-LICENSE.txt
+          cp "$RUNNER_TEMP/engine/COPYRIGHT.txt" artifacts/mobile-mutex/GODOT-COPYRIGHT.txt
+          cp "$RUNNER_TEMP/engine/thirdparty/angle/LICENSE" artifacts/mobile-mutex/ANGLE-BSD-LICENSE.txt
+          cp tools/licenses/ANGLE-BUILD-LICENSE.txt artifacts/mobile-mutex/ANGLE-BUILD-LICENSE.txt
           cp "$RUNNER_TEMP/engine/bin/godot.macos.template_release.arm64" artifacts/mobile-mutex/godot.macos.template_release.arm64
           artifacts/mobile-mutex/godot.macos.template_release.arm64 --version | tee artifacts/mobile-mutex/engine-version.txt
       - name: Substitute only the tested app executable and verify the signed bundle
@@ -47,7 +60,7 @@ jobs:
           exe.chmod(0o755)
           subprocess.run(["codesign","--force","--deep","--sign","-",str(app)],check=True)
           subprocess.run(["codesign","--verify","--deep","--strict",str(app)],check=True)
-          (Path("artifacts/mobile-mutex")/"provenance.json").write_text(json.dumps({"game_source":"7481b60411540e8c6c23a4553a0a99cc2a3a5df2","original_binary_sha256":before,"patched_binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"engine_source":"35e80b3a8822a9df9be390814b62f44c0a9c69e8","upstream_fix":"https://github.com/godotengine/godot/pull/123312","role":"isolated startup regression, arm64 only, no game assets changed"},indent=2)+"\n")
+          (Path("artifacts/mobile-mutex")/"provenance.json").write_text(json.dumps({"game_source":"b71573d6475faa94503069d5ba2debe295b8d9b8","original_binary_sha256":before,"patched_binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"engine_source":"35e80b3a8822a9df9be390814b62f44c0a9c69e8","upstream_fix":"https://github.com/godotengine/godot/pull/123312","role":"complete arm64 template with Mobile mutex fix and static ANGLE", "angle_release":"chromium/7578", "angle_source":"aaebda1c5a40c15340d7a01a935a7c5398443272", "angle_archive_sha256":"9eadd2055f66507e9d74655e7683e068e7e4a9dade5a84bc03d3f5affdfb7b9d"},indent=2)+"\n")
           PY
           ditto -c -k --keepParent package/unpacked/*.app package/patched-macOS.zip
       - name: Recheck every renderer trial and six independently cold-data Metal launches
@@ -60,6 +73,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mobile-mutex-native-probe
+          name: mobile-mutex-angle-template
           path: artifacts/mobile-mutex/
           compression-level: 1
