@@ -1,0 +1,52 @@
+name: Inspect original Red Autumn EEVEE source (NOT game)
+on:
+  push:
+    branches: ['dot/red-autumn-source-macos']
+    paths: ['.github/workflows/red-autumn-source.yml','tools/art/production_v2/render_red_autumn_source.py','tools/art/production_v2/measure_process.py']
+permissions:
+  contents: read
+concurrency:
+  group: red-autumn-source-inspection
+  cancel-in-progress: false
+jobs:
+  source-image:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record actual hosted hardware
+        run: |
+          mkdir -p evidence
+          uname -a > evidence/hardware.txt
+          sysctl hw.model hw.memsize hw.ncpu >> evidence/hardware.txt
+          system_profiler SPDisplaysDataType >> evidence/hardware.txt
+          test "$(uname -m)" = arm64
+      - name: Fetch exact official Blender and original source
+        run: |
+          set -euo pipefail
+          BASE=https://download.blender.org/release/Blender5.2
+          curl -fL --retry 2 "$BASE/blender-5.2.4.sha256" -o evidence/official-checksums.txt
+          grep '^e73d564f97061b2496ccc5a0bd738937d2d3d0acae23621a00bbc7534dfd135f  blender-5.2.4-macos-arm64.dmg$' evidence/official-checksums.txt
+          curl -fL --retry 2 "$BASE/blender-5.2.4-macos-arm64.dmg" -o "$RUNNER_TEMP/blender.dmg"
+          echo "e73d564f97061b2496ccc5a0bd738937d2d3d0acae23621a00bbc7534dfd135f  $RUNNER_TEMP/blender.dmg" | shasum -a 256 -c -
+          hdiutil attach -readonly -nobrowse -mountpoint "$RUNNER_TEMP/blender-mount" "$RUNNER_TEMP/blender.dmg"
+          ditto "$RUNNER_TEMP/blender-mount/Blender.app" "$RUNNER_TEMP/Blender.app"
+          hdiutil detach "$RUNNER_TEMP/blender-mount"
+          curl -fL --retry 2 https://download.blender.org/demo/splash/blender-2.91-splash.blend -o "$RUNNER_TEMP/source.blend"
+          echo "b60bd6d566d202cc9cd8c0bd260a45be0ab8c37fc24e0d2e9c909efa41e94655  $RUNNER_TEMP/source.blend" | shasum -a 256 -c -
+          "$RUNNER_TEMP/Blender.app/Contents/MacOS/Blender" --version > evidence/blender-version.txt
+      - name: Render original camera and shaders without autoexec
+        run: |
+          set -euo pipefail
+          python3 tools/art/production_v2/measure_process.py --timeout 780 --json evidence/resource.json -- "$RUNNER_TEMP/Blender.app/Contents/MacOS/Blender" --background --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/production_v2/render_red_autumn_source.py -- "$RUNNER_TEMP/source.blend" "$GITHUB_WORKSPACE/evidence" 2>&1 | tee evidence/render.log
+          test -s evidence/completed.json
+          test -s evidence/original-eevee-NOT-GAME.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: RedAutumn-original-EEVEE-NOT-GAME-${{ github.sha }}
+          path: evidence/
+          retention-days: 14
+          if-no-files-found: error
