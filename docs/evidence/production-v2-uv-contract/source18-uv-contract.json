@@ -1,0 +1,623 @@
+{
+  "glb_sha256": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "affected_surfaces": 18,
+  "surfaces": [
+    {
+      "node": "V3 source bound puttee L",
+      "material": "V3 thin wrapped linen with physical overlap",
+      "channels": {
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49552369862794876,
+          "mean_rgb_abs_error": 0.0032903546102685984,
+          "max_rgb_abs_error": 0.03137254901960773
+        }
+      }
+    },
+    {
+      "node": "V3 source bound puttee R",
+      "material": "V3 thin wrapped linen with physical overlap",
+      "channels": {
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4989082813262935,
+          "mean_rgb_abs_error": 0.0031504823771956905,
+          "max_rgb_abs_error": 0.04154687021292891
+        }
+      }
+    },
+    {
+      "node": "V3 supported chest course 0",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49675679206848145,
+          "mean_rgb_abs_error": 0.07444121618830774,
+          "max_rgb_abs_error": 0.24251915944665317
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4706244021654129,
+          "mean_rgb_abs_error": 0.03700457595066047,
+          "max_rgb_abs_error": 0.3176470588235294
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4706244021654129,
+          "mean_rgb_abs_error": 2.960594732333751e-17,
+          "max_rgb_abs_error": 2.220446049250313e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported chest course 1",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49180418252944946,
+          "mean_rgb_abs_error": 0.06819858015308952,
+          "max_rgb_abs_error": 0.31010397756788455
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4909649230539799,
+          "mean_rgb_abs_error": 0.06770082386720432,
+          "max_rgb_abs_error": 0.6352941176470588
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4909649230539799,
+          "mean_rgb_abs_error": 2.8125649957170635e-17,
+          "max_rgb_abs_error": 1.1102230246251565e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported chest course 2",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.48955241590738297,
+          "mean_rgb_abs_error": 0.08688024470031303,
+          "max_rgb_abs_error": 0.2981713043215345
+        },
+        "normal": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.44723109900951385,
+          "mean_rgb_abs_error": 0.04565101056336407,
+          "max_rgb_abs_error": 0.31764705882352945
+        },
+        "ORM": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.44723109900951385,
+          "mean_rgb_abs_error": 2.929755203871941e-17,
+          "max_rgb_abs_error": 2.220446049250313e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported chest course 3",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.48299452662467957,
+          "mean_rgb_abs_error": 0.03945673105218733,
+          "max_rgb_abs_error": 0.30137281113504755
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4855011962354183,
+          "mean_rgb_abs_error": 0.054062618514809015,
+          "max_rgb_abs_error": 0.6352941176470588
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4855011962354183,
+          "mean_rgb_abs_error": 1.9984014443252817e-17,
+          "max_rgb_abs_error": 1.1102230246251565e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported shoulder L course 0",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.4904820173978805,
+          "mean_rgb_abs_error": 0.03641672320389961,
+          "max_rgb_abs_error": 0.18095545221109027
+        },
+        "normal": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.4855288863182068,
+          "mean_rgb_abs_error": 0.0536635986860022,
+          "max_rgb_abs_error": 0.3176470588235295
+        },
+        "ORM": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.4855288863182068,
+          "mean_rgb_abs_error": 1.5419764230904953e-17,
+          "max_rgb_abs_error": 1.1102230246251565e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported shoulder L course 1",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.491452120244503,
+          "mean_rgb_abs_error": 0.0535026173699923,
+          "max_rgb_abs_error": 0.23177079735485756
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49394988268613815,
+          "mean_rgb_abs_error": 0.0421019655287622,
+          "max_rgb_abs_error": 0.3176470588235294
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49394988268613815,
+          "mean_rgb_abs_error": 2.1464311809419693e-17,
+          "max_rgb_abs_error": 1.1102230246251565e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported shoulder L root",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4839210510253906,
+          "mean_rgb_abs_error": 0.04621235837453881,
+          "max_rgb_abs_error": 0.17371363732427655
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.481941856443882,
+          "mean_rgb_abs_error": 0.11244488420583659,
+          "max_rgb_abs_error": 0.4406594553122333
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.481941856443882,
+          "mean_rgb_abs_error": 0.003213500584652243,
+          "max_rgb_abs_error": 0.144197142883843
+        }
+      }
+    },
+    {
+      "node": "V3 supported shoulder R course 0",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49135671555995936,
+          "mean_rgb_abs_error": 0.08538715470508511,
+          "max_rgb_abs_error": 0.32784590874603337
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.40513642132282257,
+          "mean_rgb_abs_error": 0.05157562299569449,
+          "max_rgb_abs_error": 0.3176470588235295
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.40513642132282257,
+          "mean_rgb_abs_error": 2.2204460492503132e-17,
+          "max_rgb_abs_error": 1.1102230246251565e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported shoulder R course 1",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4984491616487503,
+          "mean_rgb_abs_error": 0.06376181490563884,
+          "max_rgb_abs_error": 0.19012760804805784
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.48083360493183136,
+          "mean_rgb_abs_error": 0.045734451547557245,
+          "max_rgb_abs_error": 0.38075058880974266
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.48083360493183136,
+          "mean_rgb_abs_error": 0.00020290958180149292,
+          "max_rgb_abs_error": 0.015218218635110359
+        }
+      }
+    },
+    {
+      "node": "V3 supported shoulder R root",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4957443848252296,
+          "mean_rgb_abs_error": 0.05404529739932595,
+          "max_rgb_abs_error": 0.24071191203481498
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49203020334243786,
+          "mean_rgb_abs_error": 0.038159312528722435,
+          "max_rgb_abs_error": 0.4501905254289216
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49203020334243786,
+          "mean_rgb_abs_error": 0.002593509050755747,
+          "max_rgb_abs_error": 0.19451317880667893
+        }
+      }
+    },
+    {
+      "node": "V3 supported split skirt 0",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.49638061597943306,
+          "mean_rgb_abs_error": 0.04936291805252352,
+          "max_rgb_abs_error": 0.264041393815542
+        },
+        "normal": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.473336897790432,
+          "mean_rgb_abs_error": 0.047402743509035235,
+          "max_rgb_abs_error": 0.35089757728810406
+        },
+        "ORM": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.473336897790432,
+          "mean_rgb_abs_error": 0.0056906162686078095,
+          "max_rgb_abs_error": 0.35875507429534315
+        }
+      }
+    },
+    {
+      "node": "V3 supported split skirt 1",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.49489188194274913,
+          "mean_rgb_abs_error": 0.07555512250926566,
+          "max_rgb_abs_error": 0.23129888531284093
+        },
+        "normal": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4846201613545418,
+          "mean_rgb_abs_error": 0.08644620608660131,
+          "max_rgb_abs_error": 0.31764705882352945
+        },
+        "ORM": {
+          "samples": 25,
+          "uv_mismatch_samples": 25,
+          "max_wrapped_uv_error": 0.4846201613545418,
+          "mean_rgb_abs_error": 2.1464311809419693e-17,
+          "max_rgb_abs_error": 1.1102230246251565e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported split skirt 2",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.4990253150463104,
+          "mean_rgb_abs_error": 0.05621578423841773,
+          "max_rgb_abs_error": 0.2151788184823883
+        },
+        "normal": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.46715761721134186,
+          "mean_rgb_abs_error": 0.14573145842500249,
+          "max_rgb_abs_error": 0.7771599264705882
+        },
+        "ORM": {
+          "samples": 24,
+          "uv_mismatch_samples": 24,
+          "max_wrapped_uv_error": 0.46715761721134186,
+          "mean_rgb_abs_error": 0.0018899323893528579,
+          "max_rgb_abs_error": 0.13607513203340416
+        }
+      }
+    },
+    {
+      "node": "V3 supported split skirt 3",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 26,
+          "uv_mismatch_samples": 26,
+          "max_wrapped_uv_error": 0.49354179203510273,
+          "mean_rgb_abs_error": 0.04134078724981379,
+          "max_rgb_abs_error": 0.21084728377322803
+        },
+        "normal": {
+          "samples": 26,
+          "uv_mismatch_samples": 26,
+          "max_wrapped_uv_error": 0.4974590986967087,
+          "mean_rgb_abs_error": 0.02714956253841948,
+          "max_rgb_abs_error": 0.24188672234030667
+        },
+        "ORM": {
+          "samples": 26,
+          "uv_mismatch_samples": 26,
+          "max_wrapped_uv_error": 0.4974590986967087,
+          "mean_rgb_abs_error": 2.0638761355211244e-17,
+          "max_rgb_abs_error": 1.1102230246251565e-16
+        }
+      }
+    },
+    {
+      "node": "V3 supported split skirt 4",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 27,
+          "uv_mismatch_samples": 27,
+          "max_wrapped_uv_error": 0.4900089241564274,
+          "mean_rgb_abs_error": 0.07100972265516833,
+          "max_rgb_abs_error": 0.2660090886264824
+        },
+        "normal": {
+          "samples": 27,
+          "uv_mismatch_samples": 27,
+          "max_wrapped_uv_error": 0.49123864714056253,
+          "mean_rgb_abs_error": 0.015391922828159054,
+          "max_rgb_abs_error": 0.31764705882352945
+        },
+        "ORM": {
+          "samples": 27,
+          "uv_mismatch_samples": 27,
+          "max_wrapped_uv_error": 0.49123864714056253,
+          "mean_rgb_abs_error": 0.005422898742483734,
+          "max_rgb_abs_error": 0.3687297521852979
+        }
+      }
+    },
+    {
+      "node": "V3 supported split skirt 5",
+      "material": "V2 continuous lamellar cuirass",
+      "channels": {
+        "base": {
+          "samples": 27,
+          "uv_mismatch_samples": 27,
+          "max_wrapped_uv_error": 0.42782700061798096,
+          "mean_rgb_abs_error": 0.08079615541655158,
+          "max_rgb_abs_error": 0.24067525449266614
+        },
+        "normal": {
+          "samples": 27,
+          "uv_mismatch_samples": 27,
+          "max_wrapped_uv_error": 0.49175211787223816,
+          "mean_rgb_abs_error": 0.05754094522070342,
+          "max_rgb_abs_error": 0.463671875
+        },
+        "ORM": {
+          "samples": 27,
+          "uv_mismatch_samples": 27,
+          "max_wrapped_uv_error": 0.49175211787223816,
+          "mean_rgb_abs_error": 0.0013519161522634053,
+          "max_rgb_abs_error": 0.10950520833333338
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "imported_vertex_index": 0,
+      "matched_gltf_index": 231,
+      "match_error": 1.0415857460899474e-15,
+      "imported_uv0": [
+        0.773803293704987,
+        0.336176455020905
+      ],
+      "imported_uv1": [
+        65.7960815429688,
+        1.0
+      ],
+      "uv1_vs_gltf_texcoord1_error": 5.684341886080802e-14,
+      "actual_all_standard_channels_uv": [
+        0.773803293704987,
+        0.336176455020905
+      ],
+      "channels": {
+        "normal": {
+          "expected_texcoord": 2,
+          "expected_uv": [
+            -0.394410640001297,
+            -5.671474456787109
+          ],
+          "wrapped_uv_error": [
+            0.168213933706284,
+            0.007650911808013916
+          ],
+          "expected_bilinear_rgb": [
+            0.5019607843137255,
+            0.5019607843137255,
+            1.0
+          ],
+          "actual_coordinate_bilinear_rgb": [
+            0.5019607843137255,
+            0.5019607843137255,
+            1.0
+          ],
+          "rgb_abs_error": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "imported_vertex_index": 0,
+      "matched_gltf_index": 287,
+      "match_error": 8.073308315234376e-16,
+      "imported_uv0": [
+        0.155322581529617,
+        0.232293486595154
+      ],
+      "imported_uv1": [
+        20.9682846069336,
+        -3.99109697341919
+      ],
+      "uv1_vs_gltf_texcoord1_error": 7.119291619286993e-15,
+      "actual_all_standard_channels_uv": [
+        0.019415322691202126,
+        0.8080733716487885
+      ],
+      "channels": {
+        "base": {
+          "expected_texcoord": 1,
+          "expected_uv": [
+            2.621035575866699,
+            -0.24777424335479736
+          ],
+          "wrapped_uv_error": [
+            0.39837974682450294,
+            0.055847615003585815
+          ],
+          "expected_bilinear_rgb": [
+            0.17219515882226255,
+            0.16520343955765243,
+            0.17020639585453576
+          ],
+          "actual_coordinate_bilinear_rgb": [
+            0.3074357123347292,
+            0.3064118666387474,
+            0.31556181406021894
+          ],
+          "rgb_abs_error": [
+            0.13524055351246667,
+            0.141208427081095,
+            0.14535541820568318
+          ]
+        },
+        "normal": {
+          "expected_texcoord": 1,
+          "expected_uv": [
+            20.968284606933594,
+            -3.9910969734191895
+          ],
+          "wrapped_uv_error": [
+            0.051130715757608414,
+            0.2008296549320221
+          ],
+          "expected_bilinear_rgb": [
+            0.49803921568627446,
+            0.49803921568627446,
+            1.0
+          ],
+          "actual_coordinate_bilinear_rgb": [
+            0.4980392156862745,
+            0.4980392156862745,
+            1.0
+          ],
+          "rgb_abs_error": [
+            5.551115123125783e-17,
+            5.551115123125783e-17,
+            0.0
+          ]
+        },
+        "ORM": {
+          "expected_texcoord": 1,
+          "expected_uv": [
+            20.968284606933594,
+            -3.9910969734191895
+          ],
+          "wrapped_uv_error": [
+            0.051130715757608414,
+            0.2008296549320221
+          ],
+          "expected_bilinear_rgb": [
+            1.0,
+            0.6784313725490195,
+            0.4196078431372549
+          ],
+          "actual_coordinate_bilinear_rgb": [
+            1.0,
+            0.6784313725490196,
+            0.4196078431372549
+          ],
+          "rgb_abs_error": [
+            0.0,
+            1.1102230246251565e-16,
+            0.0
+          ]
+        }
+      }
+    }
+  ],
+  "official_sources": [
+    "https://github.com/godotengine/godot/blob/4.6.3-stable/scene/resources/material.cpp#L1245",
+    "https://github.com/godotengine/godot/blob/4.6.3-stable/scene/resources/material.cpp#L1685",
+    "https://github.com/godotengine/godot/blob/4.6.3-stable/scene/resources/material.cpp#L1752",
+    "https://github.com/godotengine/godot/blob/4.6.3-stable/modules/gltf/gltf_document.cpp#L1531"
+  ],
+  "raw_receipt_sha256": {
+    "import.json": "3d2f66e32b83c776835d77812fefafaf0b5ce99040876548fc94f1444f79224e",
+    "comparison.json": "cfd3a662b6004d1a56c327261efec0d9d2203bf3b610ab6b43517bff238ee4f7",
+    "material.cpp": "8ac2c3fb5ff98554de117014b58518f5d917fe41784c979213b03e97cac81386",
+    "gltf_document.cpp": "a33185acc304524e99302244a652c295e9f201fcf9e8269223ea2e8df6fe803e"
+  },
+  "not_a_gpu_image_or_causal_attribution": true
+}
