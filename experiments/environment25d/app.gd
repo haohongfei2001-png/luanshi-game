@@ -1,3 +1,4 @@
+class_name LuanshiEnvironment25DExperiment
 extends SceneTree
 # ISOLATED DEFAULT-OFF 2.5D FEASIBILITY. Never loaded by the main game.
 const Battle=preload("res://scripts/field/battle.gd")
@@ -176,8 +177,13 @@ func start()->void:
  report.new_spear_actors=actors.keys();report.other_kit_diagnostic_proxies=proxies.keys();report.rendering={"engine":Engine.get_version_info(),"os":OS.get_name(),"device":RenderingServer.get_video_adapter_name(),"vendor":RenderingServer.get_video_adapter_vendor(),"method":RenderingServer.get_current_rendering_method(),"native_window_pixels":DisplayServer.window_get_size(),"requested_render_pixels":requested_render_size,"render_target_reported_pixels":root.get_texture().get_size(),"internal_scale":root.scaling_3d_scale}
  var layer=CanvasLayer.new();root.add_child(layer);hud=Label.new();hud.position=Vector2(18,18);hud.add_theme_font_size_override("font_size",24);layer.add_child(hud)
  var driver=load("res://physics_driver.gd").new();driver.experiment=self;root.add_child(driver)
+ if "--validate-packed" in OS.get_cmdline_user_args():
+  assert(actors.size()==11 and proxies.size()==8)
+  print("25D_PACKED_SETUP ",JSON.stringify({"actors":actors.size(),"proxies":proxies.size(),"timing_sha":FileAccess.get_sha256("res://assets/timing.json"),"asset_load":"real imported GLB instance, full textures required by loader"}));quit();return
  var warmup_start=Time.get_ticks_usec();update_view(0.);await process_frame;await RenderingServer.frame_post_draw
  report.render_warmup_seconds=float(Time.get_ticks_usec()-warmup_start)/1000000.
+ if "--pose-control" in OS.get_cmdline_user_args():
+  report.pose_control=true;report.control_tick=0;wall_start_usec=Time.get_ticks_usec();await capture();finish();return
  battle.start();wall_start_usec=Time.get_ticks_usec();running=true
  print("25D_GPU_STARTED ",JSON.stringify(report))
 func set_camera(foot:Vector3)->void:
@@ -240,12 +246,13 @@ func handle_input(event:InputEvent)->void:
   if event.keycode==KEY_DOWN:user_pan.y+=1.
 func capture()->void:
  capture_busy=true;await RenderingServer.frame_post_draw
+ var frame_timestamp=float(Time.get_ticks_usec()-wall_start_usec)/1000000.
  var image=root.get_texture().get_image()
  if not image.is_empty():
   image.save_png(out+"/frame-%05d.png"%sample_index)
   report.actual_capture_pixels=[image.get_width(),image.get_height()]
  var foot=runtime.unit_point(battle.hero.pos);var original=pixel(foot)
- trace.append({"frame":sample_index,"wall_seconds":elapsed,"tick":battle.tick,"hero_position":[foot.x,foot.y,foot.z],"source_foot_pixel":[original.x,original.y],"viewport_foot_pixel":camera.unproject_position(foot),"camera_position":camera.position,"hero_hp":battle.hero.hp,"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate()})
+ trace.append({"frame":sample_index,"wall_seconds":frame_timestamp,"schedule_elapsed_seconds":elapsed,"readback_and_save_seconds":float(Time.get_ticks_usec()-wall_start_usec)/1000000.-frame_timestamp,"tick":battle.tick,"hero_position":[foot.x,foot.y,foot.z],"source_foot_pixel":[original.x,original.y],"viewport_foot_pixel":camera.unproject_position(foot),"camera_position":camera.position,"hero_hp":battle.hero.hp,"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate()})
  sample_index+=1;capture_busy=false
 func finish()->void:
  if capture_busy:await process_frame;finish.call_deferred();return

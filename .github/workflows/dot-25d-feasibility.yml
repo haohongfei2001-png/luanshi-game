@@ -5,6 +5,7 @@ on:
     paths: ['experiments/environment25d/**','.github/workflows/dot-25d-feasibility.yml']
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: luanshi-25d-single-native-experiment
   cancel-in-progress: false
@@ -41,16 +42,40 @@ jobs:
           "$GODOT" --headless --editor --path experiments/environment25d --import > evidence/import.log 2>&1
           LUANSHI_25D_OUT="$PWD/evidence/headless-combat" "$GODOT" --headless --path experiments/environment25d --script app.gd -- --test > evidence/headless-combat.log 2>&1
           LUANSHI_25D_OUT="$PWD/evidence/headless-traversal" "$GODOT" --headless --path experiments/environment25d --script app.gd -- --test --traversal > evidence/headless-traversal.log 2>&1
-      - name: Real native 2K combat and traversal with physics and wall time
+      - uses: actions/cache/restore@v4
+        id: engine-cache
+        with:
+          path: patch
+          key: macos-arm64-godot-35e80b3-angle-7578-mobile-mutex-v1
+      - uses: actions/download-artifact@v4
+        if: steps.engine-cache.outputs.cache-hit != 'true'
+        with:
+          name: mobile-mutex-angle-template
+          path: patch
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+      - name: Verify existing Metal engine and export real MainLoop PCK
+        run: python3 experiments/environment25d/export_native.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/patch" "$PWD/evidence"
+      - name: Same tick0 same source18 scene official GLES control
+        run: python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/gles-pose-control" 2560x1440 control
+      - name: Same tick0 same source18 scene existing native Metal control
+        env:
+          LUANSHI_25D_PACKED: '1'
+        run: python3 experiments/environment25d/run_capture.py "$PWD/patch/godot.macos.template_release.arm64" "$PWD/experiments/environment25d" "$PWD/evidence/metal-pose-control" 2560x1440 control
+      - name: Real native Metal 2K combat and traversal, same scene conditions
+        env:
+          LUANSHI_25D_PACKED: '1'
         run: |
           set -euo pipefail
-          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/2560-combat" 2560x1440 combat
-          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/2560-traversal" 2560x1440 traversal
-      - name: Real native 4K stills, source plate is only1672x941
+          python3 experiments/environment25d/run_capture.py "$PWD/patch/godot.macos.template_release.arm64" "$PWD/experiments/environment25d" "$PWD/evidence/2560-combat" 2560x1440 combat
+          python3 experiments/environment25d/run_capture.py "$PWD/patch/godot.macos.template_release.arm64" "$PWD/experiments/environment25d" "$PWD/evidence/2560-traversal" 2560x1440 traversal
+      - name: Real native Metal 4K stills, source plate only1672x941
+        env:
+          LUANSHI_25D_PACKED: '1'
         run: |
           set -euo pipefail
-          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/3840-combat" 3840x2160 combat
-          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/3840-traversal" 3840x2160 traversal
+          python3 experiments/environment25d/run_capture.py "$PWD/patch/godot.macos.template_release.arm64" "$PWD/experiments/environment25d" "$PWD/evidence/3840-combat" 3840x2160 combat
+          python3 experiments/environment25d/run_capture.py "$PWD/patch/godot.macos.template_release.arm64" "$PWD/experiments/environment25d" "$PWD/evidence/3840-traversal" 3840x2160 traversal
       - uses: actions/upload-artifact@v4
         if: always()
         with:

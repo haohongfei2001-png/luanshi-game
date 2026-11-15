@@ -1,16 +1,20 @@
-import os,sys,subprocess,json,time,shutil,struct
+import os,sys,subprocess,json,time,shutil,struct,tempfile
 from pathlib import Path
 editor,project,out,res,mode=sys.argv[1:]
 out=Path(out).resolve();out.mkdir(parents=True,exist_ok=True)
 env=os.environ.copy();env.update(LUANSHI_25D_EXPERIMENT='1',LUANSHI_25D_OUT=str(out),LUANSHI_25D_RENDER_SIZE=res,LUANSHI_25D_STILLS_ONLY='1' if res.startswith('3840') else '0')
-cmd=[editor,'--path',project,'--resolution',res,'--rendering-method','gl_compatibility','--audio-driver','Dummy','--script','app.gd','--']+(['--traversal'] if mode=='traversal' else [])
+packed=os.environ.get('LUANSHI_25D_PACKED')=='1'
+method='mobile' if packed else 'gl_compatibility'
+cmd=[editor]+([] if packed else ['--path',project,'--script','app.gd'])+['--resolution',res,'--rendering-method',method]+(['--rendering-driver','metal'] if packed else [])+['--audio-driver','Dummy','--']+(['--traversal'] if mode=='traversal' else ['--pose-control'] if mode=='control' else [])
+cwd=tempfile.mkdtemp(prefix='empty-game-cwd-',dir=out) if packed else project
 t0=time.monotonic()
 with (out/'run.log').open('w') as log:
- try:r=subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=150)
+ try:r=subprocess.run(cmd,cwd=cwd,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=150)
  except subprocess.TimeoutExpired:(out/'process.json').write_text(json.dumps({'timeout':150,'command':cmd}));raise
 (out/'process.json').write_text(json.dumps({'returncode':r.returncode,'wall_seconds':time.monotonic()-t0,'command':cmd},indent=2))
 if r.returncode or not(out/'result.json').exists():raise SystemExit('CAPTURE FAILED; original log preserved')
 result=json.loads((out/'result.json').read_text());trace=result['trace']
+if packed and (result['rendering']['method']!='mobile' or not 'Metal' in (out/'run.log').read_text()):raise SystemExit('Native Metal not observed')
 actual=struct.unpack('>II',(out/'frame-00000.png').read_bytes()[16:24]);expected=tuple(map(int,res.split('x')))
 if actual!=expected:raise SystemExit(f'PIXEL CONTRACT FAIL: requested {expected}, actually {actual}; no resizing performed')
 if shutil.which('ffmpeg') and len(trace)>15:

@@ -1,5 +1,7 @@
 config_version=5
 [application]
+run/main_loop_type="LuanshiEnvironment25DExperiment"
+run/main_scene="res://bootstrap.tscn"
 config/name="Luanshi isolated 2.5D feasibility NOT ART PASS"
 [display]
 window/size/viewport_width=2560
