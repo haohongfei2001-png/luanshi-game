@@ -19,9 +19,11 @@ func compare_segment(reference,native,a:Vector2,b:Vector2,from:String,to:String,
  segment_checks+=1
 func _initialize():run.call_deferred()
 func run():
- var args:=OS.get_cmdline_user_args();assert(args.size()==2)
+ var args:=OS.get_cmdline_user_args();assert(args.size() in [2,3])
  var data:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[0]));var bounds:=Rect2(-60,-42,144,84)
  var reference:=Navigation.new();var native:=NativeNavigation.new()
+ if args.size()==3 and args[2]=="native-fused":native=load("res://scripts/field/maps/experimental_native_fused_navigation.gd").new()
+ if args.size()==3 and args[2]=="native-obstacles":native=load("res://scripts/field/maps/experimental_native_obstacle_navigation.gd").new()
  assert(reference.configure(data,bounds,{"gate_main":true},.7,3.4)==OK)
  assert(native.configure(data,bounds,{"gate_main":true},.7,3.4)==OK);assert(native.support.kernel!=null)
  assert(reference.graph.get_point_ids()==native.graph.get_point_ids())

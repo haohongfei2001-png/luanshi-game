@@ -1,4 +1,5 @@
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/array.hpp>
@@ -14,6 +15,7 @@
 #include <unordered_map>
 #include <vector>
 using namespace godot;
+#include "obstacle_kernel.hpp"
 
 // Experimental immutable exact kernel. The original validated Godot geometry
 // and ordered cell slots remain the configuration authority.
@@ -25,6 +27,7 @@ class HF08SupportKernel : public RefCounted {
  std::unordered_map<uint64_t,std::vector<int>> cells;
  bool configured=false;
  mutable uint64_t evaluations=0,batch_calls=0,batch_samples=0;
+ mutable uint64_t fused_calls=0,fused_planned=0,fused_visited=0,fused_body=0,fused_slope=0,fused_support_reject=0,fused_body_reject=0,fused_slope_reject=0,fused_fallback=0;
  struct Result { int code; const char *reason; int surface=-1; double height=0.; std::vector<int> ambiguous; };
  int find_surface(const String &id) const {
   if(id.is_empty())return -1;
@@ -69,6 +72,7 @@ protected:
   ClassDB::bind_method(D_METHOD("configure","triangles","cells"),&HF08SupportKernel::configure);
   ClassDB::bind_method(D_METHOD("support","point","surface_id"),&HF08SupportKernel::support);
   ClassDB::bind_method(D_METHOD("segment_support","a","b","steps","from","to"),&HF08SupportKernel::segment_support);
+  ClassDB::bind_method(D_METHOD("travel_fused","a","b","steps","from","to","radius","height","gates","obstacles"),&HF08SupportKernel::travel_fused);
   ClassDB::bind_method(D_METHOD("reset_profile"),&HF08SupportKernel::reset_profile);
   ClassDB::bind_method(D_METHOD("statistics"),&HF08SupportKernel::statistics);
  }
@@ -131,11 +135,38 @@ public:
   }
   Dictionary d;d["error"]=OK;d["points"]=points;d["positions"]=positions;d["errors"]=errors;return d;
  }
- void reset_profile() {evaluations=0;batch_calls=0;batch_samples=0;}
- Dictionary statistics() const {Dictionary d;d["evaluations"]=int64_t(evaluations);d["batch_calls"]=int64_t(batch_calls);d["batch_samples"]=int64_t(batch_samples);return d;}
+ // Tri-state result: 0/1 exact travel decision, -1 caller must use reference.
+ int64_t travel_fused(Vector2 a,Vector2 b,int64_t steps,const String &from,const String &to,double radius,double height,const Dictionary &gates,const Ref<HF08ObstacleKernel> &obstacles) const {
+  if(!configured || obstacles.is_null() || !a.is_finite() || !b.is_finite() || steps<1 || steps>65536 || std::abs(a.x)>2147480000. || std::abs(a.y)>2147480000. || std::abs(b.x)>2147480000. || std::abs(b.y)>2147480000.){++fused_fallback;return -1;}
+  ++fused_calls;fused_planned+=uint64_t(steps+1);
+  const int from_id=find_surface(from),to_id=find_surface(to);Vector3 previous;bool have_previous=false;
+  for(int64_t step=0;step<=steps;++step){
+   ++fused_visited;const Vector2 p=a.lerp(b,real_t(double(step)/double(steps)));
+   Result r=evaluate(p,from_id);if(r.code!=OK && from!=to)r=evaluate(p,to_id);
+   if(r.code!=OK){++fused_support_reject;return 0;}
+   const Vector3 foot(p.x,real_t(r.height),p.y);++fused_body;
+   const auto body=obstacles->evaluate_body(foot,radius,height,gates,false);
+   if(body.code==ERR_UNAVAILABLE){++fused_fallback;return -1;}
+   if(body.blocked){++fused_body_reject;return 0;}
+   if(have_previous){
+    ++fused_slope;
+    // Scalar coordinate properties/subtraction are double in GDScript;
+    // Vector2 construction rounds each difference, length is float32, then
+    // the slope threshold returns to double. Do not use Vector3 subtraction.
+    const Vector2 horizontal(real_t(double(foot.x)-double(previous.x)),real_t(double(foot.z)-double(previous.z)));
+    const double run=double(horizontal.length());
+    if(std::abs(double(foot.y)-double(previous.y))>.1+run*.85){++fused_slope_reject;return 0;}
+   }
+   previous=foot;have_previous=true;
+  }
+  return 1;
+ }
+ void reset_profile() {evaluations=0;batch_calls=0;batch_samples=0;fused_calls=0;fused_planned=0;fused_visited=0;fused_body=0;fused_slope=0;fused_support_reject=0;fused_body_reject=0;fused_slope_reject=0;fused_fallback=0;}
+
+ Dictionary statistics() const {Dictionary d;d["evaluations"]=int64_t(evaluations);d["batch_calls"]=int64_t(batch_calls);d["batch_samples"]=int64_t(batch_samples);d["fused_calls"]=int64_t(fused_calls);d["fused_planned_samples"]=int64_t(fused_planned);d["fused_visited_samples"]=int64_t(fused_visited);d["fused_body_checks"]=int64_t(fused_body);d["fused_slope_checks"]=int64_t(fused_slope);d["fused_support_rejections"]=int64_t(fused_support_reject);d["fused_body_rejections"]=int64_t(fused_body_reject);d["fused_slope_rejections"]=int64_t(fused_slope_reject);d["fused_fallbacks"]=int64_t(fused_fallback);return d;}
 
 };
-static void initialize(ModuleInitializationLevel level) {if(level==MODULE_INITIALIZATION_LEVEL_SCENE)GDREGISTER_CLASS(HF08SupportKernel);}
+static void initialize(ModuleInitializationLevel level) {if(level==MODULE_INITIALIZATION_LEVEL_SCENE){GDREGISTER_CLASS(HF08ObstacleKernel);GDREGISTER_CLASS(HF08SupportKernel);}}
 static void terminate(ModuleInitializationLevel) {}
 extern "C" GDExtensionBool GDE_EXPORT hf08_query_init(GDExtensionInterfaceGetProcAddress proc,GDExtensionClassLibraryPtr library,GDExtensionInitialization *init) {
  GDExtensionBinding::InitObject object(proc,library,init);object.register_initializer(initialize);object.register_terminator(terminate);object.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);return object.init();
