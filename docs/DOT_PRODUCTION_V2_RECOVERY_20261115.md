@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 22 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 26 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -766,3 +766,35 @@ Whole18 now has an exact21,297,157B delta archive, SHA256 `336a784b8f2b52c76e052
 The exact native26 is privately persisted, original retained. Its106-file/62,378,102B author/runtime/evidence companion is separately persisted as50,887,041B, SHA256 `0c7a5db4153f524282faaab3257f0f6f12acbdaa12e43b1170b00fd71fbc42b0`, with all local decoded CRC/SHA checks and source rehashes passed. A small source extraction was checked, but independent remote readback and complete restoration are not claimed; all original inputs remain. Its native and25b parent are explicit separate dependencies. These recoverability stages are not a new installer, public asset approval or art acceptance.
 
 Only the recovery document is published by this checkpoint. The latest actual whole-scene image is still18 with25b;26 has isolated actual author keyposes only. New4K, realBattle integration, original-speed complete-action/riding/large-army footage,20/100/250/512-per-side benchmarks and realM5 testing remainNOT_RUN for these rejected sources. Preserve RC24/RC25, genuine and offscreen combat, legacy saves, all held new public asset payloads and the held PR67 merge. Continue the existing unique writers; no new account, fee, owner-computer access or owner screening of failed drafts is required.
+
+
+## 26. First complete professional-grove preview rendered, reviewed and rejected; whole27 remains in production
+
+### A real new source picture, explicitly not a game picture
+
+After a fifth default-guard attempt stopped at 4,325,183,488 B without a PNG, a single offline preview was authorized with a 4.5 GiB process cap. Its other limits remained global available memory at least 2 GiB, disk at least 350 MiB and 180 seconds. This authorization applied only to this one source preview and is now exhausted; it is not a general increase for subsequent work.
+
+The same complete representation01 derivative finished on 2026-11-15 after starting at 19:01:30 UTC. Actual terminal result: exit 0, 169.442663 seconds, peak process-group RSS 4,641,697,792 B (4.323 GiB), minimum global available memory 2,729,746,432 B and minimum disk 690,847,744 B. No guard fired. Original native source SHA remained unchanged. Cycles completed four of eight requested samples before its existing 120-second render time limit, so Monte Carlo grain must not be called an original texture defect.
+
+- Original PNG: 2560 × 1440, 8,453,216 B, SHA256 `ddcc6711155854e2ca2428f285c52895c408bb2c80061cc0f1b7a7e366d0c4ac`.
+- Source: compatible Blender 3.1.2, complete selected professional grove and native background, not the entire movie Scene.
+- Camera: 15.000001 m radius, approximately 45-degree optical pitch, FOV50. A 1.76 m calibration segment projects to 125.01 px; there was no actual character whose bounding box could be measured.
+- Representation changes are explicit: shared near/mid/far native leaf/branch/volume detail, regenerated reduced micro-groundcover and original material values. Complete macro placements remain, but this is not an unchanged-source fidelity certificate.
+
+Both the author and coordinator actually viewed the resulting complete image. **The whole proposed environment fails.** Low-hanging forest crowns occlude almost the entire normal tactical view, the exposed clearing is too small, and a monumental hollow tree has a fairy-tale setting identity. This is not a readable military approach, bridgehead or battle composition. No complete Chinese gate or military bridge has appeared. The native ecology remains useful as an editable edge/background source, but the closed forest stage must not be mass-converted and called an accepted battlefield.
+
+The next environment work physically reconstructs a complete tactical clearing, shoreline and bridge-to-gate approach under the same normal camera. It must retain coherent natural stand relationships at the edges, not hide crowns or shrink soldiers to fake suitability. Structural placeholders are explicitly unfinished and do not count as a successful new art picture. The previous parameterized box-wall/scatter route stays stopped. No new Godot19 picture exists at this checkpoint.
+
+### Whole27 is a structural production change, not another accepted outfit
+
+Actual native26 analysis separated two independent causes: iron already folds at rest because it follows garment creases, while late runtime weight truncation adds an export-layer deformation mismatch. The original professional 1,373-point garment control surface, its multiresolution structure and 566-point cage remain available. Whole27 returns to that continuous coarse fitting structure, fixes the derived runtime-weight contract before layer fitting, and uses separate smooth support surfaces and whole-plate motion instead of copying every cloth wrinkle into rigid iron.
+
+The first complete27 source batch actually ran 23.547 seconds, peak approximately 877 MB, without a resource guard. It stopped before saving a native source because a closed chart was requested across the real open front skirt slit. That failure is preserved; the implementation is being corrected to keep the original opening and join only real side seams. The reported sub-micrometre fitting residual demonstrates execution of that fit, not natural clothing or art acceptance. There is no saved27 runtime or actual27 picture yet. The rejected hand donor remains OFF, not silently applied.
+
+### Exact recovery and current scope
+
+The complete77-file grove preview/code/failure/evidence companion is privately persisted: 8,926,928 B, SHA256 `33fb75213200c5d030999d8ad4e6495b7776a0f7d1e670f3479405a8bbd73dec`. All local archive CRC, decoded-member SHA and original-source rechecks passed. It includes the unmodified PNG, but the protected original source package and official Blender binary remain explicit separate dependencies. No independent remote readback or full source restoration is claimed. All current source files remain.
+
+Closed24b and25b native duplicates were reclaimed only after fresh independent retrieval of their persistent archives, full archive/member verification, actual native extraction and exact original SHA equality, plus confirmation that27 reads26 and the whole18 runtime reads the retained25b GLB. This freed 233,202,230 B. Native24b (111,302,519 B, SHA `8b0eef5aac2ffda87956cf43c45c8563a1d71fd449c15085027084e3e6951aef`) and native25b (121,899,711 B, SHA `3fce11215f183ec7f20c74c4d07cffd6eb060ea85dfd782e0294caa4dc449d92`) now require their recorded exact restoration before historical replay. Current26 and the exact25b runtime remain local and protected; no unique work was discarded.
+
+Only this recovery document is published. Current actual Godot whole-scene evidence is still rejected18 with25b, and the latest isolated actual Godot character is rejected26. The new grove picture is an offline source preview, not realBattle, not continuous motion, not a benchmark or installer. New 4K, realBattle integration, original-speed complete-action/riding/large-army footage, 20/100/250/512-per-side benchmarks and real M5 testing remain NOT_RUN for the new sources. RC24/RC25, genuine/offscreen war, old saves and all held merges/assets remain protected.
