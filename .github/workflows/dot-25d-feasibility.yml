@@ -62,6 +62,10 @@ jobs:
         env:
           LUANSHI_25D_PACKED: '1'
         run: python3 experiments/environment25d/run_capture.py "$PWD/patch/godot.macos.template_release.arm64" "$PWD/experiments/environment25d" "$PWD/evidence/metal-pose-control" 2560x1440 control
+      - name: Twelve-second native Metal window with zero readback
+        env:
+          LUANSHI_25D_PACKED: '1'
+        run: python3 experiments/environment25d/run_capture.py "$PWD/patch/godot.macos.template_release.arm64" "$PWD/experiments/environment25d" "$PWD/evidence/2560-no-readback" 2560x1440 timing
       - name: Real native Metal 2K combat and traversal, same scene conditions
         env:
           LUANSHI_25D_PACKED: '1'

@@ -42,6 +42,9 @@ var camera_offset:=Vector2(-3.,0.)
 var hud:Label
 var interactive:=false
 var shadows:Dictionary={}
+var timing_only:=false
+var process_timestamps:Array=[]
+var next_png_time:=0.0
 var user_pan:=Vector2.ZERO
 var mouse_aim:=Vector2.RIGHT
 # The authored coordinates below are source-image pixels. Their single inverse
@@ -136,17 +139,24 @@ func _initialize()->void:
  var args=OS.get_cmdline_user_args()
  if OS.get_environment("LUANSHI_25D_EXPERIMENT")!="1":push_error("DEFAULT_OFF: explicit LUANSHI_25D_EXPERIMENT=1 required");quit(4);return
  headless_test="--test" in args
+ timing_only="--timing-window" in args
  interactive="--interactive" in args
  if "--traversal" in args:mode="traversal"
  out=OS.get_environment("LUANSHI_25D_OUT")
  if out.is_empty():out=ProjectSettings.globalize_path("res://evidence")
  DirAccess.make_dir_recursive_absolute(out)
  start.call_deferred()
+func check(condition:bool,label:String)->bool:
+ if not condition:push_error("25D_RUNTIME_GATE_FAILED "+label);quit(5);return false
+ return true
 func start()->void:
- source=build_source();var nav=Navigation.new();assert(nav.configure(source,Rect2(-34,-26,68,55),{"gate_main":true},.45,1.9,.5)==OK)
- runtime=Runtime.new();assert(runtime.bind(nav,source)==OK)
+ source=build_source();var nav=Navigation.new()
+ if not check(nav.configure(source,Rect2(-34,-26,68,55),{"gate_main":true},.45,1.9,.5)==OK,"nav configure"):return
+ runtime=Runtime.new()
+ if not check(runtime.bind(nav,source)==OK,"runtime bind"):return
  battle=Battle.new();battle.setup(8,61112,Battle.Arms.Kit.SPEAR,true,false,8,false)
- var receipt=Muster.apply(battle,runtime);assert(receipt.error==OK,JSON.stringify(receipt))
+ var receipt=Muster.apply(battle,runtime)
+ if not check(receipt.error==OK,JSON.stringify(receipt)):return
  for u in battle.roster:initial_positions[u.id]=u.pos;initial_identity.append([u.id,u.team,u.kit,u.max_hp,u.officer,u.hero])
  report={"experiment":"2.5D fixed-angle world-anchored projection","mode":mode,"source_texture_sha":FileAccess.get_sha256("res://assets/environment-wide-v2.png"),"actor_sha":FileAccess.get_sha256("res://assets/spearman-v2-wip.glb"),"topology":source.topology_sha256,"setup":receipt,"ordinary_per_side":Array(battle.ordinary_counts),"roster":battle.roster.size(),"camera_size":CAMERA_SIZE,"camera_angle_degrees":45,"source_texture_pixels":SOURCE_SIZE,"art":"FAIL_WIP_NOT_OWNER_ACCEPTED","rotation":"UNSUPPORTED_THIS_ISOLATED_MODE_ONLY_MAIN_UNCHANGED","dynamic_environment_light":"UNSUPPORTED_PRELIT","512v512":"NOT_RUN_NO_CAPACITY_CLAIM","input":"real Battle.input_state/press_action; no live Unit positions or HP assigned"}
  FileAccess.open(out+"/topology.json",FileAccess.WRITE).store_string(JSON.stringify(source))
@@ -168,7 +178,11 @@ func start()->void:
  var packed=load("res://assets/spearman-v2-wip.glb");var timing=JSON.parse_string(FileAccess.get_file_as_string("res://assets/timing.json"))
  for u in battle.roster:
   if u.kit==Battle.Arms.Kit.SPEAR and not u.mounted:
-   var actor=Actor.new();world.add_child(actor);assert(actor.setup(packed)==OK);var binding=Binding.new();binding.enabled=true;binding.ground_point=Callable(runtime,"unit_point");assert(binding.configure_timing(timing,ACTOR_SHA)==OK);actors[u.id]=actor;bindings[u.id]=binding
+   var actor=Actor.new();world.add_child(actor)
+   if not check(actor.setup(packed)==OK,"actor setup"):return
+   var binding=Binding.new();binding.enabled=true;binding.ground_point=Callable(runtime,"unit_point")
+   if not check(binding.configure_timing(timing,ACTOR_SHA)==OK,"binding timing"):return
+   actors[u.id]=actor;bindings[u.id]=binding
   else:
    # Explicit other-kit diagnostic proxies are NOT disguised as spear soldiers.
    var proxy=MeshInstance3D.new();var shape=CapsuleMesh.new();shape.radius=.28;shape.height=1.6;proxy.mesh=shape;var mat=StandardMaterial3D.new();mat.albedo_color=Color(.2,.45,.7) if u.team==0 else Color(.65,.25,.18);proxy.material_override=mat;world.add_child(proxy);proxies[u.id]=proxy
@@ -178,7 +192,7 @@ func start()->void:
  var layer=CanvasLayer.new();root.add_child(layer);hud=Label.new();hud.position=Vector2(18,18);hud.add_theme_font_size_override("font_size",24);layer.add_child(hud)
  var driver=load("res://physics_driver.gd").new();driver.experiment=self;root.add_child(driver)
  if "--validate-packed" in OS.get_cmdline_user_args():
-  assert(actors.size()==11 and proxies.size()==8)
+  if not check(actors.size()==11 and proxies.size()==8,"actor counts"):return
   print("25D_PACKED_SETUP ",JSON.stringify({"actors":actors.size(),"proxies":proxies.size(),"timing_sha":FileAccess.get_sha256("res://assets/timing.json"),"asset_load":"real imported GLB instance, full textures required by loader"}));quit();return
  var warmup_start=Time.get_ticks_usec();update_view(0.);await process_frame;await RenderingServer.frame_post_draw
  report.render_warmup_seconds=float(Time.get_ticks_usec()-warmup_start)/1000000.
@@ -217,9 +231,10 @@ func _process(delta:float)->bool:
  if not running:return false
  elapsed=float(Time.get_ticks_usec()-wall_start_usec)/1000000.
  update_view(delta)
- if elapsed>=next_capture and not capture_busy:
+ process_timestamps.append(elapsed)
+ if not timing_only and elapsed>=next_capture and not capture_busy:
   next_capture=elapsed+(2.0 if OS.get_environment("LUANSHI_25D_STILLS_ONLY")=="1" else .1);capture.call_deferred()
- if not interactive and (elapsed>=24. or (battle.result!="" and elapsed>=10.)):finish.call_deferred();running=false
+ if not interactive and (elapsed>=(12.0 if timing_only else 24.0) or (not timing_only and battle.result!="" and elapsed>=10.)):finish.call_deferred();running=false
  return false
 func physics_tick(delta:float)->void:
  if not running:return
@@ -249,14 +264,18 @@ func capture()->void:
  var frame_timestamp=float(Time.get_ticks_usec()-wall_start_usec)/1000000.
  var image=root.get_texture().get_image()
  if not image.is_empty():
-  image.save_png(out+"/frame-%05d.png"%sample_index)
+  if OS.get_environment("LUANSHI_25D_RECORD_JPEG")=="1":
+   image.save_jpg(out+"/frame-%05d.jpg"%sample_index,.92)
+   if frame_timestamp>=next_png_time:image.save_png(out+"/still-%05d.png"%sample_index);next_png_time=frame_timestamp+8.
+  else:image.save_png(out+"/frame-%05d.png"%sample_index)
   report.actual_capture_pixels=[image.get_width(),image.get_height()]
  var foot=runtime.unit_point(battle.hero.pos);var original=pixel(foot)
- trace.append({"frame":sample_index,"wall_seconds":frame_timestamp,"schedule_elapsed_seconds":elapsed,"readback_and_save_seconds":float(Time.get_ticks_usec()-wall_start_usec)/1000000.-frame_timestamp,"tick":battle.tick,"hero_position":[foot.x,foot.y,foot.z],"source_foot_pixel":[original.x,original.y],"viewport_foot_pixel":camera.unproject_position(foot),"camera_position":camera.position,"hero_hp":battle.hero.hp,"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate()})
+ trace.append({"frame":sample_index,"file":"frame-%05d.%s"%[sample_index,"jpg" if OS.get_environment("LUANSHI_25D_RECORD_JPEG")=="1" else "png"],"wall_seconds":frame_timestamp,"schedule_elapsed_seconds":elapsed,"readback_and_save_seconds":float(Time.get_ticks_usec()-wall_start_usec)/1000000.-frame_timestamp,"tick":battle.tick,"hero_position":[foot.x,foot.y,foot.z],"source_foot_pixel":[original.x,original.y],"viewport_foot_pixel":camera.unproject_position(foot),"camera_position":camera.position,"hero_hp":battle.hero.hp,"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate()})
  sample_index+=1;capture_busy=false
 func finish()->void:
  if capture_busy:await process_frame;finish.call_deferred();return
  report.render_input_path="isolated Battle-driven Node._physics_process, NOT original Controller input acceptance";report.finite_camera_bounds="source plate bounds clamped at constant22m; main camera unchanged";report.simulated_seconds=battle.tick*Battle.DT;report.elapsed_seconds=elapsed;report.actual_tick=battle.tick;report.actual_hits=battle.hits;report.actual_losses=battle.losses;report.hero_hp=battle.hero.hp;report.path_waypoints_reached=route_index;report.frames=sample_index;report.trace=trace
+ report.no_readback_window=timing_only;report.process_wall_timestamps=process_timestamps;report.process_frame_count=process_timestamps.size()
  report.active_invalid=[]
  for u in battle.roster:
   if battle.active(u) and runtime.blocked(u.pos,true):report.active_invalid.append(u.id)
