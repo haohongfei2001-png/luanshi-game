@@ -3,6 +3,10 @@ import gzip,hashlib,json
 root=Path(__file__).parent
 source=root/'assets/spearman-v2-source18.glb.gz'
 target=root/'assets/spearman-v2-wip.glb'
+license_root=root/'assets/source18-license'
+packet=json.loads((license_root/'license-packet-manifest.json').read_text())
+for entry in packet['files']:
+ assert hashlib.sha256((license_root/entry['path']).read_bytes()).hexdigest()==entry['sha256'],entry['path']
 packed=source.read_bytes();assert len(packed)==10442257
 assert hashlib.sha256(packed).hexdigest()=='caf49a68890e78644448489a8df7e2bafe2d2dc1617f6270fa886248e65737d7'
 raw=gzip.decompress(packed);assert len(raw)==14173132

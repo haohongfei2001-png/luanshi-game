@@ -21,6 +21,8 @@ var proxies:Dictionary={}
 var bindings:Dictionary={}
 var material:StandardMaterial3D
 var elapsed:=0.0
+var wall_start_usec:=0
+var requested_render_size:=Vector2i(2560,1440)
 var carry:=0.0
 var running:=false
 var capture_busy:=false
@@ -150,6 +152,14 @@ func start()->void:
  paths=[Vector2(900,485),Vector2(1025,430),Vector2(1170,375),Vector2(1280,342),Vector2(1280,290),Vector2(1360,215)]
  for i in paths.size():var p=point(paths[i]);paths[i]=Vector2(p.x,p.z)
  if headless_test:test_headless();return
+ var render_parts=OS.get_environment("LUANSHI_25D_RENDER_SIZE").split("x")
+ if render_parts.size()==2:requested_render_size=Vector2i(int(render_parts[0]),int(render_parts[1]))
+ assert(requested_render_size in [Vector2i(2560,1440),Vector2i(3840,2160)])
+ # Render at the declared native GPU target, even when the hosted Mac's visible
+ # desktop clamps the presentation window. This is not a resized screenshot.
+ root.content_scale_mode=Window.CONTENT_SCALE_MODE_VIEWPORT
+ root.content_scale_aspect=Window.CONTENT_SCALE_ASPECT_KEEP
+ root.content_scale_size=requested_render_size;root.content_scale_factor=1.;root.scaling_3d_scale=1.
  world=Node3D.new();root.add_child(world);make_environment()
  var env:=WorldEnvironment.new();var e:=Environment.new();e.background_mode=Environment.BG_COLOR;e.background_color=Color(.12,.05,.17);e.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;e.ambient_light_color=Color(.68,.74,.8);e.ambient_light_energy=.75;env.environment=e;world.add_child(env)
  var sun:=DirectionalLight3D.new();sun.rotation_degrees=Vector3(-55,-35,0);sun.light_energy=1.8;sun.shadow_enabled=false;world.add_child(sun)
@@ -163,10 +173,12 @@ func start()->void:
    var proxy=MeshInstance3D.new();var shape=CapsuleMesh.new();shape.radius=.28;shape.height=1.6;proxy.mesh=shape;var mat=StandardMaterial3D.new();mat.albedo_color=Color(.2,.45,.7) if u.team==0 else Color(.65,.25,.18);proxy.material_override=mat;world.add_child(proxy);proxies[u.id]=proxy
  for u in battle.roster:
   var shadow=MeshInstance3D.new();var plane=PlaneMesh.new();plane.size=Vector2(.9,.65);shadow.mesh=plane;var sm=ShaderMaterial.new();var ss=Shader.new();ss.code="shader_type spatial; render_mode unshaded, cull_disabled, depth_draw_never; void fragment(){ ALBEDO=vec3(0.04,0.035,0.03); ALPHA=0.28*(1.0-smoothstep(0.15,0.5,length(UV-vec2(0.5)))); }";sm.shader=ss;shadow.material_override=sm;world.add_child(shadow);shadows[u.id]=shadow
- report.new_spear_actors=actors.keys();report.other_kit_diagnostic_proxies=proxies.keys();report.rendering={"engine":Engine.get_version_info(),"os":OS.get_name(),"device":RenderingServer.get_video_adapter_name(),"vendor":RenderingServer.get_video_adapter_vendor(),"method":RenderingServer.get_current_rendering_method(),"viewport":root.size,"internal_scale":root.scaling_3d_scale}
+ report.new_spear_actors=actors.keys();report.other_kit_diagnostic_proxies=proxies.keys();report.rendering={"engine":Engine.get_version_info(),"os":OS.get_name(),"device":RenderingServer.get_video_adapter_name(),"vendor":RenderingServer.get_video_adapter_vendor(),"method":RenderingServer.get_current_rendering_method(),"native_window_pixels":DisplayServer.window_get_size(),"requested_render_pixels":requested_render_size,"render_target_reported_pixels":root.get_texture().get_size(),"internal_scale":root.scaling_3d_scale}
  var layer=CanvasLayer.new();root.add_child(layer);hud=Label.new();hud.position=Vector2(18,18);hud.add_theme_font_size_override("font_size",24);layer.add_child(hud)
  var driver=load("res://physics_driver.gd").new();driver.experiment=self;root.add_child(driver)
- battle.start();running=true;update_view(0.);await process_frame
+ var warmup_start=Time.get_ticks_usec();update_view(0.);await process_frame;await RenderingServer.frame_post_draw
+ report.render_warmup_seconds=float(Time.get_ticks_usec()-warmup_start)/1000000.
+ battle.start();wall_start_usec=Time.get_ticks_usec();running=true
  print("25D_GPU_STARTED ",JSON.stringify(report))
 func set_camera(foot:Vector3)->void:
  var focus=foot+Vector3(camera_offset.x+user_pan.x,1.0,camera_offset.y+user_pan.y)
@@ -197,7 +209,7 @@ func auto_input()->void:
  battle.input_state(direction,aim)
 func _process(delta:float)->bool:
  if not running:return false
- elapsed+=delta
+ elapsed=float(Time.get_ticks_usec()-wall_start_usec)/1000000.
  update_view(delta)
  if elapsed>=next_capture and not capture_busy:
   next_capture=elapsed+(2.0 if OS.get_environment("LUANSHI_25D_STILLS_ONLY")=="1" else .1);capture.call_deferred()

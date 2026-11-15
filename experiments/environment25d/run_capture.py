@@ -2,7 +2,7 @@ import os,sys,subprocess,json,time,shutil,struct
 from pathlib import Path
 editor,project,out,res,mode=sys.argv[1:]
 out=Path(out).resolve();out.mkdir(parents=True,exist_ok=True)
-env=os.environ.copy();env.update(LUANSHI_25D_EXPERIMENT='1',LUANSHI_25D_OUT=str(out),LUANSHI_25D_STILLS_ONLY='1' if res.startswith('3840') else '0')
+env=os.environ.copy();env.update(LUANSHI_25D_EXPERIMENT='1',LUANSHI_25D_OUT=str(out),LUANSHI_25D_RENDER_SIZE=res,LUANSHI_25D_STILLS_ONLY='1' if res.startswith('3840') else '0')
 cmd=[editor,'--path',project,'--resolution',res,'--rendering-method','gl_compatibility','--audio-driver','Dummy','--script','app.gd','--']+(['--traversal'] if mode=='traversal' else [])
 t0=time.monotonic()
 with (out/'run.log').open('w') as log:
