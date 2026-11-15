@@ -71,18 +71,26 @@ func _process(_delta:float)->void:
  var observed:Vector2=field.get_viewport().get_mouse_position()
  emit({"kind":"production_real_input","target_id":target_id,"distance":distance,"reach":reach,"clear_shot":clear,"hero_pos":[hero.pos.x,hero.pos.y],"enemy_pos":[enemy.pos.x,enemy.pos.y],"requested_logical_pointer":[logical.x,logical.y],"requested_native_pointer":[native.x,native.y],"observed_pointer":[observed.x,observed.y],"walk_aim":str(field._aim_point(observed,false)),"attack_aim":str(field._aim_point(observed,true)),"actual_input":str(Input.get_vector("move_left","move_right","move_up","move_down")),"actual_J_held":Input.is_physical_key_pressed(KEY_J),"hero_state":hero.state,"hero_timer":hero.timer,"hero_hp":hero.hp,"actual_impacts":hero.impacts,"actual_received":hero.received,"camera_yaw":field.camera_yaw,"scope":"not benchmark; no fabricated contact"})
 static func plan_route(battle)->Dictionary:
- var map=battle.map_runtime;var hero=battle.hero;var choices:Array=[]
+ var map=battle.map_runtime;var hero=battle.hero;var choices:Array=[];var attempts:Array=[]
  for unit in battle.roster:
   if unit.team!=hero.team and battle.active(unit):choices.append({"id":unit.id,"distance":hero.pos.distance_to(unit.pos)})
  choices.sort_custom(func(a,b):return a.distance<b.distance if a.distance!=b.distance else a.id<b.id)
  for i in mini(16,choices.size()):
   var target=battle.roster[choices[i].id];var p:Vector2=hero.pos;var points:Array[Vector2]=[]
+  var diagnostic:Dictionary={"target_id":target.id,"target_pos":[target.pos.x,target.pos.y],"reason":"step_budget"}
   for step in 256:
    if p.distance_to(target.pos)<1.2:return {"reachable":true,"target_id":target.id,"points":points}
-   var waypoint:Vector2=map.waypoint(p,target.pos);var q:Vector2=map.travel(p,p.direction_to(waypoint)*.5,battle.gate_hp<=0)
-   if q.distance_to(p)<.02 or map.blocked(q,battle.gate_hp<=0):break
+   var waypoint:Vector2=map.waypoint(p,target.pos)
+   var distance:=p.distance_to(waypoint)
+   var q:Vector2=map.travel(p,p.direction_to(waypoint)*minf(.5,distance),battle.gate_hp<=0)
+   var blocked:bool=map.blocked(q,battle.gate_hp<=0)
+   diagnostic.merge({"step":step,"p":[p.x,p.y],"waypoint":[waypoint.x,waypoint.y],"q":[q.x,q.y],"waypoint_distance":distance,"blocked":blocked},true)
+   if q.distance_to(p)<.02 or blocked:
+    diagnostic.reason="blocked_query" if blocked else ("waypoint_equals_current" if distance<.0001 else "travel_stalled")
+    break
    points.append(q);p=q
- return {"reachable":false,"reason":"bounded16_actual_targets_no_legal_route"}
+  attempts.append(diagnostic)
+ return {"reachable":false,"reason":"bounded16_actual_targets_no_legal_route","hero_pos":[hero.pos.x,hero.pos.y],"battle_tick":battle.tick,"attempts":attempts}
 func motion(wanted:Vector2)->void:
  for spec in [["move_left",maxf(-wanted.x,0.)],["move_right",maxf(wanted.x,0.)],["move_up",maxf(-wanted.y,0.)],["move_down",maxf(wanted.y,0.)]]:
   if is_equal_approx(Input.get_action_raw_strength(spec[0]),spec[1]):continue
