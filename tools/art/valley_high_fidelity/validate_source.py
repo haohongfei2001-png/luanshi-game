@@ -28,8 +28,9 @@ for s in m['surfaces']:
  assert s['walkable'] and len(s['vertices'])>2 and len(s['triangles'])>0
  for tri in s['triangles']:assert len(tri)==3 and all(0<=i<len(s['vertices']) for i in tri)
 sources=[]
+local_map=json.loads((out/'local-source-map.PRIVATE.json').read_text()) if (out/'local-source-map.PRIVATE.json').exists() else {}
 for source in m['sources']:
- orig=Path(source['path']);choices=[orig,out/orig.name]
+ orig=Path(source['path']);choices=[Path(local_map.get(source['path'],source['path'])),out/orig.name]
  found=next((p for p in choices if p.exists() and sha(p)==source['sha256']),None)
  assert found is not None,{'changed_or_missing_source':source}
  sources.append({'name':orig.name,'role':source['role'],'sha256':source['sha256']})

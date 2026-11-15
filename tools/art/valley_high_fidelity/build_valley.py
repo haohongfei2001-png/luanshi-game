@@ -13,10 +13,16 @@ ROOT=Path(os.environ['LUANSHI_WORKSPACE_ROOT']);SHARED=Path(os.environ['LUANSHI_
 SRC=ROOT/'luanshi-environment-rebuild/assets/river_gate/world'
 TEX=OUT/'textures';PBR=SHARED/'luanshi-material-intake-20261114'
 bpy.ops.wm.read_factory_settings(use_empty=True);sc=bpy.context.scene
-manifest={'schema_version':1,'map_id':'luanshi.river_gate.production_v2','topology_revision':4,'visual_revision':1,'status':'UNFROZEN_HF01_ART_REVIEW_REQUIRED','surfaces':[],'solids':[],'portals':[],'spawn_regions':[],'retreat_regions':[],'goal_regions':[],'sources':[]}
+manifest={'schema_version':1,'map_id':'luanshi.river_gate.production_v2','topology_revision':6,'visual_revision':3,'status':'UNFROZEN_HF01_ART_REVIEW_REQUIRED','surfaces':[],'solids':[],'portals':[],'spawn_regions':[],'retreat_regions':[],'goal_regions':[],'sources':[]}
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+local_source_paths={}
 def record(p,why):
- p=Path(p);manifest['sources'].append({'path':str(p),'sha256':sha(p),'role':why})
+ p=Path(p).resolve()
+ if p.is_relative_to(Path(__file__).resolve().parent):logical='source://valley_high_fidelity/'+p.name
+ elif p.is_relative_to(ROOT):logical='cache://'+str(p.relative_to(ROOT))
+ elif p.is_relative_to(SHARED):logical='artifact://'+str(p.relative_to(SHARED))
+ else:raise ValueError('Input must resolve within declared production roots')
+ local_source_paths[logical]=str(p);manifest['sources'].append({'path':logical,'sha256':sha(p),'role':why})
 def pt(x,y,z):return Vector((x,-z,y))
 def gp(v):return [float(v.x),float(v.z),float(-v.y)]
 def group(name,parent=None):
@@ -44,7 +50,7 @@ mortar=mat('LimeMortar_Recessed',(.22,.225,.20),.98)
 plaster=mat('WeatheredLimeInfill',(.47,.45,.38),.96)
 ground=mat('UniqueRoadSoilGrass_WorldAtlas',rough=.94,texture=TEX/'valley-albedo.jpg')
 # Very subtle physical grain normal, mapped in real metres rather than atlas coordinates.
-n=ground.node_tree.nodes;l=ground.node_tree.links;uvn=n.new('ShaderNodeUVMap');uvn.uv_map='DetailMetres';t=n.new('ShaderNodeTexImage');t.image=bpy.data.images.load(str(SRC/'ground/sandy_gravel_02_nor_gl.jpg'),check_existing=True);t.image.colorspace_settings.name='Non-Color';l.new(uvn.outputs[0],t.inputs[0]);nm=n.new('ShaderNodeNormalMap');nm.uv_map='DetailMetres';nm.inputs['Strength'].default_value=.42;l.new(t.outputs[0],nm.inputs['Color']);l.new(nm.outputs[0],n.get('Principled BSDF').inputs['Normal'])
+n=ground.node_tree.nodes;l=ground.node_tree.links;uvn=n.new('ShaderNodeUVMap');uvn.uv_map='DetailMetres';t=n.new('ShaderNodeTexImage');t.image=bpy.data.images.load(str(SRC/'ground/sandy_gravel_02_nor_gl.jpg'),check_existing=True);t.image.colorspace_settings.name='Non-Color';l.new(uvn.outputs[0],t.inputs[0]);nm=n.new('ShaderNodeNormalMap');nm.uv_map='DetailMetres';nm.inputs['Strength'].default_value=.20;l.new(t.outputs[0],nm.inputs['Color']);l.new(nm.outputs[0],n.get('Principled BSDF').inputs['Normal'])
 materials=[stone,wood,iron,mortar,plaster,ground]
 def mesh(name,verts,faces,material,parent=None,uvs=None,smoothface=False):
  # Closed author solids must have positive signed volume, never inward block normals.
@@ -146,18 +152,12 @@ for label,a,b,c,d,y0,y1 in PAVING:
    if y1!=y0:
     for v in o.data.vertices:v.co.z+=(y1-y0)/(b-a)*(v.co.x-(xa+xb)/2)
     o.data.update()
-# Exposed older approach courses disappear into packed soil, not a detached tile carpet.
-for j in range(8):
- z=-2.8+j*.8
- for k in range(1+(j%3)):
-  x=-10.6-k*.73+random.uniform(-.12,.12);zz=z+random.uniform(-.11,.11);h=float(height(x,zz))
-  box('BuriedApproachCourse',(x,h-.055,zz),(.64+random.uniform(-.07,.08),.13,.62+random.uniform(-.08,.07)),stone,arch_group,.035)
 # Abutments: individual keyed stones reach below the water and carry the sill.
-for x in [-7.15,7.15]:
+for x in [-5.15,5.15]:
  for row in range(5):
   for j in range(6):box('BridgeAbutmentBlock',(x,-1.50+row*.48,-2.68+j*1.07),(1.15,.47,1.05),stone,arch_group,.035)
 # Main timber bridge is new joinery but uses native photogrammetric board contours and UV.
-before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(SRC/'masters/modular_wooden_pier/modular_wooden_pier.gltf'));imported=list(set(bpy.data.objects)-before)
+before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(SRC/'masters/modular_wooden_pier/modular_wooden_pier.gltf'));imported=sorted(set(bpy.data.objects)-before,key=lambda item:item.name)
 plank=next(o for o in imported if o.type=='MESH' and 'planks' in o.name.lower());uv=plank.data.uv_layers.active
 # Mesh components split by UV are welded spatially for intact scan board recovery.
 from collections import defaultdict
@@ -192,17 +192,17 @@ for n in boardmat.node_tree.nodes:
  if n.type=='TEX_IMAGE' and n.image and 'diff' in n.image.name.lower():n.image=bpy.data.images.load(str(TEX/'weathered-deck-atlas.jpg'),check_existing=True)
 for o in imported:bpy.data.objects.remove(o,do_unlink=True)
 record(SRC/'masters/modular_wooden_pier/SOURCE.json','CC0 worn board shape and original UV')
-for i in range(34):
+for i in range(24):
  for half in [-1,1]:
-  vs,fs,uvs,lo,hi=boardprotos[(i+(half+1)*2)%len(boardprotos)];cx=-7+(i+.5)*14/34
+  vs,fs,uvs,lo,hi=boardprotos[(i+(half+1)*2)%len(boardprotos)];cx=-5+(i+.5)*10/24
   dest=[]
   for v in vs:
-   across=(v.x-lo.x)/(hi.x-lo.x)*2.90;along=(v.y-(hi.y+lo.y)/2)/(hi.y-lo.y)*.397;yy=(v.z-hi.z)*.70+1.
+   across=(v.x-lo.x)/(hi.x-lo.x)*2.90;along=(v.y-(hi.y+lo.y)/2)/(hi.y-lo.y)*.403;yy=(v.z-hi.z)*.70+1.
    dest.append(pt(cx+along,yy,half*(across+.008)))
   o=mesh('NativeWornDeck_%02d_%d'%(i,half),dest,fs if half==1 else [tuple(reversed(f)) for f in fs],boardmat,arch_group,uvs)
-rectsupport('bridge_main_deck',-7,7,-2.90,2.90,1,1)
-for z in [-2.65,0,2.65]:beam('BridgeLongitudinalBearing',(-7.5,.65,z),(7.5,.65,z),.25,.30,parent=arch_group)
-for x in [-5,0,5]:
+rectsupport('bridge_main_deck',-5,5,-2.90,2.90,1,1)
+for z in [-2.65,0,2.65]:beam('BridgeLongitudinalBearing',(-5.5,.65,z),(5.5,.65,z),.25,.30,parent=arch_group)
+for x in [-3.6,0,3.6]:
  for z in [-2.65,2.65]:
   box('SubmergedPierFooting',(x,-1.35,z),(.85,.9,.85),stone,arch_group,.04)
   beam('BridgeBearingPost',(x,-1.1,z),(x,.73,z),.32,.34,parent=arch_group)
@@ -211,14 +211,15 @@ for x in [-5,0,5]:
   beam('DiagonalFloodBrace',(x-1.45,.64,z),(x,-.75,z),.19,.20,parent=arch_group)
 for sign in [-1,1]:
  z=sign*3.05
- for x in [-7,-4.666,-2.333,0,2.333,4.666,7]:
+ for x in [-5,-3.333,-1.666,0,1.666,3.333,5]:
   box('RailingMortisedPost',(x,1.55,z),(.24,1.34,.24),wood,arch_group,.035)
   box('RailingWornCap',(x,2.24,z),(.32,.13,.32),wood,arch_group,.025)
   for yy in [1.36,1.93]:box('RailingWoodPeg',(x-.14,yy,z),(.05,.06,.06),wood,arch_group,.008)
- for yy in [1.35,1.92]:beam('RailingContinuousTenonedRail',(-7.12,yy,z),(7.12,yy,z),.16,.19,parent=arch_group)
- solid('bridge_rail_'+str(sign),[[-7,z-.14],[7,z-.14],[7,z+.14],[-7,z+.14]],.92,2.3)
+ for yy in [1.35,1.92]:beam('RailingContinuousTenonedRail',(-5.12,yy,z),(5.12,yy,z),.16,.19,parent=arch_group)
+ solid('bridge_rail_'+str(sign),[[-5,z-.14],[5,z-.14],[5,z+.14],[-5,z+.14]],.92,2.3)
 
 # Thick gate piers and flanking wall, rebuilt as actual dressed block courses.
+approach_arch_group=arch_group;gate_arch_group=group('ThickGateAndCurtains',root);gate_arch_group.location.x=-2.;arch_group=gate_arch_group;gate_solid_start=len(manifest['solids'])
 def facade(name,a,b,bottom,top,depth=2.8,front=True):
  ax,az=a;bx,bz=b;v=Vector((bx-ax,bz-az));length=v.length;v.normalize();normal=Vector((v.y,-v.x))
  if not front:normal=-normal
@@ -271,15 +272,15 @@ beam('FrontPortalOakLintel',(11.55,5.88,-3.5),(11.55,5.88,3.5),.42,.48,parent=ar
 for z in [-3.15,3.15]:beam('GateSolidOakJamb',(11.58,1.2,z),(11.58,5.75,z),.27,.34,parent=arch_group)
 # Reuse the mature source roof and timber frame ONLY. Rejected inherited pier/wall removed.
 print('REUSE_MATURE_ROOF_FRAME',flush=True)
-archsrc=SHARED/'production-v2-architecture/mass02/architecture.glb';record(archsrc,'CC0 roof/frame components only; rejected old walls/fort/bridge not retained')
-before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(archsrc));old=list(set(bpy.data.objects)-before)
+archsrc=SHARED/'production-v2-architecture/mass02/architecture.glb';record(archsrc,'CC0 structural timber frame only; rejected old roof/walls/fort/bridge not retained')
+before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(archsrc));old=sorted(set(bpy.data.objects)-before,key=lambda item:item.name)
 roofgroup=group('NativeCraftRoofAndHall',arch_group)
 for o in old:
  if o.type!='MESH' or not o.parent or o.parent.name!='GateHall':continue
  vs=[];fs=[];uvs=[];mi=[];source_uv=o.data.uv_layers[1] if len(o.data.uv_layers)>1 else o.data.uv_layers.active
  for poly in o.data.polygons:
   material=o.data.materials[poly.material_index]
-  if material and material.name.lower().startswith('masonry'):continue
+  if material and material.name.lower().startswith(('masonry','tile')):continue
   pts=[o.matrix_world@o.data.vertices[i].co for i in poly.vertices]
   if min(v.z for v in pts)<7.15:continue
   inds=[]
@@ -296,6 +297,50 @@ for o in old:
     if node.type in ['UVMAP','NORMAL_MAP']:node.uv_map='UVMap'
  for p,i in zip(q.data.polygons,mi):p.material_index=i
 for o in old:bpy.data.objects.remove(o,do_unlink=True)
+# Newly authored fired-clay roof: individual overlapping barrel tiles, not corrugated strips.
+clays=[mat('FiredClay_OverlapCourse_'+str(i),rough=.88,texture=TEX/('fired-clay-'+str(i)+'.jpg')) for i in range(3)]
+rv=[];rf=[];ru=[];ri=[];roof_rng=random.Random(SEED+7)
+def roof_y(d):return 8.95+2.65*(1-d/5.2)**1.10+.24*(d/5.2)**6
+# One closed shell per tile. Its downhill rim and transverse curvature remain geometry at any mip.
+def roof_tile(points,material_index):
+ n=len(points);off=len(rv);rv.extend([p for p in points]+[p-Vector((0,0,.023)) for p in points]);ru.extend([(i%7/6,i//7) for i in range(n)]*2)
+ local=[]
+ for k in range(6):local.append((k,k+1,8+k,7+k))
+ for q in list(local):local.append(tuple(i+n for i in reversed(q)))
+ border=list(range(7))+list(range(13,6,-1))
+ for a,b in zip(border,border[1:]+border[:1]):local.append((a,a+n,b+n,b))
+ for q in local:
+  rf.append(tuple(off+i for i in q));ri.append(material_index)
+for sign in [-1,1]:
+ for row,u in enumerate(np.arange(0.,5.2,.30)):
+  u1=min(u+.38,5.2)
+  for col,z in enumerate(np.arange(-6-u,6+u+.01,.25)):
+   points=[]
+   for d in [u,u1]:
+    for k in range(7):
+     cross=(k/6-.5)*.268;yy=roof_y(d)+.050*math.cos((k/6-.5)*math.pi)+.022*(1-(d-u)/.38)
+     points.append(pt(14.6+sign*d,yy,z+cross))
+   roof_tile(points,roof_rng.randrange(3))
+ for row,v in enumerate(np.arange(.18,5.2,.30)):
+  v1=min(v+.38,5.2)
+  for col,xoff in enumerate(np.arange(-v+.13,v,.25)):
+   points=[]
+   for d in [v,v1]:
+    for k in range(7):
+     cross=(k/6-.5)*.268;yy=roof_y(d)+.050*math.cos((k/6-.5)*math.pi)+.022*(1-(d-v)/.38)
+     points.append(pt(14.6+xoff+cross,yy,sign*(6+d)))
+   roof_tile(points,roof_rng.randrange(3))
+# Recalculate closed-tile shells before joining to preserve outward roof normals.
+ro=mesh('IndividualOverlappingClayTiles',rv,rf,clays[0],roofgroup,ru)
+bm=bmesh.new();bm.from_mesh(ro.data);bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(ro.data);bm.free()
+for m in clays[1:]:ro.data.materials.append(m)
+for p,i in zip(ro.data.polygons,ri):p.material_index=i
+# Short overlapping ridge and hip covers retain their end joints.
+for z in np.arange(-6.1,6.1,.42):beam('ClayRidgeCap',(14.6,11.78,z),(14.6,11.78,z+.48),.32,.22,clays[1],roofgroup)
+for sx in [-1,1]:
+ for sz in [-1,1]:
+  for d in np.arange(0,5.2,.44):
+   e=min(5.2,d+.49);beam('ClayHipCap',(14.6+sx*d,roof_y(d)+.12,sz*(6+d)),(14.6+sx*e,roof_y(e)+.12,sz*(6+e)),.25,.16,clays[1],roofgroup)
 # Dynamic leaves have exactly one gate-tagged parent, independent of stone and roof.
 door=group('GateMain_DynamicLeaves',arch_group);door['gate_id']='gate_main'
 for sign in [-1,1]:
@@ -308,10 +353,17 @@ blocker={'xz_polygon':[[14.60,-3.1],[14.98,-3.1],[14.98,3.1],[14.60,3.1]],'min_y
 solid('gate_main_closed',blocker['xz_polygon'],1.2,5.7,'gate_main')
 manifest['gate_dynamic']={'id':'gate_main','pivot':[14.8,1.2,0],'pivot_semantics':'ground landmark at actual door-plane center, not either leaf hinge','leaf_hinges':[[14.8,1.2,-3.1],[14.8,1.2,3.1]],'entry':[11.7,1.2,0],'exit':[17.5,1.2,0],'width':6.2,'clear_height':4.55,'closed_blocker':blocker,'visual_group':door.name}
 
+# One rigid architectural relocation, applied identically to source solids and gate landmarks.
+for item in manifest['solids'][gate_solid_start:]:
+ for point in item['xz_polygon']:point[0]-=2.
+for key in ['entry','exit','pivot']:manifest['gate_dynamic'][key][0]-=2.
+for hinge in manifest['gate_dynamic']['leaf_hinges']:hinge[0]-=2.
+# closed_blocker shares the already-transformed solid polygon; never transform it twice.
+arch_group=approach_arch_group
 # Native rock shapes are embedded in raised river shoulders, never arranged as a ring.
 print('GEOLOGY_AND_ECOLOGY',flush=True)
 def loadmeshes(path):
- before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(path));obs=list(set(bpy.data.objects)-before);result=[]
+ before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(path));obs=sorted(set(bpy.data.objects)-before,key=lambda item:item.name);result=[]
  for o in obs:
   if o.type=='MESH':
    me=o.data.copy();me.transform(o.matrix_world);result.append((o.name,me))
@@ -329,11 +381,19 @@ for name,me in rocks:
 ROCKS=[(-10.0,7.0,.1,1),(-11.5,8.8,.3,2),(-13.5,6.5,.3,3),(-15.7,10.2,.2,4),(-8.1,-5.6,-.35,0),(-10.2,-6.5,-.1,5),(-11.6,-8.4,.15,2),(-13.1,-9.6,.3,3),(-17.8,-13.5,.4,1),(-21,-17.3,.3,5),(-15.4,24.0,-.3,1),(-18.3,25.8,.0,0),(8.5,7.1,-.2,3),(9.1,9.3,.1,2),(10.3,12.2,.4,0),(8.7,-7.,-.25,4),(10.5,-8.6,.1,1),(13.2,-13.6,.1,0),(13.5,27.,.1,3)]
 for i,(x,z,embed,idx) in enumerate(ROCKS):
  name,me=rocks[idx];ob=bpy.data.objects.new('EmbeddedScanStratum_%02d'%i,me);sc.collection.objects.link(ob);ob.parent=ground_group;h=float(height(x,z));ob.location=pt(x,h-.58+embed,z);ob.rotation_euler.z=i*1.71;ob.scale=(1.,1.,1.)
- # Convex footprint of actual source projected vertex extent, no fake collidable air.
- vs=[ob.matrix_world@v.co for v in me.vertices] if False else []
- w=max(v.co.x for v in me.vertices)-min(v.co.x for v in me.vertices);d=max(v.co.y for v in me.vertices)-min(v.co.y for v in me.vertices)
- r=max(w,d)*.44;poly=[[x+math.cos(a)*r,z+math.sin(a)*r] for a in np.linspace(0,2*math.pi,9)[:-1]]
- solid('rock_'+str(i),poly,h-.65,h+max(v.co.z for v in me.vertices)-.5)
+ # Convex hull from actual placed exposed scan vertices, not an estimated radius.
+ angle=i*1.71;raw=np.asarray([tuple(v.co) for v in me.vertices]);xx=x+raw[:,0]*math.cos(angle)-raw[:,1]*math.sin(angle);zz=z-raw[:,0]*math.sin(angle)-raw[:,1]*math.cos(angle);yy=raw[:,2]+h-.58+embed
+ exposed=yy>height(xx,zz)+.06;points=sorted(set((round(a,5),round(b,5)) for a,b in zip(xx[exposed],zz[exposed])))
+ def cross(a,b,c):return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
+ lower=[];upper=[]
+ for point in points:
+  while len(lower)>=2 and cross(lower[-2],lower[-1],point)<=0:lower.pop()
+  lower.append(point)
+ for point in reversed(points):
+  while len(upper)>=2 and cross(upper[-2],upper[-1],point)<=0:upper.pop()
+  upper.append(point)
+ poly=[list(point) for point in lower[:-1]+upper[:-1]]
+ if len(poly)>=3:solid('rock_'+str(i),poly,float(yy.min()),float(yy.max()))
 # One native geological face becomes a continuous outcrop rising from the water.
 cliffs=loadmeshes(SRC/'masters/coastal_cliff_02/coastal_cliff_02.gltf');record(SRC/'masters/coastal_cliff_02/SOURCE.json','native-scale cliff face cropped by author; only buried cut boundaries')
 for ix,(x,z,dy,angle) in enumerate([]):
@@ -397,7 +457,7 @@ for k,(x,z) in enumerate([(-8.3,5.8),(-10.4,-10.5),(8.0,6.4),(9.0,-11.7),(-13.1,
   if y<-.8:continue
   beam('RiparianReed',(xx,y,zz),(xx+.15,y+length,zz+.06),.018,.018,reed,plants_group)
 # Water geometry carries coherent low-frequency waves. Native material remains calm.
-watermat=mat('River_JadeCurrent',(.027,.065,.060),.19,normal=TEX/'river-current-normal.png',strength=.55);p=watermat.node_tree.nodes.get('Principled BSDF');p.inputs['Metallic'].default_value=.02;p.inputs['IOR'].default_value=1.333;p.inputs['Coat Weight'].default_value=.28
+watermat=mat('River_JadeCurrent',(.027,.065,.060),.28,normal=TEX/'river-current-normal.png',strength=.16);p=watermat.node_tree.nodes.get('Principled BSDF');p.inputs['Metallic'].default_value=.02;p.inputs['IOR'].default_value=1.333;p.inputs['Coat Weight'].default_value=.28
 vs=[];fs=[]
 for j in range(169):
  z=-42+j*.5
@@ -406,7 +466,7 @@ for j in range(169):
 for j in range(168):
  for i in range(102):a=j*103+i;fs.append((a,a+103,a+104,a+1))
 water=mesh('UnbrokenRiverSurface',vs,fs,watermat,ground_group,smoothface=True)
-for uv in water.data.uv_layers.active.data:uv.uv/=3.5
+for uv in water.data.uv_layers.active.data:uv.uv/=8.
 # Threshold use details: sparse engineering clues have functional place, not scatter inventory.
 for sign in [-1,1]:
  for i in range(3):
@@ -414,19 +474,19 @@ for sign in [-1,1]:
  beam('BridgeheadRetainerRail',(-14.8,float(height(-14.8,sign*4.35))+.7,sign*4.35),(-12.8,float(height(-12.8,sign*4.15))+.7,sign*4.15),.13,.15,parent=arch_group)
 # Source gameplay semantics and capacity are new, not inherited from old preflight results.
 manifest['portals']=[
- {'id':'west_to_landing','from_surface':'west_terrace','to_surface':'west_landing','endpoints3D':[[-10.2,1,-3.1],[-10.2,1,3.1]],'width':6.2,'clearance':99},
- {'id':'bridge_west','from_surface':'west_landing','to_surface':'bridge_main_deck','endpoints3D':[[-7,1,-2.9],[-7,1,2.9]],'width':5.8,'clearance':99},
- {'id':'bridge_east','from_surface':'bridge_main_deck','to_surface':'east_landing','endpoints3D':[[7,1,-2.9],[7,1,2.9]],'width':5.8,'clearance':99},
- {'id':'gate_entry','from_surface':'east_landing','to_surface':'gate_tunnel','endpoints3D':[[11.7,1.2,-3.1],[11.7,1.2,3.1]],'width':6.2,'clearance':4.55},
- {'id':'gate_exit','from_surface':'gate_tunnel','to_surface':'east_terrace','endpoints3D':[[17.5,1.2,-3.1],[17.5,1.2,3.1]],'width':6.2,'clearance':4.55,'gate_id':'gate_main'}]
+ {'id':'west_to_landing','from_surface':'west_terrace','to_surface':'west_landing','endpoints3D':[[-8.2,1,-3.1],[-8.2,1,3.1]],'width':6.2,'clearance':99},
+ {'id':'bridge_west','from_surface':'west_landing','to_surface':'bridge_main_deck','endpoints3D':[[-5,1,-2.9],[-5,1,2.9]],'width':5.8,'clearance':99},
+ {'id':'bridge_east','from_surface':'bridge_main_deck','to_surface':'east_landing','endpoints3D':[[5,1,-2.9],[5,1,2.9]],'width':5.8,'clearance':99},
+ {'id':'gate_entry','from_surface':'east_landing','to_surface':'gate_tunnel','endpoints3D':[[9.7,1.2,-3.1],[9.7,1.2,3.1]],'width':6.2,'clearance':4.55},
+ {'id':'gate_exit','from_surface':'gate_tunnel','to_surface':'east_terrace','endpoints3D':[[15.5,1.2,-3.1],[15.5,1.2,3.1]],'width':6.2,'clearance':4.55,'gate_id':'gate_main'}]
 manifest['spawn_regions']=[{'id':'army_west','team':0,'surface_id':'west_terrace','xz_polygon':[[-57,-30],[-26,-30],[-26,30],[-57,30]],'reserved_corridor_z':[-6,6]},{'id':'army_east','team':1,'surface_id':'east_terrace','xz_polygon':[[28,-20],[62,-20],[62,20],[28,20]],'reserved_corridor_z':[-5,5]}]
 manifest['retreat_regions']=[{'id':'retreat_west','surface_id':'west_terrace','xz_polygon':[[-59,-19],[-54,-19],[-54,19],[-59,19]]},{'id':'retreat_east','surface_id':'east_terrace','xz_polygon':[[75,-3],[83,-3],[83,3],[75,3]]}]
-manifest['goal_regions']=[{'id':'gate_main_goal','surface_id':'east_terrace','center':[23,1.2,0],'radius':3}]
+manifest['goal_regions']=[{'id':'gate_main_goal','surface_id':'east_terrace','center':[21,1.2,0],'radius':3}]
 manifest['battle_mode']='open_gate_field_no_campaign';manifest['capacity_verdict']='NEW_SOURCE_NOT_RUN_512_EACH_REQUIRED';manifest['artist_status']='INTERNAL_WIP_NOT_OWNER_APPROVED'
 # One author sun. The native WorldEnvironment values accompany the GLB explicitly.
 sun=bpy.data.lights.new('AuthoredSun','SUN');sun.energy=2.7;sun.angle=.10;so=bpy.data.objects.new('AuthoredSun',sun);sc.collection.objects.link(so);so.parent=root;direction=Vector((-.45,-.52,.73)).normalized();so.rotation_euler=(-direction).to_track_quat('-Z','Y').to_euler()
 w=bpy.data.worlds.new('AuthoredClearDay');w.use_nodes=True;w.node_tree.nodes['Background'].inputs[0].default_value=(.61,.69,.77,1);w.node_tree.nodes['Background'].inputs[1].default_value=.65;sc.world=w
-worldspec={'background_color':[.61,.69,.77],'ambient_light_color':[.72,.76,.78],'ambient_light_energy':.62,'ambient_light_source':'COLOR','tonemap':'FILMIC','sun_energy':2.7,'lighting_units':'Blender COMPAT unitless: explicit Godot energy2.7; no683 lux conversion','sun_rotation_blender_euler':list(so.rotation_euler),'ssao_enabled':True,'ssao_radius':.55,'ssao_intensity':.65,'ssil_enabled':False,'fog_enabled':False}
+worldspec={'background_color':[.61,.69,.77],'ambient_light_color':[.72,.76,.78],'ambient_light_energy':.62,'ambient_light_source':'COLOR','tonemap':'FILMIC','sun_energy':2.7,'lighting_units':'Blender COMPAT unitless: explicit Godot energy2.7; no683 lux conversion','sun_rotation_blender_euler':list(so.rotation_euler),'sun_shadow':{'enabled':True,'mode':2,'max_distance':80.0,'bias':0.1,'normal_bias':0.6,'scope':'author wrapper overrides existing unique GLB Sun, not an extra light'},'ssao_enabled':True,'ssao_radius':.55,'ssao_intensity':.65,'ssil_enabled':False,'fog_enabled':False}
 (OUT/'author-world.json').write_text(json.dumps(worldspec,indent=2))
 # Identity is derived from all authored geometry/semantics, not revision prose.
 from topology_identity import topology_digest
@@ -443,7 +503,7 @@ for key in ['map_id','topology_revision','topology_sha256','visual_revision','au
 # Collect shared material-bearing geometry. Proxy actors are intentionally absent from this GLB.
 print('BATCH_STATIC_ARCHITECTURE',flush=True)
 # One batch per static author group; dynamic leaf and linked tree meshes remain independent.
-for parent in [arch_group,roofgroup,door]:
+for parent in [arch_group,gate_arch_group,roofgroup,door]:
  obs=[o for o in list(bpy.data.objects) if o.type=='MESH' and o.parent==parent]
  if len(obs)>1:
   bpy.ops.object.select_all(action='DESELECT')
@@ -459,12 +519,13 @@ bpy.ops.export_scene.gltf(filepath=str(OUT/'river-valley-hf01.glb'),export_forma
 manifest['visual_glb_sha256']=sha(OUT/'river-valley-hf01.glb')
 manifest['source_objects']=len(bpy.data.objects);usedmeshes=set(o.data for o in bpy.data.objects if o.type=='MESH');manifest['unique_meshes']=len(usedmeshes);manifest['mesh_triangles_unique']=sum(sum(len(p.vertices)-2 for p in m.polygons) for m in usedmeshes)
 (OUT/'mother-manifest.json').write_text(json.dumps(manifest,separators=(',',':')))
+(OUT/'local-source-map.PRIVATE.json').write_text(json.dumps(local_source_paths,indent=2))
 # Save a compact script/input-based source recipe rather than redundant large .blend iterations.
 (OUT/'RECOVER.txt').write_text('LUANSHI_WORKSPACE_ROOT='+str(ROOT)+' LUANSHI_PRODUCTION_ROOT='+str(SHARED)+' LUANSHI_BANK_FIELD='+os.environ.get('LUANSHI_BANK_FIELD','')+' python '+str(Path(__file__).with_name('build_materials.py'))+' '+str(TEX)+'\nLUANSHI_WORKSPACE_ROOT='+str(ROOT)+' LUANSHI_PRODUCTION_ROOT='+str(SHARED)+' LUANSHI_BANK_FIELD='+os.environ.get('LUANSHI_BANK_FIELD','')+' flock '+str(SHARED/'luanshi-heavy-art.lock')+' blender -b --factory-startup --disable-autoexec --threads 4 --python-exit-code 1 --python '+str(Path(__file__))+' -- '+str(OUT)+'\n')
 if '--build-only' in sys.argv:raise SystemExit(0)
 # Independent visual scale audit uses current real WIP18 posed actor, never spheres/sticks.
 print('OFFLINE_SCALE_ACTORS_NOT_GAME',flush=True)
-actor=SHARED/'production-v2-complete-spear18/runtime-verified/spearman-v2-wip.glb';before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(actor));aobs=list(set(bpy.data.objects)-before);arm=next(o for o in aobs if o.type=='ARMATURE');idle=next(a for a in bpy.data.actions if 'spear_idle' in a.name.lower());arm.animation_data_create()
+actor=SHARED/'production-v2-complete-spear18/runtime-verified/spearman-v2-wip.glb';before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(actor));aobs=sorted(set(bpy.data.objects)-before,key=lambda item:item.name);arm=next(o for o in aobs if o.type=='ARMATURE');idle=next(a for a in bpy.data.actions if 'spear_idle' in a.name.lower());arm.animation_data_create()
 for tr in list(arm.animation_data.nla_tracks):arm.animation_data.nla_tracks.remove(tr)
 arm.animation_data.action=idle;sc.frame_set(int(idle.frame_range[0]));bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get();actorparts=[];body=[]
 for o in aobs:
@@ -472,20 +533,20 @@ for o in aobs:
   me=bpy.data.meshes.new_from_object(o.evaluated_get(dg),depsgraph=dg);me.transform(o.matrix_world);actorparts.append((o.name,me))
   if not any(t in o.name.lower() for t in ['spear','weapon','cone','cylinder']):body.extend(v.co.copy() for v in me.vertices)
 for o in aobs:bpy.data.objects.remove(o,do_unlink=True)
-poses=[(-15,-2),(-12,1),(-10,-1),(-7.8,.8),(-4.5,-1),(0,1),(4.2,-1),(7.8,.8),(10.,-1),(18.5,1.0)]
+poses=[(-11,-2),(-10,1),(-8,-1),(-5.8,.8),(-3.5,-1),(0,1),(3.2,-1),(5.8,.8),(8.,-1),(16.5,1.0)]
 proxies=[]
 for i,(x,z) in enumerate(poses):
- y=1. if -7<=x<=7 else float(height(x,z));par=group('NOT_GAME_StaticPose18_%02d'%i);par.location=pt(x,y,z);par.rotation_euler.z=-math.pi/2 if x<3 else math.pi/2
+ y=1. if -5<=x<=5 else float(height(x,z));par=group('NOT_GAME_StaticPose18_%02d'%i);par.location=pt(x,y,z);par.rotation_euler.z=-math.pi/2 if x<3 else math.pi/2
  for name,me in actorparts:o=bpy.data.objects.new('Pose18_'+name,me);sc.collection.objects.link(o);o.parent=par
  proxies.append(par)
 for o in door.children:o.hide_render=True
 cd=bpy.data.cameras.new('OFFLINE_GAME_CAMERA_CONDITION');cam=bpy.data.objects.new(cd.name,cd);sc.collection.objects.link(cam);sc.camera=cam
 cd.sensor_fit='VERTICAL';cd.sensor_height=24.;fov=math.radians(50);cd.lens=24/(2*math.tan(fov/2));pitch=math.radians(45);yaw=math.radians(-65);span=1.8*math.cos(pitch)+(.55*abs(math.sin(yaw))+.35*abs(math.cos(yaw)))*math.sin(pitch);distance=span/(2*math.tan(fov/2)*.125)
-views=[('nearshore',-15.,-2.,'PERSP'),('bridge',0.,1.,'PERSP'),('threshold',10.,-1.,'PERSP')]
+views=[('nearshore',-11.,-2.,'PERSP'),('bridge',0.,1.,'PERSP'),('threshold',8.,-1.,'PERSP')]
 if '--one-view' in sys.argv:views=views[:1]
 report={'source_actor_sha256':sha(actor),'clip':idle.name,'body_source_height':max(v.z for v in body)-min(v.z for v in body),'status':'OFFLINE_ONLY_NOT_GAME','views':[]}
 for name,x,z,typ in views:
- cd.type=typ;target=pt(x+1.5,float(height(x,z)) if abs(x)>7 else 1.,z)+Vector((0,0,1.));offset=Vector((math.sin(yaw)*math.cos(pitch),-math.cos(yaw)*math.cos(pitch),math.sin(pitch)))*distance;cam.location=target+offset;cam.rotation_euler=(target-cam.location).to_track_quat('-Z','Y').to_euler();bpy.context.view_layer.update()
+ cd.type=typ;target=pt(x+1.5,float(height(x,z)) if abs(x)>5 else 1.,z)+Vector((0,0,1.));offset=Vector((math.sin(yaw)*math.cos(pitch),-math.cos(yaw)*math.cos(pitch),math.sin(pitch)))*distance;cam.location=target+offset;cam.rotation_euler=(target-cam.location).to_track_quat('-Z','Y').to_euler();bpy.context.view_layer.update()
  sizes=[]
  for par in proxies:
   proj=[world_to_camera_view(sc,cam,par.matrix_world@v) for v in body];sizes.append({'name':par.name,'godot_position':gp(par.location),'body_px':(max(p.y for p in proj)-min(p.y for p in proj))*900,'visible':all(0<=p.x<=1 and 0<=p.y<=1 for p in proj)})

@@ -11,7 +11,9 @@ It is **not art accepted and not a shipping scene**.
   worn road and the world-space material atlas. There is no old Ground fallback.
 - Structural bridge joinery uses actual CC0 worn board contours and original UVs.
 - The thick gate and flanking defenses are built in dressed stone courses. Only
-  mature roof/frame components survive from the earlier architectural source.
+  usable structural timber-frame components survive from the earlier architectural source.
+  The continuous inherited blue roof strips are replaced by original overlapping
+  clay tiles and ridge/hip covers.
   The rejected octagonal fortress silhouette is not retained.
 - Native rocks, full native tree crowns and woody understory are embedded/rooted
   on the same ground. Large scan capture plates are not accepted as terrain.
@@ -39,7 +41,7 @@ python build_materials.py OUTPUT/textures
 flock "$LUANSHI_PRODUCTION_ROOT/luanshi-heavy-art.lock" \
   blender -b --factory-startup --disable-autoexec --threads 4 \
   --python-exit-code 1 --python build_valley.py -- OUTPUT --build-only
-python wrap_native.py OUTPUT res://assets/production_v2/valley_hf04
+python wrap_native.py OUTPUT res://assets/production_v2/valley_hf08
 python validate_source.py OUTPUT
 flock "$LUANSHI_PRODUCTION_ROOT/luanshi-heavy-art.lock" \
   blender -b --factory-startup --disable-autoexec --threads 4 \
@@ -106,3 +108,47 @@ flattened, adds original periodic physical water-normal slopes, uses a C1 shore
 curve, and embeds irregular older approach courses into the military road. Its
 source/normal/tangent closure is checked independently; do not reuse HF05a's
 navigation results for HF06. All render evidence is still explicitly offline.
+
+
+### HF07 / HF08 whole-source checkpoint
+
+The river span is now10m, not14m; it was physically rebuilt rather than achieved
+by zoom. Both bridgehead supports and all portals moved with it. The eastern
+4.7m stone landing leads directly to the5.8m thick gateway. The courtyard and
+retreat remain actual terrain, outside the close action view. Wall-side water
+now meets the defense foundation rather than a broad grass shelf.
+
+Overlapping fired-clay roof courses and ridge/hip caps are newly authored solid
+geometry. Only the acquired source's useful structural frame remains. Native
+scan rocks use the convex hull of their actually placed exposed vertices for
+obstacles, not guessed circles. Source-object iteration is sorted for recovery.
+The terrain atlas area-prefilters source materials to its real texel density,
+rather than point-sampling a2K input into an80px repeat and creating false grain.
+
+Raw Godot inspection of HF05a exposed `shadow_enabled=false` despite its correct
+Sun energy. HF08 declares the existing Sun's enabled shadows,4-split mode,80m
+range,0.1 bias and0.6 normal bias in the author-world contract and wrapper. It
+must be verified in Godot as one changed Sun, never a second light or a runtime
+relighting override. A Cycles shadow is not evidence of Godot shadows.
+
+Public runtime manifests use stable logical source URIs. The separate
+`local-source-map.PRIVATE.json` resolves those inputs for local validation and
+must never be included in a public runtime package. Likewise, the private
+recovery command file is not a public artifact.
+
+The chosen review camera locations changed with the physically shorter bridge.
+HF05/HF06 vs HF07/HF08 images are therefore **not** a strict same-location A/B.
+The original-65 yaw and separate-40 yaw candidate use the same distance/FOV;
+actual matrices and posed body pixels are saved. Neither is owner-approved.
+
+All current author renders remain ART FAIL / NOT_GAME. Stronger technical source
+closure and a roof with real overlaps do not prove modern-game visual quality,
+normal-speed action, export-import closure or GPU/device performance.
+
+HF08 independent Godot4.6.3 verification is recorded by the runtime owner at
+`dot/production-v2-map-runtime@b8c8cf02c12433265d0642fdae88104b5fb44f39`:
+unique Sun and World, exact enabled shadow properties,8882 navigation nodes,
+33862 support triangles,62 solids,1057 actual roster entries with zero illegal
+spawn positions, all four semantic paths, and100 actual Controller ticks with
+six source18 ordinary actors (70 walking and30 idle). This is neither a combat
+hit/death test nor a frame-rate/GPU result. The-65 native camera was not replaced.

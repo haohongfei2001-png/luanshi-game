@@ -8,11 +8,11 @@ class AuthorFieldTests(unittest.TestCase):
   x=np.linspace(-60,84,200)[None,:];z=np.linspace(-42,42,140)[:,None]
   for side in ['west','east']:self.assertTrue(np.isfinite(height(x,z,side)).all())
  def test_packed_central_approach(self):
-  for x in np.linspace(-21,-7,40):self.assertAlmostEqual(float(height(x,0)),1.,places=6)
+  for x in np.linspace(-21,-5,40):self.assertAlmostEqual(float(height(x,0)),1.,places=6)
  def test_actual_apron_rise(self):
-  for x in np.linspace(7,11.7,20):self.assertAlmostEqual(float(height(x,0)),1.+(x-7)/4.7*.2,places=6)
+  for x in np.linspace(5,9.7,20):self.assertAlmostEqual(float(height(x,0)),1.+(x-5)/4.7*.2,places=6)
  def test_tunnel_level(self):
-  for x in np.linspace(11.7,17.5,20):self.assertAlmostEqual(float(height(x,0)),1.2,places=6)
+  for x in np.linspace(9.7,15.5,20):self.assertAlmostEqual(float(height(x,0)),1.2,places=6)
  def test_scalar_vector_agree(self):
   x=np.array([-40,-15,-11,-13,9,14,35]);z=np.array([-5,0,12,-13,-14,0,10]);out=height(x,z,'west')
   self.assertTrue(np.allclose(out,[height(a,b,'west') for a,b in zip(x,z)]))

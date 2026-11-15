@@ -13,11 +13,13 @@ receipts=[]
 def source(p):
  receipts.append({'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()});return Image.open(p).convert('RGB')
 def sample(im,x,z,scale):
+ # Area-prefilter to actual world-atlas texel density; nearest raw 2K sampling aliases soil into grain.
+ target=max(32,round(scale*8192/144));im=im.resize((target,target),Image.Resampling.LANCZOS)
  a=np.asarray(im,dtype=np.float32)/255.;ix=np.floor((x/scale%1)*im.width).astype(np.int32);iz=np.floor((z/scale%1)*im.height).astype(np.int32);return a[iz,ix]
 def tame(a,base,strength=.5):
  lum=a.mean(axis=-1,keepdims=True);base=np.asarray(base).reshape((1,1,3))
  # Preserve observed meso-scale soil/leaf structure; old .4*lum erased almost all relief.
- mean=np.mean(lum);relative=np.clip(lum/max(mean,.02),.18,2.1)**.80
+ mean=np.mean(lum);relative=np.clip(lum/max(mean,.02),.18,2.1)**.55
  return np.clip(base*relative+strength*(a-lum),0,1)
 # Physical feature widths match sources; contrast hierarchy is an explicit art derivative.
 soil=source(ROOT/'ground/sandy_gravel_02.jpg');grass=source(ROOT/'ground/leafy_grass.jpg');mud=source(ROOT/'ground/brown_mud_dry.jpg');forest=source(ROOT/'ground/forest_ground_04.jpg')
@@ -30,7 +32,7 @@ for row in range(0,h,320):
  b=tame(sample(mud,x,z,1.3),[.43,.402,.325],.42)
  # Rich soil is local to soft road margins, not evenly stamped across every metre.
  edgewear=(1-np.abs(cover*2-1))*.24
- compaction=.40+.20*np.sin(x*.45+z*.37)*np.sin(x*.17-z*.66)
+ compaction=.24+.15*np.sin(x*.45+z*.37)*np.sin(x*.17-z*.66)
  s=s*(1-compaction[...,None])+b*compaction[...,None]
  s=s*(1-edgewear)+b*edgewear
  macro=(.012*np.sin(x*.20+z*.31)+.009*np.sin(x*.57-z*.25))[...,None]
@@ -45,8 +47,8 @@ canvas.save(out/'valley-albedo.jpg',quality=95,subsampling=0)
 # Author-generated periodic wave slopes, not random noise or photographed highlights.
 size=1024;u=np.arange(size)[None,:]/size*2*np.pi;v=np.arange(size)[:,None]/size*2*np.pi
 wave=np.zeros((size,size));du=wave.copy();dv=wave.copy()
-for kx,kz,amp,phase in [(1,7,.08,.7),(3,12,.025,1.2),(-2,17,.018,2.8),(7,5,.025,.1),(11,21,.010,1.8),(3,31,.005,2.3)]:
- phasefield=u*kx+v*kz+phase+.28*np.sin(u*2+v*3)
+for kx,kz,amp,phase in [(3,5,.025,.7),(-4,11,.018,1.2),(8,17,.009,2.8),(7,-5,.018,.1),(-11,21,.007,1.8),(13,31,.004,2.3),(17,-23,.004,.5),(-19,13,.006,3.3)]:
+ phasefield=u*kx+v*kz+phase+1.7*np.sin(u*2+v*3)+.9*np.sin(u*3-v*2)
  du+=amp*kx*np.cos(phasefield);dv+=amp*kz*np.cos(phasefield)
 n=np.stack((-du,-dv,np.ones_like(du)),axis=-1);n/=np.linalg.norm(n,axis=-1,keepdims=True)
 Image.fromarray(((n*.5+.5)*255).astype('uint8')).save(out/'river-current-normal.png')
@@ -61,6 +63,12 @@ for i,box in enumerate(crops):
  normal.crop(box).resize((1024,768),Image.Resampling.LANCZOS).save(out/('stone-normal-'+str(i)+'.png'))
 im=source(ROOT/'masters/modular_wooden_pier/modular_wooden_pier_planks_diff_2k.jpg');a=np.asarray(im).astype(np.float32)/255.;lum=a.mean(axis=-1,keepdims=True);a=np.clip(lum*1.10+.035+(a-lum)*.80,0,1)
 Image.fromarray((a*255).astype('uint8')).save(out/'weathered-deck-atlas.jpg',quality=95)
+# Neutral fired-clay mineral microstructure, derived from acquired CC0 stone interior.
+# This supplies quiet grain only; every overlapping tile and cap is real new geometry.
+clay=np.asarray(source(MAT/'medieval_blocks_03/medieval_blocks_03_diff_2k.png').crop((330,30,900,360)).resize((512,256),Image.Resampling.LANCZOS),dtype=np.float32)/255.
+claylum=clay.mean(axis=-1,keepdims=True);claylum=(claylum-claylum.mean())*.18
+for i,base in enumerate([[.355,.34,.305],[.365,.349,.315],[.345,.332,.297]]):
+ Image.fromarray((np.clip(claylum+np.array(base),0,1)*255).astype('uint8')).save(out/('fired-clay-'+str(i)+'.jpg'),quality=95)
 # Original atlas UV remains intact for the scans. Retone only the mineral hue range.
 im=source(ROOT/'masters/rock_moss_set_01/rock_moss_set_01_diff_2k.jpg');a=np.asarray(im).astype(np.float32)/255.;lum=a.mean(axis=-1,keepdims=True);a=np.clip(lum*.83+np.array([.075,.082,.077])+(a-lum)*.55,0,1)
 Image.fromarray((a*255).astype('uint8')).save(out/'rock-mineral-atlas.jpg',quality=95)

@@ -4,23 +4,23 @@ import os
 SEED=20261115
 BOUNDS=(-60.,84.,-42.,42.)
 WATER_Y=-.65
-PAVING=[('west_landing',-10.2,-7.,-3.1,3.1,1.,1.),('east_landing',7.,11.7,-3.1,3.1,1.,1.2),('gate_tunnel',11.7,17.5,-3.1,3.1,1.2,1.2)]
+PAVING=[('west_landing',-8.2,-5.,-3.1,3.1,1.,1.),('east_landing',5.,9.7,-3.1,3.1,1.,1.2),('gate_tunnel',9.7,15.5,-3.1,3.1,1.2,1.2)]
 def smooth(a,b,x):
  t=np.clip((x-a)/(b-a),0,1);return t*t*(3-2*t)
 def gauss(x,z,cx,cz,rx,rz):return np.exp(-((x-cx)/rx)**2-((z-cz)/rz)**2)
 def edge(z,side):
  zs=[-42,-31,-22,-14,-8,0,7,15,23,32,42]
- xs=[-14,-11,-15,-12,-10,-7,-8,-12,-16,-14,-18] if side=='west' else [15,13,10,11,8,7,8,9,14,13,17]
+ xs=[-14,-11,-15,-12,-10,-5,-8,-12,-16,-14,-18] if side=='west' else [15,13,11.5,10.5,9.3,5,9.2,10.1,11.5,13,17]
  # C1 shoreline curve prevents angular spline-knot cuts in long river views.
  z=np.asarray(z);zs=np.asarray(zs,dtype=float);xs=np.asarray(xs,dtype=float)
  slope=np.gradient(xs,zs);i=np.clip(np.searchsorted(zs,z,side='right')-1,0,len(zs)-2)
  span=zs[i+1]-zs[i];t=np.clip((z-zs[i])/span,0,1)
  return (2*t**3-3*t**2+1)*xs[i]+(t**3-2*t**2+t)*span*slope[i]+(-2*t**3+3*t**2)*xs[i+1]+(t**3-t**2)*span*slope[i+1]
-def road_center(x):return -.0039*np.minimum(x+7,0)**2
+def road_center(x):return -.0039*np.minimum(x+5,0)**2
 
 def road_weight(x,z):
- center=np.where(x<-7,road_center(x),0.)
- width=np.where(x<-7,3.5+.022*np.maximum(-x-7,0),3.1)
+ center=np.where(x<-5,road_center(x),0.)
+ width=np.where(x<-5,3.5+.022*np.maximum(-x-5,0),3.1)
  d=np.abs(z-center)
  irregular=.25*np.sin(x*.48+z*.7)+.17*np.sin(x*1.13-z*.82)
  return 1-smooth(width-.45,width+2.4+irregular,d)
@@ -34,14 +34,14 @@ def base_height(x,z,side=None):
   terrace-=.40*gauss(x,z,-28,-10,10,3)
  else:
   terrace+=1.4*gauss(x,z,14,18,9,12)+1.8*gauss(x,z,20,-26,15,12)
-  terrace=np.where((x>17.5)&(np.abs(z)<22),1.2+.08*np.sin(x*.16)*np.sin(z*.13),terrace)
+  terrace=np.where((x>15.5)&(np.abs(z)<22),1.2+.08*np.sin(x*.16)*np.sin(z*.13),terrace)
  bank=-2.0+smooth(-2.8,5.2,d)*(terrace+2.0)
  h=np.where(d>5.2,terrace,bank)
  rw=road_weight(x,z)
  # Packed military road has gentle longitudinal drainage, not a noisy hill.
- rh=np.where(x<-7,1.+np.maximum(-x-22,0)*.006,np.where(x<11.7,1.+np.clip((x-7)/4.7,0,1)*.2,1.2))
- if side=='west':rw*=1-smooth(-7.,-6.7,x)
- else:rw*=smooth(6.7,7.,x)
+ rh=np.where(x<-5,1.+np.maximum(-x-22,0)*.006,np.where(x<9.7,1.+np.clip((x-5)/4.7,0,1)*.2,1.2))
+ if side=='west':rw*=1-smooth(-5.,-4.7,x)
+ else:rw*=smooth(4.7,5.,x)
  h=h*(1-rw)+rh*rw
  # Broad dry staging areas hold the real armies, outside the primary composition.
  if side=='west':
