@@ -10,7 +10,7 @@ def project_config(data):
 def preset_config(data):
     old=b'exclude_filter="tests/*,tools/*,docs/*,artifacts/*,builds/*"'
     if data.count(old)!=2 or data.count(b'include_filter="')!=2 or data.count(b'script_export_mode=2')!=2:raise ValueError('Unexpected export preset')
-    data=data.replace(b'include_filter="',b'include_filter="assets/production_v2/**/*.json,assets/production_v2/**/*.txt,assets/production_v2/**/*.md,',1)
+    data=data.replace(b'include_filter="',b'include_filter="scripts/field/experimental/production_v2/uv_spatial/*.json,assets/production_v2/**/*.json,assets/production_v2/**/*.txt,assets/production_v2/**/*.md,',1)
     return data.replace(old,b'exclude_filter="tools/*,docs/*,artifacts/*,builds/*,.pipeline/*"',1).replace(b'script_export_mode=2',b'script_export_mode=0',1)
 def export(editor,project,patch,out):
     out.mkdir(parents=True,exist_ok=True);pack=patch/'godot.macos.template_release.pck'

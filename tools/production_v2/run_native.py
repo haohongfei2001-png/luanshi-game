@@ -13,7 +13,7 @@ def run(project,patch,out,helper):
     executable,engine=validate_engine(patch);pack=executable.with_suffix('.pck');receipt=json.loads((out/'pack-integrity.json').read_text())
     if receipt.get('entry')!=ENTRY or not receipt.get('original_configs_restored') or not receipt.get('isolated_pack_setup_passed'):raise ValueError('Unverified exported entry')
     if pack.stat().st_size!=receipt['bytes'] or hashlib.sha256(pack.read_bytes()).hexdigest()!=receipt['sha256']:raise ValueError('Pack bytes changed')
-    env=os.environ|{'LUANSHI_PRODUCTION_V2':'1','PRODUCTION_NATIVE_OUT':str(out/'pixels')}
+    env=os.environ|{'LUANSHI_PRODUCTION_V2':'1','PRODUCTION_NATIVE_OUT':str(out/'pixels'),'PRODUCTION_MATERIAL_CONTROL':'1'}
     master,slave=pty.openpty();pending=b'';failure=None;host=None;window=None;completed=None
     with tempfile.TemporaryDirectory(prefix='native-empty-cwd-',dir=out) as empty, (out/'actual-game.log').open('w') as log:
         process=subprocess.Popen([str(executable),'--rendering-method','mobile','--rendering-driver','metal','--audio-driver','Dummy','--disable-vsync','--',MANIFEST],cwd=empty,env=env,stdin=subprocess.DEVNULL,stdout=slave,stderr=slave,start_new_session=True)

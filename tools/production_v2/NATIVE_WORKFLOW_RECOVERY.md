@@ -96,3 +96,31 @@ Do not run the experiment by reading raw GLB from the exported PCK, where import
 remapping normally removes it. The normal GLB/import closure stays unchanged.
 Six Python tests pass, including rejection of a changed non-material signature.
 No shader GPU execution or OFF/ON image has occurred at this preparation stage.
+
+### Material integration frozen for the next coordinated run
+
+Adapter source: `dot/source18-uv-spatial@01fb175a8ee64ed65c67e16f76bf06ea37f2b6b5`.
+The exact three files are copied without modification. Shader SHA256 is
+`32278b1720da8fb11265f27b4a3d1023491278093621d372a70db927e477ae79`;
+contract SHA256 is `6e499e13a720acdebfab6bad834d2a79d5971a3f51735f7d2cd7ccba292d83c7`.
+The normal native runner explicitly enables the diagnostic environment flag,
+while the game/adapter default remains OFF. Capture uses explicit checked calls,
+not assertions. The contract JSON is explicitly included in export. After the
+2K OFF/ON pair all 126 overrides must restore to their exact original materials
+before the original-material, real-input footage starts. This is a material
+replacement comparison, not a pre-proven GPU UV-equivalence result. Seven actors
+are one hero and six ordinary spearmen, not all troop types or a thousand-actor
+rendering solution.
+
+Final-source tests: seven Python cases; official Godot actual seven source18
+actors, two shared materials, 126 restored surfaces; and independent empty-cwd
+PCK with no raw GLB (contract present exit0, deliberately missing contract exit2).
+The latter uses an actually measured `template_debug`, not a release template.
+The native entry parses cleanly. No Mac/GPU execution has happened for this code.
+The first lifecycle test's `Control` class-name collision was corrected and its
+failed log retained locally, not hidden as a successful run.
+
+Every original JPEG/PNG/JSONL is now retained in the always-upload artifact,
+including encoder failure/partial captures. An always-run SHA256 inventory
+records the exact files; MP4 is supplemental, never a replacement for raw frames.
+Transport descriptor remains NOT_READY and no CI has been activated.

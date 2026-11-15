@@ -5,6 +5,7 @@ sys.path.insert(0,str(ROOT/'tools/production_v2'))
 from export_native_pack import project_config,preset_config,ENTRY
 from validate_native import validate,validate_material_control
 from prepare_native_inputs import prepare
+from hash_original_evidence import inventory
 class NativePreparation(unittest.TestCase):
  def test_release_entry_graph_has_no_unreviewed_assertions(self):
   # Parse every static GDScript dependency, not just the top-level runner.
@@ -39,6 +40,13 @@ class NativePreparation(unittest.TestCase):
    path=root/'material-control.json';path.write_text(json.dumps(report));self.assertTrue(validate_material_control(root)['same_state'])
    report['frames'][1]['non_material_state_sha256']='changed';path.write_text(json.dumps(report))
    with self.assertRaises(ValueError):validate_material_control(root)
+ def test_original_frames_retained_even_without_movie(self):
+  with tempfile.TemporaryDirectory() as directory:
+   root=Path(directory);(root/'partial.jpg').write_bytes(b'raw-frame');(root/'frames.jsonl').write_text('partial')
+   result=inventory(root);self.assertEqual(len(result['original_files']),2);self.assertEqual((root/'partial.jpg').read_bytes(),b'raw-frame')
+  workflow=(ROOT/'.github/workflows/dot-production-v2-native.yml').read_text()
+  self.assertNotIn('!artifacts/production-native/pixels/action/frame-',workflow)
+  self.assertIn('hash_original_evidence.py',workflow)
  def test_mainloop_is_normal_and_guarded(self):
   source=(ROOT/'project.godot').read_bytes();changed=project_config(source)
   self.assertIn(b'run/main_loop_type="DotProductionV2NativeCapture"',changed)

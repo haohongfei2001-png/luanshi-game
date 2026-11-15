@@ -1,5 +1,7 @@
 class_name DotProductionV2NativeCapture
 extends "res://scripts/review/production_v2_entry.gd"
+const MaterialControl=preload("res://scripts/review/production_v2_material_control.gd")
+const UVAdapter=preload("res://scripts/field/experimental/production_v2/uv_spatial/adapter.gd")
 const Save=preload("res://scripts/field/save.gd")
 const Recorder=preload("res://scripts/review/production_v2_wall_recorder.gd")
 const Pilot=preload("res://scripts/field/experimental/production_v2/contact_input_pilot.gd")
@@ -36,6 +38,12 @@ func start()->void:
  FileAccess.open(output+"/stills.json",FileAccess.WRITE).store_string(JSON.stringify(stills,"  "))
  root.size=Vector2i(2560,1440)
  for frame in 5:await process_frame
+ if OS.get_environment("PRODUCTION_MATERIAL_CONTROL")=="1":
+  var adapter:=UVAdapter.new()
+  if adapter.configure_contract("res://scripts/field/experimental/production_v2/uv_spatial/source18_contract.json")!=OK:fail("locked material contract rejected");return
+  var control:=MaterialControl.new()
+  var control_result:Dictionary=await control.capture(self,field,adapter,output)
+  if not control_result.get("error","").is_empty():fail("material-only comparison failed "+JSON.stringify(control_result));return
  var recorder:=Recorder.new();root.add_child(recorder)
  if not recorder.begin(root,field,output+"/action"):fail("native wall recorder rejected");return
  field.paused=false;field.set_process(true);field.set_physics_process(true)

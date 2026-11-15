@@ -14,7 +14,8 @@ def validate_material_control(out):
     if len(report.get('adapter_receipts',[]))!=7 or any(not r.get('applied') or r.get('surfaces')!=18 for r in report['adapter_receipts']) or report.get('restored_surfaces')!=126:raise ValueError('Material scope differs from seven actual source18 actors')
     return {'scope':'material-only OFF/ON control, visual review still required','same_state':True,'original_materials_restored':True}
 
-def validate(out):
+def validate(out,material_control=False):
+    if material_control:validate_material_control(out)
     stills=json.loads((out/'stills.json').read_text())
     if len(stills)!=2 or {tuple(r['actual_pixels']) for r in stills}!={(2560,1440),(3840,2160)}:raise ValueError('Missing exact native2K/4K stills')
     if len({r['battle_snapshot_sha256'] for r in stills})!=1:raise ValueError('Resolution comparison changed Battle')
@@ -35,4 +36,4 @@ def validate(out):
     missing=sorted({'walk','thrust','hit_chest','death'}-observed)
     return {'native_pixels_verified':True,'frames':len(frames),'duration_seconds':(ends[0]['monotonic_us']-frames[0]['monotonic_us'])/1e6,'observed_hero':sorted(hero),'observed_ordinary':{k:sorted(v) for k,v in ordinary.items()},'missing_requested_actions':missing,'input_results':results,'art':'NOT_ACCEPTED','performance':'READBACK_INSTRUMENTED_NOT_BENCHMARK','M5':'NOT_TESTED','action_scope':'INCOMPLETE' if missing else 'RECORDED_ACTION_NAMES_NOT_VISUAL_ACCEPTANCE'}
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('out',type=Path);a=p.parse_args();print(json.dumps(validate(a.out),indent=2))
+    p=argparse.ArgumentParser();p.add_argument('out',type=Path);p.add_argument('--material-control',action='store_true');a=p.parse_args();print(json.dumps(validate(a.out,a.material_control),indent=2))

@@ -86,7 +86,7 @@ jobs:
           clang -fobjc-arc -framework AppKit -o "$RUNNER_TEMP/production-focus" tools/macos_probe_focus.m
           chmod +x patch/godot.macos.template_release.arm64
           python3 tools/production_v2/run_native.py "$PWD" "$PWD/patch" "$PWD/artifacts/production-native" "$RUNNER_TEMP/production-focus"
-          python3 tools/production_v2/validate_native.py artifacts/production-native/pixels > artifacts/production-native/native-integrity.json
+          python3 tools/production_v2/validate_native.py artifacts/production-native/pixels --material-control > artifacts/production-native/native-integrity.json
       - name: Preserve real wall-clock movie, including missing-action failures
         if: always()
         run: |
@@ -94,12 +94,14 @@ jobs:
           RAW=artifacts/production-native/pixels/action
           if [ ! -f "$RAW/frames.jsonl" ]; then echo 'GRAPHICS_OR_RECORDING_NOT_RUN'; exit 0; fi
           python3 tools/encode_wall_clock_capture.py "$RAW" "$RAW/normal-speed.mp4" > "$RAW/encode.log"
+      - name: Preserve hashes of every original frame even if encoding failed
+        if: always()
+        run: python3 tools/production_v2/hash_original_evidence.py artifacts/production-native
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: production-native-hf08-${{ github.sha }}
           path: |
             artifacts/production-native/
-            !artifacts/production-native/pixels/action/frame-*.jpg
           if-no-files-found: warn
           retention-days: 30
