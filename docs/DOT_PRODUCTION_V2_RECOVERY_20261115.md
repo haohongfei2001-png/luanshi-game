@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 29 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 30 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -915,3 +915,57 @@ The next actual batch completed exit0 in67.742s, peakRSS1,007,063,040B. Full edi
 Continue the existing three writers under the single heavy-art lock, with explicit aggregate disk accounting. Do not start conflicting writers, promote failed art, overwrite failed frames or treat archives as acceptance. Source-process1GiB, character/architecture native2GiB, environment4GiB,180s, global available memory≥2GiB and real disk≥350MiB remain enforced; the older single4.5GiB preview allowance is not reusable. Latest source and recovery copies remain intact.
 
 The only verified deliverables here are the saved source/data and labelled actual diagnostic frames. New4K, actual Battle integration, original-speed full-action/riding/large-army footage,20/100/250/512-per-side performance and real MacBook AirM5 testing remain **NOT_RUN** for these new sources. RC24/RC25, actual/offscreen combat, old saves and production defaults remain unchanged.
+
+## 30. Verified continuation at 2026-11-15 21:21 UTC: actual whole23 / wearer29 / gate03c–03d all rejected
+
+**No complete art candidate has passed.** These are actual native-engine diagnostic results, not a release, playable-battle validation or proof that the target is close. The owner-approved original spearman image was re-opened alongside the new normal and near diagnostic frames. The generated three-view board is not a new owner approval.
+
+### Wearer29/29a: action persistence repaired, but the whole wearer fails
+
+The first45,078,476B runtime had only the new Relaxed clip because three copied actions were not persisted with fake users. It was rejected before rendering and retained, SHA256 `ba451d304e2cab56b0107dd636e3299cad5ac50906a4c93111cd332bbe31e0ec`. The original full action curves were still present in the native source.
+
+A small editable29a action library restores the three explicit copies from originalS27 clips without rewriting the143.8MB native29. Actual independent reload took4.077s; every non-socket curve hash, including keyframe handles/interpolation, matches the original, and the ten added socket tracks are identity. Corrected GLB is45,776,804B / SHA256 `d31496e5ac8225b7463ce604ba6c170a3a1838d0505dadc791e186587ba018cb`. Export completed76.041s. Four posed48-part standard-skin bounds agree with source within0.379mm,20 images are embedded and three new materials match the declared source factors/pixels. These checks establish export correspondence, **not** a natural grasp or good clothing.
+
+Six actual Godot2560 ×1440/internal1 keypose images completed exit0 in31.917s. The normal body measures148.2302px high at actual15.5m feet radius, optical45° and FOV50. Its long shaft measures only58.87px in projection because the authored carry points nearly towards the fixed camera. Both writer and coordinator reject the whole image: chest/shoulder armour is buried in the clothes; shoulder rows become sleeve rings; the helmet is a plain pale plastic-looking dome; the left hand in thrust is open instead of wrapping the shaft. The near frame confirms these are actual construction/pose/material failures, not just insufficient resolution. No camera turn, body-heading change, light adjustment or disabled underlying garment is an acceptable way to hide them.
+
+The94-file companion includes the91 frozen source/evidence files, manifest and two exact small exporter imports. Archive48,837,542B / SHA256 `387da50af3c8821b1f6df673328ef6021138699e6ed4ca51193bb0a2290e2a23` is persistently saved after full localCRC/memberSHA validation. Native29 and the failed runtime remain separate exact durable anchors. A cold full replay or independent remote readback of this companion has not been claimed.
+
+**Method30 changes the modelling foundation, rather than exporting another known-buried candidate.** Actual complete clothed triangle/plane outer sections replace an inscribed elliptical armour cage. The entire chest/back/shoulder-root/waist carrier, openings, overlapping skirt and full helmet/material design must form one coherent wearer outside the preserved professional clothes. Both real hands and the long diagonal shaft are authored as a full-body carry. First produce and review one complete static dressed mother at sufficient native pixels, plus normal-scale readability; do not launch another four-clip/six-frame batch before the static structure is credible.
+
+The first actual30 data extraction completed5.623s, peak941.76MiB: complete upper/lower/pants/body triangles and semantic weights, not a substituted old point cloud. NPZ1,827,430B / SHA256 `b234ecfe394718dd7bdbfe3d6fe9569138aba432054de1ee42e2bda55c73265f`. At this checkpoint30 still has **no finished new outfit layer, staticGLB or native image**.
+
+### Gate03c /03d: whole framing works; neither material route passes
+
+03c is an independently dimensioned18m-wide,8.2m-high military gate, not a uniformly shrunk13.2m model. The real4.8 ×3.6m passage,0.18m door thickness,0.28m posts, three actual door-back braces and curved roof/rafter relationship remain. Its actual source has41,964 triangles /3 materials.82,800 source samples found minimum rafter-to-roof-valley clearance0.178666m, above the0.12m construction criterion.
+
+Four native frames completed20.859s, peakRSS1,052,790,784B, directory growth17,156,524B. The independent30° /15m /FOV56.682 /3.5m-lookahead candidate now frames the complete gate while frozen25b stays scale1 and148.3679199px high, only−0.0003662px from the old45° control. This proves the stated composition experiment, not a changed production camera. The old control and two lateral2m frames remain. Both reviewers still reject noisy/moiré-like wood and tiles, black tile ends, periodic masonry and baked window illumination.
+
+03c full source/parent-helper closure is persistently retained:95 files,69,563,944B logical; archive44,239,730B / SHA256 `dfc1b06906e44bbf6904311f1fab48cf647be58f9eab2a29a7a73bbb945479de`. Original sources remain.
+
+03d was a bounded complete-material comparison using the same geometry dimensions, cameras, lighting and measured body bounds. Source UV analysis found ceramic median24.56 andP95 72.45 source texels/screen-pixel; wood median5.17, with independently repeated material crops. It replaced those surfaces with explicit world-scale stone/wood/ceramic shaders and corrected known mesh-face winding/normal errors. Native Mesh readback exposed an important discrepancy: old SurfaceTool-generated cap normals were+X where the CPU intention had been−X; the new committed normals were explicitly checked. The eight former black samples became approximatelyRGB70–89 without changing the light. **Normals and materials changed together; this is not a single-cause isolated proof.**
+
+Four actual03d frames completed20.591s, peak about1.081GB, growth14.585MB. Coordinator and writer viewed them and rejected **procedural flatness**: noise was removed, but the whole gate became a mathematical grey-box appearance without convincing stone/wood/ceramic. It does not replace03c as an accepted asset.117-file recovery closure76,939,603B logical is persistently stored as51,565,262B / SHA256 `d88e43803ce9c72d5d10ab0f13ea3b54064734f8422b1e8f49c9ed903e2f30a5`.
+
+Next03e uses already retained original2K stone/woodPBR channels with declared physical scale, not another procedural-noise adjustment. A genuine suitable ceramic source is being checked separately; stone or an illustrative sheet is not relabelled as ceramicPBR.
+
+### Whole23: complete first frame, direct whole-landscape failure
+
+The real whole23 frame includes the original professional shore, newly generated continuous land, complete03c gate,02c bridge, five original-crown derivatives and frozen25b. Exit0 in95.754s, peakRSS3,633,475,584B, minimum available memory3,093,827,584B; native2560 ×1440, internal1. This is an offline first-frame author scene, **not average gameplayFPS**. Character height is148.3679px. Eight selected terrain mappings pass and all16 boundary rays hit geometry; neither metric implied art quality.
+
+Actual PNG is6,970,114B / SHA256 `5f4da8fd664cd65d3d64cbef9fd79502ec74424e5597071ce9f108f7d770f431`. The writer reviewed the original; the coordinator reviewed its same-pixel JPEG because the firstPNG display exceeded tool-output limits. No falsely claimed unseen-image review is used.
+
+The bridge, gate and actual layered bank now occupy one frame, but the whole image is still rejected: huge cut-earth troughs, hard terrain/art-domain joins, overbright dense green crowns, repeated gate/bridge materials and flat blue holes under the overhanging bank. Direct source inspection identifies the main errors: the foundation plateau atX18.5..24.5 was wrongly applied acrossZ±80 rather than the actual wall width, carving the large trough; X3.75..6.61 beneath the original cliff lacks a complete riverbed, not merely a better water shader. Filling boundary rays with arbitrary soil walls was a bad design shortcut.
+
+All83 original input hashes remain unchanged. The full97-file closure187,548,059B was locally verified and persistently saved, plus its manifest: archive160,603,945B / SHA256 `a671f6e4bf24eb9a32c40efad4f5918c398d2cf3ef2dda32089f2b8293865e02`. Source art/meshes and original failures remain intact; editable mother chains and the engine are separately pinned. No independent archive readback or cold replay is claimed.
+
+**Whole24 changes the landscape assumptions as one composition.** Rebuild a continuous underwater bed through both banks; bounded, smoothly joined near-bank/road/gate-forecourt sections; foundation influence limited to the actual18m wall and a smooth collar. No random rock/grass additions to camouflage the error. A separately declared60–120m distant forest/ridge depth layer may use high-quality2.5D art, with actual lateral-view checks, not near-bank flat boards or a screenshot overlay.
+
+A new transparent woodland/ridge input has actually been generated and viewed:2172 ×724RGBA,2,640,747B / SHA256 `6322086d32d9c4d1a73f30d8226ba78b8671e9c0bb39faa1a4cffd2a4814c037`. It contains no near bridge/gate/person/river, includes baked soft shading and partly transparent edges, and is explicitly **art input, not an actual game image, PBR albedo or owner approval**. Whole24 native output remains pending.
+
+### Recoverability and next gates
+
+The no-longer-current full native27 was independently downloaded from its pinned durable version and verified against its entire140,065,878B original and SHA256 `fdc6eb95693f2ae3e19921797017424212c21742c909e2498a6e5710c97842e4`, including Library identity/version metadata. Only then was the redundant local native copy reclaimed. Current30 explicitly depends on complete29+29a, not27; environment and architecture depend on25bGLB, not27.27 code, face27a, later layers, images, failed runtimes and exact durable native remain preserved. Historical from-scratch27/28/29 authoring requires restoring27 first; do not pretend its old local native path still exists. There was no new Blender reopen during this restore check, only independent complete-byte equivalence.
+
+Closed shader caches were also fully copied and rehashed before moving toRAM with readable original-path symlinks. No unique art/source/image bytes were discarded. These are reproducible caches, not replacement persistent source backups.
+
+Next deliverables are the actual complete static wearer30, the coherent whole24 frame and same-condition architectural03e material result. All remain experimental and defaultOFF. Single heavy lock, process/time/global-memory/disk guards and aggregate disk accounting continue. No new permission, fee, account or user-device access is needed. RC24/RC25, actual/offscreen combat, old saves and production defaults remain unchanged; new4K, Battle integration, original-speed movement/attack/hit/riding footage,20/100/250/512-per-side performance and realM5 testing remain **NOT_RUN** for these art sources.
