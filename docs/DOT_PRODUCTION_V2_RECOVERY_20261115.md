@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 11 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 12 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -299,3 +299,40 @@ One paired Linux observation improves the scalar native stage from 10.997 to 7.1
 HF08 source `79f8f0304693b5ad33a3634caebbb92d491a4033`, exact runtime ZIP 139,477,998 bytes / SHA256 `f5ac12b501293da966a12072509550d91ac60fd5fafc283f8b55aa8475cb91f4`, original license notices and offline art failures remain frozen. Native review preparation is `b6a8e5e70459f135ad0f1cf39287e81fd5dd5ad8`; its input descriptor deliberately rejects missing artifact IDs. **No HF08 GPU result exists yet.**
 
 The exact world package is durably retained. Transport to the existing GitHub Actions pipeline is not complete: a 6 MiB chunk request yielded, then its tool wait unexpectedly blocked about 532 seconds; after internal interruption, the expected blob was checked through the connected GitHub API and absent. A reduced 3 MiB request also yielded, then a later wait blocked about 551 seconds. Its outcome must be checked before retrying. No success or authorization denial is inferred from that stall. Preserve both attempt ledgers. The resource branch exists at the unchanged main base, without a completed resource commit/artifact. Do not duplicate writers, pass private download credentials into public source, or call the pipeline ready. Resume from the exact chunk ledger, then activate only the already prepared native job once the exact public artifact and notices are verified. Continue independent material/performance work while transport is blocked.
+
+
+## 12. Geometry publication paused; actual typed restart checkpoint delivered (2026-11-15 09:10 UTC)
+
+This section supersedes earlier instructions to resume geometry transport. Main remains `248d26aefbb8dfe7973141a63b40f3a220f0edc0`; draft PR #67 remains `1cfda095b05a78dfe89da6f2ddd8f8cb89819180`. RC24 and RC25 are preserved. No new complete-scene art candidate, HF08 GPU run or macOS playable package has passed.
+
+### Stop boundary for unpublished map data
+
+Publication of the HF08 topology manifest was explicitly denied during action review. The owner has been asked to authorize the concrete public disclosure; no confirming response has been received at this checkpoint. The complete HF08 ZIP contains that same payload, so its transport is also paused. Do not retry it through compression, splitting, another API, another branch or a different worker. Two of 533 small package blocks already exist; no upload is pending, and there is no resource commit, completed artifact or activated native run. Earlier long-call uncertainty was checked separately; it does not override the later explicit denial.
+
+The bounded complete-depth 2.5D follow-up was also not promoted. Its CPU routes do not establish natural scale or sustained character visibility, and publication of its new geometry was denied. Some objects were created before that denial, but the public experiment branch was not advanced. Preserve the local checkpoint without retrying its publication. This is not an all-2.5D impossibility claim.
+
+The only connected authorized cloud computer was checked for local rendering. It has no usable desktop/compositor session for the available Godot templates; headless mode is a dummy display, not GPU capture. No user computer, socket/security workaround, new service or paid resource was used. These two limits explain why HF08 has no new actual game image. Independent source-only work may continue, but must not carry the denied data.
+
+### Delivered opt-in save implementation, with real restart rather than JSON equality
+
+[Pure-source commit 158de27ade75accd3bdd7e10a918176ab8060946](https://github.com/haohongfei2001-png/luanshi-game/commit/158de27ade75accd3bdd7e10a918176ab8060946) is on `dot/experimental-save-v5-source`, based on public native preparation `a2d39ae2e2321dd59e55ed18352fa237d32c11b1`. Its 13 text files contain generic code, tests and instructions, not world geometry, assets, typed save samples, trajectories, PCKs or private reports. The exact full tree is `70681af6659e4e7e2232818e6b7e92cfeb149ac1`. Remote ref and tree were verified. No PR, main update or CI run was triggered.
+
+The default-off API saves supported open-gate authored Battles into a separate experimental namespace. It requires an already verified runtime and exact map ID/topology revision/topology SHA, records the missing authored continuation state, preserves Variant types and RNG, and rejects incomplete, corrupt, unknown-topology or unsupported-mode data. The normal v1–v4 quick slot is unchanged. It does not activate Controller/UI loading or campaign settlement.
+
+Actual Linux Godot testing used 512 ordinary troops per side, 1,057 total entities. A writer saved at tick 400, exited, and a new process loaded the disk file and continued to tick 420. Full typed state and the passive per-tick combat/order/projectile/RNG observations match an uninterrupted control. Final counts are 570 attacks, hits [98,178], losses [51,21], with final typed snapshot SHA256 `79abb40a2acf1dc82cddd6a78e31b11f342463e16df11fa68c925ae8121aac29`. These are this test's real inputs, not the different performance fixture's combat counts.
+
+The final code was additionally packed into a small existing Linux **debug** template, booted through an inert main scene from an empty working directory, and loaded the same real disk checkpoint: 60 checks passed; independently missing-source and missing-oracle packs correctly refused. Original quick-save and campaign-sentinel bytes stayed unchanged. The legacy v1–v4 differential passed 138 checks, and unsupported MapQuery boundaries passed 66 checks. A sentinel proves file isolation, not world settlement. Detailed commands and limitations are in `docs/EXPERIMENTAL_MAP_V5_RESUME.md` and `docs/EXPERIMENTAL_MAP_V5_PACKED_CHECK.md` on the source branch. Locally authorized map input is required and deliberately not included.
+
+Important correction to older diagnostic evidence: `JSON.stringify` equality is not complete typed save preservation or restart proof. Vector/PackedArray types and all int64 RNG values are not safely represented that way. The new tests compare actual typed Variant bytes and perform real separate-process loading. Earlier JSON-only performance observations remain diagnostic, not retrospectively upgraded.
+
+### Exact-query CPU continuation, not a graphics result
+
+Local body-query and fused-travel prototypes retain the original algorithm's gate, support, slope, early-return and boundary decisions. The fused checkpoint is `c6738d3c9ec0359ecf0c2db0fac816d4558ba4e1`, currently local only. A fresh 400-tick paired shared-Linux observation reduced the previous native-body stage from 60.895603 to 46.677878 seconds. All 6,687,085 required body checks and 16,955 shot checks remain. It avoids 2,199,707 speculative support samples after an original early rejection, not required collision work; 2,652 independent per-step decision/counter cases verify that distinction.
+
+Typed snapshots and mapped state at ticks 0/100/200/300/400, plus the complete 401-row typed event stream, are byte-identical to both the paired control and the original full GDScript baseline. The final typed snapshot SHA256 is `c92536b9e0d54d01b07779f39bfe14fcb095d0c0e69d7e8aad0b1960651e38c6`. Actual combat has 492 attacks, hits [93,139], losses [38,22], with two delivered orders. This is still 46.7 wall seconds for 20 simulated seconds, not real time, FPS, a Mac result or M5 acceptance. Do not combine separate benchmark pairs into a fabricated single run. A separate pure-source checkpoint is being prepared without the denied manifest or evidence payloads; no public native binary is claimed.
+
+### Most recent actual image and next independent visual check
+
+The latest game image remains corrected Metal run 43690415954 described in section 11. Its complete original artifact has now been privately backed up with the exact existing SHA. The image and original-speed videos are rejected experiments, not the new HF08 scene. A further camera audit found the old overlay's “22m” misleading: the camera uses **orthographic size 22**, offset (0,40,40), with actual camera-to-target distance **56.5685 m**. Thus it is not the owner's requested 22 m camera-distance comparison. Original evidence is preserved unmodified; future captions must state projection, span and distance separately.
+
+The already public source18 UV adapter is `dot/source18-uv-spatial@01fb175a8ee64ed65c67e16f76bf06ea37f2b6b5`. A small code-only OFF/ON control is being prepared from the existing public 2.5D test scene and assets, with identical Battle, bones, transforms, camera and light and with exact material restoration. It introduces no HF08 or denied geometry. It has **not run on GPU yet**. Its purpose is to verify UV/material rendering correctness, not to revive the rejected static-plate scene, conceal the whole-art gap or declare armor quality accepted. Whole-scene reconstruction remains the visual task; all art, actual M5 and full-army visual gates remain unpassed.
