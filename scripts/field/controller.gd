@@ -327,8 +327,14 @@ func _load() -> void:
 		battle.notice="存档与军籍不符，当前战场已保留" if saved else "未找到可用的战场存档"
 	_refresh_hud()
 
+func _camera_ground_point()->Vector3:
+	return battle.map_runtime.unit_point(camera_center)
+
+func _synchronize_world_after_step()->bool:
+	return theater.sync() and (battle.result=="" or not theater.settle().is_empty())
+
 func _camera() -> void:
-	var p := Ground.unit_point(camera_center,battle.bridgehead)
+	var p := _camera_ground_point()
 	if not review_camera_profile.is_empty():
 		if _review_camera_restore.is_empty():_review_camera_restore={"far":camera.far,"fov":camera.fov}
 		camera_pitch=deg_to_rad(float(review_camera_profile['pitch_degrees']))
@@ -403,7 +409,7 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 	var best_score:=INF
 	# In the orthographic player camera a shoulder spans the same number of pixels
 	# everywhere. Measure across the screen so orbiting preserves that width.
-	var base:=Ground.unit_point(floor_point,battle.bridgehead)
+	var base:=battle.map_runtime.unit_point(floor_point)
 	var shoulder:=camera.global_transform.basis.x.normalized()*0.32
 	var radius:=maxf(2.0,camera.unproject_position(base+shoulder).distance_to(camera.unproject_position(base)))
 	# A cursor resting on a visible torso selects that ground direction at the
@@ -411,7 +417,7 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 	for id in battle._near(floor_point,4.8,1):
 		var u:=battle.roster[id]
 		if battle.hero.pos.distance_squared_to(u.pos)>34.0*34.0: continue
-		var foot:=Ground.unit_point(u.pos,battle.bridgehead)
+		var foot:=battle.map_runtime.unit_point(u.pos)
 		var head:=foot+Vector3.UP*(2.45 if u.mounted else 1.70)
 		var low:=camera.unproject_position(foot)
 		var high:=camera.unproject_position(head)
@@ -419,8 +425,8 @@ func _aim_point(screen: Vector2,target_figures: bool) -> Vector2:
 		if d>radius: continue
 		var score:=d/radius+0.001*screen.distance_to(low)
 		if score>=best_score: continue
-		var elevated:=Ground.parapet(u.pos)>2.75 or Ground.parapet(battle.hero.pos)>2.75
-		if not Ground.clear_shot(battle.hero.pos,u.pos,battle.gate_hp<=0,elevated): continue
+		var elevated:=battle.map_runtime.parapet(u.pos)>2.75 or battle.map_runtime.parapet(battle.hero.pos)>2.75
+		if not battle.map_runtime.clear_shot(battle.hero.pos,u.pos,battle.gate_hp<=0,elevated): continue
 		best_score=score
 		best=u.pos
 	return best
@@ -500,7 +506,7 @@ func _physics_process(delta: float) -> void:
 		var start := Time.get_ticks_usec()
 		battle.step()
 		if battle.tick%20==0 or battle.result!="":
-			if not theater.sync() or (battle.result!="" and theater.settle().is_empty()):
+			if not _synchronize_world_after_step():
 				paused=true
 				push_error("Field world clock or settlement audit failed")
 				return

@@ -1,4 +1,6 @@
 extends "res://scripts/field/maps/map_query.gd"
+var profile_enabled:=false
+var profile:Dictionary={} # Inclusive query times; nested totals must not be summed.
 ## Internal open-gate field battle only. No old siege/world objective fallback.
 const Navigation:=preload("res://scripts/field/maps/authored_navigation.gd")
 var nav:Navigation
@@ -44,13 +46,26 @@ func travel(p:Vector2,offset:Vector2,open:bool)->Vector2:
   if can_step(p,p+x,open):return p+x
  return p
 func waypoint(p:Vector2,goal:Vector2)->Vector2:
+ if not profile_enabled:return _waypoint_impl(p,goal)
+ var started:=Time.get_ticks_usec();var result:=_waypoint_impl(p,goal)
+ profile["waypoint_calls"]=int(profile.get("waypoint_calls",0))+1
+ profile["waypoint_us"]=int(profile.get("waypoint_us",0))+Time.get_ticks_usec()-started
+ return result
+func _waypoint_impl(p:Vector2,goal:Vector2)->Vector2:
  if p.distance_squared_to(goal)<36. and can_step(p,goal,true):return goal
  var from:=nav.graph.get_closest_point(p);var to:=nav.graph.get_closest_point(goal)
  if from<0 or to<0:return p
  var key:=Vector2i(from,to)
  if not _routes.has(key):
-  if _routes.size()>2048:_routes.clear()
+  if _routes.size()>2048:
+   _routes.clear()
+   if profile_enabled:profile["route_cache_full_clears"]=int(profile.get("route_cache_full_clears",0))+1
+  var astar_start:=Time.get_ticks_usec() if profile_enabled else 0
   _routes[key]=nav.graph.get_point_path(from,to)
+  if profile_enabled:
+   profile["astar_calls"]=int(profile.get("astar_calls",0))+1
+   profile["astar_us"]=int(profile.get("astar_us",0))+Time.get_ticks_usec()-astar_start
+ elif profile_enabled:profile["route_cache_hits"]=int(profile.get("route_cache_hits",0))+1
  var route:PackedVector2Array=_routes[key]
  # route[0] is the nearest lattice node, not a forward target. Pulling back
  # to it outside0.4m oscillates before the0.5m nearest-node switch boundary.
@@ -58,7 +73,10 @@ func waypoint(p:Vector2,goal:Vector2)->Vector2:
  for index in range(mini(route.size()-1,6),0,-1):
   var point:=route[index]
   if p.distance_squared_to(point)>.01 and can_step(p,point,true):return point
- if not route.is_empty() and p.distance_squared_to(route[0])>.81 and can_step(p,route[0],true):return route[0]
+ # At a bridge/river corner, only the start-node connector may be legal.
+ # Forward nodes were tried first, so reconnecting here does not restore the
+ # old start-node-before-forward oscillation. Never relax can_step.
+ if not route.is_empty() and p.distance_squared_to(route[0])>.000001 and can_step(p,route[0],true):return route[0]
  return p
 func clear_shot(p:Vector2,q:Vector2,_open:bool,_elevated:bool=false)->bool:
  var start:=height(p);var end:=height(q)
