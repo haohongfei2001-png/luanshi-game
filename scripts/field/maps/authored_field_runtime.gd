@@ -13,8 +13,13 @@ func bind(navigation:Navigation,data:Dictionary)->Error:
  if nav!=null:return ERR_ALREADY_IN_USE
  if not navigation._configured or navigation._gates.get("gate_main")!=true:return ERR_UNAVAILABLE
  if data.get("goal_regions",[]).is_empty() or data.get("retreat_regions",[]).size()!=2 or data.get("spawn_regions",[]).size()!=2:return ERR_INVALID_DATA
+ var dynamic=data.get("gate_dynamic")
+ if not dynamic is Dictionary or not dynamic.get("pivot") is Array or dynamic.pivot.size()!=3:return ERR_INVALID_DATA
+ var gate=dynamic.pivot;var goal=data.goal_regions[0].get("center")
+ if not goal is Array or goal.size()!=3:return ERR_INVALID_DATA
+ for value in gate+goal:
+  if not (value is int or value is float) or not is_finite(float(value)):return ERR_INVALID_DATA
  nav=navigation;source=data.duplicate(true)
- var gate=data.gate_dynamic.pivot;var goal=data.goal_regions[0].center
  _landmarks={"gate":Vector2(gate[0],gate[2]),"court":Vector2(goal[0],goal[2])}
  for region in data.retreat_regions:_retreat.append(centre(region.xz_polygon))
  for region in data.spawn_regions:_spawn_centres.append(centre(region.xz_polygon))

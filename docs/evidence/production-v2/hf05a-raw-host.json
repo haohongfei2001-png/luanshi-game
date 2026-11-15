@@ -1,0 +1,17 @@
+{
+  "error": 0,
+  "gate_origin": "(0.0, 0.0, 0.0)",
+  "gate_path": "AuthoredVisual/RiverValley_HF01_AuthoredSource/FortifiedRiverThreshold/GateMain_DynamicLeaves",
+  "glb_sha256": "d5536b56a6846e49c99c9170e1fb654d246a2469dd131402dc5a48a093f7c230",
+  "identity": {
+    "authored_source_sha256": "dc400f55d60cae499b32ee582372f05b3241e8a69d50b1612f91e588332ef32e",
+    "map_id": "luanshi.river_gate.production_v2",
+    "topology_revision": 4.0,
+    "topology_sha256": "cd78826cec49916b529b4dd6559dafae81daf32dbb864a6dfbee0e587f429056",
+    "visual_revision": 1.0
+  },
+  "scope": "RAW_GLTF_AND_EXACT_AUTHOR_WRAPPER_STRUCTURE_NO_GPU_NO_EXPORTED_IMPORT_PROOF",
+  "sun_count": 1,
+  "sun_energy": 2.70000004768372,
+  "world_count": 1
+}

@@ -1,6 +1,7 @@
 extends SceneTree
-## Real Controller + real source11 Skeleton, but a deliberately non-art mother
-## fixture and prototype004 topology. No screenshots or visual acceptance.
+## Real Controller + supplied Skeleton. Default is a non-art identity fixture;
+## optional seventh arg loads the exact raw author GLB and mother wrapper.
+## CPU source integration only: no screenshots, GPU or visual acceptance.
 const Field:=preload("res://scripts/field/maps/authored_field_controller.gd")
 const Host:=preload("res://scripts/field/maps/authored_scene_host.gd")
 const Battle:=preload("res://scripts/field/battle.gd")
@@ -20,6 +21,7 @@ class Recorder extends Node:
  func stop(value:String)->void:reason=value;active=false
 const Binding:=preload("res://scripts/field/experimental/production_v2/mh_spear_battle_binding.gd")
 var actual_actor_sha:=""
+var actual_mother_sha:=""
 func _initialize():run.call_deferred()
 func fixture(identity:Dictionary)->PackedScene:
  var scene:=Node3D.new()
@@ -31,7 +33,7 @@ func fixture(identity:Dictionary)->PackedScene:
 func press(action:String,strength:float):
  var event:=InputEventAction.new();event.action=action;event.pressed=strength>.001;event.strength=strength;Input.parse_input_event(event)
 func run():
- var args:=OS.get_cmdline_user_args();assert(args.size() in [5,6]);actual_actor_sha=FileAccess.get_sha256(args[2])
+ var args:=OS.get_cmdline_user_args();assert(args.size() in [5,6,7]);actual_actor_sha=FileAccess.get_sha256(args[2])
  var data:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[0]));var layout:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[1]));var metadata:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[3]))
  var bounds:=Rect2(Vector2(layout.bounds.x[0],layout.bounds.z[0]),Vector2(layout.bounds.x[1]-layout.bounds.x[0],layout.bounds.z[1]-layout.bounds.z[0]))
  var nav:=Nav.new();assert(nav.configure(data,bounds,{"gate_main":true},.7,3.4)==OK)
@@ -47,9 +49,18 @@ func run():
  shared_probe.free()
  var binding:=Binding.new();assert(binding.configure_timing(metadata,FileAccess.get_sha256(args[2]))==OK);binding.ground_point=Callable(runtime,"unit_point");binding.enabled=true
  var identity:=runtime.identity();identity.visual_revision=1;identity.authored_source_sha256=data.authored_source_sha256
- var host:=Host.new();assert(host.configure(fixture(identity),identity)==OK)
+ var mother:=fixture(identity)
+ if args.size()==7:
+  var handoff:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[6]+"/native-handoff.json"))
+  var mother_doc:=GLTFDocument.new();var mother_state:=GLTFState.new()
+  assert(mother_doc.append_from_file(args[6]+"/river-valley-hf01.glb",mother_state)==OK)
+  var visual:=mother_doc.generate_scene(mother_state);var visual_packed:=PackedScene.new();assert(visual_packed.pack(visual)==OK);visual.free()
+  visual_packed.take_over_path(handoff.scene.path.get_base_dir()+"/river-valley-hf01.glb")
+  mother=load(args[6]+"/mother.tscn") as PackedScene;identity=handoff.identity
+  actual_mother_sha=FileAccess.get_sha256(args[6]+"/river-valley-hf01.glb")
+ var host:=Host.new();assert(host.configure(mother,identity)==OK)
  var field:=Field.new();assert(field.configure(battle,host,actor,binding,bounds,"CPU_INTERFACE_FIXTURE_NOT_VISUAL_ART")==OK)
- if args.size()==6 and args[5] in ["contact-group","army-group"]:
+ if args.size()>=6 and args[5] in ["contact-group","army-group","input-short"]:
   var ordinary:=[]
   for id in Binding.select_ordinary_ids(battle,3):
    var extra_actor:=Actor.new();assert(extra_actor.setup(packed)==OK)
@@ -61,26 +72,29 @@ func run():
   assert(field.ordinary_actor_bindings.is_empty())
   assert(field.configure_ordinary_spearmen(ordinary)==OK)
  root.size=Vector2i(2560,1440);root.add_child(field);field.set_process(false);field.set_physics_process(false);field.deploy()
- if args.size()==6 and args[5] in ["contact-group","army-group"]:assert(field.view.review_hidden_actor_ids.size()==6)
+ if args.size()>=6 and args[5] in ["contact-group","army-group","input-short"]:assert(field.view.review_hidden_actor_ids.size()==6)
  await process_frame
- if args.size()==6:
+ if args.size()>=6 and args[5]!="input-short":
   if args[5]=="army-group":army(field,args[4]);return
   await contact(field,args[4]);return
  var initial:=battle.hero.pos;var rows:=[];var clips:={}
  for step in 100:
-  var goal:=initial+Vector2(4,0);var desired:=battle.hero.pos.direction_to(goal)*.45 if step<70 and battle.hero.pos.distance_to(goal)>.2 else Vector2.ZERO
+  var goal:Vector2=runtime.objective(0,"PRESS",initial,false)
+  var waypoint:=runtime.waypoint(battle.hero.pos,goal)
+  var desired:=battle.hero.pos.direction_to(waypoint)*.45 if step<70 and battle.hero.pos.distance_to(goal)>.2 else Vector2.ZERO
   var move:=desired.rotated(field.camera_yaw)
   press("move_right",maxf(0,move.x));press("move_left",maxf(0,-move.x));press("move_down",maxf(0,move.y));press("move_up",maxf(0,-move.y))
-  var target:=runtime.unit_point(battle.hero.pos+Vector2(2,0));var logical:=field.camera.unproject_position(target)
+  var target:=runtime.unit_point(runtime.travel(battle.hero.pos,desired.normalized()*minf(2.,battle.hero.pos.distance_to(waypoint)),true));var logical:=field.camera.unproject_position(target)
   var pointer:=InputEventMouseMotion.new();pointer.position=root.get_final_transform()*logical;pointer.global_position=pointer.position;Input.parse_input_event(pointer);Input.flush_buffered_events()
   field._physics_process(Battle.DT);field._process(Battle.DT)
   var row:=field.actor_receipt.duplicate(true);row["position"]=str(battle.hero.pos);row["pointer_actual"]=str(root.get_mouse_position());row["pointer_logical"]=str(logical);rows.append(row)
   clips[row.get("semantic",row.get("reason","unknown"))]=int(clips.get(row.get("semantic",row.get("reason","unknown")),0))+1
  for action in ["move_right","move_left","move_down","move_up"]:press(action,0)
+ FileAccess.open(args[4]+".input-trace.json",FileAccess.WRITE).store_string(JSON.stringify({"initial":str(initial),"final":str(battle.hero.pos),"rows":rows},"  "))
  assert(battle.hero.pos.distance_to(initial)>1.,"Actual Controller input did not move hero")
  assert(actor.skeleton.get_bone_count()==163);assert(field.camera.fov==50.);assert(is_equal_approx(field.camera_pitch,deg_to_rad(45.)))
  assert(runtime.unit_point(battle.hero.pos).distance_to(actor.position)<.5)
- var output={"kind":"CPU_REAL_CONTROLLER_SKELETON_INTERFACE_FIXTURE_NOT_VISUAL","tick":battle.tick,"initial":str(initial),"final":str(battle.hero.pos),"clips":clips,"hero_hp":battle.hero.hp,"hero_impacts":battle.hero.impacts,"glb_sha256":FileAccess.get_sha256(args[2]),"rows":rows}
+ var output={"kind":"CPU_REAL_CONTROLLER_SKELETON_NOT_GPU_OR_ART_ACCEPTANCE","actual_mother_sha256":actual_mother_sha,"new_ordinary_ids":field.view.review_hidden_actor_ids.keys(),"tick":battle.tick,"initial":str(initial),"final":str(battle.hero.pos),"clips":clips,"hero_hp":battle.hero.hp,"hero_impacts":battle.hero.impacts,"glb_sha256":FileAccess.get_sha256(args[2]),"rows":rows}
  FileAccess.open(args[4],FileAccess.WRITE).store_string(JSON.stringify(output,"  "));field.free();print("REAL_CONTROLLER_SKELETON_FIXTURE_PASS ",JSON.stringify({"tick":battle.tick,"clips":clips,"hero_hp":battle.hero.hp,"gpu":"NOT_RUN"}));quit()
 
 func contact(field:Field,output_path:String)->void:

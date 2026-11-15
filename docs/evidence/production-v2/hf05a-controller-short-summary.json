@@ -1,0 +1,22 @@
+{
+  "actual_mother_sha256": "d5536b56a6846e49c99c9170e1fb654d246a2469dd131402dc5a48a093f7c230",
+  "clips": {
+    "idle": 30,
+    "walk": 70
+  },
+  "final": "(-24.9513, -9.166897)",
+  "glb_sha256": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "hero_hp": 100.0,
+  "hero_impacts": 0,
+  "initial": "(-28.75, -11.75)",
+  "kind": "CPU_REAL_CONTROLLER_SKELETON_NOT_GPU_OR_ART_ACCEPTANCE",
+  "new_ordinary_ids": [
+    1,
+    2,
+    4,
+    21,
+    22,
+    24
+  ],
+  "tick": 100
+}
