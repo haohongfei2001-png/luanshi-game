@@ -1,0 +1,26 @@
+{
+  "status": "ISOLATED_SOURCE_AND_IMPORT_ONLY_NOT_ART_ACCEPTED",
+  "files": {
+    "architecture.glb": {
+      "bytes": 100434652,
+      "sha256": "044ea5497559e738cf67b54c0d79e981656f34d2e3bdb4ba879cdaeb98197fb5"
+    },
+    "architecture-mother.blend": {
+      "bytes": 113567340,
+      "sha256": "82651f57758445f040986b274408afff64995d07491c9fa968c0807854c11bbe"
+    },
+    "architecture-contract.json": {
+      "bytes": 18981,
+      "sha256": "e72444be3077eab36d6f637c55192a80b3e1b8ec6fa1f94f25fbd060c87df2f8"
+    },
+    "scene-layout-snapshot.json": {
+      "bytes": 6525,
+      "sha256": "8ac7e2263cad3b1d8f71d68ced22e03fd5992e9390df8199f3337e46f8299487"
+    }
+  },
+  "native_gameplay": "NOT_RUN",
+  "real_512_per_side_muster": "NOT_RUN",
+  "gpu_performance": "NOT_RUN",
+  "old_map_default": "UNCHANGED",
+  "whole_scene_review": "Environment owner imported03 in full mother; entire scene still FAIL, not delivered to owner as accepted art; 04 only expands gate collision envelope."
+}
