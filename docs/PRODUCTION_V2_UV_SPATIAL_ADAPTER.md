@@ -25,12 +25,20 @@ claim that runtime read original GLB bytes after export remapping.
 One adapter instance can serve all already-instantiated source18 actors:
 ```gdscript
 var adapter = preload("res://scripts/field/experimental/production_v2/uv_spatial/adapter.gd").new()
-assert(adapter.configure_contract("res://scripts/field/experimental/production_v2/uv_spatial/source18_contract.json") == OK)
+var err = adapter.configure_contract("res://scripts/field/experimental/production_v2/uv_spatial/source18_contract.json")
+if err != OK:
+    push_error("Source18 material contract rejected")
+    return
 # Default OFF. For the explicit ON control only:
 var receipt = adapter.apply(skeletal_actor, true)
-assert(receipt.applied and receipt.surfaces == 18)
+if not receipt.get("applied", false) or receipt.get("surfaces", 0) != 18:
+    push_error("Source18 material adaptation rejected")
+    return
 # After control capture, restore exact original shared material objects:
-assert(adapter.restore(skeletal_actor) == 18)
+var restored = adapter.restore(skeletal_actor)
+if restored != 18:
+    push_error("Source18 material restore count mismatch")
+    return
 ```
 `apply(actor)` without true makes no changes; it does not implicitly undo a previous
 ON call. Use `restore` for that. Reapplication onto existing overrides is rejected.
@@ -78,3 +86,32 @@ OFF/ON native2K stills with only this material override changed. Restore materia
 before the existing action run. Verify actual GPU compilation, source-color/PBR,
 normal direction and shadows. No visual approval or whole-army deployment before
 that evidence is reviewed.
+
+## Godot 4.6.3 backface and normal decoding audit
+
+Do not put configuration, apply, or restore calls inside `assert`: release builds
+remove assert expressions. The example above executes and checks them explicitly.
+
+The official `4.6.3-stable` source confirms that `cull_disabled` emits
+`DO_SIDE_CHECK` for both StandardMaterial-generated and custom spatial shaders.
+The renderer flips only interpolated NORMAL on backfaces before fragment code;
+TANGENT and BINORMAL are not flipped. Adding our own FRONT_FACING flip would
+therefore double-flip and be wrong. No manual flip was added.
+
+StandardMaterial uses `hint_roughness_normal`, not just `hint_normal`. This adapter
+now matches that hint exactly. Both hints use the same normal fallback and normal
+texture detection; the roughness variant also participates in tools-only normal /
+roughness import association. Existing imported textures remain the same objects.
+Both material paths assign sampled RGB to NORMAL_MAP and normal scale to
+NORMAL_MAP_DEPTH. The shared renderer remaps RG to [-1,1], reconstructs positive Z
+with sqrt(max(0,1-dot(RG,RG))), then normalizes the depth-mixed TBN result. Thus it
+ignores sampled B for RG-packed textures identically. No custom unpacking or
+additional sRGB conversion is introduced. This is source-level equivalence,
+not a GPU pixel/compression or art acceptance result.
+
+Exact official references:
+- [Standard material generation](https://github.com/godotengine/godot/blob/4.6.3-stable/scene/resources/material.cpp): lines 814-823, 1090-1095, 1745-1754.
+- [Mobile compiler](https://github.com/godotengine/godot/blob/4.6.3-stable/servers/rendering/renderer_rd/forward_mobile/scene_shader_forward_mobile.cpp): lines 789-790.
+- [Mobile renderer](https://github.com/godotengine/godot/blob/4.6.3-stable/servers/rendering/renderer_rd/shaders/forward_mobile/scene_forward_mobile.glsl): lines 1171-1186, 1410-1415.
+- [GLES compiler / texture hints](https://github.com/godotengine/godot/blob/4.6.3-stable/drivers/gles3/storage/material_storage.cpp): lines 946-951, 1035-1039, 1393-1394.
+- [GLES renderer](https://github.com/godotengine/godot/blob/4.6.3-stable/drivers/gles3/shaders/scene.glsl): lines 2050-2057, 2159-2164.

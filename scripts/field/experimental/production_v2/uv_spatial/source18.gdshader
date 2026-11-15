@@ -1,8 +1,10 @@
 shader_type spatial;
 // Exact scoped source18 PBR semantics. No vertex/skin/tangent writes.
+// cull_disabled supplies DO_SIDE_CHECK: renderer flips backface NORMAL once.
+// Do not manually flip NORMAL/TANGENT/BINORMAL. NORMAL_MAP uses renderer RG decode.
 render_mode blend_mix, depth_draw_opaque, cull_disabled, diffuse_burley, specular_schlick_ggx;
 uniform sampler2D base_texture : source_color, filter_linear_mipmap, repeat_enable;
-uniform sampler2D normal_texture : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform sampler2D normal_texture : hint_roughness_normal, filter_linear_mipmap, repeat_enable;
 uniform sampler2D orm_texture : filter_linear_mipmap, repeat_enable;
 uniform vec4 base_factor = vec4(1.0); // glTF factors already linear; NOT source_color.
 uniform float metallic_factor = 1.0;
