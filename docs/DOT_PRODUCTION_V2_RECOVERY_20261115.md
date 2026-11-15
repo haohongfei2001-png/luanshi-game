@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 27 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 29 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -869,3 +869,49 @@ Its30-file source/evidence closure is22,955,015B; retained archive22,849,682B / 
 A separate read-only audit also confirmed earlier soldier tests were static direction sheets, independently generated walk poses and a single-image IK puppet, not a complete consistent mother-model-to-colour/depth animated-sprite trial. Those failed implementations do not settle the representation question. Mother art quality must pass first; baking the rejected28 model cannot magically improve it.
 
 RC24/RC25, genuine/offscreen combat, old-save behaviour and production defaults are unchanged. New4K, integration into Battle, original-speed full action/riding/large-army footage,20/100/250/512-per-side performance and realM5 validation remain NOT_RUN for these rejected new sources.
+
+## 29. Verified continuation at 2026-11-15 21:00 UTC: whole22 and complete03b rejected; coherent23 and wearable29 in progress
+
+This section supersedes in-progress statements above, without deleting their failures or recovery evidence. The owner's priority remains **first make the entire art direction meet the reference in the real game**. No complete scene, character, camera or new representation has been accepted. Main remains `248d26aefbb8dfe7973141a63b40f3a220f0edc0`; PR #67 remains draft at `1cfda095b05a78dfe89da6f2ddd8f8cb89819180`. This PR is still a documentation-only, unmerged draft.
+
+### Whole22: actual native image, rejected projection and composition
+
+Whole22 rebuilt the continuous terrain rather than modifying the old21 geometry: 67,721 vertices / 134,400 triangles. Its authored ground-image input is 1536 × 1024 over 36 × 24 m, about42.67 texels/m, not the requested3072 and not a claimed pure albedo. Actual native Godot import validation found12/12 unique terrain samples with zero selected position/UV error. That is data verification, not art acceptance.
+
+The actual bridge-forward candidate rendered2560 × 1440 at internal scale1: exit0 in79.710s, peakRSS3,509,198,848B, minimum available memory3,531,702,272B, no guard trigger. It used radial15m, FOV50, optical pitch23°, yaw−90°, lookahead3m and target height3.8m. This is **not** the45° control camera and must not be labelled a same-condition before/after. Frozen25b body height was182.57px; the character was not scaled down.
+
+Both writer and coordinator viewed the actual frame and rejected the entire result: finite-ground black horizon, oversized foreground bridge, unreadable river, pasted-looking steep bank, sparse oversized trees and poor overall framing. Terrain diagnostic proves maximum bank angle76.73°,955 core triangles over60°, maximum surface/projected-area ratio4.356. A top-down colour map on nearly vertical geometry plus edge-clamped samples is the relevant production error; UV import success does not excuse it. Increasing texture noise or scattering more plants is not the recovery plan.
+
+Frozen83-file closure152,632,757B is retained. The locally CRC/SHA-verified archive is128,776,389B / SHA256 `5fffab0ff8cd89283ea07bf6c05c2c6283c68c1175b40fbfc941811c797343a0`, persistently stored. Source originals remain; a full independent remote restore/replay has not been claimed.
+
+### Complete architectural03 / 03b: real structure, still rejected art
+
+The separate architecture experiment replaced the flat-board shortcut with an editable complete gate/wall/timber/roof structure, real6 × 5m passage and0.18m doors. Complete03 has24,672 triangles /2 materials. Four actual native frames completed in18.505s, peakRSS1,024,188,416B. The normal control retained15m /45° /FOV50 and frozen25b at scale1; the additional40m author overview is explicitly **not a normal gameplay camera**.
+
+03 was rejected for white material patches, distorted photographic pieces on hidden surfaces and roof/wood texture errors. A CPU ray/UV check traced an actual white door-back pixel to light background inside a narrow pillar image strip; this was not merely exposure. The original failed images and source were frozen, not overwritten. The43-file recovery archive includes22 exact helper/control dependencies:17,184,138B / SHA256 `3830a1e002203b948a01c59934698d9b2b4470b75f2f117525a9ac8beb8a0998`, persistently stored after local full CRC/member-SHA validation.
+
+03b rebuilt semantic material placement across the complete structure, using separate masonry, timber, ceramic and stone image domains plus actual roof ribs/laps. It has38,154 triangles /3 materials and one instantiable scene, not duplicated probe geometry. Four actual native frames completed in19.342s, peakRSS1,051,348,992B, total directory growth17,877,493B, no guard. Writer and coordinator personally viewed the normal and author-overview images. White-domain and facade-stretch mistakes are gone, **but the whole asset remains ART_FAIL**: straight rafters penetrate the curved tiled roof; door backs read as unbraced slabs; masonry is overly periodic; the normal control sees mostly the wall foot.
+
+Next is a complete low military-gate design, not uniform shrinkage or another texture patch. Proposed roof peak8.2m and real structural dimensions replace the former self-chosen13.2m fort. The matching30° lookahead camera is only a CPU spatial candidate at this checkpoint, not an accepted native result or changed default.
+
+### Whole23: original professional continuous shore, not a heightfield/photo substitute
+
+Three exact official Poly Haven candidates were inspected. The chosen `coastal_cliff_01` is an actual continuous layered/overhanging shore, not a collection of rocks. Its official2K glTF closure was retrieved once and checked against official sizes/MD5 plus localSHA:5 files,20,884,923B,238,686 vertices /461,824 triangles, originalUV, diffuse, NormalGL and ARM. glTF SHA256 `8e82762ae04616a4c383cf9b91ee42d01852c07445c7b66fcc199fc635024d47`; geometry-buffer SHA256 `6833dfaf75e0d039e64bc09ad642c4be3361739f20048af32ad50fd8e6471a65`.
+
+The initial default-client403 remains recorded. A single truthful project User-Agent, as required by the official API terms, succeeded; no login, proxy, new account or payment was used. Asset models/textures are CC0 under the [official license](https://polyhaven.com/license); author preview renders are not and stay separate from any redistributable asset closure. This is the2KglTF delivery, **not** a claimed editable .blend or supplied LOD chain. Metadata says LODs, but the retrieved file has one mesh and no MSFT_lod extension or separately exposed LOD files.
+
+The original shore is approximately91.98 ×10.326 ×10.967m. A single uniform0.26 transform gives a23.915m bank and2.685m height, preserving original proportions. Actual triangle/barycentric queries recovered95/95 selected upper-seam points for terrain joining. These are source intake and placement facts only. Whole23 still has **no native scene image at this checkpoint**. Its goal is one coherent bridge/river/gate/background composition, complete visible-frustum coverage and original-bank material mapping, not another asset-scatter patch.
+
+### Wearable29: complete native source saved, no new runtime image yet
+
+Whole28's corrected export and actual frames remain preserved and rejected.29 starts from the retained professional27 body/cloth/rig plus27a face layer, with a connected vest cage, actual neck/arm/waist boundaries, shoulder cups, overlapping waist gores, closed helmet crown and one coordinated material design. It does not re-enable28's failed geometric appearance. A new full-body carry uses the original rig/rest/lengths and retains original actions; a new auxiliary weapon socket does not change their original reset relation. No ordinary-soldier red tassel is introduced.
+
+The first29 native attempt stopped at the self-contained library assertion before saving. A later attempt exceeded the unchanged1GiB source-process budget at1,091,059,712B and was stopped, also before saving. Both failures remain. The bounded correction checks packed-image status before accessing image size and releases unnecessary decoded pixel caches while retaining/verifying packed bytes; no texture resolution, geometry, animation or guard was reduced.
+
+The next actual batch completed exit0 in67.742s, peakRSS1,007,063,040B. Full editable native source is143,834,060B / SHA256 `88353fe1eab1ff05a8950e781edeebaae40ee0d7862500a90afddfcb84265695`, independently rehashed by the coordinator and retained. It contains48 equipment parts and the complete new carry pose. However,71 vest-fit points still violate the12mm normal-clearance criterion and are explicitly marked diagnostic/rejected. Saving a complete native source and passing broad posed bounds are **not** a garment fit, grasp or visual pass. Runtime export and actual Godot29 images remain pending at this checkpoint.
+
+### Continuation boundaries
+
+Continue the existing three writers under the single heavy-art lock, with explicit aggregate disk accounting. Do not start conflicting writers, promote failed art, overwrite failed frames or treat archives as acceptance. Source-process1GiB, character/architecture native2GiB, environment4GiB,180s, global available memory≥2GiB and real disk≥350MiB remain enforced; the older single4.5GiB preview allowance is not reusable. Latest source and recovery copies remain intact.
+
+The only verified deliverables here are the saved source/data and labelled actual diagnostic frames. New4K, actual Battle integration, original-speed full-action/riding/large-army footage,20/100/250/512-per-side performance and real MacBook AirM5 testing remain **NOT_RUN** for these new sources. RC24/RC25, actual/offscreen combat, old saves and production defaults remain unchanged.
