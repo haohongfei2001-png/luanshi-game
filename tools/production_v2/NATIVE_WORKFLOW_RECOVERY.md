@@ -65,3 +65,20 @@ view may not contain every structure; this is not permission to shrink people.
   original source evidence retained. This is NOT a native/export-PCK PASS.
 - Local whole-game source remained unchanged; default assets symlink is not part
   of any commit. Prepared workflow has not been dispatched.
+
+## Release assertion audit (2026-11-15)
+
+The native entry/host/Controller/actor/identity collector initialize via explicit
+calls and error branches, never inside `assert`. A recursive static regression
+now scans 67 GDScript dependencies and rejects new assertions. Its four legacy
+predicate assertions are explicitly enumerated: Battle positive/fresh setup
+(native entry checks the count before constructing a fresh Battle), two old-map
+art helpers unused by the authored host, and a frustum argument predicate. None
+performs initialization. This is not a claim that all legacy code is assert-free.
+MapQuery abstract-method diagnostics now use persistent `push_error`, preserving
+the previous conservative return values without a release-stripped diagnostic.
+Five Python tests pass. Official Linux 4.6.3 editor parsing passes; actual entry
+lifecycle tests reject absent opt-in and missing manifest with exit 2. These are
+editor lifecycle tests, NOT release-template tests. No available local release
+Linux template was established; existing tangent comparison binaries are debug.
+Mac release/PCK execution remains pending. No CI was activated by this audit.

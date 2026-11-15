@@ -1,4 +1,4 @@
-import importlib.util,json,struct,sys,tempfile,unittest
+import importlib.util,json,re,struct,sys,tempfile,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools/production_v2'))
@@ -6,6 +6,29 @@ from export_native_pack import project_config,preset_config,ENTRY
 from validate_native import validate
 from prepare_native_inputs import prepare
 class NativePreparation(unittest.TestCase):
+ def test_release_entry_graph_has_no_unreviewed_assertions(self):
+  # Parse every static GDScript dependency, not just the top-level runner.
+  pending=['scripts/review/production_v2_native_capture.gd','tools/production_v2/collect_resource_identities.gd'];seen=set();found={}
+  allowed={
+   'scripts/field/battle.gd':['assert(n>0 and defenders>0 and roster.is_empty())'],
+   'scripts/field/river_master_map.gd':['assert(parts.has(part),"Missing authored world part "+part)','assert(names.size()>=3)'],
+   'scripts/field/experimental/frustum_footprint.gd':['assert(height_max >= height_min and horizontal_pad >= 0.0)']}
+  while pending:
+   name=pending.pop()
+   if name in seen:continue
+   seen.add(name);source=(ROOT/name).read_text()
+   for dependency in re.findall(r'(?:preload|load|extends)\s*\(?\s*["\']res://([^"\']+\.gd)',source):
+    if (ROOT/dependency).exists():pending.append(dependency)
+   lines=[line.strip() for line in source.splitlines() if re.search(r'\bassert\s*\(',line) and not line.lstrip().startswith('#')]
+   if lines:found[name]=lines
+  self.assertGreaterEqual(len(seen),67)
+  self.assertEqual(found,allowed)
+  # Legacy diagnostic predicates above have no initialization side effects.
+  # Native entry guards the Battle setup count before calling the fresh instance.
+  entry=(ROOT/'scripts/review/production_v2_entry.gd').read_text()
+  self.assertLess(entry.index('if not count in [20,100,250,512]'),entry.index('battle.setup('))
+  for call in ['nav.configure(', 'runtime.bind(', 'actor.setup(', 'host.configure(']:
+   self.assertIn('if '+call,entry)
  def test_mainloop_is_normal_and_guarded(self):
   source=(ROOT/'project.godot').read_bytes();changed=project_config(source)
   self.assertIn(b'run/main_loop_type="DotProductionV2NativeCapture"',changed)
