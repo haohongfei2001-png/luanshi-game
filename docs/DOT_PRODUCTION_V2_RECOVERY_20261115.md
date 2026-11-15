@@ -2,11 +2,11 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 8 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 9 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
-> For the newer source refs and actual new-map Battle results, read section 7 first. Earlier checkpoint findings remain preserved.
+> Sections 7 and 8 are earlier checkpoints. They remain preserved, but their in-progress statements must not override section 9.
 
 ## 1. The owner's correction and the actual method change
 
@@ -205,3 +205,34 @@ The production route is now a new unified, editable **stone-gate river battlefie
 The45-degree/50-FOV/pixel-fraction camera is a development candidate, not an owner-approved constant. Preserve the requested roughly22-metre fixed-condition comparison; record any new camera experiment separately, at true native pixels. Next visual judgment must include actual ordinary troops and original-speed actions in the complete Godot scene.
 
 **No new whole-scene Godot GPU result, new macOS candidate, final mother topology2, M5 device pass or owner art approval exists at this checkpoint. Main and PR67 are unchanged.**
+
+
+## 9. Verified continuation — 2026-11-15, 01:41 UTC
+
+**No new production-v2 whole-scene GPU image or accepted art candidate exists yet. Main remains `248d26aefbb8dfe7973141a63b40f3a220f0edc0`; draft PR #67 remains `1cfda095b05a78dfe89da6f2ddd8f8cb89819180`. Do not merge or promote this recovery document as a game release.**
+
+### Stop the failed authoring method, not the project
+
+Offline composition02 through05 were personally reviewed and rejected. They still produced a broad grey sandy platform, separated shoreline rocks, weak bridge/architecture and unreadable ecological transitions. The final05 paving also incorrectly used a rock-group atlas as a repeating stone texture. Repeated changes to that generator are not the whole-art rebuild the owner requested.
+
+That authoring route is now **frozen at05**. All four05 views, the editable mother source, exact source manifests and failure records are retained; the queued06 run was cancelled before Blender and produced no scene or image. Its draft source is explicitly unexecuted. A new independent whole-scene author is rebuilding the human-scale bridge/gate, continuous landform and coherent materials from the target, without inheriting the old generator as a foundation. Mature source assets remain inputs, not visual approval. The next mother scene must export its actual visible/support/obstacle geometry and baked Godot-readable materials together.
+
+Actual camera measurement corrected two false assumptions in05: the posed body bounds were 1.61365 m and approximately90.18 pixels in the1600×900 candidate view, not the assumed112.5 pixels. The file labeled `legacy_ortho22` actually had a39.111 m vertical span because of a Blender sensor-fit conversion error. It is **not** a valid22 m comparison. The45°/50-FOV/.125 camera remains a development proposal, not a fixed owner instruction; actual gameplay pixels and the owner's normal-view target govern the decision.
+
+An isolated, default-OFF **2.5D feasibility experiment** is also underway. Its clean generated environment input is not game evidence. The experiment must test real actors, movement/combat, camera translation, support alignment and bridge/gate occlusion in Godot. Fixed direction and prelit background are explicit unsupported-feature boundaries, not silently removed capabilities of the main game. A pleasing fixed image that cannot survive real motion and occlusion fails. No route has been selected or visually accepted.
+
+### Source18 is actually imported, and real ordinary troops are connected
+
+- Soldier source/deformation checks: `dot/soldier-production-v2@38eb2a4f553c90b8e783e3884630be8995fa238c`.
+- Source18 runtime receipt and real ordinary-unit adapter: `dot/mh-spear-production-v2@cf6dbed9abc3e5f9c61f7ef038e15522527dabf3`.
+- Actual six-ordinary-soldier Controller integration: `dot/production-v2-map-runtime@bce27e7927f169b8b5e261b4c04120c629b558bc`.
+
+The missing-tangent and duplicate-action problems noted in section8 were corrected and the rejected exports preserved. The actual final local GLB is14,173,132 bytes, SHA-256 `afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b`, with163 bones,14 animations,35 surfaces and16 materials. Five actual Godot import/runtime logs are clean. Imported thrust lasts0.7 seconds with its measured peak at one third; death lasts2.4 seconds. This is not proof of finger collisions, art quality or a scalable thousand-Skeleton renderer. The complete generated GLB/mother source is not yet implied to be remotely published by those source-code refs.
+
+Source18's lossy top-eight-weight derivative was independently checked again:3,682 vertices affected, maximum discarded weight1.9975%, and maximum actual tested pose displacement2.034 mm. The earlier source11 silhouette result does not apply to this changed source. Source18's materials, silhouette and cloth coverage remain **ART_FAIL** despite passing unchanged deformation thresholds.
+
+The real Controller test now binds three actual ordinary foot SPEAR units per side to shared mesh/material resources, with separate Skeleton/animation/binding state. It does not give spear appearances to other weapon classes or rewrite HP. At460 actual Battle steps, the defenders retreated; four of the six bound soldiers naturally died and their real Death01 reached2.4 seconds/phase1. All six exhibited walking and hit states; five exhibited thrust. Applying presentation left complete Save state unchanged. A first terminal-position error of approximately14 cm was preserved, corrected and retested: all six final actor/source-support errors are below0.00001 m. Retreat animation remains explicitly unsupported.
+
+This is **CPU/manual-step functional evidence**, not original-speed video or GPU art. The complete default regression on bce27e7 has now finished with exit0, including real legacy512 siege/world writeback, save migration and youth attrition restart checks. Its log SHA-256 is `696fcc42442df81bad51638c5e887eea3e0dac92b2dc2b92f1717d93cabecb15`; the new entry check-only also completed cleanly. The same frozen source18 is being prepared for the single coordinated hosted-Mac visual experiment rather than duplicating CI or showing old004 terrain as a new visual candidate.
+
+**Still missing: accepted whole-scene art, the new actual 2K/4K original-speed game capture, final topology2, new-scene real-time performance, complete new-map siege/world integration, a new macOS candidate and owner visual approval. MacBook Air M5 remains untested.**
