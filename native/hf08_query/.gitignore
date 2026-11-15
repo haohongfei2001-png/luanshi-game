@@ -1,0 +1,6 @@
+vendor/
+bin/*.so
+*.os
+*.o
+.sconsign*
+__pycache__/

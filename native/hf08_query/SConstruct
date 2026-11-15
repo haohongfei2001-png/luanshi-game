@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+from SCons.Script import SConscript, Glob, Default
+env = SConscript("vendor/godot-cpp-10.0.0-stable/SConstruct", {"api_version": "4.6"})
+env.Append(CXXFLAGS=["-ffp-contract=off", "-fno-fast-math"])
+lib = env.SharedLibrary(target="bin/hf08_query", source=Glob("*.cpp"))
+Default(lib)

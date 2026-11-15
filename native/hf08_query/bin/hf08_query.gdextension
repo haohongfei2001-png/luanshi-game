@@ -1,0 +1,6 @@
+[configuration]
+entry_symbol = "hf08_query_init"
+compatibility_minimum = "4.6"
+reloadable = false
+[libraries]
+linux.x86_64 = "res://native/hf08_query/bin/libhf08_query.so"

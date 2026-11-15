@@ -16,7 +16,10 @@ func run():
  var args:=OS.get_cmdline_user_args();assert(args.size() in [5,6])
  var data:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[0]));var layout:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[1]));var count:=int(args[2]);var steps:=int(args[3]);var output:=args[4]
  var b=layout.bounds;var bounds:=Rect2(Vector2(b.x[0],b.z[0]),Vector2(b.x[1]-b.x[0],b.z[1]-b.z[0]))
- var nav:=Navigation.new();nav.support.exact_cache_enabled=not (args.size()==6 and args[5]=="profile-nocache");var started:=Time.get_ticks_usec();assert(nav.configure(data,bounds,{"gate_main":true},.7,3.4)==OK)
+ var nav:=Navigation.new()
+ if args.size()==6 and args[5]=="profile-native":nav.support=load("res://scripts/field/maps/experimental_native_support.gd").new()
+ nav.support.exact_cache_enabled=not (args.size()==6 and args[5]=="profile-nocache");var started:=Time.get_ticks_usec();assert(nav.configure(data,bounds,{"gate_main":true},.7,3.4)==OK)
+ if args.size()==6 and args[5]=="profile-native":assert(nav.support.get("kernel")!=null,"NATIVE_KERNEL_NOT_LOADED")
  var graph_end:=Time.get_ticks_usec()
  print("REAL_MAP_GRAPH_READY ",JSON.stringify(nav.statistics()))
  var runtime:=Runtime.new();assert(runtime.bind(nav,data)==OK)
@@ -60,7 +63,10 @@ func run():
  var unit_states:=[]
  for u in battle.roster:unit_states.append({"id":u.id,"team":u.team,"pos":str(u.pos),"state":u.state,"target":u.target,"squad":u.squad,"facing":str(u.facing),"station":str(u.station),"officer":u.officer,"hero":u.hero})
  var report={"unit_states":unit_states,"source_sidecar_sha256":FileAccess.get_sha256(args[0]),"source_status":data.status,"map_identity":runtime.identity(),"initial_setup":receipt,"ordinary_per_side":Array(battle.ordinary_counts),"roster":battle.roster.size(),"requested_steps":steps,"actual_tick":battle.tick,"attacks":battle.attacks,"hits":battle.hits.duplicate(),"losses":battle.losses.duplicate(),"escaped":battle.escaped.duplicate(),"hero_hp":battle.hero.hp,"actual_result":battle.result,"units_moved":moved,"active_units_invalid_support_or_obstacle":invalid,"accepted_command_calls":command_count,"orders_delivered":battle.messages_arrived,"checkpoints":checkpoints,"elapsed_ms":(Time.get_ticks_usec()-started)/1000.,"gpu":"NOT_RUN","performance":"CPU_INSTRUMENTED_NOT_FPS","mode":"INTERNAL_OPEN_GATE_NO_RAM_NO_SIEGE_OR_WORLD_OBJECTIVE; ordinary/hero/officer stats not altered by setup"}
- report["full_snapshot_sha256"]=JSON.stringify(Save.snapshot(battle)).sha256_text()
+ var full_snapshot:=JSON.stringify(Save.snapshot(battle))
+ FileAccess.open(output+".snapshot.json",FileAccess.WRITE).store_string(full_snapshot)
+ report["full_snapshot_sha256"]=full_snapshot.sha256_text()
+ report["native_support_kernel"]=nav.support.get_script().resource_path.ends_with("experimental_native_support.gd") and nav.support.get("kernel")!=null
  report["phase_ms"]={"navigation_configure":(graph_end-started)/1000.,"continuous_probe":(probe_end-graph_end)/1000.,"setup_muster_validation":(muster_end-probe_end)/1000.,"400_or_actual_steps_including_progress_queries":(simulation_end-muster_end)/1000.,"final_validation_snapshot":(Time.get_ticks_usec()-simulation_end)/1000.}
  report["memory"]=memory_receipt()
  report["exact_support_cache"]={"enabled":nav.support.exact_cache_enabled,"capacity":nav.support.EXACT_CACHE_CAPACITY,"final_entries":nav.support._exact_cache.size(),"coordinates":"exact Vector2 without quantization"}

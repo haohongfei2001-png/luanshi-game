@@ -5,15 +5,19 @@ const Muster=preload("res://scripts/field/maps/authored_muster.gd")
 const Battle=preload("res://scripts/field/battle.gd")
 func _initialize():run.call_deferred()
 func run():
- var args:=OS.get_cmdline_user_args();assert(args.size()==2)
+ var args:=OS.get_cmdline_user_args();assert(args.size() in [2,3])
  var data:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[0]))
  var low:=Vector2(INF,INF);var high:=Vector2(-INF,-INF)
  for surface in data.surfaces:
   if not surface.get("walkable",false):continue
   for point in surface.vertices:low=low.min(Vector2(point[0],point[2]));high=high.max(Vector2(point[0],point[2]))
  var report={"source_sha256":FileAccess.get_sha256(args[0]),"topology":data.topology_sha256,"scope":"NEW_SOURCE_FUNCTIONAL_ONLY_NO_GPU_OR_ART_ACCEPTANCE","bounds":[str(low),str(high)]}
- var nav:=Navigation.new();var started:=Time.get_ticks_usec()
+ var nav:=Navigation.new()
+ if args.size()==3 and args[2]=="native":nav.support=load("res://scripts/field/maps/experimental_native_support.gd").new()
+ var started:=Time.get_ticks_usec()
  var code:=nav.configure(data,Rect2(low,high-low),{"gate_main":true},.7,3.4)
+ if args.size()==3 and args[2]=="native":assert(nav.support.get("kernel")!=null,"NATIVE_KERNEL_NOT_LOADED")
+ report.native_support_kernel=args.size()==3 and args[2]=="native"
  report.navigation_error=code;report.configure_ms=(Time.get_ticks_usec()-started)/1000.;report.nav=nav.statistics()
  if code!=OK:finish(args[1],report);return
  var runtime:=Runtime.new();code=runtime.bind(nav,data);report.runtime_error=code
