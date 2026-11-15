@@ -27,6 +27,8 @@ static func snapshot(b: Battle) -> Dictionary:
 		"equipment":b.equipment.duplicate(),"losses":b.losses.duplicate(),"escaped":b.escaped.duplicate(),"hits":b.hits.duplicate(),
 		"vehicle_pos":b.vehicle_pos.duplicate(),"vehicle_hp":b.vehicle_hp.duplicate(),"skill_clocks":b.hero_cds.duplicate()}
 	if b.bridgehead: data["bridgehead"]=true
+	if not b.map_runtime.is_legacy:
+		data.version=5;data.map_identity=b.map_runtime.identity()
 	return data
 
 static func _valid(value: Variant, example: Variant) -> bool:
@@ -201,6 +203,7 @@ static func restore(data: Variant) -> Battle:
 	return b
 
 static func save(b: Battle) -> Error:
+	if not b.map_runtime.is_legacy:return ERR_UNAVAILABLE # Internal mapped mode cannot overwrite legacy quick slot.
 	var path := ProjectSettings.globalize_path(FILE)
 	var temp := path + ".%d.%d.tmp" % [OS.get_process_id(),Time.get_ticks_usec()]
 	var out := FileAccess.open(temp,FileAccess.WRITE)

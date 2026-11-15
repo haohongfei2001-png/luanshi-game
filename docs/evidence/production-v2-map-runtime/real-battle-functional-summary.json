@@ -1,0 +1,283 @@
+{
+  "production-v2-real20-final": {
+    "accepted_command_calls": 2,
+    "active_units_invalid_support_or_obstacle": [],
+    "actual_result": "\u5b88\u519b\u6e83\u9000",
+    "actual_tick": 540,
+    "attacks": 111,
+    "checkpoints": [
+      {
+        "attacks": 0,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          0,
+          0
+        ],
+        "losses": [
+          0,
+          0
+        ],
+        "requests": 100,
+        "sample_next": "(-11.5, 5.5)",
+        "sample_unit_pos": "(-17.88781, 5.435169)",
+        "tick": 100
+      },
+      {
+        "attacks": 0,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          0,
+          0
+        ],
+        "losses": [
+          0,
+          0
+        ],
+        "requests": 200,
+        "sample_next": "(0.5, 2.5)",
+        "sample_unit_pos": "(-5.4196, 2.772185)",
+        "tick": 200
+      },
+      {
+        "attacks": 0,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          0,
+          0
+        ],
+        "losses": [
+          0,
+          0
+        ],
+        "requests": 300,
+        "sample_next": "(16.5, 3.5)",
+        "sample_unit_pos": "(10.41286, 3.085104)",
+        "tick": 300
+      },
+      {
+        "attacks": 11,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          6,
+          0
+        ],
+        "losses": [
+          0,
+          1
+        ],
+        "requests": 400,
+        "sample_next": "(31.5, 3.5)",
+        "sample_unit_pos": "(25.05374, 3.410354)",
+        "tick": 400
+      },
+      {
+        "attacks": 90,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          37,
+          40
+        ],
+        "losses": [
+          9,
+          5
+        ],
+        "requests": 500,
+        "sample_next": "(39.5, 2.5)",
+        "sample_unit_pos": "(33.07856, 2.336164)",
+        "tick": 500
+      }
+    ],
+    "elapsed_ms": 12329.141,
+    "escaped": [
+      0,
+      0
+    ],
+    "gpu": "NOT_RUN",
+    "hero_hp": 100.0,
+    "hits": [
+      47,
+      45
+    ],
+    "initial_setup": {
+      "counts": [
+        {
+          "available": 736,
+          "placed": 22,
+          "team": 0.0
+        },
+        {
+          "available": 719,
+          "placed": 21,
+          "team": 1.0
+        }
+      ],
+      "error": 0,
+      "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+      "ordinary_per_side": [
+        20,
+        20
+      ],
+      "saved_battle_migrated": false,
+      "source_topology": "b8af3ed087e9842642f43ffe6f7878e41644e54be0c5717c05d8c46ca355f9e3"
+    },
+    "losses": [
+      9,
+      7
+    ],
+    "map_identity": {
+      "map_id": "luanshi.river_gate.production_v2",
+      "topology_revision": 1,
+      "topology_sha256": "b8af3ed087e9842642f43ffe6f7878e41644e54be0c5717c05d8c46ca355f9e3"
+    },
+    "mode": "INTERNAL_OPEN_GATE_NO_RAM_NO_SIEGE_OR_WORLD_OBJECTIVE; ordinary/hero/officer stats not altered by setup",
+    "orders_delivered": 2,
+    "ordinary_per_side": [
+      20,
+      20
+    ],
+    "performance": "CPU_INSTRUMENTED_NOT_FPS",
+    "requested_steps": 1200,
+    "roster": 43,
+    "source_sidecar_sha256": "0e077abdf27ea366cd4deabeb97b9e7c0672ba803945dec2d70d1e19a91b672f",
+    "source_status": "PREFLIGHT_ONLY_ART_AND_VEGETATION_SOLIDS_PENDING_NOT_BATTLE_READY",
+    "units_moved": 42,
+    "full_evidence_sha256": "752bfcb45f87443d8aed6201e29accbbe1ea847ea5f152055c24c97aa3854e3d"
+  },
+  "production-v2-real512-indexed": {
+    "accepted_command_calls": 2,
+    "active_units_invalid_support_or_obstacle": [],
+    "actual_result": "",
+    "actual_tick": 400,
+    "attacks": 697,
+    "checkpoints": [
+      {
+        "attacks": 0,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          0,
+          0
+        ],
+        "losses": [
+          0,
+          0
+        ],
+        "requests": 100,
+        "sample_next": "(-19.5, -3.5)",
+        "sample_unit_pos": "(-25.59875, -3.249386)",
+        "tick": 100
+      },
+      {
+        "attacks": 38,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          0,
+          10
+        ],
+        "losses": [
+          2,
+          0
+        ],
+        "requests": 200,
+        "sample_next": "(-5.5, -1.5)",
+        "sample_unit_pos": "(-11.85684, -1.653057)",
+        "tick": 200
+      },
+      {
+        "attacks": 306,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          52,
+          109
+        ],
+        "losses": [
+          31,
+          12
+        ],
+        "requests": 300,
+        "sample_next": "(5.5, 0.5)",
+        "sample_unit_pos": "(-0.044533, 0.305279)",
+        "tick": 300
+      },
+      {
+        "attacks": 697,
+        "company_aim": "(51.0, 0.0)",
+        "hero_hp": 100.0,
+        "hits": [
+          109,
+          213
+        ],
+        "losses": [
+          60,
+          24
+        ],
+        "requests": 400,
+        "sample_next": "(21.5, -0.5)",
+        "sample_unit_pos": "(15.34678, -0.453281)",
+        "tick": 400
+      }
+    ],
+    "elapsed_ms": 151939.024,
+    "escaped": [
+      0,
+      0
+    ],
+    "gpu": "NOT_RUN",
+    "hero_hp": 100.0,
+    "hits": [
+      109,
+      213
+    ],
+    "initial_setup": {
+      "counts": [
+        {
+          "available": 736,
+          "placed": 529,
+          "team": 0.0
+        },
+        {
+          "available": 719,
+          "placed": 528,
+          "team": 1.0
+        }
+      ],
+      "error": 0,
+      "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+      "ordinary_per_side": [
+        512,
+        512
+      ],
+      "saved_battle_migrated": false,
+      "source_topology": "b8af3ed087e9842642f43ffe6f7878e41644e54be0c5717c05d8c46ca355f9e3"
+    },
+    "losses": [
+      60,
+      24
+    ],
+    "map_identity": {
+      "map_id": "luanshi.river_gate.production_v2",
+      "topology_revision": 1,
+      "topology_sha256": "b8af3ed087e9842642f43ffe6f7878e41644e54be0c5717c05d8c46ca355f9e3"
+    },
+    "mode": "INTERNAL_OPEN_GATE_NO_RAM_NO_SIEGE_OR_WORLD_OBJECTIVE; ordinary/hero/officer stats not altered by setup",
+    "orders_delivered": 2,
+    "ordinary_per_side": [
+      512,
+      512
+    ],
+    "performance": "CPU_INSTRUMENTED_NOT_FPS",
+    "requested_steps": 400,
+    "roster": 1057,
+    "source_sidecar_sha256": "0e077abdf27ea366cd4deabeb97b9e7c0672ba803945dec2d70d1e19a91b672f",
+    "source_status": "PREFLIGHT_ONLY_ART_AND_VEGETATION_SOLIDS_PENDING_NOT_BATTLE_READY",
+    "units_moved": 1056,
+    "full_evidence_sha256": "346ca39cb87119ec1d633cdcabc1fee3d7c25e8fd71ea7614658657422ffa326"
+  }
+}

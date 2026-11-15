@@ -155,7 +155,7 @@ func _vacate(b, r: Command, at: Vector2) -> void:
 	# Only witnesses near their own standard feel the immediate shock.
 	for id in b._near(at, 7.5, original.team):
 		var u = b.roster[id]
-		if u.squad == original.squad and not u.officer and not u.hero and Ground.clear_shot(at, u.pos, b.gate_hp <= 0):
+		if u.squad == original.squad and not u.officer and not u.hero and b.map_runtime.clear_shot(at, u.pos, b.gate_hp <= 0):
 			u.morale = maxf(0.0, u.morale - (0.13 if r.rank == Rank.COMMANDER else 0.08))
 
 func _try_succession(b, r: Command) -> void:
@@ -167,7 +167,7 @@ func _try_succession(b, r: Command) -> void:
 		var u = b.roster[id]
 		if u.morale < 0.46 or u.pos.distance_squared_to(r.handover_pos) > 18.0 * 18.0:
 			continue
-		if not Ground.clear_shot(u.pos, r.handover_pos, b.gate_hp <= 0):
+		if not b.map_runtime.clear_shot(u.pos, r.handover_pos, b.gate_hp <= 0):
 			continue
 		r.leader = id
 		r.vacant_since = -1
@@ -217,7 +217,7 @@ func _observe(b, u, r: Command) -> void:
 	var best := INF
 	for id in b._near(u.pos, SIGHT, 1 - u.team):
 		var v = b.roster[id]
-		if v.state == b.State.ROUT or not Ground.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
+		if v.state == b.State.ROUT or not b.map_runtime.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
 			continue
 		var distance: float = u.pos.distance_to(v.pos)
 		if distance < 7.0:
@@ -242,7 +242,7 @@ func _observe(b, u, r: Command) -> void:
 		if not v.officer or v.squad == u.squad or companies[v.squad].duty != Duty.WOUNDED:
 			continue
 		var distance: float = u.pos.distance_squared_to(v.pos)
-		if distance < best and Ground.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
+		if distance < best and b.map_runtime.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
 			r.relief = id
 			best = distance
 
@@ -255,12 +255,12 @@ func guide_company(b, c, assigned: Vector2) -> Vector2:
 	var leader = b.roster[r.leader]
 	if c.mission == b.Mission.RESERVE and r.relief >= 0:
 		var wounded = b.roster[r.relief]
-		if b.active(wounded) and companies[wounded.squad].duty == Duty.WOUNDED and leader.pos.distance_squared_to(wounded.pos) <= SIGHT * SIGHT and Ground.clear_shot(leader.pos, wounded.pos, b.gate_hp <= 0):
+		if b.active(wounded) and companies[wounded.squad].duty == Duty.WOUNDED and leader.pos.distance_squared_to(wounded.pos) <= SIGHT * SIGHT and b.map_runtime.clear_shot(leader.pos, wounded.pos, b.gate_hp <= 0):
 			return c.home + (wounded.pos - c.home).limit_length(10.0)
 	if r.contact < 0 or not b.active(b.roster[r.contact]):
 		return assigned
 	var v = b.roster[r.contact]
-	if leader.pos.distance_squared_to(v.pos) > SIGHT * SIGHT or not Ground.clear_shot(leader.pos, v.pos, b.gate_hp <= 0):
+	if leader.pos.distance_squared_to(v.pos) > SIGHT * SIGHT or not b.map_runtime.clear_shot(leader.pos, v.pos, b.gate_hp <= 0):
 		return assigned
 	if c.mission == b.Mission.INTERCEPT:
 		return c.home + (v.pos - c.home).limit_length(12.0)
@@ -272,7 +272,7 @@ func _contest_wounded(b, u, r: Command) -> void:
 	r.rescuer = -1
 	for id in r.guards:
 		var guard = b.roster[id]
-		if _eligible(b, r, id) and guard.pos.distance_squared_to(u.pos) <= ESCORT_REACH * ESCORT_REACH and Ground.clear_shot(guard.pos, u.pos, b.gate_hp <= 0):
+		if _eligible(b, r, id) and guard.pos.distance_squared_to(u.pos) <= ESCORT_REACH * ESCORT_REACH and b.map_runtime.clear_shot(guard.pos, u.pos, b.gate_hp <= 0):
 			r.rescuer = id
 			break
 	if r.rescuer >= 0:
@@ -284,7 +284,7 @@ func _contest_wounded(b, u, r: Command) -> void:
 	for id in b._near(u.pos, 2.0, 1 - u.team):
 		var v = b.roster[id]
 		var d: float = u.pos.distance_squared_to(v.pos)
-		if v.state == b.State.ROUT or not Ground.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
+		if v.state == b.State.ROUT or not b.map_runtime.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
 			continue
 		if d < nearest or (d == nearest and id < holder):
 			holder = id
@@ -292,7 +292,7 @@ func _contest_wounded(b, u, r: Command) -> void:
 	if holder >= 0:
 		for id in b._near(u.pos, 2.4, u.team):
 			var ally = b.roster[id]
-			if id != u.id and ally.state != b.State.ROUT and Ground.clear_shot(u.pos, ally.pos, b.gate_hp <= 0):
+			if id != u.id and ally.state != b.State.ROUT and b.map_runtime.clear_shot(u.pos, ally.pos, b.gate_hp <= 0):
 				holder = -1
 				break
 	if holder < 0 or holder != r.captor:
@@ -308,17 +308,17 @@ func _exit(u) -> Vector2:
 	return Vector2(-98.0 if u.team == 0 else 100.0, -32.0 if u.station.y < 0.0 else 32.0)
 
 func _walk(b, u, goal: Vector2, speed: float, retreat: bool = false) -> void:
-	var next := Ground.retreat_waypoint(u.pos, goal, b.gate_hp <= 0,b.bridgehead) if retreat else Ground.waypoint(u.pos, goal,b.bridgehead)
+	var next:Vector2 = b.map_runtime.retreat_waypoint(u.pos, goal, b.gate_hp <= 0) if retreat else b.map_runtime.waypoint(u.pos, goal)
 	var dist: float = u.pos.distance_to(next)
 	if dist <= 0.10:
 		return
 	var direction: Vector2 = u.pos.direction_to(next)
 	u.facing = direction
-	var stride := minf(dist, speed * Ground.pace(u.pos,false,b.bridgehead) * b.DT)
+	var stride := minf(dist, speed * b.map_runtime.pace(u.pos,false) * b.DT)
 	b._move(u, direction * stride + u.separation.limit_length(0.9) * b.DT)
 
 func _retire(b, u, r: Command) -> void:
-	var goal := _exit(u)
+	var goal:Vector2 = _exit(u) if b.map_runtime.is_legacy else b.map_runtime.retreat_goal(u.team)
 	if u.pos.distance_squared_to(goal) <= 2.3 * 2.3:
 		if r.leader == r.primary:
 			_vacate(b, r, u.pos)
@@ -353,7 +353,7 @@ func act(b, u) -> bool:
 		var v = b.roster[target]
 		var distance: float = u.pos.distance_to(v.pos)
 		var leash := 7.0 if c.mission == b.Mission.RESERVE else SIGHT
-		if distance <= leash and Ground.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
+		if distance <= leash and b.map_runtime.clear_shot(u.pos, v.pos, b.gate_hp <= 0):
 			u.target = target
 			if _fight(b, u, v, r, distance):
 				return true
@@ -406,7 +406,7 @@ func _escort(b, guard, r: Command) -> bool:
 	if target >= 0 and b.active(b.roster[target]):
 		var v = b.roster[target]
 		var d: float = guard.pos.distance_to(v.pos)
-		if d <= 2.15 and u.pos.distance_squared_to(v.pos) <= 30.25 and Ground.clear_shot(guard.pos, v.pos, b.gate_hp <= 0):
+		if d <= 2.15 and u.pos.distance_squared_to(v.pos) <= 30.25 and b.map_runtime.clear_shot(guard.pos, v.pos, b.gate_hp <= 0):
 			if guard.fatigue <= 0.0 and guard.pos.distance_squared_to(u.pos) <= 25.0:
 				var slot := 1 if v.state == b.State.WINDUP else 0
 				if slot == 1 or d <= b._basic(guard).reach:

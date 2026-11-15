@@ -6,7 +6,8 @@ const Ground := preload("res://scripts/field/ground.gd")
 const LegacyMapRuntime:=preload("res://scripts/field/maps/legacy_map_runtime.gd")
 # First explicit instance-owned adapter boundary. Other legacy dependencies
 # remain listed in MAP_RUNTIME_GROUND_DEPENDENCIES; authored maps not enabled yet.
-var map_runtime:LegacyMapRuntime=LegacyMapRuntime.new()
+const MapQuery:=preload("res://scripts/field/maps/map_query.gd")
+var map_runtime:MapQuery=LegacyMapRuntime.new()
 const OfficerCorps := preload("res://scripts/field/officer_corps.gd")
 const Objectives := preload("res://scripts/field/field_objectives.gd")
 const CrowdGrid := preload("res://scripts/field/crowd_grid.gd")
@@ -331,12 +332,12 @@ func _place_company(index: int) -> void:
 	for j in line.size():
 		var u:=line[j]
 		u.station=c.home+Vector2(-floorf(float(j)/width)*depth,(float(j%width)-(width-1)*0.5)*spacing)
-		if bridgehead: u.station=Ground.muster_ground(u.station,c.home.x)
+		if bridgehead: u.station=map_runtime.muster_ground(u.station,c.home.x)
 		u.pos=u.station
 		u.before=u.pos
 	var officer:=roster[c.officer_id]
 	officer.station=c.home+Vector2(-7.6,1.2)
-	if bridgehead: officer.station=Ground.muster_ground(officer.station,c.home.x)
+	if bridgehead: officer.station=map_runtime.muster_ground(officer.station,c.home.x)
 	officer.pos=officer.station
 	officer.before=officer.pos
 
@@ -393,8 +394,8 @@ func _committed_move(u: Unit) -> Arms.Move:
 	return stock_blow if u.stock_strike else moves[u.kit][u.move_slot]
 
 func _add(team: int, squad: int, pos: Vector2) -> Unit:
-	if bridgehead: pos=Ground.muster_ground(pos,companies[squad].home.x)
-	if dry_muster: pos=Ground.restore_bank_position(pos,bridgehead)
+	if bridgehead: pos=map_runtime.muster_ground(pos,companies[squad].home.x)
+	if dry_muster: pos=map_runtime.restore_bank_position(pos)
 	var u := Unit.new()
 	u.id = roster.size()
 	u.team = team
@@ -442,7 +443,7 @@ func _rebuild_grid() -> void:
 			team_grid[side_ix]=i
 			if soft_crowd:
 				var weight:=2.6 if u.hero and vehicle==2 else (1.65 if u.mounted or (u.hero and vehicle==1) else 1.0)
-				u.density_cell=density.register(u.pos,weight,u.pos.x>Ground.WALL_X and Ground.parapet(u.pos)>1.2)
+				u.density_cell=density.register(u.pos,weight,u.pos.x>Ground.WALL_X and map_runtime.parapet(u.pos)>1.2)
 	# Each side looks up its opponent's width, computed from the unclamped positions.
 	hostile_min_x[0]=west1
 	hostile_max_x[0]=east1
@@ -462,7 +463,7 @@ func _assessment(u: Unit) -> void:
 	var close_hi:=_cell(pos+Vector2.ONE)
 	var enemy_offset:=(1-u.team)*COLS*ROWS
 	var open := gate_hp <= 0
-	var elevated := u.wall_post and Ground.parapet(u.pos)>2.75
+	var elevated := u.wall_post and map_runtime.parapet(u.pos)>2.75
 	var rings:=ceili(reach/CELL)
 	# Files beyond the opponent's frontage cannot yield a weapon target. Adjacent
 	# mixed cells still contribute the identical contact forces in ID order.
@@ -488,7 +489,7 @@ func _assessment(u: Unit) -> void:
 					var sq := d.length_squared()
 					if close_cell and i!=u.id and sq<0.96 and sq>0.00001:
 						correction-=d*(0.98/sqrt(sq)-1.0)
-					if other.team!=u.team and (sq<best_sq or (sq==best_sq and i<best)) and Ground.clear_shot(pos,other.pos,open,elevated or (reach>10 and other.wall_post and Ground.parapet(other.pos)>2.75)):
+					if other.team!=u.team and (sq<best_sq or (sq==best_sq and i<best)) and map_runtime.clear_shot(pos,other.pos,open,elevated or (reach>10 and other.wall_post and map_runtime.parapet(other.pos)>2.75)):
 						best=i
 						best_sq=sq
 					i=links[i] if close_cell else team_links[i]
@@ -518,10 +519,10 @@ func command(squad: int, mission: int, channel: int) -> bool:
 		notice = "已部署 · %02d队 %s" % [squad+1, MISSIONS[mission]]
 		return true
 	var distance := hero.pos.distance_to(officer.pos)
-	if channel == Channel.VOICE and (distance>12.0 or not Ground.clear_shot(hero.pos,officer.pos,gate_hp<=0)):
+	if channel == Channel.VOICE and (distance>12.0 or not map_runtime.clear_shot(hero.pos,officer.pos,gate_hp<=0)):
 		notice="军官听不清口令"
 		return false
-	if channel == Channel.FLAG and (distance > 34 or not Ground.clear_shot(hero.pos, officer.pos, gate_hp <= 0)):
+	if channel == Channel.FLAG and (distance > 34 or not map_runtime.clear_shot(hero.pos, officer.pos, gate_hp <= 0)):
 		notice = "军官看不到令旗"
 		return false
 	if channel == Channel.HORN and distance > 54:
@@ -541,7 +542,7 @@ func command(squad: int, mission: int, channel: int) -> bool:
 	return true
 
 func _observed(pos: Vector2) -> bool:
-	return hero.pos.distance_squared_to(pos)<=144.0 and Ground.clear_shot(hero.pos,pos,gate_hp<=0)
+	return hero.pos.distance_squared_to(pos)<=144.0 and map_runtime.clear_shot(hero.pos,pos,gate_hp<=0)
 
 func _deliver(order: Dispatch,c: Company) -> void:
 	if order.serial<=c.delivered: return
@@ -579,8 +580,8 @@ func _dispatches() -> void:
 			orders.remove_at(at)
 			continue
 		var destination:=hero.pos if order.leg==1 else officer.pos
-		var direction:=order.pos.direction_to(Ground.waypoint(order.pos,destination,bridgehead))
-		order.pos=Ground.travel(order.pos,direction*7.0*DT,gate_hp<=0,bridgehead)
+		var direction:=order.pos.direction_to(map_runtime.waypoint(order.pos,destination))
+		order.pos=map_runtime.travel(order.pos,direction*7.0*DT,gate_hp<=0)
 		if (order.leg==0 and not corps.can_command(self,c)) or not _near(order.pos,1.55,1).is_empty() or order.age>90.0:
 			if order.leg==0: messages_lost+=1
 			if _observed(order.pos):
@@ -597,6 +598,8 @@ func _dispatches() -> void:
 			order.leg=1
 
 func _objective(c: Company) -> Vector2:
+	if not map_runtime.is_legacy:
+		return map_runtime.objective(c.team,str(Mission.keys()[c.mission]),c.home,c.regrouping) if corps.can_command(self,c) else c.home
 	if not corps.can_command(self,c):
 		return c.home
 	if c.regrouping:
@@ -629,8 +632,8 @@ func mount(id: int) -> bool:
 			parked_heading[vehicle]=riding_heading
 			vehicle_pos[vehicle]=hero.pos+(riding_heading*1.83 if vehicle==2 else Vector2.ZERO)
 			var side:=riding_heading.orthogonal()*1.05
-			var landing:=Ground.travel(hero.pos,side,gate_hp<=0,bridgehead)
-			if landing.distance_to(hero.pos)<0.5: landing=Ground.travel(hero.pos,-side,gate_hp<=0,bridgehead)
+			var landing:=map_runtime.travel(hero.pos,side,gate_hp<=0)
+			if landing.distance_to(hero.pos)<0.5: landing=map_runtime.travel(hero.pos,-side,gate_hp<=0)
 			hero.pos=landing
 			hero.before=landing
 		else: vehicle_pos[vehicle] = hero.pos
@@ -643,7 +646,7 @@ func mount(id: int) -> bool:
 		return false
 	var seat: Vector2=vehicle_pos[id]-(parked_heading[id]*1.83 if seat_origin and id==2 else Vector2.ZERO)
 	if seat_origin:
-		if Ground.blocked(seat,gate_hp<=0,bridgehead) or not Ground.clear_shot(hero.pos,seat,gate_hp<=0):
+		if map_runtime.blocked(seat,gate_hp<=0) or not map_runtime.clear_shot(hero.pos,seat,gate_hp<=0):
 			notice="车马在阻隔另一侧"
 			return false
 		hero.pos=seat
@@ -657,7 +660,7 @@ func input_state(walk: Vector2, facing: Vector2) -> void:
 	hero_move = walk.limit_length()
 	if facing.length_squared() > 0.0001:
 		aim = facing.normalized()
-		aim_at_wall_post=Ground.parapet(hero.pos+facing)>2.75
+		aim_at_wall_post=map_runtime.parapet(hero.pos+facing)>2.75
 
 # Keep the last deliberate press near release. Holding attack never overwrites a skill.
 func press_action(slot: int) -> bool:
@@ -734,9 +737,9 @@ func _release(u: Unit, move: Arms.Move,apply_stride: bool=true) -> void:
 			shot.pos = u.pos + u.locked * 0.45
 			shot.previous = shot.pos
 			shot.direction = u.locked.rotated((float(j)-(count-1)*0.5)*0.12)
-			shot.launch_height=Ground.deck_height(u.pos,bridgehead)
+			shot.launch_height=map_runtime.deck_height(u.pos)
 			if seat_origin and (u.mounted or (u.hero and vehicle!=0)): shot.launch_height+=0.91 if u.hero and vehicle==2 else 0.81
-			shot.over_front=Ground.parapet(u.pos)>2.75 or (u.hero and locked_at_wall_post) or (u.target>=0 and roster[u.target].wall_post and Ground.parapet(roster[u.target].pos)>2.75)
+			shot.over_front=map_runtime.parapet(u.pos)>2.75 or (u.hero and locked_at_wall_post) or (u.target>=0 and roster[u.target].wall_post and map_runtime.parapet(roster[u.target].pos)>2.75)
 			shot.arrow = move.shape in [Arms.Shape.ARROW, Arms.Shape.FAN]
 			shot.speed = 24.0 if shot.arrow else 37.0
 			shot.remaining = move.reach
@@ -766,7 +769,7 @@ func _melee(u: Unit, move: Arms.Move) -> void:
 				continue
 		elif along < offset.length() * cos(move.width):
 			continue
-		if Ground.clear_shot(u.pos, v.pos, gate_hp <= 0):
+		if map_runtime.clear_shot(u.pos, v.pos, gate_hp <= 0):
 			var charging:=u.mounted and u.charging_strike
 			u.charging_strike=false
 			if charging and v.kit==Arms.Kit.SPEAR and v.state in [State.GUARD,State.WINDUP] and v.facing.dot(v.pos.direction_to(u.pos))>0.4:
@@ -856,11 +859,11 @@ func _projectiles() -> void:
 			var v := roster[id]
 			var closest := Geometry2D.get_closest_point_to_segment(v.pos, s.pos, next)
 			if closest.distance_squared_to(v.pos)>0.36: continue
-			var raised_target:=Ground.parapet(v.pos)>2.75
+			var raised_target:=map_runtime.parapet(v.pos)>2.75
 			var launch:=s.pos-s.direction*s.distance
-			if s.over_front and s.launch_height<2.75 and not raised_target and not Ground.clear_shot(launch,v.pos,gate_hp<=0):
+			if s.over_front and s.launch_height<2.75 and not raised_target and not map_runtime.clear_shot(launch,v.pos,gate_hp<=0):
 				continue
-			if Ground.clear_shot(s.pos,closest,gate_hp<=0,s.over_front):
+			if map_runtime.projectile_clear(s.pos,closest,s.launch_height,gate_hp<=0,s.over_front):
 				_hurt(roster[s.source], v, s.power, s.pos)
 				s.pierce -= 1
 				s.last_hit = id
@@ -870,7 +873,7 @@ func _projectiles() -> void:
 		s.distance += step
 		s.previous = s.pos
 		s.pos = next
-		if s.pierce == 0 or s.remaining <= 0.0001 or not Ground.clear_shot(s.previous, next, gate_hp <= 0, s.over_front):
+		if s.pierce == 0 or s.remaining <= 0.0001 or not map_runtime.projectile_clear(s.previous, next,s.launch_height, gate_hp <= 0, s.over_front):
 			shots.remove_at(at)
 
 func _move(u: Unit, offset: Vector2) -> void:
@@ -902,9 +905,9 @@ func _player_walk() -> void:
 	if hero.state in [State.WINDUP, State.GUARD]:
 		speed *= 0.45
 	if hero.state != State.STAGGER:
-		_move(hero, walk * speed * DT * Ground.pace(hero.pos,vehicle != 0,bridgehead))
+		_move(hero, walk * speed * DT * map_runtime.pace(hero.pos,vehicle != 0))
 	if vehicle != 0:
-		if vehicle==2 and seat_origin and (Ground.blocked(hero.pos+riding_heading*1.83,gate_hp<=0,bridgehead) or not Ground.clear_shot(hero.pos,hero.pos+riding_heading*1.83,gate_hp<=0)):
+		if vehicle==2 and seat_origin and (map_runtime.blocked(hero.pos+riding_heading*1.83,gate_hp<=0) or not map_runtime.clear_shot(hero.pos,hero.pos+riding_heading*1.83,gate_hp<=0)):
 			hero.pos=start_pos
 			riding_heading=start_heading
 		vehicle_pos[vehicle] = hero.pos+(riding_heading*1.83 if vehicle==2 and seat_origin else Vector2.ZERO)
@@ -944,7 +947,7 @@ func _soldier(u: Unit) -> void:
 		elif c.mission==Mission.ESCORT: goal=Traffic.escort_station(ram,c.slot,u.station-c.home)
 		elif c.mission==Mission.PRESS and c.aim.x>=Ground.WALL_X-2.1: goal=Traffic.gate_station(c.slot,companies_per_side,c.home,u.station-c.home)
 	if withdrawing:
-		goal = Vector2(-98.0 if u.team == 0 else 100.0, signf(u.pos.y)*32)
+		goal = Vector2(-98.0 if u.team == 0 else 100.0, signf(u.pos.y)*32) if map_runtime.is_legacy else map_runtime.retreat_goal(u.team)
 		if u.pos.distance_to(goal) < 3:
 			_set_state(u, State.ESCAPED, 0.0)
 			if not u.officer:
@@ -981,16 +984,16 @@ func _soldier(u: Unit) -> void:
 			return
 	var next: Vector2
 	if withdrawing:
-		next=Ground.retreat_waypoint(u.pos,goal,gate_hp<=0,bridgehead)
+		next=map_runtime.retreat_waypoint(u.pos,goal,gate_hp<=0)
 	elif traffic_enabled and not at_post:
 		next=Traffic.waypoint(u.pos,goal,u.station.y-c.home.y,u.id,gate_hp<=0,ram_hp>0 and ram.x>Ground.WALL_X-6.0,keep_gate_file,bridgehead)
 	else:
-		next=Ground.waypoint(u.pos,goal,bridgehead)
+		next=map_runtime.waypoint(u.pos,goal)
 	if traffic_enabled and ram_hp>0 and not at_post:
 		next=Traffic.around_ram(u.pos,next,ram,u.id,gate_hp<=0)
 	var dist := u.pos.distance_to(next)
 	var speed := 5.8 if u.mounted else (4.1 if fleeing else 2.85)
-	var vel := u.pos.direction_to(next) * minf(speed * Ground.pace(u.pos,u.mounted,bridgehead),dist / DT)
+	var vel := u.pos.direction_to(next) * minf(speed * map_runtime.pace(u.pos,u.mounted),dist / DT)
 	var old_heading:=u.facing
 	if vel.length_squared() > 0.08:
 		u.facing = vel.normalized()
@@ -1007,7 +1010,7 @@ func _state_step(u: Unit) -> void:
 	match u.state:
 		State.WINDUP:
 			var move:=_committed_move(u)
-			var footwork:=objectives.enabled and u.hero and vehicle==0 and move.step!=0.0
+			var footwork:=(objectives.enabled or not map_runtime.is_legacy) and u.hero and vehicle==0 and move.step!=0.0
 			if footwork:
 				var before:=smoothstep(0.12,1.0,1.0-prior/u.duration)
 				var now:=smoothstep(0.12,1.0,1.0-u.timer/u.duration)
@@ -1054,6 +1057,7 @@ func _rotate_ram_crew() -> void:
 			reliefs+=1
 
 func _siege() -> void:
+	if not map_runtime.is_legacy:return # Explicit internal field mode has no siege binding.
 	if ram_hp > 0 and tick % 4 == 0 and (gate_hp>0 or (objectives.enabled and objectives.task==Objectives.Task.ESCORT)):
 		var crew := 0
 		for id in _near(ram,4.8,0):
@@ -1067,7 +1071,7 @@ func _siege() -> void:
 					gate_hp = maxf(0,gate_hp - 14.0 - crew*1.5)
 					ram_timer = 1.7
 			else:
-				ram = Ground.travel(ram,ram.direction_to(Ground.GATE)*DT*4*1.5,false,bridgehead)
+				ram = map_runtime.travel(ram,ram.direction_to(Ground.GATE)*DT*4*1.5,false)
 	if tick % 5 == 0:
 		var friendly := _court_holders(0)
 		var enemy := _court_holders(1)
@@ -1171,6 +1175,8 @@ func step() -> void:
 func _resolve_historical() -> void:
 	if hero.hp <= 0:
 		result = "主将阵亡"
+	elif not map_runtime.is_legacy and companies[hero.squad].mission==Mission.WITHDRAW and hero.pos.distance_to(map_runtime.retreat_goal(0))<3. and escaped[0]>0:
+		result="成功撤离"
 	elif capture >= 6.0:
 		result = "夺取城内阵地"
 	elif hero.pos.x < -85 and companies[hero.squad].mission == Mission.WITHDRAW and escaped[0] > 0:

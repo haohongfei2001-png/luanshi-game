@@ -1,9 +1,10 @@
-extends RefCounted
+extends "res://scripts/field/maps/map_query.gd"
 ## Exact legacy delegation. Never changes Ground globals or an existing save.
 ## Per-battle bridgehead context, not a process-wide "current map".
 const Ground:=preload("res://scripts/field/ground.gd")
 var _bridgehead:bool
-func _init(bridgehead:bool=false):_bridgehead=bridgehead
+func _init(bridgehead:bool=false):
+ _bridgehead=bridgehead;is_legacy=true
 func height(p:Vector2)->float:return Ground.height(p,_bridgehead)
 func deck_height(p:Vector2)->float:return Ground.deck_height(p,_bridgehead)
 func unit_point(p:Vector2)->Vector3:return Ground.unit_point(p,_bridgehead)

@@ -1,7 +1,7 @@
 extends RefCounted
 ## Spatially indexed author-tagged support triangles, never arbitrary visual rays.
 ## Does not yet supply obstacles, portal navigation or a complete Battle adapter.
-const CELL:=4.0
+const CELL:=1.0
 var _triangles:Array=[]
 var _cells:Dictionary={}
 var _configured:=false
@@ -57,7 +57,12 @@ func support(p:Vector2,surface_id:String="")->Dictionary:
   if hits.has(tri.surface_id) and absf(float(hits[tri.surface_id])-y)>.001:return {"error":ERR_INVALID_DATA,"reason":"MULTIPLE_HEIGHTS_IN_ONE_SURFACE"}
   hits[tri.surface_id]=y
  if hits.is_empty():return {"error":ERR_DOES_NOT_EXIST,"reason":"NO_TAGGED_SUPPORT"}
- if hits.size()!=1:return {"error":ERR_INVALID_DATA,"reason":"EXPLICIT_SURFACE_REQUIRED","surfaces":hits.keys()}
+ if hits.size()!=1:
+  var heights=hits.values()
+  for y in heights:
+   if absf(float(y)-float(heights[0]))>.001:return {"error":ERR_INVALID_DATA,"reason":"EXPLICIT_SURFACE_REQUIRED","surfaces":hits.keys()}
+  # Coincident-height seams are support, not an overpass; portal graph still
+  # governs transitions between their distinct surface IDs.
  var id:String=hits.keys()[0]
  return {"error":OK,"surface_id":id,"position":Vector3(p.x,hits[id],p.y)}
 func statistics()->Dictionary:return {"triangles":_triangles.size(),"spatial_cells":_cells.size(),"configured":_configured,"scope":"TAGGED_SUPPORT_ONLY_NOT_COMPLETE_NAVIGATION"}
