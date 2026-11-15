@@ -1,0 +1,269 @@
+--- a/platform/linuxbsd/detect.py
++++ b/platform/linuxbsd/detect.py
+@@ -46,6 +46,7 @@
+         BoolVariable("speechd", "Use Speech Dispatcher for Text-to-Speech support", True),
+         BoolVariable("fontconfig", "Use fontconfig for system fonts support", True),
+         BoolVariable("udev", "Use udev for gamepad connection callbacks", True),
++        BoolVariable("surfaceless", "Enable explicit software EGL surfaceless display", False),
+         BoolVariable("x11", "Enable X11 display", True),
+         BoolVariable("wayland", "Enable Wayland display", True),
+         BoolVariable("libdecor", "Enable libdecor support", True),
+@@ -516,6 +517,12 @@
+             # No pkgconfig file so far, hardcode expected lib name.
+             env.Append(LIBS=["glslang", "SPIRV", "glslang-default-resource-limits"])
+ 
++    if env["surfaceless"]:
++        if not env["opengl3"]:
++            print_error("surfaceless requires opengl3=yes")
++            sys.exit(255)
++        env.Append(CPPDEFINES=["SURFACELESS_ENABLED"])
++
+     if env["opengl3"]:
+         env.Append(CPPDEFINES=["GLES3_ENABLED"])
+ 
+--- a/platform/linuxbsd/SCsub
++++ b/platform/linuxbsd/SCsub
+@@ -20,6 +20,9 @@
+ 
+ if env["use_sowrap"]:
+     common_linuxbsd.append("xkbcommon-so_wrap.c")
++
++if env["surfaceless"]:
++    common_linuxbsd.append("surfaceless/display_server_surfaceless.cpp")
+ 
+ if env["x11"]:
+     common_linuxbsd += SConscript("x11/SCsub")
+--- a/platform/linuxbsd/os_linuxbsd.cpp
++++ b/platform/linuxbsd/os_linuxbsd.cpp
+@@ -40,6 +40,10 @@
+ #include "core/profiling/profiling.h"
+ #include "main/main.h"
+ #include "servers/display/display_server.h"
++
++#ifdef SURFACELESS_ENABLED
++#include "surfaceless/display_server_surfaceless.h"
++#endif
+ #include "servers/rendering/rendering_server.h"
+ 
+ #ifdef X11_ENABLED
+@@ -1293,6 +1297,10 @@
+ 	AudioDriverManager::add_driver(&driver_alsa);
+ #endif
+ 
++#ifdef SURFACELESS_ENABLED
++	DisplayServerSurfaceless::register_surfaceless_driver();
++#endif
++
+ #ifdef X11_ENABLED
+ 	DisplayServerX11::register_x11_driver();
+ #endif
+--- /dev/null
++++ b/platform/linuxbsd/surfaceless/display_server_surfaceless.h
+@@ -0,0 +1,55 @@
++// Local Godot 4.6.3 tooling: EGL surfaceless software rendering.
++// Distributed under the same MIT license as Godot (see LICENSE.txt).
++#pragma once
++
++#include "servers/display/display_server_headless.h"
++#include "core/os/mutex.h"
++#include "thirdparty/glad/glad/egl.h"
++
++// Reuse no-desktop/input stubs only. This driver never selects RasterizerDummy.
++class DisplayServerSurfaceless : public DisplayServerHeadless {
++    GDSOFTCLASS(DisplayServerSurfaceless, DisplayServerHeadless);
++    void *egl_library = nullptr;
++    EGLDisplay egl_display = EGL_NO_DISPLAY;
++    EGLContext egl_context = EGL_NO_CONTEXT;
++    EGLSurface egl_surface = EGL_NO_SURFACE;
++    EGLConfig egl_config = nullptr;
++    bool initialized = false;
++    bool glad_loaded = false;
++    mutable Mutex size_mutex;
++    Size2i requested_size = Size2i(1280, 720);
++    Size2i surface_size;
++    ObjectID instance_id;
++    Callable rect_changed;
++
++    Error initialize_egl();
++    Error ensure_surface();
++    static Vector<String> get_rendering_drivers_func();
++    static DisplayServer *create_func(const String &, WindowMode, VSyncMode, uint32_t, const Vector2i *, const Vector2i &, int, Context, int64_t, Error &);
++
++public:
++    static void register_surfaceless_driver();
++    String get_name() const override { return "surfaceless"; }
++    int get_screen_count() const override { return 1; }
++    int window_get_current_screen(WindowID = MAIN_WINDOW_ID) const override { return 0; }
++    Size2i screen_get_size(int = SCREEN_OF_MAIN_WINDOW) const override { return window_get_size(); }
++    Rect2i screen_get_usable_rect(int = SCREEN_OF_MAIN_WINDOW) const override { return Rect2i(Point2i(), window_get_size()); }
++    Vector<WindowID> get_window_list() const override { Vector<WindowID> ids; ids.push_back(MAIN_WINDOW_ID); return ids; }
++    WindowID create_sub_window(WindowMode, VSyncMode, uint32_t, const Rect2i & = Rect2i(), bool = false, WindowID = INVALID_WINDOW_ID) override { return INVALID_WINDOW_ID; }
++    void window_attach_instance_id(ObjectID p_id, WindowID = MAIN_WINDOW_ID) override { instance_id = p_id; }
++    ObjectID window_get_attached_instance_id(WindowID = MAIN_WINDOW_ID) const override { return instance_id; }
++    void window_set_rect_changed_callback(const Callable &p_callable, WindowID = MAIN_WINDOW_ID) override { rect_changed = p_callable; }
++    void window_set_size(const Size2i, WindowID = MAIN_WINDOW_ID) override;
++    Size2i window_get_size(WindowID = MAIN_WINDOW_ID) const override;
++    Size2i window_get_size_with_decorations(WindowID = MAIN_WINDOW_ID) const override { return window_get_size(); }
++    WindowMode window_get_mode(WindowID = MAIN_WINDOW_ID) const override { return WINDOW_MODE_WINDOWED; }
++    VSyncMode window_get_vsync_mode(WindowID = MAIN_WINDOW_ID) const override { return VSYNC_DISABLED; }
++    bool window_can_draw(WindowID p_window = MAIN_WINDOW_ID) const override { return initialized && p_window == MAIN_WINDOW_ID; }
++    bool can_any_window_draw() const override { return initialized; }
++    int64_t window_get_native_handle(HandleType, WindowID = MAIN_WINDOW_ID) const override;
++    void gl_window_make_current(WindowID) override;
++    void release_rendering_thread() override;
++    void swap_buffers() override;
++    explicit DisplayServerSurfaceless(const Size2i &, Error &);
++    ~DisplayServerSurfaceless();
++};
+--- /dev/null
++++ b/platform/linuxbsd/surfaceless/display_server_surfaceless.cpp
+@@ -0,0 +1,149 @@
++// Local Godot 4.6.3 tooling: EGL surfaceless software rendering.
++// Distributed under the same MIT license as Godot (see LICENSE.txt).
++#include "display_server_surfaceless.h"
++#include "drivers/gles3/rasterizer_gles3.h"
++#include "thirdparty/glad/glad/gl.h"
++#include <cstdlib>
++#include <dlfcn.h>
++
++Vector<String> DisplayServerSurfaceless::get_rendering_drivers_func() {
++    Vector<String> drivers;
++    drivers.push_back("opengl3");
++    return drivers;
++}
++
++DisplayServer *DisplayServerSurfaceless::create_func(const String &p_driver, WindowMode, VSyncMode, uint32_t, const Vector2i *, const Vector2i &p_size, int, Context, int64_t, Error &r_error) {
++    r_error = ERR_UNAVAILABLE;
++    ERR_FAIL_COND_V_MSG(p_driver != "opengl3", nullptr, "surfaceless supports only opengl3 Compatibility.");
++    DisplayServerSurfaceless *server = memnew(DisplayServerSurfaceless(p_size, r_error));
++    if (r_error != OK) {
++        memdelete(server);
++        return nullptr;
++    }
++    RasterizerGLES3::make_current(true);
++    return server;
++}
++
++Error DisplayServerSurfaceless::initialize_egl() {
++    // Process-local software selection, before loading any EGL/GL implementation.
++    // No X11, Wayland, GBM, default-display or native-window fallback exists.
++    setenv("LIBGL_ALWAYS_SOFTWARE", "1", 1);
++    setenv("GALLIUM_DRIVER", "llvmpipe", 1);
++    egl_library = dlopen("libEGL.so.1", RTLD_NOW | RTLD_LOCAL);
++    ERR_FAIL_NULL_V_MSG(egl_library, ERR_UNAVAILABLE, "Could not load installed libEGL.so.1.");
++    auto get_platform = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYPROC>(dlsym(egl_library, "eglGetPlatformDisplay"));
++    auto initialize = reinterpret_cast<PFNEGLINITIALIZEPROC>(dlsym(egl_library, "eglInitialize"));
++    ERR_FAIL_COND_V_MSG(!get_platform || !initialize, ERR_UNAVAILABLE, "EGL 1.5 entry points required.");
++    constexpr EGLenum PLATFORM_SURFACELESS_MESA = 0x31DD;
++    egl_display = get_platform(PLATFORM_SURFACELESS_MESA, nullptr, nullptr);
++    ERR_FAIL_COND_V_MSG(egl_display == EGL_NO_DISPLAY, ERR_UNAVAILABLE, "EGL surfaceless display unavailable.");
++    EGLint major = 0, minor = 0;
++    ERR_FAIL_COND_V_MSG(!initialize(egl_display, &major, &minor), ERR_UNAVAILABLE, "EGL surfaceless initialization failed.");
++    // Passing the already initialized display is essential: GLAD's NO_DISPLAY
++    // loader otherwise calls eglGetDisplay(EGL_DEFAULT_DISPLAY).
++    ERR_FAIL_COND_V_MSG(!gladLoaderLoadEGL(egl_display), ERR_UNAVAILABLE, "Could not load EGL API for surfaceless display.");
++    glad_loaded = true;
++    ERR_FAIL_COND_V_MSG(!eglBindAPI(EGL_OPENGL_API), ERR_UNAVAILABLE, "Desktop OpenGL EGL API unavailable.");
++    const EGLint config_attributes[] = { EGL_SURFACE_TYPE, EGL_PBUFFER_BIT, EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT, EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 8, EGL_DEPTH_SIZE, 24, EGL_STENCIL_SIZE, 8, EGL_NONE };
++    EGLint count = 0;
++    ERR_FAIL_COND_V_MSG(!eglChooseConfig(egl_display, config_attributes, &egl_config, 1, &count) || count < 1, ERR_UNAVAILABLE, "No RGBA8 depth24 stencil8 software pbuffer configuration.");
++    const EGLint context_attributes[] = { EGL_CONTEXT_MAJOR_VERSION, 3, EGL_CONTEXT_MINOR_VERSION, 3, EGL_CONTEXT_OPENGL_PROFILE_MASK, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT, EGL_NONE };
++    egl_context = eglCreateContext(egl_display, egl_config, EGL_NO_CONTEXT, context_attributes);
++    ERR_FAIL_COND_V_MSG(egl_context == EGL_NO_CONTEXT, ERR_UNAVAILABLE, "OpenGL 3.3 core surfaceless context unavailable.");
++    Error err = ensure_surface();
++    ERR_FAIL_COND_V_MSG(err != OK, err, "Could not create surfaceless pbuffer.");
++    // Validate before RasterizerGLES3's constructor (which cannot return errors).
++    ERR_FAIL_COND_V_MSG(!gladLoadGL(reinterpret_cast<GLADloadfunc>(eglGetProcAddress)), ERR_UNAVAILABLE, "Could not load OpenGL API.");
++    print_line(vformat("Surfaceless EGL %d.%d, software renderer: %s, GL: %s", major, minor, (const char *)glGetString(GL_RENDERER), (const char *)glGetString(GL_VERSION)));
++    initialized = true;
++    return OK;
++}
++
++Error DisplayServerSurfaceless::ensure_surface() {
++    MutexLock lock(size_mutex);
++    if (egl_surface != EGL_NO_SURFACE && surface_size == requested_size) {
++        return eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context) ? OK : ERR_CANT_CREATE;
++    }
++    const EGLint attributes[] = { EGL_WIDTH, requested_size.x, EGL_HEIGHT, requested_size.y, EGL_NONE };
++    EGLSurface next = eglCreatePbufferSurface(egl_display, egl_config, attributes);
++    ERR_FAIL_COND_V(next == EGL_NO_SURFACE, ERR_CANT_CREATE);
++    if (!eglMakeCurrent(egl_display, next, next, egl_context)) {
++        eglDestroySurface(egl_display, next);
++        return ERR_CANT_CREATE;
++    }
++    if (egl_surface != EGL_NO_SURFACE) {
++        eglDestroySurface(egl_display, egl_surface);
++    }
++    egl_surface = next;
++    surface_size = requested_size;
++    EGLint actual_width = 0, actual_height = 0;
++    ERR_FAIL_COND_V(!eglQuerySurface(egl_display, egl_surface, EGL_WIDTH, &actual_width) || !eglQuerySurface(egl_display, egl_surface, EGL_HEIGHT, &actual_height), ERR_CANT_CREATE);
++    ERR_FAIL_COND_V(actual_width != surface_size.x || actual_height != surface_size.y, ERR_CANT_CREATE);
++    print_line(vformat("SURFACELESS_EGL_PBUFFER actual=%dx%d requested=%dx%d platform=0x31DD software=llvmpipe", actual_width, actual_height, surface_size.x, surface_size.y));
++    return OK;
++}
++
++void DisplayServerSurfaceless::window_set_size(const Size2i p_size, WindowID p_window) {
++    ERR_FAIL_COND(p_window != MAIN_WINDOW_ID || p_size.x < 1 || p_size.y < 1);
++    {
++        MutexLock lock(size_mutex);
++        if (requested_size == p_size) { return; }
++        requested_size = p_size;
++    }
++    if (rect_changed.is_valid()) { rect_changed.call(Rect2i(Point2i(), p_size)); }
++}
++
++Size2i DisplayServerSurfaceless::window_get_size(WindowID) const {
++    MutexLock lock(size_mutex);
++    return requested_size;
++}
++
++void DisplayServerSurfaceless::gl_window_make_current(WindowID p_window) {
++    // INVALID_WINDOW_ID denotes an offscreen SubViewport using this same context.
++    ERR_FAIL_COND(p_window != MAIN_WINDOW_ID && p_window != INVALID_WINDOW_ID);
++    if (ensure_surface() != OK) {
++        initialized = false; // Fail closed: do not advertise a drawable window after a bind/resize failure.
++        ERR_FAIL_MSG("Could not bind software render context; surfaceless drawing disabled.");
++    }
++}
++
++void DisplayServerSurfaceless::release_rendering_thread() {
++    if (egl_display != EGL_NO_DISPLAY) { eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT); }
++}
++
++void DisplayServerSurfaceless::swap_buffers() {
++    // Pbuffers are single-buffered; flush real rendering without desktop present.
++    glFinish();
++}
++
++int64_t DisplayServerSurfaceless::window_get_native_handle(HandleType p_type, WindowID) const {
++    switch (p_type) {
++        case OPENGL_CONTEXT: return reinterpret_cast<int64_t>(egl_context);
++        case EGL_DISPLAY: return reinterpret_cast<int64_t>(egl_display);
++        case EGL_CONFIG: return reinterpret_cast<int64_t>(egl_config);
++        default: return 0;
++    }
++}
++
++DisplayServerSurfaceless::DisplayServerSurfaceless(const Size2i &p_size, Error &r_error) {
++    requested_size = Size2i(MAX(1, p_size.x), MAX(1, p_size.y));
++    r_error = initialize_egl();
++}
++
++DisplayServerSurfaceless::~DisplayServerSurfaceless() {
++    if (glad_loaded) {
++        eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
++        if (egl_surface != EGL_NO_SURFACE) { eglDestroySurface(egl_display, egl_surface); }
++        if (egl_context != EGL_NO_CONTEXT) { eglDestroyContext(egl_display, egl_context); }
++    }
++    if (egl_library && egl_display != EGL_NO_DISPLAY) {
++        auto terminate = reinterpret_cast<PFNEGLTERMINATEPROC>(dlsym(egl_library, "eglTerminate"));
++        if (terminate) { terminate(egl_display); }
++    }
++    if (glad_loaded) { gladLoaderUnloadEGL(); }
++    if (egl_library) { dlclose(egl_library); }
++}
++
++void DisplayServerSurfaceless::register_surfaceless_driver() {
++    register_create_function("surfaceless", create_func, get_rendering_drivers_func);
++}

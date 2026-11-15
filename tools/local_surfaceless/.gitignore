@@ -1,0 +1,14 @@
+out/
+__pycache__/
+*.pyc
+.godot/
+*.png
+*.log
+*.jsonl
+*.tar.gz
+godot-surfaceless*
+artifact.json
+runtime_report.json
+pixel_qa.json
+binary_identity.json
+exit_code.txt

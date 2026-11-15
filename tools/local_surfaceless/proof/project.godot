@@ -1,0 +1,14 @@
+config_version=5
+[application]
+config/name="Godot EGL Surfaceless Genuine Rendering Proof"
+run/main_scene="res://main.tscn"
+[display]
+window/size/viewport_width=768
+window/size/viewport_height=432
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+driver/threads/thread_model=1
+textures/default_filters/use_nearest_mipmap_filter=false
+[threading]
+worker_pool/max_threads=2

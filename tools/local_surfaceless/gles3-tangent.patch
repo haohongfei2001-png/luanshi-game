@@ -1,0 +1,62 @@
+diff --git a/drivers/gles3/shaders/skeleton.glsl b/drivers/gles3/shaders/skeleton.glsl
+index 66befbc..f78aa4f 100644
+--- a/drivers/gles3/shaders/skeleton.glsl
++++ b/drivers/gles3/shaders/skeleton.glsl
+@@ -40,11 +40,12 @@ layout(location = 1) in highp uvec2 in_normal;
+ layout(location = 2) in highp uvec2 in_tangent;
+ #endif
+ #else // MODE_BLEND_PASS
+-#ifdef USE_NORMAL
+-layout(location = 1) in highp vec2 in_normal;
+-#endif
+-#ifdef USE_TANGENT
+-layout(location = 2) in highp vec2 in_tangent;
++// Base mesh VAOs pack both octahedral attributes at location 1. Location 2
++// is intentionally disabled by MeshStorage's regular mesh VAO layout.
++#if defined(USE_NORMAL) || defined(USE_TANGENT)
++layout(location = 1) in highp vec4 in_normal_tangent;
++#define in_normal in_normal_tangent.xy
++#define in_tangent in_normal_tangent.zw
+ #endif
+ #endif // MODE_BLEND_PASS
+ 
+@@ -118,12 +119,15 @@ vec2 vec3_to_oct(vec3 e) {
+ 
+ vec4 oct_to_tang(vec2 oct_sign_encoded) {
+ 	// Binormal sign encoded in y component
+-	vec2 oct = vec2(oct_sign_encoded.x, abs(oct_sign_encoded.y) * 2.0 - 1.0);
+-	return vec4(oct_to_vec3(oct), sign(oct_sign_encoded.y));
++	float signed_y = oct_sign_encoded.y * 2.0 - 1.0;
++	vec2 oct = vec2(oct_sign_encoded.x, abs(signed_y));
++	return vec4(oct_to_vec3(oct), sign(signed_y));
+ }
+ 
+ vec2 tang_to_oct(vec4 base) {
+ 	vec2 oct = vec3_to_oct(base.xyz);
++	// Match Vector3::octahedron_tangent_encode: keep handedness away from zero.
++	oct.y = max(oct.y, 1.0 / 32767.0);
+ 	// Encode binormal sign in y component
+ 	oct.y = oct.y * 0.5f + 0.5f;
+ 	oct.y = base.w >= 0.0f ? oct.y : 1.0 - oct.y;
+diff --git a/drivers/gles3/storage/mesh_storage.cpp b/drivers/gles3/storage/mesh_storage.cpp
+index e51bef1..98cbf54 100644
+--- a/drivers/gles3/storage/mesh_storage.cpp
++++ b/drivers/gles3/storage/mesh_storage.cpp
+@@ -1430,7 +1430,7 @@ void MeshStorage::update_mesh_instances() {
+ 
+ 				glBindBuffer(GL_ARRAY_BUFFER, 0);
+ 				GLuint vertex_array_gl = 0;
+-				uint64_t mask = RS::ARRAY_FORMAT_VERTEX | RS::ARRAY_FORMAT_NORMAL | RS::ARRAY_FORMAT_VERTEX;
++				uint64_t mask = RS::ARRAY_FORMAT_VERTEX | RS::ARRAY_FORMAT_NORMAL | RS::ARRAY_FORMAT_TANGENT;
+ 				uint64_t format = mi->mesh->surfaces[i]->format & mask; // Format should only have vertex, normal, tangent (as necessary).
+ 				mesh_surface_get_vertex_arrays_and_format(mi->mesh->surfaces[i], format, false, vertex_array_gl);
+ 				glBindVertexArray(vertex_array_gl);
+@@ -1546,7 +1546,7 @@ void MeshStorage::update_mesh_instances() {
+ 				skeleton_shader.shader.version_set_uniform(SkeletonShaderGLES3::INVERSE_TRANSFORM_OFFSET, inverse_transform[2], skeleton_shader.shader_version, variant, specialization);
+ 
+ 				GLuint vertex_array_gl = 0;
+-				uint64_t mask = RS::ARRAY_FORMAT_VERTEX | RS::ARRAY_FORMAT_NORMAL | RS::ARRAY_FORMAT_VERTEX;
++				uint64_t mask = RS::ARRAY_FORMAT_VERTEX | RS::ARRAY_FORMAT_NORMAL | RS::ARRAY_FORMAT_TANGENT;
+ 				uint64_t format = mi->mesh->surfaces[i]->format & mask; // Format should only have vertex, normal, tangent (as necessary).
+ 				mesh_surface_get_vertex_arrays_and_format(mi->mesh->surfaces[i], format, false, vertex_array_gl);
+ 				glBindVertexArray(vertex_array_gl);
