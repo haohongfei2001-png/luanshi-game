@@ -29,5 +29,13 @@
     "bevel_disabled_m": 0.047642977,
     "jog_full_m": 0.258899214,
     "jog_bevel_disabled_m": 0.042598524
+  },
+  "all_integer_frames18": {
+    "source_sha256": "affeac881437b0c628cc3661c1bfe2fd36b9d9c93ffb1d4cb4fccfd30047820a",
+    "poses": 2166,
+    "actions": 14,
+    "issues": 0,
+    "gate_pass": true,
+    "scope": "Every integer source frame at120fps; edge/bounds/weight/topology check, not cloth collision or subframe rendering acceptance."
   }
 }

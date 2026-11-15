@@ -2,7 +2,7 @@
 Not a render/performance/art acceptance. No limbs or visible surfaces are hidden.
 """
 import bpy,sys,pathlib,json,hashlib,math,numpy as np
-src,spear,out=map(pathlib.Path,sys.argv[sys.argv.index('--')+1:]);out.mkdir(parents=True,exist_ok=True)
+args=sys.argv[sys.argv.index('--')+1:];src,spear,out=map(pathlib.Path,args[:3]);all_frames='--all-frames' in args[3:];report_only='--report-only' in args[3:];out.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.open_mainfile(filepath=str(src),use_scripts=False,load_ui=False);rig=bpy.data.objects['MH163'];rig.animation_data_create();bpy.context.scene.render.fps=120;bpy.context.scene.render.fps_base=1
 removed=[]
 for o in bpy.context.scene.objects:
@@ -28,6 +28,7 @@ for action in sorted(bpy.data.actions,key=lambda a:a.name):
  if action.name not in ['Idle_Loop','Walk_Loop','Jog_Fwd_Loop','Sprint_Loop','Hit_Chest','Hit_Head','Death01','Sword_Idle','Sword_Attack'] and not action.name.startswith('Spear_'):continue
  rig.animation_data.action=action;lo,hi=map(int,action.frame_range);frames=sorted(set([lo,hi]+[round(lo+(hi-lo)*t) for t in [.125,.25,.375,.5,.625,.75,.875]]))
  if 'Thrust' in action.name:frames=sorted(set(frames+[min(hi,f) for f in [12,26,31,42,63,84]]))
+ if all_frames:frames=list(range(lo,hi+1))
  for frame in frames:
   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();mins=[];maxs=[]
   for o in objects:
@@ -45,7 +46,7 @@ for action in sorted(bpy.data.actions,key=lambda a:a.name):
  print(json.dumps({'completed_action':action.name,'issues_so_far':len(issues)}),flush=True)
  summary.append({'action':action.name,'source_frame_range':[lo,hi],'duration_s':(hi-lo)/120,'sampled_frames':frames})
 rig.animation_data.action=bpy.data.actions['Idle_Loop'];bpy.context.scene.frame_set(1);bpy.context.preferences.filepaths.save_version=0
-bpy.ops.wm.save_as_mainfile(filepath=str(out/'supported-uniform-editable.blend'))
-r={'source_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),'spear_source_sha256':hashlib.sha256(spear.read_bytes()).hexdigest(),'removed_faulty_live_bevels':removed,'actions':summary,'tested_poses':len(bbox_all),'worst_edges_by_object':worst,'bounds':bbox_all,'issues':issues,'technical_gate_pass':not issues,'visual_pass':False,'gpu':'NOT_RUN','edge_failure_rule':'actual edge >.12m AND >4x exact same rest edge; finite vertices; stable topology; actor extent <=3m; known finite positive bone weights'}
+if not report_only:bpy.ops.wm.save_as_mainfile(filepath=str(out/'supported-uniform-editable.blend'))
+r={'sampling':'every integer source frame' if all_frames else 'representative poses','source_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),'spear_source_sha256':hashlib.sha256(spear.read_bytes()).hexdigest(),'removed_faulty_live_bevels':removed,'actions':summary,'tested_poses':len(bbox_all),'worst_edges_by_object':worst,'bounds':bbox_all,'issues':issues,'technical_gate_pass':not issues,'visual_pass':False,'gpu':'NOT_RUN','edge_failure_rule':'actual edge >.12m AND >4x exact same rest edge; finite vertices; stable topology; actor extent <=3m; known finite positive bone weights'}
 (out/'motion-gate.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({'technical_gate_pass':not issues,'poses':len(bbox_all),'issues':len(issues)}),flush=True)
 if issues:raise RuntimeError('Actual full-motion gate failed; inspect report')

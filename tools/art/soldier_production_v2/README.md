@@ -138,3 +138,8 @@ Long needles are absent, but garment coverage and helmet/shoe material remain
 below target. Source18 has all 14 actions at120fps, no weapon object; runtime
 adds the true wrist-bound spear without duplicating clips. No new GPU evidence
 or art acceptance is claimed. This is an integration WIP, not default artwork.
+
+The same candidate18 was additionally checked at **all 2,166 integer source
+frames** across all14 clips (`--all-frames --report-only`): zero gate failures.
+This is still not an intersection/cloth-contact or subframe-rendering test.
+The report-only flag avoids duplicating a73MB editable source while auditing.
