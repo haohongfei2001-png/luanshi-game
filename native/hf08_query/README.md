@@ -80,3 +80,49 @@ Godot's static allocator grew about8.36MB in the pair; native STL allocation is
 not fully counted and this is not process RSS. The result clears the prespecified
 20% small-workload gate but remains far from real-time thousand-person gameplay.
 See `docs/evidence/production-v2/hf08-native-query.json` for exact measurements.
+
+## Stage two: ordered segment batching (separate opt-in)
+
+`experimental_native_navigation.gd` batches only immutable support calculation.
+The original caller still computes the same `ceil(distance/.25)` step count;
+native uses the same double ratio cast to float32 lerp weight. It returns packed
+ordered sample coordinates, support errors and float32 positions in one call.
+No sample is dropped. Portal admission stays before sampling; every body/gate
+and slope check remains in GDScript in its original order, with current call-time
+radius, height and gate state. No graph edge replaces an actual-position segment.
+
+The batch speculatively computes support beyond an eventual obstacle failure.
+This is safe only because configured support geometry is immutable. This changes
+support-cache FIFO contents/hit counts, not query results or battle state. It is
+not a byte-identical cache-instrumentation claim. No native obstacle/portal cache
+or permanently captured gate state is introduced. Segments beyond65536steps or
+safe coordinate range fall back rather than truncating or approximating.
+
+```sh
+native/hf08_query/build.sh
+godot --headless --path . --script tests/map_runtime/native_segment_parity.gd -- SOURCE_JSON segments.json
+godot --headless --path . --script tests/map_runtime/native_support_parity.gd -- SOURCE_JSON support.json
+godot --headless --path . --script tests/map_runtime/source_capacity_routes.gd -- SOURCE_JSON routes.json native-batch
+godot --headless --path . --script tests/map_runtime/production_battle.gd -- SOURCE_JSON LAYOUT_JSON 512 40 single.json profile-native
+godot --headless --path . --script tests/map_runtime/production_battle.gd -- SOURCE_JSON LAYOUT_JSON 512 40 batch.json profile-native-batch
+cmp single.json.snapshot.json batch.json.snapshot.json
+```
+
+55,915 sample-coordinate/error/position byte comparisons and2,622 complete
+segment decisions match, including repeated gate changes and body dimensions.
+All8,882graph nodes have exactly the original ordered connections. The507,887
+scalar-support checks still pass after sharing the internal evaluator. Four
+HF08routes and both army deployments match; missing-library support/navigation
+fallback and explicit batch disable pass.
+
+One new paired40tick observation: single native10.997s to batch7.170s (34.8%
+less), with exactly the same231,048Save bytes and unit states as stage one and
+the original baseline. All910,489body checks and2shot checks remain. Native
+batch generated1,024,058support points. Additional speculative calculation is
+not soldier or collision reduction. Query profile `support_us` now excludes
+batched support work: never present that smaller counter as total support CPU.
+Native counters are read after final validation and include those final probes.
+
+This is still slow early marching, with no hits yet. It is not real-time/FPS,
+later-contact, GPU, Mac or M5 evidence. The default constructor remains unchanged.
+See `docs/evidence/production-v2/hf08-native-batch.json` for exact scoped results.

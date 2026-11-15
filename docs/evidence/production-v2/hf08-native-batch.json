@@ -1,0 +1,106 @@
+{
+  "status": "LINUX_OPT_IN_BATCH_PROTOTYPE_NOT_DEFAULT",
+  "stage_one_remote_commit": "3e078903c2593cb86ebfeba8542ac860871d41e1",
+  "topology_sha256": "0b1d24868d11505f3e980a8eb456df7e55035203490b1d1df8384ba5622bd140",
+  "source_sidecar_sha256": "28f93aecc08a099b06aae9c70bb5ce070653a1850b0417baa3493f93a5e9b753",
+  "godot": "4.6.3.stable.official.7d41c59c4",
+  "compiler": "g++ Debian 14.2.0-19, x86_64, no fast-math/FMA contraction",
+  "kernel_source_sha256": "f4a2e0082eba56363023f2a2f2662ffd7852703ca697bdaa2979cf1abc5d6a98",
+  "kernel_linux_so_sha256": "79eca2cd2488508d4a4d5c34d586d8f0c0aa692aee1b8b2a9d09ea3d3bc921ea",
+  "segment_parity": {
+    "explicit_fallback_segments": 100,
+    "graph_connections_exact": true,
+    "graph_nodes": 8882,
+    "point_bytes_checked": 55915,
+    "result": "PASS",
+    "scope": "Native lerp/ordered support bytes; original per-sample gate/obstacle/slope decisions, no samples removed; Linux only",
+    "segment_decisions_checked": 2622,
+    "source_sha256": "28f93aecc08a099b06aae9c70bb5ce070653a1850b0417baa3493f93a5e9b753"
+  },
+  "scalar_support_regression": {
+    "byte_equal_queries": 507887,
+    "explicit_fallback_queries": 1000,
+    "malformed_native_index_rejected": true,
+    "native_kernel_loaded": true,
+    "result": "PASS",
+    "scalar_preserves_2_pow_minus_40": true,
+    "scope": "Same ordered source cells, float32 vectors/cross, float64 scalar arithmetic, exact dictionary bytes; Linux only, not FPS",
+    "source_sha256": "28f93aecc08a099b06aae9c70bb5ce070653a1850b0417baa3493f93a5e9b753",
+    "vector_real_bytes": 4,
+    "vector_rounds_2_pow_minus_40": true
+  },
+  "missing_library_support_and_navigation_fallback": "PASS",
+  "routes_equal": true,
+  "route_steps": [
+    606,
+    606,
+    104,
+    237
+  ],
+  "muster_equal": true,
+  "pair": {
+    "single_native_simulation_ms": 10996.961,
+    "batch_native_simulation_ms": 7170.218,
+    "simulation_reduction_percent": 34.798186517165966,
+    "body_obstruction_calls_each": 910489,
+    "shot_obstruction_calls_each": 2,
+    "single_native_counters": {
+      "batch_calls": 0,
+      "batch_samples": 0,
+      "evaluations": 877747
+    },
+    "batch_native_counters": {
+      "batch_calls": 93483,
+      "batch_samples": 1024058,
+      "evaluations": 1067867
+    },
+    "native_counter_scope": "Reset before real Battle, read after final validation; evaluations include the post-loop support validations. Batch sample count is actual generated support points, including speculative points after eventual obstacle failure.",
+    "remaining_gdscript_support_calls_single": 1097459,
+    "remaining_gdscript_support_calls_batch": 186970,
+    "profile_caution": "support_us no longer covers batch computation. Do not report 0.430s as all support CPU; compare full simulation time."
+  },
+  "full_snapshot_sha256": "b177e17b8093cabb02a6f6d2c37183451e452518790ebea1a9963b5f9dc9fc3e",
+  "full_snapshot_file_bytes_equal": true,
+  "full_snapshot_bytes": 231048,
+  "unit_states_equal": true,
+  "ordinary_per_side": [
+    512,
+    512
+  ],
+  "roster": 1057,
+  "ticks": 40,
+  "units_moved": 1056,
+  "invalid_positions": [],
+  "attacks": 0,
+  "hits": [
+    0,
+    0
+  ],
+  "losses": [
+    0,
+    0
+  ],
+  "single_memory": {
+    "godot_static_bytes": 130096883,
+    "godot_static_peak_bytes": 130949335
+  },
+  "batch_memory": {
+    "godot_static_bytes": 130125205,
+    "godot_static_peak_bytes": 130977661
+  },
+  "memory_limit": "Static Godot allocator, not RSS; native STL allocations not fully included",
+  "semantics": [
+    "Original caller computes same step count",
+    "Native preserves float64 step ratio then float32 lerp argument/component arithmetic",
+    "Every original support sample is generated; no quantization or graph-edge shortcut",
+    "Portal check remains before sampling; every original gate/obstacle/slope test remains in original GDScript order",
+    "Batch evaluates immutable support points beyond an eventual early obstacle rejection; support-cache counters/FIFO contents change, battle state does not",
+    "Unsupported platform, missing binary, explicit batch disable, nonfinite/extreme/big segment inputs fall back to reference path"
+  ],
+  "limits": [
+    "One shared-cloud CPU pair, not a stable hardware estimate",
+    "Still far from real-time thousand-person simulation",
+    "40-tick early marching phase, no contact-combat or thermal proof",
+    "No GPU/FPS/M5/Mac/Windows/ARM test, no default enablement or main merge"
+  ]
+}

@@ -17,9 +17,10 @@ func run():
  var data:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[0]));var layout:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[1]));var count:=int(args[2]);var steps:=int(args[3]);var output:=args[4]
  var b=layout.bounds;var bounds:=Rect2(Vector2(b.x[0],b.z[0]),Vector2(b.x[1]-b.x[0],b.z[1]-b.z[0]))
  var nav:=Navigation.new()
+ if args.size()==6 and args[5]=="profile-native-batch":nav=load("res://scripts/field/maps/experimental_native_navigation.gd").new()
  if args.size()==6 and args[5]=="profile-native":nav.support=load("res://scripts/field/maps/experimental_native_support.gd").new()
  nav.support.exact_cache_enabled=not (args.size()==6 and args[5]=="profile-nocache");var started:=Time.get_ticks_usec();assert(nav.configure(data,bounds,{"gate_main":true},.7,3.4)==OK)
- if args.size()==6 and args[5]=="profile-native":assert(nav.support.get("kernel")!=null,"NATIVE_KERNEL_NOT_LOADED")
+ if args.size()==6 and args[5] in ["profile-native","profile-native-batch"]:assert(nav.support.get("kernel")!=null,"NATIVE_KERNEL_NOT_LOADED")
  var graph_end:=Time.get_ticks_usec()
  print("REAL_MAP_GRAPH_READY ",JSON.stringify(nav.statistics()))
  var runtime:=Runtime.new();assert(runtime.bind(nav,data)==OK)
@@ -46,6 +47,7 @@ func run():
  FileAccess.open(output+".initial.json",FileAccess.WRITE).store_string(JSON.stringify(receipt,"  "));print("REAL_INITIAL_MUSTER_COMPLETE ",JSON.stringify(receipt))
  var muster_end:=Time.get_ticks_usec()
  runtime.profile_enabled=args.size()==6;nav.support.profile_enabled=runtime.profile_enabled;nav.obstacles.profile_enabled=runtime.profile_enabled
+ if args.size()==6 and args[5] in ["profile-native","profile-native-batch"]:nav.support.kernel.reset_profile()
  battle.start();var command_count:=0;var checkpoints:=[]
  for request in steps:
   if request==5 and battle.command(0,Battle.Mission.HOLD,Battle.Channel.FLAG):command_count+=1
@@ -69,6 +71,8 @@ func run():
  report["native_support_kernel"]=nav.support.get_script().resource_path.ends_with("experimental_native_support.gd") and nav.support.get("kernel")!=null
  report["phase_ms"]={"navigation_configure":(graph_end-started)/1000.,"continuous_probe":(probe_end-graph_end)/1000.,"setup_muster_validation":(muster_end-probe_end)/1000.,"400_or_actual_steps_including_progress_queries":(simulation_end-muster_end)/1000.,"final_validation_snapshot":(Time.get_ticks_usec()-simulation_end)/1000.}
  report["memory"]=memory_receipt()
+ report["native_query_profile"]=nav.support.kernel.statistics() if report.native_support_kernel else {}
+ report["native_batch_enabled"]=args.size()==6 and args[5]=="profile-native-batch"
  report["exact_support_cache"]={"enabled":nav.support.exact_cache_enabled,"capacity":nav.support.EXACT_CACHE_CAPACITY,"final_entries":nav.support._exact_cache.size(),"coordinates":"exact Vector2 without quantization"}
  report["query_profile"]={"enabled_during_battle_only":args.size()==6,"runtime":runtime.profile,"support":nav.support.profile,"obstacles":nav.obstacles.profile,"scope":"INCLUSIVE_NESTED_TIMES_NOT_ADDITIVE; CPU_SHARED_ENV_NOT_GPU_FPS"}
  FileAccess.open(output,FileAccess.WRITE).store_string(JSON.stringify(report,"  "));print("REAL_PRODUCTION_BATTLE_RESULT ",JSON.stringify(report))

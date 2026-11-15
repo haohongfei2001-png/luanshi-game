@@ -13,11 +13,12 @@ func run():
   for point in surface.vertices:low=low.min(Vector2(point[0],point[2]));high=high.max(Vector2(point[0],point[2]))
  var report={"source_sha256":FileAccess.get_sha256(args[0]),"topology":data.topology_sha256,"scope":"NEW_SOURCE_FUNCTIONAL_ONLY_NO_GPU_OR_ART_ACCEPTANCE","bounds":[str(low),str(high)]}
  var nav:=Navigation.new()
+ if args.size()==3 and args[2]=="native-batch":nav=load("res://scripts/field/maps/experimental_native_navigation.gd").new()
  if args.size()==3 and args[2]=="native":nav.support=load("res://scripts/field/maps/experimental_native_support.gd").new()
  var started:=Time.get_ticks_usec()
  var code:=nav.configure(data,Rect2(low,high-low),{"gate_main":true},.7,3.4)
- if args.size()==3 and args[2]=="native":assert(nav.support.get("kernel")!=null,"NATIVE_KERNEL_NOT_LOADED")
- report.native_support_kernel=args.size()==3 and args[2]=="native"
+ if args.size()==3 and args[2] in ["native","native-batch"]:assert(nav.support.get("kernel")!=null,"NATIVE_KERNEL_NOT_LOADED")
+ report.native_support_kernel=args.size()==3 and args[2] in ["native","native-batch"]
  report.navigation_error=code;report.configure_ms=(Time.get_ticks_usec()-started)/1000.;report.nav=nav.statistics()
  if code!=OK:finish(args[1],report);return
  var runtime:=Runtime.new();code=runtime.bind(nav,data);report.runtime_error=code
