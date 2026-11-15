@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 32 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 33 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -1081,3 +1081,64 @@ Next bounded27C reconstructs a complete bridge-to-gate walk/depth surface and re
 Continue32 full character source,27C whole depth reconstruction and source/evidence preservation under the serial heavy-job lock.31 source cap1GiB, native characters2GiB, environment4GiB; availableRAM>=2GiB,180s and disk>=350MiB remain.32 total source/cache/evidence allocation100MiB. Earlier one-off4.5GiB permission is not reused.
 
 RC24/RC25, real/offscreen combat, nine weapons, oldsavecompatibility, defaults and PR67 merge hold remain unchanged. **No accepted new playable wholeframe,4K run, full-speed movement/attack/hit/riding/army film,20/100/250/512-per-side benchmark or actualM5 test exists for these new experiments. ART_FAIL / NOT_RUN, not release-ready.**
+
+
+## 33. Verified continuation — 2026-11-15 23:28 UTC
+
+**Read this section first. Entire new art remains NOT_ACCEPTED.** Codex remains PAUSED, PR67 remains held/unmerged, and no experimental art is enabled in Battle. The latest checked main is `248d26aefbb8dfe7973141a63b40f3a220f0edc0`. Previous checkpoint32 was published as `ff68186c67829c6c1be76d2b17cfed0bd2c1c618` and verified by full remote content equality. The current task is whole visual reconstruction, not a technical-pass substitute for art acceptance.
+
+### Public original-code recovery and actual CI
+
+Draft [PR70](https://github.com/haohongfei2001-png/luanshi-game/pull/70), commit `b0c6d57f5506ea4863129711a037dd959bcfaaeb`, contains five original-code files under `experiments/layered_scene27/`: the two exact shaders used in27B, a pure projection reference, seven regression tests and explicit limits. All five remote contents were checked byte-for-byte. The directory includes no generated image, character binary or complete scene, and is default OFF.
+
+At23:22UTC the six returned jobs in [workflow43771697527](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43771697527) were completed/success, including verify/export, field journey, footage, camera comparison, macOS runtime and video preservation. This is original-game regression evidence. **It is not evidence that the new artwork is in the exported game or accepted.** Exact local test entry:
+
+```sh
+python3 -m unittest discover -s experiments/layered_scene27/tests -v
+```
+
+### Complete layered corridor27C/D/E: real depth experiment, whole visual failure
+
+27C replaced the large flat receiver with327 surfaces/670 triangles,94 walk triangles, bridge pieces, ramps, banks, gate opening, assumed3.2m tunnel depth and rear court. Native2K batch15.224s/exit0, peakRSS993,083,392B.505 engine-side surface queries succeeded; these are not physics traversal or player input. A same-position shadow-on/off comparison found5,797 changed pixels below the header, including1,160 in the deck region. This establishes a nonzero shadow path, not natural contact-shadow acceptance. Actual0.5m camera offset was captured.
+
+Whole27C FAIL: missing intermediate landscape, incorrect image-surface ownership, bridge/foliage pixels projected onto water, and broad unknown areas.27D added full-source-resolution CPU owner/depth rasterization rather than treating a surface name as visibility. The complete27C/D recovery companion has46 files,18,762,448B archive SHA256 `32f84d23a67011673aedc67a9289d5313e63b02b7e7481cb89058453fd69e7f2`; localCRC/memberSHA and persistent save succeeded. The earlier27/27A/27B complete method archive has45 files,100,248,927B SHA256 `aa2ac8d4905f5e249016f488e5e633ab26146fc0fbd72114ac193db951c2d5d2`. These are recovery companions, not independently cold-replayed distributions.
+
+27E uses a declared generated clean-water input, not a hidden photographic replacement or game screenshot. Original1672x941 PNG3,587,319B SHA256 `203b8390145fd36ca2172c054f2e1e86e83986ea17e805f7cde1cf4ecc82a93d`. Five of six retained-landmark checks locate zero-pixel displacement; one roof landmark differs by one source pixel. Correlations0.804–0.960 are not proof that redrawn water/banks reconstruct the original hidden world.
+
+The complete candidate has497 surfaces/992 triangles with four pier volumes, eight timber supports, shared continuous water/banks and the unchanged bridge/gate walk source. Exact XZ clipping removes5.49015 square metres of bank/walk overlap; two concave distant shapes use validated ear triangulation. Final owner/depth raster was recomputed, not reused:1,187,149 source pixels covered,386,203 still unmodelled. Near-middle pier fit remains9.398px RMS against6px threshold, explicitly FAIL; no local water-level change or tolerance widening was used to conceal it.
+
+Actual27E native batch15.229s/exit0, peakRSS978,018,304B, total25,620,171B below30MiB allocation. Three original2560x1440/internal1 frames show normal camera,0.5m camera offset and a distant actor placed at a queried gate endpoint. All were personally inspected by the worker; coordinator inspected the original normal frame. Normal control body148.37px; distant actor82.49px is perspective, not a scale alteration.505 height queries are **not keyboard input, collision walking, combat or a benchmark**.
+
+Normal PNG SHA256 `eefa47272a0b127c454d5b07cf21ddccb89bcd6727f6c581a9b28363c9accd03`; offset PNG `9eec44447c2b84743f55ca8b0d81a847ed9d409e45aeee54c6b390176d96ece7`; gate fixture `ba9d18ea89099d132b70324581e6df6ca52e566536b1027ceec9d188df2ce69e`.
+
+**Entire27E still severely FAILS:** broad missing foreground/midground, incomplete gate rear, incorrect pier/water contact and regular visibility stripes. A concrete stripe defect was identified: continuous fragment depth was compared with nearest-source-pixel-centre depth using a fixed0.02m threshold. Adjacent source-row depth changes on real slopes can exceed that threshold; it is not an unseen-surface signal.27F must evaluate both depths at the same capture sample, not simply enlarge the tolerance. It must also build the whole missing landscape layer, not just rerender a corrected stripe.27E source and failures are frozen.
+
+### Whole wearer32/32b: editable garment reconstruction, still ART_FAIL
+
+32 rebuilds the entire footwear last/upper/sole around the unmodified complete body, preserves the rejected fitting alternatives, and applies explicit triangulation and garment UV checks. Its editable layer is24,059,344B SHA256 `2ac5bdd4485f251d9d75747fa12092725d73df4fe030c466bff9b50508e4b441`. Shoulder/skirt unfolding is not proof of chest/back UV acceptance: those retain distortion/folding failures.
+
+32 native three-view inspection revealed that all three newly authored helmet parts were buried in the head/neck. Their source coordinates were already rig-native, but an un-updated object transform introduced an erroneous inverse-rig-root transform.32b corrects the **source attachment contract**, not only consumer display coordinates. Actual evaluated vertices of all other46 visible parts remain byte-identical. The corrected helmet top is1.80410m and42.80mm above the actual rest head. This repairs attachment, not helmet design.
+
+32b complete source rebuild/export10.96s/exit0, peakRSS1,014,448,128B within1GiB. Three actual native2K frames21.765s/exit0, peakRSS936,280,064B within2GiB. Combined32+32b source/cache/evidence153,371,726B stays below155MiB; the new budget is combined, not additive. An earlier strict assertion about unused duplicate vertex groups failed and remains recorded; actual nonzero weights were then verified without weakening binding.
+
+Normal body155.6829px. Normal image SHA256 `fe2c18b099e78e1d1b602e298d72afd95d0e8cee1d85206dcdee1f96fcfad86b`; front `428401e2a1bb3298c214aa4f440f4b269416cf7906136ed7ddc188ff9fa8f84c`; side `04e221c0e58c8301ff0c90bd6dea9ef25c23ab9b480b586e08ee23c9d70807fe`. Coordinator inspected normal/front; worker all three and approved reference again. **Entire character FAILS:** rectangular noisy armour, rigid straight skirt, narrow wraps, plain helmet/ear plates and poor grip. No promotion to production or animation acceptance.
+
+The complete32/32b companion has140 entries/139,760,436B logical; ZIP128,910,339B SHA256 `c655eb5e753e55d38894b6561d5fc76d705af95245db4b63d4b2f410b3fb2da9`. Every localCRC/memberSHA and persistent save succeeded. It explicitly depends on preserved complete native29 and31 source; it is not a standalone rig closure or independently cold-replayed package.
+
+### Sprite33: genuine same-pixel comparison, generated walk rejected
+
+The owner permits testing non-all3D representation. A separate source retains a declared AI-generated four-direction whole soldier, not an actual3D render:1199x1312 RGBA,1,124,294B SHA256 `e7b5e694fa3f38495b3f05f2b62d375f414c421da0c9ce84e72912d615eaa43e`. No ordinary-spear tassel is added. Source bytes and generation prompt are preserved.
+
+Actual static Godot trial23:01:53–23:02:06UTC,13.095s/exit0, peakRSS1,113,481,216B. Four generated directions versus unchanged25b3D control share foot positions and projected geometric body-height targets145.58–152.04px; residual below0.00013px is geometry calibration, not visible-alpha-mask/pose equivalence. Original2K/internal1 sprite image SHA256 `0ecc01659fd6dcdd5ac7cb3dc9e50a2bfba6a84644b53b040f92e05a1ae66926`; control `cf69a80d95f0fa16ffce9e6ea47fe587c670a30f1a606ad5c2ed7eeeb181a313`. Both were personally inspected. Armour/helmet/legwear read more clearly than the failed25b control, but fixed baked perspective, no proper3D shadow, no pose match, movement, mass combat or performance comparison prevent acceptance.
+
+A separate generated eight-phase walk sheet1774x887 RGBA,1,158,512B SHA256 `1417e03a5111a225fc9b965a127a56e23cbf5638f81f27acaed698d53fd1f4e7` was exercised in the actual renderer.23:12:37–23:12:45UTC,8.054s/exit0: automatic in-place then1.4m/s translation, not WASD or Battle.30 native2K JPEG frames retain actual wall-clock timestamps, span5.316518s. VFR video5.318s,118,578B SHA256 `d48af12dd99741d99c1868dce91fe11d94a1e1a6ebe84b7cf69699a491d7facd`; maximum encoded timestamp discrepancy0.000482s. No repeated frames, interpolation or artificial24fps claim. Synchronous image capture/encoding affects cadence, so5.45 captures/s is **not gameplay FPS**. The logged phase is computed at capture time and must not be presented as exact prior-rendered shader-phase evidence.
+
+**Walk01 rejected:** source poses do not convincingly alternate opposite-foot contacts, frame foot heights vary, and proper contact shadow/sliding remain unresolved. Selected native frames and the complete source sheet were inspected; full smooth-motion acceptance is not claimed. Do not treat this failed animation as the production solution or use it to conceal missing actions.
+
+Complete sprite33 source/fixture/evidence companion:66 files, ZIP5,358,473B SHA256 `58cc970a397d27662d8f91bbcdc61dba60de82214fdeab8e56449e0dd20815c5`; localCRC/memberSHA and persistent save successful. Engine/control/reference dependencies are explicitly pinned separately.
+
+### Continue, do not restart or mislabel
+
+Continue27F complete landscape representation and source-aligned visibility, plus a unified character silhouette/material/pose reconstruction. Preserve the generated input versus actual-engine-image distinction. Character/static fixtures are not playable candidate releases. Heavy work remains serial with1GiB source/2GiB bounded native experiments, availableRAM>=2GiB,180s and disk>=350MiB. No unbounded budget increase.
+
+RC24/RC25, original combat/offscreen progression,9weapons,saves,main and PR67 hold remain protected. No new-art accepted whole playable scene, native4K trial, full action/riding/army footage,20/100/250/512-per-side performance series or realMacBookAirM5 test is supplied by this checkpoint. **ART_FAIL / NOT_RUN remains accurate.**
