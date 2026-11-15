@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 10 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 11 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -263,3 +263,39 @@ The first raw14 MB character Git blob request was rejected before any ref write 
 A second run at `16b1430166ab9d099452f7247ff0d3aa38990fbd` is now testing real independent2K/4K GPU viewports, monotonic wall-clock timestamps and byte-exact license manifests. Its result is still pending here. The existing official Compatibility native-Skin tangent defect also applies to this rendering path and must be controlled before blaming every bright fragment on the character material. Preserve original-engine evidence; compare an actually supported corrected/native rendering path without silently altering source art.
 
 **Still not accepted: the whole image, people, final rendering route, native2K/4K motion evidence, HF08 GPU performance, a new macOS candidate or M5 performance. Main/PR67 and the RC24/RC25 recovery points remain unchanged.**
+
+
+## 11. Actual Metal experiment completed and rejected; native HF08 remains separate (2026-11-15 07:50 UTC)
+
+This section supersedes earlier pending-state descriptions, not their preserved failure evidence. No whole-scene art candidate has passed. Main remains `248d26aefbb8dfe7973141a63b40f3a220f0edc0`; draft PR #67 remains `1cfda095b05a78dfe89da6f2ddd8f8cb89819180`, both re-read remotely before this checkpoint. Neither was changed.
+
+### Real GPU result, with a strict route rejection
+
+The independent fixed-camera 2.5D experiment's corrected source is `1ce0ecc030db0b5ec5467fd34e1f6e3c396abc6a`. [Actual hosted-Mac Metal run 43690415954](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43690415954) completed successfully. [Original evidence artifact 14151854509](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43690415954/artifacts/14151854509) is 243,194,590 bytes, SHA256 `c5001a773e7c4aa45b04378b792ed252ccbaef6c5a9050aab246571da1148cfe`; verified not expired, expiry 2026-11-29 07:36:24 UTC. GitHub sign-in may be required to download. CI success does **not** mean visual acceptance.
+
+- Actual direct GPU targets are 2560×1440 and 3840×2160; the projected AI-generated static background is still only 1672×941. This is **not** a render of the new editable HF08 3D mother scene. Camera angle and prelit environment are fixed, and bounds are finite.
+- The 2K combat scene has 19 true Battle entities: 11 source18 spear actors plus 8 explicitly diagnostic capsules for other troop kits. Real combat produces 29 hits, 4 ordinary deaths and natural hero death. There are no HP/position cheats. This is not full troop-type art or 512-per-side rendering proof.
+- The hero genuinely crosses the bridge and gate, reaches 5 of 6 traversal waypoints, and dies before the sixth. The moving camera is real. However, `2560-traversal/still-00048.png` visibly renders rear-court soldiers over the roof and cuts bodies at the lintel. The coordinator and experiment worker personally checked these actual pixels. Complete depth/occlusion and trustworthy visual ground contact **FAIL**.
+- **Reject the current single-background-plus-fragmentary-occlusion scheme as a production mother scene.** Do not keep adding small masks or hiding the problem with framing. This does not prove all 2.5D methods impossible, but revisiting a fixed-camera hybrid would require coherent full-space depth/collision and adequate source resolution, not an attractive starting still. HF08 geometry-first integration remains separate.
+- A separate 12.01154-second no-readback window records 638 process callbacks, 53.12 process Hz, median interval 16.704 ms and P95 20.892 ms. This is one short hosted-Mac, 19-unit observation, **not** certified presented FPS, sustained performance, 512-per-side or MacBook Air M5 evidence. Battle ends at tick 111 after hero death, so subsequent frozen Battle ticks are not a simulation slowdown ratio.
+- The 2K combat and traversal videos are encoded from exact monotonic JPEG timestamps as variable-frame-rate 10.20-second and 10.04-second clips. Capture-start/readback stalls remain visible. No nominal-FPS respeeding, interpolation or generated frames were used. Encoding receipts preserve ffprobe and frame times. 4K captures are stills, not a motion benchmark.
+
+The same-tick GLES/Metal images keep assets, materials, lights, camera and roster fixed, but switch engine **and renderer**. They are not an isolated test of the earlier GLES tangent patch. Actual Mac template feature/debug flags were not printed by this experiment; its provenance and binary hash are known, but do not label a directly measured release mode. The next independently planned native run records those flags. The earlier Linux packed test was positively identified as `template_debug`, not release, and the original assertion-side-effect initialization failure remains preserved.
+
+### Character import correction, not a visual approval
+
+The source18 GLB remains byte-identical: 14,173,132 bytes, SHA256 `afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b`. The confirmed UV-contract mismatch in section 10 has an isolated default-off ShaderMaterial prototype: 11 real spear Units, independent bones, 80 Battle ticks, 198 affected surfaces sharing two shader materials; original meshes and texture objects are not copied, and the other 17 surfaces stay unchanged. Independent CPU sampling checks 1,253 cases with maximum UV error 5.96e-8 and base-level material error 3.50e-6; actual custom data is confirmed to contain TEXCOORD2. Unsupported material features are rejected, not silently simplified.
+
+This is headless/import correctness only. No GPU shader/material acceptance is claimed. Save its exact source on an independent branch, then add same-tick, same-camera/light/roster 2K OFF/ON control frames to the already planned HF08 native test. Do not combine this comparison with light changes, edit source18, activate the unadopted source19 texture-copy proposal, or propagate an unreviewed material to all soldiers.
+
+### Exact map-query optimization: second Linux stage, still not real time
+
+Independent experimental commit `83fdcf026e44b5a4a8136f13edfeb46109d91139` batches exact ordered native support samples while retaining the original GDScript obstacle/gate/height checks. 55,915 sample-byte cases, 2,622 full segment decisions, all 8,882 navigation-node connections and the prior 507,887 support-query comparisons pass. The 512-per-side, 1,057-entity, 40-tick Battle snapshot is still exactly the same 231,048 bytes, SHA256 `b177e17b8093cabb02a6f6d2c37183451e452518790ebea1a9963b5f9dc9fc3e`. All 1,056 moving units remain legal. This early marching window has no attacks, hits or casualties.
+
+One paired Linux observation improves the scalar native stage from 10.997 to 7.170 seconds, a further 34.8 percent reduction; all 910,489 body-obstacle checks and two shot checks remain. Static support may be evaluated beyond a later obstacle rejection, so cache counters are not identical although Battle state is. This is still far from real-time thousand-person simulation and not a GPU result. The original/default runtime remains unchanged. One isolated standard macos-15 ARM CPU-only verification is being prepared with the sanitized 1.29 MB manifest and necessary source, no large GLB or GPU work. It must record actual architecture/engine mode and byte equality before any integration.
+
+### Actual native-world bottleneck and next command boundary
+
+HF08 source `79f8f0304693b5ad33a3634caebbb92d491a4033`, exact runtime ZIP 139,477,998 bytes / SHA256 `f5ac12b501293da966a12072509550d91ac60fd5fafc283f8b55aa8475cb91f4`, original license notices and offline art failures remain frozen. Native review preparation is `b6a8e5e70459f135ad0f1cf39287e81fd5dd5ad8`; its input descriptor deliberately rejects missing artifact IDs. **No HF08 GPU result exists yet.**
+
+The exact world package is durably retained. Transport to the existing GitHub Actions pipeline is not complete: a 6 MiB chunk request yielded, then its tool wait unexpectedly blocked about 532 seconds; after internal interruption, the expected blob was checked through the connected GitHub API and absent. A reduced 3 MiB request also yielded, then a later wait blocked about 551 seconds. Its outcome must be checked before retrying. No success or authorization denial is inferred from that stall. Preserve both attempt ledgers. The resource branch exists at the unchanged main base, without a completed resource commit/artifact. Do not duplicate writers, pass private download credentials into public source, or call the pipeline ready. Resume from the exact chunk ledger, then activate only the already prepared native job once the exact public artifact and notices are verified. Continue independent material/performance work while transport is blocked.
