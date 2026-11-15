@@ -28,7 +28,12 @@ func centre(polygon:Array)->Vector2:
  var total:=Vector2.ZERO
  for p in polygon:total+=Vector2(p[0],p[1])
  return total/float(polygon.size())
-func identity()->Dictionary:return {"map_id":source.map_id,"topology_revision":int(source.topology_revision),"topology_sha256":source.topology_sha256}
+func identity()->Dictionary:
+ # An unbound runtime is still a MapQuery and can be inspected diagnostically.
+ if nav==null or not nav._configured:return {}
+ for key in ["map_id","topology_revision","topology_sha256"]:
+  if not source.has(key):return {}
+ return {"map_id":source.map_id,"topology_revision":int(source.topology_revision),"topology_sha256":source.topology_sha256}
 func height(p:Vector2)->float:
  var found=nav.support.support(p)
  return found.position.y if found.error==OK else NAN

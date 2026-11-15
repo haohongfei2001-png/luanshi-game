@@ -3,6 +3,8 @@ extends RefCounted
 const Battle := preload("res://scripts/field/battle.gd")
 const Arms := preload("res://scripts/field/arms.gd")
 const Ground := preload("res://scripts/field/ground.gd")
+const MappedState := preload("res://scripts/field/maps/mapped_save_state.gd")
+const AuthoredRuntime := preload("res://scripts/field/maps/authored_field_runtime.gd")
 const FILE := "user://river_gate_quick_v1.bin"
 const HEAD := [&"tick",&"started",&"result",&"attacks",&"blocked_hits",&"arrow_count",&"messages_arrived",&"messages_lost",&"notice",&"gate_hp",&"ram_hp",&"ram",&"ram_timer",&"capture",&"hero_move",&"aim",&"vehicle",&"riding_speed",&"riding_heading",&"messages_refused"]
 const UNIT := [&"pos",&"before",&"facing",&"locked",&"separation",&"target",&"state",&"timer",&"duration",&"move_slot",&"hp",&"morale",&"fatigue",&"flash",&"stride",&"used_second",&"impacts",&"received",&"lost_tick",&"mounted",&"mount_hp",&"ammo",&"stock_strike",&"charge_speed",&"charging_strike"]
@@ -29,6 +31,8 @@ static func snapshot(b: Battle) -> Dictionary:
 	if b.bridgehead: data["bridgehead"]=true
 	if not b.map_runtime.is_legacy:
 		data.version=5;data.map_identity=b.map_runtime.identity()
+		var mapped_state:=MappedState.snapshot(b)
+		if not mapped_state.is_empty():data.mapped_state=mapped_state
 	return data
 
 static func _valid(value: Variant, example: Variant) -> bool:
@@ -49,8 +53,17 @@ static func _list(data: Dictionary,key: String,count: int) -> bool:
 	return data.get(key) is Array and data[key].size()==count
 
 static func restore(data: Variant) -> Battle:
-	if not data is Dictionary or data.get("version") not in [1,2,3,4] or not data.get("side") is int or data.side<=0: return null
-	var opposing: Variant=data.get("defenders",data.side) if data.version==4 else data.side
+	# The normal loader remains legacy-only. No automatic map lookup or opt-in.
+	if not data is Dictionary or data.get("version") not in [1,2,3,4]: return null
+	return _restore_payload(data)
+
+static func _restore_payload(data: Variant, mapped_runtime: AuthoredRuntime = null) -> Battle:
+	var mapped := mapped_runtime != null
+	if mapped:
+		if not MappedState.accepts(data,mapped_runtime): return null
+	elif not data is Dictionary or data.get("version") not in [1,2,3,4]: return null
+	if not data.get("side") is int or data.side<=0: return null
+	var opposing: Variant=data.get("defenders",data.side) if data.version>=4 else data.side
 	if not opposing is int or opposing<=0 or not data.get("units") is Array: return null
 	if data.side>data.units.size() or opposing>data.units.size() or not _list(data,"units",data.side+opposing+ceili(data.side/32.0)+ceili(opposing/32.0)+1): return null
 	if not data.get("seed") is int or not data.get("rng") is int or not data.get("weapon") is int or data.weapon<0 or data.weapon>8: return null
@@ -58,7 +71,7 @@ static func restore(data: Variant) -> Battle:
 	if not terrain_revision is int or terrain_revision not in [1,2,3]: return null
 	var b := Battle.new()
 	if not data.get("dry_muster",false) is bool: return null
-	var modern: bool=data.version==4
+	var modern: bool=data.version>=4
 	if modern and (not data.get("officer_corps") is Dictionary or not data.officer_corps.get("enabled") is bool or not data.get("traffic_enabled") is bool): return null
 	var at_moat: Variant=data.get("bridgehead",false)
 	if not at_moat is bool or (at_moat and (not modern or data.get("world_patrol",false))): return null
@@ -92,7 +105,10 @@ static func restore(data: Variant) -> Battle:
 			if op[0]<last or op[0]<0 or op[0]>168 or op[1] not in ["road","river","mountain","grain_road","ration"]: return null
 			last=op[0]
 		b.camp_actions=actions.duplicate(true)
-		if not b.restore_muster(data.get("muster")): return null
+		if mapped:
+			# Restore authored homes/stations, not legacy deployment coordinates.
+			if not MappedState.restore_layout(b,data,mapped_runtime): return null
+		elif not b.restore_muster(data.get("muster")): return null
 		for k in ["aftermath_hours","at_camp","breath","winded","buffer_ticks","buffered_slot","buffer_aim","buffer_wall"]:
 			if not _valid(data.get(k),b.get(k)): return null
 			b.set(k,data[k])
@@ -131,7 +147,9 @@ static func restore(data: Variant) -> Battle:
 		spent+=Arms.issue(u.kit)-u.ammo
 		if u.state < 0 or u.state > Battle.State.DEAD or u.move_slot < 0 or u.move_slot > 3 or u.target < -1 or u.target>=b.roster.size(): return null
 		if u.hp < 0 or u.hp > u.max_hp or (u.hp==0) != (u.state==Battle.State.DEAD): return null
-		if absf(u.pos.x)>Ground.LIMIT.x or absf(u.pos.y)>Ground.LIMIT.y: return null
+		if mapped:
+			if mapped_runtime.blocked(u.pos,true): return null
+		elif absf(u.pos.x)>Ground.LIMIT.x or absf(u.pos.y)>Ground.LIMIT.y: return null
 		if u.hero or u.officer: continue
 		if u.state==Battle.State.DEAD: killed[u.team]+=1
 		elif u.state==Battle.State.ESCAPED: departed[u.team]+=1
@@ -188,7 +206,7 @@ static func restore(data: Variant) -> Battle:
 	if modern and (not b.corps.restore(b,data.officer_corps) or not b.objectives.restore(data.get("objectives"),b.tick)): return null
 	b.hero_cds=data.skill_clocks.duplicate()
 	b.rng.state=data.rng
-	if terrain_revision<3:
+	if not mapped and terrain_revision<3:
 		for unit in b.roster:
 			var repaired:=Ground.restore_bank_position(unit.pos,b.bridgehead)
 			if not repaired.is_equal_approx(unit.pos):
@@ -199,6 +217,10 @@ static func restore(data: Variant) -> Battle:
 			company.home=Ground.restore_bank_position(company.home,b.bridgehead)
 		for i in b.vehicle_pos.size():
 			b.vehicle_pos[i]=Ground.restore_bank_position(b.vehicle_pos[i],b.bridgehead)
+	if mapped:
+		# Legacy ram IDs are retained as inert historical fields in this mode;
+		# never re-enable crew jobs after restoring the generic casualty ledger.
+		if not MappedState.restore_jobs(b,data): return null
 	b._rebuild_grid()
 	return b
 
