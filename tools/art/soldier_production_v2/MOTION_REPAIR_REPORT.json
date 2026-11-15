@@ -1,0 +1,33 @@
+{
+  "16": {
+    "source_sha256": "0b7d9966b5b94cd16781e1a0077226c930f6bba6a3277fd3f49db3fe833c32b7",
+    "poses": 129,
+    "actions": 14,
+    "issues": 180,
+    "technical_gate_pass": false
+  },
+  "17": {
+    "source_sha256": "1450597f37ac0cd9413e55f64e76949ae0ed2cc218a1d26f60121f76c00a47cd",
+    "poses": 129,
+    "actions": 14,
+    "issues": 55,
+    "technical_gate_pass": false
+  },
+  "18": {
+    "source_sha256": "5af460f64a248df6b874f2679e4597af52718dc5d612d63998dbcee09540d6c7",
+    "poses": 129,
+    "actions": 14,
+    "issues": 0,
+    "technical_gate_pass": true
+  },
+  "candidate18_checked_source_sha256": "affeac881437b0c628cc3661c1bfe2fd36b9d9c93ffb1d4cb4fccfd30047820a",
+  "gpu": "NOT_RUN",
+  "visual_pass": false,
+  "scope": "Sampled pose edge/bounds gate only; not continuous collision certification. Four full-body Blender diagnostics reviewed; no long needles, but skirt coverage/helmet/shoe material remains below target.",
+  "bevel_isolation": {
+    "left_shoulder_course1_death_full_max_edge_m": 1.4625794618,
+    "bevel_disabled_m": 0.047642977,
+    "jog_full_m": 0.258899214,
+    "jog_bevel_disabled_m": 0.042598524
+  }
+}

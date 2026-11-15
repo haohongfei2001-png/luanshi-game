@@ -96,3 +96,45 @@ presence PASS. GPU/visual acceptance NOT RUN. Full-body Blender action review
 still revealed skirt/leg-layer penetration. The next whole-uniform skin derives
 armor from the exact underlying coat and puttees from exact underlying trousers,
 not independently nearest-body weights that drift apart under articulation.
+
+## Supported outfit 12–15: blocked on full-motion fault
+
+`derive_structural_uniform.py` derives actual cut source cloth topology, gives
+chest/shoulder groups stable supports, preserves flexible joint cloth, binds
+puttees to their real trouser topology and shin support, and recuts ankle shoes.
+No new limb removal or barrel enlargement is used. Source originals remain.
+
+The complete 15 candidate was rendered at Idle/Walk/Jog/Hit/Death. Idle/Walk
+removed earlier large layer holes and soft waist deformation, but **Jog/Death
+expose long needle-like geometry**. Therefore 15 is blocked: do not put it into
+a GPU evidence candidate, internal playable package or default army. The exact
+fault is being measured by object/POSE, longest edge relative to rest and separate
+Bevel/Solidify disable comparisons. Finite bone matrices and an Idle screenshot
+are not sufficient validation. Every corrected candidate needs representative
+idle/walk/jog/sprint/spear/hit/death frames and actual animated bounds checks.
+
+`review_normal_pixels.py` uses a fixed 32-degree camera, 512×512 authoring canvas,
+and nominal 180px body sizing, explicitly reporting projected geometry bounds.
+Actual 15 sample heights were 195.09px Idle and 177.15px Walk at identical camera.
+These are Blender source diagnostics, NOT actual game evidence or art acceptance.
+
+## Motion repair 16–18 (WIP, not visual acceptance)
+
+`validate_supported_motion.py` identifies actual evaluated edges, their exact
+rest counterparts and world bounds over 129 sampled poses from all 14 actions.
+The gate is unchanged: edge >12cm AND >4x rest, stable topology, finite geometry,
+known positive source weights and <=3m actor extent. It is not an exhaustive
+continuous collision test. Candidate 16 failed 180 records; 17 failed 55; 18
+passed these same sampled checks with zero failures. See MOTION_REPAIR_REPORT.json.
+
+The shoulder needle root cause was isolated to live micro-Bevel, not missing
+limbs; thin Solidify remains. `repair_support_transitions.py` creates real inner
+cloth seams and smooth full-length skirt support, locally smooths inherited
+trouser crotch weights, and gives rigid shoulder groups consistent support.
+`smooth_inner_cloth_support.py` fixes the remaining waist/armpit/seam weight
+jumps on soft undercloth only. It does not alter UV, positions, body or hard armor.
+Four actual Blender poses (Jog, Death, Thrust31, spear Sprint) were reviewed.
+Long needles are absent, but garment coverage and helmet/shoe material remain
+below target. Source18 has all 14 actions at120fps, no weapon object; runtime
+adds the true wrist-bound spear without duplicating clips. No new GPU evidence
+or art acceptance is claimed. This is an integration WIP, not default artwork.
