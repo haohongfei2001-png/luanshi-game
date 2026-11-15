@@ -9,7 +9,9 @@ New AI texture candidate SHA256:
 Image dimensions 1774 × 887. Project-generated AI material, not external CC0.
 It depicts eight columns and four courses of iron plates and brown lacing.
 It is a literal material input, not a new character concept or game screenshot.
-The full PNG is retained separately; it is NOT yet included in this source branch.
+The full original PNG is now included losslessly as source parts under
+`assets/owner_generated/lamellar-material-v2/`. Run its `restore_png.py`; every
+part and the final exact PNG are verified. This is not an art acceptance.
 
 Generation requested flat front orthographic edge-to-edge 8×4 lamellar iron,
 clear punched slots and small leather lacings, neutral basecolor, no perspective,
