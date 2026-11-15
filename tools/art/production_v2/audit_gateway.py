@@ -11,9 +11,10 @@ for o in bpy.data.objects:
 bvh=BVHTree.FromPolygons(vs,tris,all_triangles=True)
 def ray(p,d,length):return bvh.ray_cast(Vector((p[0],-p[2],p[1])),Vector((d[0],-d[2],d[1])),length)
 checks=[]
-for z in [-.15,.5,2,3,4,5.5,6.15]:
- for y in [1.25,2.2,3.8,4.6,6.55]:
-  hit=ray((26.9,y,z),(1,0,0),6.2)[0];assert hit is None,('gate_aperture_blocked',y,z,hit)
+gate=c['gate_dynamic'];cx,cy,cz=gate['pivot'];width=gate['width'];height=gate['clear_height'];start=gate['entry'][0]-.1;length=gate['exit'][0]-start+.1
+for z in [cz+f*width for f in [-.492,-.39,-.16,0,.16,.39,.492]]:
+ for y in [cy+.05,cy+1,cy+2.6,cy+3.4,cy+height-.05]:
+  hit=ray((start,y,z),(1,0,0),length)[0];assert hit is None,('gate_aperture_blocked',y,z,hit)
   checks.append([y,z])
 # Walk deck is only an explicitly declared surface, never the topmost roof.
 deck=[]

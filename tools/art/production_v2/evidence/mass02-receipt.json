@@ -1,0 +1,24 @@
+{
+  "status": "WHOLE_STRUCTURAL_REVISION_NOT_ART_ACCEPTED",
+  "files": {
+    "architecture.glb": {
+      "bytes": 99560696,
+      "sha256": "a4b432ddd09d0e7260e3f0842e16dc50206cf733377b5f2dacb908880738d99c"
+    },
+    "architecture-mother.blend": {
+      "bytes": 112769824,
+      "sha256": "59e7f8ed705d520beac2947eda2103fdf227e752eb66354c9b26c2db7e35477e"
+    },
+    "architecture-contract.json": {
+      "bytes": 18637,
+      "sha256": "86847de789a8193cc37fd8f1d3d623f16ad55b762b23092cd54a9866a0cddba0"
+    }
+  },
+  "profile_regeneration_required": true,
+  "ordinary_per_side": 512,
+  "muster": "NOT_RUN",
+  "native_gpu": "NOT_RUN",
+  "input_contract": "build04",
+  "change": "connected battered foundation/body/coping and integrated defense shoulders, true thicker gate podium; no old-shell constraint",
+  "compression": "Recorded artifact saved before enabling compression; future geometry-identical mother saves may have different compressed bytes."
+}

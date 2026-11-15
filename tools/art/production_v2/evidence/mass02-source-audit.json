@@ -1,0 +1,14 @@
+{
+  "status": "PASS_SOURCE_GATEWAY_CONTRACT_NOT_GAME_ART",
+  "gate_clear_rays": 35,
+  "gate_min_width": 6.4,
+  "gate_min_height": 5.4,
+  "deck_and_headroom_samples": 35,
+  "deck_top_min_max": [
+    0.9729969501495361,
+    1.0
+  ],
+  "ordinary_count_per_side": 512,
+  "muster": "NOT_RUN",
+  "scope": "finite actual mother mesh rays, actual source solid orientation, semantic contract; no claim full battle/native visual/performance acceptance"
+}

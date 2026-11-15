@@ -1,13 +1,20 @@
 extends SceneTree
 func _init() -> void:
  var args=OS.get_cmdline_user_args()
- if args.size()!=1:push_error('Explicit candidate GLB required');quit(1);return
+ if args.size()<1 or args.size()>2:push_error('Explicit candidate GLB required');quit(1);return
  var document=GLTFDocument.new();var state=GLTFState.new()
  if document.append_from_file(args[0],state)!=OK:push_error('GLB import failed');quit(1);return
  var scene=document.generate_scene(state)
  var door=scene.find_child('GateDoor',true,false)
  if door==null or door.position.distance_to(Vector3(30,1.2,3))>.001:push_error('Gate pivot contract lost');scene.free();quit(1);return
  if str(door.get_meta('extras',{}).get('gate_id',''))!='gate_main':push_error('Stable gate id lost');scene.free();quit(1);return
+ if args.size()==2:
+  var contract=JSON.parse_string(FileAccess.get_file_as_string(args[1]))
+  for surface in contract['walk_surfaces']:
+   var node=scene.find_child(surface['id'],true,false)
+   if node==null:push_error('Semantic walk node missing');scene.free();quit(1);return
+   var data=JSON.parse_string(str(node.get_meta('extras',{}).get('contract_json','')))
+   if data==null or data['xz_polygon']!=surface['xz_polygon'] or data['y']!=surface['y']:push_error('Embedded walk contract disagrees with sidecar');scene.free();quit(1);return
  var pending=[scene];var meshes=0;var surfaces=0;var materials={};var vertices=0
  while not pending.is_empty():
   var n=pending.pop_back();pending.append_array(n.get_children())
