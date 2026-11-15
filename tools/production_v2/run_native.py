@@ -24,6 +24,7 @@ def run(project,patch,out,helper):
             if any(x in value for x in ['SCRIPT ERROR','SHADER ERROR','ERROR:']):failure=failure or 'GODOT_ERROR'
             if value.startswith('PRODUCTION_NATIVE_FOCUS '):
                 host=json.loads(value.split(' ',1)[1])
+                if any(type(host.get(key)) is not bool for key in ['debug_build','feature_debug','feature_release','feature_editor']):failure=failure or 'MISSING_ACTUAL_TEMPLATE_MODE'
                 if host['pid']!=process.pid or host['display']!='macOS' or host['renderer']!='mobile':failure=failure or 'UNEXPECTED_NATIVE_PROCESS'
                 else:
                     try:

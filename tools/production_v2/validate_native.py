@@ -2,6 +2,18 @@
 import argparse,json,hashlib,struct
 from pathlib import Path
 
+def validate_material_control(out):
+    report=json.loads((out/'material-control.json').read_text())
+    if report.get('error') or report.get('default_enabled') is not False or report.get('original_materials_restored') is not True:raise ValueError('Material control failed or default changed')
+    frames=report.get('frames',[])
+    if len(frames)!=2 or [r['enabled'] for r in frames]!=[False,True]:raise ValueError('Missing OFF/ON control pair')
+    if len({r['non_material_state_sha256'] for r in frames})!=1 or len({r['tick'] for r in frames})!=1:raise ValueError('Control changed pose/camera/Battle/light state')
+    for row in frames:
+        data=(out/row['file']).read_bytes()
+        if data[:8]!=b'\x89PNG\r\n\x1a\n' or struct.unpack('>II',data[16:24])!=(2560,1440) or row['actual_pixels']!=[2560,1440] or row['internal_scale']!=1:raise ValueError('Material frame not native 2K')
+    if len(report.get('adapter_receipts',[]))!=7 or any(not r.get('applied') or r.get('surfaces')!=18 for r in report['adapter_receipts']) or report.get('restored_surfaces')!=126:raise ValueError('Material scope differs from seven actual source18 actors')
+    return {'scope':'material-only OFF/ON control, visual review still required','same_state':True,'original_materials_restored':True}
+
 def validate(out):
     stills=json.loads((out/'stills.json').read_text())
     if len(stills)!=2 or {tuple(r['actual_pixels']) for r in stills}!={(2560,1440),(3840,2160)}:raise ValueError('Missing exact native2K/4K stills')

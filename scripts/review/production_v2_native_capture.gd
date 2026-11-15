@@ -12,7 +12,7 @@ func start()->void:
  if output.is_empty():fail("explicit native output path required");return
  field.set_process(false);field.set_physics_process(false);field.paused=true
  DirAccess.make_dir_recursive_absolute(output)
- var host={"pid":OS.get_process_id(),"platform":OS.get_name(),"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"adapter":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info(),"source":OS.get_environment("GITHUB_SHA"),"M5":"NOT_TESTED","art":"NOT_ACCEPTED"}
+ var host={"pid":OS.get_process_id(),"platform":OS.get_name(),"display":DisplayServer.get_name(),"renderer":RenderingServer.get_current_rendering_method(),"adapter":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info(),"debug_build":OS.is_debug_build(),"feature_debug":OS.has_feature("debug"),"feature_release":OS.has_feature("release"),"feature_editor":OS.has_feature("editor"),"source":OS.get_environment("GITHUB_SHA"),"M5":"NOT_TESTED","art":"NOT_ACCEPTED"}
  print("PRODUCTION_NATIVE_FOCUS ",JSON.stringify(host))
  FileAccess.open(output+"/host.json",FileAccess.WRITE).store_string(JSON.stringify(host,"  "))
  for frame in 4:await process_frame

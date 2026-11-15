@@ -3,7 +3,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools/production_v2'))
 from export_native_pack import project_config,preset_config,ENTRY
-from validate_native import validate
+from validate_native import validate,validate_material_control
 from prepare_native_inputs import prepare
 class NativePreparation(unittest.TestCase):
  def test_release_entry_graph_has_no_unreviewed_assertions(self):
@@ -29,6 +29,16 @@ class NativePreparation(unittest.TestCase):
   self.assertLess(entry.index('if not count in [20,100,250,512]'),entry.index('battle.setup('))
   for call in ['nav.configure(', 'runtime.bind(', 'actor.setup(', 'host.configure(']:
    self.assertIn('if '+call,entry)
+ def test_material_control_rejects_nonmaterial_change(self):
+  with tempfile.TemporaryDirectory() as directory:
+   root=Path(directory);frames=[]
+   for enabled in [False,True]:
+    name='ON.png' if enabled else 'OFF.png';(root/name).write_bytes(b'\x89PNG\r\n\x1a\n'+b'\0'*8+struct.pack('>II',2560,1440))
+    frames.append({'file':name,'actual_pixels':[2560,1440],'internal_scale':1,'enabled':enabled,'tick':0,'non_material_state_sha256':'fixed'})
+   report={'error':'','default_enabled':False,'original_materials_restored':True,'frames':frames,'adapter_receipts':[{'applied':True,'surfaces':18} for _ in range(7)],'restored_surfaces':126}
+   path=root/'material-control.json';path.write_text(json.dumps(report));self.assertTrue(validate_material_control(root)['same_state'])
+   report['frames'][1]['non_material_state_sha256']='changed';path.write_text(json.dumps(report))
+   with self.assertRaises(ValueError):validate_material_control(root)
  def test_mainloop_is_normal_and_guarded(self):
   source=(ROOT/'project.godot').read_bytes();changed=project_config(source)
   self.assertIn(b'run/main_loop_type="DotProductionV2NativeCapture"',changed)

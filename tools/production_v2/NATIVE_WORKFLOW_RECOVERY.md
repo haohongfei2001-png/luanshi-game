@@ -82,3 +82,17 @@ lifecycle tests reject absent opt-in and missing manifest with exit 2. These are
 editor lifecycle tests, NOT release-template tests. No available local release
 Linux template was established; existing tangent comparison binaries are debug.
 Mac release/PCK execution remains pending. No CI was activated by this audit.
+
+### Pending material-only control preparation
+
+The next scheduled native run records `OS.is_debug_build()` and actual debug,
+release and editor feature flags; no mode is inferred from a filename. A separate
+material-control helper freezes the real Controller and requires the same Battle,
+seven actor transforms/bone poses, camera and author Sun for both 2K images. It
+restores all original per-surface overrides before any normal-input footage.
+The helper/validator are prepared, but not yet connected to an adapter: the
+source18 material worker must supply a fixed-hash export-safe JSON contract.
+Do not run the experiment by reading raw GLB from the exported PCK, where import
+remapping normally removes it. The normal GLB/import closure stays unchanged.
+Six Python tests pass, including rejection of a changed non-material signature.
+No shader GPU execution or OFF/ON image has occurred at this preparation stage.
