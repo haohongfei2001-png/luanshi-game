@@ -4,6 +4,8 @@
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
+> For the newer source refs and actual new-map Battle results, read section 7 first. Earlier checkpoint findings remain preserved.
+
 ## 1. The owner's correction and the actual method change
 
 The owner rejected the **entire** image: people, environment, buildings, materials, lighting and composition. The concept/reference is a minimum quality line, not proof that the game is close. Do not keep polishing the old rough terrain or geometry, shrink people to frame a whole army, or treat test counts and partial model changes as art progress.
@@ -106,3 +108,55 @@ Inspect the source branch's current README/tests and uncommitted work before edi
 Next deliverable is one coherent complete new environment plus complete soldier in an **actual player-controlled Godot battle**, self-reviewed against the owner references before mass rollout. Record fixed source SHA, true input/hits, original-speed footage, exact native and internal pixels, same-state comparison, hardware, frame intervals and memory. Then test 20/100/250/512 each side with real offscreen war. Keep installation/export, functional tests, art acceptance and device performance as separate verdicts.
 
 No new spending, account creation, user-computer access, unlicensed public assets, formal plot or commercial release is authorized. Public redistributable sources retain attribution, original notices and modification records. Third-party reference game pictures are private study only. **M5 DEVICE_NOT_RUN. OWNER ART NOT_ACCEPTED.**
+
+
+## 7. Verified continuation update — 2026-11-15, 00:47 UTC
+
+The earlier source table is the 00:10 checkpoint, not an instruction to revert newer work. The following refs have subsequently been verified on the remote:
+
+- Map runtime and real new-map CPU battles: `dot/production-v2-map-runtime@37f1dc992db4fe300e20f852583a4385a1978a26`.
+- Whole fortress mass and one-parent placement interface: `dot/production-v2-fortress-mass@c54e9025a1d03fc0d58b627b7e249a5ff82a0ddc`. The older gateway branch remains frozen at 66c3bf79.
+- Full long-uniform production code: `dot/soldier-production-v2@287de5008af5a7e5c952269b2536a5c4f2a758e7`.
+- MH163 complete spear action/runtime code: `dot/mh-spear-production-v2@9ecbb4f2ffe7e9c0a6b507069893556093a8db17`.
+
+### Actual new-map Battle, not new-map art
+
+The terrain004 **functional preflight** topology now runs real Battle instances, explicitly with an initially open gate and no siege/ram/world-objective mode. It is not the final visual mother scene.
+
+The first 20-per-side run moved troops but produced zero attacks. The cause was a real path-following error: the nearest first grid point pulled a soldier backward before it could cross to the next cell. Safe forward lookahead along the computed path fixed this without teleporting troops or ignoring barriers. A real movement loop then crossed the bridge and entered the gate in 422 steps.
+
+The current 20-per-side volumetric-LOS run produced 111 attacks, hits 47/45 and ordinary losses 9/7. The earlier sampled-LOS run produced 117 attacks and different losses; both are preserved, and they are not claimed equivalent.
+
+The actual 512-per-side run completed 400 ticks with 1,057 total entities including officers/player, 697 attacks, hits 109/213, ordinary losses 60/24 and two delivered orders. An independent read of the final roster confirmed exactly those 84 ordinary deaths plus three enemy officer deaths. All active units retained valid ground support and avoided authored static solids. This does **not** mean units never overlap each other.
+
+The approximately 151.94-second instrumented total includes graph construction, a continuous movement probe, initial muster, simulation and checks. It is not GPU FPS or proof of real-time performance. The previous 300-second timeout is preserved. Actual method-level timing and optimization remain necessary.
+
+An independent single-snapshot crowd review found a maximum of seven alive units in a one-metre grid cell and eight within a half-metre radius centered on an actual unit. With corpses included, the maximum one-metre cell held twelve. These numbers are not a continuous congestion or visual acceptance verdict. Do not impose one-person-per-cell physics or discard real casualties to fabricate a pass.
+
+Final comparison of the Battle/officer/save adapter changes again matched all eight complete legacy Save snapshots byte-for-byte. The complete default `tools/test.sh` regression on source 37f1dc9 finished with exit 0, including the campaign/youth/world tests. Its log SHA-256 is `742cf57f7d07efd08f1fd183ea272f42d5ad02cd30d847b8c3cbb19fed5912d5`. The first attempt failed because a sparse worktree lacked unchanged tracked data files; that failure was retained and the original data restored before retry. A later authored-scene host fixture separately passes identity/light/semantic-door tests, but is not part of this published source or evidence of gameplay art.
+
+### Whole environment restoration, not a new naked-tree candidate
+
+A concrete source-compatibility failure was found: Blender 4.3 reads the old Sprite Fright canopy Geometry Nodes as `NodeUndefined`. Blender 3.2 removed that legacy node compatibility. Installing a newer version would not restore those original systems.
+
+The official, independently prepared portable **Blender 3.1.2** has now run successfully:
+- Linux archive: 187,294,308 bytes.
+- Official SHA-256: `c1d345b25c6f83708b2681d354d70a3e6023c04bb73cc7943366c0c19e542958`.
+- Official [archive](https://download.blender.org/release/Blender3.1/blender-3.1.2-linux-x64.tar.xz) and [checksum table](https://download.blender.org/release/Blender3.1/blender-3.1.2.sha256).
+- Original 4.3 installation and source scenes remain unchanged. Disable embedded automatic scripts.
+
+The same complete 535-object source set audited with **zero undefined nodes** in 3.1.2. The original full-density render was killed with signal 9/exit 137 before producing a picture; that failure remains recorded. A diagnostic original-whole-layout render then completed at 1280×720 in 63.90 seconds, with measured process peak RSS 7,063,856 KiB. It explicitly uses 20% tree/branch leaves, 0.5% ground micro-scatter, 2% child particles, subdivision at most one and no film micro-moss geometry. This is neither full-original-density proof nor game performance.
+
+The restored complete image was personally inspected and **rejected as a direct battlefield mother scene**: hollow fairy-tree village forms, shell-like canopies, path occlusion and noisy moss do not meet the owner's clean natural military-world target. Restoring a professional source is useful compatibility work, not art acceptance. Preserve this source and findings, but do not continue forcing it onto the battlefield merely because of its film provenance. The final coherent scene is still not frozen or rendered in Godot.
+
+### Complete character boundary
+
+Actual Godot testing caught the source's 120-fps animation frames being exported from a 24-fps derived scene, slowing motion fivefold. The corrected import now measures Walk 1.333 seconds, ordinary spear thrust 0.7 seconds and death 2.4 seconds. The rejected timing receipts remain separate.
+
+The local complete long-uniform11 derivative has 163 bones, 14 clips after spear merge, approximately 60,480 triangles and 28 surfaces across 14 materials. It is **not** a thousand-character renderer and has not passed art review. Clothing intersections, overly soft armor deformation and foam-like equipment appearance are still being rebuilt. The original full body remains intact; the outfit is not being propagated as an accepted army sample.
+
+Top-eight-weight export is an explicitly lossy derived representation, not preserved original weights. For four actual POSE-state checks of this source, the measured maximum displacement was 1.543 mm and the tested 180-pixel neutral silhouette threshold difference was zero. The earlier erroneous REST-state zero-error test was rejected. This is limited deformation evidence, not visual acceptance of all motion.
+
+Published character refs currently preserve production code/provenance. Locally generated final blend/PNG/GLB assets must still be published or given a complete reproducible acquisition path before claiming a self-contained remote visual deliverable.
+
+**Still missing: final coherent mother-scene art, complete player-controlled same-scene new character capture, native 2K/4K footage, actual new-scene GPU/performance evidence, finished siege/world integration, new macOS candidate and owner art approval. M5 remains DEVICE_NOT_RUN.**
