@@ -1,0 +1,11 @@
+# Default-off complete-soldier small-group WIP
+
+Use one independent `MHSpearBattleBinding` and `SharedSkeletalActor` per actual Unit. Load a PackedScene once: Mesh, Material and Animation resources are shared; Skeleton3D and AnimationPlayer instances and binding phase/state are independent. This is a bounded integration group, not the thousand-person rendering solution.
+
+`update(battle,actor,dt,alpha)` retains hero compatibility. `update_unit(battle,unit,actor,dt,alpha)` verifies roster identity, locks the binding to the first unit/actor, rejects other weapons/mounted units, and only writes presentation. `ground_point=Callable(battle.map_runtime,"unit_point")` is required. Configure timing with the exact GLB hash. Ordinary troops are not disabled by the hero's global vehicle state.
+
+`select_ordinary_ids(battle,per_team=3)` selects only living nonhero/nonofficer foot SPEAR units, up to four each and eight total. The integrated Controller imposes the stricter three each/six ordinary limit, plus one hero. It must hide only successfully instantiated/registered actual IDs. Missing strafe/skill clips stay explicit unsupported, not fake valid poses.
+
+`tests/production_v2_unit_binding_isolation.gd -- GLB_RESOURCE TIMING_JSON OUTPUT_JSON` verifies imported resource sharing, independent skeleton/player, naturally dead and live ordinary units from a real Battle, immutable simulation state during presentation, and identity mismatch rejection. This test uses the legacy Battle setup to isolate actor behavior: it is not new-map contact/GPU/art acceptance. Native new-map Controller integration is separately owned/tested.
+
+Mother18 passed the author's unchanged 14-action/2166-integer-frame dynamic geometry gate but remains ART FAIL/WIP. Runtime-only export reads the mother and weapon source into memory, keeps the original 14 actions, adds wrist.R weapon objects, and produces GLB without copying the full editable mother. Source files remain unchanged. Runtime triangulation is an explicit UV-preserving derivative for tangent generation; all normal-mapped glTF primitives must contain TANGENT. Source weights remain untouched; runtime top-eight influence reduction is lossy and must stay disclosed.

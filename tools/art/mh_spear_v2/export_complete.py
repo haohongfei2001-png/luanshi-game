@@ -1,9 +1,10 @@
 """Export isolated complete MH military derivative as a real skinned GLB.
 Editable input is never changed. Explicit top-8 skin approximation is measured.
 """
-import bpy,sys,pathlib,json,hashlib,struct
+import bpy,sys,pathlib,json,hashlib,struct,os
 src,out=map(pathlib.Path,sys.argv[sys.argv.index('--')+1:]);out.mkdir(parents=True,exist_ok=True)
-bpy.ops.wm.open_mainfile(filepath=str(src),use_scripts=False,load_ui=False);rig=bpy.data.objects['MH163'];rig.data.pose_position='POSE'
+if os.environ.get('LUANSHI_USE_LOADED_SCENE')!='1':bpy.ops.wm.open_mainfile(filepath=str(src),use_scripts=False,load_ui=False)
+rig=bpy.data.objects['MH163'];rig.data.pose_position='POSE'
 bpy.context.scene.render.fps=120;bpy.context.scene.render.fps_base=1
 rig.animation_data_create();rig.animation_data.action=bpy.data.actions.get('Idle_Loop');bpy.context.scene.frame_set(1)
 assert all(n in bpy.data.actions for n in ['Idle_Loop','Walk_Loop','Hit_Chest','Death01']), 'Missing actual full-body actions'
@@ -26,6 +27,8 @@ assert all(o.name not in ('Cross-front robe','V2_complete_coat_fit','Body_Author
 max_loss=0.;affected=0;vertices=0
 for o in render:
  o.parent=rig
+ # Triangulate evaluated ngons before tangent generation; editable mother is unchanged.
+ if not any(m.name=='RuntimeNormalTangentTriangulation' for m in o.modifiers):o.modifiers.new('RuntimeNormalTangentTriangulation','TRIANGULATE')
  for v in o.data.vertices:
   gs=sorted([(g.group,g.weight) for g in v.groups if g.weight>0],key=lambda q:-q[1]);vertices+=1
   if len(gs)>8:
@@ -46,3 +49,8 @@ for name,expected in {'Spear_Idle_V2_DRAFT':2.5,'Spear_Walk_V2_DRAFT':160/120,'S
  assert abs(report['actual_glb_clip_seconds'][name]-expected)<.001,(name,'actual clip cadence differs')
 report['geometry']={'triangles':sum(gltf['accessors'][p['indices']]['count']//3 for m in gltf['meshes'] for p in m['primitives']),'surfaces':sum(len(m['primitives']) for m in gltf['meshes']),'materials':len(gltf['materials']),'skins':len(gltf['skins'])}
 (out/'runtime-report.json').write_text(json.dumps(report,indent=2)+'\n')
+
+for mesh in gltf['meshes']:
+ for primitive in mesh['primitives']:
+  if 'normalTexture' in gltf['materials'][primitive['material']]:assert 'TANGENT' in primitive['attributes'], ('Missing tangent for normal-mapped surface',mesh['name'])
+assert len(gltf['animations'])==14, 'Unexpected duplicate or missing animation'

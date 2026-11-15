@@ -1,8 +1,19 @@
 extends RefCounted
 ## Opt-in only. Read actual ordinary spear state; never change Battle/HP/AI/positions.
 const Battle=preload("res://scripts/field/battle.gd")
+const MAX_ORDINARY_GROUP:=8
+static func select_ordinary_ids(battle,per_team:int=3)->Array[int]:
+ var ids:Array[int]=[];var counts:Dictionary={0:0,1:0}
+ for unit in battle.roster:
+  if unit.hero or unit.officer or unit.mounted or unit.hp<=0 or unit.kit!=Battle.Arms.Kit.SPEAR:continue
+  if not counts.has(unit.team) or counts[unit.team]>=clampi(per_team,0,MAX_ORDINARY_GROUP/2):continue
+  ids.append(unit.id);counts[unit.team]+=1
+  if ids.size()>=MAX_ORDINARY_GROUP:break
+ return ids
 var ground_point:Callable # New mother-scene authoritative world-height resolver, no old-map fallback.
 var enabled:=false
+var bound_unit_id:=-1
+var bound_actor_id:=0
 var last_tick:=-1
 var previous_state:=-1
 var state_started_tick:=0
@@ -34,9 +45,14 @@ func configure_timing(metadata:Dictionary,actual_glb_sha:String)->Error:
  if not is_finite(peak) or peak<=0. or peak>=1.:return ERR_INVALID_DATA
  thrust_peak=peak;author_aim_yaw=float(metadata.get("author_aim_yaw_radians",0.0));return OK
 func update(battle,actor:Node3D,presentation_delta:float=0.0,interpolation_alpha:float=1.0)->Dictionary:
+ return update_unit(battle,battle.hero,actor,presentation_delta,interpolation_alpha)
+func update_unit(battle,unit,actor:Node3D,presentation_delta:float=0.0,interpolation_alpha:float=1.0)->Dictionary:
  if not enabled or actor==null:return {"supported":false,"reason":"disabled"}
  if not ground_point.is_valid():return {"supported":false,"reason":"new_scene_ground_resolver_missing"}
- var unit=battle.hero
+ if unit==null or unit.id<0 or unit.id>=battle.roster.size() or battle.roster[unit.id]!=unit:return {"supported":false,"reason":"unit_not_actual_roster"}
+ if bound_unit_id>=0 and (bound_unit_id!=unit.id or bound_actor_id!=actor.get_instance_id()):return {"supported":false,"reason":"binding_identity_mismatch"}
+ if unit.kit!=Battle.Arms.Kit.SPEAR or unit.mounted or (unit.hero and battle.vehicle!=0):return {"supported":false,"reason":"nonfoot_spear_outside_scope"}
+ bound_unit_id=unit.id;bound_actor_id=actor.get_instance_id()
  # Presentation interpolation never updates unit positions or advances Battle.
  actor.position=ground_point.call(unit.before.lerp(unit.pos,clampf(interpolation_alpha,0.,1.)))
  actor.rotation.y=atan2(unit.facing.x,unit.facing.y)-author_aim_yaw
@@ -45,8 +61,6 @@ func update(battle,actor:Node3D,presentation_delta:float=0.0,interpolation_alpha
  if battle.tick==last_tick and not dead:
   if last_receipt.get("supported",false):last_receipt.merge(present(actor,maxf(presentation_delta,0.),interpolation_alpha),true)
   return last_receipt
- if unit.kit!=Battle.Arms.Kit.SPEAR or unit.mounted or battle.vehicle!=0:
-  last_receipt={"supported":false,"reason":"nonfoot_spear_outside_scope"};return last_receipt
  var steps:=maxi(1,battle.tick-last_tick) if last_tick>=0 else 1
  var delta:=steps*Battle.DT;var moved:float=unit.pos.distance_to(previous_pos) if last_tick>=0 else 0.
  if unit.state!=previous_state:state_started_tick=battle.tick
@@ -80,6 +94,6 @@ func update(battle,actor:Node3D,presentation_delta:float=0.0,interpolation_alpha
   phase_to=phase;phase_clip=semantic
   last_receipt=present(actor,presentation_delta if presentation_delta>0. else delta,1.0 if dead else interpolation_alpha)
  else:last_receipt={"supported":false,"reason":reason,"representation":"new_actor_pose_held_UNSUPPORTED_not_faked_action"}
- last_receipt.merge({"tick":battle.tick,"state":unit.state,"unit_id":unit.id,"reason":reason,"actual_impacts":unit.impacts,"actual_hp":unit.hp,"stride_calibrated":false},true)
+ last_receipt.merge({"tick":battle.tick,"state":unit.state,"unit_id":unit.id,"unit_team":unit.team,"unit_kit":unit.kit,"unit_is_hero":unit.hero,"reason":reason,"actual_impacts":unit.impacts,"actual_hp":unit.hp,"stride_calibrated":false},true)
  last_tick=battle.tick;previous_state=unit.state;previous_pos=unit.pos
  return last_receipt
