@@ -85,16 +85,28 @@ func start()->void:
  if muster.error!=OK:fail("source capacity/strict muster rejected "+JSON.stringify(muster));return
  var host:=Host.new()
  if host.configure(load(manifest.scene.path) as PackedScene,manifest)!=OK:host.free();fail("mother root identity/lights/gate rejected");return
+ var packed_actor:=load(actor_spec.path) as PackedScene
  var actor:=Actor.new()
- if actor.setup(load(actor_spec.path) as PackedScene)!=OK:host.free();actor.free();fail("complete Skeleton asset rejected");return
+ if actor.setup(packed_actor)!=OK:host.free();actor.free();fail("complete Skeleton asset rejected");return
  var binding:=Binding.new();var timing=JSON.parse_string(FileAccess.get_file_as_string(actor_spec.timing_path))
  if not timing is Dictionary or binding.configure_timing(timing,actor_spec.sha256)!=OK:host.free();actor.free();fail("actual animation timing mismatch");return
  binding.ground_point=Callable(runtime,"unit_point");binding.enabled=true
  field=Controller.new()
  if field.configure(battle,host,actor,binding,bounds,"INTERNAL_COMPLETE_MOTHER_WIP_NOT_ART_ACCEPTED")!=OK:host.free();actor.free();field.free();fail("Controller binding rejected");return
+ var ordinary_budget=manifest.get("ordinary_spearmen_per_team",0)
+ if not (ordinary_budget is int or ordinary_budget is float) or not is_finite(float(ordinary_budget)) or ordinary_budget!=floor(float(ordinary_budget)) or ordinary_budget<0 or ordinary_budget>3:fail("ordinary spear probe budget must be0..3 each side");return
+ var ordinary_ids:=Binding.select_ordinary_ids(battle,int(ordinary_budget));var ordinary_instances:=[]
+ if ordinary_ids.size()!=2*int(ordinary_budget):fail("not enough actual eligible ordinary foot spearmen; never substitute troop types");return
+ for id in ordinary_ids:
+  var extra_actor:=Actor.new();var extra_binding:=Binding.new()
+  if extra_actor.setup(packed_actor)!=OK or extra_binding.configure_timing(timing,actor_spec.sha256)!=OK:extra_actor.free();fail("ordinary actor setup rejected");return
+  extra_binding.ground_point=Callable(runtime,"unit_point");extra_binding.enabled=true
+  ordinary_instances.append({"unit_id":id,"actor":extra_actor,"binding":extra_binding})
+ if field.configure_ordinary_spearmen(ordinary_instances)!=OK:fail("actual ordinary unit binding rejected");return
  root.add_child(field)
+ if field.view.review_hidden_actor_ids.size()!=ordinary_ids.size():fail("ordinary source bindings were not all supported initially");return
  if not validate_only:field.deploy()
- entry_receipt={"kind":"PRODUCTION_V2_ENTRY_READY_NOT_ART_ACCEPTANCE","manifest_sha256":FileAccess.get_sha256(args[0]),"map_identity":identity.identity(),"visual_revision":manifest.visual_revision,"scene_sha256":hashes[manifest.scene.path],"navigation_sha256":hashes[manifest.navigation.path],"actor_sha256":actor_spec.sha256,"muster":muster,"camera":{"pitch_degrees":45.,"fov":50.,"nominal_body_fraction":.125},"scope":"ONE_WIP_NEW_HERO_OLD_CROWD_DIAGNOSTIC; NO_SIEGE_CAMPAIGN_OR_NEW_SAVE_SUPPORT"}
+ entry_receipt={"kind":"PRODUCTION_V2_ENTRY_READY_NOT_ART_ACCEPTANCE","manifest_sha256":FileAccess.get_sha256(args[0]),"map_identity":identity.identity(),"visual_revision":manifest.visual_revision,"scene_sha256":hashes[manifest.scene.path],"navigation_sha256":hashes[manifest.navigation.path],"actor_sha256":actor_spec.sha256,"muster":muster,"camera":{"pitch_degrees":45.,"fov":50.,"nominal_body_fraction":.125},"ordinary_new_spear_ids":ordinary_ids,"scope":"WIP_NEW_HERO_AND_EXPLICIT_LIMITED_ACTUAL_SPEARMEN; REMAINDER_OLD_CROWD_DIAGNOSTIC; NO_SIEGE_CAMPAIGN_OR_NEW_SAVE_SUPPORT"}
  entry_receipt["validate_only"]=validate_only
  entry_receipt["runtime_packed_observations"]=packed_observations
  entry_receipt["actual_resource_closure"]=closure

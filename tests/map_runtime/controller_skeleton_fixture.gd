@@ -19,6 +19,7 @@ class Recorder extends Node:
   rows.append(row.duplicate(true))
  func stop(value:String)->void:reason=value;active=false
 const Binding:=preload("res://scripts/field/experimental/production_v2/mh_spear_battle_binding.gd")
+var actual_actor_sha:=""
 func _initialize():run.call_deferred()
 func fixture(identity:Dictionary)->PackedScene:
  var scene:=Node3D.new()
@@ -30,7 +31,7 @@ func fixture(identity:Dictionary)->PackedScene:
 func press(action:String,strength:float):
  var event:=InputEventAction.new();event.action=action;event.pressed=strength>.001;event.strength=strength;Input.parse_input_event(event)
 func run():
- var args:=OS.get_cmdline_user_args();assert(args.size() in [5,6])
+ var args:=OS.get_cmdline_user_args();assert(args.size() in [5,6]);actual_actor_sha=FileAccess.get_sha256(args[2])
  var data:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[0]));var layout:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[1]));var metadata:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(args[3]))
  var bounds:=Rect2(Vector2(layout.bounds.x[0],layout.bounds.z[0]),Vector2(layout.bounds.x[1]-layout.bounds.x[0],layout.bounds.z[1]-layout.bounds.z[0]))
  var nav:=Nav.new();assert(nav.configure(data,bounds,{"gate_main":true},.7,3.4)==OK)
@@ -48,9 +49,22 @@ func run():
  var identity:=runtime.identity();identity.visual_revision=1;identity.authored_source_sha256=data.authored_source_sha256
  var host:=Host.new();assert(host.configure(fixture(identity),identity)==OK)
  var field:=Field.new();assert(field.configure(battle,host,actor,binding,bounds,"CPU_INTERFACE_FIXTURE_NOT_VISUAL_ART")==OK)
+ if args.size()==6 and args[5] in ["contact-group","army-group"]:
+  var ordinary:=[]
+  for id in Binding.select_ordinary_ids(battle,3):
+   var extra_actor:=Actor.new();assert(extra_actor.setup(packed)==OK)
+   var extra_binding:=Binding.new();assert(extra_binding.configure_timing(metadata,FileAccess.get_sha256(args[2]))==OK)
+   extra_binding.ground_point=Callable(runtime,"unit_point");extra_binding.enabled=true
+   ordinary.append({"unit_id":id,"actor":extra_actor,"binding":extra_binding})
+  assert(ordinary.size()==6)
+  assert(field.configure_ordinary_spearmen([ordinary[0],ordinary[0]])==ERR_INVALID_DATA)
+  assert(field.ordinary_actor_bindings.is_empty())
+  assert(field.configure_ordinary_spearmen(ordinary)==OK)
  root.size=Vector2i(2560,1440);root.add_child(field);field.set_process(false);field.set_physics_process(false);field.deploy()
+ if args.size()==6 and args[5] in ["contact-group","army-group"]:assert(field.view.review_hidden_actor_ids.size()==6)
  await process_frame
  if args.size()==6:
+  if args[5]=="army-group":army(field,args[4]);return
   await contact(field,args[4]);return
  var initial:=battle.hero.pos;var rows:=[];var clips:={}
  for step in 100:
@@ -80,10 +94,39 @@ func contact(field:Field,output_path:String)->void:
   if field.battle.tick!=last_tick or field.battle.hero.hp<=0:
    last_tick=field.battle.tick;var row:=field.actor_receipt.duplicate(true);row["monotonic_us"]=Time.get_ticks_usec();row["actual_hero_pos"]=str(field.battle.hero.pos);row["actor_position"]=str(field.skeletal_actor.position);row["camera_fov"]=field.camera.fov;row["camera_pitch"]=field.camera_pitch;row["camera_yaw"]=field.camera_yaw;row["camera_transform"]=str(field.camera.global_transform);row["ground_point"]=str(field.battle.map_runtime.unit_point(field.battle.hero.pos));row["source_sha256"]=field.map.expected_identity.authored_source_sha256
    assert(field.camera.fov==50. and is_equal_approx(field.camera_pitch,deg_to_rad(45.)));assert(field.map.master.find_children("*","WorldEnvironment",true,false).size()==1)
+   row["ordinary_units"]={}
+   for item in field.ordinary_actor_bindings:
+    var ordinary:Dictionary=field.ordinary_actor_receipts.get(item.unit_id,{}).duplicate(true)
+    ordinary["team"]=field.battle.roster[item.unit_id].team;ordinary["actual_unit_hp"]=field.battle.roster[item.unit_id].hp;ordinary["actor_position"]=str(item.actor.position)
+    row.ordinary_units[item.unit_id]=ordinary
    poses.append(row)
    var semantic:String=row.get("semantic",row.get("reason","unknown"));semantics[semantic]=int(semantics.get(semantic,0))+1
  if recorder.active:pilot.finish("fixture_outer_timeout")
- var report={"kind":"CPU_REAL_CONTROLLER_CONTACT_SKELETON_NOT_GPU_ART_OR_FPS","reason":recorder.reason,"hero_hp":field.battle.hero.hp,"hero_impacts":field.battle.hero.impacts,"received":field.battle.hero.received,"result":field.battle.result,"tick":field.battle.tick,"semantics":semantics,"input_rows":recorder.rows,"pose_rows":poses}
+ var report={"kind":"CPU_REAL_CONTROLLER_CONTACT_SKELETON_NOT_GPU_ART_OR_FPS","actual_actor_sha256":actual_actor_sha,"reason":recorder.reason,"hero_hp":field.battle.hero.hp,"hero_impacts":field.battle.hero.impacts,"received":field.battle.hero.received,"result":field.battle.result,"tick":field.battle.tick,"semantics":semantics,"input_rows":recorder.rows,"pose_rows":poses,"actual_new_ordinary_ids":field.view.review_hidden_actor_ids.keys()}
  FileAccess.open(output_path,FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
  pilot.free();field.free();recorder.free()
  print("REAL_CONTROLLER_CONTACT_EXECUTED_NOT_AUTOMATIC_SUCCESS ",JSON.stringify({"reason":report.reason,"hero_hp":report.hero_hp,"impacts":report.hero_impacts,"received":report.received,"tick":report.tick,"semantics":semantics}));quit()
+
+func army(field:Field,output_path:String)->void:
+ var history:=[];var store=preload("res://scripts/field/save.gd")
+ # Real Controller command event, not direct changes to unit/HP/order fields.
+ press("order_attack",1.);Input.flush_buffered_events();press("order_attack",0.)
+ var ticks:=0
+ for step in 1200:
+  field._physics_process(Battle.DT)
+  var before:String=JSON.stringify(store.snapshot(field.battle)) if step%100==0 else ""
+  field._process(Battle.DT)
+  if not before.is_empty():assert(JSON.stringify(store.snapshot(field.battle))==before,"Presentation modified authoritative Battle")
+  history.append({"tick":field.battle.tick,"ordinary":field.ordinary_actor_receipts.duplicate(true)})
+  ticks=step+1
+  if not field.battle.result.is_empty():break
+ for tail in 55:
+  var before:=JSON.stringify(store.snapshot(field.battle));field._process(Battle.DT);assert(JSON.stringify(store.snapshot(field.battle))==before)
+  history.append({"tick":field.battle.tick,"ordinary":field.ordinary_actor_receipts.duplicate(true),"presentation_tail_only":true})
+ var units:=[]
+ for item in field.ordinary_actor_bindings:
+  var unit=field.battle.roster[item.unit_id]
+  if not field.battle.result.is_empty():assert(item.actor.position.distance_to(field.battle.map_runtime.unit_point(unit.pos))<.00001,"Stopped simulation must render final authoritative position")
+  units.append({"unit_id":unit.id,"team":unit.team,"actual_hp":unit.hp,"state":unit.state,"actual_impacts":unit.impacts,"last_pose":field.ordinary_actor_receipts[item.unit_id],"actor_position":str(item.actor.position),"ground_point":str(field.battle.map_runtime.unit_point(unit.pos))})
+ var report={"kind":"CPU_REAL_CONTROLLER_ARMY_SKELETON_GROUP_NO_GPU_NO_WALL_TIME_MOVIE","actual_actor_sha256":actual_actor_sha,"tick":field.battle.tick,"step_calls":ticks,"result":field.battle.result,"hero_hp":field.battle.hero.hp,"hero_impacts":field.battle.hero.impacts,"ordinary_ids":field.view.review_hidden_actor_ids.keys(),"units":units,"history":history,"snapshot_unchanged_by_presentation":true}
+ FileAccess.open(output_path,FileAccess.WRITE).store_string(JSON.stringify(report,"  "));field.free();print("ACTUAL_ORDINARY_GROUP_EXECUTED ",JSON.stringify({"tick":report.tick,"result":report.result,"units":units}));quit()

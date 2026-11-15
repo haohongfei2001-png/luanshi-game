@@ -6,6 +6,9 @@ var authored_bounds:Rect2
 var skeletal_actor:Node3D
 var skeletal_binding:RefCounted
 var actor_receipt:Dictionary={}
+var ordinary_actor_receipts:Dictionary={}
+var ordinary_actor_bindings:Array=[]
+const MAX_NEW_ORDINARY_PER_TEAM:=3
 var configured:=false
 var presentation_delta:=0.
 var internal_label:="INTERNAL_INTERFACE_FIXTURE_NOT_ART"
@@ -26,6 +29,27 @@ func configure(fresh:Battle,host:AuthoredHost,actor:Node3D,binding:RefCounted,bo
   for point in [triangle.a,triangle.b,triangle.c]:
    source_height_range.x=minf(source_height_range.x,point.y-.05);source_height_range.y=maxf(source_height_range.y,point.y+.05)
  configured=true;return OK
+func configure_ordinary_spearmen(instances:Array)->Error:
+ # Default empty. This is a small real-unit art probe, not a thousand-skeleton
+ # replacement. Never turn archers/officers/riders into generic spearmen.
+ if not configured or is_inside_tree() or not ordinary_actor_bindings.is_empty():return ERR_ALREADY_IN_USE
+ if instances.size()>2*MAX_NEW_ORDINARY_PER_TEAM:return ERR_PARAMETER_RANGE_ERROR
+ var ids:Dictionary={};var actors:Dictionary={};var bindings:Dictionary={};var counts:=[0,0]
+ for spec in instances:
+  if not spec is Dictionary or not spec.get("unit_id") is int:return ERR_INVALID_DATA
+  var id:int=spec.unit_id
+  if id<0 or id>=battle.roster.size() or ids.has(id):return ERR_INVALID_DATA
+  var unit=battle.roster[id]
+  if unit.hero or unit.officer or unit.mounted or unit.kit!=Battle.Arms.Kit.SPEAR or unit.hp<=0:return ERR_UNAVAILABLE
+  var actor=spec.get("actor");var binding=spec.get("binding")
+  if not actor is Node3D or not binding is RefCounted or not binding.has_method("update_unit"):return ERR_INVALID_DATA
+  if actor==skeletal_actor or binding==skeletal_binding or actor.get_parent()!=null or actors.has(actor.get_instance_id()) or bindings.has(binding.get_instance_id()):return ERR_INVALID_DATA
+  if not binding.enabled or binding.ground_point.get_object()!=battle.map_runtime or binding.ground_point.get_method()!=&"unit_point":return ERR_INVALID_DATA
+  counts[unit.team]+=1
+  if counts[unit.team]>MAX_NEW_ORDINARY_PER_TEAM:return ERR_PARAMETER_RANGE_ERROR
+  ids[id]=true;actors[actor.get_instance_id()]=true;bindings[binding.get_instance_id()]=true
+ for spec in instances:ordinary_actor_bindings.append({"unit_id":spec.unit_id,"actor":spec.actor,"binding":spec.binding,"active":false})
+ return OK
 func _ready()->void:
  if not configured:
   push_error("Authored Controller requires explicit complete source configuration");set_process(false);set_physics_process(false);return
@@ -33,6 +57,12 @@ func _ready()->void:
  add_child(map);add_child(camera);camera.current=true;camera.far=360.
  add_child(hud);add_child(audio);add_child(skeletal_actor)
  view=Figures.new();add_child(view);view.configure(battle);view.review_hidden_actor_id=battle.hero.id
+ for item in ordinary_actor_bindings:
+  add_child(item.actor)
+  var receipt:Dictionary=item.binding.update_unit(battle,battle.roster[item.unit_id],item.actor,0.,1.)
+  ordinary_actor_receipts[item.unit_id]=receipt
+  if receipt.get("supported",false):view.review_hidden_actor_ids[item.unit_id]=true;item.active=true
+  else:item.actor.hide() # Original real unit remains visible if binding failed.
  hud.bind(battle);hud.deploy.connect(deploy);hud.pause.connect(toggle_pause);hud.order_requested.connect(_order)
  hud.unit.item_selected.connect(func(i:int):hud.select_company(battle,i))
  for control in [hud.inset,hud.plan,hud.weapon,hud.slot,hud.shape,hud.front,hud.save_button,hud.load_button,hud.continue_slot,hud.change,hud.legacy]:control.hide()
@@ -100,7 +130,11 @@ func _draw_field()->void:
  var center:Vector2=footprint.center if footprint.valid else authored_bounds.get_center()
  var half:Vector2=footprint.half_extent if footprint.valid else authored_bounds.size*.5
  view.sync_view(camera_center,half,clampf(carry/Battle.DT,0.,1.),camera.size,center)
- actor_receipt=skeletal_binding.update(battle,skeletal_actor,presentation_delta,clampf(carry/Battle.DT,0.,1.))
+ # Once simulation stops, present its final authoritative transform, not a stale before point.
+ var alpha:=1.0 if paused or not battle.result.is_empty() else clampf(carry/Battle.DT,0.,1.)
+ actor_receipt=skeletal_binding.update(battle,skeletal_actor,presentation_delta,alpha)
+ for item in ordinary_actor_bindings:
+  if item.active:ordinary_actor_receipts[item.unit_id]=item.binding.update_unit(battle,battle.roster[item.unit_id],item.actor,presentation_delta,alpha)
  map.update_battle(battle);hud.marker.hide();hud.inset.hide()
  if frame_log:frame_log.pose_submitted(battle)
 func _process(delta:float)->void:
@@ -108,4 +142,4 @@ func _process(delta:float)->void:
 func _refresh_hud()->void:
  if not configured:return
  hud.update_model(battle,paused);hud.inset.hide()
- hud.feedback.text=internal_label+" | 新英雄 WIP / 旧群体诊断 / 无世界结算"
+ hud.feedback.text=internal_label+" | 新英雄 WIP / 新普通枪兵 %d / 其余旧群体诊断 / 无世界结算" % view.review_hidden_actor_ids.size()
