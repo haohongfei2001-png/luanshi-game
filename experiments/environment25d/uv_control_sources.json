@@ -1,0 +1,284 @@
+{
+  "public_baseline": "1cbdc20aaa63786b1f2fc6181bd7a62c77a84eeb",
+  "public_tree": "7a00714dde185b9ca8fbc75ae59fe9da2634118a",
+  "local_exact_tree_equivalent_commit": "50a4479f1e1ec6d64f3e170aea6c319bb0fff895",
+  "public_adapter": "01fb175a8ee64ed65c67e16f76bf06ea37f2b6b5",
+  "no_denied_data_included": true,
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "9e1ae6a52de9e8b2a7f446b1372d31bfe8554284e940e901c056475b3dfb57ec",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "README.md",
+      "sha256": "375f81166a4a72d868e7918e028a3fa8053aba981a0687463f3e14fd674fcef3",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "SOURCE.json",
+      "sha256": "50bed93c2a7a2f40b1a323513f2bbe4cc4f7b189f0966db9ccd5e1fa70a5e886",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "app.gd",
+      "sha256": "c31e615f52e2809b5a785ff878cb934c09c87c01b9f25f9559e6db013b358d46",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/environment-wide-v2.png",
+      "sha256": "9471178db61606963fd5a1d4f8acb17ad08b0acd9637bf802e28426493355da5",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/RUNTIME-DERIVATIONS.md",
+      "sha256": "9e0a124c2d44245dfc5fdcac1ff918157a167ee47dad1e975f9e9b26e8eb8301",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/SOURCE18-NOTICE.md",
+      "sha256": "e1f5ac601b325fdda30d2bd15e3da88e237930ded6ed915ba1e40bb8eb7f2707",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/license-packet-manifest.json",
+      "sha256": "bba316af65ddc1aece36b73e7f90f6b57547b9cf55004c3d9efc2cb3ff5bfaec",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/owner-generated-lamellar/NOTICE.md",
+      "sha256": "05ffef1af8b1cbd4637d3c037b83f0a896a61034492a982e59ebb914b94d5c18",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/owner-generated-lamellar/source-manifest.json",
+      "sha256": "c79ff5d7537f1d8a7b41c1b2a181206129c18503ee724972921d0e47f3d87e65",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/quaternius-ual/License.txt",
+      "sha256": "6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/quaternius-ual/package-provenance.json",
+      "sha256": "d5c4c7c2695f31f286fec31e54484cc400b36f5b4c86e5bb07fc30d4e1bd9317",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/tools/art/mh_character/NOTICE.md",
+      "sha256": "ad255d2c845a8ab3909be945dee706994482f8fc288239ed5ca010bcc8f680b9",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/tools/art/mh_character/sources.json",
+      "sha256": "fe5e973a2a1e1f6c0b0614f60e8a479b34242abdbf6096e7b1d5e709fde3faf0",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/tools/art/sintel_guard/NOTICE.md",
+      "sha256": "2a0f960324309734b5920e85737728889c593ecc3d5da2270cd302246466b7c0",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/tools/art/sintel_guard/license-evidence.json",
+      "sha256": "4f12bbe4b65295914a4d30a4b82aa3559ec3f198c9c76256bee9044833c45137",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/tools/art/sintel_guard/source-members.json",
+      "sha256": "4ef566025e0dfae70d918767be17ed595c722586651455c1b3ada388523e19ce",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/tools/art/soldier_production_v2/AI_MATERIAL_CANDIDATE.md",
+      "sha256": "7dfbf4e5de31a13e6d2624af3a90738a23fb0e090883e768d22db28923cf659b",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/source18-license/tools/art/soldier_production_v2/NOTICE.md",
+      "sha256": "36a139d02ff3822066b75a72972781ce06ace38b51b931873823b0ec03beb64f",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/spearman-v2-source18.glb.gz",
+      "sha256": "caf49a68890e78644448489a8df7e2bafe2d2dc1617f6270fa886248e65737d7",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "assets/timing.json",
+      "sha256": "ae7094c96039fea428a310330e25a1fe501aca18f6a6461f6abdc2f843f5c2ab",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "bootstrap.tscn",
+      "sha256": "dae001bfb4802a4325c273d4c0f8de403a0a98a1bbb46b8b7e980f7cc8880f9f",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "clean-environment-v1.prompt.txt",
+      "sha256": "4ef944c0eb2024d09f169265e9a28f11d1e1bf3d3905248db22de9d37eb5703e",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "clean-environment-wide-v2.prompt.txt",
+      "sha256": "38d1c925ca98b0dbdf8235e06b15b00bbe3592e406a3d94000f0f265bfb91c88",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "export_native.py",
+      "sha256": "ee0d9e32ac51223f6e9b3f7ee64c8e21837f55b23b5d97f7c1270e374feb62b5",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "export_presets.cfg",
+      "sha256": "c1a571dde7b6080e9270906c99d2a6fee4861cbaede75783b8e5739f7105c62e",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "physics_driver.gd",
+      "sha256": "063a3867acdfc7a69b2aa97048521444b3c2fdb8610f3820c05ba5aa1008cb45",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "project.godot",
+      "sha256": "d07af613b85977e61df19312557eee69dafd6d60e19677a21e095156c478a017",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "restore_assets.py",
+      "sha256": "efd5dd7047ed924aa44df18e0e1779fb243c1918daf77d208c813c7862ab5fa2",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "run_capture.py",
+      "sha256": "8c41041583ddc2ec94e7bfa7cee74ec90d52d54a02a1dba840e061777e3e6a7e",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/arms.gd",
+      "sha256": "845fb068271ef83703a871882645d7203c3d3bcd33d9283e7d88deb548ed0300",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/authored_landform_profile.gd",
+      "sha256": "011b1563b379e73ae4ca488f7d9bfaed2904183bb975e79d3c6f468b05c55478",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/authored_ridge_profile.gd",
+      "sha256": "2527c9ca53356d280755b050a66643f12dacf79cadf59344a672bc1a991271d0",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/battle.gd",
+      "sha256": "772665adb73e9e9eeb10f29207108aef2a03b6206c2a5c58de83b8857834e8e6",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/crowd_grid.gd",
+      "sha256": "ef6dc0b756cdcbb9adc94d1874fbc5d493f8a78a049d75cf4a607d4f6022b60c",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/experimental/production_v2/mh_spear_battle_binding.gd",
+      "sha256": "d64e49d4cfa8c581899b51472b8776e372eec1869d55f6e01cab763dc382a5d5",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/experimental/production_v2/shared_skeletal_actor.gd",
+      "sha256": "b74b7acc5ef277222caae66358d9c878ed2ceb9cd623c505811aa7444b5e371d",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/field_objectives.gd",
+      "sha256": "2af7023586bb5e249f19d564e6b11dddf80461e49076b67ff49f9765edc59923",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/formation_traffic.gd",
+      "sha256": "e25ded276592e4ab373a75d57718a467cb000bc1a170c939a2ab9996826b33ac",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/ground.gd",
+      "sha256": "aff520619223f2d6a1bc96648863461772d1e96b036640164cf2f47d1541b035",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/maps/authored_field_runtime.gd",
+      "sha256": "a98e24deb727040b1370d0d08057eec70bdfdfe5f1b1b1b4c236f1aaca98b880",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/maps/authored_muster.gd",
+      "sha256": "0a78a924770c88fac2e4b25ab4f028c64e2c1f5bb86c76df8c7a9677324551e8",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/maps/authored_navigation.gd",
+      "sha256": "e501cb54265bdaa168d2df9e2908ace56b488f12374f9bd398cc584cb8549452",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/maps/authored_obstacles.gd",
+      "sha256": "5a96d4f29b265cbb2c402a00b29c4ada7cc6f6e8af79744f32c939cc130eb0ce",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/maps/authored_support.gd",
+      "sha256": "3e5d3a6afeff76945c5140c2e82fc17cc27e80b89c45b3dd9bb62709bb208bc0",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/maps/legacy_map_runtime.gd",
+      "sha256": "25e8b984e00f7bb5775a0e728b95d9ef965c1d9cd2654520c155ac4336c52f07",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/maps/map_query.gd",
+      "sha256": "324e0e74f3f6b7d76266ebc4cecd1c3aabce6a98802df80d825d2cddf547bf9d",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/native_woodland_navigation.gd",
+      "sha256": "292b2f0c929ed15ac93b7d5ed8d5b9943234eb85a8d3bb21a83c501d49c61c79",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/officer_corps.gd",
+      "sha256": "6b55be12a2eb1830f3b3566467a184df7dd71c17400253735f2dca0efcb4528d",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/river_pass_profile.gd",
+      "sha256": "e304060f06e86c65ade69a1bff21ebaba7f49d9625a3508a911f14cbc474536d",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/hero_combat_profiles.gd",
+      "sha256": "2804bf443165ec93f5c0d0e6715a6680e1399dd18bc8c0962435081ad5364e5c",
+      "origin": "public1cbdc20"
+    },
+    {
+      "path": "scripts/field/experimental/production_v2/uv_spatial/adapter.gd",
+      "sha256": "ecc191093eb7d3508653bfb9f4ef7ede2002102b9fc260a4bb36bec79dede1aa",
+      "origin": "public01fb175"
+    },
+    {
+      "path": "scripts/field/experimental/production_v2/uv_spatial/source18.gdshader",
+      "sha256": "32278b1720da8fb11265f27b4a3d1023491278093621d372a70db927e477ae79",
+      "origin": "public01fb175"
+    },
+    {
+      "path": "scripts/field/experimental/production_v2/uv_spatial/source18_contract.json",
+      "sha256": "6e499e13a720acdebfab6bad834d2a79d5971a3f51735f7d2cd7ccba292d83c7",
+      "origin": "public01fb175"
+    },
+    {
+      "path": "assets/spearman-v2-wip.glb",
+      "sha256": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+      "origin": "restored_exact_public_gzip"
+    }
+  ]
+}

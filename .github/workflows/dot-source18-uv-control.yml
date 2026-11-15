@@ -1,0 +1,63 @@
+name: Source18 same-pose UV material control ONLY, not scene acceptance
+on:
+  push:
+    branches: ['dot/source18-metal-uv-control-run']
+    paths:
+      - 'experiments/environment25d/uv_control.gd'
+      - 'experiments/environment25d/uv_control_runner.py'
+      - 'experiments/environment25d/uv_control_sources.json'
+      - 'experiments/environment25d/scripts/field/experimental/production_v2/uv_spatial/**'
+      - '.github/workflows/dot-source18-uv-control.yml'
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: luanshi-25d-single-native-experiment
+  cancel-in-progress: false
+jobs:
+  native-metal-uv-control:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: experiments/environment25d
+      - name: Preserve actual host and exact code identity
+        run: |
+          mkdir -p evidence
+          uname -a > evidence/hardware.txt
+          sysctl hw.model hw.memsize hw.ncpu >> evidence/hardware.txt
+          system_profiler SPDisplaysDataType >> evidence/hardware.txt
+          git rev-parse HEAD > evidence/source-sha.txt
+      - name: Restore existing exact public source18 and official editor
+        run: |
+          set -euo pipefail
+          python3 experiments/environment25d/restore_assets.py > evidence/source18-restore.json
+          curl -fLsS --max-time 120 --retry 1 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "0155bbc8dcf179edab4ef08e3dbbd4480d7434ab1990cb3fb25517d453b1b65787c7fe6dfc8824b15ff25e1fdcec59e8584f765054106894fee00311868c3964  $RUNNER_TEMP/editor.zip" | shasum -a 512 -c -
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/editor"
+          echo "GODOT=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+      - uses: actions/cache/restore@v4
+        id: engine-cache
+        with:
+          path: patch
+          key: macos-arm64-godot-35e80b3-angle-7578-mobile-mutex-v1
+      - uses: actions/download-artifact@v4
+        if: steps.engine-cache.outputs.cache-hit != 'true'
+        with:
+          name: mobile-mutex-angle-template
+          path: patch
+          run-id: '43580708251'
+          github-token: ${{ github.token }}
+      - name: One frozen original scene, OFF then ON then fully restored OFF
+        run: |
+          python3 experiments/environment25d/uv_control_runner.py --editor "$GODOT" --engine-dir "$PWD/patch" --project "$PWD/experiments/environment25d" --out "$PWD/evidence/uv"
+      - name: Preserve original failures and frames too
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source18-metal-uv-control-${{ github.sha }}
+          path: evidence/
+          retention-days: 14
+          if-no-files-found: error
