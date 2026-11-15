@@ -2,11 +2,11 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 9 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 10 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
-> Sections 7 and 8 are earlier checkpoints. They remain preserved, but their in-progress statements must not override section 9.
+> Sections 7 and 8 are earlier checkpoints. They remain preserved, but their in-progress statements must not override the latest section.
 
 ## 1. The owner's correction and the actual method change
 
@@ -236,3 +236,30 @@ The real Controller test now binds three actual ordinary foot SPEAR units per si
 This is **CPU/manual-step functional evidence**, not original-speed video or GPU art. The complete default regression on bce27e7 has now finished with exit0, including real legacy512 siege/world writeback, save migration and youth attrition restart checks. Its log SHA-256 is `696fcc42442df81bad51638c5e887eea3e0dac92b2dc2b92f1717d93cabecb15`; the new entry check-only also completed cleanly. The same frozen source18 is being prepared for the single coordinated hosted-Mac visual experiment rather than duplicating CI or showing old004 terrain as a new visual candidate.
 
 **Still missing: accepted whole-scene art, the new actual 2K/4K original-speed game capture, final topology2, new-scene real-time performance, complete new-map siege/world integration, a new macOS candidate and owner visual approval. MacBook Air M5 remains untested.**
+
+
+## 10. Actual whole-source and first GPU checkpoint — 2026-11-15, 07:20 UTC
+
+### HF08 is a new whole source, not accepted art
+
+Author source is now `dot/river-valley-high-fidelity@79f8f0304693b5ad33a3634caebbb92d491a4033`, [draft PR #69](https://github.com/haohongfei2001-png/luanshi-game/pull/69). Actual independent runtime evidence is `dot/production-v2-map-runtime@b8c8cf02c12433265d0642fdae88104b5fb44f39`. The latest complete default regression remains bce27e7's pass; later source-identity and HF08 changes have their own focused checks, not an invented second aggregate pass.
+
+HF08 rebuilds the terrain, continuous banks, bridge, thick gate, overlapping roof tiles and material atlas together. Its actual GLB is215,471,760 bytes, SHA-256 `cb89ed9ca8d045c28c684bc69d62b996bdad3d5e1a61bf47e5d14aa20d982755`. The clean nine-member runtime ZIP is139,477,998 bytes, SHA-256 `f5ac12b501293da966a12072509550d91ac60fd5fafc283f8b55aa8475cb91f4`, and has a durable private Library backup. It is not yet an anonymously retrievable GitHub artifact; do not fabricate a public download link or embed private transfer URLs.
+
+Actual Godot checks of this new source, not old004, verified8,882 navigation nodes,33,862 support triangles and62 solids;20/512 ordinary soldiers per side deployed legally, with1,057 total characters in the larger case. Four source-defined bridge/gate/retreat routes reached their destinations. A real Controller/source18 cohort ran100 ticks with70 walking and30 idle observations, HP100 and zero hits. That is movement integration, not attack or original-speed performance acceptance.
+
+HF05a's original Sun had shadows disabled. This was found by reading actual Godot properties, not inferred from Blender pictures. HF08's author wrapper now enables the existing sole Sun, with energy2.7, shadow mode2, maximum distance80 m, bias0.1 and normal bias0.6. The independent check confirms those properties and one WorldEnvironment; no runtime fill light was inserted. All four offline HF08 GLB-reimport views were inspected and remain **ART_FAIL**. HF08 itself has not yet run on GPU.
+
+### First isolated2.5D GPU run genuinely happened, but failed
+
+The separate opt-in prototype is `dot/25d-environment-feasibility@d161f76f805aaab49a5da87bbdda7db6dbe0d0d9`. [Run43688703476](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43688703476) imported source18 and ran actual Godot on hosted VirtualMac2,1 using official4.6.3 Compatibility/ANGLE on an Apple Paravirtual Metal device. [Artifact14151193154](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43688703476/artifacts/14151193154) preserves the original logs and75 frames, expiring2026-11-29. GitHub login may be required.
+
+The actual screenshots were only1024×645 because the native window was clamped by the host desktop. The strict requested2560×1440 assertion correctly failed and4K was skipped. They were not resized. The process took51.15 real wall seconds, whereas the old report accumulated10.016 seconds of engine delta; those are not interchangeable, so the first run proves neither original-speed recording nor real-time performance.
+
+It used a1672×941 AI-generated static environment image projected into world-aligned layers, real3D source18 spear actors, explicit diagnostic capsules for other weapon types, and real Battle state. It is **not a completed3D environment or a rebuilt army**. The actual run recorded29 hits/four ordinary losses and hero death at tick111; only two of six route points were reached. Fixed camera direction, finite image boundaries and prelit environment are explicit limitations. Full GPU traversal and acceptable occlusion remain unproven. The actual frame was inspected: the environment is readable, but people are fragmented/bright and visually inconsistent; all art remains rejected.
+
+The first raw14 MB character Git blob request was rejected before any ref write because its base64 request exceeded the transport's16 MiB limit. Exact gzip compression resolved it without changing the GLB:10,442,257 bytes, SHA-256 `caf49a68890e78644448489a8df7e2bafe2d2dc1617f6270fa886248e65737d7`, Git blob `583d99e1ad15cbee89fa1d6189ca334c419a5382`. The experiment restores and verifies the original14,173,132-byte/afb966 GLB before import. Source notices retain CC0, CC BY3.0, CC BY4.0 and project-generated distinctions.
+
+A second run at `16b1430166ab9d099452f7247ff0d3aa38990fbd` is now testing real independent2K/4K GPU viewports, monotonic wall-clock timestamps and byte-exact license manifests. Its result is still pending here. The existing official Compatibility native-Skin tangent defect also applies to this rendering path and must be controlled before blaming every bright fragment on the character material. Preserve original-engine evidence; compare an actually supported corrected/native rendering path without silently altering source art.
+
+**Still not accepted: the whole image, people, final rendering route, native2K/4K motion evidence, HF08 GPU performance, a new macOS candidate or M5 performance. Main/PR67 and the RC24/RC25 recovery points remain unchanged.**
