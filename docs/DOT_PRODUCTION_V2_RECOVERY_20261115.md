@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 26 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 27 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -798,3 +798,36 @@ The complete77-file grove preview/code/failure/evidence companion is privately p
 Closed24b and25b native duplicates were reclaimed only after fresh independent retrieval of their persistent archives, full archive/member verification, actual native extraction and exact original SHA equality, plus confirmation that27 reads26 and the whole18 runtime reads the retained25b GLB. This freed 233,202,230 B. Native24b (111,302,519 B, SHA `8b0eef5aac2ffda87956cf43c45c8563a1d71fd449c15085027084e3e6951aef`) and native25b (121,899,711 B, SHA `3fce11215f183ec7f20c74c4d07cffd6eb060ea85dfd782e0294caa4dc449d92`) now require their recorded exact restoration before historical replay. Current26 and the exact25b runtime remain local and protected; no unique work was discarded.
 
 Only this recovery document is published. Current actual Godot whole-scene evidence is still rejected18 with25b, and the latest isolated actual Godot character is rejected26. The new grove picture is an offline source preview, not realBattle, not continuous motion, not a benchmark or installer. New 4K, realBattle integration, original-speed complete-action/riding/large-army footage, 20/100/250/512-per-side benchmarks and real M5 testing remain NOT_RUN for the new sources. RC24/RC25, genuine/offscreen war, old saves and all held merges/assets remain protected.
+
+
+## 27. Actual27 geometry failure, whole-space20 prototype and bounded-source recovery
+
+**Actual images override source/export success. Whole27 is GEOMETRY_FAIL, not an improved art candidate.** The whole-scene art target remains unmet. Read this section before treating the preceding in-progress source status as current.
+
+### Complete27 reached the engine and was rejected
+
+The frozen native27 was saved as 140,065,878 B, SHA256 `fdc6eb95693f2ae3e19921797017424212c21742c909e2498a6e5710c97842e4`. Its first strict runtime export correctly stopped on 14 original facial vertices with nine influences; it produced no GLB. These were face/jaw/oris/neck points, not hand or new garment/armor vertices. A separate editable 4,097,824 B mesh source layer was then authored, SHA256 `c34c9c7c35b9a5d69a80ce02738d68412384ac181019644454199a870bb6a1bb`, explicitly recording the 14 original and derived weights. Topology, UVs, coordinates and hand weights remained unchanged. Four actual posed maximum displacements were 0.016 / 0.110 / 0.041 / 0.108 mm. The complete original native27 remains unchanged; the runtime is assembled from that native plus the explicit source layer, not a silently modified original.
+
+That assembly exported with the strict maximum-eight-influence assertion: 47,291,652 B GLB, SHA256 `9798e195a3a484d6066557caffd1236bdbf4c951a1b3b134232fe3bd877aaec7`; 69.345477 seconds, exit 0, peak RSS 912,420,864 B. Twenty actual material factors, decoded texture pixels and material semantics were compared with26, with documented naming aliases. These checks did not establish geometry quality.
+
+Six actual Godot keypose frames then completed in 43.51 seconds, exit 0, peak RSS 940,367,872 B. The coordinator and writer actually viewed the normal-camera picture and reject it completely: armor surfaces explode far outside the body. Actual unanimated GLB POSITION already spans approximately x=-16.94 to15.08 m and z=-26.06 to26.28 m for armor/support parts while the body/cloth remain normal. This is not a camera or animation-only issue. The two previously reported fitting failures did not omit entire components or revert them to26; their rejected diagnostic surfaces were still visible. Neither those component counts nor nearly satisfied normal-direction margins proved that the complete fitted surface was bounded.
+
+The complete XYZ fit and shared-seam construction must be corrected, not the visible spikes clipped afterward. New28 requires control-domain/UV coverage checks, source REST and four-pose bounds, and final GLB per-part bounds before any new image. Its first bounded source-layer run stopped in 11.56 seconds at approximately905 MB, without saving a layer or exporting/rendering: six skirt surfaces failed the new geometry gate. Old adapter edge samples had been treated as Bezier control points, which does not guarantee that the resulting seam passes through or envelopes the complete original cloth edge. This failure is preserved; a whole shared-seam fit is being implemented, not a looser art or geometry threshold. Rejected27 stays OFF.
+
+### Whole-space20 is real, but is not a completed environment
+
+A new continuous riverbed/shallows/ridge/road/combat-shoulder/background-hill space and independent complete bridge/gate WIP were actually loaded in Godot with the retained25b actor. The geometry has 64,356 terrain triangles; the bridge deck is 13 m long and 5.8 m wide, with a 12 m bridge-to-gate forecourt. These are new author-space dimensions, not a validated army-capacity or traversal result.
+
+One actual native2560×1440/internal1.0 frame completed in25.182 seconds, peak RSS983,752,704 B, without a guard. Camera radius15.000 m, optical pitch45.000004 degrees and FOV50 were retained. The actual25b body projects to148.368 px; no actor/camera scale was changed to claim exactly150 px. The bridge end, expanded ground and gate opening are visible without forest-crown obstruction, but terrain/water are explicitly structural color regions, and the gate/bridge remain artistically rejected. **This is an incomplete spatial prototype, not an improved accepted art scene or realBattle.** The exploded27 character was not used.
+
+Independent architecture01 uses original authored geometry and identified CC0 material sources, not a claimed newly downloaded professional gate. Its first real normal-camera picture showed repeated bright stone patches and a strongly regular stepped-block wall, with the roof outside the frame. The next independent02 complete author views exposed further construction/material problems; both were self-rejected. A bright/cyan-looking roof is an observed image defect, not yet proof of a GLTF color-conversion bug. Full-asset author views do not replace normal-game-camera review. Existing01 inputs copied into20 are frozen; later versions do not silently overwrite that evidence.
+
+The next environment work is actual coherent whole-shore/road/water/ecology production. Pure color regions, another scatter pass, or an unfinished structural assembly do not satisfy the owner's art-first request. The independent architecture and character writers continue in separate directories and share one heavy-job lock.
+
+### Exact failed-stage recovery and preserved limits
+
+Frozen27 has an exact private native backup. Its separate91-source-file companion totals71,536,066 B and persists as a62,618,172 B archive, SHA256 `6aab9e0db5dca31b3567c3e3d279970d2b12ebbbd4b3d5ac303747e2907d1370`. All local source hashes, archive CRC/decoded hashes and one actual editable-layer extraction passed. The full native27 is a separate explicit dependency. Independent remote companion readback and full replay are not claimed; all current27 originals remain.
+
+The now-closed native26 was independently retrieved from its persistent Library record and matched to the original by full127,064,997 B SHA256. Only after the current writer confirmed28 uses27 plus the explicit source layer was the redundant local26 native reclaimed. All26 code, runtime, six images and companion remain. Historical full27 regeneration requires exact native26 restoration first. A mistaken extra character in a pinned file ID failed before retrieval; fresh Library metadata resolved the correct record. A later uncompressed-header assumption failed before deletion because this native uses a compressed prefix. Full-byte equality, not an altered file or bypassed warning, established restoration.
+
+No new source asset payload is publicly promoted by this checkpoint. PR67 remains held, RC24/RC25 remain protected, and genuine/offscreen combat and legacy saves are unchanged. New4K, actualBattle integration, continuous original-speed actions/riding/large-army footage,20/100/250/512-per-side performance and realM5 tests remain NOT_RUN for these rejected new sources.
