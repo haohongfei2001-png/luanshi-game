@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 31 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 32 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -1024,3 +1024,60 @@ The same complete independent check was performed for failedruntime26 (108-membe
 Next totals are bounded: wearer31 <=75MiB, architectural03g <=15MiB, environmentcontinuation <=22MiB, includingnewsource/cache/evidence. Serialheavylock, originalprocessRSS/time/globalmemory/diskfloors remain. Failure of oldthreadstorage does not require user action because directlocal continuation works. Professionalasset identity, sourcepreservation and data-pass counts remain separate from visualquality.
 
 RC24/RC25, nineweapons, real/offscreen combat, oldsavecompatibility and productiondefaults are unchanged. New art still has no accepted playablewholeframe,4K,movement/attack/hit/ridingvideo,20/100/250/512-per-side performance or realM5 result. **ART_FAIL / NOT_RUN remains the accurate state, not a release milestone.**
+
+
+## 32. Verified continuation — 2026-11-15 22:48 UTC
+
+**Read this section first. Whole-scene art is still NOT_ACCEPTED.** The owner prioritizes reaching the approved actual-game visual quality, not technical scorecards. Codex remains PAUSED. Main remains `248d26aefbb8dfe7973141a63b40f3a220f0edc0`; PR67 remains draft/unmerged/held. At this checkpoint's pre-write check, PR68 was draft/unmerged at `b0181ac51ae97cad383bb2d211acbb5cb27ffb3a`. No new source is promoted to the game by this documentation commit.
+
+### Continuous whole terrain26: actual native frame, rejected overall
+
+The authoring route now builds one indexed continuous river basin, both banks and approach instead of overlapping ground fans: 38,383 vertices / 75,920 triangles. The first authoring attempt collapsed near-identical float64 rows during float32 conversion and produced 2,600 degenerate triangles. Failed source/output remain preserved. The revised source validates the actual float32 vertices before writing. This is geometry integrity, not navigation or art acceptance.
+
+The first native attempt stopped after22.348s when available system RAM fell to1,956,233,216B below the unchanged2GiB floor. The process remained below its4GiB cap; no image was produced. After recovering byte-identical redundant archives, the same source completed78.181s/exit0 at22:20:38UTC, peak sampledRSS3,452,690,432B and minimum availableRAM2,325,041,152B. Native2560x1440/internal1, same15m/30deg/FOV56.682/25b controlbody148.3679px. The source-channel sample check was8/8; 145,485,656 submitted primitives include passes and are not FPS.
+
+Original PNG6,378,366B SHA256 `e1281108634b8afeeb356d648df64a0f2ff8fb81360a238ff78a1691958566d1` was saved and personally inspected through a same-pixel JPEG proxy. The entire image still FAILS: broad artificial lawn, isolated vivid crowns, coarse path, repetitive water and detached far forest; building/person quality also remains unaccepted. The complete129-file recovery archive is189,375,323B, SHA256 `fc3800535e540bf072fb3dcbb7db8cedcc1ce08306c56d4e2dfea948085d21bb`, with all localCRC/memberSHA verified and persistent save successful. No independent remote readback or cold replay is claimed.
+
+### Whole wearer31: editable source and three real images, severe failure retained
+
+The full original13,380-vertex/26,756-triangle body, UV and163-bone deform structure remain preserved. The new layer contains28 complete clothing/equipment parts; lower coverage is based on the actual trousers hem and footwear opening rather than a guessed knee height. One declared1254-square AI armour-panel source is visual pattern input, **not physical albedo or PBR**.
+
+Four failed authoring attempts remain: stale material datablock, inconsistent ray coordinate centres, an actual0.495mm shoe clearance smaller than0.65mm cloth, and post-save metadata serialization. The accepted source construction places the full wrap outside the boot instead of silently weakening thickness. A9.340s recovery verified all28 pieces' vertices/faces/every deform-weight column and restored original bone-group names. A9.626s static export stayed within the original1GiB guard. The original rig/actions remain in native29; this particular staticGLB has no skin/animations and must not be advertised as the complete animated production character.
+
+Editable layer23,798,677B SHA256 `314cb06b06129a042a7b162347c434d27b636eebe786e79a58d2e14f85be0af7`. Actual three-frame native2K batch21.958s/exit0, peakRSS952,156,160B; current normal-body projected extent155.34px. Full31directory95,658,694B stayed within the revised95MiB total allocation. Coordinator inspected the normal and front original images.
+
+**Whole31 ART_FAIL:** toes protrude through the old shoes; chest/shoulder/skirt layouts distort into radial/brick patterns, the silhouette is barrel-like, and the helmet still reads as a softcap. Existing20 collar intersections and pole/finger penetration are unresolved. Subsequent UV analysis measures front/back maximum area distortion224.8x/270.7x, not just an unattractive source texture.32 is rebuilding the actual foot-last/complete footwear fit, real per-garment unfolding and credible helmet together; it has no accepted native result yet.
+
+The complete31 companion retains89files/87,627,508B logical, archive82,921,031B SHA256 `5f45acd272f67b2e33235c38799a71f81b214447988a84d4435ac4f98163016d`. Persistent save and localCRC/memberSHA checks succeeded. Native29 and the separately pinned prior authoring layer remain protected, not implied to be inside this companion.
+
+### Complete gate03h/i: actual structural rebuild still looks simplified
+
+03h rebuilt the complete gatehouse and9.6x7m hipped roof with overlapping tile courses, timber gallery,5.6m tunnel, real4.8x3.6m passage and4.35m arch apex.49,568 triangles/3,382 closed solids; source-stream lossless compression was independently verified.61,920 sampled beam points show minimum0.0855m roof clearance;26,520 discrete door-pose checks at0.25deg intervals show no pier collision. These are discrete checks, not continuous collision or visual acceptance.
+
+03h native18.843s/exit0 exposed diagonal stone mapping and coincident ground/floor stripes.03i preserves every geometry position/normal while correcting actual face-local mapping and cutting only the separate trial ground around the intact tunnel floor.03i native18.034s/exit0, peakRSS1,103,077,376B, source/cache/evidence13,300,211B. Original image SHA256 `0bc097021d0fcd0cd70957e28dd375dbbed022dbf0fde64fca287f3c51c81770` was personally inspected. The diagonal/overlap errors are gone, but **the entire building still FAILS** for simplified upper storey, mechanical roof and monolithic arch. No03j cosmetic continuation is authorized by this result.
+
+Complete03h/i chain including earlier03g:280files/197,529,053B logical, archive166,508,485B SHA256 `49293f4edfb97de9b29877b12a5f8d9142a8612e335166f9a4d80206866b09ab`, localCRC/memberSHA verified and persistently saved. No independent remote archive readback is claimed.
+
+### Changed representation27: declared 2.5D experiment, not a finished game
+
+Rather than present further terrain recolouring as progress, a separate fixed-view2.5D representation experiment uses one coherent AI-generated environment input plus independent existing3D actors. Original image is1672x941,3,942,534B, SHA256 `882c8d56fa3f78ca0120b9e0d6410e64dab10d8b3a19e2e3b03eb83d4ab6cec6`. It is explicitly **GENERATED SOURCE, NOT GAME SCREENSHOT**. No external account/API/purchase was used. The owner's openness to non-all3D art permits evaluation, not formal acceptance of this representation or image.
+
+Actual27 native static capture:14.157s/exit0,2560x1440/internal1, eight separate unchanged25b actors and11 front-rail depth proxies. Original PNG7,413,923B SHA256 `0f33b714032f12514834b5202f45a3c78ce3b86333fb2d4b7ac6bb3d290ae215`. It is a real Godot renderer output **containing an explicitly declared generated environment**, not Battle gameplay or a reconstructed free-camera3D world. Floating/pasted figures, missing contact shadows and inadequate depth remained.
+
+Independent review established two actual design problems: fixedcanvas camera misregistration and ordinaryUV perspective error on sloping depth polygons.27A attempted real input/shadow composition but failed: recorded W/D remained down after its release test, the shader multipliedALBEDO twice and darkened the entire scene, and a rail strip visibly misregistered. Both original failed frames remain.
+
+27B changes to a frozen homogeneous capture projector, singleALBEDO light accumulation and properly flushed press/release frame synchronization. **Actual22:43:47–22:44:31UTC,43.387s/exit0**, peak sampledRSS1,772,244,992B, unchanged2GiB guard. Eight actual process frames moved the control actor2.77333355m; W=false/D=false after release and zero movement after one full released frame. Three original native2K frames were saved. This is an automated input fixture, not human playthrough or normal-speed footage.
+
+27B after-motion PNG SHA256 `772e9fffab63fc475b69aa3fb4041801e31879858039a05e38f5927bcb18b639`; actual0.5000003m side-camera PNG SHA256 `49774327dfc3c57d472ef5a46dbc9150cf3c5578cae9967745835a3eb5c2f730`. Coordinator personally inspected both at original pixel dimensions through JPEG proxies. The original-view UV strip/wholeimage darkening is corrected, but **the method still FAILS**: contact shadows have not passed an on/off proof, people look pasted, and camera movement exposes ghosted rail/door/wall discontinuities. A120m plane cannot supply real architecture/terrain/water depth. There is no actual traversable gate, coherent collision world or dynamically lit environment.
+
+Next bounded27C reconstructs a complete bridge-to-gate walk/depth surface and real openings from explicit image landmarks, rather than using SCREEN_UV to conceal parallax. Static source work only is in progress. One image cannot recover unseen sides or dynamic lighting; those remain explicit limits. Do not silently enable this experiment in Battle or substitute its images for the required full playable visual evidence.
+
+### Resource preservation, current next steps and unchanged acceptance gates
+
+499,640,841B of redundant RAM archive copies were reclaimed only after fullarchiveSHA/CRC, everymember byte equality to retainedoriginalfiles and successful pinned persistent saves were verified. Unique source files and images remain. This was not an independent remote-readback claim.
+
+157 groups of byte-identical generated import caches were safely consolidated, reclaiming716,758,244B logical duplicate bytes. Each oldpath remains readable through a link to a complete read-only canonical copy after fullSHA and byte comparison. Originals/unique content were not deleted. **Before a future Godot reimport of an affected old worktree, restore writable private cache copies using the recorded recovery helper.** Do not let an importer overwrite shared canonical files. Current development projects are separate. No memory/time floor was silently relaxed.
+
+Continue32 full character source,27C whole depth reconstruction and source/evidence preservation under the serial heavy-job lock.31 source cap1GiB, native characters2GiB, environment4GiB; availableRAM>=2GiB,180s and disk>=350MiB remain.32 total source/cache/evidence allocation100MiB. Earlier one-off4.5GiB permission is not reused.
+
+RC24/RC25, real/offscreen combat, nine weapons, oldsavecompatibility, defaults and PR67 merge hold remain unchanged. **No accepted new playable wholeframe,4K run, full-speed movement/attack/hit/riding/army film,20/100/250/512-per-side benchmark or actualM5 test exists for these new experiments. ART_FAIL / NOT_RUN, not release-ready.**
