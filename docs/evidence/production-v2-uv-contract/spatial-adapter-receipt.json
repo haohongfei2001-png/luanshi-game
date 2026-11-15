@@ -1,0 +1,128 @@
+{
+  "source_sha256": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "sampled_channel_coordinates": 1253,
+  "max_uv_error": 5.960464988241654e-08,
+  "max_baselevel_channel_error": 3.495834091454819e-06,
+  "actual_CUSTOM0_xy_vs_glTF_TEXCOORD2_max_error": 4.6629367034256575e-15,
+  "shader_frontend_uniforms": 22,
+  "real_unit_bindings": 11,
+  "scope": "Actual imported UV0/UV2/CUSTOM0 and bound material factors; independent CPU baselevel glTF sampling parity; GPU/backend/mips NOT_TESTED",
+  "actual_units": [
+    {
+      "hero": false,
+      "hp": 4.89917015433312,
+      "id": 1,
+      "kit": 3,
+      "state": 4
+    },
+    {
+      "hero": false,
+      "hp": 0.0,
+      "id": 2,
+      "kit": 3,
+      "state": 7
+    },
+    {
+      "hero": false,
+      "hp": 0.0,
+      "id": 4,
+      "kit": 3,
+      "state": 7
+    },
+    {
+      "hero": false,
+      "hp": 0.0,
+      "id": 5,
+      "kit": 3,
+      "state": 7
+    },
+    {
+      "hero": false,
+      "hp": 30.1170625805855,
+      "id": 7,
+      "kit": 3,
+      "state": 2
+    },
+    {
+      "hero": false,
+      "hp": 0.0,
+      "id": 21,
+      "kit": 3,
+      "state": 7
+    },
+    {
+      "hero": false,
+      "hp": 0.0,
+      "id": 22,
+      "kit": 3,
+      "state": 7
+    },
+    {
+      "hero": false,
+      "hp": 27.5684373142719,
+      "id": 24,
+      "kit": 3,
+      "state": 1
+    },
+    {
+      "hero": false,
+      "hp": 62.0,
+      "id": 25,
+      "kit": 3,
+      "state": 2
+    },
+    {
+      "hero": false,
+      "hp": 52.5763553691506,
+      "id": 27,
+      "kit": 3,
+      "state": 1
+    },
+    {
+      "hero": true,
+      "hp": 100.0,
+      "id": 42,
+      "kit": 3,
+      "state": 0
+    }
+  ],
+  "actual_battle_tick": 80,
+  "shared_shader_materials": 2,
+  "restored_original_surfaces": 198,
+  "shader_materials": [
+    {
+      "base_coord": null,
+      "base_factor_linear": [
+        0.389999985694885,
+        0.340000003576279,
+        0.25,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "name": "V3 thin wrapped linen with physical overlap / exact glTF UV WIP",
+      "normal_coord": 2,
+      "normal_scale": 1.0,
+      "orm_coord": null,
+      "roughness_factor": 0.959999978542328
+    },
+    {
+      "base_coord": 1,
+      "base_factor_linear": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic_factor": 1.0,
+      "name": "V2 continuous lamellar cuirass / exact glTF UV WIP",
+      "normal_coord": 1,
+      "normal_scale": 1.0,
+      "orm_coord": 1,
+      "roughness_factor": 1.0
+    }
+  ],
+  "sidecar_sha256": "6e499e13a720acdebfab6bad834d2a79d5971a3f51735f7d2cd7ccba292d83c7",
+  "GPU": "NOT_RUN",
+  "ART": "NOT_ACCEPTED",
+  "test_scope": "11 actual legacy Battle Units, complete imported source18; not a new HF08 GPU result"
+}
