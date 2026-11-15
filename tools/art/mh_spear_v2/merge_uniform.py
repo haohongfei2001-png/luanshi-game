@@ -12,8 +12,12 @@ with bpy.data.libraries.load(str(actions),link=False) as (data_from,data_to):
 for action in data_to.actions:action.use_fake_user=True
 for obj in data_to.objects:
  bpy.context.scene.collection.objects.link(obj);obj.parent=rig;obj.parent_type='BONE';obj.parent_bone='wrist.R';obj.matrix_parent_inverse=Matrix.Identity(4);obj.matrix_basis=Matrix(contract['weapon_parent_local'][obj.name]);obj.hide_render=False;obj.hide_set(False)
+ if obj.name=='Spear_Shaft' and not any(m.type=='TRIANGULATE' for m in obj.modifiers):obj.modifiers.new('TriangulateCapsForTangents','TRIANGULATE')
 for obj in list(bpy.data.objects):
- if obj not in existing and obj.type=='ARMATURE':bpy.data.objects.remove(obj,do_unlink=True)
+ if obj not in existing and obj.type=='ARMATURE':
+  assert set(obj.data.bones.keys())==set(rig.data.bones.keys()), 'Different source skeleton requires explicit retarget'
+  assert all(max(abs(x-y) for ra,rb in zip(obj.data.bones[n].matrix_local,rig.data.bones[n].matrix_local) for x,y in zip(ra,rb))<1e-6 for n in rig.data.bones.keys()), 'Rest skeleton mismatch'
+  bpy.data.objects.remove(obj,do_unlink=True)
 for image in bpy.data.images:
  if image.filepath:image.filepath=bpy.path.abspath(image.filepath)
 bpy.context.scene.render.fps=int(contract['fps']);bpy.context.scene.render.fps_base=1.0

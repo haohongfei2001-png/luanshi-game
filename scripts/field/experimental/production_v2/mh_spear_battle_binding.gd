@@ -11,6 +11,17 @@ var movement_phase:=0.0
 var idle_seconds:=0.0
 var death_presentation_seconds:=0.0
 var last_receipt:Dictionary={}
+var phase_clip:=""
+var phase_from:=0.0
+var phase_to:=0.0
+func present(actor:Node3D,delta:float,alpha:float)->Dictionary:
+ var looped:=phase_clip in ["idle","walk","jog","sprint"]
+ var end:=phase_to+1.0 if looped and phase_to<phase_from else phase_to
+ var phase:=lerpf(phase_from,end,clampf(alpha,0.,1.))
+ if looped:phase=fposmod(phase,1.0)
+ var receipt:Dictionary=actor.sample(phase_clip,phase,delta)
+ receipt["authoritative_phase_target"]=phase_to;receipt["pose_interpolation_alpha"]=alpha
+ return receipt
 # Exact imported GLB blade timing, not Guardian or a hardcoded author frame.
 var thrust_peak:=-1.0
 # Initial source-locomotion estimates; not a foot-slip/stride quality acceptance.
@@ -31,7 +42,9 @@ func update(battle,actor:Node3D,presentation_delta:float=0.0,interpolation_alpha
  actor.rotation.y=atan2(unit.facing.x,unit.facing.y)-author_aim_yaw
  var dead:bool=unit.hp<=0 or unit.state==Battle.State.DEAD
  if dead:death_presentation_seconds+=maxf(presentation_delta,0.)
- if battle.tick==last_tick and not dead:return last_receipt
+ if battle.tick==last_tick and not dead:
+  if last_receipt.get("supported",false):last_receipt.merge(present(actor,maxf(presentation_delta,0.),interpolation_alpha),true)
+  return last_receipt
  if unit.kit!=Battle.Arms.Kit.SPEAR or unit.mounted or battle.vehicle!=0:
   last_receipt={"supported":false,"reason":"nonfoot_spear_outside_scope"};return last_receipt
  var steps:=maxi(1,battle.tick-last_tick) if last_tick>=0 else 1
@@ -62,7 +75,10 @@ func update(battle,actor:Node3D,presentation_delta:float=0.0,interpolation_alpha
  else:
   supported=false;reason="state_without_complete_new_clip"
  # Transform writes are presentation only, never Unit coordinates.
- if supported:last_receipt=actor.sample(semantic,phase,presentation_delta if presentation_delta>0. else delta)
+ if supported:
+  phase_from=phase_to if phase_clip==semantic and not dead else phase
+  phase_to=phase;phase_clip=semantic
+  last_receipt=present(actor,presentation_delta if presentation_delta>0. else delta,1.0 if dead else interpolation_alpha)
  else:last_receipt={"supported":false,"reason":reason,"representation":"new_actor_pose_held_UNSUPPORTED_not_faked_action"}
  last_receipt.merge({"tick":battle.tick,"state":unit.state,"unit_id":unit.id,"reason":reason,"actual_impacts":unit.impacts,"actual_hp":unit.hp,"stride_calibrated":false},true)
  last_tick=battle.tick;previous_state=unit.state;previous_pos=unit.pos
