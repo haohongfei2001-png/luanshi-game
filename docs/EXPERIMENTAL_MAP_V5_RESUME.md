@@ -6,7 +6,9 @@ GPU capture or CI trigger is part of this change. This source-only branch does
 not contain world data, PCKs, typed saves, trajectories or private test reports.
 Reproduction requires the user's separately available, locally authorized HF08
 input and a compatible locally available Godot executable. Default gameplay and
-Controller/UI save paths remain disabled for this experiment.
+Controller/UI save paths remain disabled. A separate
+explicit authored-Controller opt-in is documented in
+[the Controller lifecycle check](EXPERIMENTAL_MAP_V5_CONTROLLER.md).
 
 ## Entry and boundaries
 
@@ -28,10 +30,10 @@ navigation and the declared open gate. Navigation agent radius/height must match
 A visual/material/source revision alone does not invalidate the topology identity.
 
 Normal `Save.restore` still accepts only versions 1–4, and `Save.save` still refuses
-mapped Battles. The authored Controller and production/native review entry are
-unchanged: their old save/load buttons remain unavailable. This API does not
-silently enable those UI paths, adopt a scene, change the default map, or call
-`Campaign.bind`. Native Controller/UI resumption is a separate NOT_RUN integration.
+mapped Battles. This API does not silently enable UI paths, adopt a scene,
+change the default map, or call `Campaign.bind`. The later, separate
+[Controller opt-in](EXPERIMENTAL_MAP_V5_CONTROLLER.md) has bounded CPU lifecycle
+coverage; exported native/UI screen acceptance remains NOT_RUN.
 
 ## Exact format, not a v5-to-v4 conversion
 
@@ -146,8 +148,10 @@ cache and printed misleading PASS after script errors. A local headless class
 scan fixed the test environment, then all affected regressions were rerun with
 error scanning. No shared asset/import cache was rebuilt or deleted.
 
-No native GPU, release-template test, M5 frame rate, UI adoption, visual acceptance,
-world settlement or filesystem power-loss simulation was performed. The separate
+These backend-only tests did not perform native GPU, release-template, M5 frame
+rate, Controller adoption, visual acceptance, world settlement or filesystem
+power-loss simulation. See the later Controller check for its bounded CPU scope.
+The separate
 debug-template PCK checks are documented in `EXPERIMENTAL_MAP_V5_PACKED_CHECK.md`;
 they do not establish any of those untested outcomes.
 

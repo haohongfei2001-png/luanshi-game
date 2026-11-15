@@ -1,7 +1,17 @@
 extends "res://scripts/field/controller.gd"
 ## Explicit internal complete-mother entry. No menu/default route creates this.
 ## Real base Controller input + physics; no independent simulation or HP writes.
+const ExperimentalStore:=preload("res://scripts/field/experimental_map_save.gd")
+const MappedState:=preload("res://scripts/field/maps/mapped_save_state.gd")
+const SpearBinding:=preload("res://scripts/field/experimental/production_v2/mh_spear_battle_binding.gd")
+const SkeletalActor:=preload("res://scripts/field/experimental/production_v2/shared_skeletal_actor.gd")
 const AuthoredHost:=preload("res://scripts/field/maps/authored_scene_host.gd")
+# A second, explicit opt-in after configure(), before entering the tree.
+var experimental_saves_enabled:=false
+var experimental_save_slot:=""
+var experimental_save_notice:=""
+var _experimental_store:=ExperimentalStore.new()
+var _save_runtime:ExperimentalStore.Runtime
 var authored_bounds:Rect2
 var skeletal_actor:Node3D
 var skeletal_binding:RefCounted
@@ -29,10 +39,82 @@ func configure(fresh:Battle,host:AuthoredHost,actor:Node3D,binding:RefCounted,bo
   for point in [triangle.a,triangle.b,triangle.c]:
    source_height_range.x=minf(source_height_range.x,point.y-.05);source_height_range.y=maxf(source_height_range.y,point.y+.05)
  configured=true;return OK
+func configure_experimental_saves(slot:String="controller_resume")->Error:
+ if not configured or is_inside_tree() or experimental_saves_enabled:return ERR_ALREADY_IN_USE
+ if _experimental_store.slot_path(slot).is_empty():return ERR_INVALID_PARAMETER
+ if not MappedState.supports_runtime(battle.map_runtime):return ERR_UNAVAILABLE
+ if not skeletal_binding is SpearBinding or not skeletal_actor is SkeletalActor:return ERR_UNAVAILABLE
+ for item in ordinary_actor_bindings:
+  if not item.binding is SpearBinding or not item.actor is SkeletalActor:return ERR_UNAVAILABLE
+ _save_runtime=battle.map_runtime;experimental_save_slot=slot
+ _experimental_store=ExperimentalStore.new(true);experimental_saves_enabled=true
+ return OK
+func _save_context_valid()->bool:
+ if not experimental_saves_enabled or not configured or not is_node_ready() or battle==null:return false
+ if battle.map_runtime!=_save_runtime or not MappedState.supports_runtime(_save_runtime):return false
+ var identity:=_save_runtime.identity()
+ for key in ["map_id","topology_revision","topology_sha256"]:
+  if identity.get(key)!=map.expected_identity.get(key):return false
+ return true
+func save_experimental()->Error:
+ if not _save_context_valid() or not _presentation_resumable(battle):return ERR_UNAVAILABLE
+ return _experimental_store.save(battle,experimental_save_slot)
+func load_experimental()->Error:
+ if not _save_context_valid():return ERR_UNAVAILABLE
+ var restored:=_experimental_store.load_slot(_save_runtime,experimental_save_slot)
+ if restored==null:return ERR_FILE_CORRUPT
+ if not _adopt_experimental(restored):return ERR_UNAVAILABLE
+ return OK
+func _presentation_resumable(restored:Battle)->bool:
+ # All actors must be sampleable before any live scene, input or binding writes.
+ if not _save_context_valid() or restored==null or restored.map_runtime!=_save_runtime:return false
+ # Fixed actor IDs were selected from this roster; do not remap them to a
+ # different-size army where the same index could name the opposing side.
+ if restored.ordinary_counts!=battle.ordinary_counts:return false
+ if restored.hero.kit!=Battle.Arms.Kit.SPEAR or restored.hero.mounted or restored.vehicle!=0:return false
+ if not skeletal_binding is SpearBinding or not skeletal_actor is SkeletalActor:return false
+ if not skeletal_binding.can_resume(restored,restored.hero,skeletal_actor):return false
+ for item in ordinary_actor_bindings:
+  if not item.binding is SpearBinding or not item.actor is SkeletalActor:return false
+  if item.unit_id<0 or item.unit_id>=restored.roster.size():return false
+  var unit=restored.roster[item.unit_id]
+  if unit.hero or unit.officer or unit.mounted or unit.kit!=Battle.Arms.Kit.SPEAR or unit.team!=battle.roster[item.unit_id].team:return false
+  if not item.binding.can_resume(restored,unit,item.actor):return false
+ return true
+func _adopt_experimental(restored:Battle)->bool:
+ # No base _adopt: Campaign.bind would reset world/army state. No new muster.
+ if not _presentation_resumable(restored):return false
+ var replacement:=Figures.new()
+ # configure() is not repeatable: it creates MultiMeshes. Replace, never append.
+ replacement.configure(restored)
+ replacement.contact_for_all=view.contact_for_all
+ remove_child(view);view.free();view=replacement;add_child(view)
+ battle=restored;selections=battle.side_size;opposing_selection=battle.ordinary_counts[1]
+ skeletal_binding.reset_for_resume(battle,battle.hero)
+ skeletal_actor.player.stop();skeletal_actor.skeleton.reset_bone_poses();skeletal_actor.show()
+ view.review_hidden_actor_id=battle.hero.id
+ actor_receipt.clear();ordinary_actor_receipts.clear()
+ for item in ordinary_actor_bindings:
+  item.binding.reset_for_resume(battle,battle.roster[item.unit_id]);item.actor.player.stop();item.actor.skeleton.reset_bone_poses()
+  item.active=true;item.actor.show();view.review_hidden_actor_ids[item.unit_id]=true
+ # UI/device state is not simulation state. Keep serialized hero_move, aim,
+ # sprinting and buffered actions EXACT until the next normal input sample.
+ for action in ["move_left","move_right","move_up","move_down","attack","sweep","lunge","guard","field_sprint"]:
+  Input.action_release(action)
+ pan=false;orbiting=false;follow=true;paused=true
+ carry=0.;ui_clock=0.;presentation_delta=0.;step_distance=0.
+ sim_us=0;view_us=0;max_step_us=0
+ last_hero_hit=-100;last_sound_tick=battle.tick;last_shot_tick=battle.tick
+ camera_center=battle.hero.pos
+ for voice in audio.voices:voice.stop()
+ audio.next=0
+ hud.bind(battle);hud.order_panel.visible=not battle.started
+ _refresh_hud();_camera();_draw_field()
+ return true
 func configure_ordinary_spearmen(instances:Array)->Error:
  # Default empty. This is a small real-unit art probe, not a thousand-skeleton
  # replacement. Never turn archers/officers/riders into generic spearmen.
- if not configured or is_inside_tree() or not ordinary_actor_bindings.is_empty():return ERR_ALREADY_IN_USE
+ if not configured or is_inside_tree() or experimental_saves_enabled or not ordinary_actor_bindings.is_empty():return ERR_ALREADY_IN_USE
  if instances.size()>2*MAX_NEW_ORDINARY_PER_TEAM:return ERR_PARAMETER_RANGE_ERROR
  var ids:Dictionary={};var actors:Dictionary={};var bindings:Dictionary={};var counts:=[0,0]
  for spec in instances:
@@ -66,10 +148,24 @@ func _ready()->void:
  hud.bind(battle);hud.deploy.connect(deploy);hud.pause.connect(toggle_pause);hud.order_requested.connect(_order)
  hud.unit.item_selected.connect(func(i:int):hud.select_company(battle,i))
  for control in [hud.inset,hud.plan,hud.weapon,hud.slot,hud.shape,hud.front,hud.save_button,hud.load_button,hud.continue_slot,hud.change,hud.legacy]:control.hide()
+ if experimental_saves_enabled:
+  hud.save_requested.connect(_save);hud.load_requested.connect(_load)
+  hud.save_button.text="实验保存 F5";hud.load_button.text="实验读档 F9"
+  hud.save_button.show();hud.load_button.show()
  hud.order_panel.hide();_refresh_hud();_camera();_draw_field()
 func _adopt(_fresh:Battle)->bool:return false # Never load a legacy battle into this mother scene.
-func _save()->void:battle.notice="内部新地图暂不写入旧存档";_refresh_hud()
-func _load()->void:battle.notice="内部新地图禁止载入旧地图存档";_refresh_hud()
+func _save()->void:
+ if not experimental_saves_enabled:
+  experimental_save_notice="内部新地图暂不写入旧存档";_refresh_hud();return
+ var error:=save_experimental()
+ experimental_save_notice="实验进度已保存" if error==OK else "实验保存失败，原存档保留"
+ _refresh_hud()
+func _load()->void:
+ if not experimental_saves_enabled:
+  experimental_save_notice="内部新地图禁止载入旧地图存档";_refresh_hud();return
+ var error:=load_experimental()
+ experimental_save_notice="实验进度已恢复，已暂停" if error==OK else "实验读档被拒，当前战场保留"
+ _refresh_hud()
 func deploy()->void:
  if not battle.started:battle.start();paused=false;hud.order_panel.hide()
 func _synchronize_world_after_step()->bool:
@@ -129,9 +225,9 @@ func _draw_field()->void:
  var footprint:=ReviewFrustum.bounds(camera,source_height_range.x,source_height_range.y,8.)
  var center:Vector2=footprint.center if footprint.valid else authored_bounds.get_center()
  var half:Vector2=footprint.half_extent if footprint.valid else authored_bounds.size*.5
- view.sync_view(camera_center,half,clampf(carry/Battle.DT,0.,1.),camera.size,center)
  # Once simulation stops, present its final authoritative transform, not a stale before point.
  var alpha:=1.0 if paused or not battle.result.is_empty() else clampf(carry/Battle.DT,0.,1.)
+ view.sync_view(camera_center,half,alpha,camera.size,center)
  actor_receipt=skeletal_binding.update(battle,skeletal_actor,presentation_delta,alpha)
  for item in ordinary_actor_bindings:
   if item.active:ordinary_actor_receipts[item.unit_id]=item.binding.update_unit(battle,battle.roster[item.unit_id],item.actor,presentation_delta,alpha)
@@ -143,3 +239,8 @@ func _refresh_hud()->void:
  if not configured:return
  hud.update_model(battle,paused);hud.inset.hide()
  hud.feedback.text=internal_label+" | 新英雄 WIP / 新普通枪兵 %d / 其余旧群体诊断 / 无世界结算" % view.review_hidden_actor_ids.size()
+ if not experimental_save_notice.is_empty():
+  hud.feedback.text+=" | "+experimental_save_notice
+  # HUD's ordinary notice lifetime belongs to Battle.notice. This independent
+  # experiment status remains visible until the next save/load attempt.
+  hud.feedback.show()

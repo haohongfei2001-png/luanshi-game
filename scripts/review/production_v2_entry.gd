@@ -34,6 +34,13 @@ func checked_resource(path:Variant,original_sha:Variant,identities:Dictionary)->
 func start()->void:
  if OS.get_environment("LUANSHI_PRODUCTION_V2")!="1":fail("explicit opt-in required");return
  var args:=OS.get_cmdline_user_args()
+ var experimental_slot:=""
+ for arg in args.duplicate():
+  if arg.begins_with("--experimental-save-slot="):
+   if not experimental_slot.is_empty():fail("duplicate experimental slot");return
+   experimental_slot=arg.trim_prefix("--experimental-save-slot=")
+   if experimental_slot.is_empty():fail("empty experimental slot");return
+   args.remove_at(args.find(arg))
  var validate_only:=args.has("--validate-setup")
  if validate_only:args.remove_at(args.find("--validate-setup"))
  if args.size()!=1 or not checked_path(args[0]):fail("one existing res:// manifest required");return
@@ -103,10 +110,12 @@ func start()->void:
   extra_binding.ground_point=Callable(runtime,"unit_point");extra_binding.enabled=true
   ordinary_instances.append({"unit_id":id,"actor":extra_actor,"binding":extra_binding})
  if field.configure_ordinary_spearmen(ordinary_instances)!=OK:fail("actual ordinary unit binding rejected");return
+ if not experimental_slot.is_empty() and field.configure_experimental_saves(experimental_slot)!=OK:fail("experimental save lifecycle rejected");return
  root.add_child(field)
  if field.view.review_hidden_actor_ids.size()!=ordinary_ids.size():fail("ordinary source bindings were not all supported initially");return
  if not validate_only:field.deploy()
- entry_receipt={"kind":"PRODUCTION_V2_ENTRY_READY_NOT_ART_ACCEPTANCE","manifest_sha256":FileAccess.get_sha256(args[0]),"map_identity":identity.identity(),"visual_revision":manifest.visual_revision,"scene_sha256":hashes[manifest.scene.path],"navigation_sha256":hashes[manifest.navigation.path],"actor_sha256":actor_spec.sha256,"muster":muster,"camera":{"pitch_degrees":45.,"fov":50.,"nominal_body_fraction":.125},"ordinary_new_spear_ids":ordinary_ids,"scope":"WIP_NEW_HERO_AND_EXPLICIT_LIMITED_ACTUAL_SPEARMEN; REMAINDER_OLD_CROWD_DIAGNOSTIC; NO_SIEGE_CAMPAIGN_OR_NEW_SAVE_SUPPORT"}
+ entry_receipt={"kind":"PRODUCTION_V2_ENTRY_READY_NOT_ART_ACCEPTANCE","manifest_sha256":FileAccess.get_sha256(args[0]),"map_identity":identity.identity(),"visual_revision":manifest.visual_revision,"scene_sha256":hashes[manifest.scene.path],"navigation_sha256":hashes[manifest.navigation.path],"actor_sha256":actor_spec.sha256,"muster":muster,"camera":{"pitch_degrees":45.,"fov":50.,"nominal_body_fraction":.125},"ordinary_new_spear_ids":ordinary_ids,"scope":"WIP_NEW_HERO_AND_EXPLICIT_LIMITED_ACTUAL_SPEARMEN; REMAINDER_OLD_CROWD_DIAGNOSTIC; NO_SIEGE_CAMPAIGN; V5_SAVE_ONLY_WITH_EXPLICIT_SLOT"}
+ entry_receipt["experimental_save_slot"]=experimental_slot
  entry_receipt["validate_only"]=validate_only
  entry_receipt["runtime_packed_observations"]=packed_observations
  entry_receipt["actual_resource_closure"]=closure

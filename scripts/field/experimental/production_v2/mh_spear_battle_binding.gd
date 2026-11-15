@@ -25,6 +25,41 @@ var last_receipt:Dictionary={}
 var phase_clip:=""
 var phase_from:=0.0
 var phase_to:=0.0
+var resume_sample:=false
+func reset_for_resume(battle,unit)->void:
+ # A restored timeline must not reuse a later tick, death timer or walk phase.
+ # Source timing/stride configuration remains unchanged; no Battle writes.
+ ground_point=Callable(battle.map_runtime,"unit_point");bound_unit_id=-1;bound_actor_id=0;last_tick=-1
+ previous_state=-1;state_started_tick=0;previous_pos=Vector2.ZERO
+ movement_phase=0.;idle_seconds=0.;death_presentation_seconds=0.
+ last_receipt={};phase_clip="";phase_from=0.;phase_to=0.
+ # Reconstruct presentation from saved authoritative time/stride, not the
+ # discarded live timeline. In particular an old corpse never stands up again.
+ last_tick=battle.tick-1;previous_pos=unit.before;previous_state=unit.state
+ state_started_tick=battle.tick-maxi(0,roundi((unit.duration-unit.timer)/Battle.DT))
+ movement_phase=fposmod(unit.stride,1.0)
+ if unit.lost_tick>=0:death_presentation_seconds=maxf(0.,(battle.tick-unit.lost_tick)*Battle.DT)
+ resume_sample=true
+class ResumeProbe extends Node3D:
+ # Read-only access to the configured actor's real clip table. Never call its
+ # sample()/AnimationPlayer, so a rejected restore cannot touch live bones.
+ var source:Node3D
+ func clip_seconds(semantic:String)->float:return source.clip_seconds(semantic)
+ func sample(semantic:String,phase:float,_delta:float)->Dictionary:
+  var player=source.get("player");var clips=source.get("clip_names")
+  var valid:bool=player!=null and clips is Dictionary and clips.has(semantic) and player.has_animation(clips[semantic])
+  return {"supported":valid and is_finite(phase) and clip_seconds(semantic)>0.}
+func can_resume(battle,unit,actor:Node3D)->bool:
+ if actor==null or not actor.has_method("clip_seconds") or actor.get("player")==null:return false
+ # Execute the very same selection/phase logic against disposable state and
+ # a non-rendering probe. No duplicated whitelist can drift from update_unit.
+ var copy=get_script().new()
+ copy.enabled=enabled;copy.thrust_peak=thrust_peak;copy.author_aim_yaw=author_aim_yaw
+ copy.stride_m=stride_m.duplicate();copy.reset_for_resume(battle,unit)
+ var probe:=ResumeProbe.new();probe.source=actor
+ var receipt:Dictionary=copy.update_unit(battle,unit,probe,0.,1.)
+ probe.free()
+ return receipt.get("supported",false)
 func present(actor:Node3D,delta:float,alpha:float)->Dictionary:
  var looped:=phase_clip in ["idle","walk","jog","sprint"]
  var end:=phase_to+1.0 if looped and phase_to<phase_from else phase_to
@@ -82,7 +117,7 @@ func update_unit(battle,unit,actor:Node3D,presentation_delta:float=0.0,interpola
    if (unit.pos-previous_pos).normalized().dot(unit.facing.normalized())<.8:
     supported=false;reason="directional_strafe_or_backward_clip_missing"
    else:
-    semantic="sprint" if unit.visual_run else "walk"
+    semantic="sprint" if (moved/delta>3.55 if resume_sample else unit.visual_run) else "walk"
     movement_phase=fposmod(movement_phase+moved/float(stride_m[semantic]),1.);phase=movement_phase;reason="actual_forward_motion_stride_uncalibrated"
   else:
    idle_seconds+=delta;phase=fposmod(idle_seconds/maxf(.001,actor.clip_seconds("idle")),1.)
@@ -95,5 +130,6 @@ func update_unit(battle,unit,actor:Node3D,presentation_delta:float=0.0,interpola
   last_receipt=present(actor,presentation_delta if presentation_delta>0. else delta,1.0 if dead else interpolation_alpha)
  else:last_receipt={"supported":false,"reason":reason,"representation":"new_actor_pose_held_UNSUPPORTED_not_faked_action"}
  last_receipt.merge({"tick":battle.tick,"state":unit.state,"unit_id":unit.id,"unit_team":unit.team,"unit_kit":unit.kit,"unit_is_hero":unit.hero,"reason":reason,"actual_impacts":unit.impacts,"actual_hp":unit.hp,"stride_calibrated":false},true)
+ resume_sample=false
  last_tick=battle.tick;previous_state=unit.state;previous_pos=unit.pos
  return last_receipt
