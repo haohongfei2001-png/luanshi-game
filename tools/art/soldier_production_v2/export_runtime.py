@@ -7,6 +7,11 @@ bpy.ops.wm.open_mainfile(filepath=str(src),use_scripts=False,load_ui=False);rig=
 bpy.context.scene.render.fps=120;bpy.context.scene.render.fps_base=1
 rig.animation_data_create();rig.animation_data.action=bpy.data.actions.get('Idle_Loop');bpy.context.scene.frame_set(1)
 assert all(n in bpy.data.actions for n in ['Idle_Loop','Walk_Loop','Hit_Chest','Death01']), 'Missing actual full-body actions'
+# glTF builds its scene tree before selection filtering. Normalize even hidden
+# high-source skin parents in this export-only memory copy, preserving world pose.
+for obj in bpy.context.scene.objects:
+ if obj.type=='MESH' and any(m.type=='ARMATURE' and m.object==rig for m in obj.modifiers):
+  world=obj.matrix_world.copy();obj.parent=rig;obj.matrix_world=world
 render=[o for o in bpy.context.scene.objects if o.type=='MESH' and not o.hide_render]
 # Source boundary: do not accidentally export the hidden robe or high source.
 assert all(o.name not in ('Cross-front robe','V2_complete_coat_fit','Body_AuthorGarmentOcclusion') for o in render)

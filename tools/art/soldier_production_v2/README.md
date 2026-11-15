@@ -22,7 +22,7 @@ spear derivative. Target format is shared skinned GLB with complete UV/material
 maps and OpenGL +Y tangent normals, not per-pose geometry JSON.
 
 Licenses remain those of sources: Sintel professional coat CC BY 3.0 (see
-`../sintel_guard/NOTICE.md`), MakeHuman official core CC0, source garments per
+`NOTICE.md`), MakeHuman official core CC0, source garments per
 existing source notices. AI approved reference is project-authorized AI work,
 not an external CC0 asset. Never publish the rejected conflicting Viking sources.
 
