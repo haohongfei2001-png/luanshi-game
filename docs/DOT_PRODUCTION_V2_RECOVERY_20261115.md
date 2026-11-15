@@ -2,6 +2,8 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
+**Read section 8 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
 > For the newer source refs and actual new-map Battle results, read section 7 first. Earlier checkpoint findings remain preserved.
@@ -14,7 +16,7 @@ The first production-v2 whole-scene authoring previews were also self-rejected. 
 
 The active reconstruction now requires:
 - One coherent **editable mother scene**, with the full terrain, banks, bridge, fortress, background and ecology authored together. Derive visible geometry, walkable surfaces, actual obstacles, portals, deployment areas and semantic objectives from that same source. Do not force a mature scene back into the old global `Ground` coordinate boxes.
-- Use the mature source ground's usable full form and original Dirt/Moss material system as a real production base, with documented stylistic adaptation and baking, not a token color overlay. Original film assets and licensing are an input, never a quality certificate.
+- Use genuinely mature ground/rock/vegetation forms and coherent full material systems as production inputs, with documented adaptation and baking, not a token color overlay. Build one authored battlefield from the approved visual reference; a ready-made film/demo set is not required. Do not remain loyal to an unsuitable source's style or compose unrelated parts randomly. Original assets and licensing are inputs, never a quality certificate.
 - Rebuild the fortress as a coherent structure with legible stone/earth, timber and tile hierarchy and clean normal-camera lighting. A bridge/door clearance test does not accept its appearance.
 - Build one complete natural adult infantry model from a full body, full garment topology and full rig. Adapt the whole military silhouette and coherent armor/cloth/leather materials; do not return to floating plate piles, barrel skirts or a professional head attached to an unrelated body.
 - Establish readable idle, walking, held spear, attack, hit and death in that same real battle, then propagate to troop types and scale. An isolated static sprite or Blender beauty render cannot fulfill this.
@@ -160,3 +162,46 @@ Top-eight-weight export is an explicitly lossy derived representation, not prese
 Published character refs currently preserve production code/provenance. Locally generated final blend/PNG/GLB assets must still be published or given a complete reproducible acquisition path before claiming a self-contained remote visual deliverable.
 
 **Still missing: final coherent mother-scene art, complete player-controlled same-scene new character capture, native 2K/4K footage, actual new-scene GPU/performance evidence, finished siege/world integration, new macOS candidate and owner art approval. M5 remains DEVICE_NOT_RUN.**
+
+
+## 8. Verified continuation — 2026-11-15, 01:21 UTC
+
+### Published functional source and real limitations
+
+- `dot/production-v2-map-runtime@087fc86dd81d90f2015a02f9f0c8d25a2af5bb09`: complete-mother host, explicit Controller/Skeleton entry, actual input, bridge-edge path correction and packed-resource closure.
+- Latest on that branch: `9d86c168d64f700f731aa663636552aed0140abf`, adding bounded exact-coordinate/surface-ID support caching and genuine CPU profiling. The full default `tools/test.sh` on this published source completed with exit 0; log SHA-256 `cd356605bd9bf98dbc6cc456bcea4feb07048d0264cfda656605cdcffe20e55d`.
+- Actor interface/input diagnostics: `dot/mh-spear-production-v2@d4dc3c60ac577272a8a69e68bf24d8b692a55aab`.
+- Clothing production source and unchanged-threshold deformation checks: `dot/soldier-production-v2@b7cc1ae451cad00d5a517f5bbc38607b15472aa4`.
+
+The first actual Controller run in the functional source004 fixture produced one hero hit followed by natural death. A second run stopped at tick23 with `no_legal_new_map_route` and no hit. This failure is retained, not hidden behind the first success. The cause was the earlier anti-oscillation fallback: at a legal bank position the only reachable first graph node was 0.713m away, but fallback wrongly required more than0.9m. Safe forward nodes remain the first choice; only when none are reachable does the corrected route rejoin its reachable first node. No collision radius, HP, enemy location or real damage was changed.
+
+After correction, the same actual Controller/complete Skeleton path produced two real hero hits, four received hits and natural HP0 at tick280. The recorded death clip reached2.4seconds/phase1 and inputs were released. This is CPU/headless interface evidence, not a GPU action showcase, survival pass or art acceptance. See `docs/PRODUCTION_V2_CONTROLLER_RECOVERY.md`.
+
+The current scene entry still presents only the hero with the new full Skeleton; ordinary troops remain explicitly labeled old visual diagnostics. A small cohort of **actual ordinary foot spearmen**, with separate real Unit state and shared mesh/material resources, is the next integration step. Do not substitute the spear appearance for other weapon classes or call this a rebuilt army.
+
+### The new-map CPU problem is real and remains unresolved
+
+Actual profiling isolated roughly5.5seconds of graph setup from172seconds of400 instrumented simulation steps. Inclusive nested hot spots were about139.6seconds in waypoint queries and104.2seconds across8.89million support queries; they must not be added together. AStar itself was only about4.96seconds.
+
+After the separate route-correctness change, cache OFF and both bounded-cache variants produced the same complete Save SHA-256:
+`838b746066cd11cd8f59828d2f30de381d1e796ec5a25af638cc95beeac7a5ec`.
+
+The observed400-step CPU wall times were157.08seconds without cache and148.68seconds with exact coordinate plus per-map surface-ID caching, with a32768-entry total limit. Godot's reported static peak increased from210.44MB to234.62MB; this is not process RSS. The roughly5.3% difference is a limited observation in a shared, instrumented CPU environment, not a stable hardware benchmark or FPS. **The new prototype is still far from the real-time target.** Additional exact query optimization is under independent experiment; do not attribute it to this published source. See `docs/PRODUCTION_V2_QUERY_PROFILE.md`.
+
+### Source completeness and character failures are preserved
+
+The full generated armor material PNG is now actually recoverable from `assets/owner_generated/lamellar-material-v2/`, introduced in76ae431. Remote source parts were fetched, rebuilt and compared byte-for-byte:2,873,363bytes, SHA-256 `f345b00aa714d05a81d2c1fc743da0b1f72eac35f42b3a046689882b875242a1`. Its provenance remains generated project material, not an invented CC0 license.
+
+Clothing15 was stopped before GPU/export after genuine Jog/Death needle deformation. A live shoulder Bevel was one cause; original pants and derived soft-cloth weight discontinuities were additional causes. These were repaired rather than hidden by disabling motion or deleting body parts. Source18 passed the same14-action/129-real-POSE deformation gate without widening thresholds, and complete dynamic images were inspected. It remains **ART_FAIL** for shape/material/coverage quality. Its full blend and later runtime export are still local work, not implied to be a complete published character asset by the code commit. A subsequent all-integer-frame check covered2,166POSE samples across the same14clips with zero failures; this is not cloth-collision or interpolated-frame acceptance. The cloth-only thrust picture has no weapon and cannot prove two-handed grip; the combined spear/rig's actual imported timing and poses must be checked. Its current export is also correcting missing tangents on derived n-gon surfaces and a duplicated action, so it is not yet claimed game-import clean.
+
+An independent actual-character PCK test demonstrated that the current imported actor has eight external texture dependencies, not just one PackedScene. An empty-working-directory pack with the actual imported scene, eight textures, their import remaps and UID table loaded163bones/14clips without rawGLB/PNG source fallback. Intentionally omitting one texture was rejected. This is a resource-closure check, not a new whole-game candidate. Native imports must generate their own packed-resource hashes.
+
+### Stop the unsuitable ready-made-scene loop
+
+The complete Red Autumn Forest source was genuinely rendered with original EEVEE/camera/materials on hosted Metal in [run43661267243](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43661267243), source `592eedc1b8a05abd97ed5d5bc0cadc7ea8cd379c`. The850×312 original-source PNG is in [artifact14140152238](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43661267243/artifacts/14140152238). It is a Blender source review, **not Godot gameplay**. Its paper-like vegetation and strongly illustrative fantasy style were rejected as a direct battlefield mother. The preserved review is on `dot/red-autumn-source-review`; no second visual run is implied.
+
+The production route is now a new unified, editable **stone-gate river battlefield**, governed by the owner's whole-image target: near-bank military road, wooden bridge,3–6m real stone landing, thick gate passage, coherent rock banks and forest edges. Rear courtyard/retreat space must exist for real armies but need not all fit in the normal camera. Do not shrink people to show an entire ring fortress. Existing mature redistributable inputs may be adapted into this coherent new scene; do not require or blindly reuse a complete film world. New full-scene authoring02/03 previews were also rejected, and are not Godot screenshots or accepted production-v2 candidates.
+
+The45-degree/50-FOV/pixel-fraction camera is a development candidate, not an owner-approved constant. Preserve the requested roughly22-metre fixed-condition comparison; record any new camera experiment separately, at true native pixels. Next visual judgment must include actual ordinary troops and original-speed actions in the complete Godot scene.
+
+**No new whole-scene Godot GPU result, new macOS candidate, final mother topology2, M5 device pass or owner art approval exists at this checkpoint. Main and PR67 are unchanged.**
