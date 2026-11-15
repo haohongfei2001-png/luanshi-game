@@ -1,0 +1,9 @@
+{
+  "status": "NOT_READY_TRANSPORT_PENDING_DO_NOT_RUN",
+  "mother_run_id": 0,
+  "mother_artifact_id": 0,
+  "mother_artifact_name": "production-v2-valley-hf08-runtime-input",
+  "mother_zip_sha256": "f5ac12b501293da966a12072509550d91ac60fd5fafc283f8b55aa8475cb91f4",
+  "actor_source_ref": "16b1430166ab9d099452f7247ff0d3aa38990fbd",
+  "actor_license_original_bytes": "VERIFIED"
+}
