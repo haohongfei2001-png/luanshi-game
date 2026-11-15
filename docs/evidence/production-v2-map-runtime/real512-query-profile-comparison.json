@@ -1,0 +1,195 @@
+{
+  "profile": {
+    "actual_tick": 400,
+    "attacks": 697,
+    "hits": [
+      109,
+      213
+    ],
+    "losses": [
+      60,
+      24
+    ],
+    "phase_ms": {
+      "400_or_actual_steps_including_progress_queries": 172012.281,
+      "continuous_probe": 301.43,
+      "final_validation_snapshot": 46.721,
+      "navigation_configure": 5506.567,
+      "setup_muster_validation": 172.41
+    },
+    "query_profile": {
+      "enabled_during_battle_only": true,
+      "obstacles": {
+        "obstruction_calls": 6561763,
+        "obstruction_us": 12842527,
+        "segment_obstruction_calls": 72966,
+        "segment_obstruction_us": 867093
+      },
+      "runtime": {
+        "astar_calls": 32148,
+        "astar_us": 4961141,
+        "route_cache_full_clears": 15,
+        "route_cache_hits": 156409,
+        "waypoint_calls": 389866,
+        "waypoint_us": 139558358
+      },
+      "scope": "INCLUSIVE_NESTED_TIMES_NOT_ADDITIVE; CPU_SHARED_ENV_NOT_GPU_FPS",
+      "support": {
+        "support_calls": 8889921,
+        "support_us": 104242792
+      }
+    },
+    "full_snapshot_sha256": "01dd6176342aa2017fb984eb4fe33bf452c0ce32b27e03a55b50e665ccf0729c",
+    "memory": {
+      "scope": "not measured in first profiler"
+    },
+    "full_json_sha256": "a6a6e41e913eed8f4bcfd43881825252914f748fc957b59af7967b418a074a50"
+  },
+  "rejoin-nocache": {
+    "actual_tick": 400,
+    "attacks": 676,
+    "hits": [
+      101,
+      216
+    ],
+    "losses": [
+      60,
+      24
+    ],
+    "phase_ms": {
+      "400_or_actual_steps_including_progress_queries": 157075.614,
+      "continuous_probe": 256.838,
+      "final_validation_snapshot": 54.005,
+      "navigation_configure": 5771.23,
+      "setup_muster_validation": 165.331
+    },
+    "query_profile": {
+      "enabled_during_battle_only": true,
+      "obstacles": {
+        "obstruction_calls": 6567292,
+        "obstruction_us": 12266769,
+        "segment_obstruction_calls": 71798,
+        "segment_obstruction_us": 850378
+      },
+      "runtime": {
+        "astar_calls": 32379,
+        "astar_us": 4838914,
+        "route_cache_full_clears": 15,
+        "route_cache_hits": 155253,
+        "waypoint_calls": 389417,
+        "waypoint_us": 125035830
+      },
+      "scope": "INCLUSIVE_NESTED_TIMES_NOT_ADDITIVE; CPU_SHARED_ENV_NOT_GPU_FPS",
+      "support": {
+        "support_calls": 8884233,
+        "support_us": 98255647
+      }
+    },
+    "full_snapshot_sha256": "838b746066cd11cd8f59828d2f30de381d1e796ec5a25af638cc95beeac7a5ec",
+    "memory": {
+      "godot_static_bytes": 209304666,
+      "godot_static_peak_bytes": 210436329
+    },
+    "full_json_sha256": "fcbf9fd8c5327db672c4cac035bc70391df42d1a34c409936913afaf90051c7b"
+  },
+  "rejoin-cache": {
+    "actual_tick": 400,
+    "attacks": 676,
+    "hits": [
+      101,
+      216
+    ],
+    "losses": [
+      60,
+      24
+    ],
+    "phase_ms": {
+      "400_or_actual_steps_including_progress_queries": 149573.055,
+      "continuous_probe": 315.226,
+      "final_validation_snapshot": 36.244,
+      "navigation_configure": 5720.297,
+      "setup_muster_validation": 200.999
+    },
+    "query_profile": {
+      "enabled_during_battle_only": true,
+      "obstacles": {
+        "obstruction_calls": 6567292,
+        "obstruction_us": 12540464,
+        "segment_obstruction_calls": 71798,
+        "segment_obstruction_us": 829042
+      },
+      "runtime": {
+        "astar_calls": 32379,
+        "astar_us": 4992500,
+        "route_cache_full_clears": 15,
+        "route_cache_hits": 155253,
+        "waypoint_calls": 389417,
+        "waypoint_us": 122039037
+      },
+      "scope": "INCLUSIVE_NESTED_TIMES_NOT_ADDITIVE; CPU_SHARED_ENV_NOT_GPU_FPS",
+      "support": {
+        "exact_cache_hits": 1469933,
+        "exact_cache_misses": 377730,
+        "exact_cache_peak_entries": 32768,
+        "support_calls": 8884233,
+        "support_us": 85631157
+      }
+    },
+    "full_snapshot_sha256": "838b746066cd11cd8f59828d2f30de381d1e796ec5a25af638cc95beeac7a5ec",
+    "memory": {
+      "godot_static_bytes": 233592702,
+      "godot_static_peak_bytes": 234724365
+    },
+    "full_json_sha256": "569ee4e33dffc7cab71b0892363cd6dc814ef7e7464f1cff56f7beccc3470e5c"
+  },
+  "rejoin-layercache": {
+    "actual_tick": 400,
+    "attacks": 676,
+    "hits": [
+      101,
+      216
+    ],
+    "losses": [
+      60,
+      24
+    ],
+    "phase_ms": {
+      "400_or_actual_steps_including_progress_queries": 148678.953,
+      "continuous_probe": 273.982,
+      "final_validation_snapshot": 36.058,
+      "navigation_configure": 4686.782,
+      "setup_muster_validation": 175.76
+    },
+    "query_profile": {
+      "enabled_during_battle_only": true,
+      "obstacles": {
+        "obstruction_calls": 6567292,
+        "obstruction_us": 12985685,
+        "segment_obstruction_calls": 71798,
+        "segment_obstruction_us": 827358
+      },
+      "runtime": {
+        "astar_calls": 32379,
+        "astar_us": 4653048,
+        "route_cache_full_clears": 15,
+        "route_cache_hits": 155253,
+        "waypoint_calls": 389417,
+        "waypoint_us": 124822448
+      },
+      "scope": "INCLUSIVE_NESTED_TIMES_NOT_ADDITIVE; CPU_SHARED_ENV_NOT_GPU_FPS",
+      "support": {
+        "exact_cache_hits": 2361634,
+        "exact_cache_misses": 6522599,
+        "exact_cache_peak_entries": 32768,
+        "support_calls": 8884233,
+        "support_us": 87207754
+      }
+    },
+    "full_snapshot_sha256": "838b746066cd11cd8f59828d2f30de381d1e796ec5a25af638cc95beeac7a5ec",
+    "memory": {
+      "godot_static_bytes": 233488582,
+      "godot_static_peak_bytes": 234620245
+    },
+    "full_json_sha256": "e7ee75f01315d5c726d86efbd1978d64f19c0809049dd0b79ff589198e4d1821"
+  }
+}

@@ -1,4 +1,6 @@
 extends RefCounted
+var profile_enabled:=false
+var profile:Dictionary={} # Inclusive query times; nested totals must not be summed.
 ## Exact authored planar solid footprints with vertical extents and per-call gate
 ## state. This is body clearance, not a replacement for surface/portal routing.
 var _solids:Array=[]
@@ -40,6 +42,12 @@ func configure(solids:Array,gates:Array=[])->Error:
     _cells[cell].append(slot)
  _configured=true;return OK
 func obstruction(foot:Vector3,radius:float,height:float,open_gates:Dictionary={},force_linear:bool=false)->Dictionary:
+ if not profile_enabled:return _obstruction_impl(foot,radius,height,open_gates,force_linear)
+ var started:=Time.get_ticks_usec();var result:=_obstruction_impl(foot,radius,height,open_gates,force_linear)
+ profile["obstruction_calls"]=int(profile.get("obstruction_calls",0))+1
+ profile["obstruction_us"]=int(profile.get("obstruction_us",0))+Time.get_ticks_usec()-started
+ return result
+func _obstruction_impl(foot:Vector3,radius:float,height:float,open_gates:Dictionary={},force_linear:bool=false)->Dictionary:
  if not _configured or not foot.is_finite() or not is_finite(radius) or not is_finite(height) or radius<0 or height<=0:return {"error":ERR_INVALID_PARAMETER,"blocked":true}
  var p:=Vector2(foot.x,foot.z)
  var candidates:Array=range(_solids.size()) if force_linear or radius>INDEX_MARGIN else _cells.get(Vector2i(floori(p.x/CELL),floori(p.y/CELL)),[])
@@ -55,6 +63,12 @@ func obstruction(foot:Vector3,radius:float,height:float,open_gates:Dictionary={}
  return {"error":OK,"blocked":false}
 func statistics()->Dictionary:return {"solids":_solids.size(),"scope":"BODY_CLEARANCE_NOT_FULL_PATH_OR_BATTLE"}
 func segment_obstruction(a:Vector3,b:Vector3,open_gates:Dictionary={},radius:float=.03,height:float=.05)->bool:
+ if not profile_enabled:return _segment_obstruction_impl(a,b,open_gates,radius,height)
+ var started:=Time.get_ticks_usec();var result:=_segment_obstruction_impl(a,b,open_gates,radius,height)
+ profile["segment_obstruction_calls"]=int(profile.get("segment_obstruction_calls",0))+1
+ profile["segment_obstruction_us"]=int(profile.get("segment_obstruction_us",0))+Time.get_ticks_usec()-started
+ return result
+func _segment_obstruction_impl(a:Vector3,b:Vector3,open_gates:Dictionary={},radius:float=.03,height:float=.05)->bool:
  if not a.is_finite() or not b.is_finite():return true
  for solid:Dictionary in _solids:
   if not solid.gate_id.is_empty() and open_gates.get(solid.gate_id,false)==true:continue
