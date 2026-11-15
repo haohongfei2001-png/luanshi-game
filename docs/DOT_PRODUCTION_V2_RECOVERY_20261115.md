@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 18 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 19 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -495,3 +495,40 @@ A bounded complete single-texture2.5D skeletal mother was actually implemented a
 The retained native2K variable-frame-rate file contains15 actual wall-clock frames over3.585 seconds, with0.241–0.272-second capture intervals and less than0.483ms encoding timestamp error. There are no interpolated or invented frames. This is about4fps image readback, not fluid8fps footage, translation walking,360-degree coverage or a gameplay benchmark. Source, actual times and failures are retained; that bounded trial has ended rather than continuing to adjust the same inadequate single-surface puppet.
 
 Continue the two existing whole-environment and whole-character writers, with one heavy rendering process at a time. Keep current sources, original assets, failed attempts and recovery evidence. No additional paid service/account, user computer, formal release, fixed literary story, held asset publication or PR67 merge is authorized by this checkpoint. The exact historical HF08 fixture publication in section17 remains separate. **No new accepted game-art result, full-army replacement, macOS candidate or M5 test is claimed.**
+
+
+## 19. Whole-source failures preserved, camera authority restored (2026-11-15 14:35 UTC)
+
+**ART_FAIL remains the whole-image verdict.** Main and draft PR67 were rechecked and remain unchanged at `248d26aefbb8dfe7973141a63b40f3a220f0edc0` and `1cfda095b05a78dfe89da6f2ddd8f8cb89819180`. Art-first work continues; no default replacement, merge, RC promotion, installation candidate or release is included.
+
+### The22m pictures are controls, not the new primary-camera art gate
+
+Re-reading the current main [owner camera authority](OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md) exposed an overly rigid continuation assumption. The owner's primary reference is **Wild Rift's actual character-to-screen relationship**. Historical orthographic size22 was never a physical22m distance and does not prescribe the new camera. The recent explicitly measured22m perspective pictures remain useful fixed controls, but calling them the required normal-gameplay scale would be wrong. Their roughly98–102px adult figures at1440px image height must not become a hard ceiling or a way to fit an entire army into one frame.
+
+Preserve those originals. Separately calibrate the primary playable camera against trustworthy official gameplay, record the actual character pixel bounds and all projection/world matrices, and label comparisons with changed cameras honestly. Reference-derived screen ratios are estimates, not published Riot FOV or distance constants. Do not enlarge the camera view to conceal inferior models or present a camera change as improved geometry. Total battle strength, offscreen warfare and the20/100/250/512-per-side validation requirements remain unchanged.
+
+### P3-13: new whole structure and full-source material content, still rejected
+
+P3-13 includes1004 authored masonry block faces combined into one mesh, real bevels/recessed joints/corners, a newly organized branch-layer leaf canopy, and the frozen complete18b soldier. Professional original trunk/branch sources, original material maps and previous failures remain retained. The new canopy is an explicit authored derivative, not an unchanged professional tree or a quality certificate.
+
+The actual Godot control PNG was captured at14:30:02 UTC, native2560x1440/internal1.0, true camera-to-feet22.000m. It is7,431,368 bytes, SHA256 `52fd5160c293f71d145f4946673a0564b90f99dc594b5ca7823976f31d2bc0dc`. The18b runtime actor is `62beaacacfe6905fba6554547b8c464ccb3cfa23c0067339b8e59098c311351e`, projecting to47.95x98.217px in this scene, not the separate diagnostic's101.53px. The150-file,469,080,117-byte dependency closure was independently rehashed without mismatch; its manifest SHA256 is `9a1d4038a6b4a7786682d88df0c76586999cc8e4e1e3274a4217e3e1b7f8a75f`.
+
+The guarded process completed in118.445 seconds with exit0, sampled peak RSS3,776,679,936 bytes and minimum global available RAM2,654,208,000 bytes. A nonfatal global-script-cache error is retained. These are authoring-process measurements on Linux AMD EPYC9V74 / Mesa llvmpipe software, **not gameplay FPS, GPU/Mac performance or M5 evidence**. This is still an author scene, not new Battle integration or a complete army.
+
+Independent visual review rejects the whole picture: a broad yellowish ground carpet and sparse thin grass, overly regular shore, isolated boulder props and smooth road still fail the target's natural, coherent environment. Tree and masonry construction changes are real but not enough. New integrated structure, source content and composition continue to be authored; counts, provenance and correct foot support do not imply art acceptance.
+
+### A confirmed material-contract mistake, not a substitute for art rebuilding
+
+The actual GLES3 engine source shows Compatibility decoding user ALBEDO/EMISSION from sRGB after the custom fragment stage, then encoding the lit output. Earlier custom environment shaders incorrectly passed raw linear pigment constants into that interface. The resulting repeated decoding darkened vegetation and wall materials. P3-13 corrects the single decode/mix/encode contract with the same Sun/Sky, without changing the engine or exposure.
+
+A second content loss was also corrected: reducing complete original grass/forest RGB maps to a single hue times compressed luminance erased the source's bare soil, litter and plant relationships. Current source restores original multichannel material content with explicit restrained grading. Neither fix explains away the remaining structural failures or establishes an art pass.
+
+The separate actual vertex-domain readback sampled0 of12 expected positions. **It is NOT VERIFIED**, despite zero reported error in an empty sample set. Preserve that failed audit and investigate position matching once without another render; do not relax navigation or claim a data-contract pass. Frozen13 inputs remain unchanged.
+
+### Complete characters19–20 rejected; exact18b native recovery preserved
+
+The complete19 character was actually rendered under the shared production lighting in both static poses. Its larger support construction became thick backpack-like shoulder pads instead of fitted armor and clear narrow load-bearing straps; footwear and helmet hierarchy also remain unfinished. The full source and failed images are preserved. Continue whole torso/shoulder/helmet/footwear construction, not another isolated roughness or color adjustment. A subsequent20 actual control removes the broad shoulder pads but reveals the new lining crossing in front of the chest plates; that complete fitting layer is being reworked against the armor surface and thickness, with the failed20 source preserved. Hands and the untasseled spear's established static axis remain intact; continuous movement, attack, contact and armor deformation are not yet accepted.
+
+The exact18b native source, SHA256 `1691f4c5bf6272bd0983a33a5c364245d52fedd9745b555cc7db15bd559cfeea`, has a persistent internal recovery backup with17 actions at120fps, full163-bone rig,32 packed images and the exact remaining external old-material image. Its two-static-pose GLB is clearly separated from the full native motion source. The102,920,824-byte archive SHA256 is `9c4d56cc10816374214cfae96fdf343c063a29619236d66943ba20fe2f19e25c`; every archive entry passed CRC/decoded-SHA validation and the largest native file passed actual extraction/readback. No current source was deleted. Thirteen closed earlier native files were separately archived, verified and restore-tested before redundant local copies were reclaimed; all unique work remains recoverable.
+
+Next: continue the existing whole-environment and whole-character writers, establish the proper primary-camera scale, self-reject whole-frame failures, then validate the same sources in real Battle once coherent art exists. Use one bounded heavy rendering process at a time. No owner art pass, full-army replacement, new macOS build, M5 result, public held-asset upload, PR67 merge, new fee/account, user-computer access or fixed literary story is claimed or authorized by this checkpoint.
