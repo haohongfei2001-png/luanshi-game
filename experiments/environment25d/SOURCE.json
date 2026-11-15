@@ -1,0 +1,38 @@
+{
+  "status": "ISOLATED_25D_FEASIBILITY_NOT_ART_PASS_DEFAULT_OFF",
+  "core_git_source": "9d86c168",
+  "core_files": {
+    "scripts/field/battle.gd": "772665adb73e9e9eeb10f29207108aef2a03b6206c2a5c58de83b8857834e8e6",
+    "scripts/field/arms.gd": "845fb068271ef83703a871882645d7203c3d3bcd33d9283e7d88deb548ed0300",
+    "scripts/field/ground.gd": "aff520619223f2d6a1bc96648863461772d1e96b036640164cf2f47d1541b035",
+    "scripts/field/authored_landform_profile.gd": "011b1563b379e73ae4ca488f7d9bfaed2904183bb975e79d3c6f468b05c55478",
+    "scripts/field/authored_ridge_profile.gd": "2527c9ca53356d280755b050a66643f12dacf79cadf59344a672bc1a991271d0",
+    "scripts/field/river_pass_profile.gd": "e304060f06e86c65ade69a1bff21ebaba7f49d9625a3508a911f14cbc474536d",
+    "scripts/field/native_woodland_navigation.gd": "292b2f0c929ed15ac93b7d5ed8d5b9943234eb85a8d3bb21a83c501d49c61c79",
+    "scripts/field/maps/legacy_map_runtime.gd": "25e8b984e00f7bb5775a0e728b95d9ef965c1d9cd2654520c155ac4336c52f07",
+    "scripts/field/maps/map_query.gd": "324e0e74f3f6b7d76266ebc4cecd1c3aabce6a98802df80d825d2cddf547bf9d",
+    "scripts/field/officer_corps.gd": "6b55be12a2eb1830f3b3566467a184df7dd71c17400253735f2dca0efcb4528d",
+    "scripts/field/field_objectives.gd": "2af7023586bb5e249f19d564e6b11dddf80461e49076b67ff49f9765edc59923",
+    "scripts/field/crowd_grid.gd": "ef6dc0b756cdcbb9adc94d1874fbc5d493f8a78a049d75cf4a607d4f6022b60c",
+    "scripts/field/formation_traffic.gd": "e25ded276592e4ab373a75d57718a467cb000bc1a170c939a2ab9996826b33ac",
+    "scripts/hero_combat_profiles.gd": "2804bf443165ec93f5c0d0e6715a6680e1399dd18bc8c0962435081ad5364e5c",
+    "scripts/field/maps/authored_navigation.gd": "e501cb54265bdaa168d2df9e2908ace56b488f12374f9bd398cc584cb8549452",
+    "scripts/field/maps/authored_support.gd": "3e5d3a6afeff76945c5140c2e82fc17cc27e80b89c45b3dd9bb62709bb208bc0",
+    "scripts/field/maps/authored_obstacles.gd": "5a96d4f29b265cbb2c402a00b29c4ada7cc6f6e8af79744f32c939cc130eb0ce",
+    "scripts/field/maps/authored_field_runtime.gd": "a98e24deb727040b1370d0d08057eec70bdfdfe5f1b1b1b4c236f1aaca98b880",
+    "scripts/field/maps/authored_muster.gd": "0a78a924770c88fac2e4b25ab4f028c64e2c1f5bb86c76df8c7a9677324551e8",
+    "scripts/field/experimental/production_v2/shared_skeletal_actor.gd": "b74b7acc5ef277222caae66358d9c878ed2ceb9cd623c505811aa7444b5e371d",
+    "scripts/field/experimental/production_v2/mh_spear_battle_binding.gd": "d64e49d4cfa8c581899b51472b8776e372eec1869d55f6e01cab763dc382a5d5"
+  },
+  "actor": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "texture": "9471178db61606963fd5a1d4f8acb17ad08b0acd9637bf802e28426493355da5",
+  "texture_origin": "Owner-authorized AI target edited with built-in image_gen; no static characters. User project-use authorization, not asserted CC0 or exclusive copyright.",
+  "limitations": [
+    "fixed-angle orthographic only",
+    "prelit static environment",
+    "finite authored plate extent",
+    "8v8 test is not 512v512 performance proof",
+    "actor18 ART_FAIL_WIP",
+    "other kits retain explicit diagnostic representation; not disguised as spear"
+  ]
+}

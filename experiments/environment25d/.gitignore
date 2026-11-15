@@ -1,0 +1,5 @@
+.godot/
+evidence/
+*.uid
+__pycache__/
+assets/spearman-v2-wip.glb

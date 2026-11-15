@@ -1,0 +1,60 @@
+name: Isolated 2.5D real battle feasibility NOT art acceptance
+on:
+  push:
+    branches: ['dot/25d-environment-feasibility']
+    paths: ['experiments/environment25d/**','.github/workflows/dot-25d-feasibility.yml']
+permissions:
+  contents: read
+concurrency:
+  group: luanshi-25d-single-native-experiment
+  cancel-in-progress: false
+jobs:
+  actual-godot-gpu:
+    runs-on: macos-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: experiments/environment25d
+      - name: Record actual host, not owner M5
+        run: |
+          mkdir -p evidence
+          uname -a > evidence/hardware.txt
+          sysctl hw.model hw.memsize hw.ncpu >> evidence/hardware.txt
+          system_profiler SPDisplaysDataType >> evidence/hardware.txt
+          git rev-parse HEAD > evidence/source-sha.txt
+      - name: Restore exact official editor, never old environment cache
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip -o "$RUNNER_TEMP/editor.zip"
+          echo "0155bbc8dcf179edab4ef08e3dbbd4480d7434ab1990cb3fb25517d453b1b65787c7fe6dfc8824b15ff25e1fdcec59e8584f765054106894fee00311868c3964  $RUNNER_TEMP/editor.zip" | shasum -a 512 -c -
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/editor"
+          echo "GODOT=$RUNNER_TEMP/editor/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+          python3 experiments/environment25d/restore_assets.py > evidence/actor-restore.json
+          echo '9471178db61606963fd5a1d4f8acb17ad08b0acd9637bf802e28426493355da5  experiments/environment25d/assets/environment-wide-v2.png' | shasum -a 256 -c -
+      - name: Import actual source18 and assert topology before GPU
+        env:
+          LUANSHI_25D_EXPERIMENT: '1'
+        run: |
+          set -euo pipefail
+          "$GODOT" --headless --editor --path experiments/environment25d --import > evidence/import.log 2>&1
+          LUANSHI_25D_OUT="$PWD/evidence/headless-combat" "$GODOT" --headless --path experiments/environment25d --script app.gd -- --test > evidence/headless-combat.log 2>&1
+          LUANSHI_25D_OUT="$PWD/evidence/headless-traversal" "$GODOT" --headless --path experiments/environment25d --script app.gd -- --test --traversal > evidence/headless-traversal.log 2>&1
+      - name: Real native 2K combat and traversal with physics and wall time
+        run: |
+          set -euo pipefail
+          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/2560-combat" 2560x1440 combat
+          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/2560-traversal" 2560x1440 traversal
+      - name: Real native 4K stills, source plate is only1672x941
+        run: |
+          set -euo pipefail
+          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/3840-combat" 3840x2160 combat
+          python3 experiments/environment25d/run_capture.py "$GODOT" "$PWD/experiments/environment25d" "$PWD/evidence/3840-traversal" 3840x2160 traversal
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-25d-Godot-evidence-${{ github.sha }}
+          path: evidence/
+          retention-days: 14
+          if-no-files-found: error

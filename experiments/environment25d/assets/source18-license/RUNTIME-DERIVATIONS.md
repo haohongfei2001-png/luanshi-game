@@ -1,0 +1,3 @@
+Runtime derivative, WIP not art accepted.
+
+Original sources and licenses are preserved in adjacent notices. Added five MH spear actions, rigid ordinary spear geometry and read-only Battle presentation binding. Forward locomotion retains the licensed UAL-derived MH full-body actions; the arms and grip are new authored derivatives, not captured professional spear combat. Clothing and all professional-source attribution remain as declared in the notices. Runtime export limits influences to eight and normalizes them; editable source retains original full weights. No source is relicensed as CC0. AI atlas is project-generated content, not measured PBR or a CC0 third-party asset.

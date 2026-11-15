@@ -1,0 +1,61 @@
+{
+  "512v512": "NOT_RUN_NO_CAPACITY_CLAIM",
+  "active_invalid": [],
+  "actor_sha": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "art": "FAIL_WIP_NOT_OWNER_ACCEPTED",
+  "battle_tick": 140,
+  "camera_angle_degrees": 45,
+  "camera_size": 22.0,
+  "dynamic_environment_light": "UNSUPPORTED_PRELIT",
+  "experiment": "2.5D fixed-angle world-anchored projection",
+  "gpu": "NOT_RUN",
+  "hits": [
+    19,
+    16
+  ],
+  "input": "real Battle.input_state/press_action; no live Unit positions or HP assigned",
+  "losses": [
+    3,
+    2
+  ],
+  "mode": "combat",
+  "ordinary_per_side": [
+    8,
+    8
+  ],
+  "projection_roundtrip_max_source_px": 0.000030517578125,
+  "roster": 19,
+  "rotation": "UNSUPPORTED_THIS_ISOLATED_MODE_ONLY_MAIN_UNCHANGED",
+  "route_end": [
+    19.87939453125,
+    -13.6272964477539
+  ],
+  "route_reached": 6,
+  "route_steps": 243,
+  "route_total": 6,
+  "setup": {
+    "counts": [
+      {
+        "available": 38,
+        "placed": 10,
+        "team": 0
+      },
+      {
+        "available": 11,
+        "placed": 9,
+        "team": 1
+      }
+    ],
+    "error": 0,
+    "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+    "ordinary_per_side": [
+      8,
+      8
+    ],
+    "saved_battle_migrated": false,
+    "source_topology": "6e363423ae09880be645e13055617bc6b45107f6edadf5abaef186454cc408d6"
+  },
+  "source_texture_pixels": "(1672.0, 941.0)",
+  "source_texture_sha": "9471178db61606963fd5a1d4f8acb17ad08b0acd9637bf802e28426493355da5",
+  "topology": "6e363423ae09880be645e13055617bc6b45107f6edadf5abaef186454cc408d6"
+}

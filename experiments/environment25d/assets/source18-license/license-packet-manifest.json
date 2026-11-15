@@ -1,0 +1,58 @@
+{
+  "glb_sha256": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "files": [
+    {
+      "path": "RUNTIME-DERIVATIONS.md",
+      "sha256": "9e0a124c2d44245dfc5fdcac1ff918157a167ee47dad1e975f9e9b26e8eb8301"
+    },
+    {
+      "path": "SOURCE18-NOTICE.md",
+      "sha256": "e1f5ac601b325fdda30d2bd15e3da88e237930ded6ed915ba1e40bb8eb7f2707"
+    },
+    {
+      "path": "owner-generated-lamellar/NOTICE.md",
+      "sha256": "05ffef1af8b1cbd4637d3c037b83f0a896a61034492a982e59ebb914b94d5c18"
+    },
+    {
+      "path": "owner-generated-lamellar/source-manifest.json",
+      "sha256": "c79ff5d7537f1d8a7b41c1b2a181206129c18503ee724972921d0e47f3d87e65"
+    },
+    {
+      "path": "quaternius-ual/License.txt",
+      "sha256": "6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061"
+    },
+    {
+      "path": "quaternius-ual/package-provenance.json",
+      "sha256": "d5c4c7c2695f31f286fec31e54484cc400b36f5b4c86e5bb07fc30d4e1bd9317"
+    },
+    {
+      "path": "tools/art/mh_character/NOTICE.md",
+      "sha256": "ad255d2c845a8ab3909be945dee706994482f8fc288239ed5ca010bcc8f680b9"
+    },
+    {
+      "path": "tools/art/mh_character/sources.json",
+      "sha256": "fe5e973a2a1e1f6c0b0614f60e8a479b34242abdbf6096e7b1d5e709fde3faf0"
+    },
+    {
+      "path": "tools/art/sintel_guard/NOTICE.md",
+      "sha256": "2a0f960324309734b5920e85737728889c593ecc3d5da2270cd302246466b7c0"
+    },
+    {
+      "path": "tools/art/sintel_guard/license-evidence.json",
+      "sha256": "4f12bbe4b65295914a4d30a4b82aa3559ec3f198c9c76256bee9044833c45137"
+    },
+    {
+      "path": "tools/art/sintel_guard/source-members.json",
+      "sha256": "4ef566025e0dfae70d918767be17ed595c722586651455c1b3ada388523e19ce"
+    },
+    {
+      "path": "tools/art/soldier_production_v2/AI_MATERIAL_CANDIDATE.md",
+      "sha256": "7dfbf4e5de31a13e6d2624af3a90738a23fb0e090883e768d22db28923cf659b"
+    },
+    {
+      "path": "tools/art/soldier_production_v2/NOTICE.md",
+      "sha256": "36a139d02ff3822066b75a72972781ce06ace38b51b931873823b0ec03beb64f"
+    }
+  ],
+  "scope": "provenance and attribution; not warranty or art acceptance"
+}

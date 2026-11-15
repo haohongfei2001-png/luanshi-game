@@ -1,0 +1,19 @@
+{
+  "source": "https://quaternius.itch.io/universal-animation-library",
+  "size": 15904933,
+  "sha256": "cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724",
+  "licenses": [
+    {
+      "member": "Universal Animation Library[Standard]/License.txt",
+      "zip_timestamp": [
+        2026,
+        6,
+        16,
+        19,
+        8,
+        34
+      ]
+    }
+  ],
+  "local_license_sha256": "6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061"
+}

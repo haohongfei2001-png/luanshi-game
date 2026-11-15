@@ -1,0 +1,161 @@
+{
+  "asset_sha256": "f345b00aa714d05a81d2c1fc743da0b1f72eac35f42b3a046689882b875242a1",
+  "original_bytes": 2873363,
+  "encoding": "base64-concatenate-before-decode",
+  "parts": [
+    {
+      "name": "lamellar-color.png.b64.part000",
+      "chars": 160000,
+      "sha256": "416e573339a5072ee23a602d869022ab84fcb73576c4f539a4096c5d2af1a0e3",
+      "git_blob_sha": "dff92b389356c796de9e9e8956e6d66853c8ac46"
+    },
+    {
+      "name": "lamellar-color.png.b64.part001",
+      "chars": 160000,
+      "sha256": "4ccb8ef4c6f5daa6610b6b7cff5f3cdf693c8b7f5b52c4a7d23ecde0cb4aee4a",
+      "git_blob_sha": "359df25a662d2ddda19cd8a98799c9ec8f8a9105"
+    },
+    {
+      "name": "lamellar-color.png.b64.part002",
+      "chars": 160000,
+      "sha256": "a6bb47ce7001fbd11e1356542c1985af2646b0bdca1366241ff0602ade44d366",
+      "git_blob_sha": "f83e055ae640cef2dbbb6ee157262cace088c68c"
+    },
+    {
+      "name": "lamellar-color.png.b64.part003",
+      "chars": 160000,
+      "sha256": "5203ca72716b3f6bb544fe4c108251093af9daa943c1147ec4217342164d541b",
+      "git_blob_sha": "9f12948b36318fceca318b2dcf81da5849adab01"
+    },
+    {
+      "name": "lamellar-color.png.b64.part004",
+      "chars": 160000,
+      "sha256": "1c271393884516f8a57ae030087d1decf9c1884718800c7e8ce6defefa2b1eac",
+      "git_blob_sha": "24a7ef5250c525f9e0076604124d85a8e437f90d"
+    },
+    {
+      "name": "lamellar-color.png.b64.part005",
+      "chars": 160000,
+      "sha256": "e6ac37888688a4b8662707afe5606f2f772f3ad31024c6ccb6026cd0ad13c464",
+      "git_blob_sha": "5ce452a05b4c5618fcd44b6a8417931461f5cc05"
+    },
+    {
+      "name": "lamellar-color.png.b64.part006",
+      "chars": 160000,
+      "sha256": "01eef717fc20aae4993bfb77de02a8981a6fbe3e58007d8d34977d4a0d4850e4",
+      "git_blob_sha": "0f0178892603318ba732ff3f6fe2dd8f2fa8a314"
+    },
+    {
+      "name": "lamellar-color.png.b64.part007",
+      "chars": 160000,
+      "sha256": "4bda16a0745318345f6d212ec97b9dbc51f18e059f28991579118d8ed06eb259",
+      "git_blob_sha": "28e71806a1b9c1fb9d23c17e91bd7f0b0107a1ca"
+    },
+    {
+      "name": "lamellar-color.png.b64.part008",
+      "chars": 160000,
+      "sha256": "b94dacb5b6bdecf63600441a1bbce304b14890e161b6993362b11be2d59ea80e",
+      "git_blob_sha": "b39cd2694074771915dad0583e07bfd822e6c8f1"
+    },
+    {
+      "name": "lamellar-color.png.b64.part009",
+      "chars": 160000,
+      "sha256": "3f9ec0ceeb3ae93cf562cfc0ea9eca0e487b969b40cfad1d42cbc3cd63e896c3",
+      "git_blob_sha": "b26914b7b6d2bcf7c6049d0f1b02171177daf739"
+    },
+    {
+      "name": "lamellar-color.png.b64.part010",
+      "chars": 160000,
+      "sha256": "0d491015f725c14505cded19db400b684bb35334b81e12f6be215a08f9e2101b",
+      "git_blob_sha": "d086c6d943dddebdaae380d967320721efad1a1c"
+    },
+    {
+      "name": "lamellar-color.png.b64.part011",
+      "chars": 160000,
+      "sha256": "86071974fbd93a76b2c0fc76ecaeb68501eb09d6cc3673da3dc0fd3f9100b77d",
+      "git_blob_sha": "c7a137c59a144890843cdd4cb5daed44ec9c6493"
+    },
+    {
+      "name": "lamellar-color.png.b64.part012",
+      "chars": 160000,
+      "sha256": "7ed515f70c237bc7e3edd0a92844f62de3ee080655181e72cb6445bd19a420c9",
+      "git_blob_sha": "582ce2305423e9b715bdd4319d04c83530d0870f"
+    },
+    {
+      "name": "lamellar-color.png.b64.part013",
+      "chars": 160000,
+      "sha256": "096e4f634e1d0b40b24949047de2082d503a15707468fa31052c5845952a3d35",
+      "git_blob_sha": "02d5c689c60ef4965ba66d361fe42c3c46b415a2"
+    },
+    {
+      "name": "lamellar-color.png.b64.part014",
+      "chars": 160000,
+      "sha256": "43e59f82b91d1b38af0629839d3b5151c44f0e89a1fc75e18f24d146bea40d21",
+      "git_blob_sha": "9de9db14f2242022d3550fb100065f0c29cad44e"
+    },
+    {
+      "name": "lamellar-color.png.b64.part015",
+      "chars": 160000,
+      "sha256": "22300748dadb1f3989b8b364119e673afa19c9fb363580e16edd55065f25fc07",
+      "git_blob_sha": "ff75021495b5df42005afd2cf5703ba68eed0d8e"
+    },
+    {
+      "name": "lamellar-color.png.b64.part016",
+      "chars": 160000,
+      "sha256": "f4dc419c7fc2a100e2c35b5543b3fedd25242142e653fafe7a4e91cae4337375",
+      "git_blob_sha": "ae70e8c92d33f652f23dcf6a1e3b7f7a8eda1d82"
+    },
+    {
+      "name": "lamellar-color.png.b64.part017",
+      "chars": 160000,
+      "sha256": "29f16bd824181aebdd913f57cb8601eb1770aaa38289af9551b7f8e5fa85065a",
+      "git_blob_sha": "c8bc9a8ef8536142e5f97775bb27adf5131df3b2"
+    },
+    {
+      "name": "lamellar-color.png.b64.part018",
+      "chars": 160000,
+      "sha256": "1fea94d547e79dc6972d2aa579a933fe7daa96adb75d8f00e490a83ada66cdcf",
+      "git_blob_sha": "235f5af8c560e2c55eb719fcfbc7610494e7890d"
+    },
+    {
+      "name": "lamellar-color.png.b64.part019",
+      "chars": 160000,
+      "sha256": "72bc2ab35ca63cec1972558b095b6ade9829330c21eae70357c137291a268a11",
+      "git_blob_sha": "f65991d24af191286fed3fc9cfc4d3ebd12516eb"
+    },
+    {
+      "name": "lamellar-color.png.b64.part020",
+      "chars": 160000,
+      "sha256": "853b2845d90005b1a0ec3e952ea803fa493f9a79c07ed527e60e00a0cc20a2fd",
+      "git_blob_sha": "a34efeb03b414502103699687f2ceb915868d7ce"
+    },
+    {
+      "name": "lamellar-color.png.b64.part021",
+      "chars": 160000,
+      "sha256": "3de520ceba044f9287be6eb2036c72fdd94c7e7f6def5b1b732458b8ea8e8317",
+      "git_blob_sha": "1ddeee163587f4fb44e64a56d1802d0ef7df4fe7"
+    },
+    {
+      "name": "lamellar-color.png.b64.part022",
+      "chars": 160000,
+      "sha256": "55027d8056e41925b1425692a436b8f05de124db394b41bc5bcee6273cfc3b71",
+      "git_blob_sha": "3a785b26e7522727f5810653fc76cd2e086a46fa"
+    },
+    {
+      "name": "lamellar-color.png.b64.part023",
+      "chars": 151152,
+      "sha256": "972e7249f5ea878e2c6e2d3392572e4408709dadb914ef08de59191f70ba735a",
+      "git_blob_sha": "1b692858f221a4d122be9487d2f99fa71c2fd15c"
+    }
+  ],
+  "source_reference": {
+    "path": "docs/art-direction/owner-20261114/spearman-direction.png",
+    "sha256": "fef54505bf0adb82646cd5c9e955170b255b3cbb8c5d6cfe1dc49c623167a932"
+  },
+  "origin": "Project AI material, not third-party CC0",
+  "dimensions": [
+    1774,
+    887
+  ],
+  "art_accepted": false
+}
