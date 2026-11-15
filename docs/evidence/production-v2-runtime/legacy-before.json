@@ -1,0 +1,66 @@
+[
+  {
+    "attacks": 123,
+    "bridgehead": false,
+    "hero_hp": 100.0,
+    "per_team": 20,
+    "sha256": "50faa59b9f23d3af339f8b696a2c6c9eb8ad31a7ff211f7507720fa9fbe40778",
+    "tick": 400
+  },
+  {
+    "attacks": 141,
+    "bridgehead": true,
+    "hero_hp": 100.0,
+    "per_team": 20,
+    "sha256": "5714d5dadd80f725d03ca51304cd3fc045279558bfec0c9efaf63dae54fca51e",
+    "tick": 400
+  },
+  {
+    "attacks": 708,
+    "bridgehead": false,
+    "hero_hp": 80.8853604793549,
+    "per_team": 100,
+    "sha256": "1300a56db6bde9b975e5c4bb804707388a7a80093def1d1b6915af721dcf809d",
+    "tick": 340
+  },
+  {
+    "attacks": 740,
+    "bridgehead": true,
+    "hero_hp": 100.0,
+    "per_team": 100,
+    "sha256": "47329166fdfc191c9d8ddfb1602da762f5f730243c73a9ca2c1111eb4016deae",
+    "tick": 400
+  },
+  {
+    "attacks": 1348,
+    "bridgehead": false,
+    "hero_hp": 100.0,
+    "per_team": 250,
+    "sha256": "9ed9c9a137665264b29039bd6fb1a1f3ebf734529e5756a088e4e7c0fd9e0489",
+    "tick": 400
+  },
+  {
+    "attacks": 1248,
+    "bridgehead": true,
+    "hero_hp": 100.0,
+    "per_team": 250,
+    "sha256": "63500b80dbd4182a741b77de4176705fe77953c213853f19720788e91d0b2ecc",
+    "tick": 400
+  },
+  {
+    "attacks": 2656,
+    "bridgehead": false,
+    "hero_hp": 100.0,
+    "per_team": 512,
+    "sha256": "4685069f22828b4d30b8f2a2a26267e77f730153cb3414e287735afb2a012bd4",
+    "tick": 400
+  },
+  {
+    "attacks": 1904,
+    "bridgehead": true,
+    "hero_hp": 100.0,
+    "per_team": 512,
+    "sha256": "afdee01abfb434e3d180ca63dde75d7e95050ec8680978fae4fcdcfbf414dcc6",
+    "tick": 400
+  }
+]

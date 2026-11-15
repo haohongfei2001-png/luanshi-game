@@ -86,3 +86,20 @@ snapshot byte-identical, including RNG/units/casualties; actual Save.restore
 returns the exact same snapshot. The actual current old loader rejects a
 version5 mapped save. Catalog rejects version4 carrying new map identity and
 version5 without map identity. These checks do not yet implement newmap restore.
+
+First actual Battle adapter boundary now routes `_move` through its own
+LegacyMapRuntime. Exact before/after complete Save snapshot hashes matched all8
+20/100/250/512-per-side x2 legacy maps after400 step requests (100 open-field
+naturally ended at tick340; others reached400). This is legacy equivalence, not
+newmap combat. Evidence under docs/evidence/production-v2-runtime.
+
+Actual mother terrain004 source support,17 architecture/gate obstacles and
+explicit bridge portals were consumed by AuthoredNavigation. A13,072-node
+source graph connected western army approach to courtyard, courtyard to eastern
+retreat and western retreat with63/43/33 path points. Build/query took38.78s on
+cloud CPU, not a simulation frame measurement. Source candidate count after
+0.45m body-foot support,1.25m spacing, reserved roads and available architecture
+solids was736 west/721 east. Tree/rock footprints were not frozen and are absent;
+these counts are not final validated Battle muster. Rendering, actual newmap
+Battle and newmap native performance remain NOT_RUN. Bridge support uses the
+explicit1m plane; actual plank top deviations up to2.7cm are not certified away.

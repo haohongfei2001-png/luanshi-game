@@ -3,6 +3,10 @@ extends RefCounted
 ## The camera and rendering layer never participate in a decision or damage roll.
 const Arms := preload("res://scripts/field/arms.gd")
 const Ground := preload("res://scripts/field/ground.gd")
+const LegacyMapRuntime:=preload("res://scripts/field/maps/legacy_map_runtime.gd")
+# First explicit instance-owned adapter boundary. Other legacy dependencies
+# remain listed in MAP_RUNTIME_GROUND_DEPENDENCIES; authored maps not enabled yet.
+var map_runtime:LegacyMapRuntime=LegacyMapRuntime.new()
 const OfficerCorps := preload("res://scripts/field/officer_corps.gd")
 const Objectives := preload("res://scripts/field/field_objectives.gd")
 const CrowdGrid := preload("res://scripts/field/crowd_grid.gd")
@@ -195,6 +199,7 @@ var hostile_max_x:=PackedFloat64Array([-INF,-INF])
 
 func setup(n: int, seed_value: int = SEED, weapon: int = Arms.Kit.SPEAR, on_banks: bool=true,ranked_officers: bool=true,defenders: int=-1,at_moat: bool=false) -> void:
 	bridgehead=at_moat
+	map_runtime=LegacyMapRuntime.new(at_moat)
 	if defenders==-1: defenders=n
 	assert(n>0 and defenders>0 and roster.is_empty())
 	ordinary_counts=PackedInt32Array([n,defenders])
@@ -870,7 +875,7 @@ func _projectiles() -> void:
 
 func _move(u: Unit, offset: Vector2) -> void:
 	if traffic_enabled and ram_hp>0: offset=Traffic.ram_motion(u.pos,offset,ram,u.id)
-	u.pos = Ground.travel(u.pos, offset,gate_hp<=0,bridgehead)
+	u.pos = map_runtime.travel(u.pos, offset,gate_hp<=0)
 
 func _player_walk() -> void:
 	var walk := hero_move
