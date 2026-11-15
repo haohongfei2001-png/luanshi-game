@@ -1,0 +1,4 @@
+Darwin sat12-dp154-17c966c4-c485-441c-b988-3ea74a92f727-527CFEBBCA2B.local 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
+hw.model: VirtualMac2,1
+hw.memsize: 7516192768
+hw.ncpu: 3

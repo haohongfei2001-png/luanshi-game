@@ -1,0 +1,221 @@
+{
+  "status": "STRICT_FEASIBILITY_FAIL_DO_NOT_PROMOTE",
+  "technical": "GPU real world pan/movement/combat verified; complete occlusion and full safe traversal NOT passed",
+  "reason": "Visible actors/capsules drawn on top of gate roof and clipped at lintel in actual traversal frames; fixed-angle only; 1672x941 intrinsic source; no512claim",
+  "run": 43690415954,
+  "job": 132739689130,
+  "commit": "1ce0ecc030db0b5ec5467fd34e1f6e3c396abc6a",
+  "tree": "bf4aa221b08a049b379aeb41144cc9bd8a2c28cc",
+  "artifact": 14151854509,
+  "artifact_sha256": "c5001a773e7c4aa45b04378b792ed252ccbaef6c5a9050aab246571da1148cfe",
+  "mac_debug_build_flag": "NOT_DIRECTLY_MEASURED_THIS_RUN",
+  "original_local_template_label_correction": "Linux godot-patched is template_debug; not release",
+  "results": [
+    {
+      "actual_capture_pixels": [
+        2560,
+        1440
+      ],
+      "render_warmup_seconds": 0.016844,
+      "elapsed_seconds": 11.096877,
+      "simulated_seconds": 5.55,
+      "actual_tick": 111,
+      "actual_hits": [
+        14,
+        15
+      ],
+      "actual_losses": [
+        3,
+        1
+      ],
+      "hero_hp": 0.0,
+      "path_waypoints_reached": 2,
+      "active_invalid": [],
+      "frames": 50,
+      "process_frame_count": 195,
+      "no_readback_window": false,
+      "mode": "2560-combat"
+    },
+    {
+      "actual_capture_pixels": null,
+      "render_warmup_seconds": 0.021446,
+      "elapsed_seconds": 12.01154,
+      "simulated_seconds": 5.55,
+      "actual_tick": 111,
+      "actual_hits": [
+        14,
+        15
+      ],
+      "actual_losses": [
+        3,
+        1
+      ],
+      "hero_hp": 0.0,
+      "path_waypoints_reached": 2,
+      "active_invalid": [],
+      "frames": 0,
+      "process_frame_count": 638,
+      "no_readback_window": true,
+      "mode": "2560-no-readback",
+      "process_hz": 53.11558717699812,
+      "median_process_interval_seconds": 0.016703999999998942,
+      "p95_process_interval_seconds": 0.02089199999999991,
+      "caution": "Process callbacks not certified presented GPU FPS; battle ends on hero death at tick111 so final tick/wall is not speed ratio"
+    },
+    {
+      "actual_capture_pixels": [
+        2560,
+        1440
+      ],
+      "render_warmup_seconds": 0.022209,
+      "elapsed_seconds": 11.142753,
+      "simulated_seconds": 6.2,
+      "actual_tick": 124,
+      "actual_hits": [
+        0,
+        5
+      ],
+      "actual_losses": [
+        0,
+        0
+      ],
+      "hero_hp": 0.0,
+      "path_waypoints_reached": 5,
+      "active_invalid": [],
+      "frames": 54,
+      "process_frame_count": 258,
+      "no_readback_window": false,
+      "mode": "2560-traversal"
+    },
+    {
+      "actual_capture_pixels": [
+        3840,
+        2160
+      ],
+      "render_warmup_seconds": 0.011918,
+      "elapsed_seconds": 29.387038,
+      "simulated_seconds": 0.8,
+      "actual_tick": 16,
+      "actual_hits": [
+        0,
+        0
+      ],
+      "actual_losses": [
+        0,
+        0
+      ],
+      "hero_hp": 100.0,
+      "path_waypoints_reached": 1,
+      "active_invalid": [],
+      "frames": 6,
+      "process_frame_count": 6,
+      "no_readback_window": false,
+      "mode": "3840-combat"
+    },
+    {
+      "actual_capture_pixels": [
+        3840,
+        2160
+      ],
+      "render_warmup_seconds": 0.019191,
+      "elapsed_seconds": 25.296464,
+      "simulated_seconds": 0.8,
+      "actual_tick": 16,
+      "actual_hits": [
+        0,
+        0
+      ],
+      "actual_losses": [
+        0,
+        0
+      ],
+      "hero_hp": 100.0,
+      "path_waypoints_reached": 1,
+      "active_invalid": [],
+      "frames": 6,
+      "process_frame_count": 6,
+      "no_readback_window": false,
+      "mode": "3840-traversal"
+    },
+    {
+      "actual_capture_pixels": [
+        2560,
+        1440
+      ],
+      "render_warmup_seconds": 6.998052,
+      "elapsed_seconds": 0.0,
+      "simulated_seconds": 0.0,
+      "actual_tick": 0,
+      "actual_hits": [
+        0,
+        0
+      ],
+      "actual_losses": [
+        0,
+        0
+      ],
+      "hero_hp": 100.0,
+      "path_waypoints_reached": 0,
+      "active_invalid": [],
+      "frames": 1,
+      "process_frame_count": 0,
+      "no_readback_window": false,
+      "mode": "gles-pose-control"
+    },
+    {
+      "actual_capture_pixels": [
+        2560,
+        1440
+      ],
+      "render_warmup_seconds": 4.482809,
+      "elapsed_seconds": 0.0,
+      "simulated_seconds": 0.0,
+      "actual_tick": 0,
+      "actual_hits": [
+        0,
+        0
+      ],
+      "actual_losses": [
+        0,
+        0
+      ],
+      "hero_hp": 100.0,
+      "path_waypoints_reached": 0,
+      "active_invalid": [],
+      "frames": 1,
+      "process_frame_count": 0,
+      "no_readback_window": false,
+      "mode": "metal-pose-control"
+    }
+  ],
+  "files": {
+    "gles-pose-control/frame-00000.png": {
+      "bytes": 5635862,
+      "sha256": "a4b2d1a735fc4be3dd6b78e3b0ea356c4c89f5147bb6a9ad7ee77aa30da13030"
+    },
+    "metal-pose-control/frame-00000.png": {
+      "bytes": 5004061,
+      "sha256": "369b65fbc7acfb6de2eb106e1a0f9ca3a9c82a455186da5e69c17ef2908aafe8"
+    },
+    "2560-combat/still-00047.png": {
+      "bytes": 5031627,
+      "sha256": "87e3a8c045f59eb585eb16a9742924aa4cf96e056377b50da8446a3ce7ba3fd4"
+    },
+    "2560-traversal/still-00048.png": {
+      "bytes": 5108703,
+      "sha256": "54158d11526b77897d7e717015554ad31c6a15cca526f0285e727eab8ceeb5e1"
+    },
+    "2560-combat/actual-walltime.mp4": {
+      "bytes": 7933867,
+      "sha256": "796d73d815e3041bcedfd00e5306b1b196597570b21cab5f13b94a409e76c280"
+    },
+    "2560-traversal/actual-walltime.mp4": {
+      "bytes": 8327312,
+      "sha256": "dd1cf978dcb655174e3385080b99f4a54f28ca95b2b9429e9bfce12a3d01f1bd"
+    },
+    "3840-combat/frame-00003.png": {
+      "bytes": 9442164,
+      "sha256": "945ae4a96610368756e6a079e38dc66707a1d9cbb050428d8b059b5530598b77"
+    }
+  }
+}

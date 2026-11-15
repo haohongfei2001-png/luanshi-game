@@ -1,0 +1,360 @@
+{
+  "512v512": "NOT_RUN_NO_CAPACITY_CLAIM",
+  "active_invalid": [],
+  "actor_sha": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "actual_capture_pixels": [
+    2560,
+    1440
+  ],
+  "actual_hits": [
+    0,
+    0
+  ],
+  "actual_losses": [
+    0,
+    0
+  ],
+  "actual_tick": 26,
+  "art": "FAIL_WIP_NOT_OWNER_ACCEPTED",
+  "camera_angle_degrees": 45,
+  "camera_size": 22.0,
+  "dynamic_environment_light": "UNSUPPORTED_PRELIT",
+  "elapsed_seconds": 26.759493,
+  "experiment": "2.5D fixed-angle world-anchored projection",
+  "finite_camera_bounds": "source plate bounds clamped at constant22m; main camera unchanged",
+  "frames": 10,
+  "hero_hp": 100.0,
+  "input": "real Battle.input_state/press_action; no live Unit positions or HP assigned",
+  "mode": "traversal",
+  "new_spear_actors": [
+    1,
+    2,
+    4,
+    5,
+    7,
+    9,
+    10,
+    12,
+    13,
+    15,
+    18
+  ],
+  "ordinary_per_side": [
+    8,
+    8
+  ],
+  "other_kit_diagnostic_proxies": [
+    0,
+    3,
+    6,
+    8,
+    11,
+    14,
+    16,
+    17
+  ],
+  "path_waypoints_reached": 1,
+  "render_input_path": "isolated Battle-driven Node._physics_process, NOT original Controller input acceptance",
+  "render_warmup_seconds": 1.181368,
+  "rendering": {
+    "device": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))",
+    "engine": {
+      "build": "official",
+      "hash": "7d41c59c457bd5a245092b4e7eb2d833e3b3f8c3",
+      "hex": 263683,
+      "major": 4,
+      "minor": 6,
+      "patch": 3,
+      "status": "stable",
+      "string": "4.6.3-stable (official)",
+      "timestamp": 0
+    },
+    "internal_scale": 1.0,
+    "method": "gl_compatibility",
+    "native_window_pixels": "(1024, 645)",
+    "os": "macOS",
+    "render_target_reported_pixels": "(2560.0, 1440.0)",
+    "requested_render_pixels": "(2560, 1440)",
+    "vendor": "Google Inc. (Apple)"
+  },
+  "roster": 19,
+  "rotation": "UNSUPPORTED_THIS_ISOLATED_MODE_ONLY_MAIN_UNCHANGED",
+  "setup": {
+    "counts": [
+      {
+        "available": 38,
+        "placed": 10,
+        "team": 0
+      },
+      {
+        "available": 12,
+        "placed": 9,
+        "team": 1
+      }
+    ],
+    "error": 0,
+    "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+    "ordinary_per_side": [
+      8,
+      8
+    ],
+    "saved_battle_migrated": false,
+    "source_topology": "4d699c6d80decc5725ffaca2072a6f01f7cb45fbab5db2451443c4a5dc336fb6"
+  },
+  "simulated_seconds": 1.3,
+  "source_texture_pixels": "(1672.0, 941.0)",
+  "source_texture_sha": "9471178db61606963fd5a1d4f8acb17ad08b0acd9637bf802e28426493355da5",
+  "topology": "4d699c6d80decc5725ffaca2072a6f01f7cb45fbab5db2451443c4a5dc336fb6",
+  "trace": [
+    {
+      "camera_position": "(-2.245703, 41.0, 42.48681)",
+      "frame": 0,
+      "hero_hp": 100.0,
+      "hero_position": [
+        0.754295706748962,
+        0.0,
+        2.48680973052979
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        855.716430664062,
+        516.463684082031
+      ],
+      "tick": 2,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 0.053492
+    },
+    {
+      "camera_position": "(-1.801296, 41.0, 42.04027)",
+      "frame": 1,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.19870388507843,
+        0.0,
+        2.04026627540588
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        867.332763671875,
+        508.210205078125
+      ],
+      "tick": 5,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 2.910878
+    },
+    {
+      "camera_position": "(-1.356887, 41.0, 41.59372)",
+      "frame": 2,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.64311194419861,
+        0.0,
+        1.59372246265411
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        878.949096679688,
+        499.956756591797
+      ],
+      "tick": 8,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.94004
+    },
+    {
+      "camera_position": "(-1.060616, 41.0, 41.29603)",
+      "frame": 3,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.93938398361206,
+        0.0,
+        1.29602658748627
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        886.693359375,
+        494.454437255859
+      ],
+      "tick": 10,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 8.735287
+    },
+    {
+      "camera_position": "(-0.568685, 41.0, 40.90644)",
+      "frame": 4,
+      "hero_hp": 100.0,
+      "hero_position": [
+        2.43131470680237,
+        0.0,
+        0.906441628932953
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        899.551879882812,
+        487.253753662109
+      ],
+      "tick": 13,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 11.487509
+    },
+    {
+      "camera_position": "(-0.039366, 41.0, 40.5648)",
+      "frame": 5,
+      "hero_hp": 100.0,
+      "hero_position": [
+        2.96063470840454,
+        0.0,
+        0.564798176288605
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        913.3876953125,
+        480.939147949219
+      ],
+      "tick": 16,
+      "viewport_foot_pixel": "(1476.364, 766.2833)",
+      "wall_seconds": 14.362831
+    },
+    {
+      "camera_position": "(0.313515, 41.0, 40.33704)",
+      "frame": 6,
+      "hero_hp": 100.0,
+      "hero_position": [
+        3.31351470947266,
+        0.0,
+        0.337035894393921
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        922.611572265625,
+        476.729431152344
+      ],
+      "tick": 18,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 17.45499
+    },
+    {
+      "camera_position": "(0.842835, 41.0, 39.99539)",
+      "frame": 7,
+      "hero_hp": 100.0,
+      "hero_position": [
+        3.84283471107483,
+        0.0,
+        -0.00460752844810486
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        936.447448730469,
+        470.414825439453
+      ],
+      "tick": 21,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 20.388415
+    },
+    {
+      "camera_position": "(1.372156, 41.0, 39.65375)",
+      "frame": 8,
+      "hero_hp": 100.0,
+      "hero_position": [
+        4.37215518951416,
+        0.0,
+        -0.346250951290131
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        950.283264160156,
+        464.100250244141
+      ],
+      "tick": 24,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 23.44756
+    },
+    {
+      "camera_position": "(1.725036, 41.0, 39.42599)",
+      "frame": 9,
+      "hero_hp": 100.0,
+      "hero_position": [
+        4.72503566741943,
+        0.0,
+        -0.574013233184814
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        959.507202148438,
+        459.890533447266
+      ],
+      "tick": 26,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 26.759493
+    }
+  ]
+}

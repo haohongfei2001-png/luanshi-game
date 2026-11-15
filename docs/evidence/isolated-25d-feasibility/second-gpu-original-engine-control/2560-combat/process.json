@@ -1,0 +1,18 @@
+{
+  "returncode": 0,
+  "wall_seconds": 51.20820225,
+  "command": [
+    "/Users/runner/work/_temp/editor/Godot.app/Contents/MacOS/Godot",
+    "--path",
+    "/Users/runner/work/luanshi-game/luanshi-game/experiments/environment25d",
+    "--resolution",
+    "2560x1440",
+    "--rendering-method",
+    "gl_compatibility",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "app.gd",
+    "--"
+  ]
+}

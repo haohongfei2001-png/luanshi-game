@@ -1,0 +1,1982 @@
+{
+  "512v512": "NOT_RUN_NO_CAPACITY_CLAIM",
+  "active_invalid": [],
+  "actor_sha": "afb966396bf5ad656b3cb0cd2edc388fc6fa02eba59df8b81d9a23ac53f3be8b",
+  "actual_capture_pixels": [
+    1024,
+    645
+  ],
+  "actual_hits": [
+    14,
+    15
+  ],
+  "actual_losses": [
+    3,
+    1
+  ],
+  "actual_tick": 111,
+  "art": "FAIL_WIP_NOT_OWNER_ACCEPTED",
+  "camera_angle_degrees": 45,
+  "camera_size": 22.0,
+  "dynamic_environment_light": "UNSUPPORTED_PRELIT",
+  "elapsed_seconds": 10.0166666666667,
+  "experiment": "2.5D fixed-angle world-anchored projection",
+  "finite_camera_bounds": "source plate bounds clamped at constant22m; main camera unchanged",
+  "frames": 75,
+  "hero_hp": 0.0,
+  "input": "real Battle.input_state/press_action; no live Unit positions or HP assigned",
+  "mode": "combat",
+  "new_spear_actors": [
+    1,
+    2,
+    4,
+    5,
+    7,
+    9,
+    10,
+    12,
+    13,
+    15,
+    18
+  ],
+  "ordinary_per_side": [
+    8,
+    8
+  ],
+  "other_kit_diagnostic_proxies": [
+    0,
+    3,
+    6,
+    8,
+    11,
+    14,
+    16,
+    17
+  ],
+  "path_waypoints_reached": 2,
+  "render_input_path": "isolated Battle-driven Node._physics_process, NOT original Controller input acceptance",
+  "rendering": {
+    "device": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 26.7.2 (Build 25G332))",
+    "engine": {
+      "build": "official",
+      "hash": "7d41c59c457bd5a245092b4e7eb2d833e3b3f8c3",
+      "hex": 263683,
+      "major": 4,
+      "minor": 6,
+      "patch": 3,
+      "status": "stable",
+      "string": "4.6.3-stable (official)",
+      "timestamp": 0
+    },
+    "internal_scale": 1.0,
+    "method": "gl_compatibility",
+    "os": "macOS",
+    "vendor": "Google Inc. (Apple)",
+    "viewport": "(1024, 645)"
+  },
+  "roster": 19,
+  "rotation": "UNSUPPORTED_THIS_ISOLATED_MODE_ONLY_MAIN_UNCHANGED",
+  "setup": {
+    "counts": [
+      {
+        "available": 38,
+        "placed": 10,
+        "team": 0
+      },
+      {
+        "available": 11,
+        "placed": 9,
+        "team": 1
+      }
+    ],
+    "error": 0,
+    "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+    "ordinary_per_side": [
+      8,
+      8
+    ],
+    "saved_battle_migrated": false,
+    "source_topology": "6e363423ae09880be645e13055617bc6b45107f6edadf5abaef186454cc408d6"
+  },
+  "simulated_seconds": 5.55,
+  "source_texture_pixels": "(1672.0, 941.0)",
+  "source_texture_sha": "9471178db61606963fd5a1d4f8acb17ad08b0acd9637bf802e28426493355da5",
+  "topology": "6e363423ae09880be645e13055617bc6b45107f6edadf5abaef186454cc408d6",
+  "trace": [
+    {
+      "camera_position": "(-2.245703, 41.0, 42.48681)",
+      "frame": 0,
+      "hero_hp": 100.0,
+      "hero_position": [
+        0.754295706748962,
+        0.0,
+        2.48680973052979
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        855.716430664062,
+        516.463684082031
+      ],
+      "tick": 2,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 0.133333333333333
+    },
+    {
+      "camera_position": "(-1.801296, 41.0, 42.04027)",
+      "frame": 1,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.19870388507843,
+        0.0,
+        2.04026627540588
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        867.332763671875,
+        508.210205078125
+      ],
+      "tick": 5,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 0.280250333333335
+    },
+    {
+      "camera_position": "(-1.505024, 41.0, 41.74257)",
+      "frame": 2,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.49497592449188,
+        0.0,
+        1.74257040023804
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        875.077026367188,
+        502.707916259766
+      ],
+      "tick": 7,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 0.403938000000002
+    },
+    {
+      "camera_position": "(-1.060616, 41.0, 41.29603)",
+      "frame": 3,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.93938398361206,
+        0.0,
+        1.29602658748627
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        886.693359375,
+        494.454437255859
+      ],
+      "tick": 10,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 0.538973666666669
+    },
+    {
+      "camera_position": "(-0.568685, 41.0, 40.90644)",
+      "frame": 4,
+      "hero_hp": 100.0,
+      "hero_position": [
+        2.43131470680237,
+        0.0,
+        0.906441628932953
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        899.551879882812,
+        487.253753662109
+      ],
+      "tick": 13,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 0.668971333333335
+    },
+    {
+      "camera_position": "(-0.215806, 41.0, 40.67868)",
+      "frame": 5,
+      "hero_hp": 100.0,
+      "hero_position": [
+        2.78419470787048,
+        0.0,
+        0.678679287433624
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        908.775756835938,
+        483.044006347656
+      ],
+      "tick": 15,
+      "viewport_foot_pixel": "(599.9546, 343.2311)",
+      "wall_seconds": 0.809056333333335
+    },
+    {
+      "camera_position": "(0.313515, 41.0, 40.33704)",
+      "frame": 6,
+      "hero_hp": 100.0,
+      "hero_position": [
+        3.31351470947266,
+        0.0,
+        0.337035894393921
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        922.611572265625,
+        476.729431152344
+      ],
+      "tick": 18,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 0.942966000000002
+    },
+    {
+      "camera_position": "(0.842835, 41.0, 39.99539)",
+      "frame": 7,
+      "hero_hp": 100.0,
+      "hero_position": [
+        3.84283471107483,
+        0.0,
+        -0.00460752844810486
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        936.447448730469,
+        470.414825439453
+      ],
+      "tick": 21,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 1.06666666666667
+    },
+    {
+      "camera_position": "(1.195714, 41.0, 39.76763)",
+      "frame": 8,
+      "hero_hp": 100.0,
+      "hero_position": [
+        4.19571495056152,
+        0.0,
+        -0.232369810342789
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        945.671325683594,
+        466.205108642578
+      ],
+      "tick": 23,
+      "viewport_foot_pixel": "(599.9546, 343.2311)",
+      "wall_seconds": 1.20504966666667
+    },
+    {
+      "camera_position": "(1.725036, 41.0, 39.42599)",
+      "frame": 9,
+      "hero_hp": 100.0,
+      "hero_position": [
+        4.72503566741943,
+        0.0,
+        -0.574013233184814
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        959.507202148438,
+        459.890533447266
+      ],
+      "tick": 26,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 1.35
+    },
+    {
+      "camera_position": "(2.254355, 41.0, 39.08434)",
+      "frame": 10,
+      "hero_hp": 100.0,
+      "hero_position": [
+        5.25435543060303,
+        0.0,
+        -0.915656745433807
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        973.343017578125,
+        453.575927734375
+      ],
+      "tick": 29,
+      "viewport_foot_pixel": "(599.9546, 343.2311)",
+      "wall_seconds": 1.46921566666667
+    },
+    {
+      "camera_position": "(2.607237, 41.0, 38.85658)",
+      "frame": 11,
+      "hero_hp": 100.0,
+      "hero_position": [
+        5.6072359085083,
+        0.0,
+        -1.14341914653778
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        982.56689453125,
+        449.3662109375
+      ],
+      "tick": 31,
+      "viewport_foot_pixel": "(599.9545, 343.2312)",
+      "wall_seconds": 1.6
+    },
+    {
+      "camera_position": "(3.136556, 41.0, 38.51494)",
+      "frame": 12,
+      "hero_hp": 100.0,
+      "hero_position": [
+        6.13655614852905,
+        0.0,
+        -1.48506283760071
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        996.402770996094,
+        443.051605224609
+      ],
+      "tick": 34,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 1.74270866666667
+    },
+    {
+      "camera_position": "(3.665877, 41.0, 38.17329)",
+      "frame": 13,
+      "hero_hp": 100.0,
+      "hero_position": [
+        6.6658763885498,
+        0.0,
+        -1.82670640945435
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1010.23858642578,
+        436.736999511719
+      ],
+      "tick": 37,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 1.87640033333334
+    },
+    {
+      "camera_position": "(4.033797, 41.0, 37.97318)",
+      "frame": 14,
+      "hero_hp": 100.0,
+      "hero_position": [
+        7.0337963104248,
+        0.0,
+        -2.02681660652161
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1019.85559082031,
+        433.038391113281
+      ],
+      "tick": 39,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.01666666666667
+    },
+    {
+      "camera_position": "(4.589114, 41.0, 37.67566)",
+      "frame": 15,
+      "hero_hp": 100.0,
+      "hero_position": [
+        7.58911371231079,
+        0.0,
+        -2.32434511184692
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1034.37097167969,
+        427.539154052734
+      ],
+      "tick": 42,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.136322
+    },
+    {
+      "camera_position": "(5.141636, 41.0, 37.37297)",
+      "frame": 16,
+      "hero_hp": 100.0,
+      "hero_position": [
+        8.14163589477539,
+        0.0,
+        -2.62703275680542
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1048.81335449219,
+        421.944580078125
+      ],
+      "tick": 45,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.283287
+    },
+    {
+      "camera_position": "(5.509984, 41.0, 37.17118)",
+      "frame": 17,
+      "hero_hp": 100.0,
+      "hero_position": [
+        8.50998306274414,
+        0.0,
+        -2.82882452011108
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1058.44152832031,
+        418.214874267578
+      ],
+      "tick": 47,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.40421466666667
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 18,
+      "hero_hp": 100.0,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 50,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.54426966666667
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 19,
+      "hero_hp": 100.0,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 53,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.66666666666667
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 20,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        1,
+        3
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 55,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.8
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 21,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        2,
+        4
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 58,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 2.93333333333333
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 22,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        2,
+        4
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 61,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 3.07176966666667
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 23,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        3,
+        4
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 63,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 3.213034
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 24,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        5,
+        6
+      ],
+      "losses": [
+        1,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 66,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 3.33877633333334
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 25,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        6,
+        6
+      ],
+      "losses": [
+        1,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 69,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 3.47384366666667
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 26,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        6,
+        7
+      ],
+      "losses": [
+        1,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 71,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 3.61183633333334
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 27,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        6,
+        8
+      ],
+      "losses": [
+        2,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 74,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 3.75
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 28,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        7,
+        8
+      ],
+      "losses": [
+        2,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 77,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 3.88333333333334
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 29,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        8,
+        8
+      ],
+      "losses": [
+        2,
+        0
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 79,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 4.01666666666667
+    },
+    {
+      "camera_position": "(5.694157, 41.0, 37.07028)",
+      "frame": 30,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        8.69415664672852,
+        0.0,
+        -2.92972040176392
+      ],
+      "hits": [
+        11,
+        8
+      ],
+      "losses": [
+        2,
+        1
+      ],
+      "source_foot_pixel": [
+        1063.25561523438,
+        416.350006103516
+      ],
+      "tick": 82,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 4.14793566666667
+    },
+    {
+      "camera_position": "(6.145383, 41.0, 36.82309)",
+      "frame": 31,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        9.14538192749023,
+        0.0,
+        -3.17691540718079
+      ],
+      "hits": [
+        11,
+        8
+      ],
+      "losses": [
+        2,
+        1
+      ],
+      "source_foot_pixel": [
+        1075.05017089844,
+        411.781127929688
+      ],
+      "tick": 85,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 4.26666666666667
+    },
+    {
+      "camera_position": "(6.329556, 41.0, 36.72219)",
+      "frame": 32,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        9.32955551147461,
+        0.0,
+        -3.27781128883362
+      ],
+      "hits": [
+        11,
+        11
+      ],
+      "losses": [
+        2,
+        1
+      ],
+      "source_foot_pixel": [
+        1079.8642578125,
+        409.916259765625
+      ],
+      "tick": 87,
+      "viewport_foot_pixel": "(599.9545, 343.231)",
+      "wall_seconds": 4.4
+    },
+    {
+      "camera_position": "(6.329556, 41.0, 36.72219)",
+      "frame": 33,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        9.32955551147461,
+        0.0,
+        -3.27781128883362
+      ],
+      "hits": [
+        11,
+        12
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1079.8642578125,
+        409.916259765625
+      ],
+      "tick": 90,
+      "viewport_foot_pixel": "(599.9545, 343.231)",
+      "wall_seconds": 4.53333333333333
+    },
+    {
+      "camera_position": "(6.329556, 41.0, 36.72219)",
+      "frame": 34,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        9.32955551147461,
+        0.0,
+        -3.27781128883362
+      ],
+      "hits": [
+        12,
+        12
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1079.8642578125,
+        409.916259765625
+      ],
+      "tick": 93,
+      "viewport_foot_pixel": "(599.9545, 343.231)",
+      "wall_seconds": 4.66806333333334
+    },
+    {
+      "camera_position": "(6.329556, 41.0, 36.72219)",
+      "frame": 35,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        9.32955551147461,
+        0.0,
+        -3.27781128883362
+      ],
+      "hits": [
+        12,
+        12
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1079.8642578125,
+        409.916259765625
+      ],
+      "tick": 95,
+      "viewport_foot_pixel": "(599.9545, 343.231)",
+      "wall_seconds": 4.8
+    },
+    {
+      "camera_position": "(6.329556, 41.0, 36.72219)",
+      "frame": 36,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        9.32955551147461,
+        0.0,
+        -3.27781128883362
+      ],
+      "hits": [
+        13,
+        12
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1079.8642578125,
+        409.916259765625
+      ],
+      "tick": 98,
+      "viewport_foot_pixel": "(599.9545, 343.231)",
+      "wall_seconds": 4.93444666666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 37,
+      "hero_hp": 63.0321626663208,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        13,
+        12
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 101,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 5.07611333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 38,
+      "hero_hp": 42.1695777773857,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        13,
+        13
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 103,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 5.20111333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 39,
+      "hero_hp": 18.0599794983864,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        13,
+        14
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 106,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 5.34278
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 40,
+      "hero_hp": 18.0599794983864,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        13,
+        14
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 109,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 5.47797933333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 41,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 5.61131266666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 42,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 5.743329
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 43,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 5.87547966666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 44,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.003354
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 45,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.13657966666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 46,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.27032966666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 47,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.401852
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 48,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.53945533333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 49,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.680019
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 50,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.8
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 51,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 6.93333333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 52,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 7.082108
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 53,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 7.21666666666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 54,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 7.335352
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 55,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 7.48314566666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 56,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 7.61148633333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 57,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 7.73333333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 58,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 7.86666666666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 59,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.01040933333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 60,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.13333333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 61,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.26666666666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 62,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.41666666666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 63,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.549293
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 64,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.68333333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 65,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.80845333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 66,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 8.93696400000001
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 67,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 9.081601
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 68,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 9.21666666666667
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 69,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 9.34583333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 70,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 9.468009
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 71,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 9.604909
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 72,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 9.748202
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 73,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 9.88333333333334
+    },
+    {
+      "camera_position": "(6.51373, 41.0, 36.62129)",
+      "frame": 74,
+      "hero_hp": 0.0,
+      "hero_position": [
+        9.51372909545898,
+        0.0,
+        -3.37870717048645
+      ],
+      "hits": [
+        14,
+        15
+      ],
+      "losses": [
+        3,
+        1
+      ],
+      "source_foot_pixel": [
+        1084.67834472656,
+        408.051391601562
+      ],
+      "tick": 111,
+      "viewport_foot_pixel": "(599.9545, 343.2311)",
+      "wall_seconds": 10.0166666666667
+    }
+  ]
+}

@@ -1,0 +1,1884 @@
+{
+  "512v512": "NOT_RUN_NO_CAPACITY_CLAIM",
+  "active_invalid": [],
+  "actor_sha": "",
+  "actual_capture_pixels": [
+    2560,
+    1440
+  ],
+  "actual_hits": [
+    0,
+    5
+  ],
+  "actual_losses": [
+    0,
+    0
+  ],
+  "actual_tick": 124,
+  "art": "FAIL_WIP_NOT_OWNER_ACCEPTED",
+  "camera_angle_degrees": 45,
+  "camera_size": 22.0,
+  "dynamic_environment_light": "UNSUPPORTED_PRELIT",
+  "elapsed_seconds": 11.142753,
+  "experiment": "2.5D fixed-angle world-anchored projection",
+  "finite_camera_bounds": "source plate bounds clamped at constant22m; main camera unchanged",
+  "frames": 54,
+  "hero_hp": 0.0,
+  "input": "real Battle.input_state/press_action; no live Unit positions or HP assigned",
+  "mode": "traversal",
+  "new_spear_actors": [
+    1,
+    2,
+    4,
+    5,
+    7,
+    9,
+    10,
+    12,
+    13,
+    15,
+    18
+  ],
+  "no_readback_window": false,
+  "ordinary_per_side": [
+    8,
+    8
+  ],
+  "other_kit_diagnostic_proxies": [
+    0,
+    3,
+    6,
+    8,
+    11,
+    14,
+    16,
+    17
+  ],
+  "path_waypoints_reached": 5,
+  "process_frame_count": 258,
+  "process_wall_timestamps": [
+    0.104531,
+    3.748084,
+    4.021322,
+    4.106461,
+    4.113042,
+    4.116217,
+    4.127623,
+    4.189873,
+    4.19469,
+    4.207693,
+    4.222657,
+    4.238395,
+    4.328145,
+    4.333339,
+    4.339016,
+    4.415933,
+    4.431715,
+    4.440646,
+    4.528269,
+    4.532071,
+    4.537152,
+    4.56245,
+    4.645002,
+    4.650342,
+    4.680684,
+    4.745614,
+    4.749176,
+    4.759408,
+    4.773368,
+    4.78928,
+    4.85145,
+    4.854401,
+    4.861699,
+    4.893778,
+    4.958175,
+    4.964605,
+    4.96896,
+    4.975961,
+    4.989719,
+    5.010048,
+    5.067003,
+    5.07441,
+    5.080564,
+    5.089158,
+    5.134489,
+    5.197876,
+    5.209388,
+    5.213438,
+    5.221586,
+    5.242413,
+    5.311555,
+    5.322654,
+    5.329656,
+    5.339471,
+    5.376452,
+    5.436858,
+    5.440245,
+    5.446629,
+    5.455547,
+    5.474739,
+    5.490367,
+    5.567871,
+    5.575965,
+    5.579864,
+    5.589199,
+    5.612991,
+    5.693275,
+    5.706995,
+    5.711446,
+    5.72318,
+    5.796522,
+    5.80013,
+    5.811091,
+    5.822141,
+    5.840695,
+    5.910801,
+    5.916829,
+    5.921438,
+    5.940326,
+    5.959563,
+    6.031763,
+    6.035027,
+    6.041467,
+    6.056171,
+    6.075011,
+    6.145189,
+    6.148842,
+    6.156445,
+    6.173886,
+    6.19195,
+    6.267211,
+    6.273909,
+    6.284813,
+    6.292021,
+    6.35734,
+    6.365275,
+    6.368701,
+    6.374528,
+    6.390246,
+    6.409539,
+    6.482718,
+    6.486094,
+    6.490773,
+    6.514344,
+    6.571444,
+    6.575104,
+    6.580531,
+    6.589337,
+    6.610989,
+    6.623259,
+    6.706975,
+    6.713289,
+    6.723472,
+    6.778158,
+    6.780985,
+    6.784948,
+    6.788641,
+    6.806203,
+    6.825111,
+    6.882042,
+    6.885257,
+    6.889419,
+    6.904704,
+    6.924762,
+    6.938732,
+    7.016355,
+    7.026585,
+    7.030477,
+    7.038795,
+    7.109051,
+    7.115647,
+    7.119886,
+    7.125406,
+    7.156833,
+    7.252051,
+    7.264772,
+    7.335153,
+    7.339611,
+    7.346778,
+    7.356235,
+    7.378384,
+    7.443625,
+    7.446964,
+    7.457828,
+    7.475083,
+    7.490189,
+    7.554777,
+    7.560788,
+    7.564594,
+    7.571447,
+    7.590533,
+    7.657017,
+    7.663014,
+    7.668354,
+    7.674283,
+    7.688598,
+    7.708772,
+    7.76629,
+    7.771623,
+    7.775578,
+    7.788728,
+    7.807851,
+    7.822059,
+    7.880604,
+    7.883674,
+    7.888718,
+    7.909505,
+    7.921375,
+    7.938123,
+    7.998246,
+    8.001389,
+    8.008597,
+    8.021425,
+    8.038187,
+    8.097933,
+    8.100883,
+    8.1075,
+    8.121368,
+    8.138247,
+    8.199195,
+    8.202154,
+    8.210735,
+    8.221442,
+    8.238139,
+    8.25806,
+    8.311606,
+    8.316498,
+    8.320002,
+    8.341448,
+    8.358301,
+    8.411282,
+    8.416474,
+    8.420306,
+    8.426481,
+    8.441094,
+    8.457351,
+    8.473227,
+    8.535105,
+    8.538505,
+    8.543822,
+    8.557676,
+    8.574453,
+    8.632998,
+    8.635774,
+    8.640115,
+    8.660296,
+    8.671442,
+    8.688528,
+    8.750267,
+    8.753583,
+    8.761991,
+    8.772711,
+    8.788161,
+    8.807985,
+    8.864945,
+    8.870765,
+    8.873811,
+    8.889179,
+    8.911415,
+    8.96124,
+    8.967946,
+    8.97087,
+    8.988189,
+    9.008801,
+    9.021374,
+    9.084679,
+    9.088248,
+    9.092994,
+    9.109949,
+    9.121301,
+    9.138732,
+    10.637134,
+    10.703405,
+    10.706641,
+    10.711285,
+    10.721234,
+    10.74308,
+    10.795735,
+    10.801307,
+    10.804601,
+    10.821525,
+    10.841778,
+    10.854595,
+    10.91157,
+    10.914143,
+    10.918214,
+    10.921957,
+    10.942713,
+    10.954458,
+    10.971662,
+    11.031315,
+    11.034553,
+    11.041821,
+    11.054959,
+    11.072706,
+    11.132893,
+    11.136037,
+    11.142753
+  ],
+  "render_input_path": "isolated Battle-driven Node._physics_process, NOT original Controller input acceptance",
+  "render_warmup_seconds": 0.022209,
+  "rendering": {
+    "device": "Apple Paravirtual device (Apple5)",
+    "engine": {
+      "build": "custom_build",
+      "hash": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+      "hex": 263683,
+      "major": 4,
+      "minor": 6,
+      "patch": 3,
+      "status": "stable",
+      "string": "4.6.3-stable (custom_build)",
+      "timestamp": 1779284873
+    },
+    "internal_scale": 1.0,
+    "method": "mobile",
+    "native_window_pixels": "(1024, 645)",
+    "os": "macOS",
+    "render_target_reported_pixels": "(2560.0, 1440.0)",
+    "requested_render_pixels": "(2560, 1440)",
+    "vendor": "Apple"
+  },
+  "roster": 19,
+  "rotation": "UNSUPPORTED_THIS_ISOLATED_MODE_ONLY_MAIN_UNCHANGED",
+  "setup": {
+    "counts": [
+      {
+        "available": 38,
+        "placed": 10,
+        "team": 0
+      },
+      {
+        "available": 12,
+        "placed": 9,
+        "team": 1
+      }
+    ],
+    "error": 0,
+    "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+    "ordinary_per_side": [
+      8,
+      8
+    ],
+    "saved_battle_migrated": false,
+    "source_topology": "4d699c6d80decc5725ffaca2072a6f01f7cb45fbab5db2451443c4a5dc336fb6"
+  },
+  "simulated_seconds": 6.2,
+  "source_texture_pixels": "(1672.0, 941.0)",
+  "source_texture_sha": "",
+  "topology": "4d699c6d80decc5725ffaca2072a6f01f7cb45fbab5db2451443c4a5dc336fb6",
+  "trace": [
+    {
+      "camera_position": "(-2.245703, 41.0, 42.48681)",
+      "file": "frame-00000.jpg",
+      "frame": 0,
+      "hero_hp": 100.0,
+      "hero_position": [
+        0.754295706748962,
+        0.0,
+        2.48680973052979
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 2.552342,
+      "schedule_elapsed_seconds": 0.104531,
+      "source_foot_pixel": [
+        855.716430664062,
+        516.463684082031
+      ],
+      "tick": 2,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 1.111348
+    },
+    {
+      "camera_position": "(-1.801296, 41.0, 42.04027)",
+      "file": "frame-00001.jpg",
+      "frame": 1,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.19870388507843,
+        0.0,
+        2.04026627540588
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.246392,
+      "schedule_elapsed_seconds": 3.748084,
+      "source_foot_pixel": [
+        867.332763671875,
+        508.210205078125
+      ],
+      "tick": 5,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 3.759766
+    },
+    {
+      "camera_position": "(-1.356887, 41.0, 41.59372)",
+      "file": "frame-00002.jpg",
+      "frame": 2,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.64311194419861,
+        0.0,
+        1.59372246265411
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0575659999999996,
+      "schedule_elapsed_seconds": 4.021322,
+      "source_foot_pixel": [
+        878.949096679688,
+        499.956756591797
+      ],
+      "tick": 8,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.027249
+    },
+    {
+      "camera_position": "(-1.060616, 41.0, 41.29603)",
+      "file": "frame-00003.jpg",
+      "frame": 3,
+      "hero_hp": 100.0,
+      "hero_position": [
+        1.93938398361206,
+        0.0,
+        1.29602658748627
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0487500000000001,
+      "schedule_elapsed_seconds": 4.127623,
+      "source_foot_pixel": [
+        886.693359375,
+        494.454437255859
+      ],
+      "tick": 10,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.137796
+    },
+    {
+      "camera_position": "(-0.745125, 41.0, 41.02032)",
+      "file": "frame-00004.jpg",
+      "frame": 4,
+      "hero_hp": 100.0,
+      "hero_position": [
+        2.25487470626831,
+        0.0,
+        1.02032279968262
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0670509999999993,
+      "schedule_elapsed_seconds": 4.238395,
+      "source_foot_pixel": [
+        894.93994140625,
+        489.358612060547
+      ],
+      "tick": 12,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.255061
+    },
+    {
+      "camera_position": "(-0.392246, 41.0, 40.79256)",
+      "file": "frame-00005.jpg",
+      "frame": 5,
+      "hero_hp": 100.0,
+      "hero_position": [
+        2.60775470733643,
+        0.0,
+        0.792560458183289
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0489809999999995,
+      "schedule_elapsed_seconds": 4.339016,
+      "source_foot_pixel": [
+        904.163818359375,
+        485.148895263672
+      ],
+      "tick": 14,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.360553
+    },
+    {
+      "camera_position": "(-0.039366, 41.0, 40.5648)",
+      "file": "frame-00006.jpg",
+      "frame": 6,
+      "hero_hp": 100.0,
+      "hero_position": [
+        2.96063470840454,
+        0.0,
+        0.564798176288605
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0744759999999998,
+      "schedule_elapsed_seconds": 4.440646,
+      "source_foot_pixel": [
+        913.3876953125,
+        480.939147949219
+      ],
+      "tick": 16,
+      "viewport_foot_pixel": "(1476.364, 766.2833)",
+      "wall_seconds": 4.44817
+    },
+    {
+      "camera_position": "(0.489955, 41.0, 40.22316)",
+      "file": "frame-00007.jpg",
+      "frame": 7,
+      "hero_hp": 100.0,
+      "hero_position": [
+        3.48995471000671,
+        0.0,
+        0.223154753446579
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0521280000000006,
+      "schedule_elapsed_seconds": 4.56245,
+      "source_foot_pixel": [
+        927.223510742188,
+        474.624572753906
+      ],
+      "tick": 19,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.587674
+    },
+    {
+      "camera_position": "(0.842835, 41.0, 39.99539)",
+      "file": "frame-00008.jpg",
+      "frame": 8,
+      "hero_hp": 100.0,
+      "hero_position": [
+        3.84283471107483,
+        0.0,
+        -0.00460752844810486
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0534140000000001,
+      "schedule_elapsed_seconds": 4.680684,
+      "source_foot_pixel": [
+        936.447448730469,
+        470.414825439453
+      ],
+      "tick": 21,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.688026
+    },
+    {
+      "camera_position": "(1.195714, 41.0, 39.76763)",
+      "file": "frame-00009.jpg",
+      "frame": 9,
+      "hero_hp": 100.0,
+      "hero_position": [
+        4.19571495056152,
+        0.0,
+        -0.232369810342789
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0426359999999999,
+      "schedule_elapsed_seconds": 4.78928,
+      "source_foot_pixel": [
+        945.671325683594,
+        466.205108642578
+      ],
+      "tick": 23,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.806115
+    },
+    {
+      "camera_position": "(1.548596, 41.0, 39.53987)",
+      "file": "frame-00010.jpg",
+      "frame": 10,
+      "hero_hp": 100.0,
+      "hero_position": [
+        4.5485954284668,
+        0.0,
+        -0.460132092237473
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0488559999999998,
+      "schedule_elapsed_seconds": 4.893778,
+      "source_foot_pixel": [
+        954.895202636719,
+        461.995391845703
+      ],
+      "tick": 25,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 4.905939
+    },
+    {
+      "camera_position": "(2.077915, 41.0, 39.19822)",
+      "file": "frame-00011.jpg",
+      "frame": 11,
+      "hero_hp": 100.0,
+      "hero_position": [
+        5.07791566848755,
+        0.0,
+        -0.801775574684143
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0451839999999999,
+      "schedule_elapsed_seconds": 5.010048,
+      "source_foot_pixel": [
+        968.731079101562,
+        455.680786132812
+      ],
+      "tick": 28,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.021584
+    },
+    {
+      "camera_position": "(2.430794, 41.0, 38.97046)",
+      "file": "frame-00012.jpg",
+      "frame": 12,
+      "hero_hp": 100.0,
+      "hero_position": [
+        5.43079566955566,
+        0.0,
+        -1.02953791618347
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.053185,
+      "schedule_elapsed_seconds": 5.134489,
+      "source_foot_pixel": [
+        977.954956054688,
+        451.471069335938
+      ],
+      "tick": 30,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.139495
+    },
+    {
+      "camera_position": "(2.783676, 41.0, 38.7427)",
+      "file": "frame-00013.jpg",
+      "frame": 13,
+      "hero_hp": 100.0,
+      "hero_position": [
+        5.78367614746094,
+        0.0,
+        -1.25730037689209
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0528079999999997,
+      "schedule_elapsed_seconds": 5.242413,
+      "source_foot_pixel": [
+        987.178894042969,
+        447.261322021484
+      ],
+      "tick": 32,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.255982
+    },
+    {
+      "camera_position": "(3.312995, 41.0, 38.40105)",
+      "file": "frame-00014.jpg",
+      "frame": 14,
+      "hero_hp": 100.0,
+      "hero_position": [
+        6.31299591064453,
+        0.0,
+        -1.59894406795502
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0460520000000004,
+      "schedule_elapsed_seconds": 5.376452,
+      "source_foot_pixel": [
+        1001.01470947266,
+        440.946746826172
+      ],
+      "tick": 35,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.388477
+    },
+    {
+      "camera_position": "(3.665877, 41.0, 38.17329)",
+      "file": "frame-00015.jpg",
+      "frame": 15,
+      "hero_hp": 100.0,
+      "hero_position": [
+        6.6658763885498,
+        0.0,
+        -1.82670640945435
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0583710000000002,
+      "schedule_elapsed_seconds": 5.490367,
+      "source_foot_pixel": [
+        1010.23858642578,
+        436.736999511719
+      ],
+      "tick": 37,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.505712
+    },
+    {
+      "camera_position": "(4.033797, 41.0, 37.97318)",
+      "file": "frame-00016.jpg",
+      "frame": 16,
+      "hero_hp": 100.0,
+      "hero_position": [
+        7.0337963104248,
+        0.0,
+        -2.02681660652161
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0616729999999999,
+      "schedule_elapsed_seconds": 5.612991,
+      "source_foot_pixel": [
+        1019.85559082031,
+        433.038391113281
+      ],
+      "tick": 39,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.622698
+    },
+    {
+      "camera_position": "(4.589114, 41.0, 37.67566)",
+      "file": "frame-00017.jpg",
+      "frame": 17,
+      "hero_hp": 100.0,
+      "hero_position": [
+        7.58911371231079,
+        0.0,
+        -2.32434511184692
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0525849999999997,
+      "schedule_elapsed_seconds": 5.72318,
+      "source_foot_pixel": [
+        1034.37097167969,
+        427.539154052734
+      ],
+      "tick": 42,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.741276
+    },
+    {
+      "camera_position": "(4.957461, 41.0, 37.47387)",
+      "file": "frame-00018.jpg",
+      "frame": 18,
+      "hero_hp": 100.0,
+      "hero_position": [
+        7.95746183395386,
+        0.0,
+        -2.52613687515259
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0531389999999998,
+      "schedule_elapsed_seconds": 5.840695,
+      "source_foot_pixel": [
+        1043.99926757812,
+        423.809448242188
+      ],
+      "tick": 44,
+      "viewport_foot_pixel": "(1476.364, 766.2833)",
+      "wall_seconds": 5.855082
+    },
+    {
+      "camera_position": "(5.509984, 41.0, 37.17118)",
+      "file": "frame-00019.jpg",
+      "frame": 19,
+      "hero_hp": 100.0,
+      "hero_position": [
+        8.50998306274414,
+        0.0,
+        -2.82882452011108
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0568460000000002,
+      "schedule_elapsed_seconds": 5.959563,
+      "source_foot_pixel": [
+        1058.44152832031,
+        418.214874267578
+      ],
+      "tick": 47,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 5.972409
+    },
+    {
+      "camera_position": "(5.87833, 41.0, 36.96938)",
+      "file": "frame-00020.jpg",
+      "frame": 20,
+      "hero_hp": 100.0,
+      "hero_position": [
+        8.87833023071289,
+        0.0,
+        -3.03061628341675
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0514299999999999,
+      "schedule_elapsed_seconds": 6.075011,
+      "source_foot_pixel": [
+        1068.06970214844,
+        414.485168457031
+      ],
+      "tick": 49,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.090936
+    },
+    {
+      "camera_position": "(6.246677, 41.0, 36.76759)",
+      "file": "frame-00021.jpg",
+      "frame": 21,
+      "hero_hp": 100.0,
+      "hero_position": [
+        9.24667739868164,
+        0.0,
+        -3.23240804672241
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0552719999999995,
+      "schedule_elapsed_seconds": 6.19195,
+      "source_foot_pixel": [
+        1077.69787597656,
+        410.755462646484
+      ],
+      "tick": 51,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.207987
+    },
+    {
+      "camera_position": "(6.615024, 41.0, 36.5658)",
+      "file": "frame-00022.jpg",
+      "frame": 22,
+      "hero_hp": 100.0,
+      "hero_position": [
+        9.61502456665039,
+        0.0,
+        -3.43419981002808
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0486300000000002,
+      "schedule_elapsed_seconds": 6.292021,
+      "source_foot_pixel": [
+        1087.32604980469,
+        407.025726318359
+      ],
+      "tick": 53,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.306281
+    },
+    {
+      "camera_position": "(7.167546, 41.0, 36.26311)",
+      "file": "frame-00023.jpg",
+      "frame": 23,
+      "hero_hp": 100.0,
+      "hero_position": [
+        10.1675453186035,
+        0.0,
+        -3.73688745498657
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0565810000000004,
+      "schedule_elapsed_seconds": 6.409539,
+      "source_foot_pixel": [
+        1101.76831054688,
+        401.43115234375
+      ],
+      "tick": 56,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.423951
+    },
+    {
+      "camera_position": "(7.535892, 41.0, 36.06132)",
+      "file": "frame-00024.jpg",
+      "frame": 24,
+      "hero_hp": 100.0,
+      "hero_position": [
+        10.5358924865723,
+        0.0,
+        -3.93867921829224
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0462510000000007,
+      "schedule_elapsed_seconds": 6.514344,
+      "source_foot_pixel": [
+        1111.396484375,
+        397.701446533203
+      ],
+      "tick": 58,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.522885
+    },
+    {
+      "camera_position": "(7.904239, 41.0, 35.85953)",
+      "file": "frame-00025.jpg",
+      "frame": 25,
+      "hero_hp": 100.0,
+      "hero_position": [
+        10.904239654541,
+        0.0,
+        -4.1404709815979
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0655380000000001,
+      "schedule_elapsed_seconds": 6.623259,
+      "source_foot_pixel": [
+        1121.02465820312,
+        393.971740722656
+      ],
+      "tick": 60,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.639362
+    },
+    {
+      "camera_position": "(8.272586, 41.0, 35.65774)",
+      "file": "frame-00026.jpg",
+      "frame": 26,
+      "hero_hp": 100.0,
+      "hero_position": [
+        11.2725868225098,
+        0.0,
+        -4.34226274490356
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0397359999999995,
+      "schedule_elapsed_seconds": 6.723472,
+      "source_foot_pixel": [
+        1130.65295410156,
+        390.242034912109
+      ],
+      "tick": 62,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.736512
+    },
+    {
+      "camera_position": "(8.640933, 41.0, 35.45595)",
+      "file": "frame-00027.jpg",
+      "frame": 27,
+      "hero_hp": 100.0,
+      "hero_position": [
+        11.6409339904785,
+        0.0,
+        -4.54405450820923
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0407019999999996,
+      "schedule_elapsed_seconds": 6.825111,
+      "source_foot_pixel": [
+        1140.28112792969,
+        386.512298583984
+      ],
+      "tick": 64,
+      "viewport_foot_pixel": "(1476.364, 766.2833)",
+      "wall_seconds": 6.838904
+    },
+    {
+      "camera_position": "(9.009279, 41.0, 35.25415)",
+      "file": "frame-00028.jpg",
+      "frame": 28,
+      "hero_hp": 100.0,
+      "hero_position": [
+        12.0092811584473,
+        0.0,
+        -4.74584579467773
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0567830000000002,
+      "schedule_elapsed_seconds": 6.938732,
+      "source_foot_pixel": [
+        1149.90930175781,
+        382.782592773438
+      ],
+      "tick": 66,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 6.954842
+    },
+    {
+      "camera_position": "(9.377626, 41.0, 35.05236)",
+      "file": "frame-00029.jpg",
+      "frame": 29,
+      "hero_hp": 100.0,
+      "hero_position": [
+        12.377628326416,
+        0.0,
+        -4.94763660430908
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0496409999999994,
+      "schedule_elapsed_seconds": 7.038795,
+      "source_foot_pixel": [
+        1159.53747558594,
+        379.052917480469
+      ],
+      "tick": 68,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 7.056625
+    },
+    {
+      "camera_position": "(9.762767, 41.0, 34.88483)",
+      "file": "frame-00030.jpg",
+      "frame": 30,
+      "hero_hp": 100.0,
+      "hero_position": [
+        12.762767791748,
+        0.0,
+        -5.1151704788208
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0686480000000005,
+      "schedule_elapsed_seconds": 7.156833,
+      "source_foot_pixel": [
+        1169.60461425781,
+        375.956390380859
+      ],
+      "tick": 70,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 7.174402
+    },
+    {
+      "camera_position": "(10.34048, 41.0, 34.63353)",
+      "file": "frame-00031.jpg",
+      "frame": 31,
+      "hero_hp": 100.0,
+      "hero_position": [
+        13.3404769897461,
+        0.0,
+        -5.36647129058838
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0598389999999993,
+      "schedule_elapsed_seconds": 7.264772,
+      "source_foot_pixel": [
+        1184.70520019531,
+        371.311584472656
+      ],
+      "tick": 73,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 7.272509
+    },
+    {
+      "camera_position": "(10.72562, 41.0, 34.466)",
+      "file": "frame-00032.jpg",
+      "frame": 32,
+      "hero_hp": 100.0,
+      "hero_position": [
+        13.7256164550781,
+        0.0,
+        -5.5340051651001
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0507280000000003,
+      "schedule_elapsed_seconds": 7.378384,
+      "source_foot_pixel": [
+        1194.77233886719,
+        368.215057373047
+      ],
+      "tick": 75,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 7.390598
+    },
+    {
+      "camera_position": "(11.11076, 41.0, 34.29846)",
+      "file": "frame-00033.jpg",
+      "frame": 33,
+      "hero_hp": 100.0,
+      "hero_position": [
+        14.1107559204102,
+        0.0,
+        -5.70153903961182
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0463130000000005,
+      "schedule_elapsed_seconds": 7.490189,
+      "source_foot_pixel": [
+        1204.83947753906,
+        365.118530273438
+      ],
+      "tick": 77,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 7.50618
+    },
+    {
+      "camera_position": "(11.4959, 41.0, 34.13093)",
+      "file": "frame-00034.jpg",
+      "frame": 34,
+      "hero_hp": 100.0,
+      "hero_position": [
+        14.4958953857422,
+        0.0,
+        -5.86907291412354
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0484,
+      "schedule_elapsed_seconds": 7.590533,
+      "source_foot_pixel": [
+        1214.90661621094,
+        362.022003173828
+      ],
+      "tick": 79,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 7.605993
+    },
+    {
+      "camera_position": "(12.0736, 41.0, 33.87963)",
+      "file": "frame-00035.jpg",
+      "frame": 35,
+      "hero_hp": 100.0,
+      "hero_position": [
+        15.0736045837402,
+        0.0,
+        -6.12037372589111
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0420090000000002,
+      "schedule_elapsed_seconds": 7.708772,
+      "source_foot_pixel": [
+        1230.00732421875,
+        357.377227783203
+      ],
+      "tick": 82,
+      "viewport_foot_pixel": "(1476.364, 766.2834)",
+      "wall_seconds": 7.724075
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 33.71209)",
+      "file": "frame-00036.jpg",
+      "frame": 36,
+      "hero_hp": 100.0,
+      "hero_position": [
+        15.4587440490723,
+        0.0,
+        -6.28790807723999
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0402380000000004,
+      "schedule_elapsed_seconds": 7.822059,
+      "source_foot_pixel": [
+        1240.07434082031,
+        354.280700683594
+      ],
+      "tick": 84,
+      "viewport_foot_pixel": "(1477.733, 766.2834)",
+      "wall_seconds": 7.838162
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 33.54456)",
+      "file": "frame-00037.jpg",
+      "frame": 37,
+      "hero_hp": 100.0,
+      "hero_position": [
+        15.8438835144043,
+        0.0,
+        -6.45544242858887
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0414259999999995,
+      "schedule_elapsed_seconds": 7.938123,
+      "source_foot_pixel": [
+        1250.14147949219,
+        351.184143066406
+      ],
+      "tick": 86,
+      "viewport_foot_pixel": "(1502.942, 766.2834)",
+      "wall_seconds": 7.954625
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 33.37703)",
+      "file": "frame-00038.jpg",
+      "frame": 38,
+      "hero_hp": 100.0,
+      "hero_position": [
+        16.2290229797363,
+        0.0,
+        -6.62297677993774
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0414209999999997,
+      "schedule_elapsed_seconds": 8.038187,
+      "source_foot_pixel": [
+        1260.20861816406,
+        348.087615966797
+      ],
+      "tick": 88,
+      "viewport_foot_pixel": "(1528.151, 766.2833)",
+      "wall_seconds": 8.054487
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 33.08675)",
+      "file": "frame-00039.jpg",
+      "frame": 39,
+      "hero_hp": 100.0,
+      "hero_position": [
+        16.4597072601318,
+        0.0,
+        -6.91325616836548
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0424040000000012,
+      "schedule_elapsed_seconds": 8.138247,
+      "source_foot_pixel": [
+        1266.23840332031,
+        342.722381591797
+      ],
+      "tick": 90,
+      "viewport_foot_pixel": "(1543.25, 766.2833)",
+      "wall_seconds": 8.154561
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 32.46721)",
+      "file": "frame-00040.jpg",
+      "frame": 40,
+      "hero_hp": 100.0,
+      "hero_position": [
+        16.5740547180176,
+        0.0,
+        -7.53279209136963
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0394220000000001,
+      "schedule_elapsed_seconds": 8.25806,
+      "source_foot_pixel": [
+        1269.22741699219,
+        331.271514892578
+      ],
+      "tick": 93,
+      "viewport_foot_pixel": "(1550.735, 766.2834)",
+      "wall_seconds": 8.271991
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 32.05418)",
+      "file": "frame-00041.jpg",
+      "frame": 41,
+      "hero_hp": 100.0,
+      "hero_position": [
+        16.6502857208252,
+        0.0,
+        -7.94581604003906
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0388950000000001,
+      "schedule_elapsed_seconds": 8.358301,
+      "source_foot_pixel": [
+        1271.21997070312,
+        323.637603759766
+      ],
+      "tick": 95,
+      "viewport_foot_pixel": "(1555.724, 766.2834)",
+      "wall_seconds": 8.372199
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.64116)",
+      "file": "frame-00042.jpg",
+      "frame": 42,
+      "hero_hp": 100.0,
+      "hero_position": [
+        16.7265167236328,
+        0.0,
+        -8.35884094238281
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0413319999999988,
+      "schedule_elapsed_seconds": 8.473227,
+      "source_foot_pixel": [
+        1273.21252441406,
+        316.003662109375
+      ],
+      "tick": 97,
+      "viewport_foot_pixel": "(1560.714, 766.2834)",
+      "wall_seconds": 8.490996
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.22813)",
+      "file": "frame-00043.jpg",
+      "frame": 43,
+      "hero_hp": 100.0,
+      "hero_position": [
+        16.8027477264404,
+        0.0,
+        -8.77186584472656
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0399599999999989,
+      "schedule_elapsed_seconds": 8.574453,
+      "source_foot_pixel": [
+        1275.20520019531,
+        308.369720458984
+      ],
+      "tick": 99,
+      "viewport_foot_pixel": "(1565.704, 766.2834)",
+      "wall_seconds": 8.590678
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00044.jpg",
+      "frame": 44,
+      "hero_hp": 100.0,
+      "hero_position": [
+        16.878978729248,
+        0.0,
+        -9.18489074707031
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0402989999999992,
+      "schedule_elapsed_seconds": 8.688528,
+      "source_foot_pixel": [
+        1277.19775390625,
+        300.735809326172
+      ],
+      "tick": 101,
+      "viewport_foot_pixel": "(1570.693, 753.0743)",
+      "wall_seconds": 8.70696
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00045.jpg",
+      "frame": 45,
+      "hero_hp": 100.0,
+      "hero_position": [
+        17.1759471893311,
+        0.0,
+        -9.74050712585449
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0400650000000002,
+      "schedule_elapsed_seconds": 8.807985,
+      "source_foot_pixel": [
+        1284.96020507812,
+        290.466339111328
+      ],
+      "tick": 104,
+      "viewport_foot_pixel": "(1590.131, 727.3586)",
+      "wall_seconds": 8.824694
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00046.jpg",
+      "frame": 46,
+      "hero_hp": 100.0,
+      "hero_position": [
+        17.3874626159668,
+        0.0,
+        -10.1030206680298
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0388070000000003,
+      "schedule_elapsed_seconds": 8.911415,
+      "source_foot_pixel": [
+        1290.48901367188,
+        283.766021728516
+      ],
+      "tick": 106,
+      "viewport_foot_pixel": "(1603.976, 710.5802)",
+      "wall_seconds": 8.922216
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00047.jpg",
+      "frame": 47,
+      "hero_hp": 100.0,
+      "hero_position": [
+        17.612512588501,
+        0.0,
+        -10.4576368331909
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0416049999999988,
+      "schedule_elapsed_seconds": 9.021374,
+      "source_foot_pixel": [
+        1296.37145996094,
+        277.211639404297
+      ],
+      "tick": 108,
+      "viewport_foot_pixel": "(1618.706, 694.1673)",
+      "wall_seconds": 9.037921
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00048.jpg",
+      "frame": 48,
+      "hero_hp": 100.0,
+      "hero_position": [
+        17.8375625610352,
+        0.0,
+        -10.8122529983521
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 1.470223,
+      "schedule_elapsed_seconds": 9.138732,
+      "source_foot_pixel": [
+        1302.25402832031,
+        270.657287597656
+      ],
+      "tick": 110,
+      "viewport_foot_pixel": "(1633.437, 677.7546)",
+      "wall_seconds": 9.155462
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00049.jpg",
+      "frame": 49,
+      "hero_hp": 100.0,
+      "hero_position": [
+        18.1277408599854,
+        0.0,
+        -11.3682861328125
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0558040000000002,
+      "schedule_elapsed_seconds": 10.637134,
+      "source_foot_pixel": [
+        1309.83898925781,
+        260.380126953125
+      ],
+      "tick": 113,
+      "viewport_foot_pixel": "(1652.43, 652.0195)",
+      "wall_seconds": 10.640813
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00050.jpg",
+      "frame": 50,
+      "hero_hp": 60.2969987988472,
+      "hero_position": [
+        18.5056781768799,
+        0.0,
+        -11.8716478347778
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0403389999999995,
+      "schedule_elapsed_seconds": 10.74308,
+      "source_foot_pixel": [
+        1319.71789550781,
+        251.076507568359
+      ],
+      "tick": 116,
+      "viewport_foot_pixel": "(1677.168, 628.7222)",
+      "wall_seconds": 10.755222
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00051.jpg",
+      "frame": 51,
+      "hero_hp": 37.2497134804726,
+      "hero_position": [
+        18.642822265625,
+        0.0,
+        -12.195502281189
+      ],
+      "hits": [
+        0,
+        3
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0380800000000008,
+      "schedule_elapsed_seconds": 10.854595,
+      "source_foot_pixel": [
+        1323.30261230469,
+        245.090713500977
+      ],
+      "tick": 118,
+      "viewport_foot_pixel": "(1686.145, 613.733)",
+      "wall_seconds": 10.871018
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00052.jpg",
+      "frame": 52,
+      "hero_hp": 13.0694422125816,
+      "hero_position": [
+        18.9171104431152,
+        0.0,
+        -12.5135698318481
+      ],
+      "hits": [
+        0,
+        4
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0412189999999999,
+      "schedule_elapsed_seconds": 10.971662,
+      "source_foot_pixel": [
+        1330.47229003906,
+        239.211868286133
+      ],
+      "tick": 120,
+      "viewport_foot_pixel": "(1704.098, 599.012)",
+      "wall_seconds": 10.987847
+    },
+    {
+      "camera_position": "(12.43783, 41.0, 31.10051)",
+      "file": "frame-00053.jpg",
+      "frame": 53,
+      "hero_hp": 13.0694422125816,
+      "hero_position": [
+        19.1913986206055,
+        0.0,
+        -12.8316373825073
+      ],
+      "hits": [
+        0,
+        4
+      ],
+      "losses": [
+        0,
+        0
+      ],
+      "readback_and_save_seconds": 0.0428420000000003,
+      "schedule_elapsed_seconds": 11.072706,
+      "source_foot_pixel": [
+        1337.64184570312,
+        233.333038330078
+      ],
+      "tick": 122,
+      "viewport_foot_pixel": "(1722.052, 584.2906)",
+      "wall_seconds": 11.088007
+    }
+  ]
+}

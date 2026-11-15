@@ -1,0 +1,16 @@
+{
+  "returncode": 0,
+  "wall_seconds": 13.172960791000008,
+  "command": [
+    "/Users/runner/work/luanshi-game/luanshi-game/patch/godot.macos.template_release.arm64",
+    "--resolution",
+    "2560x1440",
+    "--rendering-method",
+    "mobile",
+    "--rendering-driver",
+    "metal",
+    "--audio-driver",
+    "Dummy",
+    "--"
+  ]
+}
