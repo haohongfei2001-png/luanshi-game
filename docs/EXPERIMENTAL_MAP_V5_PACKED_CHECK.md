@@ -55,7 +55,20 @@ process includes startup/configuration/loading; it is not a frame-rate result.
 The pack contains22 frozen GDScript dependencies, the inert probe/scene/config,
 the original1,287,052-byte HF08 source manifest and the original typed source
 oracle. There is no GLB, texture, skeletal actor, graphical Controller or unrelated
-scene. Every dependency is checked against the frozen Git commit before packing.
+scene. Every runtime dependency is checked against the frozen Git commit before
+packing. The current tool also freezes the packed oracle-consumer probe,
+`build_save_resume_pack.gd`, and `test_packed_map_save.py` itself to that same
+exact commit. Dirty controlled files fail before output generation or Godot
+launch; all controlled hashes are rechecked before each build/template launch
+and before reporting PASS. `harness_sha256` and `frozen_files_sha256` record this
+scope separately from the22-script runtime-only `dependency_sha256` receipt.
+Git object reads disable lazy fetching; missing local objects fail closed.
+
+Generated project/main-scene/config/class-cache/pack-descriptor files remain
+dynamic and are explicitly recorded in `generated_inputs_sha256`, not falsely
+claimed as Git-frozen. The separately authorized source, typed oracle and slot
+remain byte-checked external inputs. These checks provide reproducibility, not
+protection against a deliberately rewritten runner that disables its own checks.
 
 HF08 source SHA256:
 `28f93aecc08a099b06aae9c70bb5ce070653a1850b0417baa3493f93a5e9b753`.

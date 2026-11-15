@@ -18,28 +18,23 @@ p.add_argument("--output", required=True, type=Path)
 p.add_argument("--frozen-commit", default="HEAD", help="Git revision to freeze; resolved to an exact commit before checking any inputs")
 a = p.parse_args()
 repo = Path(__file__).resolve().parents[1]
+git_env = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
 requested_frozen_ref = a.frozen_commit
 # Pin even HEAD immediately. Invalid refs or dirty dependencies fail closed;
 # never fall back to a local historical checkpoint or skip the freeze check.
 a.frozen_commit = subprocess.check_output(
     ["git", "rev-parse", "--verify", "--end-of-options", f"{requested_frozen_ref}^{{commit}}"],
-    cwd=repo, text=True,
+    cwd=repo, env=git_env, text=True,
 ).strip()
-for key in ["source", "source_evidence"]:
-    setattr(a, key, getattr(a, key).resolve(strict=True))
-a.output = a.output.resolve()
-a.output.mkdir(parents=True, exist_ok=True)
-empty = a.output / "empty-cwd"
-empty.mkdir(exist_ok=True)
-if list(empty.iterdir()):
-    raise RuntimeError("Empty working directory required")
-
 
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def run(command, log, cwd, env, expected):
+    # Recheck immediately before every builder/template launch as well as at
+    # initial admission, so changes during preparation do not get a PASS.
+    verify_controlled_files()
     start = time.monotonic_ns()
     with log.open("w") as stream:
         process = subprocess.Popen(command, cwd=cwd, env=env, stdout=stream, stderr=subprocess.STDOUT)
@@ -57,7 +52,34 @@ def run(command, log, cwd, env, expected):
             "log_sha256": sha(log)}
 
 
-# Exact static dependency closure only. No large asset or external install fallback.
+# Runtime code AND the oracle consumer/build harness share one Git freeze.
+# Admission happens before creating output, generating inputs, or launching Godot.
+controlled_sha256 = {}
+harness = ["tests/map_runtime/packed_save_resume_probe.gd",
+           "tests/map_runtime/build_save_resume_pack.gd",
+           "tools/test_packed_map_save.py"]
+
+
+def freeze_file(relative):
+    contents = (repo / relative).read_bytes()
+    frozen = subprocess.check_output(
+        ["git", "show", f"{a.frozen_commit}:{relative}"], cwd=repo, env=git_env)
+    if contents != frozen:
+        raise RuntimeError(f"Frozen controlled file changed: {relative}")
+    controlled_sha256[relative] = hashlib.sha256(contents).hexdigest()
+    return contents
+
+
+def verify_controlled_files():
+    for relative, expected_hash in controlled_sha256.items():
+        if sha(repo / relative) != expected_hash:
+            raise RuntimeError(f"Frozen controlled file changed: {relative}")
+
+
+for relative in harness:
+    freeze_file(relative)
+
+# Exact static runtime dependency closure only. No assets or install fallback.
 queue = ["scripts/field/experimental_map_save.gd"]
 closure = set()
 while queue:
@@ -67,12 +89,18 @@ while queue:
     path = repo / relative
     if path.suffix != ".gd" or not path.is_file():
         raise RuntimeError(f"Unexpected minimum dependency: {relative}")
-    contents = path.read_bytes()
-    frozen = subprocess.check_output(["git", "show", f"{a.frozen_commit}:{relative}"], cwd=repo)
-    if contents != frozen:
-        raise RuntimeError(f"Frozen save dependency changed: {relative}")
+    contents = freeze_file(relative)
     closure.add(relative)
     queue.extend(re.findall(r'["\']res://([^"\']+)["\']', contents.decode()))
+
+for key in ["source", "source_evidence"]:
+    setattr(a, key, getattr(a, key).resolve(strict=True))
+a.output = a.output.resolve()
+a.output.mkdir(parents=True, exist_ok=True)
+empty = a.output / "empty-cwd"
+empty.mkdir(exist_ok=True)
+if list(empty.iterdir()):
+    raise RuntimeError("Empty working directory required")
 
 expected_file = a.source_evidence / "expected.bin"
 xdg = a.source_evidence / "save5-xdg"
@@ -104,13 +132,18 @@ for name, omitted in [("complete", None), ("missing-source", "res://test_data/hf
                                         for res, path in files.items() if res != omitted]})
 descriptor = a.output / "pack-inputs.json"
 descriptor.write_text(json.dumps(manifest, indent=2) + "\n")
-env = os.environ.copy()
+env = git_env.copy()
 for kind in ["DATA", "CONFIG", "CACHE"]:
     env[f"XDG_{kind}_HOME"] = str(xdg / kind.lower())
 receipts = []
 result = {"status": "FAIL", "requested_frozen_ref": requested_frozen_ref,
           "frozen_commit": a.frozen_commit, "receipts": receipts,
-          "dependency_sha256": {path: sha(repo / path) for path in sorted(closure)},
+          "dependency_sha256": {path: controlled_sha256[path] for path in sorted(closure)},
+          "harness_sha256": {path: controlled_sha256[path] for path in harness},
+          "frozen_files_sha256": controlled_sha256,
+          "generated_inputs_sha256": {path.name: sha(path) for path in
+                                     [project, scene, classes, config, descriptor]},
+          "generated_input_scope": "Dynamic project/main/config/class-cache/pack descriptor; hashed, not Git-frozen",
           "template_sha256": sha(a.template), "source_sha256": sha(a.source),
           "scope": "PRIVATE_TEMPLATE_CPU_TEST_NOT_RELEASE_GPU_M5_UI_OR_ART_ACCEPTANCE"}
 try:
@@ -138,6 +171,7 @@ try:
     assert not list(empty.iterdir())
     result["protected_files_unchanged"] = protected_before
     result["empty_cwd_before_and_after"] = True
+    verify_controlled_files()
     result["status"] = "PASS"
 finally:
     (a.output / "summary.json").write_text(json.dumps(result, indent=2) + "\n")
