@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 16 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 17 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -425,3 +425,42 @@ The folder provides the separately hash-pinned surfaceless and tangent patches, 
 Read-only review found and actually reproduced one guard defect before publication: a leader could exit after SIGINT while a same-process-group descendant kept running. The final guard now checks and cleans only its own newly created group on stop, timeout, normal leader exit or monitoring failure. Remaining descendants prevent PASS; INT/TERM/KILL escalation continues even after the leader exits. Four negative scenarios with deliberately signal-ignoring descendants passed, while separate control processes stayed alive. The coordinator independently reproduced the original timeout and normal-leader-exit scenarios against the final code; both correctly stop the descendant without affecting unrelated work. Six small tests, Python/bash syntax checks, exact upstream zero-fuzz patch application/reversal, and retained primitive-image positive/negative QA pass. Final guard SHA256 is `6816c9175d979d95d10a0f4fc98d5443098166b2c5124c9a77084c5eeca041c3`.
 
 This preserves the ability to run actual local Godot inspection without mistaking dummy headless execution for rendering. It is **not** a new game-art or performance result. Read section15 for the latest complete HF08 game pictures and their ART_FAIL verdict. New whole environment and character authoring continue locally with rejected structural/character diagnostics retained; neither is accepted. A bounded alternative directional-sprite quality trial is also being tested at normal gameplay pixel size, not selected as the final representation. No normal-speed new whole-scene footage, complete troop set, new macOS package,512-per-side visual acceptance or M5 result is claimed.
+
+
+## 17. Art-first continuation, whole-scene and character failures retained (2026-11-15 13:00 UTC)
+
+The owner's latest priority is **“你先把美术弄达标”**: make the art meet the target first. Long CPU, 512-per-side and new Mac performance work is deferred. Keep only the small rendering and source-integrity checks required for actual art production. Main remains `248d26aefbb8dfe7973141a63b40f3a220f0edc0`; PR67 is still draft at `1cfda095b05a78dfe89da6f2ddd8f8cb89819180`, verified again before this update. No game default, RC24/RC25, release or acceptance status changes.
+
+### Actual whole environment, not a playable art candidate
+
+A new complete author scene has now been rendered in actual Godot at native 2560x1440, internal scale1.0, measured camera-to-feet distance22.000m, pitch45 and FOV50. It combines continuous riverbed/shallows/banks, the road, a structural timber bridge, thick masonry arch/gate, adapted complete native roof/eaves/beam source, original full tree/rock dependencies and a first vegetation community. This is a local author-scene diagnostic with an explicitly rejected source18 scale actor, **not new Battle integration, a rebuilt army or acceptance**.
+
+The P3-07 raw frame was captured at12:45:25 UTC, 7,554,106 bytes, SHA256 `d42ebe1adfb52b7c2cbf9bc2b8fb4d5577835b2e86340e1575c58b72ef81309a`. It took84.62 seconds to complete the guarded capture, with observed peak RSS about2791MiB. Host/renderer remain Linux AMD EPYC9V74 and Mesa llvmpipe software; this is not an FPS measurement, Mac GPU result or M5 test. Exact source/dependency closure, raw picture and failure records are retained privately.
+
+**ART_FAIL.** The river's previous double-lighting was corrected and the bed/depth became legible, but that does not make the image acceptable. Grass reads as dark dots, the broad bare banks and forest lack convincing ecological layers, materials are not yet coherent, and composition is structurally wrong. The old author constraint left only4.9m between bridge exit and gate, instead of the actual bridgehead battle apron visible in the target. The next complete layout is being rebuilt with a real approximately16–18m deployment/fighting apron, a widening then narrowing military road, continuous riverbank/grass/shrub/forest regions and corresponding source support. This is a change to world geometry, not a camera trick or same-geometry A/B. A complete original wide-leaf grass source and its full material bake replace the rejected needle-grass approach; counts and source provenance are not art acceptance.
+
+The previous current-source wall material had also accidentally reused an already rejected slate choice, and old tree derivatives had removed original normal/ARM maps. Those mistakes were identified and separated from the original professional sources. Do not infer that every source was intrinsically poor from a damaged conversion, or that retaining an original source guarantees quality.
+
+### Whole character, not more roughness adjustments
+
+Complete character14b produced actual normal22m and close diagnostic images in two poses. The normal relaxed image at12:41:31 UTC is79,497 bytes, SHA256 `db9ebf8d87daac9642247d9d2e5c37f86eb9273d4e884516f9c9320099259567`; its close diagnostic SHA256 is `850ca2bef8e577586cef60c309c98b50760f420561400c1a3ebd8fa0d479aa13`. **Both poses and the whole outfit fail art review.** These are not normal-speed animation, combat or a final soldier.
+
+Two source regressions were separately corrected: mesh joining had redirected the lamellar texture to the wrong UV channel, and the offline cloth process had saved a30fps scene despite120fps source curves. The corrected separate native source restores120fps, with all14 original action-curve hashes unchanged. Failed sources are preserved; no slowed full-action asset was shipped or integrated. Those corrections establish source integrity only.
+
+A same-topology garment comparison isolates another real conversion problem: nearest-body weight transfer can assign sleeve points to torso/leg regions and adds visible sharp waist/skirt deformation. The original garment binding is more continuous but still intersects in the tested poses and its wide long-robe cut is not the approved military outfit. It is therefore not accepted as a shortcut. Complete garment fit, silhouette and semantic deformation must be authored together.
+
+Independent review also finds that most cloth, trousers, boots, wraps, helmet and wood still have uniform base-color materials, despite high roughness. The professional garment import had cleared original material assignments. Further roughness changes or increasing mesh detail cannot supply the missing medium-scale folds, seams, layered garment relationships and cloth/iron/leather content. The next whole-character pass addresses these together. Ordinary spear tassels remain absent; fixed hero/story decisions remain unapproved.
+
+### Alternative representation and honest capture limits
+
+The bounded directional-sprite experiment is retained as an alternative, not rejected in principle. Its four-direction static and single eight-frame walk candidates reach readable normal-sized pixels, but identity, foot contact and natural gait do not yet pass. A first fixed-rate encode was rejected because capture was slower than the assumed rate. The corrected wall-clock run captured only17 of32 phases; the retained variable-frame-rate file follows actual timestamps and is explicitly **INCOMPLETE_CAPTURE**, not a complete original-speed action demonstration. No interpolation or invented intermediate frames were substituted.
+
+The eventual route may use shared3D, deterministic multidirectional sprites or a hybrid. Baking the current failed3D mother or freely regenerating independent poses does not solve art consistency. Establish one coherent whole-character mother first, then prove actual directions, held weapons, movement, contact, shielding, hits, riding and mass battle without reducing simulation.
+
+### Narrow publication and recovery status
+
+The owner's specific authorization for the historical HF08 geometry fixture was fulfilled and verified at [49d8d3c6957f9ea2b913382c7cdc84245025ce5c](https://github.com/haohongfei2001-png/luanshi-game/commit/49d8d3c6957f9ea2b913382c7cdc84245025ce5c), branch `dot/hf08-approved-geometry-fixture`. Its225,624-byte XZ expands to the exact1,287,052-byte JSON, SHA256 `28f93aecc08a099b06aae9c70bb5ce070653a1850b0417baa3493f93a5e9b753`. Only that fixture and explanatory README were added. This is not permission to merge PR67 or publish the held complete HF08/new visual asset payloads.
+
+Closed generated import/tree caches and four earlier native character sources were safely archived with whole-file hashes, complete archive verification and actual restore drills before local redundant copies were reclaimed. All unique data, originals, failure evidence and recovery instructions remain preserved. Old cached scenes need the documented restoration step before replay; do not claim every old import cache is still installed.
+
+Continue from the newest sole-writer authoring state, not an old table in this document. Do not repeat or overwrite current work. The next meaningful milestone is a self-reviewed coherent new battlefield and complete person at actual gameplay pixels, followed by integration of those exact accepted sources into the real Battle. **No new playable art pass, new macOS candidate, full-army visual acceptance or M5 result is claimed.**
