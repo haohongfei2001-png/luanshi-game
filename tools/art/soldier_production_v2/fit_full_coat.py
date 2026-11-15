@@ -23,6 +23,7 @@ for action in b.actions:
  if action:action.use_fake_user=True
 for ob in b.objects:
  if ob:bpy.context.scene.collection.objects.link(ob)
+bpy.context.scene.render.fps=120;bpy.context.scene.render.fps_base=1
 target=bpy.data.objects['MH163'];target.animation_data_clear();target.data.pose_position='REST'
 for p in target.pose.bones:p.matrix_basis.identity()
 body=bpy.data.objects['Body_SourceFull'];body.hide_set(False);body.hide_render=False

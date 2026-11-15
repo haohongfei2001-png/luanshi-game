@@ -13,6 +13,12 @@ func _initialize():
  assert(players.size()==1)
  var player:AnimationPlayer=players[0]
  print('ACTUAL_ANIMATIONS ',player.get_animation_list())
+ var expected_duration={'Idle':2.5,'Walk':1.3333333,'Sprint':0.6666667,'Death01':2.4}
+ for name in expected_duration:
+  if abs(player.get_animation(name).length-expected_duration[name])>0.025:
+   push_error('Wrong source FPS/duration: '+name+' '+str(player.get_animation(name).length))
+   quit(3)
+   return
  for clip in ['Idle','Walk','Jog_Fwd','Sprint','Hit_Chest','Hit_Head','Death01']:
   if not player.has_animation(clip):
    print('MISSING ',clip)

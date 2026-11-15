@@ -30,17 +30,25 @@ for m in bpy.data.materials:
 body.data.calc_loop_triangles();bv=[body.matrix_world@v.co for v in body.data.vertices];bt=[tuple(t.vertices) for t in body.data.loop_triangles];tree=BVHTree.FromPolygons(bv,bt,all_triangles=True);names={g.index:g.name for g in body.vertex_groups}
 coat_tree=BVHTree.FromPolygons([coat.matrix_world@v.co for v in coat.data.vertices],[list(p.vertices) for p in coat.data.polygons])
 parts=[]
+skin_sources={}
 def skin(o,rigid=None):
- groups={n:o.vertex_groups.new(name=n) for n in ([rigid] if rigid else names.values())}
+ provider=body
+ if not rigid:
+  provider=pants_source if 'calf wrap' in o.name else coat
+  if provider.name not in skin_sources:
+   provider.data.calc_loop_triangles();pv=[provider.matrix_world@v.co for v in provider.data.vertices];pt=[tuple(t.vertices) for t in provider.data.loop_triangles];pn={g.index:g.name for g in provider.vertex_groups};skin_sources[provider.name]=(BVHTree.FromPolygons(pv,pt,all_triangles=True),pv,pt,pn)
+  stree,sv,st,snames=skin_sources[provider.name]
+ else:snames=names
+ groups={n:o.vertex_groups.new(name=n) for n in ([rigid] if rigid else snames.values())}
  for v in o.data.vertices:
   if rigid:groups[rigid].add([v.index],1,'REPLACE');continue
-  p,n,idx,d=tree.find_nearest(v.co);ids=bt[idx];a,b,c=[bv[i] for i in ids];u=b-a;w=c-a;q=p-a;den=u.dot(u)*w.dot(w)-u.dot(w)**2
+  p,n,idx,d=stree.find_nearest(v.co);ids=st[idx];a,b,c=[sv[i] for i in ids];u=b-a;w=c-a;q=p-a;den=u.dot(u)*w.dot(w)-u.dot(w)**2
   if abs(den)<1e-14:ws=[1,0,0]
   else:
    yy=(w.dot(w)*q.dot(u)-u.dot(w)*q.dot(w))/den;zz=(u.dot(u)*q.dot(w)-u.dot(w)*q.dot(u))/den;ws=[max(0,1-yy-zz),max(0,yy),max(0,zz)]
   acc={}
   for i,k in zip(ids,ws):
-   for g in body.data.vertices[i].groups:acc[names[g.group]]=acc.get(names[g.group],0)+k*g.weight
+   for g in provider.data.vertices[i].groups:acc[snames[g.group]]=acc.get(snames[g.group],0)+k*g.weight
   total=sum(acc.values())
   for n,w in acc.items():
    if w>0:groups[n].add([v.index],w/total,'REPLACE')
@@ -62,43 +70,48 @@ def patch(name,rows,cols,fn,material,uvscale=(1,1),rigid=None,thick=.003):
  skin(o,rigid);parts.append(o);return o
 
 def torso(u,v):
- angle=u*math.tau;top=1.282-.012*abs(math.sin(angle));z=.944+v*(top-.944)
+ angle=u*math.tau;top=1.305-.009*abs(math.sin(angle));z=.944+v*(top-.944)
  center=Vector((0,-.02,z));radial=Vector((math.sin(angle),-math.cos(angle),0))
- p,n,idx,d=coat_tree.ray_cast(center,radial,.35)
+ p,n,idx,d=coat_tree.ray_cast(center+radial*.225,-radial,.225)
  if p is None:p=center+Vector((radial.x*.171,radial.y*.145,0))
  return p+radial*.007
-patch('V2 continuous wrapped cuirass',20,64,torso,armor,(29,5))
+patch('V2 continuous wrapped cuirass',20,64,torso,armor,(34,4.6))
 # Six independent sewn skirt gores share a waist, with real walking slits.
 for panel in range(6):
  a0=panel*math.tau/6+.055;a1=(panel+1)*math.tau/6-.055
  def skirt(u,v,a0=a0,a1=a1):
-  a=a0+(a1-a0)*u;rx=.155+.037*v;ry=.12+.02*v;z=.979-.245*v+.008*math.cos(u*math.pi*2)*v
-  return (rx*math.sin(a),-.005-ry*math.cos(a),z)
+  a=a0+(a1-a0)*u;rx=.155+.037*v;ry=.12+.02*v;z=.979-.325*v+.008*math.cos(u*math.pi*2)*v
+  center=Vector((0,-.02,z));radial=Vector((math.sin(a),-math.cos(a),0));p,n,i,d=coat_tree.ray_cast(center+radial*.26,-radial,.26)
+  return (p if p is not None else Vector((rx*math.sin(a),-.005-ry*math.cos(a),z)))+radial*.008
  patch('V2 bound short skirt gore '+str(panel),10,10,skirt,armor,(5,3.5))
-# Complete short cloth under-tunic, six sewn gores; distinct lower cloth hem.
-for panel in range(6):
- a0=panel*math.tau/6+.025;a1=(panel+1)*math.tau/6-.025
- def under_gore(u,v,a0=a0,a1=a1):
-  a=a0+(a1-a0)*u;rx=.151+.044*v;ry=.116+.025*v
-  return (rx*math.sin(a),-.005-ry*math.cos(a),.962-.283*v+.007*math.cos(u*math.pi*2)*v)
- patch('V2 sewn under-tunic gore '+str(panel),10,10,under_gore,cloth,(1,1),thick=.002)
-# Real shoulder suspension straps connect the chest and back across source cloth.
-for sign in [-1,1]:
- def strap(u,v,sign=sign):
-  x=sign*(.084+u*.035);y=-.145+v*.270;p,n,i,d=coat_tree.ray_cast(Vector((x,y,1.55)),Vector((0,0,-1)),.35)
-  return (x,y,(p.z if p is not None else 1.30)+.005)
- patch('V2 shoulder suspension strap '+str(sign),24,3,strap,leather,(1,2),thick=.004)
+# Broad crossing collar facings lie on the complete source inner tunic.
+# Their lower ends overlap under the chest harness, not suspend it like braces.
+for side in [-1,1]:
+ def collar(u,v,side=side):
+  x=side*(.045-.13*v)+(u-.5)*.038;z=1.365-.205*v
+  p,n,i,d=coat_tree.ray_cast(Vector((x,-.6,z)),Vector((0,1,0)),1.0)
+  y=(p.y if p is not None else -.10)-.004-(.002 if side<0 else 0)
+  return (x,y,z)
+ patch('V2 continuous crossing collar '+str(side),24,4,collar,puttee,(1,2),thick=.002)
 # Waist sash follows complete torso, not a stack of decorative hard rings.
 def sash_point(u,v):
  p=Vector(torso(u,(.946+v*.055-.944)/(1.282-.944)));p+=Vector((math.sin(u*math.tau),-math.cos(u*math.tau),0))*.009;return p
 patch('V2 continuous soft waist sash',4,64,sash_point,red,(2,1),thick=.006)
-# Shoulders are continuous sleeve-following armor cloth, not floating tile grids.
+# Continuous shoulder-to-chest mantle follows complete original cloth. It
+# starts at the clavicle, rather than a detached sleeve plate below bare neck.
 for side in ['L','R']:
- a=rig.data.bones['upperarm01.'+side].head_local;b=rig.data.bones['lowerarm01.'+side].head_local;direction=(b-a).normalized();front=Vector((0,-1,0));up=direction.cross(front).normalized()
+ sign=1 if side=='L' else -1;a=Vector((sign*.065,-.015,1.305));end=rig.data.bones['upperarm01.'+side].head_local.lerp(rig.data.bones['lowerarm01.'+side].head_local,.48);direction=(end-a).normalized();front=Vector((0,-1,0));up=direction.cross(front).normalized()
  if up.z<0:up=-up
- def shoulder(u,v,a=a,direction=direction,front=front,up=up):
-  angle=(u-.5)*math.pi*1.28;center=a+direction*(-.015+.135*v);return center+front*math.sin(angle)*(.079+.006*v)+up*math.cos(angle)*(.079+.006*v)
- patch('V2 cloth backed shoulder '+side,9,16,shoulder,armor,(7,2),thick=.004)
+ def shoulder(u,v,a=a,end=end,front=front,up=up):
+  angle=(u-.5)*math.pi*1.20;center=a.lerp(end,v);radial=front*math.sin(angle)+up*math.cos(angle);p,n,i,d=coat_tree.ray_cast(center,radial,.20)
+  return (p if p is not None else center+radial*.07)+radial*.006
+ patch('V2 continuous bound shoulder mantle '+side,15,18,shoulder,armor,(8,3.0),thick=.004)
+ # Fitted forearm wrapping closes a professional cloth sleeve onto the wrist.
+ a=rig.data.bones['lowerarm01.'+side].head_local;b=rig.data.bones['wrist.'+side].head_local;axis=(b-a).normalized();x=axis.cross(Vector((0,0,1))).normalized();y=axis.cross(x).normalized()
+ def cuff(u,v,a=a,b=b,x=x,y=y):
+  center=a.lerp(b,.58+.39*v);angle=u*math.tau;radial=x*math.cos(angle)+y*math.sin(angle);p,n,i,d=coat_tree.ray_cast(center,radial,.12)
+  return (p if p is not None else center+radial*.036)+radial*.003
+ patch('V2 fitted woven wrist binding '+side,6,24,cuff,dark,(1,1),thick=.002)
 # Head-size driven formed helmet, open face and bound neck protection.
 top=max(v.z for v in bv);headpoints=[v for v in bv if v.z>top-.15]
 cy=(min(v.y for v in headpoints)+max(v.y for v in headpoints))/2
@@ -111,18 +124,24 @@ pants_source=bpy.data.objects['Wool trousers'];pants_tree=BVHTree.FromPolygons([
 for v in pants_source.data.vertices:
  if .10<v.co.z<.43:
   side='L' if v.co.x>0 else 'R';k=rig.data.bones['lowerleg01.'+side].head_local;f=rig.data.bones['foot.'+side].head_local
-  t=max(0,min(1,(v.co.z-f.z)/(k.z-f.z)));c=f.lerp(k,t);blend=min(1,(v.co.z-.10)/.05,(.43-v.co.z)/.05)
-  v.co.x=c.x+(v.co.x-c.x)*(1-.24*blend);v.co.y=c.y+(v.co.y-c.y)*(1-.24*blend)
+  t=max(0,min(1,(v.co.z-f.z)/(k.z-f.z)));c=f.lerp(k,t);blend=min(1,(v.co.z-.10)/.04,(.43-v.co.z)/.04)
+  radial=Vector((v.co.x-c.x,v.co.y-c.y,0));distance=radial.length
+  if distance>1e-6:
+   direction=radial.normalized();p,n,i,d=tree.ray_cast(c,direction,.16)
+   if p is not None:
+    desired=(p-c).length+.007
+    if distance>desired:v.co-=radial*(1-desired/distance)*blend
 pants_source.data.update();pants_tree=BVHTree.FromPolygons([pants_source.matrix_world@v.co for v in pants_source.data.vertices],[list(p.vertices) for p in pants_source.data.polygons])
 # Puttees conform around real calf centers; keep actual source shoes.
 for side in ['L','R']:
  knee=rig.data.bones['lowerleg01.'+side].head_local;foot=rig.data.bones['foot.'+side].head_local
  def calf(u,v,k=knee,f=foot):
-  c=f.lerp(k,.08+.73*v);a=u*math.tau;radial=Vector((math.sin(a),math.cos(a),0));p,n,i,d=pants_tree.ray_cast(c,radial,.16)
-  return (p if p is not None else c+radial*.065)+radial*.005
- patch('V2 linen calf wrap '+side,10,24,calf,puttee,(1,1),thick=.003)
+  c=f.lerp(k,.14+.65*v);a=u*math.tau;radial=Vector((math.sin(a),math.cos(a),0));p,n,i,d=pants_tree.ray_cast(c,radial,.16)
+  return (p if p is not None else c+radial*.065)+radial*.009
+ patch('V2 linen calf wrap '+side,24,32,calf,puttee,(1,1),thick=.003)
 # Trousers retain source folds/UV, controlled palette removes modern visual emphasis.
 pants=bpy.data.objects['Wool trousers'];pants.data.materials.clear();pants.data.materials.append(dark)
+boots=bpy.data.objects['Medieval boots'];boots.data.materials.clear();boots.data.materials.append(mat('V2 charcoal cloth shoes',(.065,.068,.065),.9))
 # Hidden original high/source body and robe preserved; expose only render body.
 for ob in bpy.data.objects:
  if ob.name in ['Cross-front robe','Body_AuthorGarmentOcclusion','V2_complete_coat_fit']:ob.hide_render=True;ob.hide_set(True)
@@ -132,6 +151,7 @@ body.hide_render=False;body.hide_set(False)
 with bpy.data.libraries.load(str(natural_source),link=False) as (a,b):b.actions=list(a.actions)
 for action in b.actions:
  if action:action.use_fake_user=True
+bpy.context.scene.render.fps=120;bpy.context.scene.render.fps_base=1
 assert all(n in bpy.data.actions for n in ['Idle_Loop','Walk_Loop','Hit_Chest','Death01'])
 # Hide only covered anatomical faces in a separate runtime copy, never erase
 # the full editable body. Preserve head/neck/hands, avoid body through puttees.
