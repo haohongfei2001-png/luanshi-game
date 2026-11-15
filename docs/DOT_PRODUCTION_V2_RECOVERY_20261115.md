@@ -831,3 +831,41 @@ Frozen27 has an exact private native backup. Its separate91-source-file companio
 The now-closed native26 was independently retrieved from its persistent Library record and matched to the original by full127,064,997 B SHA256. Only after the current writer confirmed28 uses27 plus the explicit source layer was the redundant local26 native reclaimed. All26 code, runtime, six images and companion remain. Historical full27 regeneration requires exact native26 restoration first. A mistaken extra character in a pinned file ID failed before retrieval; fresh Library metadata resolved the correct record. A later uncompressed-header assumption failed before deletion because this native uses a compressed prefix. Full-byte equality, not an altered file or bypassed warning, established restoration.
 
 No new source asset payload is publicly promoted by this checkpoint. PR67 remains held, RC24/RC25 remain protected, and genuine/offscreen combat and legacy saves are unchanged. New4K, actualBattle integration, continuous original-speed actions/riding/large-army footage,20/100/250/512-per-side performance and realM5 tests remain NOT_RUN for these rejected new sources.
+
+## 28. Actual whole21, corrected character28 and bounded representation tests (2026-11-15 20:25 UTC)
+
+**ART_REBUILD_REQUIRED remains unchanged. These are rejected internal production experiments, not a playable art candidate or a release.** Whole21 and character28 have now been personally viewed as actual Godot output. Neither is accepted. Codex remains PAUSED; Dot continues the authorized work. PR67 is still held and no new source asset payload is promoted by this documentation checkpoint.
+
+### Whole21: material completeness did not make the whole image good
+
+Actual whole21 includes continuous ground/support, original albedo/normal/roughness inputs, water, ecological groups, architecture02c and the unchanged character25b. The native run finished exit0 in36.789s, peak RSS1,669,992,448B, minimum available5,740,191,744B, no guard stop. All87 frozen input hashes were unchanged. Its 2560x1440 PNG is7,304,630B / SHA256 `2740bbc614d4dae332d88cf35f70a2b869fb31fb0b4a8f45bca97c65f9cfcd52`.
+
+The actual 15m/45-degree/FOV50 control keeps character height148.368px and internal scale1.0. It is an authoring scene, not Battle or continuous traversal. The entire image is rejected: broad uniform bare road/sand, sparse inserted grass, noisy bright substrate, individually placed rocks, ineffective woodland edge, repetitive fort walls and unconvincing water. More scatter density, tint changes or a legal source label are not the next main art method.
+
+A106-file frozen closure contains206,929,290B of actual inputs, authoring and evidence; shader caches and the known engine binary are excluded, original source dependencies are explicit. The retained recovery archive is159,923,484B / SHA256 `1099d1711fcbc0e6fa4762cb0ccef67048e5bb03cb3dcd9c11e0657ac7d58c93`. Every archived source, streamed ZIP member CRC and decoded SHA was verified. Persistent storage succeeded; independent remote readback/full replay is NOT claimed.
+
+Next whole-place22 is a different production method: a single designed bridge landing/fan-shaped forecourt/connected inner rock bank/shallow outer bank/woodland edge, with coherent world-space art carried by genuine terrain/support and depth. Its method and connected cross-sections exist; no22 image or acceptance yet. High objects must retain real depth and actor occlusion. Camera experiments remain explicit separate variables, not a silent shrink-to-fit or an improvement A/B.
+
+### Character28: source/export correctness repaired, whole art still rejected
+
+The editable28 gear layer is10,124,400B / SHA256 `a0a2a32871da3d117bb57efde1995bc5f4f0d5b039dcab6d95bbcbb7bc765b17`, persistently saved. Complete editable28 is the deterministic composition of frozen27, explicit face27a and gear28; it is not falsely called a standalone full28 native file.
+
+Two exported runtime attempts failed the unchanged source-vs-GLB posed bounds comparison. Independent CPU skinning reproduced the validator to8.73e-8m; applying the rig-root transform BEFORE skinning reduced the diagnostic discrepancy to0.377442mm. This was a real POSITION/IBM input-frame mismatch, not permission to patch the checker. A separate5.033s native snapshot proved the immediate cause: new mesh matrix_world was still cached identity before dependency-graph update; parent normalization captured that stale value and discarded the rig transform.
+
+Only assembly evaluation timing and explicit parent-matrix invariants were corrected. The resulting actual export completed exit0/65.889s, peak970,854,400B. GLB46,814,580B / SHA256 `40db18e4d2d6eac701c5ea60025df1f3ce3f24fbbaf4941e6b3e49c2626ad464`; all76 unchanged four-pose semantic-part bounds comparisons passed, and21 material factors/decoded PBR inputs matched27. This is an export check, NOT a contact, motion or art pass.
+
+Six actual same-light native Godot28 frames completed exit0/32.483s. The giant27 geometry explosion is absent, but the complete28 character is still ART_FAIL: open plate-like helmet crown, broad flat shoulder/chest surfaces, barrel-like skirt armour and incomplete soft/hard garment connections. Left-hand thrust closure is still unresolved. The next29 method is a unified connected design topology with explicit openings, overlaps, silhouette and tangent constraints, followed by limited collision correction, not another independent full-XYZ panel fit. The original cloth/body/rig and previous rejected sources remain preserved.
+
+### Whole-building2.5D trial01: real native depth worked, the whole-plane approximation failed
+
+This deliberately default-OFF test used an AI-generated complete gate bitmap as an art INPUT, not as a purported game screenshot. It compared two CURRENT art routes under the same camera, actor and light; the bitmap and3D02c are different artwork/geometry, so this is NOT a causal representation-only quality/performance A/B.
+
+The first batch produced eight actual native2K frames, then stopped exit-15 when PNGs plus shader caches exceeded the25MiB growth guard. The failure record is preserved. A separately bounded append-only completion added the missing no-building reference and metadata, exit0/26.679s and973,975B growth; original eight image hashes stayed unchanged. Nine native frames total19,851,922B. Combined engine work was about63.18s, not a continuous gameplay movie.
+
+Actual world depth/alpha occlusion was tested: red/green markers matched between routes; the blue behind-door marker had1483px in3D,0 in the2.5D mapping,2054 with no building. Whole-plane art had visibly floating/cut-off ground edges, incorrect gate aperture, no proper thickness/parallax and no coherent ground shadow. A calibration mistake is explicit:5m in the tilted plane was only3.536m world vertical height. This trial is REJECTED, not evidence that all2.5D or sprites fail.
+
+Its30-file source/evidence closure is22,955,015B; retained archive22,849,682B / SHA256 `4adadf3b8b0dce671080af17a6fca1259070768fee3ea569138a77cd5173276d`, all member CRC/SHA checked and persistently stored. Trial02 begins with an explicit editable wall/side-wall/roof/door-volume proxy and source-image projection, retaining the original image bytes and declaring inferred hidden surfaces. CPU geometry/calibration is not an accepted native result.
+
+A separate read-only audit also confirmed earlier soldier tests were static direction sheets, independently generated walk poses and a single-image IK puppet, not a complete consistent mother-model-to-colour/depth animated-sprite trial. Those failed implementations do not settle the representation question. Mother art quality must pass first; baking the rejected28 model cannot magically improve it.
+
+RC24/RC25, genuine/offscreen combat, old-save behaviour and production defaults are unchanged. New4K, integration into Battle, original-speed full action/riding/large-army footage,20/100/250/512-per-side performance and realM5 validation remain NOT_RUN for these rejected new sources.
