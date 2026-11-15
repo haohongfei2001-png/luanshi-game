@@ -1,0 +1,24 @@
+{
+  "error": 0,
+  "gate_origin": "(-2.0, 0.0, 0.0)",
+  "gate_path": "AuthoredVisual/RiverValley_HF01_AuthoredSource/ThickGateAndCurtains/GateMain_DynamicLeaves",
+  "glb_sha256": "cb89ed9ca8d045c28c684bc69d62b996bdad3d5e1a61bf47e5d14aa20d982755",
+  "identity": {
+    "authored_source_sha256": "494c71705211b4d956f05a22483a93ddf7fbf0b54beb17dc95062e8f9a10a2f4",
+    "map_id": "luanshi.river_gate.production_v2",
+    "topology_revision": 6.0,
+    "topology_sha256": "0b1d24868d11505f3e980a8eb456df7e55035203490b1d1df8384ba5622bd140",
+    "visual_revision": 3.0
+  },
+  "scope": "RAW_GLTF_AND_EXACT_AUTHOR_WRAPPER_STRUCTURE_NO_GPU_NO_EXPORTED_IMPORT_PROOF",
+  "sun_count": 1,
+  "sun_energy": 2.70000004768372,
+  "sun_shadow": {
+    "bias": 0.100000001490116,
+    "directional_mode": 2,
+    "enabled": true,
+    "max_distance": 80.0,
+    "normal_bias": 0.600000023841858
+  },
+  "world_count": 1
+}

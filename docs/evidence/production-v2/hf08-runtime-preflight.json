@@ -1,0 +1,217 @@
+{
+  "armies": [
+    {
+      "actual_roster": 43,
+      "invalid_placements": [],
+      "muster": {
+        "counts": [
+          {
+            "available": 875,
+            "placed": 22,
+            "team": 0.0
+          },
+          {
+            "available": 594,
+            "placed": 21,
+            "team": 1.0
+          }
+        ],
+        "error": 0,
+        "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+        "ordinary_per_side": [
+          20,
+          20
+        ],
+        "saved_battle_migrated": false,
+        "source_topology": "0b1d24868d11505f3e980a8eb456df7e55035203490b1d1df8384ba5622bd140"
+      },
+      "ordinary_per_side": 20
+    },
+    {
+      "actual_roster": 1057,
+      "invalid_placements": [],
+      "muster": {
+        "counts": [
+          {
+            "available": 875,
+            "placed": 529,
+            "team": 0.0
+          },
+          {
+            "available": 594,
+            "placed": 528,
+            "team": 1.0
+          }
+        ],
+        "error": 0,
+        "mode": "INTERNAL_OPEN_GATE_FIELD_BATTLE_NO_SIEGE_NO_WORLD_OBJECTIVE",
+        "ordinary_per_side": [
+          512,
+          512
+        ],
+        "saved_battle_migrated": false,
+        "source_topology": "0b1d24868d11505f3e980a8eb456df7e55035203490b1d1df8384ba5622bd140"
+      },
+      "ordinary_per_side": 512
+    }
+  ],
+  "bounds": [
+    "(-60.0, -42.0)",
+    "(84.0, 42.0)"
+  ],
+  "configure_ms": 2334.595,
+  "nav": {
+    "agent_height": 3.4,
+    "agent_radius": 0.7,
+    "nodes": 8882,
+    "obstacles": {
+      "scope": "BODY_CLEARANCE_NOT_FULL_PATH_OR_BATTLE",
+      "solids": 62
+    },
+    "scope": "AUTHOR_SOURCE_ROUTE_GRAPH_NOT_BATTLE_OR_ART_ACCEPTANCE",
+    "support": {
+      "configured": true,
+      "scope": "TAGGED_SUPPORT_ONLY_NOT_COMPLETE_NAVIGATION",
+      "spatial_cells": 10118,
+      "triangles": 33862
+    }
+  },
+  "navigation_error": 0,
+  "routes": [
+    {
+      "end": "(44.82382, -0.015044)",
+      "goal": "(45.0, 0.0)",
+      "reason": "arrived",
+      "start": "(-41.5, 0.0)",
+      "steps": 606,
+      "trace": [
+        [
+          0,
+          -41.5,
+          0.0
+        ],
+        [
+          100,
+          -27.2604923248291,
+          -0.454522013664246
+        ],
+        [
+          200,
+          -13.0105743408203,
+          -0.495885193347931
+        ],
+        [
+          300,
+          1.23941993713379,
+          -0.499714910984039
+        ],
+        [
+          400,
+          15.4894132614136,
+          -0.499976068735123
+        ],
+        [
+          500,
+          29.7394065856934,
+          -0.499997854232788
+        ],
+        [
+          600,
+          43.9719200134277,
+          -0.0877871066331863
+        ]
+      ]
+    },
+    {
+      "end": "(-41.32369, -0.015054)",
+      "goal": "(-41.5, 0.0)",
+      "reason": "arrived",
+      "start": "(45.0, 0.0)",
+      "steps": 606,
+      "trace": [
+        [
+          0,
+          45.0,
+          0.0
+        ],
+        [
+          100,
+          30.7605819702148,
+          -0.45563605427742
+        ],
+        [
+          200,
+          16.5106525421143,
+          -0.496017336845398
+        ],
+        [
+          300,
+          2.26066017150879,
+          -0.499663531780243
+        ],
+        [
+          400,
+          -11.9893350601196,
+          -0.499977201223373
+        ],
+        [
+          500,
+          -26.2393283843994,
+          -0.499998033046722
+        ],
+        [
+          600,
+          -40.471794128418,
+          -0.0877959281206131
+        ]
+      ]
+    },
+    {
+      "end": "(-56.29732, -0.0135)",
+      "goal": "(-56.5, 0.0)",
+      "reason": "arrived",
+      "start": "(-41.5, 0.0)",
+      "steps": 104,
+      "trace": [
+        [
+          0,
+          -41.5,
+          0.0
+        ],
+        [
+          100,
+          -55.7285766601562,
+          -0.0513806976377964
+        ]
+      ]
+    },
+    {
+      "end": "(78.74215, -0.021527)",
+      "goal": "(79.0, 0.0)",
+      "reason": "arrived",
+      "start": "(45.0, 0.0)",
+      "steps": 237,
+      "trace": [
+        [
+          0,
+          45.0,
+          0.0
+        ],
+        [
+          100,
+          59.2393646240234,
+          -0.455814093351364
+        ],
+        [
+          200,
+          73.4879302978516,
+          -0.460184425115585
+        ]
+      ]
+    }
+  ],
+  "runtime_error": 0,
+  "scope": "NEW_SOURCE_FUNCTIONAL_ONLY_NO_GPU_OR_ART_ACCEPTANCE",
+  "source_sha256": "28f93aecc08a099b06aae9c70bb5ce070653a1850b0417baa3493f93a5e9b753",
+  "topology": "0b1d24868d11505f3e980a8eb456df7e55035203490b1d1df8384ba5622bd140"
+}
