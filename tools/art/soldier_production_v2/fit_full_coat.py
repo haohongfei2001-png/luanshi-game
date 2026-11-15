@@ -18,7 +18,9 @@ source_joints={s:[src_joint('upper_arm.'+s),src_joint('forearm.'+s),rig.matrix_w
 mesh.name='Complete_professional_coat_UV_derivative';mesh.use_fake_user=True
 # Remove old objects only in this newly loaded in-memory derivative.
 for ob in list(bpy.data.objects):bpy.data.objects.remove(ob,do_unlink=True)
-with bpy.data.libraries.load(str(body_path),link=False) as (a,b):b.objects=list(a.objects)
+with bpy.data.libraries.load(str(body_path),link=False) as (a,b):b.objects=list(a.objects);b.actions=list(a.actions)
+for action in b.actions:
+ if action:action.use_fake_user=True
 for ob in b.objects:
  if ob:bpy.context.scene.collection.objects.link(ob)
 target=bpy.data.objects['MH163'];target.animation_data_clear();target.data.pose_position='REST'
