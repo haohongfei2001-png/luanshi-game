@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 36 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 37 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -1281,3 +1281,54 @@ Readback found every actual exported COLOR_0 value white; the intended varying a
 A separate limited pose-guided sprite generation was internally rejected because opposite contact frames still repeated the same leading leg. Stop guessing animation through generated grids. Continue deterministic baking from one complete, genuinely skinned appearance and measured source motion when that appearance is available. Existing25b experimental walk is a retargeted and project-modified UAL derivative, not untouched professional source motion or mocap.
 
 No new4K whole-scene series, real Battle integration, full normal-speed action/riding/army video,20/100/250/512-per-side performance result or MacBook Air M5 test is established. PR70's earlier passing CI does not cover these new isolated masters. Main, PR67 hold and fallback packages remain unchanged.
+
+
+## 37. Complete character37 and gate04 native rejection; whole-source production continues — 2026-11-16 UTC
+
+**ART_REBUILD_REQUIRED remains unchanged.** No new whole-scene playable art version, action acceptance, performance qualification or owner approval is claimed. Keep main/RC24/RC25, PR67 hold, blank formal narrative and Codex PAUSED unchanged. All outputs below are isolated authoring prototypes.
+
+### Character37: actual entire wearing source and three native views
+
+The complete long upper preserves the professional21,482-vertex source topology/UV while authoring the real cuff and entire sleeve cage. The unsuitable two-leg lower wearing layer was replaced with a newly authored continuous-back, front-overlap robe pattern. Original body, rig/rest and action sources are preserved; this is not cloth simulation or a claim that the new robe retains the old trouser topology.
+
+Source completed33.796s/exit0, peak1,056,124,928B below1GiB. Editable layer52,718,316B SHA256 `1914a0353700c50165625183812e730ee153762174a58e53814e18bb9933ef2c`. Independent reopen/export completed29.676s/exit0, peak1,023,090,688B;85mesh neutral bounds checked. Actual unique neutral GLB48,125,324B SHA256 `4b70465a7db657840875ffa16868be2f1a38d1d0374f8b2e97d316c6748c0d4e`.
+
+Three actual2560x1440/internal1 native images completed33.929s/exit0, peak1,011,003,392B; source+export+native working set on disk120,949,254B within150MiB. Author reviewed all three and the approved reference; coordinator viewed original normal/front PNGs. The long sleeves and full wrapping robe are actual changes, not descriptions. **Whole art remains rejected:** the straight lower robe reads like a lampshade, armour repetition is busy at normal size, cloth weight/support and helmet/face style are not coherent. The side view still reveals skin below the shoulder. Hands are open and the spear unheld; this neutral export is not an accepted animated/gripping soldier.
+
+The next whole38 mother asset joins complete wearing, natural supported carry pose, real hand/weapon contact and skinned output. Source37's elongated sleeve retained unsuitable old short-sleeve weights, so skinning cannot be called correct just because old rig/actions survive. Actual complete sleeve cross-sections also expose off-centre coverage, requiring full shoulder-to-wrist sleeve-cavity authoring, not a hidden skin mask or a small underarm patch. New carry work stays isolated and cannot enable unaccepted default gameplay actions.
+
+Persistent complete-source archive56,600,325B SHA256 `f271f33d5f2b290503d2449849de730be8792c2f5ea91b579ab464e30a26f033`. Actual three-view/export companion48,338,909B SHA256 `8272c8098acf0044e236f39d08a647c84f1574b7e2efaf61f5ed0fdea0d5262e`. Both CRC/member-SHA verified.
+
+### Gate04: intact original roof is not a qualified entire fortress
+
+04 retained the original roof's69,426 triangles, source normals and one uniform0.20 transform rather than cutting/splicing its centre. It rebuilt a5.8m-deep gate platform,4.4m support grid, lower wings/walks and enclosing court. Source5.028s/exit0, peak approximately42.8MB; three complete, uncut native2K views48.217s/exit0, peak approximately1.059GB. Courtyard control position moved fromX24 toX27 because of the deeper platform; camera-relative distance/angle/FOV remained unchanged. It is not an identical-position A/B.
+
+Both coordinator and author reviewed actual normal/courtyard views. **Whole art rejected:** generic masonry massing, boxed apertures, mismatched material craft, visible courtyard artifacts and lower-body occlusion remain. Only the former roof splice is resolved. The fixture still uses diagnostic banks/water and is not a finished natural site.
+
+A read-only post-freeze audit found about49.115m² of soil and paving top surfaces exactly coplanar, creating concrete depth-conflict conditions. Their planar UVs are correct atXZ/2; soil has no texture, so blindly blaming UV stretching would be wrong. No elimination render established this as the sole visual cause. Separate corner points lack any ground coverage.144 other nonzero-area geometry triangles have zero-area UVs, exposing the generic primary-axis UV method's limitations. All original04 source/capture hashes remain unchanged.
+
+Stop another cosmetic variant of that same box-assembly method. New mother05 now has real CPU source using shared gate/vault sections, one assigned ground-domain partition, structural visibility layers and construction-specific UV/material roles.1,746 triangles and static domain/overlap/UV checks exist, but no native image, complete3D closure, physical traversal or art qualification. Generic medieval stone texture recolouring is not the new material plan. The original complete roof stays referenced with exact attribution; no professional whole military-gate asset was newly acquired.
+
+04 source/native/audit archive11,985,566B SHA256 `4961e3c49f560d677c38691f71da6c8ce2a2297603daf648909f418672c5d9b2`, with prior archive version retained. Mother05 CPU source46,140B SHA256 `124a2ef6c850f56e869481975fa6660e3bd8f15343387b055267c2e58e771727`.
+
+### Valley07 diagnostics and genuinely new08 continuous source
+
+07's first tiny sentinel stopped3.355s on an underestimated3MiB incremental-disk allowance; its first weights image survived but water did not. Keeping that failure, identical-source07b used15MiB incremental allowance within the existing150MiB root. It completed5.328s/exit0, peak398,692,352B, two native2K diagnostic images.46,933 actual colour vertices have0..1 range; the same probe changes red weights to blue visible water with BACK culling preserved. This proves only input channels and the front face in an unlit overhead diagnostic, not PBR appearance. Source/both-attempt archive1,818,946B SHA256 `73f7826f8b4f81a0bdcb8b9831bd8de58db1d67c878249d393b567c635d62c17`.
+
+08 is new editable continuous geomorphology, not another few props on04's plane:26,832 vertices/53,010 triangles, curved offset deep channel, asymmetric shallows, grass-bank slopes/ridges, curved bridgehead roads and gate approach. Actual road samples give maximum longitudinal1.462% and cross0.769% slopes; CPU winding/UV/semantic checks are recorded. A complete consumer references bridge, gate04 WIP, original tree and grouped original rocks; default25b control and separately labelled static36 are distinct inputs. It has **not** rendered the complete scene.
+
+The custom runtime did not implement the assumed editor-style check flow. Earlier attempts exposed a generated function-declaration error and timed out without loading the scene; those failures are retained. A dedicated tiny entry that only loads the script and checks instantiation capability completed0.253s, explicitly no scene instance. This is parse validation only.
+
+Two CPU02 files were mistakenly changed after freezing during that correction. Archiving detected the mismatch and stopped. The original generator was recovered from an existing copy; the old generated script was exactly restored and matched its manifest SHA. Every originalCPU02 member now verifies. Fixed source and parse logs are in a separate immutableCPU03 snapshot. Never present frozenCPU02 as the corrected consumer or edit frozen files in place. The aborted partial archive remains labelled incomplete; the public/persistent original checkpoint was not overwritten with it.
+
+Current CPU01+CPU02+independentCPU03/failed-LOD recovery archive3,409,759B SHA256 `687e453ce1eb945d05904636440e9f3681575e3dbc92ca74a81a4004d9ce1f73`, with original checkpoint version retained.
+
+### Original-tree LOD and sprite boundaries
+
+The original1.6M-triangle tree is retained. The first branch-LOD source attempt imported the original but exceeded1GiB during subsequent processing,9.134s/peak1,121,398,784B; no blend/GLB. A branch-only bulk-construction method avoided whole-tree EditMode splitting but failed a strict UV readback assertion before saving. A small independent experiment then proved an old UV-layer reference became invalid after setting custom normals; a fresh lookup preserved the original UV exactly. This does not authorize changing UVs or relaxing the equality check.
+
+The next evaluation reduced branches to100,916 triangles but triggered a vertex-normal check. Actual diagnosis found104 zero-length average vertex normals, all referenced by nondegenerate triangles; it does not yet establish what the final corner/export normals are. No qualified LOD is saved or visually accepted at this checkpoint. Investigate the actual rendered/exported normal semantics rather than force-normalizing data, guessing success or raising resource limits. The single04b3GiB offline exception remains consumed; normal source/native budgets remain1GiB/2GiB.
+
+Sprite37's one pose-guided generated attempt was rejected before runtime for repeating the same leading leg at opposite contacts. Its full dataURL did not yield a supported persistent original-image transfer; the attempted partial file is explicitly INCOMPLETE-NOT-VERIFIED, not an original PNG or usable animation. FK code,41-frame data, prompt, guide and exact provenance remain preserved.25b walk is a retargeted/project-modified UAL derivative, not untouched mocap. Deterministic multi-view sprite baking must wait for one complete genuinely skinned appearance; static36/37 cannot satisfy that prerequisite. Recovery archive2,109,154B SHA256 `d4161c47821c1fa4302c2090a4f4ef1ae9a2042404b745f4533064ae4dbad538`.
+
+Continue complete38 wearing/pose/rig, new08 whole landscape and mother05 construction-level authoring, serializing actual heavy jobs. None of these checks replaces the owner's whole real-game visual threshold. No new4K action series, real Battle integration, thousand-soldier high-quality performance or MacBook Air M5 result has been established.
