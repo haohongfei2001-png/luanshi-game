@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 33 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 34 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -1142,3 +1142,63 @@ Complete sprite33 source/fixture/evidence companion:66 files, ZIP5,358,473B SHA2
 Continue27F complete landscape representation and source-aligned visibility, plus a unified character silhouette/material/pose reconstruction. Preserve the generated input versus actual-engine-image distinction. Character/static fixtures are not playable candidate releases. Heavy work remains serial with1GiB source/2GiB bounded native experiments, availableRAM>=2GiB,180s and disk>=350MiB. No unbounded budget increase.
 
 RC24/RC25, original combat/offscreen progression,9weapons,saves,main and PR67 hold remain protected. No new-art accepted whole playable scene, native4K trial, full action/riding/army footage,20/100/250/512-per-side performance series or realMacBookAirM5 test is supplied by this checkpoint. **ART_FAIL / NOT_RUN remains accurate.**
+
+
+## 34. Verified recovery and method correction — 2026-11-16 00:16 UTC
+
+**Read this section first. Whole new art remains NOT_ACCEPTED; no new playable candidate is promoted.** Codex remains PAUSED, PR67 remains held/unmerged, and RC24/RC25 and the actual Battle/save systems are unchanged. Main was checked through PR70's current base as `248d26aefbb8dfe7973141a63b40f3a220f0edc0`.
+
+### Cloud interruption and exact recovery, not uninterrupted execution
+
+At approximately23:38UTC the cloud command transport disconnected. After reconnecting the same selected cloud, the recent Luanshi working directories were absent, while other older workspace content remained. It was not valid to claim the old jobs kept running. No user computer was used. Seven retained source/evidence archives were downloaded and verified by complete archiveSHA/ZIP CRC, then552 files were restored. New unarchived27F/34 working changes could not be claimed recovered; their successors below are explicitly **reconstructions**.
+
+The earlier15a recovery archive346,675,800B, SHA256 `f3ca97e42a2f7685bca7535a8c0263fe7a76d14e1ed9b102b4d70bf937f152d2`, contains the exact Linux engine rather than an assumed equivalent.84 engine/notices files were selectively restored and every referenced blob's length/SHA checked. Engine41,145,480B, SHA256 `0ff65b61f7332db602ba6305f8f16c14716d96c036fce72fe8a4aae1bdb6bf0a`, is Godot4.6.3 custom surfaceless, not the different preinstalled executable.
+
+Actual cold replay23:49:32–23:49:52UTC:19.264s/exit0, native2560x1440 EGL/internal1, Mesa/llvmpipe. Both sprite33/control PNGs are byte-identical to the earlier originals:
+- control `cf69a80d95f0fa16ffce9e6ea47fe587c670a30f1a606ad5c2ed7eeeb181a313`;
+- sprite `0ecc01659fd6dcdd5ac7cb3dc9e50a2bfba6a84644b53b040f92e05a1ae66926`.
+
+The initial global-script-cache import warning remains in the log; no clean-log claim. This proves this exact source/render path is recoverable, **not art/gameplay/M5 acceptance**. Recovery evidence companion3,683,325B SHA256 `a238b2732b144d0df13eb7d0d27f5d94b4cf438451dbfa09d8e907d704d5ad2e` was persistently saved with successful local identity writeback.
+
+### Reconstructed27F: actual new whole-frame diagnosis and rejection
+
+Reconstructed27F starts from the retained27E source, not an invented recovery of lost27F files. It restores the original court PBR from15a and checks exact input images/GLB/material hashes before rendering. Source includes2,766 triangles, complete intermediate/foreground banks, real court surfaces and exact-source-pixel-centre plane-depth comparison. Connected owner groups join only shared-edge coplanar, same-source/material/known-status surfaces; the original individual triangle identifiers are retained. The0.02m threshold is not expanded.
+
+Actual three-frame native batch33.752s/exit0, peakRSS1,174,478,848B, directory growth27,579,015B. Normal, half-metre translated camera and gate-query fixture are2560x1440/internal1. They are surface-query diagnostics, not collision traversal, player input or Battle. Normal control body148.37px is experimental framing, not an owner/Riot prescribed numerical threshold.
+
+Original normal PNG7,122,381B SHA256 `8a87f1f3f1b2bface167be11e340e0a6f756a316330e616a08d0f951ecc7480b`; side `049cba2eca29b8a2779b05240362388fec55c1d7553a4362b152b693f0b1fc82`; gate fixture `778d9249ca81ce5ade25431a46ad976d8cd4933ff932bc8a731a479a5b06cd09`. Original PNGs remain unchanged. Their direct review display exceeded tool output limits, so workers inspected same-pixel JPEG95 derivatives and the coordinator inspected a labelled same-pixel JPEG80 transfer preview. Do not claim originalPNG display succeeded.
+
+**Entire scene FAIL:** regular horizontal stripes are gone, but thick canopy shells expose large unsupported sides; gate eaves/openings and bridge rails still tear on camera movement; pier/water contact and independently textured rear-court space/light are wrong. The near-left willow is absent, but that does not explain away the other failures. Full source/native-failure companion33,021,221B SHA256 `1deee70757e76eb81b0ab85b14de48be9e36337b721856d6bdbc9950c736af35` is locally CRC/member verified. Earlier CPU checkpoint01 ZIP1,561,230B SHA256 `8d5d764cfbfdb82f261f7a1d8ddb90bc55b70e813232935330973820a7b20463` is separately persistently saved.
+
+27H CPU semantic reconstruction4,232,624B was frozen without another native run. It reduces building pixels incorrectly owned by terrain from54,523 to726 but does not prove visual correctness. Crucially50,093 tree-shell pixels are outside the original tree semantic silhouette: changing front/back labels cannot create absent artwork.
+
+### Stop near-field whole-image projection; build complete near-field masters
+
+Independent same-frame review confirms a method limitation, not just a missing-geometry bug: one whole generated view does not provide tree sides, backgrounds between rails, or surfaces uncovered by player/camera movement. Its baked radiance also conflicts with newly lit materials, and1672x941 source pixels do not become genuine2K detail.
+
+The near-field whole-image-projection route is **not being promoted or endlessly repaired as the main art method**. Its negative experiments and original code remain isolated. The new production split is:
+- one complete editable bridge with load-bearing structure, piers/feet, railing joints, deck and both-bank connections;
+- one complete gatehouse, real tunnel/doors/back faces and traversable court;
+- independent UV/materials and coherent lighting for accessible surfaces;2.5D imagery only assessed for unreachable distance.
+
+The original CC0 stone/wood PBRs are restored by fullSHA, not redownloaded substitutes. Existing full pavilion roof structures can be studied, not misrepresented as a professional complete military gate. Inventory still contains **no already-qualified mature complete military gate or bridge**. Old03h/i are rejected references, not an accepted base. New complete authored masters must pass actual normal-view art review; structural completeness alone is not success. Authoring proceeds in separate directories with coordinated interfaces, not competing writers.
+
+### Character34: new complete wearing source, grip remains unfinished
+
+After recovery,34 rebuilt a whole short armour/garment silhouette, original professional blouse shaping, broad waist/shoulder relations, complete helmet and legwear around preserved body/source/rig/action inputs. A strict lower-leg-only weight gate first rejected natural same-side knee influence; that failure is retained. The corrected contract permits original same-side upper/lower-leg/foot/toe interpolation without clipping weights or widening geometric tolerances.
+
+Actual complete REST source save28.765s/exit0, peakRSS1,030,467,584B within1GiB. Editable layer34,878,665B SHA256 `815be417c9cbd0f8fe5ef8543376877171e15d43520f4f5e3eb2bd74de798ff9`. Repeated metadata tables were gzip-compressed losslessly and fully decompressed/hash-checked, not discarded. Frozen31-file checkpoint50,165,862B logical; recovery ZIP45,145,207B SHA256 `7d21e87d751319f8503c22a19816f830927f8da68a4e20235141979fcef35494` persistently saved.
+
+New hand-source labels were rechecked against actual rest geometry, originalUV and original packed skin, rather than reusing rejected anatomical normals. Two grip candidates remain OFF: thumb opposition and little-finger closure are still unnatural. To avoid letting hand fitting indefinitely block whole-character art review, the next native review is explicitly neutral whole wearing with relaxed arms/open hands and a separately placed spear, **GRIP_UNFINISHED**, not falsely labelled carry or combat.
+
+### Original-code checkpoint and next exact checks
+
+Draft PR70 now points to `586e4c626f30161061c3cf1bb9017d6f9fdd14e9`; all five changed remote text files match the local tested contents byte-for-byte. It retains the exact27F shader, a dependency-free source-centre depth reference, six added tests and the method rejection.13 tests pass including1,800 perspective-depth cases; this is not GPU pixel parity or art validation. The legacy shader-name assertion was corrected to require the same homogeneous varying'sxy/w independent of its name. New workflow43779242946 is **in_progress at this checkpoint**, not passed.
+
+```sh
+python3 -m unittest discover -s experiments/layered_scene27/tests -v
+```
+
+Continue neutral34 actual whole-character review, then complete near-field bridge/gate masters. Source1GiB/native2GiB,180s, availableRAM>=2GiB, disk>=350MiB and serial heavy-job lock remain. On the recovered cloud with approximately57GB free, per-current-character/bridge/gate disk allocation is explicitly150MiB each for source/export/import/evidence; this is a recorded bounded disk allocation change, not a RAM/time relaxation.
+
+No new accepted whole playable frame, full-speed action/riding/army film,20/100/250/512-per-side benchmark,4K art trial or actualMacBookAirM5 run is supplied. **ART_FAIL / NOT_RUN remains the honest state.**
