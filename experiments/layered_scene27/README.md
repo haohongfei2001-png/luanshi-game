@@ -67,3 +67,44 @@ source invariants. They are mathematical/source tests, not GPU visual evidence.
 No copyrighted game imagery, restricted asset source, account information or
 credential is included. This is original project code; reference:
 [Godot spatial light shaders](https://docs.godotengine.org/en/4.6/tutorials/shaders/shader_reference/spatial_shader.html).
+
+
+##27F retained negative experiment: source-centre depth consistency
+
+The additional `center_aligned_capture.gdshader` is byte-identical to the shader
+actually executed in reconstructed27F, not a newly validated generic renderer.
+Its RF owner/depth textures use the exact1672x941 source capture. Depth is
+recomputed by ray/plane intersection at that **same nearest texel centre**.
+Comparing continuous fragment depth with texel-centre depth produced false gaps
+on slopes; simply increasing the0.02m tolerance would conceal wrong surfaces.
+The threshold and purple/orange unknown/invalid diagnostics remain unchanged.
+
+`capture_depth_reference.py` adds a standard-library mathematical reference and
+six tests, including1,800 perspective-depth cases, top-left/Y/sample conventions,
+parallel/behind-ray handling and the incorrect continuous-depth comparison.
+Together with the seven original tests,13 tests pass. The old shader invariant
+assertion was amended to recognize a consistently divided homogeneous varying
+by either name, rather than requiring one literal identifier. This is not a
+weakened perspective/divide assertion or aGPU pixel-parity claim.
+
+Reconstructed27F's actual three2560x1440/internal1 captures ran33.752s/exit0,
+peakRSS1,174,478,848B with exact engineSHA already pinned above. Horizontal
+visibility stripes disappeared. **The whole scene still FAILS:** thick canopy
+shells reveal unsupported sides, gate eaves/background assignments tear on
+half-metre camera translation, pier/water contact is wrong, and the independently
+textured rear court does not match source lighting/space. The near-left willow
+is absent. Surface queries are not physics traversal, input or combat.
+
+Normal PNG SHA256: `8a87f1f3f1b2bface167be11e340e0a6f756a316330e616a08d0f951ecc7480b`.
+Half-metre PNG: `049cba2eca29b8a2779b05240362388fec55c1d7553a4362b152b693f0b1fc82`.
+Gate-query PNG: `778d9249ca81ce5ade25431a46ad976d8cd4933ff932bc8a731a479a5b06cd09`.
+Large original PNG display exceeded review-tool output limits; visual review used
+explicitly labelled same-pixel JPEG derivatives, while originals/hashes remain.
+
+**Method boundary:** a single whole generated image cannot supply new near-field
+surfaces uncovered by player/camera motion. These code fixes are retained as
+negative-experiment recovery, not the main art production route. Near-field
+bridge/rails/gate/tunnel/court require complete geometry, independent materials
+and coherent lighting; layered imagery may be assessed for unreachable distance.
+No default-game/Battle integration, new accepted art, full action film, army
+benchmark, native4K trial or actualMacBookAirM5 test is supplied here.

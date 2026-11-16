@@ -66,7 +66,7 @@ class FrozenProjectionTests(unittest.TestCase):
         for shader in root.glob('*.gdshader'):
             source = shader.read_text()
             self.assertIn('capture_world_to_clip*MODEL_MATRIX', source)
-            self.assertIn('source_projected.xy/source_projected.w', source)
+            self.assertRegex(source, r'(\w+)\.xy/\1\.w')
             self.assertNotIn('SCREEN_UV', source)
         shadow = (root / 'source_ground_shadow.gdshader').read_text()
         self.assertNotIn('ALBEDO', shadow.split('void light()')[1])
