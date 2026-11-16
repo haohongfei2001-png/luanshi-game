@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 34 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 35 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -1202,3 +1202,40 @@ python3 -m unittest discover -s experiments/layered_scene27/tests -v
 Continue neutral34 actual whole-character review, then complete near-field bridge/gate masters. Source1GiB/native2GiB,180s, availableRAM>=2GiB, disk>=350MiB and serial heavy-job lock remain. On the recovered cloud with approximately57GB free, per-current-character/bridge/gate disk allocation is explicitly150MiB each for source/export/import/evidence; this is a recorded bounded disk allocation change, not a RAM/time relaxation.
 
 No new accepted whole playable frame, full-speed action/riding/army film,20/100/250/512-per-side benchmark,4K art trial or actualMacBookAirM5 run is supplied. **ART_FAIL / NOT_RUN remains the honest state.**
+
+
+## 35. Whole authored masters actually rendered and rejected — 2026-11-16 00:44 UTC
+
+**Still ART_FAIL, not a new playable or accepted art candidate.** The latest production direction remains complete near-field geometry and coherent full-character clothing, not further repairs to the single-view projected scene. Main remains `248d26aefbb8dfe7973141a63b40f3a220f0edc0`; PR67 is held. All new art below is isolated and unpromoted.
+
+### Complete character35, actual source and three views
+
+Character34 was independently reopened/exported and rendered at three views, then rejected: low brick-like chest armour, upright shoulder fans, short barrel skirt and smooth bowl helmet. The neutral three-view archive49,072,666B, SHA256 `353a93371a49518e95eb4f73f690589b13c2d82a28692dc7b7b4c7a0fda35baf`, preserves this result separately from its REST source.
+
+35 changed the construction method: author complete wearing in the actual neutral pose, then inverse-transform through the actual skin matrices into the preserved rest/rig space. An initial missing-material script error was retained; the corrected source save completed26.721s/exit0, peak1,022,595,072B. Independent reopen/export completed29.689s/exit0, peak1,025,470,464B. All61 final piece bounds matched saved actual-pose bounds; this verifies the export, not the art.
+
+Actual three native2560x1440/internal1 frames completed31.314s/exit0, peak929,554,432B. The coordinator personally viewed original normal and front PNGs against the approved direction; the character author viewed all three. **Whole art rejected:** shoulders no longer stand upright and chest height changes are visible, but separate grey strips still read as assembled plates rather than a coherent armour garment. The skirt remains short and tubular, sleeves too mechanical, and the helmet lacks natural metal/leather construction. Hands remain open, spear unheld, grip unfinished; no carry/action/Battle claim.
+
+The next complete wearing revision must unify the knee-length layered soft garment, relaxed sleeves, continuous armour support and semantic whole-surface UV/material design. More loose plates or rivets alone do not address the failure. Original body/rig/action sources and rejected candidates remain retained.
+
+Persistent source checkpoint19,836,927B SHA256 `11ddaf3127eb1bb62bb9e1a4ffb78a51b0d9ef9d1ffbc01f6889faeb52e140af`; actual three-view companion48,278,667B SHA256 `84aebb6a109fd941d8bf16c725757bd0d720ffa2636d3dc1a1555ebe9e658658`. Both archives were CRC/member-SHA verified; companion explicitly depends on the source rather than duplicating it.
+
+### Complete bridge, gate and shore: actual geometry is not art acceptance
+
+The bridge master supplies real load-bearing girders/braces, deck, piers/feet, railings and bank abutments with independent UV/materials.01 native20.885s revealed reversed closed-piece winding;02 corrected actual indices, not double-sided-material concealment.02 native25.57s/exit0, peak approximately1.155GB, still failed: repetitive rails, coarse paving, land seams and flat water. Complete01/02 source/four-native-frame archive10,857,928B SHA256 `2aaf3a2d22f331a9157aa7a32b09b9626495e9d965dabd7155840f461e2dbaea` is persistently saved.
+
+Whole shore03 added continuous shared-world earth UV, actual banks/riverbed and six original rocks, not an image backdrop. Source3.62s/exit0; two native2K frames26.15s/exit0, peak approximately1.203GB. Coordinator personally viewed the original normal PNG. **Whole scene rejected:** banks still resemble cut dirt platforms, isolated rocks do not form a natural shoreline, and the water lacks convincing shallow/deep terrain relations. The next source must be a complete near-field river valley/roads/water composition, not another few props on these diagnostic banks. Normal PNG SHA256 `d8460e292c653b4859c4ea3da030af36ed45e4240b231526d15ced5a3948e8e6`; side `c58bdbfe4b961017c7991ec03284cb0ba4716ca0b994adce921971e7f8dbc89c`.
+
+The gate master derives editable roof structure from the already-reviewed CC0 pavilion source, with new complete wall/tunnel/doors/court geometry. This is **not** a newly acquired professional military-gate model. The first empty-load failure was retained; explicit loader checks corrected it. Actual corrected01 four-frame batch48.259s/exit0, peak approximately1.014GB.02 source5.54s/exit0 and four native2K frames52.805s/exit0, peak1,096,675,328B.
+
+Coordinator reviewed labelled1280px derivatives of the original02 frames. **Whole gate rejected:** upper building reads as an open pavilion, stone textures are noisy and semantically repetitive, the central roof extension is visibly incomplete, and courtyard follow views occlude the actor. Complete roof geometry stays visible in evidence; later gameplay needs an explicit occlusion treatment, not hidden diagnostic geometry.03 must reconstruct the full defensive gatehouse, back-court connections and distinct masonry/wood/ground treatment, not merely patch a roof seam.
+
+Complete01/02 source/native-failure archive45,366,291B SHA256 `5aa28f307cdecf5e403f889c5701a9c16be9b0d71e486edee1c47deead2125d3` is persistently saved. Original freeze manifests are preserved; disposable renderer-cache entries are explicitly excluded, not silently presented as archived. External bridge/control-actor/exact-engine dependencies and original source/license hashes remain listed.
+
+### Asset closure and honest test boundaries
+
+Recovered original island-tree geometry is approximately1.6million triangles, not an acceptable army-scale repeated tree LOD. Its restored leaf JPEG has no alpha despite the glTF blend flag. The incomplete tree was not silently enabled; the official asset's separate alpha source is being verified independently. Existing original rocks have diffuse plus constant roughness, not a complete PBR set. Neither provenance nor successful import constitutes art qualification.
+
+Exact PR70 commit `586e4c626f30161061c3cf1bb9017d6f9fdd14e9` workflow [43779242946](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43779242946) is now completed/success, all six returned jobs successful.13 local mathematical/source tests remain passed. CI includes legacy game/save regressions, builds and macOS runtime checks; **it does not include these uncommitted new art masters and is not their visual acceptance**. PR70 remains a draft, default-OFF isolated negative experiment.
+
+All new frames above use the recovered exact Godot4.6.3 surfaceless engine, cloud Linux EGL/llvmpipe, native2560x1440/internal1. No new4K series, complete action/riding/army video,20/100/250/512-per-side benchmark or actual MacBook Air M5 run is established. Budgets and unique heavy-job coordination remain unchanged. Continue complete river-valley/gate/wearing reconstruction, preserve failed evidence and exact dependencies, and judge the entire real-engine frame before any art promotion.
