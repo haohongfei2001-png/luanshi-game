@@ -2,7 +2,7 @@
 
 **State: ART_REBUILD_REQUIRED. No production-v2 playable art candidate has passed. This is a recovery checkpoint, not a release or acceptance report.**
 
-**Read section 35 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
+**Read section 36 first for the latest verified continuation. Earlier source tables and results are preserved checkpoints, not instructions to revert later work.**
 
 This checkpoint supersedes the *next-art-action* recommendations in the older regional 04/05/06/07 experiments. It preserves their source and evidence. Read the current main `AGENTS.md`, `OWNER_MOBA_CAMERA_AND_ART_AUTHORITY_20261114.md`, the owner's latest matte-material authority in draft PR #67, the original Dot handoff, and Issue #12 together with this file. Codex remains **PAUSED**; Dot continues the authorized cloud development.
 
@@ -1239,3 +1239,45 @@ Recovered original island-tree geometry is approximately1.6million triangles, no
 Exact PR70 commit `586e4c626f30161061c3cf1bb9017d6f9fdd14e9` workflow [43779242946](https://github.com/haohongfei2001-png/luanshi-game/actions/runs/43779242946) is now completed/success, all six returned jobs successful.13 local mathematical/source tests remain passed. CI includes legacy game/save regressions, builds and macOS runtime checks; **it does not include these uncommitted new art masters and is not their visual acceptance**. PR70 remains a draft, default-OFF isolated negative experiment.
 
 All new frames above use the recovered exact Godot4.6.3 surfaceless engine, cloud Linux EGL/llvmpipe, native2560x1440/internal1. No new4K series, complete action/riding/army video,20/100/250/512-per-side benchmark or actual MacBook Air M5 run is established. Budgets and unique heavy-job coordination remain unchanged. Continue complete river-valley/gate/wearing reconstruction, preserve failed evidence and exact dependencies, and judge the entire real-engine frame before any art promotion.
+
+
+## 36. Whole wearing36 and full valley04b: actual frames rejected; source/data errors isolated — 2026-11-16 UTC
+
+The entire picture remains below the approved minimum. These are isolated art-authoring previews, **not a new playable Battle candidate**, not formal art approval and not a reason to promote PR67 or overwrite the RC24/25 fallback. The owner still requires whole-scene art first. Failed frames are retained for internal review rather than proactively presented as accepted deliverables.
+
+### Character36: complete source, actual neutral views, whole cut still wrong
+
+36 replaces the detached-strip garment with a continuous armour support and longer soft wearing layers. Its generated lamellar material master is actually1254x1254,10columns/4rows, not the requested nominal resolution/layout. It contains baked edge lighting and contact darkness and is labelled non-physical art colour, not verified physical albedo. The original image, prompt, full editable source and exact derived UV contract are retained.
+
+Source creation completed38.318s/exit0, peak1,040,924,672B. First independent reopen/export stopped at1,074,982,912B,1,241,088B above the1GiB source limit. The failed result remains. Reordering the consumer to load the base before the full wearing manifest, with **identical art and no limit increase**, completed29.469s/exit0, peak1,029,955,584B. Actual neutral static GLB51,510,248B SHA256 `f120ad82065f818a6a520d6c5bbf2c5107b2957d883abd08aebf2db1b1a0a0c2`;71mesh bounds and the original embedded image were independently checked.
+
+Three native2560x1440/internal1 views completed33.143s/exit0, peak988,979,200B. The author reviewed all three, coordinator reviewed original normal/front. **Whole art rejected:** shoulder support remains disconnected-looking, chest top too straight, helmet too bowl-like, the source sleeve ends above the wrist and exposes the elbow, and the lower layers read as two thick trouser tubes. Hands remain open and the spear unheld. This export has0skins/0animationclips: it must not be reset/seeked as an animated25b replacement or claimed to have passed grip, motion or combat.
+
+37's next method is based on actual source topology, not more armour ornaments: the upper's two44-vertex cuff loops genuinely stop near elbow height; lower triangle sections are two separate leg cavities until the upper hip. Retain all rejected originals, re-cut the complete sleeve and replace only the active unsuitable lower wearing layer with a true continuous-back wrapping robe/front opening. Re-author chest/back/shoulder suspension and eye-clear complete headwear together.37 is not yet a rendered result.
+
+Persistent CRC/SHA-verified checkpoints:
+- Design/art input2,889,978B SHA256 `a7ca2621d96731e75edc91e1ea2c90fe9a73b750e54d6198eaf285d70c189ca5`.
+- Complete editable source49,468,933B SHA256 `771b2544f450b6fef86df2b4c2e2764978d51203d42cacffd490718ce67792ef`.
+- Native three-view/consumer/failure companion52,190,172B SHA256 `5ce7830fdd7bd0244f6e266e0b3f8883f98ec4f0d4ff973a8f265867827c9b00`.
+
+### Whole valley04, original tree05 and the one-off04b preview
+
+04 authored a complete river-valley/road domain with gate03, bridge, original tree and rock sources. Its ordinary2GiB native run stopped29.20s/exit-15 at2,180,161,536B with **no captured image**. No visual conclusion was drawn from that failed run. Source/guard checkpoint2,772,997B SHA256 `2757f79299a708878682a3dca2dfc9a1bdea33a3a3e79998ae91534aaf2437f4`.
+
+The island-tree alpha gap is now source-verified: current official2KglTF and RGB leaf JPEG are byte-identical to the restored inputs. The official glTF itself assigns BLEND to a JPEG without alpha. Separately retrieved official4096-square16-bit-grey alpha PNG355,395B SHA256 `6e043be9727a14af42f3adc9b4595ed72857aa1cb490cee27d285b3b53fa4144` supplies actual mask values, not a guessed black-background cutout. Runtime Godot decoded it as8-bit L8; no16-bit GPU preservation is claimed. The official page's LOD label does not establish an available low-mesh file, and texture1K/2K choices are not geometry LODs.
+
+05 isolated the unchanged1,599,403-triangle original tree, reusing actual imported texture objects and replacing mesh-surface material references instead of retaining duplicates. Its native preview completed22.337s/exit0, peak1,594,400,768B. Original foliage and real shadows appeared, but normal-pixel leaf speckle/sparse canopy remain **ART_FAIL**. This isolated-tree camera is not the whole-scene camera. Internal procfs stage readings were unavailable; only external guard sampling is authoritative. Native baseline checkpoint740,598B SHA256 `753683bc503749e5c2127a45101dbbfa5a324313480b10ccf16214aa38303146`.
+
+The coordinator authorized **exactly one offline04b preview** at3GiB/180s, retaining global available-memory>=2GiB and free-disk>=350MiB guards. This was not a game-budget increase and has now been consumed.04b retained frozen04 geometry/cameras and applied the verified texture-reference reuse. It completed75.408897291s/exit0, peak2,580,885,504B, saving three native2560x1440/internal1 frames. Actual normal PNG SHA256 `2c21c18582c27b289dd47306246e389698af8b19bda87e11b9f1c79372b29cb3`; side `0bedf98b30031b025fb0e214c3189525db4b30af76df48a67c3510e1b5a10843`; follow-gate `fd08ea3627af5dccb4b9f6f56aff38bd4319c221e9350ef4f4d2cd8f7006e985`.
+
+Author reviewed all three; coordinator personally reviewed same-pixel normal/follow JPEG derivatives. **Whole frame severely rejected:** water absent, the entire valley sand-coloured/repetitive, sparse noisy tree, generic gate construction and an opaque roof/wall hiding the follow actor. Neither getting a complete frame nor real geometry is visual success. External phase sampling shows tree append0.621->1.139GB, then normal render1.322->2.526GB and later peak2.581GB; it does not prove tree import alone caused the original failure. Complete native/failure checkpoint19,402,954B SHA256 `22dbb4d0b38d06a2027ceb11559458f21c58e04ef10d9c59b2c42d49eda822e6`.
+
+### Actual root causes and the next bounded whole-scene work
+
+Readback found every actual exported COLOR_0 value white; the intended varying authorship was in COLOR_1. Merely asserting that a colour attribute exists had missed the failure, making the terrain shader choose sand everywhere. Native SurfaceTool water triangles had the wrong front-face winding; glTF's importer conversion cannot be assumed for native mesh construction. Double-sided rendering is not the fix.
+
+07 CPU source deterministically maps46,933 exported vertices to10,600 author points (maximum position difference0.0000665m), writes the intended semantic weights to COLOR_0, and rereads438 weight pairs with quantization error<=0.001961. It flips the actual1,680 water triangles without changing positions or disabling culling. The original04/04b bytes remain frozen. The complete region plan covers deep channel, gravel shallows, grassy low banks, roads/forecourt and grouped ecology. These data fixes alone are **not** a qualified landscape. A bounded no-tree shader/water sentinel is the next test before spending another whole-scene render.
+
+A separate limited pose-guided sprite generation was internally rejected because opposite contact frames still repeated the same leading leg. Stop guessing animation through generated grids. Continue deterministic baking from one complete, genuinely skinned appearance and measured source motion when that appearance is available. Existing25b experimental walk is a retargeted and project-modified UAL derivative, not untouched professional source motion or mocap.
+
+No new4K whole-scene series, real Battle integration, full normal-speed action/riding/army video,20/100/250/512-per-side performance result or MacBook Air M5 test is established. PR70's earlier passing CI does not cover these new isolated masters. Main, PR67 hold and fallback packages remain unchanged.
